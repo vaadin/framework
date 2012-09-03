@@ -22,7 +22,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.security.GeneralSecurityException;
@@ -55,8 +54,8 @@ import com.liferay.portal.kernel.util.PortalClassInvoker;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.vaadin.Application;
 import com.vaadin.Application.ApplicationStartEvent;
-import com.vaadin.Application.SystemMessages;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
+import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
 import com.vaadin.ui.UI;
 
 /**
@@ -67,8 +66,8 @@ import com.vaadin.ui.UI;
  * 
  * @author peholmst
  */
-public abstract class AbstractApplicationPortlet extends GenericPortlet
-        implements Constants {
+public class VaadinPortlet extends GenericPortlet implements
+        Constants {
 
     public static final String RESOURCE_URL_ID = "APP";
 
@@ -176,10 +175,10 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     public static class AbstractApplicationPortletWrapper implements Callback {
 
-        private final AbstractApplicationPortlet portlet;
+        private final VaadinPortlet portlet;
 
         public AbstractApplicationPortletWrapper(
-                AbstractApplicationPortlet portlet) {
+                VaadinPortlet portlet) {
             this.portlet = portlet;
         }
 
@@ -320,6 +319,11 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             @Override
             public String getMimeType(String resourceName) {
                 return getPortletContext().getMimeType(resourceName);
+            }
+
+            @Override
+            public SystemMessages getSystemMessages() {
+                return VaadinPortlet.this.getSystemMessages();
             }
         };
 
@@ -889,8 +893,11 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         return null;
     }
 
-    protected abstract Class<? extends Application> getApplicationClass()
-            throws ClassNotFoundException;
+    protected Class<? extends Application> getApplicationClass()
+            throws ApplicationClassException {
+        return ServletPortletHelper
+                .getApplicationClass(getDeploymentConfiguration());
+    }
 
     protected Application getNewApplication(PortletRequest request)
             throws PortletException {
@@ -901,7 +908,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             throw new PortletException("getNewApplication failed", e);
         } catch (final InstantiationException e) {
             throw new PortletException("getNewApplication failed", e);
-        } catch (final ClassNotFoundException e) {
+        } catch (final ApplicationClassException e) {
             throw new PortletException("getNewApplication failed", e);
         }
     }
@@ -912,29 +919,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * @return
      */
     protected SystemMessages getSystemMessages() {
-        try {
-            Class<? extends Application> appCls = getApplicationClass();
-            Method m = appCls.getMethod("getSystemMessages", (Class[]) null);
-            return (Application.SystemMessages) m.invoke(null, (Object[]) null);
-        } catch (ClassNotFoundException e) {
-            // This should never happen
-            throw new SystemMessageException(e);
-        } catch (SecurityException e) {
-            throw new SystemMessageException(
-                    "Application.getSystemMessage() should be static public", e);
-        } catch (NoSuchMethodException e) {
-            // This is completely ok and should be silently ignored
-        } catch (IllegalArgumentException e) {
-            // This should never happen
-            throw new SystemMessageException(e);
-        } catch (IllegalAccessException e) {
-            throw new SystemMessageException(
-                    "Application.getSystemMessage() should be static public", e);
-        } catch (InvocationTargetException e) {
-            // This should never happen
-            throw new SystemMessageException(e);
-        }
-        return Application.getSystemMessages();
+        return ServletPortletHelper.DEFAULT_SYSTEM_MESSAGES;
     }
 
     private void handleServiceException(WrappedPortletRequest request,
@@ -945,7 +930,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {
-            Application.SystemMessages ci = getSystemMessages();
+            SystemMessages ci = getSystemMessages();
             criticalNotification(request, response,
                     ci.getInternalErrorCaption(), ci.getInternalErrorMessage(),
                     null, ci.getInternalErrorURL());
@@ -1054,7 +1039,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     }
 
     private static final Logger getLogger() {
-        return Logger.getLogger(AbstractApplicationPortlet.class.getName());
+        return Logger.getLogger(VaadinPortlet.class.getName());
     }
 
 }

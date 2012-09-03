@@ -1,10 +1,9 @@
 package com.vaadin.tests.components;
 
 import com.vaadin.Application;
-import com.vaadin.server.AbstractWebApplicationContext;
+import com.vaadin.server.ApplicationContext;
 import com.vaadin.server.WebBrowser;
 import com.vaadin.server.WrappedRequest;
-import com.vaadin.service.ApplicationContext;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
@@ -58,12 +57,8 @@ public abstract class AbstractTestUI extends UI {
 
     protected WebBrowser getBrowser() {
         ApplicationContext context = Application.getCurrent().getContext();
-        if (context instanceof AbstractWebApplicationContext) {
-            AbstractWebApplicationContext webContext = (AbstractWebApplicationContext) context;
-            return webContext.getBrowser();
-        }
-
-        return null;
+        ApplicationContext webContext = context;
+        return webContext.getBrowser();
     }
 
 }

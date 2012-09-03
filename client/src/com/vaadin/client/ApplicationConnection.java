@@ -264,7 +264,6 @@ public class ApplicationConnection {
 
         VConsole.log("Vaadin application servlet version: "
                 + cnf.getServletVersion());
-        VConsole.log("Application version: " + cnf.getApplicationVersion());
 
         if (!cnf.getServletVersion().equals(Version.getFullVersion())) {
             VConsole.error("Warning: your widget set seems to be built with a different "

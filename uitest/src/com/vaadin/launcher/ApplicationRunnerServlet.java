@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
-import com.vaadin.server.AbstractApplicationServlet;
+import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.AbstractUIProvider;
 import com.vaadin.server.WrappedHttpServletRequest;
 import com.vaadin.server.WrappedRequest;
@@ -38,7 +38,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.UI;
 
 @SuppressWarnings("serial")
-public class ApplicationRunnerServlet extends AbstractApplicationServlet {
+public class ApplicationRunnerServlet extends VaadinServlet {
 
     /**
      * The name of the application class currently used. Only valid within one
@@ -207,20 +207,6 @@ public class ApplicationRunnerServlet extends AbstractApplicationServlet {
             uris.applicationClassname = applicationClassname;
         }
         return uris;
-    }
-
-    @Override
-    protected Class<? extends Application> getApplicationClass()
-            throws ClassNotFoundException {
-        Class<?> classToRun = getClassToRun();
-        if (UI.class.isAssignableFrom(classToRun)) {
-            return Application.class;
-        } else if (Application.class.isAssignableFrom(classToRun)) {
-            return classToRun.asSubclass(Application.class);
-        } else {
-            throw new ClassCastException(classToRun.getCanonicalName()
-                    + " is not an Application nor a UI");
-        }
     }
 
     private Class<?> getClassToRun() throws ClassNotFoundException {

@@ -1,6 +1,7 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.server.CustomizedSystemMessages;
+import com.vaadin.server.SystemMessages;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI.LegacyWindow;
@@ -22,8 +23,8 @@ public class Ticket1673 extends com.vaadin.Application.LegacyApplication {
 
     }
 
-    public static Application.SystemMessages getSystemMessages() {
-        Application.CustomizedSystemMessages msgs = new Application.CustomizedSystemMessages();
+    public static SystemMessages getSystemMessages() {
+        CustomizedSystemMessages msgs = new CustomizedSystemMessages();
 
         msgs.setSessionExpiredURL("http://www.vaadin.com/");
         msgs.setSessionExpiredCaption("Foo");

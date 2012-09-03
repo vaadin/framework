@@ -240,12 +240,12 @@ implements ComponentConnector {
 
     @Override
     public boolean isUndefinedHeight() {
-        return getState().height == null || getState().height.length() == 0;
+        return ComponentStateUtil.isUndefinedHeight(getState());
     }
 
     @Override
     public boolean isUndefinedWidth() {
-        return getState().width == null && getState().width.length() == 0;
+        return ComponentStateUtil.isUndefinedWidth(getState());
     }
 
     /*

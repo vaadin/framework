@@ -103,17 +103,22 @@ public class Navigator implements Serializable {
             this.page = page;
             this.navigator = navigator;
 
-            page.addListener(this);
+            page.addFragmentChangedListener(this);
         }
 
         @Override
         public String getState() {
-            return page.getFragment();
+            String fragment = page.getFragment();
+            if (fragment.startsWith("!")) {
+                return page.getFragment().substring(1);
+            } else {
+                return "";
+            }
         }
 
         @Override
         public void setState(String state) {
-            page.setFragment(state, false);
+            page.setFragment("!" + state, false);
         }
 
         @Override
@@ -475,7 +480,7 @@ public class Navigator implements Serializable {
 
         if (null != viewName && getStateManager() != null) {
             String navigationState = viewName;
-            if (!parameters.equals("")) {
+            if (!parameters.isEmpty()) {
                 navigationState += "/" + parameters;
             }
             if (!navigationState.equals(getStateManager().getState())) {
@@ -662,15 +667,6 @@ public class Navigator implements Serializable {
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
-     *             {@link #addViewChangeListener(ViewChangeListener)}
-     **/
-    @Deprecated
-    public void addListener(ViewChangeListener listener) {
-        addViewChangeListener(listener);
-    }
-
-    /**
      * Remove a view change listener.
      * 
      * @param listener
@@ -679,14 +675,4 @@ public class Navigator implements Serializable {
     public void removeViewChangeListener(ViewChangeListener listener) {
         listeners.remove(listener);
     }
-
-    /**
-     * @deprecated Since 7.0, replaced by
-     *             {@link #removeViewChangeListener(ViewChangeListener)}
-     **/
-    @Deprecated
-    public void removeListener(ViewChangeListener listener) {
-        removeViewChangeListener(listener);
-    }
-
 }

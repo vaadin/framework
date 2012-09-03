@@ -47,7 +47,6 @@ import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.apphosting.api.DeadlineExceededException;
-import com.vaadin.service.ApplicationContext;
 
 /**
  * ApplicationServlet to be used when deploying to Google App Engine, in
@@ -104,7 +103,7 @@ import com.vaadin.service.ApplicationContext;
  * possible.
  * </ul>
  */
-public class GAEApplicationServlet extends ApplicationServlet {
+public class GAEVaadinServlet extends VaadinServlet {
 
     // memcache mutex is MUTEX_BASE + sessio id
     private static final String MUTEX_BASE = "_vmutex";
@@ -323,7 +322,7 @@ public class GAEApplicationServlet extends ApplicationServlet {
                 ois = new ObjectInputStream(bais);
                 ApplicationContext applicationContext = (ApplicationContext) ois
                         .readObject();
-                session.setAttribute(WebApplicationContext.class.getName(),
+                session.setAttribute(ServletApplicationContext.class.getName(),
                         applicationContext);
             } catch (IOException e) {
                 getLogger().log(
@@ -361,7 +360,7 @@ public class GAEApplicationServlet extends ApplicationServlet {
     private void cleanSession(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
-            session.removeAttribute(WebApplicationContext.class.getName());
+            session.removeAttribute(ServletApplicationContext.class.getName());
         }
     }
 
@@ -424,6 +423,6 @@ public class GAEApplicationServlet extends ApplicationServlet {
     }
 
     private static final Logger getLogger() {
-        return Logger.getLogger(GAEApplicationServlet.class.getName());
+        return Logger.getLogger(GAEVaadinServlet.class.getName());
     }
 }

@@ -277,7 +277,7 @@ public abstract class BootstrapHandler implements RequestHandler {
                     .getConfiguredWidgetset(request);
         }
 
-        widgetset = AbstractApplicationServlet.stripSpecialChars(widgetset);
+        widgetset = VaadinServlet.stripSpecialChars(widgetset);
         return widgetset;
     }
 
@@ -401,7 +401,6 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         JSONObject versionInfo = new JSONObject();
         versionInfo.put("vaadinVersion", Version.getFullVersion());
-        versionInfo.put("applicationVersion", application.getVersion());
         appConfig.put("versionInfo", versionInfo);
 
         appConfig.put("widgetset", context.getWidgetsetName());
@@ -421,10 +420,12 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         WrappedRequest request = context.getRequest();
         Application application = context.getApplication();
+        DeploymentConfiguration deploymentConfiguration = request
+                .getDeploymentConfiguration();
 
         // Get system messages
-        Application.SystemMessages systemMessages = AbstractApplicationServlet
-                .getSystemMessages(application.getClass());
+        SystemMessages systemMessages = deploymentConfiguration
+                .getSystemMessages();
         if (systemMessages != null) {
             // Write the CommunicationError -message to client
             JSONObject comErrMsg = new JSONObject();
@@ -446,12 +447,10 @@ public abstract class BootstrapHandler implements RequestHandler {
             defaults.put("authErrMsg", authErrMsg);
         }
 
-        DeploymentConfiguration deploymentConfiguration = request
-                .getDeploymentConfiguration();
         String staticFileLocation = deploymentConfiguration
                 .getStaticFileLocation(request);
         String widgetsetBase = staticFileLocation + "/"
-                + AbstractApplicationServlet.WIDGETSET_DIRECTORY_PATH;
+                + VaadinServlet.WIDGETSET_DIRECTORY_PATH;
         defaults.put("widgetsetBase", widgetsetBase);
 
         if (!application.isProductionMode()) {
@@ -487,8 +486,8 @@ public abstract class BootstrapHandler implements RequestHandler {
         WrappedRequest request = context.getRequest();
         final String staticFilePath = request.getDeploymentConfiguration()
                 .getStaticFileLocation(request);
-        return staticFilePath + "/"
-                + AbstractApplicationServlet.THEME_DIRECTORY_PATH + themeName;
+        return staticFilePath + "/" + VaadinServlet.THEME_DIRECTORY_PATH
+                + themeName;
     }
 
     /**
@@ -518,7 +517,7 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         // XSS preventation, theme names shouldn't contain special chars anyway.
         // The servlet denies them via url parameter.
-        themeName = AbstractApplicationServlet.stripSpecialChars(themeName);
+        themeName = VaadinServlet.stripSpecialChars(themeName);
 
         return themeName;
     }

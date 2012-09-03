@@ -22,8 +22,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -48,33 +46,19 @@ import javax.servlet.http.HttpSession;
 
 import com.vaadin.Application;
 import com.vaadin.Application.ApplicationStartEvent;
-import com.vaadin.Application.SystemMessages;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
+import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.UI;
 
-/**
- * Abstract implementation of the ApplicationServlet which handles all
- * communication between the client and the server.
- * 
- * It is possible to extend this class to provide own functionality but in most
- * cases this is unnecessary.
- * 
- * 
- * @author Vaadin Ltd.
- * @since 6.0
- */
-
 @SuppressWarnings("serial")
-public abstract class AbstractApplicationServlet extends HttpServlet implements
-        Constants {
+public class VaadinServlet extends HttpServlet implements Constants {
 
     private static class AbstractApplicationServletWrapper implements Callback {
 
-        private final AbstractApplicationServlet servlet;
+        private final VaadinServlet servlet;
 
-        public AbstractApplicationServletWrapper(
-                AbstractApplicationServlet servlet) {
+        public AbstractApplicationServletWrapper(VaadinServlet servlet) {
             this.servlet = servlet;
         }
 
@@ -139,21 +123,21 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             public String getStaticFileLocation(WrappedRequest request) {
                 HttpServletRequest servletRequest = WrappedHttpServletRequest
                         .cast(request);
-                return AbstractApplicationServlet.this
+                return VaadinServlet.this
                         .getStaticFilesLocation(servletRequest);
             }
 
             @Override
             public String getConfiguredWidgetset(WrappedRequest request) {
                 return getApplicationOrSystemProperty(
-                        AbstractApplicationServlet.PARAMETER_WIDGETSET,
-                        AbstractApplicationServlet.DEFAULT_WIDGETSET);
+                        VaadinServlet.PARAMETER_WIDGETSET,
+                        VaadinServlet.DEFAULT_WIDGETSET);
             }
 
             @Override
             public String getConfiguredTheme(WrappedRequest request) {
                 // Use the default
-                return AbstractApplicationServlet.getDefaultTheme();
+                return VaadinServlet.getDefaultTheme();
             }
 
             @Override
@@ -164,6 +148,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             @Override
             public String getMimeType(String resourceName) {
                 return getServletContext().getMimeType(resourceName);
+            }
+
+            @Override
+            public SystemMessages getSystemMessages() {
+                return VaadinServlet.this.getSystemMessages();
             }
         };
 
@@ -275,7 +264,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
              * Get or create a WebApplicationContext and an ApplicationManager
              * for the session
              */
-            WebApplicationContext webApplicationContext = getApplicationContext(request
+            ServletApplicationContext webApplicationContext = getApplicationContext(request
                     .getSession());
             CommunicationManager applicationManager = webApplicationContext
                     .getApplicationManager(application, this);
@@ -363,7 +352,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             // Notifies transaction end
             try {
                 if (transactionStarted) {
-                    ((WebApplicationContext) application.getContext())
+                    ((ServletApplicationContext) application.getContext())
                             .endTransaction(application, request);
 
                 }
@@ -694,7 +683,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             throws ServletException, MalformedURLException {
         Application newApplication = getNewApplication(request);
 
-        final WebApplicationContext context = getApplicationContext(request
+        final ServletApplicationContext context = getApplicationContext(request
                 .getSession());
         context.addApplication(newApplication);
 
@@ -706,7 +695,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             Throwable e) throws IOException, ServletException {
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {
-            Application.SystemMessages ci = getSystemMessages();
+            SystemMessages ci = getSystemMessages();
             criticalNotification(request, response,
                     ci.getInternalErrorCaption(), ci.getInternalErrorMessage(),
                     null, ci.getInternalErrorURL());
@@ -769,7 +758,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         }
 
         try {
-            Application.SystemMessages ci = getSystemMessages();
+            SystemMessages ci = getSystemMessages();
             if (getRequestType(request) != RequestType.UIDL) {
                 // 'plain' http req - e.g. browser reload;
                 // just go ahead redirect the browser
@@ -811,7 +800,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         }
 
         try {
-            Application.SystemMessages ci = getSystemMessages();
+            SystemMessages ci = getSystemMessages();
             if (getRequestType(request) != RequestType.UIDL) {
                 // 'plain' http req - e.g. browser reload;
                 // just go ahead redirect the browser
@@ -843,8 +832,26 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @return A new Application instance.
      * @throws ServletException
      */
-    protected abstract Application getNewApplication(HttpServletRequest request)
-            throws ServletException;
+    protected Application getNewApplication(HttpServletRequest request)
+            throws ServletException {
+
+        // Creates a new application instance
+        try {
+            Class<? extends Application> applicationClass = ServletPortletHelper
+                    .getApplicationClass(getDeploymentConfiguration());
+
+            final Application application = applicationClass.newInstance();
+            application.addUIProvider(new DefaultUIProvider());
+
+            return application;
+        } catch (final IllegalAccessException e) {
+            throw new ServletException("getNewApplication failed", e);
+        } catch (final InstantiationException e) {
+            throw new ServletException("getNewApplication failed", e);
+        } catch (ApplicationClassException e) {
+            throw new ServletException("getNewApplication failed", e);
+        }
+    }
 
     /**
      * Starts the application if it is not already running.
@@ -856,7 +863,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @throws MalformedURLException
      */
     private void startApplication(HttpServletRequest request,
-            Application application, WebApplicationContext webApplicationContext)
+            Application application,
+            ServletApplicationContext webApplicationContext)
             throws ServletException, MalformedURLException {
 
         if (!application.isRunning()) {
@@ -1177,50 +1185,13 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     }
 
     /**
-     * Get system messages from the current application class
+     * Get system messages
      * 
      * @return
      */
     protected SystemMessages getSystemMessages() {
-        Class<? extends Application> appCls = null;
-        try {
-            appCls = getApplicationClass();
-        } catch (ClassNotFoundException e) {
-            // Previous comment claimed that this should never happen
-            throw new SystemMessageException(e);
-        }
-        return getSystemMessages(appCls);
+        return ServletPortletHelper.DEFAULT_SYSTEM_MESSAGES;
     }
-
-    public static SystemMessages getSystemMessages(
-            Class<? extends Application> appCls) {
-        try {
-            if (appCls != null) {
-                Method m = appCls
-                        .getMethod("getSystemMessages", (Class[]) null);
-                return (Application.SystemMessages) m.invoke(null,
-                        (Object[]) null);
-            }
-        } catch (SecurityException e) {
-            throw new SystemMessageException(
-                    "Application.getSystemMessage() should be static public", e);
-        } catch (NoSuchMethodException e) {
-            // This is completely ok and should be silently ignored
-        } catch (IllegalArgumentException e) {
-            // This should never happen
-            throw new SystemMessageException(e);
-        } catch (IllegalAccessException e) {
-            throw new SystemMessageException(
-                    "Application.getSystemMessage() should be static public", e);
-        } catch (InvocationTargetException e) {
-            // This should never happen
-            throw new SystemMessageException(e);
-        }
-        return Application.getSystemMessages();
-    }
-
-    protected abstract Class<? extends Application> getApplicationClass()
-            throws ClassNotFoundException;
 
     /**
      * Return the URL from where static files, e.g. the widgetset and the theme,
@@ -1385,7 +1356,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             throw new SessionExpiredException();
         }
 
-        WebApplicationContext context = getApplicationContext(session);
+        ServletApplicationContext context = getApplicationContext(session);
 
         // Gets application list for the session.
         final Collection<Application> applications = context.getApplications();
@@ -1491,7 +1462,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
         application.close();
         if (session != null) {
-            WebApplicationContext context = getApplicationContext(session);
+            ServletApplicationContext context = getApplicationContext(session);
             context.removeApplication(application);
         }
     }
@@ -1506,13 +1477,14 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      *            the HTTP session.
      * @return the application context for HttpSession.
      */
-    protected WebApplicationContext getApplicationContext(HttpSession session) {
+    protected ServletApplicationContext getApplicationContext(
+            HttpSession session) {
         /*
          * TODO the ApplicationContext.getApplicationContext() should be removed
          * and logic moved here. Now overriding context type is possible, but
          * the whole creation logic should be here. MT 1101
          */
-        return WebApplicationContext.getApplicationContext(session);
+        return ServletApplicationContext.getApplicationContext(session);
     }
 
     public class RequestError implements Terminal.ErrorEvent, Serializable {
@@ -1535,11 +1507,11 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * mananger implementation.
      * 
      * @deprecated Instead of overriding this method, override
-     *             {@link WebApplicationContext} implementation via
-     *             {@link AbstractApplicationServlet#getApplicationContext(HttpSession)}
+     *             {@link ServletApplicationContext} implementation via
+     *             {@link VaadinServlet#getApplicationContext(HttpSession)}
      *             method and in that customized implementation return your
      *             CommunicationManager in
-     *             {@link WebApplicationContext#getApplicationManager(Application, AbstractApplicationServlet)}
+     *             {@link ServletApplicationContext#getApplicationManager(Application, VaadinServlet)}
      *             method.
      * 
      * @param application
@@ -1587,6 +1559,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     }
 
     private static final Logger getLogger() {
-        return Logger.getLogger(AbstractApplicationServlet.class.getName());
+        return Logger.getLogger(VaadinServlet.class.getName());
     }
 }

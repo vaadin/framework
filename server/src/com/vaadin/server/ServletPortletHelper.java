@@ -24,6 +24,10 @@ import com.vaadin.ui.UI;
 
 class ServletPortletHelper implements Serializable {
     public static final String UPLOAD_URL_PREFIX = "APP/UPLOAD/";
+    /**
+     * The default SystemMessages (read-only).
+     */
+    static final SystemMessages DEFAULT_SYSTEM_MESSAGES = new SystemMessages();
 
     public static class ApplicationClassException extends Exception {
 

@@ -48,8 +48,8 @@ import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterFactory;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
 import com.vaadin.event.EventRouter;
-import com.vaadin.server.AbstractApplicationServlet;
 import com.vaadin.server.AbstractErrorMessage;
+import com.vaadin.server.ApplicationContext;
 import com.vaadin.server.BootstrapFragmentResponse;
 import com.vaadin.server.BootstrapListener;
 import com.vaadin.server.BootstrapPageResponse;
@@ -60,14 +60,14 @@ import com.vaadin.server.CombinedRequest;
 import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.GlobalResourceHandler;
 import com.vaadin.server.RequestHandler;
+import com.vaadin.server.ServletApplicationContext;
 import com.vaadin.server.Terminal;
 import com.vaadin.server.UIProvider;
+import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VariableOwner;
-import com.vaadin.server.WebApplicationContext;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.server.WrappedRequest.BrowserDetails;
 import com.vaadin.server.WrappedResponse;
-import com.vaadin.service.ApplicationContext;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.AbstractComponent;
@@ -463,12 +463,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
     private String logoutURL = null;
 
     /**
-     * The default SystemMessages (read-only). Change by overriding
-     * getSystemMessages() and returning CustomizedSystemMessages
-     */
-    private static final SystemMessages DEFAULT_SYSTEM_MESSAGES = new SystemMessages();
-
-    /**
      * Application wide error handler which is used by default if an error is
      * left unhandled.
      */
@@ -792,25 +786,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
     }
 
     /**
-     * Gets the SystemMessages for this application. SystemMessages are used to
-     * notify the user of various critical situations that can occur, such as
-     * session expiration, client/server out of sync, and internal server error.
-     * 
-     * You can customize the messages by "overriding" this method and returning
-     * {@link CustomizedSystemMessages}. To "override" this method, re-implement
-     * this method in your application (the class that extends
-     * {@link Application}). Even though overriding static methods is not
-     * possible in Java, Vaadin selects to call the static method from the
-     * subclass instead of the original {@link #getSystemMessages()} if such a
-     * method exists.
-     * 
-     * @return the SystemMessages for this application
-     */
-    public static SystemMessages getSystemMessages() {
-        return DEFAULT_SYSTEM_MESSAGES;
-    }
-
-    /**
      * <p>
      * Invoked by the terminal on any exception that occurs in application and
      * is thrown by the <code>setVariable</code> to the terminal. The default
@@ -867,8 +842,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * </p>
      * <p>
      * By default, when you are deploying your application to a servlet
-     * container, the implementation class is {@link WebApplicationContext} -
-     * you can safely cast to this class and use the methods from there. When
+     * container, the implementation class is {@link ServletApplicationContext}
+     * - you can safely cast to this class and use the methods from there. When
      * you are deploying your application as a portlet, context implementation
      * is {@link PortletApplicationContext}.
      * </p>
@@ -877,17 +852,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     public ApplicationContext getContext() {
         return context;
-    }
-
-    /**
-     * Override this method to return correct version number of your
-     * Application. Version information is delivered for example to Testing
-     * Tools test results. By default this returns a string "NONVERSIONED".
-     * 
-     * @return version string
-     */
-    public String getVersion() {
-        return "NONVERSIONED";
     }
 
     /**
@@ -1764,7 +1728,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * Handles a request by passing it to each registered {@link RequestHandler}
      * in turn until one produces a response. This method is used for requests
      * that have not been handled by any specific functionality in the terminal
-     * implementation (e.g. {@link AbstractApplicationServlet}).
+     * implementation (e.g. {@link VaadinServlet}).
      * <p>
      * The request handlers are invoked in the revere order in which they were
      * added to the application until a response has been produced. This means

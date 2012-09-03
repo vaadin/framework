@@ -18,7 +18,7 @@ package com.vaadin.data;
 
 import java.io.Serializable;
 
-import com.vaadin.server.AbstractApplicationServlet;
+import com.vaadin.server.VaadinServlet;
 
 /**
  * Interface that implements a method for validating if an {@link Object} is
@@ -144,8 +144,7 @@ public interface Validator extends Serializable {
          * Note that this API may change in future versions.
          */
         public String getHtmlMessage() {
-            return AbstractApplicationServlet
-                    .safeEscapeForHtml(getLocalizedMessage());
+            return VaadinServlet.safeEscapeForHtml(getLocalizedMessage());
         }
 
         /**

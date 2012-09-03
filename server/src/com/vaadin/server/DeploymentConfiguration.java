@@ -23,8 +23,6 @@ import java.util.Properties;
 import javax.portlet.PortletContext;
 import javax.servlet.ServletContext;
 
-import com.vaadin.service.ApplicationContext;
-
 /**
  * Provide deployment specific settings that are required outside terminal
  * specific code.
@@ -183,4 +181,11 @@ public interface DeploymentConfiguration extends Serializable {
      *         indefinitely.
      */
     public boolean isIdleUICleanupEnabled();
+
+    /**
+     * Gets the system messages object
+     * 
+     * @return the system messages object
+     */
+    public SystemMessages getSystemMessages();
 }

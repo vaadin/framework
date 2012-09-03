@@ -37,7 +37,7 @@ import com.vaadin.Application;
  * @since 3.1
  */
 @SuppressWarnings("serial")
-public class WebApplicationContext extends AbstractWebApplicationContext {
+public class ServletApplicationContext extends ApplicationContext {
 
     protected transient HttpSession session;
     private transient boolean reinitializingSession = false;
@@ -51,7 +51,7 @@ public class WebApplicationContext extends AbstractWebApplicationContext {
      * Creates a new Web Application Context.
      * 
      */
-    protected WebApplicationContext() {
+    protected ServletApplicationContext() {
 
     }
 
@@ -119,11 +119,11 @@ public class WebApplicationContext extends AbstractWebApplicationContext {
     /**
      * Gets the application context base directory.
      * 
-     * @see com.vaadin.service.ApplicationContext#getBaseDirectory()
+     * @see com.vaadin.server.ApplicationContext#getBaseDirectory()
      */
     @Override
     public File getBaseDirectory() {
-        final String realPath = ApplicationServlet.getResourcePath(
+        final String realPath = VaadinServlet.getResourcePath(
                 session.getServletContext(), "/");
         if (realPath == null) {
             return null;
@@ -147,13 +147,13 @@ public class WebApplicationContext extends AbstractWebApplicationContext {
      *            the HTTP session.
      * @return the application context for HttpSession.
      */
-    static public WebApplicationContext getApplicationContext(
+    static public ServletApplicationContext getApplicationContext(
             HttpSession session) {
-        WebApplicationContext cx = (WebApplicationContext) session
-                .getAttribute(WebApplicationContext.class.getName());
+        ServletApplicationContext cx = (ServletApplicationContext) session
+                .getAttribute(ServletApplicationContext.class.getName());
         if (cx == null) {
-            cx = new WebApplicationContext();
-            session.setAttribute(WebApplicationContext.class.getName(), cx);
+            cx = new ServletApplicationContext();
+            session.setAttribute(ServletApplicationContext.class.getName(), cx);
         }
         if (cx.session == null) {
             cx.session = session;
@@ -175,7 +175,7 @@ public class WebApplicationContext extends AbstractWebApplicationContext {
      * @return CommunicationManager
      */
     public CommunicationManager getApplicationManager(Application application,
-            AbstractApplicationServlet servlet) {
+            VaadinServlet servlet) {
         CommunicationManager mgr = (CommunicationManager) applicationToAjaxAppMgrMap
                 .get(application);
 

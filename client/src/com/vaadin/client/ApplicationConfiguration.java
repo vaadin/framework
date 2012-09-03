@@ -146,23 +146,11 @@ public class ApplicationConfiguration implements EntryPoint {
          * 
          * @return a string with the version
          * 
-         * @see com.vaadin.server.AbstractApplicationServlet#VERSION
+         * @see com.vaadin.server.VaadinServlet#VERSION
          */
         private native String getVaadinVersion()
         /*-{
             return this.getConfig("versionInfo").vaadinVersion;
-        }-*/;
-
-        /**
-         * Gets the version of the application running on the server.
-         * 
-         * @return a string with the application version
-         * 
-         * @see com.vaadin.Application#getVersion()
-         */
-        private native String getApplicationVersion()
-        /*-{
-            return this.getConfig("versionInfo").applicationVersion;
         }-*/;
 
         private native String getUIDL()
@@ -391,10 +379,6 @@ public class ApplicationConfiguration implements EntryPoint {
 
     public String getServletVersion() {
         return getJsoConfiguration(id).getVaadinVersion();
-    }
-
-    public String getApplicationVersion() {
-        return getJsoConfiguration(id).getApplicationVersion();
     }
 
     public Class<? extends ServerConnector> getConnectorClassByEncodedTag(
