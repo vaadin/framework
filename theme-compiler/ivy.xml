@@ -9,7 +9,7 @@
     <configurations>
         <conf name="build" />
         <conf name="build-provided" />
-        <conf name="ide" />
+        <conf name="ide" visibility="private"/>
         <conf name="tests" />
     </configurations>
     <publications>
@@ -18,6 +18,12 @@
         <artifact type="javadoc" ext="jar" />
     </publications>
     <dependencies defaultconf="*->default">
+        <!-- LIBRARY DEPENDENCIES (compile time) -->
+        <!-- Project modules -->
+        <dependency org="com.vaadin" name="vaadin-shared"
+            rev="${vaadin.version}" conf="build,tests" />
+
+
         <dependency org="org.w3c.css" name="sac" rev="1.3" />
         <dependency org="milyn" name="flute" rev="1.3" conf="*->default" />
         <dependency org="javax.servlet" name="servlet-api"
@@ -30,6 +36,8 @@
             conf="tests -> default" />
         <dependency org="net.sourceforge.cssparser" name="cssparser"
             rev="0.9.5" conf="tests,ide->default" />
+        <dependency org="commons-cli" name="commons-cli" rev="1.2"
+            conf="build,ide -> default" />
     </dependencies>
 
 </ivy-module>

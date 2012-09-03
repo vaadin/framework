@@ -9,8 +9,8 @@
     <configurations>
         <conf name="build" />
         <conf name="build-provided" />
-        <conf name="ide" />
-        <conf name="tests" />
+        <conf name="ide" visibility="private"/>
+        <conf name="tests" visibility="private"/>
     </configurations>
     <publications>
         <artifact></artifact>
@@ -38,8 +38,6 @@
         <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->
         <dependency org="com.vaadin" name="vaadin-shared"
-            rev="${vaadin.version}" conf="build,tests" />
-        <dependency org="com.vaadin" name="vaadin-buildhelpers"
             rev="${vaadin.version}" conf="build,tests" />
 
         <!-- Jsoup for BootstrapHandler -->

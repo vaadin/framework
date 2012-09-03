@@ -28,8 +28,8 @@
 		<property name="extraParams" value="" />
 		<property name="module.output.dir" location="${result.dir}/VAADIN/widgetsets" />
 
-		<ivy:resolve resolveid="common" conf="build" />
-		<ivy:cachepath pathid="classpath.compile.widgetset" conf="build" />
+		<ivy:resolve resolveid="common" conf="compile-module" />
+		<ivy:cachepath pathid="classpath.compile.widgetset" conf="compile-module" />
 
 		<echo>Compiling ${module} to ${module.output.dir}</echo>
 		<mkdir dir="${module.output.dir}" />
@@ -72,29 +72,36 @@
 		<echo>Compiled ${module}</echo>
 	</target>
 
-
 	<target name="jar" depends="default-widgetset">
+		<antcall target="common.pom.xml">
+		</antcall>
 		<property name="result.jar" location="${result.dir}/lib/${module.name}-${vaadin.version}.jar" />
-		<property name="module.output.dir" location="${result.dir}/VAADIN/widgetsets" />
 
 		<jar file="${result.jar}" compress="true">
-			<fileset dir="${module.output.dir}">
+			<fileset dir="${result.dir}">
+				<include name="VAADIN/widgetsets/**" />
+				<include name="pom.xml" />
+				<exclude name="VAADIN/widgetsets/WEB-INF"/>
 			</fileset>
 			<fileset refid="common.files.for.all.jars" />
 		</jar>
 	</target>
 
 	<target name="publish-local" depends="jar">
-		<antcall target="common.publish-local" />
+		<antcall target="common.publish-local">
+			<param name="conf" value="build" />
+		</antcall>
+	</ivy:publish>
+-->
 	</target>
 
-	<target name="clean">
-		<antcall target="common.clean" />
-	</target>
+<target name="clean">
+	<antcall target="common.clean" />
+</target>
 
-	<target name="tests">
-		<!--<antcall target="common.tests.run" />-->
-		<echo>WHAT? No tests for ${module.name}!</echo>
-	</target>
+<target name="tests">
+	<!--<antcall target="common.tests.run" />-->
+	<echo>WHAT? No tests for ${module.name}!</echo>
+</target>
 
 </project>

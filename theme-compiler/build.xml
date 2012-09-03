@@ -13,7 +13,7 @@
 	<path id="classpath.compile.custom" />
 	<path id="classpath.tests.custom" />
 
-	<property name="classes.exclude" value="com/vaadin/buildhelpers/**" />
+	<!--<property name="classes.exclude" value="com/vaadin/buildhelpers/**" />-->
 
 	<target name="jar">
 		<antcall target="common.jar">

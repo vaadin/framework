@@ -21,7 +21,9 @@
 		<fail unless="result.dir" message="No result.dir parameter given" />
 		<property name="ivy.xml" location="${result.dir}/../ivy.xml" />
 		<property name="pom.xml" location="${result.dir}/pom.xml" />
-		<ivy:makepom templatefile="${vaadin.basedir}/pom-template.xml" ivyfile="${ivy.xml}" pomfile="${pom.xml}" conf="build, build-provided">
+		<property name="conf" value="build, build-provided" />
+		
+		<ivy:makepom templatefile="${vaadin.basedir}/pom-template.xml" ivyfile="${ivy.xml}" pomfile="${pom.xml}" conf="${conf}">
 			<mapping conf="build" scope="compile" />
 			<mapping conf="build-provided" scope="provided" />
 		</ivy:makepom>
@@ -201,9 +203,10 @@
 
 	<target name="publish-local" description="Publishes the given module to the local repository">
 		<fail unless="result.dir" message="No result.dir parameter given" />
+		<property name="conf" value="*(public)" />
 
 		<ivy:resolve />
-		<ivy:publish resolver="build-temp" overwrite="true" forcedeliver="true">
+		<ivy:publish conf="${conf}" resolver="build-temp" overwrite="true" forcedeliver="true">
 			<!--			<artifacts pattern="${result.dir}/[artifact]-[revision].[ext]" />-->
 			<artifacts pattern="${result.dir}/lib/[artifact]-[revision](-[classifier]).[ext]" />
 

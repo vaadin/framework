@@ -8,19 +8,20 @@
 
     <configurations>
         <conf name="build" />
+        <conf name="compile-module" visibility="private" />
     </configurations>
     <publications>
         <artifact type="jar"></artifact>
     </publications>
-    <dependencies defaultconfmapping="*->build">
+    <dependencies>
         <dependency org="com.vaadin" name="vaadin-server"
-            rev="${vaadin.version}" />
+            rev="${vaadin.version}" conf="compile-module-> build" />
         <dependency org="com.vaadin" name="vaadin-client"
-            rev="${vaadin.version}" />
+            rev="${vaadin.version}" conf="compile-module-> build" />
         <dependency org="com.vaadin" name="vaadin-client-compiler"
-            rev="${vaadin.version}" />
+            rev="${vaadin.version}" conf="compile-module-> build" />
         <dependency org="javax.validation" name="validation-api"
-            rev="1.0.0.GA" conf="build-> default,sources" />
+            rev="1.0.0.GA" conf="compile-module-> default,sources" />
     </dependencies>
 
 </ivy-module>

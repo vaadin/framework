@@ -16,13 +16,14 @@
 
 	<union id="jar.includes">
 		<union refid="server.gwt.includes" />
-		<fileset dir="${vaadin.basedir}">
-			<include name="WebContent/VAADIN/vaadinBootstrap.js" />
+		<fileset dir="${vaadin.basedir}/WebContent">
+			<include name="VAADIN/vaadinBootstrap.js" />
 		</fileset>
 	</union>
 
 	<target name="jar">
 		<antcall target="common.jar">
+			<param name="conf" value="build" />
 			<reference torefid="extra.jar.includes" refid="jar.includes" />
 		</antcall>
 	</target>
@@ -36,7 +37,7 @@
 	</target>
 
 	<target name="tests">
-		<antcall target="common.tests.run"/>
+		<antcall target="common.tests.run" />
 	</target>
 
 

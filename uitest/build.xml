@@ -17,8 +17,8 @@
 	<target name="dependencies">
 		<!-- This is copied from common.xml to be able to add server.tests.source to the source path -->
 
-		<ivy:resolve resolveid="common" conf="build, build-provided" />
-		<ivy:cachepath pathid="classpath.compile.dependencies" conf="build, build-provided" />
+		<ivy:resolve resolveid="common" conf="build" />
+		<ivy:cachepath pathid="classpath.compile.dependencies" conf="build" />
 	</target>
 
 	<target name="compile" description="Compiles the module" depends="dependencies">
@@ -55,10 +55,14 @@
 		<property name="WebContent.dir" location="${vaadin.basedir}/WebContent" />
 		<property name="deps.dir" location="${result.dir}/deps" />
 
+		<ivy:resolve resolveid="common" conf="build" />
+		<ivy:cachepath pathid="classpath.runtime.dependencies" conf="build" />
 
+		<delete dir="${deps.dir}" />
 		<mkdir dir="${deps.dir}" />
+
 		<copy todir="${deps.dir}" flatten="true">
-			<path refid="classpath.compile.dependencies" />
+			<path refid="classpath.runtime.dependencies" />
 		</copy>
 
 		<war destfile="${result.war}" duplicate="fail" index="true">

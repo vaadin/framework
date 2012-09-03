@@ -27,8 +27,9 @@
 		<subant buildpathref="build-path" target="clean">
 		</subant>
 		<delete dir="result" />
-		<!-- Clean IVY cache (~/.ivy2) so no old artifacts are fetched from there -->
-		<ivy:cleancache />
+		<!-- Clean IVY cache (~/.ivy2) so no old artifacts are fetched from there (leave everything but Vaadin artifacts) -->
+		<delete dir="${ivy.cache.dir}/com.vaadin">
+		</delete>
 
 	</target>
 

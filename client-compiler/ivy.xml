@@ -9,7 +9,7 @@
     <configurations>
         <conf name="build" />
         <conf name="build-provided" />
-        <conf name="ide" />
+        <conf name="ide" visibility="private"/>
     </configurations>
     <publications>
         <artifact></artifact>

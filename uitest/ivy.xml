@@ -8,8 +8,7 @@
 
     <configurations>
         <conf name="build" />
-        <conf name="build-provided" />
-        <conf name="ide" />
+        <conf name="ide" visibility="private" />
     </configurations>
     <publications>
         <artifact type="war" />
@@ -17,28 +16,26 @@
     <dependencies defaultconf="build" defaultconfmapping="build,ide->default">
         <!-- API DEPENDENCIES -->
         <dependency org="javax.portlet" name="portlet-api"
-            rev="2.0" conf="build-provided,ide -> default" />
+            rev="2.0" conf="ide -> default" />
 
         <dependency org="javax.validation" name="validation-api"
-            rev="1.0.0.GA" conf="build-provided,ide -> default" />
+            rev="1.0.0.GA" conf="ide -> default" />
         <!--Servlet API version 2.5 -->
         <dependency org="javax.servlet" name="servlet-api"
-            rev="2.5" conf="build-provided,ide -> default" />
+            rev="2.5" conf="ide -> default" />
         <!-- Google App Engine -->
         <dependency org="com.google.appengine" name="appengine-api-1.0-sdk"
-            rev="1.2.1" conf="build-provided,ide -> default" />
+            rev="1.2.1" conf="ide -> default" />
 
         <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->
         <dependency org="com.vaadin" name="vaadin-server"
             rev="${vaadin.version}" conf="build->build"></dependency>
-        <dependency org="com.vaadin" name="vaadin-client"
+        <dependency org="com.vaadin" name="vaadin-client-compiled"
             rev="${vaadin.version}" conf="build->build"></dependency>
-<!--          <dependency org="com.vaadin" name="vaadin-client-compiled"
+        <dependency org="com.vaadin" name="vaadin-themes-compiled"
             rev="${vaadin.version}" conf="build->build"></dependency>
-        <dependency org="com.vaadin" name="vaadin-theme-compiled"
-            rev="${vaadin.version}" conf="build->build"></dependency>
--->
+
         <dependency org="org.mortbay.jetty" name="jetty" rev="6.1.11"
             conf="build,ide->default" />
         <dependency org="org.mortbay.jetty" name="jetty-util"

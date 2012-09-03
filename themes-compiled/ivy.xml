@@ -3,19 +3,19 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
 
-    <info organisation="com.vaadin" module="vaadin-shared"
+    <info organisation="com.vaadin" module="vaadin-themes-compiled"
         revision="${vaadin.version}" />
 
     <configurations>
         <conf name="build" />
-        <conf name="build-provided" />
-        <conf name="ide" visibility="private"/>
-        <conf name="tests" />
+        <conf name="compile-theme" visibility="private" />
     </configurations>
     <publications>
-        <artifact></artifact>
+        <artifact type="jar"></artifact>
     </publications>
     <dependencies>
+        <dependency org="com.vaadin" name="vaadin-theme-compiler"
+            rev="${vaadin.version}" conf="compile-theme->build" />
     </dependencies>
 
 </ivy-module>
