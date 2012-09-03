@@ -401,7 +401,6 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         JSONObject versionInfo = new JSONObject();
         versionInfo.put("vaadinVersion", Version.getFullVersion());
-        versionInfo.put("applicationVersion", application.getVersion());
         appConfig.put("versionInfo", versionInfo);
 
         appConfig.put("widgetset", context.getWidgetsetName());

@@ -61,10 +61,10 @@ import com.vaadin.server.CombinedRequest;
 import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.GlobalResourceHandler;
 import com.vaadin.server.RequestHandler;
+import com.vaadin.server.ServletApplicationContext;
 import com.vaadin.server.Terminal;
 import com.vaadin.server.UIProvider;
 import com.vaadin.server.VariableOwner;
-import com.vaadin.server.ServletApplicationContext;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.server.WrappedRequest.BrowserDetails;
 import com.vaadin.server.WrappedResponse;
@@ -867,8 +867,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * </p>
      * <p>
      * By default, when you are deploying your application to a servlet
-     * container, the implementation class is {@link ServletApplicationContext} -
-     * you can safely cast to this class and use the methods from there. When
+     * container, the implementation class is {@link ServletApplicationContext}
+     * - you can safely cast to this class and use the methods from there. When
      * you are deploying your application as a portlet, context implementation
      * is {@link PortletApplicationContext}.
      * </p>
@@ -877,17 +877,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     public ApplicationContext getContext() {
         return context;
-    }
-
-    /**
-     * Override this method to return correct version number of your
-     * Application. Version information is delivered for example to Testing
-     * Tools test results. By default this returns a string "NONVERSIONED".
-     * 
-     * @return version string
-     */
-    public String getVersion() {
-        return "NONVERSIONED";
     }
 
     /**
