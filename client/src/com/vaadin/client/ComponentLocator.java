@@ -519,7 +519,8 @@ public class ComponentLocator {
                  */
                 if ((w instanceof VMeasuringOrderedLayout
                         || w instanceof VBoxLayout || w instanceof VGridLayout)
-                        && "ChildComponentContainer".equals(widgetClassName)
+                        && ("ChildComponentContainer".equals(widgetClassName) || "VBoxLayout$Slot"
+                                .equals(widgetClassName))
                         && i + 1 < parts.length) {
 
                     HasWidgets layout = (HasWidgets) w;
