@@ -66,6 +66,7 @@
 		</copy>
 
 		<war destfile="${result.war}" duplicate="fail" index="true">
+			<manifest><attribute name="Class-Path" value="WEB-INF/classes"/></manifest>
 			<fileset refid="common.files.for.all.jars" />
 			<fileset dir="${WebContent.dir}">
 				<include name="statictestfiles/**" />

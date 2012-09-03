@@ -68,7 +68,7 @@
 		</fileset>
 	</union>
 
-	<union id="client-compiled.gwt.includes">
+	<union id="client-compiled-cache.gwt.includes">
 		<!-- Precompiled GWT modules (.gwtar file) -->
 		<fileset dir="${gwt.user.jar.files}">
 			<exclude name="META-INF/**" />

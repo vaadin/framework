@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="vaadin-client-compiler" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="vaadin-client-compiled" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant">
 	<description>
 		Compiled (JS+HTML) version of client side 
 	</description>
@@ -12,6 +12,17 @@
 	<!-- global properties -->
 	<property name="module.name" value="vaadin-client-compiled" />
 	<property name="result.dir" value="result" />
+	<property name="gwtar.dir" location="${result.dir}/gwtar" />
+	<property name="work.dir" location="${result.dir}/work" />
+	<property name="module.output.dir" location="${result.dir}/VAADIN/widgetsets" />
+	<property name="compiled.jar" location="${result.dir}/lib/${module.name}-${vaadin.version}.jar" />
+	<property name="compiled-cache.jar" location="${result.dir}/lib/${module.name}-cache-${vaadin.version}.jar" />
+
+	<target name="default-widgetset-cache">
+		<antcall target="compile-module-cache">
+			<param name="module" value="com.vaadin.DefaultWidgetSet" />
+		</antcall>
+	</target>
 
 	<target name="default-widgetset">
 		<antcall target="compile-module">
@@ -20,40 +31,50 @@
 	</target>
 
 
+	<target name="compile-module-cache">
+		<fail unless="module" message="You must give the module to compile in the 'module' parameter" />
+		<ivy:resolve resolveid="common" conf="compile-module" />
+		<ivy:cachepath pathid="classpath.compile.widgetset" conf="compile-module" />
+		<echo>Creating gwtar files for ${module} in ${gwtar.dir}</echo>
+
+		<!-- Produce gwtar files for the separate JAR -->
+		<java classname="com.google.gwt.dev.CompileModule" classpathref="classpath.compile.widgetset" failonerror="yes" fork="yes" maxmemory="512m">
+			<arg value="-out" />
+			<arg value="${gwtar.dir}" />
+			<arg value="-strict" />
+			<arg value="${module}" />
+
+			<jvmarg value="-Xss8M" />
+			<jvmarg value="-XX:MaxPermSize=256M" />
+			<jvmarg value="-Djava.awt.headless=true" />
+		</java>
+	</target>
+
 	<target name="compile-module">
 		<fail unless="module" message="You must give the module to compile in the 'module' parameter" />
-		<property name="result.dir" location="result" />
 		<property name="style" value="OBF" />
 		<property name="localWorkers" value="2" />
 		<property name="extraParams" value="" />
-		<property name="module.output.dir" location="${result.dir}/VAADIN/widgetsets" />
 
 		<ivy:resolve resolveid="common" conf="compile-module" />
 		<ivy:cachepath pathid="classpath.compile.widgetset" conf="compile-module" />
 
-		<echo>Compiling ${module} to ${module.output.dir}</echo>
 		<mkdir dir="${module.output.dir}" />
 
-		<!-- Disabled to reduce JAR size: precompile the widgetset to a .gwtar file -->
-		<!--
-	        <java classname="com.google.gwt.dev.CompileModule" classpathref="compile.classpath.widgetset" failonerror="yes" fork="yes" maxmemory="512m">
-	            <arg value="-out" />
-	            <arg value="${result-precompiled-widgetsets}" />
-	            <arg value="-strict" />
-	            <arg value="${widgetset}" />
+		<echo>Compiling ${module} to ${module.output.dir}</echo>
 
-	            <jvmarg value="-Xss8M"/>
-	            <jvmarg value="-XX:MaxPermSize=256M"/>  
-	            <jvmarg value="-Djava.awt.headless=true"/>
-	        </java>
-	        -->
-
-		<!-- compile the widgetset -->
+		<!-- compile the module -->
 		<java classname="com.google.gwt.dev.Compiler" classpathref="classpath.compile.widgetset" failonerror="yes" fork="yes" maxmemory="512m">
+			<classpath location="${compiled-cache.jar}" />
+			<arg value="-workDir" />
+			<arg value="${work.dir}" />
+			<arg value="-logLevel" />
+			<arg value="TRACE" />
 			<arg value="-war" />
 			<arg value="${module.output.dir}" />
 			<arg value="-style" />
 			<arg value="${style}" />
+
 			<arg value="-localWorkers" />
 			<arg value="${localWorkers}" />
 			<arg value="-strict" />
@@ -67,41 +88,47 @@
 			<jvmarg value="-Djava.awt.headless=true" />
 		</java>
 
-		<!--<antcall target="remove-gwt-tmp" />-->
-
-		<echo>Compiled ${module}</echo>
 	</target>
 
-	<target name="jar" depends="default-widgetset">
-		<antcall target="common.pom.xml">
-		</antcall>
-		<property name="result.jar" location="${result.dir}/lib/${module.name}-${vaadin.version}.jar" />
-
-		<jar file="${result.jar}" compress="true">
-			<fileset dir="${result.dir}">
-				<include name="VAADIN/widgetsets/**" />
+	<target name="client-compiled-cache.jar" depends="default-widgetset-cache">
+		<jar file="${compiled-cache.jar}" compress="true">
+			<fileset dir="${gwtar.dir}">
+				<include name="**/*.gwtar" />
 				<include name="pom.xml" />
-				<exclude name="VAADIN/widgetsets/WEB-INF"/>
 			</fileset>
+			<union refid="client-compiled-cache.gwt.includes" />
 			<fileset refid="common.files.for.all.jars" />
 		</jar>
 	</target>
 
-	<target name="publish-local" depends="jar">
+	<target name="client-compiled.jar" depends="default-widgetset">
+		<antcall target="common.pom.xml">
+		</antcall>
+
+		<jar file="${compiled.jar}" compress="true">
+			<fileset dir="${result.dir}">
+				<include name="VAADIN/widgetsets/com.vaadin*/**" />
+				<include name="pom.xml" />
+			</fileset>
+			<fileset refid="common.files.for.all.jars" />
+		</jar>
+
+
+	</target>
+
+	<target name="publish-local" depends="client-compiled.jar, client-compiled-cache.jar">
 		<antcall target="common.publish-local">
 			<param name="conf" value="build" />
 		</antcall>
-	</ivy:publish>
--->
 	</target>
 
-<target name="clean">
-	<antcall target="common.clean" />
-</target>
+	<target name="clean">
+		<antcall target="common.clean" />
+	</target>
 
-<target name="tests">
-	<!--<antcall target="common.tests.run" />-->
-	<echo>WHAT? No tests for ${module.name}!</echo>
-</target>
+	<target name="tests">
+		<!--<antcall target="common.tests.run" />-->
+		<echo>WHAT? No tests for ${module.name}!</echo>
+	</target>
 
 </project>
