@@ -54,7 +54,7 @@ public class SuperDevMode {
         VConsole.log("Recompiling widgetset using<br/>" + serverUrl
                 + "<br/>and then reloading in super dev mode");
         VNotification n = new VNotification();
-        n.show("<b>Recompiling widgetset, this should not take too long</b>",
+        n.show("<b>Recompiling widgetset, please wait</b>",
                 VNotification.CENTERED, VNotification.STYLE_SYSTEM);
 
         JsonpRequestBuilder b = new JsonpRequestBuilder();
