@@ -1484,7 +1484,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             themeName = requestThemeName;
         }
         if (themeName == null) {
-            themeName = AbstractApplicationServlet.getDefaultTheme();
+            themeName = VaadinServlet.getDefaultTheme();
         }
         return themeName;
     }
@@ -1502,7 +1502,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
     public boolean isXSRFEnabled(Application application) {
         return !"true"
                 .equals(application
-                        .getProperty(AbstractApplicationServlet.SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION));
+                        .getProperty(VaadinServlet.SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION));
     }
 
     /**

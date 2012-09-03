@@ -47,31 +47,18 @@ import javax.servlet.http.HttpSession;
 import com.vaadin.Application;
 import com.vaadin.Application.ApplicationStartEvent;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
+import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.UI;
 
-/**
- * Abstract implementation of the ApplicationServlet which handles all
- * communication between the client and the server.
- * 
- * It is possible to extend this class to provide own functionality but in most
- * cases this is unnecessary.
- * 
- * 
- * @author Vaadin Ltd.
- * @since 6.0
- */
-
 @SuppressWarnings("serial")
-public abstract class AbstractApplicationServlet extends HttpServlet implements
-        Constants {
+public class VaadinServlet extends HttpServlet implements Constants {
 
     private static class AbstractApplicationServletWrapper implements Callback {
 
-        private final AbstractApplicationServlet servlet;
+        private final VaadinServlet servlet;
 
-        public AbstractApplicationServletWrapper(
-                AbstractApplicationServlet servlet) {
+        public AbstractApplicationServletWrapper(VaadinServlet servlet) {
             this.servlet = servlet;
         }
 
@@ -136,21 +123,21 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
             public String getStaticFileLocation(WrappedRequest request) {
                 HttpServletRequest servletRequest = WrappedHttpServletRequest
                         .cast(request);
-                return AbstractApplicationServlet.this
+                return VaadinServlet.this
                         .getStaticFilesLocation(servletRequest);
             }
 
             @Override
             public String getConfiguredWidgetset(WrappedRequest request) {
                 return getApplicationOrSystemProperty(
-                        AbstractApplicationServlet.PARAMETER_WIDGETSET,
-                        AbstractApplicationServlet.DEFAULT_WIDGETSET);
+                        VaadinServlet.PARAMETER_WIDGETSET,
+                        VaadinServlet.DEFAULT_WIDGETSET);
             }
 
             @Override
             public String getConfiguredTheme(WrappedRequest request) {
                 // Use the default
-                return AbstractApplicationServlet.getDefaultTheme();
+                return VaadinServlet.getDefaultTheme();
             }
 
             @Override
@@ -165,7 +152,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
 
             @Override
             public SystemMessages getSystemMessages() {
-                return AbstractApplicationServlet.this.getSystemMessages();
+                return VaadinServlet.this.getSystemMessages();
             }
         };
 
@@ -845,8 +832,26 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @return A new Application instance.
      * @throws ServletException
      */
-    protected abstract Application getNewApplication(HttpServletRequest request)
-            throws ServletException;
+    protected Application getNewApplication(HttpServletRequest request)
+            throws ServletException {
+
+        // Creates a new application instance
+        try {
+            Class<? extends Application> applicationClass = ServletPortletHelper
+                    .getApplicationClass(getDeploymentConfiguration());
+
+            final Application application = applicationClass.newInstance();
+            application.addUIProvider(new DefaultUIProvider());
+
+            return application;
+        } catch (final IllegalAccessException e) {
+            throw new ServletException("getNewApplication failed", e);
+        } catch (final InstantiationException e) {
+            throw new ServletException("getNewApplication failed", e);
+        } catch (ApplicationClassException e) {
+            throw new ServletException("getNewApplication failed", e);
+        }
+    }
 
     /**
      * Starts the application if it is not already running.
@@ -858,7 +863,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * @throws MalformedURLException
      */
     private void startApplication(HttpServletRequest request,
-            Application application, ServletApplicationContext webApplicationContext)
+            Application application,
+            ServletApplicationContext webApplicationContext)
             throws ServletException, MalformedURLException {
 
         if (!application.isRunning()) {
@@ -1471,7 +1477,8 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      *            the HTTP session.
      * @return the application context for HttpSession.
      */
-    protected ServletApplicationContext getApplicationContext(HttpSession session) {
+    protected ServletApplicationContext getApplicationContext(
+            HttpSession session) {
         /*
          * TODO the ApplicationContext.getApplicationContext() should be removed
          * and logic moved here. Now overriding context type is possible, but
@@ -1501,10 +1508,10 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
      * 
      * @deprecated Instead of overriding this method, override
      *             {@link ServletApplicationContext} implementation via
-     *             {@link AbstractApplicationServlet#getApplicationContext(HttpSession)}
+     *             {@link VaadinServlet#getApplicationContext(HttpSession)}
      *             method and in that customized implementation return your
      *             CommunicationManager in
-     *             {@link ServletApplicationContext#getApplicationManager(Application, AbstractApplicationServlet)}
+     *             {@link ServletApplicationContext#getApplicationManager(Application, VaadinServlet)}
      *             method.
      * 
      * @param application
@@ -1552,6 +1559,6 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
     }
 
     private static final Logger getLogger() {
-        return Logger.getLogger(AbstractApplicationServlet.class.getName());
+        return Logger.getLogger(VaadinServlet.class.getName());
     }
 }

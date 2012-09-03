@@ -103,7 +103,7 @@ import com.google.apphosting.api.DeadlineExceededException;
  * possible.
  * </ul>
  */
-public class GAEApplicationServlet extends ApplicationServlet {
+public class GAEVaadinServlet extends VaadinServlet {
 
     // memcache mutex is MUTEX_BASE + sessio id
     private static final String MUTEX_BASE = "_vmutex";
@@ -423,6 +423,6 @@ public class GAEApplicationServlet extends ApplicationServlet {
     }
 
     private static final Logger getLogger() {
-        return Logger.getLogger(GAEApplicationServlet.class.getName());
+        return Logger.getLogger(GAEVaadinServlet.class.getName());
     }
 }

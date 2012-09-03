@@ -25,10 +25,10 @@
 		<servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
 	</servlet>
 
-	<!-- For testing GAE - the deployment script changes this to use GAEApplicationServlet -->
+	<!-- For testing GAE - the deployment script changes this to use GAEVaadinServlet -->
 	<servlet>
 		<servlet-name>IntegrationTest</servlet-name>
-		<servlet-class>com.vaadin.server.ApplicationServlet</servlet-class>
+		<servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
 		<init-param>
 			<param-name>application</param-name>
 			<param-value>com.vaadin.tests.integration.IntegrationTestApplication</param-value>

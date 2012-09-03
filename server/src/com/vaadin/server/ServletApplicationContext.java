@@ -123,7 +123,7 @@ public class ServletApplicationContext extends ApplicationContext {
      */
     @Override
     public File getBaseDirectory() {
-        final String realPath = ApplicationServlet.getResourcePath(
+        final String realPath = VaadinServlet.getResourcePath(
                 session.getServletContext(), "/");
         if (realPath == null) {
             return null;
@@ -175,7 +175,7 @@ public class ServletApplicationContext extends ApplicationContext {
      * @return CommunicationManager
      */
     public CommunicationManager getApplicationManager(Application application,
-            AbstractApplicationServlet servlet) {
+            VaadinServlet servlet) {
         CommunicationManager mgr = (CommunicationManager) applicationToAjaxAppMgrMap
                 .get(application);
 

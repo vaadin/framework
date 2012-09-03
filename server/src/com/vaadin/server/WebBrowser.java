@@ -335,9 +335,8 @@ public class WebBrowser {
     }
 
     /**
-     * For internal use by AbstractApplicationServlet/AbstractApplicationPortlet
-     * only. Updates all properties in the class according to the given
-     * information.
+     * For internal use by VaadinServlet/VaadinPortlet only. Updates all
+     * properties in the class according to the given information.
      * 
      * @param sw
      *            Screen width
@@ -406,9 +405,8 @@ public class WebBrowser {
     }
 
     /**
-     * For internal use by AbstractApplicationServlet/AbstractApplicationPortlet
-     * only. Updates all properties in the class according to the given
-     * information.
+     * For internal use by VaadinServlet/VaadinPortlet only. Updates all
+     * properties in the class according to the given information.
      * 
      * @param request
      *            the wrapped request to read the information from

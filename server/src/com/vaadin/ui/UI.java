@@ -33,7 +33,6 @@ import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
-import com.vaadin.server.AbstractApplicationServlet;
 import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.BrowserWindowResizeEvent;
@@ -41,6 +40,7 @@ import com.vaadin.server.Page.BrowserWindowResizeListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
+import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.server.WrappedRequest.BrowserDetails;
 import com.vaadin.shared.EventId;
@@ -63,7 +63,7 @@ import com.vaadin.tools.ReflectTools;
  * </p>
  * <p>
  * When a new UI instance is needed, typically because the user opens a URL in a
- * browser window which points to {@link AbstractApplicationServlet},
+ * browser window which points to {@link VaadinServlet},
  * {@link Application#getUIForRequest(WrappedRequest)} is invoked to get a UI.
  * That method does by default create a UI according to the
  * {@value Application#UI_PARAMETER} parameter from web.xml.

@@ -109,12 +109,11 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
         String result = null;
         switch (getMode()) {
         case TEXT:
-            result = AbstractApplicationServlet.safeEscapeForHtml(getMessage());
+            result = VaadinServlet.safeEscapeForHtml(getMessage());
             break;
         case PREFORMATTED:
-            result = "<pre>"
-                    + AbstractApplicationServlet
-                            .safeEscapeForHtml(getMessage()) + "</pre>";
+            result = "<pre>" + VaadinServlet.safeEscapeForHtml(getMessage())
+                    + "</pre>";
             break;
         case XHTML:
             result = getMessage();

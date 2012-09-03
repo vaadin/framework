@@ -146,7 +146,7 @@ public class ApplicationConfiguration implements EntryPoint {
          * 
          * @return a string with the version
          * 
-         * @see com.vaadin.server.AbstractApplicationServlet#VERSION
+         * @see com.vaadin.server.VaadinServlet#VERSION
          */
         private native String getVaadinVersion()
         /*-{

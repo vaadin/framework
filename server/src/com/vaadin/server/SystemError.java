@@ -80,8 +80,7 @@ public class SystemError extends AbstractErrorMessage {
         StringBuilder sb = new StringBuilder();
         if (getMessage() != null) {
             sb.append("<h2>");
-            sb.append(AbstractApplicationServlet
-                    .safeEscapeForHtml(getMessage()));
+            sb.append(VaadinServlet.safeEscapeForHtml(getMessage()));
             sb.append("</h2>");
         }
         return sb.toString();

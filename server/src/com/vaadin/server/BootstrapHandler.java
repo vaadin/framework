@@ -277,7 +277,7 @@ public abstract class BootstrapHandler implements RequestHandler {
                     .getConfiguredWidgetset(request);
         }
 
-        widgetset = AbstractApplicationServlet.stripSpecialChars(widgetset);
+        widgetset = VaadinServlet.stripSpecialChars(widgetset);
         return widgetset;
     }
 
@@ -450,7 +450,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         String staticFileLocation = deploymentConfiguration
                 .getStaticFileLocation(request);
         String widgetsetBase = staticFileLocation + "/"
-                + AbstractApplicationServlet.WIDGETSET_DIRECTORY_PATH;
+                + VaadinServlet.WIDGETSET_DIRECTORY_PATH;
         defaults.put("widgetsetBase", widgetsetBase);
 
         if (!application.isProductionMode()) {
@@ -486,8 +486,8 @@ public abstract class BootstrapHandler implements RequestHandler {
         WrappedRequest request = context.getRequest();
         final String staticFilePath = request.getDeploymentConfiguration()
                 .getStaticFileLocation(request);
-        return staticFilePath + "/"
-                + AbstractApplicationServlet.THEME_DIRECTORY_PATH + themeName;
+        return staticFilePath + "/" + VaadinServlet.THEME_DIRECTORY_PATH
+                + themeName;
     }
 
     /**
@@ -517,7 +517,7 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         // XSS preventation, theme names shouldn't contain special chars anyway.
         // The servlet denies them via url parameter.
-        themeName = AbstractApplicationServlet.stripSpecialChars(themeName);
+        themeName = VaadinServlet.stripSpecialChars(themeName);
 
         return themeName;
     }

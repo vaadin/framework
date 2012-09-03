@@ -48,7 +48,6 @@ import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterFactory;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
 import com.vaadin.event.EventRouter;
-import com.vaadin.server.AbstractApplicationServlet;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.ApplicationContext;
 import com.vaadin.server.BootstrapFragmentResponse;
@@ -64,6 +63,7 @@ import com.vaadin.server.RequestHandler;
 import com.vaadin.server.ServletApplicationContext;
 import com.vaadin.server.Terminal;
 import com.vaadin.server.UIProvider;
+import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VariableOwner;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.server.WrappedRequest.BrowserDetails;
@@ -1728,7 +1728,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * Handles a request by passing it to each registered {@link RequestHandler}
      * in turn until one produces a response. This method is used for requests
      * that have not been handled by any specific functionality in the terminal
-     * implementation (e.g. {@link AbstractApplicationServlet}).
+     * implementation (e.g. {@link VaadinServlet}).
      * <p>
      * The request handlers are invoked in the revere order in which they were
      * added to the application until a response has been produced. This means

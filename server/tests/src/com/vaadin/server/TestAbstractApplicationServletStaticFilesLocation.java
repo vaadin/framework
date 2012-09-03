@@ -15,14 +15,11 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import com.vaadin.server.AbstractApplicationServlet;
-import com.vaadin.server.ApplicationServlet;
-
 import junit.framework.TestCase;
 
 public class TestAbstractApplicationServletStaticFilesLocation extends TestCase {
 
-    ApplicationServlet servlet;
+    VaadinServlet servlet;
 
     private Method getStaticFilesLocationMethod;
 
@@ -30,18 +27,16 @@ public class TestAbstractApplicationServletStaticFilesLocation extends TestCase 
     protected void setUp() throws Exception {
         super.setUp();
 
-        servlet = new ApplicationServlet();
+        servlet = new VaadinServlet();
 
         // Workaround to avoid calling init and creating servlet config
-        Field f = AbstractApplicationServlet.class
-                .getDeclaredField("applicationProperties");
+        Field f = VaadinServlet.class.getDeclaredField("applicationProperties");
         f.setAccessible(true);
         f.set(servlet, new Properties());
 
-        getStaticFilesLocationMethod = AbstractApplicationServlet.class
-                .getDeclaredMethod(
-                        "getStaticFilesLocation",
-                        new Class[] { javax.servlet.http.HttpServletRequest.class });
+        getStaticFilesLocationMethod = VaadinServlet.class.getDeclaredMethod(
+                "getStaticFilesLocation",
+                new Class[] { javax.servlet.http.HttpServletRequest.class });
         getStaticFilesLocationMethod.setAccessible(true);
 
     }

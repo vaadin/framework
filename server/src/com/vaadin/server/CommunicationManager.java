@@ -45,7 +45,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
      */
     @Deprecated
     public CommunicationManager(Application application,
-            AbstractApplicationServlet applicationServlet) {
+            VaadinServlet applicationServlet) {
         super(application);
     }
 
@@ -100,7 +100,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
             @Override
             public String getThemeName(BootstrapContext context) {
                 String themeName = context.getRequest().getParameter(
-                        AbstractApplicationServlet.URL_PARAMETER_THEME);
+                        VaadinServlet.URL_PARAMETER_THEME);
                 if (themeName == null) {
                     themeName = super.getThemeName(context);
                 }
@@ -117,7 +117,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
         ServletContext servletContext = context.getHttpSession()
                 .getServletContext();
         return servletContext.getResourceAsStream("/"
-                + AbstractApplicationServlet.THEME_DIRECTORY_PATH + themeName
-                + "/" + resource);
+                + VaadinServlet.THEME_DIRECTORY_PATH + themeName + "/"
+                + resource);
     }
 }
