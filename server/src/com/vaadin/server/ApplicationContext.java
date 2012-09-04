@@ -15,7 +15,6 @@
  */
 package com.vaadin.server;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -147,20 +146,6 @@ public abstract class ApplicationContext implements HttpSessionBindingListener,
     private Logger getLogger() {
         return Logger.getLogger(ApplicationContext.class.getName());
     }
-
-    /**
-     * Returns application context base directory.
-     * 
-     * Typically an application is deployed in a such way that is has an
-     * application directory. For web applications this directory is the root
-     * directory of the web applications. In some cases applications might not
-     * have an application directory (for example web applications running
-     * inside a war).
-     * 
-     * @return The application base directory or null if the application has no
-     *         base directory.
-     */
-    public abstract File getBaseDirectory();
 
     /**
      * Gets the session to which this application context is currently

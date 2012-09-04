@@ -16,6 +16,7 @@
 package com.vaadin.server;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -24,11 +25,13 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.portlet.ActionRequest;
@@ -154,6 +157,29 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         public SystemMessages getSystemMessages() {
             return ServletPortletHelper.DEFAULT_SYSTEM_MESSAGES;
         }
+
+        @Override
+        public File getBaseDirectory() {
+            PortletContext context = getPortlet().getPortletContext();
+            String resultPath = context.getRealPath("/");
+            if (resultPath != null) {
+                return new File(resultPath);
+            } else {
+                try {
+                    final URL url = context.getResource("/");
+                    return new File(url.getFile());
+                } catch (final Exception e) {
+                    // FIXME: Handle exception
+                    getLogger()
+                            .log(Level.INFO,
+                                    "Cannot access base directory, possible security issue "
+                                            + "with Application Server or Servlet Container",
+                                    e);
+                }
+            }
+            return null;
+        }
+
     }
 
     public static class WrappedHttpAndPortletRequest extends

@@ -15,15 +15,11 @@
  */
 package com.vaadin.server;
 
-import java.io.File;
 import java.io.Serializable;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -68,28 +64,6 @@ public class PortletApplicationContext2 extends ApplicationContext {
 
     private final Map<String, String> sharedParameterActionNameMap = new HashMap<String, String>();
     private final Map<String, String> sharedParameterActionValueMap = new HashMap<String, String>();
-
-    @Override
-    public File getBaseDirectory() {
-        PortletSession session = getPortletSession();
-        String resultPath = session.getPortletContext().getRealPath("/");
-        if (resultPath != null) {
-            return new File(resultPath);
-        } else {
-            try {
-                final URL url = session.getPortletContext().getResource("/");
-                return new File(url.getFile());
-            } catch (final Exception e) {
-                // FIXME: Handle exception
-                getLogger()
-                        .log(Level.INFO,
-                                "Cannot access base directory, possible security issue "
-                                        + "with Application Server or Servlet Container",
-                                e);
-            }
-        }
-        return null;
-    }
 
     protected PortletCommunicationManager getApplicationManager(
             Application application) {
@@ -402,9 +376,5 @@ public class PortletApplicationContext2 extends ApplicationContext {
             throw new IllegalStateException(
                     "Portlet mode can only be changed from a portlet request");
         }
-    }
-
-    private Logger getLogger() {
-        return Logger.getLogger(PortletApplicationContext2.class.getName());
     }
 }

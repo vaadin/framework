@@ -20,10 +20,12 @@ import java.io.File;
 
 import com.vaadin.Application;
 import com.vaadin.server.SystemError;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
+import com.vaadin.util.CurrentInstance;
 
 /**
  * Provides sample directory based on application directory. If this fails then
@@ -46,7 +48,8 @@ public class SampleDirectory {
                 + "context base directory failed, "
                 + "possible security constraint with Application "
                 + "Server or Servlet Container.<br />";
-        File file = application.getContext().getBaseDirectory();
+        File file = CurrentInstance.get(WrappedRequest.class)
+                .getDeploymentConfiguration().getBaseDirectory();
         if ((file == null) || (!file.canRead())
                 || (file.getAbsolutePath() == null)) {
             // cannot access example directory, possible security issue with

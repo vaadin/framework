@@ -16,7 +16,6 @@
 
 package com.vaadin.server;
 
-import java.io.File;
 import java.util.Enumeration;
 import java.util.HashMap;
 
@@ -96,21 +95,6 @@ public class ServletApplicationContext extends ApplicationContext {
 
         // Update the "current session" variable
         setSession(new WrappedHttpSession(newSession));
-    }
-
-    /**
-     * Gets the application context base directory.
-     * 
-     * @see com.vaadin.server.ApplicationContext#getBaseDirectory()
-     */
-    @Override
-    public File getBaseDirectory() {
-        final String realPath = VaadinServlet.getResourcePath(getHttpSession()
-                .getServletContext(), "/");
-        if (realPath == null) {
-            return null;
-        }
-        return new File(realPath);
     }
 
     /**

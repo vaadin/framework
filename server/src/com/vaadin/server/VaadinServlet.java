@@ -16,6 +16,7 @@
 package com.vaadin.server;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -139,6 +140,16 @@ public class VaadinServlet extends HttpServlet implements Constants {
         @Override
         public SystemMessages getSystemMessages() {
             return ServletPortletHelper.DEFAULT_SYSTEM_MESSAGES;
+        }
+
+        @Override
+        public File getBaseDirectory() {
+            final String realPath = VaadinServlet.getResourcePath(
+                    servlet.getServletContext(), "/");
+            if (realPath == null) {
+                return null;
+            }
+            return new File(realPath);
         }
     }
 

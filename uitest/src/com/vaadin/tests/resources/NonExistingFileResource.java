@@ -3,9 +3,11 @@ package com.vaadin.tests.resources;
 import java.io.File;
 
 import com.vaadin.server.FileResource;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.util.CurrentInstance;
 
 public class NonExistingFileResource extends TestBase {
 
@@ -24,8 +26,10 @@ public class NonExistingFileResource extends TestBase {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                FileResource res = new FileResource(new File(getContext()
-                        .getBaseDirectory() + "/" + filename));
+                FileResource res = new FileResource(new File(CurrentInstance
+                        .get(WrappedRequest.class).getDeploymentConfiguration()
+                        .getBaseDirectory()
+                        + "/" + filename));
                 getMainWindow().open(res);
 
             }
