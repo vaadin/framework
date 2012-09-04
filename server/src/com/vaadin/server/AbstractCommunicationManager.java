@@ -802,407 +802,427 @@ public abstract class AbstractCommunicationManager implements Serializable {
             requireLocale(application.getLocale().toString());
         }
 
-        dirtyVisibleConnectors
-                .addAll(getDirtyVisibleConnectors(uiConnectorTracker));
+        uiConnectorTracker.setWritingResponse(true);
+        try {
 
-        getLogger().log(
-                Level.FINE,
-                "Found " + dirtyVisibleConnectors.size()
-                        + " dirty connectors to paint");
-        for (ClientConnector connector : dirtyVisibleConnectors) {
-            boolean initialized = uiConnectorTracker
-                    .isClientSideInitialized(connector);
-            connector.beforeClientResponse(!initialized);
-        }
+            dirtyVisibleConnectors
+                    .addAll(getDirtyVisibleConnectors(uiConnectorTracker));
 
-        outWriter.print("\"changes\":[");
-
-        List<InvalidLayout> invalidComponentRelativeSizes = null;
-
-        JsonPaintTarget paintTarget = new JsonPaintTarget(this, outWriter,
-                !repaintAll);
-        legacyPaint(paintTarget, dirtyVisibleConnectors);
-
-        if (analyzeLayouts) {
-            invalidComponentRelativeSizes = ComponentSizeValidator
-                    .validateComponentRelativeSizes(ui.getContent(), null, null);
-
-            // Also check any existing subwindows
-            if (ui.getWindows() != null) {
-                for (Window subWindow : ui.getWindows()) {
-                    invalidComponentRelativeSizes = ComponentSizeValidator
-                            .validateComponentRelativeSizes(
-                                    subWindow.getContent(),
-                                    invalidComponentRelativeSizes, null);
-                }
-            }
-        }
-
-        paintTarget.close();
-        outWriter.print("], "); // close changes
-
-        // send shared state to client
-
-        // for now, send the complete state of all modified and new
-        // components
-
-        // Ideally, all this would be sent before "changes", but that causes
-        // complications with legacy components that create sub-components
-        // in their paint phase. Nevertheless, this will be processed on the
-        // client after component creation but before legacy UIDL
-        // processing.
-        JSONObject sharedStates = new JSONObject();
-        for (ClientConnector connector : dirtyVisibleConnectors) {
-            // encode and send shared state
-            try {
-                JSONObject stateJson = connector.encodeState();
-
-                if (stateJson != null && stateJson.length() != 0) {
-                    sharedStates.put(connector.getConnectorId(), stateJson);
-                }
-            } catch (JSONException e) {
-                throw new PaintException(
-                        "Failed to serialize shared state for connector "
-                                + connector.getClass().getName() + " ("
-                                + connector.getConnectorId() + "): "
-                                + e.getMessage(), e);
-            }
-        }
-        outWriter.print("\"state\":");
-        outWriter.append(sharedStates.toString());
-        outWriter.print(", "); // close states
-
-        // TODO This should be optimized. The type only needs to be
-        // sent once for each connector id + on refresh. Use the same cache as
-        // widget mapping
-
-        JSONObject connectorTypes = new JSONObject();
-        for (ClientConnector connector : dirtyVisibleConnectors) {
-            String connectorType = paintTarget.getTag(connector);
-            try {
-                connectorTypes.put(connector.getConnectorId(), connectorType);
-            } catch (JSONException e) {
-                throw new PaintException(
-                        "Failed to send connector type for connector "
-                                + connector.getConnectorId() + ": "
-                                + e.getMessage(), e);
-            }
-        }
-        outWriter.print("\"types\":");
-        outWriter.append(connectorTypes.toString());
-        outWriter.print(", "); // close states
-
-        // Send update hierarchy information to the client.
-
-        // This could be optimized aswell to send only info if hierarchy has
-        // actually changed. Much like with the shared state. Note though
-        // that an empty hierarchy is information aswell (e.g. change from 1
-        // child to 0 children)
-
-        outWriter.print("\"hierarchy\":");
-
-        JSONObject hierarchyInfo = new JSONObject();
-        for (ClientConnector connector : dirtyVisibleConnectors) {
-            String connectorId = connector.getConnectorId();
-            JSONArray children = new JSONArray();
-
-            for (ClientConnector child : AbstractClientConnector
-                    .getAllChildrenIterable(connector)) {
-                if (isVisible(child)) {
-                    children.put(child.getConnectorId());
-                }
-            }
-            try {
-                hierarchyInfo.put(connectorId, children);
-            } catch (JSONException e) {
-                throw new PaintException(
-                        "Failed to send hierarchy information about "
-                                + connectorId + " to the client: "
-                                + e.getMessage(), e);
-            }
-        }
-        outWriter.append(hierarchyInfo.toString());
-        outWriter.print(", "); // close hierarchy
-
-        uiConnectorTracker.markAllConnectorsClean();
-
-        // send server to client RPC calls for components in the UI, in call
-        // order
-
-        // collect RPC calls from components in the UI in the order in
-        // which they were performed, remove the calls from components
-
-        LinkedList<ClientConnector> rpcPendingQueue = new LinkedList<ClientConnector>(
-                dirtyVisibleConnectors);
-        List<ClientMethodInvocation> pendingInvocations = collectPendingRpcCalls(dirtyVisibleConnectors);
-
-        JSONArray rpcCalls = new JSONArray();
-        for (ClientMethodInvocation invocation : pendingInvocations) {
-            // add invocation to rpcCalls
-            try {
-                JSONArray invocationJson = new JSONArray();
-                invocationJson.put(invocation.getConnector().getConnectorId());
-                invocationJson.put(invocation.getInterfaceName());
-                invocationJson.put(invocation.getMethodName());
-                JSONArray paramJson = new JSONArray();
-                for (int i = 0; i < invocation.getParameterTypes().length; ++i) {
-                    Type parameterType = invocation.getParameterTypes()[i];
-                    Object referenceParameter = null;
-                    // TODO Use default values for RPC parameter types
-                    // if (!JsonCodec.isInternalType(parameterType)) {
-                    // try {
-                    // referenceParameter = parameterType.newInstance();
-                    // } catch (Exception e) {
-                    // logger.log(Level.WARNING,
-                    // "Error creating reference object for parameter of type "
-                    // + parameterType.getName());
-                    // }
-                    // }
-                    EncodeResult encodeResult = JsonCodec.encode(
-                            invocation.getParameters()[i], referenceParameter,
-                            parameterType, ui.getConnectorTracker());
-                    paramJson.put(encodeResult.getEncodedValue());
-                }
-                invocationJson.put(paramJson);
-                rpcCalls.put(invocationJson);
-            } catch (JSONException e) {
-                throw new PaintException(
-                        "Failed to serialize RPC method call parameters for connector "
-                                + invocation.getConnector().getConnectorId()
-                                + " method " + invocation.getInterfaceName()
-                                + "." + invocation.getMethodName() + ": "
-                                + e.getMessage(), e);
+            getLogger().log(
+                    Level.FINE,
+                    "Found " + dirtyVisibleConnectors.size()
+                            + " dirty connectors to paint");
+            for (ClientConnector connector : dirtyVisibleConnectors) {
+                boolean initialized = uiConnectorTracker
+                        .isClientSideInitialized(connector);
+                connector.beforeClientResponse(!initialized);
             }
 
-        }
+            outWriter.print("\"changes\":[");
 
-        if (rpcCalls.length() > 0) {
-            outWriter.print("\"rpc\" : ");
-            outWriter.append(rpcCalls.toString());
-            outWriter.print(", "); // close rpc
-        }
+            List<InvalidLayout> invalidComponentRelativeSizes = null;
 
-        outWriter.print("\"meta\" : {");
-        boolean metaOpen = false;
+            JsonPaintTarget paintTarget = new JsonPaintTarget(this, outWriter,
+                    !repaintAll);
+            legacyPaint(paintTarget, dirtyVisibleConnectors);
 
-        if (repaintAll) {
-            metaOpen = true;
-            outWriter.write("\"repaintAll\":true");
             if (analyzeLayouts) {
-                outWriter.write(", \"invalidLayouts\":");
-                outWriter.write("[");
-                if (invalidComponentRelativeSizes != null) {
-                    boolean first = true;
-                    for (InvalidLayout invalidLayout : invalidComponentRelativeSizes) {
-                        if (!first) {
-                            outWriter.write(",");
-                        } else {
-                            first = false;
-                        }
-                        invalidLayout.reportErrors(outWriter, this, System.err);
+                invalidComponentRelativeSizes = ComponentSizeValidator
+                        .validateComponentRelativeSizes(ui.getContent(), null,
+                                null);
+
+                // Also check any existing subwindows
+                if (ui.getWindows() != null) {
+                    for (Window subWindow : ui.getWindows()) {
+                        invalidComponentRelativeSizes = ComponentSizeValidator
+                                .validateComponentRelativeSizes(
+                                        subWindow.getContent(),
+                                        invalidComponentRelativeSizes, null);
                     }
                 }
-                outWriter.write("]");
             }
-            if (highlightedConnector != null) {
-                outWriter.write(", \"hl\":\"");
-                outWriter.write(highlightedConnector.getConnectorId());
-                outWriter.write("\"");
-                highlightedConnector = null;
-            }
-        }
 
-        SystemMessages ci = request.getDeploymentConfiguration()
-                .getSystemMessages();
+            paintTarget.close();
+            outWriter.print("], "); // close changes
 
-        // meta instruction for client to enable auto-forward to
-        // sessionExpiredURL after timer expires.
-        if (ci != null && ci.getSessionExpiredMessage() == null
-                && ci.getSessionExpiredCaption() == null
-                && ci.isSessionExpiredNotificationEnabled()) {
-            int newTimeoutInterval = getTimeoutInterval();
-            if (repaintAll || (timeoutInterval != newTimeoutInterval)) {
-                String escapedURL = ci.getSessionExpiredURL() == null ? "" : ci
-                        .getSessionExpiredURL().replace("/", "\\/");
-                if (metaOpen) {
-                    outWriter.write(",");
-                }
-                outWriter.write("\"timedRedirect\":{\"interval\":"
-                        + (newTimeoutInterval + 15) + ",\"url\":\""
-                        + escapedURL + "\"}");
-                metaOpen = true;
-            }
-            timeoutInterval = newTimeoutInterval;
-        }
+            // send shared state to client
 
-        outWriter.print("}, \"resources\" : {");
+            // for now, send the complete state of all modified and new
+            // components
 
-        // Precache custom layouts
-
-        // TODO We should only precache the layouts that are not
-        // cached already (plagiate from usedPaintableTypes)
-        int resourceIndex = 0;
-        for (final Iterator<Object> i = paintTarget.getUsedResources()
-                .iterator(); i.hasNext();) {
-            final String resource = (String) i.next();
-            InputStream is = null;
-            try {
-                is = getThemeResourceAsStream(ui, getTheme(ui), resource);
-            } catch (final Exception e) {
-                // FIXME: Handle exception
-                getLogger().log(Level.FINER,
-                        "Failed to get theme resource stream.", e);
-            }
-            if (is != null) {
-
-                outWriter.print((resourceIndex++ > 0 ? ", " : "") + "\""
-                        + resource + "\" : ");
-                final StringBuffer layout = new StringBuffer();
-
+            // Ideally, all this would be sent before "changes", but that causes
+            // complications with legacy components that create sub-components
+            // in their paint phase. Nevertheless, this will be processed on the
+            // client after component creation but before legacy UIDL
+            // processing.
+            JSONObject sharedStates = new JSONObject();
+            for (ClientConnector connector : dirtyVisibleConnectors) {
+                // encode and send shared state
                 try {
-                    final InputStreamReader r = new InputStreamReader(is,
-                            "UTF-8");
-                    final char[] buffer = new char[20000];
-                    int charsRead = 0;
-                    while ((charsRead = r.read(buffer)) > 0) {
-                        layout.append(buffer, 0, charsRead);
+                    JSONObject stateJson = connector.encodeState();
+
+                    if (stateJson != null && stateJson.length() != 0) {
+                        sharedStates.put(connector.getConnectorId(), stateJson);
                     }
-                    r.close();
-                } catch (final java.io.IOException e) {
+                } catch (JSONException e) {
+                    throw new PaintException(
+                            "Failed to serialize shared state for connector "
+                                    + connector.getClass().getName() + " ("
+                                    + connector.getConnectorId() + "): "
+                                    + e.getMessage(), e);
+                }
+            }
+            outWriter.print("\"state\":");
+            outWriter.append(sharedStates.toString());
+            outWriter.print(", "); // close states
+
+            // TODO This should be optimized. The type only needs to be
+            // sent once for each connector id + on refresh. Use the same cache
+            // as
+            // widget mapping
+
+            JSONObject connectorTypes = new JSONObject();
+            for (ClientConnector connector : dirtyVisibleConnectors) {
+                String connectorType = paintTarget.getTag(connector);
+                try {
+                    connectorTypes.put(connector.getConnectorId(),
+                            connectorType);
+                } catch (JSONException e) {
+                    throw new PaintException(
+                            "Failed to send connector type for connector "
+                                    + connector.getConnectorId() + ": "
+                                    + e.getMessage(), e);
+                }
+            }
+            outWriter.print("\"types\":");
+            outWriter.append(connectorTypes.toString());
+            outWriter.print(", "); // close states
+
+            // Send update hierarchy information to the client.
+
+            // This could be optimized aswell to send only info if hierarchy has
+            // actually changed. Much like with the shared state. Note though
+            // that an empty hierarchy is information aswell (e.g. change from 1
+            // child to 0 children)
+
+            outWriter.print("\"hierarchy\":");
+
+            JSONObject hierarchyInfo = new JSONObject();
+            for (ClientConnector connector : dirtyVisibleConnectors) {
+                String connectorId = connector.getConnectorId();
+                JSONArray children = new JSONArray();
+
+                for (ClientConnector child : AbstractClientConnector
+                        .getAllChildrenIterable(connector)) {
+                    if (isVisible(child)) {
+                        children.put(child.getConnectorId());
+                    }
+                }
+                try {
+                    hierarchyInfo.put(connectorId, children);
+                } catch (JSONException e) {
+                    throw new PaintException(
+                            "Failed to send hierarchy information about "
+                                    + connectorId + " to the client: "
+                                    + e.getMessage(), e);
+                }
+            }
+            outWriter.append(hierarchyInfo.toString());
+            outWriter.print(", "); // close hierarchy
+
+            uiConnectorTracker.markAllConnectorsClean();
+
+            // send server to client RPC calls for components in the UI, in call
+            // order
+
+            // collect RPC calls from components in the UI in the order in
+            // which they were performed, remove the calls from components
+
+            LinkedList<ClientConnector> rpcPendingQueue = new LinkedList<ClientConnector>(
+                    dirtyVisibleConnectors);
+            List<ClientMethodInvocation> pendingInvocations = collectPendingRpcCalls(dirtyVisibleConnectors);
+
+            JSONArray rpcCalls = new JSONArray();
+            for (ClientMethodInvocation invocation : pendingInvocations) {
+                // add invocation to rpcCalls
+                try {
+                    JSONArray invocationJson = new JSONArray();
+                    invocationJson.put(invocation.getConnector()
+                            .getConnectorId());
+                    invocationJson.put(invocation.getInterfaceName());
+                    invocationJson.put(invocation.getMethodName());
+                    JSONArray paramJson = new JSONArray();
+                    for (int i = 0; i < invocation.getParameterTypes().length; ++i) {
+                        Type parameterType = invocation.getParameterTypes()[i];
+                        Object referenceParameter = null;
+                        // TODO Use default values for RPC parameter types
+                        // if (!JsonCodec.isInternalType(parameterType)) {
+                        // try {
+                        // referenceParameter = parameterType.newInstance();
+                        // } catch (Exception e) {
+                        // logger.log(Level.WARNING,
+                        // "Error creating reference object for parameter of type "
+                        // + parameterType.getName());
+                        // }
+                        // }
+                        EncodeResult encodeResult = JsonCodec.encode(
+                                invocation.getParameters()[i],
+                                referenceParameter, parameterType,
+                                ui.getConnectorTracker());
+                        paramJson.put(encodeResult.getEncodedValue());
+                    }
+                    invocationJson.put(paramJson);
+                    rpcCalls.put(invocationJson);
+                } catch (JSONException e) {
+                    throw new PaintException(
+                            "Failed to serialize RPC method call parameters for connector "
+                                    + invocation.getConnector()
+                                            .getConnectorId() + " method "
+                                    + invocation.getInterfaceName() + "."
+                                    + invocation.getMethodName() + ": "
+                                    + e.getMessage(), e);
+                }
+
+            }
+
+            if (rpcCalls.length() > 0) {
+                outWriter.print("\"rpc\" : ");
+                outWriter.append(rpcCalls.toString());
+                outWriter.print(", "); // close rpc
+            }
+
+            outWriter.print("\"meta\" : {");
+            boolean metaOpen = false;
+
+            if (repaintAll) {
+                metaOpen = true;
+                outWriter.write("\"repaintAll\":true");
+                if (analyzeLayouts) {
+                    outWriter.write(", \"invalidLayouts\":");
+                    outWriter.write("[");
+                    if (invalidComponentRelativeSizes != null) {
+                        boolean first = true;
+                        for (InvalidLayout invalidLayout : invalidComponentRelativeSizes) {
+                            if (!first) {
+                                outWriter.write(",");
+                            } else {
+                                first = false;
+                            }
+                            invalidLayout.reportErrors(outWriter, this,
+                                    System.err);
+                        }
+                    }
+                    outWriter.write("]");
+                }
+                if (highlightedConnector != null) {
+                    outWriter.write(", \"hl\":\"");
+                    outWriter.write(highlightedConnector.getConnectorId());
+                    outWriter.write("\"");
+                    highlightedConnector = null;
+                }
+            }
+
+            SystemMessages ci = request.getDeploymentConfiguration()
+                    .getSystemMessages();
+
+            // meta instruction for client to enable auto-forward to
+            // sessionExpiredURL after timer expires.
+            if (ci != null && ci.getSessionExpiredMessage() == null
+                    && ci.getSessionExpiredCaption() == null
+                    && ci.isSessionExpiredNotificationEnabled()) {
+                int newTimeoutInterval = getTimeoutInterval();
+                if (repaintAll || (timeoutInterval != newTimeoutInterval)) {
+                    String escapedURL = ci.getSessionExpiredURL() == null ? ""
+                            : ci.getSessionExpiredURL().replace("/", "\\/");
+                    if (metaOpen) {
+                        outWriter.write(",");
+                    }
+                    outWriter.write("\"timedRedirect\":{\"interval\":"
+                            + (newTimeoutInterval + 15) + ",\"url\":\""
+                            + escapedURL + "\"}");
+                    metaOpen = true;
+                }
+                timeoutInterval = newTimeoutInterval;
+            }
+
+            outWriter.print("}, \"resources\" : {");
+
+            // Precache custom layouts
+
+            // TODO We should only precache the layouts that are not
+            // cached already (plagiate from usedPaintableTypes)
+            int resourceIndex = 0;
+            for (final Iterator<Object> i = paintTarget.getUsedResources()
+                    .iterator(); i.hasNext();) {
+                final String resource = (String) i.next();
+                InputStream is = null;
+                try {
+                    is = getThemeResourceAsStream(ui, getTheme(ui), resource);
+                } catch (final Exception e) {
                     // FIXME: Handle exception
-                    getLogger().log(Level.INFO, "Resource transfer failed", e);
+                    getLogger().log(Level.FINER,
+                            "Failed to get theme resource stream.", e);
                 }
-                outWriter.print("\""
-                        + JsonPaintTarget.escapeJSON(layout.toString()) + "\"");
-            } else {
-                // FIXME: Handle exception
-                getLogger().severe("CustomLayout not found: " + resource);
-            }
-        }
-        outWriter.print("}");
+                if (is != null) {
 
-        Collection<Class<? extends ClientConnector>> usedClientConnectors = paintTarget
-                .getUsedClientConnectors();
-        boolean typeMappingsOpen = false;
-        ClientCache clientCache = getClientCache(ui);
+                    outWriter.print((resourceIndex++ > 0 ? ", " : "") + "\""
+                            + resource + "\" : ");
+                    final StringBuffer layout = new StringBuffer();
 
-        List<Class<? extends ClientConnector>> newConnectorTypes = new ArrayList<Class<? extends ClientConnector>>();
-
-        for (Class<? extends ClientConnector> class1 : usedClientConnectors) {
-            if (clientCache.cache(class1)) {
-                // client does not know the mapping key for this type, send
-                // mapping to client
-                newConnectorTypes.add(class1);
-
-                if (!typeMappingsOpen) {
-                    typeMappingsOpen = true;
-                    outWriter.print(", \"typeMappings\" : { ");
+                    try {
+                        final InputStreamReader r = new InputStreamReader(is,
+                                "UTF-8");
+                        final char[] buffer = new char[20000];
+                        int charsRead = 0;
+                        while ((charsRead = r.read(buffer)) > 0) {
+                            layout.append(buffer, 0, charsRead);
+                        }
+                        r.close();
+                    } catch (final java.io.IOException e) {
+                        // FIXME: Handle exception
+                        getLogger().log(Level.INFO, "Resource transfer failed",
+                                e);
+                    }
+                    outWriter.print("\""
+                            + JsonPaintTarget.escapeJSON(layout.toString())
+                            + "\"");
                 } else {
-                    outWriter.print(" , ");
+                    // FIXME: Handle exception
+                    getLogger().severe("CustomLayout not found: " + resource);
                 }
-                String canonicalName = class1.getCanonicalName();
-                outWriter.print("\"");
-                outWriter.print(canonicalName);
-                outWriter.print("\" : ");
-                outWriter.print(getTagForType(class1));
             }
-        }
-        if (typeMappingsOpen) {
-            outWriter.print(" }");
-        }
+            outWriter.print("}");
 
-        boolean typeInheritanceMapOpen = false;
-        if (typeMappingsOpen) {
-            // send the whole type inheritance map if any new mappings
+            Collection<Class<? extends ClientConnector>> usedClientConnectors = paintTarget
+                    .getUsedClientConnectors();
+            boolean typeMappingsOpen = false;
+            ClientCache clientCache = getClientCache(ui);
+
+            List<Class<? extends ClientConnector>> newConnectorTypes = new ArrayList<Class<? extends ClientConnector>>();
+
             for (Class<? extends ClientConnector> class1 : usedClientConnectors) {
-                if (!ClientConnector.class.isAssignableFrom(class1
-                        .getSuperclass())) {
-                    continue;
+                if (clientCache.cache(class1)) {
+                    // client does not know the mapping key for this type, send
+                    // mapping to client
+                    newConnectorTypes.add(class1);
+
+                    if (!typeMappingsOpen) {
+                        typeMappingsOpen = true;
+                        outWriter.print(", \"typeMappings\" : { ");
+                    } else {
+                        outWriter.print(" , ");
+                    }
+                    String canonicalName = class1.getCanonicalName();
+                    outWriter.print("\"");
+                    outWriter.print(canonicalName);
+                    outWriter.print("\" : ");
+                    outWriter.print(getTagForType(class1));
                 }
-                if (!typeInheritanceMapOpen) {
-                    typeInheritanceMapOpen = true;
-                    outWriter.print(", \"typeInheritanceMap\" : { ");
-                } else {
-                    outWriter.print(" , ");
-                }
-                outWriter.print("\"");
-                outWriter.print(getTagForType(class1));
-                outWriter.print("\" : ");
-                outWriter
-                        .print(getTagForType((Class<? extends ClientConnector>) class1
-                                .getSuperclass()));
             }
-            if (typeInheritanceMapOpen) {
+            if (typeMappingsOpen) {
                 outWriter.print(" }");
             }
-        }
 
-        /*
-         * Ensure super classes come before sub classes to get script dependency
-         * order right. Sub class @JavaScript might assume that @JavaScript
-         * defined by super class is already loaded.
-         */
-        Collections.sort(newConnectorTypes, new Comparator<Class<?>>() {
-            @Override
-            public int compare(Class<?> o1, Class<?> o2) {
-                // TODO optimize using Class.isAssignableFrom?
-                return hierarchyDepth(o1) - hierarchyDepth(o2);
-            }
-
-            private int hierarchyDepth(Class<?> type) {
-                if (type == Object.class) {
-                    return 0;
-                } else {
-                    return hierarchyDepth(type.getSuperclass()) + 1;
+            boolean typeInheritanceMapOpen = false;
+            if (typeMappingsOpen) {
+                // send the whole type inheritance map if any new mappings
+                for (Class<? extends ClientConnector> class1 : usedClientConnectors) {
+                    if (!ClientConnector.class.isAssignableFrom(class1
+                            .getSuperclass())) {
+                        continue;
+                    }
+                    if (!typeInheritanceMapOpen) {
+                        typeInheritanceMapOpen = true;
+                        outWriter.print(", \"typeInheritanceMap\" : { ");
+                    } else {
+                        outWriter.print(" , ");
+                    }
+                    outWriter.print("\"");
+                    outWriter.print(getTagForType(class1));
+                    outWriter.print("\" : ");
+                    outWriter
+                            .print(getTagForType((Class<? extends ClientConnector>) class1
+                                    .getSuperclass()));
                 }
-            }
-        });
-
-        List<String> scriptDependencies = new ArrayList<String>();
-        List<String> styleDependencies = new ArrayList<String>();
-
-        for (Class<? extends ClientConnector> class1 : newConnectorTypes) {
-            JavaScript jsAnnotation = class1.getAnnotation(JavaScript.class);
-            if (jsAnnotation != null) {
-                for (String resource : jsAnnotation.value()) {
-                    scriptDependencies.add(registerResource(resource, class1));
+                if (typeInheritanceMapOpen) {
+                    outWriter.print(" }");
                 }
             }
 
-            StyleSheet styleAnnotation = class1.getAnnotation(StyleSheet.class);
-            if (styleAnnotation != null) {
-                for (String resource : styleAnnotation.value()) {
-                    styleDependencies.add(registerResource(resource, class1));
+            /*
+             * Ensure super classes come before sub classes to get script
+             * dependency order right. Sub class @JavaScript might assume that
+             * 
+             * @JavaScript defined by super class is already loaded.
+             */
+            Collections.sort(newConnectorTypes, new Comparator<Class<?>>() {
+                @Override
+                public int compare(Class<?> o1, Class<?> o2) {
+                    // TODO optimize using Class.isAssignableFrom?
+                    return hierarchyDepth(o1) - hierarchyDepth(o2);
+                }
+
+                private int hierarchyDepth(Class<?> type) {
+                    if (type == Object.class) {
+                        return 0;
+                    } else {
+                        return hierarchyDepth(type.getSuperclass()) + 1;
+                    }
+                }
+            });
+
+            List<String> scriptDependencies = new ArrayList<String>();
+            List<String> styleDependencies = new ArrayList<String>();
+
+            for (Class<? extends ClientConnector> class1 : newConnectorTypes) {
+                JavaScript jsAnnotation = class1
+                        .getAnnotation(JavaScript.class);
+                if (jsAnnotation != null) {
+                    for (String resource : jsAnnotation.value()) {
+                        scriptDependencies.add(registerResource(resource,
+                                class1));
+                    }
+                }
+
+                StyleSheet styleAnnotation = class1
+                        .getAnnotation(StyleSheet.class);
+                if (styleAnnotation != null) {
+                    for (String resource : styleAnnotation.value()) {
+                        styleDependencies
+                                .add(registerResource(resource, class1));
+                    }
                 }
             }
+
+            // Include script dependencies in output if there are any
+            if (!scriptDependencies.isEmpty()) {
+                outWriter.print(", \"scriptDependencies\": "
+                        + new JSONArray(scriptDependencies).toString());
+            }
+
+            // Include style dependencies in output if there are any
+            if (!styleDependencies.isEmpty()) {
+                outWriter.print(", \"styleDependencies\": "
+                        + new JSONArray(styleDependencies).toString());
+            }
+
+            // add any pending locale definitions requested by the client
+            printLocaleDeclarations(outWriter);
+
+            if (dragAndDropService != null) {
+                dragAndDropService.printJSONResponse(outWriter);
+            }
+
+            for (ClientConnector connector : dirtyVisibleConnectors) {
+                uiConnectorTracker.markClientSideInitialized(connector);
+            }
+
+            assert (uiConnectorTracker.getDirtyConnectors().isEmpty()) : "Connectors have been marked as dirty during the end of the paint phase. This is most certainly not intended.";
+
+            writePerformanceData(outWriter);
+        } finally {
+            uiConnectorTracker.setWritingResponse(false);
         }
-
-        // Include script dependencies in output if there are any
-        if (!scriptDependencies.isEmpty()) {
-            outWriter.print(", \"scriptDependencies\": "
-                    + new JSONArray(scriptDependencies).toString());
-        }
-
-        // Include style dependencies in output if there are any
-        if (!styleDependencies.isEmpty()) {
-            outWriter.print(", \"styleDependencies\": "
-                    + new JSONArray(styleDependencies).toString());
-        }
-
-        // add any pending locale definitions requested by the client
-        printLocaleDeclarations(outWriter);
-
-        if (dragAndDropService != null) {
-            dragAndDropService.printJSONResponse(outWriter);
-        }
-
-        for (ClientConnector connector : dirtyVisibleConnectors) {
-            uiConnectorTracker.markClientSideInitialized(connector);
-        }
-
-        assert (uiConnectorTracker.getDirtyConnectors().isEmpty()) : "Connectors have been marked as dirty during the end of the paint phase. This is most certainly not intended.";
-
-        writePerformanceData(outWriter);
     }
 
     public static JSONObject encodeState(ClientConnector connector,

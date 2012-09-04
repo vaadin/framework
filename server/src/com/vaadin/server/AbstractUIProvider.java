@@ -22,7 +22,7 @@ import com.vaadin.ui.UI;
 public abstract class AbstractUIProvider implements UIProvider {
 
     @Override
-    public UI instantiateUI(Application application, Class<? extends UI> type,
+    public UI createInstance(Application application, Class<? extends UI> type,
             WrappedRequest request) {
         try {
             return type.newInstance();

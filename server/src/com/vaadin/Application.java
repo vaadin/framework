@@ -1649,7 +1649,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
                     // class
                     continue;
                 }
-                return uiClass.cast(provider.instantiateUI(this, uiClass,
+                return uiClass.cast(provider.createInstance(this, uiClass,
                         request));
             }
         }

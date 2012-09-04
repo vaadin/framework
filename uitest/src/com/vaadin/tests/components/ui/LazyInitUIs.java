@@ -25,7 +25,7 @@ public class LazyInitUIs extends AbstractTestApplication {
         addUIProvider(new UIProvider() {
 
             @Override
-            public UI instantiateUI(Application application,
+            public UI createInstance(Application application,
                     Class<? extends UI> type, WrappedRequest request) {
                 return getUI(request);
             }

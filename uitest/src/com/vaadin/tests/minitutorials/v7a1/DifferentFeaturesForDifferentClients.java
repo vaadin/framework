@@ -51,7 +51,7 @@ public class DifferentFeaturesForDifferentClients extends Application {
             // Must override as default implementation isn't allowed to
             // instantiate our non-public classes
             @Override
-            public UI instantiateUI(Application application,
+            public UI createInstance(Application application,
                     Class<? extends UI> type, WrappedRequest request) {
                 try {
                     return type.newInstance();
