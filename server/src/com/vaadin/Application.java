@@ -250,6 +250,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
                 // initialized
                 return null;
             } else {
+                UI.setCurrent(uiInstance);
                 return uiInstance;
             }
         }
