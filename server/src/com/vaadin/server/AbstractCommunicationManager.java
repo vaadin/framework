@@ -518,7 +518,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
         checkWidgetsetVersion(request);
         requestThemeName = request.getParameter("theme");
-        maxInactiveInterval = request.getSessionMaxInactiveInterval();
+        maxInactiveInterval = request.getWrappedSession()
+                .getMaxInactiveInterval();
         // repaint requested or session has timed out and new one is created
         boolean repaintAll;
         final OutputStream out;
@@ -772,12 +773,13 @@ public abstract class AbstractCommunicationManager implements Serializable {
      */
     protected String getSecurityKey(WrappedRequest request) {
         String seckey = null;
-        seckey = (String) request
-                .getSessionAttribute(ApplicationConstants.UIDL_SECURITY_TOKEN_ID);
+        WrappedSession session = request.getWrappedSession();
+        seckey = (String) session
+                .getAttribute(ApplicationConstants.UIDL_SECURITY_TOKEN_ID);
         if (seckey == null) {
             seckey = UUID.randomUUID().toString();
-            request.setSessionAttribute(
-                    ApplicationConstants.UIDL_SECURITY_TOKEN_ID, seckey);
+            session.setAttribute(ApplicationConstants.UIDL_SECURITY_TOKEN_ID,
+                    seckey);
         }
 
         return seckey;
@@ -1559,7 +1561,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     // ApplicationServlet has stored the security token in the
                     // session; check that it matched the one sent in the UIDL
                     String sessId = (String) request
-                            .getSessionAttribute(ApplicationConstants.UIDL_SECURITY_TOKEN_ID);
+                            .getWrappedSession()
+                            .getAttribute(
+                                    ApplicationConstants.UIDL_SECURITY_TOKEN_ID);
 
                     if (sessId == null || !sessId.equals(bursts[0])) {
                         throw new InvalidUIDLSecurityKeyException(

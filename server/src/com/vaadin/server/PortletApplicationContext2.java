@@ -60,7 +60,6 @@ public class PortletApplicationContext2 extends ApplicationContext {
 
     protected Map<Application, Set<PortletListener>> portletListeners = new HashMap<Application, Set<PortletListener>>();
 
-    protected transient PortletSession session;
     protected transient PortletConfig portletConfig;
 
     protected HashMap<String, Application> portletWindowIdToApplicationMap = new HashMap<String, Application>();
@@ -75,6 +74,7 @@ public class PortletApplicationContext2 extends ApplicationContext {
 
     @Override
     public File getBaseDirectory() {
+        PortletSession session = getPortletSession();
         String resultPath = session.getPortletContext().getRealPath("/");
         if (resultPath != null) {
             return new File(resultPath);
@@ -128,9 +128,7 @@ public class PortletApplicationContext2 extends ApplicationContext {
             cx = new PortletApplicationContext2();
             session.setAttribute(PortletApplicationContext2.class.getName(), cx);
         }
-        if (cx.session == null) {
-            cx.session = session;
-        }
+        cx.setSession(new WrappedPortletSession(session));
         return cx;
     }
 
@@ -152,6 +150,9 @@ public class PortletApplicationContext2 extends ApplicationContext {
     }
 
     public PortletSession getPortletSession() {
+        WrappedSession wrappedSession = getSession();
+        PortletSession session = ((WrappedPortletSession) wrappedSession)
+                .getPortletSession();
         return session;
     }
 
@@ -401,11 +402,6 @@ public class PortletApplicationContext2 extends ApplicationContext {
             throw new IllegalStateException(
                     "Portlet mode can only be changed from a portlet request");
         }
-    }
-
-    @Override
-    public int getMaxInactiveInterval() {
-        return getPortletSession().getMaxInactiveInterval();
     }
 
     private Logger getLogger() {

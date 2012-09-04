@@ -114,18 +114,8 @@ public class CombinedRequest implements WrappedRequest {
     }
 
     @Override
-    public int getSessionMaxInactiveInterval() {
-        return secondRequest.getSessionMaxInactiveInterval();
-    }
-
-    @Override
-    public Object getSessionAttribute(String name) {
-        return secondRequest.getSessionAttribute(name);
-    }
-
-    @Override
-    public void setSessionAttribute(String name, Object attribute) {
-        secondRequest.setSessionAttribute(name, attribute);
+    public WrappedSession getWrappedSession() {
+        return secondRequest.getWrappedSession();
     }
 
     @Override

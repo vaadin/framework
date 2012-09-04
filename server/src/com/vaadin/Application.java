@@ -2152,7 +2152,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     protected int getUidlRequestTimeout() {
         return configuration.isIdleUICleanupEnabled() ? getContext()
-                .getMaxInactiveInterval() : -1;
+                .getSession().getMaxInactiveInterval() : -1;
     }
 
     /**

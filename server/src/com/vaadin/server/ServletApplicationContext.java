@@ -39,7 +39,6 @@ import com.vaadin.Application;
 @SuppressWarnings("serial")
 public class ServletApplicationContext extends ApplicationContext {
 
-    protected transient HttpSession session;
     private transient boolean reinitializingSession = false;
 
     /**
@@ -113,7 +112,7 @@ public class ServletApplicationContext extends ApplicationContext {
         }
 
         // Update the "current session" variable
-        session = newSession;
+        setSession(new WrappedHttpSession(newSession));
     }
 
     /**
@@ -123,8 +122,8 @@ public class ServletApplicationContext extends ApplicationContext {
      */
     @Override
     public File getBaseDirectory() {
-        final String realPath = VaadinServlet.getResourcePath(
-                session.getServletContext(), "/");
+        final String realPath = VaadinServlet.getResourcePath(getHttpSession()
+                .getServletContext(), "/");
         if (realPath == null) {
             return null;
         }
@@ -137,7 +136,8 @@ public class ServletApplicationContext extends ApplicationContext {
      * @return HttpSession this application context resides in.
      */
     public HttpSession getHttpSession() {
-        return session;
+        WrappedSession session = getSession();
+        return ((WrappedHttpSession) session).getHttpSession();
     }
 
     /**
@@ -155,9 +155,7 @@ public class ServletApplicationContext extends ApplicationContext {
             cx = new ServletApplicationContext();
             session.setAttribute(ServletApplicationContext.class.getName(), cx);
         }
-        if (cx.session == null) {
-            cx.session = session;
-        }
+        cx.setSession(new WrappedHttpSession(session));
         return cx;
     }
 
@@ -185,10 +183,5 @@ public class ServletApplicationContext extends ApplicationContext {
             applicationToAjaxAppMgrMap.put(application, mgr);
         }
         return mgr;
-    }
-
-    @Override
-    public int getMaxInactiveInterval() {
-        return getHttpSession().getMaxInactiveInterval();
     }
 }

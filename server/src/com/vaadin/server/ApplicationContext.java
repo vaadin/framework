@@ -102,6 +102,8 @@ public abstract class ApplicationContext implements HttpSessionBindingListener,
 
     private long lastRequestTime = -1;
 
+    private transient WrappedSession session;
+
     /**
      * Adds a transaction listener to this context. The transaction listener is
      * called before and after each each request related to this session except
@@ -300,9 +302,24 @@ public abstract class ApplicationContext implements HttpSessionBindingListener,
     public abstract File getBaseDirectory();
 
     /**
-     * Returns the time between requests, in seconds, before this context is
-     * invalidated. A negative time indicates the context should never timeout.
+     * Gets the session to which this application context is currently
+     * associated.
+     * 
+     * @return the wrapped session for this context
      */
-    public abstract int getMaxInactiveInterval();
+    public WrappedSession getSession() {
+        return session;
+    }
+
+    /**
+     * Sets the session to which this application context is currently
+     * associated.
+     * 
+     * @param session
+     *            the wrapped session for this context
+     */
+    public void setSession(WrappedSession session) {
+        this.session = session;
+    }
 
 }
