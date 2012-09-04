@@ -285,7 +285,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         Application application = null;
-        boolean transactionStarted = false;
         boolean requestStarted = false;
         boolean applicationRunning = false;
 
@@ -350,13 +349,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
             startApplication(request, application, webApplicationContext);
             applicationRunning = true;
 
-            /*
-             * Transaction starts. Call transaction listeners. Transaction end
-             * is called in the finally block below.
-             */
-            webApplicationContext.startTransaction(application, request);
-            transactionStarted = true;
-
             /* Handle the request */
             if (requestType == RequestType.FILE_UPLOAD) {
                 // UI is resolved in communication manager
@@ -406,25 +398,16 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
             // Notifies transaction end
             try {
-                if (transactionStarted) {
-                    ((ServletApplicationContext) application.getContext())
-                            .endTransaction(application, request);
-
+                if (requestStarted) {
+                    ((HttpServletRequestListener) application).onRequestEnd(
+                            request, response);
                 }
-
             } finally {
-                try {
-                    if (requestStarted) {
-                        ((HttpServletRequestListener) application)
-                                .onRequestEnd(request, response);
-                    }
-                } finally {
-                    CurrentInstance.clearAll();
+                CurrentInstance.clearAll();
 
-                    HttpSession session = request.getSession(false);
-                    if (session != null) {
-                        requestTimer.stop(getApplicationContext(session));
-                    }
+                HttpSession session = request.getSession(false);
+                if (session != null) {
+                    requestTimer.stop(getApplicationContext(session));
                 }
             }
 

@@ -16,15 +16,11 @@
 package com.vaadin.server;
 
 import java.io.File;
-import java.io.PrintWriter;
 import java.io.Serializable;
-import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,50 +44,6 @@ import com.vaadin.Application;
 public abstract class ApplicationContext implements HttpSessionBindingListener,
         Serializable {
 
-    /**
-     * Interface for listening to transaction events. Implement this interface
-     * to listen to all transactions between the client and the application.
-     * 
-     */
-    public static interface TransactionListener extends Serializable {
-
-        /**
-         * Invoked at the beginning of every transaction.
-         * 
-         * The transaction is linked to the context, not the application so if
-         * you have multiple applications running in the same context you need
-         * to check that the request is associated with the application you are
-         * interested in. This can be done looking at the application parameter.
-         * 
-         * @param application
-         *            the Application object.
-         * @param transactionData
-         *            the Data identifying the transaction.
-         */
-        public void transactionStart(Application application,
-                Object transactionData);
-
-        /**
-         * Invoked at the end of every transaction.
-         * 
-         * The transaction is linked to the context, not the application so if
-         * you have multiple applications running in the same context you need
-         * to check that the request is associated with the application you are
-         * interested in. This can be done looking at the application parameter.
-         * 
-         * @param applcation
-         *            the Application object.
-         * @param transactionData
-         *            the Data identifying the transaction.
-         */
-        public void transactionEnd(Application application,
-                Object transactionData);
-
-    }
-
-    protected Collection<ApplicationContext.TransactionListener> listeners = Collections
-            .synchronizedList(new LinkedList<ApplicationContext.TransactionListener>());
-
     protected final HashSet<Application> applications = new HashSet<Application>();
 
     protected WebBrowser browser = new WebBrowser();
@@ -103,97 +55,6 @@ public abstract class ApplicationContext implements HttpSessionBindingListener,
     private long lastRequestTime = -1;
 
     private transient WrappedSession session;
-
-    /**
-     * Adds a transaction listener to this context. The transaction listener is
-     * called before and after each each request related to this session except
-     * when serving static resources.
-     * 
-     * The transaction listener must not be null.
-     * 
-     * @see com.vaadin.service.ApplicationContext#addTransactionListener(com.vaadin.service.ApplicationContext.TransactionListener)
-     */
-    public void addTransactionListener(
-            ApplicationContext.TransactionListener listener) {
-        if (listener != null) {
-            listeners.add(listener);
-        }
-    }
-
-    /**
-     * Removes a transaction listener from this context.
-     * 
-     * @param listener
-     *            the listener to be removed.
-     * @see ApplicationContext.TransactionListener
-     */
-    public void removeTransactionListener(
-            ApplicationContext.TransactionListener listener) {
-        listeners.remove(listener);
-    }
-
-    /**
-     * Sends a notification that a transaction is starting.
-     * 
-     * @param application
-     *            The application associated with the transaction.
-     * @param request
-     *            the HTTP or portlet request that triggered the transaction.
-     */
-    protected void startTransaction(Application application, Object request) {
-        ArrayList<ApplicationContext.TransactionListener> currentListeners;
-        synchronized (listeners) {
-            currentListeners = new ArrayList<ApplicationContext.TransactionListener>(
-                    listeners);
-        }
-        for (ApplicationContext.TransactionListener listener : currentListeners) {
-            listener.transactionStart(application, request);
-        }
-    }
-
-    /**
-     * Sends a notification that a transaction has ended.
-     * 
-     * @param application
-     *            The application associated with the transaction.
-     * @param request
-     *            the HTTP or portlet request that triggered the transaction.
-     */
-    protected void endTransaction(Application application, Object request) {
-        LinkedList<Exception> exceptions = null;
-
-        ArrayList<ApplicationContext.TransactionListener> currentListeners;
-        synchronized (listeners) {
-            currentListeners = new ArrayList<ApplicationContext.TransactionListener>(
-                    listeners);
-        }
-
-        for (ApplicationContext.TransactionListener listener : currentListeners) {
-            try {
-                listener.transactionEnd(application, request);
-            } catch (final RuntimeException t) {
-                if (exceptions == null) {
-                    exceptions = new LinkedList<Exception>();
-                }
-                exceptions.add(t);
-            }
-        }
-
-        // If any runtime exceptions occurred, throw a combined exception
-        if (exceptions != null) {
-            final StringBuffer msg = new StringBuffer();
-            for (Exception e : exceptions) {
-                if (msg.length() == 0) {
-                    msg.append("\n\n--------------------------\n\n");
-                }
-                msg.append(e.getMessage() + "\n");
-                final StringWriter trace = new StringWriter();
-                e.printStackTrace(new PrintWriter(trace, true));
-                msg.append(trace.toString());
-            }
-            throw new RuntimeException(msg.toString());
-        }
-    }
 
     /**
      * @see javax.servlet.http.HttpSessionBindingListener#valueBound(HttpSessionBindingEvent)

@@ -432,7 +432,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                     (ResourceResponse) response);
         } else {
             Application application = null;
-            boolean transactionStarted = false;
             boolean requestStarted = false;
             boolean applicationRunning = false;
 
@@ -484,13 +483,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                 /* Start the newly created application */
                 startApplication(request, application, applicationContext);
                 applicationRunning = true;
-
-                /*
-                 * Transaction starts. Call transaction listeners. Transaction
-                 * end is called in the finally block below.
-                 */
-                applicationContext.startTransaction(application, request);
-                transactionStarted = true;
 
                 /* Notify listeners */
 
@@ -592,25 +584,17 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
                 // Notifies transaction end
                 try {
-                    if (transactionStarted) {
-                        ((PortletApplicationContext2) application.getContext())
-                                .endTransaction(application, request);
+                    if (requestStarted) {
+                        ((PortletRequestListener) application).onRequestEnd(
+                                request, response);
+
                     }
                 } finally {
-                    try {
-                        if (requestStarted) {
-                            ((PortletRequestListener) application)
-                                    .onRequestEnd(request, response);
+                    CurrentInstance.clearAll();
 
-                        }
-                    } finally {
-                        CurrentInstance.clearAll();
-
-                        PortletSession session = request
-                                .getPortletSession(false);
-                        if (session != null) {
-                            requestTimer.stop(getApplicationContext(session));
-                        }
+                    PortletSession session = request.getPortletSession(false);
+                    if (session != null) {
+                        requestTimer.stop(getApplicationContext(session));
                     }
                 }
             }
