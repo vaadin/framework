@@ -204,8 +204,8 @@
 	<target name="publish-local" description="Publishes the given module to the local repository">
 		<fail unless="result.dir" message="No result.dir parameter given" />
 		<property name="conf" value="*(public)" />
-
-		<ivy:resolve />
+		
+		<ivy:resolve conf="${conf}"/>
 		<ivy:publish conf="${conf}" resolver="build-temp" overwrite="true" forcedeliver="true">
 			<!--			<artifacts pattern="${result.dir}/[artifact]-[revision].[ext]" />-->
 			<artifacts pattern="${result.dir}/lib/[artifact]-[revision](-[classifier]).[ext]" />

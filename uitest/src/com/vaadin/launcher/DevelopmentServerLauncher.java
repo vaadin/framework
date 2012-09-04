@@ -25,11 +25,11 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mortbay.jetty.Connector;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.nio.SelectChannelConnector;
-import org.mortbay.jetty.security.SslSocketConnector;
-import org.mortbay.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.eclipse.jetty.server.ssl.SslSocketConnector;
+import org.eclipse.jetty.webapp.WebAppContext;
 
 import com.vaadin.launcher.util.BrowserLauncher;
 
@@ -156,8 +156,6 @@ public class DevelopmentServerLauncher {
         final WebAppContext webappcontext = new WebAppContext();
         String path = DevelopmentServerLauncher.class.getPackage().getName()
                 .replace(".", File.separator);
-        webappcontext.setDefaultsDescriptor(path + File.separator
-                + "jetty-webdefault.xml");
         webappcontext.setContextPath(serverArgs.get("context"));
         webappcontext.setWar(serverArgs.get("webroot"));
         server.setHandler(webappcontext);

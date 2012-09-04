@@ -10,6 +10,7 @@
 	<!-- global properties -->
 	<property name="module.name" value="vaadin-uitest" />
 	<property name="result.dir" value="result" />
+	<property name="result.war" location="${result.dir}/lib/${module.name}-${vaadin.version}.war" />
 
 	<path id="classpath.compile.custom">
 	</path>
@@ -17,8 +18,8 @@
 	<target name="dependencies">
 		<!-- This is copied from common.xml to be able to add server.tests.source to the source path -->
 
-		<ivy:resolve resolveid="common" conf="build" />
-		<ivy:cachepath pathid="classpath.compile.dependencies" conf="build" />
+		<ivy:resolve resolveid="common" conf="build, build-provided" />
+		<ivy:cachepath pathid="classpath.compile.dependencies" conf="build, build-provided" />
 	</target>
 
 	<target name="compile" description="Compiles the module" depends="dependencies">
@@ -51,7 +52,6 @@
 	<target name="war" depends="compile, dependencies">
 		<property name="result.dir" location="result" />
 		<property name="classes" location="${result.dir}/classes" />
-		<property name="result.war" location="${result.dir}/lib/${module.name}-${vaadin.version}.war" />
 		<property name="WebContent.dir" location="${vaadin.basedir}/WebContent" />
 		<property name="deps.dir" location="${result.dir}/deps" />
 
@@ -66,20 +66,32 @@
 		</copy>
 
 		<war destfile="${result.war}" duplicate="fail" index="true">
-			<manifest><attribute name="Class-Path" value="WEB-INF/classes"/></manifest>
+			<manifest>
+				<attribute name="Class-Path" value="WEB-INF/classes" />
+			</manifest>
 			<fileset refid="common.files.for.all.jars" />
 			<fileset dir="${WebContent.dir}">
 				<include name="statictestfiles/**" />
+				<include name="VAADIN/themes/tests-tickets/**" />
 				<include name="WEB-INF/*.xml" />
 			</fileset>
 			<classes dir="${classes}" />
 			<lib dir="${deps.dir}" />
+			<!-- Include files required by the DemoLauncher/DevelopmentServerLauncher -->
+			<!--<fileset dir="src">
+				<include name="**/launcher/jetty-webdefault.xml" />
+				<include name="**/launcher/keystore" />
+			</fileset>
+			-->
+
 		</war>
 
 	</target>
 
 	<target name="publish-local" depends="war">
-		<antcall target="common.publish-local" />
+		<antcall target="common.publish-local">
+			<param name="conf" value="build" />
+		</antcall>
 	</target>
 
 	<target name="clean">
@@ -89,4 +101,5 @@
 		<!--<antcall target="common.tests.run" />-->
 		<echo>WHAT? No JUnit tests for ${module.name}!</echo>
 	</target>
+
 </project>
