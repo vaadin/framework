@@ -9,8 +9,8 @@
     <configurations>
         <conf name="build" />
         <conf name="build-provided" />
-        <conf name="ide" visibility="private"/>
-        <conf name="tests" visibility="private"/>
+        <conf name="ide" visibility="private" />
+        <conf name="tests" visibility="private" />
     </configurations>
     <publications>
         <artifact></artifact>
@@ -42,7 +42,7 @@
 
         <!-- Jsoup for BootstrapHandler -->
         <dependency org="org.jsoup" name="jsoup" rev="1.6.3"
-            conf="build,ide -> default" />
+            conf="build,ide,tests -> default" />
 
         <!-- TESTING DEPENDENCIES -->
 
@@ -57,6 +57,11 @@
             conf="tests->default" />
         <dependency org="commons-lang" name="commons-lang"
             rev="2.3" conf="tests,ide->default" />
+        <!-- Bean Validation implementation -->
+        <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.1"
+            conf="tests -> default" />
+        <dependency org="org.hibernate" name="hibernate-validator"
+            rev="4.2.0.Final" conf="tests -> default" />
 
     </dependencies>
 
