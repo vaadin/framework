@@ -21,7 +21,7 @@
             rev="2.0" conf="build-provided,ide -> default" />
 
         <dependency org="javax.validation" name="validation-api"
-            rev="1.0.0.GA" conf="build,ide -> default" />
+            rev="1.0.0.GA" conf="build,ide -> default,sources" />
         <!--Servlet API version 2.5 -->
         <dependency org="javax.servlet" name="servlet-api"
             rev="2.5" conf="build-provided,ide -> default" />
@@ -39,6 +39,10 @@
             rev="${vaadin.version}" conf="build->build"></dependency>
         <dependency org="com.vaadin" name="vaadin-themes-compiled"
             rev="${vaadin.version}" conf="build->build"></dependency>
+            
+        <!-- For compiling TestingWidgetSet -->
+        <dependency org="com.vaadin" name="vaadin-client-compiler"
+            rev="${vaadin.version}" conf="build-provided-> build"></dependency>
 
         <!-- Newest Jetty does not work with Ivy currently (orbit -> jar 
             mapping problem) -->
