@@ -25,9 +25,9 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.ItemStyleGenerator;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 public class Components extends Application.LegacyApplication {
@@ -138,7 +138,7 @@ public class Components extends Application.LegacyApplication {
         naviTree.setItemStyleGenerator(new ItemStyleGenerator() {
 
             @Override
-            public String getStyle(Object itemId) {
+            public String getStyle(Tree source, Object itemId) {
                 Class<?> cls = (Class<?>) itemId;
                 if (!isAbstract(cls)) {
                     return "blue";

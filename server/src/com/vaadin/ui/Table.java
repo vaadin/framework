@@ -3479,8 +3479,8 @@ public class Table extends AbstractSelect implements Action.Container,
              * target.
              */
             if (cellStyleGenerator != null) {
-                String cellStyle = cellStyleGenerator
-                        .getStyle(itemId, columnId);
+                String cellStyle = cellStyleGenerator.getStyle(this, itemId,
+                        columnId);
                 if (cellStyle != null && !cellStyle.equals("")) {
                     target.addAttribute("style-" + columnIdMap.key(columnId),
                             cellStyle);
@@ -3567,7 +3567,7 @@ public class Table extends AbstractSelect implements Action.Container,
          * to the target.
          */
         if (cellStyleGenerator != null) {
-            String rowStyle = cellStyleGenerator.getStyle(itemId, null);
+            String rowStyle = cellStyleGenerator.getStyle(this, itemId, null);
             if (rowStyle != null && !rowStyle.equals("")) {
                 target.addAttribute("rowstyle", rowStyle);
             }
@@ -4602,6 +4602,8 @@ public class Table extends AbstractSelect implements Action.Container,
         /**
          * Called by Table when a cell (and row) is painted.
          * 
+         * @param source
+         *            the source Table
          * @param itemId
          *            The itemId of the painted cell
          * @param propertyId
@@ -4610,7 +4612,8 @@ public class Table extends AbstractSelect implements Action.Container,
          *         name will be v-table-cell-content-[style name], or
          *         v-table-row-[style name] for rows)
          */
-        public abstract String getStyle(Object itemId, Object propertyId);
+        public abstract String getStyle(Table source, Object itemId,
+                Object propertyId);
     }
 
     @Override

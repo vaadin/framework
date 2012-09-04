@@ -7,8 +7,8 @@ import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket1857 extends Application.LegacyApplication implements
@@ -60,7 +60,8 @@ public class Ticket1857 extends Application.LegacyApplication implements
                 if (cellStylesEnabler.getValue().booleanValue()) {
                     t.setCellStyleGenerator(new Table.CellStyleGenerator() {
                         @Override
-                        public String getStyle(Object itemId, Object propertyId) {
+                        public String getStyle(Table source, Object itemId,
+                                Object propertyId) {
                             Object cell = t.getContainerProperty(itemId,
                                     propertyId).getValue();
                             if (!(cell instanceof Integer)) {

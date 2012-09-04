@@ -9,6 +9,7 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Container.Hierarchical;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.tests.components.table.Tables;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.CellStyleGenerator;
 import com.vaadin.ui.Tree.CollapseEvent;
 import com.vaadin.ui.Tree.CollapseListener;
@@ -28,7 +29,7 @@ public class TreeTableTest extends Tables<TreeTable> implements
     private CellStyleGenerator rootGreenSecondLevelRed = new com.vaadin.ui.Table.CellStyleGenerator() {
 
         @Override
-        public String getStyle(Object itemId, Object propertyId) {
+        public String getStyle(Table source, Object itemId, Object propertyId) {
             if (propertyId != null) {
                 return null;
             }
@@ -56,7 +57,7 @@ public class TreeTableTest extends Tables<TreeTable> implements
     private CellStyleGenerator evenItemsBold = new CellStyleGenerator() {
 
         @Override
-        public String getStyle(Object itemId, Object propertyId) {
+        public String getStyle(Table source, Object itemId, Object propertyId) {
             if (propertyId != null) {
                 return null;
             }
