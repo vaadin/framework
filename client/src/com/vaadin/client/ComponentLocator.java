@@ -23,11 +23,11 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.UI.VUI;
 import com.vaadin.client.ui.gridlayout.VGridLayout;
-import com.vaadin.client.ui.orderedlayout.VBoxLayout;
 import com.vaadin.client.ui.orderedlayout.VMeasuringOrderedLayout;
 import com.vaadin.client.ui.tabsheet.VTabsheetPanel;
 import com.vaadin.client.ui.window.VWindow;
@@ -499,11 +499,6 @@ public class ComponentLocator {
                     widgetClassName = "VBoxLayout";
                 }
 
-                if (w instanceof VBoxLayout
-                        && "ChildComponentContainer".equals(widgetClassName)) {
-                    widgetClassName = "VBoxLayout$Slot";
-                }
-
                 if (w instanceof VTabsheetPanel && widgetPosition != 0) {
                     // TabSheetPanel now only contains 1 connector => the index
                     // is always 0 which indicates the widget in the active tab
@@ -588,6 +583,12 @@ public class ComponentLocator {
 
                     Widget child = iterator.next();
                     String simpleName2 = Util.getSimpleName(child);
+
+                    if ("VBoxLayout$Slot".equals(simpleName2)) {
+                        // Replace slot with the actual widget in the slot
+                        child = ((SimplePanel) child).getWidget();
+                        simpleName2 = Util.getSimpleName(child);
+                    }
 
                     if (widgetClassName.equals(simpleName2)) {
                         if (widgetPosition == 0) {
