@@ -293,8 +293,10 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
     // TODO Can we close the application when the portlet is removed? Do we know
     // when the portlet is removed?
 
-    private DeploymentConfiguration deploymentConfiguration;
+    private PortletDeploymentConfiguration deploymentConfiguration;
     private AddonContext addonContext;
+
+    private static ThreadLocal<WrappedPortletResponse> currentResponse = new ThreadLocal<WrappedPortletResponse>();
 
     @Override
     public void init(PortletConfig config) throws PortletException {
@@ -324,7 +326,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         addonContext.init();
     }
 
-    protected DeploymentConfiguration createDeploymentConfiguration(
+    protected PortletDeploymentConfiguration createDeploymentConfiguration(
             Properties applicationProperties) {
         return new PortletDeploymentConfiguration(this, applicationProperties);
     }
@@ -393,6 +395,10 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         return deploymentConfiguration.isProductionMode();
     }
 
+    public static WrappedPortletResponse getCurrentResponse() {
+        return currentResponse.get();
+    }
+
     protected void handleRequest(PortletRequest request,
             PortletResponse response) throws PortletException, IOException {
         RequestTimer requestTimer = new RequestTimer();
@@ -405,6 +411,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
         WrappedPortletResponse wrappedResponse = new WrappedPortletResponse(
                 response, getDeploymentConfiguration());
+
+        currentResponse.set(wrappedResponse);
 
         RequestType requestType = getRequestType(wrappedRequest);
 
@@ -449,8 +457,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                  */
                 PortletApplicationContext2 applicationContext = getApplicationContext(request
                         .getPortletSession());
-                applicationContext.setResponse(response);
-                applicationContext.setPortletConfig(getPortletConfig());
 
                 PortletCommunicationManager applicationManager = applicationContext
                         .getApplicationManager(application);
@@ -604,6 +610,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                     } finally {
                         UI.setCurrent(null);
                         Application.setCurrent(null);
+                        currentResponse.set(null);
 
                         PortletSession session = request
                                 .getPortletSession(false);
@@ -640,7 +647,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
     }
 
-    protected DeploymentConfiguration getDeploymentConfiguration() {
+    protected PortletDeploymentConfiguration getDeploymentConfiguration() {
         return deploymentConfiguration;
     }
 

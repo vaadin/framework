@@ -20,7 +20,6 @@ import java.io.File;
 import java.util.Enumeration;
 import java.util.HashMap;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
@@ -42,28 +41,11 @@ public class ServletApplicationContext extends ApplicationContext {
     private transient boolean reinitializingSession = false;
 
     /**
-     * Stores a reference to the currentRequest. Null it not inside a request.
-     */
-    private transient Object currentRequest = null;
-
-    /**
      * Creates a new Web Application Context.
      * 
      */
     protected ServletApplicationContext() {
 
-    }
-
-    @Override
-    protected void startTransaction(Application application, Object request) {
-        currentRequest = request;
-        super.startTransaction(application, request);
-    }
-
-    @Override
-    protected void endTransaction(Application application, Object request) {
-        super.endTransaction(application, request);
-        currentRequest = null;
     }
 
     @Override
@@ -102,8 +84,7 @@ public class ServletApplicationContext extends ApplicationContext {
         reinitializingSession = false;
 
         // Create a new session
-        HttpSession newSession = ((HttpServletRequest) currentRequest)
-                .getSession();
+        HttpSession newSession = VaadinServlet.getCurrentRequest().getSession();
 
         // Restores all attributes (security key, reference to this context
         // instance)

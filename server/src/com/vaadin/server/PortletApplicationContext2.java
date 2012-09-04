@@ -60,11 +60,7 @@ public class PortletApplicationContext2 extends ApplicationContext {
 
     protected Map<Application, Set<PortletListener>> portletListeners = new HashMap<Application, Set<PortletListener>>();
 
-    protected transient PortletConfig portletConfig;
-
     protected HashMap<String, Application> portletWindowIdToApplicationMap = new HashMap<String, Application>();
-
-    private transient PortletResponse response;
 
     private final Map<String, QName> eventActionDestinationMap = new HashMap<String, QName>();
     private final Map<String, Serializable> eventActionValueMap = new HashMap<String, Serializable>();
@@ -156,12 +152,19 @@ public class PortletApplicationContext2 extends ApplicationContext {
         return session;
     }
 
-    public PortletConfig getPortletConfig() {
-        return portletConfig;
+    private PortletResponse getCurrentResponse() {
+        WrappedPortletResponse currentResponse = VaadinPortlet
+                .getCurrentResponse();
+        if (currentResponse != null) {
+            return currentResponse.getPortletResponse();
+        } else {
+            return null;
+        }
     }
 
-    public void setPortletConfig(PortletConfig config) {
-        portletConfig = config;
+    public PortletConfig getPortletConfig() {
+        return VaadinPortlet.getCurrentResponse().getDeploymentConfiguration()
+                .getPortlet().getPortletConfig();
     }
 
     public void addPortletListener(Application app, PortletListener listener) {
@@ -255,17 +258,6 @@ public class PortletApplicationContext2 extends ApplicationContext {
     }
 
     /**
-     * This is for use by {@link VaadinPortlet} only.
-     * 
-     * TODO cleaner implementation, now "semi-static"!
-     * 
-     * @param mimeResponse
-     */
-    void setResponse(PortletResponse response) {
-        this.response = response;
-    }
-
-    /**
      * Creates a new action URL.
      * 
      * @param action
@@ -274,6 +266,7 @@ public class PortletApplicationContext2 extends ApplicationContext {
      */
     public PortletURL generateActionURL(String action) {
         PortletURL url = null;
+        PortletResponse response = getCurrentResponse();
         if (response instanceof MimeResponse) {
             url = ((MimeResponse) response).createActionURL();
             url.setParameter("javax.portlet.action", action);
@@ -306,6 +299,7 @@ public class PortletApplicationContext2 extends ApplicationContext {
      */
     public void sendPortletEvent(UI uI, QName name, Serializable value)
             throws IllegalStateException {
+        PortletResponse response = getCurrentResponse();
         if (response instanceof MimeResponse) {
             String actionKey = "" + System.currentTimeMillis();
             while (eventActionDestinationMap.containsKey(actionKey)) {
@@ -352,6 +346,7 @@ public class PortletApplicationContext2 extends ApplicationContext {
      */
     public void setSharedRenderParameter(UI uI, String name, String value)
             throws IllegalStateException {
+        PortletResponse response = getCurrentResponse();
         if (response instanceof MimeResponse) {
             String actionKey = "" + System.currentTimeMillis();
             while (sharedParameterActionNameMap.containsKey(actionKey)) {
@@ -391,6 +386,7 @@ public class PortletApplicationContext2 extends ApplicationContext {
      */
     public void setPortletMode(UI uI, PortletMode portletMode)
             throws IllegalStateException, PortletModeException {
+        PortletResponse response = getCurrentResponse();
         if (response instanceof MimeResponse) {
             PortletURL url = ((MimeResponse) response).createRenderURL();
             url.setPortletMode(portletMode);

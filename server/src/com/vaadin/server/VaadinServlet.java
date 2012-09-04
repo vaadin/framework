@@ -157,6 +157,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
     }
 
+    private static ThreadLocal<WrappedHttpServletRequest> currentRequest = new ThreadLocal<WrappedHttpServletRequest>();
+
     // TODO Move some (all?) of the constants to a separate interface (shared
     // with portlet)
 
@@ -261,11 +263,17 @@ public class VaadinServlet extends HttpServlet implements Constants {
         service(createWrappedRequest(request), createWrappedResponse(response));
     }
 
+    public static WrappedHttpServletRequest getCurrentRequest() {
+        return currentRequest.get();
+    }
+
     private void service(WrappedHttpServletRequest request,
             WrappedHttpServletResponse response) throws ServletException,
             IOException {
         RequestTimer requestTimer = new RequestTimer();
         requestTimer.start();
+
+        currentRequest.set(request);
 
         AbstractApplicationServletWrapper servletWrapper = new AbstractApplicationServletWrapper(
                 this);
@@ -417,6 +425,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 } finally {
                     UI.setCurrent(null);
                     Application.setCurrent(null);
+                    currentRequest.set(null);
 
                     HttpSession session = request.getSession(false);
                     if (session != null) {
