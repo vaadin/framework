@@ -144,7 +144,7 @@ public interface FieldEvents {
      * @since 6.2
      */
     @SuppressWarnings("serial")
-    public class FocusEvent extends Component.Event {
+    public static class FocusEvent extends Component.Event {
 
         /**
          * Identifier for event that can be used in {@link EventRouter}
@@ -184,7 +184,7 @@ public interface FieldEvents {
      * @since 6.2
      */
     @SuppressWarnings("serial")
-    public class BlurEvent extends Component.Event {
+    public static class BlurEvent extends Component.Event {
 
         /**
          * Identifier for event that can be used in {@link EventRouter}
@@ -243,6 +243,7 @@ public interface FieldEvents {
      * @since 6.5
      */
     public static abstract class TextChangeEvent extends Component.Event {
+
         public TextChangeEvent(Component source) {
             super(source);
         }

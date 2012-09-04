@@ -54,7 +54,7 @@ public class Page implements Serializable {
     /**
      * Event that is fired when a browser window containing a uI is resized.
      */
-    public class BrowserWindowResizeEvent extends EventObject {
+    public static class BrowserWindowResizeEvent extends EventObject {
 
         private final int width;
         private final int height;
@@ -233,7 +233,7 @@ public class Page implements Serializable {
     /**
      * Event fired when uri fragment changes.
      */
-    public class FragmentChangedEvent extends EventObject {
+    public static class FragmentChangedEvent extends EventObject {
 
         /**
          * The new uri fragment

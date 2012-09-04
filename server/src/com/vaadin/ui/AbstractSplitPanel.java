@@ -392,8 +392,8 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      *            Allowed units are UNITS_PERCENTAGE and UNITS_PIXELS
      */
     public void setMaxSplitPosition(float pos, Unit unit) {
-        setSplitPositionLimits(getSplitterState().minPosition, posMinUnit,
-                pos, unit);
+        setSplitPositionLimits(getSplitterState().minPosition, posMinUnit, pos,
+                unit);
     }
 
     /**
@@ -492,7 +492,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
         public void splitterClick(SplitterClickEvent event);
     }
 
-    public class SplitterClickEvent extends ClickEvent {
+    public static class SplitterClickEvent extends ClickEvent {
 
         public SplitterClickEvent(Component source,
                 MouseEventDetails mouseEventDetails) {

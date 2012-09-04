@@ -108,7 +108,7 @@ public class Button extends AbstractComponent implements
      * @author Vaadin Ltd.
      * @since 3.0
      */
-    public class ClickEvent extends Component.Event {
+    public static class ClickEvent extends Component.Event {
 
         private final MouseEventDetails details;
 

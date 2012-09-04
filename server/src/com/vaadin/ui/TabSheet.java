@@ -32,11 +32,11 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.KeyMapper;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.LegacyPaint;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
-import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.ui.tabsheet.TabsheetBaseConstants;
 import com.vaadin.shared.ui.tabsheet.TabsheetConstants;
 import com.vaadin.ui.Component.Focusable;
@@ -743,7 +743,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * @author Vaadin Ltd.
      * @since 3.0
      */
-    public class SelectedTabChangeEvent extends Component.Event {
+    public static class SelectedTabChangeEvent extends Component.Event {
 
         /**
          * New instance of selected tab change event

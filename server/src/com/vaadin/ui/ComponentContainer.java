@@ -174,7 +174,7 @@ public interface ComponentContainer extends HasComponents {
      * Component attach event sent when a component is attached to container.
      */
     @SuppressWarnings("serial")
-    public class ComponentAttachEvent extends Component.Event {
+    public static class ComponentAttachEvent extends Component.Event {
 
         private final Component component;
 
@@ -218,7 +218,7 @@ public interface ComponentContainer extends HasComponents {
      * Component detach event sent when a component is detached from container.
      */
     @SuppressWarnings("serial")
-    public class ComponentDetachEvent extends Component.Event {
+    public static class ComponentDetachEvent extends Component.Event {
 
         private final Component component;
 

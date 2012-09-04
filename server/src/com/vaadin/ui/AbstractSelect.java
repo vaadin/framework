@@ -19,6 +19,7 @@ package com.vaadin.ui;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EventObject;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -1612,7 +1613,8 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     protected void firePropertySetChange() {
         if (propertySetEventListeners != null
                 && !propertySetEventListeners.isEmpty()) {
-            final Container.PropertySetChangeEvent event = new PropertySetChangeEvent();
+            final Container.PropertySetChangeEvent event = new PropertySetChangeEvent(
+                    this);
             final Object[] listeners = propertySetEventListeners.toArray();
             for (int i = 0; i < listeners.length; i++) {
                 ((Container.PropertySetChangeListener) listeners[i])
@@ -1627,7 +1629,8 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      */
     protected void fireItemSetChange() {
         if (itemSetEventListeners != null && !itemSetEventListeners.isEmpty()) {
-            final Container.ItemSetChangeEvent event = new ItemSetChangeEvent();
+            final Container.ItemSetChangeEvent event = new ItemSetChangeEvent(
+                    this);
             final Object[] listeners = itemSetEventListeners.toArray();
             for (int i = 0; i < listeners.length; i++) {
                 ((Container.ItemSetChangeListener) listeners[i])
@@ -1640,8 +1643,12 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Implementation of item set change event.
      */
-    private class ItemSetChangeEvent implements Serializable,
-            Container.ItemSetChangeEvent {
+    private static class ItemSetChangeEvent extends EventObject implements
+            Serializable, Container.ItemSetChangeEvent {
+
+        private ItemSetChangeEvent(Container source) {
+            super(source);
+        }
 
         /**
          * Gets the Property where the event occurred.
@@ -1650,7 +1657,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
          */
         @Override
         public Container getContainer() {
-            return AbstractSelect.this;
+            return (Container) getSource();
         }
 
     }
@@ -1658,8 +1665,12 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Implementation of property set change event.
      */
-    private class PropertySetChangeEvent implements
+    private static class PropertySetChangeEvent extends EventObject implements
             Container.PropertySetChangeEvent, Serializable {
+
+        private PropertySetChangeEvent(Container source) {
+            super(source);
+        }
 
         /**
          * Retrieves the Container whose contents have been modified.
@@ -1668,7 +1679,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
          */
         @Override
         public Container getContainer() {
-            return AbstractSelect.this;
+            return (Container) getSource();
         }
 
     }

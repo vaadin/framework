@@ -108,7 +108,7 @@ public class LoginForm extends CustomComponent {
                     String value = (parameters.get(key))[0];
                     params.put(key, value);
                 }
-                LoginEvent event = new LoginEvent(params);
+                LoginEvent event = new LoginEvent(LoginForm.this, params);
                 fireEvent(event);
                 return true;
             }
@@ -200,12 +200,12 @@ public class LoginForm extends CustomComponent {
     /**
      * This event is sent when login form is submitted.
      */
-    public class LoginEvent extends Event {
+    public static class LoginEvent extends Event {
 
         private Map<String, String> params;
 
-        private LoginEvent(Map<String, String> params) {
-            super(LoginForm.this);
+        private LoginEvent(Component source, Map<String, String> params) {
+            super(source);
             this.params = params;
         }
 

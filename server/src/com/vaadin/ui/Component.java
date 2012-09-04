@@ -670,7 +670,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * @see Component.Listener
      */
     @SuppressWarnings("serial")
-    public class Event extends EventObject {
+    public static class Event extends EventObject {
 
         /**
          * Constructs a new event with the specified source component.
@@ -860,7 +860,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * </p>
      */
     @SuppressWarnings("serial")
-    public class ErrorEvent extends Event {
+    public static class ErrorEvent extends Event {
 
         private final ErrorMessage message;
 
