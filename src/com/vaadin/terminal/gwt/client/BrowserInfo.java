@@ -447,13 +447,15 @@ public class BrowserInfo {
         if (!isTouchDevice()) {
             return false;
         }
+        // TODO Should test other Android browsers, especially Chrome
         if (isAndroid() && isWebkit() && getWebkitVersion() >= 534) {
             return false;
         }
-        // Cannot enable native touch scrolling on iOS 5 until #8792 is resolved
-        // if (isIOS() && isWebkit() && getWebkitVersion() >= 534) {
-        // return false;
-        // }
+        // iOS 6 Safari supports native scrolling; iOS 5 suffers from #8792
+        // TODO Should test other iOS browsers
+        if (isIOS() && isSafari() && getBrowserMajorVersion() >= 6) {
+            return false;
+        }
         return true;
     }
 
