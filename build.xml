@@ -14,7 +14,7 @@
 		</subant>
 	</target>
 
-	<target name="buildorder">
+	<target name="buildorder" depends="official.build.checks">
 		<!-- Find out a good build order -->
 		<ivy:buildlist reference="build-path">
 			<fileset dir="." includes="**/build.xml">
@@ -36,6 +36,14 @@
 	<target name="tests" depends="buildorder">
 		<subant buildpathref="build-path" target="tests">
 		</subant>
+	</target>
+
+	<target name="official.build.checks" if="official.build">
+		<condition property="java.version.matches">
+			<equals arg1="${ant.java.version}" arg2="${vaadin.java.version}" />
+		</condition>
+		<fail unless="java.version.matches" message="Java version is ${ant.java.version}, but Vaadin must be compiled with genuine Java ${vaadin.java.version} compiler." />
+		<echo>Java version is ${ant.java.version} as required.</echo>
 	</target>
 
 </project>
