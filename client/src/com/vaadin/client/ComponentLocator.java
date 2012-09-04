@@ -589,13 +589,7 @@ public class ComponentLocator {
 
                     Widget child = iterator.next();
                     String simpleName2 = Util.getSimpleName(child);
-
-                    if ("VBoxLayout$Slot".equals(simpleName2)) {
-                        // Replace slot with the actual widget in the slot
-                        child = ((SimplePanel) child).getWidget();
-                        simpleName2 = Util.getSimpleName(child);
-                    }
-
+                    
                     if (widgetClassName.equals(simpleName2)) {
                         if (widgetPosition == 0) {
                             w = child;
@@ -603,6 +597,19 @@ public class ComponentLocator {
                             break;
                         }
                         widgetPosition--;
+
+                    } else if (w instanceof VBoxLayout
+                            && "VBoxLayout$Slot".equals(simpleName2)) {
+                        child = ((SimplePanel) child).getWidget();
+                        simpleName2 = Util.getSimpleName(child);
+                        if (widgetClassName.equals(simpleName2)) {
+                            if (widgetPosition == 0) {
+                                w = child;
+                                ok = true;
+                                break;
+                            }
+                            widgetPosition--;
+                        }
                     }
                 }
 
