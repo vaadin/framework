@@ -11,8 +11,9 @@
         <conf name="compile-theme" visibility="private" />
     </configurations>
     <publications>
-        <artifact type="jar"></artifact>
-    </publications>
+        <artifact type="jar" ext="jar"/>
+                <artifact type="pom" ext="pom"/>
+                    </publications>
     <dependencies>
         <dependency org="com.vaadin" name="vaadin-theme-compiler"
             rev="${vaadin.version}" conf="compile-theme->build" />

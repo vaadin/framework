@@ -13,8 +13,8 @@
         <conf name="jetty-run" extends="build" visibility="private" />
     </configurations>
     <publications>
-        <artifact type="war" />
-    </publications>
+        <artifact type="war" ext="war"/>
+                   </publications>
     <dependencies defaultconf="build" defaultconfmapping="build,ide->default">
         <!-- API DEPENDENCIES -->
         <dependency org="javax.portlet" name="portlet-api"

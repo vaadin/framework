@@ -41,7 +41,8 @@
 		<property name="result.dir" location="result" />
 		<property name="result.jar" location="${result.dir}/lib/${module.name}-${vaadin.version}.jar" />
 		<property name="classes" location="{$result.dir}/classes" />
-
+		<antcall target="common.pom.xml" />
+		
 		<jar jarfile="${result.jar}">
 			<fileset dir="${result.dir}">
 				<include name="VAADIN/themes/**" />

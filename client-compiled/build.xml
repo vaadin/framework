@@ -94,7 +94,6 @@
 		<jar file="${compiled-cache.jar}" compress="true">
 			<fileset dir="${gwtar.dir}">
 				<include name="**/*.gwtar" />
-				<include name="pom.xml" />
 			</fileset>
 			<union refid="client-compiled-cache.gwt.includes" />
 			<fileset refid="common.files.for.all.jars" />
@@ -115,7 +114,6 @@
 			</manifest>
 			<fileset dir="${result.dir}">
 				<include name="VAADIN/widgetsets/com.vaadin*/**" />
-				<include name="pom.xml" />
 			</fileset>
 			<fileset refid="common.files.for.all.jars" />
 		</jar>
@@ -123,7 +121,7 @@
 
 	</target>
 
-	<target name="publish-local" depends="client-compiled.jar, client-compiled-cache.jar">
+	<target name="publish-local" depends="client-compiled.jar">
 		<antcall target="common.publish-local">
 			<param name="conf" value="build" />
 		</antcall>

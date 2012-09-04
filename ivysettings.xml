@@ -11,6 +11,10 @@
     <settings defaultResolver="public" />
     <resolvers>
         <ibiblio name="public" m2compatible="true" />
+        <filesystem name="local-maven" m2compatible="true">
+            <artifact
+                pattern="${user.home}/.m2/repository/[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]" />
+        </filesystem>
         <dual name="custom-smartsprites">
             <filesystem name="smartsprites-ivy">
                 <ivy pattern="${basedir}/ivymodule/[module]-ivy-[revision].xml" />

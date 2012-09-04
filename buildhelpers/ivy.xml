@@ -17,13 +17,15 @@
     <configurations>
         <conf name="build" />
         <conf name="build-provided" />
-        <conf name="ide" visibility="private"/>
+        <conf name="ide" visibility="private" />
         <conf name="tests" />
     </configurations>
     <publications>
         <artifact type="jar" />
-<!--         <artifact type="source" ext="jar" m:classifier="sources" /> -->
-<!--         <artifact type="javadoc" ext="jar" m:classifier="javadoc" /> -->
+        <!-- <artifact type="source" ext="jar" m:classifier="sources" /> -->
+        <!-- <artifact type="javadoc" ext="jar" m:classifier="javadoc" /> -->
+        <artifact type="pom" ext="pom" />
+
     </publications>
     <dependencies />
 

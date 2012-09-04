@@ -12,8 +12,9 @@
         <conf name="ide" visibility="private"/>
     </configurations>
     <publications>
-        <artifact></artifact>
-    </publications>
+        <artifact type="jar" ext="jar"/>
+                <artifact type="pom" ext="pom"/>
+                    </publications>
     <dependencies>
         <dependency org="com.vaadin" name="vaadin-shared"
             rev="${vaadin.version}"></dependency>

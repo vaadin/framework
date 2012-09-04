@@ -20,7 +20,7 @@
 	<target name="pom.xml" description="Generates a pom.xml based on the Ivy configuration">
 		<fail unless="result.dir" message="No result.dir parameter given" />
 		<property name="ivy.xml" location="${result.dir}/../ivy.xml" />
-		<property name="pom.xml" location="${result.dir}/pom.xml" />
+		<property name="pom.xml" location="${result.dir}/lib/${module.name}-${vaadin.version}.pom" />
 		<property name="conf" value="build, build-provided" />
 
 		<ivy:makepom templatefile="${vaadin.basedir}/pom-template.xml" ivyfile="${ivy.xml}" pomfile="${pom.xml}" conf="${conf}">
@@ -86,7 +86,6 @@
 			<fileset dir="${classes}" excludes="${classes.exclude}" />
 			<fileset dir="${src}" excludes="${jar.exclude}" />
 			<fileset refid="common.files.for.all.jars" />
-			<fileset file="${pom.xml}" />
 			<union refid="extra.jar.includes" />
 		</union>
 		<jar destfile="${result.jar}" duplicate="fail" index="true">
@@ -210,6 +209,17 @@
 			<!--			<artifacts pattern="${result.dir}/[artifact]-[revision].[ext]" />-->
 			<artifacts pattern="${result.dir}/lib/[artifact]-[revision](-[classifier]).[ext]" />
 
+		</ivy:publish>
+		<ivy:publish conf="${conf}" resolver="local-maven" overwrite="true">
+			<artifacts pattern="${result.dir}/lib/[artifact]-[revision](-[classifier]).[ext]" />
+		</ivy:publish>
+	</target>
+
+	<target name="publish.to.local.maven">
+		<property name="conf" value="*(public)" />
+
+		<ivy:resolve conf="${conf}" />
+		<ivy:publish conf="${conf}" resolver="local-maven" overwrite="true">
 		</ivy:publish>
 	</target>
 </project>

@@ -13,8 +13,9 @@
         <conf name="tests" />
     </configurations>
     <publications>
-        <artifact></artifact>
-    </publications>
+        <artifact type="jar" ext="jar"/>
+                <artifact type="pom" ext="pom"/>
+                    </publications>
     <dependencies>
     </dependencies>
 

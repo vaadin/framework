@@ -13,8 +13,9 @@
         <conf name="tests" />
     </configurations>
     <publications>
-        <artifact type="jar" />
-        <artifact type="sources" ext="jar" />
+        <artifact type="jar" ext="jar"/>
+                <artifact type="pom" ext="pom"/>
+                        <artifact type="sources" ext="jar" />
         <artifact type="javadoc" ext="jar" />
     </publications>
     <dependencies defaultconf="*->default">
