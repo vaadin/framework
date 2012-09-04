@@ -674,18 +674,20 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * This event is sent each time a window is removed from the application
      * with {@link com.vaadin.Application#removeWindow(Window)}.
      */
-    public class WindowDetachEvent extends EventObject {
+    public static class WindowDetachEvent extends EventObject {
 
         private final Window window;
 
         /**
          * Creates a event.
          * 
+         * @param application
+         *            the application to which the detached window belonged.
          * @param window
          *            the Detached window.
          */
-        public WindowDetachEvent(Window window) {
-            super(Application.this);
+        public WindowDetachEvent(Application application, Window window) {
+            super(application);
             this.window = window;
         }
 
@@ -714,18 +716,20 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * This event is sent each time a window is attached tothe application with
      * {@link com.vaadin.Application#addWindow(Window)}.
      */
-    public class WindowAttachEvent extends EventObject {
+    public static class WindowAttachEvent extends EventObject {
 
         private final Window window;
 
         /**
          * Creates a event.
          * 
+         * @param application
+         *            the application to which the detached window belonged.
          * @param window
          *            the Attached window.
          */
-        public WindowAttachEvent(Window window) {
-            super(Application.this);
+        public WindowAttachEvent(Application application, Window window) {
+            super(application);
             this.window = window;
         }
 
