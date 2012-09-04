@@ -661,7 +661,8 @@ public class SQLContainer implements Container, Container.Filterable,
             throw new IndexOutOfBoundsException("Index is negative! index="
                     + index);
         }
-
+        // make sure the size field is valid
+        updateCount();
         if (index < size) {
             if (itemIndexes.keySet().contains(index)) {
                 return itemIndexes.get(index);
@@ -671,7 +672,9 @@ public class SQLContainer implements Container, Container.Filterable,
         } else {
             // The index is in the added items
             int offset = index - size;
-            return addedItems.get(offset).getId();
+            // TODO this is very inefficient if looping - should improve
+            // getItemIds(int, int)
+            return getFilteredAddedItems().get(offset).getId();
         }
     }
 
@@ -694,7 +697,12 @@ public class SQLContainer implements Container, Container.Filterable,
 
     @Override
     public Object nextItemId(Object itemId) {
-        return getIdByIndex(indexOfId(itemId) + 1);
+        int index = indexOfId(itemId) + 1;
+        try {
+            return getIdByIndex(index);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
     }
 
     /*

@@ -2322,8 +2322,13 @@ public class SQLContainerTest {
                 container.getContainerProperty(container.getIdByIndex(3),
                         "NAME").getValue());
 
-        Assert.assertNull(container.getIdByIndex(4));
-        Assert.assertNull(container.nextItemId(container.getIdByIndex(3)));
+        try {
+            container.getIdByIndex(4);
+            Assert.fail("SQLContainer.getIdByIndex() returned a value for an index beyond the end of the container");
+        } catch (IndexOutOfBoundsException e) {
+            // should throw exception - item is filtered out
+        }
+        container.nextItemId(container.getIdByIndex(3));
 
         Assert.assertFalse(container.containsId(id2));
         Assert.assertFalse(container.getItemIds().contains(id2));
