@@ -66,10 +66,93 @@ import com.vaadin.ui.UI;
  * 
  * @author peholmst
  */
-public class VaadinPortlet extends GenericPortlet implements
-        Constants {
+public class VaadinPortlet extends GenericPortlet implements Constants {
 
     public static final String RESOURCE_URL_ID = "APP";
+
+    public static class PortletDeploymentConfiguration extends
+            AbstractDeploymentConfiguration {
+        private final VaadinPortlet portlet;
+
+        public PortletDeploymentConfiguration(VaadinPortlet portlet,
+                Properties applicationProperties) {
+            super(portlet.getClass(), applicationProperties);
+            this.portlet = portlet;
+        }
+
+        protected VaadinPortlet getPortlet() {
+            return portlet;
+        }
+
+        @Override
+        public String getConfiguredWidgetset(WrappedRequest request) {
+
+            String widgetset = getApplicationOrSystemProperty(
+                    PARAMETER_WIDGETSET, null);
+
+            if (widgetset == null) {
+                // If no widgetset defined for the application, check the
+                // portal property
+                widgetset = WrappedPortletRequest.cast(request)
+                        .getPortalProperty(PORTAL_PARAMETER_VAADIN_WIDGETSET);
+            }
+
+            if (widgetset == null) {
+                // If no widgetset defined for the portal, use the default
+                widgetset = DEFAULT_WIDGETSET;
+            }
+
+            return widgetset;
+        }
+
+        @Override
+        public String getConfiguredTheme(WrappedRequest request) {
+
+            // is the default theme defined by the portal?
+            String themeName = WrappedPortletRequest.cast(request)
+                    .getPortalProperty(Constants.PORTAL_PARAMETER_VAADIN_THEME);
+
+            if (themeName == null) {
+                // no, using the default theme defined by Vaadin
+                themeName = DEFAULT_THEME_NAME;
+            }
+
+            return themeName;
+        }
+
+        @Override
+        public boolean isStandalone(WrappedRequest request) {
+            return false;
+        }
+
+        @Override
+        public String getStaticFileLocation(WrappedRequest request) {
+            String staticFileLocation = WrappedPortletRequest.cast(request)
+                    .getPortalProperty(
+                            Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH);
+            if (staticFileLocation != null) {
+                // remove trailing slash if any
+                while (staticFileLocation.endsWith(".")) {
+                    staticFileLocation = staticFileLocation.substring(0,
+                            staticFileLocation.length() - 1);
+                }
+                return staticFileLocation;
+            } else {
+                // default for Liferay
+                return "/html";
+            }
+        }
+
+        @Override
+        public String getMimeType(String resourceName) {
+            return getPortlet().getPortletContext().getMimeType(resourceName);
+        }
+
+        @Override
+        public SystemMessages getSystemMessages() {
+            return ServletPortletHelper.DEFAULT_SYSTEM_MESSAGES;
+        }
+    }
 
     public static class WrappedHttpAndPortletRequest extends
             WrappedPortletRequest {
@@ -177,8 +260,7 @@ public class VaadinPortlet extends GenericPortlet implements
 
         private final VaadinPortlet portlet;
 
-        public AbstractApplicationPortletWrapper(
-                VaadinPortlet portlet) {
+        public AbstractApplicationPortletWrapper(VaadinPortlet portlet) {
             this.portlet = portlet;
         }
 
@@ -236,99 +318,15 @@ public class VaadinPortlet extends GenericPortlet implements
                     config.getInitParameter(name));
         }
 
-        deploymentConfiguration = new AbstractDeploymentConfiguration(
-                getClass(), applicationProperties) {
-            @Override
-            public String getConfiguredWidgetset(WrappedRequest request) {
-
-                String widgetset = getApplicationOrSystemProperty(
-                        PARAMETER_WIDGETSET, null);
-
-                if (widgetset == null) {
-                    // If no widgetset defined for the application, check the
-                    // portal property
-                    widgetset = WrappedPortletRequest.cast(request)
-                            .getPortalProperty(
-                                    PORTAL_PARAMETER_VAADIN_WIDGETSET);
-                }
-
-                if (widgetset == null) {
-                    // If no widgetset defined for the portal, use the default
-                    widgetset = DEFAULT_WIDGETSET;
-                }
-
-                return widgetset;
-            }
-
-            @Override
-            public String getConfiguredTheme(WrappedRequest request) {
-
-                // is the default theme defined by the portal?
-                String themeName = WrappedPortletRequest.cast(request)
-                        .getPortalProperty(
-                                Constants.PORTAL_PARAMETER_VAADIN_THEME);
-
-                if (themeName == null) {
-                    // no, using the default theme defined by Vaadin
-                    themeName = DEFAULT_THEME_NAME;
-                }
-
-                return themeName;
-            }
-
-            @Override
-            public boolean isStandalone(WrappedRequest request) {
-                return false;
-            }
-
-            /*
-             * (non-Javadoc)
-             * 
-             * @see
-             * com.vaadin.terminal.DeploymentConfiguration#getStaticFileLocation
-             * (com.vaadin.terminal.WrappedRequest)
-             * 
-             * Return the URL from where static files, e.g. the widgetset and
-             * the theme, are served. In a standard configuration the VAADIN
-             * folder inside the returned folder is what is used for widgetsets
-             * and themes.
-             * 
-             * @return The location of static resources (inside which there
-             * should be a VAADIN directory). Does not end with a slash (/).
-             */
-
-            @Override
-            public String getStaticFileLocation(WrappedRequest request) {
-                String staticFileLocation = WrappedPortletRequest
-                        .cast(request)
-                        .getPortalProperty(
-                                Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH);
-                if (staticFileLocation != null) {
-                    // remove trailing slash if any
-                    while (staticFileLocation.endsWith(".")) {
-                        staticFileLocation = staticFileLocation.substring(0,
-                                staticFileLocation.length() - 1);
-                    }
-                    return staticFileLocation;
-                } else {
-                    // default for Liferay
-                    return "/html";
-                }
-            }
-
-            @Override
-            public String getMimeType(String resourceName) {
-                return getPortletContext().getMimeType(resourceName);
-            }
-
-            @Override
-            public SystemMessages getSystemMessages() {
-                return VaadinPortlet.this.getSystemMessages();
-            }
-        };
+        deploymentConfiguration = createDeploymentConfiguration(applicationProperties);
 
         addonContext = new AddonContext(deploymentConfiguration);
         addonContext.init();
+    }
+
+    protected DeploymentConfiguration createDeploymentConfiguration(
+            Properties applicationProperties) {
+        return new PortletDeploymentConfiguration(this, applicationProperties);
     }
 
     @Override
@@ -913,15 +911,6 @@ public class VaadinPortlet extends GenericPortlet implements
         }
     }
 
-    /**
-     * Get system messages from the current application class
-     * 
-     * @return
-     */
-    protected SystemMessages getSystemMessages() {
-        return ServletPortletHelper.DEFAULT_SYSTEM_MESSAGES;
-    }
-
     private void handleServiceException(WrappedPortletRequest request,
             WrappedPortletResponse response, Application application,
             Throwable e) throws IOException, PortletException {
@@ -930,7 +919,8 @@ public class VaadinPortlet extends GenericPortlet implements
 
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {
-            SystemMessages ci = getSystemMessages();
+            SystemMessages ci = getDeploymentConfiguration()
+                    .getSystemMessages();
             criticalNotification(request, response,
                     ci.getInternalErrorCaption(), ci.getInternalErrorMessage(),
                     null, ci.getInternalErrorURL());

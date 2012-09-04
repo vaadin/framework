@@ -54,6 +54,90 @@ import com.vaadin.ui.UI;
 @SuppressWarnings("serial")
 public class VaadinServlet extends HttpServlet implements Constants {
 
+    public static class ServletDeploymentConfiguration extends
+            AbstractDeploymentConfiguration {
+        private final VaadinServlet servlet;
+
+        public ServletDeploymentConfiguration(VaadinServlet servlet,
+                Properties applicationProperties) {
+            super(servlet.getClass(), applicationProperties);
+            this.servlet = servlet;
+        }
+
+        protected VaadinServlet getServlet() {
+            return servlet;
+        }
+
+        @Override
+        public String getStaticFileLocation(WrappedRequest request) {
+            HttpServletRequest servletRequest = WrappedHttpServletRequest
+                    .cast(request);
+            String staticFileLocation;
+            // if property is defined in configurations, use that
+            staticFileLocation = getApplicationOrSystemProperty(
+                    PARAMETER_VAADIN_RESOURCES, null);
+            if (staticFileLocation != null) {
+                return staticFileLocation;
+            }
+
+            // the last (but most common) option is to generate default location
+            // from request
+
+            // if context is specified add it to widgetsetUrl
+            String ctxPath = servletRequest.getContextPath();
+
+            // FIXME: ctxPath.length() == 0 condition is probably unnecessary
+            // and
+            // might even be wrong.
+
+            if (ctxPath.length() == 0
+                    && request
+                            .getAttribute("javax.servlet.include.context_path") != null) {
+                // include request (e.g portlet), get context path from
+                // attribute
+                ctxPath = (String) request
+                        .getAttribute("javax.servlet.include.context_path");
+            }
+
+            // Remove heading and trailing slashes from the context path
+            ctxPath = removeHeadingOrTrailing(ctxPath, "/");
+
+            if (ctxPath.equals("")) {
+                return "";
+            } else {
+                return "/" + ctxPath;
+            }
+        }
+
+        @Override
+        public String getConfiguredWidgetset(WrappedRequest request) {
+            return getApplicationOrSystemProperty(
+                    VaadinServlet.PARAMETER_WIDGETSET,
+                    VaadinServlet.DEFAULT_WIDGETSET);
+        }
+
+        @Override
+        public String getConfiguredTheme(WrappedRequest request) {
+            // Use the default
+            return VaadinServlet.getDefaultTheme();
+        }
+
+        @Override
+        public boolean isStandalone(WrappedRequest request) {
+            return true;
+        }
+
+        @Override
+        public String getMimeType(String resourceName) {
+            return getServlet().getServletContext().getMimeType(resourceName);
+        }
+
+        @Override
+        public SystemMessages getSystemMessages() {
+            return ServletPortletHelper.DEFAULT_SYSTEM_MESSAGES;
+        }
+    }
+
     private static class AbstractApplicationServletWrapper implements Callback {
 
         private final VaadinServlet servlet;
@@ -116,48 +200,15 @@ public class VaadinServlet extends HttpServlet implements Constants {
                     servletConfig.getInitParameter(name));
         }
 
-        deploymentConfiguration = new AbstractDeploymentConfiguration(
-                getClass(), applicationProperties) {
-
-            @Override
-            public String getStaticFileLocation(WrappedRequest request) {
-                HttpServletRequest servletRequest = WrappedHttpServletRequest
-                        .cast(request);
-                return VaadinServlet.this
-                        .getStaticFilesLocation(servletRequest);
-            }
-
-            @Override
-            public String getConfiguredWidgetset(WrappedRequest request) {
-                return getApplicationOrSystemProperty(
-                        VaadinServlet.PARAMETER_WIDGETSET,
-                        VaadinServlet.DEFAULT_WIDGETSET);
-            }
-
-            @Override
-            public String getConfiguredTheme(WrappedRequest request) {
-                // Use the default
-                return VaadinServlet.getDefaultTheme();
-            }
-
-            @Override
-            public boolean isStandalone(WrappedRequest request) {
-                return true;
-            }
-
-            @Override
-            public String getMimeType(String resourceName) {
-                return getServletContext().getMimeType(resourceName);
-            }
-
-            @Override
-            public SystemMessages getSystemMessages() {
-                return VaadinServlet.this.getSystemMessages();
-            }
-        };
+        deploymentConfiguration = createDeploymentConfiguration(applicationProperties);
 
         addonContext = new AddonContext(deploymentConfiguration);
         addonContext.init();
+    }
+
+    protected ServletDeploymentConfiguration createDeploymentConfiguration(
+            Properties applicationProperties) {
+        return new ServletDeploymentConfiguration(this, applicationProperties);
     }
 
     @Override
@@ -430,10 +481,12 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // This can be removed if cookieless mode (#3228) is supported
             if (request.getRequestedSessionId() == null) {
                 // User has cookies disabled
-                criticalNotification(request, response, getSystemMessages()
-                        .getCookiesDisabledCaption(), getSystemMessages()
-                        .getCookiesDisabledMessage(), null, getSystemMessages()
-                        .getCookiesDisabledURL());
+                SystemMessages systemMessages = getDeploymentConfiguration()
+                        .getSystemMessages();
+                criticalNotification(request, response,
+                        systemMessages.getCookiesDisabledCaption(),
+                        systemMessages.getCookiesDisabledMessage(), null,
+                        systemMessages.getCookiesDisabledURL());
                 return false;
             }
         }
@@ -695,7 +748,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
             Throwable e) throws IOException, ServletException {
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {
-            SystemMessages ci = getSystemMessages();
+            SystemMessages ci = getDeploymentConfiguration()
+                    .getSystemMessages();
             criticalNotification(request, response,
                     ci.getInternalErrorCaption(), ci.getInternalErrorMessage(),
                     null, ci.getInternalErrorURL());
@@ -758,7 +812,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         try {
-            SystemMessages ci = getSystemMessages();
+            SystemMessages ci = getDeploymentConfiguration()
+                    .getSystemMessages();
             if (getRequestType(request) != RequestType.UIDL) {
                 // 'plain' http req - e.g. browser reload;
                 // just go ahead redirect the browser
@@ -800,7 +855,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         try {
-            SystemMessages ci = getSystemMessages();
+            SystemMessages ci = getDeploymentConfiguration()
+                    .getSystemMessages();
             if (getRequestType(request) != RequestType.UIDL) {
                 // 'plain' http req - e.g. browser reload;
                 // just go ahead redirect the browser
@@ -1182,77 +1238,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     private boolean isOnUnloadRequest(HttpServletRequest request) {
         return request.getParameter(ApplicationConstants.PARAM_UNLOADBURST) != null;
-    }
-
-    /**
-     * Get system messages
-     * 
-     * @return
-     */
-    protected SystemMessages getSystemMessages() {
-        return ServletPortletHelper.DEFAULT_SYSTEM_MESSAGES;
-    }
-
-    /**
-     * Return the URL from where static files, e.g. the widgetset and the theme,
-     * are served. In a standard configuration the VAADIN folder inside the
-     * returned folder is what is used for widgetsets and themes.
-     * 
-     * The returned folder is usually the same as the context path and
-     * independent of the application.
-     * 
-     * @param request
-     * @return The location of static resources (should contain the VAADIN
-     *         directory). Never ends with a slash (/).
-     */
-    protected String getStaticFilesLocation(HttpServletRequest request) {
-
-        return getWebApplicationsStaticFileLocation(request);
-    }
-
-    /**
-     * The default method to fetch static files location (URL). This method does
-     * not check for request attribute {@value #REQUEST_VAADIN_STATIC_FILE_PATH}
-     * 
-     * @param request
-     * @return
-     */
-    private String getWebApplicationsStaticFileLocation(
-            HttpServletRequest request) {
-        String staticFileLocation;
-        // if property is defined in configurations, use that
-        staticFileLocation = getDeploymentConfiguration()
-                .getApplicationOrSystemProperty(PARAMETER_VAADIN_RESOURCES,
-                        null);
-        if (staticFileLocation != null) {
-            return staticFileLocation;
-        }
-
-        // the last (but most common) option is to generate default location
-        // from request
-
-        // if context is specified add it to widgetsetUrl
-        String ctxPath = request.getContextPath();
-
-        // FIXME: ctxPath.length() == 0 condition is probably unnecessary and
-        // might even be wrong.
-
-        if (ctxPath.length() == 0
-                && request.getAttribute("javax.servlet.include.context_path") != null) {
-            // include request (e.g portlet), get context path from
-            // attribute
-            ctxPath = (String) request
-                    .getAttribute("javax.servlet.include.context_path");
-        }
-
-        // Remove heading and trailing slashes from the context path
-        ctxPath = removeHeadingOrTrailing(ctxPath, "/");
-
-        if (ctxPath.equals("")) {
-            return "";
-        } else {
-            return "/" + ctxPath;
-        }
     }
 
     /**

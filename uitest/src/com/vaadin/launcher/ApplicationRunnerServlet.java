@@ -21,6 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,8 +31,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
-import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.AbstractUIProvider;
+import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.WrappedHttpServletRequest;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.TestBase;
@@ -257,14 +258,21 @@ public class ApplicationRunnerServlet extends VaadinServlet {
     }
 
     @Override
-    protected String getStaticFilesLocation(HttpServletRequest request) {
-        URIS uris = getApplicationRunnerURIs(request);
-        String staticFilesPath = uris.staticFilesPath;
-        if (staticFilesPath.equals("/")) {
-            staticFilesPath = "";
-        }
+    protected ServletDeploymentConfiguration createDeploymentConfiguration(
+            Properties applicationProperties) {
+        return new ServletDeploymentConfiguration(this, applicationProperties) {
+            @Override
+            public String getStaticFileLocation(WrappedRequest request) {
+                URIS uris = getApplicationRunnerURIs(WrappedHttpServletRequest
+                        .cast(request));
+                String staticFilesPath = uris.staticFilesPath;
+                if (staticFilesPath.equals("/")) {
+                    staticFilesPath = "";
+                }
 
-        return staticFilesPath;
+                return staticFilesPath;
+            }
+        };
     }
 
     @Override
