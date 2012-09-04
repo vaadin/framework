@@ -11,8 +11,9 @@
         <conf name="compile-module" visibility="private" />
     </configurations>
     <publications>
-        <artifact type="jar" name="vaadin-client-compiled"/>
-        <artifact type="jar" name="vaadin-client-compiled-cache"/>
+        <artifact type="jar" name="vaadin-client-compiled" />
+        <!-- cache must be a separate artifact, not within vaadin-client-compiled -->
+        <!-- <artifact type="jar" name="vaadin-client-compiled-cache"/> -->
     </publications>
     <dependencies>
         <dependency org="com.vaadin" name="vaadin-server"
