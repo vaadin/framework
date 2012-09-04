@@ -19,8 +19,8 @@ package com.vaadin.event;
 import java.lang.reflect.Method;
 
 import com.vaadin.shared.MouseEventDetails;
-import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.Component;
+import com.vaadin.util.ReflectTools;
 
 /**
  * Interface that serves as a wrapper for mouse related events.

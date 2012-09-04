@@ -21,12 +21,12 @@ import java.lang.reflect.Method;
 
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
-import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Field.ValueChangeEvent;
 import com.vaadin.ui.TextField;
+import com.vaadin.util.ReflectTools;
 
 /**
  * Interface that serves as a wrapper for {@link Field} related events.

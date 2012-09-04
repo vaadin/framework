@@ -29,10 +29,10 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.TransactionalPropertyWrapper;
-import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
+import com.vaadin.util.ReflectTools;
 
 /**
  * FieldGroup provides an easy way of binding fields to data and handling

@@ -28,10 +28,10 @@ import com.vaadin.server.WrappedRequest.BrowserDetails;
 import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.ui.PageClientRpc;
 import com.vaadin.shared.ui.ui.UIConstants;
-import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.JavaScript;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
+import com.vaadin.util.ReflectTools;
 
 public class Page implements Serializable {
 

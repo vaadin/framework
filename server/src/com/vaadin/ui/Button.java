@@ -33,8 +33,8 @@ import com.vaadin.event.ShortcutListener;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.button.ButtonServerRpc;
 import com.vaadin.shared.ui.button.ButtonState;
-import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.Component.Focusable;
+import com.vaadin.util.ReflectTools;
 
 /**
  * A generic button component.

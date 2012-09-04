@@ -49,7 +49,7 @@ import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIServerRpc;
 import com.vaadin.shared.ui.ui.UIState;
-import com.vaadin.tools.ReflectTools;
+import com.vaadin.util.ReflectTools;
 
 /**
  * The topmost component in any component hierarchy. There is one UI for every
