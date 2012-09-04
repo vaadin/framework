@@ -76,7 +76,13 @@ public class VUriFragmentUtility extends Widget implements Paintable,
 
     public void onValueChange(ValueChangeEvent<String> event) {
         String historyToken = event.getValue();
+        if (fragment != null && fragment.equals(historyToken)) {
+            // Do nothing if the fragment has not changed. This can at least
+            // happen when detaching and attaching a UriFragmentUtility.
+            return;
+        }
         fragment = historyToken;
+
         if (client != null) {
             client.updateVariable(paintableId, "fragment", fragment, immediate);
         }
