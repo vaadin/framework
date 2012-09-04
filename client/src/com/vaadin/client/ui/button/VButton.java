@@ -91,11 +91,6 @@ public class VButton extends FocusWidget implements ClickHandler {
     private HandlerRegistration focusHandlerRegistration;
     private HandlerRegistration blurHandlerRegistration;
 
-    /**
-     * If caption should be rendered in HTML
-     */
-    protected boolean htmlCaption = false;
-
     public VButton() {
         super(DOM.createDiv());
         setTabIndex(0);
