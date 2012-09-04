@@ -18,6 +18,9 @@ public class RemoveListenersOnDetach {
     int numReadOnlyChanges = 0;
 
     AbstractField field = new AbstractField() {
+        final private Application application = new Application() {
+
+        };
         private UI uI = new UI() {
 
             @Override
@@ -25,8 +28,10 @@ public class RemoveListenersOnDetach {
 
             }
 
-        };
-        private Application application = new Application() {
+            @Override
+            public Application getApplication() {
+                return application;
+            }
 
         };
 
