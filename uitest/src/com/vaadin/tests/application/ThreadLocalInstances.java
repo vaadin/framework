@@ -1,9 +1,9 @@
 package com.vaadin.tests.application;
 
 import com.vaadin.Application;
+import com.vaadin.server.AbstractUIProvider;
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.PaintException;
-import com.vaadin.server.UIProvider;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestApplication;
 import com.vaadin.tests.integration.FlagSeResource;
@@ -73,7 +73,7 @@ public class ThreadLocalInstances extends AbstractTestApplication {
     @Override
     public void init() {
         reportCurrentStatus("app init");
-        addUIProvider(new UIProvider() {
+        addUIProvider(new AbstractUIProvider() {
             @Override
             public UI createInstance(Application application,
                     Class<? extends UI> type, WrappedRequest request) {

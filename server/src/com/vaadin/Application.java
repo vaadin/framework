@@ -18,7 +18,6 @@ package com.vaadin;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.net.SocketException;
 import java.net.URL;
@@ -40,15 +39,12 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.vaadin.annotations.PreserveOnRefresh;
-import com.vaadin.annotations.Theme;
-import com.vaadin.annotations.Title;
-import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterFactory;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
 import com.vaadin.event.EventRouter;
 import com.vaadin.server.AbstractErrorMessage;
+import com.vaadin.server.AbstractUIProvider;
 import com.vaadin.server.ApplicationContext;
 import com.vaadin.server.BootstrapFragmentResponse;
 import com.vaadin.server.BootstrapListener;
@@ -193,6 +189,47 @@ public class Application implements Terminal.ErrorListener, Serializable {
             this.mainWindow = mainWindow;
         }
 
+        @Override
+        public void start(ApplicationStartEvent event) {
+            super.start(event);
+            addUIProvider(new AbstractUIProvider() {
+                @Override
+                public Class<? extends UI> getUIClass(Application application,
+                        WrappedRequest request) {
+                    if (application == LegacyApplication.this) {
+                        UI uiInstance = getUIInstance(request);
+                        if (uiInstance != null) {
+                            return uiInstance.getClass();
+                        }
+                    }
+                    return null;
+                }
+
+                @Override
+                public UI createInstance(Application application,
+                        Class<? extends UI> type, WrappedRequest request) {
+                    return getUIInstance(request);
+                }
+
+                @Override
+                public String getThemeForUI(WrappedRequest request,
+                        Class<? extends UI> uiClass) {
+                    return theme;
+                }
+
+                @Override
+                public String getPageTitleForUI(WrappedRequest request,
+                        Class<? extends UI> uiClass) {
+                    UI uiInstance = getUIInstance(request);
+                    if (uiInstance != null) {
+                        return uiInstance.getCaption();
+                    } else {
+                        return super.getPageTitleForUI(request, uiClass);
+                    }
+                }
+            });
+        }
+
         /**
          * Gets the mainWindow of the application.
          * 
@@ -208,19 +245,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
          */
         public UI.LegacyWindow getMainWindow() {
             return mainWindow;
-        }
-
-        /**
-         * This implementation simulates the way of finding a window for a
-         * request by extracting a window name from the requested path and
-         * passes that name to {@link #getWindow(String)}.
-         * <p>
-         * {@inheritDoc}
-         */
-        @Override
-        protected <T extends UI> T createUIInstance(WrappedRequest request,
-                Class<T> uiClass) {
-            return uiClass.cast(getUIInstance(request));
         }
 
         private UI getUIInstance(WrappedRequest request) {
@@ -261,19 +285,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
         }
 
         /**
-         * This implementation simulates the way of finding a window for a
-         * request by extracting a window name from the requested path and
-         * passes that name to {@link #getWindow(String)}.
-         * 
-         * <p>
-         * {@inheritDoc}
-         */
-        @Override
-        public Class<? extends UI> getUIClass(WrappedRequest request) {
-            return getUIInstance(request).getClass();
-        }
-
-        /**
          * Sets the application's theme.
          * <p>
          * Note that this theme can be overridden for a specific UI with
@@ -298,18 +309,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
          * @return the name of the application's theme.
          */
         public String getTheme() {
-            return theme;
-        }
-
-        /**
-         * This implementation returns the theme that has been set using
-         * {@link #setTheme(String)}
-         * <p>
-         * {@inheritDoc}
-         */
-        @Override
-        public String getThemeForUI(WrappedRequest request,
-                Class<? extends UI> uiClass) {
             return theme;
         }
 
@@ -1601,23 +1600,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @since 7.0
      */
     public Class<? extends UI> getUIClass(WrappedRequest request) {
-        // Iterate in reverse order - check newest provider first
-        int providersSize = uiProviders.size();
-        if (providersSize == 0) {
-            throw new IllegalStateException("There are no UI providers");
-        }
-        for (int i = providersSize - 1; i >= 0; i--) {
-            UIProvider provider = uiProviders.get(i);
-
-            Class<? extends UI> uiClass = provider.getUIClass(this, request);
-
-            if (uiClass != null) {
-                return uiClass;
-            }
-        }
-
-        throw new RuntimeException(
-                "No UI provider returned an UI class for request");
+        UIProvider uiProvider = getUiProvider(request, null);
+        return uiProvider.getUIClass(this, request);
     }
 
     /**
@@ -1639,6 +1623,59 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     protected <T extends UI> T createUIInstance(WrappedRequest request,
             Class<T> uiClass) {
+        UIProvider uiProvider = getUiProvider(request, uiClass);
+        return uiClass.cast(uiProvider.createInstance(this, uiClass, request));
+    }
+
+    /**
+     * Gets the {@link UIProvider} that should be used for a request. The
+     * selection can further be restricted by also requiring the UI provider to
+     * support a specific UI class.
+     * 
+     * @see UIProvider
+     * @see #addUIProvider(UIProvider)
+     * 
+     * @param request
+     *            the request for which to get an UI provider
+     * @param uiClass
+     *            the UI class for which a provider is required, or
+     *            <code>null</code> to use the first UI provider supporting the
+     *            request.
+     * @return an UI provider supporting the request (and the UI class if
+     *         provided).
+     * 
+     * @since 7.0.0
+     */
+    public UIProvider getUiProvider(WrappedRequest request, Class<?> uiClass) {
+        UIProvider provider = (UIProvider) request
+                .getAttribute(UIProvider.class.getName());
+        if (provider != null) {
+            // Cached provider found, verify that it's a sensible selection
+            Class<? extends UI> providerClass = provider.getUIClass(this,
+                    request);
+            if (uiClass == null && providerClass != null) {
+                // Use it if it gives any answer if no specific class is
+                // required
+                return provider;
+            } else if (uiClass == providerClass) {
+                // Use it if it gives the expected UI class
+                return provider;
+            } else {
+                // Don't keep it cached if it doesn't match the expectations
+                request.setAttribute(UIProvider.class.getName(), null);
+            }
+        }
+
+        // Iterate all current providers if no matching cached provider found
+        provider = doGetUiProvider(request, uiClass);
+
+        // Cache the found provider
+        request.setAttribute(UIProvider.class.getName(), provider);
+
+        return provider;
+    }
+
+    private UIProvider doGetUiProvider(WrappedRequest request, Class<?> uiClass) {
         int providersSize = uiProviders.size();
         if (providersSize == 0) {
             throw new IllegalStateException("There are no UI providers");
@@ -1649,108 +1686,25 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
             Class<? extends UI> providerClass = provider.getUIClass(this,
                     request);
+            // If we found something
             if (providerClass != null) {
-                if (providerClass != uiClass) {
+                if (uiClass == null) {
+                    // Not looking for anything particular -> anything is ok
+                    return provider;
+                } else if (providerClass == uiClass) {
+                    // Looking for a specific provider -> only use if matching
+                    return provider;
+                } else {
                     getLogger().warning(
                             "Mismatching UI classes. Expected " + uiClass
                                     + " but got " + providerClass + " from "
                                     + provider);
-                    // Try with next provider if we didn't get the expected
-                    // class
-                    continue;
+                    // Continue looking
                 }
-                return uiClass.cast(provider.createInstance(this, uiClass,
-                        request));
             }
         }
 
-        throw new RuntimeException(
-                "No UI provider created an UI instance for request");
-    }
-
-    /**
-     * Finds the theme to use for a specific UI. If no specific theme is
-     * required, <code>null</code> is returned.
-     * 
-     * TODO Tell what the default implementation does once it does something.
-     * 
-     * @param uI
-     *            the UI to get a theme for
-     * @return the name of the theme, or <code>null</code> if the default theme
-     *         should be used
-     * 
-     * @since 7.0
-     */
-    public String getThemeForUI(WrappedRequest request,
-            Class<? extends UI> uiClass) {
-        Theme uiTheme = getAnnotationFor(uiClass, Theme.class);
-        if (uiTheme != null) {
-            return uiTheme.value();
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Finds the widgetset to use for a specific UI. If no specific widgetset is
-     * required, <code>null</code> is returned.
-     * <p>
-     * The default implementation uses the @{@link Widgetset} annotation if it's
-     * defined for the UI class.
-     * 
-     * @param request
-     *            the wrapped request for which to get a widgetset
-     * @param uiClass
-     *            the UI class to get a widgetset for
-     * @return the name of the widgetset, or <code>null</code> if the default
-     *         widgetset should be used
-     * 
-     * @since 7.0
-     */
-    public String getWidgetsetForUI(WrappedRequest request,
-            Class<? extends UI> uiClass) {
-        Widgetset uiWidgetset = getAnnotationFor(uiClass, Widgetset.class);
-        if (uiWidgetset != null) {
-            return uiWidgetset.value();
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Helper to get an annotation for a class. If the annotation is not present
-     * on the target class, it's superclasses and implemented interfaces are
-     * also searched for the annotation.
-     * 
-     * @param type
-     *            the target class from which the annotation should be found
-     * @param annotationType
-     *            the annotation type to look for
-     * @return an annotation of the given type, or <code>null</code> if the
-     *         annotation is not present on the class
-     */
-    private static <T extends Annotation> T getAnnotationFor(Class<?> type,
-            Class<T> annotationType) {
-        // Find from the class hierarchy
-        Class<?> currentType = type;
-        while (currentType != Object.class) {
-            T annotation = currentType.getAnnotation(annotationType);
-            if (annotation != null) {
-                return annotation;
-            } else {
-                currentType = currentType.getSuperclass();
-            }
-        }
-
-        // Find from an implemented interface
-        for (Class<?> iface : type.getInterfaces()) {
-            T annotation = iface.getAnnotation(annotationType);
-            if (annotation != null) {
-                return annotation;
-            }
-        }
-
-        return null;
+        throw new RuntimeException("No UI provider found for request");
     }
 
     /**
@@ -1999,7 +1953,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
         ui.doInit(request, uiId.intValue());
 
-        if (isUiPreserved(request, uiClass)) {
+        if (getUiProvider(request, uiClass).isUiPreserved(request, uiClass)) {
             // Remember this UI
             String windowName = request.getBrowserDetails().getWindowName();
             if (windowName == null) {
@@ -2032,25 +1986,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
         String uiIdString = request.getParameter(UIConstants.UI_ID_PARAMETER);
         Integer uiId = uiIdString == null ? null : new Integer(uiIdString);
         return uiId;
-    }
-
-    /**
-     * Checks whether the same UI state should be reused if the framework can
-     * detect that the application is opened in a browser window where it has
-     * previously been open. The framework attempts to discover this by checking
-     * the value of window.name in the browser.
-     * 
-     * @param request
-     * @param uiClass
-     * 
-     * @return <code>true</code>if the same UI instance should be reused e.g.
-     *         when the browser window is refreshed.
-     */
-    public boolean isUiPreserved(WrappedRequest request,
-            Class<? extends UI> uiClass) {
-        PreserveOnRefresh preserveOnRefresh = getAnnotationFor(uiClass,
-                PreserveOnRefresh.class);
-        return preserveOnRefresh != null;
     }
 
     /**
@@ -2270,13 +2205,4 @@ public class Application implements Terminal.ErrorListener, Serializable {
         return globalResourceHandler;
     }
 
-    public String getPageTitleForUI(WrappedRequest request,
-            Class<? extends UI> uiClass) {
-        Title titleAnnotation = getAnnotationFor(uiClass, Title.class);
-        if (titleAnnotation == null) {
-            return null;
-        } else {
-            return titleAnnotation.value();
-        }
-    }
 }

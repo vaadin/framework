@@ -218,8 +218,9 @@ public abstract class BootstrapHandler implements RequestHandler {
         head.appendElement("meta").attr("http-equiv", "X-UA-Compatible")
                 .attr("content", "chrome=1");
 
-        String title = context.getApplication().getPageTitleForUI(
-                context.getRequest(), context.getUIClass());
+        String title = context.getApplication()
+                .getUiProvider(context.getRequest(), context.getUIClass())
+                .getPageTitleForUI(context.getRequest(), context.getUIClass());
         if (title != null) {
             head.appendElement("title").appendText(title);
         }
@@ -270,8 +271,9 @@ public abstract class BootstrapHandler implements RequestHandler {
     public String getWidgetsetForUI(BootstrapContext context) {
         WrappedRequest request = context.getRequest();
 
-        String widgetset = context.getApplication().getWidgetsetForUI(
-                context.getRequest(), context.getUIClass());
+        String widgetset = context.getApplication()
+                .getUiProvider(context.getRequest(), context.getUIClass())
+                .getWidgetsetForUI(context.getRequest(), context.getUIClass());
         if (widgetset == null) {
             widgetset = request.getDeploymentConfiguration()
                     .getConfiguredWidgetset(request);
@@ -497,8 +499,9 @@ public abstract class BootstrapHandler implements RequestHandler {
      * @return
      */
     public String getThemeName(BootstrapContext context) {
-        return context.getApplication().getThemeForUI(context.getRequest(),
-                context.getUIClass());
+        return context.getApplication()
+                .getUiProvider(context.getRequest(), context.getUIClass())
+                .getThemeForUI(context.getRequest(), context.getUIClass());
     }
 
     /**

@@ -1,8 +1,8 @@
 package com.vaadin.tests.components.ui;
 
 import com.vaadin.Application;
+import com.vaadin.server.AbstractUIProvider;
 import com.vaadin.server.ExternalResource;
-import com.vaadin.server.UIProvider;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestApplication;
@@ -22,7 +22,7 @@ public class LazyInitUIs extends AbstractTestApplication {
 
     @Override
     public void init() {
-        addUIProvider(new UIProvider() {
+        addUIProvider(new AbstractUIProvider() {
 
             @Override
             public UI createInstance(Application application,

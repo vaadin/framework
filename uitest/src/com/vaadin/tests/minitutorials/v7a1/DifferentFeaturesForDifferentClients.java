@@ -17,7 +17,7 @@
 package com.vaadin.tests.minitutorials.v7a1;
 
 import com.vaadin.Application;
-import com.vaadin.server.UIProvider;
+import com.vaadin.server.AbstractUIProvider;
 import com.vaadin.server.WebBrowser;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.Label;
@@ -36,7 +36,7 @@ public class DifferentFeaturesForDifferentClients extends Application {
     @Override
     public void init() {
         super.init();
-        addUIProvider(new UIProvider() {
+        addUIProvider(new AbstractUIProvider() {
             @Override
             public Class<? extends UI> getUIClass(Application application,
                     WrappedRequest request) {
