@@ -2079,9 +2079,16 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
         WebBrowser browser = getApplicationContext(request.getSession())
                 .getBrowser();
         if (browser.isIE()) {
+            String content = "chrome=1";
+            if (browser.getBrowserMajorVersion() == 10) {
+                // Tell IE10 to emulate IE9 until IE10 is properly supported
+                // (#9462, #9214)
+                content = "IE=9; " + content;
+            }
             // Chrome frame in all versions of IE (only if Chrome frame is
             // installed)
-            page.write("<meta http-equiv=\"X-UA-Compatible\" content=\"chrome=1\"/>\n");
+            page.write("<meta http-equiv=\"X-UA-Compatible\" content=\""
+                    + content + "\"/>\n");
         }
 
         page.write("<style type=\"text/css\">"
