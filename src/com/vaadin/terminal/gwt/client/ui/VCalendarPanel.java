@@ -119,7 +119,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
          */
         public void onClick(ClickEvent event) {
             Date newDate = ((Day) event.getSource()).getDate();
-            if (newDate.getMonth() != displayedMonth.getMonth()) {
+            if (newDate.getMonth() != displayedMonth.getMonth()
+                    || newDate.getYear() != displayedMonth.getYear()) {
                 // If an off-month date was clicked, we must change the
                 // displayed month and re-render the calendar (#8931)
                 displayedMonth.setMonth(newDate.getMonth());
@@ -595,14 +596,17 @@ public class VCalendarPanel extends FocusableFlexTable implements
      */
     private void focusNextDay(int days) {
         int oldMonth = focusedDate.getMonth();
+        int oldYear = focusedDate.getYear();
         focusedDate.setDate(focusedDate.getDate() + days);
 
-        if (focusedDate.getMonth() == oldMonth) {
+        if (focusedDate.getMonth() == oldMonth
+                && focusedDate.getYear() == oldYear) {
             // Month did not change, only move the selection
             focusDay(focusedDate);
         } else {
             // If the month changed we need to re-render the calendar
             displayedMonth.setMonth(focusedDate.getMonth());
+            displayedMonth.setYear(focusedDate.getYear());
             renderCalendar();
         }
     }
