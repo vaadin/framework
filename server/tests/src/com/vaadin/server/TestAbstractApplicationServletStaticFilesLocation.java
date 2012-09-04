@@ -5,23 +5,21 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Enumeration;
 import java.util.Properties;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import junit.framework.TestCase;
+
+import com.vaadin.server.VaadinServlet.ServletDeploymentConfiguration;
 
 public class TestAbstractApplicationServletStaticFilesLocation extends TestCase {
 
     VaadinServlet servlet;
 
-    private Method getStaticFilesLocationMethod;
+    // private Method getStaticFilesLocationMethod;
 
     @Override
     protected void setUp() throws Exception {
@@ -30,53 +28,11 @@ public class TestAbstractApplicationServletStaticFilesLocation extends TestCase 
         servlet = new VaadinServlet();
 
         // Workaround to avoid calling init and creating servlet config
-        Field f = VaadinServlet.class.getDeclaredField("applicationProperties");
+        Field f = VaadinServlet.class
+                .getDeclaredField("deploymentConfiguration");
         f.setAccessible(true);
-        f.set(servlet, new Properties());
-
-        getStaticFilesLocationMethod = VaadinServlet.class.getDeclaredMethod(
-                "getStaticFilesLocation",
-                new Class[] { javax.servlet.http.HttpServletRequest.class });
-        getStaticFilesLocationMethod.setAccessible(true);
-
-    }
-
-    public class DummyServletConfig implements ServletConfig {
-
-        // public DummyServletConfig(Map<String,String> initParameters, )
-        @Override
-        public String getInitParameter(String name) {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public Enumeration<Object> getInitParameterNames() {
-            return new Enumeration<Object>() {
-
-                @Override
-                public boolean hasMoreElements() {
-                    return false;
-                }
-
-                @Override
-                public Object nextElement() {
-                    return null;
-                }
-            };
-        }
-
-        @Override
-        public ServletContext getServletContext() {
-            // TODO Auto-generated method stub
-            return null;
-        }
-
-        @Override
-        public String getServletName() {
-            // TODO Auto-generated method stub
-            return null;
-        }
+        f.set(servlet, new ServletDeploymentConfiguration(servlet,
+                new Properties()));
 
     }
 
@@ -122,8 +78,8 @@ public class TestAbstractApplicationServletStaticFilesLocation extends TestCase 
         // Set request into replay mode
         replay(request);
 
-        String location = (String) getStaticFilesLocationMethod.invoke(servlet,
-                request);
+        String location = servlet.getDeploymentConfiguration()
+                .getStaticFileLocation(servlet.createWrappedRequest(request));
         return location;
     }
 
@@ -135,8 +91,8 @@ public class TestAbstractApplicationServletStaticFilesLocation extends TestCase 
         // Set request into replay mode
         replay(request);
 
-        String location = (String) getStaticFilesLocationMethod.invoke(servlet,
-                request);
+        String location = servlet.getDeploymentConfiguration()
+                .getStaticFileLocation(servlet.createWrappedRequest(request));
         return location;
     }
 
