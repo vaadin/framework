@@ -18,7 +18,6 @@ package com.vaadin.server;
 
 import java.io.Serializable;
 import java.util.Iterator;
-import java.util.Properties;
 
 import javax.portlet.PortletContext;
 import javax.servlet.ServletContext;
@@ -82,22 +81,6 @@ public interface DeploymentConfiguration extends Serializable {
     public boolean isStandalone(WrappedRequest request);
 
     /**
-     * Gets a configured property. The properties are typically read from e.g.
-     * web.xml or from system properties of the JVM.
-     * 
-     * @param propertyName
-     *            The simple of the property, in some contexts, lookup might be
-     *            performed using variations of the provided name.
-     * @param defaultValue
-     *            the default value that should be used if no value has been
-     *            defined
-     * @return the property value, or the passed default value if no property
-     *         value is found
-     */
-    public String getApplicationOrSystemProperty(String propertyName,
-            String defaultValue);
-
-    /**
      * Get the class loader to use for loading classes loaded by name, e.g.
      * custom UI classes. <code>null</code> indicates that the default class
      * loader should be used.
@@ -122,70 +105,17 @@ public interface DeploymentConfiguration extends Serializable {
     public String getMimeType(String resourceName);
 
     /**
-     * Gets the properties configured for the deployment, e.g. as init
-     * parameters to the servlet or portlet.
+     * Gets the application configuration.
      * 
-     * @return properties for the application.
+     * @return the application configuration
      */
-    public Properties getInitParameters();
+    public ApplicationConfiguration getApplicationConfiguration();
 
     public Iterator<AddonContextListener> getAddonContextListeners();
 
     public AddonContext getAddonContext();
 
     public void setAddonContext(AddonContext vaadinContext);
-
-    /**
-     * Returns whether Vaadin is in production mode.
-     * 
-     * @since 7.0.0
-     * 
-     * @return true if in production mode, false otherwise.
-     */
-    public boolean isProductionMode();
-
-    /**
-     * Returns whether cross-site request forgery protection is enabled.
-     * 
-     * @since 7.0.0
-     * 
-     * @return true if XSRF protection is enabled, false otherwise.
-     */
-    public boolean isXsrfProtectionEnabled();
-
-    /**
-     * Returns the time resources can be cached in the browsers, in seconds.
-     * 
-     * @since 7.0.0
-     * 
-     * @return The resource cache time.
-     */
-    public int getResourceCacheTime();
-
-    /**
-     * Returns the number of seconds between heartbeat requests of a UI, or a
-     * non-positive number if heartbeat is disabled.
-     * 
-     * @since 7.0.0
-     * 
-     * @return The time between heartbeats.
-     */
-    public int getHeartbeatInterval();
-
-    /**
-     * Returns whether UIs that have no other activity than heartbeat requests
-     * should be closed after they have been idle the maximum inactivity time
-     * enforced by the session.
-     * 
-     * @see ApplicationContext#getMaxInactiveInterval()
-     * 
-     * @since 7.0.0
-     * 
-     * @return True if UIs receiving only heartbeat requests are eventually
-     *         closed; false if heartbeat requests extend UI lifetime
-     *         indefinitely.
-     */
-    public boolean isIdleUICleanupEnabled();
 
     /**
      * Gets the system messages object

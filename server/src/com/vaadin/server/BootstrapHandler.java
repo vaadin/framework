@@ -463,8 +463,8 @@ public abstract class BootstrapHandler implements RequestHandler {
             defaults.put("standalone", true);
         }
 
-        defaults.put("heartbeatInterval",
-                deploymentConfiguration.getHeartbeatInterval());
+        defaults.put("heartbeatInterval", deploymentConfiguration
+                .getApplicationConfiguration().getHeartbeatInterval());
 
         defaults.put("appUri", getAppUri(context));
 

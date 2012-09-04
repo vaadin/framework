@@ -1,6 +1,7 @@
 package com.vaadin.server;
 
 import java.io.Serializable;
+import java.util.Properties;
 
 import com.vaadin.Application;
 import com.vaadin.shared.ApplicationConstants;
@@ -43,9 +44,10 @@ class ServletPortletHelper implements Serializable {
     static Class<? extends Application> getApplicationClass(
             DeploymentConfiguration deploymentConfiguration)
             throws ApplicationClassException {
-        String applicationParameter = deploymentConfiguration
-                .getInitParameters().getProperty("application");
-        String uiParameter = deploymentConfiguration.getInitParameters()
+        Properties initParameters = deploymentConfiguration
+                .getApplicationConfiguration().getInitParameters();
+        String applicationParameter = initParameters.getProperty("application");
+        String uiParameter = initParameters
                 .getProperty(Application.UI_PARAMETER);
         ClassLoader classLoader = deploymentConfiguration.getClassLoader();
 

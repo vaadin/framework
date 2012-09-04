@@ -54,6 +54,7 @@ import com.liferay.portal.kernel.util.PortalClassInvoker;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.vaadin.Application;
 import com.vaadin.Application.ApplicationStartEvent;
+import com.vaadin.DefaultApplicationConfiguration;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
 import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
 import com.vaadin.ui.UI;
@@ -76,8 +77,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         private final VaadinPortlet portlet;
 
         public PortletDeploymentConfiguration(VaadinPortlet portlet,
-                Properties applicationProperties) {
-            super(portlet.getClass(), applicationProperties);
+                ApplicationConfiguration applicationConfiguration) {
+            super(applicationConfiguration);
             this.portlet = portlet;
         }
 
@@ -88,8 +89,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         @Override
         public String getConfiguredWidgetset(WrappedRequest request) {
 
-            String widgetset = getApplicationOrSystemProperty(
-                    PARAMETER_WIDGETSET, null);
+            String widgetset = getApplicationConfiguration()
+                    .getApplicationOrSystemProperty(PARAMETER_WIDGETSET, null);
 
             if (widgetset == null) {
                 // If no widgetset defined for the application, check the
@@ -319,15 +320,23 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                     config.getInitParameter(name));
         }
 
-        deploymentConfiguration = createDeploymentConfiguration(applicationProperties);
+        ApplicationConfiguration applicationConfiguration = createApplicationConfiguration(applicationProperties);
+        deploymentConfiguration = createDeploymentConfiguration(applicationConfiguration);
 
         addonContext = new AddonContext(deploymentConfiguration);
         addonContext.init();
     }
 
-    protected PortletDeploymentConfiguration createDeploymentConfiguration(
+    protected ApplicationConfiguration createApplicationConfiguration(
             Properties applicationProperties) {
-        return new PortletDeploymentConfiguration(this, applicationProperties);
+        return new DefaultApplicationConfiguration(getClass(),
+                applicationProperties);
+    }
+
+    protected PortletDeploymentConfiguration createDeploymentConfiguration(
+            ApplicationConfiguration applicationConfiguration) {
+        return new PortletDeploymentConfiguration(this,
+                applicationConfiguration);
     }
 
     @Override
@@ -382,16 +391,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
     private boolean isDummyRequest(ResourceRequest request) {
         return request.getResourceID() != null
                 && request.getResourceID().equals("DUMMY");
-    }
-
-    /**
-     * Returns true if the portlet is running in production mode. Production
-     * mode disables all debug facilities.
-     * 
-     * @return true if in production mode, false if in debug mode
-     */
-    public boolean isProductionMode() {
-        return deploymentConfiguration.isProductionMode();
     }
 
     protected void handleRequest(PortletRequest request,
@@ -769,7 +768,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             application.setLocale(locale);
             // No application URL when running inside a portlet
             application.start(new ApplicationStartEvent(null,
-                    getDeploymentConfiguration(), context));
+                    getDeploymentConfiguration().getApplicationConfiguration(),
+                    context));
             addonContext.fireApplicationStarted(application);
         }
     }

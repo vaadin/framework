@@ -1522,9 +1522,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @return false if the XSRF is turned off, true otherwise
      */
     public boolean isXSRFEnabled(Application application) {
-        return !"true"
-                .equals(application
-                        .getProperty(VaadinServlet.SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION));
+        return application.getConfiguration().isXsrfProtectionEnabled();
     }
 
     /**

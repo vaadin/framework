@@ -52,8 +52,10 @@ public class SampleDirectory {
             // cannot access example directory, possible security issue with
             // Application Server or Servlet Container
             // Try to read sample directory from web.xml parameter
-            if (application.getProperty("sampleDirectory") != null) {
-                file = new File(application.getProperty("sampleDirectory"));
+            String sampleDirProperty = application.getConfiguration()
+                    .getInitParameters().getProperty("sampleDirectory");
+            if (sampleDirProperty != null) {
+                file = new File(sampleDirProperty);
                 if ((file != null) && (file.canRead())
                         && (file.getAbsolutePath() != null)) {
                     // Success using property
@@ -61,7 +63,7 @@ public class SampleDirectory {
                 }
                 // Failure using property
                 errorMessage += "Failed also to access sample directory <b>["
-                        + application.getProperty("sampleDirectory")
+                        + sampleDirProperty
                         + "]</b> defined in <b>sampleDirectory property</b>.";
             } else {
                 // Failure using application context base dir, no property set

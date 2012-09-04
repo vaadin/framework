@@ -24,7 +24,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -45,6 +44,7 @@ import com.vaadin.data.util.converter.DefaultConverterFactory;
 import com.vaadin.event.EventRouter;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.AbstractUIProvider;
+import com.vaadin.server.ApplicationConfiguration;
 import com.vaadin.server.ApplicationContext;
 import com.vaadin.server.BootstrapFragmentResponse;
 import com.vaadin.server.BootstrapListener;
@@ -400,7 +400,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
     public static class ApplicationStartEvent implements Serializable {
         private final URL applicationUrl;
 
-        private final DeploymentConfiguration configuration;
+        private final ApplicationConfiguration configuration;
 
         private final ApplicationContext context;
 
@@ -408,12 +408,12 @@ public class Application implements Terminal.ErrorListener, Serializable {
          * @param applicationUrl
          *            the URL the application should respond to.
          * @param configuration
-         *            the deployment configuration for the application.
+         *            the application configuration for the application.
          * @param context
          *            the context application will be running in.
          */
         public ApplicationStartEvent(URL applicationUrl,
-                DeploymentConfiguration configuration,
+                ApplicationConfiguration configuration,
                 ApplicationContext context) {
             this.applicationUrl = applicationUrl;
             this.configuration = configuration;
@@ -433,11 +433,11 @@ public class Application implements Terminal.ErrorListener, Serializable {
         }
 
         /**
-         * Returns the deployment configuration used by this application.
+         * Returns the application configuration used by this application.
          * 
          * @return the deployment configuration.
          */
-        public DeploymentConfiguration getConfiguration() {
+        public ApplicationConfiguration getConfiguration() {
             return configuration;
         }
 
@@ -462,9 +462,9 @@ public class Application implements Terminal.ErrorListener, Serializable {
     private ApplicationContext context;
 
     /**
-     * Deployment configuration for the application.
+     * Configuration for the application.
      */
-    private DeploymentConfiguration configuration;
+    private ApplicationConfiguration configuration;
 
     /**
      * The application's URL.
@@ -604,44 +604,12 @@ public class Application implements Terminal.ErrorListener, Serializable {
     }
 
     /**
-     * Returns the properties of this application as specified in the deployment
-     * configuration.
+     * Gets the configuration for this application
      * 
-     * @return Application properties
+     * @return the application configuration
      */
-    protected Properties getProperties() {
-        return configuration.getInitParameters();
-    }
-
-    /**
-     * Returns an enumeration of all the names in this application.
-     * 
-     * <p>
-     * See {@link #start(URL, Properties, ApplicationContext)} how properties
-     * are defined.
-     * </p>
-     * 
-     * @return an enumeration of all the keys in this property list, including
-     *         the keys in the default property list.
-     * 
-     */
-    public Enumeration<?> getPropertyNames() {
-        return getProperties().propertyNames();
-    }
-
-    /**
-     * Searches for the property with the specified name in this application.
-     * This method returns <code>null</code> if the property is not found.
-     * 
-     * See {@link #start(URL, Properties, ApplicationContext)} how properties
-     * are defined.
-     * 
-     * @param name
-     *            the name of the property.
-     * @return the value in this property list with the specified key value.
-     */
-    public String getProperty(String name) {
-        return getProperties().getProperty(name);
+    public ApplicationConfiguration getConfiguration() {
+        return configuration;
     }
 
     /**

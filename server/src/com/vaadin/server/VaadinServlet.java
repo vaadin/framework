@@ -46,6 +46,7 @@ import javax.servlet.http.HttpSession;
 
 import com.vaadin.Application;
 import com.vaadin.Application.ApplicationStartEvent;
+import com.vaadin.DefaultApplicationConfiguration;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
 import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
 import com.vaadin.shared.ApplicationConstants;
@@ -60,8 +61,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
         private final VaadinServlet servlet;
 
         public ServletDeploymentConfiguration(VaadinServlet servlet,
-                Properties applicationProperties) {
-            super(servlet.getClass(), applicationProperties);
+                ApplicationConfiguration applicationProperties) {
+            super(applicationProperties);
             this.servlet = servlet;
         }
 
@@ -75,8 +76,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
                     .cast(request);
             String staticFileLocation;
             // if property is defined in configurations, use that
-            staticFileLocation = getApplicationOrSystemProperty(
-                    PARAMETER_VAADIN_RESOURCES, null);
+            staticFileLocation = getApplicationConfiguration()
+                    .getApplicationOrSystemProperty(PARAMETER_VAADIN_RESOURCES,
+                            null);
             if (staticFileLocation != null) {
                 return staticFileLocation;
             }
@@ -112,9 +114,10 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
         @Override
         public String getConfiguredWidgetset(WrappedRequest request) {
-            return getApplicationOrSystemProperty(
-                    VaadinServlet.PARAMETER_WIDGETSET,
-                    VaadinServlet.DEFAULT_WIDGETSET);
+            return getApplicationConfiguration()
+                    .getApplicationOrSystemProperty(
+                            VaadinServlet.PARAMETER_WIDGETSET,
+                            VaadinServlet.DEFAULT_WIDGETSET);
         }
 
         @Override
@@ -201,15 +204,23 @@ public class VaadinServlet extends HttpServlet implements Constants {
                     servletConfig.getInitParameter(name));
         }
 
-        deploymentConfiguration = createDeploymentConfiguration(applicationProperties);
+        ApplicationConfiguration applicationConfiguration = createApplicationConfiguration(applicationProperties);
+        deploymentConfiguration = createDeploymentConfiguration(applicationConfiguration);
 
         addonContext = new AddonContext(deploymentConfiguration);
         addonContext.init();
     }
 
-    protected ServletDeploymentConfiguration createDeploymentConfiguration(
+    protected ApplicationConfiguration createApplicationConfiguration(
             Properties applicationProperties) {
-        return new ServletDeploymentConfiguration(this, applicationProperties);
+        return new DefaultApplicationConfiguration(getClass(),
+                applicationProperties);
+    }
+
+    protected ServletDeploymentConfiguration createDeploymentConfiguration(
+            ApplicationConfiguration applicationConfiguration) {
+        return new ServletDeploymentConfiguration(this,
+                applicationConfiguration);
     }
 
     @Override
@@ -217,26 +228,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
         super.destroy();
 
         addonContext.destroy();
-    }
-
-    /**
-     * Returns true if the servlet is running in production mode. Production
-     * mode disables all debug facilities.
-     * 
-     * @return true if in production mode, false if in debug mode
-     */
-    public boolean isProductionMode() {
-        return getDeploymentConfiguration().isProductionMode();
-    }
-
-    /**
-     * Returns the number of seconds the browser should cache a file. Default is
-     * 1 hour (3600 s).
-     * 
-     * @return The number of seconds files are cached in the browser
-     */
-    public int getResourceCacheTime() {
-        return getDeploymentConfiguration().getResourceCacheTime();
     }
 
     /**
@@ -917,7 +908,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
             Locale locale = request.getLocale();
             application.setLocale(locale);
             application.start(new ApplicationStartEvent(applicationUrl,
-                    getDeploymentConfiguration(), webApplicationContext));
+                    getDeploymentConfiguration().getApplicationConfiguration(),
+                    webApplicationContext));
             addonContext.fireApplicationStarted(application);
         }
     }
@@ -1062,8 +1054,10 @@ public class VaadinServlet extends HttpServlet implements Constants {
              * cache timeout can be configured by setting the resourceCacheTime
              * parameter in web.xml
              */
+            int resourceCacheTime = getDeploymentConfiguration()
+                    .getApplicationConfiguration().getResourceCacheTime();
             response.setHeader("Cache-Control",
-                    "max-age= " + String.valueOf(getResourceCacheTime()));
+                    "max-age= " + String.valueOf(resourceCacheTime));
         }
 
         // Write the resource to the client.
