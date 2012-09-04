@@ -46,6 +46,7 @@ import javax.xml.namespace.QName;
 
 import com.vaadin.Application;
 import com.vaadin.ui.UI;
+import com.vaadin.util.CurrentInstance;
 
 /**
  * TODO Write documentation, fix JavaDoc tags.
@@ -153,8 +154,9 @@ public class PortletApplicationContext2 extends ApplicationContext {
     }
 
     private PortletResponse getCurrentResponse() {
-        WrappedPortletResponse currentResponse = VaadinPortlet
-                .getCurrentResponse();
+        WrappedPortletResponse currentResponse = (WrappedPortletResponse) CurrentInstance
+                .get(WrappedResponse.class);
+
         if (currentResponse != null) {
             return currentResponse.getPortletResponse();
         } else {
@@ -163,8 +165,10 @@ public class PortletApplicationContext2 extends ApplicationContext {
     }
 
     public PortletConfig getPortletConfig() {
-        return VaadinPortlet.getCurrentResponse().getDeploymentConfiguration()
-                .getPortlet().getPortletConfig();
+        WrappedPortletResponse response = (WrappedPortletResponse) CurrentInstance
+                .get(WrappedResponse.class);
+        return response.getDeploymentConfiguration().getPortlet()
+                .getPortletConfig();
     }
 
     public void addPortletListener(Application app, PortletListener listener) {

@@ -25,6 +25,7 @@ import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
 import com.vaadin.Application;
+import com.vaadin.util.CurrentInstance;
 
 /**
  * Web application context for Vaadin applications.
@@ -84,7 +85,8 @@ public class ServletApplicationContext extends ApplicationContext {
         reinitializingSession = false;
 
         // Create a new session
-        HttpSession newSession = VaadinServlet.getCurrentRequest().getSession();
+        HttpSession newSession = WrappedHttpServletRequest.cast(
+                CurrentInstance.get(WrappedRequest.class)).getSession();
 
         // Restores all attributes (security key, reference to this context
         // instance)

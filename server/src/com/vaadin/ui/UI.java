@@ -49,6 +49,7 @@ import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIServerRpc;
 import com.vaadin.shared.ui.ui.UIState;
+import com.vaadin.util.CurrentInstance;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -449,11 +450,6 @@ public abstract class UI extends AbstractComponentContainer implements
      * painting and handling as well.
      */
     protected ActionManager actionManager;
-
-    /**
-     * Thread local for keeping track of the current UI.
-     */
-    private static final ThreadLocal<UI> currentUI = new ThreadLocal<UI>();
 
     /** Identifies the click event */
     private ConnectorTracker connectorTracker = new ConnectorTracker(this);
@@ -982,7 +978,7 @@ public abstract class UI extends AbstractComponentContainer implements
      * @see ThreadLocal
      */
     public static void setCurrent(UI ui) {
-        currentUI.set(ui);
+        CurrentInstance.setInheritable(UI.class, ui);
     }
 
     /**
@@ -995,7 +991,7 @@ public abstract class UI extends AbstractComponentContainer implements
      * @see #setCurrent(UI)
      */
     public static UI getCurrent() {
-        return currentUI.get();
+        return CurrentInstance.get(UI.class);
     }
 
     public void setScrollTop(int scrollTop) {

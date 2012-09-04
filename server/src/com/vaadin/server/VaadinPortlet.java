@@ -57,6 +57,7 @@ import com.vaadin.Application.ApplicationStartEvent;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
 import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
 import com.vaadin.ui.UI;
+import com.vaadin.util.CurrentInstance;
 
 /**
  * Portlet 2.0 base class. This replaces the servlet in servlet/portlet 1.0
@@ -296,8 +297,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
     private PortletDeploymentConfiguration deploymentConfiguration;
     private AddonContext addonContext;
 
-    private static ThreadLocal<WrappedPortletResponse> currentResponse = new ThreadLocal<WrappedPortletResponse>();
-
     @Override
     public void init(PortletConfig config) throws PortletException {
         super.init(config);
@@ -395,10 +394,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         return deploymentConfiguration.isProductionMode();
     }
 
-    public static WrappedPortletResponse getCurrentResponse() {
-        return currentResponse.get();
-    }
-
     protected void handleRequest(PortletRequest request,
             PortletResponse response) throws PortletException, IOException {
         RequestTimer requestTimer = new RequestTimer();
@@ -412,7 +407,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         WrappedPortletResponse wrappedResponse = new WrappedPortletResponse(
                 response, getDeploymentConfiguration());
 
-        currentResponse.set(wrappedResponse);
+        CurrentInstance.set(WrappedRequest.class, wrappedRequest);
+        CurrentInstance.set(WrappedResponse.class, wrappedResponse);
 
         RequestType requestType = getRequestType(wrappedRequest);
 
@@ -608,9 +604,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
                         }
                     } finally {
-                        UI.setCurrent(null);
-                        Application.setCurrent(null);
-                        currentResponse.set(null);
+                        CurrentInstance.clearAll();
 
                         PortletSession session = request
                                 .getPortletSession(false);

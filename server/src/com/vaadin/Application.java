@@ -70,6 +70,7 @@ import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
+import com.vaadin.util.CurrentInstance;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -1799,13 +1800,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
     }
 
     /**
-     * Thread local for keeping track of currently used application instance
-     * 
-     * @since 7.0
-     */
-    private static final ThreadLocal<Application> currentApplication = new ThreadLocal<Application>();
-
-    /**
      * Gets the currently used application. The current application is
      * automatically defined when processing requests to the server. In other
      * cases, (e.g. from background threads), the current application is not
@@ -1819,7 +1813,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @since 7.0
      */
     public static Application getCurrent() {
-        return currentApplication.get();
+        return CurrentInstance.get(Application.class);
     }
 
     /**
@@ -1840,7 +1834,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @since 7.0
      */
     public static void setCurrent(Application application) {
-        currentApplication.set(application);
+        CurrentInstance.setInheritable(Application.class, application);
     }
 
     /**
