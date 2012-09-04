@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.UI.VUI;
 import com.vaadin.client.ui.gridlayout.VGridLayout;
+import com.vaadin.client.ui.orderedlayout.VBoxLayout;
 import com.vaadin.client.ui.orderedlayout.VMeasuringOrderedLayout;
 import com.vaadin.client.ui.tabsheet.VTabsheetPanel;
 import com.vaadin.client.ui.window.VWindow;
@@ -497,6 +498,11 @@ public class ComponentLocator {
                 if ("VVerticalLayout".equals(widgetClassName)
                         || "VHorizontalLayout".equals(widgetClassName)) {
                     widgetClassName = "VBoxLayout";
+                }
+
+                if (w instanceof VBoxLayout
+                        && "ChildComponentContainer".equals(widgetClassName)) {
+                    widgetClassName = "VBoxLayout$Slot";
                 }
 
                 if (w instanceof VTabsheetPanel && widgetPosition != 0) {
