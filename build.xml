@@ -34,11 +34,14 @@
 	</target>
 
 	<target name="tests" depends="buildorder">
-		<subant buildpathref="build-path" target="tests">
-		</subant>
+		<parallel>
+			<subant buildpathref="build-path" target="tests">
+			</subant>
+			<subant antfile="test/uitest.xml" target="test-package" />
+		</parallel>
 	</target>
 
-	<target name="official.build.checks" if="official.build">
+	<target name="official.build.checks" if="build.release">
 		<condition property="java.version.matches">
 			<equals arg1="${ant.java.version}" arg2="${vaadin.java.version}" />
 		</condition>
