@@ -269,6 +269,14 @@ public class ComponentLocator {
             if (part.startsWith("domChild[")) {
                 String childIndexString = part.substring("domChild[".length(),
                         part.length() - 1);
+
+                if (Util.findWidget(baseElement, null) instanceof VBoxLayout) {
+                    Element e = baseElement.getFirstChildElement().cast();
+                    if (e.getClassName().equals("v-expand")) {
+                        element = e;
+                    }
+                }
+
                 try {
                     int childIndex = Integer.parseInt(childIndexString);
                     element = DOM.getChild(element, childIndex);
