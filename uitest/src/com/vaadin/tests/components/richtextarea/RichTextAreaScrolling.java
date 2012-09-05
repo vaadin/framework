@@ -32,9 +32,9 @@ public class RichTextAreaScrolling extends TestBase {
         RichTextArea second = new RichTextArea("Full height");
         RichTextArea third = new RichTextArea("Undefined height");
 
-        first.setValue(sb);
-        second.setValue(sb);
-        third.setValue(sb);
+        first.setValue(sb.toString());
+        second.setValue(sb.toString());
+        third.setValue(sb.toString());
 
         first.setReadOnly(true);
         second.setReadOnly(true);
