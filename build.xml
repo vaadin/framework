@@ -35,9 +35,10 @@
 
 	<target name="tests" depends="buildorder">
 		<parallel>
-			<subant buildpathref="build-path" target="tests">
-			</subant>
-			<subant antfile="test/uitest.xml" target="test-package" />
+			<subant buildpathref="build-path" target="tests" />
+			<ant antfile="uitest/test.xml" target="test-package">
+				<property name="war.file" location="result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
+			</ant>
 		</parallel>
 	</target>
 

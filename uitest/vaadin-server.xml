@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
 <project xmlns:antcontrib="antlib:net.sf.antcontrib" xmlns:ivy="antlib:org.apache.ivy.ant" name="vaadin-server" default="deploy-and-start" basedir=".">
 	<include file="../common.xml" />
+	<dirname property="dir" file="${ant.file.vaadin-server}" />
 
 	<target name="deploy-and-start">
 		<fail unless="war.file" message="No war file given in 'war.file'" />
 
-		<ivy:resolve file="ivy.xml" />
+		<ivy:resolve file="${dir}/ivy.xml" />
 		<ivy:cachepath pathid="classpath.jetty" conf="jetty-run" />
 		<java classname="org.mortbay.jetty.runner.Runner" fork="yes">
 			<arg value="--port" />

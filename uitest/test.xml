@@ -1,14 +1,8 @@
 <?xml version="1.0"?>
 <project xmlns:antcontrib="antlib:net.sf.antcontrib" xmlns:ivy="antlib:org.apache.ivy.ant" name="Run Vaadin Testbench Tests" basedir="." default="run-and-clean-up">
 
-	<property name="project.root" value=".." />
-	<!-- Import common targets  -->
-	<!--<import file="../build/common.xml" />-->
-	<!-- ant contrib required for flow control (for loop, if, property override)   -->
-	<!-- Note that we have to use a namespace to avoid clash when running sub-ant. -->
-	<ivy:resolve file="${project.root}/build/ivy/ivy.xml" conf="taskdefs" />
-	<ivy:cachepath pathid="taskdefs.classpath" conf="taskdefs" />
-	<taskdef uri="antlib:net.sf.antcontrib" resource="net/sf/antcontrib/antlib.xml" classpathref="taskdefs.classpath" />
+	<include file="../common.xml" />
+	<dirname property="test.xml.dir" file="${ant.file.Run Vaadin Testbench Tests}" />
 
 	<!-- ================================================================== -->
 	<!-- Configuration                                                      -->
@@ -44,9 +38,9 @@
 	</target>
 
 	<!-- fileset containing all TestBench tests to run -->
-	<fileset dir=".." id="html-test-files">
-		<include name="uitest/**/AbsoluteLayoutClip**.html" />
-		<exclude name="uitest/integration-testscripts/**" />
+	<fileset dir="${test.xml.dir}" id="html-test-files">
+		<include name="src/**/*.html" />
+		<exclude name="integration-testscripts/**/*.html" />
 	</fileset>
 
 	<!-- This target converts HTML tests files to java junit tests. One test file for each browser is created. -->
@@ -171,7 +165,7 @@
 	<!-- Starts the server and runs all TestBench tests -->
 	<target name="test-package">
 		<fail unless="war.file" message="No 'war.file' parameter given." />
-		<property name="test-output-dir" location="result/testbench-junit-classes" />
+		<property name="test-output-dir" location="${test.xml.dir}/result/testbench-junit-classes" />
 		<property name="retries" value="2" />
 
 		<!-- Parameters for the test.xml script. -->
@@ -181,13 +175,12 @@
 		<property name="com.vaadin.testbench.screenshot.block.error" value="0.025" />
 		<property name="com.vaadin.testbench.debug" value="false" />
 
-
 		<parallel>
 			<daemons>
-				<ant antfile="vaadin-server.xml" inheritall="true" inheritrefs="true" target="deploy-and-start" />
+				<ant antfile="${test.xml.dir}/vaadin-server.xml" inheritall="true" inheritrefs="true" target="deploy-and-start" />
 			</daemons>
 			<sequential>
-				<ant antfile="vaadin-server.xml" target="wait-for-startup" />
+				<ant antfile="${test.xml.dir}/vaadin-server.xml" target="wait-for-startup" />
 				<antcall inheritall="true" inheritrefs="true" target="run-and-clean-up" />
 			</sequential>
 		</parallel>
