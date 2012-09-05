@@ -2,6 +2,10 @@
 <project name="publish" basedir="." default="" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:antcontrib="antlib:net.sf.antcontrib" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 	<include file="common.xml" as="common" />
 	<include file="build.xml" as="vaadin" />
+
+	<!-- Dummy value as ivysettings-publish require a value  -->
+	<property name="publish.sftp.keyfile" value="/dummy" />
+
 	<ivy:settings file="ivysettings.xml" />
 	<ivy:settings file="ivysettings-publish.xml" id="publish.settings" />
 	<property name="modules.to.publish" value="shared,server,client,client-compiler,client-compiled,theme-compiler,themes-compiled" />
@@ -12,111 +16,59 @@
 	<fail unless="ant-jsch.present" message="Please install ant-jsch.jar into ANT_HOME/lib" />
 	<fail unless="jsch.present" message="Please install jsch.jar into ANT_HOME/lib" />
 
-	<!--	<ivy:resolve organisation="com.vaadin" />-->
-	<!--<property name="local.temp" location="result/publish.temp" />-->
-
-
-	<ivy:cachepath inline="true" organisation="com.jcraft" module="jsch" revision="0.1.42" pathid="jsch.path" />
-	<ivy:cachepath inline="true" organisation="ant" module="ant-jsch" revision="1.6.5" pathid="jsch.task.path" />
-
-	<taskdef name="scp" classname="org.apache.tools.ant.taskdefs.optional.ssh.Scp">
-		<classpath refid="jsch.path" />
-		<classpath refid="jsch.task.path" />
-	</taskdef>
-
-	<!--
-	<target name="artifacts.to.local.temp">
-		<delete dir="${local.temp}" />
-		<copy todir="${local.temp}" flatten="true">
-			<fileset dir="result/artifacts">
-				<include name="**/vaadin-*.jar" />
-				<include name="**/*.pom" />
-				<exclude name="**/*buildhelper*" />
-			</fileset>
-		</copy>
-	</target>
--->
-	<!--
 	<target name="nightly.publish" depends="nightly.download.publish, nightly.maven.publish">
 
-	</target>
-	-->
-	<target name="resolve.modules">
-		<!-- Find out a good build order -->
-		<ivy:buildlist reference="project.modules" excluderoot="true">
-			<fileset dir="." includes="**/build.xml">
-				<exclude name="build/**" />
-			</fileset>
-		</ivy:buildlist>
 	</target>
 
 	<!-- Copies the nightly build artifacts to the download server. -->
 	<target name="nightly.tests.publish" if="nightly.tests.publish">
 		<property name="file.war" location="result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${version}.war" />
-
-		<!-- Publish to the demo server. -->
 		<property name="target" value="${nightly.tests.publish}/${vaadin.version.major}.${vaadin.version.minor}-${build.tag}.war" />
 
 		<echo>Installing ${src} to ${target}</echo>
 
-		<!-- Copy the linux installation package and the JAR. -->
-		<exec executable="scp" searchpath="true" resultproperty="nightly.demo.install.scp.result">
-			<arg value="-B" />
-			<arg value="${src}" />
-			<arg value="${target}" />
-		</exec>
-
-		<echo>Result: ${nightly.install.scp.result}</echo>
-
+		<scp todir="${nightly.tests.publish}" file="${file.war}">
+		</scp>
 	</target>
+
 	<target name="nightly.download.publish">
 		<antcontrib:foreach list="${modules.to.publish}" target="publish.module.to.download.site" param="module" />
 	</target>
 
+	<target name="nightly.maven.publish">
+		<antcontrib:foreach list="${modules.to.publish}" target="publish.module.to.maven" param="module" />
+	</target>
+
 	<target name="publish.module.to.download.site">
+		<fail unless="module" message="No module to publish defined" />
 		<ivy:resolve file="${module}/ivy.xml" />
 		<ivy:publish publishivy="false" settingsref="publish.settings" conf="*(public)" resolver="sftp-publish">
-			<artifacts pattern="${ivy.settings.dir}/result/artifacts/[revision]/[module]/[artifact]-[revision](-[type]).[ext]" />
+			<artifacts pattern="${ivy.settings.dir}/result/artifacts/[revision]/[module]/[artifact]-[revision](-[classifier]).[ext]" />
 		</ivy:publish>
 	</target>
 
-	<target name="nightly.maven.publish" if="maven.publish">
-		<antcall target="publish.module.to.maven">
-			<param name="module" value="shared" />
-		</antcall>
-	</target
-	>
 	<target name="publish.module.to.maven">
+		<fail unless="module" message="No module to publish defined" />
 		<property file="${gpg.passphrase.file}" />
-		<ivy:resolve file="${module}/ivy.xml" />
-		<!--
-		<ivy:publish publishivy="false" settingsref="publish.settings" conf="*(public)" resolver="sonatype">
-			<artifacts pattern="${ivy.settings.dir}/result/artifacts/[revision]/[module]/[artifact]-[revision](-[type]).[ext]" />
+
+		<!-- Ivy should be able to handle this but this does not work at the moment
+				<ivy:resolve file="${module}/ivy.xml" />
+		<ivy:publish pubrevision="7.0-SNAPSHOT" publishivy="false" settingsref="publish.settings" conf="*(public)" resolver="sonatype">
+			<artifacts pattern="${ivy.settings.dir}/result/artifacts/${vaadin.version}/[module]/[artifact]-${vaadin.version}(-[classifier]).[ext]" />
 		</ivy:publish>
 -->
+		<property name="jar.file" location="result/artifacts/${vaadin.version}/vaadin-${module}/vaadin-${module}-${vaadin.version}.jar" />
+		<property name="pom.file" location="result/artifacts/${vaadin.version}/vaadin-${module}/vaadin-${module}-${vaadin.version}.pom" />
 
 		<artifact:mvn failonerror="true">
 			<arg value="gpg:sign-and-deploy-file" />
-			<arg value="-e" />
-			<sysproperty key="file" value="result/artifacts/7.0.0.test1/vaadin-shared/vaadin-shared-7.0.0.test1.jar" />
-			<!--			<sysproperty key="file" value="result/artifacts/*/${module}/" />-->
-			<sysproperty key="pomFile" value="result/artifacts/7.0.0.test1/vaadin-shared/vaadin-shared-7.0.0.test1.pom" />
+			<sysproperty key="file" value="${jar.file}" />
+			<sysproperty key="pomFile" value="${pom.file}" />
 			<sysproperty key="repositoryId" value="${maven.snapshot.repository.id}" />
 			<sysproperty key="url" value="${maven.snapshot.repository.url}" />
 			<sysproperty key="gpg.passphrase" value="${gpg.passphrase}" />
+			<sysproperty key="retryFailedDeploymentCount" value="10" />
 		</artifact:mvn>
-
 	</target>
 
-	<!--<target name="nightly.download.publish" if="nightly.publish" depends="artifacts.to.local.temp">-->
-	<!-- Publish to the download server. -->
-	<!--		<fileset dir="${local.temp}" id="files.to.publish" />
-		<property name="files.string" refid="files.to.publish" />
-		<echo>Publishing ${files.string} to ${nightly.publish}</echo>
-		<scp todir="${nightly.publish}" trust="true" verbose="true">
-			<fileset refid="files.to.publish" />
-		</scp>
-
-	</target>
-	-->
 </project>

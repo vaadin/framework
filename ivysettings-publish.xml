@@ -5,6 +5,9 @@
     <credentials host="oss.sonatype.org" realm="Sonatype Nexus Repository Manager"
         username="${sonatype.username}" passwd="${sonatype.password}">
     </credentials>
+    <signers>
+        <pgp name="gpg" password="${gpg.passphrase}" />
+    </signers>
     <resolvers>
         <!-- user="${publish.sftp.user}" host="${publish.sftp.host}" keyFile="${publish.sftp.keyfile}" 
             keyFilePassword="${publish.sftp.keyfilepassword}" -->
@@ -12,7 +15,7 @@
             <ivy pattern="${publish.sftp.ivy.pattern}" />
             <artifact pattern="${publish.sftp.artifact.pattern}" />
         </sftp>
-        <ibiblio name="sonatype"
+        <ibiblio name="sonatype" signer="gpg"
             root="https://oss.sonatype.org/content/repositories/vaadin-snapshots/"
             m2compatible="true" />
 
@@ -20,7 +23,7 @@
             <ivy
                 pattern="${ivy.settings.dir}/result/artifacts/[revision]/[module]/ivy-[revision].xml" />
             <artifact
-                pattern="${ivy.settings.dir}/result/artifacts/[revision]/[module]/[artifact]-[revision].[ext]" />
+                pattern="${ivy.settings.dir}/result/artifacts/[revision]/[module]/[artifact]-[revision](-[classifier]).[ext]" />
         </filesystem>
     </resolvers>
 

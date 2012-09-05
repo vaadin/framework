@@ -11,10 +11,9 @@
 	<taskdef resource="org/apache/maven/artifact/ant/antlib.xml" uri="antlib:org.apache.maven.artifact.ant" classpathref="taskdefs.classpath" />
 
 	<!-- FIXME These are not available in other files -->
-	<antcontrib:propertyregex property="vaadin.version.major" input="${version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\1" />
-	<antcontrib:propertyregex property="vaadin.version.minor" input="${version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\2" />
-	<antcontrib:propertyregex property="vaadin.version.revision" input="${version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\3" />
-
+	<antcontrib:propertyregex property="vaadin.version.major" input="${vaadin.version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\1" />
+	<antcontrib:propertyregex property="vaadin.version.minor" input="${vaadin.version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\2" />
+	<antcontrib:propertyregex property="vaadin.version.revision" input="${vaadin.version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\3" />
 	<ivy:settings file="${vaadin.basedir}/ivysettings.xml" id="ivysettings" />
 
 	<union id="empty.reference" />
@@ -30,17 +29,40 @@
 	</fileset>
 
 
-	<target name="pom.xml" description="Generates a pom.xml based on the Ivy configuration">
+	<target name="pom.xml" description="Generates a pom.xml based on the Ivy configuration. Either for a snapshot or a release version" depends="pom.xml.release,pom.xml.snapshot">
+	</target>
+
+	<target name="pom.xml.release" if="build.release">
 		<fail unless="result.dir" message="No result.dir parameter given" />
 		<property name="ivy.xml" location="${result.dir}/../ivy.xml" />
 		<property name="pom.xml" location="${result.dir}/lib/${module.name}-${vaadin.version}.pom" />
 		<property name="conf" value="build, build-provided" />
-		<property name="vaadin.maven.version" value="${vaadin.version.major}.${vaadin.version.minor}-SNAPSHOT" />
+		<property name="vaadin.maven.version" value="${vaadin.version}" />
 
 		<ivy:makepom templatefile="${vaadin.basedir}/pom-template.xml" ivyfile="${ivy.xml}" pomfile="${pom.xml}" conf="${conf}">
 			<mapping conf="build" scope="compile" />
 			<mapping conf="build-provided" scope="provided" />
 		</ivy:makepom>
+	</target>
+
+	<target name="pom.xml.snapshot" unless="build.release">
+		<fail unless="result.dir" message="No result.dir parameter given" />
+		<property name="ivy.xml" location="${result.dir}/../ivy.xml" />
+		<property name="pom.xml" location="${result.dir}/lib/${module.name}-${vaadin.version}.pom" />
+		<property name="temp.pom.xml" location="${pom.xml}.temp" />
+		<property name="conf" value="build, build-provided" />
+		<property name="vaadin.maven.version" value="${vaadin.version.major}.${vaadin.version.minor}-SNAPSHOT" />
+
+		<ivy:makepom templatefile="${vaadin.basedir}/pom-template.xml" ivyfile="${ivy.xml}" pomfile="${temp.pom.xml}" conf="${conf}">
+			<mapping conf="build" scope="compile" />
+			<mapping conf="build-provided" scope="provided" />
+		</ivy:makepom>
+		<copy file="${temp.pom.xml}" tofile="${pom.xml}">
+			<filterchain>
+				<replacestring from="${vaadin.version}" to="${vaadin.maven.version}" />
+			</filterchain>
+		</copy>
+		<delete file="${temp.pom.xml}" />
 	</target>
 
 
