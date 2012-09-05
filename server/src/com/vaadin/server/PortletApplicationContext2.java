@@ -16,6 +16,7 @@
 package com.vaadin.server;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -40,7 +41,6 @@ import javax.portlet.StateAwareResponse;
 import javax.servlet.http.HttpSessionBindingListener;
 import javax.xml.namespace.QName;
 
-import com.vaadin.Application;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
@@ -55,7 +55,7 @@ import com.vaadin.util.CurrentInstance;
 @SuppressWarnings("serial")
 public class PortletApplicationContext2 extends ApplicationContext {
 
-    protected Map<Application, Set<PortletListener>> portletListeners = new HashMap<Application, Set<PortletListener>>();
+    private final Set<PortletListener> portletListeners = new LinkedHashSet<PortletListener>();
 
     private final Map<String, QName> eventActionDestinationMap = new HashMap<String, QName>();
     private final Map<String, Serializable> eventActionValueMap = new HashMap<String, Serializable>();
@@ -108,35 +108,25 @@ public class PortletApplicationContext2 extends ApplicationContext {
                 .getPortletConfig();
     }
 
-    public void addPortletListener(Application app, PortletListener listener) {
-        Set<PortletListener> l = portletListeners.get(app);
-        if (l == null) {
-            l = new LinkedHashSet<PortletListener>();
-            portletListeners.put(app, l);
-        }
-        l.add(listener);
+    public void addPortletListener(PortletListener listener) {
+        portletListeners.add(listener);
     }
 
-    public void removePortletListener(Application app, PortletListener listener) {
-        Set<PortletListener> l = portletListeners.get(app);
-        if (l != null) {
-            l.remove(listener);
-        }
+    public void removePortletListener(PortletListener listener) {
+        portletListeners.remove(listener);
     }
 
-    public void firePortletRenderRequest(Application app, UI uI,
-            RenderRequest request, RenderResponse response) {
-        Set<PortletListener> listeners = portletListeners.get(app);
-        if (listeners != null) {
-            for (PortletListener l : listeners) {
-                l.handleRenderRequest(request, new RestrictedRenderResponse(
-                        response), uI);
-            }
+    public void firePortletRenderRequest(UI uI, RenderRequest request,
+            RenderResponse response) {
+        for (PortletListener l : new ArrayList<PortletListener>(
+                portletListeners)) {
+            l.handleRenderRequest(request, new RestrictedRenderResponse(
+                    response), uI);
         }
     }
 
-    public void firePortletActionRequest(Application app, UI uI,
-            ActionRequest request, ActionResponse response) {
+    public void firePortletActionRequest(UI uI, ActionRequest request,
+            ActionResponse response) {
         String key = request.getParameter(ActionRequest.ACTION_NAME);
         if (eventActionDestinationMap.containsKey(key)) {
             // this action request is only to send queued portlet events
@@ -154,32 +144,26 @@ public class PortletApplicationContext2 extends ApplicationContext {
             sharedParameterActionValueMap.remove(key);
         } else {
             // normal action request, notify listeners
-            Set<PortletListener> listeners = portletListeners.get(app);
-            if (listeners != null) {
-                for (PortletListener l : listeners) {
-                    l.handleActionRequest(request, response, uI);
-                }
+            for (PortletListener l : new ArrayList<PortletListener>(
+                    portletListeners)) {
+                l.handleActionRequest(request, response, uI);
             }
         }
     }
 
-    public void firePortletEventRequest(Application app, UI uI,
-            EventRequest request, EventResponse response) {
-        Set<PortletListener> listeners = portletListeners.get(app);
-        if (listeners != null) {
-            for (PortletListener l : listeners) {
-                l.handleEventRequest(request, response, uI);
-            }
+    public void firePortletEventRequest(UI uI, EventRequest request,
+            EventResponse response) {
+        for (PortletListener l : new ArrayList<PortletListener>(
+                portletListeners)) {
+            l.handleEventRequest(request, response, uI);
         }
     }
 
-    public void firePortletResourceRequest(Application app, UI uI,
-            ResourceRequest request, ResourceResponse response) {
-        Set<PortletListener> listeners = portletListeners.get(app);
-        if (listeners != null) {
-            for (PortletListener l : listeners) {
-                l.handleResourceRequest(request, response, uI);
-            }
+    public void firePortletResourceRequest(UI uI, ResourceRequest request,
+            ResourceResponse response) {
+        for (PortletListener l : new ArrayList<PortletListener>(
+                portletListeners)) {
+            l.handleResourceRequest(request, response, uI);
         }
     }
 

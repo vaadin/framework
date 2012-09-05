@@ -89,7 +89,7 @@ public class JSR286PortletApplication extends Application.LegacyApplication {
 
         if (getContext() instanceof PortletApplicationContext2) {
             PortletApplicationContext2 ctx = (PortletApplicationContext2) getContext();
-            ctx.addPortletListener(this, new DemoPortletListener());
+            ctx.addPortletListener(new DemoPortletListener());
         } else {
             getMainWindow().showNotification("Not inited via Portal!",
                     Notification.TYPE_ERROR_MESSAGE);

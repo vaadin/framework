@@ -544,19 +544,17 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                 // TODO Should this happen before or after the transaction
                 // starts?
                 if (request instanceof RenderRequest) {
-                    applicationContext.firePortletRenderRequest(application,
-                            uI, (RenderRequest) request,
-                            (RenderResponse) response);
+                    applicationContext.firePortletRenderRequest(uI,
+                            (RenderRequest) request, (RenderResponse) response);
                 } else if (request instanceof ActionRequest) {
-                    applicationContext.firePortletActionRequest(application,
-                            uI, (ActionRequest) request,
-                            (ActionResponse) response);
+                    applicationContext.firePortletActionRequest(uI,
+                            (ActionRequest) request, (ActionResponse) response);
                 } else if (request instanceof EventRequest) {
-                    applicationContext.firePortletEventRequest(application, uI,
+                    applicationContext.firePortletEventRequest(uI,
                             (EventRequest) request, (EventResponse) response);
                 } else if (request instanceof ResourceRequest) {
-                    applicationContext.firePortletResourceRequest(application,
-                            uI, (ResourceRequest) request,
+                    applicationContext.firePortletResourceRequest(uI,
+                            (ResourceRequest) request,
                             (ResourceResponse) response);
                 }
 
