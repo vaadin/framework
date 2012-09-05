@@ -21,6 +21,9 @@
 		</antcall>
 	</target>
 	<target name="publish-local" depends="jar">
+		<antcall target="common.sources.jar" />
+		<antcall target="common.javadoc.jar" />
+
 		<antcall target="common.publish-local" />
 	</target>
 

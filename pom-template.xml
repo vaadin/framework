@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.vaadin</groupId>
   <artifactId>${module.name}</artifactId>
-  <version>${vaadin.version}</version>
+  <version>${vaadin.maven.version}</version>
   <name>Vaadin</name>
   <organization>
     <name>Vaadin Ltd</name>

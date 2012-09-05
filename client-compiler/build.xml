@@ -25,12 +25,12 @@
 	<target name="jar">
 		<!-- Get Git revision -->
 		<exec executable="git" outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
-			 <arg value="describe"/>
-			 <arg value="--tags"/>
-			 <arg value="--always"/>
-			 <arg value="HEAD"/>
-		</exec> 
-		 
+			<arg value="describe"/>
+			<arg value="--tags"/>
+			<arg value="--always"/>
+			<arg value="HEAD"/>
+		</exec>
+
 		<echo file="${result.dir}/com/google/gwt/dev/About.properties">gwt.version=${vaadin.version}
 gwt.svnrev=${git.revision}</echo>
 
@@ -40,6 +40,9 @@ gwt.svnrev=${git.revision}</echo>
 	</target>
 
 	<target name="publish-local" depends="jar">
+		<antcall target="common.sources.jar" />
+		<antcall target="common.javadoc.jar" />
+
 		<antcall target="common.publish-local" />
 	</target>
 

@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="common" basedir="." default="" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="common" basedir="." default="" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:antcontrib="antlib:net.sf.antcontrib">
+
 	<dirname property="vaadin.basedir" file="${ant.file.common}" />
 	<property file="${vaadin.basedir}/build.properties" />
-	<ivy:settings file="${vaadin.basedir}/ivysettings.xml" />
+
+	<ivy:resolve file="${vaadin.basedir}/build/ivy/ivy.xml" conf="taskdefs" />
+	<ivy:cachepath pathid="taskdefs.classpath" conf="taskdefs" />
+	<taskdef uri="antlib:net.sf.antcontrib" resource="net/sf/antcontrib/antlib.xml" classpathref="taskdefs.classpath" />
+	<!-- ant contrib for Maven integration -->
+	<taskdef resource="org/apache/maven/artifact/ant/antlib.xml" uri="antlib:org.apache.maven.artifact.ant" classpathref="taskdefs.classpath" />
+
+	<!-- FIXME These are not available in other files -->
+	<antcontrib:propertyregex property="vaadin.version.major" input="${version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\1" />
+	<antcontrib:propertyregex property="vaadin.version.minor" input="${version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\2" />
+	<antcontrib:propertyregex property="vaadin.version.revision" input="${version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\3" />
+
+	<ivy:settings file="${vaadin.basedir}/ivysettings.xml" id="ivysettings" />
 
 	<union id="empty.reference" />
 
@@ -22,6 +35,7 @@
 		<property name="ivy.xml" location="${result.dir}/../ivy.xml" />
 		<property name="pom.xml" location="${result.dir}/lib/${module.name}-${vaadin.version}.pom" />
 		<property name="conf" value="build, build-provided" />
+		<property name="vaadin.maven.version" value="${vaadin.version.major}.${vaadin.version.minor}-SNAPSHOT" />
 
 		<ivy:makepom templatefile="${vaadin.basedir}/pom-template.xml" ivyfile="${ivy.xml}" pomfile="${pom.xml}" conf="${conf}">
 			<mapping conf="build" scope="compile" />
@@ -205,12 +219,12 @@
 		<property name="conf" value="*(public)" />
 
 		<ivy:resolve conf="${conf}" />
-		<ivy:publish conf="${conf}" resolver="build-temp" overwrite="true" forcedeliver="true">
+		<ivy:publish settingsref="ivysettings" conf="${conf}" resolver="build-temp" overwrite="true" forcedeliver="true">
 			<!--			<artifacts pattern="${result.dir}/[artifact]-[revision].[ext]" />-->
 			<artifacts pattern="${result.dir}/lib/[artifact]-[revision](-[classifier]).[ext]" />
 
 		</ivy:publish>
-		<ivy:publish conf="${conf}" resolver="local-maven" overwrite="true">
+		<ivy:publish settingsref="ivysettings" conf="${conf}" resolver="local-maven" overwrite="true">
 			<artifacts pattern="${result.dir}/lib/[artifact]-[revision](-[classifier]).[ext]" />
 		</ivy:publish>
 	</target>
