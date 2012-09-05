@@ -1,13 +1,13 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 
-public class Ticket2240 extends Application.LegacyApplication {
+public class Ticket2240 extends LegacyApplication {
 
     public static final String txt = "<p>There are two main types of windows: application-level windows, and "
             + "\"sub windows\".</p><p>A sub window is rendered as a \"inline\" popup window"

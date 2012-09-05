@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.CheckBox;
@@ -8,7 +8,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 
-public class Ticket2038 extends Application.LegacyApplication {
+public class Ticket2038 extends LegacyApplication {
 
     @Override
     public void init() {

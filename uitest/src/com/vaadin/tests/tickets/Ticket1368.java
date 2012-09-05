@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.tests.TestForTablesInitialColumnWidthLogicRendering;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.UI.LegacyWindow;
@@ -8,7 +8,7 @@ import com.vaadin.ui.Table;
 
 /**
  */
-public class Ticket1368 extends Application.LegacyApplication {
+public class Ticket1368 extends LegacyApplication {
 
     private Table t;
 

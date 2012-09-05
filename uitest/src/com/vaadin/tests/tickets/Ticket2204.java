@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.AbstractOrderedLayout;
@@ -31,7 +31,7 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 
-public class Ticket2204 extends Application.LegacyApplication {
+public class Ticket2204 extends LegacyApplication {
 
     private final List<RichTextArea> textAreas = new ArrayList<RichTextArea>();
     private TabSheet ts;

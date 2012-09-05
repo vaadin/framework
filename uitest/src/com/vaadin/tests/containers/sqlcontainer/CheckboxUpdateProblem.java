@@ -2,7 +2,7 @@ package com.vaadin.tests.containers.sqlcontainer;
 
 import java.sql.SQLException;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.Container.ItemSetChangeEvent;
 import com.vaadin.data.Container.ItemSetChangeListener;
 import com.vaadin.data.Item;
@@ -15,7 +15,7 @@ import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
 
-public class CheckboxUpdateProblem extends Application.LegacyApplication
+public class CheckboxUpdateProblem extends LegacyApplication
         implements Property.ValueChangeListener {
     private final DatabaseHelper databaseHelper = new DatabaseHelper();
     private Table testList;

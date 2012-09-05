@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.combobox;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.Container;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -12,7 +12,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
-public class ComboBoxReapperingOldValue extends Application.LegacyApplication
+public class ComboBoxReapperingOldValue extends LegacyApplication
         implements ValueChangeListener {
 
     ComboBox cbox1 = new ComboBox();

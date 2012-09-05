@@ -28,6 +28,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 
 import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
@@ -89,7 +90,7 @@ public abstract class UI extends AbstractComponentContainer implements
     /**
      * Helper class to emulate the main window from Vaadin 6 using UIs. This
      * class should be used in the same way as Window used as a browser level
-     * window in Vaadin 6 with {@link com.vaadin.Application.LegacyApplication}
+     * window in Vaadin 6 with {@link com.vaadin.LegacyApplication}
      */
     @Deprecated
     public static class LegacyWindow extends UI {

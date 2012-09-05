@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.ui.Accordion;
@@ -9,7 +9,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket2103 extends Application.LegacyApplication {
+public class Ticket2103 extends LegacyApplication {
     private LegacyWindow mainWindow;
 
     @Override

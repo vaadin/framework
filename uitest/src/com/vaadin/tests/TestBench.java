@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.server.ExternalResource;
@@ -51,7 +51,7 @@ import com.vaadin.ui.VerticalLayout;
  * @author Vaadin Ltd.
  * 
  */
-public class TestBench extends com.vaadin.Application.LegacyApplication
+public class TestBench extends com.vaadin.LegacyApplication
         implements Property.ValueChangeListener {
 
     // Add here packages which are used for finding testable classes
@@ -223,7 +223,7 @@ public class TestBench extends com.vaadin.Application.LegacyApplication
 
     private Component createTestable(Class<?> c) {
         try {
-            final Application.LegacyApplication app = (Application.LegacyApplication) c
+            final LegacyApplication app = (LegacyApplication) c
                     .newInstance();
             app.doInit();
             Layout lo = (Layout) app.getMainWindow().getContent();

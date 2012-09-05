@@ -26,7 +26,7 @@ import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.server.StreamResource;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
@@ -48,7 +48,7 @@ import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.ui.Upload.SucceededListener;
 import com.vaadin.ui.VerticalLayout;
 
-public class TestForStyledUpload extends Application.LegacyApplication
+public class TestForStyledUpload extends LegacyApplication
         implements Upload.FinishedListener, FailedListener, SucceededListener,
         StartedListener {
 

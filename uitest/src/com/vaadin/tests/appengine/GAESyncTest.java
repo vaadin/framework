@@ -1,8 +1,7 @@
 package com.vaadin.tests.appengine;
 
 import com.google.apphosting.api.DeadlineExceededException;
-import com.vaadin.Application;
-import com.vaadin.Application.LegacyApplication;
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.server.ClassResource;
@@ -16,7 +15,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class GAESyncTest extends Application.LegacyApplication {
+public class GAESyncTest extends LegacyApplication {
 
     /**
      * 

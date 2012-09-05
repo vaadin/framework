@@ -20,7 +20,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import com.vaadin.Application;
-import com.vaadin.Application.LegacyApplication;
+import com.vaadin.LegacyApplication;
 import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
 
 public class LegacyVaadinServlet extends VaadinServlet {

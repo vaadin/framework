@@ -1,12 +1,12 @@
 package com.vaadin.tests.layouts;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class GridLayoutInsidePanel2 extends Application.LegacyApplication {
+public class GridLayoutInsidePanel2 extends LegacyApplication {
 
     private Layout layout;
 

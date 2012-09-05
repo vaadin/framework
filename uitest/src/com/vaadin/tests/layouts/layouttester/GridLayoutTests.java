@@ -2,7 +2,7 @@ package com.vaadin.tests.layouts.layouttester;
 
 import java.util.Date;
 
-import com.vaadin.Application.LegacyApplication;
+import com.vaadin.LegacyApplication;
 import com.vaadin.server.Resource;
 import com.vaadin.server.SystemError;
 import com.vaadin.server.ThemeResource;

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.server.WrappedResponse;
@@ -13,7 +14,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket1921 extends Application.LegacyApplication implements
+public class Ticket1921 extends LegacyApplication implements
         RequestHandler {
 
     int state = -1;

@@ -16,7 +16,7 @@
 
 package com.vaadin.tests;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
@@ -25,7 +25,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 
 public class TestForApplicationLayoutThatUsesWholeBrosersSpace extends
-        Application.LegacyApplication {
+        LegacyApplication {
 
     LegacyWindow main = new LegacyWindow("Windowing test");
 

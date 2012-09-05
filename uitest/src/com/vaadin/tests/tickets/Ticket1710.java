@@ -2,6 +2,7 @@ package com.vaadin.tests.tickets;
 
 import java.util.Iterator;
 
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.MethodProperty;
@@ -28,7 +29,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket1710 extends com.vaadin.Application.LegacyApplication {
+public class Ticket1710 extends com.vaadin.LegacyApplication {
 
     @Override
     public void init() {

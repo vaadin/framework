@@ -3,7 +3,7 @@
  */
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.UI.LegacyWindow;
@@ -12,7 +12,7 @@ import com.vaadin.ui.UI.LegacyWindow;
  * @author Risto Yrjänä / Vaadin Ltd.
  * 
  */
-public class Ticket2742 extends Application.LegacyApplication {
+public class Ticket2742 extends LegacyApplication {
 
     /*
      * (non-Javadoc)

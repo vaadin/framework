@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
@@ -8,7 +8,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.themes.Reindeer;
 
-public class Ticket2310 extends Application.LegacyApplication {
+public class Ticket2310 extends LegacyApplication {
 
     @Override
     public void init() {

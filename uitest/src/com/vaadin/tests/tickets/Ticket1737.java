@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.Resource;
@@ -10,7 +10,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket1737 extends Application.LegacyApplication {
+public class Ticket1737 extends LegacyApplication {
 
     Resource slowRes = new ClassResource(Ticket1737.class, "m-bullet-blue.gif") {
         @Override

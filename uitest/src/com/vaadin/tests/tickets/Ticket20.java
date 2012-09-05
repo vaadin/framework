@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.data.validator.CompositeValidator;
@@ -11,7 +11,7 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 
-public class Ticket20 extends Application.LegacyApplication {
+public class Ticket20 extends LegacyApplication {
 
     @Override
     public void init() {

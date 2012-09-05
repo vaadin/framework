@@ -2,14 +2,14 @@ package com.vaadin.tests.tickets;
 
 import java.util.Iterator;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket1970 extends Application.LegacyApplication {
+public class Ticket1970 extends LegacyApplication {
 
     @Override
     public void init() {

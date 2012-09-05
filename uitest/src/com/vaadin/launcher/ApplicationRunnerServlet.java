@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
-import com.vaadin.Application.LegacyApplication;
+import com.vaadin.LegacyApplication;
 import com.vaadin.server.AbstractUIProvider;
 import com.vaadin.server.ApplicationConfiguration;
 import com.vaadin.server.LegacyVaadinServlet;

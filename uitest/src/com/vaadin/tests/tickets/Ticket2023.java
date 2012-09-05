@@ -1,12 +1,13 @@
 package com.vaadin.tests.tickets;
 
+import com.vaadin.LegacyApplication;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2023 extends com.vaadin.Application.LegacyApplication
+public class Ticket2023 extends com.vaadin.LegacyApplication
         implements Button.ClickListener {
 
     AbstractComponent c = new Button();

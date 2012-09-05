@@ -1,13 +1,13 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 
-public class Ticket2062 extends Application.LegacyApplication {
+public class Ticket2062 extends LegacyApplication {
     private static final Object P1 = new Object();
 
     @Override

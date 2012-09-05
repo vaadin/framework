@@ -3,6 +3,7 @@ package com.vaadin.tests.tickets;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.server.SystemError;
@@ -15,7 +16,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.Window;
 
-public class Ticket1804 extends com.vaadin.Application.LegacyApplication {
+public class Ticket1804 extends com.vaadin.LegacyApplication {
 
     LinkedList<Select> listOfAllFields = new LinkedList<Select>();
 

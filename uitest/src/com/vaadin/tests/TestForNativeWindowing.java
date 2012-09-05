@@ -19,7 +19,7 @@ package com.vaadin.tests;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -27,7 +27,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Window;
 
-public class TestForNativeWindowing extends Application.LegacyApplication {
+public class TestForNativeWindowing extends LegacyApplication {
 
     LegacyWindow main = new LegacyWindow("Windowing test");
 

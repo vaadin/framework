@@ -18,6 +18,7 @@ package com.vaadin.tests;
 
 import java.util.Random;
 
+import com.vaadin.LegacyApplication;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
@@ -43,7 +44,7 @@ import com.vaadin.ui.VerticalLayout;
  * 
  */
 public class RandomLayoutStress extends
-        com.vaadin.Application.LegacyApplication {
+        com.vaadin.LegacyApplication {
 
     private final Random seededRandom = new Random(1);
 

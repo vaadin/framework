@@ -20,7 +20,7 @@ import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 
 import com.vaadin.Application;
-import com.vaadin.Application.LegacyApplication;
+import com.vaadin.LegacyApplication;
 import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
 
 public class LegacyVaadinPortlet extends VaadinPortlet {

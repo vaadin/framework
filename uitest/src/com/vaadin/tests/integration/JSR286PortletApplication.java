@@ -18,7 +18,7 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.portlet.WindowState;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.PortletApplicationContext2;
@@ -37,7 +37,7 @@ import com.vaadin.ui.Upload.Receiver;
 /**
  * Adapted from old PortletDemo to support integration testing.
  */
-public class JSR286PortletApplication extends Application.LegacyApplication {
+public class JSR286PortletApplication extends LegacyApplication {
 
     @StyleSheet("PortletConnectorResource.css")
     public final class LegacyWindowWithStylesheet extends LegacyWindow {

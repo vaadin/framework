@@ -1,5 +1,6 @@
 package com.vaadin.tests.tickets;
 
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Button;
@@ -14,7 +15,7 @@ import com.vaadin.ui.Table;
  * client.
  * 
  */
-public class Ticket2126 extends com.vaadin.Application.LegacyApplication {
+public class Ticket2126 extends com.vaadin.LegacyApplication {
 
     LegacyWindow main = new LegacyWindow();
     Table table = new Table();

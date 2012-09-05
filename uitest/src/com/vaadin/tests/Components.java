@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.DefaultItemSorter;
 import com.vaadin.data.util.HierarchicalContainer;
@@ -30,7 +30,7 @@ import com.vaadin.ui.Tree.ItemStyleGenerator;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
-public class Components extends Application.LegacyApplication {
+public class Components extends LegacyApplication {
 
     private static final Object CAPTION = "c";
     private Map<Class<? extends AbstractComponentTest>, String> tests = new HashMap<Class<? extends AbstractComponentTest>, String>();

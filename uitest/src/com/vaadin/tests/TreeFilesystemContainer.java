@@ -19,6 +19,7 @@ package com.vaadin.tests;
 import java.io.File;
 
 import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.util.FilesystemContainer;
 import com.vaadin.data.util.FilesystemContainer.FileItem;
 import com.vaadin.tests.util.SampleDirectory;
@@ -42,7 +43,7 @@ import com.vaadin.ui.VerticalLayout;
  * 
  */
 public class TreeFilesystemContainer extends
-        com.vaadin.Application.LegacyApplication implements Listener {
+        com.vaadin.LegacyApplication implements Listener {
 
     // Filesystem explorer panel and it's components
     private final Panel explorerPanel = new Panel("Filesystem explorer");

@@ -1,10 +1,10 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2420 extends Application.LegacyApplication {
+public class Ticket2420 extends LegacyApplication {
 
     @Override
     public void init() {

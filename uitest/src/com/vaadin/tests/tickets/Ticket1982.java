@@ -3,7 +3,7 @@ package com.vaadin.tests.tickets;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -12,7 +12,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket1982 extends Application.LegacyApplication {
+public class Ticket1982 extends LegacyApplication {
 
     private List<TitleBar> components = new ArrayList<TitleBar>();
 

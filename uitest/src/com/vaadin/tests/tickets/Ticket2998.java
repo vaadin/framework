@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.Container;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.BeanItemContainer;
@@ -38,7 +38,7 @@ import com.vaadin.ui.themes.Reindeer;
  * 
  * Other browsers are much faster.
  */
-public class Ticket2998 extends Application.LegacyApplication {
+public class Ticket2998 extends LegacyApplication {
     private Table table;
     private VerticalLayout mainLayout;
 
