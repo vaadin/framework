@@ -463,7 +463,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      **/
     @Deprecated
     public void removeListener(ClickListener listener) {
-        addClickListener(listener);
+        removeClickListener(listener);
     }
 
     /**
