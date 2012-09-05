@@ -185,6 +185,11 @@ public class Application implements Terminal.ErrorListener, Serializable {
                 throw new IllegalStateException(
                         "mainWindow is attached to another application");
             }
+            if (UI.getCurrent() == null) {
+                // Assume setting a main window from Application.init if there's
+                // no current UI -> set the main window as the current UI
+                UI.setCurrent(mainWindow);
+            }
             this.mainWindow = mainWindow;
         }
 
