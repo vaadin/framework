@@ -271,9 +271,14 @@ public class ComponentLocator {
                         part.length() - 1);
 
                 if (Util.findWidget(baseElement, null) instanceof VBoxLayout) {
-                    Element e = baseElement.getFirstChildElement().cast();
-                    if (e.getClassName().equals("v-expand")) {
-                        element = e;
+                    if (element.hasChildNodes()) {
+                        Element e = element.getFirstChildElement().cast();
+                        String cn = e.getClassName();
+                        if (cn != null
+                                && (cn.equals("v-expand") || cn
+                                        .contains("v-has-caption"))) {
+                            element = e;
+                        }
                     }
                 }
 
