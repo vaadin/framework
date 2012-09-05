@@ -391,7 +391,7 @@ public class Page implements Serializable {
     }
 
     public WebBrowser getWebBrowser() {
-        return uI.getApplication().getBrowser();
+        return uI.getSession().getBrowser();
     }
 
     public void setBrowserWindowSize(int width, int height) {

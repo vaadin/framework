@@ -30,7 +30,7 @@ public class TestStreamVariableMapping extends TestCase {
             }
 
             @Override
-            public VaadinSession getApplication() {
+            public VaadinSession getSession() {
                 return application;
             }
         };

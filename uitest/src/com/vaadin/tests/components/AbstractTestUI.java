@@ -54,7 +54,7 @@ public abstract class AbstractTestUI extends UI {
     protected abstract Integer getTicketNumber();
 
     protected WebBrowser getBrowser() {
-        return getApplication().getBrowser();
+        return getSession().getBrowser();
     }
 
 }

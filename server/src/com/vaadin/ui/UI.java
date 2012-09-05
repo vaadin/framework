@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
-import com.vaadin.LegacyApplication;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
@@ -174,7 +173,7 @@ public abstract class UI extends AbstractComponentContainer implements
         public void setName(String name) {
             this.name = name;
             // The name can not be changed in application
-            if (getApplication() != null) {
+            if (getSession() != null) {
                 throw new IllegalStateException(
                         "Window name can not be changed while "
                                 + "the window is in application");
@@ -193,7 +192,7 @@ public abstract class UI extends AbstractComponentContainer implements
          *         to an application
          */
         public URL getURL() {
-            VaadinSession application = getApplication();
+            VaadinSession application = getSession();
             if (application == null) {
                 return null;
             }
@@ -424,7 +423,7 @@ public abstract class UI extends AbstractComponentContainer implements
     /**
      * The application to which this UI belongs
      */
-    private VaadinSession application;
+    private VaadinSession session;
 
     /**
      * List of windows in this UI.
@@ -563,9 +562,29 @@ public abstract class UI extends AbstractComponentContainer implements
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Gets the application object to which the component is attached.
+     * 
+     * <p>
+     * The method will return {@code null} if the component is not currently
+     * attached to an application.
+     * </p>
+     * 
+     * <p>
+     * Getting a null value is often a problem in constructors of regular
+     * components and in the initializers of custom composite components. A
+     * standard workaround is to use {@link VaadinSession#getCurrent()} to
+     * retrieve the application instance that the current request relates to.
+     * Another way is to move the problematic initialization to
+     * {@link #attach()}, as described in the documentation of the method.
+     * </p>
+     * 
+     * @return the parent application of the component or <code>null</code>.
+     * @see #attach()
+     */
     @Override
-    public VaadinSession getApplication() {
-        return application;
+    public VaadinSession getSession() {
+        return session;
     }
 
     @Override
@@ -676,25 +695,25 @@ public abstract class UI extends AbstractComponentContainer implements
      * This method is mainly intended for internal use by the framework.
      * </p>
      * 
-     * @param application
+     * @param session
      *            the application to set
      * 
      * @throws IllegalStateException
      *             if the application has already been set
      * 
-     * @see #getApplication()
+     * @see #getSession()
      */
-    public void setApplication(VaadinSession application) {
-        if ((application == null) == (this.application == null)) {
+    public void setSession(VaadinSession session) {
+        if ((session == null) == (this.session == null)) {
             throw new IllegalStateException("Application has already been set");
         } else {
-            if (application == null) {
+            if (session == null) {
                 detach();
             }
-            this.application = application;
+            this.session = session;
         }
 
-        if (application != null) {
+        if (session != null) {
             attach();
         }
     }
@@ -703,8 +722,8 @@ public abstract class UI extends AbstractComponentContainer implements
      * Gets the id of the UI, used to identify this UI within its application
      * when processing requests. The UI id should be present in every request to
      * the server that originates from this UI.
-     * {@link VaadinSession#getUIForRequest(WrappedRequest)} uses this id to find
-     * the route to which the request belongs.
+     * {@link VaadinSession#getUIForRequest(WrappedRequest)} uses this id to
+     * find the route to which the request belongs.
      * 
      * @return
      */
@@ -732,7 +751,7 @@ public abstract class UI extends AbstractComponentContainer implements
             throw new NullPointerException("Argument must not be null");
         }
 
-        if (window.getApplication() != null) {
+        if (window.getUI() != null && window.getUI().getSession() != null) {
             throw new IllegalArgumentException(
                     "Window is already attached to an application.");
         }
@@ -937,7 +956,7 @@ public abstract class UI extends AbstractComponentContainer implements
             throw new IllegalStateException("UI id has already been defined");
         }
         this.uiId = uiId;
-        theme = getApplication().getUiProvider(request, getClass())
+        theme = getSession().getUiProvider(request, getClass())
                 .getThemeForUI(request, getClass());
 
         getPage().init(request);

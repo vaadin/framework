@@ -29,7 +29,7 @@ public class RemoveListenersOnDetach {
             }
 
             @Override
-            public VaadinSession getApplication() {
+            public VaadinSession getSession() {
                 return application;
             }
 
@@ -59,7 +59,7 @@ public class RemoveListenersOnDetach {
         };
 
         @Override
-        public VaadinSession getApplication() {
+        public VaadinSession getSession() {
             return application;
         };
     };

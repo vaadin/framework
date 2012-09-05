@@ -26,7 +26,7 @@ public class ApplicationCloseTest extends TestBase {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                event.getButton().getApplication().close();
+                event.getButton().getUI().getSession().close();
             }
         });
 

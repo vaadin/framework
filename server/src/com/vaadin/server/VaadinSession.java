@@ -1706,8 +1706,8 @@ public class VaadinSession implements Terminal.ErrorListener,
         UI ui = createUIInstance(request, uiClass);
 
         // Initialize some fields for a newly created UI
-        if (ui.getApplication() == null) {
-            ui.setApplication(this);
+        if (ui.getSession() == null) {
+            ui.setSession(this);
         }
         // Get the next id
         Integer uiId = Integer.valueOf(nextUIId++);

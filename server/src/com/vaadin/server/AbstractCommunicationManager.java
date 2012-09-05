@@ -676,7 +676,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
 
         sb.append("\nComponent hierarchy:\n");
-        VaadinSession application2 = component.getApplication();
+        VaadinSession application2 = component.getUI().getSession();
         sb.append(application2.getClass().getName());
         sb.append(".");
         sb.append(application2.getClass().getSimpleName());
@@ -789,7 +789,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             final PrintWriter outWriter, UI ui, boolean analyzeLayouts)
             throws PaintException, JSONException {
         ArrayList<ClientConnector> dirtyVisibleConnectors = new ArrayList<ClientConnector>();
-        VaadinSession application = ui.getApplication();
+        VaadinSession application = ui.getSession();
         // Paints components
         ConnectorTracker uiConnectorTracker = ui.getConnectorTracker();
         getLogger().log(Level.FINE, "* Creating response to client");
@@ -1697,7 +1697,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                         if (connector instanceof Component) {
                             errorComponent = (Component) connector;
                         }
-                        handleChangeVariablesError(uI.getApplication(),
+                        handleChangeVariablesError(uI.getSession(),
                                 errorComponent, realException, null);
                     }
                 } else {
@@ -1729,7 +1729,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                                 errorComponent = (Component) dropHandlerOwner;
                             }
                         }
-                        handleChangeVariablesError(uI.getApplication(),
+                        handleChangeVariablesError(uI.getSession(),
                                 errorComponent, e, changes);
                     }
                 }
@@ -2154,8 +2154,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * Ends the Application.
      * 
      * The browser is redirected to the Application logout URL set with
-     * {@link VaadinSession#setLogoutURL(String)}, or to the application URL if no
-     * logout URL is given.
+     * {@link VaadinSession#setLogoutURL(String)}, or to the application URL if
+     * no logout URL is given.
      * 
      * @param request
      *            the request instance.
@@ -2450,7 +2450,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         StringWriter sWriter = new StringWriter();
         PrintWriter pWriter = new PrintWriter(sWriter);
         pWriter.print("{");
-        if (isXSRFEnabled(uI.getApplication())) {
+        if (isXSRFEnabled(uI.getSession())) {
             pWriter.print(getSecurityKeyUIDL(request));
         }
         writeUidlResponse(request, true, pWriter, uI, false);

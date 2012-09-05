@@ -7,7 +7,7 @@ import com.vaadin.ui.TextField;
 public class CustomConverterFactoryUI extends AbstractTestUI {
     @Override
     public void setup(WrappedRequest request) {
-        getApplication().setConverterFactory(new MyConverterFactory());
+        getSession().setConverterFactory(new MyConverterFactory());
 
         TextField tf = new TextField("This is my double field");
         tf.setImmediate(true);

@@ -132,7 +132,7 @@ public class LoginForm extends CustomComponent {
      * @return byte array containing login page html
      */
     protected byte[] getLoginHTML() {
-        String appUri = getApplication().getURL().toString();
+        String appUri = getSession().getURL().toString();
 
         try {
             return ("<!DOCTYPE html PUBLIC \"-//W3C//DTD "
@@ -186,13 +186,13 @@ public class LoginForm extends CustomComponent {
     @Override
     public void attach() {
         super.attach();
-        getApplication().addRequestHandler(requestHandler);
+        getSession().addRequestHandler(requestHandler);
         iframe.setSource(loginPage);
     }
 
     @Override
     public void detach() {
-        getApplication().removeRequestHandler(requestHandler);
+        getSession().removeRequestHandler(requestHandler);
 
         super.detach();
     }

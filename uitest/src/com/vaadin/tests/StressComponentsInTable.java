@@ -54,7 +54,7 @@ public class StressComponentsInTable extends CustomComponent {
                     Button b = event.getButton();
                     System.out.println(b.getCaption() + " click: "
                             + (new Date()).toString());
-                    System.out.println(b.getApplication());
+                    System.out.println(b.getUI().getSession());
 
                 }
             }));

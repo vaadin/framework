@@ -20,12 +20,12 @@ public class DynamicImageUI extends AbstractTestUI {
     @Override
     public void setup(WrappedRequest request) {
         // Add the request handler that handles our dynamic image
-        getApplication().addRequestHandler(new DynamicImageRequestHandler());
+        getSession().addRequestHandler(new DynamicImageRequestHandler());
 
         // Create a URL that we can handle in DynamicImageRequestHandler
         URL imageUrl;
         try {
-            imageUrl = new URL(getApplication().getURL(),
+            imageUrl = new URL(getSession().getURL(),
                     DynamicImageRequestHandler.IMAGE_URL + "?text=Hello!");
         } catch (MalformedURLException e) {
             // This should never happen

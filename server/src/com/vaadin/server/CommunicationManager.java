@@ -112,7 +112,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
     protected InputStream getThemeResourceAsStream(UI uI, String themeName,
             String resource) {
         VaadinServletSession context = (VaadinServletSession) uI
-                .getApplication();
+                .getSession();
         ServletContext servletContext = context.getHttpSession()
                 .getServletContext();
         return servletContext.getResourceAsStream("/"

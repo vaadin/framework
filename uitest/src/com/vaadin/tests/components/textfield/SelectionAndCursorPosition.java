@@ -30,7 +30,8 @@ public class SelectionAndCursorPosition extends TestBase {
         ml.addListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                if (textField.getApplication() == null) {
+                if (textField.getUI() == null
+                        || textField.getUI().getSession() == null) {
                     replaceComponent(textArea, textField);
                     activeComponent = textField;
                 } else {

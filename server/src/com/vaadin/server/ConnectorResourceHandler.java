@@ -44,7 +44,7 @@ public class ConnectorResourceHandler implements RequestHandler {
             }
 
             UI.setCurrent(ui);
-            VaadinSession.setCurrent(ui.getApplication());
+            VaadinSession.setCurrent(ui.getSession());
 
             ClientConnector connector = ui.getConnectorTracker().getConnector(
                     cid);

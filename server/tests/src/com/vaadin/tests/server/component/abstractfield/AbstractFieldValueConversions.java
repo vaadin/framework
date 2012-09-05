@@ -190,7 +190,7 @@ public class AbstractFieldValueConversions extends TestCase {
         VaadinSession.setCurrent(a);
         TextField tf = new TextField() {
             @Override
-            public VaadinSession getApplication() {
+            public VaadinSession getSession() {
                 return a;
             }
         };

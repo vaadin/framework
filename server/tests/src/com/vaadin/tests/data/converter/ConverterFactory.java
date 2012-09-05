@@ -72,7 +72,7 @@ public class ConverterFactory extends TestCase {
 
         TextField tf = new TextField("", "123") {
             @Override
-            public VaadinSession getApplication() {
+            public VaadinSession getSession() {
                 return appWithCustomIntegerConverter;
             };
         };
@@ -103,7 +103,7 @@ public class ConverterFactory extends TestCase {
 
         TextField tf = new TextField("", "123") {
             @Override
-            public VaadinSession getApplication() {
+            public VaadinSession getSession() {
                 return fieldAppWithCustomIntegerConverter;
             }
         };

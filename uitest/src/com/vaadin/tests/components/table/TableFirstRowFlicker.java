@@ -5,8 +5,8 @@ import com.vaadin.data.Container;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ProgressIndicator;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 public class TableFirstRowFlicker extends LegacyApplication {
@@ -43,7 +43,7 @@ public class TableFirstRowFlicker extends LegacyApplication {
             @Override
             public void run() {
                 while (t != null) {
-                    synchronized (t.getApplication()) {
+                    synchronized (t.getUI().getSession()) {
                         int firstId = t.getCurrentPageFirstItemIndex();
                         Object selected = t.getValue();
                         t.setContainerDataSource(buildContainer());
