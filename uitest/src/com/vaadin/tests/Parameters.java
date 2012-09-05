@@ -21,7 +21,7 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.VaadinSession;
@@ -42,7 +42,7 @@ import com.vaadin.ui.VerticalLayout;
  * 
  * @since 3.1.1
  */
-public class Parameters extends com.vaadin.LegacyApplication
+public class Parameters extends com.vaadin.Application
         implements RequestHandler {
 
     private final Label context = new Label();

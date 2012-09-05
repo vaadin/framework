@@ -3,13 +3,13 @@ package com.vaadin.tests.tickets;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket2303 extends LegacyApplication {
+public class Ticket2303 extends Application {
 
     @Override
     public void init() {

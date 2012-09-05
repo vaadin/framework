@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.ui.AbstractSelect;
@@ -12,7 +12,7 @@ import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
-public class Ticket1245 extends com.vaadin.LegacyApplication {
+public class Ticket1245 extends com.vaadin.Application {
 
     TextField f = new TextField();
 

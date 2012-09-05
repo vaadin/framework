@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ShortcutAction;
@@ -8,7 +8,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 
-public class Ticket1365 extends com.vaadin.LegacyApplication
+public class Ticket1365 extends com.vaadin.Application
         implements Handler {
 
     TextField f = new TextField();

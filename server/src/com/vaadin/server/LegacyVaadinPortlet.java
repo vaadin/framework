@@ -19,12 +19,12 @@ package com.vaadin.server;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
 
 public class LegacyVaadinPortlet extends VaadinPortlet {
 
-    protected Class<? extends LegacyApplication> getApplicationClass()
+    protected Class<? extends Application> getApplicationClass()
             throws ClassNotFoundException {
         try {
             return ServletPortletHelper
@@ -34,10 +34,10 @@ public class LegacyVaadinPortlet extends VaadinPortlet {
         }
     }
 
-    protected LegacyApplication getNewApplication(PortletRequest request)
+    protected Application getNewApplication(PortletRequest request)
             throws PortletException {
         try {
-            Class<? extends LegacyApplication> applicationClass = getApplicationClass();
+            Class<? extends Application> applicationClass = getApplicationClass();
             return applicationClass.newInstance();
         } catch (Exception e) {
             throw new PortletException(e);
@@ -53,7 +53,7 @@ public class LegacyVaadinPortlet extends VaadinPortlet {
         // Must set current before running init()
         VaadinSession.setCurrent(application);
 
-        LegacyApplication legacyApplication = getNewApplication(request);
+        Application legacyApplication = getNewApplication(request);
         legacyApplication.doInit();
         application.addUIProvider(legacyApplication);
 

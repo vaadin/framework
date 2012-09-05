@@ -1,12 +1,12 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket1659 extends LegacyApplication {
+public class Ticket1659 extends Application {
 
     @Override
     public void init() {

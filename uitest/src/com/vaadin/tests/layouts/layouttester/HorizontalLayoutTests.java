@@ -1,6 +1,6 @@
 package com.vaadin.tests.layouts.layouttester;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.server.Resource;
 import com.vaadin.server.SystemError;
 import com.vaadin.server.ThemeResource;
@@ -26,7 +26,7 @@ import com.vaadin.ui.themes.Reindeer;
 
 public class HorizontalLayoutTests extends AbstractLayoutTests {
 
-    public HorizontalLayoutTests(LegacyApplication application) {
+    public HorizontalLayoutTests(Application application) {
         super();
     }
 

@@ -1,12 +1,12 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket1953 extends LegacyApplication {
+public class Ticket1953 extends Application {
     public static final String cellStyle = "test-cell";
     public static final String colHeadStyle = "test-col-head";
     public static final String headingStyle = "test-heading";

@@ -3,14 +3,14 @@ package com.vaadin.tests.tickets;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket1598 extends LegacyApplication {
+public class Ticket1598 extends Application {
 
     LegacyWindow main = new LegacyWindow("MenuBar test");
 

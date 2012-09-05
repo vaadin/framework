@@ -4,13 +4,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI.LegacyWindow;
 
 @SuppressWarnings("serial")
-public class Ticket695 extends LegacyApplication {
+public class Ticket695 extends Application {
 
     @Override
     public void init() {

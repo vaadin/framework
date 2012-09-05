@@ -18,7 +18,7 @@ package com.vaadin.tests;
 
 import java.io.File;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.data.Item;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.label.ContentMode;
@@ -38,7 +38,7 @@ import com.vaadin.ui.UI.LegacyWindow;
  * @since 4.0.0
  * 
  */
-public class TreeFilesystem extends com.vaadin.LegacyApplication
+public class TreeFilesystem extends com.vaadin.Application
         implements Tree.ExpandListener {
 
     // Filesystem explorer panel and it's components

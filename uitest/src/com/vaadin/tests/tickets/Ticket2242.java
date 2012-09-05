@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -13,7 +13,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
 
-public class Ticket2242 extends LegacyApplication implements
+public class Ticket2242 extends Application implements
         ValueChangeListener {
 
     private Object tableValue = null;

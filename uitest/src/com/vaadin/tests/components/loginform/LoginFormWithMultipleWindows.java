@@ -1,13 +1,13 @@
 package com.vaadin.tests.components.loginform;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.ui.LoginForm;
 import com.vaadin.ui.LoginForm.LoginEvent;
 import com.vaadin.ui.LoginForm.LoginListener;
 import com.vaadin.ui.UI.LegacyWindow;
 
 @SuppressWarnings("serial")
-public class LoginFormWithMultipleWindows extends LegacyApplication {
+public class LoginFormWithMultipleWindows extends Application {
 
     @Override
     public void init() {

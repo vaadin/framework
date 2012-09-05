@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.data.Container;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Label;
@@ -9,7 +9,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
-public class TableFirstRowFlicker extends LegacyApplication {
+public class TableFirstRowFlicker extends Application {
 
     Table t;
 

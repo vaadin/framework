@@ -16,12 +16,12 @@
 
 package com.vaadin.tests;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalSplitPanel;
 
-public class TestSplitPanel extends com.vaadin.LegacyApplication {
+public class TestSplitPanel extends com.vaadin.Application {
 
     VerticalSplitPanel verticalSplit = new VerticalSplitPanel();
 

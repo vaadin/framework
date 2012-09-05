@@ -16,7 +16,7 @@
 
 package com.vaadin.tests;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -35,7 +35,7 @@ import com.vaadin.ui.Window;
  * @see com.vaadin.ui.Window
  * @see com.vaadin.ui.Label
  */
-public class ModalWindow extends com.vaadin.LegacyApplication
+public class ModalWindow extends com.vaadin.Application
         implements ClickListener {
 
     private Window test;

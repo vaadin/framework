@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Random;
 import java.util.Set;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.Button;
@@ -16,7 +16,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket2181 extends LegacyApplication implements
+public class Ticket2181 extends Application implements
         Button.ClickListener {
 
     // private static final Object PROPERTY_VALUE = new Object();

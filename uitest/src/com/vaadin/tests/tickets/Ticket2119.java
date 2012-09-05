@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.server.ExternalResource;
@@ -15,7 +15,7 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * Test case for Ticket 2119.
  */
-public class Ticket2119 extends LegacyApplication {
+public class Ticket2119 extends Application {
 
     private ObjectProperty<String> globalValue;
 

@@ -16,7 +16,7 @@
 
 package com.vaadin.tests;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -44,7 +44,7 @@ import com.vaadin.ui.Tree;
  * @since 4.0.0
  * 
  */
-public class CustomLayoutDemo extends com.vaadin.LegacyApplication
+public class CustomLayoutDemo extends com.vaadin.Application
         implements Listener {
 
     private CustomLayout mainLayout = null;

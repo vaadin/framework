@@ -2,7 +2,7 @@ package com.vaadin.tests.layouts.layouttester;
 
 import java.util.Date;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.server.Resource;
 import com.vaadin.server.SystemError;
 import com.vaadin.server.ThemeResource;
@@ -32,7 +32,7 @@ public class GridLayoutTests extends AbstractLayoutTests {
 
     private AbstractComponent rc1, col1, col2, col3, row1, row2, row3, x3, x22;
 
-    public GridLayoutTests(LegacyApplication application) {
+    public GridLayoutTests(Application application) {
         super();
     }
 

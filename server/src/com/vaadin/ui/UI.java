@@ -89,7 +89,7 @@ public abstract class UI extends AbstractComponentContainer implements
     /**
      * Helper class to emulate the main window from Vaadin 6 using UIs. This
      * class should be used in the same way as Window used as a browser level
-     * window in Vaadin 6 with {@link com.vaadin.LegacyApplication}
+     * window in Vaadin 6 with {@link com.vaadin.Application}
      */
     @Deprecated
     public static class LegacyWindow extends UI {

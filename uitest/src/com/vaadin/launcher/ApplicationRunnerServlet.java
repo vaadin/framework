@@ -29,7 +29,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.server.AbstractUIProvider;
 import com.vaadin.server.ApplicationConfiguration;
 import com.vaadin.server.LegacyVaadinServlet;
@@ -107,9 +107,9 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     }
 
     @Override
-    protected Class<? extends LegacyApplication> getApplicationClass()
+    protected Class<? extends Application> getApplicationClass()
             throws ClassNotFoundException {
-        return getClassToRun().asSubclass(LegacyApplication.class);
+        return getClassToRun().asSubclass(Application.class);
     }
 
     @Override
@@ -128,7 +128,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
                     }
                 });
                 return application;
-            } else if (LegacyApplication.class.isAssignableFrom(classToRun)) {
+            } else if (Application.class.isAssignableFrom(classToRun)) {
                 return super.createApplication(request);
             } else if (UIProvider.class.isAssignableFrom(classToRun)) {
                 VaadinServletSession application = new VaadinServletSession();

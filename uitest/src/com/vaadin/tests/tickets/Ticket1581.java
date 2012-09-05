@@ -2,7 +2,7 @@ package com.vaadin.tests.tickets;
 
 import java.util.Date;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -10,7 +10,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket1581 extends com.vaadin.LegacyApplication {
+public class Ticket1581 extends com.vaadin.Application {
 
     private Label time;
     private ProgressIndicator poller;

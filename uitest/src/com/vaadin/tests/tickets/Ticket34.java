@@ -3,7 +3,7 @@ package com.vaadin.tests.tickets;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.FragmentChangedEvent;
 import com.vaadin.ui.Button;
@@ -15,7 +15,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket34 extends LegacyApplication {
+public class Ticket34 extends Application {
 
     private Map<String, Component> views = new HashMap<String, Component>();
     private VerticalLayout mainLayout;

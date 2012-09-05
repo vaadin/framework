@@ -3,14 +3,14 @@ package com.vaadin.tests.tickets;
 import java.util.Collection;
 import java.util.HashSet;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 
-public class Ticket3146 extends LegacyApplication {
+public class Ticket3146 extends Application {
 
     Table table;
     TextField result;

@@ -2,7 +2,7 @@ package com.vaadin.tests.tickets;
 
 import java.util.Date;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -14,7 +14,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 
-public class Ticket1397 extends LegacyApplication {
+public class Ticket1397 extends Application {
 
     LegacyWindow main;
 

@@ -1,6 +1,6 @@
 package com.vaadin.tests.integration;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
@@ -12,7 +12,7 @@ import com.vaadin.ui.VerticalLayout;
  * See ticket #5521.
  */
 public class PortletSizeInLiferayFreeformLayoutApplication extends
-        LegacyApplication {
+        Application {
     @Override
     public void init() {
         LegacyWindow mainWindow = new LegacyWindow("Portlet5521 Application");

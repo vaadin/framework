@@ -1,10 +1,10 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket1767 extends com.vaadin.LegacyApplication {
+public class Ticket1767 extends com.vaadin.Application {
 
     @Override
     public void init() {

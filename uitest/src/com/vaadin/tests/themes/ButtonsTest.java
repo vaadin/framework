@@ -1,6 +1,6 @@
 package com.vaadin.tests.themes;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.ThemeResource;
@@ -15,7 +15,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.UI.LegacyWindow;
 
 @SuppressWarnings("serial")
-public class ButtonsTest extends com.vaadin.LegacyApplication {
+public class ButtonsTest extends com.vaadin.Application {
 
     final UI.LegacyWindow main = new LegacyWindow("Button states & themes");
 

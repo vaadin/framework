@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -9,7 +9,7 @@ import com.vaadin.ui.Table;
 
 /**
  */
-public class Ticket1632 extends LegacyApplication {
+public class Ticket1632 extends Application {
 
     private Table t;
 

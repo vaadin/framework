@@ -4,7 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -14,7 +14,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.util.CurrentInstance;
 
-public class Ticket1975 extends LegacyApplication {
+public class Ticket1975 extends Application {
 
     private CustomLayout cl1;
     private CustomLayout cl2;

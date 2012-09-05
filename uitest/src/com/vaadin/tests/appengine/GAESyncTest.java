@@ -1,7 +1,7 @@
 package com.vaadin.tests.appengine;
 
 import com.google.apphosting.api.DeadlineExceededException;
-import com.vaadin.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.server.ClassResource;
@@ -15,7 +15,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class GAESyncTest extends LegacyApplication {
+public class GAESyncTest extends Application {
 
     /**
      * 
@@ -50,10 +50,10 @@ public class GAESyncTest extends LegacyApplication {
         private static final long serialVersionUID = -6521351715072191625l;
         TextField tf;
         Label l;
-        LegacyApplication app;
+        Application app;
         GridLayout gl;
 
-        private IntrWindow(LegacyApplication app) {
+        private IntrWindow(Application app) {
 
             this.app = app;
             tf = new TextField("Echo thingie");
