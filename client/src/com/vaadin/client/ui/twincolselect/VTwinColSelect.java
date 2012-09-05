@@ -226,8 +226,8 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         selections.setMultipleSelect(isMultiselect());
         options.setEnabled(enabled);
         selections.setEnabled(enabled);
-        add.setEnabled(enabled);
-        remove.setEnabled(enabled);
+        add.setEnabled(enabled && !readonly);
+        remove.setEnabled(enabled && !readonly);
         options.clear();
         selections.clear();
         for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
@@ -247,6 +247,8 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
         }
 
+        add.setStyleName("v-disabled", readonly);
+        remove.setStyleName("v-disabled", readonly);
     }
 
     @Override
