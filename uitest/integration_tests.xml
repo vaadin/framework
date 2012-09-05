@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 
-<project xmlns:antcontrib="antlib:net.sf.antcontrib"
-	name="Vaadin Integration Tests" basedir="." default="integration-test-all">
+<project xmlns:antcontrib="antlib:net.sf.antcontrib" name="Vaadin Integration Tests" basedir="." default="integration-test-all">
 
-    <!-- Import common targets  -->
-    <import file="../build/common.xml" />
+	<!-- Import common targets  -->
+	<import file="../common.xml" />
+	<dirname file="${ant.file.Vaadin Integration Tests}" property="integration_test.dir" />
 
 	<!-- Target deploying demo.war -->
 	<fail unless="test.integration.server" message="test.integration.server must be set for integration tests to run" />
@@ -48,7 +48,7 @@
 			<property name="server.start.succeeded" value="1" />
 			<property name="browsers" value="${test_browsers}" />
 			<property name="testfiles" value="${testfiles}" />
-			<property name="test-output-dir" value="../build/integration-test-output/${server-name}" />
+			<property name="test-output-dir" value="${integration_test.dir}/result/integration-test-output/${server-name}" />
 			<property name="retries" value="0" />
 
 			<fileset dir="." includes="test.xml" />
@@ -62,7 +62,7 @@
 			<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
 			<property name="server.start.succeeded" value="1" />
 			<property name="testfiles" value="${testfiles-theme}" />
-			<property name="test-output-dir" value="../build/integration-test-output/${server-name}" />
+			<property name="test-output-dir" value="${integration_test.dir}/result/integration-test-output/${server-name}" />
 
 			<fileset dir="." includes="test.xml" />
 		</subant>
@@ -243,14 +243,14 @@
 			<param name="target-server" value="weblogic9" />
 		</antcall>
 	</target>
-	
-    <target name="integration-test-websphere8">
-        <antcall target="run-generic-integration-test">
-            <param name="startDelay" value="600" />
-            <param name="target-port" value="9080" />
-            <param name="target-server" value="websphere8" />
-        </antcall>
-    </target>	
+
+	<target name="integration-test-websphere8">
+		<antcall target="run-generic-integration-test">
+			<param name="startDelay" value="600" />
+			<param name="target-port" value="9080" />
+			<param name="target-server" value="websphere8" />
+		</antcall>
+	</target>
 
 	<target name="integration-test-weblogic10">
 		<antcall target="run-generic-integration-test">
@@ -285,7 +285,10 @@
 	</target>
 
 	<!-- Upload demo, clean error screenshots and test deployment on all servers -->
-	<target name="integration-test-all" depends="common.init-deps">
+	<target name="integration-test-all">
+		<property name="passphrase" value="${passphrase}" />
+		<fail unless="sshkey.file" message="You must define an ssh.keyfile parameter" />
+		<fail unless="com.vaadin.testbench.screenshot.directory" message="You must define a com.vaadin.testbench.screenshot.directory parameter" />
 		<parallel>
 			<antcontrib:trycatch property="tried">
 				<try>
@@ -303,7 +306,7 @@
 					<echo message="Getting lock" />
 					<antcall target="integration-test-release-lock" />
 					<echo message="Lock released" />
-
+					
 				</try>
 				<catch>
 					<echo message="Uploading of demo.war failed. ${tried}" />
@@ -332,7 +335,7 @@
 			<antcall target="integration-test-tomcat6" />
 			<antcall target="integration-test-tomcat7" />
 			<antcall target="integration-test-websphere8" />
-
+			
 		</parallel>
 
 	</target>
@@ -351,12 +354,12 @@
 						</op>
 					</op>
 				</antcontrib:math>
-				<echo>Delaying startup of ${target-server} with ${sleepTime} seconds</echo>		
+				<echo>Delaying startup of ${target-server} with ${sleepTime} seconds</echo>
 				<sleep seconds="${sleepTime}" />
 			</then>
 		</antcontrib:if>
-		
-		<scp todir="${user}@${target-host}:." keyfile="${sshkey.file}" trust="yes" passphrase="${passphrase}" >
+
+		<scp todir="${user}@${target-host}:." keyfile="${sshkey.file}" trust="yes" passphrase="${passphrase}">
 			<fileset dir="integration_base_files">
 				<include name="*" />
 			</fileset>
@@ -405,7 +408,7 @@
 						</antcall>
 					</antcontrib:then>
 				</antcontrib:if>
-				
+
 				<!-- timeout in five minutes -->
 				<sshexec host="${target-host}" outputproperty="stop-output" timeout="600000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml shutdown-and-cleanup" failonerror="false" />
 				<antcall target="echo-prefix">

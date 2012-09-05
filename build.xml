@@ -34,15 +34,18 @@
 	</target>
 
 	<target name="tests" depends="buildorder">
+		<property name="war.file" location="result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
 		<parallel>
 			<sequential>
 				<!-- Sleep before running integration tests so testbench tests have time to compile and start -->
 				<sleep minutes="4" />
-				<antcall inheritrefs="true" inheritall="true" target="integration-tests"/>
+				<ant antfile="uitest/integration_tests.xml" target="integration-test-all" inheritall="false" inheritrefs="false">
+					<property name="demo.war" value="${war.file}" />
+				</ant>
 			</sequential>
 			<subant buildpathref="build-path" target="tests" />
 			<ant antfile="uitest/test.xml" target="test-package">
-				<property name="war.file" location="result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
+				<property name="war.file" location="${war.file}" />
 			</ant>
 		</parallel>
 	</target>
