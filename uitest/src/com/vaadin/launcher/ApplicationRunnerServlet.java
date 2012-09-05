@@ -29,13 +29,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.vaadin.Application;
 import com.vaadin.LegacyApplication;
 import com.vaadin.server.AbstractUIProvider;
 import com.vaadin.server.ApplicationConfiguration;
 import com.vaadin.server.LegacyVaadinServlet;
-import com.vaadin.server.ServletApplicationContext;
+import com.vaadin.server.VaadinServletSession;
 import com.vaadin.server.UIProvider;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedHttpServletRequest;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.TestBase;
@@ -113,17 +113,17 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     }
 
     @Override
-    protected ServletApplicationContext createApplication(
+    protected VaadinServletSession createApplication(
             HttpServletRequest request) throws ServletException {
         try {
             final Class<?> classToRun = getClassToRun();
             if (UI.class.isAssignableFrom(classToRun)) {
-                ServletApplicationContext application = new ServletApplicationContext();
+                VaadinServletSession application = new VaadinServletSession();
                 application.addUIProvider(new AbstractUIProvider() {
 
                     @Override
                     public Class<? extends UI> getUIClass(
-                            Application application, WrappedRequest request) {
+                            VaadinSession application, WrappedRequest request) {
                         return (Class<? extends UI>) classToRun;
                     }
                 });
@@ -131,7 +131,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
             } else if (LegacyApplication.class.isAssignableFrom(classToRun)) {
                 return super.createApplication(request);
             } else if (UIProvider.class.isAssignableFrom(classToRun)) {
-                ServletApplicationContext application = new ServletApplicationContext();
+                VaadinServletSession application = new VaadinServletSession();
                 application
                         .addUIProvider((UIProvider) classToRun.newInstance());
                 return application;

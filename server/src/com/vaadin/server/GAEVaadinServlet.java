@@ -47,7 +47,6 @@ import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.apphosting.api.DeadlineExceededException;
-import com.vaadin.Application;
 
 /**
  * ApplicationServlet to be used when deploying to Google App Engine, in
@@ -242,7 +241,7 @@ public class GAEVaadinServlet extends VaadinServlet {
             }
 
             // de-serialize or create application context, store in session
-            Application ctx = getApplicationContext(request, memcache);
+            VaadinSession ctx = getApplicationContext(request, memcache);
 
             super.service(request, response);
 
@@ -292,7 +291,7 @@ public class GAEVaadinServlet extends VaadinServlet {
         }
     }
 
-    protected Application getApplicationContext(HttpServletRequest request,
+    protected VaadinSession getApplicationContext(HttpServletRequest request,
             MemcacheService memcache) {
         HttpSession session = request.getSession();
         String id = AC_BASE + session.getId();
@@ -321,7 +320,7 @@ public class GAEVaadinServlet extends VaadinServlet {
             ObjectInputStream ois;
             try {
                 ois = new ObjectInputStream(bais);
-                Application applicationContext = (Application) ois.readObject();
+                VaadinSession applicationContext = (VaadinSession) ois.readObject();
                 applicationContext.storeInSession(new WrappedHttpSession(
                         session));
             } catch (IOException e) {
@@ -360,7 +359,7 @@ public class GAEVaadinServlet extends VaadinServlet {
     private void cleanSession(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
-            session.removeAttribute(ServletApplicationContext.class.getName());
+            session.removeAttribute(VaadinServletSession.class.getName());
         }
     }
 

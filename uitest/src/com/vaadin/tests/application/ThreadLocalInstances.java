@@ -1,8 +1,8 @@
 package com.vaadin.tests.application;
 
-import com.vaadin.Application;
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.PaintException;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.integration.FlagSeResource;
@@ -14,7 +14,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.UI.LegacyWindow;
 
 public class ThreadLocalInstances extends AbstractTestCase {
-    private static final Application staticInitApplication = Application
+    private static final VaadinSession staticInitApplication = VaadinSession
             .getCurrent();
     private static final UI staticInitRoot = UI.getCurrent();
 
@@ -87,10 +87,10 @@ public class ThreadLocalInstances extends AbstractTestCase {
     }
 
     private void reportCurrentStatus(String phase) {
-        reportStatus(phase, Application.getCurrent(), UI.getCurrent());
+        reportStatus(phase, VaadinSession.getCurrent(), UI.getCurrent());
     }
 
-    private void reportStatus(String phase, Application application, UI uI) {
+    private void reportStatus(String phase, VaadinSession application, UI uI) {
         log.log(getState(application, this) + " app in " + phase);
         log.log(getState(uI, mainWindow) + " root in " + phase);
     }

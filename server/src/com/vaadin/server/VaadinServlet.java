@@ -44,11 +44,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.vaadin.Application;
-import com.vaadin.Application.ApplicationStartEvent;
 import com.vaadin.DefaultApplicationConfiguration;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
 import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
+import com.vaadin.server.VaadinSession.ApplicationStartEvent;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
@@ -285,7 +284,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return;
         }
 
-        Application application = null;
+        VaadinSession application = null;
         boolean applicationRunning = false;
 
         try {
@@ -312,13 +311,13 @@ public class VaadinServlet extends HttpServlet implements Constants {
             if (application == null) {
                 return;
             }
-            Application.setCurrent(application);
+            VaadinSession.setCurrent(application);
 
             /*
              * Get or create a WebApplicationContext and an ApplicationManager
              * for the session
              */
-            ServletApplicationContext webApplicationContext = (ServletApplicationContext) application;
+            VaadinServletSession webApplicationContext = (VaadinServletSession) application;
             CommunicationManager applicationManager = (CommunicationManager) webApplicationContext
                     .getApplicationManager();
 
@@ -575,7 +574,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @throws ServletException
      * @throws SessionExpiredException
      */
-    private Application findApplicationInstance(HttpServletRequest request,
+    private VaadinSession findApplicationInstance(HttpServletRequest request,
             RequestType requestType) throws MalformedURLException,
             ServletException, SessionExpiredException {
 
@@ -583,7 +582,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 request, requestType);
 
         /* Find an existing application for this request. */
-        Application application = getExistingApplication(request,
+        VaadinSession application = getExistingApplication(request,
                 requestCanCreateApplication);
 
         if (application != null) {
@@ -626,9 +625,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     }
 
-    private Application createAndRegisterApplication(HttpServletRequest request)
+    private VaadinSession createAndRegisterApplication(HttpServletRequest request)
             throws ServletException, MalformedURLException {
-        Application newApplication = createApplication(request);
+        VaadinSession newApplication = createApplication(request);
 
         try {
             ServletPortletHelper.checkUiProviders(newApplication);
@@ -722,9 +721,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @throws ServletException
      * @throws MalformedURLException
      */
-    protected ServletApplicationContext createApplication(
+    protected VaadinServletSession createApplication(
             HttpServletRequest request) throws ServletException {
-        ServletApplicationContext newApplication = new ServletApplicationContext();
+        VaadinServletSession newApplication = new VaadinServletSession();
 
         try {
             ServletPortletHelper.initDefaultUIProvider(newApplication,
@@ -737,7 +736,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     }
 
     private void handleServiceException(WrappedHttpServletRequest request,
-            WrappedHttpServletResponse response, Application application,
+            WrappedHttpServletResponse response, VaadinSession application,
             Throwable e) throws IOException, ServletException {
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {
@@ -1270,7 +1269,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @throws InstantiationException
      * @throws SessionExpiredException
      */
-    protected Application getExistingApplication(HttpServletRequest request,
+    protected VaadinSession getExistingApplication(HttpServletRequest request,
             boolean allowSessionCreation) throws MalformedURLException,
             SessionExpiredException {
 
@@ -1280,7 +1279,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             throw new SessionExpiredException();
         }
 
-        Application sessionApplication = getApplicationContext(session);
+        VaadinSession sessionApplication = getApplicationContext(session);
 
         if (sessionApplication == null) {
             return null;
@@ -1307,7 +1306,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      *             if the writing failed due to input/output error.
      */
     private void endApplication(HttpServletRequest request,
-            HttpServletResponse response, Application application)
+            HttpServletResponse response, VaadinSession application)
             throws IOException {
 
         String logoutUrl = application.getLogoutURL();
@@ -1362,7 +1361,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 && (request.getParameter(URL_PARAMETER_REPAINT_ALL).equals("1"));
     }
 
-    private void closeApplication(Application application, HttpSession session) {
+    private void closeApplication(VaadinSession application, HttpSession session) {
         if (application == null) {
             return;
         }
@@ -1373,8 +1372,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
     }
 
-    protected Application getApplicationContext(final HttpSession session) {
-        Application sessionApplication = Application
+    protected VaadinSession getApplicationContext(final HttpSession session) {
+        VaadinSession sessionApplication = VaadinSession
                 .getForSession(new WrappedHttpSession(session));
         return sessionApplication;
     }
@@ -1399,11 +1398,11 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * mananger implementation.
      * 
      * @deprecated Instead of overriding this method, override
-     *             {@link ServletApplicationContext} implementation via
+     *             {@link VaadinServletSession} implementation via
      *             {@link VaadinServlet#getApplicationContext(HttpSession)}
      *             method and in that customized implementation return your
      *             CommunicationManager in
-     *             {@link ServletApplicationContext#getApplicationManager(Application, VaadinServlet)}
+     *             {@link VaadinServletSession#getApplicationManager(VaadinSession, VaadinServlet)}
      *             method.
      * 
      * @param application
@@ -1411,7 +1410,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      */
     @Deprecated
     public CommunicationManager createCommunicationManager(
-            Application application) {
+            VaadinSession application) {
         return new CommunicationManager(application);
     }
 

@@ -18,8 +18,8 @@ package com.vaadin.tests.util;
 
 import java.io.File;
 
-import com.vaadin.Application;
 import com.vaadin.server.SystemError;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
@@ -43,7 +43,7 @@ public class SampleDirectory {
      * @param application
      * @return file pointing to sample directory
      */
-    public static File getDirectory(Application application, UI uI) {
+    public static File getDirectory(VaadinSession application, UI uI) {
         String errorMessage = "Access to application "
                 + "context base directory failed, "
                 + "possible security constraint with Application "

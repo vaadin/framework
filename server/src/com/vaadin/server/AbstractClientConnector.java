@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
-import com.vaadin.Application;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.shared.communication.ClientRpc;
@@ -358,7 +357,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
      * 
      * @return The connector's application, or <code>null</code> if not attached
      */
-    protected Application getApplication() {
+    protected VaadinSession getApplication() {
         UI uI = getUI();
         if (uI == null) {
             return null;

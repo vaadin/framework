@@ -17,9 +17,9 @@ package com.vaadin.tests.server.component.label;
 
 import junit.framework.TestCase;
 
-import com.vaadin.Application;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.MethodProperty;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.ui.Label;
 
@@ -37,7 +37,7 @@ public class LabelConverters extends TestCase {
     }
 
     public void testIntegerDataSource() {
-        Application.setCurrent(new Application());
+        VaadinSession.setCurrent(new VaadinSession());
         Label l = new Label("Foo");
         Property ds = new MethodProperty<Integer>(Person.createTestPerson1(),
                 "age");

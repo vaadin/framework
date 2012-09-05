@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-import com.vaadin.Application;
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
@@ -143,7 +142,7 @@ public class CombinedRequest implements WrappedRequest {
 
             @Override
             public WebBrowser getWebBrowser() {
-                return Application.getCurrent().getBrowser();
+                return VaadinSession.getCurrent().getBrowser();
             }
         };
     }

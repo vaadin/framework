@@ -16,16 +16,15 @@
 
 package com.vaadin.server;
 
-import com.vaadin.Application;
 import com.vaadin.ui.UI;
 
 public class DefaultUIProvider extends AbstractUIProvider {
 
     @Override
-    public Class<? extends UI> getUIClass(Application application,
+    public Class<? extends UI> getUIClass(VaadinSession application,
             WrappedRequest request) {
         Object uiClassNameObj = application.getConfiguration()
-                .getInitParameters().getProperty(Application.UI_PARAMETER);
+                .getInitParameters().getProperty(VaadinSession.UI_PARAMETER);
 
         if (uiClassNameObj instanceof String) {
             String uiClassName = uiClassNameObj.toString();

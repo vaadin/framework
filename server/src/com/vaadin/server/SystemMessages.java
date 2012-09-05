@@ -18,7 +18,6 @@ package com.vaadin.server;
 
 import java.io.Serializable;
 
-import com.vaadin.Application;
 
 
 /**
@@ -26,7 +25,7 @@ import com.vaadin.Application;
  * critical situations that can occur.
  * <p>
  * Customize by overriding the static
- * {@link Application#getSystemMessages()} and returning
+ * {@link VaadinSession#getSystemMessages()} and returning
  * {@link CustomizedSystemMessages}.
  * </p>
  * <p>

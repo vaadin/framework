@@ -24,10 +24,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.vaadin.Application;
 import com.vaadin.server.ConnectorResource;
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.RequestHandler;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.server.WrappedResponse;
 import com.vaadin.shared.ApplicationConstants;
@@ -83,7 +83,7 @@ public class LoginForm extends CustomComponent {
 
     private final RequestHandler requestHandler = new RequestHandler() {
         @Override
-        public boolean handleRequest(Application application,
+        public boolean handleRequest(VaadinSession application,
                 WrappedRequest request, WrappedResponse response)
                 throws IOException {
             String requestPathInfo = request.getRequestPathInfo();

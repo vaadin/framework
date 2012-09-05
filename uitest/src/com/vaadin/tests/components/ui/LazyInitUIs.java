@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.ui;
 
-import com.vaadin.Application;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestUIProvider;
@@ -20,13 +20,13 @@ public class LazyInitUIs extends AbstractTestUIProvider {
     }
 
     @Override
-    public UI createInstance(Application application, Class<? extends UI> type,
+    public UI createInstance(VaadinSession application, Class<? extends UI> type,
             WrappedRequest request) {
         return getUI(request);
     }
 
     @Override
-    public Class<? extends UI> getUIClass(Application application,
+    public Class<? extends UI> getUIClass(VaadinSession application,
             WrappedRequest request) {
         return getUI(request).getClass();
     }
@@ -52,13 +52,13 @@ public class LazyInitUIs extends AbstractTestUIProvider {
                     addComponent(getRequestInfo("NormalUI", request));
 
                     Link lazyCreateLink = new Link("Open lazyCreate UI",
-                            new ExternalResource(Application.getCurrent()
+                            new ExternalResource(VaadinSession.getCurrent()
                                     .getURL() + "?lazyCreate#lazyCreate"));
                     lazyCreateLink.setTargetName("_blank");
                     addComponent(lazyCreateLink);
 
                     Link lazyInitLink = new Link("Open eagerInit UI",
-                            new ExternalResource(Application.getCurrent()
+                            new ExternalResource(VaadinSession.getCurrent()
                                     .getURL() + "?eagerInit#eagerInit"));
                     lazyInitLink.setTargetName("_blank");
                     addComponent(lazyInitLink);

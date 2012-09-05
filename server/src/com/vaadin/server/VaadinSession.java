@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin;
+package com.vaadin.server;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -41,28 +41,7 @@ import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterFactory;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
 import com.vaadin.event.EventRouter;
-import com.vaadin.server.AbstractCommunicationManager;
-import com.vaadin.server.AbstractErrorMessage;
-import com.vaadin.server.ApplicationConfiguration;
-import com.vaadin.server.BootstrapFragmentResponse;
-import com.vaadin.server.BootstrapListener;
-import com.vaadin.server.BootstrapPageResponse;
-import com.vaadin.server.BootstrapResponse;
-import com.vaadin.server.ChangeVariablesErrorEvent;
-import com.vaadin.server.ClientConnector;
-import com.vaadin.server.CombinedRequest;
-import com.vaadin.server.DeploymentConfiguration;
-import com.vaadin.server.GlobalResourceHandler;
-import com.vaadin.server.RequestHandler;
-import com.vaadin.server.Terminal;
-import com.vaadin.server.UIProvider;
-import com.vaadin.server.VaadinServlet;
-import com.vaadin.server.VariableOwner;
-import com.vaadin.server.WebBrowser;
-import com.vaadin.server.WrappedRequest;
 import com.vaadin.server.WrappedRequest.BrowserDetails;
-import com.vaadin.server.WrappedResponse;
-import com.vaadin.server.WrappedSession;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
@@ -124,7 +103,7 @@ import com.vaadin.util.ReflectTools;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class Application implements Terminal.ErrorListener,
+public class VaadinSession implements Terminal.ErrorListener,
         HttpSessionBindingListener, Serializable {
 
     /**
@@ -175,7 +154,7 @@ public class Application implements Terminal.ErrorListener,
          * @return the URL the application should respond to or
          *         <code>null</code> if the URL is not defined.
          * 
-         * @see Application#getURL()
+         * @see VaadinSession#getURL()
          */
         public URL getApplicationUrl() {
             return applicationUrl;
@@ -195,14 +174,14 @@ public class Application implements Terminal.ErrorListener,
          * 
          * @return the communication manager for this application.
          * 
-         * @see Application#getCommunicationManager
+         * @see VaadinSession#getCommunicationManager
          */
         public AbstractCommunicationManager getCommunicationManager() {
             return communicationManager;
         }
     }
 
-    private final static Logger logger = Logger.getLogger(Application.class
+    private final static Logger logger = Logger.getLogger(VaadinSession.class
             .getName());
 
     /**
@@ -371,10 +350,10 @@ public class Application implements Terminal.ErrorListener,
         }
     }
 
-    public static Application getForSession(WrappedSession session) {
-        Object attribute = session.getAttribute(Application.class.getName());
-        if (attribute instanceof Application) {
-            Application application = (Application) attribute;
+    public static VaadinSession getForSession(WrappedSession session) {
+        Object attribute = session.getAttribute(VaadinSession.class.getName());
+        if (attribute instanceof VaadinSession) {
+            VaadinSession application = (VaadinSession) attribute;
             application.session = session;
             return application;
         }
@@ -385,11 +364,11 @@ public class Application implements Terminal.ErrorListener,
     public void removeFromSession() {
         assert (getForSession(session) == this);
 
-        session.setAttribute(Application.class.getName(), null);
+        session.setAttribute(VaadinSession.class.getName(), null);
     }
 
     public void storeInSession(WrappedSession session) {
-        session.setAttribute(Application.class.getName(), this);
+        session.setAttribute(VaadinSession.class.getName(), this);
         this.session = session;
     }
 
@@ -479,7 +458,7 @@ public class Application implements Terminal.ErrorListener,
      * Window detach event.
      * 
      * This event is sent each time a window is removed from the application
-     * with {@link com.vaadin.Application#removeWindow(Window)}.
+     * with {@link com.vaadin.server.VaadinSession#removeWindow(Window)}.
      */
     public static class WindowDetachEvent extends EventObject {
 
@@ -493,7 +472,7 @@ public class Application implements Terminal.ErrorListener,
          * @param window
          *            the Detached window.
          */
-        public WindowDetachEvent(Application application, Window window) {
+        public WindowDetachEvent(VaadinSession application, Window window) {
             super(application);
             this.window = window;
         }
@@ -512,8 +491,8 @@ public class Application implements Terminal.ErrorListener,
          * 
          * @return the Application.
          */
-        public Application getApplication() {
-            return (Application) getSource();
+        public VaadinSession getApplication() {
+            return (VaadinSession) getSource();
         }
     }
 
@@ -521,7 +500,7 @@ public class Application implements Terminal.ErrorListener,
      * Window attach event.
      * 
      * This event is sent each time a window is attached tothe application with
-     * {@link com.vaadin.Application#addWindow(Window)}.
+     * {@link com.vaadin.server.VaadinSession#addWindow(Window)}.
      */
     public static class WindowAttachEvent extends EventObject {
 
@@ -535,7 +514,7 @@ public class Application implements Terminal.ErrorListener,
          * @param window
          *            the Attached window.
          */
-        public WindowAttachEvent(Application application, Window window) {
+        public WindowAttachEvent(VaadinSession application, Window window) {
             super(application);
             this.window = window;
         }
@@ -554,8 +533,8 @@ public class Application implements Terminal.ErrorListener,
          * 
          * @return the Application.
          */
-        public Application getApplication() {
-            return (Application) getSource();
+        public VaadinSession getApplication() {
+            return (VaadinSession) getSource();
         }
     }
 
@@ -729,7 +708,7 @@ public class Application implements Terminal.ErrorListener,
      * critical situations that can occur.
      * <p>
      * Customize by overriding the static
-     * {@link Application#getSystemMessages()} and returning
+     * {@link VaadinSession#getSystemMessages()} and returning
      * {@link CustomizedSystemMessages}.
      * </p>
      * <p>
@@ -1362,7 +1341,7 @@ public class Application implements Terminal.ErrorListener,
      * Subclasses of Application may override this method to provide custom
      * logic for choosing what kind of UI to use.
      * <p>
-     * The default implementation in {@link Application} uses the
+     * The default implementation in {@link VaadinSession} uses the
      * {@value #UI_PARAMETER} parameter from web.xml for finding the name of the
      * UI class. If {@link DeploymentConfiguration#getClassLoader()} does not
      * return <code>null</code>, the returned {@link ClassLoader} is used for
@@ -1588,12 +1567,12 @@ public class Application implements Terminal.ErrorListener,
      * @return the current application instance if available, otherwise
      *         <code>null</code>
      * 
-     * @see #setCurrent(Application)
+     * @see #setCurrent(VaadinSession)
      * 
      * @since 7.0
      */
-    public static Application getCurrent() {
-        return CurrentInstance.get(Application.class);
+    public static VaadinSession getCurrent() {
+        return CurrentInstance.get(VaadinSession.class);
     }
 
     /**
@@ -1613,8 +1592,8 @@ public class Application implements Terminal.ErrorListener,
      * 
      * @since 7.0
      */
-    public static void setCurrent(Application application) {
-        CurrentInstance.setInheritable(Application.class, application);
+    public static void setCurrent(VaadinSession application) {
+        CurrentInstance.setInheritable(VaadinSession.class, application);
     }
 
     /**
@@ -1808,7 +1787,7 @@ public class Application implements Terminal.ErrorListener,
     }
 
     private static final Logger getLogger() {
-        return Logger.getLogger(Application.class.getName());
+        return Logger.getLogger(VaadinSession.class.getName());
     }
 
     /**

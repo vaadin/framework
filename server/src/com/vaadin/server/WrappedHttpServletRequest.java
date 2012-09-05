@@ -19,7 +19,6 @@ package com.vaadin.server;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-import com.vaadin.Application;
 
 /**
  * Wrapper for {@link HttpServletRequest}.
@@ -89,7 +88,7 @@ public class WrappedHttpServletRequest extends HttpServletRequestWrapper
 
             @Override
             public WebBrowser getWebBrowser() {
-                return Application.getCurrent().getBrowser();
+                return VaadinSession.getCurrent().getBrowser();
             }
         };
     }

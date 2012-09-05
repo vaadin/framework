@@ -3,9 +3,9 @@ package com.vaadin.tests.tickets;
 import java.io.IOException;
 import java.util.Map;
 
-import com.vaadin.Application;
 import com.vaadin.LegacyApplication;
 import com.vaadin.server.RequestHandler;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.server.WrappedResponse;
 import com.vaadin.ui.Button;
@@ -43,7 +43,7 @@ public class Ticket1921 extends LegacyApplication implements
 
         newState();
 
-        Application.getCurrent().addRequestHandler(this);
+        VaadinSession.getCurrent().addRequestHandler(this);
     }
 
     public void newState() {
@@ -95,7 +95,7 @@ public class Ticket1921 extends LegacyApplication implements
     }
 
     @Override
-    public boolean handleRequest(Application application,
+    public boolean handleRequest(VaadinSession application,
             WrappedRequest request, WrappedResponse response)
             throws IOException {
         Map<String, String[]> parameters = request.getParameterMap();

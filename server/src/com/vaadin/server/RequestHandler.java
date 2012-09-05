@@ -19,11 +19,10 @@ package com.vaadin.server;
 import java.io.IOException;
 import java.io.Serializable;
 
-import com.vaadin.Application;
 
 /**
  * Handler for producing a response to non-UIDL requests. Handlers can be added
- * to applications using {@link Application#addRequestHandler(RequestHandler)}
+ * to applications using {@link VaadinSession#addRequestHandler(RequestHandler)}
  */
 public interface RequestHandler extends Serializable {
 
@@ -42,7 +41,7 @@ public interface RequestHandler extends Serializable {
      *         handlers should be called, otherwise false
      * @throws IOException
      */
-    boolean handleRequest(Application application, WrappedRequest request,
+    boolean handleRequest(VaadinSession application, WrappedRequest request,
             WrappedResponse response) throws IOException;
 
 }

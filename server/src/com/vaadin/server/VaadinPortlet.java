@@ -55,11 +55,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.liferay.portal.kernel.util.PortalClassInvoker;
 import com.liferay.portal.kernel.util.PropsUtil;
-import com.vaadin.Application;
-import com.vaadin.Application.ApplicationStartEvent;
 import com.vaadin.DefaultApplicationConfiguration;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
 import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
+import com.vaadin.server.VaadinSession.ApplicationStartEvent;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
@@ -456,7 +455,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             serveStaticResources((ResourceRequest) request,
                     (ResourceResponse) response);
         } else {
-            Application application = null;
+            VaadinSession application = null;
             boolean applicationRunning = false;
 
             try {
@@ -468,13 +467,13 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                 if (application == null) {
                     return;
                 }
-                Application.setCurrent(application);
+                VaadinSession.setCurrent(application);
 
                 /*
                  * Get or create an application context and an application
                  * manager for the session
                  */
-                PortletApplicationContext2 applicationContext = (PortletApplicationContext2) application;
+                VaadinPortletSession applicationContext = (VaadinPortletSession) application;
 
                 PortletCommunicationManager applicationManager = (PortletCommunicationManager) applicationContext
                         .getApplicationManager();
@@ -652,8 +651,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
      */
     private void handleOtherRequest(WrappedPortletRequest request,
             WrappedResponse response, RequestType requestType,
-            Application application,
-            PortletApplicationContext2 applicationContext,
+            VaadinSession application,
+            VaadinPortletSession applicationContext,
             PortletCommunicationManager applicationManager)
             throws PortletException, IOException, MalformedURLException {
         if (requestType == RequestType.APPLICATION_RESOURCE
@@ -761,13 +760,13 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
     }
 
     private void endApplication(PortletRequest request,
-            PortletResponse response, Application application)
+            PortletResponse response, VaadinSession application)
             throws IOException {
         application.removeFromSession();
         // Do not send any redirects when running inside a portlet.
     }
 
-    private Application findApplicationInstance(
+    private VaadinSession findApplicationInstance(
             WrappedPortletRequest wrappedRequest, RequestType requestType)
             throws PortletException, SessionExpiredException,
             MalformedURLException {
@@ -777,7 +776,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                 request, requestType);
 
         /* Find an existing application for this request. */
-        Application application = getExistingApplication(request,
+        VaadinSession application = getExistingApplication(request,
                 requestCanCreateApplication);
 
         if (application != null) {
@@ -811,7 +810,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         }
     }
 
-    private void closeApplication(Application application,
+    private void closeApplication(VaadinSession application,
             PortletSession session) {
         if (application == null) {
             return;
@@ -821,9 +820,9 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         application.removeFromSession();
     }
 
-    private Application createAndRegisterApplication(PortletRequest request)
+    private VaadinSession createAndRegisterApplication(PortletRequest request)
             throws PortletException {
-        Application newApplication = createApplication(request);
+        VaadinSession newApplication = createApplication(request);
 
         try {
             ServletPortletHelper.checkUiProviders(newApplication);
@@ -845,9 +844,9 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         return newApplication;
     }
 
-    protected PortletApplicationContext2 createApplication(
+    protected VaadinPortletSession createApplication(
             PortletRequest request) throws PortletException {
-        PortletApplicationContext2 application = new PortletApplicationContext2();
+        VaadinPortletSession application = new VaadinPortletSession();
 
         try {
             ServletPortletHelper.initDefaultUIProvider(application,
@@ -859,7 +858,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         return application;
     }
 
-    private Application getExistingApplication(PortletRequest request,
+    private VaadinSession getExistingApplication(PortletRequest request,
             boolean allowSessionCreation) throws MalformedURLException,
             SessionExpiredException {
 
@@ -870,7 +869,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             throw new SessionExpiredException();
         }
 
-        Application application = Application
+        VaadinSession application = VaadinSession
                 .getForSession(new WrappedPortletSession(session));
         if (application == null) {
             return null;
@@ -884,7 +883,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
     }
 
     private void handleServiceException(WrappedPortletRequest request,
-            WrappedPortletResponse response, Application application,
+            WrappedPortletResponse response, VaadinSession application,
             Throwable e) throws IOException, PortletException {
         // TODO Check that this error handler is working when running inside a
         // portlet

@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import com.vaadin.Application;
 import com.vaadin.server.Terminal.ErrorEvent;
 import com.vaadin.service.FileTypeResolver;
 
@@ -74,7 +73,7 @@ public class FileResource implements ConnectorResource {
             return ds;
         } catch (final FileNotFoundException e) {
             // Log the exception using the application error handler
-            Application.getCurrent().getErrorHandler()
+            VaadinSession.getCurrent().getErrorHandler()
                     .terminalError(new ErrorEvent() {
 
                         @Override

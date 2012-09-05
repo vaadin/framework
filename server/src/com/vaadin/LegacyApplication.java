@@ -26,6 +26,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.vaadin.server.AbstractUIProvider;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.Terminal.ErrorEvent;
 import com.vaadin.server.Terminal.ErrorListener;
 import com.vaadin.server.WrappedRequest;
@@ -68,8 +69,8 @@ public abstract class LegacyApplication extends AbstractUIProvider implements
             throw new IllegalStateException("mainWindow has already been set");
         }
         if (mainWindow.getApplication() == null) {
-            mainWindow.setApplication(Application.getCurrent());
-        } else if (mainWindow.getApplication() != Application.getCurrent()) {
+            mainWindow.setApplication(VaadinSession.getCurrent());
+        } else if (mainWindow.getApplication() != VaadinSession.getCurrent()) {
             throw new IllegalStateException(
                     "mainWindow is attached to another application");
         }
@@ -82,14 +83,14 @@ public abstract class LegacyApplication extends AbstractUIProvider implements
     }
 
     public void doInit() {
-        Application.getCurrent().setErrorHandler(this);
+        VaadinSession.getCurrent().setErrorHandler(this);
         init();
     }
 
     protected abstract void init();
 
     @Override
-    public Class<? extends UI> getUIClass(Application application,
+    public Class<? extends UI> getUIClass(VaadinSession application,
             WrappedRequest request) {
         UI uiInstance = getUIInstance(request);
         if (uiInstance != null) {
@@ -99,7 +100,7 @@ public abstract class LegacyApplication extends AbstractUIProvider implements
     }
 
     @Override
-    public UI createInstance(Application application, Class<? extends UI> type,
+    public UI createInstance(VaadinSession application, Class<? extends UI> type,
             WrappedRequest request) {
         return getUIInstance(request);
     }
@@ -179,7 +180,7 @@ public abstract class LegacyApplication extends AbstractUIProvider implements
      * Sets the application's theme.
      * <p>
      * Note that this theme can be overridden for a specific UI with
-     * {@link Application#getThemeForUI(UI)}. Setting theme to be
+     * {@link VaadinSession#getThemeForUI(UI)}. Setting theme to be
      * <code>null</code> selects the default theme. For the available theme
      * names, see the contents of the VAADIN/themes directory.
      * </p>
@@ -241,7 +242,7 @@ public abstract class LegacyApplication extends AbstractUIProvider implements
         }
 
         legacyUINames.put(uI.getName(), uI);
-        uI.setApplication(Application.getCurrent());
+        uI.setApplication(VaadinSession.getCurrent());
     }
 
     /**
@@ -280,22 +281,22 @@ public abstract class LegacyApplication extends AbstractUIProvider implements
 
     @Override
     public void terminalError(ErrorEvent event) {
-        Application.getCurrent().terminalError(event);
+        VaadinSession.getCurrent().terminalError(event);
     }
 
-    public Application getContext() {
-        return Application.getCurrent();
+    public VaadinSession getContext() {
+        return VaadinSession.getCurrent();
     }
 
     protected void close() {
-        Application.getCurrent().close();
+        VaadinSession.getCurrent().close();
     }
 
     public boolean isRunning() {
-        return Application.getCurrent().isRunning();
+        return VaadinSession.getCurrent().isRunning();
     }
 
     public URL getURL() {
-        return Application.getCurrent().getURL();
+        return VaadinSession.getCurrent().getURL();
     }
 }

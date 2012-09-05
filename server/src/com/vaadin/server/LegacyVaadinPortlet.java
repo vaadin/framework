@@ -19,7 +19,6 @@ package com.vaadin.server;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 
-import com.vaadin.Application;
 import com.vaadin.LegacyApplication;
 import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
 
@@ -46,13 +45,13 @@ public class LegacyVaadinPortlet extends VaadinPortlet {
     }
 
     @Override
-    protected PortletApplicationContext2 createApplication(
+    protected VaadinPortletSession createApplication(
             PortletRequest request) throws PortletException {
-        PortletApplicationContext2 application = super
+        VaadinPortletSession application = super
                 .createApplication(request);
 
         // Must set current before running init()
-        Application.setCurrent(application);
+        VaadinSession.setCurrent(application);
 
         LegacyApplication legacyApplication = getNewApplication(request);
         legacyApplication.doInit();

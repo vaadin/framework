@@ -18,7 +18,6 @@ package com.vaadin.server;
 import java.io.OutputStream;
 import java.io.Serializable;
 
-import com.vaadin.Application;
 import com.vaadin.server.StreamVariable.StreamingEndEvent;
 import com.vaadin.server.StreamVariable.StreamingErrorEvent;
 import com.vaadin.server.StreamVariable.StreamingStartEvent;
@@ -152,7 +151,7 @@ public interface StreamVariable extends Serializable {
      * the streaming ended before the end of the input. The streaming may fail
      * due an interruption by {@link } or due an other unknown exception in
      * communication. In the latter case the exception is also passed to
-     * {@link Application#terminalError(com.vaadin.server.Terminal.ErrorEvent)}
+     * {@link VaadinSession#terminalError(com.vaadin.server.Terminal.ErrorEvent)}
      * .
      */
     public interface StreamingErrorEvent extends StreamingEvent {

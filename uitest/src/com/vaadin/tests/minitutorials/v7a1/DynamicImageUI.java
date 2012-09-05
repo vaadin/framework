@@ -7,9 +7,9 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
-import com.vaadin.Application;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.RequestHandler;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.server.WrappedResponse;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -56,7 +56,7 @@ class DynamicImageRequestHandler implements RequestHandler {
     public static final String IMAGE_URL = "myimage.png";
 
     @Override
-    public boolean handleRequest(Application application,
+    public boolean handleRequest(VaadinSession application,
             WrappedRequest request, WrappedResponse response)
             throws IOException {
         String pathInfo = request.getRequestPathInfo();

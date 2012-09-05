@@ -25,7 +25,6 @@ import javax.portlet.ClientDataRequest;
 import javax.portlet.PortletRequest;
 import javax.portlet.ResourceRequest;
 
-import com.vaadin.Application;
 import com.vaadin.shared.ApplicationConstants;
 
 /**
@@ -151,7 +150,7 @@ public class WrappedPortletRequest implements WrappedRequest {
 
             @Override
             public WebBrowser getWebBrowser() {
-                PortletApplicationContext2 context = (PortletApplicationContext2) Application
+                VaadinPortletSession context = (VaadinPortletSession) VaadinSession
                         .getCurrent();
                 return context.getBrowser();
             }

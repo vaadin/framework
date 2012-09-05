@@ -9,11 +9,11 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import com.vaadin.Application;
 import com.vaadin.LegacyApplication;
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.RequestHandler;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.server.WrappedResponse;
 import com.vaadin.ui.Button;
@@ -45,11 +45,11 @@ public class Ticket2292 extends com.vaadin.LegacyApplication
         Link l = new Link("l", icon);
         main.addComponent(l);
 
-        Application.getCurrent().addRequestHandler(this);
+        VaadinSession.getCurrent().addRequestHandler(this);
     }
 
     @Override
-    public boolean handleRequest(Application application,
+    public boolean handleRequest(VaadinSession application,
             WrappedRequest request, WrappedResponse response)
             throws IOException {
         String relativeUri = request.getRequestPathInfo();

@@ -18,7 +18,6 @@ package com.vaadin.server;
 
 import java.lang.annotation.Annotation;
 
-import com.vaadin.Application;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -28,7 +27,7 @@ import com.vaadin.ui.UI;
 public abstract class AbstractUIProvider implements UIProvider {
 
     @Override
-    public UI createInstance(Application application, Class<? extends UI> type,
+    public UI createInstance(VaadinSession application, Class<? extends UI> type,
             WrappedRequest request) {
         try {
             return type.newInstance();

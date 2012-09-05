@@ -21,7 +21,6 @@ import java.net.URL;
 
 import javax.servlet.ServletContext;
 
-import com.vaadin.Application;
 import com.vaadin.ui.UI;
 
 /**
@@ -39,12 +38,12 @@ import com.vaadin.ui.UI;
 public class CommunicationManager extends AbstractCommunicationManager {
 
     /**
-     * @deprecated use {@link #CommunicationManager(Application)} instead
+     * @deprecated use {@link #CommunicationManager(VaadinSession)} instead
      * @param application
      * @param applicationServlet
      */
     @Deprecated
-    public CommunicationManager(Application application,
+    public CommunicationManager(VaadinSession application,
             VaadinServlet applicationServlet) {
         super(application);
     }
@@ -54,7 +53,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
      * 
      * @param application
      */
-    public CommunicationManager(Application application) {
+    public CommunicationManager(VaadinSession application) {
         super(application);
     }
 
@@ -88,7 +87,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
                 // don't use server and port in uri. It may cause problems with
                 // some
                 // virtual server configurations which lose the server name
-                Application application = context.getApplication();
+                VaadinSession application = context.getApplication();
                 URL url = application.getURL();
                 String appUrl = url.getPath();
                 if (appUrl.endsWith("/")) {
@@ -112,7 +111,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
     @Override
     protected InputStream getThemeResourceAsStream(UI uI, String themeName,
             String resource) {
-        ServletApplicationContext context = (ServletApplicationContext) uI
+        VaadinServletSession context = (VaadinServletSession) uI
                 .getApplication();
         ServletContext servletContext = context.getHttpSession()
                 .getServletContext();

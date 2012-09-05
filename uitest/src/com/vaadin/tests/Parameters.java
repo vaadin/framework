@@ -21,10 +21,10 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.vaadin.Application;
 import com.vaadin.LegacyApplication;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.RequestHandler;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.server.WrappedResponse;
 import com.vaadin.ui.Label;
@@ -57,7 +57,7 @@ public class Parameters extends com.vaadin.LegacyApplication
         setMainWindow(main);
 
         // This class acts both as URI handler and parameter handler
-        Application.getCurrent().addRequestHandler(this);
+        VaadinSession.getCurrent().addRequestHandler(this);
 
         final VerticalLayout layout = new VerticalLayout();
         final Label info = new Label("To test URI and Parameter Handlers, "
@@ -107,7 +107,7 @@ public class Parameters extends com.vaadin.LegacyApplication
     }
 
     @Override
-    public boolean handleRequest(Application application,
+    public boolean handleRequest(VaadinSession application,
             WrappedRequest request, WrappedResponse response)
             throws IOException {
         context.setValue("Context not available");

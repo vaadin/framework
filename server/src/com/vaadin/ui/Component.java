@@ -21,12 +21,12 @@ import java.util.EventListener;
 import java.util.EventObject;
 import java.util.Locale;
 
-import com.vaadin.Application;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
 import com.vaadin.server.Sizeable;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.VariableOwner;
 
 /**
@@ -532,7 +532,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * <p>
      * Getting a null value is often a problem in constructors of regular
      * components and in the initializers of custom composite components. A
-     * standard workaround is to use {@link Application#getCurrent()} to
+     * standard workaround is to use {@link VaadinSession#getCurrent()} to
      * retrieve the application instance that the current request relates to.
      * Another way is to move the problematic initialization to
      * {@link #attach()}, as described in the documentation of the method.
@@ -541,7 +541,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * @return the parent application of the component or <code>null</code>.
      * @see #attach()
      */
-    public Application getApplication();
+    public VaadinSession getApplication();
 
     /**
      * {@inheritDoc}

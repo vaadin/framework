@@ -16,15 +16,14 @@
 
 package com.vaadin.server;
 
-import com.vaadin.Application;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.ui.UI;
 
 public interface UIProvider {
-    public Class<? extends UI> getUIClass(Application application,
+    public Class<? extends UI> getUIClass(VaadinSession application,
             WrappedRequest request);
 
-    public UI createInstance(Application application, Class<? extends UI> type,
+    public UI createInstance(VaadinSession application, Class<? extends UI> type,
             WrappedRequest request);
 
     public String getPageTitleForUI(WrappedRequest request,

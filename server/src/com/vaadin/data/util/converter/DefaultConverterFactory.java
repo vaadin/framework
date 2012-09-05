@@ -19,14 +19,14 @@ package com.vaadin.data.util.converter;
 import java.util.Date;
 import java.util.logging.Logger;
 
-import com.vaadin.Application;
+import com.vaadin.server.VaadinSession;
 
 /**
  * Default implementation of {@link ConverterFactory}. Provides converters for
  * standard types like {@link String}, {@link Double} and {@link Date}. </p>
  * <p>
  * Custom converters can be provided by extending this class and using
- * {@link Application#setConverterFactory(ConverterFactory)}.
+ * {@link VaadinSession#setConverterFactory(ConverterFactory)}.
  * </p>
  * 
  * @author Vaadin Ltd

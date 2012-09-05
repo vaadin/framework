@@ -15,7 +15,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 
-import com.vaadin.Application;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CustomComponent;
@@ -144,7 +144,7 @@ public class VaadinClasses {
             String basePackage, String[] ignoredPackages) throws IOException {
         List<Class<? extends T>> classes = new ArrayList<Class<? extends T>>();
         String basePackageDirName = "/" + basePackage.replace('.', '/');
-        URL location = Application.class.getResource(basePackageDirName);
+        URL location = VaadinSession.class.getResource(basePackageDirName);
         if (location.getProtocol().equals("file")) {
             try {
                 File f = new File(location.toURI());

@@ -41,7 +41,6 @@ import javax.portlet.StateAwareResponse;
 import javax.servlet.http.HttpSessionBindingListener;
 import javax.xml.namespace.QName;
 
-import com.vaadin.Application;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
@@ -54,7 +53,7 @@ import com.vaadin.util.CurrentInstance;
  * @author peholmst
  */
 @SuppressWarnings("serial")
-public class PortletApplicationContext2 extends Application {
+public class VaadinPortletSession extends VaadinSession {
 
     private final Set<PortletListener> portletListeners = new LinkedHashSet<PortletListener>();
 

@@ -36,7 +36,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.parser.Tag;
 
-import com.vaadin.Application;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.shared.ApplicationConstants;
@@ -68,7 +67,7 @@ public abstract class BootstrapHandler implements RequestHandler {
             return bootstrapResponse.getRequest();
         }
 
-        public Application getApplication() {
+        public VaadinSession getApplication() {
             return bootstrapResponse.getApplication();
         }
 
@@ -104,7 +103,7 @@ public abstract class BootstrapHandler implements RequestHandler {
     }
 
     @Override
-    public boolean handleRequest(Application application,
+    public boolean handleRequest(VaadinSession application,
             WrappedRequest request, WrappedResponse response)
             throws IOException {
 
@@ -246,7 +245,7 @@ public abstract class BootstrapHandler implements RequestHandler {
     }
 
     private BootstrapContext createContext(WrappedRequest request,
-            WrappedResponse response, Application application,
+            WrappedResponse response, VaadinSession application,
             Class<? extends UI> uiClass) {
         BootstrapContext context = new BootstrapContext(response,
                 new BootstrapFragmentResponse(this, request, application,
@@ -392,7 +391,7 @@ public abstract class BootstrapHandler implements RequestHandler {
 
     protected JSONObject getApplicationParameters(BootstrapContext context)
             throws JSONException, PaintException {
-        Application application = context.getApplication();
+        VaadinSession application = context.getApplication();
 
         JSONObject appConfig = new JSONObject();
 
@@ -421,7 +420,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         JSONObject defaults = new JSONObject();
 
         WrappedRequest request = context.getRequest();
-        Application application = context.getApplication();
+        VaadinSession application = context.getApplication();
         DeploymentConfiguration deploymentConfiguration = request
                 .getDeploymentConfiguration();
 

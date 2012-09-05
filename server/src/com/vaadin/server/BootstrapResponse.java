@@ -18,7 +18,6 @@ package com.vaadin.server;
 
 import java.util.EventObject;
 
-import com.vaadin.Application;
 import com.vaadin.ui.UI;
 
 /**
@@ -30,7 +29,7 @@ import com.vaadin.ui.UI;
  */
 public abstract class BootstrapResponse extends EventObject {
     private final WrappedRequest request;
-    private final Application application;
+    private final VaadinSession application;
     private final Class<? extends UI> uiClass;
 
     /**
@@ -48,7 +47,7 @@ public abstract class BootstrapResponse extends EventObject {
      *            the class of the UI that will be displayed on the page
      */
     public BootstrapResponse(BootstrapHandler handler, WrappedRequest request,
-            Application application, Class<? extends UI> uiClass) {
+            VaadinSession application, Class<? extends UI> uiClass) {
         super(handler);
         this.request = request;
         this.application = application;
@@ -83,7 +82,7 @@ public abstract class BootstrapResponse extends EventObject {
      * 
      * @return the application
      */
-    public Application getApplication() {
+    public VaadinSession getApplication() {
         return application;
     }
 

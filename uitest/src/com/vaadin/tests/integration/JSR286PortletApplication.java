@@ -21,8 +21,8 @@ import javax.portlet.WindowState;
 import com.vaadin.LegacyApplication;
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.server.ExternalResource;
-import com.vaadin.server.PortletApplicationContext2;
-import com.vaadin.server.PortletApplicationContext2.PortletListener;
+import com.vaadin.server.VaadinPortletSession;
+import com.vaadin.server.VaadinPortletSession.PortletListener;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
@@ -87,8 +87,8 @@ public class JSR286PortletApplication extends LegacyApplication {
         });
         main.addComponent(upload);
 
-        if (getContext() instanceof PortletApplicationContext2) {
-            PortletApplicationContext2 ctx = (PortletApplicationContext2) getContext();
+        if (getContext() instanceof VaadinPortletSession) {
+            VaadinPortletSession ctx = (VaadinPortletSession) getContext();
             ctx.addPortletListener(new DemoPortletListener());
         } else {
             getMainWindow().showNotification("Not inited via Portal!",

@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.Application;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
@@ -14,7 +14,7 @@ import com.vaadin.ui.Window;
 
 public class AttachDetachWindow {
 
-    private Application testApp = new Application();
+    private VaadinSession testApp = new VaadinSession();
 
     private interface TestContainer {
         public boolean attachCalled();
@@ -23,7 +23,7 @@ public class AttachDetachWindow {
 
         public TestContent getTestContent();
 
-        public Application getApplication();
+        public VaadinSession getApplication();
     }
 
     private class TestWindow extends Window implements TestContainer {

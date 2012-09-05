@@ -23,7 +23,6 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
-import com.vaadin.Application;
 import com.vaadin.util.CurrentInstance;
 
 /**
@@ -36,7 +35,7 @@ import com.vaadin.util.CurrentInstance;
  * @since 3.1
  */
 @SuppressWarnings("serial")
-public class ServletApplicationContext extends Application {
+public class VaadinServletSession extends VaadinSession {
 
     private transient boolean reinitializingSession = false;
 

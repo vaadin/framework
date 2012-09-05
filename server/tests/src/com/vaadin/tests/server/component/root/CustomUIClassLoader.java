@@ -8,13 +8,13 @@ import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
 
-import com.vaadin.Application;
-import com.vaadin.Application.ApplicationStartEvent;
 import com.vaadin.DefaultApplicationConfiguration;
 import com.vaadin.server.ApplicationConfiguration;
 import com.vaadin.server.DefaultUIProvider;
 import com.vaadin.server.DeploymentConfiguration;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinSession.ApplicationStartEvent;
 import com.vaadin.ui.UI;
 
 public class CustomUIClassLoader extends TestCase {
@@ -53,7 +53,7 @@ public class CustomUIClassLoader extends TestCase {
      *             if thrown
      */
     public void testWithNullClassLoader() throws Exception {
-        Application application = createStubApplication();
+        VaadinSession application = createStubApplication();
         application.start(new ApplicationStartEvent(null,
                 createConfigurationMock(), null));
 
@@ -66,7 +66,7 @@ public class CustomUIClassLoader extends TestCase {
 
     private static ApplicationConfiguration createConfigurationMock() {
         Properties properties = new Properties();
-        properties.put(Application.UI_PARAMETER, MyUI.class.getName());
+        properties.put(VaadinSession.UI_PARAMETER, MyUI.class.getName());
         return new DefaultApplicationConfiguration(CustomUIClassLoader.class,
                 properties);
     }
@@ -97,7 +97,7 @@ public class CustomUIClassLoader extends TestCase {
     public void testWithClassLoader() throws Exception {
         LoggingClassLoader loggingClassLoader = new LoggingClassLoader();
 
-        Application application = createStubApplication();
+        VaadinSession application = createStubApplication();
         application.start(new ApplicationStartEvent(null,
                 createConfigurationMock(), null));
 
@@ -112,8 +112,8 @@ public class CustomUIClassLoader extends TestCase {
 
     }
 
-    private Application createStubApplication() {
-        return new Application() {
+    private VaadinSession createStubApplication() {
+        return new VaadinSession() {
             @Override
             public ApplicationConfiguration getConfiguration() {
                 return createConfigurationMock();

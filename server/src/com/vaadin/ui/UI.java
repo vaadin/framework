@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
-import com.vaadin.Application;
 import com.vaadin.LegacyApplication;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
@@ -42,6 +41,7 @@ import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.server.WrappedRequest.BrowserDetails;
 import com.vaadin.shared.EventId;
@@ -66,9 +66,9 @@ import com.vaadin.util.ReflectTools;
  * <p>
  * When a new UI instance is needed, typically because the user opens a URL in a
  * browser window which points to {@link VaadinServlet},
- * {@link Application#getUIForRequest(WrappedRequest)} is invoked to get a UI.
+ * {@link VaadinSession#getUIForRequest(WrappedRequest)} is invoked to get a UI.
  * That method does by default create a UI according to the
- * {@value Application#UI_PARAMETER} parameter from web.xml.
+ * {@value VaadinSession#UI_PARAMETER} parameter from web.xml.
  * </p>
  * <p>
  * After a UI has been created by the application, it is initialized using
@@ -80,7 +80,7 @@ import com.vaadin.util.ReflectTools;
  * </p>
  * 
  * @see #init(WrappedRequest)
- * @see Application#createUI(WrappedRequest)
+ * @see VaadinSession#createUI(WrappedRequest)
  * 
  * @since 7.0
  */
@@ -135,7 +135,7 @@ public abstract class UI extends AbstractComponentContainer implements
          * The name also determines the URL that can be used for direct access
          * to a window. All windows can be accessed through
          * {@code http://host:port/app/win} where {@code http://host:port/app}
-         * is the application URL (as returned by {@link Application#getURL()}
+         * is the application URL (as returned by {@link VaadinSession#getURL()}
          * and {@code win} is the window name.
          * </p>
          * <p>
@@ -155,7 +155,7 @@ public abstract class UI extends AbstractComponentContainer implements
          * The name also determines the URL that can be used for direct access
          * to a window. All windows can be accessed through
          * {@code http://host:port/app/win} where {@code http://host:port/app}
-         * is the application URL (as returned by {@link Application#getURL()}
+         * is the application URL (as returned by {@link VaadinSession#getURL()}
          * and {@code win} is the window name.
          * </p>
          * <p>
@@ -193,7 +193,7 @@ public abstract class UI extends AbstractComponentContainer implements
          *         to an application
          */
         public URL getURL() {
-            Application application = getApplication();
+            VaadinSession application = getApplication();
             if (application == null) {
                 return null;
             }
@@ -424,7 +424,7 @@ public abstract class UI extends AbstractComponentContainer implements
     /**
      * The application to which this UI belongs
      */
-    private Application application;
+    private VaadinSession application;
 
     /**
      * List of windows in this UI.
@@ -442,7 +442,7 @@ public abstract class UI extends AbstractComponentContainer implements
      * which a request originates. A negative value indicates that the UI id has
      * not yet been assigned by the Application.
      * 
-     * @see Application#nextUIId
+     * @see VaadinSession#nextUIId
      */
     private int uiId = -1;
 
@@ -564,7 +564,7 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     @Override
-    public Application getApplication() {
+    public VaadinSession getApplication() {
         return application;
     }
 
@@ -684,7 +684,7 @@ public abstract class UI extends AbstractComponentContainer implements
      * 
      * @see #getApplication()
      */
-    public void setApplication(Application application) {
+    public void setApplication(VaadinSession application) {
         if ((application == null) == (this.application == null)) {
             throw new IllegalStateException("Application has already been set");
         } else {
@@ -703,7 +703,7 @@ public abstract class UI extends AbstractComponentContainer implements
      * Gets the id of the UI, used to identify this UI within its application
      * when processing requests. The UI id should be present in every request to
      * the server that originates from this UI.
-     * {@link Application#getUIForRequest(WrappedRequest)} uses this id to find
+     * {@link VaadinSession#getUIForRequest(WrappedRequest)} uses this id to find
      * the route to which the request belongs.
      * 
      * @return
@@ -716,7 +716,7 @@ public abstract class UI extends AbstractComponentContainer implements
      * Adds a window as a subwindow inside this UI. To open a new browser window
      * or tab, you should instead use {@link open(Resource)} with an url
      * pointing to this application and ensure
-     * {@link Application#createUI(WrappedRequest)} returns an appropriate UI
+     * {@link VaadinSession#createUI(WrappedRequest)} returns an appropriate UI
      * for the request.
      * 
      * @param window
@@ -1294,7 +1294,7 @@ public abstract class UI extends AbstractComponentContainer implements
      * heartbeat for this UI.
      * 
      * @see #heartbeat()
-     * @see Application#closeInactiveUIs()
+     * @see VaadinSession#closeInactiveUIs()
      * 
      * @return The time the last heartbeat request occurred.
      */

@@ -27,7 +27,6 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.vaadin.Application;
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.EventRouter;
 import com.vaadin.event.MethodEventSource;
@@ -38,6 +37,7 @@ import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
 import com.vaadin.server.Terminal;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.ui.ComponentStateUtil;
@@ -259,7 +259,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         if (parent != null) {
             return parent.getLocale();
         }
-        final Application app = getApplication();
+        final VaadinSession app = getApplication();
         if (app != null) {
             return app.getLocale();
         }
@@ -616,7 +616,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     protected void focus() {
         if (this instanceof Focusable) {
-            final Application app = getApplication();
+            final VaadinSession app = getApplication();
             if (app != null) {
                 getUI().setFocusedComponent((Focusable) this);
                 delayedFocus = false;
@@ -646,7 +646,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * @see #attach()
      */
     @Override
-    public Application getApplication() {
+    public VaadinSession getApplication() {
         // Just make method inherited from Component interface public
         return super.getApplication();
     }

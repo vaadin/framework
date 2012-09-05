@@ -19,7 +19,6 @@ package com.vaadin.server;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-import com.vaadin.Application;
 import com.vaadin.LegacyApplication;
 import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
 
@@ -46,13 +45,13 @@ public class LegacyVaadinServlet extends VaadinServlet {
     }
 
     @Override
-    protected ServletApplicationContext createApplication(
+    protected VaadinServletSession createApplication(
             HttpServletRequest request) throws ServletException {
-        ServletApplicationContext application = super
+        VaadinServletSession application = super
                 .createApplication(request);
 
         // Must set current before running init()
-        Application.setCurrent(application);
+        VaadinSession.setCurrent(application);
 
         LegacyApplication legacyApplication = getNewApplication(request);
         legacyApplication.doInit();

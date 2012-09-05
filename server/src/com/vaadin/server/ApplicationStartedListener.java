@@ -18,10 +18,9 @@ package com.vaadin.server;
 
 import java.util.EventListener;
 
-import com.vaadin.Application;
 
 /**
- * Listener that gets notified when a new {@link Application} has been started.
+ * Listener that gets notified when a new {@link VaadinSession} has been started.
  * Add-ons can use this listener to automatically integrate with API tied to the
  * Application API.
  * 
@@ -33,7 +32,7 @@ import com.vaadin.Application;
 public interface ApplicationStartedListener extends EventListener {
     /**
      * Tells the listener that an application has been started (meaning that
-     * {@link Application#init()} has been invoked.
+     * {@link VaadinSession#init()} has been invoked.
      * 
      * @param event
      *            details about the event
