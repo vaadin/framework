@@ -35,6 +35,11 @@
 
 	<target name="tests" depends="buildorder">
 		<parallel>
+			<sequential>
+				<!-- Sleep before running integration tests so testbench tests have time to compile and start -->
+				<sleep minutes="4" />
+				<antcall inheritrefs="true" inheritall="true" target="integration-tests"/>
+			</sequential>
 			<subant buildpathref="build-path" target="tests" />
 			<ant antfile="uitest/test.xml" target="test-package">
 				<property name="war.file" location="result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
