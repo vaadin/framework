@@ -15,10 +15,24 @@
  */
 package com.vaadin.client.ui.orderedlayout;
 
+import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.Connect.LoadStyle;
+import com.vaadin.ui.VerticalLayout;
 
-//@Connect(value = VerticalLayout.class, loadStyle = LoadStyle.EAGER)
+/**
+ * Connects the client widget {@link VVerticalLayout} with the Vaadin server
+ * side counterpart {@link VerticalLayout}
+ */
+@Connect(value = VerticalLayout.class, loadStyle = LoadStyle.EAGER)
 public class VerticalLayoutConnector extends AbstractOrderedLayoutConnector {
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.client.ui.orderedlayout.AbstractOrderedLayoutConnector#getWidget
+     * ()
+     */
     @Override
     public VVerticalLayout getWidget() {
         return (VVerticalLayout) super.getWidget();

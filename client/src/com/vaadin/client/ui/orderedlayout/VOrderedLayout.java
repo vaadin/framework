@@ -1,5 +1,17 @@
 /*
-@VaadinApache2LicenseForJavaFiles@
+ * Copyright 2011 Vaadin Ltd.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  */
 package com.vaadin.client.ui.orderedlayout;
 
@@ -19,13 +31,16 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.LayoutManager;
+import com.vaadin.client.Util;
 import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.themes.BaseTheme;
 
-public class VBoxLayout extends FlowPanel {
+/**
+ * Base class for ordered layouts
+ */
+public class VOrderedLayout extends FlowPanel {
 
     public static final String CLASSNAME = "v-boxlayout";
 
@@ -39,15 +54,28 @@ public class VBoxLayout extends FlowPanel {
 
     private Map<Widget, Slot> widgetToSlot = new HashMap<Widget, Slot>();
 
+    private Element expandWrapper;
+
     private LayoutManager layoutManager;
 
-    public VBoxLayout() {
+    /**
+     * Constructor
+     */
+    public VOrderedLayout() {
         setStyleName(CLASSNAME);
         setVertical(true);
     }
 
-    public void setVertical(boolean isVertical) {
-        vertical = isVertical;
+    /**
+     * Does the layout order its children horizontally or vertically
+     * 
+     * @param vertical
+     *            true to order the childer vertically, false to order them
+     *            horizontally
+     * 
+     */
+    protected void setVertical(boolean vertical) {
+        this.vertical = vertical;
         if (vertical) {
             addStyleName("v-vertical");
             removeStyleName("v-horizontal");
@@ -57,7 +85,15 @@ public class VBoxLayout extends FlowPanel {
         }
     }
 
-    public void addOrMoveSlot(Slot slot, int index) {
+    /**
+     * Add or move a slot to another index
+     * 
+     * @param slot
+     *            The slot to move or add
+     * @param index
+     *            The index where the slot should be placed
+     */
+    void addOrMoveSlot(Slot slot, int index) {
         if (slot.getParent() == this) {
             int currentIndex = getWidgetIndex(slot);
             if (index == currentIndex) {
@@ -67,6 +103,9 @@ public class VBoxLayout extends FlowPanel {
         insert(slot, index);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void insert(Widget child, Element container, int beforeIndex,
             boolean domInsert) {
@@ -93,56 +132,93 @@ public class VBoxLayout extends FlowPanel {
         adopt(child);
     }
 
-    public Slot removeSlot(Widget widget) {
+    /**
+     * Remove a slot from the layout
+     * 
+     * @param widget
+     * @return
+     */
+    public void removeWidget(Widget widget) {
         Slot slot = widgetToSlot.get(widget);
         remove(slot);
         widgetToSlot.remove(widget);
-        return slot;
     }
 
-    public Slot getSlot(ComponentConnector connector) {
-        Slot slot = widgetToSlot.get(connector.getWidget());
+    /**
+     * Get the containing slot for a widget
+     * 
+     * @param widget
+     *            The widget whose slot you want to get
+     * 
+     * @return
+     */
+    public Slot getSlot(Widget widget) {
+        Slot slot = widgetToSlot.get(widget);
         if (slot == null) {
-            slot = new Slot(connector);
-            widgetToSlot.put(connector.getWidget(), slot);
+            slot = new Slot(widget, this);
+            widgetToSlot.put(widget, slot);
         }
         return slot;
     }
 
+    /**
+     * Defines where the caption should be placed
+     */
     public enum CaptionPosition {
         TOP, RIGHT, BOTTOM, LEFT
     }
 
-    protected class Slot extends SimplePanel {
-
-        private ComponentConnector connector;
+    /**
+     * Represents a slot which contains the actual widget in the layout.
+     */
+    public static final class Slot extends SimplePanel {
 
         private Element spacer;
-
         private Element captionWrap;
         private Element caption;
         private Element captionText;
         private Icon icon;
         private Element errorIcon;
         private Element requiredIcon;
+        private final VOrderedLayout layout;
 
         // Caption is placed after component unless there is some part which
         // moves it above.
         private CaptionPosition captionPosition = CaptionPosition.RIGHT;
 
         private AlignmentInfo alignment;
+
         private double expandRatio = -1;
 
-        public Slot(ComponentConnector connector) {
-            this.connector = connector;
-            setWidget(connector.getWidget());
+        /**
+         * Constructor
+         * 
+         * @param widget
+         *            The widget to put in the slot
+         * 
+         * @param layoutManager
+         *            The layout manager used by the layout
+         */
+        private Slot(Widget widget, VOrderedLayout layout) {
+            this.layout = layout;
+            setWidget(widget);
             setStylePrimaryName("v-slot");
         }
 
+        /**
+         * Returns the alignment for the slot
+         * 
+         */
         public AlignmentInfo getAlignment() {
             return alignment;
         }
 
+        /**
+         * Sets how the widget is aligned inside the slot
+         * 
+         * @param alignment
+         *            The alignment inside the slot
+         */
         public void setAlignment(AlignmentInfo alignment) {
             this.alignment = alignment;
 
@@ -168,14 +244,34 @@ public class VBoxLayout extends FlowPanel {
             }
         }
 
+        /**
+         * Set how the slot should be expanded relative to the other slots
+         * 
+         * @param expandRatio
+         *            The ratio of the space the slot should occupy
+         * 
+         */
         public void setExpandRatio(double expandRatio) {
             this.expandRatio = expandRatio;
         }
 
+        /**
+         * Get the expand ratio for the slot. The expand ratio describes how the
+         * slot should be resized compared to other slots in the layout
+         * 
+         * @return
+         */
         public double getExpandRatio() {
             return expandRatio;
         }
 
+        /**
+         * Set the spacing for the slot. The spacing determines if there should
+         * be empty space around the slot when the slot.
+         * 
+         * @param spacing
+         *            Should spacing be enabled
+         */
         public void setSpacing(boolean spacing) {
             if (spacing && spacer == null) {
                 spacer = DOM.createDiv();
@@ -188,39 +284,58 @@ public class VBoxLayout extends FlowPanel {
             }
         }
 
+        /**
+         * Get the element which is added to make the spacing
+         * 
+         * @return
+         */
         public Element getSpacingElement() {
             return spacer;
         }
 
+        /**
+         * Does the slot have spacing
+         */
         public boolean hasSpacing() {
             return getSpacingElement() != null;
         }
 
-        protected int getSpacingSize(boolean vertical) {
+        /**
+         * Get the vertical amount in pixels of the spacing
+         */
+        protected int getVerticalSpacing() {
             if (spacer == null) {
                 return 0;
+            } else if (layout.getLayoutManager() != null) {
+                return layout.getLayoutManager().getOuterHeight(spacer);
             }
-
-            if (layoutManager != null) {
-                if (vertical) {
-                    return layoutManager.getOuterHeight(spacer);
-                } else {
-                    return layoutManager.getOuterWidth(spacer);
-                }
-            }
-            // TODO place for optimization (in expense of theme
-            // flexibility): only measure one of the elements and cache the
-            // value
-            return vertical ? spacer.getOffsetHeight() : spacer
-                    .getOffsetWidth();
-            // }
+            return spacer.getOffsetHeight();
         }
 
+        /**
+         * Get the horizontal amount of pixels of the spacing
+         * 
+         * @return
+         */
+        protected int getHorizontalSpacing() {
+            if (spacer == null) {
+                return 0;
+            } else if (layout.getLayoutManager() != null) {
+                return layout.getLayoutManager().getOuterWidth(spacer);
+            }
+            return spacer.getOffsetWidth();
+        }
+
+        /**
+         * Set the position of the caption relative to the slot
+         * 
+         * @param captionPosition
+         *            The position of the caption
+         */
         public void setCaptionPosition(CaptionPosition captionPosition) {
             if (caption == null) {
                 return;
             }
-
             captionWrap.removeClassName("v-caption-on-"
                     + this.captionPosition.name().toLowerCase());
 
@@ -236,12 +351,31 @@ public class VBoxLayout extends FlowPanel {
                     + captionPosition.name().toLowerCase());
         }
 
+        /**
+         * Get the position of the caption relative to the slot
+         */
         public CaptionPosition getCaptionPosition() {
             return captionPosition;
         }
 
-        // TODO refactor VCaption and use that instead: creates a tight coupling
-        // between this layout and Vaadin, but it's already coupled
+        /**
+         * Set the caption of the slot
+         * 
+         * @param captionText
+         *            The text of the caption
+         * @param iconUrl
+         *            The icon URL
+         * @param styles
+         *            The style names
+         * @param error
+         *            The error message
+         * @param showError
+         *            Should the error message be shown
+         * @param required
+         *            Is the (field) required
+         * @param enabled
+         *            Is the component enabled
+         */
         public void setCaption(String captionText, String iconUrl,
                 List<String> styles, String error, boolean showError,
                 boolean required, boolean enabled) {
@@ -288,11 +422,8 @@ public class VBoxLayout extends FlowPanel {
             if (iconUrl != null) {
                 if (icon == null) {
                     icon = new Icon();
-                    // icon = DOM.createImg();
-                    // icon.setClassName("v-icon");
                     caption.insertFirst(icon.getElement());
                 }
-                // icon.setAttribute("src", iconUrl);
                 icon.setUri(iconUrl);
             } else if (icon != null) {
                 icon.getElement().removeFromParent();
@@ -349,27 +480,56 @@ public class VBoxLayout extends FlowPanel {
                     setCaptionPosition(CaptionPosition.RIGHT);
                 }
             }
-
-            // TODO theme flexibility: add extra styles to captionWrap as well?
-
         }
 
+        /**
+         * Does the slot have a caption
+         */
         public boolean hasCaption() {
             return caption != null;
         }
 
+        /**
+         * Get the slots caption element
+         */
         public Element getCaptionElement() {
             return caption;
         }
 
-        public void setRelativeWidth(boolean relativeWidth) {
+        /**
+         * Set if the slot has a relative width
+         * 
+         * @param relativeWidth
+         *            True if slot uses relative width, false if the slot has a
+         *            static width
+         */
+        private boolean relativeWidth = false;
+        protected void setRelativeWidth(boolean relativeWidth) {
+            this.relativeWidth = relativeWidth;
             updateRelativeSize(relativeWidth, "width");
         }
 
-        public void setRelativeHeight(boolean relativeHeight) {
+        /**
+         * Set if the slot has a relative height
+         * 
+         * @param relativeHeight
+         *            Trie if the slot uses a relative height, false if the slot
+         *            has a static height
+         */
+        private boolean relativeHeight = false;
+        protected void setRelativeHeight(boolean relativeHeight) {
+            this.relativeHeight = relativeHeight;
             updateRelativeSize(relativeHeight, "height");
         }
 
+        /**
+         * Updates the captions size if the slot is relative
+         * 
+         * @param isRelativeSize
+         *            Is the slot relatived sized
+         * @param direction
+         *            The directorion of the caption
+         */
         private void updateRelativeSize(boolean isRelativeSize, String direction) {
             if (isRelativeSize && hasCaption()) {
                 captionWrap.getStyle().setProperty(
@@ -395,19 +555,31 @@ public class VBoxLayout extends FlowPanel {
             }
         }
 
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.google.gwt.user.client.ui.Widget#onBrowserEvent(com.google.gwt
+         * .user.client.Event)
+         */
         @Override
         public void onBrowserEvent(Event event) {
             super.onBrowserEvent(event);
             if (DOM.eventGetType(event) == Event.ONLOAD
                     && icon.getElement() == DOM.eventGetTarget(event)) {
-                if (layoutManager != null) {
-                    layoutManager.layoutLater();
+                if (layout.getLayoutManager() != null) {
+                    layout.getLayoutManager().layoutLater();
                 } else {
-                    updateCaptionOffset(caption);
+                    layout.updateCaptionOffset(caption);
                 }
             }
         }
 
+        /*
+         * (non-Javadoc)
+         * 
+         * @see com.google.gwt.user.client.ui.SimplePanel#getContainerElement()
+         */
         @Override
         protected Element getContainerElement() {
             if (captionWrap == null) {
@@ -417,6 +589,11 @@ public class VBoxLayout extends FlowPanel {
             }
         }
 
+        /*
+         * (non-Javadoc)
+         * 
+         * @see com.google.gwt.user.client.ui.Widget#onDetach()
+         */
         @Override
         protected void onDetach() {
             if (spacer != null) {
@@ -425,6 +602,11 @@ public class VBoxLayout extends FlowPanel {
             super.onDetach();
         }
 
+        /*
+         * (non-Javadoc)
+         * 
+         * @see com.google.gwt.user.client.ui.Widget#onAttach()
+         */
         @Override
         protected void onAttach() {
             super.onAttach();
@@ -433,19 +615,32 @@ public class VBoxLayout extends FlowPanel {
                         getElement());
             }
         }
-
     }
 
-    protected class Icon extends UIObject {
+    /**
+     * The icon for each widget. Located in the caption of the slot.
+     */
+    public static class Icon extends UIObject {
+
         public static final String CLASSNAME = "v-icon";
+
         private String myUrl;
 
+        /**
+         * Constructor
+         */
         public Icon() {
             setElement(DOM.createImg());
             DOM.setElementProperty(getElement(), "alt", "");
             setStyleName(CLASSNAME);
         }
 
+        /**
+         * Set the URL where the icon is located
+         * 
+         * @param url
+         *            A fully qualified URL
+         */
         public void setUri(String url) {
             if (!url.equals(myUrl)) {
                 /*
@@ -459,17 +654,37 @@ public class VBoxLayout extends FlowPanel {
                 myUrl = url;
             }
         }
-
     }
 
-    void setLayoutManager(LayoutManager manager) {
+    /**
+     * Set the layout manager for the layout
+     * 
+     * @param manager
+     *            The layout manager to use
+     */
+    public void setLayoutManager(LayoutManager manager) {
         layoutManager = manager;
     }
+    
+    /**
+     * Get the layout manager used by this layout
+     * 
+     */
+    public LayoutManager getLayoutManager() {
+        return layoutManager;
+    }
 
-    private static final RegExp captionPositionRegexp = RegExp
-            .compile("v-caption-on-(\\S+)");
-
+    /**
+     * Deducts the caption position by examining the wrapping element
+     * 
+     * @param captionWrap
+     *            The wrapping element
+     * 
+     * @return The caption position
+     */
     CaptionPosition getCaptionPositionFromElement(Element captionWrap) {
+        RegExp captionPositionRegexp = RegExp.compile("v-caption-on-(\\S+)");
+
         // Get caption position from the classname
         MatchResult matcher = captionPositionRegexp.exec(captionWrap
                 .getClassName());
@@ -482,6 +697,12 @@ public class VBoxLayout extends FlowPanel {
         return captionPosition;
     }
 
+    /**
+     * Update the offset off the caption relative to the slot
+     * 
+     * @param caption
+     *            The caption element
+     */
     void updateCaptionOffset(Element caption) {
 
         Element captionWrap = caption.getParentElement().cast();
@@ -541,22 +762,39 @@ public class VBoxLayout extends FlowPanel {
         }
     }
 
-    void setMargin(MarginInfo marginInfo) {
-        setStyleName("v-margin-top", marginInfo.hasTop());
-        setStyleName("v-margin-right", marginInfo.hasRight());
-        setStyleName("v-margin-bottom", marginInfo.hasBottom());
-        setStyleName("v-margin-left", marginInfo.hasLeft());
+    /**
+     * Set the margin of the layout
+     * 
+     * @param marginInfo
+     *            The margin information
+     */
+    public void setMargin(MarginInfo marginInfo) {
+        if (marginInfo != null) {
+            setStyleName("v-margin-top", marginInfo.hasTop());
+            setStyleName("v-margin-right", marginInfo.hasRight());
+            setStyleName("v-margin-bottom", marginInfo.hasBottom());
+            setStyleName("v-margin-left", marginInfo.hasLeft());
+        }
     }
 
-    protected void setSpacing(boolean spacingEnabled) {
-        spacing = spacingEnabled;
+    /**
+     * Turn on or off spacing in the layout
+     * 
+     * @param spacing
+     *            True if spacing should be used, false if not
+     */
+    public void setSpacing(boolean spacing) {
+        this.spacing = spacing;
         for (Slot slot : widgetToSlot.values()) {
             if (getWidgetIndex(slot) > 0) {
-                slot.setSpacing(spacingEnabled);
+                slot.setSpacing(spacing);
             }
         }
     }
 
+    /**
+     * Triggers a recalculation of the expand width and heights
+     */
     private void recalculateExpands() {
         double total = 0;
         for (Slot slot : widgetToSlot.values()) {
@@ -575,21 +813,22 @@ public class VBoxLayout extends FlowPanel {
                 if (vertical) {
                     slot.setHeight((100 * (slot.getExpandRatio() / total))
                             + "%");
-                    if (slot.connector.isRelativeHeight()) {
-                        layoutManager.setNeedsMeasure(slot.connector);
+                    if (slot.relativeHeight) {
+                        Util.notifyParentOfSizeChange(this, true);
                     }
                 } else {
                     slot.setWidth((100 * (slot.getExpandRatio() / total)) + "%");
-                    if (slot.connector.isRelativeWidth()) {
-                        layoutManager.setNeedsMeasure(slot.connector);
+                    if (slot.relativeWidth) {
+                        Util.notifyParentOfSizeChange(this, true);
                     }
                 }
             }
         }
     }
 
-    private Element expandWrapper;
-
+    /**
+     * Removes elements used to expand a slot
+     */
     void clearExpand() {
         if (expandWrapper != null) {
             for (; expandWrapper.getChildCount() > 0;) {
@@ -608,6 +847,9 @@ public class VBoxLayout extends FlowPanel {
         }
     }
 
+    /**
+     * Adds elements used to expand a slot
+     */
     public void updateExpand() {
         boolean isExpanding = false;
         for (Widget slot : getChildren()) {
@@ -639,6 +881,7 @@ public class VBoxLayout extends FlowPanel {
             for (Widget w : getChildren()) {
                 Slot slot = (Slot) w;
                 if (slot.getExpandRatio() == -1) {
+
                     if (layoutManager != null) {
                         // TODO check caption position
                         if (vertical) {
@@ -678,7 +921,8 @@ public class VBoxLayout extends FlowPanel {
                     }
                 }
                 // TODO fails in Opera, always returns 0
-                int spacingSize = slot.getSpacingSize(vertical);
+                int spacingSize = vertical ? slot.getVerticalSpacing() : slot
+                        .getHorizontalSpacing();
                 if (spacingSize > 0) {
                     totalSize += spacingSize;
                 }
@@ -702,6 +946,9 @@ public class VBoxLayout extends FlowPanel {
         }
     }
 
+    /**
+     * Perform a recalculation of the layout height
+     */
     public void recalculateLayoutHeight() {
         // Only needed if a horizontal layout is undefined high, and contains
         // relative height children or vertical alignments
@@ -732,16 +979,14 @@ public class VBoxLayout extends FlowPanel {
             } else {
                 newHeight = getElement().getOffsetHeight();
             }
-            VBoxLayout.this.getElement().getStyle()
+            VOrderedLayout.this.getElement().getStyle()
             .setHeight(newHeight, Unit.PX);
         }
-
     }
 
-    void clearHeight() {
-        getElement().getStyle().clearHeight();
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setHeight(String height) {
         super.setHeight(height);

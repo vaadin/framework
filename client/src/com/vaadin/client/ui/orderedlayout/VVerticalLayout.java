@@ -15,12 +15,15 @@
  */
 package com.vaadin.client.ui.orderedlayout;
 
-public class VVerticalLayout extends VMeasuringOrderedLayout {
+/**
+ * Represents a layout where the children is ordered vertically
+ */
+public class VVerticalLayout extends VOrderedLayout {
 
-    public static final String CLASSNAME = "v-verticallayout";
-
+    /**
+     * Default constructor
+     */
     public VVerticalLayout() {
-        super(CLASSNAME, true);
+        setVertical(true);
     }
-
 }

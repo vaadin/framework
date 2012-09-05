@@ -27,8 +27,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.gridlayout.VGridLayout;
-import com.vaadin.client.ui.orderedlayout.VBoxLayout;
-import com.vaadin.client.ui.orderedlayout.VMeasuringOrderedLayout;
+import com.vaadin.client.ui.orderedlayout.VOrderedLayout;
 import com.vaadin.client.ui.tabsheet.VTabsheetPanel;
 import com.vaadin.client.ui.ui.VUI;
 import com.vaadin.client.ui.window.VWindow;
@@ -270,7 +269,7 @@ public class ComponentLocator {
                 String childIndexString = part.substring("domChild[".length(),
                         part.length() - 1);
 
-                if (Util.findWidget(baseElement, null) instanceof VBoxLayout) {
+                if (Util.findWidget(baseElement, null) instanceof VOrderedLayout) {
                     if (element.hasChildNodes()) {
                         Element e = element.getFirstChildElement().cast();
                         String cn = e.getClassName();
@@ -508,14 +507,9 @@ public class ComponentLocator {
                     continue;
                 }
 
-                if ("VVerticalLayout".equals(widgetClassName)
-                        || "VHorizontalLayout".equals(widgetClassName)) {
-                    widgetClassName = "VBoxLayout";
-                }
-
-                if (w instanceof VBoxLayout
+                if (w instanceof VOrderedLayout
                         && "ChildComponentContainer".equals(widgetClassName)) {
-                    widgetClassName = "VBoxLayout$Slot";
+                    widgetClassName = "VOrderedLayout$Slot";
                 }
 
                 if (w instanceof VTabsheetPanel && widgetPosition != 0) {
@@ -532,7 +526,7 @@ public class ComponentLocator {
                  * (which would originally have found the widget inside the
                  * ChildComponentContainer)
                  */
-                if ((w instanceof VMeasuringOrderedLayout || w instanceof VGridLayout)
+                if ((w instanceof VGridLayout)
                         && "ChildComponentContainer".equals(widgetClassName)
                         && i + 1 < parts.length) {
 
@@ -541,11 +535,6 @@ public class ComponentLocator {
                     String nextPart = parts[i + 1];
                     String[] nextSplit = nextPart.split("\\[", 2);
                     String nextWidgetClassName = nextSplit[0];
-
-                    if ("VVerticalLayout".equals(nextWidgetClassName)
-                            || "VHorizontalLayout".equals(nextWidgetClassName)) {
-                        nextWidgetClassName = "VBoxLayout";
-                    }
 
                     // Find the n:th child and count the number of children with
                     // the same type before it
@@ -616,8 +605,8 @@ public class ComponentLocator {
                         }
                         widgetPosition--;
 
-                    } else if (w instanceof VBoxLayout
-                            && "VBoxLayout$Slot".equals(simpleName2)) {
+                    } else if (w instanceof VOrderedLayout
+                            && "VOrderedLayout$Slot".equals(simpleName2)) {
                         child = ((SimplePanel) child).getWidget();
                         simpleName2 = Util.getSimpleName(child);
                         if (widgetClassName.equals(simpleName2)) {
