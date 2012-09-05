@@ -504,6 +504,7 @@ public class VOrderedLayout extends FlowPanel {
          *            static width
          */
         private boolean relativeWidth = false;
+
         protected void setRelativeWidth(boolean relativeWidth) {
             this.relativeWidth = relativeWidth;
             updateRelativeSize(relativeWidth, "width");
@@ -517,6 +518,7 @@ public class VOrderedLayout extends FlowPanel {
          *            has a static height
          */
         private boolean relativeHeight = false;
+
         protected void setRelativeHeight(boolean relativeHeight) {
             this.relativeHeight = relativeHeight;
             updateRelativeSize(relativeHeight, "height");
@@ -535,7 +537,7 @@ public class VOrderedLayout extends FlowPanel {
                 captionWrap.getStyle().setProperty(
                         direction,
                         getWidget().getElement().getStyle()
-                        .getProperty(direction));
+                                .getProperty(direction));
                 captionWrap.addClassName("v-has-" + direction);
             } else if (hasCaption()) {
                 if (direction.equals("height")) {
@@ -665,7 +667,7 @@ public class VOrderedLayout extends FlowPanel {
     public void setLayoutManager(LayoutManager manager) {
         layoutManager = manager;
     }
-    
+
     /**
      * Get the layout manager used by this layout
      * 
@@ -935,11 +937,11 @@ public class VOrderedLayout extends FlowPanel {
             if (vertical) {
                 expandWrapper.getStyle().setPaddingTop(totalSize, Unit.PX);
                 expandWrapper.getFirstChildElement().getStyle()
-                .setMarginTop(-totalSize, Unit.PX);
+                        .setMarginTop(-totalSize, Unit.PX);
             } else {
                 expandWrapper.getStyle().setPaddingLeft(totalSize, Unit.PX);
                 expandWrapper.getFirstChildElement().getStyle()
-                .setMarginLeft(-totalSize, Unit.PX);
+                        .setMarginLeft(-totalSize, Unit.PX);
             }
 
             recalculateExpands();
@@ -980,7 +982,7 @@ public class VOrderedLayout extends FlowPanel {
                 newHeight = getElement().getOffsetHeight();
             }
             VOrderedLayout.this.getElement().getStyle()
-            .setHeight(newHeight, Unit.PX);
+                    .setHeight(newHeight, Unit.PX);
         }
     }
 

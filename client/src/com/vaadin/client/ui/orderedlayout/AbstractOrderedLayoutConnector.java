@@ -239,45 +239,44 @@ public abstract class AbstractOrderedLayoutConnector extends
         String iconUrlString = iconUrl != null ? iconUrl.toString() : null;
         List<String> styles = child.getState().styles;
         String error = child.getState().errorMessage;
-                boolean showError = error != null;
-                if (child.getState() instanceof AbstractFieldState) {
-                    AbstractFieldState abstractFieldState = (AbstractFieldState) child
-                            .getState();
+        boolean showError = error != null;
+        if (child.getState() instanceof AbstractFieldState) {
+            AbstractFieldState abstractFieldState = (AbstractFieldState) child
+                    .getState();
             showError = showError && !abstractFieldState.hideErrors;
-                }
-                boolean required = false;
-                if (child instanceof AbstractFieldConnector) {
-                    required = ((AbstractFieldConnector) child).isRequired();
-                }
+        }
+        boolean required = false;
+        if (child instanceof AbstractFieldConnector) {
+            required = ((AbstractFieldConnector) child).isRequired();
+        }
         boolean enabled = child.getState().enabled;
 
         slot.setCaption(caption, iconUrlString, styles, error, showError,
-                required,
-                        enabled);
+                required, enabled);
 
-                slot.setRelativeWidth(child.isRelativeWidth());
-                slot.setRelativeHeight(child.isRelativeHeight());
+        slot.setRelativeWidth(child.isRelativeWidth());
+        slot.setRelativeHeight(child.isRelativeHeight());
 
-                if (slot.hasCaption()) {
-                    CaptionPosition pos = slot.getCaptionPosition();
-                    getLayoutManager().addElementResizeListener(
-                            slot.getCaptionElement(), slotCaptionResizeListener);
-                    if (child.isRelativeHeight()
-                            && (pos == CaptionPosition.TOP || pos == CaptionPosition.BOTTOM)) {
-                        getWidget().updateCaptionOffset(slot.getCaptionElement());
-                    } else if (child.isRelativeWidth()
-                            && (pos == CaptionPosition.LEFT || pos == CaptionPosition.RIGHT)) {
-                        getWidget().updateCaptionOffset(slot.getCaptionElement());
-                    }
-                } else {
-                    childCaptionElementHeight.remove(child.getWidget().getElement());
-                }
+        if (slot.hasCaption()) {
+            CaptionPosition pos = slot.getCaptionPosition();
+            getLayoutManager().addElementResizeListener(
+                    slot.getCaptionElement(), slotCaptionResizeListener);
+            if (child.isRelativeHeight()
+                    && (pos == CaptionPosition.TOP || pos == CaptionPosition.BOTTOM)) {
+                getWidget().updateCaptionOffset(slot.getCaptionElement());
+            } else if (child.isRelativeWidth()
+                    && (pos == CaptionPosition.LEFT || pos == CaptionPosition.RIGHT)) {
+                getWidget().updateCaptionOffset(slot.getCaptionElement());
+            }
+        } else {
+            childCaptionElementHeight.remove(child.getWidget().getElement());
+        }
 
-                updateLayoutHeight();
+        updateLayoutHeight();
 
-                if (needsExpand()) {
+        if (needsExpand()) {
             getWidget().updateExpand();
-                }
+        }
     }
 
     /*
@@ -317,9 +316,9 @@ public abstract class AbstractOrderedLayoutConnector extends
                         childComponentResizeListener);
                 if (slot.hasCaption()) {
                     getLayoutManager()
-                    .removeElementResizeListener(
-                            slot.getCaptionElement(),
-                            slotCaptionResizeListener);
+                            .removeElementResizeListener(
+                                    slot.getCaptionElement(),
+                                    slotCaptionResizeListener);
                 }
                 if (slot.getSpacingElement() != null) {
                     getLayoutManager().removeElementResizeListener(
@@ -401,7 +400,6 @@ public abstract class AbstractOrderedLayoutConnector extends
         updateLayoutHeight();
     }
 
-
     /**
      * Does the layout need a fixed height?
      */
@@ -442,32 +440,40 @@ public abstract class AbstractOrderedLayoutConnector extends
         Slot slot = getWidget().getSlot(child.getWidget());
 
         // Clear all possible listeners first
-        rmeoveResizeListener(slot.getWidget().getElement(), childComponentResizeListener);
+        rmeoveResizeListener(slot.getWidget().getElement(),
+                childComponentResizeListener);
         if (slot.hasCaption()) {
-            rmeoveResizeListener(slot.getCaptionElement(), slotCaptionResizeListener);
+            rmeoveResizeListener(slot.getCaptionElement(),
+                    slotCaptionResizeListener);
         }
         if (slot.hasSpacing()) {
-            rmeoveResizeListener(slot.getSpacingElement(), spacingResizeListener);
+            rmeoveResizeListener(slot.getSpacingElement(),
+                    spacingResizeListener);
         }
 
         // Add all necessary listeners
         if (needsFixedHeight()) {
-            addResizeListener(slot.getWidget().getElement(), childComponentResizeListener);
+            addResizeListener(slot.getWidget().getElement(),
+                    childComponentResizeListener);
             if (slot.hasCaption()) {
-                addResizeListener(slot.getCaptionElement(), slotCaptionResizeListener);
+                addResizeListener(slot.getCaptionElement(),
+                        slotCaptionResizeListener);
             }
         } else if ((child.isRelativeHeight() || child.isRelativeWidth())
                 && slot.hasCaption()) {
             // If the slot has caption, we need to listen for it's size changes
             // in order to update the padding/margin offset for relative sized
             // components
-            addResizeListener(slot.getCaptionElement(), slotCaptionResizeListener);
+            addResizeListener(slot.getCaptionElement(),
+                    slotCaptionResizeListener);
         }
 
         if (needsExpand()) {
-            addResizeListener(slot.getWidget().getElement(), childComponentResizeListener);
+            addResizeListener(slot.getWidget().getElement(),
+                    childComponentResizeListener);
             if (slot.hasSpacing()) {
-                addResizeListener(slot.getSpacingElement(), spacingResizeListener);
+                addResizeListener(slot.getSpacingElement(),
+                        spacingResizeListener);
             }
         }
 
@@ -548,11 +554,13 @@ public abstract class AbstractOrderedLayoutConnector extends
         for (ComponentConnector child : getChildComponents()) {
             Slot slot = getWidget().getSlot(child.getWidget());
             if (slot.hasCaption()) {
-                rmeoveResizeListener(slot.getCaptionElement(), slotCaptionResizeListener);
+                rmeoveResizeListener(slot.getCaptionElement(),
+                        slotCaptionResizeListener);
             }
 
             if (slot.getSpacingElement() != null) {
-                rmeoveResizeListener(slot.getSpacingElement(), spacingResizeListener);
+                rmeoveResizeListener(slot.getSpacingElement(),
+                        spacingResizeListener);
             }
 
             rmeoveResizeListener(slot.getWidget().getElement(),
