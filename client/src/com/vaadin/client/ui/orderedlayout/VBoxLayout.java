@@ -541,19 +541,11 @@ public class VBoxLayout extends FlowPanel {
         }
     }
 
-    private void toggleStyleName(String name, boolean enabled) {
-        if (enabled) {
-            addStyleName(name);
-        } else {
-            removeStyleName(name);
-        }
-    }
-
     void setMargin(MarginInfo marginInfo) {
-        toggleStyleName("v-margin-top", marginInfo.hasTop());
-        toggleStyleName("v-margin-right", marginInfo.hasRight());
-        toggleStyleName("v-margin-bottom", marginInfo.hasBottom());
-        toggleStyleName("v-margin-left", marginInfo.hasLeft());
+        setStyleName("v-margin-top", marginInfo.hasTop());
+        setStyleName("v-margin-right", marginInfo.hasRight());
+        setStyleName("v-margin-bottom", marginInfo.hasBottom());
+        setStyleName("v-margin-left", marginInfo.hasLeft());
     }
 
     protected void setSpacing(boolean spacingEnabled) {
