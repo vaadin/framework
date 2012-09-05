@@ -570,7 +570,7 @@ public abstract class AbstractTextField extends AbstractField<String> implements
         return textChangeEventTimeout;
     }
 
-    public class TextChangeEventImpl extends TextChangeEvent {
+    public static class TextChangeEventImpl extends TextChangeEvent {
         private String curText;
         private int cursorPosition;
 

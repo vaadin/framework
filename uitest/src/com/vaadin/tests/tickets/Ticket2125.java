@@ -5,10 +5,10 @@ import com.vaadin.data.util.MethodProperty;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.CellStyleGenerator;
 import com.vaadin.ui.Table.ColumnGenerator;
+import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket2125 extends Application.LegacyApplication {
 
@@ -42,7 +42,8 @@ public class Ticket2125 extends Application.LegacyApplication {
             });
             table.setCellStyleGenerator(new CellStyleGenerator() {
                 @Override
-                public String getStyle(Object itemId, Object propertyId) {
+                public String getStyle(Table source, Object itemId,
+                        Object propertyId) {
                     if (new Integer(4).equals(itemId)) {
                         if (propertyId == null) {
                             return "MYROW";

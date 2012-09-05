@@ -69,8 +69,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.VLazyExecutor;
 import com.vaadin.client.ui.VOverlay;
-import com.vaadin.client.ui.UI.UIConnector;
 import com.vaadin.client.ui.notification.VNotification;
+import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.client.ui.window.WindowConnector;
 import com.vaadin.shared.Version;
 

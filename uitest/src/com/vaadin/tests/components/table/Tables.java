@@ -335,7 +335,8 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
                 c.setCellStyleGenerator(new CellStyleGenerator() {
 
                     @Override
-                    public String getStyle(Object itemId, Object propertyId) {
+                    public String getStyle(Table source, Object itemId,
+                            Object propertyId) {
                         if (cellStyleInfo.appliesTo(itemId, propertyId)) {
                             return cellStyleInfo.styleName;
                         }

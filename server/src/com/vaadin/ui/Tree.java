@@ -56,7 +56,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.shared.ui.tree.TreeConstants;
-import com.vaadin.tools.ReflectTools;
+import com.vaadin.util.ReflectTools;
 
 /**
  * Tree component. A Tree can be used to select an item (or multiple items) from
@@ -611,7 +611,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 }
 
                 if (itemStyleGenerator != null) {
-                    String stylename = itemStyleGenerator.getStyle(itemId);
+                    String stylename = itemStyleGenerator
+                            .getStyle(this, itemId);
                     if (stylename != null) {
                         target.addAttribute(TreeConstants.ATTRIBUTE_NODE_STYLE,
                                 stylename);
@@ -1255,12 +1256,14 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         /**
          * Called by Tree when an item is painted.
          * 
+         * @param source
+         *            the source Tree
          * @param itemId
          *            The itemId of the item to be painted
          * @return The style name to add to this item. (the CSS class name will
          *         be v-tree-node-[style name]
          */
-        public abstract String getStyle(Object itemId);
+        public abstract String getStyle(Tree source, Object itemId);
     }
 
     // Overriden so javadoc comes from Container.Hierarchical

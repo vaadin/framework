@@ -56,8 +56,7 @@ public class UriFragmentManagerTest extends TestCase {
         navigator.navigateTo("test");
         control.replay();
 
-        FragmentChangedEvent event = page.new FragmentChangedEvent(page,
-                "oldtest");
+        FragmentChangedEvent event = new FragmentChangedEvent(page, "oldtest");
         manager.fragmentChanged(event);
     }
 }

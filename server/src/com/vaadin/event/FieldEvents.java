@@ -21,12 +21,12 @@ import java.lang.reflect.Method;
 
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
-import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Field.ValueChangeEvent;
 import com.vaadin.ui.TextField;
+import com.vaadin.util.ReflectTools;
 
 /**
  * Interface that serves as a wrapper for {@link Field} related events.
@@ -144,7 +144,7 @@ public interface FieldEvents {
      * @since 6.2
      */
     @SuppressWarnings("serial")
-    public class FocusEvent extends Component.Event {
+    public static class FocusEvent extends Component.Event {
 
         /**
          * Identifier for event that can be used in {@link EventRouter}
@@ -184,7 +184,7 @@ public interface FieldEvents {
      * @since 6.2
      */
     @SuppressWarnings("serial")
-    public class BlurEvent extends Component.Event {
+    public static class BlurEvent extends Component.Event {
 
         /**
          * Identifier for event that can be used in {@link EventRouter}
@@ -243,6 +243,7 @@ public interface FieldEvents {
      * @since 6.5
      */
     public static abstract class TextChangeEvent extends Component.Event {
+
         public TextChangeEvent(Component source) {
             super(source);
         }

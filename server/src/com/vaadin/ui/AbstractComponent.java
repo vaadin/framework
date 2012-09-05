@@ -41,7 +41,7 @@ import com.vaadin.server.Terminal;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.ui.ComponentStateUtil;
-import com.vaadin.tools.ReflectTools;
+import com.vaadin.util.ReflectTools;
 
 /**
  * An abstract class that defines default implementation for the

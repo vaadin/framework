@@ -299,7 +299,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         }
     }
 
-    public class CloseEvent extends Component.Event {
+    public static class CloseEvent extends Component.Event {
 
         /**
          * 
@@ -422,7 +422,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * (e.g. the browser window is resized). The frequency may vary across
      * browsers.
      */
-    public class ResizeEvent extends Component.Event {
+    public static class ResizeEvent extends Component.Event {
 
         /**
          * 

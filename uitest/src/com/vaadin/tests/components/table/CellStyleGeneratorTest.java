@@ -17,7 +17,8 @@ public class CellStyleGeneratorTest extends TestBase {
         CellStyleGenerator g = new CellStyleGenerator() {
 
             @Override
-            public String getStyle(Object itemId, Object propertyId) {
+            public String getStyle(Table source, Object itemId,
+                    Object propertyId) {
                 if (propertyId != null && propertyId.equals("red")) {
                     return "red";
                 } else if (itemId.equals("blue") && propertyId == null) {

@@ -20,10 +20,10 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.LegacyPaint;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.server.LegacyComponent;
 
 /**
  * 
@@ -421,7 +421,7 @@ public class PopupView extends AbstractComponentContainer implements
      * event with {@link #getPopupView()}.
      * 
      */
-    public class PopupVisibilityEvent extends Event {
+    public static class PopupVisibilityEvent extends Event {
 
         public PopupVisibilityEvent(PopupView source) {
             super(source);

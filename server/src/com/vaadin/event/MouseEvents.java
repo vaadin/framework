@@ -19,8 +19,8 @@ package com.vaadin.event;
 import java.lang.reflect.Method;
 
 import com.vaadin.shared.MouseEventDetails;
-import com.vaadin.tools.ReflectTools;
 import com.vaadin.ui.Component;
+import com.vaadin.util.ReflectTools;
 
 /**
  * Interface that serves as a wrapper for mouse related events.
@@ -43,7 +43,7 @@ public interface MouseEvents {
      * @see ClickListener
      * @since 6.2
      */
-    public class ClickEvent extends Component.Event {
+    public static class ClickEvent extends Component.Event {
         public static final int BUTTON_LEFT = MouseEventDetails.BUTTON_LEFT;
         public static final int BUTTON_MIDDLE = MouseEventDetails.BUTTON_MIDDLE;
         public static final int BUTTON_RIGHT = MouseEventDetails.BUTTON_RIGHT;
@@ -202,7 +202,7 @@ public interface MouseEvents {
      * @author Vaadin Ltd.
      * @since 6.2
      */
-    public class DoubleClickEvent extends Component.Event {
+    public static class DoubleClickEvent extends Component.Event {
 
         public DoubleClickEvent(Component source) {
             super(source);

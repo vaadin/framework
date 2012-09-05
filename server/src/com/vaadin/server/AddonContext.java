@@ -24,7 +24,7 @@ import java.util.ServiceLoader;
 
 import com.vaadin.Application;
 import com.vaadin.event.EventRouter;
-import com.vaadin.tools.ReflectTools;
+import com.vaadin.util.ReflectTools;
 
 /**
  * Point of entry for add-ons for integrating into various aspects of the

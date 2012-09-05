@@ -33,7 +33,7 @@ public class ItemStyleGenerator extends TestBase {
 
         tree.setItemStyleGenerator(new Tree.ItemStyleGenerator() {
             @Override
-            public String getStyle(Object itemId) {
+            public String getStyle(Tree source, Object itemId) {
                 // simple return itemId as css style name
                 return itemId.toString();
             }

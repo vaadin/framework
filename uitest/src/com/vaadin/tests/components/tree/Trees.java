@@ -27,7 +27,7 @@ public class Trees extends AbstractSelectTestCase<Tree> implements
     private ItemStyleGenerator rootGreenSecondLevelRed = new com.vaadin.ui.Tree.ItemStyleGenerator() {
 
         @Override
-        public String getStyle(Object itemId) {
+        public String getStyle(Tree source, Object itemId) {
             Hierarchical c = (Container.Hierarchical) getComponent()
                     .getContainerDataSource();
             if (c.isRoot(itemId)) {
@@ -52,7 +52,7 @@ public class Trees extends AbstractSelectTestCase<Tree> implements
     private ItemStyleGenerator evenItemsBold = new com.vaadin.ui.Tree.ItemStyleGenerator() {
 
         @Override
-        public String getStyle(Object itemId) {
+        public String getStyle(Tree source, Object itemId) {
             Hierarchical c = (Container.Hierarchical) getComponent()
                     .getContainerDataSource();
             int idx = 0;

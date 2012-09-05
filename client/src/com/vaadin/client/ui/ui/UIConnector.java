@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.ui.UI;
+package com.vaadin.client.ui.ui;
 
 import java.util.ArrayList;
 import java.util.Iterator;

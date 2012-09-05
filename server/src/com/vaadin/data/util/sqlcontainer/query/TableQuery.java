@@ -678,7 +678,7 @@ public class TableQuery implements QueryDelegate,
     /**
      * Simple RowIdChangeEvent implementation.
      */
-    public class RowIdChangeEvent extends EventObject implements
+    public static class RowIdChangeEvent extends EventObject implements
             QueryDelegate.RowIdChangeEvent {
         private final RowId oldId;
         private final RowId newId;

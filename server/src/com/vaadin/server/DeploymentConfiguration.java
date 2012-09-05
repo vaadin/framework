@@ -32,14 +32,19 @@ import javax.servlet.ServletContext;
  * @since 7.0
  */
 public interface DeploymentConfiguration extends Serializable {
-
     /**
-     * Gets the base URL of the location of Vaadin's static files.
+     * Return the URL from where static files, e.g. the widgetset and the theme,
+     * are served. In a standard configuration the VAADIN folder inside the
+     * returned folder is what is used for widgetsets and themes.
+     * 
+     * The returned folder is usually the same as the context path and
+     * independent of the application.
      * 
      * @param request
      *            the request for which the location should be determined
      * 
-     * @return a string with the base URL for static files
+     * @return The location of static resources (should contain the VAADIN
+     *         directory). Never ends with a slash (/).
      */
     public String getStaticFileLocation(WrappedRequest request);
 
