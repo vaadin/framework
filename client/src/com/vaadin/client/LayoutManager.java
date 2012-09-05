@@ -282,15 +282,18 @@ public class LayoutManager {
                 for (Element element : listenersToFire) {
                     Collection<ElementResizeListener> listeners = elementResizeListeners
                             .get(element);
-                    ElementResizeListener[] array = listeners
-                            .toArray(new ElementResizeListener[listeners.size()]);
-                    ElementResizeEvent event = new ElementResizeEvent(this,
-                            element);
-                    for (ElementResizeListener listener : array) {
-                        try {
-                            listener.onElementResize(event);
-                        } catch (RuntimeException e) {
-                            VConsole.error(e);
+                    if (listeners != null) {
+                        ElementResizeListener[] array = listeners
+                                .toArray(new ElementResizeListener[listeners
+                                        .size()]);
+                        ElementResizeEvent event = new ElementResizeEvent(this,
+                                element);
+                        for (ElementResizeListener listener : array) {
+                            try {
+                                listener.onElementResize(event);
+                            } catch (RuntimeException e) {
+                                VConsole.error(e);
+                            }
                         }
                     }
                 }
