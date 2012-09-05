@@ -478,8 +478,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                 PortletApplicationContext2 applicationContext = getApplicationContext(request
                         .getPortletSession());
 
-                PortletCommunicationManager applicationManager = applicationContext
-                        .getApplicationManager(application);
+                PortletCommunicationManager applicationManager = (PortletCommunicationManager) applicationContext
+                        .getApplicationManager();
 
                 if (requestType == RequestType.CONNECTOR_RESOURCE) {
                     applicationManager.serveConnectorResource(wrappedRequest,
@@ -805,7 +805,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             throws IOException {
         final PortletSession session = request.getPortletSession();
         if (session != null) {
-            getApplicationContext(session).removeApplication(application);
+            getApplicationContext(session).removeApplication();
         }
         // Do not send any redirects when running inside a portlet.
     }
@@ -863,16 +863,17 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         application.close();
         if (session != null) {
             PortletApplicationContext2 context = getApplicationContext(session);
-            context.removeApplication(application);
+            context.removeApplication();
         }
     }
 
     private Application createApplication(PortletRequest request)
-            throws PortletException, MalformedURLException {
+            throws PortletException {
         Application newApplication = getNewApplication(request);
         final PortletApplicationContext2 context = getApplicationContext(request
                 .getPortletSession());
-        context.addApplication(newApplication, request.getWindowID());
+        context.setApplication(newApplication, new PortletCommunicationManager(
+                newApplication));
         return newApplication;
     }
 
@@ -888,8 +889,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         }
 
         PortletApplicationContext2 context = getApplicationContext(session);
-        Application application = context.getApplicationForWindowId(request
-                .getWindowID());
+        Application application = context.getApplication();
         if (application == null) {
             return null;
         }
@@ -897,7 +897,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             return application;
         }
         // application found but not running
-        context.removeApplication(application);
+        context.removeApplication();
 
         return null;
     }

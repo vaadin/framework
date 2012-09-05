@@ -57,31 +57,11 @@ public class PortletApplicationContext2 extends ApplicationContext {
 
     protected Map<Application, Set<PortletListener>> portletListeners = new HashMap<Application, Set<PortletListener>>();
 
-    protected HashMap<String, Application> portletWindowIdToApplicationMap = new HashMap<String, Application>();
-
     private final Map<String, QName> eventActionDestinationMap = new HashMap<String, QName>();
     private final Map<String, Serializable> eventActionValueMap = new HashMap<String, Serializable>();
 
     private final Map<String, String> sharedParameterActionNameMap = new HashMap<String, String>();
     private final Map<String, String> sharedParameterActionValueMap = new HashMap<String, String>();
-
-    protected PortletCommunicationManager getApplicationManager(
-            Application application) {
-        PortletCommunicationManager mgr = (PortletCommunicationManager) applicationToAjaxAppMgrMap
-                .get(application);
-
-        if (mgr == null) {
-            // Creates a new manager
-            mgr = createPortletCommunicationManager(application);
-            applicationToAjaxAppMgrMap.put(application, mgr);
-        }
-        return mgr;
-    }
-
-    protected PortletCommunicationManager createPortletCommunicationManager(
-            Application application) {
-        return new PortletCommunicationManager(application);
-    }
 
     public static PortletApplicationContext2 getApplicationContext(
             PortletSession session) {
@@ -101,23 +81,6 @@ public class PortletApplicationContext2 extends ApplicationContext {
         }
         cx.setSession(new WrappedPortletSession(session));
         return cx;
-    }
-
-    @Override
-    protected void removeApplication(Application application) {
-        super.removeApplication(application);
-        // values() is backed by map, removes the key-value pair from the map
-        portletWindowIdToApplicationMap.values().remove(application);
-    }
-
-    protected void addApplication(Application application,
-            String portletWindowId) {
-        applications.add(application);
-        portletWindowIdToApplicationMap.put(portletWindowId, application);
-    }
-
-    public Application getApplicationForWindowId(String portletWindowId) {
-        return portletWindowIdToApplicationMap.get(portletWindowId);
     }
 
     public PortletSession getPortletSession() {

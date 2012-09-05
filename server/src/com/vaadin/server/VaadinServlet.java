@@ -31,7 +31,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -322,8 +321,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
              */
             ServletApplicationContext webApplicationContext = getApplicationContext(request
                     .getSession());
-            CommunicationManager applicationManager = webApplicationContext
-                    .getApplicationManager(application, this);
+            CommunicationManager applicationManager = (CommunicationManager) webApplicationContext
+                    .getApplicationManager();
 
             if (requestType == RequestType.CONNECTOR_RESOURCE) {
                 applicationManager.serveConnectorResource(request, response);
@@ -726,7 +725,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
         final ServletApplicationContext context = getApplicationContext(request
                 .getSession());
-        context.addApplication(newApplication);
+        context.setApplication(newApplication,
+                createCommunicationManager(newApplication));
 
         return newApplication;
     }
@@ -1334,30 +1334,19 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
         ServletApplicationContext context = getApplicationContext(session);
 
-        // Gets application list for the session.
-        final Collection<Application> applications = context.getApplications();
+        Application sessionApplication = context.getApplication();
 
-        // Search for the application (using the application URI) from the list
-        for (final Iterator<Application> i = applications.iterator(); i
-                .hasNext();) {
-            final Application sessionApplication = i.next();
-            final String sessionApplicationPath = sessionApplication.getURL()
-                    .getPath();
-            String requestApplicationPath = getApplicationUrl(request)
-                    .getPath();
-
-            if (requestApplicationPath.equals(sessionApplicationPath)) {
-                // Found a running application
-                if (sessionApplication.isRunning()) {
-                    return sessionApplication;
-                }
-                // Application has stopped, so remove it before creating a new
-                // application
-                getApplicationContext(session).removeApplication(
-                        sessionApplication);
-                break;
-            }
+        if (sessionApplication == null) {
+            return null;
         }
+
+        if (sessionApplication.isRunning()) {
+            // Found a running application
+            return sessionApplication;
+        }
+        // Application has stopped, so remove it before creating a new
+        // application
+        getApplicationContext(session).removeApplication();
 
         // Existing application not found
         return null;
@@ -1386,7 +1375,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
         final HttpSession session = request.getSession();
         if (session != null) {
-            getApplicationContext(session).removeApplication(application);
+            getApplicationContext(session).removeApplication();
         }
 
         response.sendRedirect(response.encodeRedirectURL(logoutUrl));
@@ -1439,7 +1428,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         application.close();
         if (session != null) {
             ServletApplicationContext context = getApplicationContext(session);
-            context.removeApplication(application);
+            context.removeApplication();
         }
     }
 

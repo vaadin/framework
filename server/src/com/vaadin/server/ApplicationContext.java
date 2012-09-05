@@ -16,10 +16,6 @@
 package com.vaadin.server;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,11 +39,11 @@ import com.vaadin.Application;
 public abstract class ApplicationContext implements HttpSessionBindingListener,
         Serializable {
 
-    protected final HashSet<Application> applications = new HashSet<Application>();
+    private Application application;
 
     protected WebBrowser browser = new WebBrowser();
 
-    protected HashMap<Application, AbstractCommunicationManager> applicationToAjaxAppMgrMap = new HashMap<Application, AbstractCommunicationManager>();
+    private AbstractCommunicationManager communicationManager;
 
     private long totalSessionTime = 0;
 
@@ -70,22 +66,7 @@ public abstract class ApplicationContext implements HttpSessionBindingListener,
     public void valueUnbound(HttpSessionBindingEvent event) {
         // If we are going to be unbound from the session, the session must be
         // closing
-        try {
-            while (!applications.isEmpty()) {
-                final Application app = applications.iterator().next();
-                app.close();
-                removeApplication(app);
-            }
-        } catch (Exception e) {
-            // This should never happen but is possible with rare
-            // configurations (e.g. robustness tests). If you have one
-            // thread doing HTTP socket write and another thread trying to
-            // remove same application here. Possible if you got e.g. session
-            // lifetime 1 min but socket write may take longer than 1 min.
-            // FIXME: Handle exception
-            getLogger().log(Level.SEVERE,
-                    "Could not remove application, leaking memory.", e);
-        }
+        removeApplication();
     }
 
     /**
@@ -102,19 +83,36 @@ public abstract class ApplicationContext implements HttpSessionBindingListener,
     }
 
     /**
-     * Returns a collection of all the applications in this context.
+     * Returns the applications in this context.
      * 
-     * Each application context contains all active applications for one user.
+     * Each application context contains the application for one user.
      * 
-     * @return A collection containing all the applications in this context.
+     * @return The application of this context, or <code>null</code> if there is
+     *         no application
      */
-    public Collection<Application> getApplications() {
-        return Collections.unmodifiableCollection(applications);
+    public Application getApplication() {
+        return application;
     }
 
-    protected void removeApplication(Application application) {
-        applications.remove(application);
-        applicationToAjaxAppMgrMap.remove(application);
+    public void removeApplication() {
+        if (application == null) {
+            return;
+        }
+        try {
+            application.close();
+        } catch (Exception e) {
+            // This should never happen but is possible with rare
+            // configurations (e.g. robustness tests). If you have one
+            // thread doing HTTP socket write and another thread trying to
+            // remove same application here. Possible if you got e.g. session
+            // lifetime 1 min but socket write may take longer than 1 min.
+            // FIXME: Handle exception
+            getLogger().log(Level.SEVERE,
+                    "Could not close application, leaking memory.", e);
+        } finally {
+            application = null;
+            communicationManager = null;
+        }
     }
 
     /**
@@ -166,6 +164,19 @@ public abstract class ApplicationContext implements HttpSessionBindingListener,
      */
     public void setSession(WrappedSession session) {
         this.session = session;
+    }
+
+    public AbstractCommunicationManager getApplicationManager() {
+        return communicationManager;
+    }
+
+    public void setApplication(Application application,
+            AbstractCommunicationManager communicationManager) {
+        if (this.application != null) {
+            removeApplication();
+        }
+        this.application = application;
+        this.communicationManager = communicationManager;
     }
 
 }

@@ -1,6 +1,5 @@
 package com.vaadin.tests.application;
 
-import com.vaadin.Application;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
@@ -15,9 +14,9 @@ public class ApplicationCloseTest extends TestBase {
     protected void setup() {
         Label applications = new Label("Applications in session: <br/>",
                 ContentMode.XHTML);
-        for (Application a : getContext().getApplications()) {
-            applications.setValue(applications.getValue() + "App: " + a
-                    + "<br/>");
+        if (getContext().getApplication() != null) {
+            applications.setValue(applications.getValue() + "App: "
+                    + getContext().getApplication() + "<br/>");
         }
         applications.setValue(applications.getValue() + "<br/><br/>");
 

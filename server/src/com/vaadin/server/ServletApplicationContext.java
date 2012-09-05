@@ -23,7 +23,6 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
-import com.vaadin.Application;
 import com.vaadin.util.CurrentInstance;
 
 /**
@@ -124,31 +123,5 @@ public class ServletApplicationContext extends ApplicationContext {
         }
         cx.setSession(new WrappedHttpSession(session));
         return cx;
-    }
-
-    protected void addApplication(Application application) {
-        applications.add(application);
-    }
-
-    /**
-     * Gets communication manager for an application.
-     * 
-     * If this application has not been running before, a new manager is
-     * created.
-     * 
-     * @param application
-     * @return CommunicationManager
-     */
-    public CommunicationManager getApplicationManager(Application application,
-            VaadinServlet servlet) {
-        CommunicationManager mgr = (CommunicationManager) applicationToAjaxAppMgrMap
-                .get(application);
-
-        if (mgr == null) {
-            // Creates new manager
-            mgr = servlet.createCommunicationManager(application);
-            applicationToAjaxAppMgrMap.put(application, mgr);
-        }
-        return mgr;
     }
 }
