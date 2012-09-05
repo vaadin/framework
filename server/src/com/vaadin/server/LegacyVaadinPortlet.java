@@ -46,9 +46,10 @@ public class LegacyVaadinPortlet extends VaadinPortlet {
     }
 
     @Override
-    protected Application createApplication(PortletRequest request)
-            throws PortletException {
-        Application application = super.createApplication(request);
+    protected PortletApplicationContext2 createApplication(
+            PortletRequest request) throws PortletException {
+        PortletApplicationContext2 application = super
+                .createApplication(request);
 
         // Must set current before running init()
         Application.setCurrent(application);

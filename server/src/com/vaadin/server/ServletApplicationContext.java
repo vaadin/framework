@@ -23,6 +23,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
+import com.vaadin.Application;
 import com.vaadin.util.CurrentInstance;
 
 /**
@@ -35,17 +36,9 @@ import com.vaadin.util.CurrentInstance;
  * @since 3.1
  */
 @SuppressWarnings("serial")
-public class ServletApplicationContext extends ApplicationContext {
+public class ServletApplicationContext extends Application {
 
     private transient boolean reinitializingSession = false;
-
-    /**
-     * Creates a new Web Application Context.
-     * 
-     */
-    protected ServletApplicationContext() {
-
-    }
 
     @Override
     public void valueUnbound(HttpSessionBindingEvent event) {
@@ -62,7 +55,6 @@ public class ServletApplicationContext extends ApplicationContext {
      * contents. The purpose of this is to introduce a new session key in order
      * to avoid session fixation attacks.
      */
-    @SuppressWarnings("unchecked")
     public void reinitializeSession() {
 
         HttpSession oldSession = getHttpSession();
@@ -93,7 +85,7 @@ public class ServletApplicationContext extends ApplicationContext {
         }
 
         // Update the "current session" variable
-        setSession(new WrappedHttpSession(newSession));
+        storeInSession(new WrappedHttpSession(newSession));
     }
 
     /**
@@ -106,22 +98,4 @@ public class ServletApplicationContext extends ApplicationContext {
         return ((WrappedHttpSession) session).getHttpSession();
     }
 
-    /**
-     * Gets the application context for an HttpSession.
-     * 
-     * @param session
-     *            the HTTP session.
-     * @return the application context for HttpSession.
-     */
-    static public ServletApplicationContext getApplicationContext(
-            HttpSession session) {
-        ServletApplicationContext cx = (ServletApplicationContext) session
-                .getAttribute(ServletApplicationContext.class.getName());
-        if (cx == null) {
-            cx = new ServletApplicationContext();
-            session.setAttribute(ServletApplicationContext.class.getName(), cx);
-        }
-        cx.setSession(new WrappedHttpSession(session));
-        return cx;
-    }
 }

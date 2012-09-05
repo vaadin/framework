@@ -14,9 +14,9 @@ public class ApplicationCloseTest extends TestBase {
     protected void setup() {
         Label applications = new Label("Applications in session: <br/>",
                 ContentMode.XHTML);
-        if (getContext().getApplication() != null) {
+        if (getContext() != null) {
             applications.setValue(applications.getValue() + "App: "
-                    + getContext().getApplication() + "<br/>");
+                    + getContext() + "<br/>");
         }
         applications.setValue(applications.getValue() + "<br/><br/>");
 

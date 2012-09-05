@@ -34,6 +34,7 @@ import com.vaadin.LegacyApplication;
 import com.vaadin.server.AbstractUIProvider;
 import com.vaadin.server.ApplicationConfiguration;
 import com.vaadin.server.LegacyVaadinServlet;
+import com.vaadin.server.ServletApplicationContext;
 import com.vaadin.server.UIProvider;
 import com.vaadin.server.WrappedHttpServletRequest;
 import com.vaadin.server.WrappedRequest;
@@ -112,12 +113,12 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     }
 
     @Override
-    protected Application createApplication(HttpServletRequest request)
-            throws ServletException {
+    protected ServletApplicationContext createApplication(
+            HttpServletRequest request) throws ServletException {
         try {
             final Class<?> classToRun = getClassToRun();
             if (UI.class.isAssignableFrom(classToRun)) {
-                Application application = new Application();
+                ServletApplicationContext application = new ServletApplicationContext();
                 application.addUIProvider(new AbstractUIProvider() {
 
                     @Override
@@ -130,7 +131,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
             } else if (LegacyApplication.class.isAssignableFrom(classToRun)) {
                 return super.createApplication(request);
             } else if (UIProvider.class.isAssignableFrom(classToRun)) {
-                Application application = new Application();
+                ServletApplicationContext application = new ServletApplicationContext();
                 application
                         .addUIProvider((UIProvider) classToRun.newInstance());
                 return application;

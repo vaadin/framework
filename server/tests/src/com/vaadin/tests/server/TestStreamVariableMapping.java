@@ -66,12 +66,7 @@ public class TestStreamVariableMapping extends TestCase {
     }
 
     private CommunicationManager createCommunicationManager() {
-        return new CommunicationManager(new Application() {
-            @Override
-            public void init() {
-                // TODO Auto-generated method stub
-            }
-        });
+        return new CommunicationManager(new Application());
     }
 
 }

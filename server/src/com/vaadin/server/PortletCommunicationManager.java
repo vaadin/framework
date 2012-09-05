@@ -158,7 +158,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
     protected InputStream getThemeResourceAsStream(UI uI, String themeName,
             String resource) {
         PortletApplicationContext2 context = (PortletApplicationContext2) uI
-                .getApplication().getContext();
+                .getApplication();
         PortletContext portletContext = context.getPortletSession()
                 .getPortletContext();
         return portletContext.getResourceAsStream("/"

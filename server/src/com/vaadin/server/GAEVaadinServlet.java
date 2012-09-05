@@ -47,6 +47,7 @@ import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.apphosting.api.DeadlineExceededException;
+import com.vaadin.Application;
 
 /**
  * ApplicationServlet to be used when deploying to Google App Engine, in
@@ -241,7 +242,7 @@ public class GAEVaadinServlet extends VaadinServlet {
             }
 
             // de-serialize or create application context, store in session
-            ApplicationContext ctx = getApplicationContext(request, memcache);
+            Application ctx = getApplicationContext(request, memcache);
 
             super.service(request, response);
 
@@ -291,8 +292,8 @@ public class GAEVaadinServlet extends VaadinServlet {
         }
     }
 
-    protected ApplicationContext getApplicationContext(
-            HttpServletRequest request, MemcacheService memcache) {
+    protected Application getApplicationContext(HttpServletRequest request,
+            MemcacheService memcache) {
         HttpSession session = request.getSession();
         String id = AC_BASE + session.getId();
         byte[] serializedAC = (byte[]) memcache.get(id);
@@ -320,10 +321,9 @@ public class GAEVaadinServlet extends VaadinServlet {
             ObjectInputStream ois;
             try {
                 ois = new ObjectInputStream(bais);
-                ApplicationContext applicationContext = (ApplicationContext) ois
-                        .readObject();
-                session.setAttribute(ServletApplicationContext.class.getName(),
-                        applicationContext);
+                Application applicationContext = (Application) ois.readObject();
+                applicationContext.storeInSession(new WrappedHttpSession(
+                        session));
             } catch (IOException e) {
                 getLogger().log(
                         Level.WARNING,

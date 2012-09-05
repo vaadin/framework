@@ -89,9 +89,7 @@ public class WrappedHttpServletRequest extends HttpServletRequestWrapper
 
             @Override
             public WebBrowser getWebBrowser() {
-                ApplicationContext context = Application.getCurrent()
-                        .getContext();
-                return context.getBrowser();
+                return Application.getCurrent().getBrowser();
             }
         };
     }

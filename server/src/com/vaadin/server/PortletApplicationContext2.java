@@ -41,6 +41,7 @@ import javax.portlet.StateAwareResponse;
 import javax.servlet.http.HttpSessionBindingListener;
 import javax.xml.namespace.QName;
 
+import com.vaadin.Application;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
@@ -53,7 +54,7 @@ import com.vaadin.util.CurrentInstance;
  * @author peholmst
  */
 @SuppressWarnings("serial")
-public class PortletApplicationContext2 extends ApplicationContext {
+public class PortletApplicationContext2 extends Application {
 
     private final Set<PortletListener> portletListeners = new LinkedHashSet<PortletListener>();
 
@@ -62,26 +63,6 @@ public class PortletApplicationContext2 extends ApplicationContext {
 
     private final Map<String, String> sharedParameterActionNameMap = new HashMap<String, String>();
     private final Map<String, String> sharedParameterActionValueMap = new HashMap<String, String>();
-
-    public static PortletApplicationContext2 getApplicationContext(
-            PortletSession session) {
-        Object cxattr = session.getAttribute(PortletApplicationContext2.class
-                .getName());
-        PortletApplicationContext2 cx = null;
-        // can be false also e.g. if old context comes from another
-        // classloader when using
-        // <private-session-attributes>false</private-session-attributes>
-        // and redeploying the portlet - see #7461
-        if (cxattr instanceof PortletApplicationContext2) {
-            cx = (PortletApplicationContext2) cxattr;
-        }
-        if (cx == null) {
-            cx = new PortletApplicationContext2();
-            session.setAttribute(PortletApplicationContext2.class.getName(), cx);
-        }
-        cx.setSession(new WrappedPortletSession(session));
-        return cx;
-    }
 
     public PortletSession getPortletSession() {
         WrappedSession wrappedSession = getSession();

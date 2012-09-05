@@ -26,27 +26,25 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.vaadin.server.AbstractUIProvider;
-import com.vaadin.server.ApplicationContext;
-import com.vaadin.server.WrappedRequest;
 import com.vaadin.server.Terminal.ErrorEvent;
 import com.vaadin.server.Terminal.ErrorListener;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.UI.LegacyWindow;
 
 /**
- * A special application designed to help migrating applications from Vaadin
- * 6 to Vaadin 7. The legacy application supports setting a main window,
- * adding additional browser level windows and defining the theme for the
- * entire application.
+ * A special application designed to help migrating applications from Vaadin 6
+ * to Vaadin 7. The legacy application supports setting a main window, adding
+ * additional browser level windows and defining the theme for the entire
+ * application.
  * 
- * @deprecated This class is only intended to ease migration and should not
- *             be used for new projects.
+ * @deprecated This class is only intended to ease migration and should not be
+ *             used for new projects.
  * 
  * @since 7.0
  */
 @Deprecated
-public abstract class LegacyApplication extends AbstractUIProvider
-        implements ErrorListener {
+public abstract class LegacyApplication extends AbstractUIProvider implements
+        ErrorListener {
     /**
      * Ignore initial / and then get everything up to the next /
      */
@@ -59,16 +57,15 @@ public abstract class LegacyApplication extends AbstractUIProvider
     private Map<String, UI.LegacyWindow> legacyUINames = new HashMap<String, UI.LegacyWindow>();
 
     /**
-     * Sets the main window of this application. Setting window as a main
-     * window of this application also adds the window to this application.
+     * Sets the main window of this application. Setting window as a main window
+     * of this application also adds the window to this application.
      * 
      * @param mainWindow
      *            the UI to set as the default window
      */
     public void setMainWindow(UI.LegacyWindow mainWindow) {
         if (this.mainWindow != null) {
-            throw new IllegalStateException(
-                    "mainWindow has already been set");
+            throw new IllegalStateException("mainWindow has already been set");
         }
         if (mainWindow.getApplication() == null) {
             mainWindow.setApplication(Application.getCurrent());
@@ -102,8 +99,8 @@ public abstract class LegacyApplication extends AbstractUIProvider
     }
 
     @Override
-    public UI createInstance(Application application,
-            Class<? extends UI> type, WrappedRequest request) {
+    public UI createInstance(Application application, Class<? extends UI> type,
+            WrappedRequest request) {
         return getUIInstance(request);
     }
 
@@ -159,9 +156,9 @@ public abstract class LegacyApplication extends AbstractUIProvider
     }
 
     /**
-     * This implementation simulates the way of finding a window for a
-     * request by extracting a window name from the requested path and
-     * passes that name to {@link #getWindow(String)}.
+     * This implementation simulates the way of finding a window for a request
+     * by extracting a window name from the requested path and passes that name
+     * to {@link #getWindow(String)}.
      * <p>
      * {@inheritDoc}
      */
@@ -196,9 +193,9 @@ public abstract class LegacyApplication extends AbstractUIProvider
 
     /**
      * Gets the application's theme. The application's theme is the default
-     * theme used by all the uIs for which a theme is not explicitly
-     * defined. If the application theme is not explicitly set,
-     * <code>null</code> is returned.
+     * theme used by all the uIs for which a theme is not explicitly defined. If
+     * the application theme is not explicitly set, <code>null</code> is
+     * returned.
      * 
      * @return the name of the application's theme.
      */
@@ -208,15 +205,14 @@ public abstract class LegacyApplication extends AbstractUIProvider
 
     /**
      * <p>
-     * Gets a UI by name. Returns <code>null</code> if the application is
-     * not running or it does not contain a window corresponding to the
-     * name.
+     * Gets a UI by name. Returns <code>null</code> if the application is not
+     * running or it does not contain a window corresponding to the name.
      * </p>
      * 
      * @param name
      *            the name of the requested window
-     * @return a UI corresponding to the name, or <code>null</code> to use
-     *         the default window
+     * @return a UI corresponding to the name, or <code>null</code> to use the
+     *         default window
      */
     public UI.LegacyWindow getWindow(String name) {
         return legacyUINames.get(name);
@@ -228,9 +224,9 @@ public abstract class LegacyApplication extends AbstractUIProvider
     private int namelessUIIndex = 0;
 
     /**
-     * Adds a new browser level window to this application. Please note that
-     * UI doesn't have a name that is used in the URL - to add a named
-     * window you should instead use {@link #addWindow(UI, String)}
+     * Adds a new browser level window to this application. Please note that UI
+     * doesn't have a name that is used in the URL - to add a named window you
+     * should instead use {@link #addWindow(UI, String)}
      * 
      * @param uI
      *            the UI window to add to the application
@@ -249,21 +245,20 @@ public abstract class LegacyApplication extends AbstractUIProvider
     }
 
     /**
-     * Removes the specified window from the application. This also removes
-     * all name mappings for the window (see {@link #addWindow(UI, String)
-     * and #getWindowName(UI)}.
+     * Removes the specified window from the application. This also removes all
+     * name mappings for the window (see {@link #addWindow(UI, String) and
+     * #getWindowName(UI)}.
      * 
      * <p>
-     * Note that removing window from the application does not close the
-     * browser window - the window is only removed from the server-side.
+     * Note that removing window from the application does not close the browser
+     * window - the window is only removed from the server-side.
      * </p>
      * 
      * @param uI
      *            the UI to remove
      */
     public void removeWindow(UI.LegacyWindow uI) {
-        for (Entry<String, UI.LegacyWindow> entry : legacyUINames
-                .entrySet()) {
+        for (Entry<String, UI.LegacyWindow> entry : legacyUINames.entrySet()) {
             if (entry.getValue() == uI) {
                 legacyUINames.remove(entry.getKey());
             }
@@ -288,8 +283,8 @@ public abstract class LegacyApplication extends AbstractUIProvider
         Application.getCurrent().terminalError(event);
     }
 
-    public ApplicationContext getContext() {
-        return Application.getCurrent().getContext();
+    public Application getContext() {
+        return Application.getCurrent();
     }
 
     protected void close() {

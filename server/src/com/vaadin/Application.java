@@ -31,17 +31,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.servlet.http.HttpSessionBindingEvent;
+import javax.servlet.http.HttpSessionBindingListener;
 
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterFactory;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
 import com.vaadin.event.EventRouter;
+import com.vaadin.server.AbstractCommunicationManager;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.ApplicationConfiguration;
-import com.vaadin.server.ApplicationContext;
 import com.vaadin.server.BootstrapFragmentResponse;
 import com.vaadin.server.BootstrapListener;
 import com.vaadin.server.BootstrapPageResponse;
@@ -52,14 +54,15 @@ import com.vaadin.server.CombinedRequest;
 import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.GlobalResourceHandler;
 import com.vaadin.server.RequestHandler;
-import com.vaadin.server.ServletApplicationContext;
 import com.vaadin.server.Terminal;
 import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VariableOwner;
+import com.vaadin.server.WebBrowser;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.server.WrappedRequest.BrowserDetails;
 import com.vaadin.server.WrappedResponse;
+import com.vaadin.server.WrappedSession;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
@@ -121,7 +124,8 @@ import com.vaadin.util.ReflectTools;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class Application implements Terminal.ErrorListener, Serializable {
+public class Application implements Terminal.ErrorListener,
+        HttpSessionBindingListener, Serializable {
 
     /**
      * The name of the parameter that is by default used in e.g. web.xml to
@@ -147,22 +151,22 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
         private final ApplicationConfiguration configuration;
 
-        private final ApplicationContext context;
+        private final AbstractCommunicationManager communicationManager;
 
         /**
          * @param applicationUrl
          *            the URL the application should respond to.
          * @param configuration
          *            the application configuration for the application.
-         * @param context
-         *            the context application will be running in.
+         * @param communicationManager
+         *            the communication manager for the application.
          */
         public ApplicationStartEvent(URL applicationUrl,
                 ApplicationConfiguration configuration,
-                ApplicationContext context) {
+                AbstractCommunicationManager communicationManager) {
             this.applicationUrl = applicationUrl;
             this.configuration = configuration;
-            this.context = context;
+            this.communicationManager = communicationManager;
         }
 
         /**
@@ -187,24 +191,19 @@ public class Application implements Terminal.ErrorListener, Serializable {
         }
 
         /**
-         * Gets the context application will be running in.
+         * Gets the communication manager for this application.
          * 
-         * @return the context application will be running in.
+         * @return the communication manager for this application.
          * 
-         * @see Application#getContext()
+         * @see Application#getCommunicationManager
          */
-        public ApplicationContext getContext() {
-            return context;
+        public AbstractCommunicationManager getCommunicationManager() {
+            return communicationManager;
         }
     }
 
     private final static Logger logger = Logger.getLogger(Application.class
             .getName());
-
-    /**
-     * Application context the application is running in.
-     */
-    private ApplicationContext context;
 
     /**
      * Configuration for the application.
@@ -257,6 +256,87 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
     private GlobalResourceHandler globalResourceHandler;
 
+    protected WebBrowser browser = new WebBrowser();
+
+    private AbstractCommunicationManager communicationManager;
+
+    private long totalSessionTime = 0;
+
+    private long lastRequestTime = -1;
+
+    private transient WrappedSession session;
+
+    /**
+     * @see javax.servlet.http.HttpSessionBindingListener#valueBound(HttpSessionBindingEvent)
+     */
+    @Override
+    public void valueBound(HttpSessionBindingEvent arg0) {
+        // We are not interested in bindings
+    }
+
+    /**
+     * @see javax.servlet.http.HttpSessionBindingListener#valueUnbound(HttpSessionBindingEvent)
+     */
+    @Override
+    public void valueUnbound(HttpSessionBindingEvent event) {
+        // If we are going to be unbound from the session, the session must be
+        // closing
+        close();
+    }
+
+    /**
+     * Get the web browser associated with this application context.
+     * 
+     * Because application context is related to the http session and server
+     * maintains one session per browser-instance, each context has exactly one
+     * web browser associated with it.
+     * 
+     * @return
+     */
+    public WebBrowser getBrowser() {
+        return browser;
+    }
+
+    /**
+     * @return The total time spent servicing requests in this session.
+     */
+    public long getTotalSessionTime() {
+        return totalSessionTime;
+    }
+
+    /**
+     * Sets the time spent servicing the last request in the session and updates
+     * the total time spent servicing requests in this session.
+     * 
+     * @param time
+     *            the time spent in the last request.
+     */
+    public void setLastRequestTime(long time) {
+        lastRequestTime = time;
+        totalSessionTime += time;
+    }
+
+    /**
+     * @return the time spent servicing the last request in this session.
+     */
+    public long getLastRequestTime() {
+        return lastRequestTime;
+    }
+
+    /**
+     * Gets the session to which this application context is currently
+     * associated.
+     * 
+     * @return the wrapped session for this context
+     */
+    public WrappedSession getSession() {
+        return session;
+    }
+
+    public AbstractCommunicationManager getApplicationManager() {
+        return communicationManager;
+    }
+
     /**
      * Gets the URL of the application.
      * 
@@ -291,6 +371,28 @@ public class Application implements Terminal.ErrorListener, Serializable {
         }
     }
 
+    public static Application getForSession(WrappedSession session) {
+        Object attribute = session.getAttribute(Application.class.getName());
+        if (attribute instanceof Application) {
+            Application application = (Application) attribute;
+            application.session = session;
+            return application;
+        }
+
+        return null;
+    }
+
+    public void removeFromSession() {
+        assert (getForSession(session) == this);
+
+        session.setAttribute(Application.class.getName(), null);
+    }
+
+    public void storeInSession(WrappedSession session) {
+        session.setAttribute(Application.class.getName(), this);
+        this.session = session;
+    }
+
     /**
      * Starts the application on the given URL.
      * 
@@ -316,8 +418,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
     public void start(ApplicationStartEvent event) {
         applicationUrl = event.getApplicationUrl();
         configuration = event.getConfiguration();
-        context = event.getContext();
-        init();
+        communicationManager = event.getCommunicationManager();
         applicationIsRunning = true;
     }
 
@@ -325,9 +426,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * Tests if the application is running or if it has been finished.
      * 
      * <p>
-     * Application starts running when its
-     * {@link #start(URL, Properties, ApplicationContext)} method has been
-     * called and stops when the {@link #close()} is called.
+     * Application starts running when its {@link #start(ApplicationStartEvent)}
+     * method has been called and stops when the {@link #close()} is called.
      * </p>
      * 
      * @return <code>true</code> if the application is running,
@@ -335,17 +435,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
      */
     public boolean isRunning() {
         return applicationIsRunning;
-    }
-
-    /**
-     * <p>
-     * Main initializer of the application. The <code>init</code> method is
-     * called by the framework when the application is started, and it should
-     * perform whatever initialization operations the application needs.
-     * </p>
-     */
-    public void init() {
-        // Default implementation does nothing
     }
 
     /**
@@ -572,28 +661,6 @@ public class Application implements Terminal.ErrorListener, Serializable {
 
         // also print the error on console
         getLogger().log(Level.SEVERE, "Terminal error:", t);
-    }
-
-    /**
-     * Gets the application context.
-     * <p>
-     * The application context is the environment where the application is
-     * running in. The actual implementation class of may contains quite a lot
-     * more functionality than defined in the {@link ApplicationContext}
-     * interface.
-     * </p>
-     * <p>
-     * By default, when you are deploying your application to a servlet
-     * container, the implementation class is {@link ServletApplicationContext}
-     * - you can safely cast to this class and use the methods from there. When
-     * you are deploying your application as a portlet, context implementation
-     * is {@link PortletApplicationContext}.
-     * </p>
-     * 
-     * @return the application context.
-     */
-    public ApplicationContext getContext() {
-        return context;
     }
 
     /**
@@ -1871,8 +1938,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
      *         timeout never occurs.
      */
     protected int getUidlRequestTimeout() {
-        return configuration.isIdleUICleanupEnabled() ? getContext()
-                .getSession().getMaxInactiveInterval() : -1;
+        return configuration.isIdleUICleanupEnabled() ? getSession()
+                .getMaxInactiveInterval() : -1;
     }
 
     /**

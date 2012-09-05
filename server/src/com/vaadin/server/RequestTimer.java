@@ -18,6 +18,7 @@ package com.vaadin.server;
 
 import java.io.Serializable;
 
+import com.vaadin.Application;
 
 /**
  * Times the handling of requests and stores the information as an attribute in
@@ -44,7 +45,7 @@ public class RequestTimer implements Serializable {
      * 
      * @param context
      */
-    public void stop(ApplicationContext context) {
+    public void stop(Application context) {
         // Measure and store the total handling time. This data can be
         // used in TestBench 3 tests.
         long time = (System.nanoTime() - requestStartTime) / 1000000;

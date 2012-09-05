@@ -474,8 +474,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                  * Get or create an application context and an application
                  * manager for the session
                  */
-                PortletApplicationContext2 applicationContext = getApplicationContext(request
-                        .getPortletSession());
+                PortletApplicationContext2 applicationContext = (PortletApplicationContext2) application;
 
                 PortletCommunicationManager applicationManager = (PortletCommunicationManager) applicationContext
                         .getApplicationManager();
@@ -494,8 +493,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                 applicationContext.getBrowser().updateRequestDetails(
                         wrappedRequest);
 
-                /* Start the newly created application */
-                startApplication(request, application, applicationContext);
                 applicationRunning = true;
 
                 /* Notify listeners */
@@ -596,9 +593,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
                 CurrentInstance.clearAll();
 
-                PortletSession session = request.getPortletSession(false);
-                if (session != null) {
-                    requestTimer.stop(getApplicationContext(session));
+                if (application != null) {
+                    requestTimer.stop(application);
                 }
             }
         }
@@ -764,27 +760,10 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                 && (request.getParameter(URL_PARAMETER_REPAINT_ALL).equals("1"));
     }
 
-    private void startApplication(PortletRequest request,
-            Application application, PortletApplicationContext2 context)
-            throws PortletException, MalformedURLException {
-        if (!application.isRunning()) {
-            Locale locale = request.getLocale();
-            application.setLocale(locale);
-            // No application URL when running inside a portlet
-            application.start(new ApplicationStartEvent(null,
-                    getDeploymentConfiguration().getApplicationConfiguration(),
-                    context));
-            addonContext.fireApplicationStarted(application);
-        }
-    }
-
     private void endApplication(PortletRequest request,
             PortletResponse response, Application application)
             throws IOException {
-        final PortletSession session = request.getPortletSession();
-        if (session != null) {
-            getApplicationContext(session).removeApplication();
-        }
+        application.removeFromSession();
         // Do not send any redirects when running inside a portlet.
     }
 
@@ -839,10 +818,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         }
 
         application.close();
-        if (session != null) {
-            PortletApplicationContext2 context = getApplicationContext(session);
-            context.removeApplication();
-        }
+        application.removeFromSession();
     }
 
     private Application createAndRegisterApplication(PortletRequest request)
@@ -855,16 +831,23 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             throw new PortletException(e);
         }
 
-        final PortletApplicationContext2 context = getApplicationContext(request
-                .getPortletSession());
-        context.setApplication(newApplication, new PortletCommunicationManager(
-                newApplication));
+        newApplication.storeInSession(new WrappedPortletSession(request
+                .getPortletSession()));
+
+        Locale locale = request.getLocale();
+        newApplication.setLocale(locale);
+        // No application URL when running inside a portlet
+        newApplication.start(new ApplicationStartEvent(null,
+                getDeploymentConfiguration().getApplicationConfiguration(),
+                new PortletCommunicationManager(newApplication)));
+        addonContext.fireApplicationStarted(newApplication);
+
         return newApplication;
     }
 
-    protected Application createApplication(PortletRequest request)
-            throws PortletException {
-        Application application = new Application();
+    protected PortletApplicationContext2 createApplication(
+            PortletRequest request) throws PortletException {
+        PortletApplicationContext2 application = new PortletApplicationContext2();
 
         try {
             ServletPortletHelper.initDefaultUIProvider(application,
@@ -887,18 +870,17 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             throw new SessionExpiredException();
         }
 
-        PortletApplicationContext2 context = getApplicationContext(session);
-        Application application = context.getApplication();
+        Application application = Application
+                .getForSession(new WrappedPortletSession(session));
         if (application == null) {
             return null;
         }
-        if (application.isRunning()) {
-            return application;
+        if (!application.isRunning()) {
+            application.removeFromSession();
+            return null;
         }
-        // application found but not running
-        context.removeApplication();
 
-        return null;
+        return application;
     }
 
     private void handleServiceException(WrappedPortletRequest request,
@@ -1001,21 +983,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                 + "\"message\" : " + message + "," + "\"url\" : " + url
                 + "}}, \"resources\": {}, \"locales\":[]}]");
         outWriter.close();
-    }
-
-    /**
-     * 
-     * Gets the application context for a PortletSession. If no context is
-     * currently stored in a session a new context is created and stored in the
-     * session.
-     * 
-     * @param portletSession
-     *            the portlet session.
-     * @return the application context for the session.
-     */
-    protected PortletApplicationContext2 getApplicationContext(
-            PortletSession portletSession) {
-        return PortletApplicationContext2.getApplicationContext(portletSession);
     }
 
     private static final Logger getLogger() {
