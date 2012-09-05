@@ -537,6 +537,11 @@ public class ComponentLocator {
                     String[] nextSplit = nextPart.split("\\[", 2);
                     String nextWidgetClassName = nextSplit[0];
 
+                    if ("VVerticalLayout".equals(nextWidgetClassName)
+                            || "VHorizontalLayout".equals(nextWidgetClassName)) {
+                        nextWidgetClassName = "VBoxLayout";
+                    }
+
                     // Find the n:th child and count the number of children with
                     // the same type before it
                     int nextIndex = 0;
