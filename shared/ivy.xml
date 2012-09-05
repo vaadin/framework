@@ -10,16 +10,18 @@
     <configurations>
         <conf name="build" />
         <conf name="build-provided" />
-        <conf name="ide" visibility="private"/>
+        <conf name="ide" visibility="private" />
         <conf name="tests" />
     </configurations>
     <publications>
-        <artifact type="jar" ext="jar"/>
-<artifact type="source" ext="jar" m:classifier="sources" />
-<artifact type="javadoc" ext="jar" m:classifier="javadoc" />
-                <artifact type="pom" ext="pom"/>
-                    </publications>
+        <artifact type="jar" ext="jar" />
+        <artifact type="source" ext="jar" m:classifier="sources" />
+        <artifact type="javadoc" ext="jar" m:classifier="javadoc" />
+        <artifact type="pom" ext="pom" />
+    </publications>
     <dependencies>
+        <dependency org="org.json" name="json" rev="20080701"
+            conf="build,ide->default" />
     </dependencies>
 
 </ivy-module>

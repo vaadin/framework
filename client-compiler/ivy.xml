@@ -27,6 +27,8 @@
             rev="${vaadin.version}" conf="build" />
         <dependency org="commons-collections" name="commons-collections"
             rev="3.1" conf="build,ide -> default" />
+        <dependency org="ant" name="ant"
+            rev="1.6.5" conf="build,ide -> default" />
 
     </dependencies>
 
