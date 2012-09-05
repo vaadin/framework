@@ -31,8 +31,11 @@ import java.util.List;
  * 
  * @author Vaadin Ltd.
  * @since 3.0
+ * @deprecated The EventRouter will be replaced by an EventRouter which does not
+ *             use reflection in Vaadin 7.0.0. See #8640.
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class EventRouter implements MethodEventSource {
 
     /**
