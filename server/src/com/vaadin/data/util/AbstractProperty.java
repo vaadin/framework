@@ -133,6 +133,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
      * @deprecated Since 7.0, replaced by
      *             {@link #addReadOnlyStatusChangeListener(com.vaadin.data.Property.ReadOnlyStatusChangeListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(Property.ReadOnlyStatusChangeListener listener) {
         addReadOnlyStatusChangeListener(listener);
@@ -156,6 +157,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
      * @deprecated Since 7.0, replaced by
      *             {@link #removeReadOnlyStatusChangeListener(com.vaadin.data.Property.ReadOnlyStatusChangeListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(Property.ReadOnlyStatusChangeListener listener) {
         removeReadOnlyStatusChangeListener(listener);
@@ -218,6 +220,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
      * @deprecated Since 7.0, replaced by
      *             {@link #addValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(ValueChangeListener listener) {
         addValueChangeListener(listener);
@@ -235,6 +238,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
      * @deprecated Since 7.0, replaced by
      *             {@link #removeValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(ValueChangeListener listener) {
         removeValueChangeListener(listener);

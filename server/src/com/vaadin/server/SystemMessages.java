@@ -18,15 +18,12 @@ package com.vaadin.server;
 
 import java.io.Serializable;
 
-
-
 /**
- * Contains the system messages used to notify the user about various
- * critical situations that can occur.
+ * Contains the system messages used to notify the user about various critical
+ * situations that can occur.
  * <p>
- * Customize by overriding the static
- * {@link VaadinSession#getSystemMessages()} and returning
- * {@link CustomizedSystemMessages}.
+ * Customize by overriding the static {@link VaadinSession#getSystemMessages()}
+ * and returning {@link CustomizedSystemMessages}.
  * </p>
  * <p>
  * The defaults defined in this class are:
@@ -49,16 +46,15 @@ import java.io.Serializable;
  * <li><b>outOfSyncURL</b> = null</li>
  * <li><b>outOfSyncNotificationEnabled</b> = true</li>
  * <li><b>outOfSyncCaption</b> = "Out of sync"</li>
- * <li><b>outOfSyncMessage</b> = "Something has caused us to be out of sync
- * with the server.<br/>
+ * <li><b>outOfSyncMessage</b> = "Something has caused us to be out of sync with
+ * the server.<br/>
  * Take note of any unsaved data, and <u>click here</u> to re-sync."</li>
  * <li><b>cookiesDisabledURL</b> = null</li>
  * <li><b>cookiesDisabledNotificationEnabled</b> = true</li>
  * <li><b>cookiesDisabledCaption</b> = "Cookies disabled"</li>
  * <li><b>cookiesDisabledMessage</b> = "This application requires cookies to
  * function.<br/>
- * Please enable cookies in your browser and <u>click here</u> to try again.
- * </li>
+ * Please enable cookies in your browser and <u>click here</u> to try again.</li>
  * </ul>
  * </p>
  * 
@@ -134,8 +130,7 @@ public class SystemMessages implements Serializable {
     }
 
     /**
-     * @return null to reload the application after communication error
-     *         message.
+     * @return null to reload the application after communication error message.
      */
     public String getCommunicationErrorURL() {
         return communicationErrorURL;
@@ -198,8 +193,8 @@ public class SystemMessages implements Serializable {
     }
 
     /**
-     * @return null to reload the current URL after internal error message
-     *         has been shown.
+     * @return null to reload the current URL after internal error message has
+     *         been shown.
      */
     public String getInternalErrorURL() {
         return internalErrorURL;
@@ -216,8 +211,7 @@ public class SystemMessages implements Serializable {
      * @return "Internal error"
      */
     public String getInternalErrorCaption() {
-        return (internalErrorNotificationEnabled ? internalErrorCaption
-                : null);
+        return (internalErrorNotificationEnabled ? internalErrorCaption : null);
     }
 
     /**
@@ -226,8 +220,7 @@ public class SystemMessages implements Serializable {
      *         continue."
      */
     public String getInternalErrorMessage() {
-        return (internalErrorNotificationEnabled ? internalErrorMessage
-                : null);
+        return (internalErrorNotificationEnabled ? internalErrorMessage : null);
     }
 
     /**
@@ -253,8 +246,7 @@ public class SystemMessages implements Serializable {
 
     /**
      * @return "Something has caused us to be out of sync with the server.<br/>
-     *         Take note of any unsaved data, and <u>click here</u> to
-     *         re-sync."
+     *         Take note of any unsaved data, and <u>click here</u> to re-sync."
      */
     public String getOutOfSyncMessage() {
         return (outOfSyncNotificationEnabled ? outOfSyncMessage : null);
@@ -272,13 +264,12 @@ public class SystemMessages implements Serializable {
     }
 
     /**
-     * Determines if "cookies disabled" messages should be shown to the end
-     * user or not. If the notification is disabled the user will be
-     * immediately redirected to the URL returned by
-     * {@link #getCookiesDisabledURL()}.
+     * Determines if "cookies disabled" messages should be shown to the end user
+     * or not. If the notification is disabled the user will be immediately
+     * redirected to the URL returned by {@link #getCookiesDisabledURL()}.
      * 
-     * @return true to show "cookies disabled" messages to the end user,
-     *         false to redirect to the given URL directly
+     * @return true to show "cookies disabled" messages to the end user, false
+     *         to redirect to the given URL directly
      */
     public boolean isCookiesDisabledNotificationEnabled() {
         return cookiesDisabledNotificationEnabled;
@@ -296,8 +287,8 @@ public class SystemMessages implements Serializable {
     }
 
     /**
-     * Returns the message shown to the user when cookies are disabled in
-     * the browser.
+     * Returns the message shown to the user when cookies are disabled in the
+     * browser.
      * 
      * @return The "cookies disabled" message
      */

@@ -50,4 +50,3 @@ public class ComponentState extends SharedState {
     // only uses the message
     public String errorMessage = null;
 }
-

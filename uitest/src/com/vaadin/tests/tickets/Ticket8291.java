@@ -11,8 +11,8 @@ import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.UI;
 
 /**
  * Test for #8291 and #7666: NegativeArraySizeException when Table scrolled to

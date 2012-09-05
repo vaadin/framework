@@ -7,8 +7,8 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket1995 extends Application {
 

@@ -522,6 +522,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
      * @deprecated Since 7.0, replaced by
      *             {@link #addItemSetChangeListener(com.vaadin.data.Container.ItemSetChangeListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(Container.ItemSetChangeListener listener) {
         addItemSetChangeListener(listener);
@@ -545,6 +546,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
      * @deprecated Since 7.0, replaced by
      *             {@link #removeItemSetChangeListener(com.vaadin.data.Container.ItemSetChangeListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(Container.ItemSetChangeListener listener) {
         removeItemSetChangeListener(listener);
@@ -569,6 +571,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
      * @deprecated Since 7.0, replaced by
      *             {@link #addPropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(Container.PropertySetChangeListener listener) {
         addPropertySetChangeListener(listener);
@@ -593,6 +596,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
      * @deprecated Since 7.0, replaced by
      *             {@link #removePropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(Container.PropertySetChangeListener listener) {
         removePropertySetChangeListener(listener);

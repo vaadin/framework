@@ -4626,6 +4626,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @deprecated Since 7.0, replaced by
      *             {@link #addItemClickListener(ItemClickListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(ItemClickListener listener) {
         addItemClickListener(listener);
@@ -4641,6 +4642,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @deprecated Since 7.0, replaced by
      *             {@link #removeItemClickListener(ItemClickListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(ItemClickListener listener) {
         removeItemClickListener(listener);

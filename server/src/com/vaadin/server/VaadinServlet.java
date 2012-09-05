@@ -625,8 +625,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     }
 
-    private VaadinSession createAndRegisterApplication(HttpServletRequest request)
-            throws ServletException, MalformedURLException {
+    private VaadinSession createAndRegisterApplication(
+            HttpServletRequest request) throws ServletException,
+            MalformedURLException {
         VaadinSession newApplication = createApplication(request);
 
         try {
@@ -721,8 +722,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @throws ServletException
      * @throws MalformedURLException
      */
-    protected VaadinServletSession createApplication(
-            HttpServletRequest request) throws ServletException {
+    protected VaadinServletSession createApplication(HttpServletRequest request)
+            throws ServletException {
         VaadinServletSession newApplication = new VaadinServletSession();
 
         try {

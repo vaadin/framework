@@ -2,9 +2,9 @@ package com.vaadin.tests.components.tree;
 
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.RichTextArea;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 public class TreeScrolling extends AbstractTestCase {

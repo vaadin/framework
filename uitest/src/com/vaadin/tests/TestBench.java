@@ -51,8 +51,8 @@ import com.vaadin.ui.VerticalLayout;
  * @author Vaadin Ltd.
  * 
  */
-public class TestBench extends com.vaadin.Application
-        implements Property.ValueChangeListener {
+public class TestBench extends com.vaadin.Application implements
+        Property.ValueChangeListener {
 
     // Add here packages which are used for finding testable classes
     String[] testablePackages = { "com.vaadin.tests",
@@ -223,8 +223,7 @@ public class TestBench extends com.vaadin.Application
 
     private Component createTestable(Class<?> c) {
         try {
-            final Application app = (Application) c
-                    .newInstance();
+            final Application app = (Application) c.newInstance();
             app.doInit();
             Layout lo = (Layout) app.getMainWindow().getContent();
             lo.setParent(null);

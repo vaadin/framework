@@ -44,8 +44,8 @@ import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.TouchScrollDelegate;
-import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
+import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.splitpanel.VAbstractSplitPanel.SplitterMoveHandler.SplitterMoveEvent;
 
 public class VAbstractSplitPanel extends ComplexPanel {

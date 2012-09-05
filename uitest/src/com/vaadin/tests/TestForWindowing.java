@@ -26,9 +26,9 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.Slider;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -53,7 +53,7 @@ public class TestForWindowing extends CustomComponent {
                     public void buttonClick(ClickEvent event) {
                         Window w = new Window("Testing Window");
 
-                        if (((Boolean) asModal.getValue()).booleanValue()) {
+                        if (asModal.getValue().booleanValue()) {
                             w.setModal(true);
                         }
 

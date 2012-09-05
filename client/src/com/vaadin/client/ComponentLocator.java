@@ -596,7 +596,7 @@ public class ComponentLocator {
 
                     Widget child = iterator.next();
                     String simpleName2 = Util.getSimpleName(child);
-                    
+
                     if (widgetClassName.equals(simpleName2)) {
                         if (widgetPosition == 0) {
                             w = child;

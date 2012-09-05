@@ -1238,6 +1238,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     /**
      * @deprecated Since 7.0, replaced by {@link #addBlurListener(BlurListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(BlurListener listener) {
         addBlurListener(listener);
@@ -1252,6 +1253,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * @deprecated Since 7.0, replaced by
      *             {@link #removeBlurListener(BlurListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(BlurListener listener) {
         removeBlurListener(listener);
@@ -1267,6 +1269,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * @deprecated Since 7.0, replaced by
      *             {@link #addFocusListener(FocusListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(FocusListener listener) {
         addFocusListener(listener);
@@ -1281,6 +1284,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * @deprecated Since 7.0, replaced by
      *             {@link #removeFocusListener(FocusListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(FocusListener listener) {
         removeFocusListener(listener);

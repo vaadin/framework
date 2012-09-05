@@ -46,7 +46,7 @@ import com.vaadin.shared.communication.URLReference;
  * 
  */
 public abstract class AbstractConnector implements ServerConnector,
-StateChangeHandler {
+        StateChangeHandler {
 
     private ApplicationConnection connection;
     private String id;

@@ -20,8 +20,9 @@ public class TreeToolTips extends TestBase {
             }
         });
 
-        for (Object rootItems : tree.rootItemIds())
+        for (Object rootItems : tree.rootItemIds()) {
             tree.expandItemsRecursively(rootItems);
+        }
 
         addComponent(tree);
     }

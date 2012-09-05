@@ -1,8 +1,8 @@
 package com.vaadin.client;
 
-import com.vaadin.shared.VBrowserDetails;
-
 import junit.framework.TestCase;
+
+import com.vaadin.shared.VBrowserDetails;
 
 public class TestVBrowserDetailsUserAgentParser extends TestCase {
 

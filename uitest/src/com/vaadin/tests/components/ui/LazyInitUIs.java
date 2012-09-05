@@ -20,8 +20,8 @@ public class LazyInitUIs extends AbstractTestUIProvider {
     }
 
     @Override
-    public UI createInstance(VaadinSession application, Class<? extends UI> type,
-            WrappedRequest request) {
+    public UI createInstance(VaadinSession application,
+            Class<? extends UI> type, WrappedRequest request) {
         return getUI(request);
     }
 

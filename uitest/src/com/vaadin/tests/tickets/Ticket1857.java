@@ -11,8 +11,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket1857 extends Application implements
-        Handler {
+public class Ticket1857 extends Application implements Handler {
 
     @Override
     public void init() {

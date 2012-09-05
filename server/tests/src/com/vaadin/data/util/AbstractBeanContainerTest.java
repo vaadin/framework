@@ -1,8 +1,5 @@
 package com.vaadin.data.util;
 
-import com.vaadin.data.util.AbstractBeanContainer;
-import com.vaadin.data.util.BeanContainer;
-import com.vaadin.data.util.BeanItemContainer;
 
 /**
  * Automated test for {@link AbstractBeanContainer}.

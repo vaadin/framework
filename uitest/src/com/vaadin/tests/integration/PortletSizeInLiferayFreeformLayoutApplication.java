@@ -11,8 +11,7 @@ import com.vaadin.ui.VerticalLayout;
  * 
  * See ticket #5521.
  */
-public class PortletSizeInLiferayFreeformLayoutApplication extends
-        Application {
+public class PortletSizeInLiferayFreeformLayoutApplication extends Application {
     @Override
     public void init() {
         LegacyWindow mainWindow = new LegacyWindow("Portlet5521 Application");

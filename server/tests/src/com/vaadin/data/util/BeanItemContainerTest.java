@@ -12,7 +12,6 @@ import junit.framework.Assert;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
-import com.vaadin.data.util.BeanItemContainer;
 
 /**
  * Test basic functionality of BeanItemContainer.

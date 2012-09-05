@@ -558,15 +558,18 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         this.resolution = resolution;
     }
 
+    @Override
     public HandlerRegistration addValueChangeHandler(
             ValueChangeHandler<Double> handler) {
         return addHandler(handler, ValueChangeEvent.getType());
     }
 
+    @Override
     public Double getValue() {
         return value;
     }
 
+    @Override
     public void setValue(Double value) {
         if (value < min) {
             value = min;
@@ -613,6 +616,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         setFeedbackValue(v);
     }
 
+    @Override
     public void setValue(Double value, boolean fireEvents) {
         if (value == null) {
             return;

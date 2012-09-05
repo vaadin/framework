@@ -9,7 +9,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import com.vaadin.Application;
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.RequestHandler;
@@ -22,8 +21,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2292 extends com.vaadin.Application
-        implements RequestHandler {
+public class Ticket2292 extends com.vaadin.Application implements
+        RequestHandler {
 
     @Override
     public void init() {

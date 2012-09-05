@@ -1,6 +1,5 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
 import com.vaadin.server.CustomizedSystemMessages;
 import com.vaadin.server.SystemMessages;
 import com.vaadin.ui.Button;

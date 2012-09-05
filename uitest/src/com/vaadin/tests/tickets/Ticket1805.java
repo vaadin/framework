@@ -1,6 +1,5 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.Alignment;
@@ -8,8 +7,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout.MarginHandler;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket1805 extends com.vaadin.Application {
 

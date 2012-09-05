@@ -19,7 +19,6 @@ package com.vaadin.server;
 import java.io.IOException;
 import java.io.Serializable;
 
-
 /**
  * Handler for producing a response to non-UIDL requests. Handlers can be added
  * to applications using {@link VaadinSession#addRequestHandler(RequestHandler)}

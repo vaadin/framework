@@ -22,9 +22,9 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ComponentContainerConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
+import com.vaadin.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
-import com.vaadin.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
 
 public abstract class AbstractComponentContainerConnector extends
         AbstractComponentConnector implements ComponentContainerConnector,

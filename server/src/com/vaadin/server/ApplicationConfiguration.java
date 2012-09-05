@@ -18,6 +18,7 @@ package com.vaadin.server;
 
 import java.util.Properties;
 
+import org.apache.catalina.core.ApplicationContext;
 
 /**
  * A collection of properties configured for all applications as well as a way

@@ -34,7 +34,7 @@ public class AbstractSplitPanelState extends ComponentState {
         public String minPositionUnit;
         public float maxPosition;
         public String maxPositionUnit;
-        
+
         @DelegateToWidget
         public boolean positionReversed = false;
 

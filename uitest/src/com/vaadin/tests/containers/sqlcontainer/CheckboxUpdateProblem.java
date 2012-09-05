@@ -12,11 +12,11 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.UI.LegacyWindow;
 
-public class CheckboxUpdateProblem extends Application
-        implements Property.ValueChangeListener {
+public class CheckboxUpdateProblem extends Application implements
+        Property.ValueChangeListener {
     private final DatabaseHelper databaseHelper = new DatabaseHelper();
     private Table testList;
     private final HorizontalSplitPanel horizontalSplit = new HorizontalSplitPanel();

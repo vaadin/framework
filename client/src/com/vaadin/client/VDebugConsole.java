@@ -924,8 +924,8 @@ public class VDebugConsole extends VOverlay implements Console {
     protected void dumpConnectorInfo(ApplicationConnection a) {
         UIConnector root = a.getRootConnector();
         log("================");
-        log("Connector hierarchy for Root: " + root.getState().caption
-                + " (" + root.getConnectorId() + ")");
+        log("Connector hierarchy for Root: " + root.getState().caption + " ("
+                + root.getConnectorId() + ")");
         Set<ServerConnector> connectorsInHierarchy = new HashSet<ServerConnector>();
         SimpleTree rootHierachy = dumpConnectorHierarchy(root, "",
                 connectorsInHierarchy);

@@ -2,9 +2,9 @@ package com.vaadin.tests.components.formlayout;
 
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI.LegacyWindow;
 
 public class TableInFormLayoutCausesScrolling extends AbstractTestCase {
 

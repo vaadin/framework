@@ -3,15 +3,14 @@ package com.vaadin.tests.tickets;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import com.vaadin.Application;
 import com.vaadin.data.Validator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Window;
 
 public class Ticket1811 extends com.vaadin.Application {

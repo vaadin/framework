@@ -15,6 +15,8 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 
+import org.junit.Test;
+
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -28,8 +30,6 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.BaseTheme;
-
-import org.junit.Test;
 
 @SuppressWarnings("deprecation")
 public class VaadinClasses {

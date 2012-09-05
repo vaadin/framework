@@ -4,8 +4,8 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.UI.LegacyWindow;
 
 /**
  * Setting table height and setting column header mode as hidden leaves the body

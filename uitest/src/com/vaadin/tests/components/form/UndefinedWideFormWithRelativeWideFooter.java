@@ -5,12 +5,11 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI.LegacyWindow;
 
 @SuppressWarnings("serial")
-public class UndefinedWideFormWithRelativeWideFooter extends
-        Application {
+public class UndefinedWideFormWithRelativeWideFooter extends Application {
 
     @Override
     public void init() {

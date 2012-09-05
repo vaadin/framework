@@ -30,7 +30,7 @@ public class FormClearDatasourceRepaint extends TestBase {
         }
 
         public void setValue2(String value) {
-            this.value2 = value;
+            value2 = value;
         }
     }
 

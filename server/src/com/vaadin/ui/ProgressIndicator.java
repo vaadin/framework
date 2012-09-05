@@ -20,9 +20,9 @@ import java.util.Map;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.server.LegacyComponent;
 
 /**
  * <code>ProgressIndicator</code> is component that shows user state of a

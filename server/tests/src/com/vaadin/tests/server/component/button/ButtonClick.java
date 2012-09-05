@@ -2,10 +2,10 @@ package com.vaadin.tests.server.component.button;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Test;
+
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-
-import org.junit.Test;
 
 /**
  * Tests the public click() method.

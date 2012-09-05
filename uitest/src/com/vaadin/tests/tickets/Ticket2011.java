@@ -2,8 +2,8 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.Application;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Select;
+import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket2011 extends Application {
 

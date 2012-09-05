@@ -16,7 +16,6 @@
 
 package com.vaadin.shared.ui.link;
 
-import com.vaadin.shared.ComponentState;
 
 public class LinkConstants {
     public static String HREF_RESOURCE = "href";

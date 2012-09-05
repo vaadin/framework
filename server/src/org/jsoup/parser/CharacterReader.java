@@ -3,7 +3,7 @@ package org.jsoup.parser;
 import org.jsoup.helper.Validate;
 
 /**
- CharacterReader consumes tokens off a string. To replace the old TokenQueue.
+ * CharacterReader consumes tokens off a string. To replace the old TokenQueue.
  */
 class CharacterReader {
     static final char EOF = (char) -1;
@@ -15,10 +15,11 @@ class CharacterReader {
 
     CharacterReader(String input) {
         Validate.notNull(input);
-        input = input.replaceAll("\r\n?", "\n"); // normalise carriage returns to newlines
+        input = input.replaceAll("\r\n?", "\n"); // normalise carriage returns
+                                                 // to newlines
 
         this.input = input;
-        this.length = input.length();
+        length = input.length();
     }
 
     int pos() {
@@ -87,8 +88,9 @@ class CharacterReader {
         OUTER: while (!isEmpty()) {
             char c = input.charAt(pos);
             for (char seek : seq) {
-                if (seek == c)
+                if (seek == c) {
                     break OUTER;
+                }
             }
             pos++;
         }
@@ -106,10 +108,11 @@ class CharacterReader {
         int start = pos;
         while (!isEmpty()) {
             char c = input.charAt(pos);
-            if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+            if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) {
                 pos++;
-            else
+            } else {
                 break;
+            }
         }
 
         return input.substring(start, pos);
@@ -119,17 +122,19 @@ class CharacterReader {
         int start = pos;
         while (!isEmpty()) {
             char c = input.charAt(pos);
-            if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+            if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) {
                 pos++;
-            else
+            } else {
                 break;
+            }
         }
         while (!isEmpty()) {
             char c = input.charAt(pos);
-            if (c >= '0' && c <= '9')
+            if (c >= '0' && c <= '9') {
                 pos++;
-            else
+            } else {
                 break;
+            }
         }
 
         return input.substring(start, pos);
@@ -139,10 +144,12 @@ class CharacterReader {
         int start = pos;
         while (!isEmpty()) {
             char c = input.charAt(pos);
-            if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f'))
+            if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F')
+                    || (c >= 'a' && c <= 'f')) {
                 pos++;
-            else
+            } else {
                 break;
+            }
         }
         return input.substring(start, pos);
     }
@@ -151,10 +158,11 @@ class CharacterReader {
         int start = pos;
         while (!isEmpty()) {
             char c = input.charAt(pos);
-            if (c >= '0' && c <= '9')
+            if (c >= '0' && c <= '9') {
                 pos++;
-            else
+            } else {
                 break;
+            }
         }
         return input.substring(start, pos);
     }
@@ -173,27 +181,31 @@ class CharacterReader {
     }
 
     boolean matchesAny(char... seq) {
-        if (isEmpty())
+        if (isEmpty()) {
             return false;
+        }
 
         char c = input.charAt(pos);
         for (char seek : seq) {
-            if (seek == c)
+            if (seek == c) {
                 return true;
+            }
         }
         return false;
     }
 
     boolean matchesLetter() {
-        if (isEmpty())
+        if (isEmpty()) {
             return false;
+        }
         char c = input.charAt(pos);
         return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
     }
 
     boolean matchesDigit() {
-        if (isEmpty())
+        if (isEmpty()) {
             return false;
+        }
         char c = input.charAt(pos);
         return (c >= '0' && c <= '9');
     }
@@ -217,10 +229,12 @@ class CharacterReader {
     }
 
     boolean containsIgnoreCase(String seq) {
-        // used to check presence of </title>, </style>. only finds consistent case.
+        // used to check presence of </title>, </style>. only finds consistent
+        // case.
         String loScan = seq.toLowerCase();
         String hiScan = seq.toUpperCase();
-        return (input.indexOf(loScan, pos) > -1) || (input.indexOf(hiScan, pos) > -1);
+        return (input.indexOf(loScan, pos) > -1)
+                || (input.indexOf(hiScan, pos) > -1);
     }
 
     @Override

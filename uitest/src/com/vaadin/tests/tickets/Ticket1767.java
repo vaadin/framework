@@ -1,6 +1,5 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.UI.LegacyWindow;
 

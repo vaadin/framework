@@ -33,8 +33,8 @@ import com.vaadin.Application;
 import com.vaadin.server.AbstractUIProvider;
 import com.vaadin.server.ApplicationConfiguration;
 import com.vaadin.server.LegacyVaadinServlet;
-import com.vaadin.server.VaadinServletSession;
 import com.vaadin.server.UIProvider;
+import com.vaadin.server.VaadinServletSession;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedHttpServletRequest;
 import com.vaadin.server.WrappedRequest;
@@ -113,8 +113,8 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     }
 
     @Override
-    protected VaadinServletSession createApplication(
-            HttpServletRequest request) throws ServletException {
+    protected VaadinServletSession createApplication(HttpServletRequest request)
+            throws ServletException {
         try {
             final Class<?> classToRun = getClassToRun();
             if (UI.class.isAssignableFrom(classToRun)) {

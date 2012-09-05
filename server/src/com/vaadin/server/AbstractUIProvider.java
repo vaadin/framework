@@ -27,8 +27,8 @@ import com.vaadin.ui.UI;
 public abstract class AbstractUIProvider implements UIProvider {
 
     @Override
-    public UI createInstance(VaadinSession application, Class<? extends UI> type,
-            WrappedRequest request) {
+    public UI createInstance(VaadinSession application,
+            Class<? extends UI> type, WrappedRequest request) {
         try {
             return type.newInstance();
         } catch (InstantiationException e) {

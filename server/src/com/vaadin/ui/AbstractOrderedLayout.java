@@ -232,8 +232,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     @Override
     public void setComponentAlignment(Component childComponent,
             Alignment alignment) {
-        ChildComponentData childData = getState().childData.get(
-                childComponent);
+        ChildComponentData childData = getState().childData.get(childComponent);
         if (childData != null) {
             // Alignments are bit masks
             childData.alignmentBitmask = alignment.getBitMask();
@@ -252,8 +251,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      */
     @Override
     public Alignment getComponentAlignment(Component childComponent) {
-        ChildComponentData childData = getState().childData.get(
-                childComponent);
+        ChildComponentData childData = getState().childData.get(childComponent);
         if (childData == null) {
             throw new IllegalArgumentException(
                     "The given component is not a child of this layout");

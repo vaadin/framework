@@ -4,111 +4,142 @@ import org.jsoup.helper.StringUtil;
 import org.jsoup.helper.Validate;
 
 /**
- A text node.
-
- @author Jonathan Hedley, jonathan@hedley.net */
+ * A text node.
+ * 
+ * @author Jonathan Hedley, jonathan@hedley.net
+ */
 public class TextNode extends Node {
     /*
-    TextNode is a node, and so by default comes with attributes and children. The attributes are seldom used, but use
-    memory, and the child nodes are never used. So we don't have them, and override accessors to attributes to create
-    them as needed on the fly.
+     * TextNode is a node, and so by default comes with attributes and children.
+     * The attributes are seldom used, but use memory, and the child nodes are
+     * never used. So we don't have them, and override accessors to attributes
+     * to create them as needed on the fly.
      */
     private static final String TEXT_KEY = "text";
     String text;
 
     /**
-     Create a new TextNode representing the supplied (unencoded) text).
-
-     @param text raw text
-     @param baseUri base uri
-     @see #createFromEncoded(String, String)
+     * Create a new TextNode representing the supplied (unencoded) text).
+     * 
+     * @param text
+     *            raw text
+     * @param baseUri
+     *            base uri
+     * @see #createFromEncoded(String, String)
      */
     public TextNode(String text, String baseUri) {
         this.baseUri = baseUri;
         this.text = text;
     }
 
+    @Override
     public String nodeName() {
         return "#text";
     }
-    
+
     /**
      * Get the text content of this text node.
+     * 
      * @return Unencoded, normalised text.
      * @see TextNode#getWholeText()
      */
     public String text() {
         return normaliseWhitespace(getWholeText());
     }
-    
+
     /**
      * Set the text content of this text node.
-     * @param text unencoded text
+     * 
+     * @param text
+     *            unencoded text
      * @return this, for chaining
      */
     public TextNode text(String text) {
         this.text = text;
-        if (attributes != null)
+        if (attributes != null) {
             attributes.put(TEXT_KEY, text);
+        }
         return this;
     }
 
     /**
-     Get the (unencoded) text of this text node, including any newlines and spaces present in the original.
-     @return text
+     * Get the (unencoded) text of this text node, including any newlines and
+     * spaces present in the original.
+     * 
+     * @return text
      */
     public String getWholeText() {
         return attributes == null ? text : attributes.get(TEXT_KEY);
     }
 
     /**
-     Test if this text node is blank -- that is, empty or only whitespace (including newlines).
-     @return true if this document is empty or only whitespace, false if it contains any text content.
+     * Test if this text node is blank -- that is, empty or only whitespace
+     * (including newlines).
+     * 
+     * @return true if this document is empty or only whitespace, false if it
+     *         contains any text content.
      */
     public boolean isBlank() {
         return StringUtil.isBlank(getWholeText());
     }
 
     /**
-     * Split this text node into two nodes at the specified string offset. After splitting, this node will contain the
-     * original text up to the offset, and will have a new text node sibling containing the text after the offset.
-     * @param offset string offset point to split node at.
+     * Split this text node into two nodes at the specified string offset. After
+     * splitting, this node will contain the original text up to the offset, and
+     * will have a new text node sibling containing the text after the offset.
+     * 
+     * @param offset
+     *            string offset point to split node at.
      * @return the newly created text node containing the text after the offset.
      */
     public TextNode splitText(int offset) {
         Validate.isTrue(offset >= 0, "Split offset must be not be negative");
-        Validate.isTrue(offset < text.length(), "Split offset must not be greater than current text length");
+        Validate.isTrue(offset < text.length(),
+                "Split offset must not be greater than current text length");
 
         String head = getWholeText().substring(0, offset);
         String tail = getWholeText().substring(offset);
         text(head);
-        TextNode tailNode = new TextNode(tail, this.baseUri());
-        if (parent() != null)
-            parent().addChildren(siblingIndex()+1, tailNode);
+        TextNode tailNode = new TextNode(tail, baseUri());
+        if (parent() != null) {
+            parent().addChildren(siblingIndex() + 1, tailNode);
+        }
 
         return tailNode;
     }
 
-    void outerHtmlHead(StringBuilder accum, int depth, Document.OutputSettings out) {
+    @Override
+    void outerHtmlHead(StringBuilder accum, int depth,
+            Document.OutputSettings out) {
         String html = Entities.escape(getWholeText(), out);
-        if (out.prettyPrint() && parent() instanceof Element && !((Element) parent()).preserveWhitespace()) {
+        if (out.prettyPrint() && parent() instanceof Element
+                && !((Element) parent()).preserveWhitespace()) {
             html = normaliseWhitespace(html);
         }
 
-        if (out.prettyPrint() && siblingIndex() == 0 && parentNode instanceof Element && ((Element) parentNode).tag().formatAsBlock() && !isBlank())
+        if (out.prettyPrint() && siblingIndex() == 0
+                && parentNode instanceof Element
+                && ((Element) parentNode).tag().formatAsBlock() && !isBlank()) {
             indent(accum, depth, out);
+        }
         accum.append(html);
     }
 
-    void outerHtmlTail(StringBuilder accum, int depth, Document.OutputSettings out) {}
+    @Override
+    void outerHtmlTail(StringBuilder accum, int depth,
+            Document.OutputSettings out) {
+    }
 
+    @Override
     public String toString() {
         return outerHtml();
     }
 
     /**
      * Create a new TextNode from HTML encoded (aka escaped) data.
-     * @param encodedText Text containing encoded HTML (e.g. &amp;lt;)
+     * 
+     * @param encodedText
+     *            Text containing encoded HTML (e.g. &amp;lt;)
      * @return TextNode containing unencoded data (e.g. &lt;)
      */
     public static TextNode createFromEncoded(String encodedText, String baseUri) {

@@ -1,12 +1,12 @@
 package org.jsoup.select;
 
-import org.jsoup.helper.StringUtil;
-import org.jsoup.nodes.Element;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
+import org.jsoup.helper.StringUtil;
+import org.jsoup.nodes.Element;
 
 /**
  * Base combining (and, or) evaluator.
@@ -25,9 +25,10 @@ abstract class CombiningEvaluator extends Evaluator {
     }
 
     Evaluator rightMostEvaluator() {
-        return evaluators.size() > 0 ? evaluators.get(evaluators.size() - 1) : null;
+        return evaluators.size() > 0 ? evaluators.get(evaluators.size() - 1)
+                : null;
     }
-    
+
     void replaceRightMostEvaluator(Evaluator replacement) {
         evaluators.set(evaluators.size() - 1, replacement);
     }
@@ -44,8 +45,9 @@ abstract class CombiningEvaluator extends Evaluator {
         @Override
         public boolean matches(Element root, Element node) {
             for (Evaluator s : evaluators) {
-                if (!s.matches(root, node))
+                if (!s.matches(root, node)) {
                     return false;
+                }
             }
             return true;
         }
@@ -58,15 +60,20 @@ abstract class CombiningEvaluator extends Evaluator {
 
     static final class Or extends CombiningEvaluator {
         /**
-         * Create a new Or evaluator. The initial evaluators are ANDed together and used as the first clause of the OR.
-         * @param evaluators initial OR clause (these are wrapped into an AND evaluator).
+         * Create a new Or evaluator. The initial evaluators are ANDed together
+         * and used as the first clause of the OR.
+         * 
+         * @param evaluators
+         *            initial OR clause (these are wrapped into an AND
+         *            evaluator).
          */
         Or(Collection<Evaluator> evaluators) {
             super();
-            if (evaluators.size() > 1)
+            if (evaluators.size() > 1) {
                 this.evaluators.add(new And(evaluators));
-            else // 0 or 1
+            } else {
                 this.evaluators.addAll(evaluators);
+            }
         }
 
         Or() {
@@ -80,8 +87,9 @@ abstract class CombiningEvaluator extends Evaluator {
         @Override
         public boolean matches(Element root, Element node) {
             for (Evaluator s : evaluators) {
-                if (s.matches(root, node))
+                if (s.matches(root, node)) {
                     return true;
+                }
             }
             return false;
         }

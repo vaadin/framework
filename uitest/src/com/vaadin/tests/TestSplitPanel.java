@@ -16,7 +16,6 @@
 
 package com.vaadin.tests;
 
-import com.vaadin.Application;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalSplitPanel;

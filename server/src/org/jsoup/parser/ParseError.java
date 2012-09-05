@@ -1,7 +1,8 @@
 package org.jsoup.parser;
 
 /**
- * A Parse Error records an error in the input HTML that occurs in either the tokenisation or the tree building phase.
+ * A Parse Error records an error in the input HTML that occurs in either the
+ * tokenisation or the tree building phase.
  */
 public class ParseError {
     private int pos;
@@ -13,12 +14,13 @@ public class ParseError {
     }
 
     ParseError(int pos, String errorFormat, Object... args) {
-        this.errorMsg = String.format(errorFormat, args);
+        errorMsg = String.format(errorFormat, args);
         this.pos = pos;
     }
 
     /**
      * Retrieve the error message.
+     * 
      * @return the error message.
      */
     public String getErrorMessage() {
@@ -27,6 +29,7 @@ public class ParseError {
 
     /**
      * Retrieves the offset of the error.
+     * 
      * @return error offset within input
      */
     public int getPosition() {

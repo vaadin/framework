@@ -651,8 +651,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
      */
     private void handleOtherRequest(WrappedPortletRequest request,
             WrappedResponse response, RequestType requestType,
-            VaadinSession application,
-            VaadinPortletSession applicationContext,
+            VaadinSession application, VaadinPortletSession applicationContext,
             PortletCommunicationManager applicationManager)
             throws PortletException, IOException, MalformedURLException {
         if (requestType == RequestType.APPLICATION_RESOURCE
@@ -844,8 +843,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         return newApplication;
     }
 
-    protected VaadinPortletSession createApplication(
-            PortletRequest request) throws PortletException {
+    protected VaadinPortletSession createApplication(PortletRequest request)
+            throws PortletException {
         VaadinPortletSession application = new VaadinPortletSession();
 
         try {

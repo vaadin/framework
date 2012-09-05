@@ -17,16 +17,13 @@ import org.junit.Test;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.util.filter.Like;
 import com.vaadin.data.util.sqlcontainer.AllTests;
+import com.vaadin.data.util.sqlcontainer.AllTests.DB;
 import com.vaadin.data.util.sqlcontainer.DataGenerator;
 import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.data.util.sqlcontainer.RowItem;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
-import com.vaadin.data.util.sqlcontainer.AllTests.DB;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
-import com.vaadin.data.util.sqlcontainer.query.FreeformQuery;
-import com.vaadin.data.util.sqlcontainer.query.FreeformQueryDelegate;
-import com.vaadin.data.util.sqlcontainer.query.OrderBy;
 
 public class FreeformQueryTest {
 

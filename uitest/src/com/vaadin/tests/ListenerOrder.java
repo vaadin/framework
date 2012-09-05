@@ -3,7 +3,6 @@ package com.vaadin.tests;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.vaadin.Application;
 import com.vaadin.data.Container.ItemSetChangeEvent;
 import com.vaadin.data.Container.ItemSetChangeListener;
 import com.vaadin.data.Container.PropertySetChangeEvent;
@@ -14,12 +13,12 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Select;
+import com.vaadin.ui.UI.LegacyWindow;
 
-public class ListenerOrder extends com.vaadin.Application
-        implements Button.ClickListener, PropertySetChangeListener,
-        ItemSetChangeListener, ValueChangeListener {
+public class ListenerOrder extends com.vaadin.Application implements
+        Button.ClickListener, PropertySetChangeListener, ItemSetChangeListener,
+        ValueChangeListener {
 
     Button b1;
 

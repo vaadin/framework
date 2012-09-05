@@ -4,8 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.vaadin.client.ApplicationConnection;
-
 public class ApplicationConnectionTestURLGeneration {
 
     private static final String[] URIS = new String[] {

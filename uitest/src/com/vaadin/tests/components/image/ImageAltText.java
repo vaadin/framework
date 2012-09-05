@@ -18,6 +18,7 @@ public class ImageAltText extends TestBase {
 
         Button changeAltTexts = new Button("Change alt text",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         image.setAlternateText("New alt text!");
                     }

@@ -7,8 +7,6 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import com.vaadin.client.DateTimeService;
-
 public class DateTimeServiceTest extends TestCase {
 
     final long MILLISECONDS_PER_DAY = 24 * 3600 * 1000;

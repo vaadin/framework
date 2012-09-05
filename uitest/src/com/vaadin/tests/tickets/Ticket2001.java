@@ -24,7 +24,7 @@ public class Ticket2001 extends Application {
         b.addListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                if ((Boolean) b.getValue()) {
+                if (b.getValue()) {
                     l.setWidth("30px");
                 } else {
                     l.setWidth(null);

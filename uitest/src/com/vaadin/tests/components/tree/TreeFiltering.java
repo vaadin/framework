@@ -49,7 +49,7 @@ public class TreeFiltering extends TestBase {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
-                cont.setIncludeParentsWhenFiltering((Boolean) ((CheckBox) event
+                cont.setIncludeParentsWhenFiltering(((CheckBox) event
                         .getProperty()).getValue());
                 ccTree.markAsDirty();
             }

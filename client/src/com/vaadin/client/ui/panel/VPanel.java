@@ -26,8 +26,8 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.ShortcutActionHandler;
-import com.vaadin.client.ui.TouchScrollDelegate;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
+import com.vaadin.client.ui.TouchScrollDelegate;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
 
 public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,

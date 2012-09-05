@@ -10,8 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.util.sqlcontainer.AllTests;
-import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
-import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 
 public class SimpleJDBCConnectionPoolTest {
     private JDBCConnectionPool connectionPool;

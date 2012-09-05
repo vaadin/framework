@@ -18,7 +18,6 @@ package com.vaadin.server;
 import java.io.IOException;
 import java.io.Writer;
 
-
 /**
  * A {@link RequestHandler} that presents an informative page if the browser in
  * use is unsupported. Recognizes Chrome Frame and allow it to be used.

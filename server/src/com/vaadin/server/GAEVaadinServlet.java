@@ -320,7 +320,8 @@ public class GAEVaadinServlet extends VaadinServlet {
             ObjectInputStream ois;
             try {
                 ois = new ObjectInputStream(bais);
-                VaadinSession applicationContext = (VaadinSession) ois.readObject();
+                VaadinSession applicationContext = (VaadinSession) ois
+                        .readObject();
                 applicationContext.storeInSession(new WrappedHttpSession(
                         session));
             } catch (IOException e) {

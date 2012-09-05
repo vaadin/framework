@@ -163,7 +163,7 @@ public class TextChangeEvents2 extends TestBase {
                     @Override
                     public void valueChange(ValueChangeEvent event) {
                         TextField tf = (TextField) event.getProperty();
-                        String val = (String) tf.getValue();
+                        String val = tf.getValue();
                         if (val != null && val.length() > 4) {
                             tf.setValue(val.substring(0, 4));
                         }

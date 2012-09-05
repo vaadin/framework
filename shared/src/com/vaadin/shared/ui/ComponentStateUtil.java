@@ -33,8 +33,7 @@ public final class ComponentStateUtil {
      *            The event identifier to remove
      */
     public static final void removeRegisteredEventListener(
-            ComponentState state,
-            String eventIdentifier) {
+            ComponentState state, String eventIdentifier) {
         if (state.registeredEventListeners == null) {
             return;
         }

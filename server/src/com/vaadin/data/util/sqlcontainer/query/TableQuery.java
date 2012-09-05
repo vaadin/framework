@@ -715,6 +715,7 @@ public class TableQuery implements QueryDelegate,
      * @deprecated Since 7.0, replaced by
      *             {@link #addRowIdChangeListener(com.vaadin.data.util.sqlcontainer.query.QueryDelegate.RowIdChangeListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(RowIdChangeListener listener) {
         addRowIdChangeListener(listener);
@@ -734,6 +735,7 @@ public class TableQuery implements QueryDelegate,
      * @deprecated Since 7.0, replaced by
      *             {@link #removeRowIdChangeListener(com.vaadin.data.util.sqlcontainer.query.QueryDelegate.RowIdChangeListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(RowIdChangeListener listener) {
         removeRowIdChangeListener(listener);

@@ -29,7 +29,7 @@ public class ValidationOfRequiredEmptyFields extends TestBase {
         requiredInput.addListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                tf.setRequired((Boolean) requiredInput.getValue());
+                tf.setRequired(requiredInput.getValue());
             }
         });
 
@@ -38,7 +38,7 @@ public class ValidationOfRequiredEmptyFields extends TestBase {
         requiredErrorInput.addListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                tf.setRequiredError((String) requiredErrorInput.getValue());
+                tf.setRequiredError(requiredErrorInput.getValue());
             }
         });
 
@@ -48,7 +48,7 @@ public class ValidationOfRequiredEmptyFields extends TestBase {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
-                if ((Boolean) integerValidatorInput.getValue()) {
+                if (integerValidatorInput.getValue()) {
                     tf.addValidator(integerValidator);
                 } else {
                     tf.removeValidator(integerValidator);
@@ -62,7 +62,7 @@ public class ValidationOfRequiredEmptyFields extends TestBase {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
-                if ((Boolean) stringLengthValidatorInput.getValue()) {
+                if (stringLengthValidatorInput.getValue()) {
                     tf.addValidator(stringLengthValidator);
                 } else {
                     tf.removeValidator(stringLengthValidator);

@@ -16,8 +16,8 @@ import com.vaadin.tests.util.PersonContainer;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.UI;
 
 public class DDTest4 extends TestBase {
 

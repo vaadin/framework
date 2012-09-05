@@ -11,9 +11,6 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.DefaultItemSorter;
-
 public class BeanItemContainerSortTest {
     public class Person {
         private String name;

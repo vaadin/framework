@@ -9,6 +9,7 @@ abstract class StructuralEvaluator extends Evaluator {
     Evaluator evaluator;
 
     static class Root extends Evaluator {
+        @Override
         public boolean matches(Element root, Element element) {
             return root == element;
         }
@@ -19,14 +20,17 @@ abstract class StructuralEvaluator extends Evaluator {
             this.evaluator = evaluator;
         }
 
+        @Override
         public boolean matches(Element root, Element element) {
             for (Element e : element.getAllElements()) {
-                if (e != element && evaluator.matches(root, e))
+                if (e != element && evaluator.matches(root, e)) {
                     return true;
+                }
             }
             return false;
         }
 
+        @Override
         public String toString() {
             return String.format(":has(%s)", evaluator);
         }
@@ -37,10 +41,12 @@ abstract class StructuralEvaluator extends Evaluator {
             this.evaluator = evaluator;
         }
 
+        @Override
         public boolean matches(Element root, Element node) {
             return !evaluator.matches(root, node);
         }
 
+        @Override
         public String toString() {
             return String.format(":not%s", evaluator);
         }
@@ -51,19 +57,23 @@ abstract class StructuralEvaluator extends Evaluator {
             this.evaluator = evaluator;
         }
 
+        @Override
         public boolean matches(Element root, Element element) {
-            if (root == element)
+            if (root == element) {
                 return false;
+            }
 
             Element parent = element.parent();
             while (parent != root) {
-                if (evaluator.matches(root, parent))
+                if (evaluator.matches(root, parent)) {
                     return true;
+                }
                 parent = parent.parent();
             }
             return false;
         }
 
+        @Override
         public String toString() {
             return String.format(":parent%s", evaluator);
         }
@@ -74,14 +84,17 @@ abstract class StructuralEvaluator extends Evaluator {
             this.evaluator = evaluator;
         }
 
+        @Override
         public boolean matches(Element root, Element element) {
-            if (root == element)
+            if (root == element) {
                 return false;
+            }
 
             Element parent = element.parent();
             return parent != null && evaluator.matches(root, parent);
         }
 
+        @Override
         public String toString() {
             return String.format(":ImmediateParent%s", evaluator);
         }
@@ -92,21 +105,25 @@ abstract class StructuralEvaluator extends Evaluator {
             this.evaluator = evaluator;
         }
 
+        @Override
         public boolean matches(Element root, Element element) {
-            if (root == element)
+            if (root == element) {
                 return false;
+            }
 
             Element prev = element.previousElementSibling();
 
             while (prev != null) {
-                if (evaluator.matches(root, prev))
+                if (evaluator.matches(root, prev)) {
                     return true;
+                }
 
                 prev = prev.previousElementSibling();
             }
             return false;
         }
 
+        @Override
         public String toString() {
             return String.format(":prev*%s", evaluator);
         }
@@ -117,14 +134,17 @@ abstract class StructuralEvaluator extends Evaluator {
             this.evaluator = evaluator;
         }
 
+        @Override
         public boolean matches(Element root, Element element) {
-            if (root == element)
+            if (root == element) {
                 return false;
+            }
 
             Element prev = element.previousElementSibling();
             return prev != null && evaluator.matches(root, prev);
         }
 
+        @Override
         public String toString() {
             return String.format(":prev%s", evaluator);
         }

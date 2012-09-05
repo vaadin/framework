@@ -50,7 +50,7 @@ public class TreeDragStart extends TestBase {
         checkBox.addListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                if ((Boolean) ((CheckBox) event.getProperty()).getValue()) {
+                if (((CheckBox) event.getProperty()).getValue()) {
                     tree.setDragMode(TreeDragMode.NODE);
                 } else {
                     tree.setDragMode(TreeDragMode.NONE);

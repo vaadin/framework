@@ -45,10 +45,9 @@ public class LegacyVaadinServlet extends VaadinServlet {
     }
 
     @Override
-    protected VaadinServletSession createApplication(
-            HttpServletRequest request) throws ServletException {
-        VaadinServletSession application = super
-                .createApplication(request);
+    protected VaadinServletSession createApplication(HttpServletRequest request)
+            throws ServletException {
+        VaadinServletSession application = super.createApplication(request);
 
         // Must set current before running init()
         VaadinSession.setCurrent(application);

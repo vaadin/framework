@@ -2,7 +2,6 @@ package com.vaadin.tests.tickets;
 
 import java.util.Date;
 
-import com.vaadin.Application;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;

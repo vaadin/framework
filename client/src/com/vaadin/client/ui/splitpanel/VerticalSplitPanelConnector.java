@@ -15,7 +15,6 @@
  */
 package com.vaadin.client.ui.splitpanel;
 
-import com.google.gwt.core.client.GWT;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.ui.VerticalSplitPanel;

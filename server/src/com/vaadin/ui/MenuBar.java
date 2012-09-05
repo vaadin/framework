@@ -22,10 +22,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
-import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.ui.menubar.MenuBarConstants;
 
 /**

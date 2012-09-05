@@ -357,6 +357,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * @deprecated Since 7.0, replaced by
      *             {@link #addValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(Property.ValueChangeListener listener) {
         addValueChangeListener(listener);
@@ -379,6 +380,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * @deprecated Since 7.0, replaced by
      *             {@link #removeValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(Property.ValueChangeListener listener) {
         removeValueChangeListener(listener);

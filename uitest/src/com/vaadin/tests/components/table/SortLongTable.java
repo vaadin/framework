@@ -1,8 +1,8 @@
 package com.vaadin.tests.components.table;
 
 import com.vaadin.tests.components.AbstractTestCase;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 public class SortLongTable extends AbstractTestCase {

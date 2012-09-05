@@ -5,8 +5,8 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket2038 extends Application {
 
@@ -38,7 +38,7 @@ public class Ticket2038 extends Application {
         b.addListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                tf.setRequiredError((Boolean) b.getValue() ? "Field must not be empty"
+                tf.setRequiredError(b.getValue() ? "Field must not be empty"
                         : null);
             }
         });

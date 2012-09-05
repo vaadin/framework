@@ -143,9 +143,9 @@ public class AddonContext {
     }
 
     /**
-     * Adds a listener that will be notified any time a new {@link VaadinSession}
-     * instance is started or more precisely directly after
-     * {@link VaadinSession#init()} has been invoked.
+     * Adds a listener that will be notified any time a new
+     * {@link VaadinSession} instance is started or more precisely directly
+     * after {@link VaadinSession#init()} has been invoked.
      * 
      * @param applicationStartListener
      *            the application start listener that should be added

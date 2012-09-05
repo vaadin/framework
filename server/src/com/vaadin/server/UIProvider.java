@@ -23,8 +23,8 @@ public interface UIProvider {
     public Class<? extends UI> getUIClass(VaadinSession application,
             WrappedRequest request);
 
-    public UI createInstance(VaadinSession application, Class<? extends UI> type,
-            WrappedRequest request);
+    public UI createInstance(VaadinSession application,
+            Class<? extends UI> type, WrappedRequest request);
 
     public String getPageTitleForUI(WrappedRequest request,
             Class<? extends UI> uiClass);

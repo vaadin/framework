@@ -23,8 +23,8 @@ import javax.validation.constraints.Size;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.server.WrappedRequest;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 
 /**
  * Mini tutorial code for

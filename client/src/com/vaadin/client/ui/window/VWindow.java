@@ -48,9 +48,9 @@ import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.FocusableScrollPanel;
 import com.vaadin.client.ui.ShortcutActionHandler;
+import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.VLazyExecutor;
 import com.vaadin.client.ui.VOverlay;
-import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.notification.VNotification;
 import com.vaadin.shared.EventId;
 

@@ -47,7 +47,7 @@ import com.vaadin.shared.ui.TabIndexState;
 import com.vaadin.ui.themes.BaseTheme;
 
 public abstract class AbstractComponentConnector extends AbstractConnector
-implements ComponentConnector {
+        implements ComponentConnector {
 
     private Widget widget;
 
@@ -93,7 +93,7 @@ implements ComponentConnector {
                     "There is no information about the widget for "
                             + Util.getSimpleName(this)
                             + ". Did you remember to compile the right widgetset?",
-                            e);
+                    e);
         }
     }
 

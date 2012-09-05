@@ -1,8 +1,8 @@
 package com.vaadin.tests.components.ui;
 
 import com.vaadin.server.Page;
-import com.vaadin.server.WrappedRequest;
 import com.vaadin.server.Page.FragmentChangedEvent;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;

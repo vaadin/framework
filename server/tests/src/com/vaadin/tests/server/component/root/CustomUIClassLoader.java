@@ -13,8 +13,8 @@ import com.vaadin.server.ApplicationConfiguration;
 import com.vaadin.server.DefaultUIProvider;
 import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.server.WrappedRequest;
 import com.vaadin.server.VaadinSession.ApplicationStartEvent;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.UI;
 
 public class CustomUIClassLoader extends TestCase {

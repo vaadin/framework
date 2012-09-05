@@ -75,12 +75,12 @@ public class MovingComponentsWhileOldParentInvisible extends TestBase {
                         cc.setVisible(!cc.isVisible());
                         if (!cc.isVisible()) {
                             getLayout().addComponent(lab);
-                            lab.setValue(((String) lab.getValue()).replace(
-                                    "inside", "outside"));
+                            lab.setValue(lab.getValue().replace("inside",
+                                    "outside"));
                         } else {
                             cc.addComponent(lab);
-                            lab.setValue(((String) lab.getValue()).replace(
-                                    "outside", "inside"));
+                            lab.setValue(lab.getValue().replace("outside",
+                                    "inside"));
                         }
                     }
                 });

@@ -14,8 +14,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket1921 extends Application implements
-        RequestHandler {
+public class Ticket1921 extends Application implements RequestHandler {
 
     int state = -1;
     int round = 1;

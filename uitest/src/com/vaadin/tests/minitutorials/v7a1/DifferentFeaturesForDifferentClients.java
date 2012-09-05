@@ -47,8 +47,8 @@ public class DifferentFeaturesForDifferentClients extends AbstractUIProvider {
     // Must override as default implementation isn't allowed to
     // instantiate our non-public classes
     @Override
-    public UI createInstance(VaadinSession application, Class<? extends UI> type,
-            WrappedRequest request) {
+    public UI createInstance(VaadinSession application,
+            Class<? extends UI> type, WrappedRequest request) {
         try {
             return type.newInstance();
         } catch (Exception e) {

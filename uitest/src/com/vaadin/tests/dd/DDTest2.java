@@ -24,12 +24,12 @@ import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.AbstractSelect.AcceptItem;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.TableTransferable;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.TargetItemAllowsChildren;
 import com.vaadin.ui.Tree.TreeDragMode;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 
 public class DDTest2 extends TestBase {

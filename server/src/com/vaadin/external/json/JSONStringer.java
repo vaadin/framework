@@ -79,6 +79,6 @@ public class JSONStringer extends JSONWriter {
      */
     @Override
     public String toString() {
-        return this.mode == 'd' ? this.writer.toString() : null;
+        return mode == 'd' ? writer.toString() : null;
     }
 }

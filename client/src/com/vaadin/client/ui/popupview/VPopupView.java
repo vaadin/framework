@@ -42,8 +42,8 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.VCaptionWrapper;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.ShortcutActionHandler;
-import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
+import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.richtextarea.VRichTextArea;
 
 public class VPopupView extends HTML {

@@ -19,7 +19,7 @@ public class NewItemsESCPress extends TestBase {
         box.setNewItemHandler(new NewItemHandler() {
             @Override
             public void addNewItem(String newItemCaption) {
-                String value = (String) addedItems.getValue();
+                String value = addedItems.getValue();
                 addedItems.setValue(value + newItemCaption + "\n");
                 box.addItem(newItemCaption);
             }

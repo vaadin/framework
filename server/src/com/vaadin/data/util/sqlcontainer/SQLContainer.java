@@ -1523,6 +1523,7 @@ public class SQLContainer implements Container, Container.Filterable,
      * @deprecated Since 7.0, replaced by
      *             {@link #addItemSetChangeListener(com.vaadin.data.Container.ItemSetChangeListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(Container.ItemSetChangeListener listener) {
         addItemSetChangeListener(listener);
@@ -1548,6 +1549,7 @@ public class SQLContainer implements Container, Container.Filterable,
      * @deprecated Since 7.0, replaced by
      *             {@link #removeItemSetChangeListener(com.vaadin.data.Container.ItemSetChangeListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(Container.ItemSetChangeListener listener) {
         removeItemSetChangeListener(listener);

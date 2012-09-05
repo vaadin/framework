@@ -12,12 +12,11 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.OptionGroup;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket2181 extends Application implements
-        Button.ClickListener {
+public class Ticket2181 extends Application implements Button.ClickListener {
 
     // private static final Object PROPERTY_VALUE = new Object();
     // private static final Object PROPERTY_CAPTION = new Object();

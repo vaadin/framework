@@ -26,9 +26,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.vaadin.server.AbstractUIProvider;
-import com.vaadin.server.VaadinSession;
 import com.vaadin.server.Terminal.ErrorEvent;
 import com.vaadin.server.Terminal.ErrorListener;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.UI;
 
@@ -100,8 +100,8 @@ public abstract class Application extends AbstractUIProvider implements
     }
 
     @Override
-    public UI createInstance(VaadinSession application, Class<? extends UI> type,
-            WrappedRequest request) {
+    public UI createInstance(VaadinSession application,
+            Class<? extends UI> type, WrappedRequest request) {
         return getUIInstance(request);
     }
 

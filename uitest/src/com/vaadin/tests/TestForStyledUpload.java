@@ -48,8 +48,8 @@ import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.ui.Upload.SucceededListener;
 import com.vaadin.ui.VerticalLayout;
 
-public class TestForStyledUpload extends Application
-        implements Upload.FinishedListener, FailedListener, SucceededListener,
+public class TestForStyledUpload extends Application implements
+        Upload.FinishedListener, FailedListener, SucceededListener,
         StartedListener {
 
     Layout main = new VerticalLayout();

@@ -19,45 +19,44 @@ package com.vaadin.server;
 import java.io.Serializable;
 
 /**
- * Contains the system messages used to notify the user about various
- * critical situations that can occur.
+ * Contains the system messages used to notify the user about various critical
+ * situations that can occur.
  * <p>
  * Vaadin gets the SystemMessages from your application by calling a static
- * getSystemMessages() method. By default the
- * Application.getSystemMessages() is used. You can customize this by
- * defining a static MyApplication.getSystemMessages() and returning
- * CustomizedSystemMessages. Note that getSystemMessages() is static -
- * changing the system messages will by default change the message for all
- * users of the application.
+ * getSystemMessages() method. By default the Application.getSystemMessages() is
+ * used. You can customize this by defining a static
+ * MyApplication.getSystemMessages() and returning CustomizedSystemMessages.
+ * Note that getSystemMessages() is static - changing the system messages will
+ * by default change the message for all users of the application.
  * </p>
  * <p>
- * The default behavior is to show a notification, and restart the
- * application the the user clicks the message. <br/>
- * Instead of restarting the application, you can set a specific URL that
- * the user is taken to.<br/>
- * Setting both caption and message to null will restart the application (or
- * go to the specified URL) without displaying a notification.
+ * The default behavior is to show a notification, and restart the application
+ * the the user clicks the message. <br/>
+ * Instead of restarting the application, you can set a specific URL that the
+ * user is taken to.<br/>
+ * Setting both caption and message to null will restart the application (or go
+ * to the specified URL) without displaying a notification.
  * set*NotificationEnabled(false) will achieve the same thing.
  * </p>
  * <p>
  * The situations are:
- * <li>Session expired: the user session has expired, usually due to
- * inactivity.</li>
+ * <li>Session expired: the user session has expired, usually due to inactivity.
+ * </li>
  * <li>Communication error: the client failed to contact the server, or the
  * server returned and invalid response.</li>
  * <li>Internal error: unhandled critical server error (e.g out of memory,
  * database crash)
  * <li>Out of sync: the client is not in sync with the server. E.g the user
- * opens two windows showing the same application, but the application does
- * not support this and uses the same Window instance. When the user makes
- * changes in one of the windows - the other window is no longer in sync,
- * and (for instance) pressing a button that is no longer present in the UI
- * will cause a out-of-sync -situation.
+ * opens two windows showing the same application, but the application does not
+ * support this and uses the same Window instance. When the user makes changes
+ * in one of the windows - the other window is no longer in sync, and (for
+ * instance) pressing a button that is no longer present in the UI will cause a
+ * out-of-sync -situation.
  * </p>
  */
 
-public class CustomizedSystemMessages extends SystemMessages
-        implements Serializable {
+public class CustomizedSystemMessages extends SystemMessages implements
+        Serializable {
 
     /**
      * Sets the URL to go to when the session has expired.
@@ -83,10 +82,10 @@ public class CustomizedSystemMessages extends SystemMessages
     }
 
     /**
-     * Sets the caption of the notification. Set to null for no caption. If
-     * both caption and message are null, client automatically forwards to
-     * sessionExpiredUrl after timeout timer expires. Timer uses value read
-     * from HTTPSession.getMaxInactiveInterval()
+     * Sets the caption of the notification. Set to null for no caption. If both
+     * caption and message are null, client automatically forwards to
+     * sessionExpiredUrl after timeout timer expires. Timer uses value read from
+     * HTTPSession.getMaxInactiveInterval()
      * 
      * @param sessionExpiredCaption
      *            the caption
@@ -96,10 +95,10 @@ public class CustomizedSystemMessages extends SystemMessages
     }
 
     /**
-     * Sets the message of the notification. Set to null for no message. If
-     * both caption and message are null, client automatically forwards to
-     * sessionExpiredUrl after timeout timer expires. Timer uses value read
-     * from HTTPSession.getMaxInactiveInterval()
+     * Sets the message of the notification. Set to null for no message. If both
+     * caption and message are null, client automatically forwards to
+     * sessionExpiredUrl after timeout timer expires. Timer uses value read from
+     * HTTPSession.getMaxInactiveInterval()
      * 
      * @param sessionExpiredMessage
      *            the message
@@ -131,26 +130,24 @@ public class CustomizedSystemMessages extends SystemMessages
     }
 
     /**
-     * Sets the caption of the notification. Set to null for no caption. If
-     * both caption and message is null, the notification is disabled;
+     * Sets the caption of the notification. Set to null for no caption. If both
+     * caption and message is null, the notification is disabled;
      * 
      * @param authenticationErrorCaption
      *            the caption
      */
-    public void setAuthenticationErrorCaption(
-            String authenticationErrorCaption) {
+    public void setAuthenticationErrorCaption(String authenticationErrorCaption) {
         this.authenticationErrorCaption = authenticationErrorCaption;
     }
 
     /**
-     * Sets the message of the notification. Set to null for no message. If
-     * both caption and message is null, the notification is disabled;
+     * Sets the message of the notification. Set to null for no message. If both
+     * caption and message is null, the notification is disabled;
      * 
      * @param authenticationErrorMessage
      *            the message
      */
-    public void setAuthenticationErrorMessage(
-            String authenticationErrorMessage) {
+    public void setAuthenticationErrorMessage(String authenticationErrorMessage) {
         this.authenticationErrorMessage = authenticationErrorMessage;
     }
 
@@ -177,26 +174,24 @@ public class CustomizedSystemMessages extends SystemMessages
     }
 
     /**
-     * Sets the caption of the notification. Set to null for no caption. If
-     * both caption and message is null, the notification is disabled;
+     * Sets the caption of the notification. Set to null for no caption. If both
+     * caption and message is null, the notification is disabled;
      * 
      * @param communicationErrorCaption
      *            the caption
      */
-    public void setCommunicationErrorCaption(
-            String communicationErrorCaption) {
+    public void setCommunicationErrorCaption(String communicationErrorCaption) {
         this.communicationErrorCaption = communicationErrorCaption;
     }
 
     /**
-     * Sets the message of the notification. Set to null for no message. If
-     * both caption and message is null, the notification is disabled;
+     * Sets the message of the notification. Set to null for no message. If both
+     * caption and message is null, the notification is disabled;
      * 
      * @param communicationErrorMessage
      *            the message
      */
-    public void setCommunicationErrorMessage(
-            String communicationErrorMessage) {
+    public void setCommunicationErrorMessage(String communicationErrorMessage) {
         this.communicationErrorMessage = communicationErrorMessage;
     }
 
@@ -223,8 +218,8 @@ public class CustomizedSystemMessages extends SystemMessages
     }
 
     /**
-     * Sets the caption of the notification. Set to null for no caption. If
-     * both caption and message is null, the notification is disabled;
+     * Sets the caption of the notification. Set to null for no caption. If both
+     * caption and message is null, the notification is disabled;
      * 
      * @param internalErrorCaption
      *            the caption
@@ -234,8 +229,8 @@ public class CustomizedSystemMessages extends SystemMessages
     }
 
     /**
-     * Sets the message of the notification. Set to null for no message. If
-     * both caption and message is null, the notification is disabled;
+     * Sets the message of the notification. Set to null for no message. If both
+     * caption and message is null, the notification is disabled;
      * 
      * @param internalErrorMessage
      *            the message
@@ -267,8 +262,8 @@ public class CustomizedSystemMessages extends SystemMessages
     }
 
     /**
-     * Sets the caption of the notification. Set to null for no caption. If
-     * both caption and message is null, the notification is disabled;
+     * Sets the caption of the notification. Set to null for no caption. If both
+     * caption and message is null, the notification is disabled;
      * 
      * @param outOfSyncCaption
      *            the caption
@@ -278,8 +273,8 @@ public class CustomizedSystemMessages extends SystemMessages
     }
 
     /**
-     * Sets the message of the notification. Set to null for no message. If
-     * both caption and message is null, the notification is disabled;
+     * Sets the message of the notification. Set to null for no message. If both
+     * caption and message is null, the notification is disabled;
      * 
      * @param outOfSyncMessage
      *            the message
@@ -299,13 +294,12 @@ public class CustomizedSystemMessages extends SystemMessages
     }
 
     /**
-     * Enables or disables the notification for "cookies disabled" messages.
-     * If disabled, the URL returned by {@link #getCookiesDisabledURL()} is
-     * loaded directly.
+     * Enables or disables the notification for "cookies disabled" messages. If
+     * disabled, the URL returned by {@link #getCookiesDisabledURL()} is loaded
+     * directly.
      * 
      * @param cookiesDisabledNotificationEnabled
-     *            true to enable "cookies disabled" messages, false
-     *            otherwise
+     *            true to enable "cookies disabled" messages, false otherwise
      */
     public void setCookiesDisabledNotificationEnabled(
             boolean cookiesDisabledNotificationEnabled) {
@@ -313,9 +307,9 @@ public class CustomizedSystemMessages extends SystemMessages
     }
 
     /**
-     * Sets the caption of the "cookies disabled" notification. Set to null
-     * for no caption. If both caption and message is null, the notification
-     * is disabled.
+     * Sets the caption of the "cookies disabled" notification. Set to null for
+     * no caption. If both caption and message is null, the notification is
+     * disabled.
      * 
      * @param cookiesDisabledCaption
      *            the caption for the "cookies disabled" notification
@@ -325,9 +319,9 @@ public class CustomizedSystemMessages extends SystemMessages
     }
 
     /**
-     * Sets the message of the "cookies disabled" notification. Set to null
-     * for no message. If both caption and message is null, the notification
-     * is disabled.
+     * Sets the message of the "cookies disabled" notification. Set to null for
+     * no message. If both caption and message is null, the notification is
+     * disabled.
      * 
      * @param cookiesDisabledMessage
      *            the message for the "cookies disabled" notification

@@ -701,6 +701,7 @@ public class ComboBox extends AbstractSelect implements
         return filteringMode;
     }
 
+    @Override
     public void addBlurListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
                 BlurListener.blurMethod);
@@ -709,6 +710,7 @@ public class ComboBox extends AbstractSelect implements
     /**
      * @deprecated Since 7.0, replaced by {@link #addBlurListener(BlurListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(BlurListener listener) {
         addBlurListener(listener);
@@ -723,6 +725,7 @@ public class ComboBox extends AbstractSelect implements
      * @deprecated Since 7.0, replaced by
      *             {@link #removeBlurListener(BlurListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(BlurListener listener) {
         removeBlurListener(listener);
@@ -738,6 +741,7 @@ public class ComboBox extends AbstractSelect implements
      * @deprecated Since 7.0, replaced by
      *             {@link #addFocusListener(FocusListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(FocusListener listener) {
         addFocusListener(listener);
@@ -752,6 +756,7 @@ public class ComboBox extends AbstractSelect implements
      * @deprecated Since 7.0, replaced by
      *             {@link #removeFocusListener(FocusListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(FocusListener listener) {
         removeFocusListener(listener);

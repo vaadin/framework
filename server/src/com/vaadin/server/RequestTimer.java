@@ -18,7 +18,6 @@ package com.vaadin.server;
 
 import java.io.Serializable;
 
-
 /**
  * Times the handling of requests and stores the information as an attribute in
  * the request. The timing info is later passed on to the client in the UIDL and

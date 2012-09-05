@@ -36,9 +36,9 @@ import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
+import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
-import com.vaadin.server.LegacyComponent;
 import com.vaadin.shared.ui.datefield.DateFieldConstants;
 
 /**
@@ -750,6 +750,7 @@ public class DateField extends AbstractField<Date> implements
      * @deprecated Since 7.0, replaced by
      *             {@link #addFocusListener(FocusListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(FocusListener listener) {
         addFocusListener(listener);
@@ -764,6 +765,7 @@ public class DateField extends AbstractField<Date> implements
      * @deprecated Since 7.0, replaced by
      *             {@link #removeFocusListener(FocusListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(FocusListener listener) {
         removeFocusListener(listener);
@@ -778,6 +780,7 @@ public class DateField extends AbstractField<Date> implements
     /**
      * @deprecated Since 7.0, replaced by {@link #addBlurListener(BlurListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(BlurListener listener) {
         addBlurListener(listener);
@@ -792,6 +795,7 @@ public class DateField extends AbstractField<Date> implements
      * @deprecated Since 7.0, replaced by
      *             {@link #removeBlurListener(BlurListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(BlurListener listener) {
         removeBlurListener(listener);

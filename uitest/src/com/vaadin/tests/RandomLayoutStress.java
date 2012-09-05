@@ -18,7 +18,6 @@ package com.vaadin.tests;
 
 import java.util.Random;
 
-import com.vaadin.Application;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
@@ -30,10 +29,10 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -43,8 +42,7 @@ import com.vaadin.ui.VerticalLayout;
  * @author Vaadin Ltd.
  * 
  */
-public class RandomLayoutStress extends
-        com.vaadin.Application {
+public class RandomLayoutStress extends com.vaadin.Application {
 
     private final Random seededRandom = new Random(1);
 

@@ -1,6 +1,5 @@
 package com.vaadin.tests.themes;
 
-import com.vaadin.Application;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.ThemeResource;

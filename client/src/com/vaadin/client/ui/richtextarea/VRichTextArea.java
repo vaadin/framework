@@ -42,8 +42,8 @@ import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.Field;
 import com.vaadin.client.ui.ShortcutActionHandler;
-import com.vaadin.client.ui.TouchScrollDelegate;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
+import com.vaadin.client.ui.TouchScrollDelegate;
 
 /**
  * This class implements a basic client side rich text editor component.

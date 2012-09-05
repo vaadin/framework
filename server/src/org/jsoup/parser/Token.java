@@ -12,7 +12,7 @@ abstract class Token {
 
     private Token() {
     }
-    
+
     String tokenType() {
         return this.getClass().getSimpleName();
     }
@@ -50,13 +50,16 @@ abstract class Token {
         private String pendingAttributeValue;
 
         boolean selfClosing = false;
-        Attributes attributes = new Attributes(); // todo: allow nodes to not have attributes
+        Attributes attributes = new Attributes(); // todo: allow nodes to not
+                                                  // have attributes
 
         void newAttribute() {
             if (pendingAttributeName != null) {
-                if (pendingAttributeValue == null)
+                if (pendingAttributeValue == null) {
                     pendingAttributeValue = "";
-                Attribute attribute = new Attribute(pendingAttributeName, pendingAttributeValue);
+                }
+                Attribute attribute = new Attribute(pendingAttributeName,
+                        pendingAttributeValue);
                 attributes.put(attribute);
             }
             pendingAttributeName = null;
@@ -85,12 +88,13 @@ abstract class Token {
             return selfClosing;
         }
 
-        @SuppressWarnings({"TypeMayBeWeakened"})
+        @SuppressWarnings({ "TypeMayBeWeakened" })
         Attributes getAttributes() {
             return attributes;
         }
 
-        // these appenders are rarely hit in not null state-- caused by null chars.
+        // these appenders are rarely hit in not null state-- caused by null
+        // chars.
         void appendTagName(String append) {
             tagName = tagName == null ? append : tagName.concat(append);
         }
@@ -100,7 +104,8 @@ abstract class Token {
         }
 
         void appendAttributeName(String append) {
-            pendingAttributeName = pendingAttributeName == null ? append : pendingAttributeName.concat(append);
+            pendingAttributeName = pendingAttributeName == null ? append
+                    : pendingAttributeName.concat(append);
         }
 
         void appendAttributeName(char append) {
@@ -108,7 +113,8 @@ abstract class Token {
         }
 
         void appendAttributeValue(String append) {
-            pendingAttributeValue = pendingAttributeValue == null ? append : pendingAttributeValue.concat(append);
+            pendingAttributeValue = pendingAttributeValue == null ? append
+                    : pendingAttributeValue.concat(append);
         }
 
         void appendAttributeValue(char append) {
@@ -124,12 +130,12 @@ abstract class Token {
 
         StartTag(String name) {
             this();
-            this.tagName = name;
+            tagName = name;
         }
 
         StartTag(String name, Attributes attributes) {
             this();
-            this.tagName = name;
+            tagName = name;
             this.attributes = attributes;
         }
 
@@ -139,7 +145,7 @@ abstract class Token {
         }
     }
 
-    static class EndTag extends Tag{
+    static class EndTag extends Tag {
         EndTag() {
             super();
             type = TokenType.EndTag;
@@ -147,7 +153,7 @@ abstract class Token {
 
         EndTag(String name) {
             this();
-            this.tagName = name;
+            tagName = name;
         }
 
         @Override
@@ -242,11 +248,6 @@ abstract class Token {
     }
 
     enum TokenType {
-        Doctype,
-        StartTag,
-        EndTag,
-        Comment,
-        Character,
-        EOF
+        Doctype, StartTag, EndTag, Comment, Character, EOF
     }
 }

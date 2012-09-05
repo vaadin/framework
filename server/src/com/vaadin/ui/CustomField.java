@@ -230,6 +230,7 @@ public abstract class CustomField<T> extends AbstractField<T> implements
      * @deprecated Since 7.0, replaced by
      *             {@link #addComponentAttachListener(com.vaadin.ui.ComponentContainer.ComponentAttachListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(ComponentAttachListener listener) {
         addComponentAttachListener(listener);
@@ -245,6 +246,7 @@ public abstract class CustomField<T> extends AbstractField<T> implements
      * @deprecated Since 7.0, replaced by
      *             {@link #removeComponentAttachListener(com.vaadin.ui.ComponentContainer.ComponentAttachListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(ComponentAttachListener listener) {
         removeComponentAttachListener(listener);
@@ -259,6 +261,7 @@ public abstract class CustomField<T> extends AbstractField<T> implements
      * @deprecated Since 7.0, replaced by
      *             {@link #addComponentDetachListener(com.vaadin.ui.ComponentContainer.ComponentDetachListener)}
      **/
+    @Override
     @Deprecated
     public void addListener(ComponentDetachListener listener) {
         addComponentDetachListener(listener);
@@ -274,6 +277,7 @@ public abstract class CustomField<T> extends AbstractField<T> implements
      * @deprecated Since 7.0, replaced by
      *             {@link #removeComponentDetachListener(com.vaadin.ui.ComponentContainer.ComponentDetachListener)}
      **/
+    @Override
     @Deprecated
     public void removeListener(ComponentDetachListener listener) {
         removeComponentDetachListener(listener);

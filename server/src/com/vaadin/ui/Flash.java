@@ -34,8 +34,7 @@ public class Flash extends AbstractEmbedded {
      */
     public void setCodebase(String codebase) {
         if (codebase != getState().codebase
-                || (codebase != null && !codebase.equals(getState()
-.codebase))) {
+                || (codebase != null && !codebase.equals(getState().codebase))) {
             getState().codebase = codebase;
             requestRepaint();
         }
@@ -53,8 +52,7 @@ public class Flash extends AbstractEmbedded {
      */
     public void setCodetype(String codetype) {
         if (codetype != getState().codetype
-                || (codetype != null && !codetype.equals(getState()
-.codetype))) {
+                || (codetype != null && !codetype.equals(getState().codetype))) {
             getState().codetype = codetype;
             requestRepaint();
         }

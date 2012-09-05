@@ -9,8 +9,6 @@ import java.util.TreeSet;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import com.vaadin.data.util.IndexedContainer;
-
 public class PerformanceTestIndexedContainer extends TestCase {
 
     private static final int REPEATS = 10;

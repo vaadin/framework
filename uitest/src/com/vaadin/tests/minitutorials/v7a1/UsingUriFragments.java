@@ -16,9 +16,9 @@
 
 package com.vaadin.tests.minitutorials.v7a1;
 
-import com.vaadin.server.WrappedRequest;
 import com.vaadin.server.Page.FragmentChangedEvent;
 import com.vaadin.server.Page.FragmentChangedListener;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;

@@ -18,7 +18,6 @@ package com.vaadin.server;
 
 import java.util.EventObject;
 
-
 /**
  * Event used by
  * {@link ApplicationStartedListener#applicationStarted(ApplicationStartedEvent)}
@@ -38,7 +37,8 @@ public class ApplicationStartedEvent extends EventObject {
      * @param application
      *            the application that has been started
      */
-    public ApplicationStartedEvent(AddonContext context, VaadinSession application) {
+    public ApplicationStartedEvent(AddonContext context,
+            VaadinSession application) {
         super(context);
         this.application = application;
     }

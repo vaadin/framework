@@ -1,12 +1,11 @@
 package org.jsoup.select;
 
-import org.jsoup.helper.Validate;
-import org.jsoup.nodes.Element;
-
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jsoup.helper.Validate;
+import org.jsoup.nodes.Element;
 
 /**
  * Evaluates that an element matches the selector.
@@ -17,9 +16,11 @@ public abstract class Evaluator {
 
     /**
      * Test if the element meets the evaluator's requirements.
-     *
-     * @param root    UI of the matching subtree
-     * @param element tested element
+     * 
+     * @param root
+     *            UI of the matching subtree
+     * @param element
+     *            tested element
      */
     public abstract boolean matches(Element root, Element element);
 
@@ -122,10 +123,12 @@ public abstract class Evaluator {
 
         @Override
         public boolean matches(Element root, Element element) {
-            List<org.jsoup.nodes.Attribute> values = element.attributes().asList();
+            List<org.jsoup.nodes.Attribute> values = element.attributes()
+                    .asList();
             for (org.jsoup.nodes.Attribute attribute : values) {
-                if (attribute.getKey().startsWith(keyPrefix))
+                if (attribute.getKey().startsWith(keyPrefix)) {
                     return true;
+                }
             }
             return false;
         }
@@ -147,7 +150,8 @@ public abstract class Evaluator {
 
         @Override
         public boolean matches(Element root, Element element) {
-            return element.hasAttr(key) && value.equalsIgnoreCase(element.attr(key));
+            return element.hasAttr(key)
+                    && value.equalsIgnoreCase(element.attr(key));
         }
 
         @Override
@@ -180,14 +184,20 @@ public abstract class Evaluator {
     /**
      * Evaluator for attribute name/value matching (value prefix)
      */
-    public static final class AttributeWithValueStarting extends AttributeKeyPair {
+    public static final class AttributeWithValueStarting extends
+            AttributeKeyPair {
         public AttributeWithValueStarting(String key, String value) {
             super(key, value);
         }
 
         @Override
         public boolean matches(Element root, Element element) {
-            return element.hasAttr(key) && element.attr(key).toLowerCase().startsWith(value); // value is lower case already
+            return element.hasAttr(key)
+                    && element.attr(key).toLowerCase().startsWith(value); // value
+                                                                          // is
+                                                                          // lower
+                                                                          // case
+                                                                          // already
         }
 
         @Override
@@ -207,7 +217,11 @@ public abstract class Evaluator {
 
         @Override
         public boolean matches(Element root, Element element) {
-            return element.hasAttr(key) && element.attr(key).toLowerCase().endsWith(value); // value is lower case
+            return element.hasAttr(key)
+                    && element.attr(key).toLowerCase().endsWith(value); // value
+                                                                        // is
+                                                                        // lower
+                                                                        // case
         }
 
         @Override
@@ -220,14 +234,19 @@ public abstract class Evaluator {
     /**
      * Evaluator for attribute name/value matching (value containing)
      */
-    public static final class AttributeWithValueContaining extends AttributeKeyPair {
+    public static final class AttributeWithValueContaining extends
+            AttributeKeyPair {
         public AttributeWithValueContaining(String key, String value) {
             super(key, value);
         }
 
         @Override
         public boolean matches(Element root, Element element) {
-            return element.hasAttr(key) && element.attr(key).toLowerCase().contains(value); // value is lower case
+            return element.hasAttr(key)
+                    && element.attr(key).toLowerCase().contains(value); // value
+                                                                        // is
+                                                                        // lower
+                                                                        // case
         }
 
         @Override
@@ -251,7 +270,8 @@ public abstract class Evaluator {
 
         @Override
         public boolean matches(Element root, Element element) {
-            return element.hasAttr(key) && pattern.matcher(element.attr(key)).find();
+            return element.hasAttr(key)
+                    && pattern.matcher(element.attr(key)).find();
         }
 
         @Override
@@ -355,7 +375,7 @@ public abstract class Evaluator {
 
     /**
      * Abstract evaluator for sibling index matching
-     *
+     * 
      * @author ant
      */
     public abstract static class IndexEvaluator extends Evaluator {

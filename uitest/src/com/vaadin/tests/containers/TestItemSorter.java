@@ -30,8 +30,8 @@ public class TestItemSorter extends TestBase {
             @Override
             public int compare(Object o1, Object o2) {
                 if (o1 instanceof CheckBox && o2 instanceof CheckBox) {
-                    Boolean b1 = (Boolean) ((CheckBox) o1).getValue();
-                    return b1.compareTo((Boolean) ((CheckBox) o2).getValue());
+                    Boolean b1 = ((CheckBox) o1).getValue();
+                    return b1.compareTo(((CheckBox) o2).getValue());
                 } else if (o1 instanceof Button && o2 instanceof Button) {
                     String caption1 = ((Button) o1).getCaption().toLowerCase();
                     String caption2 = ((Button) o2).getCaption().toLowerCase();
