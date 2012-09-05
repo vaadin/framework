@@ -1,10 +1,7 @@
 package com.vaadin.tests.components.window;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.server.HttpServletRequestListener;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
@@ -14,9 +11,9 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
+import com.vaadin.util.CurrentInstance;
 
-public class AttachShouldBeCalledForSubWindows extends AbstractTestCase
-        implements HttpServletRequestListener {
+public class AttachShouldBeCalledForSubWindows extends AbstractTestCase {
     private static final long serialVersionUID = 1L;
 
     private Log log = new Log(20);
@@ -25,6 +22,13 @@ public class AttachShouldBeCalledForSubWindows extends AbstractTestCase
 
     @Override
     public void init() {
+
+        WrappedRequest request = CurrentInstance.get(WrappedRequest.class);
+        if (request.getParameter("attachMainFirst") != null) {
+            addSubWindowBeforeMainWindow = false;
+        } else {
+            addSubWindowBeforeMainWindow = true;
+        }
 
         UI.LegacyWindow mainWindow = new UI.LegacyWindow() {
             @Override
@@ -115,19 +119,4 @@ public class AttachShouldBeCalledForSubWindows extends AbstractTestCase
         return 8170;
     }
 
-    @Override
-    public void onRequestStart(HttpServletRequest request,
-            HttpServletResponse response) {
-        if (request.getParameter("attachMainFirst") != null) {
-            addSubWindowBeforeMainWindow = false;
-        }
-
-    }
-
-    @Override
-    public void onRequestEnd(HttpServletRequest request,
-            HttpServletResponse response) {
-        // TODO Auto-generated method stub
-
-    }
 }

@@ -286,7 +286,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         Application application = null;
-        boolean requestStarted = false;
         boolean applicationRunning = false;
 
         try {
@@ -335,16 +334,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
             /* Update browser information from the request */
             webApplicationContext.getBrowser().updateRequestDetails(request);
-
-            /*
-             * Call application requestStart before Application.init() is called
-             * (bypasses the limitation in TransactionListener)
-             */
-            if (application instanceof HttpServletRequestListener) {
-                ((HttpServletRequestListener) application).onRequestStart(
-                        request, response);
-                requestStarted = true;
-            }
 
             // Start the application if it's newly created
             startApplication(request, application, webApplicationContext);
@@ -397,21 +386,12 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 application.closeInactiveUIs();
             }
 
-            // Notifies transaction end
-            try {
-                if (requestStarted) {
-                    ((HttpServletRequestListener) application).onRequestEnd(
-                            request, response);
-                }
-            } finally {
-                CurrentInstance.clearAll();
+            CurrentInstance.clearAll();
 
-                HttpSession session = request.getSession(false);
-                if (session != null) {
-                    requestTimer.stop(getApplicationContext(session));
-                }
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                requestTimer.stop(getApplicationContext(session));
             }
-
         }
     }
 

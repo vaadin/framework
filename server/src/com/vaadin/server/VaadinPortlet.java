@@ -457,7 +457,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                     (ResourceResponse) response);
         } else {
             Application application = null;
-            boolean requestStarted = false;
             boolean applicationRunning = false;
 
             try {
@@ -494,16 +493,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                 /* Update browser information from request */
                 applicationContext.getBrowser().updateRequestDetails(
                         wrappedRequest);
-
-                /*
-                 * Call application requestStart before Application.init() is
-                 * called (bypasses the limitation in TransactionListener)
-                 */
-                if (application instanceof PortletRequestListener) {
-                    ((PortletRequestListener) application).onRequestStart(
-                            request, response);
-                    requestStarted = true;
-                }
 
                 /* Start the newly created application */
                 startApplication(request, application, applicationContext);
@@ -605,20 +594,11 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                     application.closeInactiveUIs();
                 }
 
-                // Notifies transaction end
-                try {
-                    if (requestStarted) {
-                        ((PortletRequestListener) application).onRequestEnd(
-                                request, response);
+                CurrentInstance.clearAll();
 
-                    }
-                } finally {
-                    CurrentInstance.clearAll();
-
-                    PortletSession session = request.getPortletSession(false);
-                    if (session != null) {
-                        requestTimer.stop(getApplicationContext(session));
-                    }
+                PortletSession session = request.getPortletSession(false);
+                if (session != null) {
+                    requestTimer.stop(getApplicationContext(session));
                 }
             }
         }
