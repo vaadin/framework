@@ -15,7 +15,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket34 extends Application.LegacyApplication {
+public class Ticket34 extends Application {
 
     private Map<String, Component> views = new HashMap<String, Component>();
     private VerticalLayout mainLayout;

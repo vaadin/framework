@@ -14,7 +14,7 @@ import com.vaadin.ui.TextField;
  * Therefore, registering e.g. F8 as a key code resulted in "w" being used as
  * the trigger and F8 being ignored.
  */
-public class Ticket5157 extends Application.LegacyApplication {
+public class Ticket5157 extends Application {
 
     @Override
     public void init() {

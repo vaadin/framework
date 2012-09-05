@@ -10,7 +10,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 
-public class Ticket3146 extends Application.LegacyApplication {
+public class Ticket3146 extends Application {
 
     Table table;
     TextField result;

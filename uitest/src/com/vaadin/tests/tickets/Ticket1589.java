@@ -14,12 +14,13 @@ import com.vaadin.Application;
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.RequestHandler;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.server.WrappedResponse;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket1589 extends Application.LegacyApplication {
+public class Ticket1589 extends Application {
 
     @Override
     public void init() {
@@ -28,7 +29,7 @@ public class Ticket1589 extends Application.LegacyApplication {
 
         MyDynamicResource res = new MyDynamicResource();
 
-        addRequestHandler(res);
+        VaadinSession.getCurrent().addRequestHandler(res);
 
         w.addComponent(new Link(
                 "Test (without Content-Disposition, should suggest generatedFile.png when saving, browser default for actual disposition)",
@@ -51,7 +52,7 @@ class MyDynamicResource implements RequestHandler {
      * stream that contains the response from the server.
      */
     @Override
-    public boolean handleRequest(Application application,
+    public boolean handleRequest(VaadinSession application,
             WrappedRequest request, WrappedResponse response)
             throws IOException {
         String relativeUri = request.getRequestPathInfo();

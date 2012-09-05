@@ -1,35 +1,18 @@
 package com.vaadin.tests.application;
 
-import com.vaadin.Application;
 import com.vaadin.annotations.PreserveOnRefresh;
-import com.vaadin.server.AbstractUIProvider;
 import com.vaadin.server.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestApplication;
+import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.UI;
 
-public class RefreshStatePreserve extends AbstractTestApplication {
-    @PreserveOnRefresh
-    public static class RefreshStateUI extends UI {
-        @Override
-        public void init(WrappedRequest request) {
-            getContent().addComponent(
-                    new Label("window.name: "
-                            + request.getBrowserDetails().getWindowName()));
-            getContent().addComponent(new Label("UI id: " + getUIId()));
-        }
-    }
+@PreserveOnRefresh
+public class RefreshStatePreserve extends AbstractTestUI {
 
     @Override
-    public void init() {
-        super.init();
-        addUIProvider(new AbstractUIProvider() {
-            @Override
-            public Class<? extends UI> getUIClass(Application application,
-                    WrappedRequest request) {
-                return RefreshStateUI.class;
-            }
-        });
+    protected void setup(WrappedRequest request) {
+        addComponent(new Label("window.name: "
+                + request.getBrowserDetails().getWindowName()));
+        addComponent(new Label("UI id: " + getUIId()));
     }
 
     @Override

@@ -13,7 +13,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket2048 extends Application.LegacyApplication {
+public class Ticket2048 extends Application {
 
     private Embedded embedded;
     private Panel p;

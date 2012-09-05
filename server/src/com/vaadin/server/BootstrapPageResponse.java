@@ -20,7 +20,6 @@ import java.util.Map;
 
 import org.jsoup.nodes.Document;
 
-import com.vaadin.Application;
 import com.vaadin.ui.UI;
 
 /**
@@ -40,7 +39,7 @@ public class BootstrapPageResponse extends BootstrapResponse {
      * Crate a new bootstrap page response.
      * 
      * @see BootstrapResponse#BootstrapResponse(BootstrapHandler,
-     *      WrappedRequest, Application, Class)
+     *      WrappedRequest, VaadinSession, Class)
      * 
      * @param handler
      *            the bootstrap handler that is firing the event
@@ -58,7 +57,7 @@ public class BootstrapPageResponse extends BootstrapResponse {
      *            a map into which header data can be added
      */
     public BootstrapPageResponse(BootstrapHandler handler,
-            WrappedRequest request, Application application,
+            WrappedRequest request, VaadinSession application,
             Class<? extends UI> uiClass, Document document,
             Map<String, Object> headers) {
         super(handler, request, application, uiClass);

@@ -71,7 +71,7 @@ public class ResourceReference extends URLReference {
             ConnectorResource connectorResource = (ConnectorResource) resource;
 
             GlobalResourceHandler globalResourceHandler = connector.getUI()
-                    .getApplication().getGlobalResourceHandler(false);
+                    .getSession().getGlobalResourceHandler(false);
             if (globalResourceHandler != null) {
                 String uri = globalResourceHandler.getUri(connector,
                         connectorResource);

@@ -8,7 +8,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2060 extends Application.LegacyApplication {
+public class Ticket2060 extends Application {
 
     private Button button1;
     private Button button2;

@@ -36,7 +36,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.parser.Tag;
 
-import com.vaadin.Application;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.shared.ApplicationConstants;
@@ -68,7 +67,7 @@ public abstract class BootstrapHandler implements RequestHandler {
             return bootstrapResponse.getRequest();
         }
 
-        public Application getApplication() {
+        public VaadinSession getApplication() {
             return bootstrapResponse.getApplication();
         }
 
@@ -104,7 +103,7 @@ public abstract class BootstrapHandler implements RequestHandler {
     }
 
     @Override
-    public boolean handleRequest(Application application,
+    public boolean handleRequest(VaadinSession application,
             WrappedRequest request, WrappedResponse response)
             throws IOException {
 
@@ -218,8 +217,9 @@ public abstract class BootstrapHandler implements RequestHandler {
         head.appendElement("meta").attr("http-equiv", "X-UA-Compatible")
                 .attr("content", "chrome=1");
 
-        String title = context.getApplication().getPageTitleForUI(
-                context.getRequest(), context.getUIClass());
+        String title = context.getApplication()
+                .getUiProvider(context.getRequest(), context.getUIClass())
+                .getPageTitleForUI(context.getRequest(), context.getUIClass());
         if (title != null) {
             head.appendElement("title").appendText(title);
         }
@@ -245,7 +245,7 @@ public abstract class BootstrapHandler implements RequestHandler {
     }
 
     private BootstrapContext createContext(WrappedRequest request,
-            WrappedResponse response, Application application,
+            WrappedResponse response, VaadinSession application,
             Class<? extends UI> uiClass) {
         BootstrapContext context = new BootstrapContext(response,
                 new BootstrapFragmentResponse(this, request, application,
@@ -270,8 +270,9 @@ public abstract class BootstrapHandler implements RequestHandler {
     public String getWidgetsetForUI(BootstrapContext context) {
         WrappedRequest request = context.getRequest();
 
-        String widgetset = context.getApplication().getWidgetsetForUI(
-                context.getRequest(), context.getUIClass());
+        String widgetset = context.getApplication()
+                .getUiProvider(context.getRequest(), context.getUIClass())
+                .getWidgetsetForUI(context.getRequest(), context.getUIClass());
         if (widgetset == null) {
             widgetset = request.getDeploymentConfiguration()
                     .getConfiguredWidgetset(request);
@@ -390,7 +391,7 @@ public abstract class BootstrapHandler implements RequestHandler {
 
     protected JSONObject getApplicationParameters(BootstrapContext context)
             throws JSONException, PaintException {
-        Application application = context.getApplication();
+        VaadinSession application = context.getApplication();
 
         JSONObject appConfig = new JSONObject();
 
@@ -419,7 +420,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         JSONObject defaults = new JSONObject();
 
         WrappedRequest request = context.getRequest();
-        Application application = context.getApplication();
+        VaadinSession application = context.getApplication();
         DeploymentConfiguration deploymentConfiguration = request
                 .getDeploymentConfiguration();
 
@@ -461,8 +462,8 @@ public abstract class BootstrapHandler implements RequestHandler {
             defaults.put("standalone", true);
         }
 
-        defaults.put("heartbeatInterval",
-                deploymentConfiguration.getHeartbeatInterval());
+        defaults.put("heartbeatInterval", deploymentConfiguration
+                .getApplicationConfiguration().getHeartbeatInterval());
 
         defaults.put("appUri", getAppUri(context));
 
@@ -497,8 +498,9 @@ public abstract class BootstrapHandler implements RequestHandler {
      * @return
      */
     public String getThemeName(BootstrapContext context) {
-        return context.getApplication().getThemeForUI(context.getRequest(),
-                context.getUIClass());
+        return context.getApplication()
+                .getUiProvider(context.getRequest(), context.getUIClass())
+                .getThemeForUI(context.getRequest(), context.getUIClass());
     }
 
     /**

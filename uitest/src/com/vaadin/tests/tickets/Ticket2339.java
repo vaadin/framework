@@ -8,7 +8,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2339 extends Application.LegacyApplication {
+public class Ticket2339 extends Application {
 
     @Override
     public void init() {

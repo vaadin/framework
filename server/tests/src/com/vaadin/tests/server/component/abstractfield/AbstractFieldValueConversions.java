@@ -4,10 +4,10 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
-import com.vaadin.Application;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
@@ -186,11 +186,11 @@ public class AbstractFieldValueConversions extends TestCase {
     }
 
     public void testNumberDoubleConverterChange() {
-        final Application a = new Application();
-        Application.setCurrent(a);
+        final VaadinSession a = new VaadinSession();
+        VaadinSession.setCurrent(a);
         TextField tf = new TextField() {
             @Override
-            public Application getApplication() {
+            public VaadinSession getSession() {
                 return a;
             }
         };

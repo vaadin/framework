@@ -21,7 +21,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,14 +31,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
 import com.vaadin.server.AbstractUIProvider;
-import com.vaadin.server.VaadinServlet;
+import com.vaadin.server.ApplicationConfiguration;
+import com.vaadin.server.LegacyVaadinServlet;
+import com.vaadin.server.VaadinServletSession;
+import com.vaadin.server.UIProvider;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedHttpServletRequest;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.UI;
 
 @SuppressWarnings("serial")
-public class ApplicationRunnerServlet extends VaadinServlet {
+public class ApplicationRunnerServlet extends LegacyVaadinServlet {
 
     /**
      * The name of the application class currently used. Only valid within one
@@ -104,25 +107,34 @@ public class ApplicationRunnerServlet extends VaadinServlet {
     }
 
     @Override
-    protected Application getNewApplication(HttpServletRequest request)
-            throws ServletException {
+    protected Class<? extends Application> getApplicationClass()
+            throws ClassNotFoundException {
+        return getClassToRun().asSubclass(Application.class);
+    }
 
-        // Creates a new application instance
+    @Override
+    protected VaadinServletSession createApplication(
+            HttpServletRequest request) throws ServletException {
         try {
             final Class<?> classToRun = getClassToRun();
             if (UI.class.isAssignableFrom(classToRun)) {
-                Application application = new Application();
+                VaadinServletSession application = new VaadinServletSession();
                 application.addUIProvider(new AbstractUIProvider() {
 
                     @Override
                     public Class<? extends UI> getUIClass(
-                            Application application, WrappedRequest request) {
+                            VaadinSession application, WrappedRequest request) {
                         return (Class<? extends UI>) classToRun;
                     }
                 });
                 return application;
             } else if (Application.class.isAssignableFrom(classToRun)) {
-                return (Application) classToRun.newInstance();
+                return super.createApplication(request);
+            } else if (UIProvider.class.isAssignableFrom(classToRun)) {
+                VaadinServletSession application = new VaadinServletSession();
+                application
+                        .addUIProvider((UIProvider) classToRun.newInstance());
+                return application;
             } else {
                 throw new ServletException(classToRun.getCanonicalName()
                         + " is neither an Application nor a UI");
@@ -259,8 +271,9 @@ public class ApplicationRunnerServlet extends VaadinServlet {
 
     @Override
     protected ServletDeploymentConfiguration createDeploymentConfiguration(
-            Properties applicationProperties) {
-        return new ServletDeploymentConfiguration(this, applicationProperties) {
+            ApplicationConfiguration applicationConfiguration) {
+        return new ServletDeploymentConfiguration(this,
+                applicationConfiguration) {
             @Override
             public String getStaticFileLocation(WrappedRequest request) {
                 URIS uris = getApplicationRunnerURIs(WrappedHttpServletRequest

@@ -8,11 +8,13 @@ import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
 
-import com.vaadin.Application;
-import com.vaadin.Application.ApplicationStartEvent;
+import com.vaadin.DefaultApplicationConfiguration;
+import com.vaadin.server.ApplicationConfiguration;
 import com.vaadin.server.DefaultUIProvider;
 import com.vaadin.server.DeploymentConfiguration;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinSession.ApplicationStartEvent;
 import com.vaadin.ui.UI;
 
 public class CustomUIClassLoader extends TestCase {
@@ -51,7 +53,7 @@ public class CustomUIClassLoader extends TestCase {
      *             if thrown
      */
     public void testWithNullClassLoader() throws Exception {
-        Application application = createStubApplication();
+        VaadinSession application = createStubApplication();
         application.start(new ApplicationStartEvent(null,
                 createConfigurationMock(), null));
 
@@ -62,15 +64,11 @@ public class CustomUIClassLoader extends TestCase {
         assertEquals(MyUI.class, uiClass);
     }
 
-    private static DeploymentConfiguration createConfigurationMock() {
-        DeploymentConfiguration configurationMock = EasyMock
-                .createMock(DeploymentConfiguration.class);
-        EasyMock.expect(configurationMock.isProductionMode()).andReturn(false);
-        EasyMock.expect(configurationMock.getInitParameters()).andReturn(
-                new Properties());
-
-        EasyMock.replay(configurationMock);
-        return configurationMock;
+    private static ApplicationConfiguration createConfigurationMock() {
+        Properties properties = new Properties();
+        properties.put(VaadinSession.UI_PARAMETER, MyUI.class.getName());
+        return new DefaultApplicationConfiguration(CustomUIClassLoader.class,
+                properties);
     }
 
     private static WrappedRequest createRequestMock(ClassLoader classloader) {
@@ -99,7 +97,7 @@ public class CustomUIClassLoader extends TestCase {
     public void testWithClassLoader() throws Exception {
         LoggingClassLoader loggingClassLoader = new LoggingClassLoader();
 
-        Application application = createStubApplication();
+        VaadinSession application = createStubApplication();
         application.start(new ApplicationStartEvent(null,
                 createConfigurationMock(), null));
 
@@ -114,15 +112,11 @@ public class CustomUIClassLoader extends TestCase {
 
     }
 
-    private Application createStubApplication() {
-        return new Application() {
+    private VaadinSession createStubApplication() {
+        return new VaadinSession() {
             @Override
-            public String getProperty(String name) {
-                if (name.equals(UI_PARAMETER)) {
-                    return MyUI.class.getName();
-                } else {
-                    return super.getProperty(name);
-                }
+            public ApplicationConfiguration getConfiguration() {
+                return createConfigurationMock();
             }
         };
     }

@@ -7,7 +7,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 
-public class Ticket1916 extends Application.LegacyApplication {
+public class Ticket1916 extends Application {
 
     @Override
     public void init() {

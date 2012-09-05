@@ -41,7 +41,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
-public class TestSizeableIncomponents extends Application.LegacyApplication {
+public class TestSizeableIncomponents extends Application {
 
     private IndexedContainer cont;
     private ComboBox select;

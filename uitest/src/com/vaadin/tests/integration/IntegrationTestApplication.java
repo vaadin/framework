@@ -10,7 +10,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class IntegrationTestApplication extends Application.LegacyApplication {
+public class IntegrationTestApplication extends Application {
 
     @Override
     public void init() {

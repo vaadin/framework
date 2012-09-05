@@ -9,7 +9,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2209 extends Application.LegacyApplication {
+public class Ticket2209 extends Application {
 
     private GridLayout gl;
     private ComboBox combo;

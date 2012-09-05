@@ -6,7 +6,7 @@ import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2234 extends Application.LegacyApplication {
+public class Ticket2234 extends Application {
 
     @Override
     public void init() {

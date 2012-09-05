@@ -19,6 +19,7 @@ package com.vaadin.tests;
 import java.util.LinkedList;
 import java.util.Random;
 
+import com.vaadin.Application;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.shared.ui.label.ContentMode;
@@ -28,7 +29,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Select;
 
 public class UsingObjectsInSelect extends
-        com.vaadin.Application.LegacyApplication implements ValueChangeListener {
+        com.vaadin.Application implements ValueChangeListener {
 
     private final Select select = new Select();
     private final Label selectedTask = new Label("Selected task",

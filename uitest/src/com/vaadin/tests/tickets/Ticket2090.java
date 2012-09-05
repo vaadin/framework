@@ -9,7 +9,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 
-public class Ticket2090 extends Application.LegacyApplication {
+public class Ticket2090 extends Application {
 
     Label label = new Label();
     Button target = new Button();

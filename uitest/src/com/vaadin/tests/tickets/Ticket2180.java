@@ -6,7 +6,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TabSheet;
 
-public class Ticket2180 extends Application.LegacyApplication {
+public class Ticket2180 extends Application {
 
     private LegacyWindow mainWindow;
     private TabSheet tabSheet;

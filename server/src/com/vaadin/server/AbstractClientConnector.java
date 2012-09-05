@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
-import com.vaadin.Application;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.shared.communication.ClientRpc;
@@ -343,11 +342,11 @@ public abstract class AbstractClientConnector implements ClientConnector {
     @Override
     public String getConnectorId() {
         if (connectorId == null) {
-            if (getApplication() == null) {
+            if (getSession() == null) {
                 throw new RuntimeException(
                         "Component must be attached to an application when getConnectorId() is called for the first time");
             }
-            connectorId = getApplication().createConnectorId(this);
+            connectorId = getSession().createConnectorId(this);
         }
         return connectorId;
     }
@@ -358,12 +357,12 @@ public abstract class AbstractClientConnector implements ClientConnector {
      * 
      * @return The connector's application, or <code>null</code> if not attached
      */
-    protected Application getApplication() {
+    protected VaadinSession getSession() {
         UI uI = getUI();
         if (uI == null) {
             return null;
         } else {
-            return uI.getApplication();
+            return uI.getSession();
         }
     }
 
@@ -502,7 +501,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
         }
 
         // Send detach event if the component have been connected to a window
-        if (getApplication() != null) {
+        if (getSession() != null) {
             detach();
         }
 
@@ -510,7 +509,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
         this.parent = parent;
 
         // Send attach event if connected to an application
-        if (getApplication() != null) {
+        if (getSession() != null) {
             attach();
         }
     }
@@ -536,7 +535,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
      * {@inheritDoc}
      * 
      * <p>
-     * The {@link #getApplication()} and {@link #getUI()} methods might return
+     * The {@link #getSession()} and {@link #getUI()} methods might return
      * <code>null</code> after this method is called.
      * </p>
      */

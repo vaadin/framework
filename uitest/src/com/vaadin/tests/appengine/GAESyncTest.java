@@ -15,7 +15,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class GAESyncTest extends Application.LegacyApplication {
+public class GAESyncTest extends Application {
 
     /**
      * 

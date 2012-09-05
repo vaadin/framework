@@ -17,7 +17,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket736 extends Application.LegacyApplication {
+public class Ticket736 extends Application {
 
     Address address = new Address();
 

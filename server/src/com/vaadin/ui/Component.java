@@ -21,7 +21,6 @@ import java.util.EventListener;
 import java.util.EventObject;
 import java.util.Locale;
 
-import com.vaadin.Application;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ErrorMessage;
@@ -522,34 +521,12 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public UI getUI();
 
     /**
-     * Gets the application object to which the component is attached.
-     * 
-     * <p>
-     * The method will return {@code null} if the component is not currently
-     * attached to an application.
-     * </p>
-     * 
-     * <p>
-     * Getting a null value is often a problem in constructors of regular
-     * components and in the initializers of custom composite components. A
-     * standard workaround is to use {@link Application#getCurrent()} to
-     * retrieve the application instance that the current request relates to.
-     * Another way is to move the problematic initialization to
-     * {@link #attach()}, as described in the documentation of the method.
-     * </p>
-     * 
-     * @return the parent application of the component or <code>null</code>.
-     * @see #attach()
-     */
-    public Application getApplication();
-
-    /**
      * {@inheritDoc}
      * 
      * <p>
      * Reimplementing the {@code attach()} method is useful for tasks that need
      * to get a reference to the parent, window, or application object with the
-     * {@link #getParent()}, {@link #getUI()}, and {@link #getApplication()}
+     * {@link #getParent()}, {@link #getUI()}, and {@link #getSession()}
      * methods. A component does not yet know these objects in the constructor,
      * so in such case, the methods will return {@code null}. For example, the
      * following is invalid:

@@ -8,7 +8,7 @@ import com.vaadin.ui.UI;
 /**
  * See http://dev.vaadin.com/ticket/9155 .
  */
-public class ComboBoxUpdateProblem extends Application.LegacyApplication {
+public class ComboBoxUpdateProblem extends Application {
     private final DatabaseHelper databaseHelper = new DatabaseHelper();
 
     @Override

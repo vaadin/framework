@@ -10,7 +10,7 @@ import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket1598 extends Application.LegacyApplication {
+public class Ticket1598 extends Application {
 
     LegacyWindow main = new LegacyWindow("MenuBar test");
 

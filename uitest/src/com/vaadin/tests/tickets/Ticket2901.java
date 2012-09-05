@@ -11,7 +11,7 @@ import com.vaadin.ui.VerticalSplitPanel;
  * properly. Scrollbars will disappear if "shaking" content a bit, like
  * selecting tests in area.
  */
-public class Ticket2901 extends Application.LegacyApplication {
+public class Ticket2901 extends Application {
 
     @Override
     public void init() {

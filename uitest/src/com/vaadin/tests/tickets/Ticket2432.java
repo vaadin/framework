@@ -10,7 +10,7 @@ import com.vaadin.ui.Layout.AlignmentHandler;
 import com.vaadin.ui.Layout.SpacingHandler;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2432 extends Application.LegacyApplication {
+public class Ticket2432 extends Application {
 
     @Override
     public void init() {

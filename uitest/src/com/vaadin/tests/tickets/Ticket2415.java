@@ -6,7 +6,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 
-public class Ticket2415 extends Application.LegacyApplication {
+public class Ticket2415 extends Application {
 
     @Override
     public void init() {

@@ -26,7 +26,6 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceURL;
 
-import com.vaadin.Application;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
 import com.vaadin.shared.ApplicationConstants;
@@ -41,7 +40,7 @@ import com.vaadin.ui.UI;
 @SuppressWarnings("serial")
 public class PortletCommunicationManager extends AbstractCommunicationManager {
 
-    public PortletCommunicationManager(Application application) {
+    public PortletCommunicationManager(VaadinSession application) {
         super(application);
     }
 
@@ -49,7 +48,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
     protected BootstrapHandler createBootstrapHandler() {
         return new BootstrapHandler() {
             @Override
-            public boolean handleRequest(Application application,
+            public boolean handleRequest(VaadinSession application,
                     WrappedRequest request, WrappedResponse response)
                     throws IOException {
                 PortletRequest portletRequest = WrappedPortletRequest.cast(
@@ -130,8 +129,9 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             protected String getMainDivStyle(BootstrapContext context) {
                 DeploymentConfiguration deploymentConfiguration = context
                         .getRequest().getDeploymentConfiguration();
-                return deploymentConfiguration.getApplicationOrSystemProperty(
-                        VaadinPortlet.PORTLET_PARAMETER_STYLE, null);
+                return deploymentConfiguration.getApplicationConfiguration()
+                        .getApplicationOrSystemProperty(
+                                VaadinPortlet.PORTLET_PARAMETER_STYLE, null);
             }
 
             @Override
@@ -156,8 +156,8 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
     @Override
     protected InputStream getThemeResourceAsStream(UI uI, String themeName,
             String resource) {
-        PortletApplicationContext2 context = (PortletApplicationContext2) uI
-                .getApplication().getContext();
+        VaadinPortletSession context = (VaadinPortletSession) uI
+                .getSession();
         PortletContext portletContext = context.getPortletSession()
                 .getPortletContext();
         return portletContext.getResourceAsStream("/"

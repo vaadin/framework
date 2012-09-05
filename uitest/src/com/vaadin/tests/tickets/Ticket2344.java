@@ -9,7 +9,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.BaseTheme;
 
-public class Ticket2344 extends Application.LegacyApplication {
+public class Ticket2344 extends Application {
 
     @Override
     public void init() {

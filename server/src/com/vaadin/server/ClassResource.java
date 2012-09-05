@@ -18,7 +18,6 @@ package com.vaadin.server;
 
 import java.io.Serializable;
 
-import com.vaadin.Application;
 import com.vaadin.service.FileTypeResolver;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.UI.LegacyWindow;
@@ -115,7 +114,7 @@ public class ClassResource implements ConnectorResource, Serializable {
         if (associatedClass == null) {
             Class<? extends UI> associatedClass = UI.getCurrent().getClass();
             if (associatedClass == LegacyWindow.class) {
-                return Application.getCurrent().getClass();
+                return VaadinSession.getCurrent().getClass();
             }
             return associatedClass;
         }

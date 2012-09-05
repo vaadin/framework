@@ -18,7 +18,6 @@ package com.vaadin.server;
 import java.io.IOException;
 import java.io.Writer;
 
-import com.vaadin.Application;
 
 /**
  * A {@link RequestHandler} that presents an informative page if the browser in
@@ -36,7 +35,7 @@ public class UnsupportedBrowserHandler implements RequestHandler {
     public static final String FORCE_LOAD_COOKIE = "vaadinforceload=1";
 
     @Override
-    public boolean handleRequest(Application application,
+    public boolean handleRequest(VaadinSession application,
             WrappedRequest request, WrappedResponse response)
             throws IOException {
 

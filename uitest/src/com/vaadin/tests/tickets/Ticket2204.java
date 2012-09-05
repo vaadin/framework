@@ -31,7 +31,7 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 
-public class Ticket2204 extends Application.LegacyApplication {
+public class Ticket2204 extends Application {
 
     private final List<RichTextArea> textAreas = new ArrayList<RichTextArea>();
     private TabSheet ts;

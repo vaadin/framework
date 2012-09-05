@@ -14,7 +14,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 
-public class Ticket1397 extends Application.LegacyApplication {
+public class Ticket1397 extends Application {
 
     LegacyWindow main;
 

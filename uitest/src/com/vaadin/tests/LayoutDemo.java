@@ -16,6 +16,7 @@
 
 package com.vaadin.tests;
 
+import com.vaadin.Application;
 import com.vaadin.server.ClassResource;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Component;
@@ -37,7 +38,7 @@ import com.vaadin.ui.VerticalLayout;
  * @since 4.0.0
  * 
  */
-public class LayoutDemo extends com.vaadin.Application.LegacyApplication {
+public class LayoutDemo extends com.vaadin.Application {
 
     /**
      * Initialize Application. Demo components are added to main window.

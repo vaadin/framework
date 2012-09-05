@@ -8,6 +8,7 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.AbstractField;
@@ -54,7 +55,7 @@ public abstract class AbstractComponentDataBindingTest extends TestBase
     }
 
     protected void updateLocale(Locale locale) {
-        setLocale(locale);
+        VaadinSession.getCurrent().setLocale(locale);
         for (Component c : fields) {
             removeComponent(c);
         }

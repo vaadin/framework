@@ -12,7 +12,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
-public class ComboBoxReapperingOldValue extends Application.LegacyApplication
+public class ComboBoxReapperingOldValue extends Application
         implements ValueChangeListener {
 
     ComboBox cbox1 = new ComboBox();

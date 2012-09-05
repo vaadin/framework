@@ -6,7 +6,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2007 extends Application.LegacyApplication {
+public class Ticket2007 extends Application {
 
     int childs = 0;
 

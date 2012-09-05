@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.vaadin.Application;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.UI;
 
@@ -25,7 +24,7 @@ public class ConnectorResourceHandler implements RequestHandler {
     }
 
     @Override
-    public boolean handleRequest(Application application,
+    public boolean handleRequest(VaadinSession application,
             WrappedRequest request, WrappedResponse response)
             throws IOException {
         String requestPath = request.getRequestPathInfo();
@@ -45,7 +44,7 @@ public class ConnectorResourceHandler implements RequestHandler {
             }
 
             UI.setCurrent(ui);
-            Application.setCurrent(ui.getApplication());
+            VaadinSession.setCurrent(ui.getSession());
 
             ClientConnector connector = ui.getConnectorTracker().getConnector(
                     cid);

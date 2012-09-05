@@ -12,7 +12,7 @@ import com.vaadin.ui.UI.LegacyWindow;
  * @author Risto Yrjänä / Vaadin Ltd.
  * 
  */
-public class Ticket2742 extends Application.LegacyApplication {
+public class Ticket2742 extends Application {
 
     /*
      * (non-Javadoc)

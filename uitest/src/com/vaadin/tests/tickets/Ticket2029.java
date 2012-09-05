@@ -16,7 +16,7 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket2029 extends Application.LegacyApplication {
+public class Ticket2029 extends Application {
 
     int COMPONENTS;
     int DIM1, DIM2;

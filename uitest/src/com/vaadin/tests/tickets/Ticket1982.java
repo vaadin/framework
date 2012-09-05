@@ -12,7 +12,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket1982 extends Application.LegacyApplication {
+public class Ticket1982 extends Application {
 
     private List<TitleBar> components = new ArrayList<TitleBar>();
 

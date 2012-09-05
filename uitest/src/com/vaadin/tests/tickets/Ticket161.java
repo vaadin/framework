@@ -10,7 +10,7 @@ import com.vaadin.ui.Table;
 
 /**
  */
-public class Ticket161 extends Application.LegacyApplication {
+public class Ticket161 extends Application {
 
     private Table t;
 

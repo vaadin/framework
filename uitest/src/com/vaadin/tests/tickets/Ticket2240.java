@@ -7,7 +7,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 
-public class Ticket2240 extends Application.LegacyApplication {
+public class Ticket2240 extends Application {
 
     public static final String txt = "<p>There are two main types of windows: application-level windows, and "
             + "\"sub windows\".</p><p>A sub window is rendered as a \"inline\" popup window"

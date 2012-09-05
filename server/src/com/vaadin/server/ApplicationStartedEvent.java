@@ -18,7 +18,6 @@ package com.vaadin.server;
 
 import java.util.EventObject;
 
-import com.vaadin.Application;
 
 /**
  * Event used by
@@ -29,7 +28,7 @@ import com.vaadin.Application;
  * @since 7.0.0
  */
 public class ApplicationStartedEvent extends EventObject {
-    private final Application application;
+    private final VaadinSession application;
 
     /**
      * Creates a new event.
@@ -39,7 +38,7 @@ public class ApplicationStartedEvent extends EventObject {
      * @param application
      *            the application that has been started
      */
-    public ApplicationStartedEvent(AddonContext context, Application application) {
+    public ApplicationStartedEvent(AddonContext context, VaadinSession application) {
         super(context);
         this.application = application;
     }
@@ -58,7 +57,7 @@ public class ApplicationStartedEvent extends EventObject {
      * 
      * @return the newly created application
      */
-    public Application getApplication() {
+    public VaadinSession getApplication() {
         return application;
     }
 

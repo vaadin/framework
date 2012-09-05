@@ -1,18 +1,17 @@
 package com.vaadin.tests.components;
 
 import com.vaadin.Application;
-import com.vaadin.server.ApplicationContext;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WebBrowser;
 
-public abstract class AbstractTestCase extends Application.LegacyApplication {
+public abstract class AbstractTestCase extends Application {
 
     protected abstract String getDescription();
 
     protected abstract Integer getTicketNumber();
 
     protected WebBrowser getBrowser() {
-        ApplicationContext context = getContext();
-        WebBrowser webBrowser = context.getBrowser();
+        WebBrowser webBrowser = VaadinSession.getCurrent().getBrowser();
         return webBrowser;
 
     }

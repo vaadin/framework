@@ -27,7 +27,6 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.vaadin.Application;
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.EventRouter;
 import com.vaadin.event.MethodEventSource;
@@ -38,6 +37,7 @@ import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
 import com.vaadin.server.Terminal;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.ui.ComponentStateUtil;
@@ -259,7 +259,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         if (parent != null) {
             return parent.getLocale();
         }
-        final Application app = getApplication();
+        final VaadinSession app = getSession();
         if (app != null) {
             return app.getLocale();
         }
@@ -616,7 +616,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     protected void focus() {
         if (this instanceof Focusable) {
-            final Application app = getApplication();
+            final VaadinSession app = getSession();
             if (app != null) {
                 getUI().setFocusedComponent((Focusable) this);
                 delayedFocus = false;
@@ -624,31 +624,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
                 delayedFocus = true;
             }
         }
-    }
-
-    /**
-     * Gets the application object to which the component is attached.
-     * 
-     * <p>
-     * The method will return {@code null} if the component is not currently
-     * attached to an application. This is often a problem in constructors of
-     * regular components and in the initializers of custom composite
-     * components. A standard workaround is to move the problematic
-     * initialization to {@link #attach()}, as described in the documentation of
-     * the method.
-     * </p>
-     * <p>
-     * <b>This method is not meant to be overridden. Due to CDI requirements we
-     * cannot declare it as final even though it should be final.</b>
-     * </p>
-     * 
-     * @return the parent application of the component or <code>null</code>.
-     * @see #attach()
-     */
-    @Override
-    public Application getApplication() {
-        // Just make method inherited from Component interface public
-        return super.getApplication();
     }
 
     /**

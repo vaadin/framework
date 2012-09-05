@@ -12,7 +12,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
 
-public class Ticket1986 extends Application.LegacyApplication {
+public class Ticket1986 extends Application {
 
     @Override
     public void init() {

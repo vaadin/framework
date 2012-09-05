@@ -5,7 +5,7 @@ import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2095 extends Application.LegacyApplication {
+public class Ticket2095 extends Application {
 
     @Override
     public void init() {

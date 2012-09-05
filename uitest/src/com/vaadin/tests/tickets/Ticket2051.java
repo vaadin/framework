@@ -11,7 +11,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 
-public class Ticket2051 extends Application.LegacyApplication {
+public class Ticket2051 extends Application {
 
     private static final Object P1 = new Object();
     private static final Object P2 = new Object();

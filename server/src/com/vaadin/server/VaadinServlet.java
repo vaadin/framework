@@ -16,6 +16,7 @@
 package com.vaadin.server;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -30,7 +31,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -44,12 +44,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.vaadin.Application;
-import com.vaadin.Application.ApplicationStartEvent;
+import com.vaadin.DefaultApplicationConfiguration;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
 import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
+import com.vaadin.server.VaadinSession.ApplicationStartEvent;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.UI;
+import com.vaadin.util.CurrentInstance;
 
 @SuppressWarnings("serial")
 public class VaadinServlet extends HttpServlet implements Constants {
@@ -59,8 +60,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
         private final VaadinServlet servlet;
 
         public ServletDeploymentConfiguration(VaadinServlet servlet,
-                Properties applicationProperties) {
-            super(servlet.getClass(), applicationProperties);
+                ApplicationConfiguration applicationProperties) {
+            super(applicationProperties);
             this.servlet = servlet;
         }
 
@@ -74,8 +75,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
                     .cast(request);
             String staticFileLocation;
             // if property is defined in configurations, use that
-            staticFileLocation = getApplicationOrSystemProperty(
-                    PARAMETER_VAADIN_RESOURCES, null);
+            staticFileLocation = getApplicationConfiguration()
+                    .getApplicationOrSystemProperty(PARAMETER_VAADIN_RESOURCES,
+                            null);
             if (staticFileLocation != null) {
                 return staticFileLocation;
             }
@@ -111,9 +113,10 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
         @Override
         public String getConfiguredWidgetset(WrappedRequest request) {
-            return getApplicationOrSystemProperty(
-                    VaadinServlet.PARAMETER_WIDGETSET,
-                    VaadinServlet.DEFAULT_WIDGETSET);
+            return getApplicationConfiguration()
+                    .getApplicationOrSystemProperty(
+                            VaadinServlet.PARAMETER_WIDGETSET,
+                            VaadinServlet.DEFAULT_WIDGETSET);
         }
 
         @Override
@@ -135,6 +138,16 @@ public class VaadinServlet extends HttpServlet implements Constants {
         @Override
         public SystemMessages getSystemMessages() {
             return ServletPortletHelper.DEFAULT_SYSTEM_MESSAGES;
+        }
+
+        @Override
+        public File getBaseDirectory() {
+            final String realPath = VaadinServlet.getResourcePath(
+                    servlet.getServletContext(), "/");
+            if (realPath == null) {
+                return null;
+            }
+            return new File(realPath);
         }
     }
 
@@ -200,15 +213,23 @@ public class VaadinServlet extends HttpServlet implements Constants {
                     servletConfig.getInitParameter(name));
         }
 
-        deploymentConfiguration = createDeploymentConfiguration(applicationProperties);
+        ApplicationConfiguration applicationConfiguration = createApplicationConfiguration(applicationProperties);
+        deploymentConfiguration = createDeploymentConfiguration(applicationConfiguration);
 
         addonContext = new AddonContext(deploymentConfiguration);
         addonContext.init();
     }
 
-    protected ServletDeploymentConfiguration createDeploymentConfiguration(
+    protected ApplicationConfiguration createApplicationConfiguration(
             Properties applicationProperties) {
-        return new ServletDeploymentConfiguration(this, applicationProperties);
+        return new DefaultApplicationConfiguration(getClass(),
+                applicationProperties);
+    }
+
+    protected ServletDeploymentConfiguration createDeploymentConfiguration(
+            ApplicationConfiguration applicationConfiguration) {
+        return new ServletDeploymentConfiguration(this,
+                applicationConfiguration);
     }
 
     @Override
@@ -216,26 +237,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
         super.destroy();
 
         addonContext.destroy();
-    }
-
-    /**
-     * Returns true if the servlet is running in production mode. Production
-     * mode disables all debug facilities.
-     * 
-     * @return true if in production mode, false if in debug mode
-     */
-    public boolean isProductionMode() {
-        return getDeploymentConfiguration().isProductionMode();
-    }
-
-    /**
-     * Returns the number of seconds the browser should cache a file. Default is
-     * 1 hour (3600 s).
-     * 
-     * @return The number of seconds files are cached in the browser
-     */
-    public int getResourceCacheTime() {
-        return getDeploymentConfiguration().getResourceCacheTime();
     }
 
     /**
@@ -267,6 +268,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
         RequestTimer requestTimer = new RequestTimer();
         requestTimer.start();
 
+        CurrentInstance.set(WrappedResponse.class, response);
+        CurrentInstance.set(WrappedRequest.class, request);
+
         AbstractApplicationServletWrapper servletWrapper = new AbstractApplicationServletWrapper(
                 this);
 
@@ -280,9 +284,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return;
         }
 
-        Application application = null;
-        boolean transactionStarted = false;
-        boolean requestStarted = false;
+        VaadinSession application = null;
         boolean applicationRunning = false;
 
         try {
@@ -309,16 +311,15 @@ public class VaadinServlet extends HttpServlet implements Constants {
             if (application == null) {
                 return;
             }
-            Application.setCurrent(application);
+            VaadinSession.setCurrent(application);
 
             /*
              * Get or create a WebApplicationContext and an ApplicationManager
              * for the session
              */
-            ServletApplicationContext webApplicationContext = getApplicationContext(request
-                    .getSession());
-            CommunicationManager applicationManager = webApplicationContext
-                    .getApplicationManager(application, this);
+            VaadinServletSession webApplicationContext = (VaadinServletSession) application;
+            CommunicationManager applicationManager = (CommunicationManager) webApplicationContext
+                    .getApplicationManager();
 
             if (requestType == RequestType.CONNECTOR_RESOURCE) {
                 applicationManager.serveConnectorResource(request, response);
@@ -332,26 +333,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             /* Update browser information from the request */
             webApplicationContext.getBrowser().updateRequestDetails(request);
 
-            /*
-             * Call application requestStart before Application.init() is called
-             * (bypasses the limitation in TransactionListener)
-             */
-            if (application instanceof HttpServletRequestListener) {
-                ((HttpServletRequestListener) application).onRequestStart(
-                        request, response);
-                requestStarted = true;
-            }
-
-            // Start the application if it's newly created
-            startApplication(request, application, webApplicationContext);
             applicationRunning = true;
-
-            /*
-             * Transaction starts. Call transaction listeners. Transaction end
-             * is called in the finally block below.
-             */
-            webApplicationContext.startTransaction(application, request);
-            transactionStarted = true;
 
             /* Handle the request */
             if (requestType == RequestType.FILE_UPLOAD) {
@@ -400,31 +382,11 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 application.closeInactiveUIs();
             }
 
-            // Notifies transaction end
-            try {
-                if (transactionStarted) {
-                    ((ServletApplicationContext) application.getContext())
-                            .endTransaction(application, request);
+            CurrentInstance.clearAll();
 
-                }
-
-            } finally {
-                try {
-                    if (requestStarted) {
-                        ((HttpServletRequestListener) application)
-                                .onRequestEnd(request, response);
-                    }
-                } finally {
-                    UI.setCurrent(null);
-                    Application.setCurrent(null);
-
-                    HttpSession session = request.getSession(false);
-                    if (session != null) {
-                        requestTimer.stop(getApplicationContext(session));
-                    }
-                }
+            if (application != null) {
+                requestTimer.stop(application);
             }
-
         }
     }
 
@@ -612,7 +574,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @throws ServletException
      * @throws SessionExpiredException
      */
-    private Application findApplicationInstance(HttpServletRequest request,
+    private VaadinSession findApplicationInstance(HttpServletRequest request,
             RequestType requestType) throws MalformedURLException,
             ServletException, SessionExpiredException {
 
@@ -620,7 +582,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 request, requestType);
 
         /* Find an existing application for this request. */
-        Application application = getExistingApplication(request,
+        VaadinSession application = getExistingApplication(request,
                 requestCanCreateApplication);
 
         if (application != null) {
@@ -636,7 +598,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
             if (restartApplication) {
                 closeApplication(application, request.getSession(false));
-                return createApplication(request);
+                return createAndRegisterApplication(request);
             } else if (closeApplication) {
                 closeApplication(application, request.getSession(false));
                 return null;
@@ -652,7 +614,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
              * If the request is such that it should create a new application if
              * one as not found, we do that.
              */
-            return createApplication(request);
+            return createAndRegisterApplication(request);
         } else {
             /*
              * The application was not found and a new one should not be
@@ -661,6 +623,33 @@ public class VaadinServlet extends HttpServlet implements Constants {
             throw new SessionExpiredException();
         }
 
+    }
+
+    private VaadinSession createAndRegisterApplication(HttpServletRequest request)
+            throws ServletException, MalformedURLException {
+        VaadinSession newApplication = createApplication(request);
+
+        try {
+            ServletPortletHelper.checkUiProviders(newApplication);
+        } catch (ApplicationClassException e) {
+            throw new ServletException(e);
+        }
+
+        newApplication.storeInSession(new WrappedHttpSession(request
+                .getSession()));
+
+        final URL applicationUrl = getApplicationUrl(request);
+
+        // Initial locale comes from the request
+        Locale locale = request.getLocale();
+        newApplication.setLocale(locale);
+        newApplication.start(new ApplicationStartEvent(applicationUrl,
+                getDeploymentConfiguration().getApplicationConfiguration(),
+                createCommunicationManager(newApplication)));
+
+        addonContext.fireApplicationStarted(newApplication);
+
+        return newApplication;
     }
 
     /**
@@ -732,19 +721,22 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @throws ServletException
      * @throws MalformedURLException
      */
-    private Application createApplication(HttpServletRequest request)
-            throws ServletException, MalformedURLException {
-        Application newApplication = getNewApplication(request);
+    protected VaadinServletSession createApplication(
+            HttpServletRequest request) throws ServletException {
+        VaadinServletSession newApplication = new VaadinServletSession();
 
-        final ServletApplicationContext context = getApplicationContext(request
-                .getSession());
-        context.addApplication(newApplication);
+        try {
+            ServletPortletHelper.initDefaultUIProvider(newApplication,
+                    getDeploymentConfiguration());
+        } catch (ApplicationClassException e) {
+            throw new ServletException(e);
+        }
 
         return newApplication;
     }
 
     private void handleServiceException(WrappedHttpServletRequest request,
-            WrappedHttpServletResponse response, Application application,
+            WrappedHttpServletResponse response, VaadinSession application,
             Throwable e) throws IOException, ServletException {
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {
@@ -878,62 +870,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         log("Invalid security key received from " + request.getRemoteHost());
-    }
-
-    /**
-     * Creates a new application for the given request.
-     * 
-     * @param request
-     *            the HTTP request.
-     * @return A new Application instance.
-     * @throws ServletException
-     */
-    protected Application getNewApplication(HttpServletRequest request)
-            throws ServletException {
-
-        // Creates a new application instance
-        try {
-            Class<? extends Application> applicationClass = ServletPortletHelper
-                    .getApplicationClass(getDeploymentConfiguration());
-
-            final Application application = applicationClass.newInstance();
-            application.addUIProvider(new DefaultUIProvider());
-
-            return application;
-        } catch (final IllegalAccessException e) {
-            throw new ServletException("getNewApplication failed", e);
-        } catch (final InstantiationException e) {
-            throw new ServletException("getNewApplication failed", e);
-        } catch (ApplicationClassException e) {
-            throw new ServletException("getNewApplication failed", e);
-        }
-    }
-
-    /**
-     * Starts the application if it is not already running.
-     * 
-     * @param request
-     * @param application
-     * @param webApplicationContext
-     * @throws ServletException
-     * @throws MalformedURLException
-     */
-    private void startApplication(HttpServletRequest request,
-            Application application,
-            ServletApplicationContext webApplicationContext)
-            throws ServletException, MalformedURLException {
-
-        if (!application.isRunning()) {
-            // Create application
-            final URL applicationUrl = getApplicationUrl(request);
-
-            // Initial locale comes from the request
-            Locale locale = request.getLocale();
-            application.setLocale(locale);
-            application.start(new ApplicationStartEvent(applicationUrl,
-                    getDeploymentConfiguration(), webApplicationContext));
-            addonContext.fireApplicationStarted(application);
-        }
     }
 
     /**
@@ -1076,8 +1012,10 @@ public class VaadinServlet extends HttpServlet implements Constants {
              * cache timeout can be configured by setting the resourceCacheTime
              * parameter in web.xml
              */
+            int resourceCacheTime = getDeploymentConfiguration()
+                    .getApplicationConfiguration().getResourceCacheTime();
             response.setHeader("Cache-Control",
-                    "max-age= " + String.valueOf(getResourceCacheTime()));
+                    "max-age= " + String.valueOf(resourceCacheTime));
         }
 
         // Write the resource to the client.
@@ -1331,7 +1269,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @throws InstantiationException
      * @throws SessionExpiredException
      */
-    protected Application getExistingApplication(HttpServletRequest request,
+    protected VaadinSession getExistingApplication(HttpServletRequest request,
             boolean allowSessionCreation) throws MalformedURLException,
             SessionExpiredException {
 
@@ -1341,35 +1279,18 @@ public class VaadinServlet extends HttpServlet implements Constants {
             throw new SessionExpiredException();
         }
 
-        ServletApplicationContext context = getApplicationContext(session);
+        VaadinSession sessionApplication = getApplicationContext(session);
 
-        // Gets application list for the session.
-        final Collection<Application> applications = context.getApplications();
-
-        // Search for the application (using the application URI) from the list
-        for (final Iterator<Application> i = applications.iterator(); i
-                .hasNext();) {
-            final Application sessionApplication = i.next();
-            final String sessionApplicationPath = sessionApplication.getURL()
-                    .getPath();
-            String requestApplicationPath = getApplicationUrl(request)
-                    .getPath();
-
-            if (requestApplicationPath.equals(sessionApplicationPath)) {
-                // Found a running application
-                if (sessionApplication.isRunning()) {
-                    return sessionApplication;
-                }
-                // Application has stopped, so remove it before creating a new
-                // application
-                getApplicationContext(session).removeApplication(
-                        sessionApplication);
-                break;
-            }
+        if (sessionApplication == null) {
+            return null;
         }
 
-        // Existing application not found
-        return null;
+        if (!sessionApplication.isRunning()) {
+            sessionApplication.removeFromSession();
+            return null;
+        }
+
+        return sessionApplication;
     }
 
     /**
@@ -1385,7 +1306,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      *             if the writing failed due to input/output error.
      */
     private void endApplication(HttpServletRequest request,
-            HttpServletResponse response, Application application)
+            HttpServletResponse response, VaadinSession application)
             throws IOException {
 
         String logoutUrl = application.getLogoutURL();
@@ -1395,7 +1316,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
         final HttpSession session = request.getSession();
         if (session != null) {
-            getApplicationContext(session).removeApplication(application);
+            application.removeFromSession();
         }
 
         response.sendRedirect(response.encodeRedirectURL(logoutUrl));
@@ -1440,36 +1361,21 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 && (request.getParameter(URL_PARAMETER_REPAINT_ALL).equals("1"));
     }
 
-    private void closeApplication(Application application, HttpSession session) {
+    private void closeApplication(VaadinSession application, HttpSession session) {
         if (application == null) {
             return;
         }
 
         application.close();
         if (session != null) {
-            ServletApplicationContext context = getApplicationContext(session);
-            context.removeApplication(application);
+            application.removeFromSession();
         }
     }
 
-    /**
-     * 
-     * Gets the application context from an HttpSession. If no context is
-     * currently stored in a session a new context is created and stored in the
-     * session.
-     * 
-     * @param session
-     *            the HTTP session.
-     * @return the application context for HttpSession.
-     */
-    protected ServletApplicationContext getApplicationContext(
-            HttpSession session) {
-        /*
-         * TODO the ApplicationContext.getApplicationContext() should be removed
-         * and logic moved here. Now overriding context type is possible, but
-         * the whole creation logic should be here. MT 1101
-         */
-        return ServletApplicationContext.getApplicationContext(session);
+    protected VaadinSession getApplicationContext(final HttpSession session) {
+        VaadinSession sessionApplication = VaadinSession
+                .getForSession(new WrappedHttpSession(session));
+        return sessionApplication;
     }
 
     public class RequestError implements Terminal.ErrorEvent, Serializable {
@@ -1492,11 +1398,11 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * mananger implementation.
      * 
      * @deprecated Instead of overriding this method, override
-     *             {@link ServletApplicationContext} implementation via
+     *             {@link VaadinServletSession} implementation via
      *             {@link VaadinServlet#getApplicationContext(HttpSession)}
      *             method and in that customized implementation return your
      *             CommunicationManager in
-     *             {@link ServletApplicationContext#getApplicationManager(Application, VaadinServlet)}
+     *             {@link VaadinServletSession#getApplicationManager(VaadinSession, VaadinServlet)}
      *             method.
      * 
      * @param application
@@ -1504,7 +1410,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      */
     @Deprecated
     public CommunicationManager createCommunicationManager(
-            Application application) {
+            VaadinSession application) {
         return new CommunicationManager(application);
     }
 

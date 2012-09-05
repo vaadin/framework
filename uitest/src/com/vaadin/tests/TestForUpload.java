@@ -244,7 +244,7 @@ public class TestForUpload extends CustomComponent implements
 
             @Override
             public void buttonClick(ClickEvent event) {
-                getApplication().close();
+                getSession().close();
             }
         });
         main.addComponent(restart);

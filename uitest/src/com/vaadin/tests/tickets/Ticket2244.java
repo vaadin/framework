@@ -10,7 +10,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2244 extends Application.LegacyApplication {
+public class Ticket2244 extends Application {
 
     Form form;
 

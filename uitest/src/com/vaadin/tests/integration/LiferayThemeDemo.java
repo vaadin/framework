@@ -57,7 +57,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.LiferayTheme;
 
 @SuppressWarnings("serial")
-public class LiferayThemeDemo extends Application.LegacyApplication {
+public class LiferayThemeDemo extends Application {
 
     @SuppressWarnings("deprecation")
     private static final Date DATE = new Date(2009 - 1900, 6 - 1, 2);

@@ -38,7 +38,7 @@ import com.vaadin.ui.themes.Reindeer;
  * 
  * Other browsers are much faster.
  */
-public class Ticket2998 extends Application.LegacyApplication {
+public class Ticket2998 extends Application {
     private Table table;
     private VerticalLayout mainLayout;
 

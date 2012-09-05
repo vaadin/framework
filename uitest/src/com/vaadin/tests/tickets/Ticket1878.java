@@ -27,7 +27,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket1878 extends Application.LegacyApplication {
+public class Ticket1878 extends Application {
 
     private Layout orderedLayout;
     private Layout gridLayout;

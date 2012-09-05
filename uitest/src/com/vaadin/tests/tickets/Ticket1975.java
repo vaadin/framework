@@ -5,15 +5,16 @@ import java.io.File;
 import java.io.FileInputStream;
 
 import com.vaadin.Application;
-import com.vaadin.server.ServletApplicationContext;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.UI.LegacyWindow;
+import com.vaadin.util.CurrentInstance;
 
-public class Ticket1975 extends Application.LegacyApplication {
+public class Ticket1975 extends Application {
 
     private CustomLayout cl1;
     private CustomLayout cl2;
@@ -33,7 +34,6 @@ public class Ticket1975 extends Application.LegacyApplication {
         try {
             cl1 = new CustomLayout(new ByteArrayInputStream(s.getBytes()));
             layout.addComponent(cl1);
-            ServletApplicationContext wc = ((ServletApplicationContext) getContext());
 
             layout.addComponent(new Button("Disable/Enable",
                     new ClickListener() {
@@ -47,8 +47,10 @@ public class Ticket1975 extends Application.LegacyApplication {
                         }
 
                     }));
-            File f = new File(wc.getBaseDirectory().getAbsoluteFile()
-                    + "/VAADIN/themes/" + getTheme()
+            File baseDir = CurrentInstance.get(WrappedRequest.class)
+                    .getDeploymentConfiguration().getBaseDirectory()
+                    .getAbsoluteFile();
+            File f = new File(baseDir + "/VAADIN/themes/" + getTheme()
                     + "/layouts/Ticket1975.html");
 
             cl2 = new CustomLayout(new FileInputStream(f));

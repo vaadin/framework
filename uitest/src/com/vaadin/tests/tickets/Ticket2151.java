@@ -10,7 +10,7 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2151 extends Application.LegacyApplication {
+public class Ticket2151 extends Application {
 
     private Label status;
 

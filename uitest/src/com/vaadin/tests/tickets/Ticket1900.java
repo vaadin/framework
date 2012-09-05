@@ -7,7 +7,7 @@ import com.vaadin.data.Validator;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 
-public class Ticket1900 extends Application.LegacyApplication {
+public class Ticket1900 extends Application {
 
     TextField f[] = new TextField[5];
     LegacyWindow main = new LegacyWindow("#1900 test");

@@ -18,12 +18,14 @@ package com.vaadin.tests.util;
 
 import java.io.File;
 
-import com.vaadin.Application;
 import com.vaadin.server.SystemError;
+import com.vaadin.server.VaadinSession;
+import com.vaadin.server.WrappedRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
+import com.vaadin.util.CurrentInstance;
 
 /**
  * Provides sample directory based on application directory. If this fails then
@@ -41,19 +43,22 @@ public class SampleDirectory {
      * @param application
      * @return file pointing to sample directory
      */
-    public static File getDirectory(Application application, UI uI) {
+    public static File getDirectory(VaadinSession application, UI uI) {
         String errorMessage = "Access to application "
                 + "context base directory failed, "
                 + "possible security constraint with Application "
                 + "Server or Servlet Container.<br />";
-        File file = application.getContext().getBaseDirectory();
+        File file = CurrentInstance.get(WrappedRequest.class)
+                .getDeploymentConfiguration().getBaseDirectory();
         if ((file == null) || (!file.canRead())
                 || (file.getAbsolutePath() == null)) {
             // cannot access example directory, possible security issue with
             // Application Server or Servlet Container
             // Try to read sample directory from web.xml parameter
-            if (application.getProperty("sampleDirectory") != null) {
-                file = new File(application.getProperty("sampleDirectory"));
+            String sampleDirProperty = application.getConfiguration()
+                    .getInitParameters().getProperty("sampleDirectory");
+            if (sampleDirProperty != null) {
+                file = new File(sampleDirProperty);
                 if ((file != null) && (file.canRead())
                         && (file.getAbsolutePath() != null)) {
                     // Success using property
@@ -61,7 +66,7 @@ public class SampleDirectory {
                 }
                 // Failure using property
                 errorMessage += "Failed also to access sample directory <b>["
-                        + application.getProperty("sampleDirectory")
+                        + sampleDirProperty
                         + "]</b> defined in <b>sampleDirectory property</b>.";
             } else {
                 // Failure using application context base dir, no property set

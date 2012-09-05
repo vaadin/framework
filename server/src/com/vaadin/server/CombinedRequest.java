@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-import com.vaadin.Application;
 import com.vaadin.external.json.JSONArray;
 import com.vaadin.external.json.JSONException;
 import com.vaadin.external.json.JSONObject;
@@ -114,18 +113,8 @@ public class CombinedRequest implements WrappedRequest {
     }
 
     @Override
-    public int getSessionMaxInactiveInterval() {
-        return secondRequest.getSessionMaxInactiveInterval();
-    }
-
-    @Override
-    public Object getSessionAttribute(String name) {
-        return secondRequest.getSessionAttribute(name);
-    }
-
-    @Override
-    public void setSessionAttribute(String name, Object attribute) {
-        secondRequest.setSessionAttribute(name, attribute);
+    public WrappedSession getWrappedSession() {
+        return secondRequest.getWrappedSession();
     }
 
     @Override
@@ -153,9 +142,7 @@ public class CombinedRequest implements WrappedRequest {
 
             @Override
             public WebBrowser getWebBrowser() {
-                ApplicationContext context = Application.getCurrent()
-                        .getContext();
-                return context.getBrowser();
+                return VaadinSession.getCurrent().getBrowser();
             }
         };
     }

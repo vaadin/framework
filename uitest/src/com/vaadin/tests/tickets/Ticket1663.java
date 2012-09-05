@@ -1,10 +1,11 @@
 package com.vaadin.tests.tickets;
 
+import com.vaadin.Application;
 import com.vaadin.server.SystemError;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 
-public class Ticket1663 extends com.vaadin.Application.LegacyApplication {
+public class Ticket1663 extends com.vaadin.Application {
 
     @Override
     public void init() {

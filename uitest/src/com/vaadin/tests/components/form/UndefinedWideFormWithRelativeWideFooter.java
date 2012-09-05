@@ -10,7 +10,7 @@ import com.vaadin.ui.TextField;
 
 @SuppressWarnings("serial")
 public class UndefinedWideFormWithRelativeWideFooter extends
-        Application.LegacyApplication {
+        Application {
 
     @Override
     public void init() {

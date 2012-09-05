@@ -25,7 +25,6 @@ import javax.portlet.ClientDataRequest;
 import javax.portlet.PortletRequest;
 import javax.portlet.ResourceRequest;
 
-import com.vaadin.Application;
 import com.vaadin.shared.ApplicationConstants;
 
 /**
@@ -113,18 +112,8 @@ public class WrappedPortletRequest implements WrappedRequest {
     }
 
     @Override
-    public int getSessionMaxInactiveInterval() {
-        return request.getPortletSession().getMaxInactiveInterval();
-    }
-
-    @Override
-    public Object getSessionAttribute(String name) {
-        return request.getPortletSession().getAttribute(name);
-    }
-
-    @Override
-    public void setSessionAttribute(String name, Object attribute) {
-        request.getPortletSession().setAttribute(name, attribute);
+    public WrappedSession getWrappedSession() {
+        return new WrappedPortletSession(request.getPortletSession());
     }
 
     /**
@@ -161,8 +150,8 @@ public class WrappedPortletRequest implements WrappedRequest {
 
             @Override
             public WebBrowser getWebBrowser() {
-                PortletApplicationContext2 context = (PortletApplicationContext2) Application
-                        .getCurrent().getContext();
+                VaadinPortletSession context = (VaadinPortletSession) VaadinSession
+                        .getCurrent();
                 return context.getBrowser();
             }
         };

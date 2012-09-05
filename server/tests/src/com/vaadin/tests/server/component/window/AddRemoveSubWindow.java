@@ -13,7 +13,7 @@ import com.vaadin.ui.Window;
 
 public class AddRemoveSubWindow {
 
-    public class TestApp extends Application.LegacyApplication {
+    public class TestApp extends Application {
 
         @Override
         public void init() {

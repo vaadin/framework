@@ -44,7 +44,7 @@ public class RequestTimer implements Serializable {
      * 
      * @param context
      */
-    public void stop(ApplicationContext context) {
+    public void stop(VaadinSession context) {
         // Measure and store the total handling time. This data can be
         // used in TestBench 3 tests.
         long time = (System.nanoTime() - requestStartTime) / 1000000;

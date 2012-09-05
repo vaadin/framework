@@ -21,8 +21,8 @@ import javax.portlet.WindowState;
 import com.vaadin.Application;
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.server.ExternalResource;
-import com.vaadin.server.PortletApplicationContext2;
-import com.vaadin.server.PortletApplicationContext2.PortletListener;
+import com.vaadin.server.VaadinPortletSession;
+import com.vaadin.server.VaadinPortletSession.PortletListener;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
@@ -37,7 +37,7 @@ import com.vaadin.ui.Upload.Receiver;
 /**
  * Adapted from old PortletDemo to support integration testing.
  */
-public class JSR286PortletApplication extends Application.LegacyApplication {
+public class JSR286PortletApplication extends Application {
 
     @StyleSheet("PortletConnectorResource.css")
     public final class LegacyWindowWithStylesheet extends LegacyWindow {
@@ -87,9 +87,9 @@ public class JSR286PortletApplication extends Application.LegacyApplication {
         });
         main.addComponent(upload);
 
-        if (getContext() instanceof PortletApplicationContext2) {
-            PortletApplicationContext2 ctx = (PortletApplicationContext2) getContext();
-            ctx.addPortletListener(this, new DemoPortletListener());
+        if (getContext() instanceof VaadinPortletSession) {
+            VaadinPortletSession ctx = (VaadinPortletSession) getContext();
+            ctx.addPortletListener(new DemoPortletListener());
         } else {
             getMainWindow().showNotification("Not inited via Portal!",
                     Notification.TYPE_ERROR_MESSAGE);

@@ -15,7 +15,7 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * Test case for Ticket 2119.
  */
-public class Ticket2119 extends Application.LegacyApplication {
+public class Ticket2119 extends Application {
 
     private ObjectProperty<String> globalValue;
 

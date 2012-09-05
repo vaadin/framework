@@ -5,7 +5,7 @@ import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TabSheet;
 
-public class Ticket1519 extends Application.LegacyApplication {
+public class Ticket1519 extends Application {
 
     @Override
     public void init() {

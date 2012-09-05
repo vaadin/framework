@@ -345,7 +345,7 @@ public class JsonPaintTarget implements PaintTarget {
             throw new NullPointerException();
         }
         ClientConnector ownerConnector = openPaintables.peek();
-        ownerConnector.getUI().getApplication().getGlobalResourceHandler(true)
+        ownerConnector.getUI().getSession().getGlobalResourceHandler(true)
                 .register(value, ownerConnector);
 
         ResourceReference reference = ResourceReference.create(value,

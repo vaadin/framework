@@ -152,7 +152,7 @@ public class ConnectorTracker implements Serializable {
     }
 
     private void removeFromGlobalResourceHandler(ClientConnector connector) {
-        GlobalResourceHandler globalResourceHandler = uI.getApplication()
+        GlobalResourceHandler globalResourceHandler = uI.getSession()
                 .getGlobalResourceHandler(false);
         // Nothing to do if there is no handler
         if (globalResourceHandler != null) {

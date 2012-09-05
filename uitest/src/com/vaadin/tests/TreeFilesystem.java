@@ -18,14 +18,16 @@ package com.vaadin.tests;
 
 import java.io.File;
 
+import com.vaadin.Application;
 import com.vaadin.data.Item;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.util.SampleDirectory;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.ExpandEvent;
+import com.vaadin.ui.UI.LegacyWindow;
 
 /**
  * Browsable file explorer using Vaadin Tree component. Demonstrates: how to add
@@ -36,7 +38,7 @@ import com.vaadin.ui.Tree.ExpandEvent;
  * @since 4.0.0
  * 
  */
-public class TreeFilesystem extends com.vaadin.Application.LegacyApplication
+public class TreeFilesystem extends com.vaadin.Application
         implements Tree.ExpandListener {
 
     // Filesystem explorer panel and it's components
@@ -61,7 +63,8 @@ public class TreeFilesystem extends com.vaadin.Application.LegacyApplication
         tree.addListener(this);
 
         // Get sample directory
-        final File sampleDir = SampleDirectory.getDirectory(this, main);
+        final File sampleDir = SampleDirectory.getDirectory(
+                VaadinSession.getCurrent(), main);
         // populate tree's root node with example directory
         if (sampleDir != null) {
             populateNode(sampleDir.getAbsolutePath(), null);

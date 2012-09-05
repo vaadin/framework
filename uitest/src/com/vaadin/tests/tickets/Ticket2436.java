@@ -6,7 +6,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2436 extends Application.LegacyApplication {
+public class Ticket2436 extends Application {
 
     @Override
     public void init() {

@@ -5,7 +5,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.Application;
+import com.vaadin.server.ClientConnector;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
@@ -14,7 +15,7 @@ import com.vaadin.ui.Window;
 
 public class AttachDetachWindow {
 
-    private Application testApp = new Application();
+    private VaadinSession testApp = new VaadinSession();
 
     private interface TestContainer {
         public boolean attachCalled();
@@ -23,7 +24,7 @@ public class AttachDetachWindow {
 
         public TestContent getTestContent();
 
-        public Application getApplication();
+        public VaadinSession getSession();
     }
 
     private class TestWindow extends Window implements TestContainer {
@@ -60,6 +61,11 @@ public class AttachDetachWindow {
         @Override
         public TestContent getTestContent() {
             return testContent;
+        }
+
+        @Override
+        public VaadinSession getSession() {
+            return super.getSession();
         }
     }
 
@@ -155,7 +161,7 @@ public class AttachDetachWindow {
         assertUnattached(sub);
 
         // attaching main should recurse to sub
-        main.setApplication(testApp);
+        main.setSession(testApp);
         assertAttached(main);
         assertAttached(sub);
     }
@@ -165,7 +171,7 @@ public class AttachDetachWindow {
         assertUnattached(main);
         assertUnattached(sub);
 
-        main.setApplication(testApp);
+        main.setSession(testApp);
         assertAttached(main);
         assertUnattached(sub);
 
@@ -177,7 +183,7 @@ public class AttachDetachWindow {
 
     @Test
     public void removeSubWindowBeforeDetachingMainWindow() {
-        main.setApplication(testApp);
+        main.setSession(testApp);
         main.addWindow(sub);
 
         // sub should be detached when removing from attached main
@@ -186,18 +192,18 @@ public class AttachDetachWindow {
         assertDetached(sub);
 
         // main detach should recurse to sub
-        main.setApplication(null);
+        main.setSession(null);
         assertDetached(main);
         assertDetached(sub);
     }
 
     @Test
     public void removeSubWindowAfterDetachingMainWindow() {
-        main.setApplication(testApp);
+        main.setSession(testApp);
         main.addWindow(sub);
 
         // main detach should recurse to sub
-        main.setApplication(null);
+        main.setSession(null);
         assertDetached(main);
         assertDetached(sub);
 
@@ -219,22 +225,31 @@ public class AttachDetachWindow {
         assertTrue("window child attach not called",
                 testContent.childAttachCalled);
 
-        assertSame("window not attached", win.getApplication(), testApp);
-        assertSame("window content not attached", testContent.getApplication(),
-                testApp);
-        assertSame("window children not attached",
-                testContent.child.getApplication(), testApp);
+        assertSame("window not attached", win.getSession(), testApp);
+        assertSame("window content not attached", testContent.getUI()
+                .getSession(), testApp);
+        assertSame("window children not attached", testContent.child.getUI()
+                .getSession(), testApp);
     }
 
     /**
      * Asserts that win and its children are not attached.
      */
     private void assertUnattached(TestContainer win) {
-        assertSame("window not detached", win.getApplication(), null);
-        assertSame("window content not detached", win.getTestContent()
-                .getApplication(), null);
+        assertSame("window not detached", win.getSession(), null);
+        assertSame("window content not detached",
+                getVaadinSession(win.getTestContent()), null);
         assertSame("window children not detached",
-                win.getTestContent().child.getApplication(), null);
+                getVaadinSession(win.getTestContent().child), null);
+    }
+
+    private VaadinSession getVaadinSession(ClientConnector testContainer) {
+        UI ui = testContainer.getUI();
+        if (ui != null) {
+            return ui.getSession();
+        } else {
+            return null;
+        }
     }
 
     /**

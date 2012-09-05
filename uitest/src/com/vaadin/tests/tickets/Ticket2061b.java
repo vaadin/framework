@@ -21,7 +21,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 
-public class Ticket2061b extends Application.LegacyApplication implements
+public class Ticket2061b extends Application implements
         SelectedTabChangeListener {
 
     private LegacyWindow mainWindow;

@@ -25,7 +25,7 @@ import com.vaadin.ui.VerticalLayout;
 // +-------------+-------------+------+-----+---------+----------------+
 
 @SuppressWarnings("serial")
-public class MassInsertMemoryLeakTestApp extends Application.LegacyApplication {
+public class MassInsertMemoryLeakTestApp extends Application {
 
     ProgressIndicator proggress = new ProgressIndicator();
     Button process = new Button("Mass insert");

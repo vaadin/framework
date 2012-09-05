@@ -15,7 +15,7 @@ import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
 
-public class CheckboxUpdateProblem extends Application.LegacyApplication
+public class CheckboxUpdateProblem extends Application
         implements Property.ValueChangeListener {
     private final DatabaseHelper databaseHelper = new DatabaseHelper();
     private Table testList;

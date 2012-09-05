@@ -9,7 +9,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2117 extends Application.LegacyApplication {
+public class Ticket2117 extends Application {
 
     @Override
     public void init() {

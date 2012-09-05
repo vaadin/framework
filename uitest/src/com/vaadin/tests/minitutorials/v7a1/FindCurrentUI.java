@@ -16,7 +16,7 @@
 
 package com.vaadin.tests.minitutorials.v7a1;
 
-import com.vaadin.Application;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -41,7 +41,7 @@ public class FindCurrentUI extends UI {
             @Override
             public void buttonClick(ClickEvent event) {
                 String msg = "Running in ";
-                msg += Application.getCurrent().isProductionMode() ? "production"
+                msg += VaadinSession.getCurrent().isProductionMode() ? "production"
                         : "debug";
                 Notification.show(msg);
             }

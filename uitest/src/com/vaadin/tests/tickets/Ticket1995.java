@@ -10,7 +10,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
 
-public class Ticket1995 extends Application.LegacyApplication {
+public class Ticket1995 extends Application {
 
     private static final Object PROPERTY_1 = "Test";
     private Table table;

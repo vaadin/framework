@@ -1,5 +1,6 @@
 package com.vaadin.tests.tickets;
 
+import com.vaadin.Application;
 import com.vaadin.data.Container;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.tests.TestForTablesInitialColumnWidthLogicRendering;
@@ -15,7 +16,7 @@ import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class Ticket2009 extends com.vaadin.Application.LegacyApplication {
+public class Ticket2009 extends com.vaadin.Application {
 
     TextField f = new TextField();
 

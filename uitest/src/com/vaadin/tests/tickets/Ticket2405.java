@@ -13,7 +13,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket2405 extends Application.LegacyApplication {
+public class Ticket2405 extends Application {
 
     private Label label;
     private HorizontalSplitPanel split;

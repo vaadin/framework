@@ -10,7 +10,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 
-public class Ticket124 extends Application.LegacyApplication {
+public class Ticket124 extends Application {
 
     private TextField tf;
     private GridLayout gl;

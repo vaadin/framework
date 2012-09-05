@@ -16,7 +16,7 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * Test class for ticket 1983
  */
-public class Ticket1983 extends Application.LegacyApplication {
+public class Ticket1983 extends Application {
 
     @Override
     public void init() {

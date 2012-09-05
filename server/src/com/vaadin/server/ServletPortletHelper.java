@@ -1,6 +1,7 @@
 package com.vaadin.server;
 
 import java.io.Serializable;
+import java.util.Properties;
 
 import com.vaadin.Application;
 import com.vaadin.shared.ApplicationConstants;
@@ -40,27 +41,22 @@ class ServletPortletHelper implements Serializable {
         }
     }
 
-    static Class<? extends Application> getApplicationClass(
+    static Class<? extends Application> getLegacyApplicationClass(
             DeploymentConfiguration deploymentConfiguration)
             throws ApplicationClassException {
-        String applicationParameter = deploymentConfiguration
-                .getInitParameters().getProperty("application");
-        String uiParameter = deploymentConfiguration.getInitParameters()
-                .getProperty(Application.UI_PARAMETER);
+        Properties initParameters = deploymentConfiguration
+                .getApplicationConfiguration().getInitParameters();
+        String applicationParameter = initParameters.getProperty("application");
         ClassLoader classLoader = deploymentConfiguration.getClassLoader();
 
         if (applicationParameter == null) {
-
-            // Validate the parameter value
-            verifyUIClass(uiParameter, classLoader);
-
-            // Application can be used if a valid rootLayout is defined
-            return Application.class;
+            throw new ApplicationClassException(
+                    "No \"application\" init parameter found");
         }
 
         try {
-            return (Class<? extends Application>) classLoader
-                    .loadClass(applicationParameter);
+            return classLoader.loadClass(applicationParameter).asSubclass(
+                    Application.class);
         } catch (final ClassNotFoundException e) {
             throw new ApplicationClassException(
                     "Failed to load application class: " + applicationParameter,
@@ -71,7 +67,7 @@ class ServletPortletHelper implements Serializable {
     private static void verifyUIClass(String className, ClassLoader classLoader)
             throws ApplicationClassException {
         if (className == null) {
-            throw new ApplicationClassException(Application.UI_PARAMETER
+            throw new ApplicationClassException(VaadinSession.UI_PARAMETER
                     + " init parameter not defined");
         }
 
@@ -134,6 +130,27 @@ class ServletPortletHelper implements Serializable {
     public static boolean isHeartbeatRequest(WrappedRequest request) {
         return hasPathPrefix(request,
                 ApplicationConstants.HEARTBEAT_REQUEST_PATH);
+    }
+
+    public static void initDefaultUIProvider(VaadinSession application,
+            DeploymentConfiguration deploymentConfiguration)
+            throws ApplicationClassException {
+        String uiProperty = deploymentConfiguration
+                .getApplicationConfiguration().getInitParameters()
+                .getProperty(VaadinSession.UI_PARAMETER);
+        if (uiProperty != null) {
+            verifyUIClass(uiProperty, deploymentConfiguration.getClassLoader());
+            application.addUIProvider(new DefaultUIProvider());
+        }
+    }
+
+    public static void checkUiProviders(VaadinSession newApplication)
+            throws ApplicationClassException {
+        if (newApplication.getUIProviders().isEmpty()) {
+            throw new ApplicationClassException(
+                    "No UIProvider has been added to the application and there is no \""
+                            + VaadinSession.UI_PARAMETER + "\" init parameter.");
+        }
     }
 
 }

@@ -10,7 +10,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI.LegacyWindow;
 
 @SuppressWarnings("serial")
-public class Ticket695 extends Application.LegacyApplication {
+public class Ticket695 extends Application {
 
     @Override
     public void init() {

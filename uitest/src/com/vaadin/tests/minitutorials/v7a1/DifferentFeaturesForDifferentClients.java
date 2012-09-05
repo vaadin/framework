@@ -16,8 +16,8 @@
 
 package com.vaadin.tests.minitutorials.v7a1;
 
-import com.vaadin.Application;
-import com.vaadin.server.UIProvider;
+import com.vaadin.server.AbstractUIProvider;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WebBrowser;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.Label;
@@ -31,35 +31,29 @@ import com.vaadin.ui.UI;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public class DifferentFeaturesForDifferentClients extends Application {
+public class DifferentFeaturesForDifferentClients extends AbstractUIProvider {
 
     @Override
-    public void init() {
-        super.init();
-        addUIProvider(new UIProvider() {
-            @Override
-            public Class<? extends UI> getUIClass(Application application,
-                    WrappedRequest request) {
-                // could also use browser version etc.
-                if (request.getHeader("user-agent").contains("mobile")) {
-                    return TouchRoot.class;
-                } else {
-                    return DefaultRoot.class;
-                }
-            }
+    public Class<? extends UI> getUIClass(VaadinSession application,
+            WrappedRequest request) {
+        // could also use browser version etc.
+        if (request.getHeader("user-agent").contains("mobile")) {
+            return TouchRoot.class;
+        } else {
+            return DefaultRoot.class;
+        }
+    }
 
-            // Must override as default implementation isn't allowed to
-            // instantiate our non-public classes
-            @Override
-            public UI createInstance(Application application,
-                    Class<? extends UI> type, WrappedRequest request) {
-                try {
-                    return type.newInstance();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
+    // Must override as default implementation isn't allowed to
+    // instantiate our non-public classes
+    @Override
+    public UI createInstance(VaadinSession application, Class<? extends UI> type,
+            WrappedRequest request) {
+        try {
+            return type.newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 

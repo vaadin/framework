@@ -5,7 +5,7 @@ import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Window;
 
-public class Ticket2323 extends Application.LegacyApplication {
+public class Ticket2323 extends Application {
 
     @Override
     public void init() {

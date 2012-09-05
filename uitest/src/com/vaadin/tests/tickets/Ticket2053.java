@@ -10,7 +10,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 
-public class Ticket2053 extends Application.LegacyApplication {
+public class Ticket2053 extends Application {
 
     int childs = 0;
 

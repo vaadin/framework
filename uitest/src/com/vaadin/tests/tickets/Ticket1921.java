@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.vaadin.Application;
 import com.vaadin.server.RequestHandler;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.server.WrappedResponse;
 import com.vaadin.ui.Button;
@@ -13,7 +14,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket1921 extends Application.LegacyApplication implements
+public class Ticket1921 extends Application implements
         RequestHandler {
 
     int state = -1;
@@ -42,7 +43,7 @@ public class Ticket1921 extends Application.LegacyApplication implements
 
         newState();
 
-        addRequestHandler(this);
+        VaadinSession.getCurrent().addRequestHandler(this);
     }
 
     public void newState() {
@@ -94,7 +95,7 @@ public class Ticket1921 extends Application.LegacyApplication implements
     }
 
     @Override
-    public boolean handleRequest(Application application,
+    public boolean handleRequest(VaadinSession application,
             WrappedRequest request, WrappedResponse response)
             throws IOException {
         Map<String, String[]> parameters = request.getParameterMap();

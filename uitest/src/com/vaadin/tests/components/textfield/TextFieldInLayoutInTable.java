@@ -8,7 +8,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class TextFieldInLayoutInTable extends Application.LegacyApplication {
+public class TextFieldInLayoutInTable extends Application {
 
     @Override
     public void init() {

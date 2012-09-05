@@ -30,7 +30,7 @@ import com.vaadin.ui.Tree.ItemStyleGenerator;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
-public class Components extends Application.LegacyApplication {
+public class Components extends Application {
 
     private static final Object CAPTION = "c";
     private Map<Class<? extends AbstractComponentTest>, String> tests = new HashMap<Class<? extends AbstractComponentTest>, String>();

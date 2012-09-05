@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 
-import com.vaadin.Application;
 import com.vaadin.event.EventRouter;
 import com.vaadin.util.ReflectTools;
 
@@ -116,7 +115,7 @@ public class AddonContext {
      * application.
      * 
      * @see #addApplicationStartedListener(ApplicationStartedListener)
-     * @see Application#addBootstrapListener(BootstrapListener)
+     * @see VaadinSession#addBootstrapListener(BootstrapListener)
      * 
      * @param listener
      *            the bootstrap listener that should be added to all new
@@ -136,7 +135,7 @@ public class AddonContext {
      * @param application
      *            the newly started application
      */
-    public void fireApplicationStarted(Application application) {
+    public void fireApplicationStarted(VaadinSession application) {
         eventRouter.fireEvent(new ApplicationStartedEvent(this, application));
         for (BootstrapListener l : bootstrapListeners) {
             application.addBootstrapListener(l);
@@ -144,9 +143,9 @@ public class AddonContext {
     }
 
     /**
-     * Adds a listener that will be notified any time a new {@link Application}
+     * Adds a listener that will be notified any time a new {@link VaadinSession}
      * instance is started or more precisely directly after
-     * {@link Application#init()} has been invoked.
+     * {@link VaadinSession#init()} has been invoked.
      * 
      * @param applicationStartListener
      *            the application start listener that should be added

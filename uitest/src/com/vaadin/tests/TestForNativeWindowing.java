@@ -27,7 +27,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Window;
 
-public class TestForNativeWindowing extends Application.LegacyApplication {
+public class TestForNativeWindowing extends Application {
 
     LegacyWindow main = new LegacyWindow("Windowing test");
 

@@ -6,7 +6,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class GridLayoutInsidePanel2 extends Application.LegacyApplication {
+public class GridLayoutInsidePanel2 extends Application {
 
     private Layout layout;
 

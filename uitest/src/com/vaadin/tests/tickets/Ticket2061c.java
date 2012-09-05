@@ -17,7 +17,7 @@ import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket2061c extends Application.LegacyApplication implements
+public class Ticket2061c extends Application implements
         SelectedTabChangeListener {
 
     private LegacyWindow mainWindow;

@@ -28,7 +28,6 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.vaadin.Application;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.UI;
 
@@ -66,7 +65,7 @@ public class GlobalResourceHandler implements RequestHandler {
             "");
 
     @Override
-    public boolean handleRequest(Application application,
+    public boolean handleRequest(VaadinSession application,
             WrappedRequest request, WrappedResponse response)
             throws IOException {
         String pathInfo = request.getRequestPathInfo();

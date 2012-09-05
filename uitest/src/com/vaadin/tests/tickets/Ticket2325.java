@@ -6,7 +6,7 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class Ticket2325 extends Application.LegacyApplication {
+public class Ticket2325 extends Application {
 
     @Override
     public void init() {

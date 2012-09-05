@@ -10,7 +10,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket2227OrderedlayoutInTable extends
-        Application.LegacyApplication {
+        Application {
 
     @Override
     public void init() {

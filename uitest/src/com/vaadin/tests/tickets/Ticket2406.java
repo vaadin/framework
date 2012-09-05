@@ -8,7 +8,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class Ticket2406 extends Application.LegacyApplication {
+public class Ticket2406 extends Application {
 
     private Window w;
 

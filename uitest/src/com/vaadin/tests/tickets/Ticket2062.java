@@ -7,7 +7,7 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 
-public class Ticket2062 extends Application.LegacyApplication {
+public class Ticket2062 extends Application {
     private static final Object P1 = new Object();
 
     @Override

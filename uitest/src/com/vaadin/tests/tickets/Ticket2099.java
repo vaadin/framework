@@ -11,7 +11,7 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class Ticket2099 extends Application.LegacyApplication {
+public class Ticket2099 extends Application {
 
     private Label l1, l2, l3;
     private VerticalLayout ol1, ol2, ol3;

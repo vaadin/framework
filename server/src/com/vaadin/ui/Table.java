@@ -3717,7 +3717,7 @@ public class Table extends AbstractSelect implements Action.Container,
             converter = getConverter(colId);
         } else {
             ConverterUtil.getConverter(String.class, property.getType(),
-                    getApplication());
+                    getSession());
         }
         Object value = property.getValue();
         if (converter != null) {

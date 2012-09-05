@@ -19,7 +19,6 @@ package com.vaadin.server;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-import com.vaadin.Application;
 
 /**
  * Wrapper for {@link HttpServletRequest}.
@@ -56,18 +55,8 @@ public class WrappedHttpServletRequest extends HttpServletRequestWrapper
     }
 
     @Override
-    public int getSessionMaxInactiveInterval() {
-        return getSession().getMaxInactiveInterval();
-    }
-
-    @Override
-    public Object getSessionAttribute(String name) {
-        return getSession().getAttribute(name);
-    }
-
-    @Override
-    public void setSessionAttribute(String name, Object attribute) {
-        getSession().setAttribute(name, attribute);
+    public WrappedSession getWrappedSession() {
+        return new WrappedHttpSession(getSession());
     }
 
     /**
@@ -99,9 +88,7 @@ public class WrappedHttpServletRequest extends HttpServletRequestWrapper
 
             @Override
             public WebBrowser getWebBrowser() {
-                ApplicationContext context = Application.getCurrent()
-                        .getContext();
-                return context.getBrowser();
+                return VaadinSession.getCurrent().getBrowser();
             }
         };
     }

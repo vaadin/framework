@@ -11,7 +11,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket2289 extends Application.LegacyApplication {
+public class Ticket2289 extends Application {
 
     TabSheet ts = null;
     Accordion acc = null;

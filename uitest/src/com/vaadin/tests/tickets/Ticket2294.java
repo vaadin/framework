@@ -6,7 +6,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2294 extends Application.LegacyApplication {
+public class Ticket2294 extends Application {
 
     @Override
     public void init() {

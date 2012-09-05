@@ -7,7 +7,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 /**
  * #5053: Last ComboBox item may not be shown if null selection enabled
  */
-public class Ticket5053 extends Application.LegacyApplication {
+public class Ticket5053 extends Application {
 
     @Override
     public void init() {

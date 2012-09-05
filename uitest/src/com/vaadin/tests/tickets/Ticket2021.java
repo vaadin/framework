@@ -15,7 +15,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket2021 extends Application.LegacyApplication {
+public class Ticket2021 extends Application {
 
     private TextArea tf1, tf2, tf3;
 

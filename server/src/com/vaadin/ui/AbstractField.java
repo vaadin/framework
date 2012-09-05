@@ -697,7 +697,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     public void setConverter(Class<?> datamodelType) {
         Converter<T, ?> c = (Converter<T, ?>) ConverterUtil.getConverter(
-                getType(), datamodelType, getApplication());
+                getType(), datamodelType, getSession());
         setConverter(c);
     }
 

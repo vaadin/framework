@@ -8,7 +8,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 
-public class Ticket2038 extends Application.LegacyApplication {
+public class Ticket2038 extends Application {
 
     @Override
     public void init() {

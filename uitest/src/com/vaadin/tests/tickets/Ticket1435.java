@@ -16,7 +16,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket1435 extends Application.LegacyApplication {
+public class Ticket1435 extends Application {
 
     private static final boolean useWorkaround = true;
 

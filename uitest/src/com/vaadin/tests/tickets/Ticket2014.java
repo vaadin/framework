@@ -11,7 +11,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2014 extends Application.LegacyApplication {
+public class Ticket2014 extends Application {
 
     private HorizontalLayout innerLayout1;
     private Button b1;

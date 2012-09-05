@@ -9,7 +9,7 @@ import com.vaadin.ui.Layout.SpacingHandler;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket2232 extends Application.LegacyApplication {
+public class Ticket2232 extends Application {
 
     @Override
     public void init() {

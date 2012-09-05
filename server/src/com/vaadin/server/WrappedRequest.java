@@ -32,7 +32,9 @@ import com.vaadin.ui.UI;
  * A generic request to the server, wrapping a more specific request type, e.g.
  * HttpServletReqest or PortletRequest.
  * 
- * @since 7.0
+ * @author Vaadin Ltd
+ * @version @VERSION@
+ * @since 7.0.0
  */
 public interface WrappedRequest extends Serializable {
 
@@ -158,42 +160,15 @@ public interface WrappedRequest extends Serializable {
     public String getRequestPathInfo();
 
     /**
-     * Returns the maximum time interval, in seconds, that the session
-     * associated with this request will be kept open between client accesses.
+     * Gets the session associated with this request.
      * 
-     * @return an integer specifying the number of seconds the session
-     *         associated with this request remains open between client requests
+     * @see WrappedSession
+     * @see HttpServletRequest#getSession()
+     * @see PortletRequest#getPortletSession()
      * 
-     * @see javax.servlet.http.HttpSession#getMaxInactiveInterval()
-     * @see javax.portlet.PortletSession#getMaxInactiveInterval()
+     * @return the wrapped session for this request
      */
-    public int getSessionMaxInactiveInterval();
-
-    /**
-     * Gets an attribute from the session associated with this request.
-     * 
-     * @param name
-     *            the name of the attribute
-     * @return the attribute value, or <code>null</code> if the attribute is not
-     *         defined in the session
-     * 
-     * @see javax.servlet.http.HttpSession#getAttribute(String)
-     * @see javax.portlet.PortletSession#getAttribute(String)
-     */
-    public Object getSessionAttribute(String name);
-
-    /**
-     * Saves an attribute value in the session associated with this request.
-     * 
-     * @param name
-     *            the name of the attribute
-     * @param attribute
-     *            the attribute value
-     * 
-     * @see javax.servlet.http.HttpSession#setAttribute(String, Object)
-     * @see javax.portlet.PortletSession#setAttribute(String, Object)
-     */
-    public void setSessionAttribute(String name, Object attribute);
+    public WrappedSession getWrappedSession();
 
     /**
      * Returns the MIME type of the body of the request, or null if the type is

@@ -17,7 +17,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
 
-public class ScrollbarStressTest extends Application.LegacyApplication {
+public class ScrollbarStressTest extends Application {
 
     final LegacyWindow main = new LegacyWindow("Scrollbar Stress Test");
 

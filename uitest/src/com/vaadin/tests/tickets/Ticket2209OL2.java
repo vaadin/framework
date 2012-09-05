@@ -9,7 +9,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket2209OL2 extends Application.LegacyApplication {
+public class Ticket2209OL2 extends Application {
 
     private VerticalLayout gl;
     private ComboBox combo;

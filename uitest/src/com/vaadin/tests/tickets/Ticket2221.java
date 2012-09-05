@@ -13,7 +13,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket2221 extends Application.LegacyApplication {
+public class Ticket2221 extends Application {
 
     @Override
     public void init() {

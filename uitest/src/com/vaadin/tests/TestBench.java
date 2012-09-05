@@ -37,8 +37,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Tree;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -51,7 +51,7 @@ import com.vaadin.ui.VerticalLayout;
  * @author Vaadin Ltd.
  * 
  */
-public class TestBench extends com.vaadin.Application.LegacyApplication
+public class TestBench extends com.vaadin.Application
         implements Property.ValueChangeListener {
 
     // Add here packages which are used for finding testable classes
@@ -223,9 +223,9 @@ public class TestBench extends com.vaadin.Application.LegacyApplication
 
     private Component createTestable(Class<?> c) {
         try {
-            final Application.LegacyApplication app = (Application.LegacyApplication) c
+            final Application app = (Application) c
                     .newInstance();
-            app.init();
+            app.doInit();
             Layout lo = (Layout) app.getMainWindow().getContent();
             lo.setParent(null);
             return lo;
@@ -312,7 +312,7 @@ public class TestBench extends com.vaadin.Application.LegacyApplication
                         final Class<?> c = Class.forName(p);
                         if (c.getSuperclass() != null) {
                             if ((c.getSuperclass()
-                                    .equals(com.vaadin.Application.class))) {
+                                    .equals(com.vaadin.server.VaadinSession.class))) {
                                 classes.add(c);
                             } else if ((c.getSuperclass()
                                     .equals(com.vaadin.ui.CustomComponent.class))) {

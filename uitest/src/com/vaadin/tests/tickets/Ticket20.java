@@ -11,7 +11,7 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 
-public class Ticket20 extends Application.LegacyApplication {
+public class Ticket20 extends Application {
 
     @Override
     public void init() {

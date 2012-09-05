@@ -7,7 +7,7 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2282 extends Application.LegacyApplication {
+public class Ticket2282 extends Application {
 
     private FormLayout layout1;
     private FormLayout layout2;

@@ -16,7 +16,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket2181 extends Application.LegacyApplication implements
+public class Ticket2181 extends Application implements
         Button.ClickListener {
 
     // private static final Object PROPERTY_VALUE = new Object();

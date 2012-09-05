@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
-import com.vaadin.Application;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
@@ -41,6 +40,7 @@ import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.server.WrappedRequest.BrowserDetails;
 import com.vaadin.shared.EventId;
@@ -49,6 +49,7 @@ import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIServerRpc;
 import com.vaadin.shared.ui.ui.UIState;
+import com.vaadin.util.CurrentInstance;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -64,9 +65,9 @@ import com.vaadin.util.ReflectTools;
  * <p>
  * When a new UI instance is needed, typically because the user opens a URL in a
  * browser window which points to {@link VaadinServlet},
- * {@link Application#getUIForRequest(WrappedRequest)} is invoked to get a UI.
+ * {@link VaadinSession#getUIForRequest(WrappedRequest)} is invoked to get a UI.
  * That method does by default create a UI according to the
- * {@value Application#UI_PARAMETER} parameter from web.xml.
+ * {@value VaadinSession#UI_PARAMETER} parameter from web.xml.
  * </p>
  * <p>
  * After a UI has been created by the application, it is initialized using
@@ -78,7 +79,7 @@ import com.vaadin.util.ReflectTools;
  * </p>
  * 
  * @see #init(WrappedRequest)
- * @see Application#createUI(WrappedRequest)
+ * @see VaadinSession#createUI(WrappedRequest)
  * 
  * @since 7.0
  */
@@ -88,7 +89,7 @@ public abstract class UI extends AbstractComponentContainer implements
     /**
      * Helper class to emulate the main window from Vaadin 6 using UIs. This
      * class should be used in the same way as Window used as a browser level
-     * window in Vaadin 6 with {@link com.vaadin.Application.LegacyApplication}
+     * window in Vaadin 6 with {@link com.vaadin.Application}
      */
     @Deprecated
     public static class LegacyWindow extends UI {
@@ -133,7 +134,7 @@ public abstract class UI extends AbstractComponentContainer implements
          * The name also determines the URL that can be used for direct access
          * to a window. All windows can be accessed through
          * {@code http://host:port/app/win} where {@code http://host:port/app}
-         * is the application URL (as returned by {@link Application#getURL()}
+         * is the application URL (as returned by {@link VaadinSession#getURL()}
          * and {@code win} is the window name.
          * </p>
          * <p>
@@ -153,7 +154,7 @@ public abstract class UI extends AbstractComponentContainer implements
          * The name also determines the URL that can be used for direct access
          * to a window. All windows can be accessed through
          * {@code http://host:port/app/win} where {@code http://host:port/app}
-         * is the application URL (as returned by {@link Application#getURL()}
+         * is the application URL (as returned by {@link VaadinSession#getURL()}
          * and {@code win} is the window name.
          * </p>
          * <p>
@@ -172,7 +173,7 @@ public abstract class UI extends AbstractComponentContainer implements
         public void setName(String name) {
             this.name = name;
             // The name can not be changed in application
-            if (getApplication() != null) {
+            if (getSession() != null) {
                 throw new IllegalStateException(
                         "Window name can not be changed while "
                                 + "the window is in application");
@@ -191,7 +192,7 @@ public abstract class UI extends AbstractComponentContainer implements
          *         to an application
          */
         public URL getURL() {
-            Application application = getApplication();
+            VaadinSession application = getSession();
             if (application == null) {
                 return null;
             }
@@ -422,7 +423,7 @@ public abstract class UI extends AbstractComponentContainer implements
     /**
      * The application to which this UI belongs
      */
-    private Application application;
+    private VaadinSession session;
 
     /**
      * List of windows in this UI.
@@ -440,7 +441,7 @@ public abstract class UI extends AbstractComponentContainer implements
      * which a request originates. A negative value indicates that the UI id has
      * not yet been assigned by the Application.
      * 
-     * @see Application#nextUIId
+     * @see VaadinSession#nextUIId
      */
     private int uiId = -1;
 
@@ -449,11 +450,6 @@ public abstract class UI extends AbstractComponentContainer implements
      * painting and handling as well.
      */
     protected ActionManager actionManager;
-
-    /**
-     * Thread local for keeping track of the current UI.
-     */
-    private static final ThreadLocal<UI> currentUI = new ThreadLocal<UI>();
 
     /** Identifies the click event */
     private ConnectorTracker connectorTracker = new ConnectorTracker(this);
@@ -566,9 +562,29 @@ public abstract class UI extends AbstractComponentContainer implements
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Gets the application object to which the component is attached.
+     * 
+     * <p>
+     * The method will return {@code null} if the component is not currently
+     * attached to an application.
+     * </p>
+     * 
+     * <p>
+     * Getting a null value is often a problem in constructors of regular
+     * components and in the initializers of custom composite components. A
+     * standard workaround is to use {@link VaadinSession#getCurrent()} to
+     * retrieve the application instance that the current request relates to.
+     * Another way is to move the problematic initialization to
+     * {@link #attach()}, as described in the documentation of the method.
+     * </p>
+     * 
+     * @return the parent application of the component or <code>null</code>.
+     * @see #attach()
+     */
     @Override
-    public Application getApplication() {
-        return application;
+    public VaadinSession getSession() {
+        return session;
     }
 
     @Override
@@ -679,25 +695,25 @@ public abstract class UI extends AbstractComponentContainer implements
      * This method is mainly intended for internal use by the framework.
      * </p>
      * 
-     * @param application
+     * @param session
      *            the application to set
      * 
      * @throws IllegalStateException
      *             if the application has already been set
      * 
-     * @see #getApplication()
+     * @see #getSession()
      */
-    public void setApplication(Application application) {
-        if ((application == null) == (this.application == null)) {
+    public void setSession(VaadinSession session) {
+        if ((session == null) == (this.session == null)) {
             throw new IllegalStateException("Application has already been set");
         } else {
-            if (application == null) {
+            if (session == null) {
                 detach();
             }
-            this.application = application;
+            this.session = session;
         }
 
-        if (application != null) {
+        if (session != null) {
             attach();
         }
     }
@@ -706,8 +722,8 @@ public abstract class UI extends AbstractComponentContainer implements
      * Gets the id of the UI, used to identify this UI within its application
      * when processing requests. The UI id should be present in every request to
      * the server that originates from this UI.
-     * {@link Application#getUIForRequest(WrappedRequest)} uses this id to find
-     * the route to which the request belongs.
+     * {@link VaadinSession#getUIForRequest(WrappedRequest)} uses this id to
+     * find the route to which the request belongs.
      * 
      * @return
      */
@@ -719,7 +735,7 @@ public abstract class UI extends AbstractComponentContainer implements
      * Adds a window as a subwindow inside this UI. To open a new browser window
      * or tab, you should instead use {@link open(Resource)} with an url
      * pointing to this application and ensure
-     * {@link Application#createUI(WrappedRequest)} returns an appropriate UI
+     * {@link VaadinSession#createUI(WrappedRequest)} returns an appropriate UI
      * for the request.
      * 
      * @param window
@@ -735,7 +751,7 @@ public abstract class UI extends AbstractComponentContainer implements
             throw new NullPointerException("Argument must not be null");
         }
 
-        if (window.getApplication() != null) {
+        if (window.getUI() != null && window.getUI().getSession() != null) {
             throw new IllegalArgumentException(
                     "Window is already attached to an application.");
         }
@@ -940,7 +956,8 @@ public abstract class UI extends AbstractComponentContainer implements
             throw new IllegalStateException("UI id has already been defined");
         }
         this.uiId = uiId;
-        theme = getApplication().getThemeForUI(request, getClass());
+        theme = getSession().getUiProvider(request, getClass())
+                .getThemeForUI(request, getClass());
 
         getPage().init(request);
 
@@ -981,7 +998,7 @@ public abstract class UI extends AbstractComponentContainer implements
      * @see ThreadLocal
      */
     public static void setCurrent(UI ui) {
-        currentUI.set(ui);
+        CurrentInstance.setInheritable(UI.class, ui);
     }
 
     /**
@@ -994,7 +1011,7 @@ public abstract class UI extends AbstractComponentContainer implements
      * @see #setCurrent(UI)
      */
     public static UI getCurrent() {
-        return currentUI.get();
+        return CurrentInstance.get(UI.class);
     }
 
     public void setScrollTop(int scrollTop) {
@@ -1296,7 +1313,7 @@ public abstract class UI extends AbstractComponentContainer implements
      * heartbeat for this UI.
      * 
      * @see #heartbeat()
-     * @see Application#closeInactiveUIs()
+     * @see VaadinSession#closeInactiveUIs()
      * 
      * @return The time the last heartbeat request occurred.
      */

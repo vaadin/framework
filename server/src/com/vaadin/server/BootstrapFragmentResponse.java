@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.jsoup.nodes.Node;
 
-import com.vaadin.Application;
 import com.vaadin.ui.UI;
 
 /**
@@ -38,7 +37,7 @@ public class BootstrapFragmentResponse extends BootstrapResponse {
      * Crate a new bootstrap fragment response.
      * 
      * @see BootstrapResponse#BootstrapResponse(BootstrapHandler,
-     *      WrappedRequest, Application, Class)
+     *      WrappedRequest, VaadinSession, Class)
      * 
      * @param handler
      *            the bootstrap handler that is firing the event
@@ -55,7 +54,7 @@ public class BootstrapFragmentResponse extends BootstrapResponse {
      *            application HTML
      */
     public BootstrapFragmentResponse(BootstrapHandler handler,
-            WrappedRequest request, Application application,
+            WrappedRequest request, VaadinSession application,
             Class<? extends UI> uiClass, List<Node> fragmentNodes) {
         super(handler, request, application, uiClass);
         this.fragmentNodes = fragmentNodes;
