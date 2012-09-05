@@ -1,24 +1,24 @@
 package com.vaadin.tests.application;
 
 import com.vaadin.Application;
-import com.vaadin.server.AbstractUIProvider;
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestApplication;
+import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.integration.FlagSeResource;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.UI.LegacyWindow;
 
-public class ThreadLocalInstances extends AbstractTestApplication {
+public class ThreadLocalInstances extends AbstractTestCase {
     private static final Application staticInitApplication = Application
             .getCurrent();
     private static final UI staticInitRoot = UI.getCurrent();
 
-    private final UI mainWindow = new UI() {
+    private final LegacyWindow mainWindow = new LegacyWindow() {
         boolean paintReported = false;
 
         @Override
@@ -71,25 +71,13 @@ public class ThreadLocalInstances extends AbstractTestApplication {
     }
 
     @Override
-    public void init() {
+    protected void init() {
         reportCurrentStatus("app init");
-        addUIProvider(new AbstractUIProvider() {
-            @Override
-            public UI createInstance(Application application,
-                    Class<? extends UI> type, WrappedRequest request) {
-                return mainWindow;
-            }
-
-            @Override
-            public Class<? extends UI> getUIClass(Application application,
-                    WrappedRequest request) {
-                return mainWindow.getClass();
-            }
-        });
+        setMainWindow(mainWindow);
     }
 
     @Override
-    protected String getTestDescription() {
+    protected String getDescription() {
         return "Tests the precence of Application.getCurrentApplication() and UI.getCurrentRoot() from different contexts";
     }
 
@@ -113,7 +101,7 @@ public class ThreadLocalInstances extends AbstractTestApplication {
         } else if (value == reference) {
             return "this";
         } else {
-            return value.toString();
+            return "some";
         }
     }
 

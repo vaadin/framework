@@ -78,4 +78,23 @@ public interface UIProvider {
     public String getThemeForUI(WrappedRequest request,
             Class<? extends UI> uiClass);
 
+    /**
+     * Finds an existing {@link UI} for a request.
+     * <p>
+     * Implementations should take care to not return an UI instance that might
+     * be used in some other browser as that might cause synchronization issues
+     * when changes from one browser window are not present in the other.
+     * <p>
+     * If no UI provider returns an existing UI, the framework does also check
+     * the window.name for an existing instance with
+     * {@link #isUiPreserved(WrappedRequest, Class)} before falling back to
+     * bootstrapping and creating a new UI instance.
+     * 
+     * @param request
+     *            the request for which a UI is desired
+     * @return a UI belonging to the request, or <code>null</code> if this UI
+     *         provider doesn't have an existing UI for the request.
+     */
+    public UI getExistingUI(WrappedRequest request);
+
 }

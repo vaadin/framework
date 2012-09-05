@@ -42,7 +42,7 @@ public class Ticket1921 extends Application.LegacyApplication implements
 
         newState();
 
-        addRequestHandler(this);
+        Application.getCurrent().addRequestHandler(this);
     }
 
     public void newState() {

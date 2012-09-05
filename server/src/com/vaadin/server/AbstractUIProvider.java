@@ -115,4 +115,9 @@ public abstract class AbstractUIProvider implements UIProvider {
             return titleAnnotation.value();
         }
     }
+
+    @Override
+    public UI getExistingUI(WrappedRequest request) {
+        return null;
+    }
 }

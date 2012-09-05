@@ -44,7 +44,7 @@ public class Ticket2292 extends com.vaadin.Application.LegacyApplication
         Link l = new Link("l", icon);
         main.addComponent(l);
 
-        addRequestHandler(this);
+        Application.getCurrent().addRequestHandler(this);
     }
 
     @Override

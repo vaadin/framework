@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
+import com.vaadin.Application;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -54,7 +55,7 @@ public abstract class AbstractComponentDataBindingTest extends TestBase
     }
 
     protected void updateLocale(Locale locale) {
-        setLocale(locale);
+        Application.getCurrent().setLocale(locale);
         for (Component c : fields) {
             removeComponent(c);
         }

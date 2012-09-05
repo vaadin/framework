@@ -814,7 +814,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
             if (restartApplication) {
                 closeApplication(application, request.getPortletSession(false));
-                return createApplication(request);
+                return createAndRegisterApplication(request);
             } else if (closeApplication) {
                 closeApplication(application, request.getPortletSession(false));
                 return null;
@@ -826,7 +826,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         // No existing application was found
 
         if (requestCanCreateApplication) {
-            return createApplication(request);
+            return createAndRegisterApplication(request);
         } else {
             throw new SessionExpiredException();
         }
@@ -845,14 +845,35 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         }
     }
 
-    private Application createApplication(PortletRequest request)
+    private Application createAndRegisterApplication(PortletRequest request)
             throws PortletException {
-        Application newApplication = getNewApplication(request);
+        Application newApplication = createApplication(request);
+
+        try {
+            ServletPortletHelper.checkUiProviders(newApplication);
+        } catch (ApplicationClassException e) {
+            throw new PortletException(e);
+        }
+
         final PortletApplicationContext2 context = getApplicationContext(request
                 .getPortletSession());
         context.setApplication(newApplication, new PortletCommunicationManager(
                 newApplication));
         return newApplication;
+    }
+
+    protected Application createApplication(PortletRequest request)
+            throws PortletException {
+        Application application = new Application();
+
+        try {
+            ServletPortletHelper.initDefaultUIProvider(application,
+                    getDeploymentConfiguration());
+        } catch (ApplicationClassException e) {
+            throw new PortletException(e);
+        }
+
+        return application;
     }
 
     private Application getExistingApplication(PortletRequest request,
@@ -878,26 +899,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         context.removeApplication();
 
         return null;
-    }
-
-    protected Class<? extends Application> getApplicationClass()
-            throws ApplicationClassException {
-        return ServletPortletHelper
-                .getApplicationClass(getDeploymentConfiguration());
-    }
-
-    protected Application getNewApplication(PortletRequest request)
-            throws PortletException {
-        try {
-            final Application application = getApplicationClass().newInstance();
-            return application;
-        } catch (final IllegalAccessException e) {
-            throw new PortletException("getNewApplication failed", e);
-        } catch (final InstantiationException e) {
-            throw new PortletException("getNewApplication failed", e);
-        } catch (final ApplicationClassException e) {
-            throw new PortletException("getNewApplication failed", e);
-        }
     }
 
     private void handleServiceException(WrappedPortletRequest request,

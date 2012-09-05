@@ -1,34 +1,40 @@
 package com.vaadin.tests.components.ui;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import com.vaadin.Application;
-import com.vaadin.server.AbstractUIProvider;
 import com.vaadin.server.WrappedRequest;
-import com.vaadin.tests.components.AbstractTestApplication;
+import com.vaadin.tests.components.AbstractTestUIProvider;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
-public class UIsInMultipleTabs extends AbstractTestApplication {
-    private int numberOfUIsOpened;
+public class UIsInMultipleTabs extends AbstractTestUIProvider {
+    // No cleanup -> will leak, but shouldn't matter for tests
+    private static ConcurrentHashMap<Application, AtomicInteger> numberOfUIsOpened = new ConcurrentHashMap<Application, AtomicInteger>();
 
     public static class TabUI extends UI {
         @Override
         protected void init(WrappedRequest request) {
-            UIsInMultipleTabs application = (UIsInMultipleTabs) getApplication();
-            String message = "This is UI number "
-                    + ++application.numberOfUIsOpened;
+            Application application = Application.getCurrent();
+            AtomicInteger count = numberOfUIsOpened.get(application);
+            if (count == null) {
+                numberOfUIsOpened.putIfAbsent(application, new AtomicInteger());
+                // Get our added instance or another instance that was added by
+                // another thread between previous get and putIfAbsent
+                count = numberOfUIsOpened.get(application);
+            }
+            int currentCount = count.incrementAndGet();
+            String message = "This is UI number " + currentCount;
 
             addComponent(new Label(message));
         }
     }
 
-    public UIsInMultipleTabs() {
-        addUIProvider(new AbstractUIProvider() {
-            @Override
-            public Class<? extends UI> getUIClass(Application application,
-                    WrappedRequest request) {
-                return TabUI.class;
-            }
-        });
+    @Override
+    public Class<? extends UI> getUIClass(Application application,
+            WrappedRequest request) {
+        return TabUI.class;
     }
 
     @Override

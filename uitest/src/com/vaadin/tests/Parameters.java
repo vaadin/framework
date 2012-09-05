@@ -30,8 +30,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout.MarginHandler;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -56,7 +56,7 @@ public class Parameters extends com.vaadin.Application.LegacyApplication
         setMainWindow(main);
 
         // This class acts both as URI handler and parameter handler
-        addRequestHandler(this);
+        Application.getCurrent().addRequestHandler(this);
 
         final VerticalLayout layout = new VerticalLayout();
         final Label info = new Label("To test URI and Parameter Handlers, "

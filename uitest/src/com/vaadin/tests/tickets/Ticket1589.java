@@ -28,7 +28,7 @@ public class Ticket1589 extends Application.LegacyApplication {
 
         MyDynamicResource res = new MyDynamicResource();
 
-        addRequestHandler(res);
+        Application.getCurrent().addRequestHandler(res);
 
         w.addComponent(new Link(
                 "Test (without Content-Disposition, should suggest generatedFile.png when saving, browser default for actual disposition)",

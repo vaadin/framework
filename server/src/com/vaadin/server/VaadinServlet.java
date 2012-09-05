@@ -603,7 +603,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
             if (restartApplication) {
                 closeApplication(application, request.getSession(false));
-                return createApplication(request);
+                return createAndRegisterApplication(request);
             } else if (closeApplication) {
                 closeApplication(application, request.getSession(false));
                 return null;
@@ -619,7 +619,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
              * If the request is such that it should create a new application if
              * one as not found, we do that.
              */
-            return createApplication(request);
+            return createAndRegisterApplication(request);
         } else {
             /*
              * The application was not found and a new one should not be
@@ -628,6 +628,24 @@ public class VaadinServlet extends HttpServlet implements Constants {
             throw new SessionExpiredException();
         }
 
+    }
+
+    private Application createAndRegisterApplication(HttpServletRequest request)
+            throws ServletException {
+        Application newApplication = createApplication(request);
+
+        try {
+            ServletPortletHelper.checkUiProviders(newApplication);
+        } catch (ApplicationClassException e) {
+            throw new ServletException(e);
+        }
+
+        final ServletApplicationContext context = getApplicationContext(request
+                .getSession());
+        context.setApplication(newApplication,
+                createCommunicationManager(newApplication));
+
+        return newApplication;
     }
 
     /**
@@ -699,14 +717,16 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @throws ServletException
      * @throws MalformedURLException
      */
-    private Application createApplication(HttpServletRequest request)
-            throws ServletException, MalformedURLException {
-        Application newApplication = getNewApplication(request);
+    protected Application createApplication(HttpServletRequest request)
+            throws ServletException {
+        Application newApplication = new Application();
 
-        final ServletApplicationContext context = getApplicationContext(request
-                .getSession());
-        context.setApplication(newApplication,
-                createCommunicationManager(newApplication));
+        try {
+            ServletPortletHelper.initDefaultUIProvider(newApplication,
+                    getDeploymentConfiguration());
+        } catch (ApplicationClassException e) {
+            throw new ServletException(e);
+        }
 
         return newApplication;
     }
@@ -846,35 +866,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         log("Invalid security key received from " + request.getRemoteHost());
-    }
-
-    /**
-     * Creates a new application for the given request.
-     * 
-     * @param request
-     *            the HTTP request.
-     * @return A new Application instance.
-     * @throws ServletException
-     */
-    protected Application getNewApplication(HttpServletRequest request)
-            throws ServletException {
-
-        // Creates a new application instance
-        try {
-            Class<? extends Application> applicationClass = ServletPortletHelper
-                    .getApplicationClass(getDeploymentConfiguration());
-
-            final Application application = applicationClass.newInstance();
-            application.addUIProvider(new DefaultUIProvider());
-
-            return application;
-        } catch (final IllegalAccessException e) {
-            throw new ServletException("getNewApplication failed", e);
-        } catch (final InstantiationException e) {
-            throw new ServletException("getNewApplication failed", e);
-        } catch (ApplicationClassException e) {
-            throw new ServletException("getNewApplication failed", e);
-        }
     }
 
     /**

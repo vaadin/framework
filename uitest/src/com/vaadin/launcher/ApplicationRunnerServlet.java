@@ -30,16 +30,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
+import com.vaadin.Application.LegacyApplication;
 import com.vaadin.server.AbstractUIProvider;
 import com.vaadin.server.ApplicationConfiguration;
-import com.vaadin.server.VaadinServlet;
+import com.vaadin.server.LegacyVaadinServlet;
+import com.vaadin.server.UIProvider;
 import com.vaadin.server.WrappedHttpServletRequest;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.UI;
 
 @SuppressWarnings("serial")
-public class ApplicationRunnerServlet extends VaadinServlet {
+public class ApplicationRunnerServlet extends LegacyVaadinServlet {
 
     /**
      * The name of the application class currently used. Only valid within one
@@ -104,10 +106,14 @@ public class ApplicationRunnerServlet extends VaadinServlet {
     }
 
     @Override
-    protected Application getNewApplication(HttpServletRequest request)
-            throws ServletException {
+    protected Class<? extends LegacyApplication> getApplicationClass()
+            throws ClassNotFoundException {
+        return getClassToRun().asSubclass(LegacyApplication.class);
+    }
 
-        // Creates a new application instance
+    @Override
+    protected Application createApplication(HttpServletRequest request)
+            throws ServletException {
         try {
             final Class<?> classToRun = getClassToRun();
             if (UI.class.isAssignableFrom(classToRun)) {
@@ -121,8 +127,13 @@ public class ApplicationRunnerServlet extends VaadinServlet {
                     }
                 });
                 return application;
-            } else if (Application.class.isAssignableFrom(classToRun)) {
-                return (Application) classToRun.newInstance();
+            } else if (LegacyApplication.class.isAssignableFrom(classToRun)) {
+                return super.createApplication(request);
+            } else if (UIProvider.class.isAssignableFrom(classToRun)) {
+                Application application = new Application();
+                application
+                        .addUIProvider((UIProvider) classToRun.newInstance());
+                return application;
             } else {
                 throw new ServletException(classToRun.getCanonicalName()
                         + " is neither an Application nor a UI");

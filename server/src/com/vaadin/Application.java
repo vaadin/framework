@@ -58,6 +58,8 @@ import com.vaadin.server.GlobalResourceHandler;
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.ServletApplicationContext;
 import com.vaadin.server.Terminal;
+import com.vaadin.server.Terminal.ErrorEvent;
+import com.vaadin.server.Terminal.ErrorListener;
 import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VariableOwner;
@@ -152,7 +154,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
      * @since 7.0
      */
     @Deprecated
-    public static class LegacyApplication extends Application {
+    public static abstract class LegacyApplication extends AbstractUIProvider
+            implements ErrorListener {
         /**
          * Ignore initial / and then get everything up to the next /
          */
@@ -177,8 +180,8 @@ public class Application implements Terminal.ErrorListener, Serializable {
                         "mainWindow has already been set");
             }
             if (mainWindow.getApplication() == null) {
-                mainWindow.setApplication(this);
-            } else if (mainWindow.getApplication() != this) {
+                mainWindow.setApplication(Application.getCurrent());
+            } else if (mainWindow.getApplication() != Application.getCurrent()) {
                 throw new IllegalStateException(
                         "mainWindow is attached to another application");
             }
@@ -190,45 +193,44 @@ public class Application implements Terminal.ErrorListener, Serializable {
             this.mainWindow = mainWindow;
         }
 
+        public void doInit() {
+            Application.getCurrent().setErrorHandler(this);
+            init();
+        }
+
+        protected abstract void init();
+
         @Override
-        public void start(ApplicationStartEvent event) {
-            super.start(event);
-            addUIProvider(new AbstractUIProvider() {
-                @Override
-                public Class<? extends UI> getUIClass(Application application,
-                        WrappedRequest request) {
-                    if (application == LegacyApplication.this) {
-                        UI uiInstance = getUIInstance(request);
-                        if (uiInstance != null) {
-                            return uiInstance.getClass();
-                        }
-                    }
-                    return null;
-                }
+        public Class<? extends UI> getUIClass(Application application,
+                WrappedRequest request) {
+            UI uiInstance = getUIInstance(request);
+            if (uiInstance != null) {
+                return uiInstance.getClass();
+            }
+            return null;
+        }
 
-                @Override
-                public UI createInstance(Application application,
-                        Class<? extends UI> type, WrappedRequest request) {
-                    return getUIInstance(request);
-                }
+        @Override
+        public UI createInstance(Application application,
+                Class<? extends UI> type, WrappedRequest request) {
+            return getUIInstance(request);
+        }
 
-                @Override
-                public String getThemeForUI(WrappedRequest request,
-                        Class<? extends UI> uiClass) {
-                    return theme;
-                }
+        @Override
+        public String getThemeForUI(WrappedRequest request,
+                Class<? extends UI> uiClass) {
+            return theme;
+        }
 
-                @Override
-                public String getPageTitleForUI(WrappedRequest request,
-                        Class<? extends UI> uiClass) {
-                    UI uiInstance = getUIInstance(request);
-                    if (uiInstance != null) {
-                        return uiInstance.getCaption();
-                    } else {
-                        return super.getPageTitleForUI(request, uiClass);
-                    }
-                }
-            });
+        @Override
+        public String getPageTitleForUI(WrappedRequest request,
+                Class<? extends UI> uiClass) {
+            UI uiInstance = getUIInstance(request);
+            if (uiInstance != null) {
+                return uiInstance.getCaption();
+            } else {
+                return super.getPageTitleForUI(request, uiClass);
+            }
         }
 
         /**
@@ -273,7 +275,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
          * {@inheritDoc}
          */
         @Override
-        public UI getUIForRequest(WrappedRequest request) {
+        public UI getExistingUI(WrappedRequest request) {
             UI uiInstance = getUIInstance(request);
             if (uiInstance.getUIId() == -1) {
                 // Not initialized -> Let go through createUIInstance to make it
@@ -352,7 +354,7 @@ public class Application implements Terminal.ErrorListener, Serializable {
             }
 
             legacyUINames.put(uI.getName(), uI);
-            uI.setApplication(this);
+            uI.setApplication(Application.getCurrent());
         }
 
         /**
@@ -388,6 +390,27 @@ public class Application implements Terminal.ErrorListener, Serializable {
          */
         public Collection<UI.LegacyWindow> getWindows() {
             return Collections.unmodifiableCollection(legacyUINames.values());
+        }
+
+        @Override
+        public void terminalError(ErrorEvent event) {
+            Application.getCurrent().terminalError(event);
+        }
+
+        public ApplicationContext getContext() {
+            return Application.getCurrent().getContext();
+        }
+
+        protected void close() {
+            Application.getCurrent().close();
+        }
+
+        public boolean isRunning() {
+            return Application.getCurrent().isRunning();
+        }
+
+        public URL getURL() {
+            return Application.getCurrent().getURL();
         }
     }
 
@@ -1854,39 +1877,10 @@ public class Application implements Terminal.ErrorListener, Serializable {
         Integer uiId = getUIId(request);
 
         synchronized (this) {
-            BrowserDetails browserDetails = request.getBrowserDetails();
-            boolean hasBrowserDetails = browserDetails != null
-                    && browserDetails.getUriFragment() != null;
-
             uI = uIs.get(uiId);
-            Class<? extends UI> uiClass = null;
 
-            if (uI == null && hasBrowserDetails
-                    && !retainOnRefreshUIs.isEmpty()) {
-                uiClass = getUIClass(request);
-
-                // Check for a known UI
-
-                @SuppressWarnings("null")
-                String windowName = browserDetails.getWindowName();
-                Integer retainedUIId = retainOnRefreshUIs.get(windowName);
-
-                if (retainedUIId != null) {
-                    UI retainedUI = uIs.get(retainedUIId);
-                    // We've had the same UI instance in a window with this
-                    // name, but should we still use it?
-                    if (retainedUI.getClass() == uiClass) {
-                        uiId = retainedUIId;
-                        uI = retainedUI;
-                    } else {
-                        getLogger().info(
-                                "Not using retained UI in " + windowName
-                                        + " because retained UI was of type "
-                                        + retainedUIId.getClass() + " but "
-                                        + uiClass
-                                        + " is expected for the request.");
-                    }
-                }
+            if (uI == null) {
+                uI = findExistingUi(request);
             }
 
         } // end synchronized block
@@ -1894,6 +1888,48 @@ public class Application implements Terminal.ErrorListener, Serializable {
         UI.setCurrent(uI);
 
         return uI;
+    }
+
+    private UI findExistingUi(WrappedRequest request) {
+        // Check if some UI provider has an existing UI available
+        for (int i = uiProviders.size() - 1; i >= 0; i--) {
+            UIProvider provider = uiProviders.get(i);
+            UI existingUi = provider.getExistingUI(request);
+            if (existingUi != null) {
+                return existingUi;
+            }
+        }
+
+        BrowserDetails browserDetails = request.getBrowserDetails();
+        boolean hasBrowserDetails = browserDetails != null
+                && browserDetails.getUriFragment() != null;
+
+        if (hasBrowserDetails && !retainOnRefreshUIs.isEmpty()) {
+            // Check for a known UI
+
+            @SuppressWarnings("null")
+            String windowName = browserDetails.getWindowName();
+            Integer retainedUIId = retainOnRefreshUIs.get(windowName);
+
+            if (retainedUIId != null) {
+                Class<? extends UI> expectedUIClass = getUIClass(request);
+                UI retainedUI = uIs.get(retainedUIId);
+                // We've had the same UI instance in a window with this
+                // name, but should we still use it?
+                if (retainedUI.getClass() == expectedUIClass) {
+                    return retainedUI;
+                } else {
+                    getLogger().info(
+                            "Not using retained UI in " + windowName
+                                    + " because retained UI was of type "
+                                    + retainedUIId.getClass() + " but "
+                                    + expectedUIClass
+                                    + " is expected for the request.");
+                }
+            }
+        }
+
+        return null;
     }
 
     public UI createUI(WrappedRequest request) {
@@ -2165,6 +2201,10 @@ public class Application implements Terminal.ErrorListener, Serializable {
         }
 
         return globalResourceHandler;
+    }
+
+    public Collection<UIProvider> getUIProviders() {
+        return Collections.unmodifiableCollection(uiProviders);
     }
 
 }

@@ -18,6 +18,7 @@ package com.vaadin.tests;
 
 import java.io.File;
 
+import com.vaadin.Application;
 import com.vaadin.data.util.FilesystemContainer;
 import com.vaadin.data.util.FilesystemContainer.FileItem;
 import com.vaadin.tests.util.SampleDirectory;
@@ -26,8 +27,8 @@ import com.vaadin.ui.Component.Listener;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Tree;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -77,7 +78,8 @@ public class TreeFilesystemContainer extends
         propertyPanel.setEnabled(false);
 
         // Get sample directory
-        final File sampleDir = SampleDirectory.getDirectory(this, w);
+        final File sampleDir = SampleDirectory.getDirectory(
+                Application.getCurrent(), w);
         // Populate tree with FilesystemContainer
         final FilesystemContainer fsc = new FilesystemContainer(sampleDir, true);
         filesystem.setContainerDataSource(fsc);
