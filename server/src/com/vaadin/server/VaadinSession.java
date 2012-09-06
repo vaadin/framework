@@ -19,7 +19,6 @@ package com.vaadin.server;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.net.SocketException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,7 +30,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.portlet.PortletSession;
@@ -45,7 +43,6 @@ import com.vaadin.data.util.converter.DefaultConverterFactory;
 import com.vaadin.event.EventRouter;
 import com.vaadin.server.WrappedRequest.BrowserDetails;
 import com.vaadin.shared.ui.ui.UIConstants;
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
@@ -67,8 +64,7 @@ import com.vaadin.util.ReflectTools;
  * @since 7.0.0
  */
 @SuppressWarnings("serial")
-public class VaadinSession implements Terminal.ErrorListener,
-        HttpSessionBindingListener, Serializable {
+public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     /**
      * The name of the parameter that is by default used in e.g. web.xml to
@@ -176,7 +172,7 @@ public class VaadinSession implements Terminal.ErrorListener,
      * Session wide error handler which is used by default if an error is left
      * unhandled.
      */
-    private Terminal.ErrorListener errorHandler = this;
+    private Terminal.ErrorListener errorHandler = new DefaultErrorListener();
 
     /**
      * The converter factory that is used to provide default converters for the
@@ -560,53 +556,6 @@ public class VaadinSession implements Terminal.ErrorListener,
     @Deprecated
     public void setLogoutURL(String logoutURL) {
         this.logoutURL = logoutURL;
-    }
-
-    /**
-     * <p>
-     * Invoked by the terminal on any exception that occurs in application and
-     * is thrown by the <code>setVariable</code> to the terminal. The default
-     * implementation sets the exceptions as <code>ComponentErrors</code> to the
-     * component that initiated the exception and prints stack trace to standard
-     * error stream.
-     * </p>
-     * <p>
-     * You can safely override this method in your application in order to
-     * direct the errors to some other destination (for example log).
-     * </p>
-     * 
-     * @param event
-     *            the change event.
-     * @see com.vaadin.server.Terminal.ErrorListener#terminalError(com.vaadin.server.Terminal.ErrorEvent)
-     */
-    @Override
-    @Deprecated
-    public void terminalError(Terminal.ErrorEvent event) {
-        final Throwable t = event.getThrowable();
-        if (t instanceof SocketException) {
-            // Most likely client browser closed socket
-            getLogger().info(
-                    "SocketException in CommunicationManager."
-                            + " Most likely client (browser) closed socket.");
-            return;
-        }
-
-        // Finds the original source of the error/exception
-        Object owner = null;
-        if (event instanceof VariableOwner.ErrorEvent) {
-            owner = ((VariableOwner.ErrorEvent) event).getVariableOwner();
-        } else if (event instanceof ChangeVariablesErrorEvent) {
-            owner = ((ChangeVariablesErrorEvent) event).getComponent();
-        }
-
-        // Shows the error in AbstractComponent
-        if (owner instanceof AbstractComponent) {
-            ((AbstractComponent) owner).setComponentError(AbstractErrorMessage
-                    .getErrorMessageForException(t));
-        }
-
-        // also print the error on console
-        getLogger().log(Level.SEVERE, "Terminal error:", t);
     }
 
     /**

@@ -281,7 +281,7 @@ public abstract class Application extends AbstractUIProvider implements
 
     @Override
     public void terminalError(ErrorEvent event) {
-        VaadinSession.getCurrent().terminalError(event);
+        VaadinSession.getCurrent().getErrorHandler().terminalError(event);
     }
 
     public VaadinSession getContext() {
