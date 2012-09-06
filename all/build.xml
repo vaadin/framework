@@ -47,6 +47,9 @@
 
 			</fileset>
 			<fileset refid="common.files.for.all.jars" />
+			<fileset dir="${result.dir}/..">
+				<include name="README.TXT"/>
+			</fileset>
 		</zip>
 	</target>
 
