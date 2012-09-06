@@ -55,8 +55,8 @@ public class AddonContext {
     private List<AddonContextListener> initedListeners = new ArrayList<AddonContextListener>();
 
     /**
-     * Creates a new context using a given deployment configuration. Only the
-     * framework itself should typically create AddonContext methods.
+     * Creates a new context using a given vaadin service. Only the framework
+     * itself should typically create AddonContext instances.
      * 
      * @param vaadinService
      *            the vaadin service for the associated servlet or portlet.
@@ -67,9 +67,9 @@ public class AddonContext {
     }
 
     /**
-     * Gets the deployment configuration for this context.
+     * Gets the vaadin service for this context.
      * 
-     * @return the deployment configuration
+     * @return the vaadin service
      */
     public VaadinService getVaadinService() {
         return vaadinService;

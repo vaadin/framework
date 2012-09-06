@@ -51,7 +51,7 @@ public class WrappedPortletResponse implements WrappedResponse {
     private PortletService vaadinService;
 
     /**
-     * Wraps a portlet response and an associated deployment configuration
+     * Wraps a portlet response and an associated vaadin service
      * 
      * @param response
      *            the portlet response to wrap

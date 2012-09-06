@@ -409,9 +409,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
     }
 
     /**
-     * Gets a the deployment configuration for this servlet.
+     * Gets a the vaadin service for this servlet.
      * 
-     * @return the deployment configuration
+     * @return the vaadin service
      */
     protected ServletService getVaadinService() {
         return servletService;

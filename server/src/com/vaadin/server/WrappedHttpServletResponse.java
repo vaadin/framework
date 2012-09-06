@@ -36,7 +36,7 @@ public class WrappedHttpServletResponse extends HttpServletResponseWrapper
     private ServletService vaadinService;
 
     /**
-     * Wraps a http servlet response and an associated deployment configuration
+     * Wraps a http servlet response and an associated vaadin service
      * 
      * @param response
      *            the http servlet response to wrap

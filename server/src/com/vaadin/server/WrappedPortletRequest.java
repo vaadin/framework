@@ -43,7 +43,7 @@ public class WrappedPortletRequest implements WrappedRequest {
     private final PortletService vaadinService;
 
     /**
-     * Wraps a portlet request and an associated deployment configuration
+     * Wraps a portlet request and an associated vaadin service
      * 
      * @param request
      *            the portlet request to wrap

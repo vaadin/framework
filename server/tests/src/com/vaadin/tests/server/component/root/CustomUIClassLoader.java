@@ -72,13 +72,13 @@ public class CustomUIClassLoader extends TestCase {
     }
 
     private static WrappedRequest createRequestMock(ClassLoader classloader) {
-        // Mock a DeploymentConfiguration to give the passed classloader
+        // Mock a VaadinService to give the passed classloader
         VaadinService configurationMock = EasyMock
                 .createMock(VaadinService.class);
         EasyMock.expect(configurationMock.getClassLoader()).andReturn(
                 classloader);
 
-        // Mock a WrappedRequest to give the mocked deployment configuration
+        // Mock a WrappedRequest to give the mocked vaadin service
         WrappedRequest requestMock = EasyMock.createMock(WrappedRequest.class);
         EasyMock.expect(requestMock.getVaadinService()).andReturn(
                 configurationMock);
