@@ -46,8 +46,8 @@ public class BootstrapPageResponse extends BootstrapResponse {
      * @param request
      *            the wrapped request for which the bootstrap page should be
      *            generated
-     * @param application
-     *            the application for which the bootstrap page should be
+     * @param session
+     *            the vaadin session for which the bootstrap page should be
      *            generated
      * @param uiClass
      *            the class of the UI that will be displayed on the page
@@ -57,10 +57,10 @@ public class BootstrapPageResponse extends BootstrapResponse {
      *            a map into which header data can be added
      */
     public BootstrapPageResponse(BootstrapHandler handler,
-            WrappedRequest request, VaadinSession application,
+            WrappedRequest request, VaadinSession session,
             Class<? extends UI> uiClass, Document document,
             Map<String, Object> headers) {
-        super(handler, request, application, uiClass);
+        super(handler, request, session, uiClass);
         this.headers = headers;
         this.document = document;
     }

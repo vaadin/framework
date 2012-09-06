@@ -87,8 +87,8 @@ public class CommunicationManager extends AbstractCommunicationManager {
                 // don't use server and port in uri. It may cause problems with
                 // some
                 // virtual server configurations which lose the server name
-                VaadinSession application = context.getApplication();
-                URL url = application.getURL();
+                VaadinSession session = context.getVaadinSession();
+                URL url = session.getURL();
                 String appUrl = url.getPath();
                 if (appUrl.endsWith("/")) {
                     appUrl = appUrl.substring(0, appUrl.length() - 1);

@@ -44,8 +44,8 @@ public class BootstrapFragmentResponse extends BootstrapResponse {
      * @param request
      *            the wrapped request for which the bootstrap page should be
      *            generated
-     * @param application
-     *            the application for which the bootstrap page should be
+     * @param session
+     *            the vaadin session for which the bootstrap page should be
      *            generated
      * @param uiClass
      *            the class of the UI that will be displayed on the page
@@ -54,9 +54,9 @@ public class BootstrapFragmentResponse extends BootstrapResponse {
      *            application HTML
      */
     public BootstrapFragmentResponse(BootstrapHandler handler,
-            WrappedRequest request, VaadinSession application,
+            WrappedRequest request, VaadinSession session,
             Class<? extends UI> uiClass, List<Node> fragmentNodes) {
-        super(handler, request, application, uiClass);
+        super(handler, request, session, uiClass);
         this.fragmentNodes = fragmentNodes;
     }
 

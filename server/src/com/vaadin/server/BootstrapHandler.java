@@ -67,8 +67,8 @@ public abstract class BootstrapHandler implements RequestHandler {
             return bootstrapResponse.getRequest();
         }
 
-        public VaadinSession getApplication() {
-            return bootstrapResponse.getApplication();
+        public VaadinSession getVaadinSession() {
+            return bootstrapResponse.getVaadinSession();
         }
 
         public Class<? extends UI> getUIClass() {
@@ -140,7 +140,7 @@ public abstract class BootstrapHandler implements RequestHandler {
             Map<String, Object> headers = new LinkedHashMap<String, Object>();
             Document document = Document.createShell("");
             BootstrapPageResponse pageResponse = new BootstrapPageResponse(
-                    this, request, context.getApplication(),
+                    this, request, context.getVaadinSession(),
                     context.getUIClass(), document, headers);
             List<Node> fragmentNodes = fragmentResponse.getFragmentNodes();
             Element body = document.body();
@@ -149,7 +149,7 @@ public abstract class BootstrapHandler implements RequestHandler {
             }
 
             setupStandaloneDocument(context, pageResponse);
-            context.getApplication().modifyBootstrapResponse(pageResponse);
+            context.getVaadinSession().modifyBootstrapResponse(pageResponse);
 
             sendBootstrapHeaders(response, headers);
 
@@ -216,7 +216,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         head.appendElement("meta").attr("http-equiv", "X-UA-Compatible")
                 .attr("content", "chrome=1");
 
-        String title = context.getApplication()
+        String title = context.getVaadinSession()
                 .getUiProvider(context.getRequest(), context.getUIClass())
                 .getPageTitleForUI(context.getRequest(), context.getUIClass());
         if (title != null) {
@@ -269,7 +269,7 @@ public abstract class BootstrapHandler implements RequestHandler {
     public String getWidgetsetForUI(BootstrapContext context) {
         WrappedRequest request = context.getRequest();
 
-        String widgetset = context.getApplication()
+        String widgetset = context.getVaadinSession()
                 .getUiProvider(context.getRequest(), context.getUIClass())
                 .getWidgetsetForUI(context.getRequest(), context.getUIClass());
         if (widgetset == null) {
@@ -307,7 +307,7 @@ public abstract class BootstrapHandler implements RequestHandler {
          */
 
         String appClass = "v-app-"
-                + context.getApplication().getClass().getSimpleName();
+                + context.getVaadinSession().getClass().getSimpleName();
 
         String classNames = "v-app " + appClass;
         List<Node> fragmentNodes = context.getBootstrapResponse()
@@ -365,7 +365,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         JSONObject defaults = getDefaultParameters(context);
         JSONObject appConfig = getApplicationParameters(context);
 
-        boolean isDebug = !context.getApplication().getConfiguration()
+        boolean isDebug = !context.getVaadinSession().getConfiguration()
                 .isProductionMode();
 
         builder.append("vaadin.setDefaults(");
@@ -390,8 +390,6 @@ public abstract class BootstrapHandler implements RequestHandler {
 
     protected JSONObject getApplicationParameters(BootstrapContext context)
             throws JSONException, PaintException {
-        VaadinSession application = context.getApplication();
-
         JSONObject appConfig = new JSONObject();
 
         if (context.getThemeName() != null) {
@@ -419,7 +417,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         JSONObject defaults = new JSONObject();
 
         WrappedRequest request = context.getRequest();
-        VaadinSession application = context.getApplication();
+        VaadinSession session = context.getVaadinSession();
         VaadinService vaadinService = request.getVaadinService();
 
         // Get system messages
@@ -451,7 +449,7 @@ public abstract class BootstrapHandler implements RequestHandler {
                 + VaadinServlet.WIDGETSET_DIRECTORY_PATH;
         defaults.put("widgetsetBase", widgetsetBase);
 
-        if (!application.getConfiguration().isProductionMode()) {
+        if (!session.getConfiguration().isProductionMode()) {
             defaults.put("debug", true);
         }
 
@@ -495,7 +493,7 @@ public abstract class BootstrapHandler implements RequestHandler {
      * @return
      */
     public String getThemeName(BootstrapContext context) {
-        return context.getApplication()
+        return context.getVaadinSession()
                 .getUiProvider(context.getRequest(), context.getUIClass())
                 .getThemeForUI(context.getRequest(), context.getUIClass());
     }
