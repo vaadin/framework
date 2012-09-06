@@ -56,7 +56,7 @@
 	</target>
 	<target name="default-widgetset">
 		<property name="module" value="com.vaadin.DefaultWidgetSet" />
-		<property name="module.output.dir" location="../WebContent/VAADIN/widgetset" />
+		<property name="module.output.dir" location="WebContent/VAADIN/widgetsets" />
 		<property name="style" value="PRETTY" />
 		<property name="localWorkers" value="2" />
 		<property name="extraParams" value="" />
