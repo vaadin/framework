@@ -149,11 +149,11 @@ public interface WrappedResponse extends Serializable {
     public void sendError(int errorCode, String message) throws IOException;
 
     /**
-     * Gets the deployment configuration for the context of this response.
+     * Gets the vaadin service for the context of this response.
      * 
-     * @return the deployment configuration
+     * @return the vaadin service
      * 
-     * @see DeploymentConfiguration
+     * @see VaadinService
      */
-    public DeploymentConfiguration getDeploymentConfiguration();
+    public VaadinService getVaadinService();
 }

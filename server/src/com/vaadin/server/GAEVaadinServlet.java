@@ -172,9 +172,9 @@ public class GAEVaadinServlet extends VaadinServlet {
             HttpServletResponse unwrappedResponse) throws ServletException,
             IOException {
         WrappedHttpServletRequest request = new WrappedHttpServletRequest(
-                unwrappedRequest, getDeploymentConfiguration());
+                unwrappedRequest, getVaadinService());
         WrappedHttpServletResponse response = new WrappedHttpServletResponse(
-                unwrappedResponse, getDeploymentConfiguration());
+                unwrappedResponse, getVaadinService());
 
         if (isCleanupRequest(request)) {
             cleanDatastore();

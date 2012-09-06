@@ -48,8 +48,7 @@ public class Ticket1975 extends Application {
 
                     }));
             File baseDir = CurrentInstance.get(WrappedRequest.class)
-                    .getDeploymentConfiguration().getBaseDirectory()
-                    .getAbsoluteFile();
+                    .getVaadinService().getBaseDirectory().getAbsoluteFile();
             File f = new File(baseDir + "/VAADIN/themes/" + getTheme()
                     + "/layouts/Ticket1975.html");
 

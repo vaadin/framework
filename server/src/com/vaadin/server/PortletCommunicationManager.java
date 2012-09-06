@@ -127,9 +127,9 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
 
             @Override
             protected String getMainDivStyle(BootstrapContext context) {
-                DeploymentConfiguration deploymentConfiguration = context
-                        .getRequest().getDeploymentConfiguration();
-                return deploymentConfiguration.getApplicationConfiguration()
+                VaadinService vaadinService = context.getRequest()
+                        .getVaadinService();
+                return vaadinService.getApplicationConfiguration()
                         .getApplicationOrSystemProperty(
                                 VaadinPortlet.PORTLET_PARAMETER_STYLE, null);
             }

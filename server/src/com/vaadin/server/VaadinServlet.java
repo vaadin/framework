@@ -55,11 +55,10 @@ import com.vaadin.util.CurrentInstance;
 @SuppressWarnings("serial")
 public class VaadinServlet extends HttpServlet implements Constants {
 
-    public static class ServletDeploymentConfiguration extends
-            AbstractDeploymentConfiguration {
+    public static class ServletService extends AbstractVaadinService {
         private final VaadinServlet servlet;
 
-        public ServletDeploymentConfiguration(VaadinServlet servlet,
+        public ServletService(VaadinServlet servlet,
                 ApplicationConfiguration applicationProperties) {
             super(applicationProperties);
             this.servlet = servlet;
@@ -175,7 +174,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     private final String resourcePath = null;
 
-    private DeploymentConfiguration deploymentConfiguration;
+    private ServletService servletService;
 
     private AddonContext addonContext;
 
@@ -214,9 +213,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         ApplicationConfiguration applicationConfiguration = createApplicationConfiguration(applicationProperties);
-        deploymentConfiguration = createDeploymentConfiguration(applicationConfiguration);
+        servletService = createServletService(applicationConfiguration);
 
-        addonContext = new AddonContext(deploymentConfiguration);
+        addonContext = new AddonContext(servletService);
         addonContext.init();
     }
 
@@ -226,10 +225,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 applicationProperties);
     }
 
-    protected ServletDeploymentConfiguration createDeploymentConfiguration(
+    protected ServletService createServletService(
             ApplicationConfiguration applicationConfiguration) {
-        return new ServletDeploymentConfiguration(this,
-                applicationConfiguration);
+        return new ServletService(this, applicationConfiguration);
     }
 
     @Override
@@ -393,7 +391,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     private WrappedHttpServletResponse createWrappedResponse(
             HttpServletResponse response) {
         WrappedHttpServletResponse wrappedResponse = new WrappedHttpServletResponse(
-                response, getDeploymentConfiguration());
+                response, getVaadinService());
         return wrappedResponse;
     }
 
@@ -407,8 +405,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      */
     protected WrappedHttpServletRequest createWrappedRequest(
             HttpServletRequest request) {
-        return new WrappedHttpServletRequest(request,
-                getDeploymentConfiguration());
+        return new WrappedHttpServletRequest(request, getVaadinService());
     }
 
     /**
@@ -416,8 +413,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * 
      * @return the deployment configuration
      */
-    protected DeploymentConfiguration getDeploymentConfiguration() {
-        return deploymentConfiguration;
+    protected ServletService getVaadinService() {
+        return servletService;
     }
 
     /**
@@ -443,7 +440,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // This can be removed if cookieless mode (#3228) is supported
             if (request.getRequestedSessionId() == null) {
                 // User has cookies disabled
-                SystemMessages systemMessages = getDeploymentConfiguration()
+                SystemMessages systemMessages = getVaadinService()
                         .getSystemMessages();
                 criticalNotification(request, response,
                         systemMessages.getCookiesDisabledCaption(),
@@ -645,7 +642,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         Locale locale = request.getLocale();
         newApplication.setLocale(locale);
         newApplication.start(new ApplicationStartEvent(applicationUrl,
-                getDeploymentConfiguration().getApplicationConfiguration(),
+                getVaadinService().getApplicationConfiguration(),
                 createCommunicationManager(newApplication)));
 
         addonContext.fireApplicationStarted(newApplication);
@@ -728,7 +725,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
         try {
             ServletPortletHelper.initDefaultUIProvider(newApplication,
-                    getDeploymentConfiguration());
+                    getVaadinService());
         } catch (ApplicationClassException e) {
             throw new ServletException(e);
         }
@@ -741,8 +738,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             Throwable e) throws IOException, ServletException {
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {
-            SystemMessages ci = getDeploymentConfiguration()
-                    .getSystemMessages();
+            SystemMessages ci = getVaadinService().getSystemMessages();
             criticalNotification(request, response,
                     ci.getInternalErrorCaption(), ci.getInternalErrorMessage(),
                     null, ci.getInternalErrorURL());
@@ -805,8 +801,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         try {
-            SystemMessages ci = getDeploymentConfiguration()
-                    .getSystemMessages();
+            SystemMessages ci = getVaadinService().getSystemMessages();
             if (getRequestType(request) != RequestType.UIDL) {
                 // 'plain' http req - e.g. browser reload;
                 // just go ahead redirect the browser
@@ -848,8 +843,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         try {
-            SystemMessages ci = getDeploymentConfiguration()
-                    .getSystemMessages();
+            SystemMessages ci = getVaadinService().getSystemMessages();
             if (getRequestType(request) != RequestType.UIDL) {
                 // 'plain' http req - e.g. browser reload;
                 // just go ahead redirect the browser
@@ -931,8 +925,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
             // strip leading "/" otherwise stream from JAR wont work
             filename = filename.substring(1);
-            resourceUrl = getDeploymentConfiguration().getClassLoader()
-                    .getResource(filename);
+            resourceUrl = getVaadinService().getClassLoader().getResource(
+                    filename);
 
             if (resourceUrl == null) {
                 // cannot serve requested file
@@ -1013,7 +1007,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
              * cache timeout can be configured by setting the resourceCacheTime
              * parameter in web.xml
              */
-            int resourceCacheTime = getDeploymentConfiguration()
+            int resourceCacheTime = getVaadinService()
                     .getApplicationConfiguration().getResourceCacheTime();
             response.setHeader("Cache-Control",
                     "max-age= " + String.valueOf(resourceCacheTime));

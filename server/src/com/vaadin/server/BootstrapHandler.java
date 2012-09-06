@@ -131,13 +131,12 @@ public abstract class BootstrapHandler implements RequestHandler {
     private String getBootstrapHtml(BootstrapContext context) {
         WrappedRequest request = context.getRequest();
         WrappedResponse response = context.getResponse();
-        DeploymentConfiguration deploymentConfiguration = request
-                .getDeploymentConfiguration();
+        VaadinService vaadinService = request.getVaadinService();
 
         BootstrapFragmentResponse fragmentResponse = context
                 .getBootstrapResponse();
 
-        if (deploymentConfiguration.isStandalone(request)) {
+        if (vaadinService.isStandalone(request)) {
             Map<String, Object> headers = new LinkedHashMap<String, Object>();
             Document document = Document.createShell("");
             BootstrapPageResponse pageResponse = new BootstrapPageResponse(
@@ -274,8 +273,8 @@ public abstract class BootstrapHandler implements RequestHandler {
                 .getUiProvider(context.getRequest(), context.getUIClass())
                 .getWidgetsetForUI(context.getRequest(), context.getUIClass());
         if (widgetset == null) {
-            widgetset = request.getDeploymentConfiguration()
-                    .getConfiguredWidgetset(request);
+            widgetset = request.getVaadinService().getConfiguredWidgetset(
+                    request);
         }
 
         widgetset = VaadinServlet.stripSpecialChars(widgetset);
@@ -327,9 +326,8 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         WrappedRequest request = context.getRequest();
 
-        DeploymentConfiguration deploymentConfiguration = request
-                .getDeploymentConfiguration();
-        String staticFileLocation = deploymentConfiguration
+        VaadinService vaadinService = request.getVaadinService();
+        String staticFileLocation = vaadinService
                 .getStaticFileLocation(request);
 
         fragmentNodes
@@ -421,12 +419,10 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         WrappedRequest request = context.getRequest();
         VaadinSession application = context.getApplication();
-        DeploymentConfiguration deploymentConfiguration = request
-                .getDeploymentConfiguration();
+        VaadinService vaadinService = request.getVaadinService();
 
         // Get system messages
-        SystemMessages systemMessages = deploymentConfiguration
-                .getSystemMessages();
+        SystemMessages systemMessages = vaadinService.getSystemMessages();
         if (systemMessages != null) {
             // Write the CommunicationError -message to client
             JSONObject comErrMsg = new JSONObject();
@@ -448,7 +444,7 @@ public abstract class BootstrapHandler implements RequestHandler {
             defaults.put("authErrMsg", authErrMsg);
         }
 
-        String staticFileLocation = deploymentConfiguration
+        String staticFileLocation = vaadinService
                 .getStaticFileLocation(request);
         String widgetsetBase = staticFileLocation + "/"
                 + VaadinServlet.WIDGETSET_DIRECTORY_PATH;
@@ -458,11 +454,11 @@ public abstract class BootstrapHandler implements RequestHandler {
             defaults.put("debug", true);
         }
 
-        if (deploymentConfiguration.isStandalone(request)) {
+        if (vaadinService.isStandalone(request)) {
             defaults.put("standalone", true);
         }
 
-        defaults.put("heartbeatInterval", deploymentConfiguration
+        defaults.put("heartbeatInterval", vaadinService
                 .getApplicationConfiguration().getHeartbeatInterval());
 
         defaults.put("appUri", getAppUri(context));
@@ -485,7 +481,7 @@ public abstract class BootstrapHandler implements RequestHandler {
      */
     public String getThemeUri(BootstrapContext context, String themeName) {
         WrappedRequest request = context.getRequest();
-        final String staticFilePath = request.getDeploymentConfiguration()
+        final String staticFilePath = request.getVaadinService()
                 .getStaticFileLocation(request);
         return staticFilePath + "/" + VaadinServlet.THEME_DIRECTORY_PATH
                 + themeName;
@@ -513,8 +509,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         String themeName = getThemeName(context);
         if (themeName == null) {
             WrappedRequest request = context.getRequest();
-            themeName = request.getDeploymentConfiguration()
-                    .getConfiguredTheme(request);
+            themeName = request.getVaadinService().getConfiguredTheme(request);
         }
 
         // XSS preventation, theme names shouldn't contain special chars anyway.

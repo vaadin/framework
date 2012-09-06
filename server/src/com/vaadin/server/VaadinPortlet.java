@@ -74,11 +74,10 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
     public static final String RESOURCE_URL_ID = "APP";
 
-    public static class PortletDeploymentConfiguration extends
-            AbstractDeploymentConfiguration {
+    public static class PortletService extends AbstractVaadinService {
         private final VaadinPortlet portlet;
 
-        public PortletDeploymentConfiguration(VaadinPortlet portlet,
+        public PortletService(VaadinPortlet portlet,
                 ApplicationConfiguration applicationConfiguration) {
             super(applicationConfiguration);
             this.portlet = portlet;
@@ -185,9 +184,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             WrappedPortletRequest {
 
         public WrappedHttpAndPortletRequest(PortletRequest request,
-                HttpServletRequest originalRequest,
-                DeploymentConfiguration deploymentConfiguration) {
-            super(request, deploymentConfiguration);
+                HttpServletRequest originalRequest, PortletService vaadinService) {
+            super(request, vaadinService);
             this.originalRequest = originalRequest;
         }
 
@@ -229,8 +227,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
     public static class WrappedGateinRequest extends
             WrappedHttpAndPortletRequest {
         public WrappedGateinRequest(PortletRequest request,
-                DeploymentConfiguration deploymentConfiguration) {
-            super(request, getOriginalRequest(request), deploymentConfiguration);
+                PortletService vaadinService) {
+            super(request, getOriginalRequest(request), vaadinService);
         }
 
         private static final HttpServletRequest getOriginalRequest(
@@ -252,8 +250,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             WrappedHttpAndPortletRequest {
 
         public WrappedLiferayRequest(PortletRequest request,
-                DeploymentConfiguration deploymentConfiguration) {
-            super(request, getOriginalRequest(request), deploymentConfiguration);
+                PortletService vaadinService) {
+            super(request, getOriginalRequest(request), vaadinService);
         }
 
         @Override
@@ -320,7 +318,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
     // TODO Can we close the application when the portlet is removed? Do we know
     // when the portlet is removed?
 
-    private PortletDeploymentConfiguration deploymentConfiguration;
+    private PortletService vaadinService;
     private AddonContext addonContext;
 
     @Override
@@ -346,9 +344,9 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         }
 
         ApplicationConfiguration applicationConfiguration = createApplicationConfiguration(applicationProperties);
-        deploymentConfiguration = createDeploymentConfiguration(applicationConfiguration);
+        vaadinService = createPortletService(applicationConfiguration);
 
-        addonContext = new AddonContext(deploymentConfiguration);
+        addonContext = new AddonContext(vaadinService);
         addonContext.init();
     }
 
@@ -358,10 +356,9 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                 applicationProperties);
     }
 
-    protected PortletDeploymentConfiguration createDeploymentConfiguration(
+    protected PortletService createPortletService(
             ApplicationConfiguration applicationConfiguration) {
-        return new PortletDeploymentConfiguration(this,
-                applicationConfiguration);
+        return new PortletService(this, applicationConfiguration);
     }
 
     @Override
@@ -429,7 +426,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         WrappedPortletRequest wrappedRequest = createWrappedRequest(request);
 
         WrappedPortletResponse wrappedResponse = new WrappedPortletResponse(
-                response, getDeploymentConfiguration());
+                response, getVaadinService());
 
         CurrentInstance.set(WrappedRequest.class, wrappedRequest);
         CurrentInstance.set(WrappedResponse.class, wrappedResponse);
@@ -611,20 +608,17 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         String portalInfo = request.getPortalContext().getPortalInfo()
                 .toLowerCase();
         if (portalInfo.contains("liferay")) {
-            return new WrappedLiferayRequest(request,
-                    getDeploymentConfiguration());
+            return new WrappedLiferayRequest(request, getVaadinService());
         } else if (portalInfo.contains("gatein")) {
-            return new WrappedGateinRequest(request,
-                    getDeploymentConfiguration());
+            return new WrappedGateinRequest(request, getVaadinService());
         } else {
-            return new WrappedPortletRequest(request,
-                    getDeploymentConfiguration());
+            return new WrappedPortletRequest(request, getVaadinService());
         }
 
     }
 
-    protected PortletDeploymentConfiguration getDeploymentConfiguration() {
-        return deploymentConfiguration;
+    protected PortletService getVaadinService() {
+        return vaadinService;
     }
 
     private void handleUnknownRequest(PortletRequest request,
@@ -835,8 +829,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         Locale locale = request.getLocale();
         newApplication.setLocale(locale);
         // No application URL when running inside a portlet
-        newApplication.start(new ApplicationStartEvent(null,
-                getDeploymentConfiguration().getApplicationConfiguration(),
+        newApplication.start(new ApplicationStartEvent(null, getVaadinService()
+                .getApplicationConfiguration(),
                 new PortletCommunicationManager(newApplication)));
         addonContext.fireApplicationStarted(newApplication);
 
@@ -849,7 +843,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
         try {
             ServletPortletHelper.initDefaultUIProvider(application,
-                    getDeploymentConfiguration());
+                    getVaadinService());
         } catch (ApplicationClassException e) {
             throw new PortletException(e);
         }
@@ -889,8 +883,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {
-            SystemMessages ci = getDeploymentConfiguration()
-                    .getSystemMessages();
+            SystemMessages ci = getVaadinService().getSystemMessages();
             criticalNotification(request, response,
                     ci.getInternalErrorCaption(), ci.getInternalErrorMessage(),
                     null, ci.getInternalErrorURL());

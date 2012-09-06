@@ -29,7 +29,7 @@ import javax.portlet.MimeResponse;
 import javax.portlet.PortletResponse;
 import javax.portlet.ResourceResponse;
 
-import com.vaadin.server.VaadinPortlet.PortletDeploymentConfiguration;
+import com.vaadin.server.VaadinPortlet.PortletService;
 
 /**
  * Wrapper for {@link PortletResponse} and its subclasses.
@@ -48,20 +48,20 @@ public class WrappedPortletResponse implements WrappedResponse {
     }
 
     private final PortletResponse response;
-    private PortletDeploymentConfiguration deploymentConfiguration;
+    private PortletService vaadinService;
 
     /**
      * Wraps a portlet response and an associated deployment configuration
      * 
      * @param response
      *            the portlet response to wrap
-     * @param deploymentConfiguration
-     *            the associated deployment configuration
+     * @param vaadinService
+     *            the associated vaadin service
      */
     public WrappedPortletResponse(PortletResponse response,
-            PortletDeploymentConfiguration deploymentConfiguration) {
+            PortletService vaadinService) {
         this.response = response;
-        this.deploymentConfiguration = deploymentConfiguration;
+        this.vaadinService = vaadinService;
     }
 
     @Override
@@ -116,7 +116,7 @@ public class WrappedPortletResponse implements WrappedResponse {
     }
 
     @Override
-    public PortletDeploymentConfiguration getDeploymentConfiguration() {
-        return deploymentConfiguration;
+    public PortletService getVaadinService() {
+        return vaadinService;
     }
 }

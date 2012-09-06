@@ -61,8 +61,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
             Collections.addAll(defaultPackages, initParameter.split(","));
         }
         String str = TestBase.class.getName().replace('.', '/') + ".class";
-        URL url = getDeploymentConfiguration().getClassLoader()
-                .getResource(str);
+        URL url = getVaadinService().getClassLoader().getResource(str);
         if ("file".equals(url.getProtocol())) {
             File comVaadinTests = new File(url.getPath()).getParentFile()
                     .getParentFile();
@@ -270,10 +269,9 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     }
 
     @Override
-    protected ServletDeploymentConfiguration createDeploymentConfiguration(
+    protected ServletService createServletService(
             ApplicationConfiguration applicationConfiguration) {
-        return new ServletDeploymentConfiguration(this,
-                applicationConfiguration) {
+        return new ServletService(this, applicationConfiguration) {
             @Override
             public String getStaticFileLocation(WrappedRequest request) {
                 URIS uris = getApplicationRunnerURIs(WrappedHttpServletRequest
@@ -291,8 +289,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     @Override
     protected WrappedHttpServletRequest createWrappedRequest(
             HttpServletRequest request) {
-        return new WrappedHttpServletRequest(request,
-                getDeploymentConfiguration()) {
+        return new WrappedHttpServletRequest(request, getVaadinService()) {
             @Override
             public String getRequestPathInfo() {
                 return ApplicationRunnerServlet.this.getRequestPathInfo(this);

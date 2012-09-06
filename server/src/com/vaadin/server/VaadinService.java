@@ -31,7 +31,7 @@ import javax.servlet.ServletContext;
  * 
  * @since 7.0
  */
-public interface DeploymentConfiguration extends Serializable {
+public interface VaadinService extends Serializable {
     /**
      * Return the URL from where static files, e.g. the widgetset and the theme,
      * are served. In a standard configuration the VAADIN folder inside the

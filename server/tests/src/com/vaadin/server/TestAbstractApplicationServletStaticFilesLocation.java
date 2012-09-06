@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import junit.framework.TestCase;
 
 import com.vaadin.DefaultApplicationConfiguration;
-import com.vaadin.server.VaadinServlet.ServletDeploymentConfiguration;
+import com.vaadin.server.VaadinServlet.ServletService;
 
 public class TestAbstractApplicationServletStaticFilesLocation extends TestCase {
 
@@ -32,7 +32,7 @@ public class TestAbstractApplicationServletStaticFilesLocation extends TestCase 
         Field f = VaadinServlet.class
                 .getDeclaredField("deploymentConfiguration");
         f.setAccessible(true);
-        f.set(servlet, new ServletDeploymentConfiguration(servlet,
+        f.set(servlet, new ServletService(servlet,
                 new DefaultApplicationConfiguration(servlet.getClass(),
                         new Properties())));
 
@@ -80,8 +80,8 @@ public class TestAbstractApplicationServletStaticFilesLocation extends TestCase 
         // Set request into replay mode
         replay(request);
 
-        String location = servlet.getDeploymentConfiguration()
-                .getStaticFileLocation(servlet.createWrappedRequest(request));
+        String location = servlet.getVaadinService().getStaticFileLocation(
+                servlet.createWrappedRequest(request));
         return location;
     }
 
@@ -93,8 +93,8 @@ public class TestAbstractApplicationServletStaticFilesLocation extends TestCase 
         // Set request into replay mode
         replay(request);
 
-        String location = servlet.getDeploymentConfiguration()
-                .getStaticFileLocation(servlet.createWrappedRequest(request));
+        String location = servlet.getVaadinService().getStaticFileLocation(
+                servlet.createWrappedRequest(request));
         return location;
     }
 

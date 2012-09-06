@@ -49,7 +49,7 @@ public class SampleDirectory {
                 + "possible security constraint with Application "
                 + "Server or Servlet Container.<br />";
         File file = CurrentInstance.get(WrappedRequest.class)
-                .getDeploymentConfiguration().getBaseDirectory();
+                .getVaadinService().getBaseDirectory();
         if ((file == null) || (!file.canRead())
                 || (file.getAbsolutePath() == null)) {
             // cannot access example directory, possible security issue with

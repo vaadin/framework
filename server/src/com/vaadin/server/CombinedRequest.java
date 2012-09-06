@@ -178,7 +178,7 @@ public class CombinedRequest implements WrappedRequest {
     }
 
     @Override
-    public DeploymentConfiguration getDeploymentConfiguration() {
-        return secondRequest.getDeploymentConfiguration();
+    public VaadinService getVaadinService() {
+        return secondRequest.getVaadinService();
     }
 }

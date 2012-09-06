@@ -1343,10 +1343,10 @@ public class VaadinSession implements Terminal.ErrorListener,
      * <p>
      * The default implementation in {@link VaadinSession} uses the
      * {@value #UI_PARAMETER} parameter from web.xml for finding the name of the
-     * UI class. If {@link DeploymentConfiguration#getClassLoader()} does not
-     * return <code>null</code>, the returned {@link ClassLoader} is used for
-     * loading the UI class. Otherwise the {@link ClassLoader} used to load this
-     * class is used.
+     * UI class. If {@link VaadinService#getClassLoader()} does not return
+     * <code>null</code>, the returned {@link ClassLoader} is used for loading
+     * the UI class. Otherwise the {@link ClassLoader} used to load this class
+     * is used.
      * 
      * </p>
      * 
@@ -1885,7 +1885,7 @@ public class VaadinSession implements Terminal.ErrorListener,
      * 
      * @see #getUidlRequestTimeout()
      * @see #closeInactiveUIs()
-     * @see DeploymentConfiguration#getHeartbeatInterval()
+     * @see ApplicationConfiguration#getHeartbeatInterval()
      * 
      * @since 7.0.0
      * 
@@ -1907,7 +1907,7 @@ public class VaadinSession implements Terminal.ErrorListener,
      * otherwise heartbeat requests are enough to extend UI lifetime
      * indefinitely.
      * 
-     * @see DeploymentConfiguration#isIdleUICleanupEnabled()
+     * @see ApplicationConfiguration#isIdleUICleanupEnabled()
      * @see #getHeartbeatTimeout()
      * @see #closeInactiveUIs()
      * 

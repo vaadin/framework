@@ -42,12 +42,11 @@ class ServletPortletHelper implements Serializable {
     }
 
     static Class<? extends Application> getLegacyApplicationClass(
-            DeploymentConfiguration deploymentConfiguration)
-            throws ApplicationClassException {
-        Properties initParameters = deploymentConfiguration
-                .getApplicationConfiguration().getInitParameters();
+            VaadinService vaadinService) throws ApplicationClassException {
+        Properties initParameters = vaadinService.getApplicationConfiguration()
+                .getInitParameters();
         String applicationParameter = initParameters.getProperty("application");
-        ClassLoader classLoader = deploymentConfiguration.getClassLoader();
+        ClassLoader classLoader = vaadinService.getClassLoader();
 
         if (applicationParameter == null) {
             throw new ApplicationClassException(
@@ -133,13 +132,11 @@ class ServletPortletHelper implements Serializable {
     }
 
     public static void initDefaultUIProvider(VaadinSession application,
-            DeploymentConfiguration deploymentConfiguration)
-            throws ApplicationClassException {
-        String uiProperty = deploymentConfiguration
-                .getApplicationConfiguration().getInitParameters()
-                .getProperty(VaadinSession.UI_PARAMETER);
+            VaadinService vaadinService) throws ApplicationClassException {
+        String uiProperty = vaadinService.getApplicationConfiguration()
+                .getInitParameters().getProperty(VaadinSession.UI_PARAMETER);
         if (uiProperty != null) {
-            verifyUIClass(uiProperty, deploymentConfiguration.getClassLoader());
+            verifyUIClass(uiProperty, vaadinService.getClassLoader());
             application.addUIProvider(new DefaultUIProvider());
         }
     }

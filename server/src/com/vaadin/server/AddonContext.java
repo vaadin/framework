@@ -36,8 +36,7 @@ import com.vaadin.util.ReflectTools;
  * META-INF/services/com.vaadin.server.AddonContextListener will be checked for
  * lines containing fully qualified names of classes to use. This behavior can
  * however be overridden for custom deployment situations (e.g. to use CDI or
- * OSGi) by overriding
- * {@link DeploymentConfiguration#getAddonContextListeners()}.
+ * OSGi) by overriding {@link VaadinService#getAddonContextListeners()}.
  * 
  * @author Vaadin Ltd
  * @since 7.0.0
@@ -47,7 +46,7 @@ public class AddonContext {
             .findMethod(ApplicationStartedListener.class, "applicationStarted",
                     ApplicationStartedEvent.class);
 
-    private final DeploymentConfiguration deploymentConfiguration;
+    private final VaadinService vaadinService;
 
     private final EventRouter eventRouter = new EventRouter();
 
@@ -59,13 +58,12 @@ public class AddonContext {
      * Creates a new context using a given deployment configuration. Only the
      * framework itself should typically create AddonContext methods.
      * 
-     * @param deploymentConfiguration
-     *            the deployment configuration for the associated servlet or
-     *            portlet.
+     * @param vaadinService
+     *            the vaadin service for the associated servlet or portlet.
      */
-    public AddonContext(DeploymentConfiguration deploymentConfiguration) {
-        this.deploymentConfiguration = deploymentConfiguration;
-        deploymentConfiguration.setAddonContext(this);
+    public AddonContext(VaadinService vaadinService) {
+        this.vaadinService = vaadinService;
+        vaadinService.setAddonContext(this);
     }
 
     /**
@@ -73,22 +71,21 @@ public class AddonContext {
      * 
      * @return the deployment configuration
      */
-    public DeploymentConfiguration getDeploymentConfiguration() {
-        return deploymentConfiguration;
+    public VaadinService getVaadinService() {
+        return vaadinService;
     }
 
     /**
      * Initializes this context, causing all found listeners to be notified.
      * Listeners are by default found using {@link ServiceLoader}, but the
-     * {@link DeploymentConfiguration} can provide an alternative
-     * implementation.
+     * {@link VaadinService} can provide an alternative implementation.
      * <p>
      * This method is not intended to be used by add-ons, but instead by the
      * part of the framework that created this context object.
      */
     public void init() {
         AddonContextEvent event = new AddonContextEvent(this);
-        Iterator<AddonContextListener> listeners = deploymentConfiguration
+        Iterator<AddonContextListener> listeners = vaadinService
                 .getAddonContextListeners();
         while (listeners.hasNext()) {
             AddonContextListener listener = listeners.next();

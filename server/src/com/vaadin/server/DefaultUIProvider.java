@@ -29,7 +29,7 @@ public class DefaultUIProvider extends AbstractUIProvider {
         if (uiClassNameObj instanceof String) {
             String uiClassName = uiClassNameObj.toString();
 
-            ClassLoader classLoader = request.getDeploymentConfiguration()
+            ClassLoader classLoader = request.getVaadinService()
                     .getClassLoader();
             if (classLoader == null) {
                 classLoader = getClass().getClassLoader();

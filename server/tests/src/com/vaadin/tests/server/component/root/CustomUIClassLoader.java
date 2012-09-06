@@ -11,7 +11,7 @@ import org.easymock.EasyMock;
 import com.vaadin.DefaultApplicationConfiguration;
 import com.vaadin.server.ApplicationConfiguration;
 import com.vaadin.server.DefaultUIProvider;
-import com.vaadin.server.DeploymentConfiguration;
+import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.server.VaadinSession.ApplicationStartEvent;
 import com.vaadin.server.WrappedRequest;
@@ -73,14 +73,14 @@ public class CustomUIClassLoader extends TestCase {
 
     private static WrappedRequest createRequestMock(ClassLoader classloader) {
         // Mock a DeploymentConfiguration to give the passed classloader
-        DeploymentConfiguration configurationMock = EasyMock
-                .createMock(DeploymentConfiguration.class);
+        VaadinService configurationMock = EasyMock
+                .createMock(VaadinService.class);
         EasyMock.expect(configurationMock.getClassLoader()).andReturn(
                 classloader);
 
         // Mock a WrappedRequest to give the mocked deployment configuration
         WrappedRequest requestMock = EasyMock.createMock(WrappedRequest.class);
-        EasyMock.expect(requestMock.getDeploymentConfiguration()).andReturn(
+        EasyMock.expect(requestMock.getVaadinService()).andReturn(
                 configurationMock);
 
         EasyMock.replay(configurationMock, requestMock);

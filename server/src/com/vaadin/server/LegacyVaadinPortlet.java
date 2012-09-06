@@ -28,7 +28,7 @@ public class LegacyVaadinPortlet extends VaadinPortlet {
             throws ClassNotFoundException {
         try {
             return ServletPortletHelper
-                    .getLegacyApplicationClass(getDeploymentConfiguration());
+                    .getLegacyApplicationClass(getVaadinService());
         } catch (ApplicationClassException e) {
             throw new RuntimeException(e);
         }

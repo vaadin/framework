@@ -246,12 +246,12 @@ public interface WrappedRequest extends Serializable {
     public String getHeader(String headerName);
 
     /**
-     * Gets the deployment configuration for the context of this request.
+     * Gets the vaadin service for the context of this request.
      * 
-     * @return the deployment configuration
+     * @return the vaadin service
      * 
-     * @see DeploymentConfiguration
+     * @see VaadinService
      */
-    public DeploymentConfiguration getDeploymentConfiguration();
+    public VaadinService getVaadinService();
 
 }

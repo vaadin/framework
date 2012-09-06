@@ -571,7 +571,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             if (!handleVariables(request, response, callback, application, uI)) {
 
                 // var inconsistency; the client is probably out-of-sync
-                SystemMessages ci = response.getDeploymentConfiguration()
+                SystemMessages ci = response.getVaadinService()
                         .getSystemMessages();
                 String msg = ci.getOutOfSyncMessage();
                 String cap = ci.getOutOfSyncCaption();
@@ -1023,8 +1023,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 }
             }
 
-            SystemMessages ci = request.getDeploymentConfiguration()
-                    .getSystemMessages();
+            SystemMessages ci = request.getVaadinService().getSystemMessages();
 
             // meta instruction for client to enable auto-forward to
             // sessionExpiredURL after timer expires.
@@ -2483,8 +2482,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 .substring(ApplicationConstants.CONNECTOR_RESOURCE_PREFIX
                         .length() + 2);
 
-        final String mimetype = response.getDeploymentConfiguration()
-                .getMimeType(resourceName);
+        final String mimetype = response.getVaadinService().getMimeType(
+                resourceName);
 
         // Security check: avoid accidentally serving from the UI of the
         // classpath instead of relative to the context class

@@ -84,8 +84,7 @@ public class VaadinPortletSession extends VaadinSession {
     public PortletConfig getPortletConfig() {
         WrappedPortletResponse response = (WrappedPortletResponse) CurrentInstance
                 .get(WrappedResponse.class);
-        return response.getDeploymentConfiguration().getPortlet()
-                .getPortletConfig();
+        return response.getVaadinService().getPortlet().getPortletConfig();
     }
 
     public void addPortletListener(PortletListener listener) {

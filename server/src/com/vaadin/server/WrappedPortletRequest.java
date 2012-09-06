@@ -25,6 +25,7 @@ import javax.portlet.ClientDataRequest;
 import javax.portlet.PortletRequest;
 import javax.portlet.ResourceRequest;
 
+import com.vaadin.server.VaadinPortlet.PortletService;
 import com.vaadin.shared.ApplicationConstants;
 
 /**
@@ -39,20 +40,20 @@ import com.vaadin.shared.ApplicationConstants;
 public class WrappedPortletRequest implements WrappedRequest {
 
     private final PortletRequest request;
-    private final DeploymentConfiguration deploymentConfiguration;
+    private final PortletService vaadinService;
 
     /**
      * Wraps a portlet request and an associated deployment configuration
      * 
      * @param request
      *            the portlet request to wrap
-     * @param deploymentConfiguration
-     *            the associated deployment configuration
+     * @param vaadinService
+     *            the associated vaadin service
      */
     public WrappedPortletRequest(PortletRequest request,
-            DeploymentConfiguration deploymentConfiguration) {
+            PortletService vaadinService) {
         this.request = request;
-        this.deploymentConfiguration = deploymentConfiguration;
+        this.vaadinService = vaadinService;
     }
 
     @Override
@@ -190,8 +191,8 @@ public class WrappedPortletRequest implements WrappedRequest {
     }
 
     @Override
-    public DeploymentConfiguration getDeploymentConfiguration() {
-        return deploymentConfiguration;
+    public PortletService getVaadinService() {
+        return vaadinService;
     }
 
     /**

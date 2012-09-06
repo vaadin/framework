@@ -20,13 +20,12 @@ import java.lang.reflect.Constructor;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 
-public abstract class AbstractDeploymentConfiguration implements
-        DeploymentConfiguration {
+public abstract class AbstractVaadinService implements VaadinService {
 
     private AddonContext addonContext;
     private final ApplicationConfiguration applicationConfiguration;
 
-    public AbstractDeploymentConfiguration(
+    public AbstractVaadinService(
             ApplicationConfiguration applicationConfiguration) {
         this.applicationConfiguration = applicationConfiguration;
     }

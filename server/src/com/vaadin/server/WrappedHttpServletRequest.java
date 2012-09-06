@@ -19,6 +19,8 @@ package com.vaadin.server;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import com.vaadin.server.VaadinServlet.ServletService;
+
 /**
  * Wrapper for {@link HttpServletRequest}.
  * 
@@ -31,7 +33,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 public class WrappedHttpServletRequest extends HttpServletRequestWrapper
         implements WrappedRequest {
 
-    private final DeploymentConfiguration deploymentConfiguration;
+    private final ServletService vaadinService;
 
     /**
      * Wraps a http servlet request and associates with a deployment
@@ -39,13 +41,13 @@ public class WrappedHttpServletRequest extends HttpServletRequestWrapper
      * 
      * @param request
      *            the http servlet request to wrap
-     * @param deploymentConfiguration
-     *            the associated deployment configuration
+     * @param vaadinService
+     *            the associated vaadin service
      */
     public WrappedHttpServletRequest(HttpServletRequest request,
-            DeploymentConfiguration deploymentConfiguration) {
+            ServletService vaadinService) {
         super(request);
-        this.deploymentConfiguration = deploymentConfiguration;
+        this.vaadinService = vaadinService;
     }
 
     @Override
@@ -68,8 +70,8 @@ public class WrappedHttpServletRequest extends HttpServletRequestWrapper
     }
 
     @Override
-    public DeploymentConfiguration getDeploymentConfiguration() {
-        return deploymentConfiguration;
+    public ServletService getVaadinService() {
+        return vaadinService;
     }
 
     @Override

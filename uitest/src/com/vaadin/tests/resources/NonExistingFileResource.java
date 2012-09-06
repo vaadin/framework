@@ -27,7 +27,7 @@ public class NonExistingFileResource extends TestBase {
             @Override
             public void buttonClick(ClickEvent event) {
                 FileResource res = new FileResource(new File(CurrentInstance
-                        .get(WrappedRequest.class).getDeploymentConfiguration()
+                        .get(WrappedRequest.class).getVaadinService()
                         .getBaseDirectory()
                         + "/" + filename));
                 getMainWindow().open(res);

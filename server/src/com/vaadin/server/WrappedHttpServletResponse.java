@@ -19,6 +19,8 @@ package com.vaadin.server;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
+import com.vaadin.server.VaadinServlet.ServletService;
+
 /**
  * Wrapper for {@link HttpServletResponse}.
  * 
@@ -31,20 +33,20 @@ import javax.servlet.http.HttpServletResponseWrapper;
 public class WrappedHttpServletResponse extends HttpServletResponseWrapper
         implements WrappedResponse {
 
-    private DeploymentConfiguration deploymentConfiguration;
+    private ServletService vaadinService;
 
     /**
      * Wraps a http servlet response and an associated deployment configuration
      * 
      * @param response
      *            the http servlet response to wrap
-     * @param deploymentConfiguration
-     *            the associated deployment configuration
+     * @param vaadinService
+     *            the associated vaadin service
      */
     public WrappedHttpServletResponse(HttpServletResponse response,
-            DeploymentConfiguration deploymentConfiguration) {
+            ServletService vaadinService) {
         super(response);
-        this.deploymentConfiguration = deploymentConfiguration;
+        this.vaadinService = vaadinService;
     }
 
     /**
@@ -78,7 +80,7 @@ public class WrappedHttpServletResponse extends HttpServletResponseWrapper
     }
 
     @Override
-    public DeploymentConfiguration getDeploymentConfiguration() {
-        return deploymentConfiguration;
+    public ServletService getVaadinService() {
+        return vaadinService;
     }
 }

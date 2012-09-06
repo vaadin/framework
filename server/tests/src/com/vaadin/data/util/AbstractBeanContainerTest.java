@@ -1,6 +1,5 @@
 package com.vaadin.data.util;
 
-
 /**
  * Automated test for {@link AbstractBeanContainer}.
  * 
