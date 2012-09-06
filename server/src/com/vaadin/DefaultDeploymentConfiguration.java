@@ -19,12 +19,11 @@ package com.vaadin;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import com.vaadin.server.ApplicationConfiguration;
 import com.vaadin.server.Constants;
+import com.vaadin.server.DeploymentConfiguration;
 
-public class DefaultApplicationConfiguration implements
-        ApplicationConfiguration {
-    private final Properties applicationProperties;
+public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
+    private final Properties initParameters;
     private boolean productionMode;
     private boolean xsrfProtectionEnabled;
     private int resourceCacheTime;
@@ -32,9 +31,9 @@ public class DefaultApplicationConfiguration implements
     private boolean idleRootCleanupEnabled;
     private final Class<?> systemPropertyBaseClass;
 
-    public DefaultApplicationConfiguration(Class<?> systemPropertyBaseClass,
-            Properties applicationProperties) {
-        this.applicationProperties = applicationProperties;
+    public DefaultDeploymentConfiguration(Class<?> systemPropertyBaseClass,
+            Properties initParameters) {
+        this.initParameters = initParameters;
         this.systemPropertyBaseClass = systemPropertyBaseClass;
 
         checkProductionMode();
@@ -102,14 +101,14 @@ public class DefaultApplicationConfiguration implements
      */
     public String getApplicationProperty(String parameterName) {
 
-        String val = applicationProperties.getProperty(parameterName);
+        String val = initParameters.getProperty(parameterName);
         if (val != null) {
             return val;
         }
 
         // Try lower case application properties for backward compatibility with
         // 3.0.2 and earlier
-        val = applicationProperties.getProperty(parameterName.toLowerCase());
+        val = initParameters.getProperty(parameterName.toLowerCase());
 
         return val;
     }
@@ -223,7 +222,7 @@ public class DefaultApplicationConfiguration implements
 
     @Override
     public Properties getInitParameters() {
-        return applicationProperties;
+        return initParameters;
     }
 
 }

@@ -55,7 +55,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.liferay.portal.kernel.util.PortalClassInvoker;
 import com.liferay.portal.kernel.util.PropsUtil;
-import com.vaadin.DefaultApplicationConfiguration;
+import com.vaadin.DefaultDeploymentConfiguration;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
 import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
 import com.vaadin.server.VaadinSession.ApplicationStartEvent;
@@ -78,8 +78,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         private final VaadinPortlet portlet;
 
         public PortletService(VaadinPortlet portlet,
-                ApplicationConfiguration applicationConfiguration) {
-            super(applicationConfiguration);
+                DeploymentConfiguration deploymentConfiguration) {
+            super(deploymentConfiguration);
             this.portlet = portlet;
         }
 
@@ -90,7 +90,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         @Override
         public String getConfiguredWidgetset(WrappedRequest request) {
 
-            String widgetset = getApplicationConfiguration()
+            String widgetset = getDeploymentConfiguration()
                     .getApplicationOrSystemProperty(PARAMETER_WIDGETSET, null);
 
             if (widgetset == null) {
@@ -324,41 +324,38 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
     @Override
     public void init(PortletConfig config) throws PortletException {
         super.init(config);
-        Properties applicationProperties = new Properties();
+        Properties initParameters = new Properties();
 
         // Read default parameters from the context
         final PortletContext context = config.getPortletContext();
         for (final Enumeration<String> e = context.getInitParameterNames(); e
                 .hasMoreElements();) {
             final String name = e.nextElement();
-            applicationProperties.setProperty(name,
-                    context.getInitParameter(name));
+            initParameters.setProperty(name, context.getInitParameter(name));
         }
 
         // Override with application settings from portlet.xml
         for (final Enumeration<String> e = config.getInitParameterNames(); e
                 .hasMoreElements();) {
             final String name = e.nextElement();
-            applicationProperties.setProperty(name,
-                    config.getInitParameter(name));
+            initParameters.setProperty(name, config.getInitParameter(name));
         }
 
-        ApplicationConfiguration applicationConfiguration = createApplicationConfiguration(applicationProperties);
-        vaadinService = createPortletService(applicationConfiguration);
+        DeploymentConfiguration deploymentConfiguration = createDeploymentConfiguration(initParameters);
+        vaadinService = createPortletService(deploymentConfiguration);
 
         addonContext = new AddonContext(vaadinService);
         addonContext.init();
     }
 
-    protected ApplicationConfiguration createApplicationConfiguration(
-            Properties applicationProperties) {
-        return new DefaultApplicationConfiguration(getClass(),
-                applicationProperties);
+    protected DeploymentConfiguration createDeploymentConfiguration(
+            Properties initParameters) {
+        return new DefaultDeploymentConfiguration(getClass(), initParameters);
     }
 
     protected PortletService createPortletService(
-            ApplicationConfiguration applicationConfiguration) {
-        return new PortletService(this, applicationConfiguration);
+            DeploymentConfiguration deploymentConfiguration) {
+        return new PortletService(this, deploymentConfiguration);
     }
 
     @Override
@@ -830,8 +827,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         newApplication.setLocale(locale);
         // No application URL when running inside a portlet
         newApplication.start(new ApplicationStartEvent(null, getVaadinService()
-                .getApplicationConfiguration(),
-                new PortletCommunicationManager(newApplication)));
+                .getDeploymentConfiguration(), new PortletCommunicationManager(
+                newApplication)));
         addonContext.fireApplicationStarted(newApplication);
 
         return newApplication;

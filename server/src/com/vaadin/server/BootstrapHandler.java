@@ -459,7 +459,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         }
 
         defaults.put("heartbeatInterval", vaadinService
-                .getApplicationConfiguration().getHeartbeatInterval());
+                .getDeploymentConfiguration().getHeartbeatInterval());
 
         defaults.put("appUri", getAppUri(context));
 

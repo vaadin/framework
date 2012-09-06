@@ -8,8 +8,8 @@ import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
 
-import com.vaadin.DefaultApplicationConfiguration;
-import com.vaadin.server.ApplicationConfiguration;
+import com.vaadin.DefaultDeploymentConfiguration;
+import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.DefaultUIProvider;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
@@ -64,10 +64,10 @@ public class CustomUIClassLoader extends TestCase {
         assertEquals(MyUI.class, uiClass);
     }
 
-    private static ApplicationConfiguration createConfigurationMock() {
+    private static DeploymentConfiguration createConfigurationMock() {
         Properties properties = new Properties();
         properties.put(VaadinSession.UI_PARAMETER, MyUI.class.getName());
-        return new DefaultApplicationConfiguration(CustomUIClassLoader.class,
+        return new DefaultDeploymentConfiguration(CustomUIClassLoader.class,
                 properties);
     }
 
@@ -115,7 +115,7 @@ public class CustomUIClassLoader extends TestCase {
     private VaadinSession createStubApplication() {
         return new VaadinSession() {
             @Override
-            public ApplicationConfiguration getConfiguration() {
+            public DeploymentConfiguration getConfiguration() {
                 return createConfigurationMock();
             }
         };

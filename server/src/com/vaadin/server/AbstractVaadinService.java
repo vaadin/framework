@@ -23,21 +23,20 @@ import java.util.ServiceLoader;
 public abstract class AbstractVaadinService implements VaadinService {
 
     private AddonContext addonContext;
-    private final ApplicationConfiguration applicationConfiguration;
+    private final DeploymentConfiguration deploymentConfiguration;
 
-    public AbstractVaadinService(
-            ApplicationConfiguration applicationConfiguration) {
-        this.applicationConfiguration = applicationConfiguration;
+    public AbstractVaadinService(DeploymentConfiguration deploymentConfiguration) {
+        this.deploymentConfiguration = deploymentConfiguration;
     }
 
     @Override
-    public ApplicationConfiguration getApplicationConfiguration() {
-        return applicationConfiguration;
+    public DeploymentConfiguration getDeploymentConfiguration() {
+        return deploymentConfiguration;
     }
 
     @Override
     public ClassLoader getClassLoader() {
-        final String classLoaderName = getApplicationConfiguration()
+        final String classLoaderName = getDeploymentConfiguration()
                 .getApplicationOrSystemProperty("ClassLoader", null);
         ClassLoader classLoader;
         if (classLoaderName == null) {

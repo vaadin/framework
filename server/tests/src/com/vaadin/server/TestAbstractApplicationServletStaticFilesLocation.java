@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import junit.framework.TestCase;
 
-import com.vaadin.DefaultApplicationConfiguration;
+import com.vaadin.DefaultDeploymentConfiguration;
 import com.vaadin.server.VaadinServlet.ServletService;
 
 public class TestAbstractApplicationServletStaticFilesLocation extends TestCase {
@@ -32,7 +32,7 @@ public class TestAbstractApplicationServletStaticFilesLocation extends TestCase 
         Field f = VaadinServlet.class.getDeclaredField("servletService");
         f.setAccessible(true);
         f.set(servlet, new ServletService(servlet,
-                new DefaultApplicationConfiguration(servlet.getClass(),
+                new DefaultDeploymentConfiguration(servlet.getClass(),
                         new Properties())));
 
     }

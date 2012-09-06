@@ -44,7 +44,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.vaadin.DefaultApplicationConfiguration;
+import com.vaadin.DefaultDeploymentConfiguration;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
 import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
 import com.vaadin.server.VaadinSession.ApplicationStartEvent;
@@ -59,8 +59,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
         private final VaadinServlet servlet;
 
         public ServletService(VaadinServlet servlet,
-                ApplicationConfiguration applicationProperties) {
-            super(applicationProperties);
+                DeploymentConfiguration deploymentConfiguration) {
+            super(deploymentConfiguration);
             this.servlet = servlet;
         }
 
@@ -74,7 +74,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                     .cast(request);
             String staticFileLocation;
             // if property is defined in configurations, use that
-            staticFileLocation = getApplicationConfiguration()
+            staticFileLocation = getDeploymentConfiguration()
                     .getApplicationOrSystemProperty(PARAMETER_VAADIN_RESOURCES,
                             null);
             if (staticFileLocation != null) {
@@ -112,10 +112,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
         @Override
         public String getConfiguredWidgetset(WrappedRequest request) {
-            return getApplicationConfiguration()
-                    .getApplicationOrSystemProperty(
-                            VaadinServlet.PARAMETER_WIDGETSET,
-                            VaadinServlet.DEFAULT_WIDGETSET);
+            return getDeploymentConfiguration().getApplicationOrSystemProperty(
+                    VaadinServlet.PARAMETER_WIDGETSET,
+                    VaadinServlet.DEFAULT_WIDGETSET);
         }
 
         @Override
@@ -193,41 +192,39 @@ public class VaadinServlet extends HttpServlet implements Constants {
     public void init(javax.servlet.ServletConfig servletConfig)
             throws javax.servlet.ServletException {
         super.init(servletConfig);
-        Properties applicationProperties = new Properties();
+        Properties initParameters = new Properties();
 
         // Read default parameters from server.xml
         final ServletContext context = servletConfig.getServletContext();
         for (final Enumeration<String> e = context.getInitParameterNames(); e
                 .hasMoreElements();) {
             final String name = e.nextElement();
-            applicationProperties.setProperty(name,
-                    context.getInitParameter(name));
+            initParameters.setProperty(name, context.getInitParameter(name));
         }
 
         // Override with application config from web.xml
         for (final Enumeration<String> e = servletConfig
                 .getInitParameterNames(); e.hasMoreElements();) {
             final String name = e.nextElement();
-            applicationProperties.setProperty(name,
+            initParameters.setProperty(name,
                     servletConfig.getInitParameter(name));
         }
 
-        ApplicationConfiguration applicationConfiguration = createApplicationConfiguration(applicationProperties);
-        servletService = createServletService(applicationConfiguration);
+        DeploymentConfiguration deploymentConfiguration = createDeploymentConfiguration(initParameters);
+        servletService = createServletService(deploymentConfiguration);
 
         addonContext = new AddonContext(servletService);
         addonContext.init();
     }
 
-    protected ApplicationConfiguration createApplicationConfiguration(
-            Properties applicationProperties) {
-        return new DefaultApplicationConfiguration(getClass(),
-                applicationProperties);
+    protected DeploymentConfiguration createDeploymentConfiguration(
+            Properties initParameters) {
+        return new DefaultDeploymentConfiguration(getClass(), initParameters);
     }
 
     protected ServletService createServletService(
-            ApplicationConfiguration applicationConfiguration) {
-        return new ServletService(this, applicationConfiguration);
+            DeploymentConfiguration deploymentConfiguration) {
+        return new ServletService(this, deploymentConfiguration);
     }
 
     @Override
@@ -642,7 +639,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         Locale locale = request.getLocale();
         newApplication.setLocale(locale);
         newApplication.start(new ApplicationStartEvent(applicationUrl,
-                getVaadinService().getApplicationConfiguration(),
+                getVaadinService().getDeploymentConfiguration(),
                 createCommunicationManager(newApplication)));
 
         addonContext.fireApplicationStarted(newApplication);
@@ -1008,7 +1005,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
              * parameter in web.xml
              */
             int resourceCacheTime = getVaadinService()
-                    .getApplicationConfiguration().getResourceCacheTime();
+                    .getDeploymentConfiguration().getResourceCacheTime();
             response.setHeader("Cache-Control",
                     "max-age= " + String.valueOf(resourceCacheTime));
         }

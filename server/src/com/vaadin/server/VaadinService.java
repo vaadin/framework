@@ -106,11 +106,11 @@ public interface VaadinService extends Serializable {
     public String getMimeType(String resourceName);
 
     /**
-     * Gets the application configuration.
+     * Gets the deployment configuration.
      * 
-     * @return the application configuration
+     * @return the deployment configuration
      */
-    public ApplicationConfiguration getApplicationConfiguration();
+    public DeploymentConfiguration getDeploymentConfiguration();
 
     public Iterator<AddonContextListener> getAddonContextListeners();
 

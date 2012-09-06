@@ -16,17 +16,18 @@
 
 package com.vaadin.server;
 
+import java.io.Serializable;
 import java.util.Properties;
 
 /**
- * A collection of properties configured for all applications as well as a way
- * of accessing third party properties not explicitely supported by this class.
+ * A collection of properties configured at deploy time as well as a way of
+ * accessing third party properties not explicitly supported by this class.
  * 
  * @author Vaadin Ltd
  * @version @VERSION@
  * @since 7.0.0
  */
-public interface ApplicationConfiguration {
+public interface DeploymentConfiguration extends Serializable {
     /**
      * Returns whether Vaadin is in production mode.
      * 

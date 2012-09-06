@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.Application;
 import com.vaadin.server.AbstractUIProvider;
-import com.vaadin.server.ApplicationConfiguration;
+import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.LegacyVaadinServlet;
 import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinServletSession;
@@ -270,8 +270,8 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
 
     @Override
     protected ServletService createServletService(
-            ApplicationConfiguration applicationConfiguration) {
-        return new ServletService(this, applicationConfiguration) {
+            DeploymentConfiguration deploymentConfiguration) {
+        return new ServletService(this, deploymentConfiguration) {
             @Override
             public String getStaticFileLocation(WrappedRequest request) {
                 URIS uris = getApplicationRunnerURIs(WrappedHttpServletRequest

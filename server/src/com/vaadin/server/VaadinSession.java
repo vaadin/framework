@@ -128,7 +128,7 @@ public class VaadinSession implements Terminal.ErrorListener,
     public static class ApplicationStartEvent implements Serializable {
         private final URL applicationUrl;
 
-        private final ApplicationConfiguration configuration;
+        private final DeploymentConfiguration configuration;
 
         private final AbstractCommunicationManager communicationManager;
 
@@ -141,7 +141,7 @@ public class VaadinSession implements Terminal.ErrorListener,
          *            the communication manager for the application.
          */
         public ApplicationStartEvent(URL applicationUrl,
-                ApplicationConfiguration configuration,
+                DeploymentConfiguration configuration,
                 AbstractCommunicationManager communicationManager) {
             this.applicationUrl = applicationUrl;
             this.configuration = configuration;
@@ -161,11 +161,11 @@ public class VaadinSession implements Terminal.ErrorListener,
         }
 
         /**
-         * Returns the application configuration used by this application.
+         * Returns the deployment configuration used by this session.
          * 
          * @return the deployment configuration.
          */
-        public ApplicationConfiguration getConfiguration() {
+        public DeploymentConfiguration getConfiguration() {
             return configuration;
         }
 
@@ -187,7 +187,7 @@ public class VaadinSession implements Terminal.ErrorListener,
     /**
      * Configuration for the application.
      */
-    private ApplicationConfiguration configuration;
+    private DeploymentConfiguration configuration;
 
     /**
      * The application's URL.
@@ -421,7 +421,7 @@ public class VaadinSession implements Terminal.ErrorListener,
      * 
      * @return the application configuration
      */
-    public ApplicationConfiguration getConfiguration() {
+    public DeploymentConfiguration getConfiguration() {
         return configuration;
     }
 
@@ -1885,7 +1885,7 @@ public class VaadinSession implements Terminal.ErrorListener,
      * 
      * @see #getUidlRequestTimeout()
      * @see #closeInactiveUIs()
-     * @see ApplicationConfiguration#getHeartbeatInterval()
+     * @see DeploymentConfiguration#getHeartbeatInterval()
      * 
      * @since 7.0.0
      * 
@@ -1907,7 +1907,7 @@ public class VaadinSession implements Terminal.ErrorListener,
      * otherwise heartbeat requests are enough to extend UI lifetime
      * indefinitely.
      * 
-     * @see ApplicationConfiguration#isIdleUICleanupEnabled()
+     * @see DeploymentConfiguration#isIdleUICleanupEnabled()
      * @see #getHeartbeatTimeout()
      * @see #closeInactiveUIs()
      * 
