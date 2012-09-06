@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -21,6 +21,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.ui.themes.BaseTheme;
 
 public class VCssLayout extends SimplePanel {
     public static final String TAGNAME = "csslayout";
@@ -33,7 +34,8 @@ public class VCssLayout extends SimplePanel {
     public VCssLayout() {
         super();
         getElement().appendChild(margin);
-        setStyleName(CLASSNAME);
+        setStyleName(BaseTheme.UI_LAYOUT);
+        addStyleName(CLASSNAME);
         margin.setClassName(CLASSNAME + "-margin");
         setWidget(panel);
     }

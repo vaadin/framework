@@ -42,8 +42,6 @@ import com.vaadin.ui.themes.BaseTheme;
  */
 public class VOrderedLayout extends FlowPanel {
 
-    public static final String CLASSNAME = "v-boxlayout";
-
     private static final String ALIGN_CLASS_PREFIX = "v-align-";
 
     protected boolean spacing = false;
@@ -62,7 +60,7 @@ public class VOrderedLayout extends FlowPanel {
      * Constructor
      */
     public VOrderedLayout() {
-        setStyleName(CLASSNAME);
+        setStyleName(BaseTheme.UI_LAYOUT);
         setVertical(true);
     }
 

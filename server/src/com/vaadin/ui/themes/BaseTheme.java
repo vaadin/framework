@@ -61,4 +61,9 @@ public class BaseTheme {
      */
     public static final String UI_WIDGET = "v-widget";
 
+    /**
+     * Added to all layouts to denote they are layouts
+     */
+    public static final String UI_LAYOUT = "v-layout";
+
 }

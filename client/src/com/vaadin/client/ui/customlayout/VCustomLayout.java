@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -32,6 +32,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.VCaptionWrapper;
+import com.vaadin.ui.themes.BaseTheme;
 
 /**
  * Custom Layout implements complex layout defined with HTML template.
@@ -82,7 +83,8 @@ public class VCustomLayout extends ComplexPanel {
             DOM.setStyleAttribute(getElement(), "position", "relative");
         }
 
-        setStyleName(CLASSNAME);
+        setStyleName(BaseTheme.UI_LAYOUT);
+        addStyleName(CLASSNAME);
     }
 
     /**
@@ -207,7 +209,7 @@ public class VCustomLayout extends ComplexPanel {
     static native void eval(String script)
     /*-{
       try {
-     	 if (script != null) 
+     	 if (script != null)
       eval("{ var document = $doc; var window = $wnd; "+ script + "}");
       } catch (e) {
       }

@@ -20,10 +20,13 @@ package com.vaadin.client.ui.orderedlayout;
  */
 public class VHorizontalLayout extends VOrderedLayout {
 
+    private static final String CLASSNAME = "v-horizontallayout";
+
     /**
      * Default constructor
      */
     public VHorizontalLayout() {
         setVertical(false);
+        addStyleName(CLASSNAME);
     }
 }

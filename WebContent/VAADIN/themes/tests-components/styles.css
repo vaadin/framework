@@ -38,11 +38,11 @@
 	background: #f00;
 }
 
-.v-boxlayout.test {
+.v-layout.test {
 	border: 1px solid #ddd;
 }
 
-.v-boxlayout.test .target {
+.v-layout.test .target {
 	outline: 2px dashed blue;
 }
 

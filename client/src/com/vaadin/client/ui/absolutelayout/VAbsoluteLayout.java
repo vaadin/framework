@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.VCaption;
+import com.vaadin.ui.themes.BaseTheme;
 
 public class VAbsoluteLayout extends ComplexPanel {
 
@@ -44,7 +45,8 @@ public class VAbsoluteLayout extends ComplexPanel {
 
     public VAbsoluteLayout() {
         setElement(Document.get().createDivElement());
-        setStyleName(CLASSNAME);
+        setStyleName(BaseTheme.UI_LAYOUT);
+        addStyleName(CLASSNAME);
         marginElement = Document.get().createDivElement();
         canvas.getStyle().setProperty("position", "relative");
         canvas.getStyle().setProperty("overflow", "hidden");
