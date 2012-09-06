@@ -1,0 +1,129 @@
+/*
+@VaadinApache2LicenseForJavaFiles@
+ */
+
+package com.vaadin.tests.navigator;
+
+import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.WrappedRequest;
+import com.vaadin.tests.util.Log;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
+import com.vaadin.ui.RichTextArea;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
+
+public class NavigatorTest extends UI {
+
+    private Log log = new Log(5);
+    private Layout naviLayout = new VerticalLayout();
+    private TextField params = new TextField("Parameters");
+
+    private Navigator navi;
+
+    class ListView extends Table implements View {
+
+        public ListView() {
+            addContainerProperty("name", String.class, "");
+            addContainerProperty("value", String.class, "");
+        }
+
+        @Override
+        public void enter(ViewChangeEvent event) {
+            String params = event.getParameters();
+            log.log("Navigated to ListView with params " + params);
+            removeAllItems();
+            for (String arg : params.split(",")) {
+                addItem(arg.split("=|$", 2), arg);
+            }
+        }
+    }
+
+    class EditView extends RichTextArea implements View {
+
+        @Override
+        public void enter(ViewChangeEvent event) {
+            log.log("Navigated to EditView with params "
+                    + event.getParameters());
+            setValue("Displaying edit view with parameters "
+                    + event.getParameters());
+        }
+    }
+
+    class DefaultView extends Label implements View {
+
+        @Override
+        public void enter(ViewChangeEvent event) {
+            log.log("Navigated to DefaultView with params "
+                    + event.getParameters());
+            setValue("Default view: " + event.getParameters());
+        }
+    }
+
+    class ForbiddenView implements View {
+
+        @Override
+        public void enter(ViewChangeEvent event) {
+            log.log("Navigated to ForbiddenView - this should not happen");
+        }
+    }
+
+    class NaviListener implements ViewChangeListener {
+
+        @Override
+        public boolean isViewChangeAllowed(ViewChangeEvent event) {
+            if (event.getNewView() instanceof ForbiddenView) {
+                log.log("Prevent navigation to ForbiddenView");
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public void navigatorViewChanged(ViewChangeEvent event) {
+        }
+    };
+
+    class NaviButton extends Button {
+        public NaviButton(final String path) {
+            super("Navigate to " + path, new ClickListener() {
+                @Override
+                public void buttonClick(ClickEvent event) {
+                    navi.navigateTo(path + "/" + params.getValue());
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void init(WrappedRequest req) {
+        try {
+            navi = new Navigator(naviLayout);
+
+            navi.addView("", new DefaultView());
+
+            navi.addView("list", new ListView());
+            navi.addView("edit", new EditView());
+            navi.addView("forbidden", new ForbiddenView());
+
+            navi.addViewChangeListener(new NaviListener());
+            // navi.navigate();
+
+            addComponent(new NaviButton("list"));
+            addComponent(new NaviButton("edit"));
+            addComponent(new NaviButton("forbidden"));
+
+            addComponent(params);
+            addComponent(log);
+            addComponent(naviLayout);
+        } catch (Exception e) {
+            log.log("Exception: " + e.getMessage());
+        }
+    }
+}
