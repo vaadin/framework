@@ -789,7 +789,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             final PrintWriter outWriter, UI ui, boolean analyzeLayouts)
             throws PaintException, JSONException {
         ArrayList<ClientConnector> dirtyVisibleConnectors = new ArrayList<ClientConnector>();
-        VaadinSession application = ui.getSession();
+        VaadinSession session = ui.getSession();
         // Paints components
         ConnectorTracker uiConnectorTracker = ui.getConnectorTracker();
         getLogger().log(Level.FINE, "* Creating response to client");
@@ -800,7 +800,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
             // Reset sent locales
             locales = null;
-            requireLocale(application.getLocale().toString());
+            requireLocale(session.getLocale().toString());
         }
 
         uiConnectorTracker.setWritingResponse(true);
@@ -1516,11 +1516,11 @@ public abstract class AbstractCommunicationManager implements Serializable {
     /**
      * Returns false if the cross site request forgery protection is turned off.
      * 
-     * @param application
+     * @param session
      * @return false if the XSRF is turned off, true otherwise
      */
-    public boolean isXSRFEnabled(VaadinSession application) {
-        return application.getConfiguration().isXsrfProtectionEnabled();
+    public boolean isXSRFEnabled(VaadinSession session) {
+        return session.getConfiguration().isXsrfProtectionEnabled();
     }
 
     /**
@@ -1933,7 +1933,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * error), {@link ErrorListener#terminalError(ErrorEvent)} for the
      * application error handler is called.
      * 
-     * @param application
+     * @param session
      * @param owner
      *            component that the error concerns
      * @param e
@@ -1941,7 +1941,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @param m
      *            map from variable names to values
      */
-    private void handleChangeVariablesError(VaadinSession application,
+    private void handleChangeVariablesError(VaadinSession session,
             Component owner, Throwable t, Map<String, Object> m) {
         boolean handled = false;
         ChangeVariablesErrorEvent errorEvent = new ChangeVariablesErrorEvent(
@@ -1956,14 +1956,14 @@ public abstract class AbstractCommunicationManager implements Serializable {
                  * the that error to the application error handler and continue
                  * processing the actual error
                  */
-                application.getErrorHandler().terminalError(
+                session.getErrorHandler().terminalError(
                         new ErrorHandlerErrorEvent(handlerException));
                 handled = false;
             }
         }
 
         if (!handled) {
-            application.getErrorHandler().terminalError(errorEvent);
+            session.getErrorHandler().terminalError(errorEvent);
         }
 
     }

@@ -34,6 +34,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.portlet.PortletSession;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
@@ -52,55 +54,17 @@ import com.vaadin.util.CurrentInstance;
 import com.vaadin.util.ReflectTools;
 
 /**
+ * Contains everything that Vaadin needs to store for a specific user. This is
+ * typically stored in a {@link HttpSession} or {@link PortletSession}, but
+ * others storage mechanisms might also be used.
  * <p>
- * Base class required for all Vaadin applications. This class provides all the
- * basic services required by Vaadin. These services allow external discovery
- * and manipulation of the user, {@link com.vaadin.ui.Window windows} and
- * themes, and starting and stopping the application.
- * </p>
+ * Everything inside a {@link VaadinSession} should be serializable to ensure
+ * compatibility with schemes using serialization for persisting the session
+ * data.
  * 
- * <p>
- * As mentioned, all Vaadin applications must inherit this class. However, this
- * is almost all of what one needs to do to create a fully functional
- * application. The only thing a class inheriting the <code>Application</code>
- * needs to do is implement the <code>init</code> method where it creates the
- * windows it needs to perform its function. Note that all applications must
- * have at least one window: the main window. The first unnamed window
- * constructed by an application automatically becomes the main window which
- * behaves just like other windows with one exception: when accessing windows
- * using URLs the main window corresponds to the application URL whereas other
- * windows correspond to a URL gotten by catenating the window's name to the
- * application URL.
- * </p>
- * 
- * <p>
- * See the class <code>com.vaadin.demo.HelloWorld</code> for a simple example of
- * a fully working application.
- * </p>
- * 
- * <p>
- * <strong>Window access.</strong> <code>Application</code> provides methods to
- * list, add and remove the windows it contains.
- * </p>
- * 
- * <p>
- * <strong>Execution control.</strong> This class includes method to start and
- * finish the execution of the application. Being finished means basically that
- * no windows will be available from the application anymore.
- * </p>
- * 
- * <p>
- * <strong>Theme selection.</strong> The theme selection process allows a theme
- * to be specified at three different levels. When a window's theme needs to be
- * found out, the window itself is queried for a preferred theme. If the window
- * does not prefer a specific theme, the application containing the window is
- * queried. If neither the application prefers a theme, the default theme for
- * the {@link com.vaadin.server.Terminal terminal} is used. The terminal always
- * defines a default theme.
- * </p>
- * 
- * @author Vaadin Ltd.
- * @since 3.0
+ * @author Vaadin Ltd
+ * @version @VERSION@
+ * @since 7.0.0
  */
 @SuppressWarnings("serial")
 public class VaadinSession implements Terminal.ErrorListener,
@@ -120,12 +84,13 @@ public class VaadinSession implements Terminal.ErrorListener,
                     BootstrapPageResponse.class);
 
     /**
-     * An event sent to {@link #start(ApplicationStartEvent)} when a new
-     * Application is being started.
+     * An event sent to {@link #start(SessionStartEvent)} when a new Application
+     * is being started.
      * 
      * @since 7.0
      */
-    public static class ApplicationStartEvent implements Serializable {
+    @Deprecated
+    public static class SessionStartEvent implements Serializable {
         private final URL applicationUrl;
 
         private final DeploymentConfiguration configuration;
@@ -136,11 +101,11 @@ public class VaadinSession implements Terminal.ErrorListener,
          * @param applicationUrl
          *            the URL the application should respond to.
          * @param configuration
-         *            the application configuration for the application.
+         *            the deployment configuration for the session.
          * @param communicationManager
-         *            the communication manager for the application.
+         *            the communication manager for the session.
          */
-        public ApplicationStartEvent(URL applicationUrl,
+        public SessionStartEvent(URL applicationUrl,
                 DeploymentConfiguration configuration,
                 AbstractCommunicationManager communicationManager) {
             this.applicationUrl = applicationUrl;
@@ -185,7 +150,7 @@ public class VaadinSession implements Terminal.ErrorListener,
             .getName());
 
     /**
-     * Configuration for the application.
+     * Configuration for the session.
      */
     private DeploymentConfiguration configuration;
 
@@ -200,7 +165,7 @@ public class VaadinSession implements Terminal.ErrorListener,
     private volatile boolean applicationIsRunning = false;
 
     /**
-     * Default locale of the application.
+     * Default locale of the session.
      */
     private Locale locale;
 
@@ -211,14 +176,14 @@ public class VaadinSession implements Terminal.ErrorListener,
     private String logoutURL = null;
 
     /**
-     * Application wide error handler which is used by default if an error is
-     * left unhandled.
+     * Session wide error handler which is used by default if an error is left
+     * unhandled.
      */
     private Terminal.ErrorListener errorHandler = this;
 
     /**
      * The converter factory that is used to provide default converters for the
-     * application.
+     * session.
      */
     private ConverterFactory converterFactory = new DefaultConverterFactory();
 
@@ -264,11 +229,7 @@ public class VaadinSession implements Terminal.ErrorListener,
     }
 
     /**
-     * Get the web browser associated with this application context.
-     * 
-     * Because application context is related to the http session and server
-     * maintains one session per browser-instance, each context has exactly one
-     * web browser associated with it.
+     * Get the web browser associated with this session.
      * 
      * @return
      */
@@ -303,7 +264,7 @@ public class VaadinSession implements Terminal.ErrorListener,
     }
 
     /**
-     * Gets the session to which this application context is currently
+     * Gets the underlying session to which this vaadin session is currently
      * associated.
      * 
      * @return the wrapped session for this context
@@ -329,20 +290,21 @@ public class VaadinSession implements Terminal.ErrorListener,
      * 
      * @return the application's URL.
      */
+    @Deprecated
     public URL getURL() {
         return applicationUrl;
     }
 
     /**
-     * Ends the Application.
+     * Ends the session.
      * <p>
-     * In effect this will cause the application stop returning any windows when
-     * asked. When the application is closed, close events are fired for its
-     * UIs, its state is removed from the session, and the browser window is
+     * When the session is closed, close events are fired for its UIs, its state
+     * is removed from the underlying session, and the browser window is
      * redirected to the application logout url set with
      * {@link #setLogoutURL(String)}. If the logout url has not been set, the
      * browser window is reloaded and the application is restarted.
      */
+    @Deprecated
     public void close() {
         applicationIsRunning = false;
         for (UI ui : getUIs()) {
@@ -350,23 +312,27 @@ public class VaadinSession implements Terminal.ErrorListener,
         }
     }
 
-    public static VaadinSession getForSession(WrappedSession session) {
-        Object attribute = session.getAttribute(VaadinSession.class.getName());
+    @Deprecated
+    public static VaadinSession getForSession(WrappedSession underlyingSession) {
+        Object attribute = underlyingSession.getAttribute(VaadinSession.class
+                .getName());
         if (attribute instanceof VaadinSession) {
-            VaadinSession application = (VaadinSession) attribute;
-            application.session = session;
-            return application;
+            VaadinSession vaadinSession = (VaadinSession) attribute;
+            vaadinSession.session = underlyingSession;
+            return vaadinSession;
         }
 
         return null;
     }
 
+    @Deprecated
     public void removeFromSession() {
         assert (getForSession(session) == this);
 
         session.setAttribute(VaadinSession.class.getName(), null);
     }
 
+    @Deprecated
     public void storeInSession(WrappedSession session) {
         session.setAttribute(VaadinSession.class.getName(), this);
         this.session = session;
@@ -394,7 +360,8 @@ public class VaadinSession implements Terminal.ErrorListener,
      *            starting the application.
      * 
      */
-    public void start(ApplicationStartEvent event) {
+    @Deprecated
+    public void start(SessionStartEvent event) {
         applicationUrl = event.getApplicationUrl();
         configuration = event.getConfiguration();
         communicationManager = event.getCommunicationManager();
@@ -405,33 +372,34 @@ public class VaadinSession implements Terminal.ErrorListener,
      * Tests if the application is running or if it has been finished.
      * 
      * <p>
-     * Application starts running when its {@link #start(ApplicationStartEvent)}
+     * Application starts running when its {@link #start(SessionStartEvent)}
      * method has been called and stops when the {@link #close()} is called.
      * </p>
      * 
      * @return <code>true</code> if the application is running,
      *         <code>false</code> if not.
      */
+    @Deprecated
     public boolean isRunning() {
         return applicationIsRunning;
     }
 
     /**
-     * Gets the configuration for this application
+     * Gets the configuration for this session
      * 
-     * @return the application configuration
+     * @return the deployment configuration
      */
     public DeploymentConfiguration getConfiguration() {
         return configuration;
     }
 
     /**
-     * Gets the default locale for this application.
+     * Gets the default locale for this session.
      * 
-     * By default this is the preferred locale of the user using the
-     * application. In most cases it is read from the browser defaults.
+     * By default this is the preferred locale of the user using the session. In
+     * most cases it is read from the browser defaults.
      * 
-     * @return the locale of this application.
+     * @return the locale of this session.
      */
     public Locale getLocale() {
         if (locale != null) {
@@ -441,7 +409,7 @@ public class VaadinSession implements Terminal.ErrorListener,
     }
 
     /**
-     * Sets the default locale for this application.
+     * Sets the default locale for this session.
      * 
      * By default this is the preferred locale of the user using the
      * application. In most cases it is read from the browser defaults.
@@ -577,6 +545,7 @@ public class VaadinSession implements Terminal.ErrorListener,
      * 
      * @return the URL.
      */
+    @Deprecated
     public String getLogoutURL() {
         return logoutURL;
     }
@@ -591,6 +560,7 @@ public class VaadinSession implements Terminal.ErrorListener,
      * @param logoutURL
      *            the logoutURL to set.
      */
+    @Deprecated
     public void setLogoutURL(String logoutURL) {
         this.logoutURL = logoutURL;
     }
@@ -612,8 +582,8 @@ public class VaadinSession implements Terminal.ErrorListener,
      *            the change event.
      * @see com.vaadin.server.Terminal.ErrorListener#terminalError(com.vaadin.server.Terminal.ErrorEvent)
      */
-
     @Override
+    @Deprecated
     public void terminalError(Terminal.ErrorEvent event) {
         final Throwable t = event.getThrowable();
         if (t instanceof SocketException) {
@@ -643,22 +613,16 @@ public class VaadinSession implements Terminal.ErrorListener,
     }
 
     /**
-     * Gets the application error handler.
+     * Gets the session's error handler.
      * 
-     * The default error handler is the application itself.
-     * 
-     * @return Application error handler
+     * @return the current error handler
      */
     public Terminal.ErrorListener getErrorHandler() {
         return errorHandler;
     }
 
     /**
-     * Sets the application error handler.
-     * 
-     * The default error handler is the application itself. By overriding this,
-     * you can redirect the error messages to your selected target (log for
-     * example).
+     * Sets the session error handler.
      * 
      * @param errorHandler
      */
@@ -668,11 +632,11 @@ public class VaadinSession implements Terminal.ErrorListener,
 
     /**
      * Gets the {@link ConverterFactory} used to locate a suitable
-     * {@link Converter} for fields in the application.
+     * {@link Converter} for fields in the session.
      * 
      * See {@link #setConverterFactory(ConverterFactory)} for more details
      * 
-     * @return The converter factory used in the application
+     * @return The converter factory used in the session
      */
     public ConverterFactory getConverterFactory() {
         return converterFactory;
@@ -680,7 +644,7 @@ public class VaadinSession implements Terminal.ErrorListener,
 
     /**
      * Sets the {@link ConverterFactory} used to locate a suitable
-     * {@link Converter} for fields in the application.
+     * {@link Converter} for fields in the session.
      * <p>
      * The {@link ConverterFactory} is used to find a suitable converter when
      * binding data to a UI component and the data type does not match the UI
@@ -697,624 +661,16 @@ public class VaadinSession implements Terminal.ErrorListener,
      * The converter factory must never be set to null.
      * 
      * @param converterFactory
-     *            The converter factory used in the application
+     *            The converter factory used in the session
      */
     public void setConverterFactory(ConverterFactory converterFactory) {
         this.converterFactory = converterFactory;
     }
 
     /**
-     * Contains the system messages used to notify the user about various
-     * critical situations that can occur.
-     * <p>
-     * Customize by overriding the static
-     * {@link VaadinSession#getSystemMessages()} and returning
-     * {@link CustomizedSystemMessages}.
-     * </p>
-     * <p>
-     * The defaults defined in this class are:
-     * <ul>
-     * <li><b>sessionExpiredURL</b> = null</li>
-     * <li><b>sessionExpiredNotificationEnabled</b> = true</li>
-     * <li><b>sessionExpiredCaption</b> = ""</li>
-     * <li><b>sessionExpiredMessage</b> =
-     * "Take note of any unsaved data, and <u>click here</u> to continue."</li>
-     * <li><b>communicationErrorURL</b> = null</li>
-     * <li><b>communicationErrorNotificationEnabled</b> = true</li>
-     * <li><b>communicationErrorCaption</b> = "Communication problem"</li>
-     * <li><b>communicationErrorMessage</b> =
-     * "Take note of any unsaved data, and <u>click here</u> to continue."</li>
-     * <li><b>internalErrorURL</b> = null</li>
-     * <li><b>internalErrorNotificationEnabled</b> = true</li>
-     * <li><b>internalErrorCaption</b> = "Internal error"</li>
-     * <li><b>internalErrorMessage</b> = "Please notify the administrator.<br/>
-     * Take note of any unsaved data, and <u>click here</u> to continue."</li>
-     * <li><b>outOfSyncURL</b> = null</li>
-     * <li><b>outOfSyncNotificationEnabled</b> = true</li>
-     * <li><b>outOfSyncCaption</b> = "Out of sync"</li>
-     * <li><b>outOfSyncMessage</b> = "Something has caused us to be out of sync
-     * with the server.<br/>
-     * Take note of any unsaved data, and <u>click here</u> to re-sync."</li>
-     * <li><b>cookiesDisabledURL</b> = null</li>
-     * <li><b>cookiesDisabledNotificationEnabled</b> = true</li>
-     * <li><b>cookiesDisabledCaption</b> = "Cookies disabled"</li>
-     * <li><b>cookiesDisabledMessage</b> = "This application requires cookies to
-     * function.<br/>
-     * Please enable cookies in your browser and <u>click here</u> to try again.
-     * </li>
-     * </ul>
-     * </p>
-     * 
-     */
-    public static class SystemMessages implements Serializable {
-        protected String sessionExpiredURL = null;
-        protected boolean sessionExpiredNotificationEnabled = true;
-        protected String sessionExpiredCaption = "Session Expired";
-        protected String sessionExpiredMessage = "Take note of any unsaved data, and <u>click here</u> to continue.";
-
-        protected String communicationErrorURL = null;
-        protected boolean communicationErrorNotificationEnabled = true;
-        protected String communicationErrorCaption = "Communication problem";
-        protected String communicationErrorMessage = "Take note of any unsaved data, and <u>click here</u> to continue.";
-
-        protected String authenticationErrorURL = null;
-        protected boolean authenticationErrorNotificationEnabled = true;
-        protected String authenticationErrorCaption = "Authentication problem";
-        protected String authenticationErrorMessage = "Take note of any unsaved data, and <u>click here</u> to continue.";
-
-        protected String internalErrorURL = null;
-        protected boolean internalErrorNotificationEnabled = true;
-        protected String internalErrorCaption = "Internal error";
-        protected String internalErrorMessage = "Please notify the administrator.<br/>Take note of any unsaved data, and <u>click here</u> to continue.";
-
-        protected String outOfSyncURL = null;
-        protected boolean outOfSyncNotificationEnabled = true;
-        protected String outOfSyncCaption = "Out of sync";
-        protected String outOfSyncMessage = "Something has caused us to be out of sync with the server.<br/>Take note of any unsaved data, and <u>click here</u> to re-sync.";
-
-        protected String cookiesDisabledURL = null;
-        protected boolean cookiesDisabledNotificationEnabled = true;
-        protected String cookiesDisabledCaption = "Cookies disabled";
-        protected String cookiesDisabledMessage = "This application requires cookies to function.<br/>Please enable cookies in your browser and <u>click here</u> to try again.";
-
-        /**
-         * Use {@link CustomizedSystemMessages} to customize
-         */
-        private SystemMessages() {
-
-        }
-
-        /**
-         * @return null to indicate that the application will be restarted after
-         *         session expired message has been shown.
-         */
-        public String getSessionExpiredURL() {
-            return sessionExpiredURL;
-        }
-
-        /**
-         * @return true to show session expiration message.
-         */
-        public boolean isSessionExpiredNotificationEnabled() {
-            return sessionExpiredNotificationEnabled;
-        }
-
-        /**
-         * @return "" to show no caption.
-         */
-        public String getSessionExpiredCaption() {
-            return (sessionExpiredNotificationEnabled ? sessionExpiredCaption
-                    : null);
-        }
-
-        /**
-         * @return 
-         *         "Take note of any unsaved data, and <u>click here</u> to continue."
-         */
-        public String getSessionExpiredMessage() {
-            return (sessionExpiredNotificationEnabled ? sessionExpiredMessage
-                    : null);
-        }
-
-        /**
-         * @return null to reload the application after communication error
-         *         message.
-         */
-        public String getCommunicationErrorURL() {
-            return communicationErrorURL;
-        }
-
-        /**
-         * @return true to show the communication error message.
-         */
-        public boolean isCommunicationErrorNotificationEnabled() {
-            return communicationErrorNotificationEnabled;
-        }
-
-        /**
-         * @return "Communication problem"
-         */
-        public String getCommunicationErrorCaption() {
-            return (communicationErrorNotificationEnabled ? communicationErrorCaption
-                    : null);
-        }
-
-        /**
-         * @return 
-         *         "Take note of any unsaved data, and <u>click here</u> to continue."
-         */
-        public String getCommunicationErrorMessage() {
-            return (communicationErrorNotificationEnabled ? communicationErrorMessage
-                    : null);
-        }
-
-        /**
-         * @return null to reload the application after authentication error
-         *         message.
-         */
-        public String getAuthenticationErrorURL() {
-            return authenticationErrorURL;
-        }
-
-        /**
-         * @return true to show the authentication error message.
-         */
-        public boolean isAuthenticationErrorNotificationEnabled() {
-            return authenticationErrorNotificationEnabled;
-        }
-
-        /**
-         * @return "Authentication problem"
-         */
-        public String getAuthenticationErrorCaption() {
-            return (authenticationErrorNotificationEnabled ? authenticationErrorCaption
-                    : null);
-        }
-
-        /**
-         * @return 
-         *         "Take note of any unsaved data, and <u>click here</u> to continue."
-         */
-        public String getAuthenticationErrorMessage() {
-            return (authenticationErrorNotificationEnabled ? authenticationErrorMessage
-                    : null);
-        }
-
-        /**
-         * @return null to reload the current URL after internal error message
-         *         has been shown.
-         */
-        public String getInternalErrorURL() {
-            return internalErrorURL;
-        }
-
-        /**
-         * @return true to enable showing of internal error message.
-         */
-        public boolean isInternalErrorNotificationEnabled() {
-            return internalErrorNotificationEnabled;
-        }
-
-        /**
-         * @return "Internal error"
-         */
-        public String getInternalErrorCaption() {
-            return (internalErrorNotificationEnabled ? internalErrorCaption
-                    : null);
-        }
-
-        /**
-         * @return "Please notify the administrator.<br/>
-         *         Take note of any unsaved data, and <u>click here</u> to
-         *         continue."
-         */
-        public String getInternalErrorMessage() {
-            return (internalErrorNotificationEnabled ? internalErrorMessage
-                    : null);
-        }
-
-        /**
-         * @return null to reload the application after out of sync message.
-         */
-        public String getOutOfSyncURL() {
-            return outOfSyncURL;
-        }
-
-        /**
-         * @return true to enable showing out of sync message
-         */
-        public boolean isOutOfSyncNotificationEnabled() {
-            return outOfSyncNotificationEnabled;
-        }
-
-        /**
-         * @return "Out of sync"
-         */
-        public String getOutOfSyncCaption() {
-            return (outOfSyncNotificationEnabled ? outOfSyncCaption : null);
-        }
-
-        /**
-         * @return "Something has caused us to be out of sync with the server.<br/>
-         *         Take note of any unsaved data, and <u>click here</u> to
-         *         re-sync."
-         */
-        public String getOutOfSyncMessage() {
-            return (outOfSyncNotificationEnabled ? outOfSyncMessage : null);
-        }
-
-        /**
-         * Returns the URL the user should be redirected to after dismissing the
-         * "you have to enable your cookies" message. Typically null.
-         * 
-         * @return A URL the user should be redirected to after dismissing the
-         *         message or null to reload the current URL.
-         */
-        public String getCookiesDisabledURL() {
-            return cookiesDisabledURL;
-        }
-
-        /**
-         * Determines if "cookies disabled" messages should be shown to the end
-         * user or not. If the notification is disabled the user will be
-         * immediately redirected to the URL returned by
-         * {@link #getCookiesDisabledURL()}.
-         * 
-         * @return true to show "cookies disabled" messages to the end user,
-         *         false to redirect to the given URL directly
-         */
-        public boolean isCookiesDisabledNotificationEnabled() {
-            return cookiesDisabledNotificationEnabled;
-        }
-
-        /**
-         * Returns the caption of the message shown to the user when cookies are
-         * disabled in the browser.
-         * 
-         * @return The caption of the "cookies disabled" message
-         */
-        public String getCookiesDisabledCaption() {
-            return (cookiesDisabledNotificationEnabled ? cookiesDisabledCaption
-                    : null);
-        }
-
-        /**
-         * Returns the message shown to the user when cookies are disabled in
-         * the browser.
-         * 
-         * @return The "cookies disabled" message
-         */
-        public String getCookiesDisabledMessage() {
-            return (cookiesDisabledNotificationEnabled ? cookiesDisabledMessage
-                    : null);
-        }
-
-    }
-
-    /**
-     * Contains the system messages used to notify the user about various
-     * critical situations that can occur.
-     * <p>
-     * Vaadin gets the SystemMessages from your application by calling a static
-     * getSystemMessages() method. By default the
-     * Application.getSystemMessages() is used. You can customize this by
-     * defining a static MyApplication.getSystemMessages() and returning
-     * CustomizedSystemMessages. Note that getSystemMessages() is static -
-     * changing the system messages will by default change the message for all
-     * users of the application.
-     * </p>
-     * <p>
-     * The default behavior is to show a notification, and restart the
-     * application the the user clicks the message. <br/>
-     * Instead of restarting the application, you can set a specific URL that
-     * the user is taken to.<br/>
-     * Setting both caption and message to null will restart the application (or
-     * go to the specified URL) without displaying a notification.
-     * set*NotificationEnabled(false) will achieve the same thing.
-     * </p>
-     * <p>
-     * The situations are:
-     * <li>Session expired: the user session has expired, usually due to
-     * inactivity.</li>
-     * <li>Communication error: the client failed to contact the server, or the
-     * server returned and invalid response.</li>
-     * <li>Internal error: unhandled critical server error (e.g out of memory,
-     * database crash)
-     * <li>Out of sync: the client is not in sync with the server. E.g the user
-     * opens two windows showing the same application, but the application does
-     * not support this and uses the same Window instance. When the user makes
-     * changes in one of the windows - the other window is no longer in sync,
-     * and (for instance) pressing a button that is no longer present in the UI
-     * will cause a out-of-sync -situation.
-     * </p>
-     */
-
-    public static class CustomizedSystemMessages extends SystemMessages
-            implements Serializable {
-
-        /**
-         * Sets the URL to go to when the session has expired.
-         * 
-         * @param sessionExpiredURL
-         *            the URL to go to, or null to reload current
-         */
-        public void setSessionExpiredURL(String sessionExpiredURL) {
-            this.sessionExpiredURL = sessionExpiredURL;
-        }
-
-        /**
-         * Enables or disables the notification. If disabled, the set URL (or
-         * current) is loaded directly when next transaction between server and
-         * client happens.
-         * 
-         * @param sessionExpiredNotificationEnabled
-         *            true = enabled, false = disabled
-         */
-        public void setSessionExpiredNotificationEnabled(
-                boolean sessionExpiredNotificationEnabled) {
-            this.sessionExpiredNotificationEnabled = sessionExpiredNotificationEnabled;
-        }
-
-        /**
-         * Sets the caption of the notification. Set to null for no caption. If
-         * both caption and message are null, client automatically forwards to
-         * sessionExpiredUrl after timeout timer expires. Timer uses value read
-         * from HTTPSession.getMaxInactiveInterval()
-         * 
-         * @param sessionExpiredCaption
-         *            the caption
-         */
-        public void setSessionExpiredCaption(String sessionExpiredCaption) {
-            this.sessionExpiredCaption = sessionExpiredCaption;
-        }
-
-        /**
-         * Sets the message of the notification. Set to null for no message. If
-         * both caption and message are null, client automatically forwards to
-         * sessionExpiredUrl after timeout timer expires. Timer uses value read
-         * from HTTPSession.getMaxInactiveInterval()
-         * 
-         * @param sessionExpiredMessage
-         *            the message
-         */
-        public void setSessionExpiredMessage(String sessionExpiredMessage) {
-            this.sessionExpiredMessage = sessionExpiredMessage;
-        }
-
-        /**
-         * Sets the URL to go to when there is a authentication error.
-         * 
-         * @param authenticationErrorURL
-         *            the URL to go to, or null to reload current
-         */
-        public void setAuthenticationErrorURL(String authenticationErrorURL) {
-            this.authenticationErrorURL = authenticationErrorURL;
-        }
-
-        /**
-         * Enables or disables the notification. If disabled, the set URL (or
-         * current) is loaded directly.
-         * 
-         * @param authenticationErrorNotificationEnabled
-         *            true = enabled, false = disabled
-         */
-        public void setAuthenticationErrorNotificationEnabled(
-                boolean authenticationErrorNotificationEnabled) {
-            this.authenticationErrorNotificationEnabled = authenticationErrorNotificationEnabled;
-        }
-
-        /**
-         * Sets the caption of the notification. Set to null for no caption. If
-         * both caption and message is null, the notification is disabled;
-         * 
-         * @param authenticationErrorCaption
-         *            the caption
-         */
-        public void setAuthenticationErrorCaption(
-                String authenticationErrorCaption) {
-            this.authenticationErrorCaption = authenticationErrorCaption;
-        }
-
-        /**
-         * Sets the message of the notification. Set to null for no message. If
-         * both caption and message is null, the notification is disabled;
-         * 
-         * @param authenticationErrorMessage
-         *            the message
-         */
-        public void setAuthenticationErrorMessage(
-                String authenticationErrorMessage) {
-            this.authenticationErrorMessage = authenticationErrorMessage;
-        }
-
-        /**
-         * Sets the URL to go to when there is a communication error.
-         * 
-         * @param communicationErrorURL
-         *            the URL to go to, or null to reload current
-         */
-        public void setCommunicationErrorURL(String communicationErrorURL) {
-            this.communicationErrorURL = communicationErrorURL;
-        }
-
-        /**
-         * Enables or disables the notification. If disabled, the set URL (or
-         * current) is loaded directly.
-         * 
-         * @param communicationErrorNotificationEnabled
-         *            true = enabled, false = disabled
-         */
-        public void setCommunicationErrorNotificationEnabled(
-                boolean communicationErrorNotificationEnabled) {
-            this.communicationErrorNotificationEnabled = communicationErrorNotificationEnabled;
-        }
-
-        /**
-         * Sets the caption of the notification. Set to null for no caption. If
-         * both caption and message is null, the notification is disabled;
-         * 
-         * @param communicationErrorCaption
-         *            the caption
-         */
-        public void setCommunicationErrorCaption(
-                String communicationErrorCaption) {
-            this.communicationErrorCaption = communicationErrorCaption;
-        }
-
-        /**
-         * Sets the message of the notification. Set to null for no message. If
-         * both caption and message is null, the notification is disabled;
-         * 
-         * @param communicationErrorMessage
-         *            the message
-         */
-        public void setCommunicationErrorMessage(
-                String communicationErrorMessage) {
-            this.communicationErrorMessage = communicationErrorMessage;
-        }
-
-        /**
-         * Sets the URL to go to when an internal error occurs.
-         * 
-         * @param internalErrorURL
-         *            the URL to go to, or null to reload current
-         */
-        public void setInternalErrorURL(String internalErrorURL) {
-            this.internalErrorURL = internalErrorURL;
-        }
-
-        /**
-         * Enables or disables the notification. If disabled, the set URL (or
-         * current) is loaded directly.
-         * 
-         * @param internalErrorNotificationEnabled
-         *            true = enabled, false = disabled
-         */
-        public void setInternalErrorNotificationEnabled(
-                boolean internalErrorNotificationEnabled) {
-            this.internalErrorNotificationEnabled = internalErrorNotificationEnabled;
-        }
-
-        /**
-         * Sets the caption of the notification. Set to null for no caption. If
-         * both caption and message is null, the notification is disabled;
-         * 
-         * @param internalErrorCaption
-         *            the caption
-         */
-        public void setInternalErrorCaption(String internalErrorCaption) {
-            this.internalErrorCaption = internalErrorCaption;
-        }
-
-        /**
-         * Sets the message of the notification. Set to null for no message. If
-         * both caption and message is null, the notification is disabled;
-         * 
-         * @param internalErrorMessage
-         *            the message
-         */
-        public void setInternalErrorMessage(String internalErrorMessage) {
-            this.internalErrorMessage = internalErrorMessage;
-        }
-
-        /**
-         * Sets the URL to go to when the client is out-of-sync.
-         * 
-         * @param outOfSyncURL
-         *            the URL to go to, or null to reload current
-         */
-        public void setOutOfSyncURL(String outOfSyncURL) {
-            this.outOfSyncURL = outOfSyncURL;
-        }
-
-        /**
-         * Enables or disables the notification. If disabled, the set URL (or
-         * current) is loaded directly.
-         * 
-         * @param outOfSyncNotificationEnabled
-         *            true = enabled, false = disabled
-         */
-        public void setOutOfSyncNotificationEnabled(
-                boolean outOfSyncNotificationEnabled) {
-            this.outOfSyncNotificationEnabled = outOfSyncNotificationEnabled;
-        }
-
-        /**
-         * Sets the caption of the notification. Set to null for no caption. If
-         * both caption and message is null, the notification is disabled;
-         * 
-         * @param outOfSyncCaption
-         *            the caption
-         */
-        public void setOutOfSyncCaption(String outOfSyncCaption) {
-            this.outOfSyncCaption = outOfSyncCaption;
-        }
-
-        /**
-         * Sets the message of the notification. Set to null for no message. If
-         * both caption and message is null, the notification is disabled;
-         * 
-         * @param outOfSyncMessage
-         *            the message
-         */
-        public void setOutOfSyncMessage(String outOfSyncMessage) {
-            this.outOfSyncMessage = outOfSyncMessage;
-        }
-
-        /**
-         * Sets the URL to redirect to when the browser has cookies disabled.
-         * 
-         * @param cookiesDisabledURL
-         *            the URL to redirect to, or null to reload the current URL
-         */
-        public void setCookiesDisabledURL(String cookiesDisabledURL) {
-            this.cookiesDisabledURL = cookiesDisabledURL;
-        }
-
-        /**
-         * Enables or disables the notification for "cookies disabled" messages.
-         * If disabled, the URL returned by {@link #getCookiesDisabledURL()} is
-         * loaded directly.
-         * 
-         * @param cookiesDisabledNotificationEnabled
-         *            true to enable "cookies disabled" messages, false
-         *            otherwise
-         */
-        public void setCookiesDisabledNotificationEnabled(
-                boolean cookiesDisabledNotificationEnabled) {
-            this.cookiesDisabledNotificationEnabled = cookiesDisabledNotificationEnabled;
-        }
-
-        /**
-         * Sets the caption of the "cookies disabled" notification. Set to null
-         * for no caption. If both caption and message is null, the notification
-         * is disabled.
-         * 
-         * @param cookiesDisabledCaption
-         *            the caption for the "cookies disabled" notification
-         */
-        public void setCookiesDisabledCaption(String cookiesDisabledCaption) {
-            this.cookiesDisabledCaption = cookiesDisabledCaption;
-        }
-
-        /**
-         * Sets the message of the "cookies disabled" notification. Set to null
-         * for no message. If both caption and message is null, the notification
-         * is disabled.
-         * 
-         * @param cookiesDisabledMessage
-         *            the message for the "cookies disabled" notification
-         */
-        public void setCookiesDisabledMessage(String cookiesDisabledMessage) {
-            this.cookiesDisabledMessage = cookiesDisabledMessage;
-        }
-
-    }
-
-    /**
      * Application error is an error message defined on the application level.
      * 
-     * When an error occurs on the application level, this error message type
+     * When an error occurs on the application level, this error message4 type
      * should be used. This indicates that the problem is caused by the
      * application - not by the user.
      */
@@ -1337,18 +693,6 @@ public class VaadinSession implements Terminal.ErrorListener,
      * method is called when the framework processes a request that does not
      * originate from an existing UI instance. This typically happens when a
      * host page is requested.
-     * <p>
-     * Subclasses of Application may override this method to provide custom
-     * logic for choosing what kind of UI to use.
-     * <p>
-     * The default implementation in {@link VaadinSession} uses the
-     * {@value #UI_PARAMETER} parameter from web.xml for finding the name of the
-     * UI class. If {@link VaadinService#getClassLoader()} does not return
-     * <code>null</code>, the returned {@link ClassLoader} is used for loading
-     * the UI class. Otherwise the {@link ClassLoader} used to load this class
-     * is used.
-     * 
-     * </p>
      * 
      * @param request
      *            the wrapped request for which a UI is needed
@@ -1359,6 +703,7 @@ public class VaadinSession implements Terminal.ErrorListener,
      * 
      * @since 7.0
      */
+    @Deprecated
     public Class<? extends UI> getUIClass(WrappedRequest request) {
         UIProvider uiProvider = getUiProvider(request, null);
         return uiProvider.getUIClass(this, request);
@@ -1369,18 +714,12 @@ public class VaadinSession implements Terminal.ErrorListener,
      * This method is called when the framework processes a request that does
      * not originate from an existing UI instance. This typically happens when a
      * host page is requested.
-     * <p>
-     * Subclasses of Application may override this method to provide custom
-     * logic for choosing how to create a suitable UI or for picking an already
-     * created UI. If an existing UI is picked, care should be taken to avoid
-     * keeping the same UI open in multiple browser windows, as that will cause
-     * the states to go out of sync.
-     * </p>
      * 
      * @param request
      * @param uiClass
      * @return
      */
+    @Deprecated
     protected <T extends UI> T createUIInstance(WrappedRequest request,
             Class<T> uiClass) {
         UIProvider uiProvider = getUiProvider(request, uiClass);
@@ -1406,6 +745,7 @@ public class VaadinSession implements Terminal.ErrorListener,
      * 
      * @since 7.0.0
      */
+    @Deprecated
     public UIProvider getUiProvider(WrappedRequest request, Class<?> uiClass) {
         UIProvider provider = (UIProvider) request
                 .getAttribute(UIProvider.class.getName());
@@ -1435,6 +775,7 @@ public class VaadinSession implements Terminal.ErrorListener,
         return provider;
     }
 
+    @Deprecated
     private UIProvider doGetUiProvider(WrappedRequest request, Class<?> uiClass) {
         int providersSize = uiProviders.size();
         if (providersSize == 0) {
@@ -1494,6 +835,7 @@ public class VaadinSession implements Terminal.ErrorListener,
      * 
      * @since 7.0
      */
+    @Deprecated
     public boolean handleRequest(WrappedRequest request,
             WrappedResponse response) throws IOException {
         // Use a copy to avoid ConcurrentModificationException
@@ -1508,8 +850,8 @@ public class VaadinSession implements Terminal.ErrorListener,
     }
 
     /**
-     * Adds a request handler to this application. Request handlers can be added
-     * to provide responses to requests that are not handled by the default
+     * Adds a request handler to this session. Request handlers can be added to
+     * provide responses to requests that are not handled by the default
      * functionality of the framework.
      * <p>
      * Handlers are called in reverse order of addition, so the most recently
@@ -1529,7 +871,7 @@ public class VaadinSession implements Terminal.ErrorListener,
     }
 
     /**
-     * Removes a request handler from the application.
+     * Removes a request handler from the session.
      * 
      * @param handler
      *            the request handler to remove
@@ -1541,7 +883,7 @@ public class VaadinSession implements Terminal.ErrorListener,
     }
 
     /**
-     * Gets the request handlers that are registered to the application. The
+     * Gets the request handlers that are registered to the session. The
      * iteration order of the returned collection is the same as the order in
      * which the request handlers will be invoked when a request is handled.
      * 
@@ -1559,12 +901,14 @@ public class VaadinSession implements Terminal.ErrorListener,
     }
 
     /**
-     * Gets the currently used application. The current application is
-     * automatically defined when processing requests to the server. In other
-     * cases, (e.g. from background threads), the current application is not
+     * Gets the currently used session. The current session is automatically
+     * defined when processing requests to the server and in threads started at
+     * a point when the current session is defined (see
+     * {@link InheritableThreadLocal}). In other cases, (e.g. from background
+     * threads started in some other way), the current session is not
      * automatically defined.
      * 
-     * @return the current application instance if available, otherwise
+     * @return the current session instance if available, otherwise
      *         <code>null</code>
      * 
      * @see #setCurrent(VaadinSession)
@@ -1576,24 +920,24 @@ public class VaadinSession implements Terminal.ErrorListener,
     }
 
     /**
-     * Sets the thread local for the current application. This method is used by
-     * the framework to set the current application whenever a new request is
-     * processed and it is cleared when the request has been processed.
+     * Sets the thread local for the current session. This method is used by the
+     * framework to set the current session whenever a new request is processed
+     * and it is cleared when the request has been processed.
      * <p>
      * The application developer can also use this method to define the current
-     * application outside the normal request handling, e.g. when initiating
-     * custom background threads.
+     * session outside the normal request handling and treads started from
+     * request handling threads, e.g. when initiating custom background threads.
      * </p>
      * 
-     * @param application
+     * @param session
      * 
      * @see #getCurrent()
      * @see ThreadLocal
      * 
      * @since 7.0
      */
-    public static void setCurrent(VaadinSession application) {
-        CurrentInstance.setInheritable(VaadinSession.class, application);
+    public static void setCurrent(VaadinSession session) {
+        CurrentInstance.setInheritable(VaadinSession.class, session);
     }
 
     /**
@@ -1604,6 +948,7 @@ public class VaadinSession implements Terminal.ErrorListener,
      * 
      * @since 7.0
      */
+    @Deprecated
     public boolean isProductionMode() {
         return configuration.isProductionMode();
     }
@@ -1637,6 +982,7 @@ public class VaadinSession implements Terminal.ErrorListener,
      * 
      * @since 7.0
      */
+    @Deprecated
     public UI getUIForRequest(WrappedRequest request) {
         UI uI = UI.getCurrent();
         if (uI != null) {
@@ -1658,6 +1004,7 @@ public class VaadinSession implements Terminal.ErrorListener,
         return uI;
     }
 
+    @Deprecated
     private UI findExistingUi(WrappedRequest request) {
         // Check if some UI provider has an existing UI available
         for (int i = uiProviders.size() - 1; i >= 0; i--) {
@@ -1700,6 +1047,7 @@ public class VaadinSession implements Terminal.ErrorListener,
         return null;
     }
 
+    @Deprecated
     public UI createUI(WrappedRequest request) {
         Class<? extends UI> uiClass = getUIClass(request);
 
@@ -1743,6 +1091,7 @@ public class VaadinSession implements Terminal.ErrorListener,
      * 
      * @since 7.0
      */
+    @Deprecated
     private static Integer getUIId(WrappedRequest request) {
         if (request instanceof CombinedRequest) {
             // Combined requests has the uiId parameter in the second request
@@ -1755,10 +1104,10 @@ public class VaadinSession implements Terminal.ErrorListener,
     }
 
     /**
-     * Gets all the uIs of this application. This includes uIs that have been
-     * requested but not yet initialized. Please note, that uIs are not
+     * Gets all the UIs of this session. This includes UIs that have been
+     * requested but not yet initialized. Please note, that UIs are not
      * automatically removed e.g. if the browser window is closed and that there
-     * is no way to manually remove a UI. Inactive uIs will thus not be released
+     * is no way to manually remove a UI. Inactive UIs will thus not be released
      * for GC until the entire application is released when the session has
      * timed out (unless there are dangling references). Improved support for
      * releasing unused uIs is planned for an upcoming alpha release of Vaadin
@@ -1847,12 +1196,13 @@ public class VaadinSession implements Terminal.ErrorListener,
      *            the bootstrap response event for which listeners should be
      *            fired
      */
+    @Deprecated
     public void modifyBootstrapResponse(BootstrapResponse response) {
         eventRouter.fireEvent(response);
     }
 
     /**
-     * Removes all those UIs from the application for which {@link #isUIAlive}
+     * Removes all those UIs from the session for which {@link #isUIAlive}
      * returns false. Close events are fired for the removed UIs.
      * <p>
      * Called by the framework at the end of every request.
@@ -1899,9 +1249,9 @@ public class VaadinSession implements Terminal.ErrorListener,
 
     /**
      * Returns the number of seconds that must pass without a valid UIDL request
-     * being received from a UI before the UI is removed from the application,
-     * even though heartbeat requests are received. This is a lower bound; it
-     * might take longer to close an inactive UI. Returns a negative number if
+     * being received from a UI before the UI is removed from the session, even
+     * though heartbeat requests are received. This is a lower bound; it might
+     * take longer to close an inactive UI. Returns a negative number if
      * <p>
      * This timeout only has effect if cleanup of inactive UIs is enabled;
      * otherwise heartbeat requests are enough to extend UI lifetime
@@ -1924,7 +1274,7 @@ public class VaadinSession implements Terminal.ErrorListener,
     /**
      * Returns whether the given UI is alive (the client-side actively
      * communicates with the server) or whether it can be removed from the
-     * application and eventually collected.
+     * session and eventually collected.
      * 
      * @since 7.0.0
      * 
@@ -1946,18 +1296,18 @@ public class VaadinSession implements Terminal.ErrorListener,
     }
 
     /**
-     * Gets this application's global resource handler that takes care of
-     * serving connector resources that are not served by any single connector
-     * because e.g. because they are served with strong caching or because of
-     * legacy reasons.
+     * Gets this session's global resource handler that takes care of serving
+     * connector resources that are not served by any single connector because
+     * e.g. because they are served with strong caching or because of legacy
+     * reasons.
      * 
      * @param createOnDemand
      *            <code>true</code> if a resource handler should be initialized
      *            if there is no handler associated with this application.
      *            </code>false</code> if </code>null</code> should be returned
      *            if there is no registered handler.
-     * @return this application's global resource handler, or <code>null</code>
-     *         if there is no handler and the createOnDemand parameter is
+     * @return this session's global resource handler, or <code>null</code> if
+     *         there is no handler and the createOnDemand parameter is
      *         <code>false</code>.
      * 
      * @since 7.0.0

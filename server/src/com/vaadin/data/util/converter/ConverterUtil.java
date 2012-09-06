@@ -36,22 +36,22 @@ public class ConverterUtil implements Serializable {
      *            The presentation type
      * @param modelType
      *            The model type
-     * @param application
-     *            The application to use to find a ConverterFactory or null to
-     *            use the current application
+     * @param session
+     *            The session to use to find a ConverterFactory or null to use
+     *            the current session
      * @return A Converter capable of converting between the given types or null
      *         if no converter was found
      */
     public static <PRESENTATIONTYPE, MODELTYPE> Converter<PRESENTATIONTYPE, MODELTYPE> getConverter(
             Class<PRESENTATIONTYPE> presentationType,
-            Class<MODELTYPE> modelType, VaadinSession application) {
+            Class<MODELTYPE> modelType, VaadinSession session) {
         Converter<PRESENTATIONTYPE, MODELTYPE> converter = null;
-        if (application == null) {
-            application = VaadinSession.getCurrent();
+        if (session == null) {
+            session = VaadinSession.getCurrent();
         }
 
-        if (application != null) {
-            ConverterFactory factory = application.getConverterFactory();
+        if (session != null) {
+            ConverterFactory factory = session.getConverterFactory();
             converter = factory.createConverter(presentationType, modelType);
         }
         return converter;

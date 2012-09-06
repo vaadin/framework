@@ -47,7 +47,7 @@ import javax.servlet.http.HttpSession;
 import com.vaadin.DefaultDeploymentConfiguration;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
 import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
-import com.vaadin.server.VaadinSession.ApplicationStartEvent;
+import com.vaadin.server.VaadinSession.SessionStartEvent;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
@@ -638,7 +638,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         // Initial locale comes from the request
         Locale locale = request.getLocale();
         newApplication.setLocale(locale);
-        newApplication.start(new ApplicationStartEvent(applicationUrl,
+        newApplication.start(new SessionStartEvent(applicationUrl,
                 getVaadinService().getDeploymentConfiguration(),
                 createCommunicationManager(newApplication)));
 

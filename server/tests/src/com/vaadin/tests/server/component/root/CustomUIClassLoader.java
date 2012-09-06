@@ -13,7 +13,7 @@ import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.DefaultUIProvider;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.server.VaadinSession.ApplicationStartEvent;
+import com.vaadin.server.VaadinSession.SessionStartEvent;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.UI;
 
@@ -54,7 +54,7 @@ public class CustomUIClassLoader extends TestCase {
      */
     public void testWithNullClassLoader() throws Exception {
         VaadinSession application = createStubApplication();
-        application.start(new ApplicationStartEvent(null,
+        application.start(new SessionStartEvent(null,
                 createConfigurationMock(), null));
 
         DefaultUIProvider uiProvider = new DefaultUIProvider();
@@ -98,7 +98,7 @@ public class CustomUIClassLoader extends TestCase {
         LoggingClassLoader loggingClassLoader = new LoggingClassLoader();
 
         VaadinSession application = createStubApplication();
-        application.start(new ApplicationStartEvent(null,
+        application.start(new SessionStartEvent(null,
                 createConfigurationMock(), null));
 
         DefaultUIProvider uiProvider = new DefaultUIProvider();

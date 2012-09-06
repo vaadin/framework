@@ -58,7 +58,7 @@ import com.liferay.portal.kernel.util.PropsUtil;
 import com.vaadin.DefaultDeploymentConfiguration;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
 import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
-import com.vaadin.server.VaadinSession.ApplicationStartEvent;
+import com.vaadin.server.VaadinSession.SessionStartEvent;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
@@ -826,7 +826,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         Locale locale = request.getLocale();
         newApplication.setLocale(locale);
         // No application URL when running inside a portlet
-        newApplication.start(new ApplicationStartEvent(null, getVaadinService()
+        newApplication.start(new SessionStartEvent(null, getVaadinService()
                 .getDeploymentConfiguration(), new PortletCommunicationManager(
                 newApplication)));
         addonContext.fireApplicationStarted(newApplication);

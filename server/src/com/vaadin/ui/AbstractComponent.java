@@ -263,9 +263,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
         if (parent != null) {
             return parent.getLocale();
         }
-        final VaadinSession app = getSession();
-        if (app != null) {
-            return app.getLocale();
+        final VaadinSession session = getSession();
+        if (session != null) {
+            return session.getLocale();
         }
         return null;
     }
@@ -620,8 +620,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     protected void focus() {
         if (this instanceof Focusable) {
-            final VaadinSession app = getSession();
-            if (app != null) {
+            final VaadinSession session = getSession();
+            if (session != null) {
                 getUI().setFocusedComponent((Focusable) this);
                 delayedFocus = false;
             } else {

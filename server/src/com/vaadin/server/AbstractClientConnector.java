@@ -344,7 +344,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
         if (connectorId == null) {
             if (getSession() == null) {
                 throw new RuntimeException(
-                        "Component must be attached to an application when getConnectorId() is called for the first time");
+                        "Component must be attached to a session when getConnectorId() is called for the first time");
             }
             connectorId = getSession().createConnectorId(this);
         }
@@ -352,10 +352,10 @@ public abstract class AbstractClientConnector implements ClientConnector {
     }
 
     /**
-     * Finds the Application to which this connector belongs. If the connector
-     * has not been attached, <code>null</code> is returned.
+     * Finds the {@link VaadinSession} to which this connector belongs. If the
+     * connector has not been attached, <code>null</code> is returned.
      * 
-     * @return The connector's application, or <code>null</code> if not attached
+     * @return The connector's session, or <code>null</code> if not attached
      */
     protected VaadinSession getSession() {
         UI uI = getUI();

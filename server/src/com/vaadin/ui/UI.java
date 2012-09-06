@@ -192,13 +192,13 @@ public abstract class UI extends AbstractComponentContainer implements
          *         to an application
          */
         public URL getURL() {
-            VaadinSession application = getSession();
-            if (application == null) {
+            VaadinSession session = getSession();
+            if (session == null) {
                 return null;
             }
 
             try {
-                return new URL(application.getURL(), getName() + "/");
+                return new URL(session.getURL(), getName() + "/");
             } catch (MalformedURLException e) {
                 throw new RuntimeException(
                         "Internal problem getting window URL, please report");
@@ -705,7 +705,8 @@ public abstract class UI extends AbstractComponentContainer implements
      */
     public void setSession(VaadinSession session) {
         if ((session == null) == (this.session == null)) {
-            throw new IllegalStateException("Application has already been set");
+            throw new IllegalStateException(
+                    "VaadinSession has already been set");
         } else {
             if (session == null) {
                 detach();
