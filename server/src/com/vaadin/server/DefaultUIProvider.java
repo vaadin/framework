@@ -21,10 +21,10 @@ import com.vaadin.ui.UI;
 public class DefaultUIProvider extends AbstractUIProvider {
 
     @Override
-    public Class<? extends UI> getUIClass(VaadinSession application,
-            WrappedRequest request) {
-        Object uiClassNameObj = application.getConfiguration()
-                .getInitParameters().getProperty(VaadinSession.UI_PARAMETER);
+    public Class<? extends UI> getUIClass(WrappedRequest request) {
+        Object uiClassNameObj = request.getVaadinService()
+                .getDeploymentConfiguration().getInitParameters()
+                .getProperty(VaadinSession.UI_PARAMETER);
 
         if (uiClassNameObj instanceof String) {
             String uiClassName = uiClassNameObj.toString();

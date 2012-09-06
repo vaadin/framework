@@ -35,7 +35,6 @@ import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.LegacyVaadinServlet;
 import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinServletSession;
-import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedHttpServletRequest;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.TestBase;
@@ -122,7 +121,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
 
                     @Override
                     public Class<? extends UI> getUIClass(
-                            VaadinSession application, WrappedRequest request) {
+                            WrappedRequest request) {
                         return (Class<? extends UI>) classToRun;
                     }
                 });

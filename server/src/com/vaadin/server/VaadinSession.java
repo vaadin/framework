@@ -650,7 +650,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     @Deprecated
     public Class<? extends UI> getUIClass(WrappedRequest request) {
         UIProvider uiProvider = getUiProvider(request, null);
-        return uiProvider.getUIClass(this, request);
+        return uiProvider.getUIClass(request);
     }
 
     /**
@@ -667,7 +667,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     protected <T extends UI> T createUIInstance(WrappedRequest request,
             Class<T> uiClass) {
         UIProvider uiProvider = getUiProvider(request, uiClass);
-        return uiClass.cast(uiProvider.createInstance(this, uiClass, request));
+        return uiClass.cast(uiProvider.createInstance(uiClass, request));
     }
 
     /**
@@ -695,8 +695,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
                 .getAttribute(UIProvider.class.getName());
         if (provider != null) {
             // Cached provider found, verify that it's a sensible selection
-            Class<? extends UI> providerClass = provider.getUIClass(this,
-                    request);
+            Class<? extends UI> providerClass = provider.getUIClass(request);
             if (uiClass == null && providerClass != null) {
                 // Use it if it gives any answer if no specific class is
                 // required
@@ -729,8 +728,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         for (int i = providersSize - 1; i >= 0; i--) {
             UIProvider provider = uiProviders.get(i);
 
-            Class<? extends UI> providerClass = provider.getUIClass(this,
-                    request);
+            Class<? extends UI> providerClass = provider.getUIClass(request);
             // If we found something
             if (providerClass != null) {
                 if (uiClass == null) {

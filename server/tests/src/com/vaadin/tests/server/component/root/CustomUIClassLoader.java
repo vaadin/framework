@@ -58,8 +58,7 @@ public class CustomUIClassLoader extends TestCase {
                 createConfigurationMock(), null));
 
         DefaultUIProvider uiProvider = new DefaultUIProvider();
-        Class<? extends UI> uiClass = uiProvider.getUIClass(application,
-                createRequestMock(null));
+        Class<? extends UI> uiClass = uiProvider.getUIClass(createRequestMock(null));
 
         assertEquals(MyUI.class, uiClass);
     }
@@ -102,8 +101,7 @@ public class CustomUIClassLoader extends TestCase {
                 createConfigurationMock(), null));
 
         DefaultUIProvider uiProvider = new DefaultUIProvider();
-        Class<? extends UI> uiClass = uiProvider.getUIClass(application,
-                createRequestMock(loggingClassLoader));
+        Class<? extends UI> uiClass = uiProvider.getUIClass(createRequestMock(loggingClassLoader));
 
         assertEquals(MyUI.class, uiClass);
         assertEquals(1, loggingClassLoader.requestedClasses.size());

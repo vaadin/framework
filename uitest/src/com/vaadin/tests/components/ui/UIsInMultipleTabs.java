@@ -32,8 +32,7 @@ public class UIsInMultipleTabs extends AbstractTestUIProvider {
     }
 
     @Override
-    public Class<? extends UI> getUIClass(VaadinSession application,
-            WrappedRequest request) {
+    public Class<? extends UI> getUIClass(WrappedRequest request) {
         return TabUI.class;
     }
 

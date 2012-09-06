@@ -20,11 +20,10 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.ui.UI;
 
 public interface UIProvider {
-    public Class<? extends UI> getUIClass(VaadinSession application,
-            WrappedRequest request);
+    public Class<? extends UI> getUIClass(WrappedRequest request);
 
-    public UI createInstance(VaadinSession application,
-            Class<? extends UI> type, WrappedRequest request);
+    public UI createInstance(Class<? extends UI> type,
+            WrappedRequest request);
 
     public String getPageTitleForUI(WrappedRequest request,
             Class<? extends UI> uiClass);

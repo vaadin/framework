@@ -90,8 +90,7 @@ public abstract class Application extends AbstractUIProvider implements
     protected abstract void init();
 
     @Override
-    public Class<? extends UI> getUIClass(VaadinSession application,
-            WrappedRequest request) {
+    public Class<? extends UI> getUIClass(WrappedRequest request) {
         UI uiInstance = getUIInstance(request);
         if (uiInstance != null) {
             return uiInstance.getClass();
@@ -100,8 +99,8 @@ public abstract class Application extends AbstractUIProvider implements
     }
 
     @Override
-    public UI createInstance(VaadinSession application,
-            Class<? extends UI> type, WrappedRequest request) {
+    public UI createInstance(Class<? extends UI> type,
+            WrappedRequest request) {
         return getUIInstance(request);
     }
 

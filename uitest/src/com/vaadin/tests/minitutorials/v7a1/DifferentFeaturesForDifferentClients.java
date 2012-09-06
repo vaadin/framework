@@ -17,7 +17,6 @@
 package com.vaadin.tests.minitutorials.v7a1;
 
 import com.vaadin.server.AbstractUIProvider;
-import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WebBrowser;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.Label;
@@ -34,8 +33,7 @@ import com.vaadin.ui.UI;
 public class DifferentFeaturesForDifferentClients extends AbstractUIProvider {
 
     @Override
-    public Class<? extends UI> getUIClass(VaadinSession application,
-            WrappedRequest request) {
+    public Class<? extends UI> getUIClass(WrappedRequest request) {
         // could also use browser version etc.
         if (request.getHeader("user-agent").contains("mobile")) {
             return TouchRoot.class;
@@ -47,8 +45,8 @@ public class DifferentFeaturesForDifferentClients extends AbstractUIProvider {
     // Must override as default implementation isn't allowed to
     // instantiate our non-public classes
     @Override
-    public UI createInstance(VaadinSession application,
-            Class<? extends UI> type, WrappedRequest request) {
+    public UI createInstance(Class<? extends UI> type,
+            WrappedRequest request) {
         try {
             return type.newInstance();
         } catch (Exception e) {
