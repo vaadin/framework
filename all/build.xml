@@ -16,10 +16,17 @@
 	<target name="fetch.module.and.dependencies">
 		<fail unless="module" message="No 'module' parameter given" />
 
-		<ivy:cachepath pathid="module.and.deps" inline="true" organisation="com.vaadin" module="vaadin-${module}" revision="${vaadin.version}" />
-		<copy todir="${temp.dir}" flatten="true">
-			<path refid="module.and.deps" />
-		</copy>
+		<antcontrib:if>
+			<not>
+				<equals arg1="${module}" arg2="all" />
+			</not>
+			<then>
+				<ivy:cachepath pathid="module.and.deps" inline="true" organisation="com.vaadin" module="vaadin-${module}" revision="${vaadin.version}" />
+				<copy todir="${temp.dir}" flatten="true">
+					<path refid="module.and.deps" />
+				</copy>
+			</then>
+		</antcontrib:if>
 	</target>
 
 	<target name="zip">
