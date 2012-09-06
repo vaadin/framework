@@ -223,7 +223,8 @@ public class Navigator implements Serializable {
             if (null == navigationState) {
                 return null;
             }
-            if (navigationState.startsWith(viewName)) {
+            if (navigationState.equals(viewName)
+                    || navigationState.startsWith(viewName + "/")) {
                 return viewName;
             }
             return null;
