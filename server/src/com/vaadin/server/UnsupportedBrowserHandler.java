@@ -34,7 +34,7 @@ public class UnsupportedBrowserHandler implements RequestHandler {
     public static final String FORCE_LOAD_COOKIE = "vaadinforceload=1";
 
     @Override
-    public boolean handleRequest(VaadinSession application,
+    public boolean handleRequest(VaadinSession session,
             WrappedRequest request, WrappedResponse response)
             throws IOException {
 

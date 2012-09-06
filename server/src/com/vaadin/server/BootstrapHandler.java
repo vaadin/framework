@@ -103,20 +103,20 @@ public abstract class BootstrapHandler implements RequestHandler {
     }
 
     @Override
-    public boolean handleRequest(VaadinSession application,
+    public boolean handleRequest(VaadinSession session,
             WrappedRequest request, WrappedResponse response)
             throws IOException {
 
         try {
-            Class<? extends UI> uiClass = application.getUIClass(request);
+            Class<? extends UI> uiClass = session.getUIClass(request);
 
             BootstrapContext context = createContext(request, response,
-                    application, uiClass);
+                    session, uiClass);
             setupMainDiv(context);
 
             BootstrapFragmentResponse fragmentResponse = context
                     .getBootstrapResponse();
-            application.modifyBootstrapResponse(fragmentResponse);
+            session.modifyBootstrapResponse(fragmentResponse);
 
             String html = getBootstrapHtml(context);
 

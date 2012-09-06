@@ -94,7 +94,7 @@ public class Ticket1921 extends Application implements RequestHandler {
     }
 
     @Override
-    public boolean handleRequest(VaadinSession application,
+    public boolean handleRequest(VaadinSession session,
             WrappedRequest request, WrappedResponse response)
             throws IOException {
         Map<String, String[]> parameters = request.getParameterMap();

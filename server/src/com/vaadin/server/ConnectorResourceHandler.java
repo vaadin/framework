@@ -24,7 +24,7 @@ public class ConnectorResourceHandler implements RequestHandler {
     }
 
     @Override
-    public boolean handleRequest(VaadinSession application,
+    public boolean handleRequest(VaadinSession session,
             WrappedRequest request, WrappedResponse response)
             throws IOException {
         String requestPath = request.getRequestPathInfo();
@@ -36,7 +36,7 @@ public class ConnectorResourceHandler implements RequestHandler {
             String uiId = matcher.group(1);
             String cid = matcher.group(2);
             String key = matcher.group(3);
-            UI ui = application.getUIById(Integer.parseInt(uiId));
+            UI ui = session.getUIById(Integer.parseInt(uiId));
             if (ui == null) {
                 return error(request, response,
                         "Ignoring connector request for no-existent root "

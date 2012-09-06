@@ -2386,9 +2386,45 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     protected abstract BootstrapHandler createBootstrapHandler();
 
+    /**
+     * Handles a request by passing it to each registered {@link RequestHandler}
+     * in turn until one produces a response. This method is used for requests
+     * that have not been handled by any specific functionality in the terminal
+     * implementation (e.g. {@link VaadinServlet}).
+     * <p>
+     * The request handlers are invoked in the revere order in which they were
+     * added to the session until a response has been produced. This means that
+     * the most recently added handler is used first and the first request
+     * handler that was added to the application is invoked towards the end
+     * unless any previous handler has already produced a response.
+     * </p>
+     * 
+     * @param request
+     *            the wrapped request to get information from
+     * @param response
+     *            the response to which data can be written
+     * @return returns <code>true</code> if a {@link RequestHandler} has
+     *         produced a response and <code>false</code> if no response has
+     *         been written.
+     * @throws IOException
+     *             if a handler throws an exception
+     * 
+     * @see VaadinSession#addRequestHandler(RequestHandler)
+     * @see RequestHandler
+     * 
+     * @since 7.0
+     */
     protected boolean handleApplicationRequest(WrappedRequest request,
             WrappedResponse response) throws IOException {
-        return application.handleRequest(request, response);
+        // Use a copy to avoid ConcurrentModificationException
+        for (RequestHandler handler : new ArrayList<RequestHandler>(
+                application.getRequestHandlers())) {
+            if (handler.handleRequest(application, request, response)) {
+                return true;
+            }
+        }
+        // If not handled
+        return false;
     }
 
     public void handleBrowserDetailsRequest(WrappedRequest request,

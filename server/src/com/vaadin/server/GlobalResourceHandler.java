@@ -65,7 +65,7 @@ public class GlobalResourceHandler implements RequestHandler {
             "");
 
     @Override
-    public boolean handleRequest(VaadinSession application,
+    public boolean handleRequest(VaadinSession session,
             WrappedRequest request, WrappedResponse response)
             throws IOException {
         String pathInfo = request.getRequestPathInfo();
@@ -90,7 +90,7 @@ public class GlobalResourceHandler implements RequestHandler {
                     + " is not a valid global resource path");
         }
 
-        UI ui = application.getUIById(Integer.parseInt(uiid));
+        UI ui = session.getUIById(Integer.parseInt(uiid));
         if (ui == null) {
             return error(request, response, "No UI found for id  " + uiid);
         }

@@ -48,13 +48,13 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
     protected BootstrapHandler createBootstrapHandler() {
         return new BootstrapHandler() {
             @Override
-            public boolean handleRequest(VaadinSession application,
+            public boolean handleRequest(VaadinSession session,
                     WrappedRequest request, WrappedResponse response)
                     throws IOException {
                 PortletRequest portletRequest = WrappedPortletRequest.cast(
                         request).getPortletRequest();
                 if (portletRequest instanceof RenderRequest) {
-                    return super.handleRequest(application, request, response);
+                    return super.handleRequest(session, request, response);
                 } else {
                     return false;
                 }
