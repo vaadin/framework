@@ -4,6 +4,8 @@
 	<dirname property="vaadin.basedir" file="${ant.file.common}" />
 	<property file="${vaadin.basedir}/build.properties" />
 
+	<property name="modules.to.publish" value="shared,server,client,client-compiler,client-compiled,theme-compiler,themes-compiled" />
+
 	<ivy:resolve file="${vaadin.basedir}/build/ivy/ivy.xml" conf="taskdefs" />
 	<ivy:cachepath pathid="taskdefs.classpath" conf="taskdefs" />
 	<taskdef uri="antlib:net.sf.antcontrib" resource="net/sf/antcontrib/antlib.xml" classpathref="taskdefs.classpath" />
@@ -179,7 +181,7 @@
 		<property name="tests.classes" location="${result.dir}/tests/classes" />
 
 
-		<junit printsummary="withOutAndErr">
+		<junit printsummary="withOutAndErr" fork="yes">
 			<formatter usefile="false" type="plain" />
 			<jvmarg value="-ea" />
 			<classpath location="${tests.classes}" />

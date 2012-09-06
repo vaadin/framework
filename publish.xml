@@ -5,11 +5,10 @@
 
 	<!-- Dummy value as ivysettings-publish require a value  -->
 	<property name="publish.sftp.keyfile" value="/dummy" />
-	<property name="publish.sftp.ivy.pattern" value="dummy"/>
-	
+	<property name="publish.sftp.ivy.pattern" value="dummy" />
+
 	<ivy:settings file="ivysettings.xml" />
 	<ivy:settings file="ivysettings-publish.xml" id="publish.settings" />
-	<property name="modules.to.publish" value="shared,server,client,client-compiler,client-compiled,theme-compiler,themes-compiled" />
 	<property file="publish.properties" />
 
 	<available property="ant-jsch.present" file="${ant.home}/lib/ant-jsch.jar" />
