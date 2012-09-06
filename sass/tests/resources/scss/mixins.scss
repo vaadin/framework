@@ -6,7 +6,7 @@
 	font-weight: bold;
 }
 
-@mixin rounded-borders($thickness, $radius : 3px) {
+@mixin rounded-borders ($thickness, $radius : 3px) {
 	border: $thickness solid black;
 	-webkit-border-radius: $radius;
 	-moz-border-radius: $radius;

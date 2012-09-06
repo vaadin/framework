@@ -664,7 +664,7 @@ TOKEN :
 <DEFAULT>
 TOKEN :
 {
- < FUNCTION : <IDENT> "(" >
+ < FUNCTION : <IDENT>(< S >)* "(" >
 }
 
 <DEFAULT, IN_MULTI_LINE_COMMENT>

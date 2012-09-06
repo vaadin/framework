@@ -252,7 +252,7 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
 
     @Override
     public void startMixinDirective(String name, Collection<VariableNode> args) {
-        MixinDefNode node = new MixinDefNode(name, args);
+        MixinDefNode node = new MixinDefNode(name.trim(), args);
         nodeStack.peek().appendChild(node);
         nodeStack.push(node);
     }
