@@ -109,7 +109,8 @@
 			<fileset refid="common.files.for.all.jars" />
 			<fileset dir="${WebContent.dir}">
 				<include name="statictestfiles/**" />
-				<include name="VAADIN/themes/tests-tickets/**" />
+				<include name="VAADIN/themes/tests-*/**" />
+				<include name="VAADIN/themes/reindeer-test/**" />
 				<include name="WEB-INF/*.xml" />
 			</fileset>
 			<classes dir="${classes}" />
