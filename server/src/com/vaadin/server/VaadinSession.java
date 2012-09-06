@@ -146,9 +146,6 @@ public class VaadinSession implements Terminal.ErrorListener,
         }
     }
 
-    private final static Logger logger = Logger.getLogger(VaadinSession.class
-            .getName());
-
     /**
      * Configuration for the session.
      */
