@@ -8,10 +8,10 @@
 	<include file="../build.xml" as="vaadin" />
 
 	<!-- global properties -->
-	<property name="module.name" value="vaadin" />
+	<property name="module.name" value="vaadin-all" />
 	<property name="result.dir" value="result" />
 	<property name="temp.dir" location="${result.dir}/temp" />
-	<property name="zip.file" location="${result.dir}/lib/vaadin-${vaadin.version}.zip" />
+	<property name="zip.file" location="${result.dir}/lib/${module.name}-${vaadin.version}.zip" />
 
 	<target name="fetch.module.and.dependencies">
 		<fail unless="module" message="No 'module' parameter given" />

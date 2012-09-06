@@ -14,11 +14,11 @@
         <conf name="tests" visibility="private" />
     </configurations>
     <publications>
-        <artifact type="jar" ext="jar"/>
-<artifact type="source" ext="jar" m:classifier="sources" />
-<artifact type="javadoc" ext="jar" m:classifier="javadoc" />
-                <artifact type="pom" ext="pom"/>
-                    </publications>
+        <artifact type="jar" ext="jar" />
+        <artifact type="source" ext="jar" m:classifier="sources" />
+        <artifact type="javadoc" ext="jar" m:classifier="javadoc" />
+        <artifact type="pom" ext="pom" />
+    </publications>
     <dependencies>
         <!-- API DEPENDENCIES -->
 
