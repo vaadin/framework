@@ -19,7 +19,6 @@ import java.io.Serializable;
 
 import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.Connector;
-import com.vaadin.shared.annotations.DelegateToWidget;
 
 public class AbstractSplitPanelState extends ComponentState {
 
@@ -34,11 +33,7 @@ public class AbstractSplitPanelState extends ComponentState {
         public String minPositionUnit;
         public float maxPosition;
         public String maxPositionUnit;
-
-        @DelegateToWidget
         public boolean positionReversed = false;
-
-        @DelegateToWidget
         public boolean locked = false;
     }
 }

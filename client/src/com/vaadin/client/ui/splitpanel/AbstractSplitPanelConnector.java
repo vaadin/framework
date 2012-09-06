@@ -150,6 +150,10 @@ public abstract class AbstractSplitPanelConnector extends
         getWidget().position = splitterState.position
                 + splitterState.positionUnit;
 
+        getWidget().setPositionReversed(splitterState.positionReversed);
+
+        getWidget().setLocked(splitterState.locked);
+
         // This is needed at least for cases like #3458 to take
         // appearing/disappearing scrollbars into account.
         getConnection().runDescendentsLayout(getWidget());
