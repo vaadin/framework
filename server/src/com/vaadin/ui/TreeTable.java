@@ -869,4 +869,12 @@ public class TreeTable extends Table implements Hierarchical {
         return Logger.getLogger(TreeTable.class.getName());
     }
 
+    @Override
+    protected List<Object> getItemIds(int firstIndex, int rows) {
+        List<Object> itemIds = new ArrayList<Object>();
+        for (int i = firstIndex; i < firstIndex + rows; i++) {
+            itemIds.add(getIdByIndex(i));
+        }
+        return itemIds;
+    }
 }

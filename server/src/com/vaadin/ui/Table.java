@@ -1968,7 +1968,7 @@ public class Table extends AbstractSelect implements Action.Container,
             // index
 
             Container.Indexed indexed = ((Container.Indexed) items);
-            List<?> itemIds = indexed.getItemIds(firstIndex, rows);
+            List<?> itemIds = getItemIds(firstIndex, rows);
             for (int i = 0; i < rows && i < itemIds.size(); i++) {
                 Object id = itemIds.get(i);
                 // Start by parsing the values, id should already be set
@@ -2015,6 +2015,11 @@ public class Table extends AbstractSelect implements Action.Container,
                 oldVisibleComponents);
 
         return cells;
+    }
+
+    protected List<Object> getItemIds(int firstIndex, int rows) {
+        return (List<Object>) ((Container.Indexed) items).getItemIds(
+                firstIndex, rows);
     }
 
     /**
