@@ -3,6 +3,7 @@ package com.vaadin.tests.components.orderedlayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -30,6 +31,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
 @Theme("tests-components")
+@PreserveOnRefresh
 public class BoxLayoutTest extends AbstractTestUI {
 
     protected AbstractOrderedLayout view;
@@ -53,20 +55,14 @@ public class BoxLayoutTest extends AbstractTestUI {
     protected void setup(WrappedRequest request) {
 
         view = new VerticalLayout();
-        // view.setSizeFull();
         view.setMargin(true);
         view.setSpacing(true);
-
-        // view.addComponent(createControls(false));
-        // view.addComponent(createTestLayout(false));
-        // view.setExpandRatio(view.getComponent(1), 1);
 
         for (int i = 0; i < 20; i++) {
             view.addComponent(createHorizontalTest());
         }
 
         setContent(view);
-        getApplication().setUiPreserved(true);
     }
 
     private Component createHorizontalTest() {

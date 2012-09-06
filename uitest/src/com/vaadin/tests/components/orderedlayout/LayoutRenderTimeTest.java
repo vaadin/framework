@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.orderedlayout;
 
-import com.vaadin.Application.LegacyApplication;
+import com.vaadin.Application;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Embedded;
@@ -10,7 +10,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
-public class LayoutRenderTimeTest extends LegacyApplication {
+public class LayoutRenderTimeTest extends Application {
 
     @Override
     public void init() {
