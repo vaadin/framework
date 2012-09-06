@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="common" basedir="." default="" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:antcontrib="antlib:net.sf.antcontrib">
 
+	<tstamp>
+		<format property="build.date" pattern="yyyy-MM-dd" />
+	</tstamp>
+
 	<dirname property="vaadin.basedir" file="${ant.file.common}" />
 	<property file="${vaadin.basedir}/build.properties" />
 
@@ -21,8 +25,42 @@
 
 	<union id="empty.reference" />
 
-	<!-- TODO Preprocess @version@ and more -->
-	<fileset dir="${vaadin.basedir}/WebContent" id="common.files.for.all.jars">
+	<property name="filtered.webcontent.dir" location="${vaadin.basedir}/result/filteredWebContent" />
+
+	<target name="filter.webcontent" unless="webcontent.filtered">
+		<property name="webcontent.filtered" value="true" />
+
+		<delete dir="${filtered.webcontent.dir}" />
+		<copy todir="${filtered.webcontent.dir}">
+			<fileset dir="${vaadin.basedir}/WebContent">
+				<include name="img/**" />
+			</fileset>
+		</copy>
+		<copy todir="${filtered.webcontent.dir}">
+			<fileset dir="${vaadin.basedir}/WebContent">
+				<patternset>
+					<include name="release-notes.html" />
+					<include name="license.html" />
+					<include name="css/**" />
+				</patternset>
+			</fileset>
+			<filterchain>
+				<expandproperties />
+				<replacetokens begintoken="@" endtoken="@">
+					<token key="version" value="${vaadin.version}" />
+				</replacetokens>
+				<replacetokens begintoken="@" endtoken="@">
+					<token key="version-minor" value="${vaadin.version.major}.${vaadin.version.minor}" />
+				</replacetokens>
+				<replacetokens begintoken="@" endtoken="@">
+					<token key="builddate" value="${build.date}" />
+				</replacetokens>
+			</filterchain>
+		</copy>
+
+
+	</target>
+	<fileset dir="${filtered.webcontent.dir}" id="common.files.for.all.jars">
 		<patternset>
 			<include name="release-notes.html" />
 			<include name="license.html" />
@@ -225,7 +263,7 @@
 		</copy>
 	</target>
 
-	<target name="dependencies" description="Resolves dependencies needed by this module">
+	<target name="dependencies" description="Resolves dependencies needed by this module" depends="filter.webcontent">
 		<ivy:resolve resolveid="common" conf="build, build-provided" />
 		<ivy:cachepath pathid="classpath.compile.dependencies" conf="build, build-provided" />
 	</target>
