@@ -26,14 +26,25 @@
 		<delete dir="${temp.dir}" />
 		<antcontrib:foreach list="${modules.to.publish.to.maven}" target="fetch.module.and.dependencies" param="module" />
 		<!-- All jars are now in temp.dir. Still need to separate vaadin and deps -->
-		<move todir="${temp.dir}/deps">
+		<move todir="${temp.dir}/lib">
 			<fileset dir="${temp.dir}">
 				<exclude name="vaadin-*-${vaadin.version}.*" />
 				<exclude name="vaadin-*-${vaadin.version}-*.*" />
 			</fileset>
 		</move>
+
 		<zip destfile="${zip.file}">
 			<fileset dir="${temp.dir}">
+				<!-- Avoid conflicts with servlet and portlet API. They are provided by the container -->
+				<exclude name="**/servlet-api*" />
+				<exclude name="**/portlet-api*" />
+				<!-- Buildhelpers should not even get here ... -->
+				<exclude name="*buildhelpers*" />
+				<!-- Zip users should not need javadoc, sources or pom files -->
+				<exclude name="*.pom" />
+				<exclude name="*-javadoc.jar" />
+				<exclude name="*-sources.jar" />
+
 			</fileset>
 			<fileset refid="common.files.for.all.jars" />
 		</zip>
