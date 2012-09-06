@@ -306,6 +306,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             if (application == null) {
                 return;
             }
+            request.setAttribute(VaadinSession.class.getName(), application);
             VaadinSession.setCurrent(application);
 
             /*

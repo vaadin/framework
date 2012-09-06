@@ -462,6 +462,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                     return;
                 }
                 VaadinSession.setCurrent(application);
+                request.setAttribute(VaadinSession.class.getName(), application);
 
                 /*
                  * Get or create an application context and an application

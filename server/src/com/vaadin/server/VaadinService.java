@@ -138,4 +138,18 @@ public interface VaadinService extends Serializable {
      *         base directory.
      */
     public File getBaseDirectory();
+
+    /**
+     * Gets the Vaadin session associated with this request.
+     * 
+     * @param request
+     *            the request to get a vaadin session for.
+     * 
+     * @see VaadinSession
+     * 
+     * @return the vaadin session for the request, or <code>null</code> if no
+     *         session is found and this is a request for which a new session
+     *         shouldn't be created.
+     */
+    public VaadinSession getVaadinSession(WrappedRequest request);
 }

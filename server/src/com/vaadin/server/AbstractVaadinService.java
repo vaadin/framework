@@ -76,4 +76,11 @@ public abstract class AbstractVaadinService implements VaadinService {
     public AddonContext getAddonContext() {
         return addonContext;
     }
+
+    @Override
+    public VaadinSession getVaadinSession(WrappedRequest request) {
+        return (VaadinSession) request.getAttribute(VaadinSession.class
+                .getName());
+    }
+
 }
