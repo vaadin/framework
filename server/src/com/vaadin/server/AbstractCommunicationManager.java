@@ -140,9 +140,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
     private static final String GET_PARAM_ANALYZE_LAYOUTS = "analyzeLayouts";
 
     /**
-     * The application this communication manager is used for
+     * The session this communication manager is used for
      */
-    private final VaadinSession application;
+    private final VaadinSession session;
 
     private List<String> locales;
 
@@ -167,18 +167,18 @@ public abstract class AbstractCommunicationManager implements Serializable {
     /**
      * TODO New constructor - document me!
      * 
-     * @param application
+     * @param session
      */
-    public AbstractCommunicationManager(VaadinSession application) {
-        this.application = application;
-        application.addRequestHandler(getBootstrapHandler());
-        application.addRequestHandler(UNSUPPORTED_BROWSER_HANDLER);
-        application.addRequestHandler(CONNECTOR_RESOURCE_HANDLER);
-        requireLocale(application.getLocale().toString());
+    public AbstractCommunicationManager(VaadinSession session) {
+        this.session = session;
+        session.addRequestHandler(getBootstrapHandler());
+        session.addRequestHandler(UNSUPPORTED_BROWSER_HANDLER);
+        session.addRequestHandler(CONNECTOR_RESOURCE_HANDLER);
+        requireLocale(session.getLocale().toString());
     }
 
-    protected VaadinSession getApplication() {
-        return application;
+    protected VaadinSession getVaadinSession() {
+        return session;
     }
 
     private static final int LF = "\n".getBytes()[0];
@@ -294,8 +294,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 cleanStreamVariable(owner, variableName);
             }
         } catch (Exception e) {
-            synchronized (application) {
-                handleChangeVariablesError(application, (Component) owner, e,
+            synchronized (session) {
+                handleChangeVariablesError(session, (Component) owner, e,
                         new HashMap<String, Object>());
             }
         }
@@ -339,8 +339,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 cleanStreamVariable(owner, variableName);
             }
         } catch (Exception e) {
-            synchronized (application) {
-                handleChangeVariablesError(application, (Component) owner, e,
+            synchronized (session) {
+                handleChangeVariablesError(session, (Component) owner, e,
                         new HashMap<String, Object>());
             }
         }
@@ -365,7 +365,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     "StreamVariable for the post not found");
         }
 
-        final VaadinSession application = getApplication();
+        final VaadinSession session = getVaadinSession();
 
         OutputStream out = null;
         int totalBytes = 0;
@@ -373,7 +373,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 filename, type, contentLength);
         try {
             boolean listenProgress;
-            synchronized (application) {
+            synchronized (session) {
                 streamVariable.streamingStarted(startedEvent);
                 out = streamVariable.getOutputStream();
                 listenProgress = streamVariable.listenProgress();
@@ -397,7 +397,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 if (listenProgress) {
                     // update progress if listener set and contentLength
                     // received
-                    synchronized (application) {
+                    synchronized (session) {
                         StreamingProgressEventImpl progressEvent = new StreamingProgressEventImpl(
                                 filename, type, contentLength, totalBytes);
                         streamVariable.onProgress(progressEvent);
@@ -412,7 +412,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             out.close();
             StreamingEndEvent event = new StreamingEndEventImpl(filename, type,
                     totalBytes);
-            synchronized (application) {
+            synchronized (session) {
                 streamVariable.streamingFinished(event);
             }
 
@@ -421,19 +421,17 @@ public abstract class AbstractCommunicationManager implements Serializable {
             tryToCloseStream(out);
             StreamingErrorEvent event = new StreamingErrorEventImpl(filename,
                     type, contentLength, totalBytes, e);
-            synchronized (application) {
+            synchronized (session) {
                 streamVariable.streamingFailed(event);
             }
             // Note, we are not throwing interrupted exception forward as it is
             // not a terminal level error like all other exception.
         } catch (final Exception e) {
             tryToCloseStream(out);
-            synchronized (application) {
+            synchronized (session) {
                 StreamingErrorEvent event = new StreamingErrorEventImpl(
                         filename, type, contentLength, totalBytes, e);
-                synchronized (application) {
-                    streamVariable.streamingFailed(event);
-                }
+                streamVariable.streamingFailed(event);
                 // throw exception for terminal to be handled (to be passed to
                 // terminalErrorHandler)
                 throw new UploadException(e);
@@ -494,8 +492,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * to process any changes to variables by the client and then repaints
      * affected components using {@link #paintAfterVariableChanges()}.
      * 
-     * Also, some cleanup is done when a request arrives for an application that
-     * has already been closed.
+     * Also, some cleanup is done when a request arrives for an session that has
+     * already been closed.
      * 
      * The method handleUidlRequest(...) in subclasses should call this method.
      * 
@@ -544,23 +542,23 @@ public abstract class AbstractCommunicationManager implements Serializable {
         final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
                 new OutputStreamWriter(out, "UTF-8")));
 
-        // The rest of the process is synchronized with the application
+        // The rest of the process is synchronized with the session
         // in order to guarantee that no parallel variable handling is
         // made
-        synchronized (application) {
+        synchronized (session) {
 
-            // Finds the window within the application
-            if (application.isRunning()) {
+            // Finds the UI within the session
+            if (session.isRunning()) {
                 // Returns if no window found
                 if (uI == null) {
                     // This should not happen, no windows exists but
-                    // application is still open.
-                    getLogger().warning("Could not get UI for application");
+                    // session is still open.
+                    getLogger().warning("Could not get UI for session");
                     return;
                 }
             } else {
-                // application has been closed
-                endApplication(request, response, application);
+                // session has been closed
+                endApplication(request, response, session);
                 return;
             }
 
@@ -568,7 +566,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             uI.setLastUidlRequestTime(System.currentTimeMillis());
 
             // Change all variables based on request parameters
-            if (!handleVariables(request, response, callback, application, uI)) {
+            if (!handleVariables(request, response, callback, session, uI)) {
 
                 // var inconsistency; the client is probably out-of-sync
                 SystemMessages ci = response.getVaadinService()
@@ -618,13 +616,13 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     /**
      * Method called after the paint phase while still being synchronized on the
-     * application
+     * session
      * 
      * @param uI
      * 
      */
     protected void postPaint(UI uI) {
-        // Remove connectors that have been detached from the application during
+        // Remove connectors that have been detached from the session during
         // handling of the request
         uI.getConnectorTracker().cleanConnectorMap();
 
@@ -634,7 +632,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             while (iterator.hasNext()) {
                 String connectorId = iterator.next();
                 if (uI.getConnectorTracker().getConnector(connectorId) == null) {
-                    // Owner is no longer attached to the application
+                    // Owner is no longer attached to the session
                     Map<String, StreamVariable> removed = pidToNameToStreamVariable
                             .get(connectorId);
                     for (String key : removed.keySet()) {
@@ -676,12 +674,12 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
 
         sb.append("\nComponent hierarchy:\n");
-        VaadinSession application2 = component.getUI().getSession();
-        sb.append(application2.getClass().getName());
+        VaadinSession session2 = component.getUI().getSession();
+        sb.append(session2.getClass().getName());
         sb.append(".");
-        sb.append(application2.getClass().getSimpleName());
+        sb.append(session2.getClass().getSimpleName());
         sb.append("(");
-        sb.append(application2.getClass().getSimpleName());
+        sb.append(session2.getClass().getSimpleName());
         sb.append(".java");
         sb.append(":1)");
         int l = 1;
@@ -724,9 +722,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
             final PrintWriter outWriter, UI uI, boolean analyzeLayouts)
             throws PaintException, IOException, JSONException {
 
-        // Removes application if it has stopped during variable changes
-        if (!application.isRunning()) {
-            endApplication(request, response, application);
+        // Removes session if it has stopped during variable changes
+        if (!session.isRunning()) {
+            endApplication(request, response, session);
             return;
         }
 
@@ -1312,8 +1310,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      */
     private void writePerformanceData(final PrintWriter outWriter) {
         outWriter.write(String.format(", \"timings\":[%d, %d]",
-                application.getTotalSessionTime(),
-                application.getLastRequestTime()));
+                session.getTotalSessionTime(), session.getLastRequestTime()));
     }
 
     private void legacyPaint(PaintTarget paintTarget,
@@ -1533,9 +1530,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @return true if successful, false if there was an inconsistency
      */
     private boolean handleVariables(WrappedRequest request,
-            WrappedResponse response, Callback callback,
-            VaadinSession application2, UI uI) throws IOException,
-            InvalidUIDLSecurityKeyException, JSONException {
+            WrappedResponse response, Callback callback, VaadinSession session,
+            UI uI) throws IOException, InvalidUIDLSecurityKeyException,
+            JSONException {
         boolean success = true;
 
         String changes = getRequestPayload(request);
@@ -1547,7 +1544,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
             // Security: double cookie submission pattern unless disabled by
             // property
-            if (isXSRFEnabled(application2)) {
+            if (isXSRFEnabled(session)) {
                 if (bursts.length == 1 && "init".equals(bursts[0])) {
                     // init request; don't handle any variables, key sent in
                     // response.
@@ -1930,8 +1927,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * For {@link AbstractField} components,
      * {@link AbstractField#handleError(com.vaadin.ui.AbstractComponent.ComponentErrorEvent)}
      * is called. In all other cases (or if the field does not handle the
-     * error), {@link ErrorListener#terminalError(ErrorEvent)} for the
-     * application error handler is called.
+     * error), {@link ErrorListener#terminalError(ErrorEvent)} for the session
+     * error handler is called.
      * 
      * @param session
      * @param owner
@@ -1953,7 +1950,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             } catch (Exception handlerException) {
                 /*
                  * If there is an error in the component error handler we pass
-                 * the that error to the application error handler and continue
+                 * the that error to the session error handler and continue
                  * processing the actual error
                  */
                 session.getErrorHandler().terminalError(
@@ -2240,7 +2237,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
     public void requireLocale(String value) {
         if (locales == null) {
             locales = new ArrayList<String>();
-            locales.add(application.getLocale().toString());
+            locales.add(session.getLocale().toString());
             pendingLocalesIndex = 0;
         }
         if (!locales.contains(value)) {
@@ -2395,8 +2392,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * The request handlers are invoked in the revere order in which they were
      * added to the session until a response has been produced. This means that
      * the most recently added handler is used first and the first request
-     * handler that was added to the application is invoked towards the end
-     * unless any previous handler has already produced a response.
+     * handler that was added to the session is invoked towards the end unless
+     * any previous handler has already produced a response.
      * </p>
      * 
      * @param request
@@ -2418,8 +2415,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
             WrappedResponse response) throws IOException {
         // Use a copy to avoid ConcurrentModificationException
         for (RequestHandler handler : new ArrayList<RequestHandler>(
-                application.getRequestHandlers())) {
-            if (handler.handleRequest(application, request, response)) {
+                session.getRequestHandlers())) {
+            if (handler.handleRequest(session, request, response)) {
                 return true;
             }
         }
@@ -2428,8 +2425,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
     }
 
     public void handleBrowserDetailsRequest(WrappedRequest request,
-            WrappedResponse response, VaadinSession application)
-            throws IOException {
+            WrappedResponse response, VaadinSession session) throws IOException {
 
         assert UI.getCurrent() == null;
 
@@ -2438,9 +2434,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
             response.setContentType("application/json; charset=UTF-8");
 
-            UI uI = application.getUIForRequest(combinedRequest);
+            UI uI = session.getUIForRequest(combinedRequest);
             if (uI == null) {
-                uI = application.createUI(combinedRequest);
+                uI = session.createUI(combinedRequest);
             }
 
             JSONObject params = new JSONObject();
@@ -2606,9 +2602,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @throws IOException
      * @throws InvalidUIDLSecurityKeyException
      */
-    public void handleFileUpload(VaadinSession application,
-            WrappedRequest request, WrappedResponse response)
-            throws IOException, InvalidUIDLSecurityKeyException {
+    public void handleFileUpload(VaadinSession session, WrappedRequest request,
+            WrappedResponse response) throws IOException,
+            InvalidUIDLSecurityKeyException {
 
         /*
          * URI pattern: APP/UPLOAD/[UIID]/[PID]/[NAME]/[SECKEY] See
@@ -2626,7 +2622,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         String uiId = parts[0];
         String connectorId = parts[1];
         String variableName = parts[2];
-        UI uI = application.getUIById(Integer.parseInt(uiId));
+        UI uI = session.getUIById(Integer.parseInt(uiId));
         UI.setCurrent(uI);
 
         StreamVariable streamVariable = getStreamVariable(connectorId,
@@ -2660,21 +2656,20 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * still alive (the browser window is open, the connection is up) even when
      * there are no UIDL requests for a prolonged period of time. UIs that do
      * not receive either heartbeat or UIDL requests are eventually removed from
-     * the application and garbage collected.
+     * the session and garbage collected.
      * 
      * @param request
      * @param response
-     * @param application
+     * @param session
      * @throws IOException
      */
     public void handleHeartbeatRequest(WrappedRequest request,
-            WrappedResponse response, VaadinSession application)
-            throws IOException {
+            WrappedResponse response, VaadinSession session) throws IOException {
         UI ui = null;
         try {
             int uiId = Integer.parseInt(request
                     .getParameter(UIConstants.UI_ID_PARAMETER));
-            ui = application.getUIById(uiId);
+            ui = session.getUIById(uiId);
         } catch (NumberFormatException nfe) {
             // null-check below handles this as well
         }

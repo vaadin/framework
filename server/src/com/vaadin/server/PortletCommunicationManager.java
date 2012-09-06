@@ -40,8 +40,8 @@ import com.vaadin.ui.UI;
 @SuppressWarnings("serial")
 public class PortletCommunicationManager extends AbstractCommunicationManager {
 
-    public PortletCommunicationManager(VaadinSession application) {
-        super(application);
+    public PortletCommunicationManager(VaadinSession session) {
+        super(session);
     }
 
     @Override

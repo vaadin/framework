@@ -38,23 +38,12 @@ import com.vaadin.ui.UI;
 public class CommunicationManager extends AbstractCommunicationManager {
 
     /**
-     * @deprecated use {@link #CommunicationManager(VaadinSession)} instead
-     * @param application
-     * @param applicationServlet
-     */
-    @Deprecated
-    public CommunicationManager(VaadinSession application,
-            VaadinServlet applicationServlet) {
-        super(application);
-    }
-
-    /**
      * TODO New constructor - document me!
      * 
-     * @param application
+     * @param session
      */
-    public CommunicationManager(VaadinSession application) {
-        super(application);
+    public CommunicationManager(VaadinSession session) {
+        super(session);
     }
 
     @Override
