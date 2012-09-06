@@ -18,8 +18,6 @@ package com.vaadin.server;
 
 import java.util.Properties;
 
-import org.apache.catalina.core.ApplicationContext;
-
 /**
  * A collection of properties configured for all applications as well as a way
  * of accessing third party properties not explicitely supported by this class.
@@ -63,7 +61,7 @@ public interface ApplicationConfiguration {
      * should be closed after they have been idle the maximum inactivity time
      * enforced by the session.
      * 
-     * @see ApplicationContext#getMaxInactiveInterval()
+     * @see WrappedSession#getMaxInactiveInterval()
      * 
      * @since 7.0.0
      * 
