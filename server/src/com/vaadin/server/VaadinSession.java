@@ -886,19 +886,6 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         CurrentInstance.setInheritable(VaadinSession.class, session);
     }
 
-    /**
-     * Check whether this application is in production mode. If an application
-     * is in production mode, certain debugging facilities are not available.
-     * 
-     * @return the status of the production mode flag
-     * 
-     * @since 7.0
-     */
-    @Deprecated
-    public boolean isProductionMode() {
-        return configuration.isProductionMode();
-    }
-
     public void addUIProvider(UIProvider uIProvider) {
         uiProviders.add(uIProvider);
     }

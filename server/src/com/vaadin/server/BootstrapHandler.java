@@ -365,7 +365,8 @@ public abstract class BootstrapHandler implements RequestHandler {
         JSONObject defaults = getDefaultParameters(context);
         JSONObject appConfig = getApplicationParameters(context);
 
-        boolean isDebug = !context.getApplication().isProductionMode();
+        boolean isDebug = !context.getApplication().getConfiguration()
+                .isProductionMode();
 
         builder.append("vaadin.setDefaults(");
         appendJsonObject(builder, defaults, isDebug);
@@ -450,7 +451,7 @@ public abstract class BootstrapHandler implements RequestHandler {
                 + VaadinServlet.WIDGETSET_DIRECTORY_PATH;
         defaults.put("widgetsetBase", widgetsetBase);
 
-        if (!application.isProductionMode()) {
+        if (!application.getConfiguration().isProductionMode()) {
             defaults.put("debug", true);
         }
 
