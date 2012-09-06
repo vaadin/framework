@@ -16,12 +16,17 @@
 
 	<target name="buildorder" depends="official.build.checks">
 		<!-- Find out a good build order -->
-		<ivy:buildlist reference="build-path">
+		<ivy:buildlist reference="ivy.build.path">
 			<fileset dir="." includes="**/build.xml">
 				<exclude name="build.xml" />
 				<exclude name="build/**" />
+				<exclude name="buildhelpers/**" />
 			</fileset>
 		</ivy:buildlist>
+		<path id="build-path">
+			<path location="buildhelpers/build.xml"/>
+			<path refid="ivy.build.path" />
+		</path>
 	</target>
 	<target name="clean" depends="buildorder">
 		<subant buildpathref="build-path" target="clean">
