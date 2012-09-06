@@ -16,22 +16,15 @@
 	<target name="fetch.module.and.dependencies">
 		<fail unless="module" message="No 'module' parameter given" />
 
-		<antcontrib:if>
-			<not>
-				<equals arg1="${module}" arg2="all" />
-			</not>
-			<then>
-				<ivy:cachepath pathid="module.and.deps" inline="true" organisation="com.vaadin" module="vaadin-${module}" revision="${vaadin.version}" />
-				<copy todir="${temp.dir}" flatten="true">
-					<path refid="module.and.deps" />
-				</copy>
-			</then>
-		</antcontrib:if>
+		<ivy:cachepath pathid="module.and.deps" inline="true" organisation="com.vaadin" module="vaadin-${module}" revision="${vaadin.version}" />
+		<copy todir="${temp.dir}" flatten="true">
+			<path refid="module.and.deps" />
+		</copy>
 	</target>
 
 	<target name="zip">
 		<delete dir="${temp.dir}" />
-		<antcontrib:foreach list="${modules.to.publish}" target="fetch.module.and.dependencies" param="module" />
+		<antcontrib:foreach list="${modules.to.publish.to.maven}" target="fetch.module.and.dependencies" param="module" />
 		<!-- All jars are now in temp.dir. Still need to separate vaadin and deps -->
 		<move todir="${temp.dir}/deps">
 			<fileset dir="${temp.dir}">

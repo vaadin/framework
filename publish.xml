@@ -32,11 +32,11 @@
 	</target>
 
 	<target name="nightly.download.publish">
-		<antcontrib:foreach list="${modules.to.publish}" target="publish.module.to.download.site" param="module" />
+		<antcontrib:foreach list="${modules.to.publish.to.download}" target="publish.module.to.download.site" param="module" />
 	</target>
 
 	<target name="nightly.maven.publish">
-		<antcontrib:foreach list="${modules.to.publish}" target="publish.module.to.maven" param="module" />
+		<antcontrib:foreach list="${modules.to.publish.to.maven}" target="publish.module.to.maven" param="module" />
 	</target>
 
 	<target name="publish.module.to.download.site">
