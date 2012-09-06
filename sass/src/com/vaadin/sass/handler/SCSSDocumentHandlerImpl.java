@@ -16,6 +16,7 @@
 
 package com.vaadin.sass.handler;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +31,6 @@ import org.w3c.css.sac.SelectorList;
 import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.tree.BlockNode;
 import com.vaadin.sass.tree.CommentNode;
-import com.vaadin.sass.tree.EachNode;
 import com.vaadin.sass.tree.ExtendNode;
 import com.vaadin.sass.tree.ForNode;
 import com.vaadin.sass.tree.IfNode;
@@ -43,6 +43,7 @@ import com.vaadin.sass.tree.Node;
 import com.vaadin.sass.tree.RuleNode;
 import com.vaadin.sass.tree.VariableNode;
 import com.vaadin.sass.tree.WhileNode;
+import com.vaadin.sass.tree.controldirective.EachDefNode;
 
 public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
 
@@ -120,10 +121,16 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
     }
 
     @Override
-    public EachNode eachDirective(String var, String list, String body) {
-        EachNode node = new EachNode(var, list, body);
-        System.out.println(node);
+    public EachDefNode startEachDirective(String var, ArrayList<String> list) {
+        EachDefNode node = new EachDefNode(var, list);
+        nodeStack.peek().appendChild(node);
+        nodeStack.push(node);
         return node;
+    }
+
+    @Override
+    public void endEachDirective() {
+        nodeStack.pop();
     }
 
     @Override

@@ -1,14 +1,13 @@
-@for $i from 1 through 3 {
-  .item-#{$i} { width: 2em * $i; }
-}
-
-@while $i > 0 {
-  .item-#{$i} { width: 2em * $i; }
-  $i: $i - 2;
-}
-
 @each $animal in puma, sea-slug, egret, salamander {
-  .#{$animal}-icon {
+  .#{$animal}-icon #animal, .menu {
     background-image: url('/images/#{$animal}.png');
+    @include logo(10px);
   }
+}
+
+@mixin logo($size){
+	font: {
+		size: $size;
+		color: blue;		
+	}
 }

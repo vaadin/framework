@@ -1,1 +1,23 @@
-Implement a sane test case.
+.salamander-icon #animal, .menu {
+	background-image: url(/images/salamander.png);
+	font-size: 10px;
+	font-color: blue;
+}
+
+.egret-icon #animal, .menu {
+	background-image: url(/images/egret.png);
+	font-size: 10px;
+	font-color: blue;
+}
+
+.sea-slug-icon #animal, .menu {
+	background-image: url(/images/sea-slug.png);
+	font-size: 10px;
+	font-color: blue;
+}
+
+.puma-icon #animal, .menu {
+	background-image: url(/images/puma.png);
+	font-size: 10px;
+	font-color: blue;
+}

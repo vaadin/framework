@@ -445,25 +445,7 @@ TOKEN :
     < S : ( [ " ", "\t" , "\n" , "\r", "\f" ] )+ > 
 	{ image = Parser.SPACE; }
 }
-
-<DEFAULT>
-MORE:
-{
-    "#{" : IN_INTERPOLATION
-}
-
-<IN_INTERPOLATION>
-MORE:
-{
-    < ~["}"]> : IN_INTERPOLATION
-}
-
-<IN_INTERPOLATION>
-SPECIAL_TOKEN:
-{
-    <INTERPOLATION: "}"> : DEFAULT
-}
-    
+   
 <DEFAULT>
 MORE :
 {
@@ -481,7 +463,6 @@ SKIP :
 {
     < "\n"|"\r"|"\r\n" > : DEFAULT
 }
-    
 
 <DEFAULT>
 MORE :
@@ -537,6 +518,12 @@ TOKEN :
 TOKEN :
 {
   < COLON     : ":" >
+}
+
+< DEFAULT >
+TOKEN :
+{
+	< EACH_VAR : "#{"< VARIABLE > "}">
 }
 
 <DEFAULT>
@@ -733,7 +720,7 @@ void afterImportDeclaration() :
 }
 {
   ( 
-     ( variable() | mixinDirective() | includeDirective() | styleRule() | media()| page() | fontFace() 
+     ( variable() | mixinDirective()|eachDirective() | includeDirective() | styleRule() | media()| page() | fontFace() 
       | { l = getLocator(); } ret=skipStatement() 
       {
 	  if ((ret == null) || (ret.length() == 0)) {
@@ -987,9 +974,10 @@ char connector = ' ';
  * @exception ParseException exception during the parse
  */
 String property() :
-{Token n; }
+{Token n;
+}
 {
-    n=<IDENT> ( <S> )* { return convertIdent(n.image); }
+	    n=<IDENT> ( <S> )* { return convertIdent(n.image); }
 }
 
 String variableName() :
@@ -1020,7 +1008,7 @@ void styleRule() :
 	 start = true;
 	 documentHandler.startSelector(l);
      }
-     ( includeDirective() | media() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*
+     ( includeDirective() | media() | extendDirective()| eachDirective() | variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*
      <RBRACE> (<S>)*
  } catch (ThrowedParseException e) {
      if (errorHandler != null) {
@@ -1160,13 +1148,14 @@ Selector simple_selector(Selector selector, char comb) :
  * @exception ParseException exception during the parse
  */
 Condition _class(Condition pred) :
-{Token n;
+{Token t;
+String s = "";
 Condition c;
 }
 {
-  "." n=<IDENT>
+  "." (t = <IDENT>{s += t.image; }|t = < EACH_VAR >{ s += t.image; })+
       { 
-	  c = conditionFactory.createClassCondition(null, n.image);
+	  c = conditionFactory.createClassCondition(null, s);
 	  if (pred == null) {
 	      return c;
 	  } else {
@@ -1179,11 +1168,11 @@ Condition c;
  * @exception ParseException exception during the parse
  */
 SimpleSelector element_name() :
-{Token n; }
+{Token t; String s = "";}
 {
-    n=<IDENT> 
+    (t = <IDENT>{s += t.image; }|t = < EACH_VAR >{ s += t.image; })+
     { 
-      return selectorFactory.createElementSelector(null, convertIdent(n.image)); 
+      return selectorFactory.createElementSelector(null, s); 
     }
       | "*"
     { return selectorFactory.createElementSelector(null, "*"); }
@@ -1354,6 +1343,37 @@ void variable() :
 	}
 }
 
+void eachDirective() :
+{
+  Token var;
+  ArrayList<String> list;
+}
+{
+  < EACH_SYM >
+  (< S >)*
+  var = < VARIABLE > (< S >)* < EACH_IN > (< S >)*
+  list = stringList()
+  < LBRACE >(< S >)*
+  { documentHandler.startEachDirective(var.image, list);}
+  ( includeDirective() | media() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*	  
+  < RBRACE >(< S >)*
+  { documentHandler.endEachDirective();}
+}
+
+ArrayList<String > stringList():
+{
+	ArrayList<String > strings = new ArrayList<String >();
+	Token input;	
+}
+{
+	(input = < IDENT > (< S >)*) 
+	{ strings.add(input.image); }
+	
+	(< COMMA >(< S >)* input = < IDENT > { strings.add(input.image); } (< S >)*)*
+	{ return strings; }
+	  
+}
+
 void mixinDirective() :
 {
     String name;
@@ -1367,7 +1387,7 @@ void mixinDirective() :
     |(name = functionName() 
       args = arglist()) <RPARAN> (<S>)*) <LBRACE> (<S>)*
     {documentHandler.startMixinDirective(name, args);}
-    ( includeDirective() | media() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*
+    ( includeDirective() | media()| extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*
     //(includeDirective() | media() | LOOKAHEAD(declaration()) declaration()";"(<S>)* | styleRule())*
     <RBRACE>(<S>)*
     {documentHandler.endMixinDirective(name, args);}
@@ -1480,22 +1500,6 @@ Node forDirective() :
     (<S>)*
     body = skipStatement()
     {return documentHandler.forDirective(var, from, to, exclusive, body);}
-}
-
-Node eachDirective() :
-{
-    String var;
-    String list;
-    String body;
-}  
-{
-    var = variableName()
-    <EACH_IN> (<S>)*
-    list = skipStatementUntilLeftBrace()
-    body = skipStatement()
-    {
-        return documentHandler.eachDirective(var, list, body);
-    }
 }
 
 Node whileDirective() :
@@ -2203,6 +2207,7 @@ String skipStatementUntil(int[] symbols){
     }
     return s.toString().trim();
 }
+
 
 JAVACODE
 String skipStatement() {

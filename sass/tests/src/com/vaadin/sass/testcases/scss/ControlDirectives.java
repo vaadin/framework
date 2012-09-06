@@ -28,6 +28,8 @@ import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.handler.SCSSDocumentHandler;
 import com.vaadin.sass.handler.SCSSDocumentHandlerImpl;
 import com.vaadin.sass.parser.Parser;
+import com.vaadin.sass.tree.MixinDefNode;
+import com.vaadin.sass.tree.controldirective.EachDefNode;
 
 public class ControlDirectives extends AbstractTestBase {
 
@@ -42,7 +44,14 @@ public class ControlDirectives extends AbstractTestBase {
         parser.parseStyleSheet(getClass().getResource(scss).getPath());
         ScssStylesheet root = handler.getStyleSheet();
         Assert.assertNotNull(root);
-        Assert.fail("Implement assert nodes");
+
+        Assert.assertEquals(2, root.getChildren().size());
+
+        Assert.assertTrue(root.getChildren().get(0) instanceof EachDefNode);
+        Assert.assertEquals(1, root.getChildren().get(0).getChildren().size());
+
+        Assert.assertTrue(root.getChildren().get(1) instanceof MixinDefNode);
+
     }
 
     @Test

@@ -47,6 +47,7 @@ public class MixinVisitor implements Visitor {
                 node.removeChild(child);
             }
         }
+
     }
 
     private void replaceMixins(Node node) throws Exception {

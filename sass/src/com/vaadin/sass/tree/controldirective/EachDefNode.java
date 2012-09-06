@@ -14,25 +14,36 @@
  * the License.
  */
 
-package com.vaadin.sass.tree;
+package com.vaadin.sass.tree.controldirective;
 
-public class EachNode extends Node {
+import java.util.ArrayList;
+import java.util.List;
+
+import com.vaadin.sass.tree.Node;
+
+public class EachDefNode extends Node implements ControlDefNode {
     private static final long serialVersionUID = 7943948981204906221L;
 
     private String var;
-    private String list;
-    private String body;
+    private ArrayList<String> list;
 
-    public EachNode(String var, String list, String body) {
+    public EachDefNode(String var, ArrayList<String> list) {
         super();
         this.var = var;
         this.list = list;
-        this.body = body;
+    }
+
+    public List<String> getVariables() {
+        return list;
+    }
+
+    public String getVariableName() {
+        return var;
     }
 
     @Override
     public String toString() {
-        return "Each Node: {variable: " + var + ", list: " + list + ", body: "
-                + body + "}";
+        return "Each Definition Node: {variable : " + var + ", "
+                + "children : " + list.size() + "}";
     }
 }

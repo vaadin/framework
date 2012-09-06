@@ -16,6 +16,7 @@
 
 package com.vaadin.sass.handler;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.w3c.css.sac.DocumentHandler;
@@ -24,12 +25,12 @@ import org.w3c.css.sac.SACMediaList;
 import org.w3c.css.sac.SelectorList;
 
 import com.vaadin.sass.ScssStylesheet;
-import com.vaadin.sass.tree.EachNode;
 import com.vaadin.sass.tree.ForNode;
 import com.vaadin.sass.tree.IfNode;
 import com.vaadin.sass.tree.MixinDefNode;
 import com.vaadin.sass.tree.VariableNode;
 import com.vaadin.sass.tree.WhileNode;
+import com.vaadin.sass.tree.controldirective.EachDefNode;
 
 public interface SCSSDocumentHandler extends DocumentHandler {
     ScssStylesheet getStyleSheet();
@@ -47,8 +48,6 @@ public interface SCSSDocumentHandler extends DocumentHandler {
     ForNode forDirective(String var, String from, String to, boolean exclusive,
             String body);
 
-    EachNode eachDirective(String var, String list, String body);
-
     WhileNode whileDirective(String condition, String body);
 
     IfNode ifDirective();
@@ -65,4 +64,9 @@ public interface SCSSDocumentHandler extends DocumentHandler {
 
     void property(String name, LexicalUnit value, boolean important,
             String comment);
+
+    EachDefNode startEachDirective(String variable, ArrayList<String> list);
+
+    void endEachDirective();
+
 }
