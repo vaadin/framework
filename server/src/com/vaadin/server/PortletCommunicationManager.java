@@ -36,7 +36,10 @@ import com.vaadin.ui.UI;
  * 
  * @author peholmst
  * 
+ * 
+ * @deprecated might be refactored or removed before 7.0.0
  */
+@Deprecated
 @SuppressWarnings("serial")
 public class PortletCommunicationManager extends AbstractCommunicationManager {
 

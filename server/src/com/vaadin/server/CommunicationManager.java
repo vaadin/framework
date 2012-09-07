@@ -33,7 +33,10 @@ import com.vaadin.ui.UI;
  * 
  * @author Vaadin Ltd.
  * @since 5.0
+ * 
+ * @deprecated might be refactored or removed before 7.0.0
  */
+@Deprecated
 @SuppressWarnings("serial")
 public class CommunicationManager extends AbstractCommunicationManager {
 

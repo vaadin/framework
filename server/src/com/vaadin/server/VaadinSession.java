@@ -58,7 +58,6 @@ import com.vaadin.util.ReflectTools;
  * data.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 @SuppressWarnings("serial")
@@ -81,7 +80,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * An event sent to {@link #start(SessionStartEvent)} when a new Application
      * is being started.
      * 
-     * @since 7.0
+     * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
     public static class SessionStartEvent implements Serializable {
@@ -223,7 +222,9 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * Get the web browser associated with this session.
      * 
      * @return
+     * @deprecated might be refactored or removed before 7.0.0
      */
+    @Deprecated
     public WebBrowser getBrowser() {
         return browser;
     }
@@ -264,6 +265,12 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         return session;
     }
 
+    /**
+     * @return
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
+     */
+    @Deprecated
     public AbstractCommunicationManager getApplicationManager() {
         return communicationManager;
     }
@@ -280,6 +287,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * </p>
      * 
      * @return the application's URL.
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
     public URL getURL() {
@@ -294,6 +303,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * redirected to the application logout url set with
      * {@link #setLogoutURL(String)}. If the logout url has not been set, the
      * browser window is reloaded and the application is restarted.
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
     public void close() {
@@ -303,6 +314,12 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         }
     }
 
+    /**
+     * @param underlyingSession
+     * @return
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
+     */
     @Deprecated
     public static VaadinSession getForSession(WrappedSession underlyingSession) {
         Object attribute = underlyingSession.getAttribute(VaadinSession.class
@@ -316,6 +333,10 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         return null;
     }
 
+    /**
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
+     */
     @Deprecated
     public void removeFromSession() {
         assert (getForSession(session) == this);
@@ -323,6 +344,11 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         session.setAttribute(VaadinSession.class.getName(), null);
     }
 
+    /**
+     * @param session
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
+     */
     @Deprecated
     public void storeInSession(WrappedSession session) {
         session.setAttribute(VaadinSession.class.getName(), this);
@@ -350,6 +376,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *            the application start event containing details required for
      *            starting the application.
      * 
+     * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
     public void start(SessionStartEvent event) {
@@ -369,6 +396,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * 
      * @return <code>true</code> if the application is running,
      *         <code>false</code> if not.
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
     public boolean isRunning() {
@@ -418,7 +447,10 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * 
      * This event is sent each time a window is removed from the application
      * with {@link com.vaadin.server.VaadinSession#removeWindow(Window)}.
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
      */
+    @Deprecated
     public static class WindowDetachEvent extends EventObject {
 
         private final Window window;
@@ -460,7 +492,10 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * 
      * This event is sent each time a window is attached tothe application with
      * {@link com.vaadin.server.VaadinSession#addWindow(Window)}.
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
      */
+    @Deprecated
     public static class WindowAttachEvent extends EventObject {
 
         private final Window window;
@@ -535,6 +570,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * </p>
      * 
      * @return the URL.
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
     public String getLogoutURL() {
@@ -550,6 +587,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * 
      * @param logoutURL
      *            the logoutURL to set.
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
     public void setLogoutURL(String logoutURL) {
@@ -646,6 +685,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @see WrappedRequest#getBrowserDetails()
      * 
      * @since 7.0
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
     public Class<? extends UI> getUIClass(WrappedRequest request) {
@@ -662,6 +703,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @param request
      * @param uiClass
      * @return
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
     protected <T extends UI> T createUIInstance(WrappedRequest request,
@@ -688,6 +731,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *         provided).
      * 
      * @since 7.0.0
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
     public UIProvider getUiProvider(WrappedRequest request, Class<?> uiClass) {
@@ -718,6 +763,13 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         return provider;
     }
 
+    /**
+     * @param request
+     * @param uiClass
+     * @return
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
+     */
     @Deprecated
     private UIProvider doGetUiProvider(WrappedRequest request, Class<?> uiClass) {
         int providersSize = uiProviders.size();
@@ -867,6 +919,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @see #createUI(WrappedRequest)
      * 
      * @since 7.0
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
     public UI getUIForRequest(WrappedRequest request) {
@@ -890,6 +944,12 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         return uI;
     }
 
+    /**
+     * @param request
+     * @return
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
+     */
     @Deprecated
     private UI findExistingUi(WrappedRequest request) {
         // Check if some UI provider has an existing UI available
@@ -933,6 +993,12 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         return null;
     }
 
+    /**
+     * @param request
+     * @return
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
+     */
     @Deprecated
     public UI createUI(WrappedRequest request) {
         Class<? extends UI> uiClass = getUIClass(request);
@@ -976,6 +1042,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @return a UI id, or <code>null</code> if no UI id is defined
      * 
      * @since 7.0
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
     private static Integer getUIId(WrappedRequest request) {
@@ -1016,7 +1084,10 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @param connector
      *            A connector that has not yet been assigned an id.
      * @return A new id for the connector
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
      */
+    @Deprecated
     public String createConnectorId(ClientConnector connector) {
         return String.valueOf(connectorIdSequence++);
     }
@@ -1081,6 +1152,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @param response
      *            the bootstrap response event for which listeners should be
      *            fired
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
     public void modifyBootstrapResponse(BootstrapResponse response) {
@@ -1098,7 +1171,10 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @see #isUIAlive(UI)
      * 
      * @since 7.0.0
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
      */
+    @Deprecated
     public void closeInactiveUIs() {
         for (Iterator<UI> i = uIs.values().iterator(); i.hasNext();) {
             UI ui = i.next();
@@ -1167,7 +1243,10 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @param ui
      *            The UI whose status to check
      * @return true if the UI is alive, false if it could be removed.
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
      */
+    @Deprecated
     protected boolean isUIAlive(UI ui) {
         long now = System.currentTimeMillis();
         if (getHeartbeatTimeout() >= 0

@@ -91,7 +91,10 @@ import com.vaadin.ui.Window;
  * {@link com.vaadin.client.ApplicationConnection}.
  * <p>
  * TODO Document better!
+ * 
+ * @deprecated might be refactored or removed before 7.0.0
  */
+@Deprecated
 @SuppressWarnings("serial")
 public abstract class AbstractCommunicationManager implements Serializable {
 
@@ -105,7 +108,10 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * TODO Document me!
      * 
      * @author peholmst
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
      */
+    @Deprecated
     public interface Callback extends Serializable {
 
         public void criticalNotification(WrappedRequest request,
@@ -2381,6 +2387,12 @@ public abstract class AbstractCommunicationManager implements Serializable {
         return bootstrapHandler;
     }
 
+    /**
+     * @return
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
+     */
+    @Deprecated
     protected abstract BootstrapHandler createBootstrapHandler();
 
     /**

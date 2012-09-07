@@ -72,6 +72,10 @@ import com.vaadin.util.CurrentInstance;
  */
 public class VaadinPortlet extends GenericPortlet implements Constants {
 
+    /**
+     * @deprecated might be refactored or removed before 7.0.0
+     */
+    @Deprecated
     public static final String RESOURCE_URL_ID = "APP";
 
     public static class PortletService extends AbstractVaadinService {
@@ -302,15 +306,25 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
     /**
      * This portlet parameter is used to add styles to the main element. E.g
      * "height:500px" generates a style="height:500px" to the main element.
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
      */
+    @Deprecated
     public static final String PORTLET_PARAMETER_STYLE = "style";
 
     /**
      * This portal parameter is used to define the name of the Vaadin theme that
      * is used for all Vaadin applications in the portal.
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
      */
+    @Deprecated
     public static final String PORTAL_PARAMETER_VAADIN_THEME = "vaadin.theme";
 
+    /**
+     * @deprecated might be refactored or removed before 7.0.0
+     */
+    @Deprecated
     public static final String WRITE_AJAX_PAGE_SCRIPT_WIDGETSET_SHOULD_WRITE = "writeAjaxPageScriptWidgetsetShouldWrite";
 
     // TODO some parts could be shared with AbstractApplicationServlet
@@ -365,10 +379,23 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         addonContext.destroy();
     }
 
+    /**
+     * @author Vaadin Ltd
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
+     */
+    @Deprecated
     protected enum RequestType {
         FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APPLICATION_RESOURCE, DUMMY, EVENT, ACTION, UNKNOWN, BROWSER_DETAILS, CONNECTOR_RESOURCE, HEARTBEAT;
     }
 
+    /**
+     * @param wrappedRequest
+     * @return
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
+     */
+    @Deprecated
     protected RequestType getRequestType(WrappedPortletRequest wrappedRequest) {
         PortletRequest request = wrappedRequest.getPortletRequest();
         if (request instanceof RenderRequest) {
@@ -412,6 +439,15 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                 && request.getResourceID().equals("DUMMY");
     }
 
+    /**
+     * @param request
+     * @param response
+     * @throws PortletException
+     * @throws IOException
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
+     */
+    @Deprecated
     protected void handleRequest(PortletRequest request,
             PortletResponse response) throws PortletException, IOException {
         RequestTimer requestTimer = new RequestTimer();
@@ -728,6 +764,14 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         handleRequest(request, response);
     }
 
+    /**
+     * @param request
+     * @param requestType
+     * @return
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
+     */
+    @Deprecated
     boolean requestCanCreateApplication(PortletRequest request,
             RequestType requestType) {
         if (requestType == RequestType.UIDL && isRepaintAll(request)) {
@@ -944,7 +988,10 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
      *            url to load after message, null for current page
      * @throws IOException
      *             if the writing failed due to input/output error.
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
      */
+    @Deprecated
     void criticalNotification(WrappedPortletRequest request,
             WrappedPortletResponse response, String caption, String message,
             String details, String url) throws IOException {

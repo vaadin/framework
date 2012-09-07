@@ -51,7 +51,10 @@ import com.vaadin.util.CurrentInstance;
  * {@link PortletSession#setAttribute()} is called with the context as value.
  * 
  * @author peholmst
+ * 
+ * @deprecated might be refactored or removed before 7.0.0
  */
+@Deprecated
 @SuppressWarnings("serial")
 public class VaadinPortletSession extends VaadinSession {
 

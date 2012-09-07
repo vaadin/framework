@@ -33,7 +33,10 @@ import com.vaadin.util.CurrentInstance;
  * 
  * @author Vaadin Ltd.
  * @since 3.1
+ * 
+ * @deprecated might be refactored or removed before 7.0.0
  */
+@Deprecated
 @SuppressWarnings("serial")
 public class VaadinServletSession extends VaadinSession {
 

@@ -42,6 +42,14 @@ import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Version;
 import com.vaadin.ui.UI;
 
+/**
+ * 
+ * @author Vaadin Ltd
+ * @since 7.0.0
+ * 
+ * @deprecated might be refactored or removed before 7.0.0
+ */
+@Deprecated
 public abstract class BootstrapHandler implements RequestHandler {
 
     protected class BootstrapContext implements Serializable {
@@ -103,9 +111,8 @@ public abstract class BootstrapHandler implements RequestHandler {
     }
 
     @Override
-    public boolean handleRequest(VaadinSession session,
-            WrappedRequest request, WrappedResponse response)
-            throws IOException {
+    public boolean handleRequest(VaadinSession session, WrappedRequest request,
+            WrappedResponse response) throws IOException {
 
         try {
             Class<? extends UI> uiClass = session.getUIClass(request);
