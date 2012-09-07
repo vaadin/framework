@@ -569,9 +569,10 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @throws ServletException
      * @throws SessionExpiredException
      */
-    private VaadinSession findApplicationInstance(HttpServletRequest request,
-            RequestType requestType) throws MalformedURLException,
-            ServletException, SessionExpiredException {
+    private VaadinSession findApplicationInstance(
+            WrappedHttpServletRequest request, RequestType requestType)
+            throws MalformedURLException, ServletException,
+            SessionExpiredException {
 
         boolean requestCanCreateApplication = requestCanCreateApplication(
                 request, requestType);
@@ -621,31 +622,35 @@ public class VaadinServlet extends HttpServlet implements Constants {
     }
 
     private VaadinSession createAndRegisterApplication(
-            HttpServletRequest request) throws ServletException,
+            WrappedHttpServletRequest request) throws ServletException,
             MalformedURLException {
-        VaadinSession newApplication = createApplication(request);
+        VaadinServletSession session = createVaadinSession(request);
 
-        try {
-            ServletPortletHelper.checkUiProviders(newApplication);
-        } catch (ApplicationClassException e) {
-            throw new ServletException(e);
-        }
-
-        newApplication.storeInSession(new WrappedHttpSession(request
-                .getSession()));
+        session.storeInSession(new WrappedHttpSession(request.getSession()));
 
         final URL applicationUrl = getApplicationUrl(request);
 
         // Initial locale comes from the request
         Locale locale = request.getLocale();
-        newApplication.setLocale(locale);
-        newApplication.start(new SessionStartEvent(applicationUrl,
-                getVaadinService().getDeploymentConfiguration(),
-                createCommunicationManager(newApplication)));
+        session.setLocale(locale);
+        session.start(new SessionStartEvent(applicationUrl, getVaadinService()
+                .getDeploymentConfiguration(),
+                createCommunicationManager(session)));
 
-        addonContext.fireApplicationStarted(newApplication);
+        onVaadinSessionStarted(request, session);
 
-        return newApplication;
+        return session;
+    }
+
+    protected void onVaadinSessionStarted(WrappedHttpServletRequest request,
+            VaadinServletSession session) throws ServletException {
+        addonContext.fireApplicationStarted(session);
+
+        try {
+            ServletPortletHelper.checkUiProviders(session);
+        } catch (ApplicationClassException e) {
+            throw new ServletException(e);
+        }
     }
 
     /**
@@ -708,27 +713,25 @@ public class VaadinServlet extends HttpServlet implements Constants {
     }
 
     /**
-     * Creates a new application and registers it into WebApplicationContext
-     * (aka session). This is not meant to be overridden. Override
-     * getNewApplication to create the application instance in a custom way.
+     * Creates a new vaadin session.
      * 
      * @param request
      * @return
      * @throws ServletException
      * @throws MalformedURLException
      */
-    protected VaadinServletSession createApplication(HttpServletRequest request)
+    private VaadinServletSession createVaadinSession(HttpServletRequest request)
             throws ServletException {
-        VaadinServletSession newApplication = new VaadinServletSession();
+        VaadinServletSession session = new VaadinServletSession();
 
         try {
-            ServletPortletHelper.initDefaultUIProvider(newApplication,
+            ServletPortletHelper.initDefaultUIProvider(session,
                     getVaadinService());
         } catch (ApplicationClassException e) {
             throw new ServletException(e);
         }
 
-        return newApplication;
+        return session;
     }
 
     private void handleServiceException(WrappedHttpServletRequest request,

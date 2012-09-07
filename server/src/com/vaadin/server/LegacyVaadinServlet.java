@@ -44,19 +44,28 @@ public class LegacyVaadinServlet extends VaadinServlet {
         }
     }
 
-    @Override
-    protected VaadinServletSession createApplication(HttpServletRequest request)
+    protected boolean shouldCreateApplication(WrappedHttpServletRequest request)
             throws ServletException {
-        VaadinServletSession application = super.createApplication(request);
+        return true;
+    }
 
-        // Must set current before running init()
-        VaadinSession.setCurrent(application);
+    @Override
+    protected void onVaadinSessionStarted(WrappedHttpServletRequest request,
+            VaadinServletSession session) throws ServletException {
 
-        Application legacyApplication = getNewApplication(request);
-        legacyApplication.doInit();
-        application.addUIProvider(legacyApplication);
+        if (shouldCreateApplication(request)) {
+            // Must set current before running init()
+            VaadinSession.setCurrent(session);
 
-        return application;
+            // XXX Must update details here so they are available in init.
+            session.getBrowser().updateRequestDetails(request);
+
+            Application legacyApplication = getNewApplication(request);
+            legacyApplication.doInit();
+            session.addUIProvider(legacyApplication);
+        }
+
+        super.onVaadinSessionStarted(request, session);
     }
 
 }

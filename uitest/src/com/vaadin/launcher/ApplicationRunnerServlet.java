@@ -111,28 +111,32 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     }
 
     @Override
-    protected VaadinServletSession createApplication(HttpServletRequest request)
+    protected boolean shouldCreateApplication(WrappedHttpServletRequest request)
             throws ServletException {
+        try {
+            return Application.class.isAssignableFrom(getClassToRun());
+        } catch (ClassNotFoundException e) {
+            throw new ServletException(e);
+        }
+    }
+
+    @Override
+    protected void onVaadinSessionStarted(WrappedHttpServletRequest request,
+            VaadinServletSession session) throws ServletException {
         try {
             final Class<?> classToRun = getClassToRun();
             if (UI.class.isAssignableFrom(classToRun)) {
-                VaadinServletSession application = new VaadinServletSession();
-                application.addUIProvider(new AbstractUIProvider() {
+                session.addUIProvider(new AbstractUIProvider() {
 
                     @Override
-                    public Class<? extends UI> getUIClass(
-                            WrappedRequest request) {
+                    public Class<? extends UI> getUIClass(WrappedRequest request) {
                         return (Class<? extends UI>) classToRun;
                     }
                 });
-                return application;
             } else if (Application.class.isAssignableFrom(classToRun)) {
-                return super.createApplication(request);
+                // Avoid using own UIProvider for legacy Application
             } else if (UIProvider.class.isAssignableFrom(classToRun)) {
-                VaadinServletSession application = new VaadinServletSession();
-                application
-                        .addUIProvider((UIProvider) classToRun.newInstance());
-                return application;
+                session.addUIProvider((UIProvider) classToRun.newInstance());
             } else {
                 throw new ServletException(classToRun.getCanonicalName()
                         + " is neither an Application nor a UI");
@@ -148,6 +152,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
                                     + getApplicationRunnerApplicationClassName(request)));
         }
 
+        super.onVaadinSessionStarted(request, session);
     }
 
     private String getApplicationRunnerApplicationClassName(

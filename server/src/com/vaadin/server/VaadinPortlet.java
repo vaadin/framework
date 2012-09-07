@@ -783,7 +783,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
             if (restartApplication) {
                 closeApplication(application, request.getPortletSession(false));
-                return createAndRegisterApplication(request);
+                return createAndRegisterApplication(wrappedRequest);
             } else if (closeApplication) {
                 closeApplication(application, request.getPortletSession(false));
                 return null;
@@ -795,7 +795,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         // No existing application was found
 
         if (requestCanCreateApplication) {
-            return createAndRegisterApplication(request);
+            return createAndRegisterApplication(wrappedRequest);
         } else {
             throw new SessionExpiredException();
         }
@@ -811,9 +811,9 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         application.removeFromSession();
     }
 
-    private VaadinSession createAndRegisterApplication(PortletRequest request)
-            throws PortletException {
-        VaadinSession newApplication = createApplication(request);
+    private VaadinSession createAndRegisterApplication(
+            WrappedPortletRequest request) throws PortletException {
+        VaadinPortletSession newApplication = createApplication();
 
         try {
             ServletPortletHelper.checkUiProviders(newApplication);
@@ -822,7 +822,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         }
 
         newApplication.storeInSession(new WrappedPortletSession(request
-                .getPortletSession()));
+                .getPortletRequest().getPortletSession()));
 
         Locale locale = request.getLocale();
         newApplication.setLocale(locale);
@@ -830,13 +830,22 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         newApplication.start(new SessionStartEvent(null, getVaadinService()
                 .getDeploymentConfiguration(), new PortletCommunicationManager(
                 newApplication)));
-        addonContext.fireApplicationStarted(newApplication);
+        onVaadinSessionStarted(request, newApplication);
 
         return newApplication;
     }
 
-    protected VaadinPortletSession createApplication(PortletRequest request)
-            throws PortletException {
+    protected void onVaadinSessionStarted(WrappedPortletRequest request,
+            VaadinPortletSession session) throws PortletException {
+        addonContext.fireApplicationStarted(session);
+        try {
+            ServletPortletHelper.checkUiProviders(session);
+        } catch (ApplicationClassException e) {
+            throw new PortletException(e);
+        }
+    }
+
+    private VaadinPortletSession createApplication() throws PortletException {
         VaadinPortletSession application = new VaadinPortletSession();
 
         try {
