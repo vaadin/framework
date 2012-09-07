@@ -112,11 +112,13 @@ public class ClassResource implements ConnectorResource, Serializable {
 
     protected Class<?> getAssociatedClass() {
         if (associatedClass == null) {
-            Class<? extends UI> associatedClass = UI.getCurrent().getClass();
-            if (associatedClass == LegacyWindow.class) {
-                return VaadinSession.getCurrent().getClass();
+            UI current = UI.getCurrent();
+            if (current instanceof LegacyWindow) {
+                LegacyWindow legacyWindow = (LegacyWindow) current;
+                return legacyWindow.getApplication().getClass();
+            } else {
+                return current.getClass();
             }
-            return associatedClass;
         }
         return associatedClass;
     }

@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
+import com.vaadin.Application;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
@@ -94,6 +95,7 @@ public abstract class UI extends AbstractComponentContainer implements
     @Deprecated
     public static class LegacyWindow extends UI {
         private String name;
+        private Application application;
 
         /**
          * Create a new legacy window
@@ -125,6 +127,14 @@ public abstract class UI extends AbstractComponentContainer implements
         @Override
         protected void init(WrappedRequest request) {
             // Just empty
+        }
+
+        public void setApplication(Application application) {
+            this.application = application;
+        }
+
+        public Application getApplication() {
+            return application;
         }
 
         /**

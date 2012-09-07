@@ -79,6 +79,7 @@ public abstract class Application extends AbstractUIProvider implements
             // no current UI -> set the main window as the current UI
             UI.setCurrent(mainWindow);
         }
+        mainWindow.setApplication(this);
         this.mainWindow = mainWindow;
     }
 
@@ -99,8 +100,7 @@ public abstract class Application extends AbstractUIProvider implements
     }
 
     @Override
-    public UI createInstance(Class<? extends UI> type,
-            WrappedRequest request) {
+    public UI createInstance(Class<? extends UI> type, WrappedRequest request) {
         return getUIInstance(request);
     }
 
@@ -239,6 +239,8 @@ public abstract class Application extends AbstractUIProvider implements
             String name = Integer.toString(namelessUIIndex++);
             uI.setName(name);
         }
+
+        uI.setApplication(this);
 
         legacyUINames.put(uI.getName(), uI);
         uI.setSession(VaadinSession.getCurrent());
