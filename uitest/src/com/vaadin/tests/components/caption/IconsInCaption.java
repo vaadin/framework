@@ -106,7 +106,7 @@ public class IconsInCaption extends TestBase {
         ComponentContainer container = containerClass.newInstance();
         for (String size : sizes) {
             Label title = new Label("<h3>" + size + "x" + size + "</h3>",
-                    ContentMode.XHTML);
+                    ContentMode.HTML);
             container.addComponent(title);
             for (String icon : icons) {
                 ThemeResource res = new ThemeResource("../runo/icons/" + size

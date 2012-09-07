@@ -65,11 +65,11 @@ public class Ticket1970 extends Application {
                     }
                 }));
         w.addComponent(new Label("<a href='" + getURL().toExternalForm() + "'>"
-                + getURL().toExternalForm() + "</a>", ContentMode.XHTML));
+                + getURL().toExternalForm() + "</a>", ContentMode.HTML));
         w.addComponent(new Label(
                 "<h2>How to reproduce</h2>Open the above link in another browser"
                         + " window and then press the Show-button on this window.",
-                ContentMode.XHTML));
+                ContentMode.HTML));
 
         return w;
     }

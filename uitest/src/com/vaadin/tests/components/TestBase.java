@@ -14,7 +14,7 @@ public abstract class TestBase extends AbstractTestCase {
         setMainWindow(window);
         window.getContent().setSizeFull();
 
-        Label label = new Label(getDescription(), ContentMode.XHTML);
+        Label label = new Label(getDescription(), ContentMode.HTML);
         label.setWidth("100%");
         window.getContent().addComponent(label);
 

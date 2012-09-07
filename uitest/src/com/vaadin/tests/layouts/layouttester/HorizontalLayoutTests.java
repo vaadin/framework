@@ -115,7 +115,7 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
 
         final AbstractComponent c1 = new Button("BUTTON");
         final AbstractComponent c2 = new Label("<b>LABEL</b>",
-                ContentMode.XHTML);
+                ContentMode.HTML);
         final AbstractComponent c3 = new Table("TABLE");
         c3.setHeight("100px");
         c3.setWidth("100%");

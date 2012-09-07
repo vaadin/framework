@@ -38,13 +38,13 @@ public class Labels extends ComponentTestCase<Label> {
         l = createLabel(
                 "<div style='border: 1px solid red'><h1>Hello\n\n\n</h1><p/><h2>I am a rich Label</h3></div>",
                 "This is an XHTML label with rich content");
-        l.setContentMode(ContentMode.XHTML);
+        l.setContentMode(ContentMode.HTML);
         addTestComponent(l);
 
         l = createLabel(
                 "<div style='border: 1px solid blue'><h1>Hello</h1><p/><h2>I am a rich Label</h3></div>",
                 "This is an XHTML label with fixed 200px width and rich content");
-        l.setContentMode(ContentMode.XHTML);
+        l.setContentMode(ContentMode.HTML);
         l.setWidth("200px");
         addTestComponent(l);
 

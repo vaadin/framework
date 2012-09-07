@@ -34,12 +34,12 @@ public class TestLayoutPerformance extends TestBase {
     @Override
     protected void setup() {
         Label label = new Label("<h1>CssLayout performance test.</h1>",
-                ContentMode.XHTML);
+                ContentMode.HTML);
         getLayout().addComponent(label);
 
         label = new Label(
                 "<em>Hint</em>. Use debug dialog to measure rendering times TODO: extend with size settings (to both layout and content).",
-                ContentMode.XHTML);
+                ContentMode.HTML);
         getLayout().addComponent(label);
 
         ns = new NativeSelect("Select component to test");

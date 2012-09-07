@@ -44,7 +44,7 @@ public class TestIFrames extends CustomComponent {
         final int height = 250;
         final String iFrame = "<iframe height=\"" + height + "\" width=\""
                 + width + "\" src=\"" + URL + "\" />";
-        return new Label(iFrame, ContentMode.XHTML);
+        return new Label(iFrame, ContentMode.HTML);
     }
 
 }

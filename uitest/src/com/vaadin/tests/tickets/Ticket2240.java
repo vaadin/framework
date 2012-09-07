@@ -37,7 +37,7 @@ public class Ticket2240 extends Application {
         layout.setStyleName("borders");
         // layout.setSizeFull();
         final Label l = new Label(txt);
-        l.setContentMode(ContentMode.XHTML);
+        l.setContentMode(ContentMode.HTML);
         // l.setWidth("100%");
 
         TextField tf = new TextField("This is a textField");

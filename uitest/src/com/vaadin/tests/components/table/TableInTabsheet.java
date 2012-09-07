@@ -32,7 +32,7 @@ public class TableInTabsheet extends AbstractTestUI {
 
         VerticalLayout vP = new VerticalLayout();
         vP.setStyleName(Reindeer.LAYOUT_BLACK);
-        Label tit = new Label("<h1> Tab/Table Test</h1>", ContentMode.XHTML);
+        Label tit = new Label("<h1> Tab/Table Test</h1>", ContentMode.HTML);
         vP.addComponent(tit);
         return vP;
 

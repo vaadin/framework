@@ -71,7 +71,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * @deprecated From 7.0, use {@link ContentMode#XHTML} instead
      */
     @Deprecated
-    public static final ContentMode CONTENT_XHTML = ContentMode.XHTML;
+    public static final ContentMode CONTENT_XHTML = ContentMode.HTML;
 
     /**
      * @deprecated From 7.0, use {@link ContentMode#XML} instead
@@ -413,9 +413,8 @@ public class Label extends AbstractComponent implements Property<String>,
             stringValue = "";
         }
 
-        if (getContentMode() == ContentMode.XHTML
-                || getContentMode() == ContentMode.XML
-                || getContentMode() == ContentMode.HTML) {
+        if (getContentMode() == ContentMode.HTML
+                || getContentMode() == ContentMode.XML) {
             return stripTags(stringValue);
         } else {
             return stringValue;

@@ -14,7 +14,7 @@ public abstract class AbstractTestUI extends UI {
     public void init(WrappedRequest request) {
         getPage().setTitle(getClass().getName());
 
-        Label label = new Label(getTestDescription(), ContentMode.XHTML);
+        Label label = new Label(getTestDescription(), ContentMode.HTML);
         label.setWidth("100%");
 
         layout = new VerticalLayout();

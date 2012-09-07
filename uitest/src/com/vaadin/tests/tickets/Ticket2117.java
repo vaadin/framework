@@ -56,7 +56,7 @@ public class Ticket2117 extends Application {
                         + "'>"
                         + getURL().toExternalForm()
                         + "</a> which opens new windows to this uri. They should end up having a separate Window and URL.",
-                ContentMode.XHTML));
+                ContentMode.HTML));
         return w;
     }
 }

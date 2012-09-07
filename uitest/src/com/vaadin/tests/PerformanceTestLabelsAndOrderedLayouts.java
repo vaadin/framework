@@ -88,7 +88,7 @@ public class PerformanceTestLabelsAndOrderedLayouts extends CustomComponent {
     }
 
     private void addInfo() {
-        main.addComponent(new Label(DESCRIPTION, ContentMode.XHTML));
+        main.addComponent(new Label(DESCRIPTION, ContentMode.HTML));
     }
 
 }

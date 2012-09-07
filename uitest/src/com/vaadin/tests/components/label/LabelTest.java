@@ -78,7 +78,7 @@ public class LabelTest extends AbstractComponentTest<Label> implements
         options.put("Raw", ContentMode.RAW);
         options.put("UIDL", ContentMode.XML); // Deprecated UIDL mode still used
                                               // to avoid breaking old tests
-        options.put("XHTML", ContentMode.XHTML);
+        options.put("XHTML", ContentMode.HTML);
         options.put("XML", ContentMode.XML);
 
         createSelectAction("Content mode", category, options, "Text",

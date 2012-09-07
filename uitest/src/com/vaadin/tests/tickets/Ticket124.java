@@ -49,7 +49,7 @@ public class Ticket124 extends Application {
         gl.addComponent(new Label("0,0-1,0"), 0, 0, 1, 0);
         gl.addComponent(new Label("2,0-3,0"), 2, 0, 3, 0);
         Label l = new Label("Large cell 0,1-2,2<br/>yadayada<br/>lorem ipsum");
-        l.setContentMode(ContentMode.XHTML);
+        l.setContentMode(ContentMode.HTML);
         gl.addComponent(l, 0, 1, 2, 2);
         gl.addComponent(new Label("3-1"), 3, 1);
         gl.addComponent(new Label("3,2-3,3"), 3, 2, 3, 3);

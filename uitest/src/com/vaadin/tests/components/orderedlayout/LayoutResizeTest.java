@@ -33,7 +33,7 @@ public class LayoutResizeTest extends TestBase {
         left.setMargin(true);
 
         left.addComponent(new Label("<h2>Layout resize test</h2>",
-                ContentMode.XHTML));
+                ContentMode.HTML));
 
         Button resize = new Button("Resize to 700x400",
                 new Button.ClickListener() {

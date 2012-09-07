@@ -182,11 +182,11 @@ public class TestForStyledUpload extends Application implements
                     "Upload finished, but output buffer is null!!"));
         } else {
             status.addComponent(new Label(
-                    "<b>Name:</b> " + event.getFilename(), ContentMode.XHTML));
+                    "<b>Name:</b> " + event.getFilename(), ContentMode.HTML));
             status.addComponent(new Label("<b>Mimetype:</b> "
-                    + event.getMIMEType(), ContentMode.XHTML));
+                    + event.getMIMEType(), ContentMode.HTML));
             status.addComponent(new Label("<b>Size:</b> " + event.getLength()
-                    + " bytes.", ContentMode.XHTML));
+                    + " bytes.", ContentMode.HTML));
 
             status.addComponent(new Link("Download " + buffer.getFileName(),
                     new StreamResource(buffer, buffer.getFileName())));

@@ -21,7 +21,7 @@ public class Ticket1444 extends Application {
 
         Label red = new Label(
                 "<div style='background:red;width:100%;height:100%;'>??</div>",
-                ContentMode.XHTML);
+                ContentMode.HTML);
         red.setSizeFull();
 
         ol.addComponent(red);

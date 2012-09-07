@@ -37,7 +37,7 @@ public class DateFieldEmptyValid extends TestBase {
 
     @Override
     protected void setup() {
-        addComponent(new Label("<br/><br/>", ContentMode.XHTML));
+        addComponent(new Label("<br/><br/>", ContentMode.HTML));
         log = new Log(8);
         addComponent(log);
         df = new MyDateField();

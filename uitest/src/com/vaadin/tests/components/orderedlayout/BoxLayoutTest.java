@@ -185,7 +185,7 @@ public class BoxLayoutTest extends AbstractTestUI {
             }
         });
         layout.addComponent(width);
-        layout.addComponent(new Label("&times;", ContentMode.XHTML));
+        layout.addComponent(new Label("&times;", ContentMode.HTML));
         final NativeSelect height = new NativeSelect(null, sizes);
         height.setImmediate(true);
         height.addListener(new ValueChangeListener() {
@@ -295,7 +295,7 @@ public class BoxLayoutTest extends AbstractTestUI {
             }
         });
         component.addComponent(componentWidth);
-        component.addComponent(new Label("&times;", ContentMode.XHTML));
+        component.addComponent(new Label("&times;", ContentMode.HTML));
 
         componentHeight = new NativeSelect(null, sizes);
         componentHeight.setImmediate(true);

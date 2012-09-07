@@ -26,7 +26,7 @@ public class EditableTableLeak extends TestBase {
     private final Table table = new Table("ISO-3166 Country Codes and flags");
     private final CheckBox useFieldFactory = new CheckBox(
             "Use a caching TableFieldFactory");
-    private final Label sizeLabel = new Label("", ContentMode.XHTML);
+    private final Label sizeLabel = new Label("", ContentMode.HTML);
 
     private long size = 0;
 

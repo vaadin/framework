@@ -51,7 +51,7 @@ public class TreeFilesystem extends com.vaadin.Application implements
         setMainWindow(main);
 
         // Main window contains heading and panel
-        main.addComponent(new Label("<h2>Tree demo</h2>", ContentMode.XHTML));
+        main.addComponent(new Label("<h2>Tree demo</h2>", ContentMode.HTML));
 
         // configure file structure panel
         main.addComponent(explorerPanel);

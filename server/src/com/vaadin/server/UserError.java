@@ -42,7 +42,7 @@ public class UserError extends AbstractErrorMessage {
      * @deprecated from 7.0, use {@link ContentMode#HTML} instead    
      */
     @Deprecated
-    public static final ContentMode CONTENT_XHTML = ContentMode.XHTML;
+    public static final ContentMode CONTENT_XHTML = ContentMode.HTML;
 
     /**
      * Creates a textual error message of level ERROR.

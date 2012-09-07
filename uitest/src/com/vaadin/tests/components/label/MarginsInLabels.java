@@ -16,23 +16,23 @@ public class MarginsInLabels extends AbstractTestUI {
     protected void setup(WrappedRequest request) {
         AbstractLayout layout = new VerticalLayout();
         layout.addComponent(new Label("<h1>Vertical layout</h1>",
-                ContentMode.XHTML));
+                ContentMode.HTML));
         layout.addComponent(new Label("Next row"));
         addComponent(layout);
 
         layout = new GridLayout(1, 2);
         layout.setWidth("100%");
-        layout.addComponent(new Label("<h1>Grid layout</h1>", ContentMode.XHTML));
+        layout.addComponent(new Label("<h1>Grid layout</h1>", ContentMode.HTML));
         layout.addComponent(new Label("Next row"));
         addComponent(layout);
 
         TabSheet tabSheet = new TabSheet();
-        tabSheet.addTab(new Label("<h1>Tabsheet</h1>", ContentMode.XHTML),
+        tabSheet.addTab(new Label("<h1>Tabsheet</h1>", ContentMode.HTML),
                 "Label");
         addComponent(tabSheet);
 
         Accordion accordion = new Accordion();
-        accordion.addTab(new Label("<h1>Accordion</h1>", ContentMode.XHTML),
+        accordion.addTab(new Label("<h1>Accordion</h1>", ContentMode.HTML),
                 "Label");
         addComponent(accordion);
     }

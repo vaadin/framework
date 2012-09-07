@@ -103,7 +103,7 @@ public class LazyWindowResize extends AbstractTestCase {
         mainWindow.addComponent(resizeListenerCheckBox);
         mainWindow.addComponent(immediateCheckBox);
         mainWindow.addComponent(log);
-        mainWindow.addComponent(new Label("<br/><br/>", ContentMode.XHTML));
+        mainWindow.addComponent(new Label("<br/><br/>", ContentMode.HTML));
         mainWindow.addComponent(new Label(LoremIpsum.get(10000)));
 
         setLazy(false);

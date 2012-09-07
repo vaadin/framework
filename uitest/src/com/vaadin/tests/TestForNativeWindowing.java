@@ -84,7 +84,7 @@ public class TestForNativeWindowing extends Application {
                                         + "<p>Lorem ipsum dolor sit amet.</p>"
                                         + "<p>Lorem ipsum dolor sit amet.</p>"
                                         + "<p>Lorem ipsum dolor sit amet.</p>",
-                                ContentMode.XHTML));
+                                ContentMode.HTML));
 
                     }
                 }));

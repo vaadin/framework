@@ -58,7 +58,7 @@ public class ComboFocusBlurEvents extends TestBase {
         Label output = new Label(log);
         output.setCaption("Events:");
 
-        output.setContentMode(ContentMode.XHTML);
+        output.setContentMode(ContentMode.HTML);
         addComponent(output);
 
     }

@@ -136,7 +136,7 @@ public class LiferayThemeDemo extends Application {
         l.setMargin(true);
         l.setCaption("Labels");
 
-        l.addComponent(new Label("Normal Label", ContentMode.XHTML));
+        l.addComponent(new Label("Normal Label", ContentMode.HTML));
         l.addComponent(new Label(
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit."));
         return l;
@@ -217,12 +217,12 @@ public class LiferayThemeDemo extends Application {
         l.setWidth("400px");
         l.setColumnExpandRatio(0, 1);
 
-        l.addComponent(new Label("Normal TextField", ContentMode.XHTML));
+        l.addComponent(new Label("Normal TextField", ContentMode.HTML));
         TextField tf = new TextField();
         tf.setInputPrompt("Enter text");
         l.addComponent(tf);
 
-        l.addComponent(new Label("Normal TextArea", ContentMode.XHTML));
+        l.addComponent(new Label("Normal TextArea", ContentMode.HTML));
 
         TextArea ta = new TextArea();
         ta.setHeight("5em");
@@ -344,7 +344,7 @@ public class LiferayThemeDemo extends Application {
         l.setColumnExpandRatio(0, 2);
         l.setColumnExpandRatio(1, 5);
 
-        l.addComponent(new Label("Normal Panel", ContentMode.XHTML));
+        l.addComponent(new Label("Normal Panel", ContentMode.HTML));
 
         Panel p = new Panel("Normal Panel");
         p.setHeight("100px");
@@ -353,7 +353,7 @@ public class LiferayThemeDemo extends Application {
 
         l.addComponent(new Label(
                 "Light Style (<code>LiferayTheme.PANEL_LIGHT</code>)",
-                ContentMode.XHTML));
+                ContentMode.HTML));
 
         Panel p2 = new Panel("Light Style Panel");
         p2.setStyleName(LiferayTheme.PANEL_LIGHT);
@@ -416,7 +416,7 @@ public class LiferayThemeDemo extends Application {
         w2.setPositionX(350);
         w2.setPositionY(160);
         w2.addComponent(new Label("<code>Window.setResizable(false)</code>",
-                ContentMode.XHTML));
+                ContentMode.HTML));
 
         tabs.addListener(new TabSheet.SelectedTabChangeListener() {
             @Override
@@ -448,7 +448,7 @@ public class LiferayThemeDemo extends Application {
         l.addComponent(lockCheckBox, 1, 0);
         l.newLine();
 
-        Label label = new Label("Normal SplitPanel", ContentMode.XHTML);
+        Label label = new Label("Normal SplitPanel", ContentMode.HTML);
         label.setWidth(null);
         l.addComponent(label);
         final HorizontalSplitPanel sp = new HorizontalSplitPanel();
@@ -461,7 +461,7 @@ public class LiferayThemeDemo extends Application {
 
         label = new Label(
                 "Small Style<br />(<code>LiferayTheme.SPLITPANEL_SMALL</code>)",
-                ContentMode.XHTML);
+                ContentMode.HTML);
         label.setWidth(null);
         l.addComponent(label);
 
@@ -522,7 +522,7 @@ public class LiferayThemeDemo extends Application {
         l.setWidth("400px");
         l.setColumnExpandRatio(0, 1);
 
-        l.addComponent(new Label("Horizontal Slider", ContentMode.XHTML));
+        l.addComponent(new Label("Horizontal Slider", ContentMode.HTML));
         Slider s = new Slider();
         s.setWidth("200px");
         try {
@@ -533,7 +533,7 @@ public class LiferayThemeDemo extends Application {
         }
         l.addComponent(s);
 
-        l.addComponent(new Label("Vertical Slider", ContentMode.XHTML));
+        l.addComponent(new Label("Vertical Slider", ContentMode.HTML));
         s = new Slider();
         s.setOrientation(SliderOrientation.VERTICAL);
         s.setHeight("200px");
@@ -595,10 +595,10 @@ public class LiferayThemeDemo extends Application {
         message.setValue("Jumped over the lazy dog.");
         message.setWidth("15em");
 
-        l.addComponent(new Label("<h3>Type</h3>", ContentMode.XHTML));
-        l.addComponent(new Label("<h3>Preview</h3>", ContentMode.XHTML));
+        l.addComponent(new Label("<h3>Type</h3>", ContentMode.HTML));
+        l.addComponent(new Label("<h3>Preview</h3>", ContentMode.HTML));
 
-        l.addComponent(new Label("Humanized", ContentMode.XHTML));
+        l.addComponent(new Label("Humanized", ContentMode.HTML));
         Button show = new Button("Humanized Notification",
                 new Button.ClickListener() {
                     @Override
@@ -611,7 +611,7 @@ public class LiferayThemeDemo extends Application {
                 });
         l.addComponent(show);
 
-        l.addComponent(new Label("Warning", ContentMode.XHTML));
+        l.addComponent(new Label("Warning", ContentMode.HTML));
         show = new Button("Warning Notification", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
@@ -623,7 +623,7 @@ public class LiferayThemeDemo extends Application {
         });
         l.addComponent(show);
 
-        l.addComponent(new Label("Error", ContentMode.XHTML));
+        l.addComponent(new Label("Error", ContentMode.HTML));
         show = new Button("Error Notification", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
@@ -635,7 +635,7 @@ public class LiferayThemeDemo extends Application {
         });
         l.addComponent(show);
 
-        l.addComponent(new Label("Tray", ContentMode.XHTML));
+        l.addComponent(new Label("Tray", ContentMode.HTML));
         show = new Button("Tray Notification", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {

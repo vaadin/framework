@@ -57,7 +57,6 @@ public class LabelConnector extends AbstractComponentConnector {
             getWidget().setText(getState().text);
             break;
 
-        case XHTML:
         case HTML:
         case RAW:
             sinkOnloads = true;

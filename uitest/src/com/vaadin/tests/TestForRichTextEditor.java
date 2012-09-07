@@ -58,7 +58,7 @@ public class TestForRichTextEditor extends CustomComponent implements
 
         main.addComponent(new Button("commit content to label below"));
 
-        l = new Label("", ContentMode.XHTML);
+        l = new Label("", ContentMode.HTML);
         main.addComponent(l);
 
         CheckBox b = new CheckBox("enabled");

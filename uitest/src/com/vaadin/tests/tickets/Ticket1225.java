@@ -46,7 +46,7 @@ public class Ticket1225 extends Application {
 
         Label red = new Label(
                 "<div style='background:red;width:100%;height:100%;'>??</div>",
-                ContentMode.XHTML);
+                ContentMode.HTML);
         // red.setCaption("cap");
         // red.setSizeFull();
 
@@ -59,7 +59,7 @@ public class Ticket1225 extends Application {
         ts.getTab(red).setCaption("REd tab");
 
         Label l = new Label("<div style='background:blue;'>sdf</div>",
-                ContentMode.XHTML);
+                ContentMode.HTML);
         el.addComponent(l);
         el.setComponentAlignment(l, Alignment.MIDDLE_RIGHT);
 

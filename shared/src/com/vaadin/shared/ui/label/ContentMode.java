@@ -39,14 +39,6 @@ public enum ContentMode {
     HTML,
 
     /**
-     * Content mode, where the label contains XHTML.
-     * 
-     * @deprecated Use {@link ContentMode.HTML}
-     */
-    @Deprecated
-    XHTML,
-
-    /**
      * Content mode, where the label contains well-formed or well-balanced XML.
      * This is handled in the same way as {@link #XHTML}.
      * 

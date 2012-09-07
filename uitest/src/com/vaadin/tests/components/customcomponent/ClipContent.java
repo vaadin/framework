@@ -15,7 +15,7 @@ public class ClipContent extends TestBase {
 
         Label text = new Label(
                 "1_long_line_that_should_be_clipped<br/>2_long_line_that_should_be_clipped<br/>3_long_line_that_should_be_clipped<br/>4_long_line_that_should_be_clipped<br/>",
-                ContentMode.XHTML);
+                ContentMode.HTML);
 
         final CustomComponent cc = new CustomComponent(text);
         cc.setWidth("20px");

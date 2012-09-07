@@ -50,7 +50,7 @@ public class Log extends VerticalLayout {
     }
 
     private Label createEventLabel() {
-        Label l = new Label("&nbsp;", ContentMode.XHTML);
+        Label l = new Label("&nbsp;", ContentMode.HTML);
         l.setWidth(null);
         return l;
     }

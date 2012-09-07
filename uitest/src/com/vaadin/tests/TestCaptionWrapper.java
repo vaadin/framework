@@ -172,7 +172,7 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
 
         // Custom components
         layout.addComponent(new Label("<B>Below are few custom components</B>",
-                ContentMode.XHTML));
+                ContentMode.HTML));
         final TestForUpload tfu = new TestForUpload();
         layout.addComponent(tfu);
 

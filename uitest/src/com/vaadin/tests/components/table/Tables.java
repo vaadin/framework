@@ -272,7 +272,7 @@ public class Tables<T extends Table> extends AbstractSelectTestCase<T>
                                 l.setWidth(col.width);
                                 if (col.html) {
                                     l.setValue(value);
-                                    l.setContentMode(ContentMode.XHTML);
+                                    l.setContentMode(ContentMode.HTML);
                                 } else {
                                     l.setValue(value);
                                 }

@@ -42,7 +42,7 @@ public class HiddenHorizontalLayout extends TestBase {
                 + "3. Click \"toggle layout visibility\"<br>"
                 + "4. Resize browser window to full <br/>"
                 + "5. Click \"toggle layout visibility\"<br/>",
-                ContentMode.XHTML);
+                ContentMode.HTML);
         vl.addComponent(l);
         Button b = new Button("toggle layout visibility",
                 new Button.ClickListener() {

@@ -37,7 +37,7 @@ public class LabelEmbeddedClickThroughForTable extends TestBase {
         item.getItemProperty("Column 1").setValue("String A");
         item.getItemProperty("Column 2").setValue(new Label("Label A"));
         item.getItemProperty("Column 3").setValue(
-                new Label("<b>Label A</b>", ContentMode.XHTML));
+                new Label("<b>Label A</b>", ContentMode.HTML));
         item.getItemProperty("Column 4").setValue(
                 new Embedded("An embedded image", new ThemeResource(
                         "../runo/icons/32/ok.png")));
@@ -49,7 +49,7 @@ public class LabelEmbeddedClickThroughForTable extends TestBase {
                 .setValue(
                         new Label(
                                 "<a style=\"color: blue\" href=\"javascript:false\">Label A</a>",
-                                ContentMode.XHTML));
+                                ContentMode.HTML));
         item.getItemProperty("Column 4").setValue(
                 new Embedded("", new ThemeResource(
                         "../runo/icons/32/cancel.png")));

@@ -40,7 +40,7 @@ public class PanelShouldNotScroll extends TestBase {
         panel.addComponent(new Label(
                 "fooooooooo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>"
                         + "foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>",
-                ContentMode.XHTML));
+                ContentMode.HTML));
         return panel;
     }
 

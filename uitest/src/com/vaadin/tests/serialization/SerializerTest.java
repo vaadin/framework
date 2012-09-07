@@ -125,7 +125,7 @@ public class SerializerTest extends AbstractTestUI {
 
         rpc.sendEnum(ContentMode.TEXT, new ContentMode[] {
                 ContentMode.PREFORMATTED, ContentMode.XML },
-                Arrays.asList(ContentMode.XHTML, ContentMode.RAW));
+                Arrays.asList(ContentMode.HTML, ContentMode.RAW));
 
         testExtension.registerRpc(new SerializerTestRpc() {
             @Override

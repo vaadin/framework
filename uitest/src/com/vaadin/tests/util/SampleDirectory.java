@@ -82,7 +82,7 @@ public class SampleDirectory {
         errorPanel.setStyleName("strong");
         errorPanel.setComponentError(new SystemError(
                 "Cannot provide sample directory"));
-        errorPanel.addComponent(new Label(errorMessage, ContentMode.XHTML));
+        errorPanel.addComponent(new Label(errorMessage, ContentMode.HTML));
         // Remove all components from applications main window
         uI.getContent().removeAllComponents();
         // Add error panel

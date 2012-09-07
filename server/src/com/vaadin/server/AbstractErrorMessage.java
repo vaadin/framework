@@ -49,14 +49,6 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
          * 
          */
         HTML,
-
-        /**
-         * Content mode, where the error contains XHTML.
-         * 
-         * @deprecated Use {@link ContentMode.HTML}
-         */
-        @Deprecated
-        XHTML;
     }
 
     /**
@@ -125,7 +117,6 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
             result = "<pre>" + VaadinServlet.safeEscapeForHtml(getMessage())
                     + "</pre>";
             break;
-        case XHTML:
         case HTML:
             result = getMessage();
             break;

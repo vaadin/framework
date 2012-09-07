@@ -110,7 +110,7 @@ public class CustomLayoutDemo extends com.vaadin.Application implements
 
         // Add heading label and custom layout panel to main window
         mainWindow.addComponent(new Label("<h3>Custom layout demo</h3>",
-                ContentMode.XHTML));
+                ContentMode.HTML));
         mainWindow.addComponent(customLayoutPanel);
     }
 
@@ -126,7 +126,7 @@ public class CustomLayoutDemo extends com.vaadin.Application implements
             username.setValue("Anonymous");
         }
         mainLayout.replaceComponent(loginButton, new Label("Welcome user <em>"
-                + username.getValue() + "</em>", ContentMode.XHTML));
+                + username.getValue() + "</em>", ContentMode.HTML));
     }
 
     /**

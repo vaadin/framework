@@ -29,7 +29,7 @@ public class LabelModes extends ComponentTestCase<Label> {
         addTestComponent(l);
 
         l = createLabel("This label                       contains\nnewlines and spaces\nand is in\nhtml mode");
-        l.setContentMode(ContentMode.XHTML);
+        l.setContentMode(ContentMode.HTML);
         l.setWidth(null);
         addTestComponent(l);
 

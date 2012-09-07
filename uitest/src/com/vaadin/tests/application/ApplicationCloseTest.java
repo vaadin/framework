@@ -13,7 +13,7 @@ public class ApplicationCloseTest extends TestBase {
     @Override
     protected void setup() {
         Label applications = new Label("Applications in session: <br/>",
-                ContentMode.XHTML);
+                ContentMode.HTML);
         if (getContext() != null) {
             applications.setValue(applications.getValue() + "App: "
                     + getContext() + "<br/>");
@@ -49,7 +49,7 @@ public class ApplicationCloseTest extends TestBase {
                         / 1000
                         / 1000
                         + "MiB memory for this application.<br/>Total memory usage reported as "
-                        + totalUsageString + "<br/>", ContentMode.XHTML);
+                        + totalUsageString + "<br/>", ContentMode.HTML);
 
         addComponent(thisApp);
         addComponent(memoryUsage);

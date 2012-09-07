@@ -32,7 +32,7 @@ public class UsingObjectsInSelect extends com.vaadin.Application implements
 
     private final Select select = new Select();
     private final Label selectedTask = new Label("Selected task",
-            ContentMode.XHTML);
+            ContentMode.HTML);
 
     public LinkedList<?> exampleTasks = new LinkedList<Object>();
 
