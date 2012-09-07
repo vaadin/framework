@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -405,8 +405,8 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * </pre>
      * 
      * <p>
-     * The contents of a caption are automatically quoted, so no raw XHTML can
-     * be rendered in a caption. The validity of the used character encoding,
+     * The contents of a caption are automatically quoted, so no raw HTML can be
+     * rendered in a caption. The validity of the used character encoding,
      * usually UTF-8, is not checked.
      * </p>
      * 

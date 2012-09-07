@@ -90,7 +90,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * Creates a new empty panel with caption. Default layout is used.
      * 
      * @param caption
-     *            the caption used in the panel (HTML/XHTML).
+     *            the caption used in the panel (HTML).
      */
     public Panel(String caption) {
         this(caption, null);
@@ -100,7 +100,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * Creates a new empty panel with the given caption and content.
      * 
      * @param caption
-     *            the caption of the panel (HTML/XHTML).
+     *            the caption of the panel (HTML).
      * @param content
      *            the content used in the panel.
      */
@@ -112,7 +112,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     /**
      * Sets the caption of the panel.
      * 
-     * Note that the caption is interpreted as HTML/XHTML and therefore care
+     * Note that the caption is interpreted as HTML and therefore care
      * should be taken not to enable HTML injection and XSS attacks using panel
      * captions. This behavior may change in future versions.
      * 

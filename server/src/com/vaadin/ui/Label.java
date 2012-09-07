@@ -68,7 +68,7 @@ public class Label extends AbstractComponent implements Property<String>,
     public static final ContentMode CONTENT_PREFORMATTED = ContentMode.PREFORMATTED;
 
     /**
-     * @deprecated From 7.0, use {@link ContentMode#XHTML} instead
+     * @deprecated From 7.0, use {@link ContentMode#HTML} instead
      */
     @Deprecated
     public static final ContentMode CONTENT_XHTML = ContentMode.HTML;
@@ -432,9 +432,9 @@ public class Label extends AbstractComponent implements Property<String>,
      * 
      * <p>
      * In RAW, PREFORMATTED and TEXT modes, the label contents are compared as
-     * is. In XML, UIDL and XHTML modes, only CDATA is compared and tags
-     * ignored. If the other object is not a Label, its toString() return value
-     * is used in comparison.
+     * is. In XML, UIDL and HTML modes, only CDATA is compared and tags ignored.
+     * If the other object is not a Label, its toString() return value is used
+     * in comparison.
      * </p>
      * 
      * @param other

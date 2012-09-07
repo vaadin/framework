@@ -211,7 +211,6 @@ public abstract class BootstrapHandler implements RequestHandler {
                 document.baseUri());
 
         document.child(0).before(doctype);
-        document.body().parent().attr("xmlns", "http://www.w3.org/1999/xhtml");
 
         Element head = document.head();
         head.appendElement("meta").attr("http-equiv", "Content-Type")

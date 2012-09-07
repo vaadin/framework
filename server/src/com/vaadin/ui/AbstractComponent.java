@@ -474,9 +474,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * information on what the description is. This method will trigger a
      * {@link RepaintRequestEvent}.
      * 
-     * The description is displayed as HTML/XHTML in tooltips or directly in
-     * certain components so care should be taken to avoid creating the
-     * possibility for HTML injection and possibly XSS vulnerabilities.
+     * The description is displayed as HTML in tooltips or directly in certain
+     * components so care should be taken to avoid creating the possibility for
+     * HTML injection and possibly XSS vulnerabilities.
      * 
      * @param description
      *            the new description string for the component.

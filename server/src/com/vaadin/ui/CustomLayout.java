@@ -44,7 +44,7 @@ import com.vaadin.shared.ui.customlayout.CustomLayoutState;
  * locations in a way that is suitable for them. One typical example would be to
  * create visual design for a web site as a custom layout: the visual design
  * would define locations for "menu", "body", and "title", for example. The
- * layout would then be implemented as an XHTML template for each theme.
+ * layout would then be implemented as an HTML template for each theme.
  * </p>
  * 
  * <p>

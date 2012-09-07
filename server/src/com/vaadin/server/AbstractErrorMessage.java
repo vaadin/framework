@@ -45,7 +45,7 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
         PREFORMATTED,
 
         /**
-         * Content mode, where the error contains XHTML.
+         * Content mode, where the error contains HTML.
          * 
          */
         HTML,
