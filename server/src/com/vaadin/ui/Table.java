@@ -1678,12 +1678,6 @@ public class Table extends AbstractSelect implements Action.Container,
         super.markAsDirty();
     }
 
-    @Deprecated
-    @Override
-    public void requestRepaintAll() {
-        markAsDirtyRecursive();
-    }
-
     @Override
     public void markAsDirtyRecursive() {
         super.markAsDirtyRecursive();

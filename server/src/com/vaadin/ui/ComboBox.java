@@ -686,12 +686,6 @@ public class ComboBox extends AbstractSelect implements
     }
 
     @Override
-    @Deprecated
-    public void requestRepaint() {
-        markAsDirty();
-    }
-
-    @Override
     public void setFilteringMode(int filteringMode) {
         this.filteringMode = filteringMode;
     }
