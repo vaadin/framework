@@ -30,13 +30,16 @@ import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractLayoutConnector;
 import com.vaadin.client.ui.LayoutClickEventHandler;
-import com.vaadin.client.ui.csslayout.VCssLayout.FlowPane;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.LayoutClickRpc;
 import com.vaadin.shared.ui.csslayout.CssLayoutServerRpc;
 import com.vaadin.shared.ui.csslayout.CssLayoutState;
 import com.vaadin.ui.CssLayout;
 
+/**
+ * Connects the server side widget {@link CssLayout} with the client side
+ * counterpart {@link VCssLayout}
+ */
 @Connect(CssLayout.class)
 public class CssLayoutConnector extends AbstractLayoutConnector {
 
@@ -59,17 +62,34 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
 
     private Map<ComponentConnector, VCaption> childToCaption = new HashMap<ComponentConnector, VCaption>();
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.client.ui.AbstractComponentConnector#init()
+     */
     @Override
     protected void init() {
         super.init();
         rpc = RpcProxy.create(CssLayoutServerRpc.class, this);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.client.ui.AbstractLayoutConnector#getState()
+     */
     @Override
     public CssLayoutState getState() {
         return (CssLayoutState) super.getState();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.client.ui.AbstractComponentConnector#onStateChanged(com.vaadin
+     * .client.communication.StateChangeEvent)
+     */
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
@@ -94,6 +114,13 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
 
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.client.ui.AbstractComponentContainerConnector#
+     * onConnectorHierarchyChange
+     * (com.vaadin.client.ConnectorHierarchyChangeEvent)
+     */
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
         super.onConnectorHierarchyChange(event);
@@ -101,13 +128,12 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
         clickEventHandler.handleEventHandlerRegistration();
 
         int index = 0;
-        FlowPane cssLayoutWidgetContainer = getWidget().panel;
         for (ComponentConnector child : getChildComponents()) {
             VCaption childCaption = childToCaption.get(child);
             if (childCaption != null) {
-                cssLayoutWidgetContainer.addOrMove(childCaption, index++);
+                getWidget().addOrMove(childCaption, index++);
             }
-            cssLayoutWidgetContainer.addOrMove(child.getWidget(), index++);
+            getWidget().addOrMove(child.getWidget(), index++);
         }
 
         // Detach old child widgets and possibly their caption
@@ -116,14 +142,21 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
                 // Skip current children
                 continue;
             }
-            cssLayoutWidgetContainer.remove(child.getWidget());
+            getWidget().remove(child.getWidget());
             VCaption vCaption = childToCaption.remove(child);
             if (vCaption != null) {
-                cssLayoutWidgetContainer.remove(vCaption);
+                getWidget().remove(vCaption);
             }
         }
     }
 
+    /**
+     * Converts a css property string to CamelCase
+     * 
+     * @param cssProperty
+     *            The property string
+     * @return A string converted to camelcase
+     */
     private static final String makeCamelCase(String cssProperty) {
         // TODO this might be cleaner to implement with regexp
         while (cssProperty.contains("-")) {
@@ -142,17 +175,27 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
         return cssProperty;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.client.ui.AbstractComponentConnector#getWidget()
+     */
     @Override
     public VCssLayout getWidget() {
         return (VCssLayout) super.getWidget();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.client.ComponentContainerConnector#updateCaption(com.vaadin
+     * .client.ComponentConnector)
+     */
     @Override
     public void updateCaption(ComponentConnector child) {
         Widget childWidget = child.getWidget();
-        FlowPane cssLayoutWidgetContainer = getWidget().panel;
-        int widgetPosition = cssLayoutWidgetContainer
-                .getWidgetIndex(childWidget);
+        int widgetPosition = getWidget().getWidgetIndex(childWidget);
 
         VCaption caption = childToCaption.get(child);
         if (VCaption.isNeeded(child.getState())) {
@@ -162,13 +205,12 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
             }
             if (!caption.isAttached()) {
                 // Insert caption at widget index == before widget
-                cssLayoutWidgetContainer.insert(caption, widgetPosition);
+                getWidget().insert(caption, widgetPosition);
             }
             caption.updateCaption();
         } else if (caption != null) {
             childToCaption.remove(child);
-            cssLayoutWidgetContainer.remove(caption);
+            getWidget().remove(caption);
         }
     }
-
 }

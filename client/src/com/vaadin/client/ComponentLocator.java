@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.SubPartAware;
+import com.vaadin.client.ui.csslayout.VCssLayout;
 import com.vaadin.client.ui.gridlayout.VGridLayout;
 import com.vaadin.client.ui.orderedlayout.VOrderedLayout;
 import com.vaadin.client.ui.tabsheet.VTabsheetPanel;
@@ -507,6 +508,14 @@ public class ComponentLocator {
                     continue;
                 }
 
+                // FlowPane in CSSLayout has been removed -> skip it
+                if (w instanceof VCssLayout
+                        && "VCssLayout$FlowPane".equals(widgetClassName)) {
+                    continue;
+                }
+
+                // ChildComponentContainer has been removed and replaced with
+                // VOrderLayout.Slot's
                 if (w instanceof VOrderedLayout
                         && "ChildComponentContainer".equals(widgetClassName)) {
                     widgetClassName = "VOrderedLayout$Slot";

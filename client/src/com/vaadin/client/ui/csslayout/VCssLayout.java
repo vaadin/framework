@@ -16,52 +16,40 @@
 
 package com.vaadin.client.ui.csslayout;
 
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.ui.themes.BaseTheme;
 
-public class VCssLayout extends SimplePanel {
-    public static final String TAGNAME = "csslayout";
-    public static final String CLASSNAME = "v-" + TAGNAME;
+/**
+ * VCCSlayout is a layout which supports configuring it's children with CSS
+ * selectors
+ */
+public class VCssLayout extends FlowPanel {
 
-    FlowPane panel = new FlowPane();
+    public static final String CLASSNAME = "v-csslayout";
 
-    Element margin = DOM.createDiv();
-
+    /**
+     * Default constructor
+     */
     public VCssLayout() {
         super();
-        getElement().appendChild(margin);
         setStyleName(BaseTheme.UI_LAYOUT);
         addStyleName(CLASSNAME);
-        margin.setClassName(CLASSNAME + "-margin");
-        setWidget(panel);
     }
 
-    @Override
-    protected Element getContainerElement() {
-        return margin;
-    }
-
-    public class FlowPane extends FlowPanel {
-
-        public FlowPane() {
-            super();
-            setStyleName(CLASSNAME + "-container");
-        }
-
-        void addOrMove(Widget child, int index) {
-            if (child.getParent() == this) {
-                int currentIndex = getWidgetIndex(child);
-                if (index == currentIndex) {
-                    return;
-                }
+    /**
+     * Add or move a child in the
+     * 
+     * @param child
+     * @param index
+     */
+    void addOrMove(Widget child, int index) {
+        if (child.getParent() == this) {
+            int currentIndex = getWidgetIndex(child);
+            if (index == currentIndex) {
+                return;
             }
-            insert(child, index);
         }
-
+        insert(child, index);
     }
-
 }
