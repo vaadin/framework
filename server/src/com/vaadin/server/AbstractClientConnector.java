@@ -78,7 +78,9 @@ public abstract class AbstractClientConnector implements ClientConnector {
 
     private ClientConnector parent;
 
-    /* Documentation copied from interface */
+    /**
+     * @deprecated As of 7.0.0, use {@link #markAsDirty()} instead
+     */
     @Deprecated
     @Override
     public void requestRepaint() {
@@ -390,6 +392,9 @@ public abstract class AbstractClientConnector implements ClientConnector {
         return Logger.getLogger(AbstractClientConnector.class.getName());
     }
 
+    /**
+     * @deprecated As of 7.0.0, use {@link #markAsDirtyRecursive()} instead
+     */
     @Override
     @Deprecated
     public void requestRepaintAll() {
