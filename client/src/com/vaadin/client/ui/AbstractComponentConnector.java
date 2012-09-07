@@ -29,6 +29,7 @@ import com.vaadin.client.ComponentContainerConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.ServerConnector;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
@@ -44,7 +45,6 @@ import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.TabIndexState;
-import com.vaadin.ui.themes.BaseTheme;
 
 public abstract class AbstractComponentConnector extends AbstractConnector
         implements ComponentConnector {
@@ -73,7 +73,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         getConnection().getVTooltip().connectHandlersToWidget(getWidget());
 
         // Set the core 'v' style name for the widget
-        getWidget().setStyleName(BaseTheme.UI_WIDGET, true);
+        getWidget().setStyleName(StyleConstants.UI_WIDGET, true);
     }
 
     /**

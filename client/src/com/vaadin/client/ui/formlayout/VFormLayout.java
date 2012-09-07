@@ -40,7 +40,6 @@ import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.ui.themes.BaseTheme;
 
 /**
  * Two col Layout that places caption on left col and field on right col
@@ -53,7 +52,7 @@ public class VFormLayout extends SimplePanel {
 
     public VFormLayout() {
         super();
-        setStyleName(BaseTheme.UI_LAYOUT);
+        setStyleName(StyleConstants.UI_LAYOUT);
         addStyleName(CLASSNAME);
         table = new VFormLayoutTable();
         setWidget(table);

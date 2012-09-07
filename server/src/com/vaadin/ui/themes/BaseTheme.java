@@ -55,15 +55,4 @@ public class BaseTheme {
      * overflow.
      */
     public static final String CLIP = "v-clip";
-
-    /**
-     * Added to all UI components
-     */
-    public static final String UI_WIDGET = "v-widget";
-
-    /**
-     * Added to all layouts to denote they are layouts
-     */
-    public static final String UI_LAYOUT = "v-layout";
-
 }

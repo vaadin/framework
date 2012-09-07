@@ -32,10 +32,10 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.LayoutManager;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.client.Util;
 import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.ui.themes.BaseTheme;
 
 /**
  * Base class for ordered layouts
@@ -60,7 +60,7 @@ public class VOrderedLayout extends FlowPanel {
      * Constructor
      */
     public VOrderedLayout() {
-        setStyleName(BaseTheme.UI_LAYOUT);
+        setStyleName(StyleConstants.UI_LAYOUT);
         setVertical(true);
     }
 
@@ -387,7 +387,7 @@ public class VOrderedLayout extends FlowPanel {
                 if (caption == null) {
                     caption = DOM.createDiv();
                     captionWrap = DOM.createDiv();
-                    captionWrap.addClassName(BaseTheme.UI_WIDGET);
+                    captionWrap.addClassName(StyleConstants.UI_WIDGET);
                     captionWrap.addClassName("v-has-caption");
                     getElement().appendChild(captionWrap);
                     captionWrap.appendChild(getWidget().getElement());

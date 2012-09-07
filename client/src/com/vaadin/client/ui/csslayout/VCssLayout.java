@@ -18,7 +18,7 @@ package com.vaadin.client.ui.csslayout;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.ui.themes.BaseTheme;
+import com.vaadin.client.StyleConstants;
 
 /**
  * VCCSlayout is a layout which supports configuring it's children with CSS
@@ -33,7 +33,7 @@ public class VCssLayout extends FlowPanel {
      */
     public VCssLayout() {
         super();
-        setStyleName(BaseTheme.UI_LAYOUT);
+        setStyleName(StyleConstants.UI_LAYOUT);
         addStyleName(CLASSNAME);
     }
 

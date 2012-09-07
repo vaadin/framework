@@ -32,6 +32,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.LayoutManager;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
@@ -39,7 +40,6 @@ import com.vaadin.client.ui.layout.ComponentConnectorLayoutSlot;
 import com.vaadin.client.ui.layout.VLayoutSlot;
 import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.ui.themes.BaseTheme;
 
 public class VGridLayout extends ComplexPanel {
 
@@ -71,7 +71,7 @@ public class VGridLayout extends ComplexPanel {
         spacingStyle.setPosition(Position.ABSOLUTE);
         getElement().appendChild(spacingMeasureElement);
 
-        setStyleName(BaseTheme.UI_LAYOUT);
+        setStyleName(StyleConstants.UI_LAYOUT);
         addStyleName(CLASSNAME);
     }
 

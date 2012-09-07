@@ -29,10 +29,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.VCaptionWrapper;
-import com.vaadin.ui.themes.BaseTheme;
 
 /**
  * Custom Layout implements complex layout defined with HTML template.
@@ -83,7 +83,7 @@ public class VCustomLayout extends ComplexPanel {
             DOM.setStyleAttribute(getElement(), "position", "relative");
         }
 
-        setStyleName(BaseTheme.UI_LAYOUT);
+        setStyleName(StyleConstants.UI_LAYOUT);
         addStyleName(CLASSNAME);
     }
 

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -26,4 +26,13 @@ public class StyleConstants {
     public static final String VERTICAL_SPACING = "vspacing";
     public static final String HORIZONTAL_SPACING = "hspacing";
 
+    /**
+     * Added to all UI components
+     */
+    public static final String UI_WIDGET = "v-widget";
+
+    /**
+     * Added to all layouts to denote they are layouts
+     */
+    public static final String UI_LAYOUT = "v-layout";
 }
