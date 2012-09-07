@@ -1,11 +1,11 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2098 extends Application {
+public class Ticket2098 extends LegacyApplication {
 
     private static final String info = "First tab hidden, second should initially be selected";
 

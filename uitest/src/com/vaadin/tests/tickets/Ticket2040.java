@@ -7,7 +7,7 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2040 extends com.vaadin.Application {
+public class Ticket2040 extends com.vaadin.LegacyApplication {
 
     TextField f = new TextField();
 

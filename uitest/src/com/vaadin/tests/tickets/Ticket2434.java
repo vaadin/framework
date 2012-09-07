@@ -1,11 +1,11 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.tests.TestForTablesInitialColumnWidthLogicRendering;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2434 extends Application {
+public class Ticket2434 extends LegacyApplication {
 
     @Override
     public void init() {

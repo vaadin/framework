@@ -27,7 +27,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class UsingObjectsInSelect extends com.vaadin.Application implements
+public class UsingObjectsInSelect extends com.vaadin.LegacyApplication implements
         ValueChangeListener {
 
     private final Select select = new Select();

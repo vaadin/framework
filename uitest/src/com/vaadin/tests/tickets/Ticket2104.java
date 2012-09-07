@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.MethodProperty;
@@ -15,7 +15,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2104 extends Application {
+public class Ticket2104 extends LegacyApplication {
 
     private static final Label info = new Label(
             "Click event should _always_ come trough. Switching features on/off should immediatly affect the tree (verify w/ debug window)",

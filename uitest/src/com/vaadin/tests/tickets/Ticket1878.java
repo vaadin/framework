@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Random;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.server.Resource;
@@ -27,7 +27,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket1878 extends Application {
+public class Ticket1878 extends LegacyApplication {
 
     private Layout orderedLayout;
     private Layout gridLayout;

@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
@@ -10,7 +10,7 @@ import com.vaadin.ui.Table.CellStyleGenerator;
 import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2125 extends Application {
+public class Ticket2125 extends LegacyApplication {
 
     @Override
     public void init() {

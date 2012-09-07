@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
@@ -10,7 +10,7 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2151 extends Application {
+public class Ticket2151 extends LegacyApplication {
 
     private Label status;
 

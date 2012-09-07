@@ -6,7 +6,7 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2341 extends com.vaadin.Application {
+public class Ticket2341 extends com.vaadin.LegacyApplication {
     @Override
     public void init() {
         LegacyWindow main = new LegacyWindow();

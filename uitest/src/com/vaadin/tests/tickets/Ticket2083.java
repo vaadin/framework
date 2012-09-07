@@ -1,12 +1,12 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2083 extends Application {
+public class Ticket2083 extends LegacyApplication {
 
     @Override
     public void init() {

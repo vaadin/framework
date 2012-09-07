@@ -7,7 +7,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket1365 extends com.vaadin.Application implements Handler {
+public class Ticket1365 extends com.vaadin.LegacyApplication implements Handler {
 
     TextField f = new TextField();
 

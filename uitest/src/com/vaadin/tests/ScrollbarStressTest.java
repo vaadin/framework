@@ -1,6 +1,6 @@
 package com.vaadin.tests;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -17,7 +17,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
 
-public class ScrollbarStressTest extends Application {
+public class ScrollbarStressTest extends LegacyApplication {
 
     final LegacyWindow main = new LegacyWindow("Scrollbar Stress Test");
 

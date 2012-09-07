@@ -42,7 +42,7 @@ import com.vaadin.ui.VerticalLayout;
  * @author Vaadin Ltd.
  * 
  */
-public class RandomLayoutStress extends com.vaadin.Application {
+public class RandomLayoutStress extends com.vaadin.LegacyApplication {
 
     private final Random seededRandom = new Random(1);
 

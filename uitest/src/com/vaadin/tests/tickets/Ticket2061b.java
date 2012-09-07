@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -21,7 +21,7 @@ import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 
-public class Ticket2061b extends Application implements
+public class Ticket2061b extends LegacyApplication implements
         SelectedTabChangeListener {
 
     private LegacyWindow mainWindow;

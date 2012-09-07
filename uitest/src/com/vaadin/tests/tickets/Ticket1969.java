@@ -10,7 +10,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket1969 extends com.vaadin.Application {
+public class Ticket1969 extends com.vaadin.LegacyApplication {
 
     @Override
     public void init() {

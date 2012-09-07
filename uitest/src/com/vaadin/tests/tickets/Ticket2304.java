@@ -1,13 +1,13 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.themes.Reindeer;
 
-public class Ticket2304 extends Application {
+public class Ticket2304 extends LegacyApplication {
 
     @Override
     public void init() {

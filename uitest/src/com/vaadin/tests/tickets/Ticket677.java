@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -21,7 +21,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket677 extends Application {
+public class Ticket677 extends LegacyApplication {
 
     private static final Label info = new Label(
             "<li> keep debug window open to see variable changes"

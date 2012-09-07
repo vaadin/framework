@@ -6,14 +6,14 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Window;
 
 public class AddRemoveSubWindow {
 
-    public class TestApp extends Application {
+    public class TestApp extends LegacyApplication {
 
         @Override
         public void init() {

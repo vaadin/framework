@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
@@ -11,7 +11,7 @@ import com.vaadin.ui.VerticalSplitPanel;
  * properly. Scrollbars will disappear if "shaking" content a bit, like
  * selecting tests in area.
  */
-public class Ticket2901 extends Application {
+public class Ticket2901 extends LegacyApplication {
 
     @Override
     public void init() {

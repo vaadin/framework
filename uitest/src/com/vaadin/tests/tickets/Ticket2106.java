@@ -2,7 +2,7 @@ package com.vaadin.tests.tickets;
 
 import java.util.Date;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.server.CustomizedSystemMessages;
 import com.vaadin.server.SystemMessages;
 import com.vaadin.ui.Button;
@@ -10,7 +10,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2106 extends Application {
+public class Ticket2106 extends LegacyApplication {
 
     private static CustomizedSystemMessages msgs = new CustomizedSystemMessages();
     static {

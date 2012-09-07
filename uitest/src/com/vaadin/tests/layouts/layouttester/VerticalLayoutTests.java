@@ -1,6 +1,6 @@
 package com.vaadin.tests.layouts.layouttester;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.server.Resource;
 import com.vaadin.server.SystemError;
 import com.vaadin.server.ThemeResource;
@@ -26,7 +26,7 @@ import com.vaadin.ui.VerticalLayout;
 
 public class VerticalLayoutTests extends AbstractLayoutTests {
 
-    public VerticalLayoutTests(Application application) {
+    public VerticalLayoutTests(LegacyApplication application) {
         super();
     }
 

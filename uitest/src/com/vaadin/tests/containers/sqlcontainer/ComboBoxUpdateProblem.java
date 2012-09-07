@@ -1,6 +1,6 @@
 package com.vaadin.tests.containers.sqlcontainer;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.ui.AbstractSelect.Filtering;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.UI;
@@ -8,7 +8,7 @@ import com.vaadin.ui.UI;
 /**
  * See http://dev.vaadin.com/ticket/9155 .
  */
-public class ComboBoxUpdateProblem extends Application {
+public class ComboBoxUpdateProblem extends LegacyApplication {
     private final DatabaseHelper databaseHelper = new DatabaseHelper();
 
     @Override

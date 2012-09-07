@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
@@ -9,7 +9,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket2227OrderedlayoutInTable extends Application {
+public class Ticket2227OrderedlayoutInTable extends LegacyApplication {
 
     @Override
     public void init() {

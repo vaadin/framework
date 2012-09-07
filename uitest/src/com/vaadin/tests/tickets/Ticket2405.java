@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -13,7 +13,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket2405 extends Application {
+public class Ticket2405 extends LegacyApplication {
 
     private Label label;
     private HorizontalSplitPanel split;

@@ -37,7 +37,7 @@ import com.vaadin.ui.UI.LegacyWindow;
  * @since 4.0.0
  * 
  */
-public class TreeFilesystem extends com.vaadin.Application implements
+public class TreeFilesystem extends com.vaadin.LegacyApplication implements
         Tree.ExpandListener {
 
     // Filesystem explorer panel and it's components

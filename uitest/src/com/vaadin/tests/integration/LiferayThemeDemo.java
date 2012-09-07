@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.Action;
@@ -57,7 +57,7 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.LiferayTheme;
 
 @SuppressWarnings("serial")
-public class LiferayThemeDemo extends Application {
+public class LiferayThemeDemo extends LegacyApplication {
 
     @SuppressWarnings("deprecation")
     private static final Date DATE = new Date(2009 - 1900, 6 - 1, 2);

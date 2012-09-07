@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -9,7 +9,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket1230 extends Application {
+public class Ticket1230 extends LegacyApplication {
 
     private static final Object PROPERTY_ID = new Object();
     private static final Object NULL_ITEM_ID = new Object();

@@ -1,10 +1,10 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2245 extends Application {
+public class Ticket2245 extends LegacyApplication {
 
     @Override
     public void init() {

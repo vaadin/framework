@@ -8,7 +8,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket1834PanelScrolling extends com.vaadin.Application {
+public class Ticket1834PanelScrolling extends com.vaadin.LegacyApplication {
 
     private static final int ROWS = 50;
 

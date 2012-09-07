@@ -43,7 +43,7 @@ import com.vaadin.ui.UI.LegacyWindow;
  * @since 4.0.0
  * 
  */
-public class CustomLayoutDemo extends com.vaadin.Application implements
+public class CustomLayoutDemo extends com.vaadin.LegacyApplication implements
         Listener {
 
     private CustomLayout mainLayout = null;

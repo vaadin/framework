@@ -3,7 +3,7 @@ package com.vaadin.server;
 import java.io.Serializable;
 import java.util.Properties;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.UI;
 
@@ -41,7 +41,7 @@ class ServletPortletHelper implements Serializable {
         }
     }
 
-    static Class<? extends Application> getLegacyApplicationClass(
+    static Class<? extends LegacyApplication> getLegacyApplicationClass(
             VaadinService vaadinService) throws ApplicationClassException {
         Properties initParameters = vaadinService.getDeploymentConfiguration()
                 .getInitParameters();
@@ -55,7 +55,7 @@ class ServletPortletHelper implements Serializable {
 
         try {
             return classLoader.loadClass(applicationParameter).asSubclass(
-                    Application.class);
+                    LegacyApplication.class);
         } catch (final ClassNotFoundException e) {
             throw new ApplicationClassException(
                     "Failed to load application class: " + applicationParameter,

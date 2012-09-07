@@ -14,7 +14,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.UI.LegacyWindow;
 
 @SuppressWarnings("serial")
-public class ButtonsTest extends com.vaadin.Application {
+public class ButtonsTest extends com.vaadin.LegacyApplication {
 
     final UI.LegacyWindow main = new LegacyWindow("Button states & themes");
 

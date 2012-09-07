@@ -2,7 +2,7 @@ package com.vaadin.tests.tickets;
 
 import java.util.Random;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.UserError;
@@ -16,7 +16,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket2029 extends Application {
+public class Ticket2029 extends LegacyApplication {
 
     int COMPONENTS;
     int DIM1, DIM2;

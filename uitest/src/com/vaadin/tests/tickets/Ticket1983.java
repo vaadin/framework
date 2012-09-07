@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
@@ -16,7 +16,7 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * Test class for ticket 1983
  */
-public class Ticket1983 extends Application {
+public class Ticket1983 extends LegacyApplication {
 
     @Override
     public void init() {

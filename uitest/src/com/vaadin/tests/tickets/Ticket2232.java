@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
@@ -9,7 +9,7 @@ import com.vaadin.ui.Layout.SpacingHandler;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket2232 extends Application {
+public class Ticket2232 extends LegacyApplication {
 
     @Override
     public void init() {

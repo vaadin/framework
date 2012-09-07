@@ -1,6 +1,6 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.Action;
@@ -11,7 +11,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket1857 extends Application implements Handler {
+public class Ticket1857 extends LegacyApplication implements Handler {
 
     @Override
     public void init() {

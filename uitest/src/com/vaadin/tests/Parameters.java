@@ -41,7 +41,7 @@ import com.vaadin.ui.VerticalLayout;
  * 
  * @since 3.1.1
  */
-public class Parameters extends com.vaadin.Application implements
+public class Parameters extends com.vaadin.LegacyApplication implements
         RequestHandler {
 
     private final Label context = new Label();

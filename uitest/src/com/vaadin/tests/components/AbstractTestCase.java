@@ -1,10 +1,10 @@
 package com.vaadin.tests.components;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WebBrowser;
 
-public abstract class AbstractTestCase extends Application {
+public abstract class AbstractTestCase extends LegacyApplication {
 
     protected abstract String getDescription();
 

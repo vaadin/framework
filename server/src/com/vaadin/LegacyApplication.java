@@ -44,7 +44,7 @@ import com.vaadin.ui.UI;
  * @since 7.0
  */
 @Deprecated
-public abstract class Application extends AbstractUIProvider implements
+public abstract class LegacyApplication extends AbstractUIProvider implements
         ErrorListener {
     /**
      * Ignore initial / and then get everything up to the next /

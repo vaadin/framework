@@ -12,7 +12,7 @@ import com.vaadin.ui.Select;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Window;
 
-public class Ticket1819 extends com.vaadin.Application {
+public class Ticket1819 extends com.vaadin.LegacyApplication {
 
     LinkedList<Select> listOfAllFields = new LinkedList<Select>();
 

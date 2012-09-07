@@ -29,7 +29,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.server.AbstractUIProvider;
 import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.LegacyVaadinServlet;
@@ -105,16 +105,16 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     }
 
     @Override
-    protected Class<? extends Application> getApplicationClass()
+    protected Class<? extends LegacyApplication> getApplicationClass()
             throws ClassNotFoundException {
-        return getClassToRun().asSubclass(Application.class);
+        return getClassToRun().asSubclass(LegacyApplication.class);
     }
 
     @Override
     protected boolean shouldCreateApplication(WrappedHttpServletRequest request)
             throws ServletException {
         try {
-            return Application.class.isAssignableFrom(getClassToRun());
+            return LegacyApplication.class.isAssignableFrom(getClassToRun());
         } catch (ClassNotFoundException e) {
             throw new ServletException(e);
         }
@@ -133,7 +133,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
                         return (Class<? extends UI>) classToRun;
                     }
                 });
-            } else if (Application.class.isAssignableFrom(classToRun)) {
+            } else if (LegacyApplication.class.isAssignableFrom(classToRun)) {
                 // Avoid using own UIProvider for legacy Application
             } else if (UIProvider.class.isAssignableFrom(classToRun)) {
                 session.addUIProvider((UIProvider) classToRun.newInstance());

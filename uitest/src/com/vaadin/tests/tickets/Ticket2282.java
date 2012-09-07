@@ -1,13 +1,13 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2282 extends Application {
+public class Ticket2282 extends LegacyApplication {
 
     private FormLayout layout1;
     private FormLayout layout2;

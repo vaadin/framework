@@ -19,12 +19,12 @@ package com.vaadin.server;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
 
 public class LegacyVaadinServlet extends VaadinServlet {
 
-    protected Class<? extends Application> getApplicationClass()
+    protected Class<? extends LegacyApplication> getApplicationClass()
             throws ClassNotFoundException {
         try {
             return ServletPortletHelper
@@ -34,10 +34,10 @@ public class LegacyVaadinServlet extends VaadinServlet {
         }
     }
 
-    protected Application getNewApplication(HttpServletRequest request)
+    protected LegacyApplication getNewApplication(HttpServletRequest request)
             throws ServletException {
         try {
-            Class<? extends Application> applicationClass = getApplicationClass();
+            Class<? extends LegacyApplication> applicationClass = getApplicationClass();
             return applicationClass.newInstance();
         } catch (Exception e) {
             throw new ServletException(e);
@@ -60,7 +60,7 @@ public class LegacyVaadinServlet extends VaadinServlet {
             // XXX Must update details here so they are available in init.
             session.getBrowser().updateRequestDetails(request);
 
-            Application legacyApplication = getNewApplication(request);
+            LegacyApplication legacyApplication = getNewApplication(request);
             legacyApplication.doInit();
             session.addUIProvider(legacyApplication);
         }

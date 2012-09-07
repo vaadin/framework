@@ -10,7 +10,7 @@ import java.util.Date;
 
 import javax.imageio.ImageIO;
 
-import com.vaadin.Application;
+import com.vaadin.LegacyApplication;
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.RequestHandler;
@@ -20,7 +20,7 @@ import com.vaadin.server.WrappedResponse;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket1589 extends Application {
+public class Ticket1589 extends LegacyApplication {
 
     @Override
     public void init() {
