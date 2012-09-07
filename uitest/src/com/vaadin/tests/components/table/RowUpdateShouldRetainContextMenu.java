@@ -36,8 +36,11 @@ public class RowUpdateShouldRetainContextMenu extends TestBase {
                         sleep(1000);
                     } catch (InterruptedException ie) {
                     }
-                    synchronized (RowUpdateShouldRetainContextMenu.this) {
+                    getContext().getLock().lock();
+                    try {
                         indicator.setValue(progress += 0.01);
+                    } finally {
+                        getContext().getLock().unlock();
                     }
                 }
             }

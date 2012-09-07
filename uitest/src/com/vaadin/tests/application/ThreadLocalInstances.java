@@ -34,8 +34,11 @@ public class ThreadLocalInstances extends AbstractTestCase {
                 Thread thread = new Thread() {
                     @Override
                     public void run() {
-                        synchronized (ThreadLocalInstances.this) {
+                        getSession().getLock().lock();
+                        try {
                             reportCurrentStatus("background thread");
+                        } finally {
+                            getSession().getLock().unlock();
                         }
                     }
                 };

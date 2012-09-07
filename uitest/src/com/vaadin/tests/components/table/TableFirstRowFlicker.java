@@ -43,7 +43,8 @@ public class TableFirstRowFlicker extends LegacyApplication {
             @Override
             public void run() {
                 while (t != null) {
-                    synchronized (t.getUI().getSession()) {
+                    t.getUI().getSession().getLock().lock();
+                    try {
                         int firstId = t.getCurrentPageFirstItemIndex();
                         Object selected = t.getValue();
                         t.setContainerDataSource(buildContainer());
@@ -51,6 +52,8 @@ public class TableFirstRowFlicker extends LegacyApplication {
                         t.setCurrentPageFirstItemIndex(firstId);
                         // lighter alternative for all of above
                         // t.refreshRowCache();
+                    } finally {
+                        t.getUI().getSession().getLock().unlock();
                     }
                     try {
                         Thread.sleep(500);
