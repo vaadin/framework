@@ -52,7 +52,7 @@
       <p>
         <b>Vaadin</b> is a Java framework for building modern web applications that look
         great, perform well and make you and your users happy. <b>Vaadin</b> is available
-        under the Apache 2 license (see license.html).
+        under the Apache 2 license (see <tt>license.html</tt>).
       </p>
       
       <p>
@@ -60,7 +60,6 @@
       </p>
 
       <ul>
-<<<<<<< HEAD
         <li>Vaadin server and client side classes (<tt>/com</tt>)</li>
         <li>Vaadin server and client side sources (<tt>/com</tt>)</li>
         <li>The default widget set (<tt>/VAADIN/widgetsets</tt>)</li>
@@ -68,87 +67,95 @@
         <li>Release notes (<tt>/release-notes.html</tt>)</li>
         <li>Licensing information (<tt>/license.html</tt>)</li>
       </ul>
-=======
-  <li><a href="http://dev.vaadin.com/ticket/8932">#8932</a>: Custom build from 6.8</li>
-  <li><a href="http://dev.vaadin.com/ticket/8193">#8193</a>: Enter ClickShortcut not working in a PopupView</li>
-  <li><a href="http://dev.vaadin.com/ticket/8584">#8584</a>: Invalid behavior of multiselection for com.vaadin.ui.Table</li>
-  <li><a href="http://dev.vaadin.com/ticket/9136">#9136</a>: Tree throws wrong ItemClickEvent in IE9 (when immediate is set to true)</li>
-  <li><a href="http://dev.vaadin.com/ticket/9139">#9139</a>: TextArea in Internet Explorer</li>
-  <li><a href="http://dev.vaadin.com/ticket/9188">#9188</a>: Error parsing maps with empty string as the last value</li>
-  <li><a href="http://dev.vaadin.com/ticket/7036">#7036</a>: Enable scrollbars on a read-only RichTextArea</li>
-  <li><a href="http://dev.vaadin.com/ticket/8109">#8109</a>: Iterating over Table multiselection causes multiple Vaadin SQLContainer full table scans</li>
-  <li><a href="http://dev.vaadin.com/ticket/8144">#8144</a>: Can't use LoginForm inside an iframe</li>
-  <li><a href="http://dev.vaadin.com/ticket/9202">#9202</a>: Test using Chrome 21</li>
-  <li><a href="http://dev.vaadin.com/ticket/6219">#6219</a>: PDF viewer draws itself over floating Vaadin elements</li>
-  <li><a href="http://dev.vaadin.com/ticket/8230">#8230</a>: TextField's input prompt is persisted if Alt is depressed while in focus (Chrome)</li>
-  <li><a href="http://dev.vaadin.com/ticket/8399">#8399</a>: On IE 8 or Google Chrome 16, VOverlay components aren't display on top of Applet</li>
-  <li><a href="http://dev.vaadin.com/ticket/9148">#9148</a>: Oracle TIMESTAMP not supported in SQLContainer</li>
-  <li><a href="http://dev.vaadin.com/ticket/9189">#9189</a>: Variables sent to the DragAndDropManager are not logged in the debug console</li>
-  <li><a href="http://dev.vaadin.com/ticket/9128">#9128</a>: Typo in vaadin book</li>
-  <li><a href="http://dev.vaadin.com/ticket/8736">#8736</a>: com.vaadin.ui.Table component return null value on multiple selection</li>
-  <li><a href="http://dev.vaadin.com/ticket/9132">#9132</a>: No entries in Table with a defined pageLength causes Table to shrink in height</li>
-  <li><a href="http://dev.vaadin.com/ticket/9147">#9147</a>: SQLContainer Filters - Comparison against NULL value produces error</li>
-  <li><a href="http://dev.vaadin.com/ticket/9154">#9154</a>: NumberFormatException in client-side component VSplitPanel</li>
-  <li><a href="http://dev.vaadin.com/ticket/9171">#9171</a>: StreamVariable never cleaned up in CommunicationManager</li>
-  <li><a href="http://dev.vaadin.com/ticket/9187">#9187</a>: No horizontal scroll bar on empty Table</li>
-  <li><a href="http://dev.vaadin.com/ticket/8838">#8838</a>: Drag and Drop in Google Chrome causes ArrayIndexOutOfBoundsException in AbstractCommunicationManager#convertMap (1612)</li>
-  <li><a href="http://dev.vaadin.com/ticket/8917">#8917</a>: input prompt text is leaking into the component's value</li>
-      </ul>
-          
-      <p>
-        The <a
-        href="http://dev.vaadin.com/query?status=closed&resolution=fixed&milestone=Vaadin+@version@&order=priority">full
-        list of the closed issues</a> can be found at <tt>dev.vaadin.com</tt>.
-      </p>
->>>>>>> remotes/origin/6.8
 
       <h2 id="enhancements">Enhancements in Vaadin @version-minor@</h2>
 
       <p>
-        @version-minor@ is the third development release of the upcoming Version 7 of the
-        Vaadin Framework. It introduces the third set of new features in Vaadin 7, for the
-        purpose of receiving feedback about the changes.
+        @version-minor@ is the first beta release release of the upcoming Version 7 of the
+        Vaadin Framework. It introduces the final major set of new features in Vaadin 7,
+        for the purpose of receiving feedback about the changes.
       </p>
 
-      <p>The major changes in this third alpha phase are:</p>
+      <p>The major changes in this first beta release are:</p>
+
+      <ul>
+        <li>Applications are now written by extending the <b>UI</b> class
+          <ul>
+            <li>UIs use heartbeat to detect closing</li>
+          </ul>
+        </li>
+        <li>The <b>Application</b> class is removed altogether</li>
+        <li><b>ApplicationServlet</b> is replaced with <b>VaadinServlet</b></li>
+        <li><b>ApplicationResource</b> is replaced with <b>ConnectorResource</b></li>
+        <li>Themeing with <a href="http://sass-lang.com/">SASS</a> in addition to CSS</li>
+        <li>Add-ons can modify the startup page</i></li>
+        <li>All <tt>addListener()</tt> methods have changed to listener-specific methods, such as <tt>addClickListener()</tt>, <tt>addValueChangeListener()</tt>, etc.</li>
+        <li>Packaging has changed, now in a ZIP package (again)</li>
+      </ul>
+
+      <p>
+        The following major changes were first introduced in the alpha releases:
+      </p>
 
       <ul>
         <li>GWT is now built into Vaadin Framework
           <ul>
             <li>New SuperDevMode allows debugging client-side Java code in the browser without any plugins</li>
-          </ul>
         </li>
-        <li>Support for JavaScript components - GWT integration code not required</li>
-        <li>Handle JavaScript callbacks on the server-side</li>
-        <li>Component and root extensions</li>
         <li>Navigation API for view navigation
           <ul>
             <li>View navigation with bookmarking/linking with URI fragments and browser history support</li>
             <li>Access control for views, view change confirmation</li>
           </ul>
         </li>
+        <li>Component and root extensions</li>
         <li>Resource loading (JS/CSS) by the framework</li>
+        <li>Complete overhaul of the client-server communication architecture
+          <ul>
+            <li>All add-on components that have widgets need to be ported to Vaadin 7</li>
+            <li>Integration of a GWT widget is done in a connector class</li>
+            <li>Component-to-widget mapping now defined on the client-side, in the connector</li>
+            <li>No more Paintable or VariableOwner</li>
+            <li>Server-side component and client-side widget can have a shared state object which is automatically synchronized</li>
+            <li>Both client-side and server-side can make RPC calls to the other side
+              <ul>
+                <li>Communicated in the next request/response</li>
+                <li>No return values</li>
+                <li>Typically for communicating events</li>
+              </ul>
+            </li>
+            <li>Support for JavaScript components - GWT integration code not required</li>
+            <li>Handle JavaScript callbacks on the server-side</li>
+            <li>UIDL is deprecated</li>
+            <li>Compatibility layer for Vaadin 6 included for easy migration</li>
+          </ul>
+        </li>
+        <li><b>Form</b> is deprecated and form hand is replaced with the <b>FieldGroup</b></li>
+        <li>Get computed style of a component from the browser</li>
+        <li>Support for border, padding, and margin in core layout components</li>
       </ul>
         
       <p>
-        The enhancements are described in more detail in the <a
-        href="https://vaadin.com/wiki/-/wiki/Main/Vaadin+7">mini-tutorials</a> in the
-        Vaadin Wiki.
+        There are many other enhancements. Most of them are described in more detail in
+        the <a href="https://vaadin.com/wiki/-/wiki/Main/Vaadin+7">mini-tutorials</a> in
+        the Vaadin Wiki.
       </p>
 
       <p>
         Please see the release notes for <a
-        href="http://vaadin.com/download/prerelease/7.0/7.0.0/7.0.0.alpha1/release-notes.html">alpha1</a>
+        href="http://vaadin.com/download/prerelease/7.0/7.0.0/7.0.0.alpha1/release-notes.html">alpha1</a>,
+        <a
+        href="http://vaadin.com/download/prerelease/7.0/7.0.0/7.0.0.alpha2/release-notes.html">alpha2</a>,
         and <a
-        href="http://vaadin.com/download/prerelease/7.0/7.0.0/7.0.0.alpha2/release-notes.html">alpha2</a>
-        for a complete list of major enhancements for Vaadin 7 so far.
+        href="http://vaadin.com/download/prerelease/7.0/7.0.0/7.0.0.alpha3/release-notes.html">alpha3</a>
+        for the lists of where the major enhancements were introduced.
       </p>
 
       <h3 id="changelog">ChangeLog</h3>
 
       <p>
         For a complete list of changes in this release, please see the <a
-        href="http://dev.vaadin.com/query?status=closed&group=resolution&milestone=Vaadin+7.0.0.alpha3">list
+        href="http://dev.vaadin.com/query?status=closed&group=resolution&milestone=Vaadin+7.0.0.beta1">list
         of closed tickets</a>.
       </p>
 
@@ -382,19 +389,11 @@
       </p>
 
       <ul>
-<<<<<<< HEAD
-        <li>Mozilla Firefox 12</li>
+        <li>Mozilla Firefox 12-14</li>
         <li>Internet Explorer 8-9</li>
         <li>Safari 5</li>
-        <li>Opera 11</li>
-        <li>Google Chrome 19</li>
-=======
-        <li>Mozilla Firefox 3-14</li>
-        <li>Internet Explorer 6-9</li>
-        <li>Safari 4-5</li>
-        <li>Opera 10-12</li>
-        <li>Google Chrome 13-21</li>
->>>>>>> remotes/origin/6.8
+        <li>Opera 11-12</li>
+        <li>Google Chrome 19-21</li>
       </ul>
 
       <p>
