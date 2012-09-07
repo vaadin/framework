@@ -28,6 +28,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
 import javax.portlet.PortletSession;
@@ -75,6 +77,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     private static final Method BOOTSTRAP_PAGE_METHOD = ReflectTools
             .findMethod(BootstrapListener.class, "modifyBootstrapPage",
                     BootstrapPageResponse.class);
+
+    private final Lock lock = new ReentrantLock();
 
     /**
      * An event sent to {@link #start(SessionStartEvent)} when a new Application
@@ -929,15 +933,17 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
             return uI;
         }
         Integer uiId = getUIId(request);
-
-        synchronized (this) {
+        getLock().lock();
+        try {
             uI = uIs.get(uiId);
 
             if (uI == null) {
                 uI = findExistingUi(request);
             }
 
-        } // end synchronized block
+        } finally {
+            getLock().unlock();
+        }
 
         UI.setCurrent(uI);
 
@@ -1288,6 +1294,16 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     public Collection<UIProvider> getUIProviders() {
         return Collections.unmodifiableCollection(uiProviders);
+    }
+
+    /**
+     * Gets the lock that should be used to synchronize usage of data inside
+     * this session.
+     * 
+     * @return the lock that should be used for synchronization
+     */
+    public Lock getLock() {
+        return lock;
     }
 
 }

@@ -46,13 +46,18 @@ public class MassInsertMemoryLeakTestApp extends LegacyApplication {
     private class MassInsert extends Thread {
 
         @Override
-        public synchronized void start() {
-            proggress.setVisible(true);
-            proggress.setValue(new Float(0));
-            proggress.setPollingInterval(100);
-            process.setEnabled(false);
-            proggress.setCaption("");
-            super.start();
+        public void start() {
+            getContext().getLock().lock();
+            try {
+                proggress.setVisible(true);
+                proggress.setValue(new Float(0));
+                proggress.setPollingInterval(100);
+                process.setEnabled(false);
+                proggress.setCaption("");
+                super.start();
+            } finally {
+                getContext().getLock().unlock();
+            }
         }
 
         @Override
@@ -73,11 +78,14 @@ public class MassInsertMemoryLeakTestApp extends LegacyApplication {
                                     getRandonName());
                         }
                         c.commit();
-                        synchronized (MassInsertMemoryLeakTestApp.this) {
+                        getContext().getLock().lock();
+                        try {
                             proggress
                                     .setValue(new Float((1.0f * cent) / cents));
                             proggress.setCaption("" + 100 * cent
                                     + " rows inserted");
+                        } finally {
+                            getContext().getLock().unlock();
                         }
                     }
                 } catch (SQLException e) {
@@ -87,10 +95,13 @@ public class MassInsertMemoryLeakTestApp extends LegacyApplication {
                     e.printStackTrace();
                 }
             }
-            synchronized (MassInsertMemoryLeakTestApp.this) {
+            getContext().getLock().lock();
+            try {
                 proggress.setVisible(false);
                 proggress.setPollingInterval(0);
                 process.setEnabled(true);
+            } finally {
+                getContext().getLock().unlock();
             }
         }
     }

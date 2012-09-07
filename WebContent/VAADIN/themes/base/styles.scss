@@ -5,7 +5,7 @@
 // everything included from base theme
 // other themes should enclose corresponding definitions in theme selectors
 
-@include base-paintable;
+@include base-widget;
 
 @include base-absolutelayout;
 @include base-accordion;

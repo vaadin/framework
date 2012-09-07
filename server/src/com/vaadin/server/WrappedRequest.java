@@ -33,7 +33,6 @@ import com.vaadin.ui.UI;
  * HttpServletReqest or PortletRequest.
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public interface WrappedRequest extends Serializable {
@@ -42,7 +41,9 @@ public interface WrappedRequest extends Serializable {
      * Detailed information extracted from the browser.
      * 
      * @see WrappedRequest#getBrowserDetails()
+     * @deprecated might be refactored or removed before 7.0.0
      */
+    @Deprecated
     public interface BrowserDetails extends Serializable {
         /**
          * Gets the URI hash fragment for the request. This is typically used to
@@ -196,7 +197,9 @@ public interface WrappedRequest extends Serializable {
      *         available
      * 
      * @see BrowserDetails
+     * @deprecated might be refactored or removed before 7.0.0
      */
+    @Deprecated
     public BrowserDetails getBrowserDetails();
 
     /**

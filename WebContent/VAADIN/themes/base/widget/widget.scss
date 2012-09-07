@@ -1,4 +1,4 @@
-@mixin base-paintable {
+@mixin base-widget {
 
 .v-widget {
 	-webkit-box-sizing: border-box;
@@ -7,6 +7,7 @@
 	text-align: left;
 	display: inline-block;
 	white-space: normal;
+	vertical-align: top;
 }
 
 }

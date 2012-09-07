@@ -300,9 +300,12 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 cleanStreamVariable(owner, variableName);
             }
         } catch (Exception e) {
-            synchronized (session) {
+            session.getLock().lock();
+            try {
                 handleChangeVariablesError(session, (Component) owner, e,
                         new HashMap<String, Object>());
+            } finally {
+                session.getLock().unlock();
             }
         }
         sendUploadResponse(request, response);
@@ -345,9 +348,12 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 cleanStreamVariable(owner, variableName);
             }
         } catch (Exception e) {
-            synchronized (session) {
+            session.getLock().lock();
+            try {
                 handleChangeVariablesError(session, (Component) owner, e,
                         new HashMap<String, Object>());
+            } finally {
+                session.getLock().unlock();
             }
         }
         sendUploadResponse(request, response);
@@ -379,10 +385,13 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 filename, type, contentLength);
         try {
             boolean listenProgress;
-            synchronized (session) {
+            session.getLock().lock();
+            try {
                 streamVariable.streamingStarted(startedEvent);
                 out = streamVariable.getOutputStream();
                 listenProgress = streamVariable.listenProgress();
+            } finally {
+                session.getLock().unlock();
             }
 
             // Gets the output target stream
@@ -403,10 +412,13 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 if (listenProgress) {
                     // update progress if listener set and contentLength
                     // received
-                    synchronized (session) {
+                    session.getLock().lock();
+                    try {
                         StreamingProgressEventImpl progressEvent = new StreamingProgressEventImpl(
                                 filename, type, contentLength, totalBytes);
                         streamVariable.onProgress(progressEvent);
+                    } finally {
+                        session.getLock().unlock();
                     }
                 }
                 if (streamVariable.isInterrupted()) {
@@ -418,8 +430,11 @@ public abstract class AbstractCommunicationManager implements Serializable {
             out.close();
             StreamingEndEvent event = new StreamingEndEventImpl(filename, type,
                     totalBytes);
-            synchronized (session) {
+            session.getLock().lock();
+            try {
                 streamVariable.streamingFinished(event);
+            } finally {
+                session.getLock().unlock();
             }
 
         } catch (UploadInterruptedException e) {
@@ -427,20 +442,26 @@ public abstract class AbstractCommunicationManager implements Serializable {
             tryToCloseStream(out);
             StreamingErrorEvent event = new StreamingErrorEventImpl(filename,
                     type, contentLength, totalBytes, e);
-            synchronized (session) {
+            session.getLock().lock();
+            try {
                 streamVariable.streamingFailed(event);
+            } finally {
+                session.getLock().unlock();
             }
             // Note, we are not throwing interrupted exception forward as it is
             // not a terminal level error like all other exception.
         } catch (final Exception e) {
             tryToCloseStream(out);
-            synchronized (session) {
+            session.getLock().lock();
+            try {
                 StreamingErrorEvent event = new StreamingErrorEventImpl(
                         filename, type, contentLength, totalBytes, e);
                 streamVariable.streamingFailed(event);
                 // throw exception for terminal to be handled (to be passed to
                 // terminalErrorHandler)
                 throw new UploadException(e);
+            } finally {
+                session.getLock().unlock();
             }
         }
         return startedEvent.isDisposed();
@@ -551,7 +572,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // The rest of the process is synchronized with the session
         // in order to guarantee that no parallel variable handling is
         // made
-        synchronized (session) {
+        session.getLock().lock();
+        try {
 
             // Finds the UI within the session
             if (session.isRunning()) {
@@ -592,6 +614,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
             paintAfterVariableChanges(request, response, callback, repaintAll,
                     outWriter, uI, analyzeLayouts);
             postPaint(uI);
+        } finally {
+            session.getLock().unlock();
         }
 
         outWriter.close();

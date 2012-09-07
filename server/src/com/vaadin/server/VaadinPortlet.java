@@ -529,7 +529,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
                 // Finds the window within the application
                 UI uI = null;
-                synchronized (application) {
+                application.getLock().lock();
+                try {
                     if (application.isRunning()) {
                         switch (requestType) {
                         case RENDER:
@@ -555,6 +556,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                         }
                         // if window not found, not a problem - use null
                     }
+                } finally {
+                    application.getLock().unlock();
                 }
 
                 // TODO Should this happen before or after the transaction
