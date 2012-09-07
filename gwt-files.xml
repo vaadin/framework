@@ -29,7 +29,7 @@
 
 	<target name="unpack.gwt">
 		<delete dir="${gwt.unpack.dir}" />
-		
+
 		<mkdir dir="${gwt.user.jar.files}" />
 		<mkdir dir="${gwt.dev.jar.files}" />
 		<mkdir dir="${gwt.elemental.jar.files}" />
@@ -99,6 +99,10 @@
 			<exclude name="javax/servlet/**" />
 			<exclude name="org/w3c/css/sac/**" />
 		</fileset>
+		<!-- GWT Elemental -->
+		<fileset dir="${gwt.elemental.jar.files}">
+			<exclude name="META-INF/**" />
+		</fileset>
 	</union>
 
 	<union id="shared.gwt.includes">
@@ -111,10 +115,6 @@
 		<fileset dir="${gwt.dev.jar.files}">
 			<!-- Used by client and server apparently... -->
 			<include name="com/google/gwt/thirdparty/guava/**" />
-		</fileset>
-		<!-- GWT Elemental -->
-		<fileset dir="${gwt.elemental.jar.files}">
-			<exclude name="META-INF/**" />
 		</fileset>
 	</union>
 
