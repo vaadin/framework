@@ -84,13 +84,29 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
      */
     protected LinkedList<Component> components = new LinkedList<Component>();
 
+    /**
+     * Constructs an empty CssLayout.
+     */
     public CssLayout() {
         registerRpc(rpc);
     }
 
     /**
+     * Constructs a CssLayout with the given components in the given order.
+     * 
+     * @see #addComponents(Component...)
+     * 
+     * @param children
+     *            Components to add to the container.
+     */
+    public CssLayout(Component... children) {
+        this();
+        addComponents(children);
+    }
+
+    /**
      * Add a component into this container. The component is added to the right
-     * or under the previous component.
+     * or below the previous component.
      * 
      * @param c
      *            the component to be added.
@@ -106,6 +122,19 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
         } catch (IllegalArgumentException e) {
             components.remove(c);
             throw e;
+        }
+    }
+
+    /**
+     * Adds the given components into this container. Each component is added to
+     * the right or below the previous component.
+     * 
+     * @param components
+     *            The components to add.
+     */
+    public void addComponents(Component... components) {
+        for (Component c : components) {
+            addComponent(c);
         }
     }
 

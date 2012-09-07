@@ -27,8 +27,25 @@ package com.vaadin.ui;
 @SuppressWarnings("serial")
 public class HorizontalLayout extends AbstractOrderedLayout {
 
+    /**
+     * Constructs an empty HorizontalLayout.
+     */
     public HorizontalLayout() {
 
+    }
+
+    /**
+     * Constructs a HorizontalLayout with the given components. The components
+     * are added in the given order.
+     * 
+     * @see AbstractOrderedLayout#addComponents(Component...)
+     * 
+     * @param children
+     *            The components to add.
+     */
+    public HorizontalLayout(Component... children) {
+        this();
+        addComponents(children);
     }
 
 }

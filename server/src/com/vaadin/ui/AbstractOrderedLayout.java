@@ -56,7 +56,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     /* Child component alignments */
 
     /**
-     * Mapping from components to alignments (horizontal + vertical).
+     * Constructs an empty AbstractOrderedLayout.
      */
     public AbstractOrderedLayout() {
         registerRpc(rpc);
@@ -110,6 +110,18 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
         }
         componentAdded(c);
 
+    }
+
+    /**
+     * Adds the given components in the given order to the container.
+     * 
+     * @param components
+     *            The components to add.
+     */
+    public void addComponents(Component... components) {
+        for (Component c : components) {
+            addComponent(c);
+        }
     }
 
     /**

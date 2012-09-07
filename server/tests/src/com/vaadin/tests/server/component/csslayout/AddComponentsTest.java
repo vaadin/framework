@@ -91,6 +91,27 @@ public class AddComponentsTest {
         assertOrder(layout, new int[] { 2, 3, 1, 0 });
     }
 
+    @Test
+    public void testConstructorWithComponents() {
+        Layout layout = new CssLayout(children);
+        assertOrder(layout, new int[] { 0, 1, 2, 3 });
+    }
+
+    @Test
+    public void testAddComponents() {
+        CssLayout layout = new CssLayout();
+        layout.addComponents(children);
+        assertOrder(layout, new int[] { 0, 1, 2, 3 });
+        
+        Label extra = new Label("Extra");
+        layout.addComponents(extra);
+        assertSame(extra, layout.getComponent(4));
+        
+        layout.removeAllComponents();
+        layout.addComponents(children[3], children[2], children[1], children[0]);
+        assertOrder(layout, new int[] { 3, 2, 1, 0 });
+    }
+
     /**
      * Asserts that layout has the components in children in the order specified
      * by indices.

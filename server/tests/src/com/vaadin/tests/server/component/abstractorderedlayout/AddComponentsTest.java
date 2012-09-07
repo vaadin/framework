@@ -97,6 +97,45 @@ public class AddComponentsTest {
         assertOrder(layout, new int[] { 2, 3, 1, 0 });
     }
 
+    @Test
+    public void testConstructorsWithComponents() {
+        AbstractOrderedLayout layout1 = new HorizontalLayout(children);
+        assertOrder(layout1, new int[] { 0, 1, 2, 3 });
+        shuffleChildComponents(layout1);
+
+        AbstractOrderedLayout layout2 = new VerticalLayout(children);
+        assertOrder(layout2, new int[] { 0, 1, 2, 3 });
+        shuffleChildComponents(layout2);
+    }
+
+    @Test
+    public void testAddComponents() {
+        HorizontalLayout layout1 = new HorizontalLayout();
+        layout1.addComponents(children);
+        assertOrder(layout1, new int[] { 0, 1, 2, 3 });
+        
+        Label extra = new Label("Extra");
+        layout1.addComponents(extra);
+        assertSame(extra, layout1.getComponent(4));
+        
+        layout1.removeAllComponents();
+        layout1.addComponents(children[3], children[2], children[1],
+                children[0]);
+        assertOrder(layout1, new int[] { 3, 2, 1, 0 });
+
+        VerticalLayout layout2 = new VerticalLayout(children);
+        layout2.addComponents(children);
+        assertOrder(layout2, new int[] { 0, 1, 2, 3 });
+        
+        layout2.addComponents(extra);
+        assertSame(extra, layout2.getComponent(4));
+        
+        layout2.removeAllComponents();
+        layout2.addComponents(children[3], children[2], children[1],
+                children[0]);
+        assertOrder(layout2, new int[] { 3, 2, 1, 0 });
+    }
+
     /**
      * Asserts that layout has the components in children in the order specified
      * by indices.

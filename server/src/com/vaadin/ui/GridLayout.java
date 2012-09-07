@@ -140,6 +140,24 @@ public class GridLayout extends AbstractLayout implements
         this(1, 1);
     }
 
+    /**
+     * Constructs a GridLayout of given size (number of columns and rows) and
+     * adds the given components in order to the grid.
+     * 
+     * @see #addComponents(Component...)
+     * 
+     * @param columns
+     *            Number of columns in the grid.
+     * @param rows
+     *            Number of rows in the grid.
+     * @param children
+     *            Components to add to the grid.
+     */
+    public GridLayout(int columns, int rows, Component... children) {
+        this(columns, rows);
+        addComponents(children);
+    }
+
     @Override
     protected GridLayoutState getState() {
         return (GridLayoutState) super.getState();
@@ -255,6 +273,19 @@ public class GridLayout extends AbstractLayout implements
         }
 
         markAsDirty();
+    }
+
+    /**
+     * Adds the given components to the grid starting from the current cursor
+     * position.
+     * 
+     * @param components
+     *            Components to add.
+     */
+    public void addComponents(Component... components) {
+        for (Component c : components) {
+            this.addComponent(c);
+        }
     }
 
     /**

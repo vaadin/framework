@@ -22,12 +22,9 @@ import com.vaadin.shared.ui.MarginInfo;
  * FormLayout is used by {@link Form} to layout fields. It may also be used
  * separately without {@link Form}.
  * 
- * FormLayout is a close relative to vertical {@link OrderedLayout}, but in
- * FormLayout caption is rendered on left side of component. Required and
- * validation indicators are between captions and fields.
- * 
- * FormLayout does not currently support some advanced methods from
- * OrderedLayout like setExpandRatio and setComponentAlignment.
+ * FormLayout is a close relative of {@link VerticalLayout}, but in FormLayout
+ * captions are rendered to the left of their respective components. Required
+ * and validation indicators are shown between the captions and the fields.
  * 
  * FormLayout by default has component spacing on. Also margin top and margin
  * bottom are by default on.
@@ -40,6 +37,19 @@ public class FormLayout extends AbstractOrderedLayout {
         setSpacing(true);
         setMargin(new MarginInfo(true, false, true, false));
         setWidth(100, UNITS_PERCENTAGE);
+    }
+
+    /**
+     * Constructs a FormLayout and adds the given components to it.
+     * 
+     * @see AbstractOrderedLayout#addComponents(Component...)
+     * 
+     * @param children
+     *            Components to add to the FormLayout
+     */
+    public FormLayout(Component... children) {
+        this();
+        addComponents(children);
     }
 
 }
