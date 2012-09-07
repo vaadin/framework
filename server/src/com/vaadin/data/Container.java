@@ -503,17 +503,13 @@ public interface Container extends Serializable {
          * container, starting with the item id at <code>startIndex</code>. <br>
          * <br>
          * 
-         * Implementations should return the exact number of item ids given by
-         * <code>numberOfItems</code>. The returned list must hence contain all
-         * of the item ids from the range: <br>
+         * Implementations should return at most <code>numberOfItems</code> item
+         * ids, but can contain less if the container has less items than
+         * required to fulfill the request. The returned list must hence contain
+         * all of the item ids from the range: <br>
          * <br>
          * <code>startIndex</code> to
-         * <code>startIndex + (numberOfItems-1)</code>. <br>
-         * <br>
-         * 
-         * The returned list must contain all of the requested item ids or throw
-         * a {@link RangeOutOfContainerBoundsException} to indicate that the
-         * container does not contain all the requested item ids.<br>
+         * <code>max(startIndex + (numberOfItems-1), container.size()-1)</code>. <br>
          * <br>
          * For quick migration to new API see:
          * {@link ContainerHelpers#getItemIdsUsingGetIdByIndex(int, int, Indexed)}
@@ -521,8 +517,6 @@ public interface Container extends Serializable {
          * <br>
          * <b>Throws:</b> {@link IllegalArgumentException} if
          * <code>numberOfItems</code> is < 0 <br>
-         * <b>Throws:</b> {@link RangeOutOfContainerBoundsException} if all of
-         * the requested item ids cannot be fetched <br>
          * <b>Throws:</b> {@link IndexOutOfBoundsException} if
          * <code>startIndex</code> is outside the range of the container. (i.e.
          * <code>startIndex &lt; 0 || container.size()-1 &lt; startIndex</code>)
@@ -532,8 +526,8 @@ public interface Container extends Serializable {
          * @param numberOfItems
          *            the number of consecutive item ids to get from the given
          *            start index, must be >= 0
-         * @return List containing all of the requested item ids or empty list
-         *         if <code>numberOfItems</code> == 0; not null
+         * @return List containing the requested item ids or empty list if
+         *         <code>numberOfItems</code> == 0; not null
          * 
          * @since 7.0
          */

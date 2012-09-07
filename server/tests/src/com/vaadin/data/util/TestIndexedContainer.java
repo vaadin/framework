@@ -2,8 +2,9 @@ package com.vaadin.data.util;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import com.vaadin.data.Item;
-import com.vaadin.data.RangeOutOfContainerBoundsException;
 
 public class TestIndexedContainer extends AbstractInMemoryContainerTest {
 
@@ -342,22 +343,9 @@ public class TestIndexedContainer extends AbstractInMemoryContainerTest {
     public void testGetItemIdsRangeIndexOutOfBoundsDueToSizeChange() {
         IndexedContainer ic = new IndexedContainer();
         ic.addItem(new Object());
-        try {
-            ic.getItemIds(0, 10);
-            fail("Container returned items when the range was >> container size");
-        } catch (RangeOutOfContainerBoundsException e) {
-            // This is expected...
-            assertTrue(e.isAdditionalParametersSet());
-            assertEquals(0, e.getStartIndex());
-            assertEquals(10, e.getNumberOfIds());
-            assertEquals(1, e.getContainerCurrentSize());
-
-        } catch (IndexOutOfBoundsException e) {
-            fail("Container threw wrong exception when the range exceeded container size... ");
-        } catch (Exception e) {
-            // Should not happen!
-            fail("Container threw unspecified exception when fetching a range of items and the range started from -1");
-        }
+        Assert.assertEquals(
+                "Container returned too many items when the range was >> container size",
+                1, ic.getItemIds(0, 10).size());
     }
 
     // Ticket 8028

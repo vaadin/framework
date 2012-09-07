@@ -64,11 +64,7 @@ public class ContainerHelpers {
         int endIndex = startIndex + numberOfIds;
 
         if (endIndex > container.size()) {
-            throw new RangeOutOfContainerBoundsException(
-                    "Cannot get all requested item ids from container. "
-                            + "Container size might have changed, recalculate numberOfIds "
-                            + "based on the actual container size!",
-                    startIndex, numberOfIds, container.size());
+            endIndex = container.size();
         }
 
         ArrayList<Object> rangeOfIds = new ArrayList<Object>();

@@ -26,7 +26,6 @@ import java.util.Set;
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.ItemSetChangeNotifier;
 import com.vaadin.data.Item;
-import com.vaadin.data.RangeOutOfContainerBoundsException;
 import com.vaadin.data.util.filter.SimpleStringFilter;
 import com.vaadin.data.util.filter.UnsupportedFilterException;
 
@@ -278,11 +277,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
         int endIndex = startIndex + numberOfIds;
 
         if (endIndex > getVisibleItemIds().size()) {
-            throw new RangeOutOfContainerBoundsException(
-                    "Cannot get all requested item ids from container. "
-                            + "Container size might have changed, recalculate numberOfIds "
-                            + "based on the actual container size!",
-                    startIndex, numberOfIds, getVisibleItemIds().size());
+            endIndex = getVisibleItemIds().size();
         }
 
         return Collections.unmodifiableList(getVisibleItemIds().subList(
