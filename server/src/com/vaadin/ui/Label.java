@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -414,7 +414,8 @@ public class Label extends AbstractComponent implements Property<String>,
         }
 
         if (getContentMode() == ContentMode.XHTML
-                || getContentMode() == ContentMode.XML) {
+                || getContentMode() == ContentMode.XML
+                || getContentMode() == ContentMode.HTML) {
             return stripTags(stringValue);
         } else {
             return stringValue;

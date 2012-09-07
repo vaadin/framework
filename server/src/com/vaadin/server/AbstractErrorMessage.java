@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -43,9 +43,19 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
          * Content mode, where the error contains preformatted text.
          */
         PREFORMATTED,
+
         /**
          * Content mode, where the error contains XHTML.
+         * 
          */
+        HTML,
+
+        /**
+         * Content mode, where the error contains XHTML.
+         * 
+         * @deprecated Use {@link ContentMode.HTML}
+         */
+        @Deprecated
         XHTML;
     }
 
@@ -116,6 +126,7 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
                     + "</pre>";
             break;
         case XHTML:
+        case HTML:
             result = getMessage();
             break;
         }
@@ -151,7 +162,7 @@ public abstract class AbstractErrorMessage implements ErrorMessage {
         } else if (t instanceof Validator.InvalidValueException) {
             UserError error = new UserError(
                     ((Validator.InvalidValueException) t).getHtmlMessage(),
-                    ContentMode.XHTML, ErrorLevel.ERROR);
+                    ContentMode.HTML, ErrorLevel.ERROR);
             for (Validator.InvalidValueException nestedException : ((Validator.InvalidValueException) t)
                     .getCauses()) {
                 error.addCause(getErrorMessageForException(nestedException));

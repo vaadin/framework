@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -39,7 +39,7 @@ public class UserError extends AbstractErrorMessage {
     public static final ContentMode CONTENT_PREFORMATTED = ContentMode.PREFORMATTED;
 
     /**
-     * @deprecated from 7.0, use {@link ContentMode#XHTML} instead    
+     * @deprecated from 7.0, use {@link ContentMode#HTML} instead    
      */
     @Deprecated
     public static final ContentMode CONTENT_XHTML = ContentMode.XHTML;

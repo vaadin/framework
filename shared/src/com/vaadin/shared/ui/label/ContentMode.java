@@ -15,6 +15,7 @@
  */
 package com.vaadin.shared.ui.label;
 
+
 /**
  * Content modes defining how the client should interpret a Label's value.
  * 
@@ -33,9 +34,16 @@ public enum ContentMode {
     PREFORMATTED,
 
     /**
-     * Content mode, where the label contains XHTML. Care should be taken to
-     * ensure
+     * Content mode, where the label contains HTML.
      */
+    HTML,
+
+    /**
+     * Content mode, where the label contains XHTML.
+     * 
+     * @deprecated Use {@link ContentMode.HTML}
+     */
+    @Deprecated
     XHTML,
 
     /**

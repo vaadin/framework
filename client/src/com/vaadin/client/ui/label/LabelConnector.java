@@ -58,6 +58,7 @@ public class LabelConnector extends AbstractComponentConnector {
             break;
 
         case XHTML:
+        case HTML:
         case RAW:
             sinkOnloads = true;
         case XML:

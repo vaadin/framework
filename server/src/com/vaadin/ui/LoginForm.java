@@ -135,10 +135,7 @@ public class LoginForm extends CustomComponent {
         String appUri = getSession().getURL().toString();
 
         try {
-            return ("<!DOCTYPE html PUBLIC \"-//W3C//DTD "
-                    + "XHTML 1.0 Transitional//EN\" "
-                    + "\"http://www.w3.org/TR/xhtml1/"
-                    + "DTD/xhtml1-transitional.dtd\">\n" + "<html>"
+            return ("<!DOCTYPE html>\n" + "<html>"
                     + "<head><script type='text/javascript'>"
                     + "var setTarget = function() {" + "var uri = '"
                     + appUri
