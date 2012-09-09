@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+
+<project name="vaadin-all" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:antcontrib="antlib:net.sf.antcontrib">
+	<description>
+		Compiles a zip containing all jars + dependencies
+	</description>
+	<include file="../common.xml" as="common" />
+	<include file="../build.xml" as="vaadin" />
+
+	<!-- global properties -->
+	<property name="module.name" value="vaadin-all" />
+	<property name="result.dir" value="result" />
+	<property name="temp.dir" location="${result.dir}/temp" />
+	<property name="zip.file" location="${result.dir}/lib/${module.name}-${vaadin.version}.zip" />
+
+	<target name="fetch.module.and.dependencies">
+		<fail unless="module" message="No 'module' parameter given" />
+
+		<ivy:cachepath pathid="module.and.deps" inline="true" organisation="com.vaadin" module="vaadin-${module}" revision="${vaadin.version}" />
+		<copy todir="${temp.dir}" flatten="true">
+			<path refid="module.and.deps" />
+		</copy>
+	</target>
+
+	<target name="zip">
+		<delete dir="${temp.dir}" />
+		<antcontrib:foreach list="${modules.to.publish.to.maven}" target="fetch.module.and.dependencies" param="module" />
+		<!-- All jars are now in temp.dir. Still need to separate vaadin and deps -->
+		<move todir="${temp.dir}/lib">
+			<fileset dir="${temp.dir}">
+				<exclude name="vaadin-*-${vaadin.version}.*" />
+				<exclude name="vaadin-*-${vaadin.version}-*.*" />
+			</fileset>
+		</move>
+
+		<zip destfile="${zip.file}">
+			<fileset dir="${temp.dir}">
+				<!-- Avoid conflicts with servlet and portlet API. They are provided by the container -->
+				<exclude name="**/servlet-api*" />
+				<exclude name="**/portlet-api*" />
+				<!-- Buildhelpers should not even get here ... -->
+				<exclude name="*buildhelpers*" />
+				<!-- Zip users should not need javadoc, sources or pom files -->
+				<exclude name="*.pom" />
+				<exclude name="*-javadoc.jar" />
+				<exclude name="*-sources.jar" />
+
+			</fileset>
+			<fileset refid="common.files.for.all.jars" />
+			<fileset dir="${result.dir}/..">
+				<include name="README.TXT"/>
+			</fileset>
+		</zip>
+	</target>
+
+	<target name="publish-local" depends="zip">
+		<antcall target="common.publish-local" />
+	</target>
+
+	<target name="clean">
+		<antcall target="common.clean" />
+	</target>
+
+	<target name="tests">
+		<!-- No tests for this zip.. -->
+	</target>
+
+</project>

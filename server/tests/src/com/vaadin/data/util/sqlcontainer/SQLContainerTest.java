@@ -24,7 +24,7 @@ import com.vaadin.data.Container.ItemSetChangeListener;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.filter.Compare.Equal;
 import com.vaadin.data.util.filter.Like;
-import com.vaadin.data.util.sqlcontainer.AllTests.DB;
+import com.vaadin.data.util.sqlcontainer.SQLTestsConstants.DB;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.query.FreeformQuery;
@@ -38,15 +38,16 @@ import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
 import com.vaadin.data.util.sqlcontainer.query.generator.filter.QueryBuilder;
 
 public class SQLContainerTest {
-    private static final int offset = AllTests.offset;
+    private static final int offset = SQLTestsConstants.offset;
     private JDBCConnectionPool connectionPool;
 
     @Before
     public void setUp() throws SQLException {
 
         try {
-            connectionPool = new SimpleJDBCConnectionPool(AllTests.dbDriver,
-                    AllTests.dbURL, AllTests.dbUser, AllTests.dbPwd, 2, 2);
+            connectionPool = new SimpleJDBCConnectionPool(
+                    SQLTestsConstants.dbDriver, SQLTestsConstants.dbURL,
+                    SQLTestsConstants.dbUser, SQLTestsConstants.dbPwd, 2, 2);
         } catch (SQLException e) {
             e.printStackTrace();
             Assert.fail(e.getMessage());
@@ -99,7 +100,7 @@ public class SQLContainerTest {
             throws SQLException {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people", connectionPool, "ID"));
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(
                     "Ville",
                     container
@@ -150,7 +151,7 @@ public class SQLContainerTest {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people", connectionPool, "ID"));
         Item item;
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             item = container.getItem(new RowId(new Object[] { new BigDecimal(
                     0 + offset) }));
         } else {
@@ -167,7 +168,7 @@ public class SQLContainerTest {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people", connectionPool, "ID"));
         Item item;
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             item = container.getItem(new RowId(new Object[] { new BigDecimal(
                     1337 + offset) }));
             Assert.assertNotNull(item);
@@ -194,7 +195,7 @@ public class SQLContainerTest {
         RowId one = new RowId(new Object[] { 1 + offset });
         RowId two = new RowId(new Object[] { 2 + offset });
         RowId three = new RowId(new Object[] { 3 + offset });
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             String[] correct = new String[] { "1", "2", "3", "4" };
             List<String> oracle = new ArrayList<String>();
             for (Object o : itemIds) {
@@ -220,7 +221,7 @@ public class SQLContainerTest {
             throws SQLException {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people", connectionPool, "ID"));
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(BigDecimal.class, container.getType("ID"));
         } else {
             Assert.assertEquals(Integer.class, container.getType("ID"));
@@ -246,7 +247,7 @@ public class SQLContainerTest {
     public void size_freeformOneAddedItem_returnsFive() throws SQLException {
         Connection conn = connectionPool.reserveConnection();
         Statement statement = conn.createStatement();
-        if (AllTests.db == DB.MSSQL) {
+        if (SQLTestsConstants.db == DB.MSSQL) {
             statement.executeUpdate("insert into people values('Bengt', '42')");
         } else {
             statement
@@ -266,7 +267,7 @@ public class SQLContainerTest {
             throws SQLException {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people", connectionPool, "ID"));
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(3, container.indexOfId(new RowId(
                     new Object[] { new BigDecimal(3 + offset) })));
         } else {
@@ -282,7 +283,7 @@ public class SQLContainerTest {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people ORDER BY \"ID\" ASC", connectionPool,
                 "ID"));
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             container.getItem(new RowId(new Object[] { new BigDecimal(
                     1337 + offset) }));
             Assert.assertEquals(1337, container.indexOfId(new RowId(
@@ -302,7 +303,7 @@ public class SQLContainerTest {
                 "SELECT * FROM people ORDER BY \"ID\" ASC", connectionPool,
                 "ID"));
         Object itemId = container.getIdByIndex(1337);
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(new RowId(new Object[] { new BigDecimal(
                     1337 + offset) }), itemId);
         } else {
@@ -328,7 +329,7 @@ public class SQLContainerTest {
                         Object[] args = EasyMock.getCurrentArguments();
                         int offset = (Integer) (args[0]);
                         int limit = (Integer) (args[1]);
-                        if (AllTests.db == DB.MSSQL) {
+                        if (SQLTestsConstants.db == DB.MSSQL) {
                             int start = offset + 1;
                             int end = offset + limit + 1;
                             String q = "SELECT * FROM (SELECT row_number() OVER"
@@ -337,7 +338,7 @@ public class SQLContainerTest {
                                     + start
                                     + " AND " + end;
                             return q;
-                        } else if (AllTests.db == DB.ORACLE) {
+                        } else if (SQLTestsConstants.db == DB.ORACLE) {
                             int start = offset + 1;
                             int end = offset + limit + 1;
                             String q = "SELECT * FROM (SELECT x.*, ROWNUM AS r FROM"
@@ -367,7 +368,7 @@ public class SQLContainerTest {
         query.setDelegate(delegate);
         SQLContainer container = new SQLContainer(query);
         Object itemId = container.getIdByIndex(1337);
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(
                     new RowId(new Object[] { 1337 + offset }).toString(),
                     itemId.toString());
@@ -385,7 +386,7 @@ public class SQLContainerTest {
                 "SELECT * FROM people ORDER BY \"ID\" ASC", connectionPool,
                 "ID"));
         Object itemId = container.getIdByIndex(1337);
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(
                     new RowId(new Object[] { 1338 + offset }).toString(),
                     container.nextItemId(itemId).toString());
@@ -403,7 +404,7 @@ public class SQLContainerTest {
                 "SELECT * FROM people ORDER BY \"ID\" ASC", connectionPool,
                 "ID"));
         Object itemId = container.getIdByIndex(1337);
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(
                     new RowId(new Object[] { 1336 + offset }).toString(),
                     container.prevItemId(itemId).toString());
@@ -417,7 +418,7 @@ public class SQLContainerTest {
     public void firstItemId_freeform_returnsItemId0() throws SQLException {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people", connectionPool, "ID"));
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(
                     new RowId(new Object[] { 0 + offset }).toString(),
                     container.firstItemId().toString());
@@ -435,7 +436,7 @@ public class SQLContainerTest {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people ORDER BY \"ID\" ASC", connectionPool,
                 "ID"));
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(
                     new RowId(new Object[] { 4999 + offset }).toString(),
                     container.lastItemId().toString());
@@ -450,7 +451,7 @@ public class SQLContainerTest {
             throws SQLException {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people", connectionPool, "ID"));
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertTrue(container.isFirstId(new RowId(
                     new Object[] { new BigDecimal(0 + offset) })));
         } else {
@@ -463,7 +464,7 @@ public class SQLContainerTest {
     public void isFirstId_freeformSecondId_returnsFalse() throws SQLException {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people", connectionPool, "ID"));
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertFalse(container.isFirstId(new RowId(
                     new Object[] { new BigDecimal(1 + offset) })));
         } else {
@@ -476,7 +477,7 @@ public class SQLContainerTest {
     public void isLastId_freeformSecondId_returnsFalse() throws SQLException {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people", connectionPool, "ID"));
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertFalse(container.isLastId(new RowId(
                     new Object[] { new BigDecimal(1 + offset) })));
         } else {
@@ -489,7 +490,7 @@ public class SQLContainerTest {
     public void isLastId_freeformLastId_returnsTrue() throws SQLException {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people", connectionPool, "ID"));
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertTrue(container.isLastId(new RowId(
                     new Object[] { new BigDecimal(3 + offset) })));
         } else {
@@ -505,7 +506,7 @@ public class SQLContainerTest {
         SQLContainer container = new SQLContainer(new FreeformQuery(
                 "SELECT * FROM people ORDER BY \"ID\" ASC", connectionPool,
                 "ID"));
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertTrue(container.isLastId(new RowId(
                     new Object[] { new BigDecimal(4999 + offset) })));
         } else {
@@ -1139,7 +1140,7 @@ public class SQLContainerTest {
                                 .getCurrentArguments()[0];
                         RowItem item = (RowItem) EasyMock.getCurrentArguments()[1];
                         Statement statement = conn.createStatement();
-                        if (AllTests.db == DB.MSSQL) {
+                        if (SQLTestsConstants.db == DB.MSSQL) {
                             statement
                                     .executeUpdate("insert into people values('"
                                             + item.getItemProperty("NAME")
@@ -1170,7 +1171,7 @@ public class SQLContainerTest {
                         Object[] args = EasyMock.getCurrentArguments();
                         int offset = (Integer) (args[0]);
                         int limit = (Integer) (args[1]);
-                        if (AllTests.db == DB.MSSQL) {
+                        if (SQLTestsConstants.db == DB.MSSQL) {
                             int start = offset + 1;
                             int end = offset + limit + 1;
                             String q = "SELECT * FROM (SELECT row_number() OVER"
@@ -1179,7 +1180,7 @@ public class SQLContainerTest {
                                     + start
                                     + " AND " + end;
                             return q;
-                        } else if (AllTests.db == DB.ORACLE) {
+                        } else if (SQLTestsConstants.db == DB.ORACLE) {
                             int start = offset + 1;
                             int end = offset + limit + 1;
                             String q = "SELECT * FROM (SELECT x.*, ROWNUM AS r FROM"
@@ -1240,7 +1241,7 @@ public class SQLContainerTest {
                                 .getCurrentArguments()[0];
                         RowItem item = (RowItem) EasyMock.getCurrentArguments()[1];
                         Statement statement = conn.createStatement();
-                        if (AllTests.db == DB.MSSQL) {
+                        if (SQLTestsConstants.db == DB.MSSQL) {
                             statement
                                     .executeUpdate("insert into people values('"
                                             + item.getItemProperty("NAME")
@@ -1271,7 +1272,7 @@ public class SQLContainerTest {
                         Object[] args = EasyMock.getCurrentArguments();
                         int offset = (Integer) (args[0]);
                         int limit = (Integer) (args[1]);
-                        if (AllTests.db == DB.MSSQL) {
+                        if (SQLTestsConstants.db == DB.MSSQL) {
                             int start = offset + 1;
                             int end = offset + limit + 1;
                             String q = "SELECT * FROM (SELECT row_number() OVER"
@@ -1280,7 +1281,7 @@ public class SQLContainerTest {
                                     + start
                                     + " AND " + end;
                             return q;
-                        } else if (AllTests.db == DB.ORACLE) {
+                        } else if (SQLTestsConstants.db == DB.ORACLE) {
                             int start = offset + 1;
                             int end = offset + limit + 1;
                             String q = "SELECT * FROM (SELECT x.*, ROWNUM AS r FROM"
@@ -1363,7 +1364,7 @@ public class SQLContainerTest {
                         Object[] args = EasyMock.getCurrentArguments();
                         int offset = (Integer) (args[0]);
                         int limit = (Integer) (args[1]);
-                        if (AllTests.db == DB.MSSQL) {
+                        if (SQLTestsConstants.db == DB.MSSQL) {
                             int start = offset + 1;
                             int end = offset + limit + 1;
                             String q = "SELECT * FROM (SELECT row_number() OVER"
@@ -1372,7 +1373,7 @@ public class SQLContainerTest {
                                     + start
                                     + " AND " + end;
                             return q;
-                        } else if (AllTests.db == DB.ORACLE) {
+                        } else if (SQLTestsConstants.db == DB.ORACLE) {
                             int start = offset + 1;
                             int end = offset + limit + 1;
                             String q = "SELECT * FROM (SELECT x.*, ROWNUM AS r FROM"
@@ -1445,7 +1446,7 @@ public class SQLContainerTest {
                         Object[] args = EasyMock.getCurrentArguments();
                         int offset = (Integer) (args[0]);
                         int limit = (Integer) (args[1]);
-                        if (AllTests.db == DB.MSSQL) {
+                        if (SQLTestsConstants.db == DB.MSSQL) {
                             int start = offset + 1;
                             int end = offset + limit + 1;
                             String q = "SELECT * FROM (SELECT row_number() OVER"
@@ -1454,7 +1455,7 @@ public class SQLContainerTest {
                                     + start
                                     + " AND " + end;
                             return q;
-                        } else if (AllTests.db == DB.ORACLE) {
+                        } else if (SQLTestsConstants.db == DB.ORACLE) {
                             int start = offset + 1;
                             int end = offset + limit + 1;
                             String q = "SELECT * FROM (SELECT x.*, ROWNUM AS r FROM"
@@ -1670,7 +1671,7 @@ public class SQLContainerTest {
                         Object[] args = EasyMock.getCurrentArguments();
                         int offset = (Integer) (args[0]);
                         int limit = (Integer) (args[1]);
-                        if (AllTests.db == DB.MSSQL) {
+                        if (SQLTestsConstants.db == DB.MSSQL) {
                             SQLGenerator gen = new MSSQLGenerator();
                             if (orderBys == null || orderBys.isEmpty()) {
                                 List<OrderBy> ob = new ArrayList<OrderBy>();
@@ -1683,7 +1684,7 @@ public class SQLContainerTest {
                                         orderBys, offset, limit, null)
                                         .getQueryString();
                             }
-                        } else if (AllTests.db == DB.ORACLE) {
+                        } else if (SQLTestsConstants.db == DB.ORACLE) {
                             SQLGenerator gen = new OracleGenerator();
                             if (orderBys == null || orderBys.isEmpty()) {
                                 List<OrderBy> ob = new ArrayList<OrderBy>();
@@ -1784,7 +1785,7 @@ public class SQLContainerTest {
                         Object[] args = EasyMock.getCurrentArguments();
                         int offset = (Integer) (args[0]);
                         int limit = (Integer) (args[1]);
-                        if (AllTests.db == DB.MSSQL) {
+                        if (SQLTestsConstants.db == DB.MSSQL) {
                             SQLGenerator gen = new MSSQLGenerator();
                             if (orderBys == null || orderBys.isEmpty()) {
                                 List<OrderBy> ob = new ArrayList<OrderBy>();
@@ -1797,7 +1798,7 @@ public class SQLContainerTest {
                                         orderBys, offset, limit, null)
                                         .getQueryString();
                             }
-                        } else if (AllTests.db == DB.ORACLE) {
+                        } else if (SQLTestsConstants.db == DB.ORACLE) {
                             SQLGenerator gen = new OracleGenerator();
                             if (orderBys == null || orderBys.isEmpty()) {
                                 List<OrderBy> ob = new ArrayList<OrderBy>();
@@ -2376,7 +2377,7 @@ public class SQLContainerTest {
                         Object[] args = EasyMock.getCurrentArguments();
                         int offset = (Integer) (args[0]);
                         int limit = (Integer) (args[1]);
-                        if (AllTests.db == DB.MSSQL) {
+                        if (SQLTestsConstants.db == DB.MSSQL) {
                             SQLGenerator gen = new MSSQLGenerator();
                             if (orderBys == null || orderBys.isEmpty()) {
                                 List<OrderBy> ob = new ArrayList<OrderBy>();
@@ -2389,7 +2390,7 @@ public class SQLContainerTest {
                                         orderBys, offset, limit, null)
                                         .getQueryString();
                             }
-                        } else if (AllTests.db == DB.ORACLE) {
+                        } else if (SQLTestsConstants.db == DB.ORACLE) {
                             SQLGenerator gen = new OracleGenerator();
                             if (orderBys == null || orderBys.isEmpty()) {
                                 List<OrderBy> ob = new ArrayList<OrderBy>();

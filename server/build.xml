@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+
+<project name="vaadin-server" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<description>
+		Compiles build helpers used when building other modules.
+	</description>
+	<include file="../common.xml" as="common" />
+	<include file="../build.xml" as="vaadin" />
+	<include file="../gwt-files.xml" as="gwtfiles" />
+
+	<!-- global properties -->
+	<property name="module.name" value="vaadin-server" />
+	<property name="result.dir" value="result" />
+	<path id="classpath.compile.custom" />
+	<path id="classpath.tests.custom" />
+
+	<union id="jar.includes">
+		<union refid="server.gwt.includes" />
+		<fileset dir="${vaadin.basedir}/WebContent">
+			<include name="VAADIN/vaadinBootstrap.js" />
+		</fileset>
+	</union>
+
+	<target name="jar">
+		<antcall target="common.jar">
+			<param name="conf" value="build" />
+			<reference torefid="extra.jar.includes" refid="jar.includes" />
+		</antcall>
+	</target>
+
+	<target name="publish-local" depends="jar">
+		<antcall target="common.sources.jar" />
+		<antcall target="common.javadoc.jar" />
+
+		<antcall target="common.publish-local" />
+	</target>
+
+	<target name="clean">
+		<antcall target="common.clean" />
+	</target>
+
+	<target name="tests">
+		<antcall target="common.tests.run" />
+	</target>
+
+
+</project>

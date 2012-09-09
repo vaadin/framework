@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"
+    xmlns:m="http://ant.apache.org/ivy/maven">
+
+    <info organisation="com.vaadin" module="vaadin-theme-compiler"
+        revision="${vaadin.version}" />
+
+    <configurations>
+        <conf name="build" />
+        <conf name="build-provided" />
+        <conf name="ide" visibility="private" />
+        <conf name="tests" />
+    </configurations>
+    <publications>
+        <artifact type="jar" ext="jar" />
+        <artifact type="pom" ext="pom" />
+        <artifact type="source" ext="jar" m:classifier="sources" />
+        <artifact type="javadoc" ext="jar" m:classifier="javadoc" />
+    </publications>
+    <dependencies defaultconf="*->default">
+        <!-- LIBRARY DEPENDENCIES (compile time) -->
+        <!-- Project modules -->
+        <dependency org="com.vaadin" name="vaadin-shared"
+            rev="${vaadin.version}" conf="build,tests" />
+
+
+        <dependency org="org.w3c.css" name="sac" rev="1.3" />
+        <dependency org="milyn" name="flute" rev="1.3" conf="*->default" />
+        <dependency org="javax.servlet" name="servlet-api"
+            rev="2.5" />
+        <dependency org="com.carrotsearch" name="smartsprites"
+            rev="0.2.3-itmill" />
+        <dependency org="com.vaadin" name="vaadin-buildhelpers"
+            rev="${vaadin.version}" conf="build"></dependency>
+        <dependency org="junit" name="junit" rev="4.5"
+            conf="tests -> default" />
+        <dependency org="net.sourceforge.cssparser" name="cssparser"
+            rev="0.9.5" conf="tests,ide->default" />
+        <dependency org="commons-cli" name="commons-cli" rev="1.2"
+            conf="build,ide -> default" />
+    </dependencies>
+
+</ivy-module>

@@ -5,7 +5,7 @@ import java.util.List;
 import org.junit.Test;
 
 import com.vaadin.data.Container.Filter;
-import com.vaadin.data.util.sqlcontainer.AllTests.DB;
+import com.vaadin.data.util.sqlcontainer.SQLTestsConstants.DB;
 import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
 import com.vaadin.data.util.sqlcontainer.query.generator.filter.QueryBuilder;
 
@@ -20,7 +20,7 @@ public class FreeformQueryUtil {
     public static StatementHelper getQueryWithFilters(List<Filter> filters,
             int offset, int limit) {
         StatementHelper sh = new StatementHelper();
-        if (AllTests.db == DB.MSSQL) {
+        if (SQLTestsConstants.db == DB.MSSQL) {
             if (limit > 1) {
                 offset++;
                 limit--;
@@ -37,7 +37,7 @@ public class FreeformQueryUtil {
                     .append(" AND ").append(Integer.toString(offset + limit));
             sh.setQueryString(query.toString());
             return sh;
-        } else if (AllTests.db == DB.ORACLE) {
+        } else if (SQLTestsConstants.db == DB.ORACLE) {
             if (limit > 1) {
                 offset++;
                 limit--;

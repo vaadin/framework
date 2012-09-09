@@ -15,7 +15,7 @@ import org.junit.Test;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.filter.Compare.Equal;
-import com.vaadin.data.util.sqlcontainer.AllTests.DB;
+import com.vaadin.data.util.sqlcontainer.SQLTestsConstants.DB;
 import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.query.FreeformQuery;
 import com.vaadin.data.util.sqlcontainer.query.FreeformStatementDelegate;
@@ -31,8 +31,9 @@ public class TicketTests {
 
     @Before
     public void setUp() throws SQLException {
-        connectionPool = new SimpleJDBCConnectionPool(AllTests.dbDriver,
-                AllTests.dbURL, AllTests.dbUser, AllTests.dbPwd, 2, 2);
+        connectionPool = new SimpleJDBCConnectionPool(
+                SQLTestsConstants.dbDriver, SQLTestsConstants.dbURL,
+                SQLTestsConstants.dbUser, SQLTestsConstants.dbPwd, 2, 2);
         DataGenerator.addPeopleToDatabase(connectionPool);
     }
 
@@ -116,7 +117,7 @@ public class TicketTests {
         Assert.assertEquals("Pelle",
                 container.getContainerProperty(container.firstItemId(), "NAME")
                         .getValue());
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(new BigDecimal(18), container
                     .getContainerProperty(container.firstItemId(), "AGE")
                     .getValue());
@@ -133,7 +134,7 @@ public class TicketTests {
     @Test
     public void ticket6136_table_ageIs18() throws SQLException {
         TableQuery query = new TableQuery("people", connectionPool,
-                AllTests.sqlGen);
+                SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(query);
         // Ville, Kalle, Pelle, Börje
         Assert.assertEquals(4, container.size());
@@ -145,7 +146,7 @@ public class TicketTests {
         Assert.assertEquals("Pelle",
                 container.getContainerProperty(container.firstItemId(), "NAME")
                         .getValue());
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(new BigDecimal(18), container
                     .getContainerProperty(container.firstItemId(), "AGE")
                     .getValue());
@@ -161,7 +162,7 @@ public class TicketTests {
     public void ticket7434_getItem_Modified_Changed_Unchanged()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
 
         Object id = container.firstItemId();
         Item item = container.getItem(id);

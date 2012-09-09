@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import com.vaadin.data.util.sqlcontainer.AllTests;
+import com.vaadin.data.util.sqlcontainer.SQLTestsConstants;
 import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
@@ -32,7 +32,7 @@ class DatabaseHelper {
                 // Will fail if table doesn't exist, which is OK.
                 conn.rollback();
             }
-            switch (AllTests.db) {
+            switch (SQLTestsConstants.db) {
             case HSQLDB:
                 statement
                         .execute("create table "
@@ -78,8 +78,9 @@ class DatabaseHelper {
 
     private void initConnectionPool() {
         try {
-            connectionPool = new SimpleJDBCConnectionPool(AllTests.dbDriver,
-                    AllTests.dbURL, AllTests.dbUser, AllTests.dbPwd, 2, 5);
+            connectionPool = new SimpleJDBCConnectionPool(
+                    SQLTestsConstants.dbDriver, SQLTestsConstants.dbURL,
+                    SQLTestsConstants.dbUser, SQLTestsConstants.dbPwd, 2, 5);
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -44,10 +44,6 @@
    		<dependency org="org.apache.maven" name="maven-ant-tasks" rev="2.0.10" conf="taskdefs ->master"/>
    		<dependency org="com.googlecode.jarjar" name="jarjar" rev="1.3" conf="taskdefs ->master"/>
    	   	   		
-   		<!-- Emma -->
-   		<dependency org="emma" name="emma_ant" rev="2.0.5312" conf="server.tests.extdep,taskdefs ->master"/>
-   		<dependency org="emma" name="emma" rev="2.0.5312-patched" conf="server.tests.extdep,taskdefs ->*"/>
-
         <!-- Bean Validation implementation -->
         <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.1" conf="server.tests.extdep -> default"/>
         <dependency org="org.hibernate" name="hibernate-validator" rev="4.2.0.Final" conf="server.tests.extdep -> default"/>

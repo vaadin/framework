@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<project name="vaadin-theme-compiler" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<description>
+		Compiles build helpers used when building other modules.
+	</description>
+	<include file="../common.xml" as="common" />
+	<include file="../build.xml" as="vaadin" />
+
+	<!-- global properties -->
+	<property name="module.name" value="vaadin-theme-compiler" />
+	<property name="result.dir" value="result" />
+	<path id="classpath.compile.custom" />
+	<path id="classpath.tests.custom" />
+
+	<!--<property name="classes.exclude" value="com/vaadin/buildhelpers/**" />-->
+
+	<target name="jar">
+		<antcall target="common.jar">
+			<reference torefid="extra.jar.includes" refid="empty.reference" />
+		</antcall>
+	</target>
+	<target name="publish-local" depends="jar">
+		<antcall target="common.sources.jar" />
+		<antcall target="common.javadoc.jar" />
+
+		<antcall target="common.publish-local" />
+	</target>
+
+	<target name="clean">
+		<antcall target="common.clean" />
+	</target>
+
+	<target name="tests">
+		<antcall target="common.tests.run" />
+	</target>
+
+</project>

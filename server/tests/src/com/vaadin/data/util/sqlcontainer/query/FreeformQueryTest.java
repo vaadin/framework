@@ -16,8 +16,8 @@ import org.junit.Test;
 
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.util.filter.Like;
-import com.vaadin.data.util.sqlcontainer.AllTests;
-import com.vaadin.data.util.sqlcontainer.AllTests.DB;
+import com.vaadin.data.util.sqlcontainer.SQLTestsConstants;
+import com.vaadin.data.util.sqlcontainer.SQLTestsConstants.DB;
 import com.vaadin.data.util.sqlcontainer.DataGenerator;
 import com.vaadin.data.util.sqlcontainer.RowId;
 import com.vaadin.data.util.sqlcontainer.RowItem;
@@ -27,15 +27,16 @@ import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 
 public class FreeformQueryTest {
 
-    private static final int offset = AllTests.offset;
+    private static final int offset = SQLTestsConstants.offset;
     private JDBCConnectionPool connectionPool;
 
     @Before
     public void setUp() throws SQLException {
 
         try {
-            connectionPool = new SimpleJDBCConnectionPool(AllTests.dbDriver,
-                    AllTests.dbURL, AllTests.dbUser, AllTests.dbPwd, 2, 2);
+            connectionPool = new SimpleJDBCConnectionPool(
+                    SQLTestsConstants.dbDriver, SQLTestsConstants.dbURL,
+                    SQLTestsConstants.dbUser, SQLTestsConstants.dbPwd, 2, 2);
         } catch (SQLException e) {
             e.printStackTrace();
             Assert.fail(e.getMessage());
@@ -113,7 +114,7 @@ public class FreeformQueryTest {
         // Add some people
         Connection conn = connectionPool.reserveConnection();
         Statement statement = conn.createStatement();
-        if (AllTests.db == DB.MSSQL) {
+        if (SQLTestsConstants.db == DB.MSSQL) {
             statement.executeUpdate("insert into people values('Bengt', 30)");
             statement.executeUpdate("insert into people values('Ingvar', 50)");
         } else {
@@ -416,13 +417,13 @@ public class FreeformQueryTest {
                 Arrays.asList("ID"), connectionPool);
         FreeformQueryDelegate delegate = EasyMock
                 .createMock(FreeformQueryDelegate.class);
-        if (AllTests.db == DB.MSSQL) {
+        if (SQLTestsConstants.db == DB.MSSQL) {
             EasyMock.expect(delegate.getQueryString(0, 2))
                     .andReturn(
                             "SELECT * FROM (SELECT row_number()"
                                     + "OVER (ORDER BY id ASC) AS rownum, * FROM people)"
                                     + " AS a WHERE a.rownum BETWEEN 0 AND 2");
-        } else if (AllTests.db == DB.ORACLE) {
+        } else if (SQLTestsConstants.db == DB.ORACLE) {
             EasyMock.expect(delegate.getQueryString(0, 2))
                     .andReturn(
                             "SELECT * FROM (SELECT  x.*, ROWNUM AS r FROM"
@@ -447,13 +448,13 @@ public class FreeformQueryTest {
                 Arrays.asList("ID"), connectionPool);
         FreeformQueryDelegate delegate = EasyMock
                 .createMock(FreeformQueryDelegate.class);
-        if (AllTests.db == DB.MSSQL) {
+        if (SQLTestsConstants.db == DB.MSSQL) {
             EasyMock.expect(delegate.getQueryString(0, 2))
                     .andReturn(
                             "SELECT * FROM (SELECT row_number()"
                                     + "OVER (ORDER BY id ASC) AS rownum, * FROM people)"
                                     + " AS a WHERE a.rownum BETWEEN 0 AND 2");
-        } else if (AllTests.db == DB.ORACLE) {
+        } else if (SQLTestsConstants.db == DB.ORACLE) {
             EasyMock.expect(delegate.getQueryString(0, 2))
                     .andReturn(
                             "SELECT * FROM (SELECT  x.*, ROWNUM AS r FROM"
@@ -468,7 +469,7 @@ public class FreeformQueryTest {
         query.beginTransaction();
         ResultSet rs = query.getResults(0, 2);
         int rsoffset = 0;
-        if (AllTests.db == DB.MSSQL) {
+        if (SQLTestsConstants.db == DB.MSSQL) {
             rsoffset++;
         }
         Assert.assertTrue(rs.next());
@@ -493,13 +494,13 @@ public class FreeformQueryTest {
                 Arrays.asList("ID"), connectionPool);
         FreeformQueryDelegate delegate = EasyMock
                 .createMock(FreeformQueryDelegate.class);
-        if (AllTests.db == DB.MSSQL) {
+        if (SQLTestsConstants.db == DB.MSSQL) {
             EasyMock.expect(delegate.getQueryString(200, 100))
                     .andReturn(
                             "SELECT * FROM (SELECT row_number()"
                                     + "OVER (ORDER BY id ASC) AS rownum, * FROM people)"
                                     + " AS a WHERE a.rownum BETWEEN 201 AND 300");
-        } else if (AllTests.db == DB.ORACLE) {
+        } else if (SQLTestsConstants.db == DB.ORACLE) {
             EasyMock.expect(delegate.getQueryString(200, 100))
                     .andReturn(
                             "SELECT * FROM (SELECT  x.*, ROWNUM AS r FROM"

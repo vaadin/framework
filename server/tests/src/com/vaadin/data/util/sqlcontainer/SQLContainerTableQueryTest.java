@@ -18,7 +18,7 @@ import com.vaadin.data.Container.ItemSetChangeEvent;
 import com.vaadin.data.Container.ItemSetChangeListener;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.filter.Like;
-import com.vaadin.data.util.sqlcontainer.AllTests.DB;
+import com.vaadin.data.util.sqlcontainer.SQLTestsConstants.DB;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.query.OrderBy;
@@ -26,16 +26,17 @@ import com.vaadin.data.util.sqlcontainer.query.TableQuery;
 
 public class SQLContainerTableQueryTest {
 
-    private static final int offset = AllTests.offset;
-    private static final String createGarbage = AllTests.createGarbage;
+    private static final int offset = SQLTestsConstants.offset;
+    private static final String createGarbage = SQLTestsConstants.createGarbage;
     private JDBCConnectionPool connectionPool;
 
     @Before
     public void setUp() throws SQLException {
 
         try {
-            connectionPool = new SimpleJDBCConnectionPool(AllTests.dbDriver,
-                    AllTests.dbURL, AllTests.dbUser, AllTests.dbPwd, 2, 2);
+            connectionPool = new SimpleJDBCConnectionPool(
+                    SQLTestsConstants.dbDriver, SQLTestsConstants.dbURL,
+                    SQLTestsConstants.dbUser, SQLTestsConstants.dbPwd, 2, 2);
         } catch (SQLException e) {
             e.printStackTrace();
             Assert.fail(e.getMessage());
@@ -54,14 +55,14 @@ public class SQLContainerTableQueryTest {
     @Test
     public void constructor_withTableQuery_shouldSucceed() throws SQLException {
         new SQLContainer(new TableQuery("people", connectionPool,
-                AllTests.sqlGen));
+                SQLTestsConstants.sqlGen));
     }
 
     @Test
     public void containsId_withTableQueryAndExistingId_returnsTrue()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Assert.assertTrue(container.containsId(new RowId(
                 new Object[] { 1 + offset })));
     }
@@ -70,7 +71,7 @@ public class SQLContainerTableQueryTest {
     public void containsId_withTableQueryAndNonexistingId_returnsFalse()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Assert.assertFalse(container.containsId(new RowId(
                 new Object[] { 1337 + offset })));
     }
@@ -78,9 +79,10 @@ public class SQLContainerTableQueryTest {
     @Test
     public void getContainerProperty_tableExistingItemIdAndPropertyId_returnsProperty()
             throws SQLException {
-        TableQuery t = new TableQuery("people", connectionPool, AllTests.sqlGen);
+        TableQuery t = new TableQuery("people", connectionPool,
+                SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(t);
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(
                     "Ville",
                     container
@@ -100,7 +102,7 @@ public class SQLContainerTableQueryTest {
     public void getContainerProperty_tableExistingItemIdAndNonexistingPropertyId_returnsNull()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Assert.assertNull(container.getContainerProperty(new RowId(
                 new Object[] { 1 + offset }), "asdf"));
     }
@@ -109,7 +111,7 @@ public class SQLContainerTableQueryTest {
     public void getContainerProperty_tableNonexistingItemId_returnsNull()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Assert.assertNull(container.getContainerProperty(new RowId(
                 new Object[] { 1337 + offset }), "NAME"));
     }
@@ -118,7 +120,7 @@ public class SQLContainerTableQueryTest {
     public void getContainerPropertyIds_table_returnsIDAndNAME()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Collection<?> propertyIds = container.getContainerPropertyIds();
         Assert.assertEquals(3, propertyIds.size());
         Assert.assertArrayEquals(new String[] { "ID", "NAME", "AGE" },
@@ -128,9 +130,9 @@ public class SQLContainerTableQueryTest {
     @Test
     public void getItem_tableExistingItemId_returnsItem() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Item item;
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             item = container.getItem(new RowId(new Object[] { new BigDecimal(
                     0 + offset) }));
         } else {
@@ -146,7 +148,7 @@ public class SQLContainerTableQueryTest {
         String NEW_VALUE = "OtherValue"; //$NON-NLS-1$
 
         SQLContainer container = new SQLContainer(new TableQuery("people", //$NON-NLS-1$
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object itemID = container.addItem();
         Item item = container.getItem(itemID);
         item.getItemProperty("NAME").setValue(OLD_VALUE); //$NON-NLS-1$
@@ -174,11 +176,11 @@ public class SQLContainerTableQueryTest {
             throws SQLException {
         DataGenerator.addFiveThousandPeople(connectionPool);
         TableQuery query = new TableQuery("people", connectionPool,
-                AllTests.sqlGen);
+                SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(query);
 
         Item item;
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             item = container.getItem(new RowId(new Object[] { new BigDecimal(
                     1337 + offset) }));
             Assert.assertNotNull(item);
@@ -198,14 +200,14 @@ public class SQLContainerTableQueryTest {
     public void getItemIds_table_returnsItemIdsWithKeys0through3()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Collection<?> itemIds = container.getItemIds();
         Assert.assertEquals(4, itemIds.size());
         RowId zero = new RowId(new Object[] { 0 + offset });
         RowId one = new RowId(new Object[] { 1 + offset });
         RowId two = new RowId(new Object[] { 2 + offset });
         RowId three = new RowId(new Object[] { 3 + offset });
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             String[] correct = new String[] { "1", "2", "3", "4" };
             List<String> oracle = new ArrayList<String>();
             for (Object o : itemIds) {
@@ -221,15 +223,15 @@ public class SQLContainerTableQueryTest {
     @Test
     public void getType_tableNAMEPropertyId_returnsString() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Assert.assertEquals(String.class, container.getType("NAME"));
     }
 
     @Test
     public void getType_tableIDPropertyId_returnsInteger() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
-        if (AllTests.db == DB.ORACLE) {
+                connectionPool, SQLTestsConstants.sqlGen));
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(BigDecimal.class, container.getType("ID"));
         } else {
             Assert.assertEquals(Integer.class, container.getType("ID"));
@@ -240,14 +242,14 @@ public class SQLContainerTableQueryTest {
     public void getType_tableNonexistingPropertyId_returnsNull()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Assert.assertNull(container.getType("asdf"));
     }
 
     @Test
     public void size_table_returnsFour() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Assert.assertEquals(4, container.size());
     }
 
@@ -255,7 +257,7 @@ public class SQLContainerTableQueryTest {
     public void size_tableOneAddedItem_returnsFive() throws SQLException {
         Connection conn = connectionPool.reserveConnection();
         Statement statement = conn.createStatement();
-        if (AllTests.db == DB.MSSQL) {
+        if (SQLTestsConstants.db == DB.MSSQL) {
             statement.executeUpdate("insert into people values('Bengt', 30)");
         } else {
             statement
@@ -266,7 +268,7 @@ public class SQLContainerTableQueryTest {
         connectionPool.releaseConnection(conn);
 
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Assert.assertEquals(5, container.size());
     }
 
@@ -274,8 +276,8 @@ public class SQLContainerTableQueryTest {
     public void indexOfId_tableWithParameterThree_returnsThree()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
-        if (AllTests.db == DB.ORACLE) {
+                connectionPool, SQLTestsConstants.sqlGen));
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(3, container.indexOfId(new RowId(
                     new Object[] { new BigDecimal(3 + offset) })));
         } else {
@@ -288,9 +290,10 @@ public class SQLContainerTableQueryTest {
     public void indexOfId_table5000RowsWithParameter1337_returns1337()
             throws SQLException {
         DataGenerator.addFiveThousandPeople(connectionPool);
-        TableQuery q = new TableQuery("people", connectionPool, AllTests.sqlGen);
+        TableQuery q = new TableQuery("people", connectionPool,
+                SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(q);
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             container.getItem(new RowId(new Object[] { new BigDecimal(
                     1337 + offset) }));
             Assert.assertEquals(1337, container.indexOfId(new RowId(
@@ -307,9 +310,9 @@ public class SQLContainerTableQueryTest {
             throws SQLException {
         DataGenerator.addFiveThousandPeople(connectionPool);
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object itemId = container.getIdByIndex(1337);
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(
                     new RowId(new Object[] { 1337 + offset }).toString(),
                     itemId.toString());
@@ -324,10 +327,10 @@ public class SQLContainerTableQueryTest {
             throws SQLException {
         DataGenerator.addFiveThousandPeople(connectionPool);
         TableQuery query = new TableQuery("people", connectionPool,
-                AllTests.sqlGen);
+                SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(query);
         Object itemId = container.getIdByIndex(1337);
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(
                     new RowId(new Object[] { 1337 + offset }).toString(),
                     itemId.toString());
@@ -342,9 +345,9 @@ public class SQLContainerTableQueryTest {
             throws SQLException {
         DataGenerator.addFiveThousandPeople(connectionPool);
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object itemId = container.getIdByIndex(1337);
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(
                     new RowId(new Object[] { 1338 + offset }).toString(),
                     container.nextItemId(itemId).toString());
@@ -359,9 +362,9 @@ public class SQLContainerTableQueryTest {
             throws SQLException {
         DataGenerator.addFiveThousandPeople(connectionPool);
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object itemId = container.getIdByIndex(1337);
-        if (AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(
                     new RowId(new Object[] { 1336 + offset }).toString(),
                     container.prevItemId(itemId).toString());
@@ -374,8 +377,8 @@ public class SQLContainerTableQueryTest {
     @Test
     public void firstItemId_table_returnsItemId0() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
-        if (AllTests.db == DB.ORACLE) {
+                connectionPool, SQLTestsConstants.sqlGen));
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(
                     new RowId(new Object[] { 0 + offset }).toString(),
                     container.firstItemId().toString());
@@ -391,8 +394,8 @@ public class SQLContainerTableQueryTest {
         DataGenerator.addFiveThousandPeople(connectionPool);
 
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
-        if (AllTests.db == DB.ORACLE) {
+                connectionPool, SQLTestsConstants.sqlGen));
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertEquals(
                     new RowId(new Object[] { 4999 + offset }).toString(),
                     container.lastItemId().toString());
@@ -405,8 +408,8 @@ public class SQLContainerTableQueryTest {
     @Test
     public void isFirstId_tableActualFirstId_returnsTrue() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
-        if (AllTests.db == DB.ORACLE) {
+                connectionPool, SQLTestsConstants.sqlGen));
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertTrue(container.isFirstId(new RowId(
                     new Object[] { new BigDecimal(0 + offset) })));
         } else {
@@ -418,8 +421,8 @@ public class SQLContainerTableQueryTest {
     @Test
     public void isFirstId_tableSecondId_returnsFalse() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
-        if (AllTests.db == DB.ORACLE) {
+                connectionPool, SQLTestsConstants.sqlGen));
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertFalse(container.isFirstId(new RowId(
                     new Object[] { new BigDecimal(1 + offset) })));
         } else {
@@ -431,8 +434,8 @@ public class SQLContainerTableQueryTest {
     @Test
     public void isLastId_tableSecondId_returnsFalse() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
-        if (AllTests.db == DB.ORACLE) {
+                connectionPool, SQLTestsConstants.sqlGen));
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertFalse(container.isLastId(new RowId(
                     new Object[] { new BigDecimal(1 + offset) })));
         } else {
@@ -444,8 +447,8 @@ public class SQLContainerTableQueryTest {
     @Test
     public void isLastId_tableLastId_returnsTrue() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
-        if (AllTests.db == DB.ORACLE) {
+                connectionPool, SQLTestsConstants.sqlGen));
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertTrue(container.isLastId(new RowId(
                     new Object[] { new BigDecimal(3 + offset) })));
         } else {
@@ -458,8 +461,8 @@ public class SQLContainerTableQueryTest {
     public void isLastId_table5000RowsLastId_returnsTrue() throws SQLException {
         DataGenerator.addFiveThousandPeople(connectionPool);
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
-        if (AllTests.db == DB.ORACLE) {
+                connectionPool, SQLTestsConstants.sqlGen));
+        if (SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertTrue(container.isLastId(new RowId(
                     new Object[] { new BigDecimal(4999 + offset) })));
         } else {
@@ -473,7 +476,7 @@ public class SQLContainerTableQueryTest {
             throws SQLException {
         DataGenerator.addFiveThousandPeople(connectionPool);
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         for (int i = 0; i < 5000; i++) {
             Assert.assertTrue(container.containsId(container.getIdByIndex(i)));
         }
@@ -484,7 +487,7 @@ public class SQLContainerTableQueryTest {
             throws SQLException {
         DataGenerator.addFiveThousandPeople(connectionPool);
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         container.setAutoCommit(true);
         for (int i = 0; i < 5000; i++) {
             Assert.assertTrue(container.containsId(container.getIdByIndex(i)));
@@ -494,7 +497,7 @@ public class SQLContainerTableQueryTest {
     @Test
     public void refresh_table_sizeShouldUpdate() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Assert.assertEquals(4, container.size());
         DataGenerator.addFiveThousandPeople(connectionPool);
         container.refresh();
@@ -509,7 +512,7 @@ public class SQLContainerTableQueryTest {
         // make sure that the refresh method actually refreshes stuff and isn't
         // a NOP.
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Assert.assertEquals(4, container.size());
         DataGenerator.addFiveThousandPeople(connectionPool);
         Assert.assertEquals(4, container.size());
@@ -518,7 +521,7 @@ public class SQLContainerTableQueryTest {
     @Test
     public void setAutoCommit_table_shouldSucceed() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         container.setAutoCommit(true);
         Assert.assertTrue(container.isAutoCommit());
         container.setAutoCommit(false);
@@ -528,14 +531,14 @@ public class SQLContainerTableQueryTest {
     @Test
     public void getPageLength_table_returnsDefault100() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Assert.assertEquals(100, container.getPageLength());
     }
 
     @Test
     public void setPageLength_table_shouldSucceed() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         container.setPageLength(20);
         Assert.assertEquals(20, container.getPageLength());
         container.setPageLength(200);
@@ -545,7 +548,7 @@ public class SQLContainerTableQueryTest {
     @Test(expected = UnsupportedOperationException.class)
     public void addContainerProperty_normal_isUnsupported() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         container.addContainerProperty("asdf", String.class, "");
     }
 
@@ -553,14 +556,14 @@ public class SQLContainerTableQueryTest {
     public void removeContainerProperty_normal_isUnsupported()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         container.removeContainerProperty("asdf");
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void addItemObject_normal_isUnsupported() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         container.addItem("asdf");
     }
 
@@ -568,35 +571,35 @@ public class SQLContainerTableQueryTest {
     public void addItemAfterObjectObject_normal_isUnsupported()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         container.addItemAfter("asdf", "foo");
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void addItemAtIntObject_normal_isUnsupported() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         container.addItemAt(2, "asdf");
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void addItemAtInt_normal_isUnsupported() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         container.addItemAt(2);
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void addItemAfterObject_normal_isUnsupported() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         container.addItemAfter("asdf");
     }
 
     @Test
     public void addItem_tableAddOneNewItem_returnsItemId() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object itemId = container.addItem();
         Assert.assertNotNull(itemId);
     }
@@ -605,7 +608,7 @@ public class SQLContainerTableQueryTest {
     public void addItem_tableAddOneNewItem_autoCommit_returnsFinalItemId()
             throws SQLException {
         TableQuery query = new TableQuery("people", connectionPool,
-                AllTests.sqlGen);
+                SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(query);
         container.setAutoCommit(true);
         Object itemId = container.addItem();
@@ -618,7 +621,7 @@ public class SQLContainerTableQueryTest {
     public void addItem_tableAddOneNewItem_autoCommit_sizeIsIncreased()
             throws SQLException {
         TableQuery query = new TableQuery("people", connectionPool,
-                AllTests.sqlGen);
+                SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(query);
         container.setAutoCommit(true);
         int originalSize = container.size();
@@ -630,7 +633,7 @@ public class SQLContainerTableQueryTest {
     public void addItem_tableAddOneNewItem_shouldChangeSize()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         int size = container.size();
         container.addItem();
         Assert.assertEquals(size + 1, container.size());
@@ -640,7 +643,7 @@ public class SQLContainerTableQueryTest {
     public void addItem_tableAddTwoNewItems_shouldChangeSize()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         int size = container.size();
         Object id1 = container.addItem();
         Object id2 = container.addItem();
@@ -653,7 +656,7 @@ public class SQLContainerTableQueryTest {
     public void nextItemId_tableNewlyAddedItem_returnsNewlyAdded()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object lastId = container.lastItemId();
         Object id = container.addItem();
         Assert.assertEquals(id, container.nextItemId(lastId));
@@ -663,7 +666,7 @@ public class SQLContainerTableQueryTest {
     public void lastItemId_tableNewlyAddedItem_returnsNewlyAdded()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object lastId = container.lastItemId();
         Object id = container.addItem();
         Assert.assertEquals(id, container.lastItemId());
@@ -673,7 +676,7 @@ public class SQLContainerTableQueryTest {
     @Test
     public void indexOfId_tableNewlyAddedItem_returnsFour() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object id = container.addItem();
         Assert.assertEquals(4, container.indexOfId(id));
     }
@@ -682,7 +685,7 @@ public class SQLContainerTableQueryTest {
     public void getItem_tableNewlyAddedItem_returnsNewlyAdded()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object id = container.addItem();
         Assert.assertNotNull(container.getItem(id));
     }
@@ -691,7 +694,7 @@ public class SQLContainerTableQueryTest {
     public void getItemIds_tableNewlyAddedItem_containsNewlyAdded()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object id = container.addItem();
         Assert.assertTrue(container.getItemIds().contains(id));
     }
@@ -700,7 +703,7 @@ public class SQLContainerTableQueryTest {
     public void getContainerProperty_tableNewlyAddedItem_returnsPropertyOfNewlyAddedItem()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object id = container.addItem();
         Item item = container.getItem(id);
         item.getItemProperty("NAME").setValue("asdf");
@@ -712,7 +715,7 @@ public class SQLContainerTableQueryTest {
     public void containsId_tableNewlyAddedItem_returnsTrue()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object id = container.addItem();
         Assert.assertTrue(container.containsId(id));
     }
@@ -721,7 +724,7 @@ public class SQLContainerTableQueryTest {
     public void prevItemId_tableTwoNewlyAddedItems_returnsFirstAddedItem()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object id1 = container.addItem();
         Object id2 = container.addItem();
         Assert.assertEquals(id1, container.prevItemId(id2));
@@ -732,7 +735,7 @@ public class SQLContainerTableQueryTest {
             throws SQLException {
         DataGenerator.createGarbage(connectionPool);
         SQLContainer container = new SQLContainer(new TableQuery("garbage",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object id = container.addItem();
         Assert.assertSame(id, container.firstItemId());
     }
@@ -742,7 +745,7 @@ public class SQLContainerTableQueryTest {
             throws SQLException {
         DataGenerator.createGarbage(connectionPool);
         SQLContainer container = new SQLContainer(new TableQuery("garbage",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object id = container.addItem();
         Assert.assertTrue(container.isFirstId(id));
     }
@@ -751,7 +754,7 @@ public class SQLContainerTableQueryTest {
     public void isLastId_tableOneItemAdded_returnsTrueForAddedItem()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object id = container.addItem();
         Assert.assertTrue(container.isLastId(id));
     }
@@ -760,7 +763,7 @@ public class SQLContainerTableQueryTest {
     public void isLastId_tableTwoItemsAdded_returnsTrueForLastAddedItem()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         container.addItem();
         Object id2 = container.addItem();
         Assert.assertTrue(container.isLastId(id2));
@@ -770,7 +773,7 @@ public class SQLContainerTableQueryTest {
     public void getIdByIndex_tableOneItemAddedLastIndexInContainer_returnsAddedItem()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object id = container.addItem();
         Assert.assertEquals(id, container.getIdByIndex(container.size() - 1));
     }
@@ -779,7 +782,7 @@ public class SQLContainerTableQueryTest {
     public void removeItem_tableNoAddedItems_removesItemFromContainer()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         int size = container.size();
         Object id = container.firstItemId();
         Assert.assertTrue(container.removeItem(id));
@@ -790,7 +793,7 @@ public class SQLContainerTableQueryTest {
     @Test
     public void containsId_tableRemovedItem_returnsFalse() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object id = container.firstItemId();
         Assert.assertTrue(container.removeItem(id));
         Assert.assertFalse(container.containsId(id));
@@ -800,7 +803,7 @@ public class SQLContainerTableQueryTest {
     public void removeItem_tableOneAddedItem_removesTheAddedItem()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object id = container.addItem();
         int size = container.size();
         Assert.assertTrue(container.removeItem(id));
@@ -811,7 +814,7 @@ public class SQLContainerTableQueryTest {
     @Test
     public void getItem_tableItemRemoved_returnsNull() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object id = container.firstItemId();
         Assert.assertTrue(container.removeItem(id));
         Assert.assertNull(container.getItem(id));
@@ -820,7 +823,7 @@ public class SQLContainerTableQueryTest {
     @Test
     public void getItem_tableAddedItemRemoved_returnsNull() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object id = container.addItem();
         Assert.assertNotNull(container.getItem(id));
         Assert.assertTrue(container.removeItem(id));
@@ -831,7 +834,7 @@ public class SQLContainerTableQueryTest {
     public void getItemIds_tableItemRemoved_shouldNotContainRemovedItem()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object id = container.firstItemId();
         Assert.assertTrue(container.getItemIds().contains(id));
         Assert.assertTrue(container.removeItem(id));
@@ -842,7 +845,7 @@ public class SQLContainerTableQueryTest {
     public void getItemIds_tableAddedItemRemoved_shouldNotContainRemovedItem()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object id = container.addItem();
         Assert.assertTrue(container.getItemIds().contains(id));
         Assert.assertTrue(container.removeItem(id));
@@ -852,7 +855,7 @@ public class SQLContainerTableQueryTest {
     @Test
     public void containsId_tableItemRemoved_returnsFalse() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object id = container.firstItemId();
         Assert.assertTrue(container.containsId(id));
         Assert.assertTrue(container.removeItem(id));
@@ -863,7 +866,7 @@ public class SQLContainerTableQueryTest {
     public void containsId_tableAddedItemRemoved_returnsFalse()
             throws SQLException {
         TableQuery query = new TableQuery("people", connectionPool,
-                AllTests.sqlGen);
+                SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(query);
         Object id = container.addItem();
         Assert.assertTrue(container.containsId(id));
@@ -875,7 +878,7 @@ public class SQLContainerTableQueryTest {
     public void nextItemId_tableItemRemoved_skipsRemovedItem()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object first = container.getIdByIndex(0);
         Object second = container.getIdByIndex(1);
         Object third = container.getIdByIndex(2);
@@ -887,7 +890,7 @@ public class SQLContainerTableQueryTest {
     public void nextItemId_tableAddedItemRemoved_skipsRemovedItem()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object first = container.lastItemId();
         Object second = container.addItem();
         Object third = container.addItem();
@@ -899,7 +902,7 @@ public class SQLContainerTableQueryTest {
     public void prevItemId_tableItemRemoved_skipsRemovedItem()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object first = container.getIdByIndex(0);
         Object second = container.getIdByIndex(1);
         Object third = container.getIdByIndex(2);
@@ -911,7 +914,7 @@ public class SQLContainerTableQueryTest {
     public void prevItemId_tableAddedItemRemoved_skipsRemovedItem()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object first = container.lastItemId();
         Object second = container.addItem();
         Object third = container.addItem();
@@ -923,7 +926,7 @@ public class SQLContainerTableQueryTest {
     public void firstItemId_tableFirstItemRemoved_resultChanges()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object first = container.firstItemId();
         Assert.assertTrue(container.removeItem(first));
         Assert.assertNotSame(first, container.firstItemId());
@@ -934,7 +937,7 @@ public class SQLContainerTableQueryTest {
             throws SQLException {
         DataGenerator.createGarbage(connectionPool);
         SQLContainer container = new SQLContainer(new TableQuery("garbage",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object first = container.addItem();
         Object second = container.addItem();
         Assert.assertSame(first, container.firstItemId());
@@ -946,7 +949,7 @@ public class SQLContainerTableQueryTest {
     public void lastItemId_tableLastItemRemoved_resultChanges()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object last = container.lastItemId();
         Assert.assertTrue(container.removeItem(last));
         Assert.assertNotSame(last, container.lastItemId());
@@ -956,7 +959,7 @@ public class SQLContainerTableQueryTest {
     public void lastItemId_tableAddedLastItemRemoved_resultChanges()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object last = container.addItem();
         Assert.assertSame(last, container.lastItemId());
         Assert.assertTrue(container.removeItem(last));
@@ -967,7 +970,7 @@ public class SQLContainerTableQueryTest {
     public void isFirstId_tableFirstItemRemoved_returnsFalse()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object first = container.firstItemId();
         Assert.assertTrue(container.removeItem(first));
         Assert.assertFalse(container.isFirstId(first));
@@ -978,7 +981,7 @@ public class SQLContainerTableQueryTest {
             throws SQLException {
         DataGenerator.createGarbage(connectionPool);
         SQLContainer container = new SQLContainer(new TableQuery("garbage",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object first = container.addItem();
         container.addItem();
         Assert.assertSame(first, container.firstItemId());
@@ -990,7 +993,7 @@ public class SQLContainerTableQueryTest {
     public void isLastId_tableLastItemRemoved_returnsFalse()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object last = container.lastItemId();
         Assert.assertTrue(container.removeItem(last));
         Assert.assertFalse(container.isLastId(last));
@@ -1000,7 +1003,7 @@ public class SQLContainerTableQueryTest {
     public void isLastId_tableAddedLastItemRemoved_returnsFalse()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object last = container.addItem();
         Assert.assertSame(last, container.lastItemId());
         Assert.assertTrue(container.removeItem(last));
@@ -1010,7 +1013,7 @@ public class SQLContainerTableQueryTest {
     @Test
     public void indexOfId_tableItemRemoved_returnsNegOne() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object id = container.getIdByIndex(2);
         Assert.assertTrue(container.removeItem(id));
         Assert.assertEquals(-1, container.indexOfId(id));
@@ -1020,7 +1023,7 @@ public class SQLContainerTableQueryTest {
     public void indexOfId_tableAddedItemRemoved_returnsNegOne()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object id = container.addItem();
         Assert.assertTrue(container.indexOfId(id) != -1);
         Assert.assertTrue(container.removeItem(id));
@@ -1031,7 +1034,7 @@ public class SQLContainerTableQueryTest {
     public void getIdByIndex_tableItemRemoved_resultChanges()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object id = container.getIdByIndex(2);
         Assert.assertTrue(container.removeItem(id));
         Assert.assertNotSame(id, container.getIdByIndex(2));
@@ -1041,7 +1044,7 @@ public class SQLContainerTableQueryTest {
     public void getIdByIndex_tableAddedItemRemoved_resultChanges()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object id = container.addItem();
         container.addItem();
         int index = container.indexOfId(id);
@@ -1052,7 +1055,7 @@ public class SQLContainerTableQueryTest {
     @Test
     public void removeAllItems_table_shouldSucceed() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Assert.assertTrue(container.removeAllItems());
         Assert.assertEquals(0, container.size());
     }
@@ -1061,7 +1064,7 @@ public class SQLContainerTableQueryTest {
     public void removeAllItems_tableAddedItems_shouldSucceed()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         container.addItem();
         container.addItem();
         Assert.assertTrue(container.removeAllItems());
@@ -1071,7 +1074,7 @@ public class SQLContainerTableQueryTest {
     @Test
     public void commit_tableAddedItem_shouldBeWrittenToDB() throws SQLException {
         TableQuery query = new TableQuery("people", connectionPool,
-                AllTests.sqlGen);
+                SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(query);
         Object id = container.addItem();
         container.getContainerProperty(id, "NAME").setValue("New Name");
@@ -1088,7 +1091,7 @@ public class SQLContainerTableQueryTest {
     public void commit_tableTwoAddedItems_shouldBeWrittenToDB()
             throws SQLException {
         TableQuery query = new TableQuery("people", connectionPool,
-                AllTests.sqlGen);
+                SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(query);
         Object id = container.addItem();
         Object id2 = container.addItem();
@@ -1111,7 +1114,7 @@ public class SQLContainerTableQueryTest {
     public void commit_tableRemovedItem_shouldBeRemovedFromDB()
             throws SQLException {
         TableQuery query = new TableQuery("people", connectionPool,
-                AllTests.sqlGen);
+                SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(query);
         Object last = container.lastItemId();
         container.removeItem(last);
@@ -1123,7 +1126,7 @@ public class SQLContainerTableQueryTest {
     public void commit_tableLastItemUpdated_shouldUpdateRowInDB()
             throws SQLException {
         TableQuery query = new TableQuery("people", connectionPool,
-                AllTests.sqlGen);
+                SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(query);
         Object last = container.lastItemId();
         container.getContainerProperty(last, "NAME").setValue("Donald");
@@ -1136,7 +1139,7 @@ public class SQLContainerTableQueryTest {
     @Test
     public void rollback_tableItemAdded_discardsAddedItem() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         int size = container.size();
         Object id = container.addItem();
         container.getContainerProperty(id, "NAME").setValue("foo");
@@ -1151,7 +1154,7 @@ public class SQLContainerTableQueryTest {
     public void rollback_tableItemRemoved_restoresRemovedItem()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         int size = container.size();
         Object last = container.lastItemId();
         container.removeItem(last);
@@ -1164,7 +1167,7 @@ public class SQLContainerTableQueryTest {
     @Test
     public void rollback_tableItemChanged_discardsChanges() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Object last = container.lastItemId();
         container.getContainerProperty(last, "NAME").setValue("foo");
         container.rollback();
@@ -1176,7 +1179,7 @@ public class SQLContainerTableQueryTest {
     public void itemChangeNotification_table_isModifiedReturnsTrue()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Assert.assertFalse(container.isModified());
         RowItem last = (RowItem) container.getItem(container.lastItemId());
         container.itemChangeNotification(last);
@@ -1186,7 +1189,7 @@ public class SQLContainerTableQueryTest {
     @Test
     public void itemSetChangeListeners_table_shouldFire() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         ItemSetChangeListener listener = EasyMock
                 .createMock(ItemSetChangeListener.class);
         listener.containerItemSetChange(EasyMock.isA(ItemSetChangeEvent.class));
@@ -1202,7 +1205,7 @@ public class SQLContainerTableQueryTest {
     public void itemSetChangeListeners_tableItemRemoved_shouldFire()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         ItemSetChangeListener listener = EasyMock
                 .createMock(ItemSetChangeListener.class);
         listener.containerItemSetChange(EasyMock.isA(ItemSetChangeEvent.class));
@@ -1218,7 +1221,7 @@ public class SQLContainerTableQueryTest {
     @Test
     public void removeListener_table_shouldNotFire() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         ItemSetChangeListener listener = EasyMock
                 .createMock(ItemSetChangeListener.class);
         EasyMock.replay(listener);
@@ -1233,7 +1236,7 @@ public class SQLContainerTableQueryTest {
     @Test
     public void isModified_tableRemovedItem_returnsTrue() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Assert.assertFalse(container.isModified());
         container.removeItem(container.lastItemId());
         Assert.assertTrue(container.isModified());
@@ -1242,7 +1245,7 @@ public class SQLContainerTableQueryTest {
     @Test
     public void isModified_tableAddedItem_returnsTrue() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Assert.assertFalse(container.isModified());
         container.addItem();
         Assert.assertTrue(container.isModified());
@@ -1251,7 +1254,7 @@ public class SQLContainerTableQueryTest {
     @Test
     public void isModified_tableChangedItem_returnsTrue() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Assert.assertFalse(container.isModified());
         container.getContainerProperty(container.lastItemId(), "NAME")
                 .setValue("foo");
@@ -1262,13 +1265,14 @@ public class SQLContainerTableQueryTest {
     public void getSortableContainerPropertyIds_table_returnsAllPropertyIds()
             throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         Collection<?> sortableIds = container.getSortableContainerPropertyIds();
         Assert.assertTrue(sortableIds.contains("ID"));
         Assert.assertTrue(sortableIds.contains("NAME"));
         Assert.assertTrue(sortableIds.contains("AGE"));
         Assert.assertEquals(3, sortableIds.size());
-        if (AllTests.db == DB.MSSQL || AllTests.db == DB.ORACLE) {
+        if (SQLTestsConstants.db == DB.MSSQL
+                || SQLTestsConstants.db == DB.ORACLE) {
             Assert.assertFalse(sortableIds.contains("rownum"));
         }
     }
@@ -1276,7 +1280,7 @@ public class SQLContainerTableQueryTest {
     @Test
     public void addOrderBy_table_shouldReorderResults() throws SQLException {
         TableQuery query = new TableQuery("people", connectionPool,
-                AllTests.sqlGen);
+                SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(query);
         // Ville, Kalle, Pelle, Börje
         Assert.assertEquals("Ville",
@@ -1299,14 +1303,14 @@ public class SQLContainerTableQueryTest {
     @Test(expected = IllegalArgumentException.class)
     public void addOrderBy_tableIllegalColumn_shouldFail() throws SQLException {
         SQLContainer container = new SQLContainer(new TableQuery("people",
-                connectionPool, AllTests.sqlGen));
+                connectionPool, SQLTestsConstants.sqlGen));
         container.addOrderBy(new OrderBy("asdf", true));
     }
 
     @Test
     public void sort_table_sortsByName() throws SQLException {
         TableQuery query = new TableQuery("people", connectionPool,
-                AllTests.sqlGen);
+                SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(query);
         // Ville, Kalle, Pelle, Börje
         Assert.assertEquals("Ville",
@@ -1330,7 +1334,7 @@ public class SQLContainerTableQueryTest {
     @Test
     public void addFilter_table_filtersResults() throws SQLException {
         TableQuery query = new TableQuery("people", connectionPool,
-                AllTests.sqlGen);
+                SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(query);
         // Ville, Kalle, Pelle, Börje
         Assert.assertEquals(4, container.size());
@@ -1349,7 +1353,7 @@ public class SQLContainerTableQueryTest {
     @Test
     public void addContainerFilter_filtersResults() throws SQLException {
         TableQuery query = new TableQuery("people", connectionPool,
-                AllTests.sqlGen);
+                SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(query);
         // Ville, Kalle, Pelle, Börje
         Assert.assertEquals(4, container.size());
@@ -1367,7 +1371,7 @@ public class SQLContainerTableQueryTest {
     public void addContainerFilter_ignoreCase_filtersResults()
             throws SQLException {
         TableQuery query = new TableQuery("people", connectionPool,
-                AllTests.sqlGen);
+                SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(query);
         // Ville, Kalle, Pelle, Börje
         Assert.assertEquals(4, container.size());
@@ -1385,7 +1389,7 @@ public class SQLContainerTableQueryTest {
     public void removeAllContainerFilters_table_noFiltering()
             throws SQLException {
         TableQuery query = new TableQuery("people", connectionPool,
-                AllTests.sqlGen);
+                SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(query);
         // Ville, Kalle, Pelle, Börje
         Assert.assertEquals(4, container.size());
@@ -1409,7 +1413,7 @@ public class SQLContainerTableQueryTest {
     @Test
     public void removeContainerFilters_table_noFiltering() throws SQLException {
         TableQuery query = new TableQuery("people", connectionPool,
-                AllTests.sqlGen);
+                SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(query);
         // Ville, Kalle, Pelle, Börje
         Assert.assertEquals(4, container.size());
@@ -1434,7 +1438,7 @@ public class SQLContainerTableQueryTest {
     public void addFilter_tableBufferedItems_alsoFiltersBufferedItems()
             throws SQLException {
         TableQuery query = new TableQuery("people", connectionPool,
-                AllTests.sqlGen);
+                SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(query);
         // Ville, Kalle, Pelle, Börje
         Assert.assertEquals(4, container.size());
@@ -1490,7 +1494,7 @@ public class SQLContainerTableQueryTest {
     public void sort_tableBufferedItems_sortsBufferedItemsLastInOrderAdded()
             throws SQLException {
         TableQuery query = new TableQuery("people", connectionPool,
-                AllTests.sqlGen);
+                SQLTestsConstants.sqlGen);
         SQLContainer container = new SQLContainer(query);
         // Ville, Kalle, Pelle, Börje
         Assert.assertEquals("Ville",

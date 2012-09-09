@@ -8,7 +8,7 @@ import java.sql.Statement;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.data.util.sqlcontainer.AllTests.DB;
+import com.vaadin.data.util.sqlcontainer.SQLTestsConstants.DB;
 import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
 
 public class DataGenerator {
@@ -25,21 +25,21 @@ public class DataGenerator {
         Statement statement = conn.createStatement();
         try {
             statement.execute("drop table PEOPLE");
-            if (AllTests.db == DB.ORACLE) {
+            if (SQLTestsConstants.db == DB.ORACLE) {
                 statement.execute("drop sequence people_seq");
             }
         } catch (SQLException e) {
             // Will fail if table doesn't exist, which is OK.
             conn.rollback();
         }
-        statement.execute(AllTests.peopleFirst);
-        if (AllTests.peopleSecond != null) {
-            statement.execute(AllTests.peopleSecond);
+        statement.execute(SQLTestsConstants.peopleFirst);
+        if (SQLTestsConstants.peopleSecond != null) {
+            statement.execute(SQLTestsConstants.peopleSecond);
         }
-        if (AllTests.db == DB.ORACLE) {
-            statement.execute(AllTests.peopleThird);
+        if (SQLTestsConstants.db == DB.ORACLE) {
+            statement.execute(SQLTestsConstants.peopleThird);
         }
-        if (AllTests.db == DB.MSSQL) {
+        if (SQLTestsConstants.db == DB.MSSQL) {
             statement.executeUpdate("insert into people values('Ville', '23')");
             statement.executeUpdate("insert into people values('Kalle', '7')");
             statement.executeUpdate("insert into people values('Pelle', '18')");
@@ -68,7 +68,7 @@ public class DataGenerator {
         Connection conn = connectionPool.reserveConnection();
         Statement statement = conn.createStatement();
         for (int i = 4; i < 5000; i++) {
-            if (AllTests.db == DB.MSSQL) {
+            if (SQLTestsConstants.db == DB.MSSQL) {
                 statement.executeUpdate("insert into people values('Person "
                         + i + "', '" + i % 99 + "')");
             } else {
@@ -88,7 +88,7 @@ public class DataGenerator {
         Statement statement = conn.createStatement();
         try {
             statement.execute("DROP TABLE VERSIONED");
-            if (AllTests.db == DB.ORACLE) {
+            if (SQLTestsConstants.db == DB.ORACLE) {
                 statement.execute("drop sequence versioned_seq");
                 statement.execute("drop sequence versioned_version");
             }
@@ -96,10 +96,10 @@ public class DataGenerator {
             // Will fail if table doesn't exist, which is OK.
             conn.rollback();
         }
-        for (String stmtString : AllTests.versionStatements) {
+        for (String stmtString : SQLTestsConstants.versionStatements) {
             statement.execute(stmtString);
         }
-        if (AllTests.db == DB.MSSQL) {
+        if (SQLTestsConstants.db == DB.MSSQL) {
             statement
                     .executeUpdate("insert into VERSIONED values('Junk', default)");
         } else {
@@ -121,17 +121,17 @@ public class DataGenerator {
         Statement statement = conn.createStatement();
         try {
             statement.execute("drop table GARBAGE");
-            if (AllTests.db == DB.ORACLE) {
+            if (SQLTestsConstants.db == DB.ORACLE) {
                 statement.execute("drop sequence garbage_seq");
             }
         } catch (SQLException e) {
             // Will fail if table doesn't exist, which is OK.
             conn.rollback();
         }
-        statement.execute(AllTests.createGarbage);
-        if (AllTests.db == DB.ORACLE) {
-            statement.execute(AllTests.createGarbageSecond);
-            statement.execute(AllTests.createGarbageThird);
+        statement.execute(SQLTestsConstants.createGarbage);
+        if (SQLTestsConstants.db == DB.ORACLE) {
+            statement.execute(SQLTestsConstants.createGarbageSecond);
+            statement.execute(SQLTestsConstants.createGarbageThird);
         }
         conn.commit();
         connectionPool.releaseConnection(conn);

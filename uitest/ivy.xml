@@ -1,16 +1,68 @@
-<ivy-module version="2.0" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation= "http://ant.apache.org/ivy/schemas/ivy.xsd">
-    
-    <info organisation="com.vaadin" module="vaadin-uitests"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"
+    xmlns:m="http://ant.apache.org/ivy/maven">
+
+    <info organisation="com.vaadin" module="vaadin-uitest"
+        revision="${vaadin.version}" />
+
     <configurations>
-   		<conf name="jetty" visibility="private" />
-   		<conf name="emma" visibility="private" />
-   		<conf name="server" visibility="private" />
-	</configurations>
-    <publications />        
-	<dependencies>
-   		<dependency org="org.mortbay.jetty" name="jetty" rev="6.1.7" conf="server,jetty->default(*)" />
-        <dependency org="emma" name="emma" rev="2.0.5312-patched" conf="server,emma -> default(*)"/>		
-	</dependencies>
+        <conf name="build" />
+        <conf name="build-provided" visibility="private" />
+        <conf name="ide" visibility="private" />
+        <conf name="jetty-run" extends="build" visibility="private" />
+    </configurations>
+    <publications>
+        <artifact type="war" ext="war"/>
+                   </publications>
+    <dependencies defaultconf="build" defaultconfmapping="build,ide->default">
+        <!-- API DEPENDENCIES -->
+        <dependency org="javax.portlet" name="portlet-api"
+            rev="2.0" conf="build-provided,ide -> default" />
+
+        <dependency org="javax.validation" name="validation-api"
+            rev="1.0.0.GA" conf="build,ide -> default,sources" />
+        <!--Servlet API version 2.5 -->
+        <dependency org="javax.servlet" name="servlet-api"
+            rev="2.5" conf="build-provided,ide -> default" />
+        <!-- Google App Engine -->
+        <dependency org="com.google.appengine" name="appengine-api-1.0-sdk"
+            rev="1.2.1" conf="build-provided,ide -> default" />
+
+        <!-- LIBRARY DEPENDENCIES (compile time) -->
+        <!-- Project modules -->
+        <dependency org="com.vaadin" name="vaadin-server"
+            rev="${vaadin.version}" conf="build->build"></dependency>
+        <dependency org="com.vaadin" name="vaadin-client"
+            rev="${vaadin.version}" conf="build->build"></dependency>
+        <dependency org="com.vaadin" name="vaadin-client-compiled"
+            rev="${vaadin.version}" conf="build->build"></dependency>
+        <dependency org="com.vaadin" name="vaadin-themes-compiled"
+            rev="${vaadin.version}" conf="build->build"></dependency>
+            
+        <!-- For compiling TestingWidgetSet -->
+        <dependency org="com.vaadin" name="vaadin-client-compiler"
+            rev="${vaadin.version}" conf="build-provided-> build"></dependency>
+
+        <!-- Newest Jetty does not work with Ivy currently (orbit -> jar 
+            mapping problem) -->
+        <dependency org="org.eclipse.jetty" name="jetty-server"
+            rev="7.4.5.v20110725" conf="build-provided, ide, jetty-run->default" />
+        <!-- <dependency org="org.mortbay.jetty" name="jetty-util" -->
+        <!-- rev="8.1.5.v20120716" conf="build,ide,jetty-run->default" /> -->
+        <dependency org="org.eclipse.jetty" name="jetty-webapp"
+            rev="7.4.5.v20110725" conf="build-provided, ide,jetty-run->default" />
+        <dependency org="org.mortbay.jetty" name="jetty-runner"
+            rev="7.4.5.v20110725" conf="jetty-run->default" />
+        <dependency org="junit" name="junit" rev="4.5"
+            conf="build,ide -> default" />
+
+        <dependency org="commons-codec" name="commons-codec"
+            rev="1.5" conf="build,ide->default" />
+        <dependency org="commons-io" name="commons-io" rev="1.4"
+            conf="build,ide->default" />
+
+    </dependencies>
+
 </ivy-module>

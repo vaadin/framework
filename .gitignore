@@ -59,3 +59,7 @@
 
 # Mac
 *.DS_Store
+
+# build result folders
+*/result
+result

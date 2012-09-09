@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"
+    xmlns:m="http://ant.apache.org/ivy/maven">
+
+    <info organisation="com.vaadin" module="vaadin-server"
+        revision="${vaadin.version}" />
+
+    <configurations>
+        <conf name="build" />
+        <conf name="build-provided" />
+        <conf name="ide" visibility="private" />
+        <conf name="tests" visibility="private" />
+    </configurations>
+    <publications>
+        <artifact type="jar" ext="jar" />
+        <artifact type="source" ext="jar" m:classifier="sources" />
+        <artifact type="javadoc" ext="jar" m:classifier="javadoc" />
+        <artifact type="pom" ext="pom" />
+    </publications>
+    <dependencies>
+        <!-- API DEPENDENCIES -->
+
+        <!-- Liferay Portal Service -->
+        <dependency org="com.liferay.portal" name="portal-service"
+            rev="6.0.2" conf="build-provided,ide -> default" />
+        <!--Servlet API version 2.5 -->
+        <dependency org="javax.servlet" name="servlet-api"
+            rev="2.5" conf="build-provided,ide,tests -> default" />
+
+        <!--Portlet API version 2.0 (JSR-286) -->
+        <dependency org="javax.portlet" name="portlet-api"
+            rev="2.0" conf="build-provided,ide,tests -> default" />
+
+        <!-- Google App Engine -->
+        <dependency org="com.google.appengine" name="appengine-api-1.0-sdk"
+            rev="1.2.1" conf="build-provided,ide,tests -> default" />
+        <dependency org="javax.validation" name="validation-api"
+            rev="1.0.0.GA" conf="build-provided,ide,tests -> default" />
+
+        <!-- LIBRARY DEPENDENCIES (compile time) -->
+        <!-- Project modules -->
+        <dependency org="com.vaadin" name="vaadin-shared"
+            rev="${vaadin.version}" conf="build,tests" />
+
+        <!-- Jsoup for BootstrapHandler -->
+        <dependency org="org.jsoup" name="jsoup" rev="1.6.3"
+            conf="build,ide,tests -> default" />
+
+        <!-- TESTING DEPENDENCIES -->
+
+        <!-- Test frameworks & related -->
+        <dependency org="junit" name="junit" rev="4.5"
+            conf="tests,ide -> default" />
+        <dependency org="org.easymock" name="easymock" rev="3.0"
+            conf="tests,ide-> default" transitive="true" />
+        <dependency org="org.hsqldb" name="hsqldb" rev="2.2.6"
+            conf="tests,ide -> default" />
+        <dependency org="commons-io" name="commons-io" rev="1.4"
+            conf="tests->default" />
+        <dependency org="commons-lang" name="commons-lang"
+            rev="2.3" conf="tests,ide->default" />
+        <!-- Bean Validation implementation -->
+        <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.1"
+            conf="tests -> default" />
+        <dependency org="org.hibernate" name="hibernate-validator"
+            rev="4.2.0.Final" conf="tests -> default" />
+
+    </dependencies>
+
+</ivy-module>

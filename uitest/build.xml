@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+
+<project name="vaadin-uitest" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<description>
+		Provides a uitest WAR containing Vaadin UI tests
+	</description>
+	<include file="../common.xml" as="common" />
+	<include file="../build.xml" as="vaadin" />
+
+	<!-- global properties -->
+	<property name="module.name" value="vaadin-uitest" />
+	<property name="result.dir" value="result" />
+	<property name="result.war" location="${result.dir}/lib/${module.name}-${vaadin.version}.war" />
+
+	<path id="classpath.compile.custom">
+	</path>
+
+	<target name="dependencies">
+		<!-- This is copied from common.xml to be able to add server.tests.source to the source path -->
+
+		<ivy:resolve resolveid="common" conf="build, build-provided" />
+		<ivy:cachepath pathid="classpath.compile.dependencies" conf="build, build-provided" />
+	</target>
+
+	<target name="compile" description="Compiles the module" depends="dependencies">
+
+		<fail unless="module.name" message="No module name given" />
+		<property name="result.dir" location="result" />
+		<property name="src" location="${result.dir}/../src" />
+		<property name="classes" location="${result.dir}/classes" />
+		<property name="server.tests.sources" location="${result.dir}/../../server/tests/src" />
+		<mkdir dir="${classes}" />
+
+		<!-- TODO: Get rid of this -->
+		<javac destdir="${classes}" source="${vaadin.java.version}" target="${vaadin.java.version}" debug="true" encoding="UTF-8" includeantruntime="false">
+			<src path="${server.tests.sources}" />
+			<include name="com/vaadin/tests/data/bean/**" />
+			<include name="com/vaadin/tests/VaadinClasses.java" />
+			<include name="com/vaadin/data/util/sqlcontainer/SQLTestsConstants.java" />
+			<classpath refid="classpath.compile.dependencies" />
+			<classpath refid="classpath.compile.custom" />
+		</javac>
+
+		<javac destdir="${classes}" source="${vaadin.java.version}" target="${vaadin.java.version}" debug="true" encoding="UTF-8" includeantruntime="false">
+			<src path="${src}" />
+			<classpath location="${classes}" />
+			<classpath refid="classpath.compile.dependencies" />
+			<classpath refid="classpath.compile.custom" />
+		</javac>
+	</target>
+
+	<target name="testing-widgetset" depends="dependencies,compile">
+		<property name="module" value="com.vaadin.tests.widgetset.TestingWidgetSet" />
+		<property name="style" value="OBF" />
+		<property name="localWorkers" value="2" />
+		<property name="extraParams" value="" />
+		<property name="module.output.dir" location="${result.dir}/VAADIN/widgetsets" />
+		<property name="work.dir" location="${result.dir}/work" />
+
+		<mkdir dir="${module.output.dir}" />
+
+		<echo>Compiling ${module} to ${module.output.dir}</echo>
+
+		<!-- compile the module -->
+		<java classname="com.google.gwt.dev.Compiler" classpathref="classpath.compile.dependencies" failonerror="yes" fork="yes" maxmemory="512m">
+			<classpath location="src" />
+			<classpath location="${classes}" />
+			<arg value="-workDir" />
+			<arg value="${work.dir}" />
+			<arg value="-logLevel" />
+			<arg value="TRACE" />
+			<arg value="-war" />
+			<arg value="${module.output.dir}" />
+			<arg value="-style" />
+			<arg value="${style}" />
+
+			<arg value="-localWorkers" />
+			<arg value="${localWorkers}" />
+			<arg value="-strict" />
+			<arg line="${extraParams}" />
+			<arg value="${module}" />
+
+			<sysproperty key="vFailIfNotSerializable" value="true" />
+
+			<jvmarg value="-Xss8M" />
+			<jvmarg value="-XX:MaxPermSize=256M" />
+			<jvmarg value="-Djava.awt.headless=true" />
+		</java>
+
+	</target>
+
+	<target name="war" depends="dependencies, compile, testing-widgetset">
+		<property name="result.dir" location="result" />
+		<property name="classes" location="${result.dir}/classes" />
+		<property name="WebContent.dir" location="${vaadin.basedir}/WebContent" />
+		<property name="deps.dir" location="${result.dir}/deps" />
+
+		<ivy:resolve resolveid="common" conf="build" />
+		<ivy:cachepath pathid="classpath.runtime.dependencies" conf="build" />
+
+		<delete dir="${deps.dir}" />
+		<mkdir dir="${deps.dir}" />
+
+		<copy todir="${deps.dir}" flatten="true">
+			<path refid="classpath.runtime.dependencies" />
+		</copy>
+
+		<war destfile="${result.war}" duplicate="fail" index="true">
+			<fileset refid="common.files.for.all.jars" />
+			<fileset dir="${WebContent.dir}">
+				<include name="statictestfiles/**" />
+				<include name="VAADIN/themes/tests-*/**" />
+				<include name="VAADIN/themes/reindeer-test/**" />
+				<include name="WEB-INF/*.xml" />
+			</fileset>
+			<classes dir="${classes}" />
+			<lib dir="${deps.dir}" />
+		</war>
+
+	</target>
+
+	<target name="publish-local" depends="war">
+		<antcall target="common.publish-local">
+			<param name="conf" value="build" />
+		</antcall>
+	</target>
+
+	<target name="clean">
+		<antcall target="common.clean" />
+	</target>
+	<target name="tests">
+		<!--<antcall target="common.tests.run" />-->
+		<echo>WHAT? No JUnit tests for ${module.name}!</echo>
+	</target>
+
+</project>

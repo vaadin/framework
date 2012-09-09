@@ -1055,7 +1055,6 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
      * @return True if additions are allowed.
      */
     public boolean isNewItemsAllowed() {
-
         return allowNewOptions;
     }
 

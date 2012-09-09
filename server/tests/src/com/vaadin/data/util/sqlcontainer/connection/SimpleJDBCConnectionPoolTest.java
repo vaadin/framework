@@ -9,15 +9,16 @@ import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.vaadin.data.util.sqlcontainer.AllTests;
+import com.vaadin.data.util.sqlcontainer.SQLTestsConstants;
 
 public class SimpleJDBCConnectionPoolTest {
     private JDBCConnectionPool connectionPool;
 
     @Before
     public void setUp() throws SQLException {
-        connectionPool = new SimpleJDBCConnectionPool(AllTests.dbDriver,
-                AllTests.dbURL, AllTests.dbUser, AllTests.dbPwd, 2, 2);
+        connectionPool = new SimpleJDBCConnectionPool(
+                SQLTestsConstants.dbDriver, SQLTestsConstants.dbURL,
+                SQLTestsConstants.dbUser, SQLTestsConstants.dbPwd, 2, 2);
     }
 
     @Test
@@ -93,34 +94,37 @@ public class SimpleJDBCConnectionPoolTest {
     @Test(expected = IllegalArgumentException.class)
     public void construct_onlyDriverNameGiven_shouldFail() throws SQLException {
         SimpleJDBCConnectionPool cp = new SimpleJDBCConnectionPool(
-                AllTests.dbDriver, null, null, null);
+                SQLTestsConstants.dbDriver, null, null, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void construct_onlyDriverNameAndUrlGiven_shouldFail()
             throws SQLException {
         SimpleJDBCConnectionPool cp = new SimpleJDBCConnectionPool(
-                AllTests.dbDriver, AllTests.dbURL, null, null);
+                SQLTestsConstants.dbDriver, SQLTestsConstants.dbURL, null, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void construct_onlyDriverNameAndUrlAndUserGiven_shouldFail()
             throws SQLException {
         SimpleJDBCConnectionPool cp = new SimpleJDBCConnectionPool(
-                AllTests.dbDriver, AllTests.dbURL, AllTests.dbUser, null);
+                SQLTestsConstants.dbDriver, SQLTestsConstants.dbURL,
+                SQLTestsConstants.dbUser, null);
     }
 
     @Test(expected = RuntimeException.class)
     public void construct_nonExistingDriver_shouldFail() throws SQLException {
         SimpleJDBCConnectionPool cp = new SimpleJDBCConnectionPool("foo",
-                AllTests.dbURL, AllTests.dbUser, AllTests.dbPwd);
+                SQLTestsConstants.dbURL, SQLTestsConstants.dbUser,
+                SQLTestsConstants.dbPwd);
     }
 
     @Test
     public void reserveConnection_newConnectionOpened_shouldSucceed()
             throws SQLException {
-        connectionPool = new SimpleJDBCConnectionPool(AllTests.dbDriver,
-                AllTests.dbURL, AllTests.dbUser, AllTests.dbPwd, 0, 2);
+        connectionPool = new SimpleJDBCConnectionPool(
+                SQLTestsConstants.dbDriver, SQLTestsConstants.dbURL,
+                SQLTestsConstants.dbUser, SQLTestsConstants.dbPwd, 0, 2);
         Connection c = connectionPool.reserveConnection();
         Assert.assertNotNull(c);
     }
