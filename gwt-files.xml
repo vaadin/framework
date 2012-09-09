@@ -15,10 +15,10 @@
 	<available file="${gwt.elemental.jar}" property="gwt.elemental.jar.found" />
 	<available file="${gwt.codeserver.jar}" property="gwt.codeserver.jar.found" />
 
-	<fail unless="gwt.dev.jar.found" message="Could not find gwt-dev.jar" />
-	<fail unless="gwt.user.jar.found" message="Could not find gwt-user.jar" />
-	<fail unless="gwt.elemental.jar.found" message="Could not find gwt-elemental.jar" />
-	<fail unless="gwt.codeserver.jar.found" message="Could not find gwt-codeserver.jar" />
+	<fail unless="gwt.dev.jar.found" message="Could not find gwt-dev.jar at ${gwt.dev.jar}" />
+	<fail unless="gwt.user.jar.found" message="Could not find gwt-user.jar at ${gwt.user.jar}" />
+	<fail unless="gwt.elemental.jar.found" message="Could not find gwt-elemental.jar at ${gwt.elemental.jar}" />
+	<fail unless="gwt.codeserver.jar.found" message="Could not find gwt-codeserver.jar at ${gtw.codeserver.jar}" />
 
 	<property name="gwt.unpack.dir" location="${vaadin.basedir}/build/gwt" />
 
