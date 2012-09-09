@@ -28,7 +28,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
@@ -71,6 +70,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      */
     public static final String UI_PARAMETER = "UI";
 
+    public static final String SESSION_LOCK_MESSAGE = "You are accessing UI state without proper synchronization!";
+
     private static final Method BOOTSTRAP_FRAGMENT_METHOD = ReflectTools
             .findMethod(BootstrapListener.class, "modifyBootstrapFragment",
                     BootstrapFragmentResponse.class);
@@ -78,7 +79,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
             .findMethod(BootstrapListener.class, "modifyBootstrapPage",
                     BootstrapPageResponse.class);
 
-    private final Lock lock = new ReentrantLock();
+    private final ReentrantLock lock = new ReentrantLock();
 
     /**
      * An event sent to {@link #start(SessionStartEvent)} when a new Application
@@ -205,6 +206,10 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     private transient WrappedSession session;
 
     private final Map<String, Object> attributes = new HashMap<String, Object>();
+
+    public VaadinSession() {
+        // TODO Auto-generated constructor stub
+    }
 
     /**
      * @see javax.servlet.http.HttpSessionBindingListener#valueBound(HttpSessionBindingEvent)
@@ -1304,7 +1309,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * 
      * @return the lock that should be used for synchronization
      */
-    public Lock getLock() {
+    public ReentrantLock getLock() {
         return lock;
     }
 

@@ -146,6 +146,8 @@ public abstract class AbstractClientConnector implements ClientConnector {
     }
 
     protected SharedState getState() {
+        assert getSession() == null
+                || getSession().getLock().isHeldByCurrentThread() : VaadinSession.SESSION_LOCK_MESSAGE;
         if (null == sharedState) {
             sharedState = createState();
         }

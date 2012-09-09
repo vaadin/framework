@@ -19,10 +19,11 @@ public class RemoveListenersOnDetach {
 
     AbstractField field = new AbstractField() {
         final private VaadinSession application = new VaadinSession() {
-
+            {
+                getLock().lock();
+            }
         };
         private UI uI = new UI() {
-
             @Override
             protected void init(WrappedRequest request) {
 
