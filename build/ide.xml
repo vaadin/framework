@@ -7,6 +7,7 @@
 	<property name="gwt.lib.dir" location="${gwt.root}/build/lib" />
 	<property name="gwt.user.jar" location="${gwt.lib.dir}/gwt-user.jar" />
 	<property name="gwt.dev.jar" location="${gwt.lib.dir}/gwt-dev.jar" />
+	<property name="theme-version" location="9.9.9.INTERNAL-DEBUG-BUILD" />
 	<echo>Using gwt-dev.jar from ${gwt.dev.jar}</echo>
 
 	<ivy:cachepath pathid="ivy.deps" inline="true" organisation="javax.validation" module="validation-api" revision="1.0.0.GA" conf="default,sources" />
@@ -50,6 +51,8 @@
 			<jvmarg value="-Djava.awt.headless=true" />
 			<arg value="--theme" />
 			<arg value="${theme}" />
+			<arg value="--theme-version" />
+			<arg value="${theme-version}" />
 			<arg value="--theme-folder" />
 			<arg value="WebContent/VAADIN/themes" />
 		</java>
