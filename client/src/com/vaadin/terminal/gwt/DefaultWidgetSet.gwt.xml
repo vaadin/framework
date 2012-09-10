@@ -1,0 +1,9 @@
+<module>
+    <!-- This GWT module is provided for backwards compatibility only. You 
+        should inherit com.vaadin.DefaultWidgetSet instead. -->
+
+    <!-- Hint for WidgetSetBuilder not to automatically update the file -->
+    <!-- WS Compiler: manually edited -->
+    <inherits name="com.vaadin.DefaultWidgetSet" />
+
+</module>
