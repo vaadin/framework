@@ -32,8 +32,6 @@
             rev="2.5" />
         <dependency org="com.carrotsearch" name="smartsprites"
             rev="0.2.3-itmill" />
-        <dependency org="com.vaadin" name="vaadin-buildhelpers"
-            rev="${vaadin.version}" conf="build"></dependency>
         <dependency org="junit" name="junit" rev="4.5"
             conf="tests -> default" />
         <dependency org="net.sourceforge.cssparser" name="cssparser"

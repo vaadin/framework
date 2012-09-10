@@ -11,7 +11,9 @@
 	<property name="modules.to.publish.to.maven" value="shared,server,client,client-compiler,client-compiled,theme-compiler,themes-compiled" />
 	<property name="modules.to.publish.to.download" value="${modules.to.publish.to.maven},all" />
 
-	<ivy:resolve file="${vaadin.basedir}/build/ivy/ivy.xml" conf="taskdefs" />
+	<ivy:settings file="${vaadin.basedir}/ivysettings.xml" />
+	<ivy:settings file="${vaadin.basedir}/ivysettings.xml" id="ivysettings" />
+	<ivy:resolve file="${vaadin.basedir}/ivy-taskdefs.xml" conf="taskdefs" />
 	<ivy:cachepath pathid="taskdefs.classpath" conf="taskdefs" />
 	<taskdef uri="antlib:net.sf.antcontrib" resource="net/sf/antcontrib/antlib.xml" classpathref="taskdefs.classpath" />
 	<!-- ant contrib for Maven integration -->
@@ -21,7 +23,6 @@
 	<antcontrib:propertyregex property="vaadin.version.major" input="${vaadin.version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\1" />
 	<antcontrib:propertyregex property="vaadin.version.minor" input="${vaadin.version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\2" />
 	<antcontrib:propertyregex property="vaadin.version.revision" input="${vaadin.version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)" select="\3" />
-	<ivy:settings file="${vaadin.basedir}/ivysettings.xml" id="ivysettings" />
 
 	<union id="empty.reference" />
 
