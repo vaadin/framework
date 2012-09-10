@@ -37,7 +37,7 @@
 
       <h2 id="tableofcontents">Release Notes for Vaadin Framework @version@</h2>
       <ul>
-        <li><a href="#overview">Package contents</a></li>
+        <li><a href="#overview">Overview</a></li>
         <li><a href="#enhancements">Enhancements in Vaadin @version-minor@</a></li>
         <li><a href="#changelog">Complete change log for Vaadin @version@</a></li>
         <li><a href="#migrating">Migrating from Vaadin 6 to Vaadin 7</a></li>
@@ -47,26 +47,55 @@
         <li><a href="#vaadinontheweb">Vaadin on the Web</a></li>
       </ul>
 
-      <h2 id="overview">Package Contents</h2>
+      <h2 id="overview">Overview</h2>
 
       <p>
         <b>Vaadin</b> is a Java framework for building modern web applications that look
-        great, perform well and make you and your users happy. <b>Vaadin</b> is available
-        under the Apache 2 license (see <tt>license.html</tt>).
+        great, perform well and make you and your users happy. <b>Vaadin</b> and is
+        available under the Apache 2 license (see <tt>license.html</tt>).
       </p>
       
       <p>
-        <b>Vaadin</b> is distributed as a single JAR file. Inside the JAR you will find:
+        <b>Vaadin</b> is distributed as a ZIP package and from the Maven central
+        repository. Without Maven, the recommended way to get Vaadin is to use the Vaadin
+        Plugin for Eclipse, which automatically downloads the Vaadin libraries.
       </p>
 
+      <h3 id="package">Package Contents</h3>
+
+      <p>Inside the ZIP installation package you will find:</p>
+
       <ul>
-        <li>Vaadin server and client side classes (<tt>/com</tt>)</li>
-        <li>Vaadin server and client side sources (<tt>/com</tt>)</li>
-        <li>The default widget set (<tt>/VAADIN/widgetsets</tt>)</li>
-        <li>Themes: Runo, Reindeer and Chameleon (<tt>/VAADIN/themes</tt>)</li>
-        <li>Release notes (<tt>/release-notes.html</tt>)</li>
-        <li>Licensing information (<tt>/license.html</tt>)</li>
+        <li>Separate server-side (<tt>vaadin-server</tt>) and client-side (<tt>vaadin-client</tt>, <tt>vaadin-client-compiler</tt>) development libraries</li>
+        <li>Precompiled widget set (<tt>vaadin-client-compiled</tt>) for server-side development</li>
+        <li>Shared library (<tt>vaadin-shared</tt>) for both server- and client-side libraries</li>
+        <li>Built-in themes (<tt>vaadin-themes-compiled</tt>) and the theme compiler (<tt>vaadin-theme-compiler</tt>)
+        <li>Dependency libraries provided under the <tt>lib/</tt> folder</li>
       </ul>
+
+      <p>
+        See the <tt>README.TXT</tt> for information about the installation. <a
+        href="vaadin.com/book">Book of Vaadin</a> (for Vaadin 7) will give more detailed
+        instructions at some point, but is not yet updated at the time of this release.
+      </p>
+
+      <p>
+        For server-side development, copy the <tt>vaadin-server</tt>,
+        <tt>vaadin-client-compiled</tt>, <tt>vaadin-shared</tt>, and
+        <tt>vaadin-themes-compiled</tt> from the main folder and the dependencies from the
+        <tt>lib</tt> folder to the <tt>WEB-INF/lib</tt> folder of your Vaadin project. The
+        <tt>vaadin-theme-compiler</tt> can be copied to a library folder that is not
+        deployed with the web application. (The <tt>vaadin-client-compiled</tt> is
+        necessary if you do not wish to compile the widget set by your own, which you need
+        to do if you use almost any add-on components.)
+      </p>
+
+      <p>
+        For pure client-side development, you only need the <tt>vaadin-client</tt> and
+        <tt>vaadin-client-compiler</tt> JARs. You also need them if you compile the widget
+        set for any reason, such as using Vaadin add-ons, or create new server-side
+        components integrated with client-side widgets.
+      </p>
 
       <h2 id="enhancements">Enhancements in Vaadin @version-minor@</h2>
 
@@ -76,7 +105,7 @@
         for the purpose of receiving feedback about the changes.
       </p>
 
-      <p>The major changes in this first beta release are:</p>
+      <p>The major new changes in this first beta release are:</p>
 
       <ul>
         <li>Applications are now written by extending the <b>UI</b> class
@@ -84,13 +113,21 @@
             <li>UIs use heartbeat to detect closing</li>
           </ul>
         </li>
-        <li>The <b>Application</b> class is removed altogether</li>
-        <li><b>ApplicationServlet</b> is replaced with <b>VaadinServlet</b></li>
-        <li><b>ApplicationResource</b> is replaced with <b>ConnectorResource</b></li>
-        <li>Themeing with <a href="http://sass-lang.com/">SASS</a> in addition to CSS</li>
+        <li>The <b>Application</b> class is removed altogether
+          <ul>
+            <li><b>ApplicationServlet</b> is replaced with <b>VaadinServlet</b></li>
+            <li><b>ApplicationResource</b> is replaced with <b>ConnectorResource</b></li>
+          </ul>
+        </li>
+        <li>Themeing with <a href="http://sass-lang.com/">SASS</a> in addition to CSS
+          <ul>
+            <li>SASS themes need to (and CSS themes can) be compiled to a single CSS stylesheet with the <tt>vaadin-theme-compiler</tt></li>
+          </ul>
+        </li>
         <li>Add-ons can modify the startup page</i></li>
         <li>All <tt>addListener()</tt> methods have changed to listener-specific methods, such as <tt>addClickListener()</tt>, <tt>addValueChangeListener()</tt>, etc.</li>
-        <li>Packaging has changed, now in a ZIP package (again)</li>
+        <li>Packaging has changed, now in a ZIP package (see <a href="package">Package Contents</a> above)
+        </li>
       </ul>
 
       <p>
@@ -108,7 +145,7 @@
             <li>Access control for views, view change confirmation</li>
           </ul>
         </li>
-        <li>Component and root extensions</li>
+        <li>Component and UI extensions</li>
         <li>Resource loading (JS/CSS) by the framework</li>
         <li>Complete overhaul of the client-server communication architecture
           <ul>
@@ -164,24 +201,21 @@
       <p>
         All Vaadin 6 applications need some changes when migrating to Vaadin 7. The most
         obvious changes are in the application/window API and require extending either
-        <b>Root</b> or <b>Root.LegacyApplication</b> instead of <b>Application</b>.
+        <b>UI</b> or <b>UI.LegacyApplication</b> instead of <b>Application</b>. A detailed
+        list of migration changes are given in the <a
+        href="http://dev.vaadin.com/wiki/Vaadin7/MigrationGuide">Vaadin 7 Migration
+        Guide</a>.
+      </p>
+
+      <p>
+        Any custom client-side widgets need to be ported to use the new client-server
+        communication API, or the Vaadin 6 compatibility API.
       </p>
 
       <p>
         Vaadin 6 add-ons (ones that contain widgets) do not work in Vaadin 7 - please
         check the add-ons in <a href="http://vaadin.com/directory/">Vaadin Directory</a>
         for Vaadin 7 support.
-      </p>
-
-      <p>
-        Any custom client-side widgets need to be changed to use the new client-server
-        communication API or the Vaadin 6 compatibility API.
-      </p>
-
-      <p>
-        A detailed list of migration changes are given in the <a
-        href="http://dev.vaadin.com/wiki/Vaadin7/MigrationGuide">Vaadin 7 Migration
-        Guide</a>.
       </p>
 
       <h2 id="dependencies">Vaadin @version@ Dependencies</h2>
@@ -212,18 +246,14 @@
       </p>
 		
       <ul>
-        <li>Recompile your classes using the new Vaadin JAR. Binary
+        <li>Recompile your classes using the new Vaadin version. Binary
           compatibility is only guaranteed for maintenance releases of
           Vaadin.</li>
 
-        <li>Recompile any add-ons you have created using the new Vaadin
-          JAR.</li>
+        <li>Recompile any add-ons you have created using the new Vaadin</li>
 
-        <li>Recompile your widget set using the new Vaadin JAR and the newly compiled
-        add-ons.</li>
-
-        <li>If you have extracted a theme from the Vaadin JAR, you need to update it with
-        the theme provided in the new Vaadin JAR.</li>
+        <li>Unless using the precompiled widget set, recompile your widget set using the
+        new Vaadin version</li>
       </ul>
 
       <p>
@@ -232,8 +262,8 @@
       </p>
 
       <p>
-        Using the "?debug" URL parameter you can verify that the version of the servlet
-        (JAR), the theme and the widgetset all match.
+        By using the "<tt>?debug</tt>" URL parameter, you can verify that the version of
+        the servlet, the theme, and the widget set all match.
       </p>
 
       <p>
@@ -251,11 +281,12 @@
       </p>
 
       <p>
-        <b>Liferay and other portal</b> users must install the new vaadin-@version@.jar as
-        <t>ROOT/WEB-INF/lib/vaadin.jar</b> in the portal. Additionally the contents of the
-        <tt>VAADIN</tt> folder from the JAR must be extracted to the
-        <tt>ROOT/html/VAADIN</tt> directory in the Liferay installation. If your portal
-        uses custom widgets, install the latest version of <a
+        <b>Liferay and other portal</b> users must install the Vaadin libraries in
+        <t>ROOT/WEB-INF/lib/</b> in the portal (and remove a possibly obsolete older
+        <tt>vaadin.jar</tt>). Additionally, the contents of the
+        <tt>vaadin-client-compiled</tt> and <tt>vaadin-themes-compiled</tt> must be
+        extracted to the <tt>ROOT/html/VAADIN</tt> directory in the Liferay
+        installation. If your portal uses custom widgets, install the latest version of <a
         href="http://vaadin.com/directory#addon/vaadin-control-panel-for-liferay">Vaadin
         Control Panel for Liferay</a> for easy widget set compilation.
       </p>
@@ -285,7 +316,7 @@
         <li>
           <p>
             Avoid using the session for storage, usual App Engine limitations apply (no
-            synchronization, i.e, unreliable).
+            synchronization, that is, unreliable).
           </p>
         </li>
 
@@ -308,7 +339,7 @@
         <li>
           <p>
             DO NOT update application state when serving an <b>ApplicationResource</b>
-            (e.g <b>ClassResource</b>.<i>getStream()</i>).
+            (such as <b>ClassResource</b>.<i>getStream()</i>).
           </p>
         </li>
 
@@ -316,10 +347,10 @@
           <p>
             AVOID (or be very careful when) updating application state in a
             <b>TransactionListener</b> or a <b>HttpServletRequestListener</b> - they are
-            called even when the application is not locked and won't be serialized (e.g
-            <b>ApplicationResource</b>), and changes can thus go missing (it should be
-            safe to update things that can be safely discarded later - i.e valid only for
-            the current request)
+            called even when the application is not locked and won't be serialized (such
+            as <b>ApplicationResource</b>), and changes can thus go missing (it should be
+            safe to update things that can be safely discarded later, that is, those valid
+            only for the current request)
           </p>
         </li>
 
@@ -389,11 +420,11 @@
       </p>
 
       <ul>
-        <li>Mozilla Firefox 12-14</li>
-        <li>Internet Explorer 8-9</li>
-        <li>Safari 5</li>
-        <li>Opera 11-12</li>
-        <li>Google Chrome 19-21</li>
+        <li>Mozilla Firefox 5</li>
+        <li>Internet Explorer 8-10</li>
+        <li>Safari 6</li>
+        <li>Opera 12</li>
+        <li>Google Chrome 21</li>
       </ul>
 
       <p>
@@ -402,8 +433,8 @@
       </p>
 
       <ul>
-        <li>iOS 4-5</li>
-        <li>Android 2-4</li>
+        <li>iOS 5 and later</li>
+        <li>Android 2.3 and later</li>
       </ul>
 
       <h2 id="vaadinontheweb">Vaadin on the Web</h2>
