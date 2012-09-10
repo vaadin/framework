@@ -417,7 +417,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     public String toString() {
         logger.warning("You are using AbstractField.toString() to get the value for a "
                 + getClass().getSimpleName()
-                + ". This is not recommended and will not be supported in future versions.");
+                + ". This will not be supported starting from Vaadin 7.1 "
+                + "(your debugger might call toString() and cause this message to appear).");
         final Object value = getFieldValue();
         if (value == null) {
             return null;
