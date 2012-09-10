@@ -32,13 +32,13 @@ public class TreeItemClickListening extends TestBase {
             public void itemClick(ItemClickEvent event) {
                 clickCounter++;
                 switch (event.getButton()) {
-                case ItemClickEvent.BUTTON_LEFT:
+                case LEFT:
                     log.log("Left Click");
                     break;
-                case ItemClickEvent.BUTTON_RIGHT:
+                case RIGHT:
                     log.log("Right Click");
                     break;
-                case ItemClickEvent.BUTTON_MIDDLE:
+                case MIDDLE:
                     log.log("Middle Click");
                     break;
                 }

@@ -7,9 +7,9 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.abstractfield.AbstractFieldTest;
 import com.vaadin.ui.DateField;
-import com.vaadin.ui.DateField.Resolution;
 
 public class DateFieldTest<T extends DateField> extends AbstractFieldTest<T> {
 
@@ -97,12 +97,12 @@ public class DateFieldTest<T extends DateField> extends AbstractFieldTest<T> {
 
     private void createResolutionSelectAction(String category) {
         LinkedHashMap<String, Resolution> options = new LinkedHashMap<String, Resolution>();
-        options.put("Year", DateField.Resolution.YEAR);
-        options.put("Month", DateField.Resolution.MONTH);
-        options.put("Day", DateField.Resolution.DAY);
-        options.put("Hour", DateField.Resolution.HOUR);
-        options.put("Min", DateField.Resolution.MINUTE);
-        options.put("Sec", DateField.Resolution.SECOND);
+        options.put("Year", Resolution.YEAR);
+        options.put("Month", Resolution.MONTH);
+        options.put("Day", Resolution.DAY);
+        options.put("Hour", Resolution.HOUR);
+        options.put("Min", Resolution.MINUTE);
+        options.put("Sec", Resolution.SECOND);
 
         createSelectAction("Resolution", category, options, "Year",
                 resolutionCommand);

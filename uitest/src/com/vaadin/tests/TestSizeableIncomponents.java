@@ -26,6 +26,7 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.ThemeResource;
+import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Button;
@@ -63,7 +64,7 @@ public class TestSizeableIncomponents extends LegacyApplication {
 
         select = new ComboBox();
         select.setImmediate(true);
-        select.setFilteringMode(ComboBox.FILTERINGMODE_CONTAINS);
+        select.setFilteringMode(FilteringMode.CONTAINS);
         select.setWidth("400px");
 
         prev = new Button("<<-|");

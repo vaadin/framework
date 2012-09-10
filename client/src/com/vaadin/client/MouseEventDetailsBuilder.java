@@ -19,6 +19,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.user.client.Event;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.MouseEventDetails.MouseButton;
 
 /**
  * Helper class for constructing a MouseEventDetails object from a
@@ -58,7 +59,13 @@ public class MouseEventDetailsBuilder {
         mouseEventDetails.setType(Event.getTypeInt(evt.getType()));
         mouseEventDetails.setClientX(Util.getTouchOrMouseClientX(evt));
         mouseEventDetails.setClientY(Util.getTouchOrMouseClientY(evt));
-        mouseEventDetails.setButton(evt.getButton());
+        if (evt.getButton() == NativeEvent.BUTTON_LEFT) {
+            mouseEventDetails.setButton(MouseButton.LEFT);
+        } else if (evt.getButton() == NativeEvent.BUTTON_RIGHT) {
+            mouseEventDetails.setButton(MouseButton.RIGHT);
+        } else if (evt.getButton() == NativeEvent.BUTTON_MIDDLE) {
+            mouseEventDetails.setButton(MouseButton.MIDDLE);
+        }
         mouseEventDetails.setAltKey(evt.getAltKey());
         mouseEventDetails.setCtrlKey(evt.getCtrlKey());
         mouseEventDetails.setMetaKey(evt.getMetaKey());

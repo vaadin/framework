@@ -27,6 +27,7 @@ import com.vaadin.client.ui.combobox.VFilterSelect.FilterSelectSuggestion;
 import com.vaadin.client.ui.menubar.MenuItem;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
+import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.ComboBox;
 
 @Connect(ComboBox.class)
@@ -68,7 +69,8 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         }
 
         if (uidl.hasAttribute("filteringmode")) {
-            getWidget().filteringmode = uidl.getIntAttribute("filteringmode");
+            getWidget().filteringmode = FilteringMode.valueOf(uidl
+                    .getStringAttribute("filteringmode"));
         }
 
         getWidget().immediate = getState().immediate;

@@ -34,15 +34,21 @@ import com.vaadin.shared.ui.link.LinkConstants;
 @SuppressWarnings("serial")
 public class Link extends AbstractComponent implements LegacyComponent {
 
-    /* Target window border type constant: No window border */
+    /**
+     * @deprecated from 7.0, use {@link BorderStyle#NONE} instead
+     */
     @Deprecated
     public static final BorderStyle TARGET_BORDER_NONE = BorderStyle.NONE;
 
-    /* Target window border type constant: Minimal window border */
+    /**
+     * @deprecated from 7.0, use {@link BorderStyle#MINIMAL} instead
+     */
     @Deprecated
     public static final BorderStyle TARGET_BORDER_MINIMAL = BorderStyle.MINIMAL;
 
-    /* Target window border type constant: Default window border */
+    /**
+     * @deprecated from 7.0, use {@link BorderStyle#DEFAULT} instead
+     */
     @Deprecated
     public static final BorderStyle TARGET_BORDER_DEFAULT = BorderStyle.DEFAULT;
 

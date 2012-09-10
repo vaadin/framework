@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.combobox;
 
+import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.ComboBox;
 
@@ -32,7 +33,7 @@ public class ComboBoxValueInput extends TestBase {
         addComponent(cb);
 
         cb = getComboBox("A combobox with filteringMode off", false);
-        cb.setFilteringMode(ComboBox.FILTERINGMODE_OFF);
+        cb.setFilteringMode(FilteringMode.OFF);
 
     }
 

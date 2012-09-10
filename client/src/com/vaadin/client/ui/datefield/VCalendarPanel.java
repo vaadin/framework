@@ -56,6 +56,7 @@ import com.vaadin.client.ui.FocusableFlexTable;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.label.VLabel;
 import com.vaadin.client.ui.nativeselect.VNativeSelect;
+import com.vaadin.shared.ui.datefield.Resolution;
 
 @SuppressWarnings("deprecation")
 public class VCalendarPanel extends FocusableFlexTable implements
@@ -162,7 +163,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     private FlexTable days = new FlexTable();
 
-    private int resolution = VDateField.RESOLUTION_YEAR;
+    private Resolution resolution = Resolution.YEAR;
 
     private int focusedRow;
 
@@ -225,7 +226,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
      */
     private void focusDay(Date date) {
         // Only used when calender body is present
-        if (resolution > VDateField.RESOLUTION_MONTH) {
+        if (resolution.getCalendarField() > Resolution.MONTH.getCalendarField()) {
             if (focusedDay != null) {
                 focusedDay.removeStyleDependentName(CN_FOCUSED);
             }
@@ -321,11 +322,11 @@ public class VCalendarPanel extends FocusableFlexTable implements
         return false;
     }
 
-    public int getResolution() {
+    public Resolution getResolution() {
         return resolution;
     }
 
-    public void setResolution(int resolution) {
+    public void setResolution(Resolution resolution) {
         this.resolution = resolution;
         if (time != null) {
             time.removeFromParent();
@@ -492,7 +493,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
             if (day > 6) {
                 day = 0;
             }
-            if (getResolution() > VDateField.RESOLUTION_MONTH) {
+            if (getResolution().getCalendarField() > Resolution.MONTH
+                    .getCalendarField()) {
                 days.setHTML(headerRow, firstWeekdayColumn + i, "<strong>"
                         + getDateTimeService().getShortDay(day) + "</strong>");
             } else {
@@ -568,7 +570,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * @return True if it is required
      */
     private boolean isTimeSelectorNeeded() {
-        return getResolution() > VDateField.RESOLUTION_DAY;
+        return getResolution().getCalendarField() > Resolution.DAY
+                .getCalendarField();
     }
 
     /**
@@ -582,13 +585,15 @@ public class VCalendarPanel extends FocusableFlexTable implements
             displayedMonth = new Date(now.getYear(), now.getMonth(), 1);
         }
 
-        if (getResolution() <= VDateField.RESOLUTION_MONTH
-                && focusChangeListener != null) {
+        if (getResolution().getCalendarField() <= Resolution.MONTH
+                .getCalendarField() && focusChangeListener != null) {
             focusChangeListener.focusChanged(new Date(focusedDate.getTime()));
         }
 
-        final boolean needsMonth = getResolution() > VDateField.RESOLUTION_YEAR;
-        boolean needsBody = getResolution() >= VDateField.RESOLUTION_DAY;
+        final boolean needsMonth = getResolution().getCalendarField() > Resolution.YEAR
+                .getCalendarField();
+        boolean needsBody = getResolution().getCalendarField() >= Resolution.DAY
+                .getCalendarField();
         buildCalendarHeader(needsMonth);
         clearCalendarBody(!needsBody);
         if (needsBody) {
@@ -1048,15 +1053,15 @@ public class VCalendarPanel extends FocusableFlexTable implements
             return false;
         }
 
-        else if (resolution == VDateField.RESOLUTION_YEAR) {
+        else if (resolution == Resolution.YEAR) {
             return handleNavigationYearMode(keycode, ctrl, shift);
         }
 
-        else if (resolution == VDateField.RESOLUTION_MONTH) {
+        else if (resolution == Resolution.MONTH) {
             return handleNavigationMonthMode(keycode, ctrl, shift);
         }
 
-        else if (resolution == VDateField.RESOLUTION_DAY) {
+        else if (resolution == Resolution.DAY) {
             return handleNavigationDayMode(keycode, ctrl, shift);
         }
 
@@ -1311,14 +1316,16 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 ampm.addChangeHandler(this);
             }
 
-            if (getResolution() >= VDateField.RESOLUTION_MIN) {
+            if (getResolution().getCalendarField() >= Resolution.MINUTE
+                    .getCalendarField()) {
                 mins = createListBox();
                 for (int i = 0; i < 60; i++) {
                     mins.addItem((i < 10) ? "0" + i : "" + i);
                 }
                 mins.addChangeHandler(this);
             }
-            if (getResolution() >= VDateField.RESOLUTION_SEC) {
+            if (getResolution().getCalendarField() >= Resolution.SECOND
+                    .getCalendarField()) {
                 sec = createListBox();
                 for (int i = 0; i < 60; i++) {
                     sec.addItem((i < 10) ? "0" + i : "" + i);
@@ -1340,7 +1347,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 add(hours);
             }
 
-            if (getResolution() >= VDateField.RESOLUTION_MIN) {
+            if (getResolution().getCalendarField() >= Resolution.MINUTE
+                    .getCalendarField()) {
                 add(new VLabel(delimiter));
                 if (isReadonly()) {
                     final int m = mins.getSelectedIndex();
@@ -1349,7 +1357,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
                     add(mins);
                 }
             }
-            if (getResolution() >= VDateField.RESOLUTION_SEC) {
+            if (getResolution().getCalendarField() >= Resolution.SECOND
+                    .getCalendarField()) {
                 add(new VLabel(delimiter));
                 if (isReadonly()) {
                     final int s = sec.getSelectedIndex();
@@ -1358,7 +1367,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
                     add(sec);
                 }
             }
-            if (getResolution() == VDateField.RESOLUTION_HOUR) {
+            if (getResolution() == Resolution.HOUR) {
                 add(new VLabel(delimiter + "00")); // o'clock
             }
             if (getDateTimeService().isTwelveHourClock()) {
@@ -1428,10 +1437,12 @@ public class VCalendarPanel extends FocusableFlexTable implements
             } else {
                 hours.setSelectedIndex(value.getHours());
             }
-            if (getResolution() >= VDateField.RESOLUTION_MIN) {
+            if (getResolution().getCalendarField() >= Resolution.MINUTE
+                    .getCalendarField()) {
                 mins.setSelectedIndex(value.getMinutes());
             }
-            if (getResolution() >= VDateField.RESOLUTION_SEC) {
+            if (getResolution().getCalendarField() >= Resolution.SECOND
+                    .getCalendarField()) {
                 sec.setSelectedIndex(value.getSeconds());
             }
             if (getDateTimeService().isTwelveHourClock()) {

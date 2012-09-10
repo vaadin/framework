@@ -19,6 +19,7 @@ package com.vaadin.event;
 import java.lang.reflect.Method;
 
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.MouseEventDetails.MouseButton;
 import com.vaadin.ui.Component;
 import com.vaadin.util.ReflectTools;
 
@@ -44,10 +45,21 @@ public interface MouseEvents {
      * @since 6.2
      */
     public static class ClickEvent extends Component.Event {
-        public static final int BUTTON_LEFT = MouseEventDetails.BUTTON_LEFT;
-        public static final int BUTTON_MIDDLE = MouseEventDetails.BUTTON_MIDDLE;
-        public static final int BUTTON_RIGHT = MouseEventDetails.BUTTON_RIGHT;
-
+        /**
+         * @deprecated use {@link Button#LEFT} instead.
+         */
+        @Deprecated
+        public static final MouseButton BUTTON_LEFT = MouseButton.LEFT;
+        /**
+         * @deprecated use {@link Button#MIDDLE} instead.
+         */
+        @Deprecated
+        public static final MouseButton BUTTON_MIDDLE = MouseButton.MIDDLE;
+        /**
+         * @deprecated use {@link Button#RIGHT} instead.
+         */
+        @Deprecated
+        public static final MouseButton BUTTON_RIGHT = MouseButton.RIGHT;
         private MouseEventDetails details;
 
         public ClickEvent(Component source, MouseEventDetails mouseEventDetails) {
@@ -57,13 +69,13 @@ public interface MouseEvents {
 
         /**
          * Returns an identifier describing which mouse button the user pushed.
-         * Compare with {@link #BUTTON_LEFT},{@link #BUTTON_MIDDLE},
-         * {@link #BUTTON_RIGHT} to find out which butten it is.
+         * Compare with {@link MouseButton#LEFT},{@link MouseButton#MIDDLE},
+         * {@link Button#RIGHT} to find out which button it is.
          * 
-         * @return one of {@link #BUTTON_LEFT}, {@link #BUTTON_MIDDLE},
-         *         {@link #BUTTON_RIGHT}.
+         * @return one of {@link MouseButton#LEFT}, {@link MouseButton#MIDDLE},
+         *         {@link MouseButton#RIGHT}.
          */
-        public int getButton() {
+        public MouseButton getButton() {
             return details.getButton();
         }
 

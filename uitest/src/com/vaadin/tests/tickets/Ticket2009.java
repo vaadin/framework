@@ -44,7 +44,7 @@ public class Ticket2009 extends com.vaadin.LegacyApplication {
             public void itemClick(ItemClickEvent event) {
                 events.addComponent(new Label(new Label("Click:"
                         + (event.isDoubleClick() ? "double" : "single")
-                        + " button:" + event.getButton() + " propertyId:"
+                        + " button:" + event.getButtonName() + " propertyId:"
                         + event.getPropertyId() + " itemID:"
                         + event.getItemId() + " item:" + event.getItem())));
 
@@ -67,7 +67,7 @@ public class Ticket2009 extends com.vaadin.LegacyApplication {
             public void itemClick(ItemClickEvent event) {
                 events2.addComponent(new Label("Click:"
                         + (event.isDoubleClick() ? "double" : "single")
-                        + " button:" + event.getButton() + " propertyId:"
+                        + " button:" + event.getButtonName() + " propertyId:"
                         + event.getPropertyId() + " itemID:"
                         + event.getItemId() + " item:" + event.getItem()));
                 if (event.isDoubleClick()) {

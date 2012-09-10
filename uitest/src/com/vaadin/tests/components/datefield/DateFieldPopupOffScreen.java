@@ -3,10 +3,10 @@ package com.vaadin.tests.components.datefield;
 import java.util.Date;
 import java.util.Locale;
 
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.DateField;
-import com.vaadin.ui.DateField.Resolution;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.UI.LegacyWindow;
 

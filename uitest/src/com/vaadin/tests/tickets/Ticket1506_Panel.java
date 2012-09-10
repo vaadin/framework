@@ -2,6 +2,7 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Panel;
@@ -37,7 +38,7 @@ public class Ticket1506_Panel extends Panel {
     private Component initSelect(Container containerDataSource, String caption,
             ObjectProperty<?> property) {
         Select select = new Select(caption);
-        select.setFilteringMode(Select.FILTERINGMODE_CONTAINS);
+        select.setFilteringMode(FilteringMode.CONTAINS);
         select.setImmediate(true);
         select.setNullSelectionAllowed(false);
         select.setItemCaptionPropertyId(Ticket1506_TestContainer.PROPERTY_2_ID);

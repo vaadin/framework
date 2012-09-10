@@ -54,6 +54,7 @@ import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.shared.ui.tree.TreeConstants;
 import com.vaadin.util.ReflectTools;
@@ -519,7 +520,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                         : "single"));
                 if (isMultiSelect()) {
                     target.addAttribute("multiselectmode",
-                            multiSelectMode.ordinal());
+                            multiSelectMode.toString());
                 }
             } else {
                 target.addAttribute("selectmode", "none");

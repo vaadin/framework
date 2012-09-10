@@ -1,9 +1,9 @@
 package com.vaadin.tests.components.combobox;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
-import com.vaadin.ui.AbstractSelect.Filtering;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
@@ -21,7 +21,7 @@ public class ComboBoxCombinedWithEnterShortcut extends TestBase {
             l.addItem(cities[i]);
         }
 
-        l.setFilteringMode(Filtering.FILTERINGMODE_OFF);
+        l.setFilteringMode(FilteringMode.OFF);
         l.setImmediate(true);
         l.setNewItemsAllowed(true);
 

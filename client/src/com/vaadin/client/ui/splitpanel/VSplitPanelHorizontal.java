@@ -16,9 +16,11 @@
 
 package com.vaadin.client.ui.splitpanel;
 
+import com.vaadin.shared.ui.Orientation;
+
 public class VSplitPanelHorizontal extends VAbstractSplitPanel {
 
     public VSplitPanelHorizontal() {
-        super(VAbstractSplitPanel.ORIENTATION_HORIZONTAL);
+        super(Orientation.HORIZONTAL);
     }
 }

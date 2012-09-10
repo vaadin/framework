@@ -72,6 +72,8 @@ import com.vaadin.client.ui.dd.VDropHandler;
 import com.vaadin.client.ui.dd.VHasDropHandler;
 import com.vaadin.client.ui.dd.VTransferable;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.MouseEventDetails.MouseButton;
+import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.shared.ui.tree.TreeConstants;
 
@@ -85,14 +87,16 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
     public static final String CLASSNAME = "v-tree";
 
     /**
-     * Click selects the current node, ctrl/shift toggles multi selection
+     * @deprecated from 7.0, use {@link MultiSelectMode#DEFAULT} instead.
      */
-    public static final int MULTISELECT_MODE_DEFAULT = 0;
+    @Deprecated
+    public static final MultiSelectMode MULTISELECT_MODE_DEFAULT = MultiSelectMode.DEFAULT;
 
     /**
-     * Click/touch on node toggles its selected status
+     * @deprecated from 7.0, use {@link MultiSelectMode#SIMPLE} instead.
      */
-    public static final int MULTISELECT_MODE_SIMPLE = 1;
+    @Deprecated
+    public static final MultiSelectMode MULTISELECT_MODE_SIMPLE = MultiSelectMode.SIMPLE;
 
     private static final int CHARCODE_SPACE = 32;
 
@@ -106,7 +110,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
     private String currentMouseOverKey;
     TreeNode lastSelection;
     TreeNode focusedNode;
-    int multiSelectMode = MULTISELECT_MODE_DEFAULT;
+    MultiSelectMode multiSelectMode = MultiSelectMode.DEFAULT;
 
     private final HashMap<String, TreeNode> keyToNode = new HashMap<String, TreeNode>();
 
@@ -606,11 +610,11 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                 @Override
                 public void execute() {
 
-                    if (multiSelectMode == MULTISELECT_MODE_SIMPLE
+                    if (multiSelectMode == MultiSelectMode.SIMPLE
                             || !isMultiselect) {
                         toggleSelection();
                         lastSelection = TreeNode.this;
-                    } else if (multiSelectMode == MULTISELECT_MODE_DEFAULT) {
+                    } else if (multiSelectMode == MultiSelectMode.DEFAULT) {
                         // Handle ctrl+click
                         if (isMultiselect && ctrl && !shift) {
                             toggleSelection();
@@ -795,8 +799,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                     // we want to send it immediately.
                     boolean sendClickEventNow = true;
 
-                    if (details.getButton() == NativeEvent.BUTTON_LEFT
-                            && immediate && selectable) {
+                    if (details.getButton() == MouseButton.LEFT && immediate
+                            && selectable) {
                         // Probably a selection that will cause a value change
                         // event to be sent
                         sendClickEventNow = false;

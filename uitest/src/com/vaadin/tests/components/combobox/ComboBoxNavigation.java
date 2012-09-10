@@ -1,5 +1,6 @@
 package com.vaadin.tests.components.combobox;
 
+import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.ComboBox;
 
@@ -22,7 +23,7 @@ public class ComboBoxNavigation extends TestBase {
             cb.addItem("Item " + i);
         }
 
-        cb.setFilteringMode(ComboBox.FILTERINGMODE_CONTAINS);
+        cb.setFilteringMode(FilteringMode.CONTAINS);
         addComponent(cb);
 
     }

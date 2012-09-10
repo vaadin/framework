@@ -21,16 +21,55 @@ import java.io.Serializable;
  * Helper class to store and transfer mouse event details.
  */
 public class MouseEventDetails implements Serializable {
-    // From com.google.gwt.dom.client.NativeEvent
-    public static final int BUTTON_LEFT = 1;
-    public static final int BUTTON_MIDDLE = 4;
-    public static final int BUTTON_RIGHT = 2;
+    /**
+     * @deprecated use {@link MouseButton#LEFT} instead.
+     */
+    @Deprecated
+    public static final MouseButton BUTTON_LEFT = MouseButton.LEFT;
+    /**
+     * @deprecated use {@link MouseButton#MIDDLE} instead.
+     */
+    @Deprecated
+    public static final MouseButton BUTTON_MIDDLE = MouseButton.MIDDLE;
+    /**
+     * @deprecated use {@link MouseButton#RIGHT} instead.
+     */
+    @Deprecated
+    public static final MouseButton BUTTON_RIGHT = MouseButton.RIGHT;
+
+    /**
+     * Constants for mouse buttons.
+     * 
+     * @author Vaadin Ltd
+     * @version @VERSION@
+     * @since 7.0
+     * 
+     */
+    public enum MouseButton {
+        LEFT("left"), RIGHT("right"), MIDDLE("middle");
+
+        private String name;
+
+        private MouseButton(String name) {
+            this.name = name;
+        }
+
+        /**
+         * Returns a human readable text representing the button
+         * 
+         * @return
+         */
+        public String getName() {
+            return name;
+        }
+
+    }
 
     private static final char DELIM = ',';
     // From com.google.gwt.user.client.Event
     private static final int ONDBLCLICK = 0x00002;
 
-    private int button;
+    private MouseButton button;
     private int clientX;
     private int clientY;
     private boolean altKey;
@@ -41,7 +80,7 @@ public class MouseEventDetails implements Serializable {
     private int relativeX = -1;
     private int relativeY = -1;
 
-    public int getButton() {
+    public MouseButton getButton() {
         return button;
     }
 
@@ -77,7 +116,7 @@ public class MouseEventDetails implements Serializable {
         return relativeY;
     }
 
-    public void setButton(int button) {
+    public void setButton(MouseButton button) {
         this.button = button;
     }
 
@@ -126,16 +165,15 @@ public class MouseEventDetails implements Serializable {
     }
 
     public String serialize() {
-        return "" + button + DELIM + clientX + DELIM + clientY + DELIM + altKey
-                + DELIM + ctrlKey + DELIM + metaKey + DELIM + shiftKey + DELIM
-                + type + DELIM + relativeX + DELIM + relativeY;
+        return button.toString() + DELIM + clientX + DELIM + clientY + DELIM
+                + altKey + DELIM + ctrlKey + DELIM + metaKey + DELIM + shiftKey
+                + DELIM + type + DELIM + relativeX + DELIM + relativeY;
     }
 
     public static MouseEventDetails deSerialize(String serializedString) {
         MouseEventDetails instance = new MouseEventDetails();
         String[] fields = serializedString.split(",");
-
-        instance.button = Integer.parseInt(fields[0]);
+        instance.button = MouseButton.valueOf(fields[0]);
         instance.clientX = Integer.parseInt(fields[1]);
         instance.clientY = Integer.parseInt(fields[2]);
         instance.altKey = Boolean.valueOf(fields[3]).booleanValue();
@@ -149,15 +187,7 @@ public class MouseEventDetails implements Serializable {
     }
 
     public String getButtonName() {
-        if (button == BUTTON_LEFT) {
-            return "left";
-        } else if (button == BUTTON_RIGHT) {
-            return "right";
-        } else if (button == BUTTON_MIDDLE) {
-            return "middle";
-        }
-
-        return "";
+        return button == null ? "" : button.getName();
     }
 
     public int getType() {

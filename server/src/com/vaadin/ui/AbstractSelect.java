@@ -45,6 +45,7 @@ import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
+import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 
 /**
@@ -154,15 +155,28 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     /**
      * Interface for option filtering, used to filter options based on user
      * entered value. The value is matched to the item caption.
-     * <code>FILTERINGMODE_OFF</code> (0) turns the filtering off.
-     * <code>FILTERINGMODE_STARTSWITH</code> (1) matches from the start of the
-     * caption. <code>FILTERINGMODE_CONTAINS</code> (1) matches anywhere in the
+     * <code>FilteringMode.OFF</code> (0) turns the filtering off.
+     * <code>FilteringMode.STARTSWITH</code> (1) matches from the start of the
+     * caption. <code>FilteringMode.CONTAINS</code> (1) matches anywhere in the
      * caption.
      */
     public interface Filtering extends Serializable {
-        public static final int FILTERINGMODE_OFF = 0;
-        public static final int FILTERINGMODE_STARTSWITH = 1;
-        public static final int FILTERINGMODE_CONTAINS = 2;
+
+        /**
+         * @deprecated from 7.0, use {@link FilteringMode#OFF} instead
+         */
+        @Deprecated
+        public static final FilteringMode FILTERINGMODE_OFF = FilteringMode.OFF;
+        /**
+         * @deprecated from 7.0, use {@link FilteringMode#STARTSWITH} instead
+         */
+        @Deprecated
+        public static final FilteringMode FILTERINGMODE_STARTSWITH = FilteringMode.STARTSWITH;
+        /**
+         * @deprecated from 7.0, use {@link FilteringMode#CONTAINS} instead
+         */
+        @Deprecated
+        public static final FilteringMode FILTERINGMODE_CONTAINS = FilteringMode.CONTAINS;
 
         /**
          * Sets the option filtering mode.
@@ -170,30 +184,15 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
          * @param filteringMode
          *            the filtering mode to use
          */
-        public void setFilteringMode(int filteringMode);
+        public void setFilteringMode(FilteringMode filteringMode);
 
         /**
          * Gets the current filtering mode.
          * 
          * @return the filtering mode in use
          */
-        public int getFilteringMode();
+        public FilteringMode getFilteringMode();
 
-    }
-
-    /**
-     * Multi select modes that controls how multi select behaves.
-     */
-    public enum MultiSelectMode {
-        /**
-         * The default behavior of the multi select mode
-         */
-        DEFAULT,
-
-        /**
-         * The previous more simple behavior of the multselect
-         */
-        SIMPLE
     }
 
     /**

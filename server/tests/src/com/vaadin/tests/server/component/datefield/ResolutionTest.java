@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import junit.framework.TestCase;
 
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.util.TestUtil;
-import com.vaadin.ui.DateField.Resolution;
 
 public class ResolutionTest extends TestCase {
 

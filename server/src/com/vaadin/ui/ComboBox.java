@@ -34,6 +34,7 @@ import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
+import com.vaadin.shared.ui.combobox.FilteringMode;
 
 /**
  * A filtering dropdown single-select. Suitable for newItemsAllowed, but it's
@@ -60,7 +61,7 @@ public class ComboBox extends AbstractSelect implements
     // Current page when the user is 'paging' trough options
     private int currentPage = -1;
 
-    private int filteringMode = Filtering.FILTERINGMODE_STARTSWITH;
+    private FilteringMode filteringMode = FilteringMode.STARTSWITH;
 
     private String filterstring;
     private String prevfilterstring;
@@ -186,7 +187,7 @@ public class ComboBox extends AbstractSelect implements
 
         target.addAttribute("pagelength", pageLength);
 
-        target.addAttribute("filteringmode", getFilteringMode());
+        target.addAttribute("filteringmode", getFilteringMode().toString());
 
         // Paints the options and create array of selected id keys
         int keyIndex = 0;
@@ -201,7 +202,7 @@ public class ComboBox extends AbstractSelect implements
 
         boolean nullFilteredOut = filterstring != null
                 && !"".equals(filterstring)
-                && filteringMode != Filtering.FILTERINGMODE_OFF;
+                && filteringMode != FilteringMode.OFF;
         // null option is needed and not filtered out, even if not on current
         // page
         boolean nullOptionVisible = needNullSelectOption && !nullFilteredOut;
@@ -411,18 +412,19 @@ public class ComboBox extends AbstractSelect implements
      * @param filteringMode
      * @return
      */
-    protected Filter buildFilter(String filterString, int filteringMode) {
+    protected Filter buildFilter(String filterString,
+            FilteringMode filteringMode) {
         Filter filter = null;
 
         if (null != filterString && !"".equals(filterString)) {
             switch (filteringMode) {
-            case Filtering.FILTERINGMODE_OFF:
+            case OFF:
                 break;
-            case Filtering.FILTERINGMODE_STARTSWITH:
+            case STARTSWITH:
                 filter = new SimpleStringFilter(getItemCaptionPropertyId(),
                         filterString, true, true);
                 break;
-            case Filtering.FILTERINGMODE_CONTAINS:
+            case CONTAINS:
                 filter = new SimpleStringFilter(getItemCaptionPropertyId(),
                         filterString, true, false);
                 break;
@@ -576,7 +578,7 @@ public class ComboBox extends AbstractSelect implements
      */
     protected List<?> getFilteredOptions() {
         if (null == filterstring || "".equals(filterstring)
-                || Filtering.FILTERINGMODE_OFF == filteringMode) {
+                || FilteringMode.OFF == filteringMode) {
             prevfilterstring = null;
             filteredOptions = new LinkedList<Object>(getItemIds());
             return filteredOptions;
@@ -605,12 +607,12 @@ public class ComboBox extends AbstractSelect implements
                 caption = caption.toLowerCase();
             }
             switch (filteringMode) {
-            case Filtering.FILTERINGMODE_CONTAINS:
+            case CONTAINS:
                 if (caption.indexOf(filterstring) > -1) {
                     filteredOptions.add(itemId);
                 }
                 break;
-            case Filtering.FILTERINGMODE_STARTSWITH:
+            case STARTSWITH:
             default:
                 if (caption.startsWith(filterstring)) {
                     filteredOptions.add(itemId);
@@ -686,12 +688,12 @@ public class ComboBox extends AbstractSelect implements
     }
 
     @Override
-    public void setFilteringMode(int filteringMode) {
+    public void setFilteringMode(FilteringMode filteringMode) {
         this.filteringMode = filteringMode;
     }
 
     @Override
-    public int getFilteringMode() {
+    public FilteringMode getFilteringMode() {
         return filteringMode;
     }
 
