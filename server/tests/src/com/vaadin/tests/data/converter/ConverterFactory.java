@@ -69,7 +69,6 @@ public class ConverterFactory extends TestCase {
         final VaadinSession appWithCustomIntegerConverter = new VaadinSession();
         appWithCustomIntegerConverter
                 .setConverterFactory(new ConverterFactory42());
-        appWithCustomIntegerConverter.getLock().lock();
 
         TextField tf = new TextField("", "123") {
             @Override
@@ -98,7 +97,6 @@ public class ConverterFactory extends TestCase {
 
     public void testApplicationConverterFactoryForDifferentThanCurrentApplication() {
         final VaadinSession fieldAppWithCustomIntegerConverter = new VaadinSession();
-        fieldAppWithCustomIntegerConverter.getLock().lock();
         fieldAppWithCustomIntegerConverter
                 .setConverterFactory(new ConverterFactory42());
         VaadinSession.setCurrent(new VaadinSession());
