@@ -81,13 +81,13 @@
 
       <p>
         For server-side development, copy the <tt>vaadin-server</tt>,
-        <tt>vaadin-client-compiled</tt>, <tt>vaadin-shared</tt>, and
-        <tt>vaadin-themes-compiled</tt> from the main folder and the dependencies from the
-        <tt>lib</tt> folder to the <tt>WEB-INF/lib</tt> folder of your Vaadin project. The
-        <tt>vaadin-theme-compiler</tt> can be copied to a library folder that is not
-        deployed with the web application. (The <tt>vaadin-client-compiled</tt> is
-        necessary if you do not wish to compile the widget set by your own, which you need
-        to do if you use almost any add-on components.)
+        <tt>vaadin-client-compiled</tt>, <tt>vaadin-shared</tt>,
+        <tt>vaadin-theme-compiler</tt>, and <tt>vaadin-themes-compiled</tt> from the main
+        folder and the dependencies from the <tt>lib</tt> folder to the
+        <tt>WEB-INF/lib</tt> folder of your Vaadin project. (The
+        <tt>vaadin-client-compiled</tt> is necessary if you do not wish to compile the
+        widget set by your own, which you need to do if you use almost any add-on
+        components.)
       </p>
 
       <p>
@@ -138,6 +138,7 @@
         <li>GWT is now built into Vaadin Framework
           <ul>
             <li>New SuperDevMode allows debugging client-side Java code in the browser without any plugins</li>
+          </ul>
         </li>
         <li>Navigation API for view navigation
           <ul>
@@ -219,6 +220,24 @@
       </p>
 
       <h2 id="dependencies">Vaadin @version@ Dependencies</h2>
+
+      <h3>Dependencies Included in Installation package</h3>
+
+      <ul>
+        <li>Apache Ant (<tt>ant-*.jar</tt>)</li>
+        <li>Args4j (<tt>args4j-*.jar</tt>)</li>
+        <li>Apache Commons CLI, Collections, Discovery, IO, Lang, Logging, and Math (<tt>commons-*.jar</tt>)</li>
+        <li>CSS Parser (<tt>cssparser-*.jar</tt>)</li>
+        <li>Flute (<tt>flute-*.jar</tt>)</li>
+        <li>Google Collections Library (<tt>google-collections-*.jar</tt>)</li>
+        <li>JSON (<tt>json-*.jar</tt>)</li>
+        <li>jsoup (<tt>jsoup-*.jar</tt>)</li>
+        <li>JUnit (<tt>junit-*.jar</tt>)</li>
+        <li><tt>portal-service-*.jar</tt></li>
+        <li>SAC (<tt>sac-*.jar</tt>)</li>
+        <li>SmartSprites (<tt>smartsprites-*.jar</tt>)</li>
+        <li> Validation API (<tt>-*.jar</tt>)</li>
+      </ul>
 
       <h3>Bean Validation</h3>
 
@@ -478,7 +497,6 @@
         </li>
       </ul>
 	</div> <!-- /content-->
-
 
 	<div id="footer">
 		<span class="slogan"><strong>vaadin <em>}></em> </strong>
