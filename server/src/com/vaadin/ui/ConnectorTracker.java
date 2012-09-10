@@ -29,7 +29,6 @@ import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractCommunicationManager;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.GlobalResourceHandler;
-import com.vaadin.server.VaadinSession;
 
 /**
  * A class which takes care of book keeping of {@link ClientConnector}s for a
@@ -287,8 +286,6 @@ public class ConnectorTracker implements Serializable {
      *            The connector that should be marked clean.
      */
     public void markDirty(ClientConnector connector) {
-        assert uI.getSession() == null
-                || uI.getSession().getLock().isHeldByCurrentThread() : VaadinSession.SESSION_LOCK_MESSAGE;
         if (isWritingResponse()) {
             throw new IllegalStateException(
                     "A connector should not be marked as dirty while a response is being written.");
