@@ -29,6 +29,7 @@ import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.ui.PageClientRpc;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.JavaScript;
+import com.vaadin.ui.Link;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.util.ReflectTools;
@@ -128,6 +129,25 @@ public class Page implements Serializable {
          * The border style of the target window
          */
         private final BorderStyle border;
+
+        /**
+         * Creates a new open resource.
+         * 
+         * @param url
+         *            The URL to open
+         * @param name
+         *            The name of the target window
+         * @param width
+         *            The width of the target window
+         * @param height
+         *            The height of the target window
+         * @param border
+         *            The border style of the target window
+         */
+        private OpenResource(String url, String name, int width, int height,
+                BorderStyle border) {
+            this(new ExternalResource(url), name, width, height, border);
+        }
 
         /**
          * Creates a new open resource.
@@ -550,19 +570,19 @@ public class Page implements Serializable {
     }
 
     /**
-     * Opens the given resource in this uI. The contents of this UI is replaced
-     * by the {@code Resource}.
+     * Navigates this page to the given URL. The contents of this page in the
+     * browser is replaced with whatever is returned for the given URL.
      * 
-     * @param resource
-     *            the resource to show in this uI
+     * @param url
+     *            the URL to show
      */
-    public void open(Resource resource) {
-        openList.add(new OpenResource(resource, null, -1, -1, BORDER_DEFAULT));
+    public void setLocation(String url) {
+        openList.add(new OpenResource(url, null, -1, -1, BORDER_DEFAULT));
         uI.markAsDirty();
     }
 
     /**
-     * Opens the given resource in a window with the given name.
+     * Opens the given URL in a window with the given name.
      * <p>
      * The supplied {@code windowName} is used as the target name in a
      * window.open call in the client. This means that special values such as
@@ -570,47 +590,63 @@ public class Page implements Serializable {
      * <code>null</code> window name is also a special case.
      * </p>
      * <p>
-     * "", null and "_self" as {@code windowName} all causes the resource to be
+     * "", null and "_self" as {@code windowName} all causes the URL to be
      * opened in the current window, replacing any old contents. For
      * downloadable content you should avoid "_self" as "_self" causes the
      * client to skip rendering of any other changes as it considers them
-     * irrelevant (the page will be replaced by the resource). This can speed up
-     * the opening of a resource, but it might also put the client side into an
-     * inconsistent state if the window content is not completely replaced e.g.,
-     * if the resource is downloaded instead of displayed in the browser.
+     * irrelevant (the page will be replaced by the response from the URL). This
+     * can speed up the opening of a URL, but it might also put the client side
+     * into an inconsistent state if the window content is not completely
+     * replaced e.g., if the URL is downloaded instead of displayed in the
+     * browser.
      * </p>
      * <p>
-     * "_blank" as {@code windowName} causes the resource to always be opened in
-     * a new window or tab (depends on the browser and browser settings).
+     * "_blank" as {@code windowName} causes the URL to always be opened in a
+     * new window or tab (depends on the browser and browser settings).
      * </p>
      * <p>
      * "_top" and "_parent" as {@code windowName} works as specified by the HTML
      * standard.
      * </p>
      * <p>
-     * Any other {@code windowName} will open the resource in a window with that
+     * Any other {@code windowName} will open the URL in a window with that
      * name, either by opening a new window/tab in the browser or by replacing
      * the contents of an existing window with that name.
      * </p>
+     * <p>
+     * Please note that opening a popup window in this way may be blocked by the
+     * browser's popup-blocker because the new browser window is opened when
+     * processing a response from the server. To avoid this, you should instead
+     * use {@link Link} for opening the window because browsers are more
+     * forgiving then the window is opened directly from a client-side click
+     * event.
+     * </p>
      * 
-     * @param resource
-     *            the resource.
+     * @param url
+     *            the URL to open.
      * @param windowName
      *            the name of the window.
      */
-    public void open(Resource resource, String windowName) {
-        openList.add(new OpenResource(resource, windowName, -1, -1,
-                BORDER_DEFAULT));
+    public void open(String url, String windowName) {
+        openList.add(new OpenResource(url, windowName, -1, -1, BORDER_DEFAULT));
         uI.markAsDirty();
     }
 
     /**
-     * Opens the given resource in a window with the given size, border and
-     * name. For more information on the meaning of {@code windowName}, see
-     * {@link #open(Resource, String)}.
+     * Opens the given URL in a window with the given size, border and name. For
+     * more information on the meaning of {@code windowName}, see
+     * {@link #open(String, String)}.
+     * <p>
+     * Please note that opening a popup window in this way may be blocked by the
+     * browser's popup-blocker because the new browser window is opened when
+     * processing a response from the server. To avoid this, you should instead
+     * use {@link Link} for opening the window because browsers are more
+     * forgiving then the window is opened directly from a client-side click
+     * event.
+     * </p>
      * 
-     * @param resource
-     *            the resource.
+     * @param url
+     *            the URL to open.
      * @param windowName
      *            the name of the window.
      * @param width
@@ -620,6 +656,17 @@ public class Page implements Serializable {
      * @param border
      *            the border style of the window.
      */
+    public void open(String url, String windowName, int width, int height,
+            BorderStyle border) {
+        openList.add(new OpenResource(url, windowName, width, height, border));
+        uI.markAsDirty();
+    }
+
+    /**
+     * @deprecated only retained to maintain compatibility with
+     *             LegacyWindow.open methods
+     */
+    @Deprecated
     public void open(Resource resource, String windowName, int width,
             int height, BorderStyle border) {
         openList.add(new OpenResource(resource, windowName, width, height,

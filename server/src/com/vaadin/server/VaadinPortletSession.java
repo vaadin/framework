@@ -216,7 +216,7 @@ public class VaadinPortletSession extends VaadinSession {
             if (actionUrl != null) {
                 eventActionDestinationMap.put(actionKey, name);
                 eventActionValueMap.put(actionKey, value);
-                uI.getPage().open(new ExternalResource(actionUrl.toString()));
+                uI.getPage().setLocation(actionUrl.toString());
             } else {
                 // this should never happen as we already know the response is a
                 // MimeResponse
@@ -263,7 +263,7 @@ public class VaadinPortletSession extends VaadinSession {
             if (actionUrl != null) {
                 sharedParameterActionNameMap.put(actionKey, name);
                 sharedParameterActionValueMap.put(actionKey, value);
-                uI.getPage().open(new ExternalResource(actionUrl.toString()));
+                uI.getPage().setLocation(actionUrl.toString());
             } else {
                 // this should never happen as we already know the response is a
                 // MimeResponse

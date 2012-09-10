@@ -222,11 +222,11 @@ public abstract class UI extends AbstractComponentContainer implements
          * @param resource
          *            the resource to show in this UI
          * 
-         * @deprecated As of 7.0, use getPage().open instead
+         * @deprecated As of 7.0, use getPage().setLocation instead
          */
         @Deprecated
         public void open(Resource resource) {
-            getPage().open(resource);
+            open(resource, null);
         }
 
         /* ********************************************************************* */
@@ -264,6 +264,13 @@ public abstract class UI extends AbstractComponentContainer implements
          * that name, either by opening a new window/tab in the browser or by
          * replacing the contents of an existing window with that name.
          * </p>
+         * <p>
+         * As of Vaadin 7.0.0, the functionality for opening a Resource in a
+         * Page has been replaced with similar methods based on a String URL.
+         * This is because the usage of Resource is problematic with memory
+         * management and with security features in some browsers. Is is
+         * recommended to instead use {@link Link} for starting downloads.
+         * </p>
          * 
          * @param resource
          *            the resource.
@@ -273,13 +280,20 @@ public abstract class UI extends AbstractComponentContainer implements
          */
         @Deprecated
         public void open(Resource resource, String windowName) {
-            getPage().open(resource, windowName);
+            open(resource, windowName, -1, -1, Page.BORDER_DEFAULT);
         }
 
         /**
          * Opens the given resource in a window with the given size, border and
          * name. For more information on the meaning of {@code windowName}, see
          * {@link #open(Resource, String)}.
+         * <p>
+         * As of Vaadin 7.0.0, the functionality for opening a Resource in a
+         * Page has been replaced with similar methods based on a String URL.
+         * This is because the usage of Resource is problematic with memory
+         * management and with security features in some browsers. Is is
+         * recommended to instead use {@link Link} for starting downloads.
+         * </p>
          * 
          * @param resource
          *            the resource.
