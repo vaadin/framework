@@ -22,6 +22,13 @@ import java.util.logging.Logger;
 import com.vaadin.server.Constants;
 import com.vaadin.server.DeploymentConfiguration;
 
+/**
+ * The default implementation of {@link DeploymentConfiguration} based on a base
+ * class for resolving system properties and a set of init parameters.
+ * 
+ * @author Vaadin Ltd
+ * @since 7.0.0
+ */
 public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
     private final Properties initParameters;
     private boolean productionMode;
@@ -31,6 +38,16 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
     private boolean idleRootCleanupEnabled;
     private final Class<?> systemPropertyBaseClass;
 
+    /**
+     * Create a new deployment configuration instance.
+     * 
+     * @param systemPropertyBaseClass
+     *            the class that should be used as a basis when reading system
+     *            properties
+     * @param initParameters
+     *            the init parameters that should make up the foundation for
+     *            this configuration
+     */
     public DefaultDeploymentConfiguration(Class<?> systemPropertyBaseClass,
             Properties initParameters) {
         this.initParameters = initParameters;
