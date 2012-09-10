@@ -56,9 +56,21 @@
       </p>
       
       <p>
-        <b>Vaadin</b> is distributed as a ZIP package and from the Maven central
-        repository. Without Maven, the recommended way to get Vaadin is to use the Vaadin
-        Plugin for Eclipse, which automatically downloads the Vaadin libraries.
+        The easiest ways to install <b>Vaadin</b> are:
+      </p>
+
+      <ul>
+        <li>If using Maven, define it as a dependency or use any of the available
+        archetypes (only <tt>vaadin-application</tt> is available for Vaadin 7 at the time
+        of this release) to create a new project</li>
+
+        <li>If using Eclipse, use the Vaadin Plugin for Eclipse, which automatically
+        downloads the Vaadin libraries</li>
+      </ul>
+
+      <p>
+        It is also available as a ZIP package downloadable from <a
+        href="http://vaadin.com/download">Vaadin Download page</a>.
       </p>
 
       <h3 id="package">Package Contents</h3>
@@ -74,9 +86,10 @@
       </ul>
 
       <p>
-        See the <tt>README.TXT</tt> for information about the installation. <a
-        href="vaadin.com/book">Book of Vaadin</a> (for Vaadin 7) will give more detailed
-        instructions at some point, but is not yet updated at the time of this release.
+        See the <tt>README.TXT</tt> in the installation package for detailed information
+        about the package contents. <a href="http://vaadin.com/book">Book of Vaadin</a>
+        (for Vaadin 7) will give more detailed instructions; it is not yet up-to-date at
+        the time of this release, but will be updated soon after.
       </p>
 
       <p>
@@ -92,9 +105,10 @@
 
       <p>
         For pure client-side development, you only need the <tt>vaadin-client</tt> and
-        <tt>vaadin-client-compiler</tt> JARs. You also need them if you compile the widget
-        set for any reason, such as using Vaadin add-ons, or create new server-side
-        components integrated with client-side widgets.
+        <tt>vaadin-client-compiler</tt> JARs, which should be put to a non-deployed
+        project library folder, such as <tt>lib</tt>. You also need them if you compile
+        the widget set for any reason, such as using Vaadin add-ons, or create new
+        server-side components integrated with client-side widgets.
       </p>
 
       <h2 id="enhancements">Enhancements in Vaadin @version-minor@</h2>
@@ -222,6 +236,11 @@
       <h2 id="dependencies">Vaadin @version@ Dependencies</h2>
 
       <h3>Dependencies Included in Installation package</h3>
+      
+      <p>
+        The Vaadin ZIP installation package includes the following dependencies in the
+        <tt>lib</tt> subfolder:
+      </p>
 
       <ul>
         <li>Apache Ant (<tt>ant-*.jar</tt>)</li>
@@ -236,7 +255,7 @@
         <li><tt>portal-service-*.jar</tt></li>
         <li>SAC (<tt>sac-*.jar</tt>)</li>
         <li>SmartSprites (<tt>smartsprites-*.jar</tt>)</li>
-        <li> Validation API (<tt>-*.jar</tt>)</li>
+        <li>Validation API (<tt>validation-*.jar</tt>)</li>
       </ul>
 
       <h3>Bean Validation</h3>
@@ -307,7 +326,9 @@
         extracted to the <tt>ROOT/html/VAADIN</tt> directory in the Liferay
         installation. If your portal uses custom widgets, install the latest version of <a
         href="http://vaadin.com/directory#addon/vaadin-control-panel-for-liferay">Vaadin
-        Control Panel for Liferay</a> for easy widget set compilation.
+        Control Panel for Liferay</a> for easy widget set compilation - when it is
+        available - the add-on is not compatible with Vaadin @version@ at the time of this
+        Vaadin release. <!-- TODO: Remove note when done -->
       </p>
       
       <h2 id="gae">Notes and Limitations for Google App Engine</h4>
@@ -318,8 +339,8 @@
       <ul>
         <li>
           <p>
-            Applications must use <b>GAEApplicationServlet</b> instead of
-            <b>ApplicationServlet</b> in <tt>web.xml</tt>.
+            Applications must use <b>GAEVaadinServlet</b> instead of
+            <b>VaadinServlet</b> in <tt>web.xml</tt>.
           </p>
         </li>
 
@@ -348,7 +369,7 @@
 
         <li>
           <p>
-            The Vaadin <b>WebApplicationContext</b> class is serialized separately into
+            The Vaadin <b>VaadinSession</b> class is serialized separately into
             memcache and datastore; the memcache key is <tt>_vac&lt;sessionid&gt;</tt> and
             the datastore entity kind is <tt>_vac</tt> with identifiers of the type
             <tt>_vac&lt;sessionid&gt;</tt>.
@@ -357,19 +378,8 @@
 
         <li>
           <p>
-            DO NOT update application state when serving an <b>ApplicationResource</b>
+            DO NOT update application state when serving an <b>ConnectorResource</b>
             (such as <b>ClassResource</b>.<i>getStream()</i>).
-          </p>
-        </li>
-
-        <li>
-          <p>
-            AVOID (or be very careful when) updating application state in a
-            <b>TransactionListener</b> or a <b>HttpServletRequestListener</b> - they are
-            called even when the application is not locked and won't be serialized (such
-            as <b>ApplicationResource</b>), and changes can thus go missing (it should be
-            safe to update things that can be safely discarded later, that is, those valid
-            only for the current request)
           </p>
         </li>
 
@@ -389,12 +399,9 @@
       <h2 id="supportedversions">Supported Technologies</h2>
 
       <p>
-        Vaadin 7 is compatible with <b>Java 6</b> and it is also compatible with most other
-        operating system supporting Java 6 or newer. 
-      </p>
-
-      <p>
-        Vaadin 7 is supported on the following <b>operating systems</b>:
+        Vaadin 7 is compatible with <b>Java 6</b> and with most operating systems
+        supporting the Java 6 or newer. Vaadin 7 is especially supported on the following
+        <b>operating systems</b>:
       </p>
 
       <ul>
@@ -410,12 +417,12 @@
       </p>
 
       <ul>
-        <li>Apache Tomcat, version 5.0-7.0</li>
-        <li>Oracle WebLogic&reg; Server, version 9.2-10.3.5(11gR1)</li>
-        <li>IBM WebSphere&reg; Application Server, version 6.1-8.0</li>
-        <li>JBoss Application Server, 4.0.0-7.0</li>
-        <li>Jetty, version 5.0-7.0</li>
-        <li>Glassfish, version 2.0-3.1</li>
+        <li>Apache Tomcat, version 5.0 or newer</li>
+        <li>Oracle WebLogic&reg; Server, version 9.2 or newer</li>
+        <li>IBM WebSphere&reg; Application Server, version 6.1 or newer</li>
+        <li>JBoss Application Server, 4.0.0 or newer</li>
+        <li>Jetty, version 5.0 or newer</li>
+        <li>Glassfish, version 2.0 or newer</li>
       </ul>
 
       <p>
@@ -425,9 +432,9 @@
       </p>
 
       <ul>
-        <li>Liferay Portal 5.2-6.0</li>
-        <li>GateIn Portal 3.1</li>
-        <li>eXo Platform 3</li>
+        <li>Liferay Portal 5.2 or newer</li>
+        <li>GateIn Portal 3.1 or newer</li>
+        <li>eXo Platform 3 or newer</li>
       </ul>
 
       <p>
@@ -439,7 +446,7 @@
       </p>
 
       <ul>
-        <li>Mozilla Firefox 5</li>
+        <li>Mozilla Firefox 5 or newer</li>
         <li>Internet Explorer 8-10</li>
         <li>Safari 6</li>
         <li>Opera 12</li>
