@@ -282,43 +282,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     @Override
     public void discard() throws Buffered.SourceException {
-        if (dataSource != null) {
-
-            // Gets the correct value from datasource
-            T newFieldValue;
-            try {
-
-                // Discards buffer by overwriting from datasource
-                newFieldValue = convertFromDataSource(getDataSourceValue());
-
-                // If successful, remove set the buffering state to be ok
-                if (getCurrentBufferedSourceException() != null) {
-                    setCurrentBufferedSourceException(null);
-                }
-            } catch (final Throwable e) {
-                // FIXME: What should really be done here if conversion fails?
-
-                // Sets the buffering state
-                currentBufferedSourceException = new Buffered.SourceException(
-                        this, e);
-                markAsDirty();
-
-                // Throws the source exception
-                throw currentBufferedSourceException;
-            }
-
-            final boolean wasModified = isModified();
-            setModified(false);
-
-            // If the new value differs from the previous one
-            if (!equals(newFieldValue, getInternalValue())) {
-                setInternalValue(newFieldValue);
-                fireValueChange(false);
-            } else if (wasModified) {
-                // If the value did not change, but the modification status did
-                markAsDirty();
-            }
-        }
+        updateValueFromDataSource();
     }
 
     /**
@@ -1323,7 +1287,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             addPropertyListeners();
             if (!isModified() && !isBuffered()) {
                 // Update value from data source
-                discard();
+                updateValueFromDataSource();
             }
         }
     }
@@ -1537,6 +1501,46 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         @Override
         public void handleAction(Object sender, Object target) {
             focusable.focus();
+        }
+    }
+
+    private void updateValueFromDataSource() {
+        if (dataSource != null) {
+
+            // Gets the correct value from datasource
+            T newFieldValue;
+            try {
+
+                // Discards buffer by overwriting from datasource
+                newFieldValue = convertFromDataSource(getDataSourceValue());
+
+                // If successful, remove set the buffering state to be ok
+                if (getCurrentBufferedSourceException() != null) {
+                    setCurrentBufferedSourceException(null);
+                }
+            } catch (final Throwable e) {
+                // FIXME: What should really be done here if conversion fails?
+
+                // Sets the buffering state
+                currentBufferedSourceException = new Buffered.SourceException(
+                        this, e);
+                markAsDirty();
+
+                // Throws the source exception
+                throw currentBufferedSourceException;
+            }
+
+            final boolean wasModified = isModified();
+            setModified(false);
+
+            // If the new value differs from the previous one
+            if (!equals(newFieldValue, getInternalValue())) {
+                setInternalValue(newFieldValue);
+                fireValueChange(false);
+            } else if (wasModified) {
+                // If the value did not change, but the modification status did
+                markAsDirty();
+            }
         }
     }
 

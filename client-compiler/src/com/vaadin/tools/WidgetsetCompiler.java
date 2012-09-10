@@ -80,6 +80,8 @@ public class WidgetsetCompiler {
 
                         System.out.println("Starting GWT compiler");
                         System.setProperty("gwt.nowarn.legacy.tools", "true");
+                        System.setProperty("gwt.forceVersionCheckURL",
+                                "http://tools.vaadin.com/version/currentversion.xml");
                         Class<?> compilerClass = Class
                                 .forName("com.google.gwt.dev.GWTCompiler");
                         Method method = compilerClass.getDeclaredMethod("main",
