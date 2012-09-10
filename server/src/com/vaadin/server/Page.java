@@ -32,6 +32,7 @@ import com.vaadin.ui.JavaScript;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.util.ReflectTools;
 
 public class Page implements Serializable {
@@ -664,7 +665,9 @@ public class Page implements Serializable {
 
     /**
      * @deprecated only retained to maintain compatibility with
-     *             LegacyWindow.open methods
+     *             LegacyWindow.open methods. See documentation for
+     *             {@link LegacyWindow#open(Resource, String, int, int, BorderStyle)}
+     *             for discussion about replacing API.
      */
     @Deprecated
     public void open(Resource resource, String windowName, int width,
