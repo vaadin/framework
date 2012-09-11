@@ -100,24 +100,24 @@ public abstract class LegacyApplication extends AbstractUIProvider implements
     }
 
     @Override
-    public UI createInstance(Class<? extends UI> type, WrappedRequest request) {
+    public UI createInstance(WrappedRequest request, Class<? extends UI> type) {
         return getUIInstance(request);
     }
 
     @Override
-    public String getThemeForUI(WrappedRequest request,
+    public String getTheme(WrappedRequest request,
             Class<? extends UI> uiClass) {
         return theme;
     }
 
     @Override
-    public String getPageTitleForUI(WrappedRequest request,
+    public String getPageTitle(WrappedRequest request,
             Class<? extends UI> uiClass) {
         UI uiInstance = getUIInstance(request);
         if (uiInstance != null) {
             return uiInstance.getCaption();
         } else {
-            return super.getPageTitleForUI(request, uiClass);
+            return super.getPageTitle(request, uiClass);
         }
     }
 

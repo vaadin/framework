@@ -20,8 +20,8 @@ public class LazyInitUIs extends AbstractTestUIProvider {
     }
 
     @Override
-    public UI createInstance(Class<? extends UI> type,
-            WrappedRequest request) {
+    public UI createInstance(WrappedRequest request,
+            Class<? extends UI> type) {
         return getUI(request);
     }
 

@@ -225,7 +225,7 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         String title = context.getVaadinSession()
                 .getUiProvider(context.getRequest(), context.getUIClass())
-                .getPageTitleForUI(context.getRequest(), context.getUIClass());
+                .getPageTitle(context.getRequest(), context.getUIClass());
         if (title != null) {
             head.appendElement("title").appendText(title);
         }
@@ -278,7 +278,7 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         String widgetset = context.getVaadinSession()
                 .getUiProvider(context.getRequest(), context.getUIClass())
-                .getWidgetsetForUI(context.getRequest(), context.getUIClass());
+                .getWidgetset(context.getRequest(), context.getUIClass());
         if (widgetset == null) {
             widgetset = request.getVaadinService().getConfiguredWidgetset(
                     request);
@@ -502,7 +502,7 @@ public abstract class BootstrapHandler implements RequestHandler {
     public String getThemeName(BootstrapContext context) {
         return context.getVaadinSession()
                 .getUiProvider(context.getRequest(), context.getUIClass())
-                .getThemeForUI(context.getRequest(), context.getUIClass());
+                .getTheme(context.getRequest(), context.getUIClass());
     }
 
     /**

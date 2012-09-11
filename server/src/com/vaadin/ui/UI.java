@@ -981,7 +981,7 @@ public abstract class UI extends AbstractComponentContainer implements
             throw new IllegalStateException("UI id has already been defined");
         }
         this.uiId = uiId;
-        theme = getSession().getUiProvider(request, getClass()).getThemeForUI(
+        theme = getSession().getUiProvider(request, getClass()).getTheme(
                 request, getClass());
 
         getPage().init(request);

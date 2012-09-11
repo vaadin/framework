@@ -716,7 +716,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     protected <T extends UI> T createUIInstance(WrappedRequest request,
             Class<T> uiClass) {
         UIProvider uiProvider = getUiProvider(request, uiClass);
-        return uiClass.cast(uiProvider.createInstance(uiClass, request));
+        return uiClass.cast(uiProvider.createInstance(request, uiClass));
     }
 
     /**
@@ -1027,7 +1027,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
         ui.doInit(request, uiId.intValue());
 
-        if (getUiProvider(request, uiClass).isUiPreserved(request, uiClass)) {
+        if (getUiProvider(request, uiClass).isPreservedOnRefresh(request, uiClass)) {
             // Remember this UI
             String windowName = request.getBrowserDetails().getWindowName();
             if (windowName == null) {
