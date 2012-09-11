@@ -411,6 +411,15 @@ public class Navigator implements Serializable {
     }
 
     /**
+     * Navigates to the current navigation state. This method should be called
+     * when all required {@link View}s, {@link ViewProvider}s, and
+     * {@link ViewChangeListener}s have been added to the navigator.
+     */
+    public void navigate() {
+        navigateTo(getStateManager().getState());
+    }
+
+    /**
      * Navigate to a view and initialize the view with given parameters.
      * 
      * The view string consists of a view name optionally followed by a slash
