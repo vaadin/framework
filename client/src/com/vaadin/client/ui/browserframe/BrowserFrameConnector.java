@@ -1,13 +1,13 @@
-package com.vaadin.client.ui.embeddedbrowser;
+package com.vaadin.client.ui.browserframe;
 
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.AbstractEmbeddedState;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.embeddedbrowser.EmbeddedBrowserState;
+import com.vaadin.shared.ui.browserframe.BrowserFrameState;
 
-@Connect(com.vaadin.ui.EmbeddedBrowser.class)
-public class EmbeddedBrowserConnector extends AbstractComponentConnector {
+@Connect(com.vaadin.ui.BrowserFrame.class)
+public class BrowserFrameConnector extends AbstractComponentConnector {
 
     @Override
     protected void init() {
@@ -15,13 +15,13 @@ public class EmbeddedBrowserConnector extends AbstractComponentConnector {
     }
 
     @Override
-    public VEmbeddedBrowser getWidget() {
-        return (VEmbeddedBrowser) super.getWidget();
+    public VBrowserFrame getWidget() {
+        return (VBrowserFrame) super.getWidget();
     }
 
     @Override
-    public EmbeddedBrowserState getState() {
-        return (EmbeddedBrowserState) super.getState();
+    public BrowserFrameState getState() {
+        return (BrowserFrameState) super.getState();
     }
 
     @Override

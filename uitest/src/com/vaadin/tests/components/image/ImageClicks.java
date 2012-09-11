@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
@@ -18,6 +19,8 @@ import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 
 public class ImageClicks extends TestBase {
+
+    private final Random rng = new Random(0);
 
     private int clickCounter = 0;
 
@@ -32,7 +35,7 @@ public class ImageClicks extends TestBase {
         final StreamResource imageResource = new StreamResource(imageSource,
                 "testimage.png");
         image.setSource(imageResource);
-        image.addListener(new ClickListener() {
+        image.addClickListener(new ClickListener() {
 
             @Override
             public void click(ClickEvent event) {
@@ -107,7 +110,7 @@ public class ImageClicks extends TestBase {
                     }
 
                     // Cell
-                    if (Math.random() < 0.5f) {
+                    if (rng.nextFloat() < 0.5f) {
                         drawable.setColor(Color.white);
                     } else {
                         drawable.setColor(Color.black);

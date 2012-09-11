@@ -6,10 +6,11 @@ package com.vaadin.ui;
 
 import java.util.HashMap;
 
+import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.flash.FlashState;
 
 /**
- * Component for embedding flash objects.
+ * A component for displaying Adobe® Flash® content.
  * 
  * @author Vaadin Ltd.
  * @version
@@ -19,8 +20,39 @@ import com.vaadin.shared.ui.flash.FlashState;
 @SuppressWarnings("serial")
 public class Flash extends AbstractEmbedded {
 
+    /**
+     * Creates a new empty Flash component.
+     */
+    public Flash() {
+
+    }
+
+    /**
+     * Creates a new empty Flash component with the given caption
+     * 
+     * @param caption
+     *            The caption for the component
+     */
+    public Flash(String caption) {
+        setCaption(caption);
+    }
+
+    /**
+     * Creates a new Flash component with the given caption and content.
+     * 
+     * @param caption
+     *            The caption for the component
+     * @param source
+     *            A Resource representing the Flash content that should be
+     *            displayed
+     */
+    public Flash(String caption, Resource source) {
+        this(caption);
+        setSource(source);
+    }
+
     @Override
-    public FlashState getState() {
+    protected FlashState getState() {
         return (FlashState) super.getState();
     }
 

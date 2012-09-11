@@ -1,4 +1,4 @@
-package com.vaadin.tests.components.embeddedbrowser;
+package com.vaadin.tests.components.browserframe;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -6,12 +6,12 @@ import java.io.UnsupportedEncodingException;
 
 import com.vaadin.server.StreamResource;
 import com.vaadin.tests.components.TestBase;
+import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.EmbeddedBrowser;
 import com.vaadin.ui.HorizontalLayout;
 
-public class EmbeddedBrowserIsVisible extends TestBase {
+public class BrowserFrameIsVisible extends TestBase {
 
     @Override
     protected void setup() {
@@ -28,8 +28,8 @@ public class EmbeddedBrowserIsVisible extends TestBase {
         Button page3 = new Button("null");
         buttonLayout.addComponent(page3);
 
-        final EmbeddedBrowser browser = new EmbeddedBrowser();
-        browser.setDebugId("browser");
+        final BrowserFrame browser = new BrowserFrame();
+        browser.setId("browser");
         browser.setWidth("600px");
         browser.setHeight("300px");
         browser.setAlternateText("Browser alternative text");
@@ -40,7 +40,7 @@ public class EmbeddedBrowserIsVisible extends TestBase {
         browser.setSource(textResource);
         addComponent(browser);
 
-        page1.addListener(new Button.ClickListener() {
+        page1.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
@@ -52,7 +52,7 @@ public class EmbeddedBrowserIsVisible extends TestBase {
             }
         });
 
-        page2.addListener(new Button.ClickListener() {
+        page2.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
@@ -64,7 +64,7 @@ public class EmbeddedBrowserIsVisible extends TestBase {
             }
         });
 
-        page3.addListener(new Button.ClickListener() {
+        page3.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {

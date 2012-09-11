@@ -1,21 +1,21 @@
-package com.vaadin.client.ui.embeddedbrowser;
+package com.vaadin.client.ui.browserframe;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.user.client.ui.Widget;
 
-public class VEmbeddedBrowser extends Widget {
+public class VBrowserFrame extends Widget {
 
     protected IFrameElement iframe;
     protected Element altElement;
     protected String altText;
 
-    public VEmbeddedBrowser() {
+    public VBrowserFrame() {
         Element root = Document.get().createDivElement();
         setElement(root);
 
-        setStylePrimaryName("v-embeddedbrowser");
+        setStylePrimaryName("v-browserframe");
 
         createAltTextElement();
     }

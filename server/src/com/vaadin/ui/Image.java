@@ -61,7 +61,7 @@ public class Image extends AbstractEmbedded {
     }
 
     @Override
-    public ImageState getState() {
+    protected ImageState getState() {
         return (ImageState) super.getState();
     }
 
