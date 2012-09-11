@@ -114,6 +114,9 @@
 				<include name="WEB-INF/*.xml" />
 			</fileset>
 			<classes dir="${classes}" />
+			<fileset dir="src">
+				<exclude name="**/*.java"/>
+			</fileset>
 			<lib dir="${deps.dir}" />
 		</war>
 
