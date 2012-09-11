@@ -19,7 +19,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 
-public abstract class Vaadin6Connector extends AbstractComponentConnector
+public abstract class LegacyConnector extends AbstractComponentConnector
         implements Paintable {
 
     @Override
