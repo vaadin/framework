@@ -43,6 +43,8 @@
         <!-- Project modules -->
         <dependency org="com.vaadin" name="vaadin-shared"
             rev="${vaadin.version}" conf="build,tests" />
+        <dependency org="com.vaadin" name="vaadin-theme-compiler"
+            rev="${vaadin.version}" conf="build,tests" />
 
         <!-- Jsoup for BootstrapHandler -->
         <dependency org="org.jsoup" name="jsoup" rev="1.6.3"
