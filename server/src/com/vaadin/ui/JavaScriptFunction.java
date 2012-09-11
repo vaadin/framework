@@ -18,8 +18,9 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 
-import com.vaadin.external.json.JSONArray;
-import com.vaadin.external.json.JSONException;
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import com.vaadin.server.AbstractJavaScriptExtension;
 
 /**

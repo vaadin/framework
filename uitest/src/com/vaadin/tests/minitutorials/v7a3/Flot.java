@@ -20,9 +20,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import com.vaadin.annotations.JavaScript;
-import com.vaadin.external.json.JSONArray;
-import com.vaadin.external.json.JSONException;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.JavaScriptFunction;
 import com.vaadin.ui.Notification;

@@ -24,8 +24,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.vaadin.external.json.JSONArray;
-import com.vaadin.external.json.JSONException;
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import com.vaadin.shared.JavaScriptConnectorState;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.JavaScript.JavaScriptCallbackRpc;

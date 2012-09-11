@@ -39,9 +39,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.vaadin.external.json.JSONArray;
-import com.vaadin.external.json.JSONException;
-import com.vaadin.external.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.communication.UidlValue;

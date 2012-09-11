@@ -31,8 +31,9 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
-import com.vaadin.external.json.JSONException;
-import com.vaadin.external.json.JSONObject;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.communication.SharedState;

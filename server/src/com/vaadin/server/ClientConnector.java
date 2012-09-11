@@ -19,8 +19,9 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-import com.vaadin.external.json.JSONException;
-import com.vaadin.external.json.JSONObject;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.ui.Component;

@@ -16,9 +16,10 @@
 
 package com.vaadin.tests.extensions;
 
-import com.vaadin.external.json.JSONArray;
-import com.vaadin.external.json.JSONException;
-import com.vaadin.external.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Log;

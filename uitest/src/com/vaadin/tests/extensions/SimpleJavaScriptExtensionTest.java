@@ -16,10 +16,11 @@
 
 package com.vaadin.tests.extensions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.StyleSheet;
-import com.vaadin.external.json.JSONArray;
-import com.vaadin.external.json.JSONException;
 import com.vaadin.server.AbstractJavaScriptExtension;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.shared.JavaScriptExtensionState;
