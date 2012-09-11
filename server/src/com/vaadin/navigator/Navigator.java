@@ -475,7 +475,7 @@ public class Navigator implements Serializable {
     protected void navigateTo(View view, String viewName, String parameters) {
         ViewChangeEvent event = new ViewChangeEvent(this, currentView, view,
                 viewName, parameters);
-        if (!isViewChangeAllowed(event)) {
+        if (!fireBeforeViewChange(event)) {
             return;
         }
 
@@ -496,15 +496,16 @@ public class Navigator implements Serializable {
             display.showView(view);
         }
 
-        fireViewChange(event);
+        fireAfterViewChange(event);
     }
 
     /**
-     * Check whether view change is allowed.
-     * 
-     * All related listeners are called. The view change is blocked if any of
-     * them wants to block the navigation operation.
-     * 
+     * Fires an event before an imminent view change.
+     * <p>
+     * Listeners are called in registration order. If any listener returns
+     * <code>false</code>, the rest of the listeners are not called and the view
+     * change is blocked.
+     * <p>
      * The view change listeners may also e.g. open a warning or question dialog
      * and save the parameters to re-initiate the navigation operation upon user
      * action.
@@ -514,9 +515,9 @@ public class Navigator implements Serializable {
      * @return true if the view change should be allowed, false to silently
      *         block the navigation operation
      */
-    protected boolean isViewChangeAllowed(ViewChangeEvent event) {
+    protected boolean fireBeforeViewChange(ViewChangeEvent event) {
         for (ViewChangeListener l : listeners) {
-            if (!l.isViewChangeAllowed(event)) {
+            if (!l.beforeViewChange(event)) {
                 return false;
             }
         }
@@ -545,14 +546,16 @@ public class Navigator implements Serializable {
     }
 
     /**
-     * Fire an event when the current view has changed.
+     * Fires an event after the current view has changed.
+     * <p>
+     * Listeners are called in registration order.
      * 
      * @param event
      *            view change event (not null)
      */
-    protected void fireViewChange(ViewChangeEvent event) {
+    protected void fireAfterViewChange(ViewChangeEvent event) {
         for (ViewChangeListener l : listeners) {
-            l.navigatorViewChanged(event);
+            l.afterViewChange(event);
         }
     }
 
@@ -661,7 +664,7 @@ public class Navigator implements Serializable {
      * The listener will get notified after the view has changed.
      * 
      * @param listener
-     *            Listener to invoke after view changes.
+     *            Listener to invoke during a view change.
      */
     public void addViewChangeListener(ViewChangeListener listener) {
         listeners.add(listener);
