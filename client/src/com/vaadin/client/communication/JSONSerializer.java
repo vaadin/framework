@@ -16,22 +16,21 @@
 
 package com.vaadin.client.communication;
 
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.metadata.Type;
 
 /**
  * Implementors of this interface knows how to serialize an Object of a given
  * type to JSON and how to deserialize the JSON back into an object.
  * 
- * The {@link #serialize(Object, ConnectorMap)} and
- * {@link #deserialize(JSONObject, ConnectorMap)} methods must be symmetric so
- * they can be chained and produce the original result (or an equal result).
+ * The {@link #serialize(Object, ApplicationConnection)} and
+ * {@link #deserialize(Type, JSONValue, ApplicationConnection)} methods must be
+ * symmetric so they can be chained and produce the original result (or an equal
+ * result).
  * 
  * Each {@link JSONSerializer} implementation can handle an object of a single
- * type - see {@link SerializerMap}.
+ * type - see {@link Type#findSerializer()}.
  * 
  * @since 7.0
  */
@@ -39,12 +38,16 @@ public interface JSONSerializer<T> {
 
     /**
      * Creates and deserializes an object received from the server. Must be
-     * compatible with {@link #serialize(Object, ConnectorMap)} and also with
-     * the server side JsonCodec.encode(Object,
-     * com.vaadin.server.PaintableIdMapper) .
+     * compatible with {@link #serialize(Object, ApplicationConnection)} and
+     * also with the server side JsonCodec.encode method.
      * 
+     * @param type
+     *            the type to deserialize
      * @param jsonValue
      *            JSON map from property name to property value
+     * @param connection
+     *            the application connection providing the context
+     * 
      * @return A deserialized object
      */
     T deserialize(Type type, JSONValue jsonValue,
@@ -52,12 +55,13 @@ public interface JSONSerializer<T> {
 
     /**
      * Serialize the given object into JSON. Must be compatible with
-     * {@link #deserialize(JSONObject, ConnectorMap)} and also with the server
-     * side JsonCodec.decode(com.vaadin.external.json.JSONArray,
-     * com.vaadin.server.PaintableIdMapper)
+     * {@link #deserialize(Type, JSONValue, ApplicationConnection)} and also
+     * with the server side JsonCodec.decodeCustomType method.
      * 
      * @param value
      *            The object to serialize
+     * @param connection
+     *            the application connection providing the context
      * @return A JSON serialized version of the object
      */
     JSONValue serialize(T value, ApplicationConnection connection);
