@@ -33,7 +33,6 @@ public class CompileTheme {
                 "the version to add to the compiled theme");
         options.addOption("f", "theme-folder", true,
                 "the folder containing the theme");
-        options.addOption("s", "sprites", false, "use smartsprites");
         CommandLineParser parser = new PosixParser();
         CommandLine params = parser.parse(options, args);
         if (!params.hasOption("theme") || !params.hasOption("theme-folder")) {
@@ -45,10 +44,9 @@ public class CompileTheme {
         String themeName = params.getOptionValue("theme");
         String themeFolder = params.getOptionValue("theme-folder");
         String themeVersion = params.getOptionValue("theme-version");
-        boolean useSprites = params.hasOption("sprites");
 
         try {
-            processSassTheme(themeFolder, themeName, useSprites, themeVersion);
+            processSassTheme(themeFolder, themeName, themeVersion);
             System.out.println("Compiling theme " + themeName + " successful");
         } catch (Exception e) {
             System.err.println("Compiling theme " + themeName + " failed");
@@ -57,7 +55,7 @@ public class CompileTheme {
     }
 
     private static void processSassTheme(String themeFolder, String themeName,
-            boolean useSmartSprites, String version) throws Exception {
+            String version) throws Exception {
 
         StringBuffer cssHeader = new StringBuffer();
 
@@ -87,16 +85,19 @@ public class CompileTheme {
         System.out.println("Compiled CSS to " + stylesCssName + " ("
                 + scss.toString().length() + " bytes)");
 
-        if (useSmartSprites) {
-            createSprites(themeFolder, themeName);
-            System.out.println("Used SmartSprites to create sprites");
-            File oldCss = new File(stylesCssName);
+        createSprites(themeFolder, themeName);
+        System.out.println("Used SmartSprites to create sprites");
+        File oldCss = new File(stylesCssName);
+        File newCss = new File(stylesCssDir + "styles-sprite.css");
+
+        if (newCss.exists()) {
+            // Theme contained sprites. Renamed "styles-sprite.css" ->
+            // "styles.css"
             oldCss.delete();
 
-            File newCss = new File(stylesCssDir + "styles-sprite.css");
             boolean ok = newCss.renameTo(oldCss);
             if (!ok) {
-                System.out.println("Rename " + newCss + " -> " + oldCss
+                throw new RuntimeException("Rename " + newCss + " -> " + oldCss
                         + " failed");
             }
         }
