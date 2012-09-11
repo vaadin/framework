@@ -19,7 +19,6 @@ package com.vaadin.sass.tree;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public abstract class Node implements Serializable {
     private static final long serialVersionUID = 5914711715839294816L;
@@ -28,11 +27,9 @@ public abstract class Node implements Serializable {
     private String fileName;
 
     protected String rawString;
-    protected List<String> variables;
 
     public Node() {
         children = new ArrayList<Node>();
-        variables = new ArrayList<String>();
     }
 
     public Node(String raw) {
@@ -98,11 +95,4 @@ public abstract class Node implements Serializable {
         return rawString;
     }
 
-    public void addVariable(String var) {
-        variables.add(var);
-    }
-
-    public void removeVariable(String var) {
-        variables.remove(var);
-    }
 }

@@ -31,9 +31,11 @@ import com.vaadin.sass.parser.Parser;
 import com.vaadin.sass.resolver.ScssStylesheetResolver;
 import com.vaadin.sass.resolver.VaadinResolver;
 import com.vaadin.sass.tree.Node;
+import com.vaadin.sass.tree.VariableNode;
 import com.vaadin.sass.visitor.BlockVisitor;
-import com.vaadin.sass.visitor.ControlVisitor;
+import com.vaadin.sass.visitor.EachVisitor;
 import com.vaadin.sass.visitor.ExtendVisitor;
+import com.vaadin.sass.visitor.IfElseVisitor;
 import com.vaadin.sass.visitor.ImportVisitor;
 import com.vaadin.sass.visitor.MixinVisitor;
 import com.vaadin.sass.visitor.NestPropertiesVisitor;
@@ -116,16 +118,17 @@ public class ScssStylesheet extends Node {
      * @throws Exception
      */
     public void compile() throws Exception {
+        ScssStylesheet scssStylesheet = this;
         List<Visitor> visitors = new ArrayList<Visitor>();
         visitors.add(new ImportVisitor());
-        visitors.add(new MixinVisitor());
         visitors.add(new VariableVisitor());
+        visitors.add(new MixinVisitor());
+        visitors.add(new IfElseVisitor());
         visitors.add(new ParentSelectorVisitor());
         visitors.add(new BlockVisitor());
         visitors.add(new NestPropertiesVisitor());
         visitors.add(new ExtendVisitor());
-        visitors.add(new ControlVisitor());
-        ArrayList<Node> children2 = children;
+        visitors.add(new EachVisitor());
         for (Visitor visitor : visitors) {
             visitor.traverse(this);
         }
@@ -156,4 +159,11 @@ public class ScssStylesheet extends Node {
         String output = string.toString();
         return output;
     }
+
+    public void addChild(int index, VariableNode node) {
+        if (node != null) {
+            children.add(index, node);
+        }
+    }
+
 }

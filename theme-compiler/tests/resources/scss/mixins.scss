@@ -13,8 +13,10 @@
 	border-radius: $radius;
 }
 
+$mixinVar : 1px;
+
 .main {
-	@include rounded-borders(1px);
+	@include rounded-borders($mixinVar);
 	@include font-settings;
 	@include main-details(14px);
 }

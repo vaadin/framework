@@ -21,7 +21,9 @@ import java.util.Collection;
 
 import org.w3c.css.sac.LexicalUnit;
 
-public class MixinNode extends Node {
+import com.vaadin.sass.parser.LexicalUnitImpl;
+
+public class MixinNode extends Node implements IVariableNode {
     private static final long serialVersionUID = 4725008226813110658L;
 
     private String name;
@@ -56,4 +58,17 @@ public class MixinNode extends Node {
     public void setArglist(ArrayList<LexicalUnit> arglist) {
         this.arglist = arglist;
     }
+
+    @Override
+    public void replaceVariables(ArrayList<VariableNode> variables) {
+        for (final VariableNode var : variables) {
+            for (final LexicalUnit arg : new ArrayList<LexicalUnit>(arglist)) {
+                if (arg.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE
+                        && arg.getStringValue().equals(var.getName())) {
+                    ((LexicalUnitImpl) arg).replaceValue(var.getExpr());
+                }
+            }
+        }
+    }
+
 }

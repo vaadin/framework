@@ -56,4 +56,5 @@ public class MediaNode extends Node {
         builder.append("}");
         return builder.toString();
     }
+
 }

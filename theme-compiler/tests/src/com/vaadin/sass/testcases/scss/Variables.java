@@ -49,30 +49,25 @@ public class Variables extends AbstractTestBase {
 
         VariableNode varNode1 = (VariableNode) root.getChildren().get(0);
         Assert.assertEquals("blue", varNode1.getName());
-        // Assert.assertEquals("blue", varNode1.getExpr().);
+
+        VariableNode varNode3 = (VariableNode) root.getChildren().get(2);
+        Assert.assertEquals("chameleon-font-family", varNode3.getName());
 
         VariableNode varNode2 = (VariableNode) root.getChildren().get(1);
         Assert.assertEquals("margin", varNode2.getName());
         Assert.assertEquals(8f, varNode2.getExpr().getFloatValue());
         Assert.assertEquals("px", varNode2.getExpr().getDimensionUnitText());
 
-        VariableNode varNode3 = (VariableNode) root.getChildren().get(2);
-        Assert.assertEquals("chameleon-font-family", varNode3.getName());
-
-        BlockNode blockNode1 = (BlockNode) root.getChildren().get(3);
-        Assert.assertEquals(5, blockNode1.getChildren().size());
-        RuleNode ruleNode1Block1 = (RuleNode) blockNode1.getChildren().get(0);
+        BlockNode blockNode1 = (BlockNode) root.getChildren().get(4);
+        Assert.assertEquals(3, blockNode1.getChildren().size());
+        RuleNode ruleNode1Block1 = (RuleNode) blockNode1.getChildren().get(2);
         Assert.assertEquals("border-color", ruleNode1Block1.getVariable());
         Assert.assertEquals(SCSSLexicalUnit.SCSS_VARIABLE, ruleNode1Block1
                 .getValue().getLexicalUnitType());
         Assert.assertEquals("blue", ruleNode1Block1.getValue().getStringValue());
 
-        VariableNode varNode1Block1 = (VariableNode) blockNode1.getChildren()
-                .get(1);
-        Assert.assertEquals("blue", varNode1Block1.getName());
-
         RuleNode ruleNode2Block1 = (RuleNode) blockNode1.getChildren().get(2);
-        Assert.assertEquals("color", ruleNode2Block1.getVariable());
+        Assert.assertEquals("border-color", ruleNode2Block1.getVariable());
         Assert.assertEquals(SCSSLexicalUnit.SCSS_VARIABLE, ruleNode2Block1
                 .getValue().getLexicalUnitType());
         Assert.assertEquals("blue", ruleNode2Block1.getValue().getStringValue());

@@ -504,6 +504,7 @@ TOKEN :
   | < COMMA     : "," >
   | < SEMICOLON : ";" >
   | < PRECEDES  : ">" >
+  | < SUCCEEDS : "<" >
   | < DIV       : "/" >
   | < LBRACKET  : "[" >
   | < RBRACKET  : "]" >
@@ -512,6 +513,10 @@ TOKEN :
   | < DOT       : "." >
   | < LPARAN    : "(" >
   | < RPARAN    : ")">
+  | < COMPARE   : "==" >
+  | < OR		: "||" >
+  | < AND		: "&&" >
+  | < NOT_EQ : "!=" >
 }
 
 <DEFAULT>
@@ -545,7 +550,6 @@ TOKEN : /* basic tokens */
   | < #NAME       : ( <NMCHAR> )+ >
 }
 
-
 <DEFAULT>
 TOKEN :
 {
@@ -573,6 +577,11 @@ TOKEN :
   | <MOZ_DOCUMENT_SYM   : "@-moz-document">
   | <SUPPORTS_SYM       : "@supports">
 }
+
+< DEFAULT >
+TOKEN:
+{
+  < IF : "if" > }
 
 <DEFAULT>
 TOKEN:
@@ -1008,7 +1017,7 @@ void styleRule() :
 	 start = true;
 	 documentHandler.startSelector(l);
      }
-     ( includeDirective() | media() | extendDirective()| eachDirective() | variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*
+     ( ifDirective() | includeDirective() | media() | extendDirective()| eachDirective() | variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*
      <RBRACE> (<S>)*
  } catch (ThrowedParseException e) {
      if (errorHandler != null) {
@@ -1343,6 +1352,56 @@ void variable() :
 	}
 }
 
+void ifDirective() :
+{
+  Token n = null;
+  String evaluator = "";
+}
+{
+  < IF_SYM >
+  ( n = booleanExpressionToken() { evaluator += n.image; } )+  < LBRACE >(< S >)*      { documentHandler.startIfElseDirective();
+    documentHandler.ifDirective(evaluator);
+   }
+  ( includeDirective() | media() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*	  
+  < RBRACE >(< S >)*
+  (elseDirective())*
+  { documentHandler.endIfElseDirective(); }
+}
+
+void elseDirective() :{
+  String evaluator = "";
+  Token n = null;}
+{
+  < ELSE_SYM >(< S >)* 
+  ( < IF > (n = booleanExpressionToken() { if(n != null) evaluator += n.image; })*)?
+  < LBRACE >(< S >)*
+  { if(!evaluator.trim().equals("")){ documentHandler.ifDirective(evaluator); }
+    else{ documentHandler.elseDirective(); }    }  ( includeDirective() | media() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*    < RBRACE >(< S >)*
+}
+
+Token booleanExpressionToken() :{
+  Token n = null;}
+{ (   n = < VARIABLE >
+   |n = < IDENT >
+   |n = < NUMBER >
+   |n = < LPARAN >
+   |n = < RPARAN >
+   |n = < PLUS >
+   |n = < MINUS >
+   |n = < DIV >
+   |n = < ANY >
+   |n = < COMPARE >
+   |n = < EQ >
+   |n = < PRECEDES >
+   |n = < SUCCEEDS >
+   |n = < OR >
+   |n = < AND >
+   |n = < S >
+   |n = < NOT_EQ >
+){
+   return n; }
+}
+  
 void eachDirective() :
 {
   Token var;
@@ -1511,16 +1570,6 @@ Node whileDirective() :
     condition = skipStatementUntilLeftBrace()
     body = skipStatement()
     {   return documentHandler.whileDirective(condition, body);}
-}
-
-JAVACODE
-Node ifDirective(){
-    return documentHandler.ifDirective();
-}
-
-JAVACODE
-void elseDirective(){
-   // throw new ParseException("Invalid CSS: @else must come after @if");
 }
 
 void extendDirective() : 

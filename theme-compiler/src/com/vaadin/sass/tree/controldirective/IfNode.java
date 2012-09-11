@@ -13,41 +13,43 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
-package com.vaadin.sass.tree;
+package com.vaadin.sass.tree.controldirective;
 
 import java.util.ArrayList;
 
-public class FunctionNode extends Node implements IVariableNode {
-    private static final long serialVersionUID = -5383104165955523923L;
+import com.vaadin.sass.tree.IVariableNode;
+import com.vaadin.sass.tree.Node;
+import com.vaadin.sass.tree.VariableNode;
 
-    private String name;
-    private String args;
-    private String body;
+public class IfNode extends Node implements IfElseNode, IVariableNode {
+    private String expression;
 
-    public FunctionNode(String name) {
-        super();
-        this.name = name;
+    public IfNode(String expression) {
+        this.expression = expression;
     }
 
-    public FunctionNode(String name, String args, String body) {
-        this.name = name;
-        this.args = args;
-        this.body = body;
+    @Override
+    public String getExpression() {
+        if (expression != null) {
+            return expression.trim();
+        } else {
+            return "false";
+        }
     }
 
     @Override
     public String toString() {
-        return "Function Node: {name: " + name + ", args: " + args + ", body: "
-                + body + "}";
+        return "@if" + expression;
     }
 
     @Override
     public void replaceVariables(ArrayList<VariableNode> variables) {
         for (final VariableNode node : variables) {
-            if (args.contains(node.getName())) {
-                args.replaceAll(node.getName(), node.getExpr().toString());
+            if (expression.contains(node.getName())) {
+                expression = expression.replaceAll(node.getName(), node
+                        .getExpr().toString());
             }
         }
     }
+
 }

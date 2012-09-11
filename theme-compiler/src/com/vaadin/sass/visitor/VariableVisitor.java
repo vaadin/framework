@@ -16,79 +16,63 @@
 
 package com.vaadin.sass.visitor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
-import org.w3c.css.sac.LexicalUnit;
-
-import com.vaadin.sass.parser.LexicalUnitImpl;
-import com.vaadin.sass.parser.SCSSLexicalUnit;
+import com.vaadin.sass.tree.IVariableNode;
 import com.vaadin.sass.tree.Node;
-import com.vaadin.sass.tree.RuleNode;
 import com.vaadin.sass.tree.VariableNode;
 
 public class VariableVisitor implements Visitor {
 
+    private final HashMap<String, VariableNode> variables = new HashMap<String, VariableNode>();
+
     @Override
     public void traverse(Node node) {
-        Map<String, LexicalUnitImpl> variables = new HashMap<String, LexicalUnitImpl>();
-        traverse(node, variables);
+
+        replaceVariables(node, node.getChildren());
+
+        removeVariableNodes(node, node);
     }
 
-    private void traverse(Node node, Map<String, LexicalUnitImpl> variables) {
-        if (node instanceof RuleNode) {
-            LexicalUnit value = ((RuleNode) node).getValue();
-            while (updateValue(value, variables)) {
-                ;
+    private void removeVariableNodes(Node parent, Node node) {
+        for (final Node child : new ArrayList<Node>(node.getChildren())) {
+            removeVariableNodes(node, child);
+        }
+        if (node instanceof VariableNode) {
+            for (final Node child : node.getChildren()) {
+                parent.appendChild(child, node);
             }
-        } else {
-            Set<Node> toBeDeleted = new HashSet<Node>();
-            for (Node child : node.getChildren()) {
-                if (child instanceof VariableNode) {
-                    VariableNode varChild = (VariableNode) child;
-                    if (!varChild.isGuarded() || varChild.isGuarded()
-                            && variables.get(varChild.getName()) == null) {
-                        variables.put(((VariableNode) child).getName(),
-                                (LexicalUnitImpl) ((VariableNode) child)
-                                        .getExpr());
-                    }
-                    toBeDeleted.add(child);
-                } else {
-                    traverse(child, new HashMap<String, LexicalUnitImpl>(
-                            variables));
-                }
-            }
-            for (Node child : toBeDeleted) {
-                node.removeChild(child);
-            }
+            parent.removeChild(node);
         }
     }
 
-    private boolean updateValue(LexicalUnit value,
-            Map<String, LexicalUnitImpl> variables) {
-        boolean onceMore = false;
-        if (value == null) {
-            return false;
-        }
-        if (value.getLexicalUnitType() == SCSSLexicalUnit.SCSS_VARIABLE) {
-            LexicalUnitImpl variableValue = variables.get(value
-                    .getStringValue());
-            if (variableValue != null) {
-                LexicalUnitImpl variableValueCloned = variableValue.clone();
-                if (variableValueCloned != null) {
-                    LexicalUnitImpl lexVal = (LexicalUnitImpl) value;
-                    lexVal.replaceValue(variableValueCloned);
-                    onceMore = true;
+    private void replaceVariables(Node n, ArrayList<Node> children) {
+
+        ArrayList<VariableNode> variables = new ArrayList<VariableNode>(
+                this.variables.values());
+
+        for (Node node : children) {
+            if (node instanceof VariableNode) {
+
+                VariableNode variableNode = (VariableNode) node;
+                if (this.variables.containsKey(variableNode.getName())
+                        && variableNode.isGuarded()) {
+                    continue;
                 }
+                this.variables.put(variableNode.getName(), variableNode);
+            } else if (node instanceof IVariableNode) {
+                ((IVariableNode) node)
+                        .replaceVariables(new ArrayList<VariableNode>(
+                                this.variables.values()));
             }
-        } else if (value.getLexicalUnitType() == SCSSLexicalUnit.SAC_FUNCTION) {
-            LexicalUnit params = value.getParameters();
-            updateValue(params, variables);
+
+            replaceVariables(node, node.getChildren());
         }
-        LexicalUnit next = value.getNextLexicalUnit();
-        updateValue(next, variables);
-        return onceMore;
+
+        for (final VariableNode v : variables) {
+            this.variables.put(v.getName(), v);
+        }
     }
+
 }

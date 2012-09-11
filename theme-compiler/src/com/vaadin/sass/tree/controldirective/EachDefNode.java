@@ -21,7 +21,7 @@ import java.util.List;
 
 import com.vaadin.sass.tree.Node;
 
-public class EachDefNode extends Node implements ControlDefNode {
+public class EachDefNode extends Node {
     private static final long serialVersionUID = 7943948981204906221L;
 
     private String var;

@@ -6,20 +6,19 @@ import java.util.regex.Pattern;
 import com.vaadin.sass.tree.BlockNode;
 import com.vaadin.sass.tree.Node;
 import com.vaadin.sass.tree.SimpleNode;
-import com.vaadin.sass.tree.controldirective.ControlDefNode;
 import com.vaadin.sass.tree.controldirective.EachDefNode;
 
-public class ControlVisitor implements Visitor {
+public class EachVisitor implements Visitor {
 
-    HashSet<Node> controlDefs = new HashSet<Node>();
+    HashSet<EachDefNode> controlDefs = new HashSet<EachDefNode>();
     private Node rootNode;
 
     @Override
     public void traverse(Node node) throws Exception {
         this.rootNode = node;
         for (Node child : node.getChildren()) {
-            if (child instanceof ControlDefNode) {
-                controlDefs.add(child);
+            if (child instanceof EachDefNode) {
+                controlDefs.add((EachDefNode) child);
             }
         }
 
@@ -28,10 +27,8 @@ public class ControlVisitor implements Visitor {
     }
 
     private void replaceControlNodes() {
-        for (final Node defNode : controlDefs) {
-            if (defNode instanceof EachDefNode) {
-                replaceEachDefNode((EachDefNode) defNode);
-            }
+        for (final EachDefNode defNode : controlDefs) {
+            replaceEachDefNode(defNode);
 
         }
     }

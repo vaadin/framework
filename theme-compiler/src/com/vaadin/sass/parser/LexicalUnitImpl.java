@@ -350,22 +350,32 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
         return this;
     }
 
-    public void replaceValue(LexicalUnitImpl another) {
+    public void replaceValue(LexicalUnit another) {
         type = another.getLexicalUnitType();
         i = another.getIntegerValue();
         f = another.getFloatValue();
-        dimension = another.getDimension();
-        sdimension = another.getSdimension();
         s = another.getStringValue();
         fname = another.getFunctionName();
-        params = another.getParameters();
         prev = another.getPreviousLexicalUnit();
+        if (another instanceof LexicalUnitImpl) {
+            dimension = ((LexicalUnitImpl) another).getDimension();
+            sdimension = ((LexicalUnitImpl) another).getSdimension();
+            params = ((LexicalUnitImpl) another).getParameters();
+        }
+
         LexicalUnit finalNextInAnother = another;
         while (finalNextInAnother.getNextLexicalUnit() != null) {
             finalNextInAnother = finalNextInAnother.getNextLexicalUnit();
         }
-        ((LexicalUnitImpl) finalNextInAnother).setNextLexicalUnit(next);
-        next = another.next;
+
+        if (another instanceof LexicalUnitImpl) {
+            ((LexicalUnitImpl) finalNextInAnother).setNextLexicalUnit(next);
+            next = ((LexicalUnitImpl) another).next;
+        }
+    }
+
+    public void setParameters(LexicalUnitImpl params) {
+        this.params = params;
     }
 
     public short getDimension() {
