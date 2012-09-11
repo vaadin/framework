@@ -135,8 +135,16 @@ public class VCalendarPanel extends FocusableFlexTable implements
          */
         @Override
         public void onClick(ClickEvent event) {
-            Day day = (Day) event.getSource();
-            focusDay(day.getDate());
+            Date newDate = ((Day) event.getSource()).getDate();
+            if (newDate.getMonth() != displayedMonth.getMonth()
+                    || newDate.getYear() != displayedMonth.getYear()) {
+                // If an off-month date was clicked, we must change the
+                // displayed month and re-render the calendar (#8931)
+                displayedMonth.setMonth(newDate.getMonth());
+                displayedMonth.setYear(newDate.getYear());
+                renderCalendar();
+            }
+            focusDay(newDate);
             selectFocused();
             onSubmit();
         }
@@ -403,8 +411,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
         }
 
         final String monthName = needsMonth ? getDateTimeService().getMonth(
-                focusedDate.getMonth()) : "";
-        final int year = focusedDate.getYear() + 1900;
+                displayedMonth.getMonth()) : "";
+        final int year = displayedMonth.getYear() + 1900;
         getFlexCellFormatter().setStyleName(0, 2,
                 VDateField.CLASSNAME + "-calendarpanel-month");
         setHTML(0, 2, "<span class=\"" + VDateField.CLASSNAME
@@ -605,14 +613,17 @@ public class VCalendarPanel extends FocusableFlexTable implements
      */
     private void focusNextDay(int days) {
         int oldMonth = focusedDate.getMonth();
+        int oldYear = focusedDate.getYear();
         focusedDate.setDate(focusedDate.getDate() + days);
 
-        if (focusedDate.getMonth() == oldMonth) {
+        if (focusedDate.getMonth() == oldMonth
+                && focusedDate.getYear() == oldYear) {
             // Month did not change, only move the selection
             focusDay(focusedDate);
         } else {
             // If the month changed we need to re-render the calendar
             displayedMonth.setMonth(focusedDate.getMonth());
+            displayedMonth.setYear(focusedDate.getYear());
             renderCalendar();
         }
     }

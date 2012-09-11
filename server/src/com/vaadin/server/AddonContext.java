@@ -16,6 +16,7 @@
 
 package com.vaadin.server;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -41,7 +42,7 @@ import com.vaadin.util.ReflectTools;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public class AddonContext {
+public class AddonContext implements Serializable {
     private static final Method APPLICATION_STARTED_METHOD = ReflectTools
             .findMethod(ApplicationStartedListener.class, "applicationStarted",
                     ApplicationStartedEvent.class);

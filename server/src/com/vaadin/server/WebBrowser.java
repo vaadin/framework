@@ -16,6 +16,7 @@
 
 package com.vaadin.server;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -29,7 +30,7 @@ import com.vaadin.shared.VBrowserDetails;
  * 
  * @author Vaadin Ltd.
  */
-public class WebBrowser {
+public class WebBrowser implements Serializable {
 
     private int screenHeight = 0;
     private int screenWidth = 0;

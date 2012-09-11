@@ -13,7 +13,7 @@
 		</init-param>
 		<init-param>
 			<name>widgetset</name>
-			<value>com.vaadin.portal.gwt.PortalDefaultWidgetSet</value>
+			<value>com.vaadin.DefaultWidgetSet</value>
 		</init-param>
 		<supports>
 			<mime-type>text/html</mime-type>

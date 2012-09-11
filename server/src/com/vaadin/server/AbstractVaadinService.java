@@ -20,11 +20,24 @@ import java.lang.reflect.Constructor;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 
+/**
+ * Abstract implementation of VaadinService that takes care of those parts that
+ * are common to both servlets and portlets.
+ * 
+ * @author Vaadin Ltd
+ * @since 7.0.0
+ */
 public abstract class AbstractVaadinService implements VaadinService {
 
     private AddonContext addonContext;
     private final DeploymentConfiguration deploymentConfiguration;
 
+    /**
+     * Creates a new vaadin service based on a deployment configuration
+     * 
+     * @param deploymentConfiguration
+     *            the deployment configuration for the service
+     */
     public AbstractVaadinService(DeploymentConfiguration deploymentConfiguration) {
         this.deploymentConfiguration = deploymentConfiguration;
     }

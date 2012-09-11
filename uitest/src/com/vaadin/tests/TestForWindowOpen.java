@@ -16,7 +16,6 @@
 
 package com.vaadin.tests;
 
-import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
@@ -35,9 +34,8 @@ public class TestForWindowOpen extends CustomComponent {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        final ExternalResource r = new ExternalResource(
-                                "http://www.google.com");
-                        UI.getCurrent().getPage().open(r);
+                        UI.getCurrent().getPage()
+                                .setLocation("http://www.google.com");
 
                     }
 
@@ -48,9 +46,8 @@ public class TestForWindowOpen extends CustomComponent {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        final ExternalResource r = new ExternalResource(
-                                "http://www.google.com");
-                        UI.getCurrent().getPage().open(r, "mytarget");
+                        UI.getCurrent().getPage()
+                                .open("http://www.google.com", "mytarget");
 
                     }
 
@@ -61,9 +58,8 @@ public class TestForWindowOpen extends CustomComponent {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        final ExternalResource r = new ExternalResource(
-                                "http://www.google.com");
-                        UI.getCurrent().getPage().open(r, "secondtarget");
+                        UI.getCurrent().getPage()
+                                .open("http://www.google.com", "secondtarget");
 
                     }
 

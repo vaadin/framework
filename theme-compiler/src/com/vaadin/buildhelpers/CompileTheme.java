@@ -14,7 +14,6 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 
 import com.vaadin.sass.ScssStylesheet;
-import com.vaadin.shared.Version;
 
 /**
  * Helper to combine css divided into separate per component dirs into one to
@@ -30,6 +29,8 @@ public class CompileTheme {
     public static void main(String[] args) throws IOException, ParseException {
         Options options = new Options();
         options.addOption("t", "theme", true, "the theme to compile");
+        options.addOption("v", "theme-version", true,
+                "the version to add to the compiled theme");
         options.addOption("f", "theme-folder", true,
                 "the folder containing the theme");
         options.addOption("s", "sprites", true, "use smartsprites");
@@ -43,11 +44,11 @@ public class CompileTheme {
         }
         String themeName = params.getOptionValue("theme");
         String themeFolder = params.getOptionValue("theme-folder");
+        String themeVersion = params.getOptionValue("theme-version");
         boolean useSprites = params.hasOption("sprites");
 
-        String version = Version.getFullVersion();
         try {
-            processSassTheme(themeFolder, themeName, useSprites, version);
+            processSassTheme(themeFolder, themeName, useSprites, themeVersion);
             System.out.println("Compiling theme " + themeName + " successful");
         } catch (Exception e) {
             System.err.println("Compiling theme " + themeName + " failed");
