@@ -114,7 +114,7 @@
 			<fileset dir="${WebContent.dir}">
 				<include name="statictestfiles/**" />
 				<include name="VAADIN/themes/tests-*/**" />
-				<include name="VAADIN/themes/reindeer-test/**" />
+				<include name="VAADIN/themes/reindeer-tests/**" />
 				<include name="WEB-INF/*.xml" />
 			</fileset>
 			<classes dir="${classes}" />
