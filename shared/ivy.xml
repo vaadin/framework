@@ -21,7 +21,7 @@
     </publications>
     <dependencies>
         <dependency org="org.json" name="json" rev="20080701"
-            conf="build,ide->default" />
+            conf="build,ide,tests->default" />
     </dependencies>
 
 </ivy-module>
