@@ -33,7 +33,7 @@ public class CompileTheme {
                 "the version to add to the compiled theme");
         options.addOption("f", "theme-folder", true,
                 "the folder containing the theme");
-        options.addOption("s", "sprites", true, "use smartsprites");
+        options.addOption("s", "sprites", false, "use smartsprites");
         CommandLineParser parser = new PosixParser();
         CommandLine params = parser.parse(options, args);
         if (!params.hasOption("theme") || !params.hasOption("theme-folder")) {
