@@ -108,6 +108,9 @@
 
 		<war destfile="${result.war}" duplicate="fail" index="true">
 			<fileset refid="common.files.for.all.jars" />
+			<fileset dir="${result.dir}">
+				<include name="VAADIN/widgetsets/**/*"/>
+			</fileset>
 			<fileset dir="${WebContent.dir}">
 				<include name="statictestfiles/**" />
 				<include name="VAADIN/themes/tests-*/**" />
