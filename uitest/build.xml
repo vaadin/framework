@@ -94,6 +94,7 @@
 		<property name="classes" location="${result.dir}/classes" />
 		<property name="WebContent.dir" location="${vaadin.basedir}/WebContent" />
 		<property name="deps.dir" location="${result.dir}/deps" />
+		<property name="src" location="${result.dir}/../src" />
 
 		<ivy:resolve resolveid="common" conf="build" />
 		<ivy:cachepath pathid="classpath.runtime.dependencies" conf="build" />
@@ -114,9 +115,7 @@
 				<include name="WEB-INF/*.xml" />
 			</fileset>
 			<classes dir="${classes}" />
-			<fileset dir="src">
-				<exclude name="**/*.java"/>
-			</fileset>
+			<classes dir="${src}" />
 			<lib dir="${deps.dir}" />
 		</war>
 
