@@ -825,11 +825,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
         try {
             SystemMessages ci = getVaadinService().getSystemMessages();
-            if (getRequestType(request) != RequestType.UIDL) {
-                // 'plain' http req - e.g. browser reload;
-                // just go ahead redirect the browser
-                response.sendRedirect(ci.getSessionExpiredURL());
-            } else {
+            RequestType requestType = getRequestType(request);
+            if (requestType == RequestType.UIDL) {
                 /*
                  * Invalidate session (weird to have session if we're saying
                  * that it's expired, and worse: portal integration will fail
@@ -846,6 +843,13 @@ public class VaadinServlet extends HttpServlet implements Constants {
                         ci.getSessionExpiredMessage(), null,
                         ci.getSessionExpiredURL());
 
+            } else if (requestType == RequestType.HEARTBEAT) {
+                response.sendError(HttpServletResponse.SC_GONE,
+                        "Session expired");
+            } else {
+                // 'plain' http req - e.g. browser reload;
+                // just go ahead redirect the browser
+                response.sendRedirect(ci.getSessionExpiredURL());
             }
         } catch (SystemMessageException ee) {
             throw new ServletException(ee);
@@ -867,11 +871,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
         try {
             SystemMessages ci = getVaadinService().getSystemMessages();
-            if (getRequestType(request) != RequestType.UIDL) {
-                // 'plain' http req - e.g. browser reload;
-                // just go ahead redirect the browser
-                response.sendRedirect(ci.getCommunicationErrorURL());
-            } else {
+            RequestType requestType = getRequestType(request);
+            if (requestType == RequestType.UIDL) {
                 // send uidl redirect
                 criticalNotification(request, response,
                         ci.getCommunicationErrorCaption(),
@@ -882,6 +883,14 @@ public class VaadinServlet extends HttpServlet implements Constants {
                  * since the session is not created by the portal.
                  */
                 request.getSession().invalidate();
+
+            } else if (requestType == RequestType.HEARTBEAT) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN,
+                        "Forbidden");
+            } else {
+                // 'plain' http req - e.g. browser reload;
+                // just go ahead redirect the browser
+                response.sendRedirect(ci.getCommunicationErrorURL());
             }
         } catch (SystemMessageException ee) {
             throw new ServletException(ee);
