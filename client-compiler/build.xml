@@ -25,10 +25,10 @@
 	<target name="jar">
 		<!-- Get Git revision -->
 		<exec executable="git" outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
-			<arg value="describe"/>
-			<arg value="--tags"/>
-			<arg value="--always"/>
-			<arg value="HEAD"/>
+			<arg value="describe" />
+			<arg value="--tags" />
+			<arg value="--always" />
+			<arg value="HEAD" />
 		</exec>
 
 		<echo file="${result.dir}/com/google/gwt/dev/About.properties">gwt.version=${vaadin.version}
@@ -37,6 +37,22 @@ gwt.svnrev=${git.revision}</echo>
 		<antcall target="common.jar">
 			<reference refid="compiler.includes" torefid="extra.jar.includes" />
 		</antcall>
+
+		<!-- Hack to add validation dependency with source classifier -->
+		<property name="pom.xml" location="${result.dir}/lib/${module.name}-${vaadin.version}.pom" />
+		<copy file="${pom.xml}" tofile="${temp.pom}">
+			<filterchain>
+				<replacestring from="  &lt;/dependencies&gt;" to="    &lt;dependency&gt;
+			      &lt;groupId&gt;javax.validation&lt;/groupId&gt;
+			      &lt;artifactId&gt;validation-api&lt;/artifactId&gt;
+			      &lt;version&gt;1.0.0.GA&lt;/version&gt;
+			      &lt;scope&gt;compile&lt;/scope&gt;
+			      &lt;classifier&gt;sources&lt;/classifier&gt;
+			    &lt;/dependency&gt;
+  &lt;/dependencies&gt;" />
+			</filterchain>
+		</copy>
+		<move file="${temp.pom}" tofile="${pom.xml}" />
 	</target>
 
 	<target name="publish-local" depends="jar">
