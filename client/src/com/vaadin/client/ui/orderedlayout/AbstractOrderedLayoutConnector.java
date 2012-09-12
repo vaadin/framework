@@ -236,7 +236,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         String caption = child.getState().caption;
         URLReference iconUrl = child.getState().resources
                 .get(ComponentConstants.ICON_RESOURCE);
-        String iconUrlString = iconUrl != null ? iconUrl.toString() : null;
+        String iconUrlString = iconUrl != null ? iconUrl.getURL() : null;
         List<String> styles = child.getState().styles;
         String error = child.getState().errorMessage;
         boolean showError = error != null;
