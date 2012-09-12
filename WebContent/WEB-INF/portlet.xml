@@ -6,7 +6,7 @@
 	<portlet>
 		<portlet-name>JSR286TestPortlet</portlet-name>
 		<display-name>Vaadin Portlet 2.0 Test</display-name>
-		<portlet-class>com.vaadin.server.VaadinPortlet</portlet-class>
+		<portlet-class>com.vaadin.server.LegacyVaadinPortlet</portlet-class>
 		<init-param>
 			<name>application</name>
 			<value>com.vaadin.tests.integration.JSR286PortletApplication</value>
@@ -44,7 +44,7 @@
         <portlet-name>Vaadin Liferay Theme Portlet</portlet-name>
         <display-name>Vaadin Liferay Theme</display-name>
         
-        <portlet-class>com.vaadin.server.VaadinPortlet</portlet-class>
+        <portlet-class>com.vaadin.server.LegacyVaadinPortlet</portlet-class>
         <init-param>
             <name>application</name>
             <value>com.vaadin.tests.integration.LiferayThemeDemo</value>
