@@ -12,12 +12,14 @@
 
 	<ivy:cachepath pathid="ivy.deps" inline="true" organisation="javax.validation" module="validation-api" revision="1.0.0.GA" conf="default,sources" />
 	<ivy:cachepath pathid="ivy.deps2" inline="true" organisation="commons-cli" module="commons-cli" revision="1.2" conf="default" />
+	<ivy:cachepath pathid="ivy.deps3" inline="true" organisation="org.apache.commons" module="commons-jexl" revision="2.1.1" conf="default" />
 
 	<path id="classpath">
 		<pathelement location="${gwt.user.jar}" />
 		<pathelement location="${gwt.dev.jar}" />
 		<path refid="ivy.deps" />
 		<path refid="ivy.deps2" />
+		<path refid="ivy.deps3" />
 		<path location="bin" />
 		<path location="build/classes" />
 		<path location="server/src" />
