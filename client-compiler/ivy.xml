@@ -29,9 +29,6 @@
             rev="3.1" conf="build,ide -> default" />
         <dependency org="ant" name="ant" rev="1.6.5"
             conf="build,ide -> default" />
-        <dependency org="javax.validation" name="validation-api"
-            rev="1.0.0.GA" conf="build->default,sources" />
-
     </dependencies>
 
 </ivy-module>
