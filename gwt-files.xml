@@ -63,8 +63,6 @@
 		<!-- GWT SuperDevMode -->
 		<fileset dir="${gwt.codeserver.jar.files}">
 			<exclude name="META-INF/**" />
-			<include name="**/*.java" />
-			<include name="**/*.classes" />
 		</fileset>
 	</union>
 
