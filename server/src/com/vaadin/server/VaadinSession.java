@@ -1027,7 +1027,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
         ui.doInit(request, uiId.intValue());
 
-        if (getUiProvider(request, uiClass).isPreservedOnRefresh(request, uiClass)) {
+        if (getUiProvider(request, uiClass).isPreservedOnRefresh(request,
+                uiClass)) {
             // Remember this UI
             String windowName = request.getBrowserDetails().getWindowName();
             if (windowName == null) {
@@ -1185,7 +1186,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
                 i.remove();
                 retainOnRefreshUIs.values().remove(ui.getUIId());
                 ui.fireCloseEvent();
-                getLogger().info(
+                getLogger().fine(
                         "Closed UI #" + ui.getUIId() + " due to inactivity");
             }
         }
