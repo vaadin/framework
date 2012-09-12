@@ -58,7 +58,7 @@ public class TypeDataStore {
     public static Type getReturnType(Method method) throws NoDataException {
         Type type = get().returnTypes.get(method);
         if (type == null) {
-            throw new NoDataException("There is return type for "
+            throw new NoDataException("There is no return type for "
                     + method.getSignature());
         }
         return type;
@@ -67,7 +67,7 @@ public class TypeDataStore {
     public static Invoker getInvoker(Method method) throws NoDataException {
         Invoker invoker = get().invokers.get(method);
         if (invoker == null) {
-            throw new NoDataException("There is invoker for "
+            throw new NoDataException("There is no invoker for "
                     + method.getSignature());
         }
         return invoker;
@@ -77,7 +77,7 @@ public class TypeDataStore {
         Invoker invoker = get().invokers
                 .get(new Method(type, CONSTRUCTOR_NAME));
         if (invoker == null) {
-            throw new NoDataException("There is constructor for "
+            throw new NoDataException("There is no constructor for "
                     + type.getSignature());
         }
         return invoker;
@@ -86,7 +86,7 @@ public class TypeDataStore {
     public static Invoker getGetter(Property property) throws NoDataException {
         Invoker getter = get().getters.get(property);
         if (getter == null) {
-            throw new NoDataException("There is getter for "
+            throw new NoDataException("There is no getter for "
                     + property.getSignature());
         }
 
