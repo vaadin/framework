@@ -30,14 +30,13 @@ public class ConnectorResourceTest extends AbstractTestUI {
 
     @Override
     protected String getTestDescription() {
-        // TODO Auto-generated method stub
+        // Adding description would break screenshots -> too lazy to change
         return null;
     }
 
     @Override
     protected Integer getTicketNumber() {
-        // TODO Auto-generated method stub
-        return null;
+        return Integer.valueOf("9419");
     }
 
     @Override
