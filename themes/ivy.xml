@@ -4,7 +4,7 @@
     xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"
     xmlns:m="http://ant.apache.org/ivy/maven">
 
-    <info organisation="com.vaadin" module="vaadin-themes-compiled"
+    <info organisation="com.vaadin" module="vaadin-themes"
         revision="${vaadin.version}" />
 
     <configurations>

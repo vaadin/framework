@@ -38,7 +38,7 @@
             rev="${vaadin.version}" conf="build->build"></dependency>
         <dependency org="com.vaadin" name="vaadin-client-compiled"
             rev="${vaadin.version}" conf="build->build"></dependency>
-        <dependency org="com.vaadin" name="vaadin-themes-compiled"
+        <dependency org="com.vaadin" name="vaadin-themes"
             rev="${vaadin.version}" conf="build->build"></dependency>
             
         <!-- For compiling TestingWidgetSet -->

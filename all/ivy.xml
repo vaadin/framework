@@ -27,7 +27,7 @@
             rev="${vaadin.version}"/>
         <dependency org="com.vaadin" name="vaadin-theme-compiler"
             rev="${vaadin.version}"/>
-        <dependency org="com.vaadin" name="vaadin-themes-compiled"
+        <dependency org="com.vaadin" name="vaadin-themes"
             rev="${vaadin.version}"/>
         <dependency org="com.vaadin" name="vaadin-client-compiled"
             rev="${vaadin.version}"/>

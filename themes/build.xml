@@ -10,7 +10,7 @@
 	<include file="../gwt-files.xml" as="gwtfiles" />
 
 	<!-- global properties -->
-	<property name="module.name" value="vaadin-themes-compiled" />
+	<property name="module.name" value="vaadin-themes" />
 	<property name="result.dir" value="result" />
 	<property name="theme.result.dir" value="${result.dir}/VAADIN/themes" />
 

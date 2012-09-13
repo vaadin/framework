@@ -49,7 +49,7 @@
             resolver="build-temp" />
         <module organisation="com.vaadin" name="vaadin-theme-compiler"
             resolver="build-temp" />
-        <module organisation="com.vaadin" name="vaadin-themes-compiled"
+        <module organisation="com.vaadin" name="vaadin-themes"
             resolver="build-temp" />
     </modules>
 
