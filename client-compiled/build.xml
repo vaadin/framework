@@ -106,8 +106,6 @@
 
 		<jar file="${compiled.jar}" compress="true">
 			<manifest>
-				<attribute name="Vaadin-Package-Version" value="1" />
-				<attribute name="Vaadin-Widgetsets" value="com.vaadin.DefaultWidgetSet" />
 				<attribute name="Implementation-Vendor" value="Vaadin Ltd" />
 				<attribute name="Implementation-URL" value="http://vaadin.com" />
 				<attribute name="Implementation-Version" value="${vaadin.version}" />

@@ -22,9 +22,16 @@
 	<path id="classpath.tests.custom" />
 
 	<target name="jar">
+		<property name="jar.file" location="${result.dir}/lib/${module.name}-${vaadin.version}.jar" />
 		<antcall target="common.jar">
 			<reference refid="client.gwt.includes" torefid="extra.jar.includes" />
 		</antcall>
+		<jar destfile="${jar.file}" update="true">
+			<manifest>
+				<attribute name="Vaadin-Package-Version" value="1" />
+				<attribute name="Vaadin-Widgetsets" value="com.vaadin.DefaultWidgetSet" />
+			</manifest>
+		</jar>
 		<!-- Hack to add validation dependency with source classifier -->
 		<property name="pom.xml" location="${result.dir}/lib/${module.name}-${vaadin.version}.pom" />
 		<copy file="${pom.xml}" tofile="${temp.pom}">
