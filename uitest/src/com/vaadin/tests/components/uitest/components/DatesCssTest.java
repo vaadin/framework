@@ -1,5 +1,8 @@
 package com.vaadin.tests.components.uitest.components;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import com.vaadin.tests.components.uitest.TestSampler;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
@@ -13,6 +16,8 @@ public class DatesCssTest extends HorizontalLayout {
     private TestSampler parent;
     private int debugIdCounter = 0;
 
+    private Calendar cal = new GregorianCalendar(2012, 8, 11, 18, 00, 00);
+
     public DatesCssTest(TestSampler parent) {
         this.parent = parent;
         setSpacing(true);
@@ -24,16 +29,19 @@ public class DatesCssTest extends HorizontalLayout {
 
         DateField df = new PopupDateField("Popup date field");
         df.setId("datefield" + debugIdCounter++);
+        df.setValue(cal.getTime());
         addComponent(df);
 
         df = new InlineDateField("Inline date field");
         df.setId("datefield" + debugIdCounter++);
+        df.setValue(cal.getTime());
         addComponent(df);
     }
 
     private void createDateFieldWith(String caption, String primaryStyleName) {
         DateField df = new DateField("Date field");
         df.setId("datefield" + debugIdCounter++);
+        df.setValue(cal.getTime());
 
         if (caption != null) {
             df.setCaption(caption);
