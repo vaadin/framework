@@ -48,5 +48,5 @@ public interface AddonContextListener extends EventListener {
      * @param event
      *            the add-on context event
      */
-    public void contextDestoryed(AddonContextEvent event);
+    public void contextDestroyed(AddonContextEvent event);
 }
