@@ -409,6 +409,7 @@ public abstract class AbstractOrderedLayoutConnector extends
                 .isEmpty();
         boolean allChildrenHasVerticalAlignmentCenterOrBottom = hasVerticalAlignment
                 .size() == getChildren().size();
+        boolean hasChildrenWithRelativeHeight = !hasRelativeHeight.isEmpty();
         
         if(isVertical){
             return false;
@@ -418,6 +419,10 @@ public abstract class AbstractOrderedLayoutConnector extends
             return false;
         }
         
+        else if (!hasChildrenWithRelativeHeight) {
+            return false;
+        }
+
         else if (!hasChildrenWithVerticalAlignmentCenterOrBottom) {
             return false;
         }
@@ -532,14 +537,13 @@ public abstract class AbstractOrderedLayoutConnector extends
             Element el = child.getWidget().getElement();
             CaptionPosition pos = getWidget().getCaptionPositionFromElement(
                     (Element) el.getParentElement().cast());
+            int h = getLayoutManager().getOuterHeight(el);
+            if (h == -1) {
+                // Height has not yet been measured so using a more
+                // conventional method instead.
+                h = Util.getRequiredHeight(el);
+            }
             if (needsMeasure.contains(el)) {
-                int h = getLayoutManager().getOuterHeight(el);
-                if (h == -1) {
-                    // Height has not yet been measured so using a more
-                    // conventional method instead.
-                    h = Util.getRequiredHeight(el);
-                }
-
                 String sHeight = el.getStyle().getHeight();
                 // Only add the caption size to the height of the slot if
                 // coption position is top or bottom
@@ -552,13 +556,6 @@ public abstract class AbstractOrderedLayoutConnector extends
                     highestNonRelative = h;
                 }
             } else {
-                int h = getLayoutManager().getOuterHeight(el);
-                if (h == -1) {
-                    // Height has not yet been measured so using a more
-                    // conventional method instead.
-                    h = Util.getRequiredHeight(el);
-                }
-
                 if (childCaptionElementHeight.containsKey(el)
                         && (pos == CaptionPosition.TOP || pos == CaptionPosition.BOTTOM)) {
                     h += childCaptionElementHeight.get(el);
