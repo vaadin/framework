@@ -230,12 +230,12 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     @Override
     public boolean isRelativeHeight() {
-        return getState().height != null && getState().height.endsWith("%");
+        return ComponentStateUtil.isRelativeHeight(getState());
     }
 
     @Override
     public boolean isRelativeWidth() {
-        return getState().width != null && getState().width.endsWith("%");
+        return ComponentStateUtil.isRelativeWidth(getState());
     }
 
     @Override

@@ -404,14 +404,29 @@ public abstract class AbstractOrderedLayoutConnector extends
      * Does the layout need a fixed height?
      */
     private boolean needsFixedHeight() {
-        if (!getWidget().vertical
-                && isUndefinedHeight()
-                && (hasRelativeHeight.size() > 0 || (hasVerticalAlignment
-                        .size() > 0 && hasVerticalAlignment.size() < getChildren()
-                        .size()))) {
-            return true;
+        boolean isVertical = getWidget().vertical;
+        boolean hasChildrenWithVerticalAlignmentCenterOrBottom = !hasVerticalAlignment
+                .isEmpty();
+        boolean allChildrenHasVerticalAlignmentCenterOrBottom = hasVerticalAlignment
+                .size() == getChildren().size();
+        
+        if(isVertical){
+            return false;
         }
-        return false;
+        
+        else if(!isUndefinedHeight()){
+            return false;
+        }
+        
+        else if (!hasChildrenWithVerticalAlignmentCenterOrBottom) {
+            return false;
+        }
+
+        else if (allChildrenHasVerticalAlignmentCenterOrBottom) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -493,6 +508,7 @@ public abstract class AbstractOrderedLayoutConnector extends
     private void updateLayoutHeight() {
         if (needsFixedHeight()) {
             int h = getMaxHeight();
+            assert(h >= 0);
             h += getLayoutManager().getBorderHeight(getWidget().getElement())
                     + getLayoutManager().getPaddingHeight(
                             getWidget().getElement());
@@ -518,6 +534,12 @@ public abstract class AbstractOrderedLayoutConnector extends
                     (Element) el.getParentElement().cast());
             if (needsMeasure.contains(el)) {
                 int h = getLayoutManager().getOuterHeight(el);
+                if (h == -1) {
+                    // Height has not yet been measured so using a more
+                    // conventional method instead.
+                    h = Util.getRequiredHeight(el);
+                }
+
                 String sHeight = el.getStyle().getHeight();
                 // Only add the caption size to the height of the slot if
                 // coption position is top or bottom
@@ -531,6 +553,12 @@ public abstract class AbstractOrderedLayoutConnector extends
                 }
             } else {
                 int h = getLayoutManager().getOuterHeight(el);
+                if (h == -1) {
+                    // Height has not yet been measured so using a more
+                    // conventional method instead.
+                    h = Util.getRequiredHeight(el);
+                }
+
                 if (childCaptionElementHeight.containsKey(el)
                         && (pos == CaptionPosition.TOP || pos == CaptionPosition.BOTTOM)) {
                     h += childCaptionElementHeight.get(el);

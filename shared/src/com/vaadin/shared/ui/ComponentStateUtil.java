@@ -26,6 +26,14 @@ public final class ComponentStateUtil {
         return state.styles != null && !state.styles.isEmpty();
     }
 
+    public static final boolean isRelativeWidth(ComponentState state) {
+        return state.width != null && state.width.endsWith("%");
+    }
+
+    public static final boolean isRelativeHeight(ComponentState state) {
+        return state.height != null && state.height.endsWith("%");
+    }
+
     /**
      * Removes an event listener id.
      * 
