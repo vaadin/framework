@@ -36,7 +36,7 @@
                &lt;scope&gt;compile&lt;/scope&gt;
                &lt;classifier&gt;sources&lt;/classifier&gt;
              &lt;/dependency&gt;
-cies&gt;" />
+  &lt;/dependencies&gt;" />
 			</filterchain>
 		</copy>
 		<move file="${temp.pom}" tofile="${pom.xml}" />
