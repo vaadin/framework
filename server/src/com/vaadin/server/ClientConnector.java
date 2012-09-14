@@ -189,7 +189,7 @@ public interface ClientConnector extends Connector, RpcTarget {
      * features.
      * <p>
      * This method must not alter the component hierarchy in any way. Calling
-     * requestRepaint() from this method will have no effect.
+     * {@link #markAsDirty()} from this method will have no effect.
      * </p>
      * 
      * @param initial
