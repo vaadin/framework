@@ -1120,6 +1120,18 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
+     * Adds a close listener to the UI. Close listeners are invoked when the UI
+     * is removed from the session due to UI or session expiration.
+     * 
+     * @param listener
+     *            The CloseListener that should be added.
+     */
+    public void addCloseListener(CloseListener listener) {
+        addListener(CloseEvent.CLOSE_EVENT_IDENTIFIER, CloseEvent.class,
+                listener, CloseListener.closeMethod);
+    }
+
+    /**
      * @deprecated Since 7.0, replaced by
      *             {@link #addClickListener(ClickListener)}
      **/
@@ -1137,6 +1149,18 @@ public abstract class UI extends AbstractComponentContainer implements
      */
     public void removeClickListener(ClickListener listener) {
         removeListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
+                listener);
+    }
+
+    /**
+     * Removes a close listener from the UI, if previously added with
+     * {@link #addCloseListener(CloseListener)}.
+     * 
+     * @param listener
+     *            The CloseListener that should be removed
+     */
+    public void removeCloseListener(CloseListener listener) {
+        removeListener(CloseEvent.CLOSE_EVENT_IDENTIFIER, CloseEvent.class,
                 listener);
     }
 
