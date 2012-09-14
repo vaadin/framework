@@ -39,7 +39,7 @@
 
         <!-- Provided build libs -->
         <dependency org="javax.servlet" name="servlet-api"
-            rev="2.5" conf="build-provided->default" />
+            rev="2.4" conf="build-provided->default" />
 
         <!-- Testing libs -->
         <dependency org="junit" name="junit" rev="4.5"

@@ -23,9 +23,9 @@
 
         <dependency org="javax.validation" name="validation-api"
             rev="1.0.0.GA" conf="build,ide -> default,sources" />
-        <!--Servlet API version 2.5 -->
+        <!-- Servlet API -->
         <dependency org="javax.servlet" name="servlet-api"
-            rev="2.5" conf="build-provided,ide -> default" />
+            rev="2.4" conf="build-provided,ide -> default" />
         <!-- Google App Engine -->
         <dependency org="com.google.appengine" name="appengine-api-1.0-sdk"
             rev="1.2.1" conf="build-provided,ide -> default" />

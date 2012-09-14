@@ -25,9 +25,9 @@
         <!-- Liferay Portal Service -->
         <dependency org="com.liferay.portal" name="portal-service"
             rev="6.0.2" conf="build-provided,ide -> default" />
-        <!--Servlet API version 2.5 -->
+        <!--Servlet API version 2.4 -->
         <dependency org="javax.servlet" name="servlet-api"
-            rev="2.5" conf="build-provided,ide,tests -> default" />
+            rev="2.4" conf="build-provided,ide,tests -> default" />
 
         <!--Portlet API version 2.0 (JSR-286) -->
         <dependency org="javax.portlet" name="portlet-api"
