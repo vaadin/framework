@@ -27,15 +27,15 @@
 
         <!-- Required build libs -->
         <dependency org="org.apache.commons" name="commons-jexl"
-            rev="2.1.1" conf="build,ide->default" />
+            rev="2.1.1" conf="build,ide,tests->default" />
         <dependency org="org.w3c.css" name="sac" rev="1.3"
-            conf="build,ide->default" />
+            conf="build,ide,tests->default" />
         <dependency org="milyn" name="flute" rev="1.3"
-            conf="build,ide->default" />
+            conf="build,ide,tests->default" />
         <dependency org="net.sourceforge.cssparser" name="cssparser"
-            rev="0.9.5" conf="build,ide->default" />
+            rev="0.9.5" conf="build,ide,tests->default" />
         <dependency org="commons-cli" name="commons-cli" rev="1.2"
-            conf="build,ide->default" />
+            conf="build,ide,tests->default" />
 
         <!-- Provided build libs -->
         <dependency org="javax.servlet" name="servlet-api"
