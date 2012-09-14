@@ -209,6 +209,9 @@ public class FieldGroup implements Serializable {
      */
     public void setReadOnly(boolean fieldsReadOnly) {
         readOnly = fieldsReadOnly;
+        for (Field<?> field : getFields()) {
+            field.setReadOnly(fieldsReadOnly);
+        }
     }
 
     /**
