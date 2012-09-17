@@ -24,6 +24,7 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.datefield.VCalendarPanel.FocusChangeListener;
 import com.vaadin.client.ui.datefield.VCalendarPanel.TimeChangeListener;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.DateField;
 
 @Connect(DateField.class)
@@ -60,7 +61,8 @@ public class PopupDateFieldConnector extends TextualDateConnector {
         }
         getWidget().calendarToggle.setEnabled(getWidget().enabled);
 
-        if (getWidget().currentResolution <= VPopupCalendar.RESOLUTION_MONTH) {
+        if (getWidget().currentResolution.getCalendarField() <= Resolution.MONTH
+                .getCalendarField()) {
             getWidget().calendar
                     .setFocusChangeListener(new FocusChangeListener() {
                         @Override
@@ -76,7 +78,8 @@ public class PopupDateFieldConnector extends TextualDateConnector {
             getWidget().calendar.setFocusChangeListener(null);
         }
 
-        if (getWidget().currentResolution > VPopupCalendar.RESOLUTION_DAY) {
+        if (getWidget().currentResolution.getCalendarField() > Resolution.DAY
+                .getCalendarField()) {
             getWidget().calendar
                     .setTimeChangeListener(new TimeChangeListener() {
                         @Override

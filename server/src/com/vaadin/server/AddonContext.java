@@ -104,7 +104,7 @@ public class AddonContext implements Serializable {
     public void destroy() {
         AddonContextEvent event = new AddonContextEvent(this);
         for (AddonContextListener listener : initedListeners) {
-            listener.contextDestoryed(event);
+            listener.contextDestroyed(event);
         }
     }
 

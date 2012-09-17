@@ -31,16 +31,17 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
 
 /**
- * Navigator utility that allows switching of views in a part of an application.
- * 
+ * A navigator utility that allows switching of views in a part of an
+ * application.
+ * <p>
  * The view switching can be based e.g. on URI fragments containing the view
  * name and parameters to the view. There are two types of parameters for views:
  * an optional parameter string that is included in the fragment (may be
  * bookmarkable).
- * 
+ * <p>
  * Views can be explicitly registered or dynamically generated and listening to
  * view changes is possible.
- * 
+ * <p>
  * Note that {@link Navigator} is not a component itself but comes with
  * {@link SimpleViewDisplay} which is a component that displays the selected
  * view as its contents.
@@ -90,7 +91,7 @@ public class Navigator implements Serializable {
         private final Navigator navigator;
 
         /**
-         * Create a new URIFragmentManager and attach it to listen to URI
+         * Creates a new URIFragmentManager and attach it to listen to URI
          * fragment changes of a {@link Page}.
          * 
          * @param page
@@ -128,13 +129,13 @@ public class Navigator implements Serializable {
     }
 
     /**
-     * View display that is a component itself and replaces its contents with
+     * A ViewDisplay that is a component itself and replaces its contents with
      * the view.
-     * 
+     * <p>
      * This display only supports views that are {@link Component}s themselves.
      * Attempting to display a view that is not a component causes an exception
      * to be thrown.
-     * 
+     * <p>
      * By default, the view display has full size.
      */
     public static class SimpleViewDisplay extends CustomComponent implements
@@ -160,12 +161,12 @@ public class Navigator implements Serializable {
     }
 
     /**
-     * View display that replaces the contents of a {@link ComponentContainer}
+     * A ViewDisplay that replaces the contents of a {@link ComponentContainer}
      * with the active {@link View}.
-     * 
+     * <p>
      * All components of the container are removed before adding the new view to
      * it.
-     * 
+     * <p>
      * This display only supports views that are {@link Component}s themselves.
      * Attempting to display a view that is not a component causes an exception
      * to be thrown.
@@ -195,7 +196,7 @@ public class Navigator implements Serializable {
     }
 
     /**
-     * View provider which supports mapping a single view name to a single
+     * A ViewProvider which supports mapping a single view name to a single
      * pre-initialized view instance.
      * 
      * For most cases, ClassBasedViewProvider should be used instead of this.
@@ -205,7 +206,8 @@ public class Navigator implements Serializable {
         private final View view;
 
         /**
-         * Create a new view provider which returns a pre-created view instance.
+         * Creates a new view provider which returns a pre-created view
+         * instance.
          * 
          * @param viewName
          *            name of the view (not null)
@@ -249,12 +251,12 @@ public class Navigator implements Serializable {
     }
 
     /**
-     * View provider which maps a single view name to a class to instantiate for
-     * the view.
-     * 
+     * A ViewProvider which maps a single view name to a class to instantiate
+     * for the view.
+     * <p>
      * Note that the view class must be accessible by the class loader used by
      * the provider. This may require its visibility to be public.
-     * 
+     * <p>
      * This class is primarily for internal use by {@link Navigator}.
      */
     public static class ClassBasedViewProvider implements ViewProvider {
@@ -336,26 +338,21 @@ public class Navigator implements Serializable {
     private List<ViewProvider> providers = new LinkedList<ViewProvider>();
 
     /**
-     * Create a navigator that is tracking the active view using URI fragments
+     * Creates a navigator that is tracking the active view using URI fragments
      * of the current {@link Page} and replacing the contents of a
      * {@link ComponentContainer} with the active view.
-     * 
+     * <p>
      * In case the container is not on the current page, use another
      * {@link Navigator#Navigator(Page, ViewDisplay)} with an explicitly created
      * {@link ComponentContainerViewDisplay}.
-     * 
+     * <p>
      * All components of the container are removed each time before adding the
      * active {@link View}. Views must implement {@link Component} when using
      * this constructor.
-     * 
      * <p>
      * After all {@link View}s and {@link ViewProvider}s have been registered,
      * the application should trigger navigation to the current fragment using
-     * e.g.
-     * 
-     * <pre>
-     * navigator.navigateTo(Page.getCurrent().getFragment());
-     * </pre>
+     * {@link #navigate()}.
      * 
      * @param container
      *            ComponentContainer whose contents should be replaced with the
@@ -367,16 +364,11 @@ public class Navigator implements Serializable {
     }
 
     /**
-     * Create a navigator that is tracking the active view using URI fragments.
-     * 
+     * Creates a navigator that is tracking the active view using URI fragments.
      * <p>
      * After all {@link View}s and {@link ViewProvider}s have been registered,
      * the application should trigger navigation to the current fragment using
-     * e.g.
-     * 
-     * <pre>
-     * navigator.navigateTo(Page.getCurrent().getFragment());
-     * </pre>
+     * {@link #navigate()}.
      * 
      * @param page
      *            whose URI fragments are used
@@ -389,14 +381,15 @@ public class Navigator implements Serializable {
     }
 
     /**
-     * Create a navigator.
-     * 
+     * Creates a navigator.
+     * <p>
      * When a custom navigation state manager is not needed, use the constructor
      * {@link #Navigator(Page, ViewDisplay)} which uses a URI fragment based
      * state manager.
-     * 
-     * Note that navigation to the initial view must be performed explicitly by
-     * the application after creating a Navigator using this constructor.
+     * <p>
+     * After all {@link View}s and {@link ViewProvider}s have been registered,
+     * the application should trigger navigation to the current fragment using
+     * {@link #navigate()}.
      * 
      * @param stateManager
      *            {@link NavigationStateManager} keeping track of the active
@@ -411,20 +404,29 @@ public class Navigator implements Serializable {
     }
 
     /**
-     * Navigate to a view and initialize the view with given parameters.
-     * 
+     * Navigates to the current navigation state. This method should be called
+     * when all required {@link View}s, {@link ViewProvider}s, and
+     * {@link ViewChangeListener}s have been added to the navigator.
+     */
+    public void navigate() {
+        navigateTo(getStateManager().getState());
+    }
+
+    /**
+     * Navigates to a view and initialize the view with given parameters.
+     * <p>
      * The view string consists of a view name optionally followed by a slash
      * and a parameters part that is passed as-is to the view. ViewProviders are
      * used to find and create the correct type of view.
-     * 
+     * <p>
      * If multiple providers return a matching view, the view with the longest
      * name is selected. This way, e.g. hierarchies of subviews can be
      * registered like "admin/", "admin/users", "admin/settings" and the longest
      * match is used.
-     * 
+     * <p>
      * If the view being deactivated indicates it wants a confirmation for the
      * navigation operation, the user is asked for the confirmation.
-     * 
+     * <p>
      * Registered {@link ViewChangeListener}s are called upon successful view
      * change.
      * 
@@ -460,7 +462,7 @@ public class Navigator implements Serializable {
     /**
      * Internal method activating a view, setting its parameters and calling
      * listeners.
-     * 
+     * <p>
      * This method also verifies that the user is allowed to perform the
      * navigation operation.
      * 
@@ -475,7 +477,7 @@ public class Navigator implements Serializable {
     protected void navigateTo(View view, String viewName, String parameters) {
         ViewChangeEvent event = new ViewChangeEvent(this, currentView, view,
                 viewName, parameters);
-        if (!isViewChangeAllowed(event)) {
+        if (!fireBeforeViewChange(event)) {
             return;
         }
 
@@ -496,15 +498,16 @@ public class Navigator implements Serializable {
             display.showView(view);
         }
 
-        fireViewChange(event);
+        fireAfterViewChange(event);
     }
 
     /**
-     * Check whether view change is allowed.
-     * 
-     * All related listeners are called. The view change is blocked if any of
-     * them wants to block the navigation operation.
-     * 
+     * Fires an event before an imminent view change.
+     * <p>
+     * Listeners are called in registration order. If any listener returns
+     * <code>false</code>, the rest of the listeners are not called and the view
+     * change is blocked.
+     * <p>
      * The view change listeners may also e.g. open a warning or question dialog
      * and save the parameters to re-initiate the navigation operation upon user
      * action.
@@ -514,9 +517,9 @@ public class Navigator implements Serializable {
      * @return true if the view change should be allowed, false to silently
      *         block the navigation operation
      */
-    protected boolean isViewChangeAllowed(ViewChangeEvent event) {
+    protected boolean fireBeforeViewChange(ViewChangeEvent event) {
         for (ViewChangeListener l : listeners) {
-            if (!l.isViewChangeAllowed(event)) {
+            if (!l.beforeViewChange(event)) {
                 return false;
             }
         }
@@ -545,20 +548,22 @@ public class Navigator implements Serializable {
     }
 
     /**
-     * Fire an event when the current view has changed.
+     * Fires an event after the current view has changed.
+     * <p>
+     * Listeners are called in registration order.
      * 
      * @param event
      *            view change event (not null)
      */
-    protected void fireViewChange(ViewChangeEvent event) {
+    protected void fireAfterViewChange(ViewChangeEvent event) {
         for (ViewChangeListener l : listeners) {
-            l.navigatorViewChanged(event);
+            l.afterViewChange(event);
         }
     }
 
     /**
-     * Register a static, pre-initialized view instance for a view name.
-     * 
+     * Registers a static, pre-initialized view instance for a view name.
+     * <p>
      * Registering another view with a name that is already registered
      * overwrites the old registration of the same type.
      * 
@@ -580,8 +585,8 @@ public class Navigator implements Serializable {
     }
 
     /**
-     * Register for a view name a view class.
-     * 
+     * Register a view class for a view name.
+     * <p>
      * Registering another view with a name that is already registered
      * overwrites the old registration of the same type.
      * 
@@ -606,8 +611,8 @@ public class Navigator implements Serializable {
     }
 
     /**
-     * Remove view from navigator.
-     * 
+     * Removes a view from navigator.
+     * <p>
      * This method only applies to views registered using
      * {@link #addView(String, View)} or {@link #addView(String, Class)}.
      * 
@@ -633,8 +638,8 @@ public class Navigator implements Serializable {
     }
 
     /**
-     * Register a view provider (factory).
-     * 
+     * Registers a view provider (factory).
+     * <p>
      * Providers are called in order of registration until one that can handle
      * the requested view name is found.
      * 
@@ -656,19 +661,19 @@ public class Navigator implements Serializable {
     }
 
     /**
-     * Listen to changes of the active view.
-     * 
+     * Adds a listener for listening to changes of the active view.
+     * <p>
      * The listener will get notified after the view has changed.
      * 
      * @param listener
-     *            Listener to invoke after view changes.
+     *            Listener to invoke during a view change.
      */
     public void addViewChangeListener(ViewChangeListener listener) {
         listeners.add(listener);
     }
 
     /**
-     * Remove a view change listener.
+     * Removes a view change listener.
      * 
      * @param listener
      *            Listener to remove.

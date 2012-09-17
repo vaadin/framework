@@ -19,9 +19,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import com.vaadin.annotations.JavaScript;
-import com.vaadin.external.json.JSONArray;
-import com.vaadin.external.json.JSONException;
 import com.vaadin.server.DynamicConnectorResource;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;

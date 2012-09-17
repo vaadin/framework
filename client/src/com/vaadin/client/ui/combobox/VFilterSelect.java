@@ -73,6 +73,7 @@ import com.vaadin.client.ui.menubar.MenuItem;
 import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.ComponentStateUtil;
+import com.vaadin.shared.ui.combobox.FilteringMode;
 
 /**
  * Client side implementation of the Select component.
@@ -741,7 +742,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 }
             } else if (item != null
                     && !"".equals(lastFilter)
-                    && (filteringmode == FILTERINGMODE_CONTAINS ? item
+                    && (filteringmode == FilteringMode.CONTAINS ? item
                             .getText().toLowerCase()
                             .contains(lastFilter.toLowerCase()) : item
                             .getText().toLowerCase()
@@ -827,9 +828,12 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         }
     }
 
-    public static final int FILTERINGMODE_OFF = 0;
-    public static final int FILTERINGMODE_STARTSWITH = 1;
-    public static final int FILTERINGMODE_CONTAINS = 2;
+    @Deprecated
+    public static final FilteringMode FILTERINGMODE_OFF = FilteringMode.OFF;
+    @Deprecated
+    public static final FilteringMode FILTERINGMODE_STARTSWITH = FilteringMode.STARTSWITH;
+    @Deprecated
+    public static final FilteringMode FILTERINGMODE_CONTAINS = FilteringMode.CONTAINS;
 
     private static final String CLASSNAME = "v-filterselect";
     private static final String STYLE_NO_INPUT = "no-input";
@@ -928,7 +932,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     protected boolean enabled;
     protected boolean readonly;
 
-    protected int filteringmode = FILTERINGMODE_OFF;
+    protected FilteringMode filteringmode = FilteringMode.OFF;
 
     // shown in unfocused empty field, disappears on focus (e.g "Search here")
     private static final String CLASSNAME_PROMPT = "prompt";

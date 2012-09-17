@@ -10,11 +10,12 @@ import java.util.TimeZone;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.shared.ui.combobox.FilteringMode;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
-import com.vaadin.ui.DateField.Resolution;
 
 public class DateFieldTimezone extends TestBase {
 
@@ -49,7 +50,7 @@ public class DateFieldTimezone extends TestBase {
         timezoneSelector.setImmediate(true);
         timezoneSelector.setNullSelectionAllowed(true);
         timezoneSelector.setNullSelectionItemId(nullValue);
-        timezoneSelector.setFilteringMode(ComboBox.FILTERINGMODE_CONTAINS);
+        timezoneSelector.setFilteringMode(FilteringMode.CONTAINS);
         timezoneSelector.addListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {

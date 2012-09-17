@@ -25,19 +25,33 @@
         <dependency org="com.vaadin" name="vaadin-shared"
             rev="${vaadin.version}" conf="build,tests" />
 
+        <!-- Required build libs -->
+        <dependency org="org.apache.commons" name="commons-jexl"
+            rev="2.1.1" conf="build,ide,tests->default" />
+        <dependency org="org.w3c.css" name="sac" rev="1.3"
+            conf="build,ide,tests->default" />
+        <dependency org="net.sourceforge.cssparser" name="cssparser"
+            rev="0.9.5" conf="build,ide,tests->default" />
+        <dependency org="commons-cli" name="commons-cli" rev="1.2"
+            conf="build,ide,tests->default" />
 
-        <dependency org="org.w3c.css" name="sac" rev="1.3" />
-        <dependency org="milyn" name="flute" rev="1.3" conf="*->default" />
+        <!-- FIXME: This should use a repackaged version of flute with included 
+            GWT modifications. Only here to make IDE compilation work atm -->
+        <dependency org="milyn" name="flute" rev="1.3"
+            conf="ide->default" />
+
+        <!-- Provided build libs -->
         <dependency org="javax.servlet" name="servlet-api"
-            rev="2.5" />
-        <dependency org="com.carrotsearch" name="smartsprites"
-            rev="0.2.3-itmill" />
+            rev="2.4" conf="build-provided->default" />
+
+        <!-- Testing libs -->
         <dependency org="junit" name="junit" rev="4.5"
             conf="tests -> default" />
-        <dependency org="net.sourceforge.cssparser" name="cssparser"
-            rev="0.9.5" conf="tests,ide->default" />
-        <dependency org="commons-cli" name="commons-cli" rev="1.2"
-            conf="build,ide -> default" />
+
+        <!-- Internally used, for now -->
+        <dependency org="com.carrotsearch" name="smartsprites"
+            rev="0.2.3-itmill" />
+
     </dependencies>
 
 </ivy-module>

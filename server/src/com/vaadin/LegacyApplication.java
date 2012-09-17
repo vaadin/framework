@@ -26,6 +26,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.vaadin.server.AbstractUIProvider;
+import com.vaadin.server.DefaultErrorListener;
 import com.vaadin.server.Terminal.ErrorEvent;
 import com.vaadin.server.Terminal.ErrorListener;
 import com.vaadin.server.VaadinSession;
@@ -100,24 +101,23 @@ public abstract class LegacyApplication extends AbstractUIProvider implements
     }
 
     @Override
-    public UI createInstance(Class<? extends UI> type, WrappedRequest request) {
+    public UI createInstance(WrappedRequest request, Class<? extends UI> type) {
         return getUIInstance(request);
     }
 
     @Override
-    public String getThemeForUI(WrappedRequest request,
-            Class<? extends UI> uiClass) {
+    public String getTheme(WrappedRequest request, Class<? extends UI> uiClass) {
         return theme;
     }
 
     @Override
-    public String getPageTitleForUI(WrappedRequest request,
+    public String getPageTitle(WrappedRequest request,
             Class<? extends UI> uiClass) {
         UI uiInstance = getUIInstance(request);
         if (uiInstance != null) {
             return uiInstance.getCaption();
         } else {
-            return super.getPageTitleForUI(request, uiClass);
+            return super.getPageTitle(request, uiClass);
         }
     }
 
@@ -282,7 +282,7 @@ public abstract class LegacyApplication extends AbstractUIProvider implements
 
     @Override
     public void terminalError(ErrorEvent event) {
-        VaadinSession.getCurrent().getErrorHandler().terminalError(event);
+        DefaultErrorListener.doDefault(event);
     }
 
     public VaadinSession getContext() {

@@ -197,7 +197,12 @@ public class ComponentLocator {
          * If everything else fails we use the DOM path to identify the target
          * element
          */
-        return path + getDOMPathForElement(targetElement, w.getElement());
+        String domPath = getDOMPathForElement(targetElement, w.getElement());
+        if (domPath == null) {
+            return path;
+        } else {
+            return path + domPath;
+        }
     }
 
     /**
@@ -498,9 +503,9 @@ public class ComponentLocator {
                 // VVerticalLayout and 0
                 String[] split = part.split("\\[", 2);
                 String widgetClassName = split[0];
-                String indexString = split[1];
-                int widgetPosition = Integer.parseInt(indexString.substring(0,
-                        indexString.length() - 1));
+                String indexString = split[1].substring(0,
+                        split[1].length() - 1);
+                int widgetPosition = Integer.parseInt(indexString);
 
                 // AbsolutePanel in GridLayout has been removed -> skip it
                 if (w instanceof VGridLayout

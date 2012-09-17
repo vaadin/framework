@@ -1,7 +1,7 @@
 package com.vaadin.tests.containers.sqlcontainer;
 
 import com.vaadin.LegacyApplication;
-import com.vaadin.ui.AbstractSelect.Filtering;
+import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.UI;
 
@@ -18,7 +18,7 @@ public class ComboBoxUpdateProblem extends LegacyApplication {
         ComboBox combo = new ComboBox("Names",
                 databaseHelper.getTestContainer());
         combo.setItemCaptionPropertyId("FIELD1");
-        combo.setFilteringMode(Filtering.FILTERINGMODE_CONTAINS);
+        combo.setFilteringMode(FilteringMode.CONTAINS);
         combo.setImmediate(true);
 
         getMainWindow().addComponent(combo);

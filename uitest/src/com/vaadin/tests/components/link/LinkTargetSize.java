@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.link;
 
 import com.vaadin.server.ExternalResource;
+import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Link;
 
@@ -23,7 +24,7 @@ public class LinkTargetSize extends TestBase {
         l.setTargetName("_blank");
         l.setTargetWidth(300);
         l.setTargetHeight(300);
-        l.setTargetBorder(Link.TARGET_BORDER_NONE);
+        l.setTargetBorder(BorderStyle.NONE);
         addComponent(l);
     }
 

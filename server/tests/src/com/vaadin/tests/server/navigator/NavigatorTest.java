@@ -135,14 +135,14 @@ public class NavigatorTest extends TestCase {
         }
 
         @Override
-        public boolean isViewChangeAllowed(ViewChangeEvent event) {
+        public boolean beforeViewChange(ViewChangeEvent event) {
             if (referenceEvents.isEmpty()) {
-                fail("Unexpected call to isViewChangeAllowed()");
+                fail("Unexpected call to beforeViewChange()");
             }
             ViewChangeEvent reference = referenceEvents.remove();
             Boolean isCheck = referenceIsCheck.remove();
             if (!isCheck) {
-                fail("Expected navigatorViewChanged(), received isViewChangeAllowed()");
+                fail("Expected afterViewChange(), received beforeViewChange()");
             }
             // here to make sure exactly the correct values are removed from
             // each queue
@@ -154,14 +154,14 @@ public class NavigatorTest extends TestCase {
         }
 
         @Override
-        public void navigatorViewChanged(ViewChangeEvent event) {
+        public void afterViewChange(ViewChangeEvent event) {
             if (referenceEvents.isEmpty()) {
-                fail("Unexpected call to navigatorViewChanged()");
+                fail("Unexpected call to afterViewChange()");
             }
             ViewChangeEvent reference = referenceEvents.remove();
             Boolean isCheck = referenceIsCheck.remove();
             if (isCheck) {
-                fail("Expected isViewChangeAllowed(), received navigatorViewChanged()");
+                fail("Expected beforeViewChange(), received afterViewChange()");
             }
             if (!equalsReferenceEvent(event, reference)) {
                 fail("View change event does not match reference event");

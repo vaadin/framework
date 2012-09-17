@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+
+<project name="vaadin-client-compiler" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<description>
+		Themes compiled to CSS 
+	</description>
+
+	<include file="../common.xml" as="common" />
+	<include file="../build.xml" as="vaadin" />
+	<include file="../gwt-files.xml" as="gwtfiles" />
+
+	<!-- global properties -->
+	<property name="module.name" value="vaadin-themes" />
+	<property name="result.dir" value="result" />
+	<property name="theme.result.dir" value="${result.dir}/VAADIN/themes" />
+
+	<target name="compile-themes">
+		<ivy:resolve resolveid="common" conf="build" />
+		<ivy:cachepath pathid="classpath.compile.theme" conf="build" />
+
+		<antcall target="compile-theme">
+			<param name="theme" value="base" />
+		</antcall>
+		<antcall target="compile-theme">
+			<param name="theme" value="runo" />
+		</antcall>
+		<antcall target="compile-theme">
+			<param name="theme" value="reindeer" />
+		</antcall>
+		<antcall target="compile-theme">
+			<param name="theme" value="chameleon" />
+		</antcall>
+		<antcall target="compile-theme">
+			<param name="theme" value="liferay" />
+		</antcall>
+	</target>
+
+	<target name="jar" depends="compile-themes">
+		<fail unless="module.name" message="No module.name parameter given" />
+
+		<property name="result.dir" location="result" />
+		<property name="result.jar" location="${result.dir}/lib/${module.name}-${vaadin.version}.jar" />
+		<property name="classes" location="{$result.dir}/classes" />
+		<antcall target="common.pom.xml" />
+		
+		<jar jarfile="${result.jar}">
+			<fileset dir="${result.dir}">
+				<include name="VAADIN/themes/**" />
+			</fileset>
+			<fileset refid="common.files.for.all.jars" />
+		</jar>
+
+	</target>
+	<target name="copy-theme">
+		<fail unless="theme" message="You must give the theme name to copy n the 'theme' parameter" />
+		<property name="theme.source.dir" location="../WebContent/VAADIN/themes" />
+
+		<copy todir="${theme.result.dir}">
+			<fileset dir="${theme.source.dir}">
+				<include name="${theme}/**" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="compile-theme" depends="copy-theme">
+		<fail unless="theme" message="You must give the theme name to compile in the 'theme' parameter" />
+
+		<ivy:resolve resolveid="common" conf="compile-theme" />
+		<ivy:cachepath pathid="classpath.compile.theme" conf="compile-theme" />
+		<ivy:cachepath pathid="classpath.runtime.theme" conf="build" />
+
+		<echo>Compiling ${theme}</echo>
+		<mkdir dir="${theme.result.dir}" />
+
+		<!-- compile the theme -->
+		<java classname="com.vaadin.buildhelpers.CompileTheme" classpathref="classpath.compile.theme" failonerror="yes" fork="yes" maxmemory="512m">
+			<arg value="--theme" />
+			<arg value="${theme}" />
+			<arg value="--theme-folder" />
+			<arg value="${theme.result.dir}" />
+			<arg value="--theme-version" />
+			<arg value="${vaadin.version}" />
+			<jvmarg value="-Xss8M" />
+			<jvmarg value="-XX:MaxPermSize=256M" />
+			<jvmarg value="-Djava.awt.headless=true" />
+		</java>
+
+	</target>
+
+
+	<target name="publish-local" depends="jar">
+		<antcall target="common.publish-local">
+
+		</antcall>
+	</target>
+
+	<target name="clean">
+		<antcall target="common.clean" />
+	</target>
+
+	<target name="tests">
+		<!--<antcall target="common.tests.run" />-->
+		<echo>WHAT? No tests for ${module.name}!</echo>
+	</target>
+
+</project>

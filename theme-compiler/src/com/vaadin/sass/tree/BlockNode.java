@@ -16,6 +16,9 @@
 
 package com.vaadin.sass.tree;
 
+import java.util.ArrayList;
+
+import org.w3c.css.sac.Selector;
 import org.w3c.css.sac.SelectorList;
 
 import com.vaadin.sass.parser.SelectorListImpl;
@@ -23,7 +26,7 @@ import com.vaadin.sass.selector.SelectorUtil;
 import com.vaadin.sass.util.Clonable;
 import com.vaadin.sass.util.DeepCopy;
 
-public class BlockNode extends Node implements Clonable {
+public class BlockNode extends Node implements Clonable, IVariableNode {
 
     private static final long serialVersionUID = 5742962631468325048L;
 
@@ -79,6 +82,37 @@ public class BlockNode extends Node implements Clonable {
             clone.getChildren().add((Node) DeepCopy.copy(child));
         }
         return clone;
+    }
+
+    @Override
+    public void replaceVariables(ArrayList<VariableNode> variables) {
+        SelectorListImpl newList = new SelectorListImpl();
+
+        if (selectorList != null) {
+            for (int i = 0; i < selectorList.getLength(); i++) {
+                Selector selector = selectorList.item(i);
+
+                for (final VariableNode node : variables) {
+
+                    if (SelectorUtil.toString(selector)
+                            .contains(node.getName())) {
+                        try {
+                            selector = SelectorUtil
+                                    .createSelectorAndreplaceSelectorVariableWithValue(
+                                            selector, node.getName(), node
+                                                    .getExpr().toString());
+                            break;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return;
+                        }
+                    }
+                }
+                newList.addSelector(selector);
+            }
+
+            selectorList = newList;
+        }
     }
 
 }

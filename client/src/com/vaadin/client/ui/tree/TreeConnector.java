@@ -30,6 +30,7 @@ import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.tree.VTree.TreeNode;
 import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.tree.TreeConstants;
 import com.vaadin.ui.Tree;
 
@@ -108,10 +109,10 @@ public class TreeConnector extends AbstractComponentConnector implements
             if (BrowserInfo.get().isTouchDevice()) {
                 // Always use the simple mode for touch devices that do not have
                 // shift/ctrl keys (#8595)
-                getWidget().multiSelectMode = VTree.MULTISELECT_MODE_SIMPLE;
+                getWidget().multiSelectMode = MultiSelectMode.SIMPLE;
             } else {
-                getWidget().multiSelectMode = uidl
-                        .getIntAttribute("multiselectmode");
+                getWidget().multiSelectMode = MultiSelectMode.valueOf(uidl
+                        .getStringAttribute("multiselectmode"));
             }
         }
 

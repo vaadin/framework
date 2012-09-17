@@ -26,7 +26,6 @@ import org.w3c.css.sac.SelectorList;
 
 import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.tree.ForNode;
-import com.vaadin.sass.tree.IfNode;
 import com.vaadin.sass.tree.MixinDefNode;
 import com.vaadin.sass.tree.VariableNode;
 import com.vaadin.sass.tree.WhileNode;
@@ -50,8 +49,6 @@ public interface SCSSDocumentHandler extends DocumentHandler {
 
     WhileNode whileDirective(String condition, String body);
 
-    IfNode ifDirective();
-
     void extendDirective(SelectorList list);
 
     void startNestedProperties(String name);
@@ -68,5 +65,13 @@ public interface SCSSDocumentHandler extends DocumentHandler {
     EachDefNode startEachDirective(String variable, ArrayList<String> list);
 
     void endEachDirective();
+
+    void startIfElseDirective();
+
+    void endIfElseDirective();
+
+    void ifDirective(String evaluator);
+
+    void elseDirective();
 
 }

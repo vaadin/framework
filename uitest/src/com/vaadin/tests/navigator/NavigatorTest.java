@@ -77,7 +77,7 @@ public class NavigatorTest extends UI {
     class NaviListener implements ViewChangeListener {
 
         @Override
-        public boolean isViewChangeAllowed(ViewChangeEvent event) {
+        public boolean beforeViewChange(ViewChangeEvent event) {
             if (event.getNewView() instanceof ForbiddenView) {
                 log.log("Prevent navigation to ForbiddenView");
                 return false;
@@ -86,7 +86,7 @@ public class NavigatorTest extends UI {
         }
 
         @Override
-        public void navigatorViewChanged(ViewChangeEvent event) {
+        public void afterViewChange(ViewChangeEvent event) {
         }
     };
 

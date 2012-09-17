@@ -29,6 +29,7 @@ import org.w3c.css.sac.SiblingSelector;
 import org.w3c.css.sac.SimpleSelector;
 import org.w3c.flute.parser.selectors.AndConditionImpl;
 import org.w3c.flute.parser.selectors.AttributeConditionImpl;
+import org.w3c.flute.parser.selectors.ChildSelectorImpl;
 import org.w3c.flute.parser.selectors.ClassConditionImpl;
 import org.w3c.flute.parser.selectors.ConditionFactoryImpl;
 import org.w3c.flute.parser.selectors.DirectAdjacentSelectorImpl;
@@ -304,5 +305,29 @@ public class SelectorUtil {
     public static boolean equals(Selector one, Selector another) {
         return one == null ? another == null : toString(one).equals(
                 toString(another));
+    }
+
+    public static Selector createSelectorAndreplaceSelectorVariableWithValue(
+            Selector selector, String variable, String value) throws Exception {
+
+        SelectorFactoryImpl factory = new SelectorFactoryImpl();
+
+        ElementSelector es = factory.createElementSelector(
+                null,
+                ((ElementSelector) selector).getLocalName().replaceAll(
+                        variable, value));
+
+        if (selector instanceof ConditionalSelector) {
+            return factory.createConditionalSelector(es,
+                    ((ConditionalSelector) selector).getCondition());
+        } else if (selector instanceof DescendantSelector) {
+            return factory.createDescendantSelector(es,
+                    ((DescendantSelector) selector).getSimpleSelector());
+        } else if (selector instanceof ChildSelectorImpl) {
+            return factory.createChildSelector(es,
+                    ((DescendantSelector) selector).getSimpleSelector());
+        } else {
+            throw new Exception("Invalid selector type");
+        }
     }
 }

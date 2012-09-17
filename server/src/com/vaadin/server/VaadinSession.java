@@ -716,7 +716,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     protected <T extends UI> T createUIInstance(WrappedRequest request,
             Class<T> uiClass) {
         UIProvider uiProvider = getUiProvider(request, uiClass);
-        return uiClass.cast(uiProvider.createInstance(uiClass, request));
+        return uiClass.cast(uiProvider.createInstance(request, uiClass));
     }
 
     /**
@@ -1027,7 +1027,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
         ui.doInit(request, uiId.intValue());
 
-        if (getUiProvider(request, uiClass).isUiPreserved(request, uiClass)) {
+        if (getUiProvider(request, uiClass).isPreservedOnRefresh(request,
+                uiClass)) {
             // Remember this UI
             String windowName = request.getBrowserDetails().getWindowName();
             if (windowName == null) {
@@ -1067,15 +1068,10 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     /**
      * Gets all the UIs of this session. This includes UIs that have been
-     * requested but not yet initialized. Please note, that UIs are not
-     * automatically removed e.g. if the browser window is closed and that there
-     * is no way to manually remove a UI. Inactive UIs will thus not be released
-     * for GC until the entire application is released when the session has
-     * timed out (unless there are dangling references). Improved support for
-     * releasing unused uIs is planned for an upcoming alpha release of Vaadin
-     * 7.
+     * requested but not yet initialized. UIs that receive no heartbeat requests
+     * from the client are eventually removed from the session.
      * 
-     * @return a collection of uIs belonging to this application
+     * @return a collection of UIs belonging to this application
      * 
      * @since 7.0
      */
@@ -1190,7 +1186,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
                 i.remove();
                 retainOnRefreshUIs.values().remove(ui.getUIId());
                 ui.fireCloseEvent();
-                getLogger().info(
+                getLogger().fine(
                         "Closed UI #" + ui.getUIId() + " due to inactivity");
             }
         }
@@ -1247,6 +1243,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * session and eventually collected.
      * 
      * @since 7.0.0
+     * 
+     * @deprecated Might be refactored or removed before 7.0.0
      * 
      * @param ui
      *            The UI whose status to check

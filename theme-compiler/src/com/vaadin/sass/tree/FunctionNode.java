@@ -16,7 +16,9 @@
 
 package com.vaadin.sass.tree;
 
-public class FunctionNode extends Node {
+import java.util.ArrayList;
+
+public class FunctionNode extends Node implements IVariableNode {
     private static final long serialVersionUID = -5383104165955523923L;
 
     private String name;
@@ -38,5 +40,14 @@ public class FunctionNode extends Node {
     public String toString() {
         return "Function Node: {name: " + name + ", args: " + args + ", body: "
                 + body + "}";
+    }
+
+    @Override
+    public void replaceVariables(ArrayList<VariableNode> variables) {
+        for (final VariableNode node : variables) {
+            if (args.contains(node.getName())) {
+                args.replaceAll(node.getName(), node.getExpr().toString());
+            }
+        }
     }
 }

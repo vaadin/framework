@@ -87,12 +87,7 @@ public class MixinVisitorTest {
 
         Assert.assertEquals(1, root.getChildren().size());
         BlockNode child = (BlockNode) root.getChildren().get(0);
-        VariableNode varNode = (VariableNode) child.getChildren().get(0);
-        Assert.assertEquals("arg", varNode.getName());
-        Assert.assertEquals(LexicalUnit.SAC_PIXEL, varNode.getExpr()
-                .getLexicalUnitType());
-        Assert.assertEquals(1f, varNode.getExpr().getFloatValue(), 0);
-        BlockNode fromMixin = (BlockNode) child.getChildren().get(1);
+        BlockNode fromMixin = (BlockNode) child.getChildren().get(0);
         Assert.assertFalse(fromMixin.hasChildren());
 
     }
@@ -122,12 +117,7 @@ public class MixinVisitorTest {
 
         Assert.assertEquals(1, root.getChildren().size());
         BlockNode child = (BlockNode) root.getChildren().get(0);
-        VariableNode varNode = (VariableNode) child.getChildren().get(0);
-        Assert.assertEquals("arg", varNode.getName());
-        Assert.assertEquals(LexicalUnit.SAC_PIXEL, varNode.getExpr()
-                .getLexicalUnitType());
-        Assert.assertEquals(1f, varNode.getExpr().getFloatValue(), 0);
-        BlockNode fromMixin = (BlockNode) child.getChildren().get(1);
+        BlockNode fromMixin = (BlockNode) child.getChildren().get(0);
         Assert.assertFalse(fromMixin.hasChildren());
 
     }
@@ -239,17 +229,14 @@ public class MixinVisitorTest {
 
         Assert.assertEquals(1, root.getChildren().size());
         BlockNode dataBlockNode = (BlockNode) root.getChildren().get(0);
-        VariableNode variable = (VariableNode) dataBlockNode.getChildren().get(
-                0);
-        Assert.assertEquals("dist", variable.getName());
         Assert.assertEquals("float", ((RuleNode) dataBlockNode.getChildren()
-                .get(1)).getVariable());
+                .get(0)).getVariable());
         Assert.assertEquals("left", ((RuleNode) dataBlockNode.getChildren()
-                .get(1)).getValue().getStringValue());
+                .get(0)).getValue().getStringValue());
         Assert.assertEquals("margin-left", ((RuleNode) dataBlockNode
-                .getChildren().get(2)).getVariable());
-        Assert.assertEquals(SCSSLexicalUnit.SCSS_VARIABLE,
-                ((RuleNode) dataBlockNode.getChildren().get(2)).getValue()
+                .getChildren().get(1)).getVariable());
+        Assert.assertEquals(SCSSLexicalUnit.SAC_PIXEL,
+                ((RuleNode) dataBlockNode.getChildren().get(1)).getValue()
                         .getLexicalUnitType());
     }
 

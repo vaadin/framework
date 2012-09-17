@@ -236,7 +236,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         String caption = child.getState().caption;
         URLReference iconUrl = child.getState().resources
                 .get(ComponentConstants.ICON_RESOURCE);
-        String iconUrlString = iconUrl != null ? iconUrl.toString() : null;
+        String iconUrlString = iconUrl != null ? iconUrl.getURL() : null;
         List<String> styles = child.getState().styles;
         String error = child.getState().errorMessage;
         boolean showError = error != null;
@@ -404,14 +404,34 @@ public abstract class AbstractOrderedLayoutConnector extends
      * Does the layout need a fixed height?
      */
     private boolean needsFixedHeight() {
-        if (!getWidget().vertical
-                && isUndefinedHeight()
-                && (hasRelativeHeight.size() > 0 || (hasVerticalAlignment
-                        .size() > 0 && hasVerticalAlignment.size() < getChildren()
-                        .size()))) {
-            return true;
+        boolean isVertical = getWidget().vertical;
+        boolean hasChildrenWithVerticalAlignmentCenterOrBottom = !hasVerticalAlignment
+                .isEmpty();
+        boolean allChildrenHasVerticalAlignmentCenterOrBottom = hasVerticalAlignment
+                .size() == getChildren().size();
+        boolean hasChildrenWithRelativeHeight = !hasRelativeHeight.isEmpty();
+        
+        if(isVertical){
+            return false;
         }
-        return false;
+        
+        else if(!isUndefinedHeight()){
+            return false;
+        }
+        
+        else if (!hasChildrenWithRelativeHeight) {
+            return false;
+        }
+
+        else if (!hasChildrenWithVerticalAlignmentCenterOrBottom) {
+            return false;
+        }
+
+        else if (allChildrenHasVerticalAlignmentCenterOrBottom) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -493,6 +513,7 @@ public abstract class AbstractOrderedLayoutConnector extends
     private void updateLayoutHeight() {
         if (needsFixedHeight()) {
             int h = getMaxHeight();
+            assert(h >= 0);
             h += getLayoutManager().getBorderHeight(getWidget().getElement())
                     + getLayoutManager().getPaddingHeight(
                             getWidget().getElement());
@@ -516,8 +537,13 @@ public abstract class AbstractOrderedLayoutConnector extends
             Element el = child.getWidget().getElement();
             CaptionPosition pos = getWidget().getCaptionPositionFromElement(
                     (Element) el.getParentElement().cast());
+            int h = getLayoutManager().getOuterHeight(el);
+            if (h == -1) {
+                // Height has not yet been measured so using a more
+                // conventional method instead.
+                h = Util.getRequiredHeight(el);
+            }
             if (needsMeasure.contains(el)) {
-                int h = getLayoutManager().getOuterHeight(el);
                 String sHeight = el.getStyle().getHeight();
                 // Only add the caption size to the height of the slot if
                 // coption position is top or bottom
@@ -530,7 +556,6 @@ public abstract class AbstractOrderedLayoutConnector extends
                     highestNonRelative = h;
                 }
             } else {
-                int h = getLayoutManager().getOuterHeight(el);
                 if (childCaptionElementHeight.containsKey(el)
                         && (pos == CaptionPosition.TOP || pos == CaptionPosition.BOTTOM)) {
                     h += childCaptionElementHeight.get(el);

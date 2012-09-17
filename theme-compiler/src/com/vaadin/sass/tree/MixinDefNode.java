@@ -19,7 +19,9 @@ package com.vaadin.sass.tree;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class MixinDefNode extends Node {
+import com.vaadin.sass.util.DeepCopy;
+
+public class MixinDefNode extends Node implements IVariableNode {
     private static final long serialVersionUID = 5469294053247343948L;
 
     private String name;
@@ -62,6 +64,20 @@ public class MixinDefNode extends Node {
 
     public void setArglist(ArrayList<VariableNode> arglist) {
         this.arglist = arglist;
+    }
+
+    @Override
+    public void replaceVariables(ArrayList<VariableNode> variables) {
+        for (final VariableNode var : variables) {
+            for (final VariableNode arg : new ArrayList<VariableNode>(arglist)) {
+
+                if (arg.getName().equals(var.getName())) {
+                    arglist.add(arglist.indexOf(arg),
+                            (VariableNode) DeepCopy.copy(var));
+                    arglist.remove(arg);
+                }
+            }
+        }
     }
 
 }

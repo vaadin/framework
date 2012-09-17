@@ -862,12 +862,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             WrappedPortletRequest request) throws PortletException {
         VaadinPortletSession newApplication = createApplication();
 
-        try {
-            ServletPortletHelper.checkUiProviders(newApplication);
-        } catch (ApplicationClassException e) {
-            throw new PortletException(e);
-        }
-
         newApplication.storeInSession(new WrappedPortletSession(request
                 .getPortletRequest().getPortletSession()));
 

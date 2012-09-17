@@ -20,10 +20,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.w3c.css.sac.LexicalUnit;
+
+import com.vaadin.sass.tree.IVariableNode;
 import com.vaadin.sass.tree.MixinDefNode;
 import com.vaadin.sass.tree.MixinNode;
 import com.vaadin.sass.tree.Node;
-import com.vaadin.sass.tree.VariableNode;
 import com.vaadin.sass.util.DeepCopy;
 
 public class MixinVisitor implements Visitor {
@@ -74,21 +76,29 @@ public class MixinVisitor implements Visitor {
                 pre = child;
             }
         } else {
-            for (int i = 0; i < mixinDef.getArglist().size(); i++) {
-                VariableNode arg = (VariableNode) DeepCopy.copy(mixinDef
-                        .getArglist().get(i));
-                if (i < mixinNode.getArglist().size()) {
-                    arg.setExpr(mixinNode.getArglist().get(i));
-                }
-                current.appendChild(arg, pre);
-                pre = arg;
+            int i = 0;
+            for (final LexicalUnit unit : mixinNode.getArglist()) {
+                mixinDef.getArglist().get(i)
+                        .setExpr((LexicalUnit) DeepCopy.copy(unit));
+                i++;
             }
-            for (Node child : mixinDef.getChildren()) {
-                Node clonedChild = (Node) DeepCopy.copy(child);
-                current.appendChild(clonedChild, pre);
-                pre = clonedChild;
+
+            for (int j = mixinDef.getChildren().size() - 1; j >= 0; j--) {
+                Node child = (Node) DeepCopy
+                        .copy(mixinDef.getChildren().get(j));
+                replaceChildVariables(mixinDef, child);
+                current.appendChild(child, mixinNode);
             }
         }
         current.removeChild(mixinNode);
+    }
+
+    private void replaceChildVariables(MixinDefNode mixinDef, Node node) {
+        for (final Node child : node.getChildren()) {
+            replaceChildVariables(mixinDef, child);
+        }
+        if (node instanceof IVariableNode) {
+            ((IVariableNode) node).replaceVariables(mixinDef.getArglist());
+        }
     }
 }

@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.vaadin.event.Transferable;
 import com.vaadin.event.TransferableImpl;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -32,8 +35,6 @@ import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.external.json.JSONException;
-import com.vaadin.external.json.JSONObject;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.ui.dd.DragEventType;

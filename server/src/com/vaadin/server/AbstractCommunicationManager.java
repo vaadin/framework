@@ -56,11 +56,12 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.StyleSheet;
-import com.vaadin.external.json.JSONArray;
-import com.vaadin.external.json.JSONException;
-import com.vaadin.external.json.JSONObject;
 import com.vaadin.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.server.RpcManager.RpcInvocationException;
 import com.vaadin.server.StreamVariable.StreamingEndEvent;

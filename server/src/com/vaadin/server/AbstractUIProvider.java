@@ -27,8 +27,8 @@ import com.vaadin.ui.UI;
 public abstract class AbstractUIProvider implements UIProvider {
 
     @Override
-    public UI createInstance(Class<? extends UI> type,
-            WrappedRequest request) {
+    public UI createInstance(WrappedRequest request,
+            Class<? extends UI> type) {
         try {
             return type.newInstance();
         } catch (InstantiationException e) {
@@ -75,7 +75,7 @@ public abstract class AbstractUIProvider implements UIProvider {
     }
 
     @Override
-    public String getThemeForUI(WrappedRequest request,
+    public String getTheme(WrappedRequest request,
             Class<? extends UI> uiClass) {
         Theme uiTheme = getAnnotationFor(uiClass, Theme.class);
         if (uiTheme != null) {
@@ -86,7 +86,7 @@ public abstract class AbstractUIProvider implements UIProvider {
     }
 
     @Override
-    public String getWidgetsetForUI(WrappedRequest request,
+    public String getWidgetset(WrappedRequest request,
             Class<? extends UI> uiClass) {
         Widgetset uiWidgetset = getAnnotationFor(uiClass, Widgetset.class);
         if (uiWidgetset != null) {
@@ -97,7 +97,7 @@ public abstract class AbstractUIProvider implements UIProvider {
     }
 
     @Override
-    public boolean isUiPreserved(WrappedRequest request,
+    public boolean isPreservedOnRefresh(WrappedRequest request,
             Class<? extends UI> uiClass) {
         PreserveOnRefresh preserveOnRefresh = getAnnotationFor(uiClass,
                 PreserveOnRefresh.class);
@@ -105,7 +105,7 @@ public abstract class AbstractUIProvider implements UIProvider {
     }
 
     @Override
-    public String getPageTitleForUI(WrappedRequest request,
+    public String getPageTitle(WrappedRequest request,
             Class<? extends UI> uiClass) {
         Title titleAnnotation = getAnnotationFor(uiClass, Title.class);
         if (titleAnnotation == null) {

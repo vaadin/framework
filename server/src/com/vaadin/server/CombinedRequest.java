@@ -24,9 +24,9 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-import com.vaadin.external.json.JSONArray;
-import com.vaadin.external.json.JSONException;
-import com.vaadin.external.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * A {@link WrappedRequest} with path and parameters from one request and

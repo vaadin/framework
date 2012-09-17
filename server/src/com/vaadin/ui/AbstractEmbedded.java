@@ -19,7 +19,7 @@ import com.vaadin.shared.ui.AbstractEmbeddedState;
 public abstract class AbstractEmbedded extends AbstractComponent {
 
     @Override
-    public AbstractEmbeddedState getState() {
+    protected AbstractEmbeddedState getState() {
         return (AbstractEmbeddedState) super.getState();
     }
 

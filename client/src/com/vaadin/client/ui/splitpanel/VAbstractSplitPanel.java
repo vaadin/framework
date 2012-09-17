@@ -48,6 +48,7 @@ import com.vaadin.client.ui.TouchScrollDelegate;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.splitpanel.VAbstractSplitPanel.SplitterMoveHandler.SplitterMoveEvent;
+import com.vaadin.shared.ui.Orientation;
 
 public class VAbstractSplitPanel extends ComplexPanel {
 
@@ -55,13 +56,9 @@ public class VAbstractSplitPanel extends ComplexPanel {
 
     public static final String CLASSNAME = "v-splitpanel";
 
-    public static final int ORIENTATION_HORIZONTAL = 0;
-
-    public static final int ORIENTATION_VERTICAL = 1;
-
     private static final int MIN_SIZE = 30;
 
-    private int orientation = ORIENTATION_HORIZONTAL;
+    private Orientation orientation = Orientation.HORIZONTAL;
 
     Widget firstChild;
 
@@ -113,17 +110,17 @@ public class VAbstractSplitPanel extends ComplexPanel {
     protected int origScrollTop;
 
     public VAbstractSplitPanel() {
-        this(ORIENTATION_HORIZONTAL);
+        this(Orientation.HORIZONTAL);
     }
 
-    public VAbstractSplitPanel(int orientation) {
+    public VAbstractSplitPanel(Orientation orientation) {
         setElement(DOM.createDiv());
         setStyleName(StyleConstants.UI_LAYOUT);
         switch (orientation) {
-        case ORIENTATION_HORIZONTAL:
+        case HORIZONTAL:
             addStyleName(CLASSNAME + "-horizontal");
             break;
-        case ORIENTATION_VERTICAL:
+        case VERTICAL:
         default:
             addStyleName(CLASSNAME + "-vertical");
             break;
@@ -190,9 +187,9 @@ public class VAbstractSplitPanel extends ComplexPanel {
         setStylenames();
     }
 
-    private void setOrientation(int orientation) {
+    private void setOrientation(Orientation orientation) {
         this.orientation = orientation;
-        if (orientation == ORIENTATION_HORIZONTAL) {
+        if (orientation == Orientation.HORIZONTAL) {
             DOM.setStyleAttribute(splitter, "height", "100%");
             DOM.setStyleAttribute(splitter, "top", "0");
             DOM.setStyleAttribute(firstContainer, "height", "100%");
@@ -228,10 +225,10 @@ public class VAbstractSplitPanel extends ComplexPanel {
 
     void setPositionReversed(boolean reversed) {
         if (positionReversed != reversed) {
-            if (orientation == ORIENTATION_HORIZONTAL) {
+            if (orientation == Orientation.HORIZONTAL) {
                 DOM.setStyleAttribute(splitter, "right", "");
                 DOM.setStyleAttribute(splitter, "left", "");
-            } else if (orientation == ORIENTATION_VERTICAL) {
+            } else if (orientation == Orientation.VERTICAL) {
                 DOM.setStyleAttribute(splitter, "top", "");
                 DOM.setStyleAttribute(splitter, "bottom", "");
             }
@@ -253,7 +250,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
             posAsFloat = Math.round(Float.parseFloat(pos.substring(0,
                     pos.length() - 1))
                     / 100
-                    * (orientation == ORIENTATION_HORIZONTAL ? getOffsetWidth()
+                    * (orientation == Orientation.HORIZONTAL ? getOffsetWidth()
                             : getOffsetHeight()));
         } else {
             posAsFloat = Float.parseFloat(pos.substring(0, pos.length() - 2));
@@ -272,7 +269,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
         if (pos.endsWith("px")) {
             float pixelPosition = Float.parseFloat(pos.substring(0,
                     pos.length() - 2));
-            int offsetLength = orientation == ORIENTATION_HORIZONTAL ? getOffsetWidth()
+            int offsetLength = orientation == Orientation.HORIZONTAL ? getOffsetWidth()
                     : getOffsetHeight();
 
             // Take splitter size into account at the edge
@@ -344,7 +341,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
 
         // Convert percentage values to pixels
         if (pos.indexOf("%") > 0) {
-            int size = orientation == ORIENTATION_HORIZONTAL ? getOffsetWidth()
+            int size = orientation == Orientation.HORIZONTAL ? getOffsetWidth()
                     : getOffsetHeight();
             float percentage = Float.parseFloat(pos.substring(0,
                     pos.length() - 1));
@@ -352,7 +349,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
         }
 
         String attributeName;
-        if (orientation == ORIENTATION_HORIZONTAL) {
+        if (orientation == Orientation.HORIZONTAL) {
             if (positionReversed) {
                 attributeName = "right";
             } else {
@@ -382,7 +379,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
         int pixelPosition;
 
         switch (orientation) {
-        case ORIENTATION_HORIZONTAL:
+        case HORIZONTAL:
             wholeSize = DOM.getElementPropertyInt(wrapper, "clientWidth");
             pixelPosition = DOM.getElementPropertyInt(splitter, "offsetLeft");
 
@@ -430,7 +427,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
                 }
             }
             break;
-        case ORIENTATION_VERTICAL:
+        case VERTICAL:
             wholeSize = DOM.getElementPropertyInt(wrapper, "clientHeight");
             pixelPosition = DOM.getElementPropertyInt(splitter, "offsetTop");
 
@@ -562,11 +559,11 @@ public class VAbstractSplitPanel extends ComplexPanel {
 
     public void onMouseMove(Event event) {
         switch (orientation) {
-        case ORIENTATION_HORIZONTAL:
+        case HORIZONTAL:
             final int x = Util.getTouchOrMouseClientX(event);
             onHorizontalMouseMove(x);
             break;
-        case ORIENTATION_VERTICAL:
+        case VERTICAL:
         default:
             final int y = Util.getTouchOrMouseClientY(event);
             onVerticalMouseMove(y);
@@ -729,7 +726,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
         if (splitterSize < 0) {
             if (isAttached()) {
                 switch (orientation) {
-                case ORIENTATION_HORIZONTAL:
+                case HORIZONTAL:
                     splitterSize = DOM.getElementPropertyInt(splitter,
                             "offsetWidth");
                     break;
@@ -746,7 +743,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
 
     void setStylenames() {
         final String splitterClass = CLASSNAME
-                + (orientation == ORIENTATION_HORIZONTAL ? "-hsplitter"
+                + (orientation == Orientation.HORIZONTAL ? "-hsplitter"
                         : "-vsplitter");
         final String firstContainerClass = CLASSNAME + "-first-container";
         final String secondContainerClass = CLASSNAME + "-second-container";

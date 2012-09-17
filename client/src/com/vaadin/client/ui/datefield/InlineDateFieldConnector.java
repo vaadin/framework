@@ -23,6 +23,7 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.datefield.VCalendarPanel.FocusChangeListener;
 import com.vaadin.client.ui.datefield.VCalendarPanel.TimeChangeListener;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.InlineDateField;
 
 @Connect(InlineDateField.class)
@@ -49,7 +50,8 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
             getWidget().calendarPanel.setDate(null);
         }
 
-        if (getWidget().currentResolution > VDateField.RESOLUTION_DAY) {
+        if (getWidget().currentResolution.getCalendarField() > Resolution.DAY
+                .getCalendarField()) {
             getWidget().calendarPanel
                     .setTimeChangeListener(new TimeChangeListener() {
                         @Override
@@ -74,7 +76,8 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
                     });
         }
 
-        if (getWidget().currentResolution <= VDateField.RESOLUTION_MONTH) {
+        if (getWidget().currentResolution.getCalendarField() <= Resolution.MONTH
+                .getCalendarField()) {
             getWidget().calendarPanel
                     .setFocusChangeListener(new FocusChangeListener() {
                         @Override

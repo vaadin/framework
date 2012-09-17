@@ -1,6 +1,5 @@
 package com.vaadin.tests.components.label;
 
-import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.GridLayout;
@@ -17,7 +16,6 @@ public class LabelTooltip extends TestBase {
     private static Layout createLayout() {
         GridLayout layout = new GridLayout(2, 1);
         layout.setCaption("Tooltips");
-        layout.setIcon(new ThemeResource("icons/blue/16/home.png"));
         layout.setMargin(true);
         layout.setSpacing(true);
         layout.setWidth("400px");

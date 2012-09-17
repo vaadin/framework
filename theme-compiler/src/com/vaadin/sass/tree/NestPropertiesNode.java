@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class NestPropertiesNode extends Node {
+public class NestPropertiesNode extends Node implements IVariableNode {
     private static final long serialVersionUID = 3671253315690598308L;
 
     public NestPropertiesNode(String name) {
@@ -52,5 +52,15 @@ public class NestPropertiesNode extends Node {
         RuleNode newRuleNode = new RuleNode(builder.toString(),
                 child.getValue(), child.isImportant(), null);
         return newRuleNode;
+    }
+
+    @Override
+    public void replaceVariables(ArrayList<VariableNode> variables) {
+        for (final VariableNode node : variables) {
+            if (name.contains(node.getName())) {
+                name = name.replaceAll(node.getName(), node.getExpr()
+                        .toString());
+            }
+        }
     }
 }

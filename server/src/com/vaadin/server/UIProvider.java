@@ -22,10 +22,10 @@ import com.vaadin.ui.UI;
 public interface UIProvider {
     public Class<? extends UI> getUIClass(WrappedRequest request);
 
-    public UI createInstance(Class<? extends UI> type,
-            WrappedRequest request);
+    public UI createInstance(WrappedRequest request,
+            Class<? extends UI> type);
 
-    public String getPageTitleForUI(WrappedRequest request,
+    public String getPageTitle(WrappedRequest request,
             Class<? extends UI> uiClass);
 
     /**
@@ -40,7 +40,7 @@ public interface UIProvider {
      * @return <code>true</code>if the same UI instance should be reused e.g.
      *         when the browser window is refreshed.
      */
-    public boolean isUiPreserved(WrappedRequest request,
+    public boolean isPreservedOnRefresh(WrappedRequest request,
             Class<? extends UI> uiClass);
 
     /**
@@ -58,7 +58,7 @@ public interface UIProvider {
      *         widgetset should be used
      * 
      */
-    public String getWidgetsetForUI(WrappedRequest request,
+    public String getWidgetset(WrappedRequest request,
             Class<? extends UI> uiClass);
 
     /**
@@ -73,7 +73,7 @@ public interface UIProvider {
      *         should be used
      * 
      */
-    public String getThemeForUI(WrappedRequest request,
+    public String getTheme(WrappedRequest request,
             Class<? extends UI> uiClass);
 
     /**
@@ -85,7 +85,7 @@ public interface UIProvider {
      * <p>
      * If no UI provider returns an existing UI, the framework does also check
      * the window.name for an existing instance with
-     * {@link #isUiPreserved(WrappedRequest, Class)} before falling back to
+     * {@link #isPreservedOnRefresh(WrappedRequest, Class)} before falling back to
      * bootstrapping and creating a new UI instance.
      * 
      * @param request

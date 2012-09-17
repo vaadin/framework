@@ -10,14 +10,14 @@
     <configurations>
         <conf name="build" />
         <conf name="build-provided" />
-        <conf name="ide" visibility="private"/>
+        <conf name="ide" visibility="private" />
         <conf name="tests" />
     </configurations>
     <publications>
-        <artifact type="jar" ext="jar"/>
-<artifact type="source" ext="jar" m:classifier="sources" />
-<artifact type="javadoc" ext="jar" m:classifier="javadoc" />
-        <artifact type="pom" ext="pom"/>
+        <artifact type="jar" ext="jar" />
+        <artifact type="source" ext="jar" m:classifier="sources" />
+        <artifact type="javadoc" ext="jar" m:classifier="javadoc" />
+        <artifact type="pom" ext="pom" />
     </publications>
     <dependencies defaultconf="build" defaultconfmapping="build,ide->default">
         <!-- API DEPENDENCIES -->
@@ -34,6 +34,11 @@
 
         <dependency org="junit" name="junit" rev="4.5"
             conf="tests->default" />
+
+        <dependency org="javax.validation" name="validation-api"
+            rev="1.0.0.GA" conf="build->default,sources" />
+
+
     </dependencies>
 
 </ivy-module>

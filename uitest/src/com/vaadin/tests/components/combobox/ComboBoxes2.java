@@ -3,6 +3,7 @@ package com.vaadin.tests.components.combobox;
 import java.util.LinkedHashMap;
 
 import com.vaadin.server.Resource;
+import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.tests.components.select.AbstractSelectTestCase;
 import com.vaadin.ui.ComboBox;
 
@@ -14,10 +15,10 @@ public class ComboBoxes2<T extends ComboBox> extends AbstractSelectTestCase<T> {
             c.setInputPrompt(value);
         }
     };
-    private Command<T, Integer> filteringModeCommand = new Command<T, Integer>() {
+    private Command<T, FilteringMode> filteringModeCommand = new Command<T, FilteringMode>() {
 
         @Override
-        public void execute(T c, Integer value, Object data) {
+        public void execute(T c, FilteringMode value, Object data) {
             c.setFilteringMode(value);
         }
     };
@@ -58,10 +59,10 @@ public class ComboBoxes2<T extends ComboBox> extends AbstractSelectTestCase<T> {
     }
 
     private void createFilteringModeAction(String category) {
-        LinkedHashMap<String, Integer> options = new LinkedHashMap<String, Integer>();
-        options.put("Off", ComboBox.FILTERINGMODE_OFF);
-        options.put("Contains", ComboBox.FILTERINGMODE_CONTAINS);
-        options.put("Starts with", ComboBox.FILTERINGMODE_STARTSWITH);
+        LinkedHashMap<String, FilteringMode> options = new LinkedHashMap<String, FilteringMode>();
+        options.put("Off", FilteringMode.OFF);
+        options.put("Contains", FilteringMode.CONTAINS);
+        options.put("Starts with", FilteringMode.STARTSWITH);
 
         createSelectAction("Filtering mode", category, options, "Contains",
                 filteringModeCommand);

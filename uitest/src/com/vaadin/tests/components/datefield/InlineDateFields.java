@@ -5,10 +5,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.ComponentTestCase;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.DateField.Resolution;
 import com.vaadin.ui.InlineDateField;
 
 @SuppressWarnings("serial")
@@ -52,7 +51,7 @@ public class InlineDateFields extends ComponentTestCase<InlineDateField> {
         pd.setWidth(width);
         pd.setValue(new Date(12312312313L));
         pd.setLocale(locale);
-        pd.setResolution(DateField.Resolution.YEAR);
+        pd.setResolution(Resolution.YEAR);
 
         return pd;
     }
@@ -72,12 +71,12 @@ public class InlineDateFields extends ComponentTestCase<InlineDateField> {
 
     private Component createResolutionSelectAction() {
         LinkedHashMap<String, Resolution> options = new LinkedHashMap<String, Resolution>();
-        options.put("Year", DateField.Resolution.YEAR);
-        options.put("Month", DateField.Resolution.MONTH);
-        options.put("Day", DateField.Resolution.DAY);
-        options.put("Hour", DateField.Resolution.HOUR);
-        options.put("Min", DateField.Resolution.MINUTE);
-        options.put("Sec", DateField.Resolution.SECOND);
+        options.put("Year", Resolution.YEAR);
+        options.put("Month", Resolution.MONTH);
+        options.put("Day", Resolution.DAY);
+        options.put("Hour", Resolution.HOUR);
+        options.put("Min", Resolution.MINUTE);
+        options.put("Sec", Resolution.SECOND);
         return createSelectAction("Resolution", options, "Year",
                 new Command<InlineDateField, Resolution>() {
 

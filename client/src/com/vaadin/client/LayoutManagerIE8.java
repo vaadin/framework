@@ -23,6 +23,18 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.RootPanel;
 
+/**
+ * Alternative MeasuredSize storage for IE8. Storing any information in a DOM
+ * element in IE8 seems to make the browser think the element has changed in a
+ * way that requires a reflow. To work around that, the MeasureData is instead
+ * stored in Map for IE8.
+ * 
+ * This implementation is injected for IE8 by a replace-with definition in the
+ * GWT module.
+ * 
+ * @author Vaadin Ltd
+ * @since 7.0.0
+ */
 public class LayoutManagerIE8 extends LayoutManager {
 
     private Map<Element, MeasuredSize> measuredSizes = new HashMap<Element, MeasuredSize>();

@@ -18,12 +18,13 @@ package com.vaadin.client.ui.datefield;
 
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.UIDL;
+import com.vaadin.shared.ui.datefield.Resolution;
 
 public class TextualDateConnector extends AbstractDateFieldConnector {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        int origRes = getWidget().currentResolution;
+        Resolution origRes = getWidget().currentResolution;
         String oldLocale = getWidget().currentLocale;
         super.updateFromUIDL(uidl, client);
         if (origRes != getWidget().currentResolution

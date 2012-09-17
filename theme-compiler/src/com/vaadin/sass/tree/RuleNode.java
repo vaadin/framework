@@ -16,9 +16,13 @@
 
 package com.vaadin.sass.tree;
 
+import java.util.ArrayList;
+
 import org.w3c.css.sac.LexicalUnit;
 
-public class RuleNode extends Node {
+import com.vaadin.sass.parser.LexicalUnitImpl;
+
+public class RuleNode extends Node implements IVariableNode {
     private static final long serialVersionUID = 6653493127869037022L;
 
     String variable;
@@ -77,4 +81,32 @@ public class RuleNode extends Node {
         this.comment = comment;
     }
 
+    @Override
+    public void replaceVariables(ArrayList<VariableNode> variables) {
+        for (final VariableNode node : variables) {
+            LexicalUnit current = value;
+            if (current.getLexicalUnitType() == LexicalUnitImpl.SAC_FUNCTION) {
+                if (current.getParameters().toString().contains(node.getName())) {
+                    LexicalUnit param = value.getParameters();
+                    if (param != null) {
+                        if (param.toString().contains(node.getName())) {
+                            ((LexicalUnitImpl) param).replaceValue(node
+                                    .getExpr());
+                        }
+                    }
+                }
+            } else {
+                while (current != null) {
+                    if (current.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE
+                            && current.toString()
+                                    .contains("$" + node.getName())) {
+
+                        ((LexicalUnitImpl) current)
+                                .replaceValue(node.getExpr());
+                    }
+                    current = current.getNextLexicalUnit();
+                }
+            }
+        }
+    }
 }

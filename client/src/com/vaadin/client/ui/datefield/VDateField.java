@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.DateTimeService;
 import com.vaadin.client.ui.Field;
+import com.vaadin.shared.ui.datefield.Resolution;
 
 public class VDateField extends FlowPanel implements Field {
 
@@ -33,27 +34,33 @@ public class VDateField extends FlowPanel implements Field {
 
     protected boolean immediate;
 
-    public static final int RESOLUTION_YEAR = 1;
-    public static final int RESOLUTION_MONTH = 2;
-    public static final int RESOLUTION_DAY = 4;
-    public static final int RESOLUTION_HOUR = 8;
-    public static final int RESOLUTION_MIN = 16;
-    public static final int RESOLUTION_SEC = 32;
+    @Deprecated
+    public static final Resolution RESOLUTION_YEAR = Resolution.YEAR;
+    @Deprecated
+    public static final Resolution RESOLUTION_MONTH = Resolution.MONTH;
+    @Deprecated
+    public static final Resolution RESOLUTION_DAY = Resolution.DAY;
+    @Deprecated
+    public static final Resolution RESOLUTION_HOUR = Resolution.HOUR;
+    @Deprecated
+    public static final Resolution RESOLUTION_MIN = Resolution.MINUTE;
+    @Deprecated
+    public static final Resolution RESOLUTION_SEC = Resolution.SECOND;
 
-    static String resolutionToString(int res) {
-        if (res > RESOLUTION_DAY) {
+    static String resolutionToString(Resolution res) {
+        if (res.getCalendarField() > Resolution.DAY.getCalendarField()) {
             return "full";
         }
-        if (res == RESOLUTION_DAY) {
+        if (res == Resolution.DAY) {
             return "day";
         }
-        if (res == RESOLUTION_MONTH) {
+        if (res == Resolution.MONTH) {
             return "month";
         }
         return "year";
     }
 
-    protected int currentResolution = RESOLUTION_YEAR;
+    protected Resolution currentResolution = Resolution.YEAR;
 
     protected String currentLocale;
 
@@ -108,11 +115,11 @@ public class VDateField extends FlowPanel implements Field {
         DateTimeService.setMilliseconds(date, ms);
     }
 
-    public int getCurrentResolution() {
+    public Resolution getCurrentResolution() {
         return currentResolution;
     }
 
-    public void setCurrentResolution(int currentResolution) {
+    public void setCurrentResolution(Resolution currentResolution) {
         this.currentResolution = currentResolution;
     }
 

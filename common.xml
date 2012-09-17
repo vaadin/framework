@@ -8,7 +8,7 @@
 	<dirname property="vaadin.basedir" file="${ant.file.common}" />
 	<property file="${vaadin.basedir}/build.properties" />
 
-	<property name="modules.to.publish.to.maven" value="shared,server,client,client-compiler,client-compiled,theme-compiler,themes-compiled" />
+	<property name="modules.to.publish.to.maven" value="shared,server,client,client-compiler,client-compiled,theme-compiler,themes" />
 	<property name="modules.to.publish.to.download" value="${modules.to.publish.to.maven},all" />
 
 	<ivy:settings file="${vaadin.basedir}/ivysettings.xml" />

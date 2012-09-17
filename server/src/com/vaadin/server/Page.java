@@ -211,21 +211,21 @@ public class Page implements Serializable {
                     "browserWindowResized", BrowserWindowResizeEvent.class);
 
     /**
-     * A border style used for opening resources in a window without a border.
+     * @deprecated from 7.0, use {@link BorderStyle#NONE} instead.
      */
     @Deprecated
     public static final BorderStyle BORDER_NONE = BorderStyle.NONE;
 
     /**
-     * A border style used for opening resources in a window with a minimal
-     * border.
+     * @deprecated from 7.0, use {@link BorderStyle#MINIMAL} instead.
      */
+    @Deprecated
     public static final BorderStyle BORDER_MINIMAL = BorderStyle.MINIMAL;
 
     /**
-     * A border style that indicates that the default border style should be
-     * used when opening resources.
+     * @deprecated from 7.0, use {@link BorderStyle#DEFAULT} instead.
      */
+    @Deprecated
     public static final BorderStyle BORDER_DEFAULT = BorderStyle.DEFAULT;
 
     /**

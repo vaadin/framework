@@ -26,11 +26,15 @@ import com.vaadin.ui.AbstractComponent;
 public class DefaultErrorListener implements Terminal.ErrorListener {
     @Override
     public void terminalError(ErrorEvent event) {
+        doDefault(event);
+    }
+
+    public static void doDefault(ErrorEvent event) {
         final Throwable t = event.getThrowable();
         if (t instanceof SocketException) {
             // Most likely client browser closed socket
-            getLogger()
-                    .info("SocketException in CommunicationManager."
+            getLogger().info(
+                    "SocketException in CommunicationManager."
                             + " Most likely client (browser) closed socket.");
             return;
         }
@@ -45,16 +49,15 @@ public class DefaultErrorListener implements Terminal.ErrorListener {
 
         // Shows the error in AbstractComponent
         if (owner instanceof AbstractComponent) {
-            ((AbstractComponent) owner)
-                    .setComponentError(AbstractErrorMessage
-                            .getErrorMessageForException(t));
+            ((AbstractComponent) owner).setComponentError(AbstractErrorMessage
+                    .getErrorMessageForException(t));
         }
 
         // also print the error on console
         getLogger().log(Level.SEVERE, "Terminal error:", t);
     }
 
-    private Logger getLogger() {
+    private static Logger getLogger() {
         return Logger.getLogger(DefaultErrorListener.class.getName());
     }
 }

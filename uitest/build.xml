@@ -94,6 +94,7 @@
 		<property name="classes" location="${result.dir}/classes" />
 		<property name="WebContent.dir" location="${vaadin.basedir}/WebContent" />
 		<property name="deps.dir" location="${result.dir}/deps" />
+		<property name="src" location="${result.dir}/../src" />
 
 		<ivy:resolve resolveid="common" conf="build" />
 		<ivy:cachepath pathid="classpath.runtime.dependencies" conf="build" />
@@ -107,13 +108,17 @@
 
 		<war destfile="${result.war}" duplicate="fail" index="true">
 			<fileset refid="common.files.for.all.jars" />
+			<fileset dir="${result.dir}">
+				<include name="VAADIN/widgetsets/**/*"/>
+			</fileset>
 			<fileset dir="${WebContent.dir}">
 				<include name="statictestfiles/**" />
 				<include name="VAADIN/themes/tests-*/**" />
-				<include name="VAADIN/themes/reindeer-test/**" />
+				<include name="VAADIN/themes/reindeer-tests/**" />
 				<include name="WEB-INF/*.xml" />
 			</fileset>
 			<classes dir="${classes}" />
+			<classes dir="${src}" />
 			<lib dir="${deps.dir}" />
 		</war>
 

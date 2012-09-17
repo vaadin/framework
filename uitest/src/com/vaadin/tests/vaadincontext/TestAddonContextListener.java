@@ -58,7 +58,7 @@ public class TestAddonContextListener implements AddonContextListener {
     }
 
     @Override
-    public void contextDestoryed(AddonContextEvent event) {
+    public void contextDestroyed(AddonContextEvent event) {
         // Nothing to do
     }
 

@@ -18,8 +18,6 @@ package com.vaadin.sass.handler;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Stack;
 
 import org.w3c.css.sac.CSSException;
@@ -33,7 +31,6 @@ import com.vaadin.sass.tree.BlockNode;
 import com.vaadin.sass.tree.CommentNode;
 import com.vaadin.sass.tree.ExtendNode;
 import com.vaadin.sass.tree.ForNode;
-import com.vaadin.sass.tree.IfNode;
 import com.vaadin.sass.tree.ImportNode;
 import com.vaadin.sass.tree.MediaNode;
 import com.vaadin.sass.tree.MixinDefNode;
@@ -44,44 +41,22 @@ import com.vaadin.sass.tree.RuleNode;
 import com.vaadin.sass.tree.VariableNode;
 import com.vaadin.sass.tree.WhileNode;
 import com.vaadin.sass.tree.controldirective.EachDefNode;
+import com.vaadin.sass.tree.controldirective.ElseNode;
+import com.vaadin.sass.tree.controldirective.IfElseDefNode;
+import com.vaadin.sass.tree.controldirective.IfNode;
 
 public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
 
     private final ScssStylesheet styleSheet;
     Stack<Node> nodeStack = new Stack<Node>();
-    private Map<String, Stack<LexicalUnit>> variableMap;
 
     public SCSSDocumentHandlerImpl() {
         this(new ScssStylesheet());
-        variableMap = new HashMap<String, Stack<LexicalUnit>>();
     }
 
     public SCSSDocumentHandlerImpl(ScssStylesheet styleSheet) {
         this.styleSheet = styleSheet;
         nodeStack.push(styleSheet);
-    }
-
-    public void addVariable(String varName, LexicalUnit value) {
-        if (variableMap.get(varName) == null) {
-            variableMap.put(varName, new Stack<LexicalUnit>());
-        }
-        Stack<LexicalUnit> valueStack = variableMap.get(varName);
-        valueStack.push(value);
-    }
-
-    public void removeVaraible(String varName) {
-        Stack<LexicalUnit> valueStack = variableMap.get(varName);
-        if (valueStack != null && !valueStack.isEmpty()) {
-            valueStack.pop();
-        }
-    }
-
-    public LexicalUnit getVariable(String varName) {
-        Stack<LexicalUnit> valueStack = variableMap.get(varName);
-        if (valueStack != null && !valueStack.isEmpty()) {
-            return valueStack.peek();
-        }
-        return null;
     }
 
     @Override
@@ -138,11 +113,6 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
         WhileNode node = new WhileNode(condition, body);
         System.out.println(node);
         return node;
-    }
-
-    @Override
-    public IfNode ifDirective() {
-        return new IfNode();
     }
 
     @Override
@@ -272,5 +242,41 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
     public void importStyle(String uri, SACMediaList media, boolean isURL) {
         ImportNode node = new ImportNode(uri, media, isURL);
         nodeStack.peek().appendChild(node);
+    }
+
+    @Override
+    public void startIfElseDirective() {
+        final IfElseDefNode node = new IfElseDefNode();
+        nodeStack.peek().appendChild(node);
+        nodeStack.push(node);
+    }
+
+    @Override
+    public void ifDirective(String evaluator) {
+        if (nodeStack.peek() instanceof IfNode) {
+            nodeStack.pop();
+        }
+        IfNode node = new IfNode(evaluator);
+        nodeStack.peek().appendChild(node);
+        nodeStack.push(node);
+    }
+
+    @Override
+    public void elseDirective() {
+        if (nodeStack.peek() instanceof IfNode) {
+            nodeStack.pop();
+        }
+        ElseNode node = new ElseNode();
+        nodeStack.peek().appendChild(node);
+        nodeStack.push(node);
+    }
+
+    @Override
+    public void endIfElseDirective() {
+        if ((nodeStack.peek() instanceof ElseNode)
+                || (nodeStack.peek() instanceof IfNode)) {
+            nodeStack.pop();
+        }
+        nodeStack.pop();
     }
 }

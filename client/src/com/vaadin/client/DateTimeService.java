@@ -20,7 +20,7 @@ import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.LocaleInfo;
-import com.vaadin.client.ui.datefield.VDateField;
+import com.vaadin.shared.ui.datefield.Resolution;
 
 /**
  * This class provides date/time parsing services to all components on the
@@ -201,7 +201,7 @@ public class DateTimeService {
     }
 
     public static boolean isInRange(Date date, Date rangeStart, Date rangeEnd,
-            int resolution) {
+            Resolution resolution) {
         Date s;
         Date e;
         if (rangeStart.after(rangeEnd)) {
@@ -215,31 +215,31 @@ public class DateTimeService {
         long end = e.getYear() * 10000000000l;
         long target = date.getYear() * 10000000000l;
 
-        if (resolution == VDateField.RESOLUTION_YEAR) {
+        if (resolution == Resolution.YEAR) {
             return (start <= target && end >= target);
         }
         start += s.getMonth() * 100000000l;
         end += e.getMonth() * 100000000l;
         target += date.getMonth() * 100000000l;
-        if (resolution == VDateField.RESOLUTION_MONTH) {
+        if (resolution == Resolution.MONTH) {
             return (start <= target && end >= target);
         }
         start += s.getDate() * 1000000l;
         end += e.getDate() * 1000000l;
         target += date.getDate() * 1000000l;
-        if (resolution == VDateField.RESOLUTION_DAY) {
+        if (resolution == Resolution.DAY) {
             return (start <= target && end >= target);
         }
         start += s.getHours() * 10000l;
         end += e.getHours() * 10000l;
         target += date.getHours() * 10000l;
-        if (resolution == VDateField.RESOLUTION_HOUR) {
+        if (resolution == Resolution.HOUR) {
             return (start <= target && end >= target);
         }
         start += s.getMinutes() * 100l;
         end += e.getMinutes() * 100l;
         target += date.getMinutes() * 100l;
-        if (resolution == VDateField.RESOLUTION_MIN) {
+        if (resolution == Resolution.MINUTE) {
             return (start <= target && end >= target);
         }
         start += s.getSeconds();

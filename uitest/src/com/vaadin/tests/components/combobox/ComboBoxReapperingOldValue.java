@@ -5,7 +5,7 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.ui.AbstractSelect;
+import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI.LegacyWindow;
@@ -31,7 +31,7 @@ public class ComboBoxReapperingOldValue extends LegacyApplication implements
         layout.addComponent(lbl);
 
         cbox1.setCaption("Com Box 1");
-        cbox1.setFilteringMode(AbstractSelect.Filtering.FILTERINGMODE_CONTAINS);
+        cbox1.setFilteringMode(FilteringMode.CONTAINS);
         cbox1.setContainerDataSource(getContainer());
         cbox1.setImmediate(true);
         cbox1.setNullSelectionAllowed(false);

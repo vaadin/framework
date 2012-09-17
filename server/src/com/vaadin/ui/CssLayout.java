@@ -228,6 +228,11 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
     @Override
     public void beforeClientResponse(boolean initial) {
         super.beforeClientResponse(initial);
+
+        // This is an obsolete hack that was required before Map<Conenctor, ?>
+        // was supported. The workaround is to instead use a Map<String, ?> with
+        // the connector id as the key, but that can only be used once the
+        // connector has been attached.
         getState().childCss.clear();
         for (Iterator<Component> ci = getComponentIterator(); ci.hasNext();) {
             Component child = ci.next();

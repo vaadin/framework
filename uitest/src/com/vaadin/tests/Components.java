@@ -17,6 +17,7 @@ import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Sizeable;
+import com.vaadin.shared.MouseEventDetails.MouseButton;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.AbstractComponent;
@@ -189,10 +190,10 @@ public class Components extends LegacyApplication {
                 if (!isAbstract(cls)) {
                     String url = baseUrl + cls.getName()
                             + "?restartApplication";
-                    if (event.getButton() == ItemClickEvent.BUTTON_LEFT) {
+                    if (event.getButton() == MouseButton.LEFT) {
                         openEmbedded(url);
                         naviTree.setValue(event.getItemId());
-                    } else if (event.getButton() == ItemClickEvent.BUTTON_RIGHT) {
+                    } else if (event.getButton() == MouseButton.RIGHT) {
                         openInNewTab(url);
                     }
                 }

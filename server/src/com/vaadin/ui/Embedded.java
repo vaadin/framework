@@ -34,9 +34,14 @@ import com.vaadin.shared.ui.embedded.EmbeddedServerRpc;
 /**
  * Component for embedding external objects.
  * <p>
- * As of Vaadin 7.0, the {@link Image}, {@link Flash}, and
- * {@link EmbeddedBrowser} components should be used instead of
- * <code>Embedded</code> whenever appropriate.
+ * As of Vaadin 7.0, the {@link Image}, {@link Flash}, and {@link BrowserFrame}
+ * components should be used instead of <code>Embedded</code> for displaying
+ * images, Adobe Flash objects, and embedded web pages, respectively.
+ * <code>Embedded</code> is still useful for displaying other multimedia content
+ * such as applets and PDF documents.
+ * 
+ * @see Video
+ * @see Audio
  * 
  * @author Vaadin Ltd.
  * @since 3.0
@@ -60,7 +65,7 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
     /**
      * Browser ("iframe") type.
      * 
-     * @deprecated As of 7.0, use the {@link EmbeddedBrowser} component instead.
+     * @deprecated As of 7.0, use the {@link BrowserFrame} component instead.
      */
     @Deprecated
     public static final int TYPE_BROWSER = 2;

@@ -45,6 +45,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.vaadin.DefaultDeploymentConfiguration;
+import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
 import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
 import com.vaadin.server.VaadinSession.SessionStartEvent;
@@ -824,11 +825,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
         try {
             SystemMessages ci = getVaadinService().getSystemMessages();
-            if (getRequestType(request) != RequestType.UIDL) {
-                // 'plain' http req - e.g. browser reload;
-                // just go ahead redirect the browser
-                response.sendRedirect(ci.getSessionExpiredURL());
-            } else {
+            RequestType requestType = getRequestType(request);
+            if (requestType == RequestType.UIDL) {
                 /*
                  * Invalidate session (weird to have session if we're saying
                  * that it's expired, and worse: portal integration will fail
@@ -845,6 +843,13 @@ public class VaadinServlet extends HttpServlet implements Constants {
                         ci.getSessionExpiredMessage(), null,
                         ci.getSessionExpiredURL());
 
+            } else if (requestType == RequestType.HEARTBEAT) {
+                response.sendError(HttpServletResponse.SC_GONE,
+                        "Session expired");
+            } else {
+                // 'plain' http req - e.g. browser reload;
+                // just go ahead redirect the browser
+                response.sendRedirect(ci.getSessionExpiredURL());
             }
         } catch (SystemMessageException ee) {
             throw new ServletException(ee);
@@ -866,11 +871,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
         try {
             SystemMessages ci = getVaadinService().getSystemMessages();
-            if (getRequestType(request) != RequestType.UIDL) {
-                // 'plain' http req - e.g. browser reload;
-                // just go ahead redirect the browser
-                response.sendRedirect(ci.getCommunicationErrorURL());
-            } else {
+            RequestType requestType = getRequestType(request);
+            if (requestType == RequestType.UIDL) {
                 // send uidl redirect
                 criticalNotification(request, response,
                         ci.getCommunicationErrorCaption(),
@@ -881,6 +883,14 @@ public class VaadinServlet extends HttpServlet implements Constants {
                  * since the session is not created by the portal.
                  */
                 request.getSession().invalidate();
+
+            } else if (requestType == RequestType.HEARTBEAT) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN,
+                        "Forbidden");
+            } else {
+                // 'plain' http req - e.g. browser reload;
+                // just go ahead redirect the browser
+                response.sendRedirect(ci.getCommunicationErrorURL());
             }
         } catch (SystemMessageException ee) {
             throw new ServletException(ee);
@@ -941,16 +951,14 @@ public class VaadinServlet extends HttpServlet implements Constants {
             throws IOException, ServletException {
 
         final ServletContext sc = getServletContext();
-        URL resourceUrl = sc.getResource(filename);
+        URL resourceUrl = findResourceURL(filename, sc);
+
         if (resourceUrl == null) {
-            // try if requested file is found from classloader
-
-            // strip leading "/" otherwise stream from JAR wont work
-            filename = filename.substring(1);
-            resourceUrl = getVaadinService().getClassLoader().getResource(
-                    filename);
-
-            if (resourceUrl == null) {
+            // File not found, if this was a css request we still look for a
+            // scss file with the same name
+            if (serveOnTheFlyCompiledScss(filename, request, response, sc)) {
+                return;
+            } else {
                 // cannot serve requested file
                 getLogger()
                         .info("Requested resource ["
@@ -958,19 +966,19 @@ public class VaadinServlet extends HttpServlet implements Constants {
                                 + "] not found from filesystem or through class loader."
                                 + " Add widgetset and/or theme JAR to your classpath or add files to WebContent/VAADIN folder.");
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                return;
             }
+            return;
+        }
 
-            // security check: do not permit navigation out of the VAADIN
-            // directory
-            if (!isAllowedVAADINResourceUrl(request, resourceUrl)) {
-                getLogger()
-                        .info("Requested resource ["
-                                + filename
-                                + "] not accessible in the VAADIN directory or access to it is forbidden.");
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                return;
-            }
+        // security check: do not permit navigation out of the VAADIN
+        // directory
+        if (!isAllowedVAADINResourceUrl(request, resourceUrl)) {
+            getLogger()
+                    .info("Requested resource ["
+                            + filename
+                            + "] not accessible in the VAADIN directory or access to it is forbidden.");
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return;
         }
 
         // Find the modification timestamp
@@ -1044,6 +1052,82 @@ public class VaadinServlet extends HttpServlet implements Constants {
             os.write(buffer, 0, bytes);
         }
         is.close();
+    }
+
+    private URL findResourceURL(String filename, ServletContext sc)
+            throws MalformedURLException {
+        URL resourceUrl = sc.getResource(filename);
+        if (resourceUrl == null) {
+            // try if requested file is found from classloader
+
+            // strip leading "/" otherwise stream from JAR wont work
+            if (filename.startsWith("/")) {
+                filename = filename.substring(1);
+            }
+
+            resourceUrl = getVaadinService().getClassLoader().getResource(
+                    filename);
+        }
+        return resourceUrl;
+    }
+
+    private boolean serveOnTheFlyCompiledScss(String filename,
+            HttpServletRequest request, HttpServletResponse response,
+            ServletContext sc) throws IOException {
+        if (getVaadinService().getDeploymentConfiguration().isProductionMode()) {
+            // This is not meant for production mode.
+            return false;
+        }
+
+        if (!filename.endsWith(".css")) {
+            return false;
+        }
+
+        String scssFilename = filename.substring(0, filename.length() - 4)
+                + ".scss";
+        URL scssUrl = findResourceURL(scssFilename, sc);
+        if (scssUrl == null) {
+            // Is a css request but no scss file was found
+            return false;
+        }
+        // security check: do not permit navigation out of the VAADIN
+        // directory
+        if (!isAllowedVAADINResourceUrl(request, scssUrl)) {
+            getLogger()
+                    .info("Requested resource ["
+                            + filename
+                            + "] not accessible in the VAADIN directory or access to it is forbidden.");
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            // Handled, return true so no further processing is done
+            return true;
+        }
+        String realFilename = sc.getRealPath(scssFilename);
+        ScssStylesheet scss = ScssStylesheet.get(realFilename);
+        if (scss == null) {
+            getLogger()
+                    .warning(
+                            "Scss file "
+                                    + scssFilename
+                                    + " exists but ScssStylesheet was not able to find it");
+            return false;
+        }
+        try {
+            getLogger()
+                    .fine("Compiling " + realFilename + " for request to "
+                            + filename);
+            scss.compile();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        // This is for development mode only so instruct the browser to never
+        // cache it
+        response.setHeader("Cache-Control", "no-cache");
+        final String mimetype = getVaadinService().getMimeType(filename);
+        writeResponse(response, mimetype, scss.toString());
+
+        return true;
     }
 
     /**

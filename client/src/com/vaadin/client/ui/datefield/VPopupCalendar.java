@@ -40,6 +40,7 @@ import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.datefield.VCalendarPanel.FocusOutListener;
 import com.vaadin.client.ui.datefield.VCalendarPanel.SubmitListener;
+import com.vaadin.shared.ui.datefield.Resolution;
 
 /**
  * Represents a date selection component with a text field and a popup date
@@ -123,19 +124,24 @@ public class VPopupCalendar extends VTextualDate implements Field,
             setCurrentDate((Date) newDate.clone());
             getClient().updateVariable(getId(), "year",
                     newDate.getYear() + 1900, false);
-            if (getCurrentResolution() > VDateField.RESOLUTION_YEAR) {
+            if (getCurrentResolution().getCalendarField() > Resolution.YEAR
+                    .getCalendarField()) {
                 getClient().updateVariable(getId(), "month",
                         newDate.getMonth() + 1, false);
-                if (getCurrentResolution() > RESOLUTION_MONTH) {
+                if (getCurrentResolution().getCalendarField() > Resolution.MONTH
+                        .getCalendarField()) {
                     getClient().updateVariable(getId(), "day",
                             newDate.getDate(), false);
-                    if (getCurrentResolution() > RESOLUTION_DAY) {
+                    if (getCurrentResolution().getCalendarField() > Resolution.DAY
+                            .getCalendarField()) {
                         getClient().updateVariable(getId(), "hour",
                                 newDate.getHours(), false);
-                        if (getCurrentResolution() > RESOLUTION_HOUR) {
+                        if (getCurrentResolution().getCalendarField() > Resolution.HOUR
+                                .getCalendarField()) {
                             getClient().updateVariable(getId(), "min",
                                     newDate.getMinutes(), false);
-                            if (getCurrentResolution() > RESOLUTION_MIN) {
+                            if (getCurrentResolution().getCalendarField() > Resolution.MINUTE
+                                    .getCalendarField()) {
                                 getClient().updateVariable(getId(), "sec",
                                         newDate.getSeconds(), false);
                             }

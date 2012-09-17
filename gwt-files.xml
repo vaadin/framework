@@ -63,8 +63,6 @@
 		<!-- GWT SuperDevMode -->
 		<fileset dir="${gwt.codeserver.jar.files}">
 			<exclude name="META-INF/**" />
-			<include name="**/*.java" />
-			<include name="**/*.classes" />
 		</fileset>
 	</union>
 
@@ -79,6 +77,13 @@
 			<exclude name="javax/servlet/**" />
 			<exclude name="org/w3c/css/sac/**" />
 
+		</fileset>
+	</union>
+
+	<union id="theme-compiler.gwt.includes">
+		<!-- This is only temporary. Flute must be packaged separately as it is not in Maven and this version is also modified by the GWT team -->
+		<fileset dir="${gwt.user.jar.files}">
+			<include name="org/w3c/flute/**" />
 		</fileset>
 	</union>
 

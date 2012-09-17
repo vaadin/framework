@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+
+    <info organisation="com.vaadin" module="vaadin-client"
+        revision="${vaadin.version}" />
+
+    <configurations>
+        <conf name="default" />
+    </configurations>
+    <publications>
+    </publications>
+    <dependencies defaultconf="default" defaultconfmapping="default->default">
+        <dependency org="javax.validation" name="validation-api"
+            rev="1.0.0.GA" conf="default -> default,sources" />
+        <dependency org="commons-cli" name="commons-cli" rev="1.2" />
+        <dependency org="org.apache.commons" name="commons-jexl"
+            rev="2.1.1" />
+
+    </dependencies>
+
+</ivy-module>

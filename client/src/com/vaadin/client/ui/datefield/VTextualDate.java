@@ -34,6 +34,7 @@ import com.vaadin.client.ui.Field;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.textfield.VTextField;
 import com.vaadin.shared.EventId;
+import com.vaadin.shared.ui.datefield.Resolution;
 
 public class VTextualDate extends VDateField implements Field, ChangeHandler,
         Focusable, SubPartAware {
@@ -101,7 +102,7 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
 
     protected String getFormatString() {
         if (formatStr == null) {
-            if (currentResolution == RESOLUTION_YEAR) {
+            if (currentResolution == Resolution.YEAR) {
                 formatStr = "yyyy"; // force full year
             } else {
 
@@ -111,16 +112,18 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
                     frmString = cleanFormat(frmString);
                     // String delim = LocaleService
                     // .getClockDelimiter(currentLocale);
-
-                    if (currentResolution >= RESOLUTION_HOUR) {
+                    if (currentResolution.getCalendarField() >= Resolution.HOUR
+                            .getCalendarField()) {
                         if (dts.isTwelveHourClock()) {
                             frmString += " hh";
                         } else {
                             frmString += " HH";
                         }
-                        if (currentResolution >= RESOLUTION_MIN) {
+                        if (currentResolution.getCalendarField() >= Resolution.MINUTE
+                                .getCalendarField()) {
                             frmString += ":mm";
-                            if (currentResolution >= RESOLUTION_SEC) {
+                            if (currentResolution.getCalendarField() >= Resolution.SECOND
+                                    .getCalendarField()) {
                                 frmString += ":ss";
                             }
                         }
@@ -228,59 +231,48 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
         Date currentDate = getDate();
         getClient().updateVariable(getId(), "year",
                 currentDate != null ? currentDate.getYear() + 1900 : -1,
-                currentResolution == VDateField.RESOLUTION_YEAR && immediate);
-        if (currentResolution >= VDateField.RESOLUTION_MONTH) {
-            getClient().updateVariable(
-                    getId(),
-                    "month",
+                currentResolution == Resolution.YEAR && immediate);
+        if (currentResolution.getCalendarField() >= Resolution.MONTH
+                .getCalendarField()) {
+            getClient().updateVariable(getId(), "month",
                     currentDate != null ? currentDate.getMonth() + 1 : -1,
-                    currentResolution == VDateField.RESOLUTION_MONTH
-                            && immediate);
+                    currentResolution == Resolution.MONTH && immediate);
         }
-        if (currentResolution >= VDateField.RESOLUTION_DAY) {
-            getClient()
-                    .updateVariable(
-                            getId(),
-                            "day",
-                            currentDate != null ? currentDate.getDate() : -1,
-                            currentResolution == VDateField.RESOLUTION_DAY
-                                    && immediate);
+        if (currentResolution.getCalendarField() >= Resolution.DAY
+                .getCalendarField()) {
+            getClient().updateVariable(getId(), "day",
+                    currentDate != null ? currentDate.getDate() : -1,
+                    currentResolution == Resolution.DAY && immediate);
         }
-        if (currentResolution >= VDateField.RESOLUTION_HOUR) {
-            getClient().updateVariable(
-                    getId(),
-                    "hour",
+        if (currentResolution.getCalendarField() >= Resolution.HOUR
+                .getCalendarField()) {
+            getClient().updateVariable(getId(), "hour",
                     currentDate != null ? currentDate.getHours() : -1,
-                    currentResolution == VDateField.RESOLUTION_HOUR
-                            && immediate);
+                    currentResolution == Resolution.HOUR && immediate);
         }
-        if (currentResolution >= VDateField.RESOLUTION_MIN) {
-            getClient()
-                    .updateVariable(
-                            getId(),
-                            "min",
-                            currentDate != null ? currentDate.getMinutes() : -1,
-                            currentResolution == VDateField.RESOLUTION_MIN
-                                    && immediate);
+        if (currentResolution.getCalendarField() >= Resolution.MINUTE
+                .getCalendarField()) {
+            getClient().updateVariable(getId(), "min",
+                    currentDate != null ? currentDate.getMinutes() : -1,
+                    currentResolution == Resolution.MINUTE && immediate);
         }
-        if (currentResolution >= VDateField.RESOLUTION_SEC) {
-            getClient()
-                    .updateVariable(
-                            getId(),
-                            "sec",
-                            currentDate != null ? currentDate.getSeconds() : -1,
-                            currentResolution == VDateField.RESOLUTION_SEC
-                                    && immediate);
+        if (currentResolution.getCalendarField() >= Resolution.SECOND
+                .getCalendarField()) {
+            getClient().updateVariable(getId(), "sec",
+                    currentDate != null ? currentDate.getSeconds() : -1,
+                    currentResolution == Resolution.SECOND && immediate);
         }
 
     }
 
     private String cleanFormat(String format) {
         // Remove unnecessary d & M if resolution is too low
-        if (currentResolution < VDateField.RESOLUTION_DAY) {
+        if (currentResolution.getCalendarField() < Resolution.DAY
+                .getCalendarField()) {
             format = format.replaceAll("d", "");
         }
-        if (currentResolution < VDateField.RESOLUTION_MONTH) {
+        if (currentResolution.getCalendarField() < Resolution.MONTH
+                .getCalendarField()) {
             format = format.replaceAll("M", "");
         }
 

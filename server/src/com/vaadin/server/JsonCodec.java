@@ -39,9 +39,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.vaadin.external.json.JSONArray;
-import com.vaadin.external.json.JSONException;
-import com.vaadin.external.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.communication.UidlValue;
@@ -700,9 +701,9 @@ public class JsonCodec implements Serializable {
                     throw new RuntimeException(
                             "Can't encode "
                                     + value.getClass().getName()
-                                    + " as it has multiple fields with the name "
+                                    + " as it has multiple properties with the name "
                                     + fieldName.toLowerCase()
-                                    + ". This can happen if only casing distinguishes one property name from another.");
+                                    + ". This can happen if there are getters and setters for a public field (the framework can't know which to ignore) or if there are properties with only casing distinguishing between the names (e.g. getFoo() and getFOO())");
                 }
 
                 Object fieldReference;

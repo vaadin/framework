@@ -29,6 +29,8 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.nodes.DataNode;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.DocumentType;
@@ -36,8 +38,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.parser.Tag;
 
-import com.vaadin.external.json.JSONException;
-import com.vaadin.external.json.JSONObject;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Version;
 import com.vaadin.ui.UI;
@@ -222,7 +222,7 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         String title = context.getVaadinSession()
                 .getUiProvider(context.getRequest(), context.getUIClass())
-                .getPageTitleForUI(context.getRequest(), context.getUIClass());
+                .getPageTitle(context.getRequest(), context.getUIClass());
         if (title != null) {
             head.appendElement("title").appendText(title);
         }
@@ -275,7 +275,7 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         String widgetset = context.getVaadinSession()
                 .getUiProvider(context.getRequest(), context.getUIClass())
-                .getWidgetsetForUI(context.getRequest(), context.getUIClass());
+                .getWidgetset(context.getRequest(), context.getUIClass());
         if (widgetset == null) {
             widgetset = request.getVaadinService().getConfiguredWidgetset(
                     request);
@@ -499,7 +499,7 @@ public abstract class BootstrapHandler implements RequestHandler {
     public String getThemeName(BootstrapContext context) {
         return context.getVaadinSession()
                 .getUiProvider(context.getRequest(), context.getUIClass())
-                .getThemeForUI(context.getRequest(), context.getUIClass());
+                .getTheme(context.getRequest(), context.getUIClass());
     }
 
     /**

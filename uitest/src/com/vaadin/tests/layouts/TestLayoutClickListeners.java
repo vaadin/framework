@@ -2,7 +2,6 @@ package com.vaadin.tests.layouts;
 
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
-import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.AbsoluteLayout;
@@ -147,13 +146,7 @@ public class TestLayoutClickListeners extends AbstractTestCase {
                 target = ((Label) component).getValue().toString();
             }
         }
-        String button = "left";
-        if (event.getButton() == ClickEvent.BUTTON_RIGHT) {
-            button = "right";
-        } else if (event.getButton() == ClickEvent.BUTTON_MIDDLE) {
-            button = "middle";
-
-        }
+        String button = event.getButtonName();
         String type = "click";
         if (event.isDoubleClick()) {
             type = "double-click";

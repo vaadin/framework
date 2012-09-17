@@ -7,9 +7,9 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.RangeValidator;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.DateField.Resolution;
 import com.vaadin.ui.PopupDateField;
 
 public class DateFieldRangeValidation extends TestBase {

@@ -59,6 +59,7 @@ import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.table.TableConstants;
 
 /**

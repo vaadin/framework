@@ -26,8 +26,9 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceURL;
 
-import com.vaadin.external.json.JSONException;
-import com.vaadin.external.json.JSONObject;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.UI;
 
