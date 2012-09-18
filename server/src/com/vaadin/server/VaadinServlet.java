@@ -53,7 +53,7 @@ import com.vaadin.util.CurrentInstance;
 @SuppressWarnings("serial")
 public class VaadinServlet extends HttpServlet implements Constants {
 
-    public static class ServletService extends AbstractVaadinService {
+    public static class ServletService extends VaadinService {
         private final VaadinServlet servlet;
 
         public ServletService(VaadinServlet servlet,

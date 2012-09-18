@@ -74,7 +74,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
     @Deprecated
     public static final String RESOURCE_URL_ID = "APP";
 
-    public static class PortletService extends AbstractVaadinService {
+    public static class PortletService extends VaadinService {
         private final VaadinPortlet portlet;
 
         public PortletService(VaadinPortlet portlet,
