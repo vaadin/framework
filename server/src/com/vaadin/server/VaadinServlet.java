@@ -677,7 +677,10 @@ public class VaadinServlet extends HttpServlet implements Constants {
              * without using the bootstrap page.
              */
             return true;
-
+        } else if (requestType == RequestType.BROWSER_DETAILS) {
+            // This is the first request if you are embedding by writing the
+            // embedding code yourself
+            return true;
         } else if (requestType == RequestType.OTHER) {
             /*
              * I.e URIs that are not application resources or static (theme)
