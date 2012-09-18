@@ -312,6 +312,11 @@ class ShortcutAction {
     private String targetAction;
 
     public ShortcutAction(String key, ShortcutKeyCombination sc,
+            String caption) {
+        this(key, sc, caption, null, null);
+    }
+
+    public ShortcutAction(String key, ShortcutKeyCombination sc,
             String caption, Paintable target, String targetAction) {
         this.sc = sc;
         this.key = key;
