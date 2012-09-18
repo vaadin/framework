@@ -114,7 +114,12 @@ public class CombinedRequest implements WrappedRequest {
 
     @Override
     public WrappedSession getWrappedSession() {
-        return secondRequest.getWrappedSession();
+        return getWrappedSession(true);
+    }
+
+    @Override
+    public WrappedSession getWrappedSession(boolean allowSessionCreation) {
+        return secondRequest.getWrappedSession(allowSessionCreation);
     }
 
     @Override

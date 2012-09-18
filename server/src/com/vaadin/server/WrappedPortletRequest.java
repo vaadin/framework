@@ -114,7 +114,13 @@ public class WrappedPortletRequest implements WrappedRequest {
 
     @Override
     public WrappedSession getWrappedSession() {
-        return new WrappedPortletSession(request.getPortletSession());
+        return getWrappedSession(true);
+    }
+
+    @Override
+    public WrappedSession getWrappedSession(boolean allowSessionCreation) {
+        return new WrappedPortletSession(
+                request.getPortletSession(allowSessionCreation));
     }
 
     /**

@@ -56,7 +56,12 @@ public class WrappedHttpServletRequest extends HttpServletRequestWrapper
 
     @Override
     public WrappedSession getWrappedSession() {
-        return new WrappedHttpSession(getSession());
+        return getWrappedSession(true);
+    }
+
+    @Override
+    public WrappedSession getWrappedSession(boolean allowSessionCreation) {
+        return new WrappedHttpSession(getSession(allowSessionCreation));
     }
 
     /**
@@ -111,4 +116,5 @@ public class WrappedHttpServletRequest extends HttpServletRequestWrapper
         }
         return (WrappedHttpServletRequest) request;
     }
+
 }
