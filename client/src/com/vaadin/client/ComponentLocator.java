@@ -176,7 +176,11 @@ public class ComponentLocator {
             return null;
         }
 
-        if (w.getElement() == targetElement) {
+        // The parent check is a work around for Firefox 15 which fails to
+        // compare elements properly (#9534)
+        if (w.getElement() == targetElement
+                || (w.getElement().getParentElement() == targetElement
+                        .getParentElement())) {
             /*
              * We are done if the target element is the root of the target
              * widget.
@@ -316,28 +320,23 @@ public class ComponentLocator {
         Element e = element;
         String path = "";
         while (true) {
-            Element parent = DOM.getParent(e);
-            if (parent == null) {
-                return null;
-            }
-
             int childIndex = -1;
-
-            int childCount = DOM.getChildCount(parent);
-            for (int i = 0; i < childCount; i++) {
-                if (e == DOM.getChild(parent, i)) {
-                    childIndex = i;
-                    break;
-                }
-            }
-            if (childIndex == -1) {
-                return null;
+            Element siblingIterator = e;
+            while (siblingIterator != null) {
+                childIndex++;
+                siblingIterator = siblingIterator.getPreviousSiblingElement()
+                        .cast();
             }
 
             path = PARENTCHILD_SEPARATOR + "domChild[" + childIndex + "]"
                     + path;
 
-            if (parent == baseElement) {
+            Element parent = e.getParentElement().cast();
+            // The parent check is a work around for Firefox 15 which fails to
+            // compare elements properly (#9534)
+            if (parent == baseElement
+                    || parent.getParentElement() == baseElement
+                            .getParentElement()) {
                 break;
             }
 
