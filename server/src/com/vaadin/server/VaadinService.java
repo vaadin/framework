@@ -140,16 +140,31 @@ public interface VaadinService extends Serializable {
     public File getBaseDirectory();
 
     /**
-     * Gets the Vaadin session associated with this request.
+     * Adds a listener that gets notified when a new Vaadin session is
+     * initialized for this service.
+     * <p>
+     * Because of the way different service instances share the same session,
+     * the listener is not necessarily notified immediately when the session is
+     * created but only when the first request for that session is handled by
+     * this service.
      * 
-     * @param request
-     *            the request to get a vaadin session for.
+     * @see #removeVaadinSessionInitializationListener(VaadinSessionInitializationListener)
+     * @see VaadinSessionInitializationListener
      * 
-     * @see VaadinSession
-     * 
-     * @return the vaadin session for the request, or <code>null</code> if no
-     *         session is found and this is a request for which a new session
-     *         shouldn't be created.
+     * @param listener
+     *            the vaadin session initialization listener
      */
-    public VaadinSession getVaadinSession(WrappedRequest request);
+    public void addVaadinSessionInitializationListener(
+            VaadinSessionInitializationListener listener);
+
+    /**
+     * Removes a Vaadin session initialization listener from this service.
+     * 
+     * @see #addVaadinSessionInitializationListener(VaadinSessionInitializationListener)
+     * 
+     * @param listener
+     *            the Vaadin session initialization listener to remove.
+     */
+    public void removeVaadinSessionInitializationListener(
+            VaadinSessionInitializationListener listener);
 }

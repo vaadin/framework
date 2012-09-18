@@ -126,8 +126,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
     }
 
-    private static String GET_PARAM_REPAINT_ALL = "repaintAll";
-
     // flag used in the request to indicate that the security token should be
     // written to the response
     private static final String WRITE_SECURITY_TOKEN_FLAG = "writeSecurityToken";
@@ -549,7 +547,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
         boolean repaintAll;
         final OutputStream out;
 
-        repaintAll = (request.getParameter(GET_PARAM_REPAINT_ALL) != null);
+        repaintAll = (request
+                .getParameter(ApplicationConstants.URL_PARAMETER_REPAINT_ALL) != null);
         // || (request.getSession().isNew()); FIXME What the h*ll is this??
         out = response.getOutputStream();
 

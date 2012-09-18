@@ -199,8 +199,8 @@ public class GAEVaadinServlet extends VaadinServlet {
             return;
         }
 
-        final HttpSession session = request
-                .getSession(requestCanCreateApplication(request, requestType));
+        final HttpSession session = request.getSession(getVaadinService()
+                .requestCanCreateSession(request));
         if (session == null) {
             handleServiceSessionExpired(request, response);
             cleanSession(request);
@@ -292,7 +292,7 @@ public class GAEVaadinServlet extends VaadinServlet {
     }
 
     protected VaadinSession getApplicationContext(HttpServletRequest request,
-            MemcacheService memcache) {
+            MemcacheService memcache) throws ServletException {
         HttpSession session = request.getSession();
         String id = AC_BASE + session.getId();
         byte[] serializedAC = (byte[]) memcache.get(id);
@@ -338,9 +338,14 @@ public class GAEVaadinServlet extends VaadinServlet {
                                 + " A new one will be created. ", e);
             }
         }
-        // will create new context if the above did not
-        return getApplicationContext(session);
 
+        // will create new context if the above did not
+        try {
+            return getVaadinService().findVaadinSession(
+                    createWrappedRequest(request));
+        } catch (Exception e) {
+            throw new ServletException(e);
+        }
     }
 
     private boolean isCleanupRequest(HttpServletRequest request) {

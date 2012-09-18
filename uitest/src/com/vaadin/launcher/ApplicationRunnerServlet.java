@@ -33,8 +33,11 @@ import com.vaadin.LegacyApplication;
 import com.vaadin.server.AbstractUIProvider;
 import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.LegacyVaadinServlet;
+import com.vaadin.server.ServiceException;
 import com.vaadin.server.UIProvider;
-import com.vaadin.server.VaadinServletSession;
+import com.vaadin.server.VaadinSession;
+import com.vaadin.server.VaadinSessionInitializationListener;
+import com.vaadin.server.VaadinSessionInitializeEvent;
 import com.vaadin.server.WrappedHttpServletRequest;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.TestBase;
@@ -67,6 +70,21 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
             addDirectories(comVaadinTests, defaultPackages, "com.vaadin.tests");
 
         }
+    }
+
+    @Override
+    protected void servletInitialized() {
+        super.servletInitialized();
+        getVaadinService().addVaadinSessionInitializationListener(
+                new VaadinSessionInitializationListener() {
+                    @Override
+                    public void vaadinSessionInitialized(
+                            VaadinSessionInitializeEvent event)
+                            throws ServiceException {
+                        onVaadinSessionStarted(event.getRequest(),
+                                event.getVaadinSession());
+                    }
+                });
     }
 
     private void addDirectories(File parent, LinkedHashSet<String> packages,
@@ -120,9 +138,8 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
         }
     }
 
-    @Override
-    protected void onVaadinSessionStarted(WrappedHttpServletRequest request,
-            VaadinServletSession session) throws ServletException {
+    protected void onVaadinSessionStarted(WrappedRequest request,
+            VaadinSession session) throws ServiceException {
         try {
             final Class<?> classToRun = getClassToRun();
             if (UI.class.isAssignableFrom(classToRun)) {
@@ -138,21 +155,20 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
             } else if (UIProvider.class.isAssignableFrom(classToRun)) {
                 session.addUIProvider((UIProvider) classToRun.newInstance());
             } else {
-                throw new ServletException(classToRun.getCanonicalName()
+                throw new ServiceException(classToRun.getCanonicalName()
                         + " is neither an Application nor a UI");
             }
         } catch (final IllegalAccessException e) {
-            throw new ServletException(e);
+            throw new ServiceException(e);
         } catch (final InstantiationException e) {
-            throw new ServletException(e);
+            throw new ServiceException(e);
         } catch (final ClassNotFoundException e) {
-            throw new ServletException(
+            throw new ServiceException(
                     new InstantiationException(
                             "Failed to load application class: "
-                                    + getApplicationRunnerApplicationClassName(request)));
+                                    + getApplicationRunnerApplicationClassName(WrappedHttpServletRequest
+                                            .cast(request))));
         }
-
-        super.onVaadinSessionStarted(request, session);
     }
 
     private String getApplicationRunnerApplicationClassName(

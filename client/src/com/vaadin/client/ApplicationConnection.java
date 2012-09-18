@@ -555,7 +555,8 @@ public class ApplicationConnection {
         // TODO figure out how client and view size could be used better on
         // server. screen size can be accessed via Browser object, but other
         // values currently only via transaction listener.
-        String parameters = "repaintAll=1&" + nativeBootstrapParameters;
+        String parameters = ApplicationConstants.URL_PARAMETER_REPAINT_ALL
+                + "=1&" + nativeBootstrapParameters;
         return parameters;
     }
 

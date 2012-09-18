@@ -56,9 +56,6 @@ public interface Constants {
             + " Widgetset version: %s\n"
             + "=================================================================";
 
-    static final String URL_PARAMETER_RESTART_APPLICATION = "restartApplication";
-    static final String URL_PARAMETER_CLOSE_APPLICATION = "closeApplication";
-    static final String URL_PARAMETER_REPAINT_ALL = "repaintAll";
     static final String URL_PARAMETER_THEME = "theme";
 
     static final String SERVLET_PARAMETER_PRODUCTION_MODE = "productionMode";
