@@ -23,6 +23,7 @@ import java.util.Map;
 
 import javax.portlet.ClientDataRequest;
 import javax.portlet.PortletRequest;
+import javax.portlet.PortletSession;
 import javax.portlet.ResourceRequest;
 
 import com.vaadin.server.VaadinPortlet.PortletService;
@@ -119,8 +120,13 @@ public class WrappedPortletRequest implements WrappedRequest {
 
     @Override
     public WrappedSession getWrappedSession(boolean allowSessionCreation) {
-        return new WrappedPortletSession(
-                request.getPortletSession(allowSessionCreation));
+        PortletSession session = request
+                .getPortletSession(allowSessionCreation);
+        if (session != null) {
+            return new WrappedPortletSession(session);
+        } else {
+            return null;
+        }
     }
 
     /**
