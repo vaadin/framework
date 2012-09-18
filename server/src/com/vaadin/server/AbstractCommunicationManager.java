@@ -2464,9 +2464,11 @@ public abstract class AbstractCommunicationManager implements Serializable {
     public void handleBrowserDetailsRequest(WrappedRequest request,
             WrappedResponse response, VaadinSession session) throws IOException {
 
-        assert UI.getCurrent() == null;
+        session.getLock().lock();
 
         try {
+            assert UI.getCurrent() == null;
+
             CombinedRequest combinedRequest = new CombinedRequest(request);
 
             response.setContentType("application/json; charset=UTF-8");
@@ -2495,6 +2497,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
         } catch (JSONException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        } finally {
+            session.getLock().unlock();
         }
     }
 
