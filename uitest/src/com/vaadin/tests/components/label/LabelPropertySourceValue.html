@@ -21,6 +21,7 @@
 	<td>//div[@id='runLabelPropertySourceValue-596713704']/div/div[2]/div[2]/div/div/div</td>
 	<td>Hello Vaadin user</td>
 </tr>
+<!--set data source-->
 <tr>
 	<td>click</td>
 	<td>vaadin=runLabelPropertySourceValue::/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VButton[0]/domChild[0]</td>
@@ -31,7 +32,55 @@
 	<td>vaadin=runLabelPropertySourceValue::/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VVerticalLayout[0]/VOrderedLayout$Slot[0]/VLabel[0]</td>
 	<td>This text should appear on the label after clicking the button.</td>
 </tr>
-
+<!--remove data source-->
+<tr>
+	<td>click</td>
+	<td>vaadin=runLabelPropertySourceValue::/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VVerticalLayout[0]/VOrderedLayout$Slot[2]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runLabelPropertySourceValue::/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VVerticalLayout[0]/VOrderedLayout$Slot[0]/VLabel[0]</td>
+	<td>This text should appear on the label after clicking the button.</td>
+</tr>
+<!--set value to foo-->
+<tr>
+	<td>click</td>
+	<td>vaadin=runLabelPropertySourceValue::/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VVerticalLayout[0]/VOrderedLayout$Slot[3]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runLabelPropertySourceValue::/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VVerticalLayout[0]/VOrderedLayout$Slot[0]/VLabel[0]</td>
+	<td>foo</td>
+</tr>
+<!--set data source-->
+<tr>
+	<td>click</td>
+	<td>vaadin=runLabelPropertySourceValue::/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VButton[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runLabelPropertySourceValue::/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VVerticalLayout[0]/VOrderedLayout$Slot[0]/VLabel[0]</td>
+	<td>This text should appear on the label after clicking the button.</td>
+</tr>
+<!--set value to foo (should fail)-->
+<tr>
+	<td>click</td>
+	<td>vaadin=runLabelPropertySourceValue::/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VVerticalLayout[0]/VOrderedLayout$Slot[3]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runLabelPropertySourceValue::/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VVerticalLayout[0]/VOrderedLayout$Slot[0]/VLabel[0]</td>
+	<td>This text should appear on the label after clicking the button.</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runLabelPropertySourceValue::/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VVerticalLayout[0]/VOrderedLayout$Slot[3]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td>v-errorindicator</td>
+</tr>
 </tbody></table>
 </body>
 </html>

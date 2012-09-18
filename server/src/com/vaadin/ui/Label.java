@@ -260,15 +260,20 @@ public class Label extends AbstractComponent implements Property<String>,
             ((Property.ValueChangeNotifier) dataSource).removeListener(this);
         }
 
-        if (!ConverterUtil.canConverterHandle(getConverter(), String.class,
-                newDataSource.getType())) {
+        if (newDataSource != null
+                && !ConverterUtil.canConverterHandle(getConverter(),
+                        String.class, newDataSource.getType())) {
             // Try to find a converter
             Converter<String, ?> c = ConverterUtil.getConverter(String.class,
                     newDataSource.getType(), getSession());
             setConverter(c);
         }
         dataSource = newDataSource;
-        getState().text = getDataSourceValue();
+        if (dataSource != null) {
+            // Update the value from the data source. If data source was set to
+            // null, retain the old value
+            getState().text = getDataSourceValue();
+        }
 
         // Listens the new data source if possible
         if (dataSource != null

@@ -5,28 +5,43 @@ import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 
-public class LabelPropertySourceValue extends AbstractTestUI implements
-        Button.ClickListener {
+public class LabelPropertySourceValue extends AbstractTestUI {
     private Label label;
 
     @Override
     public void setup(WrappedRequest request) {
         label = new Label("Hello Vaadin user");
-        Button button = new Button("Give label a new property data source...");
-        button.addClickListener(this);
-
         addComponent(label);
+        Button button = new Button("Give label a new property data source...");
+        button.addClickListener(new ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                ObjectProperty<String> p = new ObjectProperty<String>(
+                        "This text should appear on the label after clicking the button.");
+
+                label.setPropertyDataSource(p);
+            }
+        });
         addComponent(button);
-    }
+        button = new Button("Remove data source", new ClickListener() {
 
-    public void buttonClick(ClickEvent event) {
-        ObjectProperty<String> p = new ObjectProperty<String>(
-                "This text should appear on the label after clicking the button.");
+            @Override
+            public void buttonClick(ClickEvent event) {
+                label.setPropertyDataSource(null);
+            }
+        });
+        addComponent(button);
 
-        label.setPropertyDataSource(p);
-        //
+        button = new Button("Set label value to 'foo'", new ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                label.setValue("foo");
+            }
+        });
+        addComponent(button);
     }
 
     @Override
