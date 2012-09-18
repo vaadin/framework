@@ -97,6 +97,8 @@ public class ComponentLocator {
     public String getPathForElement(Element targetElement) {
         String pid = null;
 
+        targetElement = getElement(targetElement);
+
         Element e = targetElement;
 
         while (true) {
@@ -178,9 +180,7 @@ public class ComponentLocator {
 
         // The parent check is a work around for Firefox 15 which fails to
         // compare elements properly (#9534)
-        if (w.getElement() == targetElement
-                || (w.getElement().getParentElement() == targetElement
-                        .getParentElement())) {
+        if (w.getElement() == targetElement) {
             /*
              * We are done if the target element is the root of the target
              * widget.
@@ -207,6 +207,41 @@ public class ComponentLocator {
         } else {
             return path + domPath;
         }
+    }
+
+    /**
+     * Returns the element passed to the method. Or in case of Firefox 15,
+     * returns the real element that is in the DOM instead of the element passed
+     * to the method (which is the same element but not ==).
+     * 
+     * @param targetElement
+     *            the element to return
+     * @return the element passed to the method
+     */
+    private Element getElement(Element targetElement) {
+        if (targetElement == null) {
+            return null;
+        }
+
+        if (!BrowserInfo.get().isFirefox()) {
+            return targetElement;
+        }
+
+        if (BrowserInfo.get().getBrowserMajorVersion() != 15) {
+            return targetElement;
+        }
+
+        // Firefox 15, you make me sad
+        if (targetElement.getNextSibling() != null) {
+            return (Element) targetElement.getNextSibling()
+                    .getPreviousSibling();
+        }
+        if (targetElement.getPreviousSibling() != null) {
+            return (Element) targetElement.getPreviousSibling()
+                    .getNextSibling();
+        }
+        // No siblings so this is the only child
+        return (Element) targetElement.getParentNode().getChild(0);
     }
 
     /**
@@ -334,9 +369,7 @@ public class ComponentLocator {
             Element parent = e.getParentElement().cast();
             // The parent check is a work around for Firefox 15 which fails to
             // compare elements properly (#9534)
-            if (parent == baseElement
-                    || parent.getParentElement() == baseElement
-                            .getParentElement()) {
+            if (parent == baseElement) {
                 break;
             }
 
