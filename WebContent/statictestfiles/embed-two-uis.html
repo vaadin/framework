@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="chrome=1" />
+<title>com.vaadin.tests.components.embedded.EmbeddedPdf</title>
+<style type="text/css">
+html,body {
+	height: 100%;
+	margin: 0;
+}
+</style>
+<link rel="shortcut icon" type="image/vnd.microsoft.icon"
+	href="/VAADIN/themes/reindeer/favicon.ico" />
+<link rel="icon" type="image/vnd.microsoft.icon"
+	href="/VAADIN/themes/reindeer/favicon.ico" />
+
+<script type="text/javascript" src="/VAADIN/vaadinBootstrap.js"></script>
+</head>
+<body scroll="auto" class=" v-generated-body">
+	<span>Embed 1 (AbsoluteLayoutClipping)</span>
+	<div style="width: 300px; height: 300px; border: 1px solid red;"
+		id="app1" class=" v-app v-app-VaadinServletSession">
+		<div class=" v-app-loading"></div>
+		<noscript>You have to enable javascript in your browser to
+			use an application built with Vaadin.</noscript>
+	</div>
+	<iframe tabindex="-1" id="__gwt_historyFrame"
+		style="position: absolute; width: 0; height: 0; border: 0; overflow: hidden"
+		src="javascript:false"></iframe>
+	<script type="text/javascript">
+		//         
+		if (!window.vaadin)
+			alert("Failed to load the bootstrap javascript: /VAADIN/vaadinBootstrap.js");
+		vaadin
+				.setDefaults({
+					"appUri" : "/",
+					"authErrMsg" : {
+						"caption" : "Authentication problem",
+						"message" : "Take note of any unsaved data, and <u>click here<\/u>tagtagtag to continue."
+					},
+					"comErrMsg" : {
+						"caption" : "Communication problem",
+						"message" : "Take note of any unsaved data, and _$t_$tag_$ere<\k here_$t_$tag_$t_$tag to continue."
+					},
+					"debug" : true,
+					"heartbeatInterval" : 300,
+					"standalone" : true,
+					"widgetsetBase" : "/VAADIN/widgetsets/"
+				});
+	</script>
+
+	</script>
+	<script type="text/javascript">
+		//         
+		vaadin.initApplication("app1", {
+			"appUri" : "/embed1",
+			"initialParams" : {},
+			"initialPath" : "",
+			"themeUri" : "/VAADIN/themes/reindeer",
+			"versionInfo" : {
+				"vaadinVersion" : "9.9.9.INTERNAL-DEBUG-BUILD"
+			},
+			"widgetset" : "com.vaadin.DefaultWidgetSet"
+		});
+		//
+	</script>
+	<span>Embed 2 (MarginsInLabels)</span>
+	<div style="width: 300px; height: 300px; border: 1px solid blue;"
+		id="app2" class=" v-app v-app-VaadinServletSession">
+		<div class="v-app-loading"></div>
+		<noscript>You have to enable javascript in your browser to
+			use an application built with Vaadin.</noscript>
+	</div>
+	<iframe tabindex="-1" id="__gwt_historyFrame"
+		style="position: absolute; width: 0; height: 0; border: 0; overflow: hidden"
+		src="javascript:false"></iframe>
+	<script type="text/javascript">
+		vaadin.initApplication("app2", {
+			"appUri" : "/embed2",
+			"initialParams" : {},
+			"initialPath" : "/",
+			"themeUri" : "/VAADIN/themes/reindeer",
+			"versionInfo" : {
+				"vaadinVersion" : "9.9.9.INTERNAL-DEBUG-BUILD"
+			},
+			"widgetset" : "com.vaadin.DefaultWidgetSet"
+		});
+		//
+	</script>
+
+</body>
+</html>

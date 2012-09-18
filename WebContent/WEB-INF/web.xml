@@ -14,6 +14,22 @@
 		<param-value>false</param-value>
 		<description>Vaadin production mode</description>
 	</context-param>
+	<servlet>
+		<servlet-name>Embed App 1</servlet-name>
+		<servlet-class>com.vaadin.server.LegacyVaadinServlet</servlet-class>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>com.vaadin.tests.components.absolutelayout.AbsoluteLayoutClipping</param-value>
+		</init-param>
+	</servlet>
+	<servlet>
+		<servlet-name>Embed App 2</servlet-name>
+		<servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
+		<init-param>
+			<param-name>ui</param-name>
+			<param-value>com.vaadin.tests.components.label.MarginsInLabels</param-value>
+		</init-param>
+	</servlet>
 
 	<context-param>
 		<param-name>resourceCacheTime</param-name>
@@ -34,7 +50,16 @@
 			<param-value>com.vaadin.tests.integration.IntegrationTestApplication</param-value>
 		</init-param>
 	</servlet>
+	<servlet-mapping>
+		<servlet-name>Embed App 1</servlet-name>
+		<url-pattern>/embed1/*</url-pattern>
+	</servlet-mapping>
 
+	<servlet-mapping>
+		<servlet-name>Embed App 2</servlet-name>
+		<url-pattern>/embed2/*</url-pattern>
+	</servlet-mapping>
+	
 	<servlet-mapping>
 		<servlet-name>VaadinApplicationRunner</servlet-name>
 		<url-pattern>/run/*</url-pattern>
