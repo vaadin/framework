@@ -1,4 +1,4 @@
-/* 
+/*
 @VaadinApache2LicenseForJavaFiles@
  */
 
@@ -9,6 +9,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.vaadin.terminal.Resource;
+import com.vaadin.terminal.gwt.client.ui.ShortcutActionTarget;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Window;
@@ -45,6 +47,11 @@ public class ShortcutAction extends Action {
     private final int keyCode;
 
     private final int[] modifiers;
+
+    private Component target;
+
+    private String targetAction;
+
 
     /**
      * Creates a shortcut that reacts to the given {@link KeyCode} and
@@ -223,6 +230,46 @@ public class ShortcutAction extends Action {
      */
     public int[] getModifiers() {
         return modifiers;
+    }
+
+    /**
+     * Set the target for the shortcut action. If the target widget on the
+     * client side implements {@link ShortcutActionTarget} it will be notified
+     * of the action before the action is communicated to the server side
+     * 
+     * @param target
+     *            The component which will be thet target of the action
+     */
+    public void setTarget(Component target) {
+        this.target = target;
+    }
+
+    /**
+     * Get the target of the shortcut action
+     */
+    public Component getTarget() {
+        return target;
+    }
+
+    /**
+     * Get the action string that is given to the {@link ShortcutActionTarget}
+     * on the client side
+     * 
+     * @return
+     */
+    public String getTargetAction() {
+        return targetAction;
+    }
+
+    /**
+     * Set the action string that is give to the {@link ShortcutActionTarget} on
+     * the client side
+     * 
+     * @param targetAction
+     *            The target action string
+     */
+    public void setTargetAction(String targetAction) {
+        this.targetAction = targetAction;
     }
 
     /**

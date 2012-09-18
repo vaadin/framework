@@ -626,7 +626,6 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
      * 
      */
     public static class ClickShortcut extends ShortcutListener {
-        protected Button button;
 
         /**
          * Creates a keyboard shortcut for clicking the given button using the
@@ -639,7 +638,8 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
          */
         public ClickShortcut(Button button, String shorthandCaption) {
             super(shorthandCaption);
-            this.button = button;
+            setTarget(button);
+            setTargetAction("click");
         }
 
         /**
@@ -655,7 +655,8 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
          */
         public ClickShortcut(Button button, int keyCode, int... modifiers) {
             super(null, keyCode, modifiers);
-            this.button = button;
+            setTarget(button);
+            setTargetAction("click");
         }
 
         /**
@@ -673,7 +674,7 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
 
         @Override
         public void handleAction(Object sender, Object target) {
-            button.click();
+            // Action handled on the client side
         }
     }
 

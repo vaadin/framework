@@ -33,6 +33,15 @@ import com.vaadin.terminal.gwt.client.ui.richtextarea.VRichTextArea;
  */
 public class ShortcutActionHandler {
 
+    public static final String ACTION_TARGET_ATTRIBUTE = "sat";
+    public static final String ACTION_TARGET_ACTION_ATTRIBUTE = "sata";
+    public static final String ACTION_CAPTION_ATTRIBUTE = "caption";
+    public static final String ACTION_KEY_ATTRIBUTE = "key";
+    public static final String ACTION_SHORTCUT_KEY_ATTRIBUTE = "kc";
+    public static final String ACTION_MODIFIER_KEYS_ATTRIBUTE = "mk";
+    public static final String ACTION_TARGET_VARIABLE = "actiontarget";
+    public static final String ACTION_TARGET_ACTION_VARIABLE = "action";
+
     /**
      * An interface implemented by those users (most often {@link Container}s,
      * but HasWidgets at least) of this helper class that want to support
@@ -99,15 +108,23 @@ public class ShortcutActionHandler {
             final UIDL action = (UIDL) it.next();
 
             int[] modifiers = null;
-            if (action.hasAttribute("mk")) {
-                modifiers = action.getIntArrayAttribute("mk");
+            if (action.hasAttribute(ACTION_MODIFIER_KEYS_ATTRIBUTE)) {
+                modifiers = action
+                        .getIntArrayAttribute(ACTION_MODIFIER_KEYS_ATTRIBUTE);
             }
 
             final ShortcutKeyCombination kc = new ShortcutKeyCombination(
-                    action.getIntAttribute("kc"), modifiers);
-            final String key = action.getStringAttribute("key");
-            final String caption = action.getStringAttribute("caption");
-            actions.add(new ShortcutAction(key, kc, caption));
+                    action.getIntAttribute(ACTION_SHORTCUT_KEY_ATTRIBUTE),
+                    modifiers);
+            final String key = action.getStringAttribute(ACTION_KEY_ATTRIBUTE);
+            final String caption = action
+                    .getStringAttribute(ACTION_CAPTION_ATTRIBUTE);
+            final Paintable target = action.getPaintableAttribute(
+                    ACTION_TARGET_ATTRIBUTE, client);
+            final String targetAction = action
+                    .getStringAttribute(ACTION_TARGET_ACTION_ATTRIBUTE);
+            actions.add(new ShortcutAction(key, kc, caption, target,
+                    targetAction));
         }
     }
 
@@ -164,11 +181,22 @@ public class ShortcutActionHandler {
 
         Scheduler.get().scheduleDeferred(new Command() {
             public void execute() {
-                if (finalTarget != null) {
-                    client.updateVariable(paintableId, "actiontarget",
-                            finalTarget, false);
+                Paintable shortcutTarget = a.getTarget();
+                boolean handledClientSide = false;
+                if (shortcutTarget instanceof ShortcutActionTarget) {
+                    handledClientSide = ((ShortcutActionTarget) shortcutTarget)
+                            .handleAction(a);
                 }
-                client.updateVariable(paintableId, "action", a.getKey(), true);
+                if (!handledClientSide) {
+                    if (finalTarget != null) {
+                        client.updateVariable(paintableId,
+                                ACTION_TARGET_VARIABLE,
+                                finalTarget, false);
+                    }
+                    client.updateVariable(paintableId,
+                            ACTION_TARGET_ACTION_VARIABLE, a.getKey(),
+                            true);
+                }
             }
         });
     }
@@ -280,11 +308,16 @@ class ShortcutAction {
     private final ShortcutKeyCombination sc;
     private final String caption;
     private final String key;
+    private Paintable target;
+    private String targetAction;
 
-    public ShortcutAction(String key, ShortcutKeyCombination sc, String caption) {
+    public ShortcutAction(String key, ShortcutKeyCombination sc,
+            String caption, Paintable target, String targetAction) {
         this.sc = sc;
         this.key = key;
         this.caption = caption;
+        this.target = target;
+        this.targetAction = targetAction;
     }
 
     public ShortcutKeyCombination getShortcutCombination() {
@@ -297,6 +330,14 @@ class ShortcutAction {
 
     public String getKey() {
         return key;
+    }
+
+    public Paintable getTarget() {
+        return target;
+    }
+
+    public String getTargetAction() {
+        return targetAction;
     }
 
 }

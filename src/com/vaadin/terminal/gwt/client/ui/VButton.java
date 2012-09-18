@@ -30,7 +30,7 @@ import com.vaadin.terminal.gwt.client.Util;
 import com.vaadin.terminal.gwt.client.VTooltip;
 
 public class VButton extends FocusWidget implements Paintable, ClickHandler,
-        FocusHandler, BlurHandler {
+        FocusHandler, BlurHandler, ShortcutActionTarget {
 
     public static final String CLASSNAME = "v-button";
     private static final String CLASSNAME_PRESSED = "v-pressed";
@@ -535,4 +535,18 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
         client.updateVariable(id, EventId.BLUR, "", true);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.terminal.gwt.client.ui.ShortcutActionTarget#handleAction(com
+     * .vaadin.terminal.gwt.client.ui.ShortcutAction)
+     */
+    public boolean handleAction(ShortcutAction action) {
+        if ("click".equals(action.getTargetAction())) {
+            onClick();
+            return true;
+        }
+        return false;
+    }
 }
