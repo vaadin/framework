@@ -33,6 +33,7 @@ import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
+import com.vaadin.navigator.Navigator;
 import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.BrowserWindowResizeEvent;
@@ -845,6 +846,8 @@ public abstract class UI extends AbstractComponentContainer implements
 
     private String theme;
 
+    private Navigator navigator;
+
     /**
      * This method is used by Component.Focusable objects to request focus to
      * themselves. Focus renders must be handled at window level (instead of
@@ -1185,6 +1188,25 @@ public abstract class UI extends AbstractComponentContainer implements
 
     public Page getPage() {
         return page;
+    }
+
+    /**
+     * Returns the navigator attached to this UI or null if there is no
+     * navigator.
+     * 
+     * @return
+     */
+    public Navigator getNavigator() {
+        return navigator;
+    }
+
+    /**
+     * For internal use only.
+     * 
+     * @param navigator
+     */
+    public void setNavigator(Navigator navigator) {
+        this.navigator = navigator;
     }
 
     /**

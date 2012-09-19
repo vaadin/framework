@@ -29,6 +29,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
+import com.vaadin.ui.UI;
 
 /**
  * A navigator utility that allows switching of views in a part of an
@@ -124,7 +125,7 @@ public class Navigator implements Serializable {
 
         @Override
         public void fragmentChanged(FragmentChangedEvent event) {
-            UriFragmentManager.this.navigator.navigateTo(getState());
+            navigator.navigateTo(getState());
         }
     }
 
@@ -331,6 +332,7 @@ public class Navigator implements Serializable {
         }
     }
 
+    private final UI ui;
     private final NavigationStateManager stateManager;
     private final ViewDisplay display;
     private View currentView = null;
@@ -354,30 +356,34 @@ public class Navigator implements Serializable {
      * the application should trigger navigation to the current fragment using
      * {@link #navigate()}.
      * 
+     * @param ui
+     *            The UI to which this Navigator is attached.
      * @param container
-     *            ComponentContainer whose contents should be replaced with the
-     *            active view on view change
+     *            The ComponentContainer whose contents should be replaced with
+     *            the active view on view change
      */
-    public Navigator(ComponentContainer container) {
-        display = new ComponentContainerViewDisplay(container);
-        stateManager = new UriFragmentManager(Page.getCurrent(), this);
+    public Navigator(UI ui, ComponentContainer container) {
+        this(ui, new ComponentContainerViewDisplay(container));
     }
 
     /**
-     * Creates a navigator that is tracking the active view using URI fragments.
+     * Creates a navigator that is tracking the active view using URI fragments
+     * of the Page containing the given UI.
      * <p>
      * After all {@link View}s and {@link ViewProvider}s have been registered,
      * the application should trigger navigation to the current fragment using
      * {@link #navigate()}.
      * 
-     * @param page
-     *            whose URI fragments are used
+     * @param ui
+     *            The UI to which this Navigator is attached.
      * @param display
-     *            where to display the views
+     *            The ViewDisplay used to display the views.
      */
-    public Navigator(Page page, ViewDisplay display) {
+    public Navigator(UI ui, ViewDisplay display) {
+        this.ui = ui;
+        this.ui.setNavigator(this);
         this.display = display;
-        stateManager = new UriFragmentManager(page, this);
+        stateManager = new UriFragmentManager(ui.getPage(), this);
     }
 
     /**
@@ -391,14 +397,19 @@ public class Navigator implements Serializable {
      * the application should trigger navigation to the current fragment using
      * {@link #navigate()}.
      * 
+     * @param ui
+     *            The UI to which this Navigator is attached.
      * @param stateManager
-     *            {@link NavigationStateManager} keeping track of the active
-     *            view and enabling bookmarking and direct navigation
+     *            The NavigationStateManager keeping track of the active view
+     *            and enabling bookmarking and direct navigation
      * @param display
-     *            {@ViewDisplay} used to display the views handled
-     *            by this navigator
+     *            The ViewDisplay used to display the views handled by this
+     *            navigator
      */
-    public Navigator(NavigationStateManager stateManager, ViewDisplay display) {
+    public Navigator(UI ui, NavigationStateManager stateManager,
+            ViewDisplay display) {
+        this.ui = ui;
+        this.ui.setNavigator(this);
         this.display = display;
         this.stateManager = stateManager;
     }
@@ -545,6 +556,10 @@ public class Navigator implements Serializable {
      */
     public ViewDisplay getDisplay() {
         return display;
+    }
+
+    public UI getUI() {
+        return ui;
     }
 
     /**

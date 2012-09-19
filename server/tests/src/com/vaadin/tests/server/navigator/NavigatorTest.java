@@ -73,7 +73,7 @@ public class NavigatorTest extends TestCase {
 
     public static class TestNavigator extends Navigator {
         public TestNavigator() {
-            super(new NullFragmentManager(), new TestDisplay());
+            super(null, new NullFragmentManager(), new TestDisplay());
         }
 
         public View getView(String viewAndParameters) {
@@ -221,7 +221,7 @@ public class NavigatorTest extends TestCase {
         control.replay();
 
         // create and test navigator
-        Navigator navigator = new Navigator(manager, display);
+        Navigator navigator = new Navigator(null, manager, display);
         navigator.addProvider(provider);
 
         navigator.navigateTo("test1");
@@ -264,7 +264,7 @@ public class NavigatorTest extends TestCase {
         control.replay();
 
         // create and test navigator
-        Navigator navigator = new Navigator(manager, display);
+        Navigator navigator = new Navigator(null, manager, display);
         navigator.addProvider(provider);
 
         navigator.navigateTo("test2");
@@ -283,7 +283,7 @@ public class NavigatorTest extends TestCase {
         ViewChangeTestListener listener = new ViewChangeTestListener();
 
         // create navigator to test
-        Navigator navigator = new Navigator(manager, display);
+        Navigator navigator = new Navigator(null, manager, display);
 
         // prepare mocks: what to expect
         EasyMock.expect(provider.getViewName("test1")).andReturn("test1");
@@ -333,7 +333,7 @@ public class NavigatorTest extends TestCase {
         ViewChangeTestListener listener1 = new ViewChangeTestListener();
         ViewChangeTestListener listener2 = new ViewChangeTestListener();
 
-        Navigator navigator = new Navigator(manager, display);
+        Navigator navigator = new Navigator(null, manager, display);
 
         // prepare mocks: what to expect
         // first listener blocks first view change
@@ -467,7 +467,7 @@ public class NavigatorTest extends TestCase {
     }
 
     public void testAddViewWithNullName() throws Exception {
-        Navigator navigator = new Navigator(new NullFragmentManager(),
+        Navigator navigator = new Navigator(null, new NullFragmentManager(),
                 new NullDisplay());
 
         try {
@@ -483,7 +483,7 @@ public class NavigatorTest extends TestCase {
     }
 
     public void testAddViewWithNullInstance() throws Exception {
-        Navigator navigator = new Navigator(new NullFragmentManager(),
+        Navigator navigator = new Navigator(null, new NullFragmentManager(),
                 new NullDisplay());
 
         try {
@@ -494,7 +494,7 @@ public class NavigatorTest extends TestCase {
     }
 
     public void testAddViewWithNullClass() throws Exception {
-        Navigator navigator = new Navigator(new NullFragmentManager(),
+        Navigator navigator = new Navigator(null, new NullFragmentManager(),
                 new NullDisplay());
 
         try {
