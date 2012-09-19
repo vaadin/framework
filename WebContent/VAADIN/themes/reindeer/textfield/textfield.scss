@@ -11,7 +11,8 @@
 .v-textfield,
 .v-textarea,
 .white .v-textfield,
-.white .v-textarea {
+.white .v-textarea,
+div.v-table-full-height-fields input.v-textfield {
 	border: 1px solid #bcbdbe;
 	border-top-color: #a2a3a4;
 	border-bottom-color: #d2d3d4;
@@ -34,7 +35,8 @@
 .v-app input.v-textfield,
 .v-window input.v-textfield,
 .v-app textarea.v-textarea,
-.v-window textarea.v-textarea  {
+.v-window textarea.v-textarea,
+div.v-table-full-height-fields input.v-textfield  {
 	padding: 3px 3px 4px;
 }
 .v-app input.v-textfield.v-widget,

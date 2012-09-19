@@ -245,7 +245,8 @@ td.v-datefield-calendarpanel-nextyear {
 .v-datefield-full >.v-datefield-textfield {
 	width: 12.5em;
 }
-.v-datefield-popupcalendar input.v-datefield-textfield {
+.v-datefield-popupcalendar input.v-datefield-textfield,
+div.v-table-full-height-fields .v-datefield-popupcalendar input.v-datefield-textfield {
 	border-right-width: 0;
 	-moz-border-radius-topright: 0;
 	-moz-border-radius-bottomright: 0;
