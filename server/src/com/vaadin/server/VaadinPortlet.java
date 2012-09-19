@@ -687,7 +687,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             } finally {
 
                 if (applicationRunning) {
-                    application.closeInactiveUIs();
+                    application.cleanupInactiveUIs();
                 }
 
                 CurrentInstance.clearAll();

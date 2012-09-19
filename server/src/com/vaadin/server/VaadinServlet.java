@@ -491,7 +491,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         } finally {
 
             if (applicationRunning) {
-                application.closeInactiveUIs();
+                application.cleanupInactiveUIs();
             }
 
             CurrentInstance.clearAll();
