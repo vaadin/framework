@@ -59,12 +59,10 @@ public class VUriFragmentUtility extends Widget implements Paintable,
             // initial paint has some special logic
             this.client = client;
             paintableId = uidl.getId();
-            if (!fragment.equals(uidlFragment)) {
-                // initial server side fragment (from link/bookmark/typed) does
-                // not equal the one on
-                // server, send initial fragment to server
-                History.fireCurrentHistoryState();
-            }
+            // Use fragment from server side for comparison so that an event is
+            // sent if the current fragment is not the same as "uidlFragment"
+            fragment = uidlFragment;
+            History.fireCurrentHistoryState();
         } else {
             if (uidlFragment != null && !uidlFragment.equals(fragment)) {
                 fragment = uidlFragment;
@@ -75,6 +73,16 @@ public class VUriFragmentUtility extends Widget implements Paintable,
     }
 
     public void onValueChange(ValueChangeEvent<String> event) {
+        if (client == null) {
+            // can't send the initial fragment before updateFromUIDL has been
+            // executed even though the listener is added in attach()
+
+            // We don't want to update the fragment variable either so that we
+            // can compare and possibly send the fragment on the next call to
+            // this method
+            return;
+        }
+
         String historyToken = event.getValue();
         if (fragment != null && fragment.equals(historyToken)) {
             // Do nothing if the fragment has not changed. This can at least
@@ -83,9 +91,6 @@ public class VUriFragmentUtility extends Widget implements Paintable,
         }
         fragment = historyToken;
 
-        if (client != null) {
-            client.updateVariable(paintableId, "fragment", fragment, immediate);
-        }
+        client.updateVariable(paintableId, "fragment", fragment, immediate);
     }
-
 }
