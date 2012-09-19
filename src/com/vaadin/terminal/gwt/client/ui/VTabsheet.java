@@ -1031,6 +1031,18 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                     "visibility", "");
             previousVisibleWidget = null;
         }
+
+        /*
+         * We must ensure that the size of the TabSheet is recalculated when
+         * changing tabs. In all standard cases this is taken care of
+         * automatically but this hack is necessary in cases such as #9275 when
+         * a cached tab in an inner tab sheet is selected at the same time as
+         * the selected tab in the outer tab sheet is changed.
+         */
+        if (isDynamicHeight() || isDynamicWidth()) {
+            client.resetCachedSize(this);
+        }
+
     }
 
     @Override

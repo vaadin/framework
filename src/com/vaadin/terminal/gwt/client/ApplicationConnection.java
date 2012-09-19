@@ -2684,4 +2684,15 @@ public class ApplicationConnection {
         return uri;
     }
 
+    /**
+     * Removes the cached size info for the paintable. This is for really edge
+     * cases only and should normally not be called by anyone.
+     * 
+     * @param p
+     *            The paintable whose cached size info should be discarded
+     */
+    public void resetCachedSize(Paintable p) {
+        idToPaintableDetail.get(getPid(p)).setOffsetSize(null);
+        idToPaintableDetail.get(getPid(p)).setRelativeSize(null);
+    }
 }
