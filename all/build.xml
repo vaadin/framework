@@ -75,7 +75,7 @@
 
 
 	</target>
-	<target name="zip" depends="copy-jars, javadoc">
+	<target name="zip" depends="copy-jars">
 		<zip destfile="${zip.file}">
 			<fileset dir="${temp.dir}">
 				<!-- Avoid conflicts with servlet and portlet API. They are provided by the container -->
