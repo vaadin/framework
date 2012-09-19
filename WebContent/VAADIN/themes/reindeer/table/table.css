@@ -114,6 +114,9 @@
 	border-right-color: #d3d4d5;
 	vertical-align: top;
 }
+.v-table.full-height-fields .v-table-cell-content {
+	height: 32px;
+}
 .v-table-cell-wrapper {
 	padding-top: 3px;
 	padding-bottom: 3px;

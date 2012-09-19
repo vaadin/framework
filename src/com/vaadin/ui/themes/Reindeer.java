@@ -214,4 +214,12 @@ public class Reindeer extends BaseTheme {
      * same way as {@link #LAYOUT_BLACK} does.
      */
     public static final String WINDOW_BLACK = "black";
+
+    /**
+     * Makes fields inside Table use their normal height instead of the reduced
+     * height defined for e.g. TextField. This can be used to improve vertical
+     * alignment if higher components, e.g. ComboBox or PopupDateField are used
+     * in the Table.
+     */
+    public static final String TABLE_FULL_HEIGHT_FIELDS = "full-height-fields";
 }
