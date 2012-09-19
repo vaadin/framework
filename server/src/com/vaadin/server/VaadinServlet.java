@@ -197,6 +197,20 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 VaadinSession session) {
             return new CommunicationManager(session);
         }
+
+        public static WrappedHttpServletRequest getCurrentRequest() {
+            WrappedRequest currentRequest = VaadinService.getCurrentRequest();
+            try {
+                return WrappedHttpServletRequest.cast(currentRequest);
+            } catch (ClassCastException e) {
+                return null;
+            }
+        }
+
+        public static WrappedHttpServletResponse getCurrentResponse() {
+            return (WrappedHttpServletResponse) VaadinService
+                    .getCurrentResponse();
+        }
     }
 
     private static class AbstractApplicationServletWrapper implements Callback {
@@ -241,6 +255,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
     @Override
     public void init(javax.servlet.ServletConfig servletConfig)
             throws javax.servlet.ServletException {
+        CurrentInstance.clearAll();
+        setCurrent(this);
         super.init(servletConfig);
         Properties initParameters = new Properties();
 
@@ -262,15 +278,58 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
         DeploymentConfiguration deploymentConfiguration = createDeploymentConfiguration(initParameters);
         servletService = createServletService(deploymentConfiguration);
+        // Sets current service even though there are no request and response
+        servletService.setCurrentInstances(null, null);
 
         addonContext = new AddonContext(servletService);
         addonContext.init();
 
         servletInitialized();
+
+        CurrentInstance.clearAll();
     }
 
     protected void servletInitialized() {
         // Empty by default
+    }
+
+    /**
+     * Gets the currently used Vaadin servlet. The current servlet is
+     * automatically defined when initializing the servlet and when processing
+     * requests to the server and in threads started at a point when the current
+     * servlet is defined (see {@link InheritableThreadLocal}). In other cases,
+     * (e.g. from background threads started in some other way), the current
+     * servlet is not automatically defined.
+     * 
+     * @return the current Vaadin servlet instance if available, otherwise
+     *         <code>null</code>
+     * 
+     * @see #setCurrent(VaadinServlet)
+     * 
+     * @since 7.0
+     */
+    public static VaadinServlet getCurrent() {
+        return CurrentInstance.get(VaadinServlet.class);
+    }
+
+    /**
+     * Sets the current Vaadin servlet. This method is used by the framework to
+     * set the current servlet whenever a new request is processed and it is
+     * cleared when the request has been processed.
+     * <p>
+     * The application developer can also use this method to define the current
+     * servlet outside the normal request handling, e.g. when initiating custom
+     * background threads.
+     * </p>
+     * 
+     * @param servlet
+     *            the Vaadin servlet to register as the current servlet
+     * 
+     * @see #getCurrent()
+     * @see InheritableThreadLocal
+     */
+    public static void setCurrent(VaadinServlet servlet) {
+        CurrentInstance.setInheritable(VaadinServlet.class, servlet);
     }
 
     protected DeploymentConfiguration createDeploymentConfiguration(
@@ -310,6 +369,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
     @Override
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
+        CurrentInstance.clearAll();
+        setCurrent(this);
         service(createWrappedRequest(request), createWrappedResponse(response));
     }
 
@@ -319,8 +380,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         RequestTimer requestTimer = new RequestTimer();
         requestTimer.start();
 
-        CurrentInstance.set(WrappedResponse.class, response);
-        CurrentInstance.set(WrappedRequest.class, request);
+        getVaadinService().setCurrentInstances(request, response);
 
         AbstractApplicationServletWrapper servletWrapper = new AbstractApplicationServletWrapper(
                 this);

@@ -34,6 +34,7 @@ import com.vaadin.LegacyApplication;
 import com.vaadin.event.EventRouter;
 import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
 import com.vaadin.server.VaadinSession.SessionStartEvent;
+import com.vaadin.util.CurrentInstance;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -447,4 +448,82 @@ public abstract class VaadinService implements Serializable {
      *         for the request; else <code>false</code>
      */
     protected abstract boolean requestCanCreateSession(WrappedRequest request);
+
+    /**
+     * Gets the currently used Vaadin service. The current service is
+     * automatically defined when processing requests related to the service and
+     * in threads started at a point when the current service is defined (see
+     * {@link InheritableThreadLocal}). In other cases, (e.g. from background
+     * threads started in some other way), the current service is not
+     * automatically defined.
+     * 
+     * @return the current Vaadin service instance if available, otherwise
+     *         <code>null</code>
+     * 
+     * @see #setCurrentInstances(WrappedRequest, WrappedResponse)
+     */
+    public static VaadinService getCurrent() {
+        return CurrentInstance.get(VaadinService.class);
+    }
+
+    /**
+     * Sets the this Vaadin service as the current service and also sets the
+     * current wrapped request and wrapped response. This method is used by the
+     * framework to set the current instances when a request related to the
+     * service is processed and they are cleared when the request has been
+     * processed.
+     * <p>
+     * The application developer can also use this method to define the current
+     * instances outside the normal request handling, e.g. when initiating
+     * custom background threads.
+     * </p>
+     * 
+     * @param request
+     *            the wrapped request to set as the current request, or
+     *            <code>null</code> if no request should be set.
+     * @param response
+     *            the wrapped response to set as the current response, or
+     *            <code>null</code> if no response should be set.
+     * 
+     * @see #getCurrent()
+     * @see #getCurrentRequest()
+     * @see #getCurrentResponse()
+     */
+    public void setCurrentInstances(WrappedRequest request,
+            WrappedResponse response) {
+        CurrentInstance.setInheritable(VaadinService.class, this);
+        CurrentInstance.set(WrappedRequest.class, request);
+        CurrentInstance.set(WrappedResponse.class, response);
+    }
+
+    /**
+     * Gets the currently processed wrapped request. The current request is
+     * automatically defined when the request is started. The current request
+     * can not be used in e.g. background threads because of the way server
+     * implementations reuse request instances.
+     * 
+     * @return the current wrapped request instance if available, otherwise
+     *         <code>null</code>
+     * 
+     * @see #setCurrentInstances(WrappedRequest, WrappedResponse)
+     */
+    public static WrappedRequest getCurrentRequest() {
+        return CurrentInstance.get(WrappedRequest.class);
+    }
+
+    /**
+     * Gets the currently processed wrapped request. The current request is
+     * automatically defined when the request is started. The current request
+     * can not be used in e.g. background threads because of the way server
+     * implementations reuse request instances.
+     * 
+     * @return the current wrapped request instance if available, otherwise
+     *         <code>null</code>
+     * 
+     * @see #setCurrentInstances(WrappedRequest, WrappedResponse)
+     */
+    public static WrappedResponse getCurrentResponse() {
+        return CurrentInstance.get(WrappedResponse.class);
+    }
+
 }

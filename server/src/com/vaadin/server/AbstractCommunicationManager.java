@@ -84,6 +84,7 @@ import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
+import com.vaadin.util.CurrentInstance;
 
 /**
  * This is a common base class for the server-side implementations of the
@@ -2469,6 +2470,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             assert UI.getCurrent() == null;
 
             CombinedRequest combinedRequest = new CombinedRequest(request);
+            CurrentInstance.set(WrappedRequest.class, combinedRequest);
 
             response.setContentType("application/json; charset=UTF-8");
 

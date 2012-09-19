@@ -5,14 +5,13 @@ import java.io.File;
 import java.io.FileInputStream;
 
 import com.vaadin.LegacyApplication;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinService;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.UI.LegacyWindow;
-import com.vaadin.util.CurrentInstance;
 
 public class Ticket1975 extends LegacyApplication {
 
@@ -47,8 +46,8 @@ public class Ticket1975 extends LegacyApplication {
                         }
 
                     }));
-            File baseDir = CurrentInstance.get(WrappedRequest.class)
-                    .getVaadinService().getBaseDirectory().getAbsoluteFile();
+            File baseDir = VaadinService.getCurrent().getBaseDirectory()
+                    .getAbsoluteFile();
             File f = new File(baseDir + "/VAADIN/themes/" + getTheme()
                     + "/layouts/Ticket1975.html");
 

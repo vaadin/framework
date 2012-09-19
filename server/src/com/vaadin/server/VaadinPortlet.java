@@ -222,6 +222,19 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             return new PortletCommunicationManager(session);
         }
 
+        public static WrappedPortletRequest getCurrentRequest() {
+            WrappedRequest currentRequest = VaadinService.getCurrentRequest();
+            try {
+                return WrappedPortletRequest.cast(currentRequest);
+            } catch (ClassCastException e) {
+                return null;
+            }
+        }
+
+        public static WrappedPortletResponse getCurrentResponse() {
+            return (WrappedPortletResponse) VaadinService.getCurrentResponse();
+        }
+
     }
 
     public static class WrappedHttpAndPortletRequest extends
@@ -377,6 +390,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
     @Override
     public void init(PortletConfig config) throws PortletException {
+        CurrentInstance.clearAll();
+        setCurrent(this);
         super.init(config);
         Properties initParameters = new Properties();
 
@@ -397,11 +412,14 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
         DeploymentConfiguration deploymentConfiguration = createDeploymentConfiguration(initParameters);
         vaadinService = createPortletService(deploymentConfiguration);
+        // Sets current service even though there are no request and response
+        vaadinService.setCurrentInstances(null, null);
 
         addonContext = new AddonContext(vaadinService);
         addonContext.init();
 
         portletInitialized();
+        CurrentInstance.clearAll();
     }
 
     protected void portletInitialized() {
@@ -499,6 +517,9 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         RequestTimer requestTimer = new RequestTimer();
         requestTimer.start();
 
+        CurrentInstance.clearAll();
+        setCurrent(this);
+
         AbstractApplicationPortletWrapper portletWrapper = new AbstractApplicationPortletWrapper(
                 this);
 
@@ -507,8 +528,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         WrappedPortletResponse wrappedResponse = new WrappedPortletResponse(
                 response, getVaadinService());
 
-        CurrentInstance.set(WrappedRequest.class, wrappedRequest);
-        CurrentInstance.set(WrappedResponse.class, wrappedResponse);
+        getVaadinService().setCurrentInstances(wrappedRequest, wrappedResponse);
 
         RequestType requestType = getRequestType(wrappedRequest);
 
@@ -926,6 +946,45 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
     private static final Logger getLogger() {
         return Logger.getLogger(VaadinPortlet.class.getName());
+    }
+
+    /**
+     * Gets the currently used Vaadin portlet. The current portlet is
+     * automatically defined when initializing the portlet and when processing
+     * requests to the server and in threads started at a point when the current
+     * portlet is defined (see {@link InheritableThreadLocal}). In other cases,
+     * (e.g. from background threads started in some other way), the current
+     * portlet is not automatically defined.
+     * 
+     * @return the current vaadin portlet instance if available, otherwise
+     *         <code>null</code>
+     * 
+     * @see #setCurrent(VaadinPortlet)
+     * 
+     * @since 7.0
+     */
+    public static VaadinPortlet getCurrent() {
+        return CurrentInstance.get(VaadinPortlet.class);
+    }
+
+    /**
+     * Sets the current Vaadin portlet. This method is used by the framework to
+     * set the current portlet whenever a new request is processed and it is
+     * cleared when the request has been processed.
+     * <p>
+     * The application developer can also use this method to define the current
+     * portlet outside the normal request handling, e.g. when initiating custom
+     * background threads.
+     * </p>
+     * 
+     * @param portlet
+     *            the Vaadin portlet to register as the current portlet
+     * 
+     * @see #getCurrent()
+     * @see InheritableThreadLocal
+     */
+    public static void setCurrent(VaadinPortlet portlet) {
+        CurrentInstance.setInheritable(VaadinPortlet.class, portlet);
     }
 
 }

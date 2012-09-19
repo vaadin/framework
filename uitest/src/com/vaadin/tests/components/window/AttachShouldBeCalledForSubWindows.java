@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.window;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.server.VaadinService;
 import com.vaadin.server.WrappedRequest;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.util.Log;
@@ -11,7 +12,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
-import com.vaadin.util.CurrentInstance;
 
 public class AttachShouldBeCalledForSubWindows extends AbstractTestCase {
     private static final long serialVersionUID = 1L;
@@ -23,7 +23,7 @@ public class AttachShouldBeCalledForSubWindows extends AbstractTestCase {
     @Override
     public void init() {
 
-        WrappedRequest request = CurrentInstance.get(WrappedRequest.class);
+        WrappedRequest request = VaadinService.getCurrentRequest();
         if (request.getParameter("attachMainFirst") != null) {
             addSubWindowBeforeMainWindow = false;
         } else {
