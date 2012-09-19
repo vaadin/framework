@@ -54,8 +54,7 @@ TODO
 
 .v-vertical,
 .v-horizontal {
-	display: inline-block;
-	line-height:0;
+	display: block;	
 }
 
 div.v-layout.v-horizontal.v-widget {
@@ -85,6 +84,7 @@ div.v-layout.v-horizontal.v-widget {
 	width: 0;
 	height: 0;
 	overflow: hidden;
+	line-height:0;
 }
 
 .v-vertical > .v-slot,
