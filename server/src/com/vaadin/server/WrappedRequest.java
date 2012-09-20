@@ -161,7 +161,8 @@ public interface WrappedRequest extends Serializable {
     public String getRequestPathInfo();
 
     /**
-     * Gets the session associated with this request.
+     * Gets the session associated with this request, creating a new if there is
+     * no session.
      * 
      * @see WrappedSession
      * @see HttpServletRequest#getSession()
@@ -170,6 +171,23 @@ public interface WrappedRequest extends Serializable {
      * @return the wrapped session for this request
      */
     public WrappedSession getWrappedSession();
+
+    /**
+     * Gets the session associated with this request, optionally creating a new
+     * if there is no session.
+     * 
+     * @param allowSessionCreation
+     *            <code>true</code> to create a new session for this request if
+     *            necessary; <code>false</code> to return <code>null</code> if
+     *            there's no current session
+     * 
+     * @see WrappedSession
+     * @see HttpServletRequest#getSession(boolean)
+     * @see PortletRequest#getPortletSession(boolean)
+     * 
+     * @return the wrapped session for this request
+     */
+    public WrappedSession getWrappedSession(boolean allowSessionCreation);
 
     /**
      * Returns the MIME type of the body of the request, or null if the type is

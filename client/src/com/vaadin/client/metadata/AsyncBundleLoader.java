@@ -53,13 +53,15 @@ public abstract class AsyncBundleLoader {
     public void load(BundleLoadCallback callback, TypeDataStore store) {
         assert state == State.NOT_STARTED;
         state = State.LOADING;
-        callbacks.add(callback);
+        addCallback(callback);
         load(store);
     }
 
     public void addCallback(BundleLoadCallback callback) {
         assert state == State.LOADING;
-        callbacks.add(callback);
+        if (callback != null) {
+            callbacks.add(callback);
+        }
     }
 
     public List<BundleLoadCallback> setLoaded() {

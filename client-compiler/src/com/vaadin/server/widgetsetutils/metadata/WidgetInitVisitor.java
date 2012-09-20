@@ -20,25 +20,35 @@ public class WidgetInitVisitor extends TypeVisitor {
     public void visitConnector(TreeLogger logger, JClassType type,
             ConnectorBundle bundle) throws UnableToCompleteException {
         if (ConnectorBundle.isConnectedComponentConnector(type)) {
+            // The class in which createWidget is implemented
             JClassType createWidgetClass = findInheritedMethod(type,
                     "createWidget").getEnclosingType();
-            boolean needsCreateWidgetSupport = createWidgetClass
-                    .getQualifiedSourceName()
-                    .equals(AbstractComponentConnector.class.getCanonicalName());
 
             JMethod getWidget = findInheritedMethod(type, "getWidget");
             JClassType widgetType = getWidget.getReturnType().isClass();
 
+            // Needs GWT constructor if createWidget is not overridden
+            if (createWidgetClass.getQualifiedSourceName().equals(
+                    AbstractComponentConnector.class.getCanonicalName())) {
+                bundle.setNeedsGwtConstructor(widgetType);
+
+                // Also needs widget type to find the right GWT constructor
+                bundle.setNeedsReturnType(type, getWidget);
+            }
+
+            // Check state properties for @DelegateToWidget
             JMethod getState = findInheritedMethod(type, "getState");
             JClassType stateType = getState.getReturnType().isClass();
 
             Collection<Property> properties = bundle.getProperties(stateType);
-            boolean hasDelegateToWidget = false;
             for (Property property : properties) {
                 DelegateToWidget delegateToWidget = property
                         .getAnnotation(DelegateToWidget.class);
                 if (delegateToWidget != null) {
+                    // Generate meta data required for @DelegateToWidget
                     bundle.setNeedsDelegateToWidget(property);
+
+                    // Find the delegate target method
                     String methodName = DelegateToWidget.Helper
                             .getDelegateTarget(property.getName(),
                                     delegateToWidget.value());
@@ -60,13 +70,10 @@ public class WidgetInitVisitor extends TypeVisitor {
                         throw new UnableToCompleteException();
                     }
                     bundle.setNeedsInvoker(widgetType, delegatedSetter);
-                    hasDelegateToWidget = true;
-                }
-            }
 
-            if (hasDelegateToWidget || needsCreateWidgetSupport) {
-                bundle.setNeedsReturnType(type, getWidget);
-                bundle.setNeedsGwtConstructor(widgetType);
+                    // GWT code needs widget type to find the target method
+                    bundle.setNeedsReturnType(type, getWidget);
+                }
             }
 
         }

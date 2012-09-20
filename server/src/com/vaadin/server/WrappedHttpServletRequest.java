@@ -18,6 +18,7 @@ package com.vaadin.server;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpSession;
 
 import com.vaadin.server.VaadinServlet.ServletService;
 
@@ -56,7 +57,17 @@ public class WrappedHttpServletRequest extends HttpServletRequestWrapper
 
     @Override
     public WrappedSession getWrappedSession() {
-        return new WrappedHttpSession(getSession());
+        return getWrappedSession(true);
+    }
+
+    @Override
+    public WrappedSession getWrappedSession(boolean allowSessionCreation) {
+        HttpSession session = getSession(allowSessionCreation);
+        if (session != null) {
+            return new WrappedHttpSession(session);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -111,4 +122,5 @@ public class WrappedHttpServletRequest extends HttpServletRequestWrapper
         }
         return (WrappedHttpServletRequest) request;
     }
+
 }

@@ -47,10 +47,14 @@ public abstract class ConnectorBundleLoader {
             loader.addCallback(callback);
             break;
         case LOADED:
-            callback.loaded();
+            if (callback != null) {
+                callback.loaded();
+            }
             break;
         case ERROR:
-            callback.failed(loader.getError());
+            if (callback != null) {
+                callback.failed(loader.getError());
+            }
         }
     }
 

@@ -799,8 +799,8 @@ public abstract class UI extends AbstractComponentContainer implements
     /**
      * Remove the given subwindow from this UI.
      * 
-     * Since Vaadin 6.5, {@link CloseListener}s are called also when explicitly
-     * removing a window by calling this method.
+     * Since Vaadin 6.5, {@link Window.CloseListener}s are called also when
+     * explicitly removing a window by calling this method.
      * 
      * Since Vaadin 6.5, returns a boolean indicating if the window was removed
      * or not.
