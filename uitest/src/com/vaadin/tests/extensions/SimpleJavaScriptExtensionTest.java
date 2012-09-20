@@ -22,7 +22,7 @@ import org.json.JSONException;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.server.AbstractJavaScriptExtension;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.JavaScriptExtensionState;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
@@ -98,7 +98,7 @@ public class SimpleJavaScriptExtensionTest extends AbstractTestUI {
     }
 
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         final SimpleJavascriptExtension simpleJavascriptExtension = new SimpleJavascriptExtension();
         simpleJavascriptExtension.setPrefix("Prefix: ");
         addExtension(simpleJavascriptExtension);

@@ -80,7 +80,7 @@ public class TestAbstractApplicationServletStaticFilesLocation extends TestCase 
         replay(request);
 
         String location = servlet.getVaadinService().getStaticFileLocation(
-                servlet.createWrappedRequest(request));
+                servlet.createVaadinRequest(request));
         return location;
     }
 
@@ -93,7 +93,7 @@ public class TestAbstractApplicationServletStaticFilesLocation extends TestCase 
         replay(request);
 
         String location = servlet.getVaadinService().getStaticFileLocation(
-                servlet.createWrappedRequest(request));
+                servlet.createVaadinRequest(request));
         return location;
     }
 

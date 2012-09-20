@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -116,7 +116,7 @@ public class AttachDetachWindow {
         }
 
         @Override
-        protected void init(WrappedRequest request) {
+        protected void init(VaadinRequest request) {
             // Do nothing
         }
 

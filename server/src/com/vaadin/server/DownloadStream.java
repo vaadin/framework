@@ -220,7 +220,7 @@ public class DownloadStream implements Serializable {
     }
 
     /**
-     * Writes this download stream to a wrapped response. This takes care of
+     * Writes this download stream to a Vaadin response. This takes care of
      * setting response headers according to what is defined in this download
      * stream ({@link #getContentType()}, {@link #getCacheTime()},
      * {@link #getFileName()}) and transferring the data from the stream (
@@ -233,14 +233,14 @@ public class DownloadStream implements Serializable {
      * @param request
      *            the request for which the response should be written
      * @param response
-     *            the wrapped response to write this download stream to
+     *            the Vaadin response to write this download stream to
      * 
      * @throws IOException
-     *             passed through from the wrapped response
+     *             passed through from the Vaadin response
      * 
      * @since 7.0
      */
-    public void writeResponse(WrappedRequest request, WrappedResponse response)
+    public void writeResponse(VaadinRequest request, VaadinResponse response)
             throws IOException {
         if (getParameter("Location") != null) {
             response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);

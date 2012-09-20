@@ -2,7 +2,7 @@ package com.vaadin.tests.components.ui;
 
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestUIProvider;
 import com.vaadin.ui.Label;
@@ -14,28 +14,28 @@ public class LazyInitUIs extends AbstractTestUIProvider {
     // @EagerInit
     private static class EagerInitUI extends UI {
         @Override
-        public void init(WrappedRequest request) {
+        public void init(VaadinRequest request) {
             addComponent(getRequestInfo("EagerInitUI", request));
         }
     }
 
     @Override
-    public UI createInstance(WrappedRequest request,
+    public UI createInstance(VaadinRequest request,
             Class<? extends UI> type) {
         return getUI(request);
     }
 
     @Override
-    public Class<? extends UI> getUIClass(WrappedRequest request) {
+    public Class<? extends UI> getUIClass(VaadinRequest request) {
         return getUI(request).getClass();
     }
 
-    private UI getUI(WrappedRequest request) {
+    private UI getUI(VaadinRequest request) {
         if (request.getParameter("lazyCreate") != null) {
             // UI created on second request
             UI uI = new UI() {
                 @Override
-                protected void init(WrappedRequest request) {
+                protected void init(VaadinRequest request) {
                     addComponent(getRequestInfo("LazyCreateUI", request));
                 }
             };
@@ -47,7 +47,7 @@ public class LazyInitUIs extends AbstractTestUIProvider {
             // The standard UI
             UI uI = new UI() {
                 @Override
-                protected void init(WrappedRequest request) {
+                protected void init(VaadinRequest request) {
                     addComponent(getRequestInfo("NormalUI", request));
 
                     Link lazyCreateLink = new Link("Open lazyCreate UI",
@@ -68,7 +68,7 @@ public class LazyInitUIs extends AbstractTestUIProvider {
         }
     }
 
-    public static Label getRequestInfo(String name, WrappedRequest request) {
+    public static Label getRequestInfo(String name, VaadinRequest request) {
         String info = name;
         info += "<br />pathInfo: " + request.getRequestPathInfo();
         info += "<br />parameters: " + request.getParameterMap().keySet();

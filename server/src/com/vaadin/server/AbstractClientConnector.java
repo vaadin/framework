@@ -570,8 +570,8 @@ public abstract class AbstractClientConnector implements ClientConnector {
     }
 
     @Override
-    public boolean handleConnectorRequest(WrappedRequest request,
-            WrappedResponse response, String path) throws IOException {
+    public boolean handleConnectorRequest(VaadinRequest request,
+            VaadinResponse response, String path) throws IOException {
         String[] parts = path.split("/", 2);
         String key = parts[0];
 

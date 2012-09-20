@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.ui;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
 
@@ -9,7 +9,7 @@ import com.vaadin.ui.Label;
 public class TestUITheme extends AbstractTestUI {
 
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         Label label = new Label("A red label");
         label.setStyleName("red");
         addComponent(label);

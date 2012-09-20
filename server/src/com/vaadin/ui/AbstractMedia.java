@@ -26,8 +26,8 @@ import java.util.regex.Pattern;
 import com.vaadin.server.ConnectorResource;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
-import com.vaadin.server.WrappedRequest;
-import com.vaadin.server.WrappedResponse;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinResponse;
 import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.AbstractMediaState;
 import com.vaadin.shared.ui.MediaControl;
@@ -79,8 +79,8 @@ public abstract class AbstractMedia extends AbstractComponent {
     }
 
     @Override
-    public boolean handleConnectorRequest(WrappedRequest request,
-            WrappedResponse response, String path) throws IOException {
+    public boolean handleConnectorRequest(VaadinRequest request,
+            VaadinResponse response, String path) throws IOException {
         Matcher matcher = Pattern.compile("(\\d+)(/.*)?").matcher(path);
         if (matcher.matches()) {
             List<URLReference> sources = getState().sources;

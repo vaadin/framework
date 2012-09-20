@@ -17,7 +17,7 @@
 package com.vaadin.tests.minitutorials.v7a1;
 
 import com.vaadin.annotations.PreserveOnRefresh;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 
@@ -34,7 +34,7 @@ public class CreatingPreserveState extends UI {
     private static int windowCounter = 0;
 
     @Override
-    public void init(WrappedRequest request) {
+    public void init(VaadinRequest request) {
         TextField tf = new TextField("Window #" + (++windowCounter));
         tf.setImmediate(true);
         getContent().addComponent(tf);

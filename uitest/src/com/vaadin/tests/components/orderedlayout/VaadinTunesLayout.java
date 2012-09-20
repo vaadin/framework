@@ -3,7 +3,7 @@ package com.vaadin.tests.components.orderedlayout;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.Sizeable;
 import com.vaadin.server.ThemeResource;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.slider.SliderOrientation;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -24,7 +24,7 @@ import com.vaadin.ui.VerticalLayout;
 public class VaadinTunesLayout extends AbstractTestUI {
 
     @Override
-    public void setup(WrappedRequest request) {
+    public void setup(VaadinRequest request) {
 
         /*
          * We'll build the whole UI here, since the application will not contain

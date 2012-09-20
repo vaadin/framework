@@ -38,13 +38,13 @@ public class BootstrapPageResponse extends BootstrapResponse {
     /**
      * Crate a new bootstrap page response.
      * 
-     * @see BootstrapResponse#BootstrapResponse(BootstrapHandler,
-     *      WrappedRequest, VaadinSession, Class)
+     * @see BootstrapResponse#BootstrapResponse(BootstrapHandler, VaadinRequest,
+     *      VaadinSession, Class)
      * 
      * @param handler
      *            the bootstrap handler that is firing the event
      * @param request
-     *            the wrapped request for which the bootstrap page should be
+     *            the Vaadin request for which the bootstrap page should be
      *            generated
      * @param session
      *            the vaadin session for which the bootstrap page should be
@@ -57,7 +57,7 @@ public class BootstrapPageResponse extends BootstrapResponse {
      *            a map into which header data can be added
      */
     public BootstrapPageResponse(BootstrapHandler handler,
-            WrappedRequest request, VaadinSession session,
+            VaadinRequest request, VaadinSession session,
             Class<? extends UI> uiClass, Document document,
             Map<String, Object> headers) {
         super(handler, request, session, uiClass);
@@ -69,7 +69,7 @@ public class BootstrapPageResponse extends BootstrapResponse {
      * Sets a header value that will be added to the HTTP response. If the
      * header had already been set, the new value overwrites the previous one.
      * 
-     * @see WrappedResponse#setHeader(String, String)
+     * @see VaadinResponse#setHeader(String, String)
      * 
      * @param name
      *            the name of the header
@@ -86,7 +86,7 @@ public class BootstrapPageResponse extends BootstrapResponse {
      * overwrites the previous one.
      * 
      * @see #setHeader(String, String)
-     * @see WrappedResponse#setDateHeader(String, long)
+     * @see VaadinResponse#setDateHeader(String, long)
      * 
      * @param name
      *            the name of the header

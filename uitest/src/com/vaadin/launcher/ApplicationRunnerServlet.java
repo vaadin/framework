@@ -38,8 +38,8 @@ import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.server.VaadinSessionInitializationListener;
 import com.vaadin.server.VaadinSessionInitializeEvent;
-import com.vaadin.server.WrappedHttpServletRequest;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinServletRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.UI;
 
@@ -138,7 +138,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
         }
     }
 
-    protected void onVaadinSessionStarted(WrappedRequest request,
+    protected void onVaadinSessionStarted(VaadinRequest request,
             VaadinSession session) throws ServiceException {
         try {
             final Class<?> classToRun = getClassToRun();
@@ -146,7 +146,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
                 session.addUIProvider(new AbstractUIProvider() {
 
                     @Override
-                    public Class<? extends UI> getUIClass(WrappedRequest request) {
+                    public Class<? extends UI> getUIClass(VaadinRequest request) {
                         return (Class<? extends UI>) classToRun;
                     }
                 });
@@ -166,7 +166,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
             throw new ServiceException(
                     new InstantiationException(
                             "Failed to load application class: "
-                                    + getApplicationRunnerApplicationClassName(WrappedHttpServletRequest
+                                    + getApplicationRunnerApplicationClassName(VaadinServletRequest
                                             .cast(request))));
         }
     }
@@ -293,8 +293,8 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
             DeploymentConfiguration deploymentConfiguration) {
         return new ServletService(this, deploymentConfiguration) {
             @Override
-            public String getStaticFileLocation(WrappedRequest request) {
-                URIS uris = getApplicationRunnerURIs(WrappedHttpServletRequest
+            public String getStaticFileLocation(VaadinRequest request) {
+                URIS uris = getApplicationRunnerURIs(VaadinServletRequest
                         .cast(request));
                 String staticFilesPath = uris.staticFilesPath;
                 if (staticFilesPath.equals("/")) {
@@ -307,9 +307,9 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     }
 
     @Override
-    protected WrappedHttpServletRequest createWrappedRequest(
+    protected VaadinServletRequest createVaadinRequest(
             HttpServletRequest request) {
-        return new WrappedHttpServletRequest(request, getVaadinService()) {
+        return new VaadinServletRequest(request, getVaadinService()) {
             @Override
             public String getRequestPathInfo() {
                 return ApplicationRunnerServlet.this.getRequestPathInfo(this);

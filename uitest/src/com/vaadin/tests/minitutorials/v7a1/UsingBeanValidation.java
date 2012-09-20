@@ -22,7 +22,7 @@ import javax.validation.constraints.Size;
 
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.BeanValidator;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 
@@ -70,7 +70,7 @@ public class UsingBeanValidation extends UI {
     }
 
     @Override
-    protected void init(WrappedRequest request) {
+    protected void init(VaadinRequest request) {
         Person person = new Person("John", 26);
         BeanItem<Person> item = new BeanItem<Person>(person);
 

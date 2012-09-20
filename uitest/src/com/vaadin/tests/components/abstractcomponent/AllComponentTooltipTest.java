@@ -15,7 +15,7 @@
  */
 package com.vaadin.tests.components.abstractcomponent;
 
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.VaadinClasses;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbstractComponent;
@@ -25,7 +25,7 @@ import com.vaadin.ui.GridLayout;
 public class AllComponentTooltipTest extends AbstractTestUI {
 
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         setContent(new GridLayout(5, 5));
         for (Class<? extends Component> cls : VaadinClasses.getComponents()) {
             try {

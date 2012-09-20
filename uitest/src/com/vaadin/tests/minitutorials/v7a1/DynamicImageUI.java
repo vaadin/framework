@@ -10,15 +10,15 @@ import javax.imageio.ImageIO;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.server.WrappedRequest;
-import com.vaadin.server.WrappedResponse;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinResponse;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Embedded;
 
 public class DynamicImageUI extends AbstractTestUI {
 
     @Override
-    public void setup(WrappedRequest request) {
+    public void setup(VaadinRequest request) {
         // Add the request handler that handles our dynamic image
         getSession().addRequestHandler(new DynamicImageRequestHandler());
 
@@ -57,7 +57,7 @@ class DynamicImageRequestHandler implements RequestHandler {
 
     @Override
     public boolean handleRequest(VaadinSession session,
-            WrappedRequest request, WrappedResponse response)
+            VaadinRequest request, VaadinResponse response)
             throws IOException {
         String pathInfo = request.getRequestPathInfo();
         if (("/" + IMAGE_URL).equals(pathInfo)) {

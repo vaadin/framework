@@ -237,6 +237,6 @@ public interface ClientConnector extends Connector, RpcTarget {
      * @throws IOException
      *             if there is a problem generating a response.
      */
-    public boolean handleConnectorRequest(WrappedRequest request,
-            WrappedResponse response, String path) throws IOException;
+    public boolean handleConnectorRequest(VaadinRequest request,
+            VaadinResponse response, String path) throws IOException;
 }

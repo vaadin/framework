@@ -35,12 +35,12 @@ import com.vaadin.ui.UI;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public interface WrappedRequest extends Serializable {
+public interface VaadinRequest extends Serializable {
 
     /**
      * Detailed information extracted from the browser.
      * 
-     * @see WrappedRequest#getBrowserDetails()
+     * @see VaadinRequest#getBrowserDetails()
      * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
@@ -209,7 +209,7 @@ public interface WrappedRequest extends Serializable {
      * for instance using javascript in the browser.
      * 
      * This information is only guaranteed to be available in some special
-     * cases, for instance in {@link UI#init(WrappedRequest)}.
+     * cases, for instance in {@link UI#init(VaadinRequest)}.
      * 
      * @return the browser details, or <code>null</code> if details are not
      *         available

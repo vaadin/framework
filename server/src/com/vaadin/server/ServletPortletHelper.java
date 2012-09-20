@@ -77,7 +77,7 @@ class ServletPortletHelper implements Serializable {
         }
     }
 
-    private static boolean hasPathPrefix(WrappedRequest request, String prefix) {
+    private static boolean hasPathPrefix(VaadinRequest request, String prefix) {
         String pathInfo = request.getRequestPathInfo();
 
         if (pathInfo == null) {
@@ -95,24 +95,24 @@ class ServletPortletHelper implements Serializable {
         return false;
     }
 
-    public static boolean isFileUploadRequest(WrappedRequest request) {
+    public static boolean isFileUploadRequest(VaadinRequest request) {
         return hasPathPrefix(request, UPLOAD_URL_PREFIX);
     }
 
-    public static boolean isConnectorResourceRequest(WrappedRequest request) {
+    public static boolean isConnectorResourceRequest(VaadinRequest request) {
         return hasPathPrefix(request,
                 ApplicationConstants.CONNECTOR_RESOURCE_PREFIX + "/");
     }
 
-    public static boolean isUIDLRequest(WrappedRequest request) {
+    public static boolean isUIDLRequest(VaadinRequest request) {
         return hasPathPrefix(request, ApplicationConstants.UIDL_REQUEST_PATH);
     }
 
-    public static boolean isAppRequest(WrappedRequest request) {
+    public static boolean isAppRequest(VaadinRequest request) {
         return hasPathPrefix(request, ApplicationConstants.APP_REQUEST_PATH);
     }
 
-    public static boolean isHeartbeatRequest(WrappedRequest request) {
+    public static boolean isHeartbeatRequest(VaadinRequest request) {
         return hasPathPrefix(request,
                 ApplicationConstants.HEARTBEAT_REQUEST_PATH);
     }

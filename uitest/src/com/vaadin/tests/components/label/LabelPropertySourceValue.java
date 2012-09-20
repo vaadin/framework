@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.label;
 
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -12,7 +12,7 @@ public class LabelPropertySourceValue extends AbstractTestUI {
     private Label label;
 
     @Override
-    public void setup(WrappedRequest request) {
+    public void setup(VaadinRequest request) {
         label = new Label("Hello Vaadin user");
         addComponent(label);
         Button button = new Button("Give label a new property data source...");

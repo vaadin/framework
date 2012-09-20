@@ -17,7 +17,7 @@
 package com.vaadin.tests.minitutorials.v7a1;
 
 import com.vaadin.server.ExternalResource;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.UI;
@@ -50,7 +50,7 @@ public class MultiTabApplication extends UI {
     }
 
     @Override
-    public void init(WrappedRequest request) {
+    public void init(VaadinRequest request) {
         String person = request.getParameter("editPerson");
         if (person == null) {
             setContent(new MainView());

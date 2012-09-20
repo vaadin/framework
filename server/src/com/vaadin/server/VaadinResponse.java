@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
  * 
  * @since 7.0
  */
-public interface WrappedResponse extends Serializable {
+public interface VaadinResponse extends Serializable {
 
     /**
      * Sets the (http) status code for the response. If you want to include an

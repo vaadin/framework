@@ -41,10 +41,10 @@ import com.vaadin.server.Page.BrowserWindowResizeListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinRequest.BrowserDetails;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.server.WrappedRequest;
-import com.vaadin.server.WrappedRequest.BrowserDetails;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.BorderStyle;
@@ -67,21 +67,21 @@ import com.vaadin.util.ReflectTools;
  * <p>
  * When a new UI instance is needed, typically because the user opens a URL in a
  * browser window which points to {@link VaadinServlet},
- * {@link VaadinSession#getUIForRequest(WrappedRequest)} is invoked to get a UI.
+ * {@link VaadinSession#getUIForRequest(VaadinRequest)} is invoked to get a UI.
  * That method does by default create a UI according to the
  * {@value VaadinSession#UI_PARAMETER} parameter from web.xml.
  * </p>
  * <p>
  * After a UI has been created by the application, it is initialized using
- * {@link #init(WrappedRequest)}. This method is intended to be overridden by
- * the developer to add components to the user interface and initialize
+ * {@link #init(VaadinRequest)}. This method is intended to be overridden by the
+ * developer to add components to the user interface and initialize
  * non-component functionality. The component hierarchy is initialized by
  * passing a {@link ComponentContainer} with the main layout of the view to
  * {@link #setContent(ComponentContainer)}.
  * </p>
  * 
- * @see #init(WrappedRequest)
- * @see VaadinSession#createUI(WrappedRequest)
+ * @see #init(VaadinRequest)
+ * @see VaadinSession#createUI(VaadinRequest)
  * 
  * @since 7.0
  */
@@ -126,7 +126,7 @@ public abstract class UI extends AbstractComponentContainer implements
         }
 
         @Override
-        protected void init(WrappedRequest request) {
+        protected void init(VaadinRequest request) {
             // Just empty
         }
 
@@ -748,8 +748,8 @@ public abstract class UI extends AbstractComponentContainer implements
      * Gets the id of the UI, used to identify this UI within its application
      * when processing requests. The UI id should be present in every request to
      * the server that originates from this UI.
-     * {@link VaadinSession#getUIForRequest(WrappedRequest)} uses this id to
-     * find the route to which the request belongs.
+     * {@link VaadinSession#getUIForRequest(VaadinRequest)} uses this id to find
+     * the route to which the request belongs.
      * 
      * @return
      */
@@ -761,7 +761,7 @@ public abstract class UI extends AbstractComponentContainer implements
      * Adds a window as a subwindow inside this UI. To open a new browser window
      * or tab, you should instead use {@link open(Resource)} with an url
      * pointing to this application and ensure
-     * {@link VaadinSession#createUI(WrappedRequest)} returns an appropriate UI
+     * {@link VaadinSession#createUI(VaadinRequest)} returns an appropriate UI
      * for the request.
      * 
      * @param window
@@ -979,7 +979,7 @@ public abstract class UI extends AbstractComponentContainer implements
      * @param uiId
      *            the id of the new ui
      */
-    public void doInit(WrappedRequest request, int uiId) {
+    public void doInit(VaadinRequest request, int uiId) {
         if (this.uiId != -1) {
             throw new IllegalStateException("UI id has already been defined");
         }
@@ -999,15 +999,15 @@ public abstract class UI extends AbstractComponentContainer implements
      * Performing the initialization in a constructor is not suggested as the
      * state of the UI is not properly set up when the constructor is invoked.
      * <p>
-     * The {@link WrappedRequest} can be used to get information about the
+     * The {@link VaadinRequest} can be used to get information about the
      * request that caused this UI to be created. {@link BrowserDetails} will be
      * available in the request.
      * </p>
      * 
      * @param request
-     *            the wrapped request that caused this UI to be created
+     *            the Vaadin request that caused this UI to be created
      */
-    protected abstract void init(WrappedRequest request);
+    protected abstract void init(VaadinRequest request);
 
     /**
      * Sets the thread local for the current UI. This method is used by the

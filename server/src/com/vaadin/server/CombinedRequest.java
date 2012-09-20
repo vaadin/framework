@@ -29,17 +29,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * A {@link WrappedRequest} with path and parameters from one request and
- * {@link WrappedRequest.BrowserDetails} extracted from another request.
+ * A {@link VaadinRequest} with path and parameters from one request and
+ * {@link VaadinRequest.BrowserDetails} extracted from another request.
  * 
  * This class is intended to be used for a two request initialization where the
  * first request fetches the actual application page and the second request
  * contains information extracted from the browser using javascript.
  * 
  */
-public class CombinedRequest implements WrappedRequest {
+public class CombinedRequest implements VaadinRequest {
 
-    private final WrappedRequest secondRequest;
+    private final VaadinRequest secondRequest;
     private Map<String, String[]> parameterMap;
 
     /**
@@ -52,7 +52,7 @@ public class CombinedRequest implements WrappedRequest {
      * @throws JSONException
      *             if the initialParams parameter can not be decoded
      */
-    public CombinedRequest(WrappedRequest secondRequest) throws JSONException {
+    public CombinedRequest(VaadinRequest secondRequest) throws JSONException {
         this.secondRequest = secondRequest;
 
         HashMap<String, String[]> map = new HashMap<String, String[]>();
@@ -156,9 +156,9 @@ public class CombinedRequest implements WrappedRequest {
      * Gets the original second request. This can be used e.g. if a request
      * parameter from the second request is required.
      * 
-     * @return the original second wrapped request
+     * @return the original second Vaadin request
      */
-    public WrappedRequest getSecondRequest() {
+    public VaadinRequest getSecondRequest() {
         return secondRequest;
     }
 

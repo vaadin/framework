@@ -74,8 +74,8 @@ public class VaadinPortletSession extends VaadinSession {
     }
 
     private PortletResponse getCurrentResponse() {
-        WrappedPortletResponse currentResponse = (WrappedPortletResponse) CurrentInstance
-                .get(WrappedResponse.class);
+        VaadinPortletResponse currentResponse = (VaadinPortletResponse) CurrentInstance
+                .get(VaadinResponse.class);
 
         if (currentResponse != null) {
             return currentResponse.getPortletResponse();
@@ -85,8 +85,8 @@ public class VaadinPortletSession extends VaadinSession {
     }
 
     public PortletConfig getPortletConfig() {
-        WrappedPortletResponse response = (WrappedPortletResponse) CurrentInstance
-                .get(WrappedResponse.class);
+        VaadinPortletResponse response = (VaadinPortletResponse) CurrentInstance
+                .get(VaadinResponse.class);
         return response.getVaadinService().getPortlet().getPortletConfig();
     }
 

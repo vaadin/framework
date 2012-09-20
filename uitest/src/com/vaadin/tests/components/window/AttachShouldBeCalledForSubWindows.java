@@ -2,7 +2,7 @@ package com.vaadin.tests.components.window;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.VaadinService;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
@@ -23,7 +23,7 @@ public class AttachShouldBeCalledForSubWindows extends AbstractTestCase {
     @Override
     public void init() {
 
-        WrappedRequest request = VaadinService.getCurrentRequest();
+        VaadinRequest request = VaadinService.getCurrentRequest();
         if (request.getParameter("attachMainFirst") != null) {
             addSubWindowBeforeMainWindow = false;
         } else {

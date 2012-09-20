@@ -54,7 +54,7 @@ public class LegacyVaadinPortlet extends VaadinPortlet {
                             VaadinSessionInitializeEvent event)
                             throws ServiceException {
                         try {
-                            onVaadinSessionStarted(WrappedPortletRequest
+                            onVaadinSessionStarted(VaadinPortletRequest
                                     .cast(event.getRequest()),
                                     (VaadinPortletSession) event
                                             .getVaadinSession());
@@ -85,7 +85,7 @@ public class LegacyVaadinPortlet extends VaadinPortlet {
         }
     }
 
-    private void onVaadinSessionStarted(WrappedPortletRequest request,
+    private void onVaadinSessionStarted(VaadinPortletRequest request,
             VaadinPortletSession session) throws PortletException {
         session.addUIProvider(provider);
     }

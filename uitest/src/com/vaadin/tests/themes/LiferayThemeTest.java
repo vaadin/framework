@@ -1,7 +1,7 @@
 package com.vaadin.tests.themes;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
@@ -11,7 +11,7 @@ import com.vaadin.ui.themes.LiferayTheme;
 public class LiferayThemeTest extends AbstractTestUI {
 
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         Panel p = new Panel("Panel");
         addComponent(p);
         p.addComponent(new Label("Panel content"));

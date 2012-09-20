@@ -23,7 +23,7 @@ import com.vaadin.service.FileTypeResolver;
 
 /**
  * A resource that is served by calling
- * {@link ClientConnector#handleConnectorRequest(WrappedRequest, WrappedResponse, String)}
+ * {@link ClientConnector#handleConnectorRequest(VaadinRequest, VaadinResponse, String)}
  * with appropriate parameters.
  * 
  * @author Vaadin Ltd
@@ -39,7 +39,7 @@ public class DynamicConnectorResource implements Resource {
     /**
      * Creates a DynamicConnectorResoruce for the given connector that will be
      * served by calling
-     * {@link ClientConnector#handleConnectorRequest(WrappedRequest, WrappedResponse, String)}
+     * {@link ClientConnector#handleConnectorRequest(VaadinRequest, VaadinResponse, String)}
      * with the given path.
      * 
      * @param connector
@@ -54,7 +54,7 @@ public class DynamicConnectorResource implements Resource {
     /**
      * Creates a DynamicConnectorResoruce for the given connector that will be
      * served by calling
-     * {@link ClientConnector#handleConnectorRequest(WrappedRequest, WrappedResponse, String)}
+     * {@link ClientConnector#handleConnectorRequest(VaadinRequest, VaadinResponse, String)}
      * with the given path and the given request parameters.
      * 
      * @param connector

@@ -53,9 +53,9 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         return new BootstrapHandler() {
             @Override
             public boolean handleRequest(VaadinSession session,
-                    WrappedRequest request, WrappedResponse response)
+                    VaadinRequest request, VaadinResponse response)
                     throws IOException {
-                PortletRequest portletRequest = WrappedPortletRequest.cast(
+                PortletRequest portletRequest = VaadinPortletRequest.cast(
                         request).getPortletRequest();
                 if (portletRequest instanceof RenderRequest) {
                     return super.handleRequest(session, request, response);
@@ -66,7 +66,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
 
             @Override
             protected String getApplicationId(BootstrapContext context) {
-                PortletRequest portletRequest = WrappedPortletRequest.cast(
+                PortletRequest portletRequest = VaadinPortletRequest.cast(
                         context.getRequest()).getPortletRequest();
                 /*
                  * We need to generate a unique ID because some portals already
@@ -81,7 +81,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             }
 
             private RenderResponse getRenderResponse(BootstrapContext context) {
-                PortletResponse response = ((WrappedPortletResponse) context
+                PortletResponse response = ((VaadinPortletResponse) context
                         .getResponse()).getPortletResponse();
 
                 RenderResponse renderResponse = (RenderResponse) response;
@@ -115,7 +115,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                     throws JSONException, IOException {
                 // fixed base theme to use - all portal pages with Vaadin
                 // applications will load this exactly once
-                String portalTheme = WrappedPortletRequest.cast(
+                String portalTheme = VaadinPortletRequest.cast(
                         context.getRequest()).getPortalProperty(
                         VaadinPortlet.PORTAL_PARAMETER_VAADIN_THEME);
                 if (portalTheme != null
@@ -143,9 +143,9 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                     BootstrapContext context) throws JSONException,
                     PaintException {
                 JSONObject parameters = super.getApplicationParameters(context);
-                WrappedPortletResponse wrappedPortletResponse = (WrappedPortletResponse) context
+                VaadinPortletResponse response = (VaadinPortletResponse) context
                         .getResponse();
-                MimeResponse portletResponse = (MimeResponse) wrappedPortletResponse
+                MimeResponse portletResponse = (MimeResponse) response
                         .getPortletResponse();
                 ResourceURL resourceURL = portletResponse.createResourceURL();
                 resourceURL.setResourceID("browserDetails");

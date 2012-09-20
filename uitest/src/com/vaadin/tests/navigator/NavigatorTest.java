@@ -8,7 +8,7 @@ import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
@@ -111,7 +111,7 @@ public class NavigatorTest extends UI {
     }
 
     @Override
-    protected void init(WrappedRequest req) {
+    protected void init(VaadinRequest req) {
         try {
             navi = new Navigator(this, naviLayout);
 

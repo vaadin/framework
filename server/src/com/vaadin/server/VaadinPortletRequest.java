@@ -35,10 +35,10 @@ import com.vaadin.shared.ApplicationConstants;
  * @author Vaadin Ltd.
  * @since 7.0
  * 
- * @see WrappedRequest
- * @see WrappedPortletResponse
+ * @see VaadinRequest
+ * @see VaadinPortletResponse
  */
-public class WrappedPortletRequest implements WrappedRequest {
+public class VaadinPortletRequest implements VaadinRequest {
 
     private final PortletRequest request;
     private final PortletService vaadinService;
@@ -51,7 +51,7 @@ public class WrappedPortletRequest implements WrappedRequest {
      * @param vaadinService
      *            the associated vaadin service
      */
-    public WrappedPortletRequest(PortletRequest request,
+    public VaadinPortletRequest(PortletRequest request,
             PortletService vaadinService) {
         this.request = request;
         this.vaadinService = vaadinService;
@@ -191,7 +191,7 @@ public class WrappedPortletRequest implements WrappedRequest {
     }
 
     /**
-     * Reads a portal property from the portal context of the wrapped request.
+     * Reads a portal property from the portal context of the Vaadin request.
      * 
      * @param name
      *            a string with the name of the portal property to get
@@ -208,21 +208,21 @@ public class WrappedPortletRequest implements WrappedRequest {
     }
 
     /**
-     * Helper method to get a <code>WrappedPortlettRequest</code> from a
-     * <code>WrappedRequest</code>. Aside from casting, this method also takes
-     * care of situations where there's another level of wrapping.
+     * Helper method to get a {@link VaadinPortletRequest} from a
+     * {@link VaadinRequest}. Aside from casting, this method also takes care of
+     * situations where there's another level of wrapping.
      * 
      * @param request
-     *            a wrapped request
-     * @return a wrapped portlet request
+     *            a Vaadin request
+     * @return a Vaadin portlet request
      * @throws ClassCastException
-     *             if the wrapped request doesn't wrap a portlet request
+     *             if the Vaadin request doesn't wrap a portlet request
      */
-    public static WrappedPortletRequest cast(WrappedRequest request) {
+    public static VaadinPortletRequest cast(VaadinRequest request) {
         if (request instanceof CombinedRequest) {
             CombinedRequest combinedRequest = (CombinedRequest) request;
             request = combinedRequest.getSecondRequest();
         }
-        return (WrappedPortletRequest) request;
+        return (VaadinPortletRequest) request;
     }
 }

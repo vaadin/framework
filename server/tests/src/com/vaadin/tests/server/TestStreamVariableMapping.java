@@ -7,7 +7,7 @@ import org.easymock.EasyMock;
 import com.vaadin.server.CommunicationManager;
 import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
 
@@ -24,7 +24,7 @@ public class TestStreamVariableMapping extends TestCase {
         final VaadinSession application = new VaadinSession();
         final UI uI = new UI() {
             @Override
-            protected void init(WrappedRequest request) {
+            protected void init(VaadinRequest request) {
                 // TODO Auto-generated method stub
 
             }

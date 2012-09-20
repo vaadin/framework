@@ -15,7 +15,7 @@
  */
 package com.vaadin.tests.components.panel;
 
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -39,7 +39,7 @@ public class PanelChangeContents extends AbstractTestUI implements
     private Panel panel;
 
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         VerticalLayout content = new VerticalLayout();
         setSizeFull();
         HorizontalLayout buttons = new HorizontalLayout();

@@ -27,7 +27,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -43,7 +43,7 @@ public class SerializerTest extends AbstractTestUI {
     private Log log = new Log(40);
 
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         final SerializerTestExtension testExtension = new SerializerTestExtension();
         addExtension(testExtension);
         addComponent(log);

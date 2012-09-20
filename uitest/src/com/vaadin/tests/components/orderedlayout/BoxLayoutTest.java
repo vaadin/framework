@@ -11,7 +11,7 @@ import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbstractComponent;
@@ -52,7 +52,7 @@ public class BoxLayoutTest extends AbstractTestUI {
     protected CheckBox expand;
 
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
 
         view = new VerticalLayout();
         view.setMargin(true);

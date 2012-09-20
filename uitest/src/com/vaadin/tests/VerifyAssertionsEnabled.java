@@ -16,14 +16,14 @@
 
 package com.vaadin.tests;
 
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
 
 public class VerifyAssertionsEnabled extends AbstractTestUI {
 
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         try {
             assert false;
             addComponent(new Label("Assertions are not enabled"));

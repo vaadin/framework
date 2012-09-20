@@ -27,7 +27,7 @@ import com.vaadin.ui.UI;
 public abstract class AbstractUIProvider implements UIProvider {
 
     @Override
-    public UI createInstance(WrappedRequest request,
+    public UI createInstance(VaadinRequest request,
             Class<? extends UI> type) {
         try {
             return type.newInstance();
@@ -75,7 +75,7 @@ public abstract class AbstractUIProvider implements UIProvider {
     }
 
     @Override
-    public String getTheme(WrappedRequest request,
+    public String getTheme(VaadinRequest request,
             Class<? extends UI> uiClass) {
         Theme uiTheme = getAnnotationFor(uiClass, Theme.class);
         if (uiTheme != null) {
@@ -86,7 +86,7 @@ public abstract class AbstractUIProvider implements UIProvider {
     }
 
     @Override
-    public String getWidgetset(WrappedRequest request,
+    public String getWidgetset(VaadinRequest request,
             Class<? extends UI> uiClass) {
         Widgetset uiWidgetset = getAnnotationFor(uiClass, Widgetset.class);
         if (uiWidgetset != null) {
@@ -97,7 +97,7 @@ public abstract class AbstractUIProvider implements UIProvider {
     }
 
     @Override
-    public boolean isPreservedOnRefresh(WrappedRequest request,
+    public boolean isPreservedOnRefresh(VaadinRequest request,
             Class<? extends UI> uiClass) {
         PreserveOnRefresh preserveOnRefresh = getAnnotationFor(uiClass,
                 PreserveOnRefresh.class);
@@ -105,7 +105,7 @@ public abstract class AbstractUIProvider implements UIProvider {
     }
 
     @Override
-    public String getPageTitle(WrappedRequest request,
+    public String getPageTitle(VaadinRequest request,
             Class<? extends UI> uiClass) {
         Title titleAnnotation = getAnnotationFor(uiClass, Title.class);
         if (titleAnnotation == null) {
@@ -116,7 +116,7 @@ public abstract class AbstractUIProvider implements UIProvider {
     }
 
     @Override
-    public UI getExistingUI(WrappedRequest request) {
+    public UI getExistingUI(VaadinRequest request) {
         return null;
     }
 }

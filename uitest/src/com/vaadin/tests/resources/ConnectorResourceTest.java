@@ -7,8 +7,8 @@ import java.util.HashMap;
 import javax.imageio.ImageIO;
 
 import com.vaadin.server.DynamicConnectorResource;
-import com.vaadin.server.WrappedRequest;
-import com.vaadin.server.WrappedResponse;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinResponse;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Embedded;
 
@@ -17,7 +17,7 @@ public class ConnectorResourceTest extends AbstractTestUI {
     private static final String DYNAMIC_IMAGE_NAME = "requestImage.png";
 
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         addComponent(new Embedded(DYNAMIC_IMAGE_NAME,
                 new DynamicConnectorResource(this, DYNAMIC_IMAGE_NAME)));
         addComponent(new Embedded("Dynamic text", new DynamicConnectorResource(
@@ -40,8 +40,8 @@ public class ConnectorResourceTest extends AbstractTestUI {
     }
 
     @Override
-    public boolean handleConnectorRequest(WrappedRequest request,
-            WrappedResponse response, String path) throws IOException {
+    public boolean handleConnectorRequest(VaadinRequest request,
+            VaadinResponse response, String path) throws IOException {
         if (DYNAMIC_IMAGE_NAME.equals(path)) {
             // Create an image, draw the "text" parameter to it and output it to
             // the browser.

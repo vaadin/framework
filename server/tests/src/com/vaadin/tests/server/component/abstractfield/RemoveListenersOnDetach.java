@@ -8,7 +8,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.AbstractProperty;
 import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.UI;
 
@@ -24,7 +24,7 @@ public class RemoveListenersOnDetach {
         private UI uI = new UI() {
 
             @Override
-            protected void init(WrappedRequest request) {
+            protected void init(VaadinRequest request) {
 
             }
 

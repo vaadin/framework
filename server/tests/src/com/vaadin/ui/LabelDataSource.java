@@ -23,7 +23,7 @@ import org.junit.Test;
 
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 
 public class LabelDataSource {
 
@@ -110,7 +110,7 @@ public class LabelDataSource {
         }
 
         @Override
-        protected void init(WrappedRequest request) {
+        protected void init(VaadinRequest request) {
         }
 
     }

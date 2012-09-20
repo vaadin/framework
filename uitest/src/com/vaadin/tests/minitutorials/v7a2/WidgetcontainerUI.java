@@ -3,7 +3,7 @@ package com.vaadin.tests.minitutorials.v7a2;
 import java.util.Random;
 
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -15,7 +15,7 @@ import com.vaadin.ui.UI;
 @Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")
 public class WidgetcontainerUI extends UI {
     @Override
-    public void init(WrappedRequest request) {
+    public void init(VaadinRequest request) {
         Label label = new Label("Hello Vaadin user");
         addComponent(label);
         final WidgetContainer widgetContainer = new WidgetContainer();

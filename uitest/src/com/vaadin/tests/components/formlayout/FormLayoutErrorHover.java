@@ -15,7 +15,7 @@
  */
 package com.vaadin.tests.components.formlayout;
 
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.PopupDateField;
@@ -23,7 +23,7 @@ import com.vaadin.ui.PopupDateField;
 public class FormLayoutErrorHover extends AbstractTestUI {
 
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         FormLayout formLayout = new FormLayout();
         PopupDateField fromDate = new PopupDateField("Date");
         fromDate.setImmediate(true);

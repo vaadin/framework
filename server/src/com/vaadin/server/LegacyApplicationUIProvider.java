@@ -30,7 +30,7 @@ public abstract class LegacyApplicationUIProvider extends AbstractUIProvider {
             .compile("^/?([^/]+).*");
 
     @Override
-    public Class<? extends UI> getUIClass(WrappedRequest request) {
+    public Class<? extends UI> getUIClass(VaadinRequest request) {
         UI uiInstance = getUIInstance(request);
         if (uiInstance != null) {
             return uiInstance.getClass();
@@ -39,12 +39,12 @@ public abstract class LegacyApplicationUIProvider extends AbstractUIProvider {
     }
 
     @Override
-    public UI createInstance(WrappedRequest request, Class<? extends UI> type) {
+    public UI createInstance(VaadinRequest request, Class<? extends UI> type) {
         return getUIInstance(request);
     }
 
     @Override
-    public String getTheme(WrappedRequest request, Class<? extends UI> uiClass) {
+    public String getTheme(VaadinRequest request, Class<? extends UI> uiClass) {
         LegacyApplication application = getApplication();
         if (application != null) {
             return application.getTheme();
@@ -54,7 +54,7 @@ public abstract class LegacyApplicationUIProvider extends AbstractUIProvider {
     }
 
     @Override
-    public String getPageTitle(WrappedRequest request,
+    public String getPageTitle(VaadinRequest request,
             Class<? extends UI> uiClass) {
         UI uiInstance = getUIInstance(request);
         if (uiInstance != null) {
@@ -64,7 +64,7 @@ public abstract class LegacyApplicationUIProvider extends AbstractUIProvider {
         }
     }
 
-    private UI getUIInstance(WrappedRequest request) {
+    private UI getUIInstance(VaadinRequest request) {
         String pathInfo = request.getRequestPathInfo();
         String name = null;
         if (pathInfo != null && pathInfo.length() > 0) {
@@ -94,7 +94,7 @@ public abstract class LegacyApplicationUIProvider extends AbstractUIProvider {
      * {@inheritDoc}
      */
     @Override
-    public UI getExistingUI(WrappedRequest request) {
+    public UI getExistingUI(VaadinRequest request) {
         UI uiInstance = getUIInstance(request);
         if (uiInstance == null || uiInstance.getUIId() == -1) {
             // Not initialized -> Let go through createUIInstance to make it

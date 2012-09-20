@@ -16,7 +16,7 @@
 
 package com.vaadin.tests.components.window;
 
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
@@ -24,7 +24,7 @@ import com.vaadin.ui.Window;
 public class TooltipInWindow extends AbstractTestUI {
 
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         Window window = new Window("Window");
         window.getContent().setSizeUndefined();
         window.center();

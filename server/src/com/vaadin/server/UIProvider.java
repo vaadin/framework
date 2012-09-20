@@ -20,12 +20,11 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.ui.UI;
 
 public interface UIProvider {
-    public Class<? extends UI> getUIClass(WrappedRequest request);
+    public Class<? extends UI> getUIClass(VaadinRequest request);
 
-    public UI createInstance(WrappedRequest request,
-            Class<? extends UI> type);
+    public UI createInstance(VaadinRequest request, Class<? extends UI> type);
 
-    public String getPageTitle(WrappedRequest request,
+    public String getPageTitle(VaadinRequest request,
             Class<? extends UI> uiClass);
 
     /**
@@ -40,7 +39,7 @@ public interface UIProvider {
      * @return <code>true</code>if the same UI instance should be reused e.g.
      *         when the browser window is refreshed.
      */
-    public boolean isPreservedOnRefresh(WrappedRequest request,
+    public boolean isPreservedOnRefresh(VaadinRequest request,
             Class<? extends UI> uiClass);
 
     /**
@@ -51,14 +50,14 @@ public interface UIProvider {
      * defined for the UI class.
      * 
      * @param request
-     *            the wrapped request for which to get a widgetset
+     *            the Vaadin request for which to get a widgetset
      * @param uiClass
      *            the UI class to get a widgetset for
      * @return the name of the widgetset, or <code>null</code> if the default
      *         widgetset should be used
      * 
      */
-    public String getWidgetset(WrappedRequest request,
+    public String getWidgetset(VaadinRequest request,
             Class<? extends UI> uiClass);
 
     /**
@@ -73,8 +72,7 @@ public interface UIProvider {
      *         should be used
      * 
      */
-    public String getTheme(WrappedRequest request,
-            Class<? extends UI> uiClass);
+    public String getTheme(VaadinRequest request, Class<? extends UI> uiClass);
 
     /**
      * Finds an existing {@link UI} for a request.
@@ -85,14 +83,14 @@ public interface UIProvider {
      * <p>
      * If no UI provider returns an existing UI, the framework does also check
      * the window.name for an existing instance with
-     * {@link #isPreservedOnRefresh(WrappedRequest, Class)} before falling back to
-     * bootstrapping and creating a new UI instance.
+     * {@link #isPreservedOnRefresh(VaadinRequest, Class)} before falling back
+     * to bootstrapping and creating a new UI instance.
      * 
      * @param request
      *            the request for which a UI is desired
      * @return a UI belonging to the request, or <code>null</code> if this UI
      *         provider doesn't have an existing UI for the request.
      */
-    public UI getExistingUI(WrappedRequest request);
+    public UI getExistingUI(VaadinRequest request);
 
 }

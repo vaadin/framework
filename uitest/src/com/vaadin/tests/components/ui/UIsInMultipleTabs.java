@@ -4,7 +4,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.vaadin.server.VaadinSession;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUIProvider;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
@@ -15,7 +15,7 @@ public class UIsInMultipleTabs extends AbstractTestUIProvider {
 
     public static class TabUI extends UI {
         @Override
-        protected void init(WrappedRequest request) {
+        protected void init(VaadinRequest request) {
             VaadinSession application = VaadinSession.getCurrent();
             AtomicInteger count = numberOfUIsOpened.get(application);
             if (count == null) {
@@ -32,7 +32,7 @@ public class UIsInMultipleTabs extends AbstractTestUIProvider {
     }
 
     @Override
-    public Class<? extends UI> getUIClass(WrappedRequest request) {
+    public Class<? extends UI> getUIClass(VaadinRequest request) {
         return TabUI.class;
     }
 

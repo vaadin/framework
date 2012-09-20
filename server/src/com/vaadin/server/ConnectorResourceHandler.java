@@ -25,7 +25,7 @@ public class ConnectorResourceHandler implements RequestHandler {
 
     @Override
     public boolean handleRequest(VaadinSession session,
-            WrappedRequest request, WrappedResponse response)
+            VaadinRequest request, VaadinResponse response)
             throws IOException {
         String requestPath = request.getRequestPathInfo();
         if (requestPath == null) {
@@ -68,8 +68,8 @@ public class ConnectorResourceHandler implements RequestHandler {
         }
     }
 
-    private static boolean error(WrappedRequest request,
-            WrappedResponse response, String logMessage) throws IOException {
+    private static boolean error(VaadinRequest request,
+            VaadinResponse response, String logMessage) throws IOException {
         getLogger().log(Level.WARNING, logMessage);
         response.sendError(HttpServletResponse.SC_NOT_FOUND,
                 request.getRequestPathInfo() + " can not be found");

@@ -2,7 +2,7 @@ package com.vaadin.tests.components.table;
 
 import java.net.MalformedURLException;
 
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.AbsoluteLayout;
@@ -17,7 +17,7 @@ import com.vaadin.ui.themes.Reindeer;
 public class TableInTabsheet extends AbstractTestUI {
 
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         getUI().setCaption("test");
         VerticalLayout vPrinc = new VerticalLayout();
         vPrinc.setStyleName(Reindeer.LAYOUT_BLUE);

@@ -19,7 +19,7 @@ package com.vaadin.tests.minitutorials.v7a1;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
 
 /**
@@ -33,7 +33,7 @@ import com.vaadin.ui.UI;
 public class AutoGeneratingForm extends UI {
 
     @Override
-    protected void init(WrappedRequest request) {
+    protected void init(VaadinRequest request) {
         FieldGroup fieldGroup = new BeanFieldGroup<Person>(Person.class);
 
         // We need an item data source before we create the fields to be able to

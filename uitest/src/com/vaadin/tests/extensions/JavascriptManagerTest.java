@@ -20,7 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.JavaScript;
@@ -31,7 +31,7 @@ public class JavascriptManagerTest extends AbstractTestUI {
     private Log log = new Log(5);
 
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         addComponent(log);
         final JavaScript js = JavaScript.getCurrent();
         js.addFunction("testing.doTest", new JavaScriptFunction() {

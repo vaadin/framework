@@ -117,8 +117,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
     @Deprecated
     public interface Callback extends Serializable {
 
-        public void criticalNotification(WrappedRequest request,
-                WrappedResponse response, String cap, String msg,
+        public void criticalNotification(VaadinRequest request,
+                VaadinResponse response, String cap, String msg,
                 String details, String outOfSyncURL) throws IOException;
     }
 
@@ -219,8 +219,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @param boundary
      * @throws IOException
      */
-    protected void doHandleSimpleMultipartFileUpload(WrappedRequest request,
-            WrappedResponse response, StreamVariable streamVariable,
+    protected void doHandleSimpleMultipartFileUpload(VaadinRequest request,
+            VaadinResponse response, StreamVariable streamVariable,
             String variableName, ClientConnector owner, String boundary)
             throws IOException {
         // multipart parsing, supports only one file for request, but that is
@@ -323,8 +323,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @param contentLength
      * @throws IOException
      */
-    protected void doHandleXhrFilePost(WrappedRequest request,
-            WrappedResponse response, StreamVariable streamVariable,
+    protected void doHandleXhrFilePost(VaadinRequest request,
+            VaadinResponse response, StreamVariable streamVariable,
             String variableName, ClientConnector owner, int contentLength)
             throws IOException {
 
@@ -501,8 +501,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @param response
      * @throws IOException
      */
-    protected void sendUploadResponse(WrappedRequest request,
-            WrappedResponse response) throws IOException {
+    protected void sendUploadResponse(VaadinRequest request,
+            VaadinResponse response) throws IOException {
         response.setContentType("text/html");
         final OutputStream out = response.getOutputStream();
         final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
@@ -516,7 +516,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * Internally process a UIDL request from the client.
      * 
      * This method calls
-     * {@link #handleVariables(WrappedRequest, WrappedResponse, Callback, VaadinSession, UI)}
+     * {@link #handleVariables(VaadinRequest, VaadinResponse, Callback, VaadinSession, UI)}
      * to process any changes to variables by the client and then repaints
      * affected components using {@link #paintAfterVariableChanges()}.
      * 
@@ -537,8 +537,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @throws InvalidUIDLSecurityKeyException
      * @throws JSONException
      */
-    public void handleUidlRequest(WrappedRequest request,
-            WrappedResponse response, Callback callback, UI uI)
+    public void handleUidlRequest(VaadinRequest request,
+            VaadinResponse response, Callback callback, UI uI)
             throws IOException, InvalidUIDLSecurityKeyException, JSONException {
 
         checkWidgetsetVersion(request);
@@ -623,7 +623,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * 
      * @param request
      */
-    private void checkWidgetsetVersion(WrappedRequest request) {
+    private void checkWidgetsetVersion(VaadinRequest request) {
         String widgetsetVersion = request.getParameter("wsver");
         if (widgetsetVersion == null) {
             // Only check when the widgetset version is reported. It is reported
@@ -752,8 +752,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @throws IOException
      * @throws JSONException
      */
-    private void paintAfterVariableChanges(WrappedRequest request,
-            WrappedResponse response, Callback callback, boolean repaintAll,
+    private void paintAfterVariableChanges(VaadinRequest request,
+            VaadinResponse response, Callback callback, boolean repaintAll,
             final PrintWriter outWriter, UI uI, boolean analyzeLayouts)
             throws PaintException, IOException, JSONException {
         openJsonMessage(outWriter, response);
@@ -780,7 +780,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @param request
      * @return the security key UIDL or "" if the feature is turned off
      */
-    public String getSecurityKeyUIDL(WrappedRequest request) {
+    public String getSecurityKeyUIDL(VaadinRequest request) {
         final String seckey = getSecurityKey(request);
         if (seckey != null) {
             return "\"" + ApplicationConstants.UIDL_SECURITY_TOKEN_ID + "\":\""
@@ -796,7 +796,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @param request
      * @return the security key
      */
-    protected String getSecurityKey(WrappedRequest request) {
+    protected String getSecurityKey(VaadinRequest request) {
         String seckey = null;
         WrappedSession session = request.getWrappedSession();
         seckey = (String) session
@@ -811,7 +811,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
     }
 
     @SuppressWarnings("unchecked")
-    public void writeUidlResponse(WrappedRequest request, boolean repaintAll,
+    public void writeUidlResponse(VaadinRequest request, boolean repaintAll,
             final PrintWriter outWriter, UI ui, boolean analyzeLayouts)
             throws PaintException, JSONException {
         ArrayList<ClientConnector> dirtyVisibleConnectors = new ArrayList<ClientConnector>();
@@ -1557,8 +1557,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * 
      * @return true if successful, false if there was an inconsistency
      */
-    private boolean handleVariables(WrappedRequest request,
-            WrappedResponse response, Callback callback, VaadinSession session,
+    private boolean handleVariables(VaadinRequest request,
+            VaadinResponse response, Callback callback, VaadinSession session,
             UI uI) throws IOException, InvalidUIDLSecurityKeyException,
             JSONException {
         boolean success = true;
@@ -1646,7 +1646,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @return true if the processing of the burst was successful and there were
      *         no messages to non-existent components
      */
-    public boolean handleBurst(WrappedRequest source, UI uI, final String burst) {
+    public boolean handleBurst(VaadinRequest source, UI uI, final String burst) {
         boolean success = true;
         try {
             Set<Connector> enabledConnectors = new HashSet<Connector>();
@@ -1908,7 +1908,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @return
      * @throws IOException
      */
-    protected String getRequestPayload(WrappedRequest request)
+    protected String getRequestPayload(VaadinRequest request)
             throws IOException {
 
         int requestLength = request.getContentLength();
@@ -2185,7 +2185,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @param response
      */
     protected void openJsonMessage(PrintWriter outWriter,
-            WrappedResponse response) {
+            VaadinResponse response) {
         // Sets the response type
         response.setContentType("application/json; charset=UTF-8");
         // some dirt to prevent cross site scripting
@@ -2392,7 +2392,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * </p>
      * 
      * @param request
-     *            the wrapped request to get information from
+     *            the Vaadin request to get information from
      * @param response
      *            the response to which data can be written
      * @return returns <code>true</code> if a {@link RequestHandler} has
@@ -2406,8 +2406,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * 
      * @since 7.0
      */
-    protected boolean handleOtherRequest(WrappedRequest request,
-            WrappedResponse response) throws IOException {
+    protected boolean handleOtherRequest(VaadinRequest request,
+            VaadinResponse response) throws IOException {
         // Use a copy to avoid ConcurrentModificationException
         for (RequestHandler handler : new ArrayList<RequestHandler>(
                 session.getRequestHandlers())) {
@@ -2419,8 +2419,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
         return false;
     }
 
-    public void handleBrowserDetailsRequest(WrappedRequest request,
-            WrappedResponse response, VaadinSession session) throws IOException {
+    public void handleBrowserDetailsRequest(VaadinRequest request,
+            VaadinResponse response, VaadinSession session) throws IOException {
 
         session.getLock().lock();
 
@@ -2428,7 +2428,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             assert UI.getCurrent() == null;
 
             CombinedRequest combinedRequest = new CombinedRequest(request);
-            CurrentInstance.set(WrappedRequest.class, combinedRequest);
+            CurrentInstance.set(VaadinRequest.class, combinedRequest);
 
             response.setContentType("application/json; charset=UTF-8");
 
@@ -2475,7 +2475,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @throws JSONException
      *             if an exception occurs while encoding output
      */
-    protected String getInitialUIDL(WrappedRequest request, UI uI)
+    protected String getInitialUIDL(VaadinRequest request, UI uI)
             throws PaintException, JSONException {
         // TODO maybe unify writeUidlResponse()?
         StringWriter sWriter = new StringWriter();
@@ -2505,8 +2505,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * 
      * @throws IOException
      */
-    public void serveConnectorResource(WrappedRequest request,
-            WrappedResponse response) throws IOException {
+    public void serveConnectorResource(VaadinRequest request,
+            VaadinResponse response) throws IOException {
 
         String pathInfo = request.getRequestPathInfo();
         // + 2 to also remove beginning and ending slashes
@@ -2602,8 +2602,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @throws IOException
      * @throws InvalidUIDLSecurityKeyException
      */
-    public void handleFileUpload(VaadinSession session, WrappedRequest request,
-            WrappedResponse response) throws IOException,
+    public void handleFileUpload(VaadinSession session, VaadinRequest request,
+            VaadinResponse response) throws IOException,
             InvalidUIDLSecurityKeyException {
 
         /*
@@ -2663,8 +2663,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @param session
      * @throws IOException
      */
-    public void handleHeartbeatRequest(WrappedRequest request,
-            WrappedResponse response, VaadinSession session) throws IOException {
+    public void handleHeartbeatRequest(VaadinRequest request,
+            VaadinResponse response, VaadinSession session) throws IOException {
         UI ui = null;
         try {
             int uiId = Integer.parseInt(request

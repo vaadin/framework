@@ -28,8 +28,8 @@ import com.vaadin.server.ConnectorResource;
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.server.WrappedRequest;
-import com.vaadin.server.WrappedResponse;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinResponse;
 import com.vaadin.shared.ApplicationConstants;
 
 /**
@@ -84,7 +84,7 @@ public class LoginForm extends CustomComponent {
     private final RequestHandler requestHandler = new RequestHandler() {
         @Override
         public boolean handleRequest(VaadinSession session,
-                WrappedRequest request, WrappedResponse response)
+                VaadinRequest request, VaadinResponse response)
                 throws IOException {
             String requestPathInfo = request.getRequestPathInfo();
             if ("/loginHandler".equals(requestPathInfo)) {

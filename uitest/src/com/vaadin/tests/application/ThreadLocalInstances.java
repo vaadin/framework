@@ -3,7 +3,7 @@ package com.vaadin.tests.application;
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.integration.FlagSeResource;
 import com.vaadin.tests.util.Log;
@@ -22,7 +22,7 @@ public class ThreadLocalInstances extends AbstractTestCase {
         boolean paintReported = false;
 
         @Override
-        protected void init(WrappedRequest request) {
+        protected void init(VaadinRequest request) {
             reportCurrentStatus("root init");
         }
 

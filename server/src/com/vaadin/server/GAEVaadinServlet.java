@@ -133,8 +133,8 @@ public class GAEVaadinServlet extends VaadinServlet {
     private static final String PROPERTY_APPENGINE_EXPIRES = "_expires";
 
     protected void sendDeadlineExceededNotification(
-            WrappedHttpServletRequest request,
-            WrappedHttpServletResponse response) throws IOException {
+            VaadinServletRequest request,
+            VaadinServletResponse response) throws IOException {
         criticalNotification(
                 request,
                 response,
@@ -144,8 +144,8 @@ public class GAEVaadinServlet extends VaadinServlet {
     }
 
     protected void sendNotSerializableNotification(
-            WrappedHttpServletRequest request,
-            WrappedHttpServletResponse response) throws IOException {
+            VaadinServletRequest request,
+            VaadinServletResponse response) throws IOException {
         criticalNotification(
                 request,
                 response,
@@ -156,8 +156,8 @@ public class GAEVaadinServlet extends VaadinServlet {
     }
 
     protected void sendCriticalErrorNotification(
-            WrappedHttpServletRequest request,
-            WrappedHttpServletResponse response) throws IOException {
+            VaadinServletRequest request,
+            VaadinServletResponse response) throws IOException {
         criticalNotification(
                 request,
                 response,
@@ -171,9 +171,9 @@ public class GAEVaadinServlet extends VaadinServlet {
     protected void service(HttpServletRequest unwrappedRequest,
             HttpServletResponse unwrappedResponse) throws ServletException,
             IOException {
-        WrappedHttpServletRequest request = new WrappedHttpServletRequest(
+        VaadinServletRequest request = new VaadinServletRequest(
                 unwrappedRequest, getVaadinService());
-        WrappedHttpServletResponse response = new WrappedHttpServletResponse(
+        VaadinServletResponse response = new VaadinServletResponse(
                 unwrappedResponse, getVaadinService());
 
         if (isCleanupRequest(request)) {
@@ -342,7 +342,7 @@ public class GAEVaadinServlet extends VaadinServlet {
         // will create new context if the above did not
         try {
             return getVaadinService().findVaadinSession(
-                    createWrappedRequest(request));
+                    createVaadinRequest(request));
         } catch (Exception e) {
             throw new ServletException(e);
         }

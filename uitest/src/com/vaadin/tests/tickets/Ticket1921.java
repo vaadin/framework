@@ -6,8 +6,8 @@ import java.util.Map;
 import com.vaadin.LegacyApplication;
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.server.WrappedRequest;
-import com.vaadin.server.WrappedResponse;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinResponse;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
@@ -95,7 +95,7 @@ public class Ticket1921 extends LegacyApplication implements RequestHandler {
 
     @Override
     public boolean handleRequest(VaadinSession session,
-            WrappedRequest request, WrappedResponse response)
+            VaadinRequest request, VaadinResponse response)
             throws IOException {
         Map<String, String[]> parameters = request.getParameterMap();
         String[] s = parameters.get("state");

@@ -97,7 +97,7 @@ public abstract class VaadinService implements Serializable {
      * @return The location of static resources (should contain the VAADIN
      *         directory). Never ends with a slash (/).
      */
-    public abstract String getStaticFileLocation(WrappedRequest request);
+    public abstract String getStaticFileLocation(VaadinRequest request);
 
     /**
      * Gets the widgetset that is configured for this deployment, e.g. from a
@@ -107,7 +107,7 @@ public abstract class VaadinService implements Serializable {
      *            the request for which a widgetset is required
      * @return the name of the widgetset
      */
-    public abstract String getConfiguredWidgetset(WrappedRequest request);
+    public abstract String getConfiguredWidgetset(VaadinRequest request);
 
     /**
      * Gets the theme that is configured for this deployment, e.g. from a portal
@@ -117,7 +117,7 @@ public abstract class VaadinService implements Serializable {
      *            the request for which a theme is required
      * @return the name of the theme
      */
-    public abstract String getConfiguredTheme(WrappedRequest request);
+    public abstract String getConfiguredTheme(VaadinRequest request);
 
     /**
      * Checks whether the UI will be rendered on its own in the browser or
@@ -129,7 +129,7 @@ public abstract class VaadinService implements Serializable {
      *            the request for which the UI is loaded
      * @return a boolean indicating whether the UI should be standalone
      */
-    public abstract boolean isStandalone(WrappedRequest request);
+    public abstract boolean isStandalone(VaadinRequest request);
 
     /**
      * Get the class loader to use for loading classes loaded by name, e.g.
@@ -307,7 +307,7 @@ public abstract class VaadinService implements Serializable {
      *         session is found and this is a request for which a new session
      *         shouldn't be created.
      */
-    public VaadinSession findVaadinSession(WrappedRequest request)
+    public VaadinSession findVaadinSession(VaadinRequest request)
             throws ServiceException, SessionExpiredException {
 
         boolean requestCanCreateSession = requestCanCreateSession(request);
@@ -356,7 +356,7 @@ public abstract class VaadinService implements Serializable {
 
     }
 
-    private VaadinSession createAndRegisterSession(WrappedRequest request)
+    private VaadinSession createAndRegisterSession(VaadinRequest request)
             throws ServiceException {
         VaadinSession session = createVaadinSession(request);
 
@@ -397,7 +397,7 @@ public abstract class VaadinService implements Serializable {
      * @deprecated Only used to support {@link LegacyApplication}.
      */
     @Deprecated
-    protected URL getApplicationUrl(WrappedRequest request)
+    protected URL getApplicationUrl(VaadinRequest request)
             throws MalformedURLException {
         return null;
     }
@@ -421,10 +421,10 @@ public abstract class VaadinService implements Serializable {
      * @throws ServletException
      * @throws MalformedURLException
      */
-    protected abstract VaadinSession createVaadinSession(WrappedRequest request)
+    protected abstract VaadinSession createVaadinSession(VaadinRequest request)
             throws ServiceException;
 
-    private void onVaadinSessionStarted(WrappedRequest request,
+    private void onVaadinSessionStarted(VaadinRequest request,
             VaadinSession session) throws ServiceException {
         addonContext.fireApplicationStarted(session);
         eventRouter.fireEvent(new VaadinSessionInitializeEvent(this, session,
@@ -444,7 +444,7 @@ public abstract class VaadinService implements Serializable {
         }
     }
 
-    protected VaadinSession getExistingSession(WrappedRequest request,
+    protected VaadinSession getExistingSession(VaadinRequest request,
             boolean allowSessionCreation) throws SessionExpiredException {
 
         // Ensures that the session is still valid
@@ -472,7 +472,7 @@ public abstract class VaadinService implements Serializable {
      * @return <code>true</code> if it's valid to create a new Vaadin session
      *         for the request; else <code>false</code>
      */
-    protected abstract boolean requestCanCreateSession(WrappedRequest request);
+    protected abstract boolean requestCanCreateSession(VaadinRequest request);
 
     /**
      * Gets the currently used Vaadin service. The current service is
@@ -485,7 +485,7 @@ public abstract class VaadinService implements Serializable {
      * @return the current Vaadin service instance if available, otherwise
      *         <code>null</code>
      * 
-     * @see #setCurrentInstances(WrappedRequest, WrappedResponse)
+     * @see #setCurrentInstances(VaadinRequest, VaadinResponse)
      */
     public static VaadinService getCurrent() {
         return CurrentInstance.get(VaadinService.class);
@@ -493,7 +493,7 @@ public abstract class VaadinService implements Serializable {
 
     /**
      * Sets the this Vaadin service as the current service and also sets the
-     * current wrapped request and wrapped response. This method is used by the
+     * current Vaadin request and Vaadin response. This method is used by the
      * framework to set the current instances when a request related to the
      * service is processed and they are cleared when the request has been
      * processed.
@@ -504,51 +504,51 @@ public abstract class VaadinService implements Serializable {
      * </p>
      * 
      * @param request
-     *            the wrapped request to set as the current request, or
+     *            the Vaadin request to set as the current request, or
      *            <code>null</code> if no request should be set.
      * @param response
-     *            the wrapped response to set as the current response, or
+     *            the Vaadin response to set as the current response, or
      *            <code>null</code> if no response should be set.
      * 
      * @see #getCurrent()
      * @see #getCurrentRequest()
      * @see #getCurrentResponse()
      */
-    public void setCurrentInstances(WrappedRequest request,
-            WrappedResponse response) {
+    public void setCurrentInstances(VaadinRequest request,
+            VaadinResponse response) {
         CurrentInstance.setInheritable(VaadinService.class, this);
-        CurrentInstance.set(WrappedRequest.class, request);
-        CurrentInstance.set(WrappedResponse.class, response);
+        CurrentInstance.set(VaadinRequest.class, request);
+        CurrentInstance.set(VaadinResponse.class, response);
     }
 
     /**
-     * Gets the currently processed wrapped request. The current request is
+     * Gets the currently processed Vaadin request. The current request is
      * automatically defined when the request is started. The current request
      * can not be used in e.g. background threads because of the way server
      * implementations reuse request instances.
      * 
-     * @return the current wrapped request instance if available, otherwise
+     * @return the current Vaadin request instance if available, otherwise
      *         <code>null</code>
      * 
-     * @see #setCurrentInstances(WrappedRequest, WrappedResponse)
+     * @see #setCurrentInstances(VaadinRequest, VaadinResponse)
      */
-    public static WrappedRequest getCurrentRequest() {
-        return CurrentInstance.get(WrappedRequest.class);
+    public static VaadinRequest getCurrentRequest() {
+        return CurrentInstance.get(VaadinRequest.class);
     }
 
     /**
-     * Gets the currently processed wrapped request. The current request is
+     * Gets the currently processed Vaadin request. The current request is
      * automatically defined when the request is started. The current request
      * can not be used in e.g. background threads because of the way server
      * implementations reuse request instances.
      * 
-     * @return the current wrapped request instance if available, otherwise
+     * @return the current Vaadin request instance if available, otherwise
      *         <code>null</code>
      * 
-     * @see #setCurrentInstances(WrappedRequest, WrappedResponse)
+     * @see #setCurrentInstances(VaadinRequest, VaadinResponse)
      */
-    public static WrappedResponse getCurrentResponse() {
-        return CurrentInstance.get(WrappedResponse.class);
+    public static VaadinResponse getCurrentResponse() {
+        return CurrentInstance.get(VaadinResponse.class);
     }
 
 }

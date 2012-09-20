@@ -28,11 +28,11 @@ import com.vaadin.server.VaadinServlet.ServletService;
  * @author Vaadin Ltd.
  * @since 7.0
  * 
- * @see WrappedRequest
- * @see WrappedHttpServletResponse
+ * @see VaadinRequest
+ * @see VaadinServletResponse
  */
-public class WrappedHttpServletRequest extends HttpServletRequestWrapper
-        implements WrappedRequest {
+public class VaadinServletRequest extends HttpServletRequestWrapper implements
+        VaadinRequest {
 
     private final ServletService vaadinService;
 
@@ -44,7 +44,7 @@ public class WrappedHttpServletRequest extends HttpServletRequestWrapper
      * @param vaadinService
      *            the associated vaadin service
      */
-    public WrappedHttpServletRequest(HttpServletRequest request,
+    public VaadinServletRequest(HttpServletRequest request,
             ServletService vaadinService) {
         super(request);
         this.vaadinService = vaadinService;
@@ -105,22 +105,22 @@ public class WrappedHttpServletRequest extends HttpServletRequestWrapper
     }
 
     /**
-     * Helper method to get a <code>WrappedHttpServletRequest</code> from a
-     * <code>WrappedRequest</code>. Aside from casting, this method also takes
-     * care of situations where there's another level of wrapping.
+     * Helper method to get a {@link VaadinServletRequest} from a
+     * {@link VaadinRequest}. Aside from casting, this method also takes care of
+     * situations where there's another level of wrapping.
      * 
      * @param request
-     *            a wrapped request
-     * @return a wrapped http servlet request
+     *            a Vaadin request
+     * @return a Vaadin http servlet request
      * @throws ClassCastException
-     *             if the wrapped request doesn't wrap a http servlet request
+     *             if the Vaadin request doesn't wrap a http servlet request
      */
-    public static WrappedHttpServletRequest cast(WrappedRequest request) {
+    public static VaadinServletRequest cast(VaadinRequest request) {
         if (request instanceof CombinedRequest) {
             CombinedRequest combinedRequest = (CombinedRequest) request;
             request = combinedRequest.getSecondRequest();
         }
-        return (WrappedHttpServletRequest) request;
+        return (VaadinServletRequest) request;
     }
 
 }

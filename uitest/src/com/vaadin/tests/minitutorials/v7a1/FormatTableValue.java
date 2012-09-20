@@ -4,7 +4,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import com.vaadin.data.util.converter.StringToNumberConverter;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Table;
 
@@ -15,7 +15,7 @@ public class FormatTableValue extends AbstractTestUI {
     private static final String DEFAULT_PROPERTY = "default";
 
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         Table table = new Table();
         table.setLocale(Locale.FRANCE);
         table.addContainerProperty(PERCENT_PROPERTY, Double.class, 0);

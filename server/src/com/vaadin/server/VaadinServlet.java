@@ -66,8 +66,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         @Override
-        public String getStaticFileLocation(WrappedRequest request) {
-            HttpServletRequest servletRequest = WrappedHttpServletRequest
+        public String getStaticFileLocation(VaadinRequest request) {
+            HttpServletRequest servletRequest = VaadinServletRequest
                     .cast(request);
             String staticFileLocation;
             // if property is defined in configurations, use that
@@ -108,20 +108,20 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         @Override
-        public String getConfiguredWidgetset(WrappedRequest request) {
+        public String getConfiguredWidgetset(VaadinRequest request) {
             return getDeploymentConfiguration().getApplicationOrSystemProperty(
                     VaadinServlet.PARAMETER_WIDGETSET,
                     VaadinServlet.DEFAULT_WIDGETSET);
         }
 
         @Override
-        public String getConfiguredTheme(WrappedRequest request) {
+        public String getConfiguredTheme(VaadinRequest request) {
             // Use the default
             return VaadinServlet.getDefaultTheme();
         }
 
         @Override
-        public boolean isStandalone(WrappedRequest request) {
+        public boolean isStandalone(VaadinRequest request) {
             return true;
         }
 
@@ -146,7 +146,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         @Override
-        protected boolean requestCanCreateSession(WrappedRequest request) {
+        protected boolean requestCanCreateSession(VaadinRequest request) {
             RequestType requestType = getRequestType(request);
             if (requestType == RequestType.BROWSER_DETAILS) {
                 // This is the first request if you are embedding by writing the
@@ -172,22 +172,22 @@ public class VaadinServlet extends HttpServlet implements Constants {
          * @deprecated might be refactored or removed before 7.0.0
          */
         @Deprecated
-        protected RequestType getRequestType(WrappedRequest request) {
+        protected RequestType getRequestType(VaadinRequest request) {
             RequestType type = (RequestType) request
                     .getAttribute(RequestType.class.getName());
             if (type == null) {
                 type = getServlet().getRequestType(
-                        WrappedHttpServletRequest.cast(request));
+                        VaadinServletRequest.cast(request));
                 request.setAttribute(RequestType.class.getName(), type);
             }
             return type;
         }
 
         @Override
-        protected URL getApplicationUrl(WrappedRequest request)
+        protected URL getApplicationUrl(VaadinRequest request)
                 throws MalformedURLException {
             return getServlet().getApplicationUrl(
-                    WrappedHttpServletRequest.cast(request));
+                    VaadinServletRequest.cast(request));
         }
 
         @Override
@@ -197,9 +197,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         public static HttpServletRequest getCurrentServletRequest() {
-            WrappedRequest currentRequest = VaadinService.getCurrentRequest();
+            VaadinRequest currentRequest = VaadinService.getCurrentRequest();
             try {
-                WrappedHttpServletRequest request = WrappedHttpServletRequest
+                VaadinServletRequest request = VaadinServletRequest
                         .cast(currentRequest);
                 if (request != null) {
                     return request.getHttpServletRequest();
@@ -211,13 +211,12 @@ public class VaadinServlet extends HttpServlet implements Constants {
             }
         }
 
-        public static WrappedHttpServletResponse getCurrentResponse() {
-            return (WrappedHttpServletResponse) VaadinService
-                    .getCurrentResponse();
+        public static VaadinServletResponse getCurrentResponse() {
+            return (VaadinServletResponse) VaadinService.getCurrentResponse();
         }
 
         @Override
-        protected VaadinSession createVaadinSession(WrappedRequest request)
+        protected VaadinSession createVaadinSession(VaadinRequest request)
                 throws ServiceException {
             return new VaadinServletSession();
         }
@@ -232,12 +231,11 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         @Override
-        public void criticalNotification(WrappedRequest request,
-                WrappedResponse response, String cap, String msg,
+        public void criticalNotification(VaadinRequest request,
+                VaadinResponse response, String cap, String msg,
                 String details, String outOfSyncURL) throws IOException {
-            servlet.criticalNotification(
-                    WrappedHttpServletRequest.cast(request),
-                    ((WrappedHttpServletResponse) response), cap, msg, details,
+            servlet.criticalNotification(VaadinServletRequest.cast(request),
+                    ((VaadinServletResponse) response), cap, msg, details,
                     outOfSyncURL);
         }
     }
@@ -381,11 +379,11 @@ public class VaadinServlet extends HttpServlet implements Constants {
             HttpServletResponse response) throws ServletException, IOException {
         CurrentInstance.clearAll();
         setCurrent(this);
-        service(createWrappedRequest(request), createWrappedResponse(response));
+        service(createVaadinRequest(request), createVaadinResponse(response));
     }
 
-    private void service(WrappedHttpServletRequest request,
-            WrappedHttpServletResponse response) throws ServletException,
+    private void service(VaadinServletRequest request,
+            VaadinServletResponse response) throws ServletException,
             IOException {
         RequestTimer requestTimer = new RequestTimer();
         requestTimer.start();
@@ -501,24 +499,22 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
     }
 
-    private WrappedHttpServletResponse createWrappedResponse(
+    private VaadinServletResponse createVaadinResponse(
             HttpServletResponse response) {
-        WrappedHttpServletResponse wrappedResponse = new WrappedHttpServletResponse(
-                response, getVaadinService());
-        return wrappedResponse;
+        return new VaadinServletResponse(response, getVaadinService());
     }
 
     /**
-     * Create a wrapped request for a http servlet request. This method can be
-     * overridden if the wrapped request should have special properties.
+     * Create a Vaadin request for a http servlet request. This method can be
+     * overridden if the Vaadin request should have special properties.
      * 
      * @param request
      *            the original http servlet request
-     * @return a wrapped request for the original request
+     * @return a Vaadin request for the original request
      */
-    protected WrappedHttpServletRequest createWrappedRequest(
+    protected VaadinServletRequest createVaadinRequest(
             HttpServletRequest request) {
-        return new WrappedHttpServletRequest(request, getVaadinService());
+        return new VaadinServletRequest(request, getVaadinService());
     }
 
     /**
@@ -545,8 +541,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @throws IOException
      */
     private boolean ensureCookiesEnabled(RequestType requestType,
-            WrappedHttpServletRequest request,
-            WrappedHttpServletResponse response) throws IOException {
+            VaadinServletRequest request, VaadinServletResponse response)
+            throws IOException {
         if (requestType == RequestType.UIDL) {
             // In all other but the first UIDL request a cookie should be
             // returned by the browser.
@@ -592,7 +588,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
-    protected void criticalNotification(WrappedHttpServletRequest request,
+    protected void criticalNotification(VaadinServletRequest request,
             HttpServletResponse response, String caption, String message,
             String details, String url) throws IOException {
 
@@ -705,8 +701,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
         return resultPath;
     }
 
-    private void handleServiceException(WrappedHttpServletRequest request,
-            WrappedHttpServletResponse response, VaadinSession vaadinSession,
+    private void handleServiceException(VaadinServletRequest request,
+            VaadinServletResponse response, VaadinSession vaadinSession,
             Throwable e) throws IOException, ServletException {
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {
@@ -772,8 +768,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
-    void handleServiceSessionExpired(WrappedHttpServletRequest request,
-            WrappedHttpServletResponse response) throws IOException,
+    void handleServiceSessionExpired(VaadinServletRequest request,
+            VaadinServletResponse response) throws IOException,
             ServletException {
 
         if (isOnUnloadRequest(request)) {
@@ -818,9 +814,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     }
 
-    private void handleServiceSecurityException(
-            WrappedHttpServletRequest request,
-            WrappedHttpServletResponse response) throws IOException,
+    private void handleServiceSecurityException(VaadinServletRequest request,
+            VaadinServletResponse response) throws IOException,
             ServletException {
         if (isOnUnloadRequest(request)) {
             /*
@@ -1212,7 +1207,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
-    protected RequestType getRequestType(WrappedHttpServletRequest request) {
+    protected RequestType getRequestType(VaadinServletRequest request) {
         if (ServletPortletHelper.isFileUploadRequest(request)) {
             return RequestType.FILE_UPLOAD;
         } else if (ServletPortletHelper.isConnectorResourceRequest(request)) {

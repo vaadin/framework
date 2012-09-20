@@ -17,7 +17,7 @@
 package com.vaadin.tests.extensions;
 
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -28,7 +28,7 @@ import com.vaadin.ui.Label;
 public class BasicExtensionTest extends AbstractTestUI {
 
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         Label label = new Label();
         addComponent(label);
 

@@ -1,7 +1,7 @@
 package com.vaadin.tests.application;
 
 import com.vaadin.annotations.PreserveOnRefresh;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
 
@@ -9,7 +9,7 @@ import com.vaadin.ui.Label;
 public class RefreshStatePreserve extends AbstractTestUI {
 
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         addComponent(new Label("window.name: "
                 + request.getBrowserDetails().getWindowName()));
         addComponent(new Label("UI id: " + getUIId()));

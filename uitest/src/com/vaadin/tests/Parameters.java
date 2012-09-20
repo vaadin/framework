@@ -24,8 +24,8 @@ import java.util.Map;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.server.WrappedRequest;
-import com.vaadin.server.WrappedResponse;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinResponse;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout.MarginHandler;
 import com.vaadin.ui.Link;
@@ -107,7 +107,7 @@ public class Parameters extends com.vaadin.LegacyApplication implements
 
     @Override
     public boolean handleRequest(VaadinSession session,
-            WrappedRequest request, WrappedResponse response)
+            VaadinRequest request, VaadinResponse response)
             throws IOException {
         context.setValue("Context not available");
         relative.setValue(request.getRequestPathInfo());

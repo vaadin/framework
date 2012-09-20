@@ -36,13 +36,13 @@ public class BootstrapFragmentResponse extends BootstrapResponse {
     /**
      * Crate a new bootstrap fragment response.
      * 
-     * @see BootstrapResponse#BootstrapResponse(BootstrapHandler,
-     *      WrappedRequest, VaadinSession, Class)
+     * @see BootstrapResponse#BootstrapResponse(BootstrapHandler, VaadinRequest,
+     *      VaadinSession, Class)
      * 
      * @param handler
      *            the bootstrap handler that is firing the event
      * @param request
-     *            the wrapped request for which the bootstrap page should be
+     *            the Vaadin request for which the bootstrap page should be
      *            generated
      * @param session
      *            the vaadin session for which the bootstrap page should be
@@ -54,7 +54,7 @@ public class BootstrapFragmentResponse extends BootstrapResponse {
      *            application HTML
      */
     public BootstrapFragmentResponse(BootstrapHandler handler,
-            WrappedRequest request, VaadinSession session,
+            VaadinRequest request, VaadinSession session,
             Class<? extends UI> uiClass, List<Node> fragmentNodes) {
         super(handler, request, session, uiClass);
         this.fragmentNodes = fragmentNodes;

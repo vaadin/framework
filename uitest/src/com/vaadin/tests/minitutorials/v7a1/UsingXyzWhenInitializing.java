@@ -16,7 +16,7 @@
 
 package com.vaadin.tests.minitutorials.v7a1;
 
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
@@ -31,7 +31,7 @@ import com.vaadin.ui.UI;
 public class UsingXyzWhenInitializing extends UI {
 
     @Override
-    protected void init(WrappedRequest request) {
+    protected void init(VaadinRequest request) {
         String name = request.getParameter("name");
         if (name == null) {
             name = "Unknown";

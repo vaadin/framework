@@ -1,7 +1,7 @@
 package com.vaadin.tests.minitutorials.v7a2;
 
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
@@ -16,7 +16,7 @@ import com.vaadin.ui.UI;
 @Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")
 public class ComponentInStateUI extends UI {
     @Override
-    protected void init(WrappedRequest request) {
+    protected void init(VaadinRequest request) {
         ComponentInStateComponent component = new ComponentInStateComponent();
         component.setOtherComponent(this);
         addComponent(component);

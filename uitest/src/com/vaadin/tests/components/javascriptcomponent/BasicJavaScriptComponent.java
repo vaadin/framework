@@ -26,7 +26,7 @@ import com.vaadin.annotations.JavaScript;
 import com.vaadin.server.DynamicConnectorResource;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.communication.URLReference;
@@ -122,7 +122,7 @@ public class BasicJavaScriptComponent extends AbstractTestUI {
     private final Log log = new Log(5);
 
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         addComponent(log);
 
         ExampleWidget c = new ExampleWidget();

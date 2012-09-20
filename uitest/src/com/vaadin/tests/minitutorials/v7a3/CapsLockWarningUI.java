@@ -17,7 +17,7 @@
 package com.vaadin.tests.minitutorials.v7a3;
 
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.ui.PasswordField;
@@ -26,7 +26,7 @@ import com.vaadin.ui.PasswordField;
 public class CapsLockWarningUI extends AbstractTestUI {
 
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         PasswordField field = new PasswordField("Enter your password");
         new CapsLockWarning().extend(field);
 

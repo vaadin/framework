@@ -1,12 +1,12 @@
 package com.vaadin.tests.components.ui;
 
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 
 public class UIInitException extends AbstractTestUI {
 
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         throw new RuntimeException("Catch me if you can");
     }
 

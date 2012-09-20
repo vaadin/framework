@@ -16,7 +16,7 @@
 package com.vaadin.tests.extensions;
 
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -25,7 +25,7 @@ import com.vaadin.ui.Button.ClickEvent;
 public class HelloWorldExtensionTest extends AbstractTestUI {
 
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         final HelloWorldExtension extension = new HelloWorldExtension();
         extension.setGreeting("Kind words");
         addExtension(extension);

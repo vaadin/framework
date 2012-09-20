@@ -42,7 +42,7 @@ import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterFactory;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
 import com.vaadin.event.EventRouter;
-import com.vaadin.server.WrappedRequest.BrowserDetails;
+import com.vaadin.server.VaadinRequest.BrowserDetails;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Table;
@@ -615,18 +615,18 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * host page is requested.
      * 
      * @param request
-     *            the wrapped request for which a UI is needed
+     *            the Vaadin request for which a UI is needed
      * @return a UI instance to use for the request
      * 
      * @see UI
-     * @see WrappedRequest#getBrowserDetails()
+     * @see VaadinRequest#getBrowserDetails()
      * 
      * @since 7.0
      * 
      * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
-    public Class<? extends UI> getUIClass(WrappedRequest request) {
+    public Class<? extends UI> getUIClass(VaadinRequest request) {
         UIProvider uiProvider = getUiProvider(request, null);
         return uiProvider.getUIClass(request);
     }
@@ -644,7 +644,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
-    protected <T extends UI> T createUIInstance(WrappedRequest request,
+    protected <T extends UI> T createUIInstance(VaadinRequest request,
             Class<T> uiClass) {
         UIProvider uiProvider = getUiProvider(request, uiClass);
         return uiClass.cast(uiProvider.createInstance(request, uiClass));
@@ -672,7 +672,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
-    public UIProvider getUiProvider(WrappedRequest request, Class<?> uiClass) {
+    public UIProvider getUiProvider(VaadinRequest request, Class<?> uiClass) {
         UIProvider provider = (UIProvider) request
                 .getAttribute(UIProvider.class.getName());
         if (provider != null) {
@@ -708,7 +708,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
-    private UIProvider doGetUiProvider(WrappedRequest request, Class<?> uiClass) {
+    private UIProvider doGetUiProvider(VaadinRequest request, Class<?> uiClass) {
         int providersSize = uiProviders.size();
         if (providersSize == 0) {
             throw new IllegalStateException("There are no UI providers");
@@ -853,14 +853,14 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *            the request for which a UI is desired
      * @return a UI belonging to the request
      * 
-     * @see #createUI(WrappedRequest)
+     * @see #createUI(VaadinRequest)
      * 
      * @since 7.0
      * 
      * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
-    public UI getUIForRequest(WrappedRequest request) {
+    public UI getUIForRequest(VaadinRequest request) {
         UI uI = UI.getCurrent();
         if (uI != null) {
             return uI;
@@ -890,7 +890,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
-    private UI findExistingUi(WrappedRequest request) {
+    private UI findExistingUi(VaadinRequest request) {
         // Check if some UI provider has an existing UI available
         for (int i = uiProviders.size() - 1; i >= 0; i--) {
             UIProvider provider = uiProviders.get(i);
@@ -939,7 +939,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
-    public UI createUI(WrappedRequest request) {
+    public UI createUI(VaadinRequest request) {
         Class<? extends UI> uiClass = getUIClass(request);
 
         UI ui = createUIInstance(request, uiClass);
@@ -986,7 +986,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
-    private static Integer getUIId(WrappedRequest request) {
+    private static Integer getUIId(VaadinRequest request) {
         if (request instanceof CombinedRequest) {
             // Combined requests has the uiId parameter in the second request
             CombinedRequest combinedRequest = (CombinedRequest) request;

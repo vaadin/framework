@@ -9,12 +9,12 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
 import com.vaadin.DefaultDeploymentConfiguration;
-import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.DefaultUIProvider;
+import com.vaadin.server.DeploymentConfiguration;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.server.VaadinSession.SessionStartEvent;
-import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.UI;
 
 public class CustomUIClassLoader extends TestCase {
@@ -24,7 +24,7 @@ public class CustomUIClassLoader extends TestCase {
      */
     public static class MyUI extends UI {
         @Override
-        protected void init(WrappedRequest request) {
+        protected void init(VaadinRequest request) {
             // Nothing to see here
         }
     }
@@ -58,7 +58,8 @@ public class CustomUIClassLoader extends TestCase {
                 createConfigurationMock(), null));
 
         DefaultUIProvider uiProvider = new DefaultUIProvider();
-        Class<? extends UI> uiClass = uiProvider.getUIClass(createRequestMock(null));
+        Class<? extends UI> uiClass = uiProvider
+                .getUIClass(createRequestMock(null));
 
         assertEquals(MyUI.class, uiClass);
     }
@@ -70,15 +71,15 @@ public class CustomUIClassLoader extends TestCase {
                 properties);
     }
 
-    private static WrappedRequest createRequestMock(ClassLoader classloader) {
+    private static VaadinRequest createRequestMock(ClassLoader classloader) {
         // Mock a VaadinService to give the passed classloader
         VaadinService configurationMock = EasyMock
                 .createMock(VaadinService.class);
         EasyMock.expect(configurationMock.getClassLoader()).andReturn(
                 classloader);
 
-        // Mock a WrappedRequest to give the mocked vaadin service
-        WrappedRequest requestMock = EasyMock.createMock(WrappedRequest.class);
+        // Mock a VaadinRequest to give the mocked vaadin service
+        VaadinRequest requestMock = EasyMock.createMock(VaadinRequest.class);
         EasyMock.expect(requestMock.getVaadinService()).andReturn(
                 configurationMock);
 
@@ -101,7 +102,8 @@ public class CustomUIClassLoader extends TestCase {
                 createConfigurationMock(), null));
 
         DefaultUIProvider uiProvider = new DefaultUIProvider();
-        Class<? extends UI> uiClass = uiProvider.getUIClass(createRequestMock(loggingClassLoader));
+        Class<? extends UI> uiClass = uiProvider
+                .getUIClass(createRequestMock(loggingClassLoader));
 
         assertEquals(MyUI.class, uiClass);
         assertEquals(1, loggingClassLoader.requestedClasses.size());

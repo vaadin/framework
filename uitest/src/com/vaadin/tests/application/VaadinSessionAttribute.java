@@ -16,7 +16,7 @@
 
 package com.vaadin.tests.application;
 
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -27,7 +27,7 @@ public class VaadinSessionAttribute extends AbstractTestUI {
     private static final String ATTR_NAME = "myAttribute";
 
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         getSession().setAttribute(ATTR_NAME, Integer.valueOf(42));
         getSession().setAttribute(Integer.class, Integer.valueOf(42 * 2));
 

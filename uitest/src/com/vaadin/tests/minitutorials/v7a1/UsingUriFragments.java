@@ -18,7 +18,7 @@ package com.vaadin.tests.minitutorials.v7a1;
 
 import com.vaadin.server.Page.FragmentChangedEvent;
 import com.vaadin.server.Page.FragmentChangedListener;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
@@ -34,7 +34,7 @@ import com.vaadin.ui.UI;
 public class UsingUriFragments extends UI {
 
     @Override
-    protected void init(WrappedRequest request) {
+    protected void init(VaadinRequest request) {
         Label label = new Label("Hello, your fragment is "
                 + request.getBrowserDetails().getUriFragment());
         getContent().addComponent(label);

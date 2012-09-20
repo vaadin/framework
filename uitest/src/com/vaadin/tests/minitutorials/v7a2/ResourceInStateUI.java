@@ -18,7 +18,7 @@ package com.vaadin.tests.minitutorials.v7a2;
 
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.ThemeResource;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
 
 /**
@@ -33,7 +33,7 @@ import com.vaadin.ui.UI;
 public class ResourceInStateUI extends UI {
 
     @Override
-    protected void init(WrappedRequest request) {
+    protected void init(VaadinRequest request) {
         ResourceInStateComponent component = new ResourceInStateComponent();
         component.setIcon(new ThemeResource("../runo/icons/32/calendar.png"));
 

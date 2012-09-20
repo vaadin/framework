@@ -27,11 +27,11 @@ import com.vaadin.server.VaadinServlet.ServletService;
  * @author Vaadin Ltd.
  * @since 7.0
  * 
- * @see WrappedResponse
- * @see WrappedHttpServletRequest
+ * @see VaadinResponse
+ * @see VaadinServletRequest
  */
-public class WrappedHttpServletResponse extends HttpServletResponseWrapper
-        implements WrappedResponse {
+public class VaadinServletResponse extends HttpServletResponseWrapper implements
+        VaadinResponse {
 
     private ServletService vaadinService;
 
@@ -43,7 +43,7 @@ public class WrappedHttpServletResponse extends HttpServletResponseWrapper
      * @param vaadinService
      *            the associated vaadin service
      */
-    public WrappedHttpServletResponse(HttpServletResponse response,
+    public VaadinServletResponse(HttpServletResponse response,
             ServletService vaadinService) {
         super(response);
         this.vaadinService = vaadinService;
@@ -63,8 +63,8 @@ public class WrappedHttpServletResponse extends HttpServletResponseWrapper
         doSetCacheTime(this, milliseconds);
     }
 
-    // Implementation shared with WrappedPortletResponse
-    static void doSetCacheTime(WrappedResponse response, long milliseconds) {
+    // Implementation shared with VaadinPortletResponse
+    static void doSetCacheTime(VaadinResponse response, long milliseconds) {
         if (milliseconds <= 0) {
             response.setHeader("Cache-Control", "no-cache");
             response.setHeader("Pragma", "no-cache");

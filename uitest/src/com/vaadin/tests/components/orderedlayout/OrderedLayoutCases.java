@@ -8,7 +8,7 @@ import java.util.List;
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.TestUtils;
 import com.vaadin.ui.AbstractOrderedLayout;
@@ -117,7 +117,7 @@ public class OrderedLayoutCases extends AbstractTestUI {
     private HorizontalLayout sizeBar;
 
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         TestUtils
                 .injectCSS(
                         getUI(),

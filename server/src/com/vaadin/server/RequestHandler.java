@@ -41,7 +41,7 @@ public interface RequestHandler extends Serializable {
      *         handlers should be called, otherwise false
      * @throws IOException
      */
-    boolean handleRequest(VaadinSession session, WrappedRequest request,
-            WrappedResponse response) throws IOException;
+    boolean handleRequest(VaadinSession session, VaadinRequest request,
+            VaadinResponse response) throws IOException;
 
 }

@@ -342,8 +342,8 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     }
 
     @Override
-    public boolean handleConnectorRequest(WrappedRequest request,
-            WrappedResponse response, String path) throws IOException {
+    public boolean handleConnectorRequest(VaadinRequest request,
+            VaadinResponse response, String path) throws IOException {
         return false;
     }
 }

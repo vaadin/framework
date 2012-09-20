@@ -17,7 +17,7 @@
 package com.vaadin.tests.minitutorials.v7b1;
 
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.ui.PasswordField;
@@ -25,7 +25,7 @@ import com.vaadin.ui.PasswordField;
 @Widgetset(TestingWidgetSet.NAME)
 public class ReducingRoundTrips extends AbstractTestUI {
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         PasswordField passwordField = new PasswordField("Enter password");
         passwordField.setImmediate(true);
         CapsLockWarningWithRpc capsLockWarningWithRpc = new CapsLockWarningWithRpc();

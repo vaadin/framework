@@ -16,13 +16,13 @@
 
 package com.vaadin.tests.vaadincontext;
 
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 
 public class BootstrapModifyUI extends AbstractTestUI {
 
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         // TODO Auto-generated method stub
 
     }

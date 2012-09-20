@@ -411,9 +411,9 @@ public class WebBrowser implements Serializable {
      * properties in the class according to the given information.
      * 
      * @param request
-     *            the wrapped request to read the information from
+     *            the Vaadin request to read the information from
      */
-    void updateRequestDetails(WrappedRequest request) {
+    void updateRequestDetails(VaadinRequest request) {
         locale = request.getLocale();
         address = request.getRemoteAddr();
         secureConnection = request.isSecure();

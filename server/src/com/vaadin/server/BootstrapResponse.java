@@ -28,7 +28,7 @@ import com.vaadin.ui.UI;
  * @since 7.0.0
  */
 public abstract class BootstrapResponse extends EventObject {
-    private final WrappedRequest request;
+    private final VaadinRequest request;
     private final VaadinSession session;
     private final Class<? extends UI> uiClass;
 
@@ -38,14 +38,14 @@ public abstract class BootstrapResponse extends EventObject {
      * @param handler
      *            the bootstrap handler that is firing the event
      * @param request
-     *            the wrapped request for which the bootstrap page should be
+     *            the Vaadin request for which the bootstrap page should be
      *            generated
      * @param session
      *            the session for which the bootstrap page should be generated
      * @param uiClass
      *            the class of the UI that will be displayed on the page
      */
-    public BootstrapResponse(BootstrapHandler handler, WrappedRequest request,
+    public BootstrapResponse(BootstrapHandler handler, VaadinRequest request,
             VaadinSession session, Class<? extends UI> uiClass) {
         super(handler);
         this.request = request;
@@ -65,14 +65,14 @@ public abstract class BootstrapResponse extends EventObject {
     /**
      * Gets the request for which the generated bootstrap HTML will be the
      * response. This can be used to read request headers and other additional
-     * information. Please note that {@link WrappedRequest#getBrowserDetails()}
+     * information. Please note that {@link VaadinRequest#getBrowserDetails()}
      * will not be available because the bootstrap page is generated before the
      * bootstrap javascript has had a chance to send any information back to the
      * server.
      * 
-     * @return the wrapped request that is being handled
+     * @return the Vaadin request that is being handled
      */
-    public WrappedRequest getRequest() {
+    public VaadinRequest getRequest() {
         return request;
     }
 

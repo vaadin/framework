@@ -54,24 +54,24 @@ public abstract class BootstrapHandler implements RequestHandler {
 
     protected class BootstrapContext implements Serializable {
 
-        private final WrappedResponse response;
+        private final VaadinResponse response;
         private final BootstrapFragmentResponse bootstrapResponse;
 
         private String widgetsetName;
         private String themeName;
         private String appId;
 
-        public BootstrapContext(WrappedResponse response,
+        public BootstrapContext(VaadinResponse response,
                 BootstrapFragmentResponse bootstrapResponse) {
             this.response = response;
             this.bootstrapResponse = bootstrapResponse;
         }
 
-        public WrappedResponse getResponse() {
+        public VaadinResponse getResponse() {
             return response;
         }
 
-        public WrappedRequest getRequest() {
+        public VaadinRequest getRequest() {
             return bootstrapResponse.getRequest();
         }
 
@@ -111,8 +111,8 @@ public abstract class BootstrapHandler implements RequestHandler {
     }
 
     @Override
-    public boolean handleRequest(VaadinSession session, WrappedRequest request,
-            WrappedResponse response) throws IOException {
+    public boolean handleRequest(VaadinSession session, VaadinRequest request,
+            VaadinResponse response) throws IOException {
 
         try {
             Class<? extends UI> uiClass = session.getUIClass(request);
@@ -136,8 +136,8 @@ public abstract class BootstrapHandler implements RequestHandler {
     }
 
     private String getBootstrapHtml(BootstrapContext context) {
-        WrappedRequest request = context.getRequest();
-        WrappedResponse response = context.getResponse();
+        VaadinRequest request = context.getRequest();
+        VaadinResponse response = context.getResponse();
         VaadinService vaadinService = request.getVaadinService();
 
         BootstrapFragmentResponse fragmentResponse = context
@@ -174,7 +174,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         }
     }
 
-    private void sendBootstrapHeaders(WrappedResponse response,
+    private void sendBootstrapHeaders(VaadinResponse response,
             Map<String, Object> headers) {
         Set<Entry<String, Object>> entrySet = headers.entrySet();
         for (Entry<String, Object> header : entrySet) {
@@ -190,7 +190,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         }
     }
 
-    private void writeBootstrapPage(WrappedResponse response, String html)
+    private void writeBootstrapPage(VaadinResponse response, String html)
             throws IOException {
         response.setContentType("text/html");
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
@@ -250,8 +250,8 @@ public abstract class BootstrapHandler implements RequestHandler {
         body.addClass(ApplicationConstants.GENERATED_BODY_CLASSNAME);
     }
 
-    private BootstrapContext createContext(WrappedRequest request,
-            WrappedResponse response, VaadinSession application,
+    private BootstrapContext createContext(VaadinRequest request,
+            VaadinResponse response, VaadinSession application,
             Class<? extends UI> uiClass) {
         BootstrapContext context = new BootstrapContext(response,
                 new BootstrapFragmentResponse(this, request, application,
@@ -274,7 +274,7 @@ public abstract class BootstrapHandler implements RequestHandler {
     protected abstract String getApplicationId(BootstrapContext context);
 
     public String getWidgetsetForUI(BootstrapContext context) {
-        WrappedRequest request = context.getRequest();
+        VaadinRequest request = context.getRequest();
 
         String widgetset = context.getVaadinSession()
                 .getUiProvider(context.getRequest(), context.getUIClass())
@@ -331,7 +331,7 @@ public abstract class BootstrapHandler implements RequestHandler {
                 .append("You have to enable javascript in your browser to use an application built with Vaadin.");
         fragmentNodes.add(mainDiv);
 
-        WrappedRequest request = context.getRequest();
+        VaadinRequest request = context.getRequest();
 
         VaadinService vaadinService = request.getVaadinService();
         String staticFileLocation = vaadinService
@@ -423,7 +423,7 @@ public abstract class BootstrapHandler implements RequestHandler {
             throws JSONException {
         JSONObject defaults = new JSONObject();
 
-        WrappedRequest request = context.getRequest();
+        VaadinRequest request = context.getRequest();
         VaadinSession session = context.getVaadinSession();
         VaadinService vaadinService = request.getVaadinService();
 
@@ -486,7 +486,7 @@ public abstract class BootstrapHandler implements RequestHandler {
      * @return
      */
     public String getThemeUri(BootstrapContext context, String themeName) {
-        WrappedRequest request = context.getRequest();
+        VaadinRequest request = context.getRequest();
         final String staticFilePath = request.getVaadinService()
                 .getStaticFileLocation(request);
         return staticFilePath + "/" + VaadinServlet.THEME_DIRECTORY_PATH
@@ -514,7 +514,7 @@ public abstract class BootstrapHandler implements RequestHandler {
     public String findAndEscapeThemeName(BootstrapContext context) {
         String themeName = getThemeName(context);
         if (themeName == null) {
-            WrappedRequest request = context.getRequest();
+            VaadinRequest request = context.getRequest();
             themeName = request.getVaadinService().getConfiguredTheme(request);
         }
 
@@ -525,7 +525,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         return themeName;
     }
 
-    protected void writeError(WrappedResponse response, Throwable e)
+    protected void writeError(VaadinResponse response, Throwable e)
             throws IOException {
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                 e.getLocalizedMessage());

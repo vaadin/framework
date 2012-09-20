@@ -37,10 +37,10 @@ import com.vaadin.server.VaadinPortlet.PortletService;
  * @author Vaadin Ltd.
  * @since 7.0
  * 
- * @see WrappedResponse
- * @see WrappedPortletRequest
+ * @see VaadinResponse
+ * @see VaadinPortletRequest
  */
-public class WrappedPortletResponse implements WrappedResponse {
+public class VaadinPortletResponse implements VaadinResponse {
     private static final DateFormat HTTP_DATE_FORMAT = new SimpleDateFormat(
             "EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH);
     static {
@@ -58,7 +58,7 @@ public class WrappedPortletResponse implements WrappedResponse {
      * @param vaadinService
      *            the associated vaadin service
      */
-    public WrappedPortletResponse(PortletResponse response,
+    public VaadinPortletResponse(PortletResponse response,
             PortletService vaadinService) {
         this.response = response;
         this.vaadinService = vaadinService;
@@ -106,7 +106,7 @@ public class WrappedPortletResponse implements WrappedResponse {
 
     @Override
     public void setCacheTime(long milliseconds) {
-        WrappedHttpServletResponse.doSetCacheTime(this, milliseconds);
+        VaadinServletResponse.doSetCacheTime(this, milliseconds);
     }
 
     @Override

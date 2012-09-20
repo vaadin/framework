@@ -18,7 +18,7 @@ package com.vaadin.tests.minitutorials.v7a1;
 
 import com.vaadin.server.AbstractUIProvider;
 import com.vaadin.server.WebBrowser;
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
@@ -33,7 +33,7 @@ import com.vaadin.ui.UI;
 public class DifferentFeaturesForDifferentClients extends AbstractUIProvider {
 
     @Override
-    public Class<? extends UI> getUIClass(WrappedRequest request) {
+    public Class<? extends UI> getUIClass(VaadinRequest request) {
         // could also use browser version etc.
         if (request.getHeader("user-agent").contains("mobile")) {
             return TouchRoot.class;
@@ -45,7 +45,7 @@ public class DifferentFeaturesForDifferentClients extends AbstractUIProvider {
     // Must override as default implementation isn't allowed to
     // instantiate our non-public classes
     @Override
-    public UI createInstance(WrappedRequest request,
+    public UI createInstance(VaadinRequest request,
             Class<? extends UI> type) {
         try {
             return type.newInstance();
@@ -57,7 +57,7 @@ public class DifferentFeaturesForDifferentClients extends AbstractUIProvider {
 
 class DefaultRoot extends UI {
     @Override
-    protected void init(WrappedRequest request) {
+    protected void init(VaadinRequest request) {
         getContent().addComponent(
                 new Label("This browser does not support touch events"));
     }
@@ -65,7 +65,7 @@ class DefaultRoot extends UI {
 
 class TouchRoot extends UI {
     @Override
-    protected void init(WrappedRequest request) {
+    protected void init(VaadinRequest request) {
         WebBrowser webBrowser = request.getBrowserDetails().getWebBrowser();
         String screenSize = "" + webBrowser.getScreenWidth() + "x"
                 + webBrowser.getScreenHeight();

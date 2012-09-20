@@ -24,7 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.vaadin.event.EventRouter;
-import com.vaadin.server.WrappedRequest.BrowserDetails;
+import com.vaadin.server.VaadinRequest.BrowserDetails;
 import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.ui.PageClientRpc;
 import com.vaadin.shared.ui.ui.UIConstants;
@@ -404,7 +404,7 @@ public class Page implements Serializable {
         return fragment;
     }
 
-    public void init(WrappedRequest request) {
+    public void init(VaadinRequest request) {
         BrowserDetails browserDetails = request.getBrowserDetails();
         if (browserDetails != null) {
             fragment = browserDetails.getUriFragment();

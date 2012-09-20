@@ -35,7 +35,7 @@ public class UnsupportedBrowserHandler implements RequestHandler {
 
     @Override
     public boolean handleRequest(VaadinSession session,
-            WrappedRequest request, WrappedResponse response)
+            VaadinRequest request, VaadinResponse response)
             throws IOException {
 
         if (request.getBrowserDetails() != null) {
@@ -62,8 +62,8 @@ public class UnsupportedBrowserHandler implements RequestHandler {
      * @param response
      * @throws IOException
      */
-    protected void writeBrowserTooOldPage(WrappedRequest request,
-            WrappedResponse response) throws IOException {
+    protected void writeBrowserTooOldPage(VaadinRequest request,
+            VaadinResponse response) throws IOException {
         Writer page = response.getWriter();
         WebBrowser b = request.getBrowserDetails().getWebBrowser();
 

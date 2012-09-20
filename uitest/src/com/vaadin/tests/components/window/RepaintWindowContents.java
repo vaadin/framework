@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.window;
 
-import com.vaadin.server.WrappedRequest;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -14,7 +14,7 @@ public class RepaintWindowContents extends AbstractTestUI {
 
     @SuppressWarnings("serial")
     @Override
-    protected void setup(WrappedRequest request) {
+    protected void setup(VaadinRequest request) {
         final Window window = new Window("Test window");
         addWindow(window);
 
