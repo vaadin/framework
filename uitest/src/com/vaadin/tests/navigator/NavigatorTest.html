@@ -17,6 +17,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/VOrderedLayout$Slot[4]/VVerticalLayout[0]/VOrderedLayout$Slot[0]/VLabel[0]</td>
+	<td>1. Navigated to DefaultView with params</td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/VOrderedLayout$Slot[0]/VButton[0]/domChild[0]/domChild[0]</td>
 	<td></td>
@@ -24,7 +29,7 @@
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/VOrderedLayout$Slot[4]/VVerticalLayout[0]/VOrderedLayout$Slot[0]/VLabel[0]</td>
-	<td>1. Navigated to ListView with params</td>
+	<td>2. Navigated to ListView with params</td>
 </tr>
 <tr>
 	<td>assertLocation</td>
@@ -39,7 +44,7 @@
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/VOrderedLayout$Slot[4]/VVerticalLayout[0]/VOrderedLayout$Slot[0]/VLabel[0]</td>
-	<td>2. Navigated to EditView with params</td>
+	<td>3. Navigated to EditView with params</td>
 </tr>
 <tr>
 	<td>assertLocation</td>
@@ -64,7 +69,7 @@
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/VOrderedLayout$Slot[4]/VVerticalLayout[0]/VOrderedLayout$Slot[0]/VLabel[0]</td>
-	<td>3. Navigated to ListView with params param=value</td>
+	<td>4. Navigated to ListView with params param=value</td>
 </tr>
 <tr>
 	<td>assertLocation</td>
@@ -79,7 +84,7 @@
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/VOrderedLayout$Slot[4]/VVerticalLayout[0]/VOrderedLayout$Slot[0]/VLabel[0]</td>
-	<td>4. Navigated to EditView with params param=value</td>
+	<td>5. Navigated to EditView with params param=value</td>
 </tr>
 <tr>
 	<td>assertLocation</td>
@@ -94,11 +99,51 @@
 <tr>
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/VOrderedLayout$Slot[4]/VVerticalLayout[0]/VOrderedLayout$Slot[0]/VLabel[0]</td>
-	<td>5. Prevent navigation to ForbiddenView</td>
+	<td>6. Prevent navigation to ForbiddenView</td>
 </tr>
 <tr>
 	<td>assertLocation</td>
 	<td>*#!edit/param=value</td>
+	<td></td>
+</tr>
+<tr>
+	<td>runScript</td>
+	<td>window.location.hash='!foo'</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/VOrderedLayout$Slot[4]/VVerticalLayout[0]/VOrderedLayout$Slot[0]/VLabel[0]</td>
+	<td>7. View 'foo' not found!</td>
+</tr>
+<tr>
+	<td>assertLocation</td>
+	<td>*#!foo</td>
+	<td></td>
+</tr>
+<tr>
+	<td>runScript</td>
+	<td>window.location.hash='foo'</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/VOrderedLayout$Slot[4]/VVerticalLayout[0]/VOrderedLayout$Slot[0]/VLabel[0]</td>
+	<td>8. Navigated to DefaultView with params</td>
+</tr>
+<tr>
+	<td>assertLocation</td>
+	<td>*#foo</td>
 	<td></td>
 </tr>
 
