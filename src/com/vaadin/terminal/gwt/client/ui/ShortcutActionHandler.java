@@ -119,11 +119,11 @@ public class ShortcutActionHandler {
             final String key = action.getStringAttribute(ACTION_KEY_ATTRIBUTE);
             final String caption = action
                     .getStringAttribute(ACTION_CAPTION_ATTRIBUTE);
-            final Paintable target = action.getPaintableAttribute(
-                    ACTION_TARGET_ATTRIBUTE, client);
+            final String targetPID = action
+                    .getStringAttribute(ACTION_TARGET_ATTRIBUTE);
             final String targetAction = action
                     .getStringAttribute(ACTION_TARGET_ACTION_ATTRIBUTE);
-            actions.add(new ShortcutAction(key, kc, caption, target,
+            actions.add(new ShortcutAction(key, kc, caption, targetPID,
                     targetAction));
         }
     }
@@ -181,7 +181,7 @@ public class ShortcutActionHandler {
 
         Scheduler.get().scheduleDeferred(new Command() {
             public void execute() {
-                Paintable shortcutTarget = a.getTarget();
+                Paintable shortcutTarget = client.getPaintable(a.getTargetPID());
                 boolean handledClientSide = false;
                 if (shortcutTarget instanceof ShortcutActionTarget) {
                     handledClientSide = ((ShortcutActionTarget) shortcutTarget)
@@ -308,7 +308,7 @@ class ShortcutAction {
     private final ShortcutKeyCombination sc;
     private final String caption;
     private final String key;
-    private Paintable target;
+    private String targetPID;
     private String targetAction;
 
     public ShortcutAction(String key, ShortcutKeyCombination sc,
@@ -317,11 +317,11 @@ class ShortcutAction {
     }
 
     public ShortcutAction(String key, ShortcutKeyCombination sc,
-            String caption, Paintable target, String targetAction) {
+            String caption, String targetPID, String targetAction) {
         this.sc = sc;
         this.key = key;
         this.caption = caption;
-        this.target = target;
+        this.targetPID = targetPID;
         this.targetAction = targetAction;
     }
 
@@ -337,8 +337,8 @@ class ShortcutAction {
         return key;
     }
 
-    public Paintable getTarget() {
-        return target;
+    public String getTargetPID() {
+        return targetPID;
     }
 
     public String getTargetAction() {
