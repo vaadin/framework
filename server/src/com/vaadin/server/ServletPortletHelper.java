@@ -117,21 +117,21 @@ class ServletPortletHelper implements Serializable {
                 ApplicationConstants.HEARTBEAT_REQUEST_PATH);
     }
 
-    public static void initDefaultUIProvider(VaadinSession application,
+    public static void initDefaultUIProvider(VaadinSession session,
             VaadinService vaadinService) throws ServiceException {
         String uiProperty = vaadinService.getDeploymentConfiguration()
                 .getInitParameters().getProperty(VaadinSession.UI_PARAMETER);
         if (uiProperty != null) {
             verifyUIClass(uiProperty, vaadinService.getClassLoader());
-            application.addUIProvider(new DefaultUIProvider());
+            session.addUIProvider(new DefaultUIProvider());
         }
     }
 
-    public static void checkUiProviders(VaadinSession newApplication)
+    public static void checkUiProviders(VaadinSession session)
             throws ServiceException {
-        if (newApplication.getUIProviders().isEmpty()) {
+        if (session.getUIProviders().isEmpty()) {
             throw new ServiceException(
-                    "No UIProvider has been added to the application and there is no \""
+                    "No UIProvider has been added and there is no \""
                             + VaadinSession.UI_PARAMETER + "\" init parameter.");
         }
     }
