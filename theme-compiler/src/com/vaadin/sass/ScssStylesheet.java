@@ -27,6 +27,7 @@ import org.w3c.css.sac.InputSource;
 
 import com.vaadin.sass.handler.SCSSDocumentHandler;
 import com.vaadin.sass.handler.SCSSDocumentHandlerImpl;
+import com.vaadin.sass.handler.SCSSErrorHandler;
 import com.vaadin.sass.parser.Parser;
 import com.vaadin.sass.resolver.ScssStylesheetResolver;
 import com.vaadin.sass.resolver.VaadinResolver;
@@ -81,6 +82,7 @@ public class ScssStylesheet extends Node {
         }
 
         Parser parser = new Parser();
+        parser.setErrorHandler(new SCSSErrorHandler());
         parser.setDocumentHandler(handler);
         parser.parseStyleSheet(source);
 
