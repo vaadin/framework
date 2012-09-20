@@ -37,7 +37,6 @@ public class ComponentState extends SharedState {
     // Note: for the caption, there is a difference between null and an empty
     // string!
     public String caption = null;
-    public boolean visible = true;
     public List<String> styles = null;
     public String id = null;
     /**

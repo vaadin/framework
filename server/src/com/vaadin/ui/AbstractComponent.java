@@ -105,6 +105,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     private ActionManager actionManager;
 
+    private boolean visible = true;
+
     /* Constructor */
 
     /**
@@ -386,7 +388,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public boolean isVisible() {
-        return getState().visible;
+        return visible;
     }
 
     /*
@@ -396,11 +398,11 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public void setVisible(boolean visible) {
-        if (getState().visible == visible) {
+        if (isVisible() == visible) {
             return;
         }
 
-        getState().visible = visible;
+        this.visible = visible;
         if (getParent() != null) {
             // Must always repaint the parent (at least the hierarchy) when
             // visibility of a child component changes.

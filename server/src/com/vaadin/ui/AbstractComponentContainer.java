@@ -244,7 +244,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
 
     @Override
     public void setVisible(boolean visible) {
-        if (getState().visible == visible) {
+        if (isVisible() == visible) {
             return;
         }
 
