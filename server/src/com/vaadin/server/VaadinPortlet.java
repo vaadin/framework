@@ -241,6 +241,11 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             return (WrappedPortletResponse) VaadinService.getCurrentResponse();
         }
 
+        @Override
+        protected VaadinSession createVaadinSession(WrappedRequest request)
+                throws ServiceException {
+            return new VaadinPortletSession();
+        }
     }
 
     public static class WrappedHttpAndPortletRequest extends

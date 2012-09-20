@@ -318,6 +318,12 @@ public abstract class VaadinService implements Serializable {
             throws ServiceException {
         VaadinSession session = createVaadinSession(request);
 
+        try {
+            ServletPortletHelper.initDefaultUIProvider(session, this);
+        } catch (ApplicationClassException e) {
+            throw new ServiceException(e);
+        }
+
         session.storeInSession(request.getWrappedSession());
 
         URL applicationUrl;
@@ -376,18 +382,8 @@ public abstract class VaadinService implements Serializable {
      * @throws ServletException
      * @throws MalformedURLException
      */
-    private VaadinServletSession createVaadinSession(WrappedRequest request)
-            throws ServiceException {
-        VaadinServletSession session = new VaadinServletSession();
-
-        try {
-            ServletPortletHelper.initDefaultUIProvider(session, this);
-        } catch (ApplicationClassException e) {
-            throw new ServiceException(e);
-        }
-
-        return session;
-    }
+    protected abstract VaadinSession createVaadinSession(WrappedRequest request)
+            throws ServiceException;
 
     private void onVaadinSessionStarted(WrappedRequest request,
             VaadinSession session) throws ServiceException {

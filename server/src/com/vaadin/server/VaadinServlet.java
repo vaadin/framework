@@ -217,6 +217,12 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return (WrappedHttpServletResponse) VaadinService
                     .getCurrentResponse();
         }
+
+        @Override
+        protected VaadinSession createVaadinSession(WrappedRequest request)
+                throws ServiceException {
+            return new VaadinServletSession();
+        }
     }
 
     private static class AbstractApplicationServletWrapper implements Callback {
