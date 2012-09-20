@@ -7,20 +7,35 @@
 	text-align:right;
 	white-space: nowrap;
 }
-.v-formlayout-spacing .v-formlayout-row .v-formlayout-captioncell, 
-.v-formlayout-spacing .v-formlayout-row .v-formlayout-contentcell,
-.v-formlayout-spacing .v-formlayout-row .v-formlayout-errorcell {
+.v-formlayout-spacing > tbody > .v-formlayout-row > .v-formlayout-captioncell, 
+.v-formlayout-spacing > tbody > .v-formlayout-row > .v-formlayout-contentcell,
+.v-formlayout-spacing > tbody > .v-formlayout-row > .v-formlayout-errorcell {
 	padding-top: 8px;
 }
-.v-formlayout-margin-top .v-formlayout-firstrow .v-formlayout-captioncell, 
-.v-formlayout-margin-top .v-formlayout-firstrow .v-formlayout-contentcell,
-.v-formlayout-margin-top .v-formlayout-firstrow .v-formlayout-errorcell {
+.v-formlayout-margin-top > tbody > .v-formlayout-firstrow > .v-formlayout-captioncell, 
+.v-formlayout-margin-top > tbody > .v-formlayout-firstrow > .v-formlayout-contentcell,
+.v-formlayout-margin-top > tbody > .v-formlayout-firstrow > .v-formlayout-errorcell {
 	padding-top: 15px;
 }
-.v-formlayout-margin-bottom .v-formlayout-lastrow .v-formlayout-captioncell,
-.v-formlayout-margin-bottom .v-formlayout-lastrow .v-formlayout-contentcell,
-.v-formlayout-margin-bottom .v-formlayout-lastrow .v-formlayout-errorcell {
+.v-formlayout-margin-bottom > tbody > .v-formlayout-lastrow > .v-formlayout-captioncell,
+.v-formlayout-margin-bottom > tbody > .v-formlayout-lastrow > .v-formlayout-contentcell,
+.v-formlayout-margin-bottom > tbody > .v-formlayout-lastrow > .v-formlayout-errorcell {
 	padding-bottom: 15px;
+}
+.v-ie6 .v-formlayout-spacing .v-formlayout-row .v-formlayout-captioncell, 
+.v-ie6 .v-formlayout-spacing .v-formlayout-row .v-formlayout-contentcell,
+.v-ie6 .v-formlayout-spacing .v-formlayout-row .v-formlayout-errorcell {
+	padding-top: expression(/v-formlayout-spacing/.test(this.parentNode.parentNode.parentNode.className) ? "8px" : "0px");
+}
+.v-ie6 .v-formlayout-margin-top .v-formlayout-row .v-formlayout-captioncell, 
+.v-ie6 .v-formlayout-margin-top .v-formlayout-row .v-formlayout-contentcell,
+.v-ie6 .v-formlayout-margin-top .v-formlayout-row .v-formlayout-errorcell {
+	padding-top: expression((/v-formlayout-firstrow/.test(this.parentNode.className) && /v-formlayout-margin-top/.test(this.parentNode.parentNode.parentNode.className)) ? "15px" : (/v-formlayout-spacing/.test(this.parentNode.parentNode.parentNode.className) ? "8px" : "0px"));
+}
+.v-ie6 .v-formlayout-margin-bottom .v-formlayout-row .v-formlayout-captioncell,
+.v-ie6 .v-formlayout-margin-bottom .v-formlayout-row .v-formlayout-contentcell,
+.v-ie6 .v-formlayout-margin-bottom .v-formlayout-row .v-formlayout-errorcell {
+	padding-bottom: expression((/v-formlayout-lastrow/.test(this.parentNode.className) && /v-formlayout-margin-bottom/.test(this.parentNode.parentNode.parentNode.className)) ? "15px" : "0px");
 }
 .v-formlayout-margin-left .v-formlayout-captioncell {
 	padding-left: 18px;
