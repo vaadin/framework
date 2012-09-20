@@ -18,10 +18,24 @@ package com.vaadin.server;
 
 import java.io.File;
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Iterator;
+import java.util.Locale;
+import java.util.ServiceLoader;
 
 import javax.portlet.PortletContext;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+
+import com.vaadin.LegacyApplication;
+import com.vaadin.event.EventRouter;
+import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
+import com.vaadin.server.VaadinSession.SessionStartEvent;
+import com.vaadin.util.CurrentInstance;
+import com.vaadin.util.ReflectTools;
 
 /**
  * Provide deployment specific settings that are required outside terminal
@@ -31,7 +45,39 @@ import javax.servlet.ServletContext;
  * 
  * @since 7.0
  */
-public interface VaadinService extends Serializable {
+public abstract class VaadinService implements Serializable {
+
+    private static final Method SESSION_INIT_METHOD = ReflectTools.findMethod(
+            VaadinSessionInitializationListener.class,
+            "vaadinSessionInitialized", VaadinSessionInitializeEvent.class);
+
+    /**
+     * @deprecated Only supported for {@link LegacyApplication}.
+     */
+    @Deprecated
+    public static final String URL_PARAMETER_RESTART_APPLICATION = "restartApplication";
+
+    /**
+     * @deprecated Only supported for {@link LegacyApplication}.
+     */
+    @Deprecated
+    public static final String URL_PARAMETER_CLOSE_APPLICATION = "closeApplication";
+
+    private AddonContext addonContext;
+    private final DeploymentConfiguration deploymentConfiguration;
+
+    private final EventRouter eventRouter = new EventRouter();
+
+    /**
+     * Creates a new vaadin service based on a deployment configuration
+     * 
+     * @param deploymentConfiguration
+     *            the deployment configuration for the service
+     */
+    public VaadinService(DeploymentConfiguration deploymentConfiguration) {
+        this.deploymentConfiguration = deploymentConfiguration;
+    }
+
     /**
      * Return the URL from where static files, e.g. the widgetset and the theme,
      * are served. In a standard configuration the VAADIN folder inside the
@@ -46,7 +92,7 @@ public interface VaadinService extends Serializable {
      * @return The location of static resources (should contain the VAADIN
      *         directory). Never ends with a slash (/).
      */
-    public String getStaticFileLocation(WrappedRequest request);
+    public abstract String getStaticFileLocation(WrappedRequest request);
 
     /**
      * Gets the widgetset that is configured for this deployment, e.g. from a
@@ -56,7 +102,7 @@ public interface VaadinService extends Serializable {
      *            the request for which a widgetset is required
      * @return the name of the widgetset
      */
-    public String getConfiguredWidgetset(WrappedRequest request);
+    public abstract String getConfiguredWidgetset(WrappedRequest request);
 
     /**
      * Gets the theme that is configured for this deployment, e.g. from a portal
@@ -66,7 +112,7 @@ public interface VaadinService extends Serializable {
      *            the request for which a theme is required
      * @return the name of the theme
      */
-    public String getConfiguredTheme(WrappedRequest request);
+    public abstract String getConfiguredTheme(WrappedRequest request);
 
     /**
      * Checks whether the Vaadin application will be rendered on its own in the
@@ -79,7 +125,7 @@ public interface VaadinService extends Serializable {
      *            the request for which the application is loaded
      * @return a boolean indicating whether the application should be standalone
      */
-    public boolean isStandalone(WrappedRequest request);
+    public abstract boolean isStandalone(WrappedRequest request);
 
     /**
      * Get the class loader to use for loading classes loaded by name, e.g.
@@ -88,7 +134,28 @@ public interface VaadinService extends Serializable {
      * 
      * @return the class loader to use, or <code>null</code>
      */
-    public ClassLoader getClassLoader();
+    public ClassLoader getClassLoader() {
+        final String classLoaderName = getDeploymentConfiguration()
+                .getApplicationOrSystemProperty("ClassLoader", null);
+        ClassLoader classLoader;
+        if (classLoaderName == null) {
+            classLoader = getClass().getClassLoader();
+        } else {
+            try {
+                final Class<?> classLoaderClass = getClass().getClassLoader()
+                        .loadClass(classLoaderName);
+                final Constructor<?> c = classLoaderClass
+                        .getConstructor(new Class[] { ClassLoader.class });
+                classLoader = (ClassLoader) c
+                        .newInstance(new Object[] { getClass().getClassLoader() });
+            } catch (final Exception e) {
+                throw new RuntimeException(
+                        "Could not find specified class loader: "
+                                + classLoaderName, e);
+            }
+        }
+        return classLoader;
+    }
 
     /**
      * Returns the MIME type of the specified file, or null if the MIME type is
@@ -103,27 +170,39 @@ public interface VaadinService extends Serializable {
      * @see ServletContext#getMimeType(String)
      * @see PortletContext#getMimeType(String)
      */
-    public String getMimeType(String resourceName);
+    public abstract String getMimeType(String resourceName);
 
     /**
      * Gets the deployment configuration.
      * 
      * @return the deployment configuration
      */
-    public DeploymentConfiguration getDeploymentConfiguration();
+    public DeploymentConfiguration getDeploymentConfiguration() {
+        return deploymentConfiguration;
+    }
 
-    public Iterator<AddonContextListener> getAddonContextListeners();
+    public Iterator<AddonContextListener> getAddonContextListeners() {
+        // Called once for init and then no more, so there's no point in caching
+        // the instance
+        ServiceLoader<AddonContextListener> contextListenerLoader = ServiceLoader
+                .load(AddonContextListener.class, getClassLoader());
+        return contextListenerLoader.iterator();
+    }
 
-    public AddonContext getAddonContext();
+    public AddonContext getAddonContext() {
+        return addonContext;
+    }
 
-    public void setAddonContext(AddonContext vaadinContext);
+    public void setAddonContext(AddonContext addonContext) {
+        this.addonContext = addonContext;
+    }
 
     /**
      * Gets the system messages object
      * 
      * @return the system messages object
      */
-    public SystemMessages getSystemMessages();
+    public abstract SystemMessages getSystemMessages();
 
     /**
      * Returns application context base directory.
@@ -137,10 +216,45 @@ public interface VaadinService extends Serializable {
      * @return The application base directory or null if the application has no
      *         base directory.
      */
-    public File getBaseDirectory();
+    public abstract File getBaseDirectory();
 
     /**
-     * Gets the Vaadin session associated with this request.
+     * Adds a listener that gets notified when a new Vaadin session is
+     * initialized for this service.
+     * <p>
+     * Because of the way different service instances share the same session,
+     * the listener is not necessarily notified immediately when the session is
+     * created but only when the first request for that session is handled by
+     * this service.
+     * 
+     * @see #removeVaadinSessionInitializationListener(VaadinSessionInitializationListener)
+     * @see VaadinSessionInitializationListener
+     * 
+     * @param listener
+     *            the vaadin session initialization listener
+     */
+    public void addVaadinSessionInitializationListener(
+            VaadinSessionInitializationListener listener) {
+        eventRouter.addListener(VaadinSessionInitializeEvent.class, listener,
+                SESSION_INIT_METHOD);
+    }
+
+    /**
+     * Removes a Vaadin session initialization listener from this service.
+     * 
+     * @see #addVaadinSessionInitializationListener(VaadinSessionInitializationListener)
+     * 
+     * @param listener
+     *            the Vaadin session initialization listener to remove.
+     */
+    public void removeVaadinSessionInitializationListener(
+            VaadinSessionInitializationListener listener) {
+        eventRouter.removeListener(VaadinSessionInitializeEvent.class,
+                listener, SESSION_INIT_METHOD);
+    }
+
+    /**
+     * Attempts to find a Vaadin session associated with this request.
      * 
      * @param request
      *            the request to get a vaadin session for.
@@ -151,5 +265,265 @@ public interface VaadinService extends Serializable {
      *         session is found and this is a request for which a new session
      *         shouldn't be created.
      */
-    public VaadinSession getVaadinSession(WrappedRequest request);
+    public VaadinSession findVaadinSession(WrappedRequest request)
+            throws ServiceException, SessionExpiredException {
+
+        boolean requestCanCreateApplication = requestCanCreateSession(request);
+
+        /* Find an existing application for this request. */
+        VaadinSession session = getExistingSession(request,
+                requestCanCreateApplication);
+
+        if (session != null) {
+            /*
+             * There is an existing application. We can use this as long as the
+             * user not specifically requested to close or restart it.
+             */
+
+            final boolean restartApplication = (request
+                    .getParameter(URL_PARAMETER_RESTART_APPLICATION) != null);
+            final boolean closeApplication = (request
+                    .getParameter(URL_PARAMETER_CLOSE_APPLICATION) != null);
+
+            if (restartApplication) {
+                closeApplication(session, request.getWrappedSession(false));
+                return createAndRegisterApplication(request);
+            } else if (closeApplication) {
+                closeApplication(session, request.getWrappedSession(false));
+                return null;
+            } else {
+                return session;
+            }
+        }
+
+        // No existing application was found
+
+        if (requestCanCreateApplication) {
+            /*
+             * If the request is such that it should create a new application if
+             * one as not found, we do that.
+             */
+            return createAndRegisterApplication(request);
+        } else {
+            /*
+             * The application was not found and a new one should not be
+             * created. Assume the session has expired.
+             */
+            throw new SessionExpiredException();
+        }
+
+    }
+
+    private VaadinSession createAndRegisterApplication(WrappedRequest request)
+            throws ServiceException {
+        VaadinSession session = createVaadinSession(request);
+
+        session.storeInSession(request.getWrappedSession());
+
+        URL applicationUrl;
+        try {
+            applicationUrl = getApplicationUrl(request);
+        } catch (MalformedURLException e) {
+            throw new ServiceException(e);
+        }
+
+        // Initial locale comes from the request
+        Locale locale = request.getLocale();
+        session.setLocale(locale);
+        session.start(new SessionStartEvent(applicationUrl,
+                getDeploymentConfiguration(),
+                createCommunicationManager(session)));
+
+        onVaadinSessionStarted(request, session);
+
+        return session;
+    }
+
+    /**
+     * Get the base URL that should be used for sending requests back to this
+     * service.
+     * <p>
+     * This is only used to support legacy cases.
+     * 
+     * @param request
+     * @return
+     * @throws MalformedURLException
+     * 
+     * @deprecated Only used to support {@link LegacyApplication}.
+     */
+    @Deprecated
+    protected URL getApplicationUrl(WrappedRequest request)
+            throws MalformedURLException {
+        return null;
+    }
+
+    /**
+     * Create a communication manager to use for the given Vaadin session.
+     * 
+     * @param session
+     *            the vaadin session for which a new communication manager is
+     *            needed
+     * @return a new communication manager
+     */
+    protected abstract AbstractCommunicationManager createCommunicationManager(
+            VaadinSession session);
+
+    /**
+     * Creates a new vaadin session.
+     * 
+     * @param request
+     * @return
+     * @throws ServletException
+     * @throws MalformedURLException
+     */
+    private VaadinServletSession createVaadinSession(WrappedRequest request)
+            throws ServiceException {
+        VaadinServletSession session = new VaadinServletSession();
+
+        try {
+            ServletPortletHelper.initDefaultUIProvider(session, this);
+        } catch (ApplicationClassException e) {
+            throw new ServiceException(e);
+        }
+
+        return session;
+    }
+
+    private void onVaadinSessionStarted(WrappedRequest request,
+            VaadinSession session) throws ServiceException {
+        addonContext.fireApplicationStarted(session);
+        eventRouter.fireEvent(new VaadinSessionInitializeEvent(this, session,
+                request));
+
+        try {
+            ServletPortletHelper.checkUiProviders(session);
+        } catch (ApplicationClassException e) {
+            throw new ServiceException(e);
+        }
+    }
+
+    private void closeApplication(VaadinSession application,
+            WrappedSession session) {
+        if (application == null) {
+            return;
+        }
+
+        application.close();
+        if (session != null) {
+            application.removeFromSession();
+        }
+    }
+
+    protected VaadinSession getExistingSession(WrappedRequest request,
+            boolean allowSessionCreation) throws SessionExpiredException {
+
+        // Ensures that the session is still valid
+        final WrappedSession session = request
+                .getWrappedSession(allowSessionCreation);
+        if (session == null) {
+            throw new SessionExpiredException();
+        }
+
+        VaadinSession sessionApplication = VaadinSession.getForSession(session);
+
+        if (sessionApplication == null) {
+            return null;
+        }
+
+        if (!sessionApplication.isRunning()) {
+            sessionApplication.removeFromSession();
+            return null;
+        }
+
+        return sessionApplication;
+    }
+
+    /**
+     * Checks whether it's valid to create a new Vaadin session as a result of
+     * the given request.
+     * 
+     * @param request
+     *            the request
+     * @return <code>true</code> if it's valid to create a new Vaadin session
+     *         for the request; else <code>false</code>
+     */
+    protected abstract boolean requestCanCreateSession(WrappedRequest request);
+
+    /**
+     * Gets the currently used Vaadin service. The current service is
+     * automatically defined when processing requests related to the service and
+     * in threads started at a point when the current service is defined (see
+     * {@link InheritableThreadLocal}). In other cases, (e.g. from background
+     * threads started in some other way), the current service is not
+     * automatically defined.
+     * 
+     * @return the current Vaadin service instance if available, otherwise
+     *         <code>null</code>
+     * 
+     * @see #setCurrentInstances(WrappedRequest, WrappedResponse)
+     */
+    public static VaadinService getCurrent() {
+        return CurrentInstance.get(VaadinService.class);
+    }
+
+    /**
+     * Sets the this Vaadin service as the current service and also sets the
+     * current wrapped request and wrapped response. This method is used by the
+     * framework to set the current instances when a request related to the
+     * service is processed and they are cleared when the request has been
+     * processed.
+     * <p>
+     * The application developer can also use this method to define the current
+     * instances outside the normal request handling, e.g. when initiating
+     * custom background threads.
+     * </p>
+     * 
+     * @param request
+     *            the wrapped request to set as the current request, or
+     *            <code>null</code> if no request should be set.
+     * @param response
+     *            the wrapped response to set as the current response, or
+     *            <code>null</code> if no response should be set.
+     * 
+     * @see #getCurrent()
+     * @see #getCurrentRequest()
+     * @see #getCurrentResponse()
+     */
+    public void setCurrentInstances(WrappedRequest request,
+            WrappedResponse response) {
+        CurrentInstance.setInheritable(VaadinService.class, this);
+        CurrentInstance.set(WrappedRequest.class, request);
+        CurrentInstance.set(WrappedResponse.class, response);
+    }
+
+    /**
+     * Gets the currently processed wrapped request. The current request is
+     * automatically defined when the request is started. The current request
+     * can not be used in e.g. background threads because of the way server
+     * implementations reuse request instances.
+     * 
+     * @return the current wrapped request instance if available, otherwise
+     *         <code>null</code>
+     * 
+     * @see #setCurrentInstances(WrappedRequest, WrappedResponse)
+     */
+    public static WrappedRequest getCurrentRequest() {
+        return CurrentInstance.get(WrappedRequest.class);
+    }
+
+    /**
+     * Gets the currently processed wrapped request. The current request is
+     * automatically defined when the request is started. The current request
+     * can not be used in e.g. background threads because of the way server
+     * implementations reuse request instances.
+     * 
+     * @return the current wrapped request instance if available, otherwise
+     *         <code>null</code>
+     * 
+     * @see #setCurrentInstances(WrappedRequest, WrappedResponse)
+     */
+    public static WrappedResponse getCurrentResponse() {
+        return CurrentInstance.get(WrappedResponse.class);
+    }
+
 }

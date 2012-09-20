@@ -84,6 +84,7 @@ import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
+import com.vaadin.util.CurrentInstance;
 
 /**
  * This is a common base class for the server-side implementations of the
@@ -125,8 +126,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
             super("Upload interrupted by other thread");
         }
     }
-
-    private static String GET_PARAM_REPAINT_ALL = "repaintAll";
 
     // flag used in the request to indicate that the security token should be
     // written to the response
@@ -549,7 +548,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
         boolean repaintAll;
         final OutputStream out;
 
-        repaintAll = (request.getParameter(GET_PARAM_REPAINT_ALL) != null);
+        repaintAll = (request
+                .getParameter(ApplicationConstants.URL_PARAMETER_REPAINT_ALL) != null);
         // || (request.getSession().isNew()); FIXME What the h*ll is this??
         out = response.getOutputStream();
 
@@ -2470,6 +2470,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             assert UI.getCurrent() == null;
 
             CombinedRequest combinedRequest = new CombinedRequest(request);
+            CurrentInstance.set(WrappedRequest.class, combinedRequest);
 
             response.setContentType("application/json; charset=UTF-8");
 

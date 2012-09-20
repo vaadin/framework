@@ -19,13 +19,12 @@ package com.vaadin.tests.util;
 import java.io.File;
 
 import com.vaadin.server.SystemError;
+import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.server.WrappedRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
-import com.vaadin.util.CurrentInstance;
 
 /**
  * Provides sample directory based on application directory. If this fails then
@@ -48,8 +47,7 @@ public class SampleDirectory {
                 + "context base directory failed, "
                 + "possible security constraint with Application "
                 + "Server or Servlet Container.<br />";
-        File file = CurrentInstance.get(WrappedRequest.class)
-                .getVaadinService().getBaseDirectory();
+        File file = VaadinService.getCurrent().getBaseDirectory();
         if ((file == null) || (!file.canRead())
                 || (file.getAbsolutePath() == null)) {
             // cannot access example directory, possible security issue with

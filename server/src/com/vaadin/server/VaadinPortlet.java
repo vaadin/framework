@@ -28,7 +28,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.Enumeration;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -44,7 +43,6 @@ import javax.portlet.PortletContext;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
-import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
@@ -57,8 +55,6 @@ import com.liferay.portal.kernel.util.PortalClassInvoker;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.vaadin.DefaultDeploymentConfiguration;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
-import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
-import com.vaadin.server.VaadinSession.SessionStartEvent;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
@@ -78,7 +74,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
     @Deprecated
     public static final String RESOURCE_URL_ID = "APP";
 
-    public static class PortletService extends AbstractVaadinService {
+    public static class PortletService extends VaadinService {
         private final VaadinPortlet portlet;
 
         public PortletService(VaadinPortlet portlet,
@@ -180,6 +176,63 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                 }
             }
             return null;
+        }
+
+        @Override
+        protected boolean requestCanCreateSession(WrappedRequest request) {
+            RequestType requestType = getRequestType(request);
+            if (requestType == RequestType.RENDER) {
+                // In most cases the first request is a render request that
+                // renders the HTML fragment. This should create an application
+                // instance.
+                return true;
+            } else if (requestType == RequestType.EVENT) {
+                // A portlet can also be sent an event even though it has not
+                // been rendered, e.g. portlet on one page sends an event to a
+                // portlet on another page and then moves the user to that page.
+                return true;
+            }
+            return false;
+        }
+
+        /**
+         * Gets the request type for the request.
+         * 
+         * @param request
+         *            the request to get a request type for
+         * @return the request type
+         * 
+         * @deprecated might be refactored or removed before 7.0.0
+         */
+        @Deprecated
+        protected RequestType getRequestType(WrappedRequest request) {
+            RequestType type = (RequestType) request
+                    .getAttribute(RequestType.class.getName());
+            if (type == null) {
+                type = getPortlet().getRequestType(
+                        WrappedPortletRequest.cast(request));
+                request.setAttribute(RequestType.class.getName(), type);
+            }
+            return type;
+        }
+
+        @Override
+        protected AbstractCommunicationManager createCommunicationManager(
+                VaadinSession session) {
+            return new PortletCommunicationManager(session);
+        }
+
+        public static WrappedPortletRequest getCurrentRequest() {
+            WrappedRequest currentRequest = VaadinService.getCurrentRequest();
+            try {
+                return WrappedPortletRequest.cast(currentRequest);
+            } catch (ClassCastException e) {
+                return null;
+            }
+        }
+
+        public static WrappedPortletResponse getCurrentResponse() {
+            return (WrappedPortletResponse) VaadinService.getCurrentResponse();
         }
 
     }
@@ -337,6 +390,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
     @Override
     public void init(PortletConfig config) throws PortletException {
+        CurrentInstance.clearAll();
+        setCurrent(this);
         super.init(config);
         Properties initParameters = new Properties();
 
@@ -357,9 +412,18 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
         DeploymentConfiguration deploymentConfiguration = createDeploymentConfiguration(initParameters);
         vaadinService = createPortletService(deploymentConfiguration);
+        // Sets current service even though there are no request and response
+        vaadinService.setCurrentInstances(null, null);
 
         addonContext = new AddonContext(vaadinService);
         addonContext.init();
+
+        portletInitialized();
+        CurrentInstance.clearAll();
+    }
+
+    protected void portletInitialized() {
+
     }
 
     protected DeploymentConfiguration createDeploymentConfiguration(
@@ -453,6 +517,9 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         RequestTimer requestTimer = new RequestTimer();
         requestTimer.start();
 
+        CurrentInstance.clearAll();
+        setCurrent(this);
+
         AbstractApplicationPortletWrapper portletWrapper = new AbstractApplicationPortletWrapper(
                 this);
 
@@ -461,8 +528,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         WrappedPortletResponse wrappedResponse = new WrappedPortletResponse(
                 response, getVaadinService());
 
-        CurrentInstance.set(WrappedRequest.class, wrappedRequest);
-        CurrentInstance.set(WrappedResponse.class, wrappedResponse);
+        getVaadinService().setCurrentInstances(wrappedRequest, wrappedResponse);
 
         RequestType requestType = getRequestType(wrappedRequest);
 
@@ -492,8 +558,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                 // TODO What about PARAM_UNLOADBURST & redirectToApplication??
 
                 /* Find out which application this request is related to */
-                application = findApplicationInstance(wrappedRequest,
-                        requestType);
+                application = getVaadinService().findVaadinSession(
+                        wrappedRequest);
                 if (application == null) {
                     return;
                 }
@@ -621,7 +687,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             } finally {
 
                 if (applicationRunning) {
-                    application.closeInactiveUIs();
+                    application.cleanupInactiveUIs();
                 }
 
                 CurrentInstance.clearAll();
@@ -767,160 +833,11 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         handleRequest(request, response);
     }
 
-    /**
-     * @param request
-     * @param requestType
-     * @return
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    boolean requestCanCreateApplication(PortletRequest request,
-            RequestType requestType) {
-        if (requestType == RequestType.UIDL && isRepaintAll(request)) {
-            return true;
-        } else if (requestType == RequestType.RENDER) {
-            // In most cases the first request is a render request that renders
-            // the HTML fragment. This should create an application instance.
-            return true;
-        } else if (requestType == RequestType.EVENT) {
-            // A portlet can also be sent an event even though it has not been
-            // rendered, e.g. portlet on one page sends an event to a portlet on
-            // another page and then moves the user to that page.
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isRepaintAll(PortletRequest request) {
-        return (request.getParameter(URL_PARAMETER_REPAINT_ALL) != null)
-                && (request.getParameter(URL_PARAMETER_REPAINT_ALL).equals("1"));
-    }
-
     private void endApplication(PortletRequest request,
             PortletResponse response, VaadinSession application)
             throws IOException {
         application.removeFromSession();
         // Do not send any redirects when running inside a portlet.
-    }
-
-    private VaadinSession findApplicationInstance(
-            WrappedPortletRequest wrappedRequest, RequestType requestType)
-            throws PortletException, SessionExpiredException,
-            MalformedURLException {
-        PortletRequest request = wrappedRequest.getPortletRequest();
-
-        boolean requestCanCreateApplication = requestCanCreateApplication(
-                request, requestType);
-
-        /* Find an existing application for this request. */
-        VaadinSession application = getExistingApplication(request,
-                requestCanCreateApplication);
-
-        if (application != null) {
-            /*
-             * There is an existing application. We can use this as long as the
-             * user not specifically requested to close or restart it.
-             */
-
-            final boolean restartApplication = (wrappedRequest
-                    .getParameter(URL_PARAMETER_RESTART_APPLICATION) != null);
-            final boolean closeApplication = (wrappedRequest
-                    .getParameter(URL_PARAMETER_CLOSE_APPLICATION) != null);
-
-            if (restartApplication) {
-                closeApplication(application, request.getPortletSession(false));
-                return createAndRegisterApplication(wrappedRequest);
-            } else if (closeApplication) {
-                closeApplication(application, request.getPortletSession(false));
-                return null;
-            } else {
-                return application;
-            }
-        }
-
-        // No existing application was found
-
-        if (requestCanCreateApplication) {
-            return createAndRegisterApplication(wrappedRequest);
-        } else {
-            throw new SessionExpiredException();
-        }
-    }
-
-    private void closeApplication(VaadinSession application,
-            PortletSession session) {
-        if (application == null) {
-            return;
-        }
-
-        application.close();
-        application.removeFromSession();
-    }
-
-    private VaadinSession createAndRegisterApplication(
-            WrappedPortletRequest request) throws PortletException {
-        VaadinPortletSession newApplication = createApplication();
-
-        newApplication.storeInSession(new WrappedPortletSession(request
-                .getPortletRequest().getPortletSession()));
-
-        Locale locale = request.getLocale();
-        newApplication.setLocale(locale);
-        // No application URL when running inside a portlet
-        newApplication.start(new SessionStartEvent(null, getVaadinService()
-                .getDeploymentConfiguration(), new PortletCommunicationManager(
-                newApplication)));
-        onVaadinSessionStarted(request, newApplication);
-
-        return newApplication;
-    }
-
-    protected void onVaadinSessionStarted(WrappedPortletRequest request,
-            VaadinPortletSession session) throws PortletException {
-        addonContext.fireApplicationStarted(session);
-        try {
-            ServletPortletHelper.checkUiProviders(session);
-        } catch (ApplicationClassException e) {
-            throw new PortletException(e);
-        }
-    }
-
-    private VaadinPortletSession createApplication() throws PortletException {
-        VaadinPortletSession application = new VaadinPortletSession();
-
-        try {
-            ServletPortletHelper.initDefaultUIProvider(application,
-                    getVaadinService());
-        } catch (ApplicationClassException e) {
-            throw new PortletException(e);
-        }
-
-        return application;
-    }
-
-    private VaadinSession getExistingApplication(PortletRequest request,
-            boolean allowSessionCreation) throws MalformedURLException,
-            SessionExpiredException {
-
-        final PortletSession session = request
-                .getPortletSession(allowSessionCreation);
-
-        if (session == null) {
-            throw new SessionExpiredException();
-        }
-
-        VaadinSession application = VaadinSession
-                .getForSession(new WrappedPortletSession(session));
-        if (application == null) {
-            return null;
-        }
-        if (!application.isRunning()) {
-            application.removeFromSession();
-            return null;
-        }
-
-        return application;
     }
 
     private void handleServiceException(WrappedPortletRequest request,
@@ -1029,6 +946,45 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
     private static final Logger getLogger() {
         return Logger.getLogger(VaadinPortlet.class.getName());
+    }
+
+    /**
+     * Gets the currently used Vaadin portlet. The current portlet is
+     * automatically defined when initializing the portlet and when processing
+     * requests to the server and in threads started at a point when the current
+     * portlet is defined (see {@link InheritableThreadLocal}). In other cases,
+     * (e.g. from background threads started in some other way), the current
+     * portlet is not automatically defined.
+     * 
+     * @return the current vaadin portlet instance if available, otherwise
+     *         <code>null</code>
+     * 
+     * @see #setCurrent(VaadinPortlet)
+     * 
+     * @since 7.0
+     */
+    public static VaadinPortlet getCurrent() {
+        return CurrentInstance.get(VaadinPortlet.class);
+    }
+
+    /**
+     * Sets the current Vaadin portlet. This method is used by the framework to
+     * set the current portlet whenever a new request is processed and it is
+     * cleared when the request has been processed.
+     * <p>
+     * The application developer can also use this method to define the current
+     * portlet outside the normal request handling, e.g. when initiating custom
+     * background threads.
+     * </p>
+     * 
+     * @param portlet
+     *            the Vaadin portlet to register as the current portlet
+     * 
+     * @see #getCurrent()
+     * @see InheritableThreadLocal
+     */
+    public static void setCurrent(VaadinPortlet portlet) {
+        CurrentInstance.setInheritable(VaadinPortlet.class, portlet);
     }
 
 }

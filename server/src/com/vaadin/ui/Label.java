@@ -170,6 +170,16 @@ public class Label extends AbstractComponent implements Property<String>,
             // Use internal value if we are running without a data source
             return getState().text;
         }
+        return getDataSourceValue();
+    }
+
+    /**
+     * Returns the current value of the data source. Assumes there is a data
+     * source.
+     * 
+     * @return
+     */
+    private String getDataSourceValue() {
         return ConverterUtil.convertFromModel(getPropertyDataSource()
                 .getValue(), String.class, getConverter(), getLocale());
     }
@@ -250,14 +260,20 @@ public class Label extends AbstractComponent implements Property<String>,
             ((Property.ValueChangeNotifier) dataSource).removeListener(this);
         }
 
-        if (!ConverterUtil.canConverterHandle(getConverter(), String.class,
-                newDataSource.getType())) {
+        if (newDataSource != null
+                && !ConverterUtil.canConverterHandle(getConverter(),
+                        String.class, newDataSource.getType())) {
             // Try to find a converter
             Converter<String, ?> c = ConverterUtil.getConverter(String.class,
                     newDataSource.getType(), getSession());
             setConverter(c);
         }
         dataSource = newDataSource;
+        if (dataSource != null) {
+            // Update the value from the data source. If data source was set to
+            // null, retain the old value
+            getState().text = getDataSourceValue();
+        }
 
         // Listens the new data source if possible
         if (dataSource != null

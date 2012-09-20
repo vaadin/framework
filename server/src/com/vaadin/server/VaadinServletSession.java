@@ -23,7 +23,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
-import com.vaadin.util.CurrentInstance;
+import com.vaadin.server.VaadinServlet.ServletService;
 
 /**
  * Web application context for Vaadin applications.
@@ -58,6 +58,12 @@ public class VaadinServletSession extends VaadinSession {
      * to avoid session fixation attacks.
      */
     public void reinitializeSession() {
+        WrappedHttpServletRequest currentRequest = ServletService
+                .getCurrentRequest();
+        if (currentRequest == null) {
+            throw new IllegalStateException(
+                    "Can not reinitialize session outside normal request handling.");
+        }
 
         HttpSession oldSession = getHttpSession();
 
@@ -77,8 +83,7 @@ public class VaadinServletSession extends VaadinSession {
         reinitializingSession = false;
 
         // Create a new session
-        HttpSession newSession = WrappedHttpServletRequest.cast(
-                CurrentInstance.get(WrappedRequest.class)).getSession();
+        HttpSession newSession = currentRequest.getSession();
 
         // Restores all attributes (security key, reference to this context
         // instance)

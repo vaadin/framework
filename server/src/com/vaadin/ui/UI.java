@@ -33,6 +33,7 @@ import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
+import com.vaadin.navigator.Navigator;
 import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.BrowserWindowResizeEvent;
@@ -411,11 +412,11 @@ public abstract class UI extends AbstractComponentContainer implements
     /**
      * Event fired when a UI is removed from the application.
      */
-    public static class CloseEvent extends Event {
+    public static class CleanupEvent extends Event {
 
-        private static final String CLOSE_EVENT_IDENTIFIER = "uiClose";
+        private static final String CLEANUP_EVENT_IDENTIFIER = "uiCleanup";
 
-        public CloseEvent(UI source) {
+        public CleanupEvent(UI source) {
             super(source);
         }
 
@@ -425,23 +426,23 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * Interface for listening {@link UI.CloseEvent UI close events}.
+     * Interface for listening {@link UI.CleanupEvent UI cleanup events}.
      * 
      */
-    public interface CloseListener extends EventListener {
+    public interface CleanupListener extends EventListener {
 
-        public static final Method closeMethod = ReflectTools.findMethod(
-                CloseListener.class, "click", CloseEvent.class);
+        public static final Method cleanupMethod = ReflectTools.findMethod(
+                CleanupListener.class, "cleanup", CleanupEvent.class);
 
         /**
-         * Called when a CloseListener is notified of a CloseEvent.
+         * Called when a CleanupListener is notified of a CleanupEvent.
          * {@link UI#getCurrent()} returns <code>event.getUI()</code> within
          * this method.
          * 
          * @param event
          *            The close event that was fired.
          */
-        public void close(CloseEvent event);
+        public void cleanup(CleanupEvent event);
     }
 
     /**
@@ -654,10 +655,10 @@ public abstract class UI extends AbstractComponentContainer implements
     /**
      * For internal use only.
      */
-    public void fireCloseEvent() {
+    public void fireCleanupEvent() {
         UI current = UI.getCurrent();
         UI.setCurrent(this);
-        fireEvent(new CloseEvent(this));
+        fireEvent(new CleanupEvent(this));
         UI.setCurrent(current);
     }
 
@@ -844,6 +845,8 @@ public abstract class UI extends AbstractComponentContainer implements
     private boolean resizeLazy = false;
 
     private String theme;
+
+    private Navigator navigator;
 
     /**
      * This method is used by Component.Focusable objects to request focus to
@@ -1126,9 +1129,9 @@ public abstract class UI extends AbstractComponentContainer implements
      * @param listener
      *            The CloseListener that should be added.
      */
-    public void addCloseListener(CloseListener listener) {
-        addListener(CloseEvent.CLOSE_EVENT_IDENTIFIER, CloseEvent.class,
-                listener, CloseListener.closeMethod);
+    public void addCleanupListener(CleanupListener listener) {
+        addListener(CleanupEvent.CLEANUP_EVENT_IDENTIFIER, CleanupEvent.class,
+                listener, CleanupListener.cleanupMethod);
     }
 
     /**
@@ -1154,14 +1157,14 @@ public abstract class UI extends AbstractComponentContainer implements
 
     /**
      * Removes a close listener from the UI, if previously added with
-     * {@link #addCloseListener(CloseListener)}.
+     * {@link #addCleanupListener(CleanupListener)}.
      * 
      * @param listener
      *            The CloseListener that should be removed
      */
-    public void removeCloseListener(CloseListener listener) {
-        removeListener(CloseEvent.CLOSE_EVENT_IDENTIFIER, CloseEvent.class,
-                listener);
+    public void removeCleanupListener(CleanupListener listener) {
+        removeListener(CleanupEvent.CLEANUP_EVENT_IDENTIFIER,
+                CleanupEvent.class, listener);
     }
 
     /**
@@ -1185,6 +1188,25 @@ public abstract class UI extends AbstractComponentContainer implements
 
     public Page getPage() {
         return page;
+    }
+
+    /**
+     * Returns the navigator attached to this UI or null if there is no
+     * navigator.
+     * 
+     * @return
+     */
+    public Navigator getNavigator() {
+        return navigator;
+    }
+
+    /**
+     * For internal use only.
+     * 
+     * @param navigator
+     */
+    public void setNavigator(Navigator navigator) {
+        this.navigator = navigator;
     }
 
     /**
@@ -1362,7 +1384,7 @@ public abstract class UI extends AbstractComponentContainer implements
      * heartbeat for this UI.
      * 
      * @see #heartbeat()
-     * @see VaadinSession#closeInactiveUIs()
+     * @see VaadinSession#cleanupInactiveUIs()
      * 
      * @return The time the last heartbeat request occurred.
      */

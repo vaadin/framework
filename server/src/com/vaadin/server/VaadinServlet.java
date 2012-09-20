@@ -31,7 +31,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,8 +46,6 @@ import javax.servlet.http.HttpSession;
 import com.vaadin.DefaultDeploymentConfiguration;
 import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
-import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
-import com.vaadin.server.VaadinSession.SessionStartEvent;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
@@ -56,7 +53,7 @@ import com.vaadin.util.CurrentInstance;
 @SuppressWarnings("serial")
 public class VaadinServlet extends HttpServlet implements Constants {
 
-    public static class ServletService extends AbstractVaadinService {
+    public static class ServletService extends VaadinService {
         private final VaadinServlet servlet;
 
         public ServletService(VaadinServlet servlet,
@@ -148,6 +145,72 @@ public class VaadinServlet extends HttpServlet implements Constants {
             }
             return new File(realPath);
         }
+
+        @Override
+        protected boolean requestCanCreateSession(WrappedRequest request) {
+            RequestType requestType = getRequestType(request);
+            if (requestType == RequestType.BROWSER_DETAILS) {
+                // This is the first request if you are embedding by writing the
+                // embedding code yourself
+                return true;
+            } else if (requestType == RequestType.OTHER) {
+                /*
+                 * I.e URIs that are not application resources or static (theme)
+                 * files.
+                 */
+                return true;
+            }
+
+            return false;
+        }
+
+        /**
+         * Gets the request type for the request.
+         * 
+         * @param request
+         *            the request to get a request type for
+         * @return the request type
+         * 
+         * @deprecated might be refactored or removed before 7.0.0
+         */
+        @Deprecated
+        protected RequestType getRequestType(WrappedRequest request) {
+            RequestType type = (RequestType) request
+                    .getAttribute(RequestType.class.getName());
+            if (type == null) {
+                type = getServlet().getRequestType(
+                        WrappedHttpServletRequest.cast(request));
+                request.setAttribute(RequestType.class.getName(), type);
+            }
+            return type;
+        }
+
+        @Override
+        protected URL getApplicationUrl(WrappedRequest request)
+                throws MalformedURLException {
+            return getServlet().getApplicationUrl(
+                    WrappedHttpServletRequest.cast(request));
+        }
+
+        @Override
+        protected AbstractCommunicationManager createCommunicationManager(
+                VaadinSession session) {
+            return new CommunicationManager(session);
+        }
+
+        public static WrappedHttpServletRequest getCurrentRequest() {
+            WrappedRequest currentRequest = VaadinService.getCurrentRequest();
+            try {
+                return WrappedHttpServletRequest.cast(currentRequest);
+            } catch (ClassCastException e) {
+                return null;
+            }
+        }
+
+        public static WrappedHttpServletResponse getCurrentResponse() {
+            return (WrappedHttpServletResponse) VaadinService
+                    .getCurrentResponse();
+        }
     }
 
     private static class AbstractApplicationServletWrapper implements Callback {
@@ -192,6 +255,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
     @Override
     public void init(javax.servlet.ServletConfig servletConfig)
             throws javax.servlet.ServletException {
+        CurrentInstance.clearAll();
+        setCurrent(this);
         super.init(servletConfig);
         Properties initParameters = new Properties();
 
@@ -213,9 +278,58 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
         DeploymentConfiguration deploymentConfiguration = createDeploymentConfiguration(initParameters);
         servletService = createServletService(deploymentConfiguration);
+        // Sets current service even though there are no request and response
+        servletService.setCurrentInstances(null, null);
 
         addonContext = new AddonContext(servletService);
         addonContext.init();
+
+        servletInitialized();
+
+        CurrentInstance.clearAll();
+    }
+
+    protected void servletInitialized() {
+        // Empty by default
+    }
+
+    /**
+     * Gets the currently used Vaadin servlet. The current servlet is
+     * automatically defined when initializing the servlet and when processing
+     * requests to the server and in threads started at a point when the current
+     * servlet is defined (see {@link InheritableThreadLocal}). In other cases,
+     * (e.g. from background threads started in some other way), the current
+     * servlet is not automatically defined.
+     * 
+     * @return the current Vaadin servlet instance if available, otherwise
+     *         <code>null</code>
+     * 
+     * @see #setCurrent(VaadinServlet)
+     * 
+     * @since 7.0
+     */
+    public static VaadinServlet getCurrent() {
+        return CurrentInstance.get(VaadinServlet.class);
+    }
+
+    /**
+     * Sets the current Vaadin servlet. This method is used by the framework to
+     * set the current servlet whenever a new request is processed and it is
+     * cleared when the request has been processed.
+     * <p>
+     * The application developer can also use this method to define the current
+     * servlet outside the normal request handling, e.g. when initiating custom
+     * background threads.
+     * </p>
+     * 
+     * @param servlet
+     *            the Vaadin servlet to register as the current servlet
+     * 
+     * @see #getCurrent()
+     * @see InheritableThreadLocal
+     */
+    public static void setCurrent(VaadinServlet servlet) {
+        CurrentInstance.setInheritable(VaadinServlet.class, servlet);
     }
 
     protected DeploymentConfiguration createDeploymentConfiguration(
@@ -255,6 +369,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
     @Override
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
+        CurrentInstance.clearAll();
+        setCurrent(this);
         service(createWrappedRequest(request), createWrappedResponse(response));
     }
 
@@ -264,8 +380,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         RequestTimer requestTimer = new RequestTimer();
         requestTimer.start();
 
-        CurrentInstance.set(WrappedResponse.class, response);
-        CurrentInstance.set(WrappedRequest.class, request);
+        getVaadinService().setCurrentInstances(request, response);
 
         AbstractApplicationServletWrapper servletWrapper = new AbstractApplicationServletWrapper(
                 this);
@@ -297,13 +412,13 @@ public class VaadinServlet extends HttpServlet implements Constants {
                     && request.getParameterMap().containsKey(
                             ApplicationConstants.PARAM_UNLOADBURST)
                     && request.getContentLength() < 1
-                    && getExistingApplication(request, false) == null) {
+                    && getVaadinService().getExistingSession(request, false) == null) {
                 redirectToApplication(request, response);
                 return;
             }
 
             // Find out which application this request is related to
-            application = findApplicationInstance(request, requestType);
+            application = getVaadinService().findVaadinSession(request);
             if (application == null) {
                 return;
             }
@@ -376,7 +491,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         } finally {
 
             if (applicationRunning) {
-                application.closeInactiveUIs();
+                application.cleanupInactiveUIs();
             }
 
             CurrentInstance.clearAll();
@@ -433,7 +548,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     private boolean ensureCookiesEnabled(RequestType requestType,
             WrappedHttpServletRequest request,
             WrappedHttpServletResponse response) throws IOException {
-        if (requestType == RequestType.UIDL && !isRepaintAll(request)) {
+        if (requestType == RequestType.UIDL) {
             // In all other but the first UIDL request a cookie should be
             // returned by the browser.
             // This can be removed if cookieless mode (#3228) is supported
@@ -560,140 +675,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
     }
 
     /**
-     * Returns the application instance to be used for the request. If an
-     * existing instance is not found a new one is created or null is returned
-     * to indicate that the application is not available.
-     * 
-     * @param request
-     * @param requestType
-     * @return
-     * @throws MalformedURLException
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     * @throws ServletException
-     * @throws SessionExpiredException
-     */
-    private VaadinSession findApplicationInstance(
-            WrappedHttpServletRequest request, RequestType requestType)
-            throws MalformedURLException, ServletException,
-            SessionExpiredException {
-
-        boolean requestCanCreateApplication = requestCanCreateApplication(
-                request, requestType);
-
-        /* Find an existing application for this request. */
-        VaadinSession application = getExistingApplication(request,
-                requestCanCreateApplication);
-
-        if (application != null) {
-            /*
-             * There is an existing application. We can use this as long as the
-             * user not specifically requested to close or restart it.
-             */
-
-            final boolean restartApplication = (request
-                    .getParameter(URL_PARAMETER_RESTART_APPLICATION) != null);
-            final boolean closeApplication = (request
-                    .getParameter(URL_PARAMETER_CLOSE_APPLICATION) != null);
-
-            if (restartApplication) {
-                closeApplication(application, request.getSession(false));
-                return createAndRegisterApplication(request);
-            } else if (closeApplication) {
-                closeApplication(application, request.getSession(false));
-                return null;
-            } else {
-                return application;
-            }
-        }
-
-        // No existing application was found
-
-        if (requestCanCreateApplication) {
-            /*
-             * If the request is such that it should create a new application if
-             * one as not found, we do that.
-             */
-            return createAndRegisterApplication(request);
-        } else {
-            /*
-             * The application was not found and a new one should not be
-             * created. Assume the session has expired.
-             */
-            throw new SessionExpiredException();
-        }
-
-    }
-
-    private VaadinSession createAndRegisterApplication(
-            WrappedHttpServletRequest request) throws ServletException,
-            MalformedURLException {
-        VaadinServletSession session = createVaadinSession(request);
-
-        session.storeInSession(new WrappedHttpSession(request.getSession()));
-
-        final URL applicationUrl = getApplicationUrl(request);
-
-        // Initial locale comes from the request
-        Locale locale = request.getLocale();
-        session.setLocale(locale);
-        session.start(new SessionStartEvent(applicationUrl, getVaadinService()
-                .getDeploymentConfiguration(),
-                createCommunicationManager(session)));
-
-        onVaadinSessionStarted(request, session);
-
-        return session;
-    }
-
-    protected void onVaadinSessionStarted(WrappedHttpServletRequest request,
-            VaadinServletSession session) throws ServletException {
-        addonContext.fireApplicationStarted(session);
-
-        try {
-            ServletPortletHelper.checkUiProviders(session);
-        } catch (ApplicationClassException e) {
-            throw new ServletException(e);
-        }
-    }
-
-    /**
-     * Check if the request should create an application if an existing
-     * application is not found.
-     * 
-     * @param request
-     * @param requestType
-     * @return true if an application should be created, false otherwise
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    boolean requestCanCreateApplication(HttpServletRequest request,
-            RequestType requestType) {
-        if (requestType == RequestType.UIDL && isRepaintAll(request)) {
-            /*
-             * UIDL request contains valid repaintAll=1 event, the user probably
-             * wants to initiate a new application through a custom index.html
-             * without using the bootstrap page.
-             */
-            return true;
-        } else if (requestType == RequestType.BROWSER_DETAILS) {
-            // This is the first request if you are embedding by writing the
-            // embedding code yourself
-            return true;
-        } else if (requestType == RequestType.OTHER) {
-            /*
-             * I.e URIs that are not application resources or static (theme)
-             * files.
-             */
-            return true;
-
-        }
-
-        return false;
-    }
-
-    /**
      * Gets resource path using different implementations. Required to
      * supporting different servlet container implementations (application
      * servers).
@@ -723,28 +704,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
             }
         }
         return resultPath;
-    }
-
-    /**
-     * Creates a new vaadin session.
-     * 
-     * @param request
-     * @return
-     * @throws ServletException
-     * @throws MalformedURLException
-     */
-    private VaadinServletSession createVaadinSession(HttpServletRequest request)
-            throws ServletException {
-        VaadinServletSession session = new VaadinServletSession();
-
-        try {
-            ServletPortletHelper.initDefaultUIProvider(session,
-                    getVaadinService());
-        } catch (ApplicationClassException e) {
-            throw new ServletException(e);
-        }
-
-        return session;
     }
 
     private void handleServiceException(WrappedHttpServletRequest request,
@@ -1377,51 +1336,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
     }
 
     /**
-     * Gets the existing application for given request. Looks for application
-     * instance for given request based on the requested URL.
-     * 
-     * @param request
-     *            the HTTP request.
-     * @param allowSessionCreation
-     *            true if a session should be created if no session exists,
-     *            false if no session should be created
-     * @return Application instance, or null if the URL does not map to valid
-     *         application.
-     * @throws MalformedURLException
-     *             if the application is denied access to the persistent data
-     *             store represented by the given URL.
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     * @throws SessionExpiredException
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    protected VaadinSession getExistingApplication(HttpServletRequest request,
-            boolean allowSessionCreation) throws MalformedURLException,
-            SessionExpiredException {
-
-        // Ensures that the session is still valid
-        final HttpSession session = request.getSession(allowSessionCreation);
-        if (session == null) {
-            throw new SessionExpiredException();
-        }
-
-        VaadinSession sessionApplication = getApplicationContext(session);
-
-        if (sessionApplication == null) {
-            return null;
-        }
-
-        if (!sessionApplication.isRunning()) {
-            sessionApplication.removeFromSession();
-            return null;
-        }
-
-        return sessionApplication;
-    }
-
-    /**
      * Ends the application.
      * 
      * @param request
@@ -1490,35 +1404,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
         return resourcePath + theme + "/" + resource.getResourceId();
     }
 
-    private boolean isRepaintAll(HttpServletRequest request) {
-        return (request.getParameter(URL_PARAMETER_REPAINT_ALL) != null)
-                && (request.getParameter(URL_PARAMETER_REPAINT_ALL).equals("1"));
-    }
-
-    private void closeApplication(VaadinSession application, HttpSession session) {
-        if (application == null) {
-            return;
-        }
-
-        application.close();
-        if (session != null) {
-            application.removeFromSession();
-        }
-    }
-
-    /**
-     * @param session
-     * @return
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    protected VaadinSession getApplicationContext(final HttpSession session) {
-        VaadinSession sessionApplication = VaadinSession
-                .getForSession(new WrappedHttpSession(session));
-        return sessionApplication;
-    }
-
     public class RequestError implements Terminal.ErrorEvent, Serializable {
 
         private final Throwable throwable;
@@ -1532,29 +1417,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return throwable;
         }
 
-    }
-
-    /**
-     * Override this method if you need to use a specialized communicaiton
-     * mananger implementation.
-     * 
-     * @deprecated Instead of overriding this method, override
-     *             {@link VaadinServletSession} implementation via
-     *             {@link VaadinServlet#getApplicationContext(HttpSession)}
-     *             method and in that customized implementation return your
-     *             CommunicationManager in
-     *             {@link VaadinServletSession#getApplicationManager(VaadinSession, VaadinServlet)}
-     *             method.
-     * 
-     * @param application
-     * @return
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    public CommunicationManager createCommunicationManager(
-            VaadinSession application) {
-        return new CommunicationManager(application);
     }
 
     /**

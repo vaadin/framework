@@ -16,6 +16,7 @@
 
 package com.vaadin.server;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,6 +24,26 @@ import com.vaadin.LegacyApplication;
 import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
 
 public class LegacyVaadinServlet extends VaadinServlet {
+
+    @Override
+    public void init(ServletConfig servletConfig) throws ServletException {
+        super.init(servletConfig);
+
+        getVaadinService().addVaadinSessionInitializationListener(
+                new VaadinSessionInitializationListener() {
+                    @Override
+                    public void vaadinSessionInitialized(
+                            VaadinSessionInitializeEvent event)
+                            throws ServiceException {
+                        try {
+                            onVaadinSessionStarted(event.getRequest(),
+                                    event.getVaadinSession());
+                        } catch (ServletException e) {
+                            throw new ServiceException(e);
+                        }
+                    }
+                });
+    }
 
     protected Class<? extends LegacyApplication> getApplicationClass()
             throws ClassNotFoundException {
@@ -49,9 +70,10 @@ public class LegacyVaadinServlet extends VaadinServlet {
         return true;
     }
 
-    @Override
-    protected void onVaadinSessionStarted(WrappedHttpServletRequest request,
-            VaadinServletSession session) throws ServletException {
+    private void onVaadinSessionStarted(WrappedRequest wrappedRequest,
+            VaadinSession session) throws ServletException {
+        WrappedHttpServletRequest request = WrappedHttpServletRequest
+                .cast(wrappedRequest);
 
         if (shouldCreateApplication(request)) {
             // Must set current before running init()
@@ -64,8 +86,6 @@ public class LegacyVaadinServlet extends VaadinServlet {
             legacyApplication.doInit();
             session.addUIProvider(legacyApplication);
         }
-
-        super.onVaadinSessionStarted(request, session);
     }
 
 }

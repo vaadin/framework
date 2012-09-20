@@ -104,7 +104,7 @@ public class NavigatorTest extends UI {
     @Override
     protected void init(WrappedRequest req) {
         try {
-            navi = new Navigator(naviLayout);
+            navi = new Navigator(this, naviLayout);
 
             navi.addView("", new DefaultView());
 
@@ -113,7 +113,8 @@ public class NavigatorTest extends UI {
             navi.addView("forbidden", new ForbiddenView());
 
             navi.addViewChangeListener(new NaviListener());
-            // navi.navigate();
+
+            navi.navigate();
 
             addComponent(new NaviButton("list"));
             addComponent(new NaviButton("edit"));

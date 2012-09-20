@@ -45,4 +45,11 @@ public class ApplicationConstants {
 
     @Deprecated
     public static final String DRAG_AND_DROP_CONNECTOR_ID = "DD";
+
+    /**
+     * URL parameter used in UIDL requests to indicate that the full server-side
+     * state should be returned to the client, i.e. without any incremental
+     * changes.
+     */
+    public static final String URL_PARAMETER_REPAINT_ALL = "repaintAll";
 }

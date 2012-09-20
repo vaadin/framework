@@ -316,7 +316,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     public void close() {
         applicationIsRunning = false;
         for (UI ui : getUIs()) {
-            ui.fireCloseEvent();
+            ui.fireCleanupEvent();
         }
     }
 
@@ -1166,12 +1166,12 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     /**
      * Removes all those UIs from the session for which {@link #isUIAlive}
-     * returns false. Close events are fired for the removed UIs.
+     * returns false. Cleanup events are fired for the removed UIs.
      * <p>
      * Called by the framework at the end of every request.
      * 
-     * @see UI.CloseEvent
-     * @see UI.CloseListener
+     * @see UI.CleanupEvent
+     * @see UI.CleanupListener
      * @see #isUIAlive(UI)
      * 
      * @since 7.0.0
@@ -1179,13 +1179,13 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
-    public void closeInactiveUIs() {
+    public void cleanupInactiveUIs() {
         for (Iterator<UI> i = uIs.values().iterator(); i.hasNext();) {
             UI ui = i.next();
             if (!isUIAlive(ui)) {
                 i.remove();
                 retainOnRefreshUIs.values().remove(ui.getUIId());
-                ui.fireCloseEvent();
+                ui.fireCleanupEvent();
                 getLogger().fine(
                         "Closed UI #" + ui.getUIId() + " due to inactivity");
             }
@@ -1200,7 +1200,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * timeout never occurs.
      * 
      * @see #getUidlRequestTimeout()
-     * @see #closeInactiveUIs()
+     * @see #cleanupInactiveUIs()
      * @see DeploymentConfiguration#getHeartbeatInterval()
      * 
      * @since 7.0.0
@@ -1225,7 +1225,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * 
      * @see DeploymentConfiguration#isIdleUICleanupEnabled()
      * @see #getHeartbeatTimeout()
-     * @see #closeInactiveUIs()
+     * @see #cleanupInactiveUIs()
      * 
      * @since 7.0.0
      * 
