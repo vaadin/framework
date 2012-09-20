@@ -22,16 +22,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import com.vaadin.server.AbstractUIProvider;
 import com.vaadin.server.DefaultErrorListener;
 import com.vaadin.server.Terminal.ErrorEvent;
 import com.vaadin.server.Terminal.ErrorListener;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.server.WrappedRequest;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.UI.LegacyWindow;
 
 /**
  * A special application designed to help migrating applications from Vaadin 6
@@ -45,18 +42,19 @@ import com.vaadin.ui.UI;
  * @since 7.0
  */
 @Deprecated
-public abstract class LegacyApplication extends AbstractUIProvider implements
-        ErrorListener {
-    /**
-     * Ignore initial / and then get everything up to the next /
-     */
-    private static final Pattern WINDOW_NAME_PATTERN = Pattern
-            .compile("^/?([^/]+).*");
-
+public abstract class LegacyApplication implements ErrorListener {
     private UI.LegacyWindow mainWindow;
     private String theme;
 
     private Map<String, UI.LegacyWindow> legacyUINames = new HashMap<String, UI.LegacyWindow>();
+
+    private boolean isRunning = true;
+
+    /**
+     * URL where the user is redirected to on application close, or null if
+     * application is just closed without redirection.
+     */
+    private String logoutURL = null;
 
     /**
      * Sets the main window of this application. Setting window as a main window
@@ -69,9 +67,7 @@ public abstract class LegacyApplication extends AbstractUIProvider implements
         if (this.mainWindow != null) {
             throw new IllegalStateException("mainWindow has already been set");
         }
-        if (mainWindow.getSession() == null) {
-            mainWindow.setSession(VaadinSession.getCurrent());
-        } else if (mainWindow.getSession() != VaadinSession.getCurrent()) {
+        if (mainWindow.getSession() != null) {
             throw new IllegalStateException(
                     "mainWindow is attached to another application");
         }
@@ -80,7 +76,7 @@ public abstract class LegacyApplication extends AbstractUIProvider implements
             // no current UI -> set the main window as the current UI
             UI.setCurrent(mainWindow);
         }
-        mainWindow.setApplication(this);
+        addWindow(mainWindow);
         this.mainWindow = mainWindow;
     }
 
@@ -90,36 +86,6 @@ public abstract class LegacyApplication extends AbstractUIProvider implements
     }
 
     protected abstract void init();
-
-    @Override
-    public Class<? extends UI> getUIClass(WrappedRequest request) {
-        UI uiInstance = getUIInstance(request);
-        if (uiInstance != null) {
-            return uiInstance.getClass();
-        }
-        return null;
-    }
-
-    @Override
-    public UI createInstance(WrappedRequest request, Class<? extends UI> type) {
-        return getUIInstance(request);
-    }
-
-    @Override
-    public String getTheme(WrappedRequest request, Class<? extends UI> uiClass) {
-        return theme;
-    }
-
-    @Override
-    public String getPageTitle(WrappedRequest request,
-            Class<? extends UI> uiClass) {
-        UI uiInstance = getUIInstance(request);
-        if (uiInstance != null) {
-            return uiInstance.getCaption();
-        } else {
-            return super.getPageTitle(request, uiClass);
-        }
-    }
 
     /**
      * Gets the mainWindow of the application.
@@ -136,43 +102,6 @@ public abstract class LegacyApplication extends AbstractUIProvider implements
      */
     public UI.LegacyWindow getMainWindow() {
         return mainWindow;
-    }
-
-    private UI getUIInstance(WrappedRequest request) {
-        String pathInfo = request.getRequestPathInfo();
-        String name = null;
-        if (pathInfo != null && pathInfo.length() > 0) {
-            Matcher matcher = WINDOW_NAME_PATTERN.matcher(pathInfo);
-            if (matcher.matches()) {
-                // Skip the initial slash
-                name = matcher.group(1);
-            }
-        }
-        UI.LegacyWindow window = getWindow(name);
-        if (window != null) {
-            return window;
-        }
-        return mainWindow;
-    }
-
-    /**
-     * This implementation simulates the way of finding a window for a request
-     * by extracting a window name from the requested path and passes that name
-     * to {@link #getWindow(String)}.
-     * <p>
-     * {@inheritDoc}
-     */
-    @Override
-    public UI getExistingUI(WrappedRequest request) {
-        UI uiInstance = getUIInstance(request);
-        if (uiInstance.getUIId() == -1) {
-            // Not initialized -> Let go through createUIInstance to make it
-            // initialized
-            return null;
-        } else {
-            UI.setCurrent(uiInstance);
-            return uiInstance;
-        }
     }
 
     /**
@@ -289,15 +218,64 @@ public abstract class LegacyApplication extends AbstractUIProvider implements
         return VaadinSession.getCurrent();
     }
 
-    protected void close() {
-        VaadinSession.getCurrent().close();
+    public void close() {
+        isRunning = false;
+        Collection<LegacyWindow> windows = getWindows();
+        for (LegacyWindow legacyWindow : windows) {
+            String logoutUrl = getLogoutURL();
+            if (logoutUrl == null) {
+                URL url = getURL();
+                if (url != null) {
+                    logoutUrl = url.toString();
+                }
+            }
+            if (logoutUrl != null) {
+                legacyWindow.getPage().setLocation(logoutUrl);
+            }
+            legacyWindow.getSession().cleanupUI(legacyWindow);
+        }
     }
 
     public boolean isRunning() {
-        return VaadinSession.getCurrent().isRunning();
+        return isRunning;
     }
 
     public URL getURL() {
         return VaadinSession.getCurrent().getURL();
+    }
+
+    /**
+     * Returns the URL user is redirected to on application close. If the URL is
+     * <code>null</code>, the application is closed normally as defined by the
+     * application running environment.
+     * <p>
+     * Desktop application just closes the application window and
+     * web-application redirects the browser to application main URL.
+     * </p>
+     * 
+     * @return the URL.
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
+     */
+    @Deprecated
+    public String getLogoutURL() {
+        return logoutURL;
+    }
+
+    /**
+     * Sets the URL user is redirected to on application close. If the URL is
+     * <code>null</code>, the application is closed normally as defined by the
+     * application running environment: Desktop application just closes the
+     * application window and web-application redirects the browser to
+     * application main URL.
+     * 
+     * @param logoutURL
+     *            the logoutURL to set.
+     * 
+     * @deprecated might be refactored or removed before 7.0.0
+     */
+    @Deprecated
+    public void setLogoutURL(String logoutURL) {
+        this.logoutURL = logoutURL;
     }
 }

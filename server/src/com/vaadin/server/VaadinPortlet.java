@@ -612,34 +612,29 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                     UI uI = null;
                     application.getLock().lock();
                     try {
-                        if (application.isRunning()) {
-                            switch (requestType) {
-                            case RENDER:
-                            case ACTION:
-                                // Both action requests and render requests are
-                                // ok
-                                // without a UI as they render the initial HTML
-                                // and then do a second request
-                                uI = application
-                                        .getUIForRequest(wrappedRequest);
-                                break;
-                            case BROWSER_DETAILS:
-                                // Should not try to find a UI here as the
-                                // combined request details might change the UI
-                                break;
-                            case FILE_UPLOAD:
-                                // no window
-                                break;
-                            case APPLICATION_RESOURCE:
-                                // use main window - should not need any window
-                                // UI = application.getUI();
-                                break;
-                            default:
-                                uI = application
-                                        .getUIForRequest(wrappedRequest);
-                            }
-                            // if window not found, not a problem - use null
+                        switch (requestType) {
+                        case RENDER:
+                        case ACTION:
+                            // Both action requests and render requests are ok
+                            // without a UI as they render the initial HTML
+                            // and then do a second request
+                            uI = application.getUIForRequest(wrappedRequest);
+                            break;
+                        case BROWSER_DETAILS:
+                            // Should not try to find a UI here as the
+                            // combined request details might change the UI
+                            break;
+                        case FILE_UPLOAD:
+                            // no window
+                            break;
+                        case APPLICATION_RESOURCE:
+                            // use main window - should not need any window
+                            // UI = application.getUI();
+                            break;
+                        default:
+                            uI = application.getUIForRequest(wrappedRequest);
                         }
+                        // if window not found, not a problem - use null
                     } finally {
                         application.getLock().unlock();
                     }
@@ -681,14 +676,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                                 wrappedResponse, portletWrapper, uI);
                         return;
                     } else {
-                        /*
-                         * Removes the application if it has stopped
-                         */
-                        if (!application.isRunning()) {
-                            endApplication(request, response, application);
-                            return;
-                        }
-
                         handleOtherRequest(wrappedRequest, wrappedResponse,
                                 requestType, application, applicationContext,
                                 applicationManager);
@@ -706,6 +693,10 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                     handleServiceException(wrappedRequest, wrappedResponse,
                             application, e);
                 } finally {
+
+                    if (applicationRunning) {
+                        application.cleanupInactiveUIs();
+                    }
 
                     if (applicationRunning) {
                         application.cleanupInactiveUIs();

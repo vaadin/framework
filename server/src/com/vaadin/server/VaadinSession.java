@@ -19,11 +19,11 @@ package com.vaadin.server;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EventObject;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -37,6 +37,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
+import com.vaadin.LegacyApplication;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterFactory;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
@@ -154,20 +155,9 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     private URL applicationUrl;
 
     /**
-     * Application status.
-     */
-    private volatile boolean applicationIsRunning = false;
-
-    /**
      * Default locale of the session.
      */
     private Locale locale;
-
-    /**
-     * URL where the user is redirected to on application close, or null if
-     * application is just closed without redirection.
-     */
-    private String logoutURL = null;
 
     /**
      * Session wide error handler which is used by default if an error is left
@@ -206,6 +196,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     private final Map<String, Object> attributes = new HashMap<String, Object>();
 
+    private VaadinService vaadinService;
+
     /**
      * @see javax.servlet.http.HttpSessionBindingListener#valueBound(HttpSessionBindingEvent)
      */
@@ -221,7 +213,19 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     public void valueUnbound(HttpSessionBindingEvent event) {
         // If we are going to be unbound from the session, the session must be
         // closing
-        close();
+        if (vaadinService != null) {
+            vaadinService.fireSessionDestroy(this);
+        }
+    }
+
+    /**
+     * Sets the Vaadin service to which this session belongs.
+     * 
+     * @param vaadinService
+     *            the Vaadin service.
+     */
+    public void setVaadinService(VaadinService vaadinService) {
+        this.vaadinService = vaadinService;
     }
 
     /**
@@ -302,25 +306,6 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     /**
-     * Ends the session.
-     * <p>
-     * When the session is closed, close events are fired for its UIs, its state
-     * is removed from the underlying session, and the browser window is
-     * redirected to the application logout url set with
-     * {@link #setLogoutURL(String)}. If the logout url has not been set, the
-     * browser window is reloaded and the application is restarted.
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    public void close() {
-        applicationIsRunning = false;
-        for (UI ui : getUIs()) {
-            ui.fireCleanupEvent();
-        }
-    }
-
-    /**
      * @param underlyingSession
      * @return
      * 
@@ -389,25 +374,6 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         applicationUrl = event.getApplicationUrl();
         configuration = event.getConfiguration();
         communicationManager = event.getCommunicationManager();
-        applicationIsRunning = true;
-    }
-
-    /**
-     * Tests if the application is running or if it has been finished.
-     * 
-     * <p>
-     * Application starts running when its {@link #start(SessionStartEvent)}
-     * method has been called and stops when the {@link #close()} is called.
-     * </p>
-     * 
-     * @return <code>true</code> if the application is running,
-     *         <code>false</code> if not.
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    public boolean isRunning() {
-        return applicationIsRunning;
     }
 
     /**
@@ -564,41 +530,6 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
          *            the window detach event.
          */
         public void windowDetached(WindowDetachEvent event);
-    }
-
-    /**
-     * Returns the URL user is redirected to on application close. If the URL is
-     * <code>null</code>, the application is closed normally as defined by the
-     * application running environment.
-     * <p>
-     * Desktop application just closes the application window and
-     * web-application redirects the browser to application main URL.
-     * </p>
-     * 
-     * @return the URL.
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    public String getLogoutURL() {
-        return logoutURL;
-    }
-
-    /**
-     * Sets the URL user is redirected to on application close. If the URL is
-     * <code>null</code>, the application is closed normally as defined by the
-     * application running environment: Desktop application just closes the
-     * application window and web-application redirects the browser to
-     * application main URL.
-     * 
-     * @param logoutURL
-     *            the logoutURL to set.
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    public void setLogoutURL(String logoutURL) {
-        this.logoutURL = logoutURL;
     }
 
     /**
@@ -1180,16 +1111,32 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      */
     @Deprecated
     public void cleanupInactiveUIs() {
-        for (Iterator<UI> i = uIs.values().iterator(); i.hasNext();) {
-            UI ui = i.next();
+        for (UI ui : new ArrayList<UI>(uIs.values())) {
             if (!isUIAlive(ui)) {
-                i.remove();
-                retainOnRefreshUIs.values().remove(ui.getUIId());
-                ui.fireCleanupEvent();
+                cleanupUI(ui);
                 getLogger().fine(
                         "Closed UI #" + ui.getUIId() + " due to inactivity");
             }
         }
+    }
+
+    /**
+     * Called by the framework to remove an UI instance because it has been
+     * inactive.
+     * 
+     * @param ui
+     *            the UI to remove
+     * 
+     * @deprecated Method is declared as public only to support
+     *             {@link LegacyApplication#close()} and will be removed when
+     *             LegacyApplciation support is removed.
+     */
+    @Deprecated
+    public void cleanupUI(UI ui) {
+        Integer id = Integer.valueOf(ui.getUIId());
+        uIs.remove(id);
+        retainOnRefreshUIs.values().remove(id);
+        ui.fireCleanupEvent();
     }
 
     /**

@@ -5,6 +5,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.UI.LegacyWindow;
 
 public class ApplicationCloseTest extends TestBase {
 
@@ -26,7 +27,8 @@ public class ApplicationCloseTest extends TestBase {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                event.getButton().getUI().getSession().close();
+                LegacyWindow ui = (LegacyWindow) event.getButton().getUI();
+                ui.getApplication().close();
             }
         });
 

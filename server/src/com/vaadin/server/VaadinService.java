@@ -22,6 +22,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.ServiceLoader;
@@ -34,6 +35,7 @@ import com.vaadin.LegacyApplication;
 import com.vaadin.event.EventRouter;
 import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
 import com.vaadin.server.VaadinSession.SessionStartEvent;
+import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 import com.vaadin.util.ReflectTools;
 
@@ -50,6 +52,10 @@ public abstract class VaadinService implements Serializable {
     private static final Method SESSION_INIT_METHOD = ReflectTools.findMethod(
             VaadinSessionInitializationListener.class,
             "vaadinSessionInitialized", VaadinSessionInitializeEvent.class);
+
+    private static final Method SESSION_DESTROY_METHOD = ReflectTools
+            .findMethod(VaadinSessionDestroyListener.class,
+                    "vaadinSessionDestroyed", VaadinSessionDestroyEvent.class);
 
     /**
      * @deprecated Only supported for {@link LegacyApplication}.
@@ -254,6 +260,44 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
+     * Adds a listener that gets notified when a Vaadin session that has been
+     * initialized for this service is destroyed.
+     * 
+     * @see #addVaadinSessionInitializationListener(VaadinSessionInitializationListener)
+     * 
+     * @param listener
+     *            the vaadin session destroy listener
+     */
+    public void addVaadinSessionDestroyListener(
+            VaadinSessionDestroyListener listener) {
+        eventRouter.addListener(VaadinSessionDestroyEvent.class, listener,
+                SESSION_DESTROY_METHOD);
+    }
+
+    public void fireSessionDestroy(VaadinSession vaadinSession) {
+        for (UI ui : new ArrayList<UI>(vaadinSession.getUIs())) {
+            vaadinSession.cleanupUI(ui);
+        }
+
+        eventRouter
+                .fireEvent(new VaadinSessionDestroyEvent(this, vaadinSession));
+    }
+
+    /**
+     * Removes a Vaadin session destroy listener from this service.
+     * 
+     * @see #addVaadinSessionDestroyListener(VaadinSessionDestroyListener)
+     * 
+     * @param listener
+     *            the vaadin session destroy listener
+     */
+    public void removeVaadinSessionDestroyListener(
+            VaadinSessionDestroyListener listener) {
+        eventRouter.removeListener(VaadinSessionDestroyEvent.class, listener,
+                SESSION_DESTROY_METHOD);
+    }
+
+    /**
      * Attempts to find a Vaadin session associated with this request.
      * 
      * @param request
@@ -324,6 +368,7 @@ public abstract class VaadinService implements Serializable {
             throw new ServiceException(e);
         }
 
+        session.setVaadinService(this);
         session.storeInSession(request.getWrappedSession());
 
         URL applicationUrl;
@@ -404,7 +449,6 @@ public abstract class VaadinService implements Serializable {
             return;
         }
 
-        application.close();
         if (session != null) {
             application.removeFromSession();
         }
@@ -423,11 +467,6 @@ public abstract class VaadinService implements Serializable {
         VaadinSession sessionApplication = VaadinSession.getForSession(session);
 
         if (sessionApplication == null) {
-            return null;
-        }
-
-        if (!sessionApplication.isRunning()) {
-            sessionApplication.removeFromSession();
             return null;
         }
 

@@ -25,6 +25,27 @@ import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
 
 public class LegacyVaadinServlet extends VaadinServlet {
 
+    private static final UIProvider provider = new LegacyApplicationUIProvider() {
+        @Override
+        protected LegacyApplication createApplication() {
+
+            VaadinServlet servlet = VaadinServlet.getCurrent();
+            if (servlet instanceof LegacyVaadinServlet) {
+                LegacyVaadinServlet legacyServlet = (LegacyVaadinServlet) servlet;
+                HttpServletRequest request = ServletService
+                        .getCurrentServletRequest();
+                try {
+                    if (legacyServlet.shouldCreateApplication(request)) {
+                        return legacyServlet.getNewApplication(request);
+                    }
+                } catch (ServletException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return null;
+        }
+    };
+
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
@@ -65,27 +86,14 @@ public class LegacyVaadinServlet extends VaadinServlet {
         }
     }
 
-    protected boolean shouldCreateApplication(WrappedHttpServletRequest request)
+    protected boolean shouldCreateApplication(HttpServletRequest request)
             throws ServletException {
         return true;
     }
 
     private void onVaadinSessionStarted(WrappedRequest wrappedRequest,
             VaadinSession session) throws ServletException {
-        WrappedHttpServletRequest request = WrappedHttpServletRequest
-                .cast(wrappedRequest);
-
-        if (shouldCreateApplication(request)) {
-            // Must set current before running init()
-            VaadinSession.setCurrent(session);
-
-            // XXX Must update details here so they are available in init.
-            session.getBrowser().updateRequestDetails(request);
-
-            LegacyApplication legacyApplication = getNewApplication(request);
-            legacyApplication.doInit();
-            session.addUIProvider(legacyApplication);
-        }
+        session.addUIProvider(provider);
     }
 
 }
