@@ -21,7 +21,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import com.vaadin.LegacyApplication;
-import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
 
 public class LegacyVaadinServlet extends VaadinServlet {
 
@@ -71,7 +70,7 @@ public class LegacyVaadinServlet extends VaadinServlet {
         try {
             return ServletPortletHelper
                     .getLegacyApplicationClass(getVaadinService());
-        } catch (ApplicationClassException e) {
+        } catch (ServiceException e) {
             throw new RuntimeException(e);
         }
     }

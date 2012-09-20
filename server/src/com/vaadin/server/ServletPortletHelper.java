@@ -30,26 +30,15 @@ class ServletPortletHelper implements Serializable {
      */
     static final SystemMessages DEFAULT_SYSTEM_MESSAGES = new SystemMessages();
 
-    public static class ApplicationClassException extends Exception {
-
-        public ApplicationClassException(String message, Throwable cause) {
-            super(message, cause);
-        }
-
-        public ApplicationClassException(String message) {
-            super(message);
-        }
-    }
-
     static Class<? extends LegacyApplication> getLegacyApplicationClass(
-            VaadinService vaadinService) throws ApplicationClassException {
+            VaadinService vaadinService) throws ServiceException {
         Properties initParameters = vaadinService.getDeploymentConfiguration()
                 .getInitParameters();
         String applicationParameter = initParameters.getProperty("application");
         ClassLoader classLoader = vaadinService.getClassLoader();
 
         if (applicationParameter == null) {
-            throw new ApplicationClassException(
+            throw new ServiceException(
                     "No \"application\" init parameter found");
         }
 
@@ -57,16 +46,15 @@ class ServletPortletHelper implements Serializable {
             return classLoader.loadClass(applicationParameter).asSubclass(
                     LegacyApplication.class);
         } catch (final ClassNotFoundException e) {
-            throw new ApplicationClassException(
-                    "Failed to load application class: " + applicationParameter,
-                    e);
+            throw new ServiceException("Failed to load application class: "
+                    + applicationParameter, e);
         }
     }
 
     private static void verifyUIClass(String className, ClassLoader classLoader)
-            throws ApplicationClassException {
+            throws ServiceException {
         if (className == null) {
-            throw new ApplicationClassException(VaadinSession.UI_PARAMETER
+            throw new ServiceException(VaadinSession.UI_PARAMETER
                     + " init parameter not defined");
         }
 
@@ -74,19 +62,17 @@ class ServletPortletHelper implements Serializable {
         try {
             Class<?> uiClass = classLoader.loadClass(className);
             if (!UI.class.isAssignableFrom(uiClass)) {
-                throw new ApplicationClassException(className
-                        + " does not implement UI");
+                throw new ServiceException(className + " does not implement UI");
             }
             // Try finding a default constructor, else throw exception
             uiClass.getConstructor();
         } catch (ClassNotFoundException e) {
-            throw new ApplicationClassException(className
-                    + " could not be loaded", e);
+            throw new ServiceException(className + " could not be loaded", e);
         } catch (SecurityException e) {
-            throw new ApplicationClassException("Could not access " + className
+            throw new ServiceException("Could not access " + className
                     + " class", e);
         } catch (NoSuchMethodException e) {
-            throw new ApplicationClassException(className
+            throw new ServiceException(className
                     + " doesn't have a public no-args constructor");
         }
     }
@@ -132,7 +118,7 @@ class ServletPortletHelper implements Serializable {
     }
 
     public static void initDefaultUIProvider(VaadinSession application,
-            VaadinService vaadinService) throws ApplicationClassException {
+            VaadinService vaadinService) throws ServiceException {
         String uiProperty = vaadinService.getDeploymentConfiguration()
                 .getInitParameters().getProperty(VaadinSession.UI_PARAMETER);
         if (uiProperty != null) {
@@ -142,9 +128,9 @@ class ServletPortletHelper implements Serializable {
     }
 
     public static void checkUiProviders(VaadinSession newApplication)
-            throws ApplicationClassException {
+            throws ServiceException {
         if (newApplication.getUIProviders().isEmpty()) {
-            throw new ApplicationClassException(
+            throw new ServiceException(
                     "No UIProvider has been added to the application and there is no \""
                             + VaadinSession.UI_PARAMETER + "\" init parameter.");
         }

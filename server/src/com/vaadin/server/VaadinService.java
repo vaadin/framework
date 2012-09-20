@@ -33,7 +33,6 @@ import javax.servlet.ServletException;
 
 import com.vaadin.LegacyApplication;
 import com.vaadin.event.EventRouter;
-import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
 import com.vaadin.server.VaadinSession.SessionStartEvent;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
@@ -362,11 +361,7 @@ public abstract class VaadinService implements Serializable {
             throws ServiceException {
         VaadinSession session = createVaadinSession(request);
 
-        try {
-            ServletPortletHelper.initDefaultUIProvider(session, this);
-        } catch (ApplicationClassException e) {
-            throw new ServiceException(e);
-        }
+        ServletPortletHelper.initDefaultUIProvider(session, this);
 
         session.setVaadinService(this);
         session.storeInSession(request.getWrappedSession());
@@ -436,11 +431,7 @@ public abstract class VaadinService implements Serializable {
         eventRouter.fireEvent(new VaadinSessionInitializeEvent(this, session,
                 request));
 
-        try {
-            ServletPortletHelper.checkUiProviders(session);
-        } catch (ApplicationClassException e) {
-            throw new ServiceException(e);
-        }
+        ServletPortletHelper.checkUiProviders(session);
     }
 
     private void closeApplication(VaadinSession application,
