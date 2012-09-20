@@ -98,6 +98,10 @@
 .v-filterselect-suggestmenu table {
 	border-collapse: collapse;
 	border: none;
+	vertical-align:top;
+}
+.v-filterselect-suggestmenu tr{
+    line-height:0;
 }
 .v-filterselect-suggestmenu .gwt-MenuItem {
 	white-space: nowrap;
