@@ -198,10 +198,16 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return new CommunicationManager(session);
         }
 
-        public static WrappedHttpServletRequest getCurrentRequest() {
+        public static HttpServletRequest getCurrentServletRequest() {
             WrappedRequest currentRequest = VaadinService.getCurrentRequest();
             try {
-                return WrappedHttpServletRequest.cast(currentRequest);
+                WrappedHttpServletRequest request = WrappedHttpServletRequest
+                        .cast(currentRequest);
+                if (request != null) {
+                    return request.getHttpServletRequest();
+                } else {
+                    return null;
+                }
             } catch (ClassCastException e) {
                 return null;
             }

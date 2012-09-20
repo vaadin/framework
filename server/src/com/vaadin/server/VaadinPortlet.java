@@ -222,10 +222,16 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             return new PortletCommunicationManager(session);
         }
 
-        public static WrappedPortletRequest getCurrentRequest() {
+        public static PortletRequest getCurrentPortletRequest() {
             WrappedRequest currentRequest = VaadinService.getCurrentRequest();
             try {
-                return WrappedPortletRequest.cast(currentRequest);
+                WrappedPortletRequest request = WrappedPortletRequest
+                        .cast(currentRequest);
+                if (request != null) {
+                    return request.getPortletRequest();
+                } else {
+                    return null;
+                }
             } catch (ClassCastException e) {
                 return null;
             }

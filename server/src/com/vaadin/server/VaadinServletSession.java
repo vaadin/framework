@@ -19,6 +19,7 @@ package com.vaadin.server;
 import java.util.Enumeration;
 import java.util.HashMap;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
@@ -58,8 +59,8 @@ public class VaadinServletSession extends VaadinSession {
      * to avoid session fixation attacks.
      */
     public void reinitializeSession() {
-        WrappedHttpServletRequest currentRequest = ServletService
-                .getCurrentRequest();
+        HttpServletRequest currentRequest = ServletService
+                .getCurrentServletRequest();
         if (currentRequest == null) {
             throw new IllegalStateException(
                     "Can not reinitialize session outside normal request handling.");
