@@ -739,6 +739,13 @@ public class JsonCodec implements Serializable {
      * @return
      */
     private static boolean jsonEquals(Object fieldValue, Object referenceValue) {
+        if (fieldValue == JSONObject.NULL) {
+            fieldValue = null;
+        }
+        if (referenceValue == JSONObject.NULL) {
+            referenceValue = null;
+        }
+
         if (fieldValue == referenceValue) {
             return true;
         } else if (fieldValue == null || referenceValue == null) {
