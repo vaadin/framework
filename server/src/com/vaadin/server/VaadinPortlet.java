@@ -526,182 +526,193 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         CurrentInstance.clearAll();
         setCurrent(this);
 
-        AbstractApplicationPortletWrapper portletWrapper = new AbstractApplicationPortletWrapper(
-                this);
+        try {
+            AbstractApplicationPortletWrapper portletWrapper = new AbstractApplicationPortletWrapper(
+                    this);
 
-        WrappedPortletRequest wrappedRequest = createWrappedRequest(request);
+            WrappedPortletRequest wrappedRequest = createWrappedRequest(request);
 
-        WrappedPortletResponse wrappedResponse = new WrappedPortletResponse(
-                response, getVaadinService());
+            WrappedPortletResponse wrappedResponse = new WrappedPortletResponse(
+                    response, getVaadinService());
 
-        getVaadinService().setCurrentInstances(wrappedRequest, wrappedResponse);
+            getVaadinService().setCurrentInstances(wrappedRequest,
+                    wrappedResponse);
 
-        RequestType requestType = getRequestType(wrappedRequest);
+            RequestType requestType = getRequestType(wrappedRequest);
 
-        if (requestType == RequestType.UNKNOWN) {
-            handleUnknownRequest(request, response);
-        } else if (requestType == RequestType.DUMMY) {
-            /*
-             * This dummy page is used by action responses to redirect to, in
-             * order to prevent the boot strap code from being rendered into
-             * strange places such as iframes.
-             */
-            ((ResourceResponse) response).setContentType("text/html");
-            final OutputStream out = ((ResourceResponse) response)
-                    .getPortletOutputStream();
-            final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
-                    new OutputStreamWriter(out, "UTF-8")));
-            outWriter.print("<html><body>dummy page</body></html>");
-            outWriter.close();
-        } else if (requestType == RequestType.STATIC_FILE) {
-            serveStaticResources((ResourceRequest) request,
-                    (ResourceResponse) response);
-        } else {
-            VaadinSession application = null;
-            boolean applicationRunning = false;
-
-            try {
-                // TODO What about PARAM_UNLOADBURST & redirectToApplication??
-
-                /* Find out which application this request is related to */
-                application = getVaadinService().findVaadinSession(
-                        wrappedRequest);
-                if (application == null) {
-                    return;
-                }
-                VaadinSession.setCurrent(application);
-                request.setAttribute(VaadinSession.class.getName(), application);
-
+            if (requestType == RequestType.UNKNOWN) {
+                handleUnknownRequest(request, response);
+            } else if (requestType == RequestType.DUMMY) {
                 /*
-                 * Get or create an application context and an application
-                 * manager for the session
+                 * This dummy page is used by action responses to redirect to,
+                 * in order to prevent the boot strap code from being rendered
+                 * into strange places such as iframes.
                  */
-                VaadinPortletSession applicationContext = (VaadinPortletSession) application;
+                ((ResourceResponse) response).setContentType("text/html");
+                final OutputStream out = ((ResourceResponse) response)
+                        .getPortletOutputStream();
+                final PrintWriter outWriter = new PrintWriter(
+                        new BufferedWriter(new OutputStreamWriter(out, "UTF-8")));
+                outWriter.print("<html><body>dummy page</body></html>");
+                outWriter.close();
+            } else if (requestType == RequestType.STATIC_FILE) {
+                serveStaticResources((ResourceRequest) request,
+                        (ResourceResponse) response);
+            } else {
+                VaadinSession application = null;
+                boolean applicationRunning = false;
 
-                PortletCommunicationManager applicationManager = (PortletCommunicationManager) applicationContext
-                        .getApplicationManager();
-
-                if (requestType == RequestType.CONNECTOR_RESOURCE) {
-                    applicationManager.serveConnectorResource(wrappedRequest,
-                            wrappedResponse);
-                    return;
-                } else if (requestType == RequestType.HEARTBEAT) {
-                    applicationManager.handleHeartbeatRequest(wrappedRequest,
-                            wrappedResponse, application);
-                    return;
-                }
-
-                /* Update browser information from request */
-                applicationContext.getBrowser().updateRequestDetails(
-                        wrappedRequest);
-
-                applicationRunning = true;
-
-                /* Notify listeners */
-
-                // Finds the window within the application
-                UI uI = null;
-                application.getLock().lock();
                 try {
-                    if (application.isRunning()) {
-                        switch (requestType) {
-                        case RENDER:
-                        case ACTION:
-                            // Both action requests and render requests are ok
-                            // without a UI as they render the initial HTML
-                            // and then do a second request
-                            uI = application.getUIForRequest(wrappedRequest);
-                            break;
-                        case BROWSER_DETAILS:
-                            // Should not try to find a UI here as the
-                            // combined request details might change the UI
-                            break;
-                        case FILE_UPLOAD:
-                            // no window
-                            break;
-                        case APPLICATION_RESOURCE:
-                            // use main window - should not need any window
-                            // UI = application.getUI();
-                            break;
-                        default:
-                            uI = application.getUIForRequest(wrappedRequest);
-                        }
-                        // if window not found, not a problem - use null
+                    // TODO What about PARAM_UNLOADBURST &
+                    // redirectToApplication??
+
+                    /* Find out which application this request is related to */
+                    application = getVaadinService().findVaadinSession(
+                            wrappedRequest);
+                    if (application == null) {
+                        return;
                     }
-                } finally {
-                    application.getLock().unlock();
-                }
+                    VaadinSession.setCurrent(application);
+                    request.setAttribute(VaadinSession.class.getName(),
+                            application);
 
-                // TODO Should this happen before or after the transaction
-                // starts?
-                if (request instanceof RenderRequest) {
-                    applicationContext.firePortletRenderRequest(uI,
-                            (RenderRequest) request, (RenderResponse) response);
-                } else if (request instanceof ActionRequest) {
-                    applicationContext.firePortletActionRequest(uI,
-                            (ActionRequest) request, (ActionResponse) response);
-                } else if (request instanceof EventRequest) {
-                    applicationContext.firePortletEventRequest(uI,
-                            (EventRequest) request, (EventResponse) response);
-                } else if (request instanceof ResourceRequest) {
-                    applicationContext.firePortletResourceRequest(uI,
-                            (ResourceRequest) request,
-                            (ResourceResponse) response);
-                }
-
-                /* Handle the request */
-                if (requestType == RequestType.FILE_UPLOAD) {
-                    // UI is resolved in handleFileUpload by
-                    // PortletCommunicationManager
-                    applicationManager.handleFileUpload(application,
-                            wrappedRequest, wrappedResponse);
-                    return;
-                } else if (requestType == RequestType.BROWSER_DETAILS) {
-                    applicationManager.handleBrowserDetailsRequest(
-                            wrappedRequest, wrappedResponse, application);
-                    return;
-                } else if (requestType == RequestType.UIDL) {
-                    // Handles AJAX UIDL requests
-                    applicationManager.handleUidlRequest(wrappedRequest,
-                            wrappedResponse, portletWrapper, uI);
-                    return;
-                } else {
                     /*
-                     * Removes the application if it has stopped
+                     * Get or create an application context and an application
+                     * manager for the session
                      */
-                    if (!application.isRunning()) {
-                        endApplication(request, response, application);
+                    VaadinPortletSession applicationContext = (VaadinPortletSession) application;
+
+                    PortletCommunicationManager applicationManager = (PortletCommunicationManager) applicationContext
+                            .getApplicationManager();
+
+                    if (requestType == RequestType.CONNECTOR_RESOURCE) {
+                        applicationManager.serveConnectorResource(
+                                wrappedRequest, wrappedResponse);
+                        return;
+                    } else if (requestType == RequestType.HEARTBEAT) {
+                        applicationManager.handleHeartbeatRequest(
+                                wrappedRequest, wrappedResponse, application);
                         return;
                     }
 
-                    handleOtherRequest(wrappedRequest, wrappedResponse,
-                            requestType, application, applicationContext,
-                            applicationManager);
-                }
-            } catch (final SessionExpiredException e) {
-                // TODO Figure out a better way to deal with
-                // SessionExpiredExceptions
-                getLogger().finest("A user session has expired");
-            } catch (final GeneralSecurityException e) {
-                // TODO Figure out a better way to deal with
-                // GeneralSecurityExceptions
-                getLogger()
-                        .fine("General security exception, the security key was probably incorrect.");
-            } catch (final Throwable e) {
-                handleServiceException(wrappedRequest, wrappedResponse,
-                        application, e);
-            } finally {
+                    /* Update browser information from request */
+                    applicationContext.getBrowser().updateRequestDetails(
+                            wrappedRequest);
 
-                if (applicationRunning) {
-                    application.cleanupInactiveUIs();
-                }
+                    applicationRunning = true;
 
-                CurrentInstance.clearAll();
+                    /* Notify listeners */
 
-                if (application != null) {
-                    requestTimer.stop(application);
+                    // Finds the window within the application
+                    UI uI = null;
+                    application.getLock().lock();
+                    try {
+                        if (application.isRunning()) {
+                            switch (requestType) {
+                            case RENDER:
+                            case ACTION:
+                                // Both action requests and render requests are
+                                // ok
+                                // without a UI as they render the initial HTML
+                                // and then do a second request
+                                uI = application
+                                        .getUIForRequest(wrappedRequest);
+                                break;
+                            case BROWSER_DETAILS:
+                                // Should not try to find a UI here as the
+                                // combined request details might change the UI
+                                break;
+                            case FILE_UPLOAD:
+                                // no window
+                                break;
+                            case APPLICATION_RESOURCE:
+                                // use main window - should not need any window
+                                // UI = application.getUI();
+                                break;
+                            default:
+                                uI = application
+                                        .getUIForRequest(wrappedRequest);
+                            }
+                            // if window not found, not a problem - use null
+                        }
+                    } finally {
+                        application.getLock().unlock();
+                    }
+
+                    // TODO Should this happen before or after the transaction
+                    // starts?
+                    if (request instanceof RenderRequest) {
+                        applicationContext.firePortletRenderRequest(uI,
+                                (RenderRequest) request,
+                                (RenderResponse) response);
+                    } else if (request instanceof ActionRequest) {
+                        applicationContext.firePortletActionRequest(uI,
+                                (ActionRequest) request,
+                                (ActionResponse) response);
+                    } else if (request instanceof EventRequest) {
+                        applicationContext.firePortletEventRequest(uI,
+                                (EventRequest) request,
+                                (EventResponse) response);
+                    } else if (request instanceof ResourceRequest) {
+                        applicationContext.firePortletResourceRequest(uI,
+                                (ResourceRequest) request,
+                                (ResourceResponse) response);
+                    }
+
+                    /* Handle the request */
+                    if (requestType == RequestType.FILE_UPLOAD) {
+                        // UI is resolved in handleFileUpload by
+                        // PortletCommunicationManager
+                        applicationManager.handleFileUpload(application,
+                                wrappedRequest, wrappedResponse);
+                        return;
+                    } else if (requestType == RequestType.BROWSER_DETAILS) {
+                        applicationManager.handleBrowserDetailsRequest(
+                                wrappedRequest, wrappedResponse, application);
+                        return;
+                    } else if (requestType == RequestType.UIDL) {
+                        // Handles AJAX UIDL requests
+                        applicationManager.handleUidlRequest(wrappedRequest,
+                                wrappedResponse, portletWrapper, uI);
+                        return;
+                    } else {
+                        /*
+                         * Removes the application if it has stopped
+                         */
+                        if (!application.isRunning()) {
+                            endApplication(request, response, application);
+                            return;
+                        }
+
+                        handleOtherRequest(wrappedRequest, wrappedResponse,
+                                requestType, application, applicationContext,
+                                applicationManager);
+                    }
+                } catch (final SessionExpiredException e) {
+                    // TODO Figure out a better way to deal with
+                    // SessionExpiredExceptions
+                    getLogger().finest("A user session has expired");
+                } catch (final GeneralSecurityException e) {
+                    // TODO Figure out a better way to deal with
+                    // GeneralSecurityExceptions
+                    getLogger()
+                            .fine("General security exception, the security key was probably incorrect.");
+                } catch (final Throwable e) {
+                    handleServiceException(wrappedRequest, wrappedResponse,
+                            application, e);
+                } finally {
+
+                    if (applicationRunning) {
+                        application.cleanupInactiveUIs();
+                    }
+
+                    if (application != null) {
+                        requestTimer.stop(application);
+                    }
                 }
             }
+        } finally {
+            CurrentInstance.clearAll();
         }
     }
 
