@@ -154,8 +154,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 return true;
             } else if (requestType == RequestType.OTHER) {
                 /*
-                 * I.e URIs that are not application resources or static (theme)
-                 * files.
+                 * I.e URIs that are not RPC calls or static (theme) files.
                  */
                 return true;
             }
@@ -406,8 +405,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return;
         }
 
-        VaadinSession application = null;
-        boolean applicationRunning = false;
+        VaadinServletSession vaadinSession = null;
+        boolean sessionProcessed = false;
 
         try {
             // If a duplicate "close application" URL is received for an
@@ -428,59 +427,55 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 return;
             }
 
-            // Find out which application this request is related to
-            application = getVaadinService().findVaadinSession(request);
-            if (application == null) {
+            // Find out the Vaadin session this request is related to
+            vaadinSession = (VaadinServletSession) getVaadinService()
+                    .findVaadinSession(request);
+            if (vaadinSession == null) {
                 return;
             }
-            request.setAttribute(VaadinSession.class.getName(), application);
-            VaadinSession.setCurrent(application);
+            request.setAttribute(VaadinSession.class.getName(), vaadinSession);
+            VaadinSession.setCurrent(vaadinSession);
 
-            /*
-             * Get or create a WebApplicationContext and an ApplicationManager
-             * for the session
-             */
-            VaadinServletSession webApplicationContext = (VaadinServletSession) application;
-            CommunicationManager applicationManager = (CommunicationManager) webApplicationContext
-                    .getApplicationManager();
+            CommunicationManager communicationManager = (CommunicationManager) vaadinSession
+                    .getCommunicationManager();
 
             if (requestType == RequestType.CONNECTOR_RESOURCE) {
-                applicationManager.serveConnectorResource(request, response);
+                communicationManager.serveConnectorResource(request, response);
                 return;
             } else if (requestType == RequestType.HEARTBEAT) {
-                applicationManager.handleHeartbeatRequest(request, response,
-                        application);
+                communicationManager.handleHeartbeatRequest(request, response,
+                        vaadinSession);
                 return;
             }
 
             /* Update browser information from the request */
-            webApplicationContext.getBrowser().updateRequestDetails(request);
+            vaadinSession.getBrowser().updateRequestDetails(request);
 
-            applicationRunning = true;
+            sessionProcessed = true;
 
             /* Handle the request */
             if (requestType == RequestType.FILE_UPLOAD) {
                 // UI is resolved in communication manager
-                applicationManager.handleFileUpload(application, request,
+                communicationManager.handleFileUpload(vaadinSession, request,
                         response);
                 return;
             } else if (requestType == RequestType.UIDL) {
-                UI uI = application.getUIForRequest(request);
+                UI uI = vaadinSession.getUIForRequest(request);
                 if (uI == null) {
                     throw new ServletException(ERROR_NO_UI_FOUND);
                 }
                 // Handles AJAX UIDL requests
-                applicationManager.handleUidlRequest(request, response,
+                communicationManager.handleUidlRequest(request, response,
                         servletWrapper, uI);
                 return;
             } else if (requestType == RequestType.BROWSER_DETAILS) {
                 // Browser details - not related to a specific UI
-                applicationManager.handleBrowserDetailsRequest(request,
-                        response, application);
+                communicationManager.handleBrowserDetailsRequest(request,
+                        response, vaadinSession);
                 return;
             }
 
-            if (applicationManager.handleApplicationRequest(request, response)) {
+            if (communicationManager.handleOtherRequest(request, response)) {
                 return;
             }
             // TODO Should return 404 error here and not do anything more
@@ -491,17 +486,17 @@ public class VaadinServlet extends HttpServlet implements Constants {
         } catch (final GeneralSecurityException e) {
             handleServiceSecurityException(request, response);
         } catch (final Throwable e) {
-            handleServiceException(request, response, application, e);
+            handleServiceException(request, response, vaadinSession, e);
         } finally {
 
-            if (applicationRunning) {
-                application.cleanupInactiveUIs();
+            if (sessionProcessed) {
+                vaadinSession.cleanupInactiveUIs();
             }
 
             CurrentInstance.clearAll();
 
-            if (application != null) {
-                requestTimer.stop(application);
+            if (vaadinSession != null) {
+                requestTimer.stop(vaadinSession);
             }
         }
     }
@@ -571,9 +566,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
     }
 
     /**
-     * Send a notification to client's application. Used to notify client of
+     * Send a notification to client-side widgetset. Used to notify client of
      * critical errors, session expiration and more. Server has no knowledge of
-     * what application client refers to.
+     * what UI client refers to.
      * 
      * @param request
      *            the HTTP request instance.
@@ -711,7 +706,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     }
 
     private void handleServiceException(WrappedHttpServletRequest request,
-            WrappedHttpServletResponse response, VaadinSession application,
+            WrappedHttpServletResponse response, VaadinSession vaadinSession,
             Throwable e) throws IOException, ServletException {
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {
@@ -719,9 +714,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
             criticalNotification(request, response,
                     ci.getInternalErrorCaption(), ci.getInternalErrorMessage(),
                     null, ci.getInternalErrorURL());
-            if (application != null) {
-                application.getErrorHandler()
-                        .terminalError(new RequestError(e));
+            if (vaadinSession != null) {
+                vaadinSession.getErrorHandler().terminalError(
+                        new RequestError(e));
             } else {
                 throw new ServletException(e);
             }
@@ -1207,7 +1202,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      */
     @Deprecated
     protected enum RequestType {
-        FILE_UPLOAD, BROWSER_DETAILS, UIDL, OTHER, STATIC_FILE, APPLICATION_RESOURCE, CONNECTOR_RESOURCE, HEARTBEAT;
+        FILE_UPLOAD, BROWSER_DETAILS, UIDL, OTHER, STATIC_FILE, APP, CONNECTOR_RESOURCE, HEARTBEAT;
     }
 
     /**
@@ -1228,8 +1223,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return RequestType.UIDL;
         } else if (isStaticResourceRequest(request)) {
             return RequestType.STATIC_FILE;
-        } else if (ServletPortletHelper.isApplicationResourceRequest(request)) {
-            return RequestType.APPLICATION_RESOURCE;
+        } else if (ServletPortletHelper.isAppRequest(request)) {
+            return RequestType.APP;
         } else if (ServletPortletHelper.isHeartbeatRequest(request)) {
             return RequestType.HEARTBEAT;
         }

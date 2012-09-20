@@ -281,7 +281,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
-    public AbstractCommunicationManager getApplicationManager() {
+    public AbstractCommunicationManager getCommunicationManager() {
         return communicationManager;
     }
 

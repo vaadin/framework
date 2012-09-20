@@ -190,7 +190,7 @@ public class GAEVaadinServlet extends VaadinServlet {
             return;
         }
 
-        if (requestType == RequestType.APPLICATION_RESOURCE) {
+        if (requestType == RequestType.APP) {
             // no locking needed, let superclass handle
             getApplicationContext(request,
                     MemcacheServiceFactory.getMemcacheService());

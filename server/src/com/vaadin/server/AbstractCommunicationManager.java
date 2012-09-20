@@ -2406,7 +2406,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * 
      * @since 7.0
      */
-    protected boolean handleApplicationRequest(WrappedRequest request,
+    protected boolean handleOtherRequest(WrappedRequest request,
             WrappedResponse response) throws IOException {
         // Use a copy to avoid ConcurrentModificationException
         for (RequestHandler handler : new ArrayList<RequestHandler>(

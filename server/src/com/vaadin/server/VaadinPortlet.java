@@ -183,8 +183,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             RequestType requestType = getRequestType(request);
             if (requestType == RequestType.RENDER) {
                 // In most cases the first request is a render request that
-                // renders the HTML fragment. This should create an application
-                // instance.
+                // renders the HTML fragment. This should create a Vaadin
+                // session unless there is already one.
                 return true;
             } else if (requestType == RequestType.EVENT) {
                 // A portlet can also be sent an event even though it has not
@@ -461,7 +461,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
      */
     @Deprecated
     protected enum RequestType {
-        FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APPLICATION_RESOURCE, DUMMY, EVENT, ACTION, UNKNOWN, BROWSER_DETAILS, CONNECTOR_RESOURCE, HEARTBEAT;
+        FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APP, DUMMY, EVENT, ACTION, UNKNOWN, BROWSER_DETAILS, CONNECTOR_RESOURCE, HEARTBEAT;
     }
 
     /**
@@ -486,9 +486,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             } else if (ServletPortletHelper
                     .isConnectorResourceRequest(wrappedRequest)) {
                 return RequestType.CONNECTOR_RESOURCE;
-            } else if (ServletPortletHelper
-                    .isApplicationResourceRequest(wrappedRequest)) {
-                return RequestType.APPLICATION_RESOURCE;
+            } else if (ServletPortletHelper.isAppRequest(wrappedRequest)) {
+                return RequestType.APP;
             } else if (ServletPortletHelper.isHeartbeatRequest(wrappedRequest)) {
                 return RequestType.HEARTBEAT;
             } else if (isDummyRequest(resourceRequest)) {
@@ -564,53 +563,46 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                 serveStaticResources((ResourceRequest) request,
                         (ResourceResponse) response);
             } else {
-                VaadinSession application = null;
-                boolean applicationRunning = false;
+                VaadinPortletSession vaadinSession = null;
+                boolean sessionProcessed = false;
 
                 try {
                     // TODO What about PARAM_UNLOADBURST &
                     // redirectToApplication??
 
-                    /* Find out which application this request is related to */
-                    application = getVaadinService().findVaadinSession(
-                            wrappedRequest);
-                    if (application == null) {
+                    vaadinSession = (VaadinPortletSession) getVaadinService()
+                            .findVaadinSession(wrappedRequest);
+                    if (vaadinSession == null) {
                         return;
                     }
-                    VaadinSession.setCurrent(application);
+                    VaadinSession.setCurrent(vaadinSession);
                     request.setAttribute(VaadinSession.class.getName(),
-                            application);
+                            vaadinSession);
 
-                    /*
-                     * Get or create an application context and an application
-                     * manager for the session
-                     */
-                    VaadinPortletSession applicationContext = (VaadinPortletSession) application;
-
-                    PortletCommunicationManager applicationManager = (PortletCommunicationManager) applicationContext
-                            .getApplicationManager();
+                    PortletCommunicationManager communicationManager = (PortletCommunicationManager) vaadinSession
+                            .getCommunicationManager();
 
                     if (requestType == RequestType.CONNECTOR_RESOURCE) {
-                        applicationManager.serveConnectorResource(
+                        communicationManager.serveConnectorResource(
                                 wrappedRequest, wrappedResponse);
                         return;
                     } else if (requestType == RequestType.HEARTBEAT) {
-                        applicationManager.handleHeartbeatRequest(
-                                wrappedRequest, wrappedResponse, application);
+                        communicationManager.handleHeartbeatRequest(
+                                wrappedRequest, wrappedResponse, vaadinSession);
                         return;
                     }
 
                     /* Update browser information from request */
-                    applicationContext.getBrowser().updateRequestDetails(
+                    vaadinSession.getBrowser().updateRequestDetails(
                             wrappedRequest);
 
-                    applicationRunning = true;
+                    sessionProcessed = true;
 
                     /* Notify listeners */
 
-                    // Finds the window within the application
+                    // Finds the right UI
                     UI uI = null;
-                    application.getLock().lock();
+                    vaadinSession.getLock().lock();
                     try {
                         switch (requestType) {
                         case RENDER:
@@ -618,7 +610,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                             // Both action requests and render requests are ok
                             // without a UI as they render the initial HTML
                             // and then do a second request
-                            uI = application.getUIForRequest(wrappedRequest);
+                            uI = vaadinSession.getUIForRequest(wrappedRequest);
                             break;
                         case BROWSER_DETAILS:
                             // Should not try to find a UI here as the
@@ -627,34 +619,33 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                         case FILE_UPLOAD:
                             // no window
                             break;
-                        case APPLICATION_RESOURCE:
-                            // use main window - should not need any window
-                            // UI = application.getUI();
+                        case APP:
+                            // Not related to any UI
                             break;
                         default:
-                            uI = application.getUIForRequest(wrappedRequest);
+                            uI = vaadinSession.getUIForRequest(wrappedRequest);
                         }
                         // if window not found, not a problem - use null
                     } finally {
-                        application.getLock().unlock();
+                        vaadinSession.getLock().unlock();
                     }
 
                     // TODO Should this happen before or after the transaction
                     // starts?
                     if (request instanceof RenderRequest) {
-                        applicationContext.firePortletRenderRequest(uI,
+                        vaadinSession.firePortletRenderRequest(uI,
                                 (RenderRequest) request,
                                 (RenderResponse) response);
                     } else if (request instanceof ActionRequest) {
-                        applicationContext.firePortletActionRequest(uI,
+                        vaadinSession.firePortletActionRequest(uI,
                                 (ActionRequest) request,
                                 (ActionResponse) response);
                     } else if (request instanceof EventRequest) {
-                        applicationContext.firePortletEventRequest(uI,
+                        vaadinSession.firePortletEventRequest(uI,
                                 (EventRequest) request,
                                 (EventResponse) response);
                     } else if (request instanceof ResourceRequest) {
-                        applicationContext.firePortletResourceRequest(uI,
+                        vaadinSession.firePortletResourceRequest(uI,
                                 (ResourceRequest) request,
                                 (ResourceResponse) response);
                     }
@@ -663,22 +654,22 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                     if (requestType == RequestType.FILE_UPLOAD) {
                         // UI is resolved in handleFileUpload by
                         // PortletCommunicationManager
-                        applicationManager.handleFileUpload(application,
+                        communicationManager.handleFileUpload(vaadinSession,
                                 wrappedRequest, wrappedResponse);
                         return;
                     } else if (requestType == RequestType.BROWSER_DETAILS) {
-                        applicationManager.handleBrowserDetailsRequest(
-                                wrappedRequest, wrappedResponse, application);
+                        communicationManager.handleBrowserDetailsRequest(
+                                wrappedRequest, wrappedResponse, vaadinSession);
                         return;
                     } else if (requestType == RequestType.UIDL) {
                         // Handles AJAX UIDL requests
-                        applicationManager.handleUidlRequest(wrappedRequest,
+                        communicationManager.handleUidlRequest(wrappedRequest,
                                 wrappedResponse, portletWrapper, uI);
                         return;
                     } else {
                         handleOtherRequest(wrappedRequest, wrappedResponse,
-                                requestType, application, applicationContext,
-                                applicationManager);
+                                requestType, vaadinSession,
+                                communicationManager);
                     }
                 } catch (final SessionExpiredException e) {
                     // TODO Figure out a better way to deal with
@@ -691,19 +682,15 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                             .fine("General security exception, the security key was probably incorrect.");
                 } catch (final Throwable e) {
                     handleServiceException(wrappedRequest, wrappedResponse,
-                            application, e);
+                            vaadinSession, e);
                 } finally {
 
-                    if (applicationRunning) {
-                        application.cleanupInactiveUIs();
+                    if (sessionProcessed) {
+                        vaadinSession.cleanupInactiveUIs();
                     }
 
-                    if (applicationRunning) {
-                        application.cleanupInactiveUIs();
-                    }
-
-                    if (application != null) {
-                        requestTimer.stop(application);
+                    if (vaadinSession != null) {
+                        requestTimer.stop(vaadinSession);
                     }
                 }
             }
@@ -752,21 +739,20 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
      * @param request
      * @param response
      * @param requestType
-     * @param application
-     * @param applicationContext
-     * @param applicationManager
+     * @param vaadinSession
+     * @param vaadinSession
+     * @param communicationManager
      * @throws PortletException
      * @throws IOException
      * @throws MalformedURLException
      */
     private void handleOtherRequest(WrappedPortletRequest request,
             WrappedResponse response, RequestType requestType,
-            VaadinSession application, VaadinPortletSession applicationContext,
-            PortletCommunicationManager applicationManager)
+            VaadinSession vaadinSession,
+            PortletCommunicationManager communicationManager)
             throws PortletException, IOException, MalformedURLException {
-        if (requestType == RequestType.APPLICATION_RESOURCE
-                || requestType == RequestType.RENDER) {
-            if (!applicationManager.handleApplicationRequest(request, response)) {
+        if (requestType == RequestType.APP || requestType == RequestType.RENDER) {
+            if (!communicationManager.handleOtherRequest(request, response)) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND,
                         "Not found");
             }
@@ -846,15 +832,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         handleRequest(request, response);
     }
 
-    private void endApplication(PortletRequest request,
-            PortletResponse response, VaadinSession application)
-            throws IOException {
-        application.removeFromSession();
-        // Do not send any redirects when running inside a portlet.
-    }
-
     private void handleServiceException(WrappedPortletRequest request,
-            WrappedPortletResponse response, VaadinSession application,
+            WrappedPortletResponse response, VaadinSession vaadinSession,
             Throwable e) throws IOException, PortletException {
         // TODO Check that this error handler is working when running inside a
         // portlet
@@ -865,9 +844,9 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             criticalNotification(request, response,
                     ci.getInternalErrorCaption(), ci.getInternalErrorMessage(),
                     null, ci.getInternalErrorURL());
-            if (application != null) {
-                application.getErrorHandler()
-                        .terminalError(new RequestError(e));
+            if (vaadinSession != null) {
+                vaadinSession.getErrorHandler().terminalError(
+                        new RequestError(e));
             } else {
                 throw new PortletException(e);
             }

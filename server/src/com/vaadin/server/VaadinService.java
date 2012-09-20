@@ -89,7 +89,7 @@ public abstract class VaadinService implements Serializable {
      * returned folder is what is used for widgetsets and themes.
      * 
      * The returned folder is usually the same as the context path and
-     * independent of the application.
+     * independent of e.g. the servlet mapping.
      * 
      * @param request
      *            the request for which the location should be determined
@@ -120,15 +120,14 @@ public abstract class VaadinService implements Serializable {
     public abstract String getConfiguredTheme(WrappedRequest request);
 
     /**
-     * Checks whether the Vaadin application will be rendered on its own in the
-     * browser or whether it will be included into some other context. A
-     * standalone application may do things that might interfere with other
-     * parts of a page, e.g. changing the page title and requesting focus upon
-     * loading.
+     * Checks whether the UI will be rendered on its own in the browser or
+     * whether it will be included into some other context. A standalone UI may
+     * do things that might interfere with other parts of a page, e.g. changing
+     * the page title and requesting focus upon loading.
      * 
      * @param request
-     *            the request for which the application is loaded
-     * @return a boolean indicating whether the application should be standalone
+     *            the request for which the UI is loaded
+     * @return a boolean indicating whether the UI should be standalone
      */
     public abstract boolean isStandalone(WrappedRequest request);
 
@@ -210,7 +209,7 @@ public abstract class VaadinService implements Serializable {
     public abstract SystemMessages getSystemMessages();
 
     /**
-     * Returns application context base directory.
+     * Returns the context base directory.
      * 
      * Typically an application is deployed in a such way that is has an
      * application directory. For web applications this directory is the root
@@ -311,16 +310,16 @@ public abstract class VaadinService implements Serializable {
     public VaadinSession findVaadinSession(WrappedRequest request)
             throws ServiceException, SessionExpiredException {
 
-        boolean requestCanCreateApplication = requestCanCreateSession(request);
+        boolean requestCanCreateSession = requestCanCreateSession(request);
 
-        /* Find an existing application for this request. */
+        /* Find an existing session for this request. */
         VaadinSession session = getExistingSession(request,
-                requestCanCreateApplication);
+                requestCanCreateSession);
 
         if (session != null) {
             /*
-             * There is an existing application. We can use this as long as the
-             * user not specifically requested to close or restart it.
+             * There is an existing session. We can use this as long as the user
+             * not specifically requested to close or restart it.
              */
 
             final boolean restartApplication = (request
@@ -329,35 +328,35 @@ public abstract class VaadinService implements Serializable {
                     .getParameter(URL_PARAMETER_CLOSE_APPLICATION) != null);
 
             if (restartApplication) {
-                closeApplication(session, request.getWrappedSession(false));
-                return createAndRegisterApplication(request);
+                closeSession(session, request.getWrappedSession(false));
+                return createAndRegisterSession(request);
             } else if (closeApplication) {
-                closeApplication(session, request.getWrappedSession(false));
+                closeSession(session, request.getWrappedSession(false));
                 return null;
             } else {
                 return session;
             }
         }
 
-        // No existing application was found
+        // No existing session was found
 
-        if (requestCanCreateApplication) {
+        if (requestCanCreateSession) {
             /*
-             * If the request is such that it should create a new application if
-             * one as not found, we do that.
+             * If the request is such that it should create a new session if one
+             * as not found, we do that.
              */
-            return createAndRegisterApplication(request);
+            return createAndRegisterSession(request);
         } else {
             /*
-             * The application was not found and a new one should not be
-             * created. Assume the session has expired.
+             * The session was not found and a new one should not be created.
+             * Assume the session has expired.
              */
             throw new SessionExpiredException();
         }
 
     }
 
-    private VaadinSession createAndRegisterApplication(WrappedRequest request)
+    private VaadinSession createAndRegisterSession(WrappedRequest request)
             throws ServiceException {
         VaadinSession session = createVaadinSession(request);
 
@@ -434,14 +433,14 @@ public abstract class VaadinService implements Serializable {
         ServletPortletHelper.checkUiProviders(session);
     }
 
-    private void closeApplication(VaadinSession application,
+    private void closeSession(VaadinSession vaadinSession,
             WrappedSession session) {
-        if (application == null) {
+        if (vaadinSession == null) {
             return;
         }
 
         if (session != null) {
-            application.removeFromSession();
+            vaadinSession.removeFromSession();
         }
     }
 
@@ -455,13 +454,13 @@ public abstract class VaadinService implements Serializable {
             throw new SessionExpiredException();
         }
 
-        VaadinSession sessionApplication = VaadinSession.getForSession(session);
+        VaadinSession vaadinSession = VaadinSession.getForSession(session);
 
-        if (sessionApplication == null) {
+        if (vaadinSession == null) {
             return null;
         }
 
-        return sessionApplication;
+        return vaadinSession;
     }
 
     /**

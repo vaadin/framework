@@ -108,7 +108,7 @@ class ServletPortletHelper implements Serializable {
         return hasPathPrefix(request, ApplicationConstants.UIDL_REQUEST_PATH);
     }
 
-    public static boolean isApplicationResourceRequest(WrappedRequest request) {
+    public static boolean isAppRequest(WrappedRequest request) {
         return hasPathPrefix(request, ApplicationConstants.APP_REQUEST_PATH);
     }
 
