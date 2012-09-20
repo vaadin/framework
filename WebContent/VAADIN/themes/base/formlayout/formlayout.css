@@ -47,11 +47,17 @@
 .v-ie6 .v-formlayout-margin-bottom .v-formlayout-row .v-formlayout-errorcell {
 	padding-bottom: expression((/v-formlayout-lastrow/.test(this.parentNode.className) && /v-formlayout-margin-bottom/.test(this.parentNode.parentNode.parentNode.className)) ? "12px" : "0px");
 }
-.v-formlayout-margin-left .v-formlayout-captioncell {
+.v-formlayout-margin-left > tbody > .v-formlayout-row > .v-formlayout-captioncell {
 	padding-left: 12px;
 } 
-.v-formlayout-margin-right .v-formlayout-contentcell {
+.v-formlayout-margin-right > tbody > .v-formlayout-row > .v-formlayout-contentcell {
 	padding-right: 12px;
+}
+.v-ie6 .v-formlayout-margin-left .v-formlayout-row .v-formlayout-captioncell {
+	padding-left: expression(/v-formlayout-margin-left/.test(this.parentNode.parentNode.parentNode.className) ? "12px" : "0px");
+}
+.v-ie6 .v-formlayout-margin-right .v-formlayout-row .v-formlayout-contentcell {
+	padding-right: expression(/v-formlayout-margin-right/.test(this.parentNode.parentNode.parentNode.className) ? "12px" : "0px");
 }
 .v-formlayout-captioncell .v-caption .v-required-field-indicator {
 	float: none;
