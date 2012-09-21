@@ -26,7 +26,7 @@
 		<servlet-name>Embed App 2</servlet-name>
 		<servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
 		<init-param>
-			<param-name>ui</param-name>
+			<param-name>UI</param-name>
 			<param-value>com.vaadin.tests.components.label.MarginsInLabels</param-value>
 		</init-param>
 	</servlet>

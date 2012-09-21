@@ -31,6 +31,7 @@ public abstract class BootstrapResponse extends EventObject {
     private final VaadinRequest request;
     private final VaadinSession session;
     private final Class<? extends UI> uiClass;
+    private final UIProvider uiProvider;
 
     /**
      * Creates a new bootstrap event.
@@ -44,13 +45,17 @@ public abstract class BootstrapResponse extends EventObject {
      *            the session for which the bootstrap page should be generated
      * @param uiClass
      *            the class of the UI that will be displayed on the page
+     * @param uiProvider
+     *            the UI provider for the bootstrap
      */
     public BootstrapResponse(BootstrapHandler handler, VaadinRequest request,
-            VaadinSession session, Class<? extends UI> uiClass) {
+            VaadinSession session, Class<? extends UI> uiClass,
+            UIProvider uiProvider) {
         super(handler);
         this.request = request;
         this.session = session;
         this.uiClass = uiClass;
+        this.uiProvider = uiProvider;
     }
 
     /**
@@ -93,6 +98,16 @@ public abstract class BootstrapResponse extends EventObject {
      */
     public Class<? extends UI> getUiClass() {
         return uiClass;
+    }
+
+    /**
+     * Gets the UI provider that is used to provide information about the
+     * bootstapped UI.
+     * 
+     * @return the UI provider
+     */
+    public UIProvider getUIProvider() {
+        return uiProvider;
     }
 
 }

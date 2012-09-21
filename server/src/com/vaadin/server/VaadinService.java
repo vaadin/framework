@@ -23,7 +23,10 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.ServiceLoader;
 
@@ -32,8 +35,10 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import com.vaadin.LegacyApplication;
+import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.event.EventRouter;
 import com.vaadin.server.VaadinSession.SessionStartEvent;
+import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 import com.vaadin.util.ReflectTools;
@@ -47,6 +52,69 @@ import com.vaadin.util.ReflectTools;
  * @since 7.0
  */
 public abstract class VaadinService implements Serializable {
+
+    /**
+     * Service specific data that is stored in VaadinSession separately for each
+     * VaadinService using that particular session.
+     * 
+     * @author Vaadin Ltd
+     */
+    public static class VaadinServiceData {
+        private final VaadinService vaadinService;
+        private LinkedList<UIProvider> uiProviders = new LinkedList<UIProvider>();
+
+        /**
+         * Create a new service data object for the given Vaadin service
+         * 
+         * @param vaadinService
+         *            the Vaadin service to which the data belongs
+         */
+        public VaadinServiceData(VaadinService vaadinService) {
+            this.vaadinService = vaadinService;
+        }
+
+        /**
+         * Gets a list of all the UI providers registered for a particular
+         * Vaadin service
+         * 
+         * @see #addUIProvider(UIProvider)
+         * 
+         * @return and unmodifiable list of UI providers
+         */
+        public List<UIProvider> getUIProviders() {
+            return Collections.unmodifiableList(uiProviders);
+        }
+
+        /**
+         * Adds a UI provider for a Vaadin service.
+         * 
+         * @param uiProvider
+         *            the UI provider to add
+         */
+        public void addUIProvider(UIProvider uiProvider) {
+            uiProviders.addFirst(uiProvider);
+        }
+
+        /**
+         * Removes a UI provider from a Vaadin service.
+         * 
+         * @param uiProvider
+         *            the UI provider to remove
+         */
+        public void removeUIProvider(UIProvider uiProvider) {
+            uiProviders.remove(uiProvider);
+        }
+
+        /**
+         * Gets the Vaadin service that this data belongs to.
+         * 
+         * @return the Vaadin service that htis data belongs to
+         */
+        public VaadinService getVaadinService() {
+            return vaadinService;
+        }
+
+    }
 
     private static final Method SESSION_INIT_METHOD = ReflectTools.findMethod(
             VaadinSessionInitializationListener.class,
@@ -309,7 +377,26 @@ public abstract class VaadinService implements Serializable {
      */
     public VaadinSession findVaadinSession(VaadinRequest request)
             throws ServiceException, SessionExpiredException {
+        VaadinSession vaadinSession = findOrCreateVaadinSession(request);
+        if (vaadinSession == null) {
+            return null;
+        }
+        if (!vaadinSession.hasVaadinServiceData(this)) {
+            vaadinSession.addVaadinServiceData(new VaadinServiceData(this));
 
+            ServletPortletHelper.initDefaultUIProvider(vaadinSession, this);
+
+            onVaadinSessionStarted(request, vaadinSession);
+        }
+
+        VaadinSession.setCurrent(vaadinSession);
+        request.setAttribute(VaadinSession.class.getName(), vaadinSession);
+
+        return vaadinSession;
+    }
+
+    private VaadinSession findOrCreateVaadinSession(VaadinRequest request)
+            throws SessionExpiredException, ServiceException {
         boolean requestCanCreateSession = requestCanCreateSession(request);
 
         /* Find an existing session for this request. */
@@ -360,9 +447,6 @@ public abstract class VaadinService implements Serializable {
             throws ServiceException {
         VaadinSession session = createVaadinSession(request);
 
-        ServletPortletHelper.initDefaultUIProvider(session, this);
-
-        session.setVaadinService(this);
         session.storeInSession(request.getWrappedSession());
 
         URL applicationUrl;
@@ -378,8 +462,6 @@ public abstract class VaadinService implements Serializable {
         session.start(new SessionStartEvent(applicationUrl,
                 getDeploymentConfiguration(),
                 createCommunicationManager(session)));
-
-        onVaadinSessionStarted(request, session);
 
         return session;
     }
@@ -430,7 +512,7 @@ public abstract class VaadinService implements Serializable {
         eventRouter.fireEvent(new VaadinSessionInitializeEvent(this, session,
                 request));
 
-        ServletPortletHelper.checkUiProviders(session);
+        ServletPortletHelper.checkUiProviders(session, this);
     }
 
     private void closeSession(VaadinSession vaadinSession,
@@ -551,4 +633,106 @@ public abstract class VaadinService implements Serializable {
         return CurrentInstance.get(VaadinResponse.class);
     }
 
+    /**
+     * Gets a unique name for this service. The name should be unique among
+     * different services of the same type but the same for corresponding
+     * instances running in different JVMs in a cluster. This is typically based
+     * on e.g. the configured servlet's or portlet's name.
+     * 
+     * @return the unique name of this service instance.
+     */
+    public abstract String getServiceName();
+
+    /**
+     * Gets all the UI providers from a session that are configured for this
+     * service.
+     * 
+     * @param session
+     *            the Vaadin session to get the UI providers from
+     * @return an unmodifiable list of UI providers
+     */
+    public List<UIProvider> getUIProviders(VaadinSession session) {
+        return session.getVaadinServiceData(this).getUIProviders();
+    }
+
+    /**
+     * Finds the {@link UI} that belongs to the provided request. This is
+     * generally only supported for UIDL requests as other request types are not
+     * related to any particular UI or have the UI information encoded in a
+     * non-standard way. The returned UI is also set as the current UI (
+     * {@link UI#setCurrent(UI)}).
+     * 
+     * @param request
+     *            the request for which a UI is desired
+     * @return the UI belonging to the request
+     * 
+     */
+    public UI findUI(VaadinRequest request) {
+        VaadinSession session = VaadinSession.getForSession(request
+                .getWrappedSession());
+
+        // Get UI id from the request
+        String uiIdString = request.getParameter(UIConstants.UI_ID_PARAMETER);
+        int uiId = Integer.parseInt(uiIdString);
+
+        // Get lock before accessing data in session
+        session.getLock().lock();
+        try {
+            UI ui = session.getUIById(uiId);
+
+            UI.setCurrent(ui);
+            return ui;
+        } finally {
+            session.getLock().unlock();
+        }
+    }
+
+    /**
+     * Adds a UI provider to a Vaadin session and associates it with this Vaadin
+     * service.
+     * 
+     * @param vaadinSession
+     *            the Vaadin session to store the UI provider in
+     * @param uiProvider
+     *            the UI provider that should be added
+     */
+    public void addUIProvider(VaadinSession vaadinSession, UIProvider uiProvider) {
+        vaadinSession.getVaadinServiceData(this).addUIProvider(uiProvider);
+    }
+
+    /**
+     * Removes a UI provider association for this service from a Vaadin session.
+     * 
+     * @param vaadinSession
+     *            the Vaadin session where the UI provider is stored
+     * @param uiProvider
+     *            the UI provider that should be removed
+     */
+    public void removeUIProvider(VaadinSession vaadinSession,
+            UIProvider uiProvider) {
+        vaadinSession.getVaadinServiceData(this).removeUIProvider(uiProvider);
+    }
+
+    /**
+     * Check if the given UI should be associated with the
+     * <code>window.name</code> so that it can be re-used if the browser window
+     * is reloaded. This is typically determined by the UI provider which
+     * typically checks the @{@link PreserveOnRefresh} annotation but UI
+     * providers and ultimately VaadinService implementations may choose to
+     * override the defaults.
+     * 
+     * @param request
+     *            the Vaadin request used to initialize the UI
+     * @param ui
+     *            the UI for which the preserve setting should be returned
+     * @param provider
+     *            the UI provider responsible for the UI
+     * @return <code>true</code> if the UI should be preserved on refresh;
+     *         <code>false</code> if a new UI instance should be initialized on
+     *         refreshed.
+     */
+    public boolean preserveUIOnRefresh(VaadinRequest request, UI ui,
+            UIProvider provider) {
+        return provider.isPreservedOnRefresh(request, ui.getClass());
+    }
 }

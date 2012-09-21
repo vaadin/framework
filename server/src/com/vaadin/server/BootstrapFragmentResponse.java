@@ -52,11 +52,14 @@ public class BootstrapFragmentResponse extends BootstrapResponse {
      * @param fragmentNodes
      *            a mutable list containing the DOM nodes that will make up the
      *            application HTML
+     * @param uiProvider
+     *            the UI provider for the bootstrap
      */
     public BootstrapFragmentResponse(BootstrapHandler handler,
             VaadinRequest request, VaadinSession session,
-            Class<? extends UI> uiClass, List<Node> fragmentNodes) {
-        super(handler, request, session, uiClass);
+            Class<? extends UI> uiClass, List<Node> fragmentNodes,
+            UIProvider uiProvider) {
+        super(handler, request, session, uiClass, uiProvider);
         this.fragmentNodes = fragmentNodes;
     }
 

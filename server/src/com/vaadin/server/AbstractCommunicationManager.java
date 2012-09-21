@@ -68,6 +68,7 @@ import com.vaadin.server.StreamVariable.StreamingEndEvent;
 import com.vaadin.server.StreamVariable.StreamingErrorEvent;
 import com.vaadin.server.Terminal.ErrorEvent;
 import com.vaadin.server.Terminal.ErrorListener;
+import com.vaadin.server.VaadinRequest.BrowserDetails;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.JavaScriptConnectorState;
@@ -2432,10 +2433,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
             response.setContentType("application/json; charset=UTF-8");
 
-            UI uI = session.getUIForRequest(combinedRequest);
-            if (uI == null) {
-                uI = session.createUI(combinedRequest);
-            }
+            UI uI = getBrowserDetailsUI(combinedRequest);
 
             JSONObject params = new JSONObject();
             params.put(UIConstants.UI_ID_PARAMETER, uI.getUIId());
@@ -2459,6 +2457,98 @@ public abstract class AbstractCommunicationManager implements Serializable {
         } finally {
             session.getLock().unlock();
         }
+    }
+
+    private UI getBrowserDetailsUI(VaadinRequest request) {
+        VaadinService vaadinService = request.getVaadinService();
+        VaadinSession session = VaadinSession.getForSession(request
+                .getWrappedSession());
+
+        List<UIProvider> uiProviders = vaadinService.getUIProviders(session);
+
+        UIProvider provider = null;
+        Class<? extends UI> uiClass = null;
+        for (UIProvider p : uiProviders) {
+            // Check if some UI provider has an existing UI available
+            UI existingUi = p.getExistingUI(request);
+            if (existingUi != null) {
+                UI.setCurrent(existingUi);
+                return existingUi;
+            }
+
+            uiClass = p.getUIClass(request);
+            if (uiClass != null) {
+                provider = p;
+                break;
+            }
+        }
+
+        if (provider == null || uiClass == null) {
+            return null;
+        }
+
+        // Check for an existing UI based on window.name
+        BrowserDetails browserDetails = request.getBrowserDetails();
+        boolean hasBrowserDetails = browserDetails != null
+                && browserDetails.getUriFragment() != null;
+
+        Map<String, Integer> retainOnRefreshUIs = session
+                .getPreserveOnRefreshUIs();
+        if (hasBrowserDetails && !retainOnRefreshUIs.isEmpty()) {
+            // Check for a known UI
+
+            @SuppressWarnings("null")
+            String windowName = browserDetails.getWindowName();
+            Integer retainedUIId = retainOnRefreshUIs.get(windowName);
+
+            if (retainedUIId != null) {
+                UI retainedUI = session.getUIById(retainedUIId.intValue());
+                if (uiClass.isInstance(retainedUI)) {
+                    return retainedUI;
+                } else {
+                    getLogger()
+                            .info("Not using retained UI in " + windowName
+                                    + " because retained UI was of type "
+                                    + retainedUIId.getClass() + " but "
+                                    + uiClass + " is expected for the request.");
+                }
+            }
+        }
+
+        // No existing UI found - go on by creating and initializing one
+
+        // Explicit Class.cast to detect if the UIProvider does something
+        // unexpected
+        UI ui = uiClass.cast(provider.createInstance(request, uiClass));
+
+        // Initialize some fields for a newly created UI
+        if (ui.getSession() != session) {
+            // Session already set for LegacyWindow
+            ui.setSession(session);
+        }
+        Integer uiId = Integer.valueOf(session.getNextUIid());
+
+        // Set thread local here so it is available in init
+        UI.setCurrent(ui);
+
+        ui.doInit(request, uiId.intValue());
+
+        session.addUI(ui);
+
+        // Remember if it should be remembered
+        if (vaadinService.preserveUIOnRefresh(request, ui, provider)) {
+            // Remember this UI
+            String windowName = request.getBrowserDetails().getWindowName();
+            if (windowName == null) {
+                getLogger().warning(
+                        "There is no window.name available for UI " + uiClass
+                                + " that should be preserved.");
+            } else {
+                session.getPreserveOnRefreshUIs().put(windowName, uiId);
+            }
+        }
+
+        return ui;
     }
 
     /**

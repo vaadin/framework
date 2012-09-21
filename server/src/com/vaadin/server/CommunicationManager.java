@@ -17,6 +17,7 @@
 package com.vaadin.server;
 
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.servlet.ServletContext;
@@ -79,8 +80,14 @@ public class CommunicationManager extends AbstractCommunicationManager {
                 // don't use server and port in uri. It may cause problems with
                 // some
                 // virtual server configurations which lose the server name
-                VaadinSession session = context.getVaadinSession();
-                URL url = session.getURL();
+                URL url;
+
+                try {
+                    url = context.getRequest().getVaadinService()
+                            .getApplicationUrl(context.getRequest());
+                } catch (MalformedURLException e) {
+                    throw new RuntimeException(e);
+                }
                 String appUrl = url.getPath();
                 if (appUrl.endsWith("/")) {
                     appUrl = appUrl.substring(0, appUrl.length() - 1);

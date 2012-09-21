@@ -246,6 +246,20 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                 throws ServiceException {
             return new VaadinPortletSession();
         }
+
+        @Override
+        public String getServiceName() {
+            return getPortlet().getPortletName();
+        }
+
+        /**
+         * Always preserve UIs in portlets to make portlet actions work.
+         */
+        @Override
+        public boolean preserveUIOnRefresh(VaadinRequest request, UI ui,
+                UIProvider provider) {
+            return true;
+        }
     }
 
     public static class VaadinHttpAndPortletRequest extends
@@ -574,9 +588,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                     if (vaadinSession == null) {
                         return;
                     }
-                    VaadinSession.setCurrent(vaadinSession);
-                    request.setAttribute(VaadinSession.class.getName(),
-                            vaadinSession);
 
                     PortletCommunicationManager communicationManager = (PortletCommunicationManager) vaadinSession
                             .getCommunicationManager();
@@ -601,32 +612,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
                     // Finds the right UI
                     UI uI = null;
-                    vaadinSession.getLock().lock();
-                    try {
-                        switch (requestType) {
-                        case RENDER:
-                        case ACTION:
-                            // Both action requests and render requests are ok
-                            // without a UI as they render the initial HTML
-                            // and then do a second request
-                            uI = vaadinSession.getUIForRequest(vaadinRequest);
-                            break;
-                        case BROWSER_DETAILS:
-                            // Should not try to find a UI here as the
-                            // combined request details might change the UI
-                            break;
-                        case FILE_UPLOAD:
-                            // no window
-                            break;
-                        case APP:
-                            // Not related to any UI
-                            break;
-                        default:
-                            uI = vaadinSession.getUIForRequest(vaadinRequest);
-                        }
-                        // if window not found, not a problem - use null
-                    } finally {
-                        vaadinSession.getLock().unlock();
+                    if (requestType == RequestType.UIDL) {
+                        uI = getVaadinService().findUI(vaadinRequest);
                     }
 
                     // TODO Should this happen before or after the transaction

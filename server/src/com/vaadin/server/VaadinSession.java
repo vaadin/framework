@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
@@ -38,12 +37,12 @@ import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
 import com.vaadin.LegacyApplication;
+import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterFactory;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
 import com.vaadin.event.EventRouter;
-import com.vaadin.server.VaadinRequest.BrowserDetails;
-import com.vaadin.shared.ui.ui.UIConstants;
+import com.vaadin.server.VaadinService.VaadinServiceData;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
@@ -180,8 +179,6 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     private final EventRouter eventRouter = new EventRouter();
 
-    private List<UIProvider> uiProviders = new LinkedList<UIProvider>();
-
     private GlobalResourceHandler globalResourceHandler;
 
     protected WebBrowser browser = new WebBrowser();
@@ -196,7 +193,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     private final Map<String, Object> attributes = new HashMap<String, Object>();
 
-    private VaadinService vaadinService;
+    private Map<String, VaadinServiceData> serviceData = new HashMap<String, VaadinServiceData>();
 
     /**
      * @see javax.servlet.http.HttpSessionBindingListener#valueBound(HttpSessionBindingEvent)
@@ -213,19 +210,10 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     public void valueUnbound(HttpSessionBindingEvent event) {
         // If we are going to be unbound from the session, the session must be
         // closing
-        if (vaadinService != null) {
-            vaadinService.fireSessionDestroy(this);
+        // Notify all services that have used this session.
+        for (VaadinServiceData vaadinServiceData : serviceData.values()) {
+            vaadinServiceData.getVaadinService().fireSessionDestroy(this);
         }
-    }
-
-    /**
-     * Sets the Vaadin service to which this session belongs.
-     * 
-     * @param vaadinService
-     *            the Vaadin service.
-     */
-    public void setVaadinService(VaadinService vaadinService) {
-        this.vaadinService = vaadinService;
     }
 
     /**
@@ -609,137 +597,6 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     /**
-     * Gets the UI class for a request for which no UI is already known. This
-     * method is called when the framework processes a request that does not
-     * originate from an existing UI instance. This typically happens when a
-     * host page is requested.
-     * 
-     * @param request
-     *            the Vaadin request for which a UI is needed
-     * @return a UI instance to use for the request
-     * 
-     * @see UI
-     * @see VaadinRequest#getBrowserDetails()
-     * 
-     * @since 7.0
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    public Class<? extends UI> getUIClass(VaadinRequest request) {
-        UIProvider uiProvider = getUiProvider(request, null);
-        return uiProvider.getUIClass(request);
-    }
-
-    /**
-     * Creates an UI instance for a request for which no UI is already known.
-     * This method is called when the framework processes a request that does
-     * not originate from an existing UI instance. This typically happens when a
-     * host page is requested.
-     * 
-     * @param request
-     * @param uiClass
-     * @return
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    protected <T extends UI> T createUIInstance(VaadinRequest request,
-            Class<T> uiClass) {
-        UIProvider uiProvider = getUiProvider(request, uiClass);
-        return uiClass.cast(uiProvider.createInstance(request, uiClass));
-    }
-
-    /**
-     * Gets the {@link UIProvider} that should be used for a request. The
-     * selection can further be restricted by also requiring the UI provider to
-     * support a specific UI class.
-     * 
-     * @see UIProvider
-     * @see #addUIProvider(UIProvider)
-     * 
-     * @param request
-     *            the request for which to get an UI provider
-     * @param uiClass
-     *            the UI class for which a provider is required, or
-     *            <code>null</code> to use the first UI provider supporting the
-     *            request.
-     * @return an UI provider supporting the request (and the UI class if
-     *         provided).
-     * 
-     * @since 7.0.0
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    public UIProvider getUiProvider(VaadinRequest request, Class<?> uiClass) {
-        UIProvider provider = (UIProvider) request
-                .getAttribute(UIProvider.class.getName());
-        if (provider != null) {
-            // Cached provider found, verify that it's a sensible selection
-            Class<? extends UI> providerClass = provider.getUIClass(request);
-            if (uiClass == null && providerClass != null) {
-                // Use it if it gives any answer if no specific class is
-                // required
-                return provider;
-            } else if (uiClass == providerClass) {
-                // Use it if it gives the expected UI class
-                return provider;
-            } else {
-                // Don't keep it cached if it doesn't match the expectations
-                request.setAttribute(UIProvider.class.getName(), null);
-            }
-        }
-
-        // Iterate all current providers if no matching cached provider found
-        provider = doGetUiProvider(request, uiClass);
-
-        // Cache the found provider
-        request.setAttribute(UIProvider.class.getName(), provider);
-
-        return provider;
-    }
-
-    /**
-     * @param request
-     * @param uiClass
-     * @return
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    private UIProvider doGetUiProvider(VaadinRequest request, Class<?> uiClass) {
-        int providersSize = uiProviders.size();
-        if (providersSize == 0) {
-            throw new IllegalStateException("There are no UI providers");
-        }
-
-        for (int i = providersSize - 1; i >= 0; i--) {
-            UIProvider provider = uiProviders.get(i);
-
-            Class<? extends UI> providerClass = provider.getUIClass(request);
-            // If we found something
-            if (providerClass != null) {
-                if (uiClass == null) {
-                    // Not looking for anything particular -> anything is ok
-                    return provider;
-                } else if (providerClass == uiClass) {
-                    // Looking for a specific provider -> only use if matching
-                    return provider;
-                } else {
-                    getLogger().warning(
-                            "Mismatching UI classes. Expected " + uiClass
-                                    + " but got " + providerClass + " from "
-                                    + provider);
-                    // Continue looking
-                }
-            }
-        }
-
-        throw new RuntimeException("No UI provider found for request");
-    }
-
-    /**
      * Adds a request handler to this session. Request handlers can be added to
      * provide responses to requests that are not handled by the default
      * functionality of the framework.
@@ -826,175 +683,6 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      */
     public static void setCurrent(VaadinSession session) {
         CurrentInstance.setInheritable(VaadinSession.class, session);
-    }
-
-    public void addUIProvider(UIProvider uIProvider) {
-        uiProviders.add(uIProvider);
-    }
-
-    public void removeUIProvider(UIProvider uIProvider) {
-        uiProviders.remove(uIProvider);
-    }
-
-    /**
-     * Finds the {@link UI} to which a particular request belongs. If the
-     * request originates from an existing UI, that UI is returned. In other
-     * cases, the method attempts to create and initialize a new UI and might
-     * throw a {@link UIRequiresMoreInformationException} if all required
-     * information is not available.
-     * <p>
-     * Please note that this method can also return a newly created
-     * <code>UI</code> which has not yet been initialized. You can use
-     * {@link #isUIInitPending(int)} with the UI's id ( {@link UI#getUIId()} to
-     * check whether the initialization is still pending.
-     * </p>
-     * 
-     * @param request
-     *            the request for which a UI is desired
-     * @return a UI belonging to the request
-     * 
-     * @see #createUI(VaadinRequest)
-     * 
-     * @since 7.0
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    public UI getUIForRequest(VaadinRequest request) {
-        UI uI = UI.getCurrent();
-        if (uI != null) {
-            return uI;
-        }
-        Integer uiId = getUIId(request);
-        getLock().lock();
-        try {
-            uI = uIs.get(uiId);
-
-            if (uI == null) {
-                uI = findExistingUi(request);
-            }
-
-        } finally {
-            getLock().unlock();
-        }
-
-        UI.setCurrent(uI);
-
-        return uI;
-    }
-
-    /**
-     * @param request
-     * @return
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    private UI findExistingUi(VaadinRequest request) {
-        // Check if some UI provider has an existing UI available
-        for (int i = uiProviders.size() - 1; i >= 0; i--) {
-            UIProvider provider = uiProviders.get(i);
-            UI existingUi = provider.getExistingUI(request);
-            if (existingUi != null) {
-                return existingUi;
-            }
-        }
-
-        BrowserDetails browserDetails = request.getBrowserDetails();
-        boolean hasBrowserDetails = browserDetails != null
-                && browserDetails.getUriFragment() != null;
-
-        if (hasBrowserDetails && !retainOnRefreshUIs.isEmpty()) {
-            // Check for a known UI
-
-            @SuppressWarnings("null")
-            String windowName = browserDetails.getWindowName();
-            Integer retainedUIId = retainOnRefreshUIs.get(windowName);
-
-            if (retainedUIId != null) {
-                Class<? extends UI> expectedUIClass = getUIClass(request);
-                UI retainedUI = uIs.get(retainedUIId);
-                // We've had the same UI instance in a window with this
-                // name, but should we still use it?
-                if (retainedUI.getClass() == expectedUIClass) {
-                    return retainedUI;
-                } else {
-                    getLogger().info(
-                            "Not using retained UI in " + windowName
-                                    + " because retained UI was of type "
-                                    + retainedUIId.getClass() + " but "
-                                    + expectedUIClass
-                                    + " is expected for the request.");
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @param request
-     * @return
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    public UI createUI(VaadinRequest request) {
-        Class<? extends UI> uiClass = getUIClass(request);
-
-        UI ui = createUIInstance(request, uiClass);
-
-        // Initialize some fields for a newly created UI
-        if (ui.getSession() == null) {
-            ui.setSession(this);
-        }
-        // Get the next id
-        Integer uiId = Integer.valueOf(nextUIId++);
-
-        uIs.put(uiId, ui);
-
-        // Set thread local here so it is available in init
-        UI.setCurrent(ui);
-
-        ui.doInit(request, uiId.intValue());
-
-        if (getUiProvider(request, uiClass).isPreservedOnRefresh(request,
-                uiClass)) {
-            // Remember this UI
-            String windowName = request.getBrowserDetails().getWindowName();
-            if (windowName == null) {
-                getLogger().warning(
-                        "There is no window.name available for UI " + uiClass
-                                + " that should be preserved.");
-            } else {
-                retainOnRefreshUIs.put(windowName, uiId);
-            }
-        }
-
-        return ui;
-    }
-
-    /**
-     * Internal helper to finds the UI id for a request.
-     * 
-     * @param request
-     *            the request to get the UI id for
-     * @return a UI id, or <code>null</code> if no UI id is defined
-     * 
-     * @since 7.0
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    private static Integer getUIId(VaadinRequest request) {
-        if (request instanceof CombinedRequest) {
-            // Combined requests has the uiId parameter in the second request
-            CombinedRequest combinedRequest = (CombinedRequest) request;
-            request = combinedRequest.getSecondRequest();
-        }
-        String uiIdString = request.getParameter(UIConstants.UI_ID_PARAMETER);
-        Integer uiId = uiIdString == null ? null : new Integer(uiIdString);
-        return uiId;
     }
 
     /**
@@ -1239,10 +927,6 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         return globalResourceHandler;
     }
 
-    public Collection<UIProvider> getUIProviders() {
-        return Collections.unmodifiableCollection(uiProviders);
-    }
-
     /**
      * Gets the lock that should be used to synchronize usage of data inside
      * this session.
@@ -1358,6 +1042,100 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         } else {
             return type.cast(value);
         }
+    }
+
+    /**
+     * Checks whether there this session has any Vaadin service data for a
+     * particular Vaadin service.
+     * 
+     * @see #addVaadinServiceData(VaadinServiceData)
+     * @see VaadinServiceData
+     * 
+     * @param vaadinService
+     *            the Vaadin service to check for
+     * @return <code>true</code> if there is a Vaadin service data object for
+     *         the passed Vaadin service; otherwise <code>false</code>
+     */
+    public boolean hasVaadinServiceData(VaadinService vaadinService) {
+        return getVaadinServiceData(vaadinService) != null;
+    }
+
+    /**
+     * Gets the data stored for the passed Vaadin service.
+     * 
+     * @see #addVaadinServiceData(VaadinServiceData)
+     * @see VaadinServiceData
+     * 
+     * @param vaadinService
+     *            the Vaadin service to get the data for
+     * @return the Vaadin service data for the provided Vaadin service; or
+     *         <code>null</code> if there is no data for the service
+     */
+    public VaadinServiceData getVaadinServiceData(VaadinService vaadinService) {
+        return serviceData.get(getServiceKey(vaadinService));
+    }
+
+    /**
+     * Adds Vaadin service specific data to this session.
+     * 
+     * @see #getVaadinServiceData(VaadinService)
+     * @see VaadinServiceData
+     * 
+     * @param serviceData
+     *            the Vaadin service data to add
+     */
+    public void addVaadinServiceData(VaadinServiceData serviceData) {
+        VaadinService vaadinService = serviceData.getVaadinService();
+        assert !hasVaadinServiceData(vaadinService);
+
+        this.serviceData.put(getServiceKey(vaadinService), serviceData);
+    }
+
+    private static String getServiceKey(VaadinService vaadinService) {
+        String serviceKey = vaadinService.getClass().getName() + "."
+                + vaadinService.getServiceName();
+        return serviceKey;
+    }
+
+    /**
+     * Creates a new unique id for a UI.
+     * 
+     * @return a unique UI id
+     */
+    public int getNextUIid() {
+        return nextUIId++;
+    }
+
+    /**
+     * Gets the mapping from <code>window.name</code> to UI id for UIs that are
+     * should be retained on refresh.
+     * 
+     * @see VaadinService#preserveUIOnRefresh(VaadinRequest, UI, UIProvider)
+     * @see PreserveOnRefresh
+     * 
+     * @return the mapping between window names and UI ids for this session.
+     */
+    public Map<String, Integer> getPreserveOnRefreshUIs() {
+        return retainOnRefreshUIs;
+    }
+
+    /**
+     * Adds an initialized UI to this session.
+     * 
+     * @param ui
+     *            the initialized UI to add.
+     */
+    public void addUI(UI ui) {
+        if (ui.getUIId() == -1) {
+            throw new IllegalArgumentException(
+                    "Can not add an UI that has not been initialized.");
+        }
+        if (ui.getSession() != this) {
+            throw new IllegalArgumentException(
+                    "The UI belongs to a different session");
+        }
+
+        uIs.put(Integer.valueOf(ui.getUIId()), ui);
     }
 
 }

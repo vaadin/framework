@@ -92,7 +92,7 @@ public class LegacyVaadinServlet extends VaadinServlet {
 
     private void onVaadinSessionStarted(VaadinRequest request,
             VaadinSession session) throws ServletException {
-        session.addUIProvider(provider);
+        getVaadinService().addUIProvider(session, provider);
     }
 
 }

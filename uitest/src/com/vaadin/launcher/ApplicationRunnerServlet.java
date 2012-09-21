@@ -35,11 +35,11 @@ import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.LegacyVaadinServlet;
 import com.vaadin.server.ServiceException;
 import com.vaadin.server.UIProvider;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.server.VaadinSessionInitializationListener;
 import com.vaadin.server.VaadinSessionInitializeEvent;
-import com.vaadin.server.VaadinServletRequest;
-import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.UI;
 
@@ -143,17 +143,19 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
         try {
             final Class<?> classToRun = getClassToRun();
             if (UI.class.isAssignableFrom(classToRun)) {
-                session.addUIProvider(new AbstractUIProvider() {
-
-                    @Override
-                    public Class<? extends UI> getUIClass(VaadinRequest request) {
-                        return (Class<? extends UI>) classToRun;
-                    }
-                });
+                getVaadinService().addUIProvider(session,
+                        new AbstractUIProvider() {
+                            @Override
+                            public Class<? extends UI> getUIClass(
+                                    VaadinRequest request) {
+                                return (Class<? extends UI>) classToRun;
+                            }
+                        });
             } else if (LegacyApplication.class.isAssignableFrom(classToRun)) {
                 // Avoid using own UIProvider for legacy Application
             } else if (UIProvider.class.isAssignableFrom(classToRun)) {
-                session.addUIProvider((UIProvider) classToRun.newInstance());
+                getVaadinService().addUIProvider(session,
+                        (UIProvider) classToRun.newInstance());
             } else {
                 throw new ServiceException(classToRun.getCanonicalName()
                         + " is neither an Application nor a UI");

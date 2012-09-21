@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,10 +116,30 @@ public abstract class BootstrapHandler implements RequestHandler {
             VaadinResponse response) throws IOException {
 
         try {
-            Class<? extends UI> uiClass = session.getUIClass(request);
+            List<UIProvider> uiProviders = request.getVaadinService()
+                    .getUIProviders(session);
 
-            BootstrapContext context = createContext(request, response,
-                    session, uiClass);
+            // Find UI provider and UI class
+            Class<? extends UI> uiClass = null;
+            UIProvider provider = null;
+            for (UIProvider p : uiProviders) {
+                uiClass = p.getUIClass(request);
+                // If we found something
+                if (uiClass != null) {
+                    provider = p;
+                    break;
+                }
+            }
+
+            if (provider == null) {
+                // Can't generate bootstrap if no UI provider matches
+                return false;
+            }
+
+            BootstrapContext context = new BootstrapContext(response,
+                    new BootstrapFragmentResponse(this, request, session,
+                            uiClass, new ArrayList<Node>(), provider));
+
             setupMainDiv(context);
 
             BootstrapFragmentResponse fragmentResponse = context
@@ -148,7 +169,8 @@ public abstract class BootstrapHandler implements RequestHandler {
             Document document = Document.createShell("");
             BootstrapPageResponse pageResponse = new BootstrapPageResponse(
                     this, request, context.getVaadinSession(),
-                    context.getUIClass(), document, headers);
+                    context.getUIClass(), document, headers,
+                    fragmentResponse.getUIProvider());
             List<Node> fragmentNodes = fragmentResponse.getFragmentNodes();
             Element body = document.body();
             for (Node node : fragmentNodes) {
@@ -223,9 +245,8 @@ public abstract class BootstrapHandler implements RequestHandler {
         head.appendElement("meta").attr("http-equiv", "X-UA-Compatible")
                 .attr("content", "chrome=1");
 
-        String title = context.getVaadinSession()
-                .getUiProvider(context.getRequest(), context.getUIClass())
-                .getPageTitle(context.getRequest(), context.getUIClass());
+        String title = response.getUIProvider().getPageTitle(
+                context.getRequest(), context.getUIClass());
         if (title != null) {
             head.appendElement("title").appendText(title);
         }
@@ -250,15 +271,6 @@ public abstract class BootstrapHandler implements RequestHandler {
         body.addClass(ApplicationConstants.GENERATED_BODY_CLASSNAME);
     }
 
-    private BootstrapContext createContext(VaadinRequest request,
-            VaadinResponse response, VaadinSession application,
-            Class<? extends UI> uiClass) {
-        BootstrapContext context = new BootstrapContext(response,
-                new BootstrapFragmentResponse(this, request, application,
-                        uiClass, new ArrayList<Node>()));
-        return context;
-    }
-
     protected String getMainDivStyle(BootstrapContext context) {
         return null;
     }
@@ -276,8 +288,7 @@ public abstract class BootstrapHandler implements RequestHandler {
     public String getWidgetsetForUI(BootstrapContext context) {
         VaadinRequest request = context.getRequest();
 
-        String widgetset = context.getVaadinSession()
-                .getUiProvider(context.getRequest(), context.getUIClass())
+        String widgetset = context.getBootstrapResponse().getUIProvider()
                 .getWidgetset(context.getRequest(), context.getUIClass());
         if (widgetset == null) {
             widgetset = request.getVaadinService().getConfiguredWidgetset(
@@ -399,9 +410,9 @@ public abstract class BootstrapHandler implements RequestHandler {
             throws JSONException, PaintException {
         JSONObject appConfig = new JSONObject();
 
-        if (context.getThemeName() != null) {
-            appConfig.put("themeUri",
-                    getThemeUri(context, context.getThemeName()));
+        String themeName = context.getThemeName();
+        if (themeName != null) {
+            appConfig.put("themeUri", getThemeUri(context, themeName));
         }
 
         JSONObject versionInfo = new JSONObject();
@@ -412,8 +423,13 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         appConfig.put("initialPath", context.getRequest().getRequestPathInfo());
 
-        Map<String, String[]> parameterMap = context.getRequest()
-                .getParameterMap();
+        Map<String, String[]> parameterMap = new HashMap<String, String[]>(
+                context.getRequest().getParameterMap());
+
+        // Include theme as a fake initial param so that UI can know its theme
+        // for serving CustomLayout templates
+        parameterMap.put("theme", new String[] { themeName });
+
         appConfig.put("initialParams", parameterMap);
 
         return appConfig;
@@ -500,8 +516,7 @@ public abstract class BootstrapHandler implements RequestHandler {
      * @return
      */
     public String getThemeName(BootstrapContext context) {
-        return context.getVaadinSession()
-                .getUiProvider(context.getRequest(), context.getUIClass())
+        return context.getBootstrapResponse().getUIProvider()
                 .getTheme(context.getRequest(), context.getUIClass());
     }
 

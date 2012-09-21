@@ -220,6 +220,11 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 throws ServiceException {
             return new VaadinServletSession();
         }
+
+        @Override
+        public String getServiceName() {
+            return getServlet().getServletName();
+        }
     }
 
     private static class AbstractApplicationServletWrapper implements Callback {
@@ -431,8 +436,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
             if (vaadinSession == null) {
                 return;
             }
-            request.setAttribute(VaadinSession.class.getName(), vaadinSession);
-            VaadinSession.setCurrent(vaadinSession);
 
             CommunicationManager communicationManager = (CommunicationManager) vaadinSession
                     .getCommunicationManager();
@@ -458,7 +461,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                         response);
                 return;
             } else if (requestType == RequestType.UIDL) {
-                UI uI = vaadinSession.getUIForRequest(request);
+                UI uI = getVaadinService().findUI(request);
                 if (uI == null) {
                     throw new ServletException(ERROR_NO_UI_FOUND);
                 }

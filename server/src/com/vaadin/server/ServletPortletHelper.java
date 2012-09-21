@@ -123,13 +123,13 @@ class ServletPortletHelper implements Serializable {
                 .getInitParameters().getProperty(VaadinSession.UI_PARAMETER);
         if (uiProperty != null) {
             verifyUIClass(uiProperty, vaadinService.getClassLoader());
-            session.addUIProvider(new DefaultUIProvider());
+            vaadinService.addUIProvider(session, new DefaultUIProvider());
         }
     }
 
-    public static void checkUiProviders(VaadinSession session)
-            throws ServiceException {
-        if (session.getUIProviders().isEmpty()) {
+    public static void checkUiProviders(VaadinSession session,
+            VaadinService vaadinService) throws ServiceException {
+        if (vaadinService.getUIProviders(session).isEmpty()) {
             throw new ServiceException(
                     "No UIProvider has been added and there is no \""
                             + VaadinSession.UI_PARAMETER + "\" init parameter.");

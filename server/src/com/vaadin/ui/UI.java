@@ -41,8 +41,10 @@ import com.vaadin.server.Page.BrowserWindowResizeListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
+import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinRequest.BrowserDetails;
+import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.EventId;
@@ -66,10 +68,10 @@ import com.vaadin.util.ReflectTools;
  * </p>
  * <p>
  * When a new UI instance is needed, typically because the user opens a URL in a
- * browser window which points to {@link VaadinServlet},
- * {@link VaadinSession#getUIForRequest(VaadinRequest)} is invoked to get a UI.
- * That method does by default create a UI according to the
- * {@value VaadinSession#UI_PARAMETER} parameter from web.xml.
+ * browser window which points to e.g. {@link VaadinServlet}, all
+ * {@link UIProvider}s registered to the current {@link VaadinSession} are
+ * queried for the UI class that should be used. The selection is by defaylt
+ * based on the {@value VaadinSession#UI_PARAMETER} parameter from web.xml.
  * </p>
  * <p>
  * After a UI has been created by the application, it is initialized using
@@ -81,7 +83,7 @@ import com.vaadin.util.ReflectTools;
  * </p>
  * 
  * @see #init(VaadinRequest)
- * @see VaadinSession#createUI(VaadinRequest)
+ * @see UIProvider
  * 
  * @since 7.0
  */
@@ -466,7 +468,7 @@ public abstract class UI extends AbstractComponentContainer implements
      * which a request originates. A negative value indicates that the UI id has
      * not yet been assigned by the Application.
      * 
-     * @see VaadinSession#nextUIId
+     * @see VaadinSession#getNextUIid()
      */
     private int uiId = -1;
 
@@ -748,8 +750,8 @@ public abstract class UI extends AbstractComponentContainer implements
      * Gets the id of the UI, used to identify this UI within its application
      * when processing requests. The UI id should be present in every request to
      * the server that originates from this UI.
-     * {@link VaadinSession#getUIForRequest(VaadinRequest)} uses this id to find
-     * the route to which the request belongs.
+     * {@link VaadinService#findUI(VaadinRequest)} uses this id to find the
+     * route to which the request belongs.
      * 
      * @return
      */
@@ -759,10 +761,7 @@ public abstract class UI extends AbstractComponentContainer implements
 
     /**
      * Adds a window as a subwindow inside this UI. To open a new browser window
-     * or tab, you should instead use {@link open(Resource)} with an url
-     * pointing to this application and ensure
-     * {@link VaadinSession#createUI(VaadinRequest)} returns an appropriate UI
-     * for the request.
+     * or tab, you should instead use a {@link UIProvider}.
      * 
      * @param window
      * @throws IllegalArgumentException
@@ -984,8 +983,9 @@ public abstract class UI extends AbstractComponentContainer implements
             throw new IllegalStateException("UI id has already been defined");
         }
         this.uiId = uiId;
-        theme = getSession().getUiProvider(request, getClass()).getTheme(
-                request, getClass());
+
+        // Actual theme - used for finding CustomLayout templates
+        theme = request.getParameter("theme");
 
         getPage().init(request);
 

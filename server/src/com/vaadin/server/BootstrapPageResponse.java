@@ -55,12 +55,14 @@ public class BootstrapPageResponse extends BootstrapResponse {
      *            the DOM document making up the HTML page
      * @param headers
      *            a map into which header data can be added
+     * @param uiProvider
+     *            the UI provider for the bootstrap
      */
     public BootstrapPageResponse(BootstrapHandler handler,
             VaadinRequest request, VaadinSession session,
             Class<? extends UI> uiClass, Document document,
-            Map<String, Object> headers) {
-        super(handler, request, session, uiClass);
+            Map<String, Object> headers, UIProvider uiProvider) {
+        super(handler, request, session, uiClass, uiProvider);
         this.headers = headers;
         this.document = document;
     }
