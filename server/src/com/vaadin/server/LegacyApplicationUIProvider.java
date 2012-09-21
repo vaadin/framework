@@ -22,6 +22,15 @@ import java.util.regex.Pattern;
 import com.vaadin.LegacyApplication;
 import com.vaadin.ui.UI;
 
+/**
+ * 
+ * @author Vaadin Ltd
+ * @since 7.0.0
+ * 
+ * @deprecated Used only to support LegacyApplication - will be removed when
+ *             LegacyApplication support is removed.
+ */
+@Deprecated
 public abstract class LegacyApplicationUIProvider extends UIProvider {
     /**
      * Ignore initial / and then get everything up to the next /
@@ -87,13 +96,12 @@ public abstract class LegacyApplicationUIProvider extends UIProvider {
     }
 
     /**
-     * This implementation simulates the way of finding a window for a request
-     * by extracting a window name from the requested path and passes that name
-     * to {@link #getWindow(String)}.
-     * <p>
-     * {@inheritDoc}
+     * Hack used to return existing LegacyWindow instances without regard for
+     * out-of-sync problems.
+     * 
+     * @param request
+     * @return
      */
-    @Override
     public UI getExistingUI(VaadinRequest request) {
         UI uiInstance = getUIInstance(request);
         if (uiInstance == null || uiInstance.getUIId() == -1) {

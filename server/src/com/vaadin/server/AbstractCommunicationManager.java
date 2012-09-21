@@ -2469,11 +2469,15 @@ public abstract class AbstractCommunicationManager implements Serializable {
         UIProvider provider = null;
         Class<? extends UI> uiClass = null;
         for (UIProvider p : uiProviders) {
-            // Check if some UI provider has an existing UI available
-            UI existingUi = p.getExistingUI(request);
-            if (existingUi != null) {
-                UI.setCurrent(existingUi);
-                return existingUi;
+            // Check for existing LegacyWindow
+            if (p instanceof LegacyApplicationUIProvider) {
+                LegacyApplicationUIProvider legacyProvider = (LegacyApplicationUIProvider) p;
+
+                UI existingUi = legacyProvider.getExistingUI(request);
+                if (existingUi != null) {
+                    UI.setCurrent(existingUi);
+                    return existingUi;
+                }
             }
 
             uiClass = p.getUIClass(request);
