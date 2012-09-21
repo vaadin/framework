@@ -16,7 +16,7 @@
 
 package com.vaadin.tests.minitutorials.v7a1;
 
-import com.vaadin.server.AbstractUIProvider;
+import com.vaadin.server.UIProvider;
 import com.vaadin.server.WebBrowser;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Label;
@@ -30,7 +30,7 @@ import com.vaadin.ui.UI;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public class DifferentFeaturesForDifferentClients extends AbstractUIProvider {
+public class DifferentFeaturesForDifferentClients extends UIProvider {
 
     @Override
     public Class<? extends UI> getUIClass(VaadinRequest request) {

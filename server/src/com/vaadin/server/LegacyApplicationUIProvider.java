@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 import com.vaadin.LegacyApplication;
 import com.vaadin.ui.UI;
 
-public abstract class LegacyApplicationUIProvider extends AbstractUIProvider {
+public abstract class LegacyApplicationUIProvider extends UIProvider {
     /**
      * Ignore initial / and then get everything up to the next /
      */

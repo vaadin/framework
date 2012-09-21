@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.LegacyApplication;
-import com.vaadin.server.AbstractUIProvider;
+import com.vaadin.server.UIProvider;
 import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.LegacyVaadinServlet;
 import com.vaadin.server.ServiceException;
@@ -144,7 +144,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
             final Class<?> classToRun = getClassToRun();
             if (UI.class.isAssignableFrom(classToRun)) {
                 getVaadinService().addUIProvider(session,
-                        new AbstractUIProvider() {
+                        new UIProvider() {
                             @Override
                             public Class<? extends UI> getUIClass(
                                     VaadinRequest request) {

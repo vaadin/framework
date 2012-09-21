@@ -18,7 +18,7 @@ package com.vaadin.server;
 
 import com.vaadin.ui.UI;
 
-public class DefaultUIProvider extends AbstractUIProvider {
+public class DefaultUIProvider extends UIProvider {
 
     @Override
     public Class<? extends UI> getUIClass(VaadinRequest request) {
