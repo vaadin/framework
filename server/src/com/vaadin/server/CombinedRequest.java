@@ -186,4 +186,9 @@ public class CombinedRequest implements VaadinRequest {
     public VaadinService getVaadinService() {
         return secondRequest.getVaadinService();
     }
+
+    @Override
+    public String getContextPath() {
+        return secondRequest.getContextPath();
+    }
 }

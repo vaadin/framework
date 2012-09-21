@@ -161,6 +161,18 @@ public interface VaadinRequest extends Serializable {
     public String getRequestPathInfo();
 
     /**
+     * Returns the portion of the request URI that indicates the context of the
+     * request. The context path always comes first in a request URI.
+     * 
+     * @see HttpServletRequest#getContextPath()
+     * @see PortletRequest#getContextPath()
+     * 
+     * @return a String specifying the portion of the request URI that indicates
+     *         the context of the request
+     */
+    public String getContextPath();
+
+    /**
      * Gets the session associated with this request, creating a new if there is
      * no session.
      * 

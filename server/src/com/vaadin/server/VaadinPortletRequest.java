@@ -225,4 +225,9 @@ public class VaadinPortletRequest implements VaadinRequest {
         }
         return (VaadinPortletRequest) request;
     }
+
+    @Override
+    public String getContextPath() {
+        return request.getContextPath();
+    }
 }
