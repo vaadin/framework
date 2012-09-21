@@ -19,9 +19,12 @@ package com.vaadin.sass.visitor;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.vaadin.sass.parser.ParseException;
 import com.vaadin.sass.tree.IVariableNode;
+import com.vaadin.sass.tree.ListModifyNode;
 import com.vaadin.sass.tree.Node;
 import com.vaadin.sass.tree.VariableNode;
+import com.vaadin.sass.util.DeepCopy;
 
 public class VariableVisitor implements Visitor {
 
@@ -61,6 +64,27 @@ public class VariableVisitor implements Visitor {
                     continue;
                 }
                 this.variables.put(variableNode.getName(), variableNode);
+            } else if (node instanceof ListModifyNode) {
+
+                ((IVariableNode) node)
+                        .replaceVariables(new ArrayList<VariableNode>(
+                                this.variables.values()));
+
+                ListModifyNode modify = (ListModifyNode) node;
+
+                if (modify.isModifyingVariable()) {
+                    String variable = modify.getVariable();
+
+                    if (!this.variables.containsKey(variable)) {
+                        throw new ParseException("No variable with name $"
+                                + variable + " found.");
+                    }
+
+                    VariableNode modifiedList = modify
+                            .getModifiedList(this.variables.get(variable));
+                    this.variables.put(variable, modifiedList);
+                }
+
             } else if (node instanceof IVariableNode) {
                 ((IVariableNode) node)
                         .replaceVariables(new ArrayList<VariableNode>(

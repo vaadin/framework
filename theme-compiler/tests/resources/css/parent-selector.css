@@ -22,3 +22,7 @@ body.firefox a {
 #main a:hover {
 	color: red;
 }
+
+.mixin-parent:hover {
+	color: blue;
+}

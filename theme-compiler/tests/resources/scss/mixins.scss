@@ -54,4 +54,12 @@ $mixinVar : 1px;
 	}
 }
 
+.banner {
+	@include fontType(1px solid black);
+}
+
+@mixin fontType($border){
+	border : $border;
+}
+
 @include layout;

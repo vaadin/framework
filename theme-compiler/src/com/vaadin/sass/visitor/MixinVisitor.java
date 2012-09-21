@@ -20,8 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.w3c.css.sac.LexicalUnit;
-
+import com.vaadin.sass.parser.LexicalUnitImpl;
 import com.vaadin.sass.tree.IVariableNode;
 import com.vaadin.sass.tree.MixinDefNode;
 import com.vaadin.sass.tree.MixinNode;
@@ -76,19 +75,29 @@ public class MixinVisitor implements Visitor {
                 pre = child;
             }
         } else {
+
+            MixinDefNode defClone = (MixinDefNode) DeepCopy.copy(mixinDef);
+
             int i = 0;
-            for (final LexicalUnit unit : mixinNode.getArglist()) {
-                mixinDef.getArglist().get(i)
-                        .setExpr((LexicalUnit) DeepCopy.copy(unit));
+            for (final LexicalUnitImpl unit : mixinNode.getArglist()) {
+                defClone.getArglist().get(i)
+                        .setExpr((LexicalUnitImpl) DeepCopy.copy(unit));
                 i++;
             }
 
-            for (int j = mixinDef.getChildren().size() - 1; j >= 0; j--) {
-                Node child = (Node) DeepCopy
-                        .copy(mixinDef.getChildren().get(j));
-                replaceChildVariables(mixinDef, child);
-                current.appendChild(child, mixinNode);
+            Node previous = mixinNode;
+            for (final Node child : defClone.getChildren()) {
+
+                Node clone = (Node) DeepCopy.copy(child);
+
+                replaceChildVariables(defClone, clone);
+
+                current.appendChild(clone, previous);
+
+                previous = clone;
+
             }
+
         }
         current.removeChild(mixinNode);
     }

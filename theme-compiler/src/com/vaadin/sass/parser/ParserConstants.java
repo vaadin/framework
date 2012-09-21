@@ -123,95 +123,99 @@ public interface ParserConstants {
   /** RegularExpression Id. */
   int SUPPORTS_SYM = 62;
   /** RegularExpression Id. */
-  int IF = 63;
+  int MICROSOFT_RULE = 63;
   /** RegularExpression Id. */
-  int GUARDED_SYM = 64;
+  int IF = 64;
   /** RegularExpression Id. */
-  int STRING = 65;
+  int GUARDED_SYM = 65;
   /** RegularExpression Id. */
-  int IDENT = 66;
+  int STRING = 66;
   /** RegularExpression Id. */
-  int NUMBER = 67;
+  int IDENT = 67;
   /** RegularExpression Id. */
-  int _URL = 68;
+  int NUMBER = 68;
   /** RegularExpression Id. */
-  int URL = 69;
+  int _URL = 69;
   /** RegularExpression Id. */
-  int VARIABLE = 70;
+  int URL = 70;
   /** RegularExpression Id. */
-  int PERCENTAGE = 71;
+  int VARIABLE = 71;
   /** RegularExpression Id. */
-  int PT = 72;
+  int PERCENTAGE = 72;
   /** RegularExpression Id. */
-  int MM = 73;
+  int PT = 73;
   /** RegularExpression Id. */
-  int CM = 74;
+  int MM = 74;
   /** RegularExpression Id. */
-  int PC = 75;
+  int CM = 75;
   /** RegularExpression Id. */
-  int IN = 76;
+  int PC = 76;
   /** RegularExpression Id. */
-  int PX = 77;
+  int IN = 77;
   /** RegularExpression Id. */
-  int EMS = 78;
+  int PX = 78;
   /** RegularExpression Id. */
-  int EXS = 79;
+  int EMS = 79;
   /** RegularExpression Id. */
-  int DEG = 80;
+  int EXS = 80;
   /** RegularExpression Id. */
-  int RAD = 81;
+  int DEG = 81;
   /** RegularExpression Id. */
-  int GRAD = 82;
+  int RAD = 82;
   /** RegularExpression Id. */
-  int MS = 83;
+  int GRAD = 83;
   /** RegularExpression Id. */
-  int SECOND = 84;
+  int MS = 84;
   /** RegularExpression Id. */
-  int HZ = 85;
+  int SECOND = 85;
   /** RegularExpression Id. */
-  int KHZ = 86;
+  int HZ = 86;
   /** RegularExpression Id. */
-  int DIMEN = 87;
+  int KHZ = 87;
   /** RegularExpression Id. */
-  int HASH = 88;
+  int DIMEN = 88;
   /** RegularExpression Id. */
-  int IMPORT_SYM = 89;
+  int HASH = 89;
   /** RegularExpression Id. */
-  int MEDIA_SYM = 90;
+  int IMPORT_SYM = 90;
   /** RegularExpression Id. */
-  int CHARSET_SYM = 91;
+  int MEDIA_SYM = 91;
   /** RegularExpression Id. */
-  int PAGE_SYM = 92;
+  int CHARSET_SYM = 92;
   /** RegularExpression Id. */
-  int FONT_FACE_SYM = 93;
+  int PAGE_SYM = 93;
   /** RegularExpression Id. */
-  int ATKEYWORD = 94;
+  int FONT_FACE_SYM = 94;
   /** RegularExpression Id. */
-  int IMPORTANT_SYM = 95;
+  int ATKEYWORD = 95;
   /** RegularExpression Id. */
-  int RANGE0 = 96;
+  int IMPORTANT_SYM = 96;
   /** RegularExpression Id. */
-  int RANGE1 = 97;
+  int RANGE0 = 97;
   /** RegularExpression Id. */
-  int RANGE2 = 98;
+  int RANGE1 = 98;
   /** RegularExpression Id. */
-  int RANGE3 = 99;
+  int RANGE2 = 99;
   /** RegularExpression Id. */
-  int RANGE4 = 100;
+  int RANGE3 = 100;
   /** RegularExpression Id. */
-  int RANGE5 = 101;
+  int RANGE4 = 101;
   /** RegularExpression Id. */
-  int RANGE6 = 102;
+  int RANGE5 = 102;
   /** RegularExpression Id. */
-  int RANGE = 103;
+  int RANGE6 = 103;
   /** RegularExpression Id. */
-  int UNI = 104;
+  int RANGE = 104;
   /** RegularExpression Id. */
-  int UNICODERANGE = 105;
+  int UNI = 105;
   /** RegularExpression Id. */
-  int FUNCTION = 106;
+  int UNICODERANGE = 106;
   /** RegularExpression Id. */
-  int UNKNOWN = 107;
+  int REMOVE = 107;
+  /** RegularExpression Id. */
+  int FUNCTION = 108;
+  /** RegularExpression Id. */
+  int UNKNOWN = 109;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -287,6 +291,7 @@ public interface ParserConstants {
     "\"@extend\"",
     "\"@-moz-document\"",
     "\"@supports\"",
+    "<MICROSOFT_RULE>",
     "\"if\"",
     "<GUARDED_SYM>",
     "<STRING>",
@@ -330,6 +335,7 @@ public interface ParserConstants {
     "<RANGE>",
     "<UNI>",
     "<UNICODERANGE>",
+    "<REMOVE>",
     "<FUNCTION>",
     "<UNKNOWN>",
   };

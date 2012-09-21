@@ -18,52 +18,31 @@ package com.vaadin.sass.tree;
 
 import java.util.ArrayList;
 
-import org.w3c.css.sac.Selector;
-import org.w3c.css.sac.SelectorList;
-
-import com.vaadin.sass.parser.SelectorListImpl;
-import com.vaadin.sass.selector.SelectorUtil;
-
 public class ExtendNode extends Node implements IVariableNode {
     private static final long serialVersionUID = 3301805078983796878L;
 
-    SelectorList list;
+    ArrayList<String> list;
 
-    public ExtendNode(SelectorList list) {
+    public ExtendNode(ArrayList<String> list) {
         super();
         this.list = list;
     }
 
-    public SelectorList getList() {
+    public ArrayList<String> getList() {
         return list;
     }
 
     @Override
     public void replaceVariables(ArrayList<VariableNode> variables) {
-        SelectorListImpl newList = new SelectorListImpl();
 
-        for (int i = 0; i < list.getLength(); i++) {
-            Selector selector = list.item(i);
-
-            for (final VariableNode node : variables) {
-
-                if (SelectorUtil.toString(selector).contains(node.getName())) {
-                    try {
-                        selector = SelectorUtil
-                                .createSelectorAndreplaceSelectorVariableWithValue(
-                                        selector, node.getName(), node
-                                                .getExpr().toString());
-                        break;
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        return;
-                    }
-                }
-            }
-            newList.addSelector(selector);
-        }
-
-        list = newList;
     }
 
+    public String getListAsString() {
+        StringBuilder b = new StringBuilder();
+        for (final String s : list) {
+            b.append(s);
+        }
+
+        return b.toString();
+    }
 }

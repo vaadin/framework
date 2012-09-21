@@ -20,6 +20,10 @@
 	border-radius: 10px;
 }
 
+.banner {
+	border: 1px solid black;
+}
+
 .header {
 	width: 100%;
 }

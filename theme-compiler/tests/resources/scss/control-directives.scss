@@ -1,12 +1,16 @@
 $borderWeight : solid;
 
-@each $animal in puma, sea-slug, egret, salamander {
-  .#{$animal}-icon #animal, .menu {
-    background-image: url('/images/#{$animal}.png');
-    @include logo(10px);
-    @if 1+1 == 2 { border: 1px solid; }
-  }
+@mixin animals($list : puma, sea-slug, egret, salamander){
+	@each $animal in $list {
+	  .#{$animal}-icon #animal, .menu {
+	    background-image: url('/images/#{$animal}.png');
+	    @include logo(10px);
+	    @if 1+1 == 2 { border: 1px solid; }
+	  }
+	}
 }
+
+@include animals;
 
 .trueIf {
 	@if solid != dotted { border: 1px $borderWeight; }
@@ -22,6 +26,12 @@ $borderWeight : solid;
 	@if 1+2 == 2 { border: 2px solid; }
 	@else if 1+1 == 2 { border: 1px solid; }
 	@else { border: 3px solid; }
+}
+
+@each $thing in cube, triangle, circle{
+	 .#{$thing}-icon {
+	 	background-image: url('/images/#{$thing}.png');
+	 }
 }
 
 @mixin logo($size){

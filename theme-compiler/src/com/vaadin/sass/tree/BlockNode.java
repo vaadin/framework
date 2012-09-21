@@ -18,35 +18,32 @@ package com.vaadin.sass.tree;
 
 import java.util.ArrayList;
 
-import org.w3c.css.sac.Selector;
-import org.w3c.css.sac.SelectorList;
-
-import com.vaadin.sass.parser.SelectorListImpl;
-import com.vaadin.sass.selector.SelectorUtil;
-import com.vaadin.sass.util.Clonable;
-import com.vaadin.sass.util.DeepCopy;
-
-public class BlockNode extends Node implements Clonable, IVariableNode {
+public class BlockNode extends Node implements IVariableNode {
 
     private static final long serialVersionUID = 5742962631468325048L;
 
-    SelectorList selectorList;
+    ArrayList<String> selectorList;
 
-    public BlockNode(SelectorList selectorList) {
+    public BlockNode(ArrayList<String> selectorList) {
         this.selectorList = selectorList;
     }
 
-    public SelectorList getSelectorList() {
+    public ArrayList<String> getSelectorList() {
         return selectorList;
     }
 
-    public void setSelectorList(SelectorList selectorList) {
+    public void setSelectorList(ArrayList<String> selectorList) {
         this.selectorList = selectorList;
     }
 
     public String toString(boolean indent) {
         StringBuilder string = new StringBuilder();
-        string.append(SelectorUtil.toString(selectorList));
+        for (final String s : selectorList) {
+            string.append(s);
+            if (selectorList.indexOf(s) != selectorList.size() - 1) {
+                string.append(", ");
+            }
+        }
         string.append(" {\n");
         for (Node child : children) {
             if (indent) {
@@ -67,52 +64,17 @@ public class BlockNode extends Node implements Clonable, IVariableNode {
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
+    public void replaceVariables(ArrayList<VariableNode> variables) {
 
-        SelectorListImpl clonedSelectorList = null;
-
-        if (selectorList != null) {
-            clonedSelectorList = new SelectorListImpl();
-            for (int i = 0; i < selectorList.getLength(); i++) {
-                clonedSelectorList.addSelector(selectorList.item(i));
-            }
-        }
-        final BlockNode clone = new BlockNode(clonedSelectorList);
-        for (Node child : getChildren()) {
-            clone.getChildren().add((Node) DeepCopy.copy(child));
-        }
-        return clone;
     }
 
-    @Override
-    public void replaceVariables(ArrayList<VariableNode> variables) {
-        SelectorListImpl newList = new SelectorListImpl();
-
-        if (selectorList != null) {
-            for (int i = 0; i < selectorList.getLength(); i++) {
-                Selector selector = selectorList.item(i);
-
-                for (final VariableNode node : variables) {
-
-                    if (SelectorUtil.toString(selector)
-                            .contains(node.getName())) {
-                        try {
-                            selector = SelectorUtil
-                                    .createSelectorAndreplaceSelectorVariableWithValue(
-                                            selector, node.getName(), node
-                                                    .getExpr().toString());
-                            break;
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            return;
-                        }
-                    }
-                }
-                newList.addSelector(selector);
-            }
-
-            selectorList = newList;
+    public String getSelectors() {
+        StringBuilder b = new StringBuilder();
+        for (final String s : selectorList) {
+            b.append(s);
         }
+
+        return b.toString();
     }
 
 }

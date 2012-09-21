@@ -17,13 +17,15 @@ import com.vaadin.sass.util.ColorUtil;
 /**
  * @version $Revision: 1.3 $
  * @author Philippe Le Hegaret
+ * 
+ * @modified Sebastian Nyholm @ Vaadin Ltd
  */
 public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
         Serializable {
     private static final long serialVersionUID = -6649833716809789399L;
 
-    LexicalUnit prev;
-    LexicalUnit next;
+    LexicalUnitImpl prev;
+    LexicalUnitImpl next;
 
     short type;
     int line;
@@ -86,18 +88,30 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
         return type;
     }
 
+    public void setLexicalUnitType(short type) {
+        this.type = type;
+    }
+
+    public void getLexicalUnitType(short type) {
+        this.type = type;
+    }
+
     @Override
-    public LexicalUnit getNextLexicalUnit() {
+    public LexicalUnitImpl getNextLexicalUnit() {
         return next;
     }
 
-    public void setNextLexicalUnit(LexicalUnit n) {
+    public void setNextLexicalUnit(LexicalUnitImpl n) {
         next = n;
     }
 
     @Override
-    public LexicalUnit getPreviousLexicalUnit() {
+    public LexicalUnitImpl getPreviousLexicalUnit() {
         return prev;
+    }
+
+    public void setPrevLexicalUnit(LexicalUnitImpl n) {
+        prev = n;
     }
 
     @Override
@@ -350,28 +364,24 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
         return this;
     }
 
-    public void replaceValue(LexicalUnit another) {
+    public void replaceValue(LexicalUnitImpl another) {
         type = another.getLexicalUnitType();
         i = another.getIntegerValue();
         f = another.getFloatValue();
         s = another.getStringValue();
         fname = another.getFunctionName();
         prev = another.getPreviousLexicalUnit();
-        if (another instanceof LexicalUnitImpl) {
-            dimension = ((LexicalUnitImpl) another).getDimension();
-            sdimension = ((LexicalUnitImpl) another).getSdimension();
-            params = ((LexicalUnitImpl) another).getParameters();
-        }
+        dimension = another.getDimension();
+        sdimension = another.getSdimension();
+        params = another.getParameters();
 
-        LexicalUnit finalNextInAnother = another;
+        LexicalUnitImpl finalNextInAnother = another;
         while (finalNextInAnother.getNextLexicalUnit() != null) {
             finalNextInAnother = finalNextInAnother.getNextLexicalUnit();
         }
 
-        if (another instanceof LexicalUnitImpl) {
-            ((LexicalUnitImpl) finalNextInAnother).setNextLexicalUnit(next);
-            next = ((LexicalUnitImpl) another).next;
-        }
+        finalNextInAnother.setNextLexicalUnit(next);
+        next = another.next;
     }
 
     public void setParameters(LexicalUnitImpl params) {
@@ -421,6 +431,10 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
     static LexicalUnitImpl createEXS(int line, int column,
             LexicalUnitImpl previous, float v) {
         return new LexicalUnitImpl(line, column, previous, SAC_EX, null, v);
+    }
+
+    public static LexicalUnitImpl createPixel(float p) {
+        return new LexicalUnitImpl(0, 0, null, SAC_PIXEL, null, p);
     }
 
     static LexicalUnitImpl createPX(int line, int column,
@@ -520,6 +534,10 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
         return new LexicalUnitImpl(line, column, previous, SAC_IDENT, s);
     }
 
+    public static LexicalUnitImpl createString(String s) {
+        return new LexicalUnitImpl(0, 0, null, SAC_STRING_VALUE, s);
+    }
+
     static LexicalUnitImpl createString(int line, int column,
             LexicalUnitImpl previous, String s) {
         return new LexicalUnitImpl(line, column, previous, SAC_STRING_VALUE, s);
@@ -588,5 +606,26 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
                 (LexicalUnitImpl) prev);
         cloned.replaceValue(this);
         return cloned;
+    }
+
+    /**
+     * Tries to return the value for this {@link LexicalUnitImpl} without
+     * considering any related units.
+     * 
+     * @return
+     */
+    public Object getValue() {
+        if (s != null) {
+            return s;
+        } else if (i != -1) {
+            return i;
+        } else if (f != -1) {
+            return f;
+        } else
+            return null;
+    }
+
+    public void setFunctionName(String functionName) {
+        fname = functionName;
     }
 }

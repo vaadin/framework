@@ -19,20 +19,18 @@ package com.vaadin.sass.tree;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.w3c.css.sac.LexicalUnit;
-
 import com.vaadin.sass.parser.LexicalUnitImpl;
 
 public class MixinNode extends Node implements IVariableNode {
     private static final long serialVersionUID = 4725008226813110658L;
 
     private String name;
-    private ArrayList<LexicalUnit> arglist;
+    private ArrayList<LexicalUnitImpl> arglist;
 
-    public MixinNode(String name, Collection<LexicalUnit> args) {
+    public MixinNode(String name, Collection<LexicalUnitImpl> args) {
         super();
         this.name = name;
-        arglist = new ArrayList<LexicalUnit>();
+        arglist = new ArrayList<LexicalUnitImpl>();
         if (args != null && !args.isEmpty()) {
             arglist.addAll(args);
         }
@@ -51,21 +49,22 @@ public class MixinNode extends Node implements IVariableNode {
         this.name = name;
     }
 
-    public ArrayList<LexicalUnit> getArglist() {
+    public ArrayList<LexicalUnitImpl> getArglist() {
         return arglist;
     }
 
-    public void setArglist(ArrayList<LexicalUnit> arglist) {
+    public void setArglist(ArrayList<LexicalUnitImpl> arglist) {
         this.arglist = arglist;
     }
 
     @Override
     public void replaceVariables(ArrayList<VariableNode> variables) {
         for (final VariableNode var : variables) {
-            for (final LexicalUnit arg : new ArrayList<LexicalUnit>(arglist)) {
+            for (final LexicalUnitImpl arg : new ArrayList<LexicalUnitImpl>(
+                    arglist)) {
                 if (arg.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE
                         && arg.getStringValue().equals(var.getName())) {
-                    ((LexicalUnitImpl) arg).replaceValue(var.getExpr());
+                    arg.replaceValue(var.getExpr());
                 }
             }
         }

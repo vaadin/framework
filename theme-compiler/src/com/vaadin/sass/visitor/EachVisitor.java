@@ -36,6 +36,7 @@ public class EachVisitor implements Visitor {
     private void replaceEachDefNode(EachDefNode defNode) {
         for (final Node child : defNode.getChildren()) {
             if (child instanceof BlockNode) {
+                Node lastNode = defNode;
                 for (final String variable : defNode.getVariables()) {
 
                     String output = child.toString();
@@ -44,7 +45,8 @@ public class EachVisitor implements Visitor {
                                     + "}"), variable);
                     SimpleNode simple = new SimpleNode(output);
 
-                    rootNode.appendChild(simple, defNode);
+                    rootNode.appendChild(simple, lastNode);
+                    lastNode = simple;
                 }
             }
         }

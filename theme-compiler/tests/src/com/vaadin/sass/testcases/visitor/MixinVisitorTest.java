@@ -20,10 +20,9 @@ import java.util.ArrayList;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.w3c.css.sac.LexicalUnit;
 
-import com.steadystate.css.parser.LexicalUnitImpl;
 import com.vaadin.sass.ScssStylesheet;
+import com.vaadin.sass.parser.LexicalUnitImpl;
 import com.vaadin.sass.parser.SCSSLexicalUnit;
 import com.vaadin.sass.tree.BlockNode;
 import com.vaadin.sass.tree.MixinDefNode;
@@ -72,8 +71,10 @@ public class MixinVisitorTest {
         root.appendChild(mixinDefWithNonDefaultArg);
 
         BlockNode blockWithMixin = new BlockNode(null);
-        ArrayList<LexicalUnit> includeArgs = new ArrayList<LexicalUnit>();
-        LexicalUnit includeArg = LexicalUnitImpl.createPixel(null, 1f);
+        ArrayList<LexicalUnitImpl> includeArgs = new ArrayList<LexicalUnitImpl>();
+        LexicalUnitImpl includeArg = LexicalUnitImpl.createPixel(1f);
+        includeArg.setLexicalUnitType(LexicalUnitImpl.SAC_PIXEL);
+        includeArg.setFloatValue(1);
         includeArgs.add(includeArg);
         MixinNode mixin = new MixinNode("non-default-arg", includeArgs);
         blockWithMixin.appendChild(mixin);
@@ -96,8 +97,8 @@ public class MixinVisitorTest {
     public void testTraverseMixinWithDefaultArgs() {
         ScssStylesheet root = new ScssStylesheet();
         ArrayList<VariableNode> args = new ArrayList<VariableNode>();
-        args.add(new VariableNode("arg", LexicalUnitImpl.createPixel(null, 1f),
-                false));
+        LexicalUnitImpl includeArg = LexicalUnitImpl.createPixel(1f);
+        args.add(new VariableNode("arg", includeArg, false));
         MixinDefNode mixinDefWithNonDefaultArg = new MixinDefNode(
                 "default-arg", args);
         BlockNode blockNode = new BlockNode(null);
@@ -135,16 +136,16 @@ public class MixinVisitorTest {
         MixinDefNode mixinDefNoArgs = new MixinDefNode("table-base", null);
         BlockNode thBlockNode = new BlockNode(null);
         RuleNode textAlignRuleNode = new RuleNode("text-align",
-                LexicalUnitImpl.createString(null, "center"), false, null);
+                LexicalUnitImpl.createString("center"), false, null);
         thBlockNode.appendChild(textAlignRuleNode);
         RuleNode fontWeightRuleNode = new RuleNode("font-weight",
-                LexicalUnitImpl.createString(null, "bold"), false, null);
+                LexicalUnitImpl.createString("bold"), false, null);
         thBlockNode.appendChild(fontWeightRuleNode);
         mixinDefNoArgs.appendChild(thBlockNode);
 
         BlockNode tdthBlockNode = new BlockNode(null);
         RuleNode paddingRuleNode = new RuleNode("padding",
-                LexicalUnitImpl.createPixel(null, 2f), false, null);
+                LexicalUnitImpl.createPixel(2f), false, null);
         tdthBlockNode.appendChild(paddingRuleNode);
         mixinDefNoArgs.appendChild(tdthBlockNode);
         root.appendChild(mixinDefNoArgs);
@@ -205,7 +206,7 @@ public class MixinVisitorTest {
         MixinDefNode mixinDef = new MixinDefNode("left", argNameList);
 
         RuleNode floatRuleNode = new RuleNode("float",
-                LexicalUnitImpl.createString(null, "left"), false, null);
+                LexicalUnitImpl.createString("left"), false, null);
         mixinDef.appendChild(floatRuleNode);
         RuleNode marginLeftRuleNode = new RuleNode("margin-left",
                 com.vaadin.sass.parser.LexicalUnitImpl.createVariable(0, 0,
@@ -214,8 +215,8 @@ public class MixinVisitorTest {
         root.appendChild(mixinDef);
 
         BlockNode dataBlock = new BlockNode(null);
-        ArrayList<LexicalUnit> argValueList = new ArrayList<LexicalUnit>();
-        LexicalUnit arg = LexicalUnitImpl.createPixel(null, 10f);
+        ArrayList<LexicalUnitImpl> argValueList = new ArrayList<LexicalUnitImpl>();
+        LexicalUnitImpl arg = LexicalUnitImpl.createPixel(10f);
         argValueList.add(arg);
         MixinNode mixinNode = new MixinNode("left", argValueList);
         dataBlock.appendChild(mixinNode);

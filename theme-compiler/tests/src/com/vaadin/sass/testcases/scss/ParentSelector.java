@@ -28,7 +28,6 @@ import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.handler.SCSSDocumentHandler;
 import com.vaadin.sass.handler.SCSSDocumentHandlerImpl;
 import com.vaadin.sass.parser.Parser;
-import com.vaadin.sass.selector.SelectorUtil;
 import com.vaadin.sass.tree.BlockNode;
 
 public class ParentSelector extends AbstractTestBase {
@@ -45,11 +44,10 @@ public class ParentSelector extends AbstractTestBase {
         BlockNode blockNode = (BlockNode) root.getChildren().get(0);
         Assert.assertEquals(4, blockNode.getChildren().size());
         BlockNode nestedBlock1 = (BlockNode) blockNode.getChildren().get(2);
-        Assert.assertEquals("&:hover",
-                SelectorUtil.toString(nestedBlock1.getSelectorList()));
+        Assert.assertEquals("&:hover", nestedBlock1.getSelectorList().get(0));
         BlockNode nestedBlock2 = (BlockNode) blockNode.getChildren().get(3);
-        Assert.assertEquals("body.firefox &",
-                SelectorUtil.toString(nestedBlock2.getSelectorList()));
+        Assert.assertEquals("body.firefox &", nestedBlock2.getSelectorList()
+                .get(0));
     }
 
     @Test

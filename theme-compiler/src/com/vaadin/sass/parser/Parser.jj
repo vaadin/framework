@@ -229,13 +229,7 @@ public class Parser implements org.w3c.css.sac.Parser {
 	this.source = source;
 	ReInit(getCharStreamWithLurk(source));
 
-	if (selectorFactory == null) {
-	    selectorFactory = new SelectorFactoryImpl();
-	}
-	if (conditionFactory == null) {
-	    conditionFactory = new ConditionFactoryImpl();
-	}
-	return _parseSelectors();
+	return null;
     }
 
     public LexicalUnit parsePropertyValue(InputSource source) 
@@ -548,6 +542,7 @@ TOKEN : /* basic tokens */
                     | <NONASCII> | <ESCAPE> >
   | < #D          : ["0"-"9"] >
   | < #NAME       : ( <NMCHAR> )+ >
+ 
 }
 
 <DEFAULT>
@@ -581,7 +576,14 @@ TOKEN :
 < DEFAULT >
 TOKEN:
 {
-  < IF : "if" > }
+  < MICROSOFT_RULE : "filter"|"-ms-filter" > 
+}
+
+< DEFAULT >
+TOKEN:
+{
+  < IF : "if" > 
+}
 
 <DEFAULT>
 TOKEN:
@@ -670,6 +672,12 @@ TOKEN :
                         | "U+" <UNI> "-" <UNI> >
 }
 
+< DEFAULT >
+TOKEN :
+{
+  	< REMOVE : "remove" (< S >)? "(" >
+}
+
 <DEFAULT>
 TOKEN :
 {
@@ -729,7 +737,7 @@ void afterImportDeclaration() :
 }
 {
   ( 
-     ( variable() | mixinDirective()|eachDirective() | includeDirective() | styleRule() | media()| page() | fontFace() 
+     ( variable() | removeDirective() | mixinDirective()|eachDirective() | includeDirective() | styleRule() | media()| page() | fontFace() 
       | { l = getLocator(); } ret=skipStatement() 
       {
 	  if ((ret == null) || (ret.length() == 0)) {
@@ -979,6 +987,32 @@ char connector = ' ';
  ( <S> )* )? { return connector; }
 }
 
+void microsoftExtension() :
+{
+  Token n;
+  String name = "";
+  String value = "";
+}
+
+{
+  n = < MICROSOFT_RULE > (< S >)* { name = n.image; }
+	< COLON >
+	((n = < IDENT > { value += n.image; })
+	| (n = < NUMBER > { value += n.image; }) 
+	| (n = < EACH_VAR > { value += n.image; })
+	| (n = < COLON > { value += n.image; })
+	| (n = < FUNCTION > { value += n.image; })
+	| (n = < RPARAN > { value += n.image; })
+	| (n = < EQ > { value += n.image; })
+	| (n = < DOT > { value += n.image; })
+	| (n = < S > { if(value.lastIndexOf(' ') != value.length()-1)
+	{ value += n.image; } }
+	) )+
+	< SEMICOLON >
+	(< S >)*
+  	{ documentHandler.microsoftDirective(name, value); 	}
+}
+
 /**
  * @exception ParseException exception during the parse
  */
@@ -1006,7 +1040,7 @@ String functionName() :
 void styleRule() :
 {
     boolean start = false;
-    SelectorList l = null;
+    ArrayList<String> l = null;
     Token save;
     Locator loc;
 }
@@ -1017,7 +1051,7 @@ void styleRule() :
 	 start = true;
 	 documentHandler.startSelector(l);
      }
-     ( ifDirective() | includeDirective() | media() | extendDirective()| eachDirective() | variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*
+     ( ifDirective() | removeDirective() | includeDirective() | media() | extendDirective()| eachDirective() | variable() | LOOKAHEAD(3) (microsoftExtension()|declarationOrNestedProperties()) | styleRule())*
      <RBRACE> (<S>)*
  } catch (ThrowedParseException e) {
      if (errorHandler != null) {
@@ -1034,20 +1068,20 @@ void styleRule() :
      reportWarningSkipText(getLocator(), skipStatement());
  } finally {
      if (start) {
-	 documentHandler.endSelector(l);
+	 documentHandler.endSelector();
      }
  }
 }
 
-SelectorList selectorList() :
+ ArrayList<String> selectorList() :
 {
-    SelectorListImpl selectors = new SelectorListImpl();
-    Selector selector;
+     ArrayList<String> selectors = new  ArrayList<String>();
+     String selector;
 }
 {
- selector=selector() ( <COMMA> (<S>)* { selectors.addSelector(selector); } 
+ selector=selector() ( <COMMA> (<S>)* { selectors.add(selector); } 
                        selector=selector() )* 
-  { selectors.addSelector(selector); 
+  { selectors.add(selector); 
     return selectors;
   }
 }
@@ -1055,9 +1089,9 @@ SelectorList selectorList() :
 /**
  * @exception ParseException exception during the parse
  */
-Selector selector() :
+String selector() :
 {   
-    Selector selector;
+    String selector;
     char    comb;
 }
 {
@@ -1095,10 +1129,10 @@ Selector selector() :
 /**
  * @exception ParseException exception during the parse
  */
-Selector simple_selector(Selector selector, char comb) :
+String simple_selector(String selector, char comb) :
 {
-    SimpleSelector simple_current = null;
-    Condition cond = null;
+    String simple_current = null;
+    String cond = null;
 
     pseudoElt = null;
 }
@@ -1117,27 +1151,21 @@ Selector simple_selector(Selector selector, char comb) :
       )
 	{
 	    if (simple_current == null) {
-		simple_current = selectorFactory.createElementSelector(null, null);
+		simple_current = "";
 	    }
 	    if (cond != null) {
-		simple_current = selectorFactory.createConditionalSelector(simple_current, 
-								    cond);
+		simple_current = simple_current + cond;
 	    }
 	    if (selector != null) {
 		switch (comb) {
 		case ' ':
-		    selector = selectorFactory.createDescendantSelector(selector, 
-								       simple_current);
+		    selector = selector + comb + simple_current;
 		    break;
 		case '+':
-		    selector = 
-			selectorFactory.createDirectAdjacentSelector((short) 1,
-								     selector, 
-								     simple_current);
+			selector = selector + " " + comb + " " + simple_current;
 		    break;
 		case '>':
-		    selector = selectorFactory.createChildSelector(selector, 
-								  simple_current);
+		    selector = selector + " " + comb + " " + simple_current;
 		    break;
 		default:
 		    throw new ParseException("invalid state. send a bug report");
@@ -1146,8 +1174,7 @@ Selector simple_selector(Selector selector, char comb) :
 		selector= simple_current;
 	    }
 	    if (pseudoElt != null) {
-		selector = selectorFactory.createChildSelector(selector, 
-                             selectorFactory.createPseudoElementSelector(null, pseudoElt));
+		selector = selector + pseudoElt;
 	    }
 	    return selector;
 	}
@@ -1156,19 +1183,18 @@ Selector simple_selector(Selector selector, char comb) :
 /**
  * @exception ParseException exception during the parse
  */
-Condition _class(Condition pred) :
+String _class(String pred) :
 {Token t;
-String s = "";
-Condition c;
+String s = ".";
 }
 {
   "." (t = <IDENT>{s += t.image; }|t = < EACH_VAR >{ s += t.image; })+
       { 
-	  c = conditionFactory.createClassCondition(null, s);
+	  
 	  if (pred == null) {
-	      return c;
+	      return s;
 	  } else {
-	      return conditionFactory.createAndCondition(pred, c);
+	      return pred + s;
 	  }
       }
 }
@@ -1176,23 +1202,23 @@ Condition c;
 /**
  * @exception ParseException exception during the parse
  */
-SimpleSelector element_name() :
+String element_name() :
 {Token t; String s = "";}
 {
     (t = <IDENT>{s += t.image; }|t = < EACH_VAR >{ s += t.image; })+
     { 
-      return selectorFactory.createElementSelector(null, s); 
+      return s; 
     }
       | "*"
-    { return selectorFactory.createElementSelector(null, "*"); }
+    { return "*"; }
       | "&"
-    { return selectorFactory.createElementSelector(null, "&"); }
+    { return "&"; }
 }
 
 /**
  * @exception ParseException exception during the parse
  */
-Condition attrib(Condition pred) :
+String attrib(String pred) :
 {
     int cases = 0;
     Token att = null;
@@ -1205,39 +1231,35 @@ Condition attrib(Condition pred) :
 	  | <INCLUDES>  { cases = 2; }	  
 	  | <DASHMATCH> { cases = 3; } ) ( <S> )* 
 	( val=<IDENT> { attValue = val.image; }
-	  | val=<STRING> { attValue = convertStringIndex(val.image, 1, 
-							 val.image.length() -1);}
+	  | val=<STRING> { attValue = val.image; }
 	)
 	( <S> )* )?
   "]"
   {
       String name = convertIdent(att.image);
-      Condition c;
+      String c;
       switch (cases) {
 	  case 0:
-	  c = conditionFactory.createAttributeCondition(name, null, false, null);
+	  c = name;
 	  break;
 	  case 1:
-	  c = conditionFactory.createAttributeCondition(name, null, false, 
-							attValue);
+	  c = name + "=" + attValue;
 	  break;
 	  case 2:
-	  c = conditionFactory.createOneOfAttributeCondition(name, null, false, 
-							     attValue);
+	  c = name + "~=" + attValue;
 	  break;
 	  case 3:
-	  c = conditionFactory.createBeginHyphenAttributeCondition(name, null, 
-								   false, 
-								   attValue);
+	  c = name + "|=" +attValue;
 	  break;
 	  default:
 	  // never reached.
 	  c = null;
       }
+      c = "[" + c + "]";
       if (pred == null) {
 	  return c;
       } else {
-	  return conditionFactory.createAndCondition(pred, c);
+	  return pred + c;
       }
   }
 }
@@ -1245,7 +1267,7 @@ Condition attrib(Condition pred) :
 /**
  * @exception ParseException exception during the parse
  */
-Condition pseudo(Condition pred) :
+String pseudo(String pred) :
 {Token n;
 Token language;
 boolean isPseudoElement = false;
@@ -1253,22 +1275,21 @@ boolean isPseudoElement = false;
 {
     ":" (":"{isPseudoElement=true;})?( n=<IDENT>
 	{
-	    String s = convertIdent(n.image);
+	    String s = ":" + convertIdent(n.image);
 	    if (isPseudoElement) {
 		if (pseudoElt != null) {
 		    throw new CSSParseException("duplicate pseudo element definition " 
 						+ s, getLocator());
 		} else {
-		    pseudoElt = s;
+		    pseudoElt = ":"+s;
 		    return pred;
 		}
 	    } else {
-		Condition c = 
-		conditionFactory.createPseudoClassCondition(null, s);
+		String c = s;
 		if (pred == null) {
 		    return c;
 		} else {
-		    return conditionFactory.createAndCondition(pred, c);
+		    return pred + c;
 		}
 	    }
 	}
@@ -1276,12 +1297,11 @@ boolean isPseudoElement = false;
 	      {
 		  String f = convertIdent(n.image);
 		  if (f.equals("lang(")) {
-		      Condition d = 
-	      conditionFactory.createLangCondition(convertIdent(language.image));
+		      String d = convertIdent(language.image);
 		      if (pred == null) {
 			  return d;
 		      } else {
-			  return conditionFactory.createAndCondition(pred, d);
+			  return pred + d;
 		      }
 		  } else {
 		      throw new CSSParseException("invalid pseudo function name " 
@@ -1295,17 +1315,16 @@ boolean isPseudoElement = false;
 /**
  * @exception ParseException exception during the parse
  */
-Condition hash(Condition pred) :
+String hash(String pred) :
 {Token n; }
 {
   n=<HASH>
   {
-      Condition d = 
-	  conditionFactory.createIdCondition(n.image.substring(1));
+      String d = n.image;
       if (pred == null) {
 	  return d;
       } else {
-	  return conditionFactory.createAndCondition(pred, d);
+	  return pred + d;
       }
   }
 }
@@ -1313,7 +1332,7 @@ Condition hash(Condition pred) :
 void variable() :
 {
 	String name;
-	LexicalUnit exp = null;
+	LexicalUnitImpl exp = null;
 	boolean guarded = false;
 	String raw;
 }
@@ -1359,7 +1378,9 @@ void ifDirective() :
 }
 {
   < IF_SYM >
-  ( n = booleanExpressionToken() { evaluator += n.image; } )+  < LBRACE >(< S >)*      { documentHandler.startIfElseDirective();
+  ( n = booleanExpressionToken() { evaluator += n.image; } )+
+  < LBRACE >(< S >)*    
+  { documentHandler.startIfElseDirective();
     documentHandler.ifDirective(evaluator);
    }
   ( includeDirective() | media() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*	  
@@ -1368,20 +1389,29 @@ void ifDirective() :
   { documentHandler.endIfElseDirective(); }
 }
 
-void elseDirective() :{
+void elseDirective() :
+{
   String evaluator = "";
-  Token n = null;}
+  Token n = null;
+}
 {
   < ELSE_SYM >(< S >)* 
   ( < IF > (n = booleanExpressionToken() { if(n != null) evaluator += n.image; })*)?
   < LBRACE >(< S >)*
   { if(!evaluator.trim().equals("")){ documentHandler.ifDirective(evaluator); }
-    else{ documentHandler.elseDirective(); }    }  ( includeDirective() | media() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*    < RBRACE >(< S >)*
+    else{ documentHandler.elseDirective(); }  
+  }
+  ( includeDirective() | media() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*  
+  < RBRACE >(< S >)*
 }
 
-Token booleanExpressionToken() :{
-  Token n = null;}
-{ (   n = < VARIABLE >
+Token booleanExpressionToken() :
+{
+  Token n = null;
+}
+{
+ (
+   n = < VARIABLE >
    |n = < IDENT >
    |n = < NUMBER >
    |n = < LPARAN >
@@ -1399,22 +1429,28 @@ Token booleanExpressionToken() :{
    |n = < S >
    |n = < NOT_EQ >
 ){
-   return n; }
+   return n;
+ }
 }
   
 void eachDirective() :
 {
   Token var;
-  ArrayList<String> list;
+  ArrayList<String> list = null;
+  String listVariable = null;
 }
 {
   < EACH_SYM >
   (< S >)*
   var = < VARIABLE > (< S >)* < EACH_IN > (< S >)*
-  list = stringList()
+  (list = stringList()
+  {documentHandler.startEachDirective(var.image, list);}
+  |{documentHandler.startEachDirective(var.image, list);}removeDirective()
+  |listVariable = variableName()
+  {documentHandler.startEachDirective(var.image, listVariable);}
+  )
   < LBRACE >(< S >)*
-  { documentHandler.startEachDirective(var.image, list);}
-  ( includeDirective() | media() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*	  
+  ( includeDirective() | removeDirective() | media() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*	  
   < RBRACE >(< S >)*
   { documentHandler.endEachDirective();}
 }
@@ -1446,7 +1482,7 @@ void mixinDirective() :
     |(name = functionName() 
       args = arglist()) <RPARAN> (<S>)*) <LBRACE> (<S>)*
     {documentHandler.startMixinDirective(name, args);}
-    ( includeDirective() | media()| extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*
+    ( includeDirective() | media() | eachDirective() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*
     //(includeDirective() | media() | LOOKAHEAD(declaration()) declaration()";"(<S>)* | styleRule())*
     <RBRACE>(<S>)*
     {documentHandler.endMixinDirective(name, args);}
@@ -1468,25 +1504,29 @@ ArrayList<VariableNode> arglist() :
 VariableNode mixinArg() :
 {
     String name;
-    LexicalUnit value = null;
+    LexicalUnitImpl first = null;
+    LexicalUnitImpl next = null;
+    LexicalUnitImpl prev = null;
 }
 {
-    name=variableName() (":" (<S>)* value=term(null) )?
+    name=variableName() (":" (<S>)* first=term(null){ prev = first; } (LOOKAHEAD(2)(< COMMA >(< S >)*)?next=term(prev){prev.setNextLexicalUnit(next); prev = next;})* )?
     {
-        VariableNode arg = new VariableNode(name, value, false);
+        VariableNode arg = new VariableNode(name, first, false);
         return arg;
     }
 }
 
-ArrayList<LexicalUnit> argValuelist() :
+ArrayList<LexicalUnitImpl> argValuelist() :
 {
-    ArrayList<LexicalUnit> args = new ArrayList<LexicalUnit>();
-    LexicalUnit argValue;
+    ArrayList<LexicalUnitImpl> args = new ArrayList<LexicalUnitImpl>();
+    LexicalUnitImpl first = null;
+    LexicalUnitImpl next = null;
+    LexicalUnitImpl prev = null;
 }
 {
-    argValue= term(null) { args.add(argValue); }
-    ( <COMMA> (<S>)* argValue = term(null)
-      {args.add(argValue);}
+    first = term(null) { args.add(first); prev = first;}(next=term(prev){prev.setNextLexicalUnit(next); prev = next;})*
+    ( <COMMA> (<S>)*
+    first = term(null) { args.add(first); prev = first;}(next=term(prev){prev.setNextLexicalUnit(next); prev = next;})*
     )* 
     {return args;}
 }
@@ -1494,7 +1534,7 @@ ArrayList<LexicalUnit> argValuelist() :
 void includeDirective() :
 {
     String name;
-    ArrayList<LexicalUnit> args=null;
+    ArrayList<LexicalUnitImpl> args=null;
 }
 {
     <INCLUDE_SYM>
@@ -1505,20 +1545,50 @@ void includeDirective() :
            {documentHandler.includeDirective(name, args);}
 }
 
-Node functionDirective() :
-{
-    String name;
-    String args = null;
-    String body;
-    int[] stops = {RPARAN};
+/**
+ * @exception ParseException exception during the parse
+ */
+void removeDirective() :{	ArrayList<String> list = null;
+	ArrayList<String> remove = null;
+	String separator = null;
+	Token n = null;
 }
 {
-    (name=functionName() args = skipStatementUntilRightParan() <RPARAN>)
-    (<S>)*
-    body = skipStatement()   
-    {
-        return null;
-    }
+  < REMOVE >(< S >)*
+  (list = removeDirectiveArgs(0))
+  < COMMA >(< S >)*  (remove = removeDirectiveArgs(1))
+  ( < COMMA >(< S >)* n = < IDENT >{ separator = n.image; } (< S >)*)?
+  < RPARAN >(< S >)* < SEMICOLON >(< S >)*
+
+  { documentHandler.removeDirective(list,remove,separator); }}
+
+JAVACODE
+ArrayList<String > removeDirectiveArgs(int nest){
+  	ArrayList<String> list = new ArrayList<String>();
+	// Start at one due to "remove(" containing one.
+	int nesting = nest;
+	Token t = null;
+	
+	while(true)	{		t = getToken(1);
+		if(t.kind == VARIABLE)		{
+		  list.add(t.image);
+		}else if(t.kind == STRING)		{
+			list.add(t.image.substring(1,t.image.length()).substring(0,t.image.length()-2));
+			
+		}else if(t.kind == LPARAN)		{			nesting++;
+			if(nesting > nest+1)			{				throw new CSSParseException("Only one ( ) pair per parameter allowed", getLocator());
+			}
+		}else if(t.kind == RPARAN)		{			nesting--;
+			if(nesting == 0)			{
+			  	getNextToken();				return list;
+			}
+		} else if(t.kind == COMMA)		{
+			if(nesting == nest)			{
+			  return list;			}
+		} else if(t.kind == LBRACE)		{
+		  throw new CSSParseException("Invalid token,'{' found", getLocator());		}
+				getNextToken();
+	}
 }
 
 Node returnDirective() :
@@ -1573,7 +1643,7 @@ Node whileDirective() :
 }
 
 void extendDirective() : 
-{SelectorList list;}
+{ArrayList<String> list;}
 {
     <EXTEND_SYM>
     (<S>)*
@@ -1626,7 +1696,7 @@ LexicalUnit exp;}
 void declarationOrNestedProperties() :
 { boolean important = false;
   String name;
-  LexicalUnit exp;
+  LexicalUnitImpl exp;
   Token save;
   String comment = null;
 }
@@ -1776,7 +1846,7 @@ n="/" ( <S> )* { return LexicalUnitImpl.createSlash(n.beginLine,
 /**
  * @exception ParseException exception during the parse
  */
-LexicalUnit expr() :
+LexicalUnitImpl expr() :
 {
     LexicalUnitImpl first, res;
     char op;
@@ -2170,10 +2240,6 @@ LexicalUnitImpl url(LexicalUnitImpl prev) :
   n=<URL>
  {
    String urlname = n.image.substring(4, n.image.length()-1).trim();
-   if (urlname.charAt(0) == '"'
-       || urlname.charAt(0) == '\'') {
-       urlname = urlname.substring(1, urlname.length()-1);
-   }
    return LexicalUnitImpl.createURL(n.beginLine, n.beginColumn, prev, urlname); 
  }
 }
@@ -2493,8 +2559,8 @@ void _parseDeclarationBlock() :
 	( declaration() )? ( ";" ( <S> )* ( declaration() )? )* 
  }
 
-SelectorList _parseSelectors() :
-{ SelectorList p = null; 
+ArrayList<String> _parseSelectors() :
+{ ArrayList<String> p = null; 
 }
 {
     try {

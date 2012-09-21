@@ -27,27 +27,32 @@ public class VariableNode extends Node implements IVariableNode {
     private static final long serialVersionUID = 7003372557547748734L;
 
     private String name;
-    private LexicalUnit expr;
+    private LexicalUnitImpl expr;
     private boolean guarded;
 
-    public VariableNode(String name, LexicalUnit expr, boolean guarded) {
+    public VariableNode(String name, LexicalUnitImpl expr, boolean guarded) {
         super();
         this.name = name;
         this.expr = expr;
         this.guarded = guarded;
+        checkSeparators();
     }
 
-    public VariableNode(String name, String raw) {
-        super(raw);
-        this.name = name;
-    }
-
-    public LexicalUnit getExpr() {
+    public LexicalUnitImpl getExpr() {
         return expr;
     }
 
-    public void setExpr(LexicalUnit expr) {
+    public void setExpr(LexicalUnitImpl expr) {
         this.expr = expr;
+        checkSeparators();
+    }
+
+    private void checkSeparators() {
+        if (expr != null) {
+            if (expr.toString().contains(",")) {
+
+            }
+        }
     }
 
     public String getName() {
@@ -75,7 +80,7 @@ public class VariableNode extends Node implements IVariableNode {
             if (!this.equals(node)) {
 
                 if (name.equals(node.getName())) {
-                    expr = (LexicalUnit) DeepCopy.copy(node.getExpr());
+                    expr = (LexicalUnitImpl) DeepCopy.copy(node.getExpr());
                     guarded = node.isGuarded();
                     continue;
                 }
@@ -92,20 +97,5 @@ public class VariableNode extends Node implements IVariableNode {
 
             }
         }
-    }
-
-    public boolean replacePossibleVariables(ArrayList<VariableNode> list) {
-        list.remove(this);
-        LexicalUnit oldExpr = (LexicalUnit) DeepCopy.copy(expr);
-        replaceVariables(list);
-
-        if (!oldExpr.toString().equals(expr.toString())) {
-            for (VariableNode n : list) {
-                if (expr.toString().equals(n.getExpr().toString())) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 }

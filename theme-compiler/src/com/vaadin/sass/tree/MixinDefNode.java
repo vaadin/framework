@@ -70,8 +70,8 @@ public class MixinDefNode extends Node implements IVariableNode {
     public void replaceVariables(ArrayList<VariableNode> variables) {
         for (final VariableNode var : variables) {
             for (final VariableNode arg : new ArrayList<VariableNode>(arglist)) {
-
-                if (arg.getName().equals(var.getName())) {
+                if (arg.getName().equals(var.getName())
+                        && arg.getExpr() == null) {
                     arglist.add(arglist.indexOf(arg),
                             (VariableNode) DeepCopy.copy(var));
                     arglist.remove(arg);

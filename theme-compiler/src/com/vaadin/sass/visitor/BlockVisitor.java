@@ -16,14 +16,10 @@
 
 package com.vaadin.sass.visitor;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.w3c.css.sac.Selector;
-import org.w3c.css.sac.SelectorList;
-
-import com.vaadin.sass.parser.SelectorListImpl;
-import com.vaadin.sass.selector.CompositeSelector;
 import com.vaadin.sass.tree.BlockNode;
 import com.vaadin.sass.tree.Node;
 
@@ -48,6 +44,9 @@ public class BlockVisitor implements Visitor {
                 toBeDeleted.add(child);
                 parent.appendChild(child, after);
                 after = child;
+            } else if (child instanceof BlockNode
+                    && child.getChildren().size() == 0) {
+                toBeDeleted.add(child);
             }
         }
         for (Node child : toBeDeleted) {
@@ -57,16 +56,16 @@ public class BlockVisitor implements Visitor {
 
     private void combineParentSelectorListToChild(Node parent, Node child) {
         if (parent instanceof BlockNode && child instanceof BlockNode) {
-            SelectorListImpl newList = new SelectorListImpl();
-            SelectorList parentSelectors = ((BlockNode) parent)
+            ArrayList<String> newList = new ArrayList<String>();
+            ArrayList<String> parentSelectors = ((BlockNode) parent)
                     .getSelectorList();
-            SelectorList childSelectors = ((BlockNode) child).getSelectorList();
-            for (int i = 0; i < parentSelectors.getLength(); i++) {
-                Selector parentSelector = parentSelectors.item(i);
-                for (int j = 0; j < childSelectors.getLength(); j++) {
-                    Selector childSelector = childSelectors.item(j);
-                    newList.addSelector(new CompositeSelector(parentSelector,
-                            childSelector));
+            ArrayList<String> childSelectors = ((BlockNode) child)
+                    .getSelectorList();
+            for (int i = 0; i < parentSelectors.size(); i++) {
+                String parentSelector = parentSelectors.get(i);
+                for (int j = 0; j < childSelectors.size(); j++) {
+                    String childSelector = childSelectors.get(j);
+                    newList.add(parentSelector + " " + childSelector);
                 }
 
             }

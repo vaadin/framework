@@ -38,6 +38,7 @@ import com.vaadin.sass.visitor.EachVisitor;
 import com.vaadin.sass.visitor.ExtendVisitor;
 import com.vaadin.sass.visitor.IfElseVisitor;
 import com.vaadin.sass.visitor.ImportVisitor;
+import com.vaadin.sass.visitor.ListModifyVisitor;
 import com.vaadin.sass.visitor.MixinVisitor;
 import com.vaadin.sass.visitor.NestPropertiesVisitor;
 import com.vaadin.sass.visitor.ParentSelectorVisitor;
@@ -120,7 +121,6 @@ public class ScssStylesheet extends Node {
      * @throws Exception
      */
     public void compile() throws Exception {
-        ScssStylesheet scssStylesheet = this;
         List<Visitor> visitors = new ArrayList<Visitor>();
         visitors.add(new ImportVisitor());
         visitors.add(new VariableVisitor());
@@ -131,6 +131,7 @@ public class ScssStylesheet extends Node {
         visitors.add(new NestPropertiesVisitor());
         visitors.add(new ExtendVisitor());
         visitors.add(new EachVisitor());
+        visitors.add(new ListModifyVisitor());
         for (Visitor visitor : visitors) {
             visitor.traverse(this);
         }

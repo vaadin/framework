@@ -1,3 +1,5 @@
+$base-color : hsl(33, 7%, 89%);
+$app-bg-color : lighten($base-color, 6%);
 .main {
 	margin: abs(-2px);
 	border: ceil(10.4px);
@@ -11,6 +13,8 @@
 	color: darken(#800, 20%);
 	color: lighten(#880000, 20%);
 	color: lighten(#800, 20%);
+	color : $base-color;
+	color : $app-bg-color;
 }
 
 

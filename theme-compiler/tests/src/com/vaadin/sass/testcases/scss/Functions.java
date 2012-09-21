@@ -18,8 +18,7 @@ package com.vaadin.sass.testcases.scss;
 
 import java.io.IOException;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.CSSException;
 
@@ -42,9 +41,9 @@ public class Functions extends AbstractTestBase {
         parser.setDocumentHandler(handler);
         parser.parseStyleSheet(getClass().getResource(scss).getPath());
         ScssStylesheet root = handler.getStyleSheet();
-        Assert.assertEquals(1, root.getChildren().size());
-        BlockNode blockNode = (BlockNode) root.getChildren().get(0);
-        Assert.assertEquals(12, blockNode.getChildren().size());
+        Assert.assertEquals(3, root.getChildren().size());
+        BlockNode blockNode = (BlockNode) root.getChildren().get(2);
+        Assert.assertEquals(14, blockNode.getChildren().size());
     }
 
     @Test

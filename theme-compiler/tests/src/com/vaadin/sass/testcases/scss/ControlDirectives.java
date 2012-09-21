@@ -29,7 +29,12 @@ import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.handler.SCSSDocumentHandler;
 import com.vaadin.sass.handler.SCSSDocumentHandlerImpl;
 import com.vaadin.sass.parser.Parser;
+import com.vaadin.sass.tree.BlockNode;
+import com.vaadin.sass.tree.MixinDefNode;
+import com.vaadin.sass.tree.MixinNode;
 import com.vaadin.sass.tree.Node;
+import com.vaadin.sass.tree.controldirective.EachDefNode;
+import com.vaadin.sass.tree.controldirective.IfElseDefNode;
 
 public class ControlDirectives extends AbstractTestBase {
 
@@ -46,24 +51,21 @@ public class ControlDirectives extends AbstractTestBase {
         Assert.assertNotNull(root);
 
         ArrayList<Node> children = root.getChildren();
-        Assert.assertEquals(6, root.getChildren().size());
-        //
-        // Assert.assertTrue(children.get(1) instanceof EachDefNode);
-        // Assert.assertTrue(children.get(2) instanceof BlockNode);
-        // Assert.assertTrue(children.get(3) instanceof BlockNode);
-        // Assert.assertTrue(children.get(4) instanceof BlockNode);
-        // Assert.assertTrue(children.get(5) instanceof MixinDefNode);
-        //
-        // Assert.assertTrue(children.get(2).getChildren().get(0) instanceof
-        // IfElseDefNode);
-        // Assert.assertTrue(children.get(3).getChildren().get(0) instanceof
-        // IfElseDefNode);
-        // Assert.assertTrue(children.get(4).getChildren().get(0) instanceof
-        // IfElseDefNode);
-        // Assert.assertTrue(!(children.get(5).getChildren().get(0) instanceof
-        // IfElseDefNode));
-        //
-        // Assert.assertEquals(1, children.get(1).getChildren().size());
+        Assert.assertEquals(8, root.getChildren().size());
+
+        Assert.assertTrue(children.get(1) instanceof MixinDefNode);
+        Assert.assertTrue(children.get(2) instanceof MixinNode);
+        Assert.assertTrue(children.get(3) instanceof BlockNode);
+        Assert.assertTrue(children.get(4) instanceof BlockNode);
+        Assert.assertTrue(children.get(5) instanceof BlockNode);
+        Assert.assertTrue(children.get(7) instanceof MixinDefNode);
+
+        Assert.assertTrue(children.get(1).getChildren().get(0) instanceof EachDefNode);
+        Assert.assertTrue(children.get(3).getChildren().get(0) instanceof IfElseDefNode);
+        Assert.assertTrue(children.get(4).getChildren().get(0) instanceof IfElseDefNode);
+        Assert.assertTrue(!(children.get(7).getChildren().get(0) instanceof IfElseDefNode));
+
+        Assert.assertEquals(1, children.get(1).getChildren().size());
 
     }
 

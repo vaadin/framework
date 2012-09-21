@@ -18,19 +18,17 @@ package com.vaadin.sass.tree;
 
 import java.util.ArrayList;
 
-import org.w3c.css.sac.LexicalUnit;
-
 import com.vaadin.sass.parser.LexicalUnitImpl;
 
 public class RuleNode extends Node implements IVariableNode {
     private static final long serialVersionUID = 6653493127869037022L;
 
     String variable;
-    LexicalUnit value;
+    LexicalUnitImpl value;
     String comment;
     private boolean important;
 
-    public RuleNode(String variable, LexicalUnit value, boolean important,
+    public RuleNode(String variable, LexicalUnitImpl value, boolean important,
             String comment) {
         this.variable = variable;
         this.value = value;
@@ -46,11 +44,11 @@ public class RuleNode extends Node implements IVariableNode {
         this.variable = variable;
     }
 
-    public LexicalUnit getValue() {
+    public LexicalUnitImpl getValue() {
         return value;
     }
 
-    public void setValue(LexicalUnit value) {
+    public void setValue(LexicalUnitImpl value) {
         this.value = value;
     }
 
@@ -84,25 +82,43 @@ public class RuleNode extends Node implements IVariableNode {
     @Override
     public void replaceVariables(ArrayList<VariableNode> variables) {
         for (final VariableNode node : variables) {
-            LexicalUnit current = value;
-            if (current.getLexicalUnitType() == LexicalUnitImpl.SAC_FUNCTION) {
-                if (current.getParameters().toString().contains(node.getName())) {
-                    LexicalUnit param = value.getParameters();
-                    if (param != null) {
-                        if (param.toString().contains(node.getName())) {
-                            ((LexicalUnitImpl) param).replaceValue(node
-                                    .getExpr());
+            if (value.getLexicalUnitType() == LexicalUnitImpl.SAC_FUNCTION) {
+                if (value.getParameters().toString().contains(node.getName())) {
+                    if (value.getParameters() != null) {
+                        if (value.getParameters().toString()
+                                .contains("$" + node.getName())) {
+
+                            LexicalUnitImpl param = value.getParameters();
+                            while (param != null) {
+                                if (param.getValue().toString()
+                                        .contains(node.getName())) {
+
+                                    LexicalUnitImpl expr = node.getExpr();
+
+                                    LexicalUnitImpl prev = param
+                                            .getPreviousLexicalUnit();
+                                    LexicalUnitImpl next = param
+                                            .getNextLexicalUnit();
+
+                                    if (param.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE) {
+                                        param.replaceValue(expr);
+                                        param.setPrevLexicalUnit(prev);
+                                        param.setNextLexicalUnit(next);
+                                    }
+                                }
+                                param = param.getNextLexicalUnit();
+                            }
                         }
                     }
                 }
             } else {
+                LexicalUnitImpl current = value;
                 while (current != null) {
                     if (current.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE
-                            && current.toString()
-                                    .contains("$" + node.getName())) {
+                            && current.getValue().toString()
+                                    .equals(node.getName())) {
 
-                        ((LexicalUnitImpl) current)
-                                .replaceValue(node.getExpr());
+                        current.replaceValue(node.getExpr());
                     }
                     current = current.getNextLexicalUnit();
                 }

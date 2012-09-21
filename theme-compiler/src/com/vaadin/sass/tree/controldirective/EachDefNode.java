@@ -19,18 +19,28 @@ package com.vaadin.sass.tree.controldirective;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.sass.parser.LexicalUnitImpl;
+import com.vaadin.sass.tree.IVariableNode;
 import com.vaadin.sass.tree.Node;
+import com.vaadin.sass.tree.VariableNode;
 
-public class EachDefNode extends Node {
+public class EachDefNode extends Node implements IVariableNode {
     private static final long serialVersionUID = 7943948981204906221L;
 
     private String var;
     private ArrayList<String> list;
 
+    private String listVariable;
+
     public EachDefNode(String var, ArrayList<String> list) {
         super();
         this.var = var;
         this.list = list;
+    }
+
+    public EachDefNode(String var, String listVariable) {
+        this.var = var;
+        this.listVariable = listVariable;
     }
 
     public List<String> getVariables() {
@@ -45,5 +55,38 @@ public class EachDefNode extends Node {
     public String toString() {
         return "Each Definition Node: {variable : " + var + ", "
                 + "children : " + list.size() + "}";
+    }
+
+    public boolean hasListVariable() {
+        return listVariable != null;
+    }
+
+    @Override
+    public void replaceVariables(ArrayList<VariableNode> variables) {
+        if (listVariable != null) {
+            for (final VariableNode var : variables) {
+                if (listVariable.equals(var.getName())) {
+
+                    LexicalUnitImpl current = (LexicalUnitImpl) var.getExpr();
+                    list = new ArrayList<String>();
+
+                    while (current != null) {
+                        if (current.getValue() != null
+                                && current.getLexicalUnitType() != LexicalUnitImpl.SAC_OPERATOR_COMMA) {
+                            list.add(current.getValue().toString());
+                        }
+                        current = (LexicalUnitImpl) current
+                                .getNextLexicalUnit();
+                    }
+                    listVariable = null;
+                    break;
+                }
+            }
+
+        }
+    }
+
+    public String getListVariable() {
+        return listVariable;
     }
 }

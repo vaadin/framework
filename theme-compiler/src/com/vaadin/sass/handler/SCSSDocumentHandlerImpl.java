@@ -27,12 +27,15 @@ import org.w3c.css.sac.SACMediaList;
 import org.w3c.css.sac.SelectorList;
 
 import com.vaadin.sass.ScssStylesheet;
+import com.vaadin.sass.parser.LexicalUnitImpl;
 import com.vaadin.sass.tree.BlockNode;
 import com.vaadin.sass.tree.CommentNode;
 import com.vaadin.sass.tree.ExtendNode;
 import com.vaadin.sass.tree.ForNode;
 import com.vaadin.sass.tree.ImportNode;
+import com.vaadin.sass.tree.ListRemoveNode;
 import com.vaadin.sass.tree.MediaNode;
+import com.vaadin.sass.tree.MicrosoftRuleNode;
 import com.vaadin.sass.tree.MixinDefNode;
 import com.vaadin.sass.tree.MixinNode;
 import com.vaadin.sass.tree.NestPropertiesNode;
@@ -67,18 +70,14 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
     @Override
     public void startDocument(InputSource source) throws CSSException {
         nodeStack.push(styleSheet);
-        // System.out.println("startDocument(InputSource source): "
-        // + source.getURI());
     }
 
     @Override
     public void endDocument(InputSource source) throws CSSException {
-        // System.out.println("endDocument(InputSource source): "
-        // + source.getURI());
     }
 
     @Override
-    public void variable(String name, LexicalUnit value, boolean guarded) {
+    public void variable(String name, LexicalUnitImpl value, boolean guarded) {
         VariableNode node = new VariableNode(name, value, guarded);
         nodeStack.peek().appendChild(node);
     }
@@ -98,6 +97,14 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
     @Override
     public EachDefNode startEachDirective(String var, ArrayList<String> list) {
         EachDefNode node = new EachDefNode(var, list);
+        nodeStack.peek().appendChild(node);
+        nodeStack.push(node);
+        return node;
+    }
+
+    @Override
+    public EachDefNode startEachDirective(String var, String listVariable) {
+        EachDefNode node = new EachDefNode(var, listVariable);
         nodeStack.peek().appendChild(node);
         nodeStack.push(node);
         return node;
@@ -173,31 +180,31 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
     }
 
     @Override
-    public void startSelector(SelectorList selectors) throws CSSException {
+    public void startSelector(ArrayList<String> selectors) throws CSSException {
         BlockNode node = new BlockNode(selectors);
         nodeStack.peek().appendChild(node);
         nodeStack.push(node);
     }
 
     @Override
-    public void endSelector(SelectorList selectors) throws CSSException {
+    public void endSelector() throws CSSException {
         nodeStack.pop();
     }
 
     @Override
     public void property(String name, LexicalUnit value, boolean important)
             throws CSSException {
-        property(name, value, important, null);
+        property(name, (LexicalUnitImpl) value, important, null);
     }
 
-    public void property(String name, LexicalUnit value, boolean important,
+    public void property(String name, LexicalUnitImpl value, boolean important,
             String comment) {
         RuleNode node = new RuleNode(name, value, important, comment);
         nodeStack.peek().appendChild(node);
     }
 
     @Override
-    public void extendDirective(SelectorList list) {
+    public void extendDirective(ArrayList<String> list) {
         ExtendNode node = new ExtendNode(list);
         nodeStack.peek().appendChild(node);
     }
@@ -233,7 +240,7 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
     }
 
     @Override
-    public void includeDirective(String name, Collection<LexicalUnit> args) {
+    public void includeDirective(String name, Collection<LexicalUnitImpl> args) {
         MixinNode node = new MixinNode(name, args);
         nodeStack.peek().appendChild(node);
     }
@@ -278,5 +285,30 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
             nodeStack.pop();
         }
         nodeStack.pop();
+    }
+
+    @Override
+    public void microsoftDirective(String name, String value) {
+        MicrosoftRuleNode node = new MicrosoftRuleNode(name, value);
+        nodeStack.peek().appendChild(node);
+    }
+
+    @Override
+    public void endSelector(SelectorList arg0) throws CSSException {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void startSelector(SelectorList arg0) throws CSSException {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void removeDirective(ArrayList<String> list,
+            ArrayList<String> remove, String separator) {
+        ListRemoveNode node = new ListRemoveNode(list, remove, separator);
+        nodeStack.peek().appendChild(node);
     }
 }

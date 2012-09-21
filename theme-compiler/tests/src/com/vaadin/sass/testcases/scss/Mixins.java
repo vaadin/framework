@@ -29,6 +29,7 @@ import com.vaadin.sass.AbstractTestBase;
 import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.handler.SCSSDocumentHandler;
 import com.vaadin.sass.handler.SCSSDocumentHandlerImpl;
+import com.vaadin.sass.parser.LexicalUnitImpl;
 import com.vaadin.sass.parser.Parser;
 import com.vaadin.sass.tree.BlockNode;
 import com.vaadin.sass.tree.MixinDefNode;
@@ -71,48 +72,37 @@ public class Mixins extends AbstractTestBase {
         Assert.assertEquals(3, mainBlockNode.getChildren().size());
         MixinNode mixinNode0MainBlock = (MixinNode) mainBlockNode.getChildren()
                 .get(0);
-        // Assert.assertEquals("rounded-borders",
-        // mixinNode0MainBlock.getName());
-        // Assert.assertEquals(1f, mixinNode0MainBlock.getArglist().get(0)
-        // .getFloatValue());
-        // Assert.assertEquals(LexicalUnit.SAC_PIXEL, mixinNode0MainBlock
-        // .getArglist().get(0).getLexicalUnitType());
-        // MixinNode mixinNOde1MainBlock = (MixinNode)
-        // mainBlockNode.getChildren()
-        // .get(1);
-        // Assert.assertEquals("font-settings", mixinNOde1MainBlock.getName());
-        // Assert.assertTrue(mixinNOde1MainBlock.getArglist().isEmpty());
-        //
-        // MixinNode mixinNOde2MainBlock = (MixinNode)
-        // mainBlockNode.getChildren()
-        // .get(2);
-        // Assert.assertEquals("main-details", mixinNOde2MainBlock.getName());
-        // Assert.assertTrue(mixinNOde1MainBlock.getArglist().isEmpty());
-        //
-        // MixinNode mixinNode1MainBlock = (MixinNode)
-        // mainBlockNode.getChildren()
-        // .get(1);
-        // Assert.assertTrue(mixinNode1MainBlock.getArglist().isEmpty());
-        //
-        // BlockNode footerBlockNode = (BlockNode) root.getChildren().get(3);
-        // MixinNode mixinNodeFooterBlock = (MixinNode) footerBlockNode
-        // .getChildren().get(0);
-        // Assert.assertEquals(2f, mixinNodeFooterBlock.getArglist().get(0)
-        // .getFloatValue());
-        // Assert.assertEquals("px", mixinNodeFooterBlock.getArglist().get(0)
-        // .getDimensionUnitText());
-        //
-        // Assert.assertEquals(10f, mixinNodeFooterBlock.getArglist().get(1)
-        // .getFloatValue());
-        // Assert.assertEquals("px", mixinNodeFooterBlock.getArglist().get(1)
-        // .getDimensionUnitText());
-        //
-        // Assert.assertTrue(root.getChildren().get(4) instanceof MixinDefNode);
-        // Assert.assertTrue(root.getChildren().get(4).getChildren().get(3)
-        // instanceof MediaNode);
-        // Assert.assertTrue(root.getChildren().get(4).getChildren().get(4)
-        // instanceof MixinNode);
+        Assert.assertEquals("rounded-borders", mixinNode0MainBlock.getName());
+        Assert.assertEquals("mixinVar", mixinNode0MainBlock.getArglist().get(0)
+                .getStringValue());
+        Assert.assertEquals(LexicalUnitImpl.SCSS_VARIABLE, mixinNode0MainBlock
+                .getArglist().get(0).getLexicalUnitType());
+        MixinNode mixinNOde1MainBlock = (MixinNode) mainBlockNode.getChildren()
+                .get(1);
+        Assert.assertEquals("font-settings", mixinNOde1MainBlock.getName());
+        Assert.assertTrue(mixinNOde1MainBlock.getArglist().isEmpty());
 
+        MixinNode mixinNOde2MainBlock = (MixinNode) mainBlockNode.getChildren()
+                .get(2);
+        Assert.assertEquals("main-details", mixinNOde2MainBlock.getName());
+        Assert.assertTrue(mixinNOde1MainBlock.getArglist().isEmpty());
+
+        MixinNode mixinNode1MainBlock = (MixinNode) mainBlockNode.getChildren()
+                .get(1);
+        Assert.assertTrue(mixinNode1MainBlock.getArglist().isEmpty());
+
+        BlockNode footerBlockNode = (BlockNode) root.getChildren().get(3);
+        MixinNode mixinNodeFooterBlock = (MixinNode) footerBlockNode
+                .getChildren().get(0);
+        Assert.assertEquals("mixinVar", mixinNodeFooterBlock.getArglist()
+                .get(0).getStringValue());
+
+        Assert.assertTrue(root.getChildren().get(0) instanceof MixinDefNode);
+        Assert.assertTrue(root.getChildren().get(1) instanceof MixinDefNode);
+        Assert.assertTrue(root.getChildren().get(5) instanceof MixinDefNode);
+        Assert.assertTrue(root.getChildren().get(6) instanceof MixinDefNode);
+        Assert.assertTrue(root.getChildren().get(8) instanceof MixinDefNode);
+        Assert.assertTrue(root.getChildren().get(9) instanceof MixinNode);
     }
 
     @Test

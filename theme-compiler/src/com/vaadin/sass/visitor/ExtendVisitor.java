@@ -22,16 +22,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.w3c.css.sac.SelectorList;
-
-import com.vaadin.sass.parser.SelectorListImpl;
-import com.vaadin.sass.selector.SelectorUtil;
 import com.vaadin.sass.tree.BlockNode;
 import com.vaadin.sass.tree.ExtendNode;
 import com.vaadin.sass.tree.Node;
 
 public class ExtendVisitor implements Visitor {
-    private Map<String, List<SelectorList>> extendsMap = new HashMap<String, List<SelectorList>>();
+    private Map<String, List<ArrayList<String>>> extendsMap = new HashMap<String, List<ArrayList<String>>>();
 
     @Override
     public void traverse(Node node) throws Exception {
@@ -39,31 +35,29 @@ public class ExtendVisitor implements Visitor {
         modifyTree(node);
     }
 
+    @SuppressWarnings("unchecked")
     private void modifyTree(Node node) throws Exception {
         for (Node child : node.getChildren()) {
             if (child instanceof BlockNode) {
                 BlockNode blockNode = (BlockNode) child;
-                String selectorString = SelectorUtil.toString(blockNode
-                        .getSelectorList());
+                String selectorString = blockNode.getSelectors();
                 if (extendsMap.get(selectorString) != null) {
-                    for (SelectorList sList : extendsMap.get(selectorString)) {
-                        SelectorList newList = SelectorUtil
-                                .createNewSelectorListFromAnOldOneWithSomPartReplaced(
-                                        blockNode.getSelectorList(),
-                                        selectorString, sList);
-                        addAdditionalSelectorListToBlockNode(blockNode, newList);
+                    for (ArrayList<String> sList : extendsMap
+                            .get(selectorString)) {
+                        ArrayList<String> clone = (ArrayList<String>) sList
+                                .clone();
+                        addAdditionalSelectorListToBlockNode(blockNode, clone,
+                                null);
                     }
                 } else {
-                    for (Entry<String, List<SelectorList>> entry : extendsMap
+                    for (Entry<String, List<ArrayList<String>>> entry : extendsMap
                             .entrySet()) {
                         if (selectorString.contains(entry.getKey())) {
-                            for (SelectorList sList : entry.getValue()) {
-                                SelectorList newList = SelectorUtil
-                                        .createNewSelectorListFromAnOldOneWithSomPartReplaced(
-                                                blockNode.getSelectorList(),
-                                                entry.getKey(), sList);
+                            for (ArrayList<String> sList : entry.getValue()) {
+                                ArrayList<String> clone = (ArrayList<String>) sList
+                                        .clone();
                                 addAdditionalSelectorListToBlockNode(blockNode,
-                                        newList);
+                                        clone, entry.getKey());
                             }
                         }
                     }
@@ -81,11 +75,11 @@ public class ExtendVisitor implements Visitor {
             for (Node child : new ArrayList<Node>(node.getChildren())) {
                 if (child instanceof ExtendNode) {
                     ExtendNode extendNode = (ExtendNode) child;
-                    String extendedString = SelectorUtil.toString(extendNode
-                            .getList());
+
+                    String extendedString = extendNode.getListAsString();
                     if (extendsMap.get(extendedString) == null) {
                         extendsMap.put(extendedString,
-                                new ArrayList<SelectorList>());
+                                new ArrayList<ArrayList<String>>());
                     }
                     extendsMap.get(extendedString).add(
                             blockNode.getSelectorList());
@@ -103,11 +97,21 @@ public class ExtendVisitor implements Visitor {
     }
 
     private void addAdditionalSelectorListToBlockNode(BlockNode blockNode,
-            SelectorList list) {
+            ArrayList<String> list, String selectorString) {
         if (list != null) {
-            for (int i = 0; i < list.getLength(); i++) {
-                ((SelectorListImpl) blockNode.getSelectorList())
-                        .addSelector(list.item(i));
+            for (int i = 0; i < list.size(); i++) {
+                if (selectorString == null) {
+                    blockNode.getSelectorList().add(list.get(i));
+                } else {
+                    ArrayList<String> newTags = new ArrayList<String>();
+                    for (final String existing : blockNode.getSelectorList()) {
+                        if (existing.contains(selectorString)) {
+                            newTags.add(existing.replace(selectorString,
+                                    list.get(i)));
+                        }
+                    }
+                    blockNode.getSelectorList().addAll(newTags);
+                }
             }
         }
     }

@@ -18,9 +18,6 @@ package com.vaadin.sass.visitor;
 
 import java.util.ArrayList;
 
-import org.w3c.css.sac.SelectorList;
-
-import com.vaadin.sass.selector.SelectorUtil;
 import com.vaadin.sass.tree.BlockNode;
 import com.vaadin.sass.tree.Node;
 
@@ -41,16 +38,21 @@ public class ParentSelectorVisitor implements Visitor {
             if (child instanceof BlockNode) {
                 BlockNode blockChild = (BlockNode) child;
                 traverse(block, blockChild);
-                if (SelectorUtil
-                        .hasParentSelector(blockChild.getSelectorList())) {
-                    parent.appendChild(child, pre);
-                    pre = child;
-                    block.removeChild(child);
-                    SelectorList newSelectorList = SelectorUtil
-                            .createNewSelectorListFromAnOldOneWithSomPartReplaced(
-                                    blockChild.getSelectorList(), "&",
-                                    block.getSelectorList());
-                    blockChild.setSelectorList(newSelectorList);
+                for (final String s : blockChild.getSelectorList()) {
+
+                    if (s.contains("&")) {
+                        parent.appendChild(child, pre);
+                        pre = child;
+                        block.removeChild(child);
+
+                        ArrayList<String> newList = new ArrayList<String>(block
+                                .getSelectorList().size());
+                        for (final String parentSelector : block
+                                .getSelectorList()) {
+                            newList.add(s.replace("&", parentSelector));
+                        }
+                        blockChild.setSelectorList(newList);
+                    }
                 }
             }
         }

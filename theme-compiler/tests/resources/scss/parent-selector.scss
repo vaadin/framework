@@ -12,3 +12,13 @@ a {
     &:hover { color: red; }
   }
 }
+
+@mixin parent {
+	&:hover {
+		color: blue;
+	}
+}
+
+.mixin-parent {
+	@include parent;
+}

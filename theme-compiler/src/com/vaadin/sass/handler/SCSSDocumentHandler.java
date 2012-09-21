@@ -19,12 +19,12 @@ package com.vaadin.sass.handler;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.DocumentHandler;
-import org.w3c.css.sac.LexicalUnit;
 import org.w3c.css.sac.SACMediaList;
-import org.w3c.css.sac.SelectorList;
 
 import com.vaadin.sass.ScssStylesheet;
+import com.vaadin.sass.parser.LexicalUnitImpl;
 import com.vaadin.sass.tree.ForNode;
 import com.vaadin.sass.tree.MixinDefNode;
 import com.vaadin.sass.tree.VariableNode;
@@ -34,7 +34,7 @@ import com.vaadin.sass.tree.controldirective.EachDefNode;
 public interface SCSSDocumentHandler extends DocumentHandler {
     ScssStylesheet getStyleSheet();
 
-    void variable(String name, LexicalUnit value, boolean guarded);
+    void variable(String name, LexicalUnitImpl value, boolean guarded);
 
     void startMixinDirective(String name, Collection<VariableNode> args);
 
@@ -49,17 +49,15 @@ public interface SCSSDocumentHandler extends DocumentHandler {
 
     WhileNode whileDirective(String condition, String body);
 
-    void extendDirective(SelectorList list);
-
     void startNestedProperties(String name);
 
     void endNestedProperties(String name);
 
-    void includeDirective(String name, Collection<LexicalUnit> args);
+    void includeDirective(String name, Collection<LexicalUnitImpl> args);
 
     void importStyle(String uri, SACMediaList media, boolean isURL);
 
-    void property(String name, LexicalUnit value, boolean important,
+    void property(String name, LexicalUnitImpl value, boolean important,
             String comment);
 
     EachDefNode startEachDirective(String variable, ArrayList<String> list);
@@ -73,5 +71,18 @@ public interface SCSSDocumentHandler extends DocumentHandler {
     void ifDirective(String evaluator);
 
     void elseDirective();
+
+    void startSelector(ArrayList<String> selectors) throws CSSException;
+
+    void endSelector() throws CSSException;
+
+    void extendDirective(ArrayList<String> list);
+
+    void microsoftDirective(String name, String value);
+
+    EachDefNode startEachDirective(String var, String listVariable);
+
+    void removeDirective(ArrayList<String> list, ArrayList<String> remove,
+            String separator);
 
 }
