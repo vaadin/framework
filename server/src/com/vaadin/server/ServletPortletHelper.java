@@ -119,17 +119,47 @@ class ServletPortletHelper implements Serializable {
 
     public static void initDefaultUIProvider(VaadinSession session,
             VaadinService vaadinService) throws ServiceException {
-        Properties initParameters = vaadinService.getDeploymentConfiguration()
-                .getInitParameters();
-        String uiProperty = initParameters
-                .getProperty(VaadinSession.UI_PARAMETER);
-        if (uiProperty == null) {
-            uiProperty = initParameters.getProperty(VaadinSession.UI_PARAMETER
-                    .toLowerCase());
-        }
+        String uiProperty = vaadinService.getDeploymentConfiguration()
+                .getApplicationOrSystemProperty(VaadinSession.UI_PARAMETER,
+                        null);
+
+        // Add provider for UI parameter first to give it lower priority
+        // (providers are FILO)
         if (uiProperty != null) {
             verifyUIClass(uiProperty, vaadinService.getClassLoader());
             vaadinService.addUIProvider(session, new DefaultUIProvider());
+        }
+
+        String uiProviderProperty = vaadinService.getDeploymentConfiguration()
+                .getApplicationOrSystemProperty(
+                        Constants.SERVLET_PARAMETER_UI_PROVIDER, null);
+        // Then add custom UI provider if defined
+        if (uiProviderProperty != null) {
+            UIProvider uiProvider = getUIProvider(uiProviderProperty,
+                    vaadinService.getClassLoader());
+            vaadinService.addUIProvider(session, uiProvider);
+        }
+    }
+
+    private static UIProvider getUIProvider(String uiProviderProperty,
+            ClassLoader classLoader) throws ServiceException {
+        try {
+            Class<?> providerClass = classLoader.loadClass(uiProviderProperty);
+            Class<? extends UIProvider> subclass = providerClass
+                    .asSubclass(UIProvider.class);
+            return subclass.newInstance();
+        } catch (ClassNotFoundException e) {
+            throw new ServiceException("Could not load UIProvider class "
+                    + uiProviderProperty, e);
+        } catch (ClassCastException e) {
+            throw new ServiceException("UIProvider class " + uiProviderProperty
+                    + " does not extend UIProvider", e);
+        } catch (InstantiationException e) {
+            throw new ServiceException("Could not instantiate UIProvider "
+                    + uiProviderProperty, e);
+        } catch (IllegalAccessException e) {
+            throw new ServiceException("Could not instantiate UIProvider "
+                    + uiProviderProperty, e);
         }
     }
 
