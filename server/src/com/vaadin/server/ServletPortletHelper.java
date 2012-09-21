@@ -119,8 +119,14 @@ class ServletPortletHelper implements Serializable {
 
     public static void initDefaultUIProvider(VaadinSession session,
             VaadinService vaadinService) throws ServiceException {
-        String uiProperty = vaadinService.getDeploymentConfiguration()
-                .getInitParameters().getProperty(VaadinSession.UI_PARAMETER);
+        Properties initParameters = vaadinService.getDeploymentConfiguration()
+                .getInitParameters();
+        String uiProperty = initParameters
+                .getProperty(VaadinSession.UI_PARAMETER);
+        if (uiProperty == null) {
+            uiProperty = initParameters.getProperty(VaadinSession.UI_PARAMETER
+                    .toLowerCase());
+        }
         if (uiProperty != null) {
             verifyUIClass(uiProperty, vaadinService.getClassLoader());
             vaadinService.addUIProvider(session, new DefaultUIProvider());
