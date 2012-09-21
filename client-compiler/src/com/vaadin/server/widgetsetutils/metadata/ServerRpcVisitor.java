@@ -19,6 +19,7 @@ package com.vaadin.server.widgetsetutils.metadata;
 import java.util.Set;
 
 import com.google.gwt.core.ext.TreeLogger;
+import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JType;
@@ -26,7 +27,7 @@ import com.google.gwt.core.ext.typeinfo.JType;
 public class ServerRpcVisitor extends TypeVisitor {
     @Override
     public void visitServerRpc(TreeLogger logger, JClassType type,
-            ConnectorBundle bundle) {
+            ConnectorBundle bundle) throws UnableToCompleteException {
         bundle.setNeedsProxySupport(type);
 
         Set<? extends JClassType> superTypes = type
@@ -35,6 +36,7 @@ public class ServerRpcVisitor extends TypeVisitor {
             if (subType.isInterface() != null) {
                 JMethod[] methods = subType.getMethods();
                 for (JMethod method : methods) {
+                    ClientRpcVisitor.checkReturnType(logger, method);
                     bundle.setNeedsDelayedInfo(type, method);
 
                     JType[] parameterTypes = method.getParameterTypes();

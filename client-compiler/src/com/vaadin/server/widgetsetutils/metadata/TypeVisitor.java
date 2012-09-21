@@ -23,12 +23,12 @@ public abstract class TypeVisitor {
     }
 
     public void visitClientRpc(TreeLogger logger, JClassType type,
-            ConnectorBundle bundle) {
+            ConnectorBundle bundle) throws UnableToCompleteException {
         // Default does nothing
     }
 
     public void visitServerRpc(TreeLogger logger, JClassType type,
-            ConnectorBundle bundle) {
+            ConnectorBundle bundle) throws UnableToCompleteException {
         // Default does nothing
     }
 

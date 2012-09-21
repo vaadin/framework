@@ -19,6 +19,8 @@ package com.vaadin.server.widgetsetutils.metadata;
 import java.util.Set;
 
 import com.google.gwt.core.ext.TreeLogger;
+import com.google.gwt.core.ext.TreeLogger.Type;
+import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JType;
@@ -26,12 +28,14 @@ import com.google.gwt.core.ext.typeinfo.JType;
 public class ClientRpcVisitor extends TypeVisitor {
     @Override
     public void visitClientRpc(TreeLogger logger, JClassType type,
-            ConnectorBundle bundle) {
+            ConnectorBundle bundle) throws UnableToCompleteException {
         Set<? extends JClassType> hierarchy = type
                 .getFlattenedSupertypeHierarchy();
         for (JClassType subType : hierarchy) {
             JMethod[] methods = subType.getMethods();
             for (JMethod method : methods) {
+                checkReturnType(logger, method);
+
                 bundle.setNeedsInvoker(type, method);
                 bundle.setNeedsParamTypes(type, method);
 
@@ -40,6 +44,23 @@ public class ClientRpcVisitor extends TypeVisitor {
                     bundle.setNeedsSerialize(paramType);
                 }
             }
+        }
+    }
+
+    public static void checkReturnType(TreeLogger logger, JMethod method)
+            throws UnableToCompleteException {
+        if (!method.getReturnType().getQualifiedSourceName().equals("void")) {
+            logger.log(
+                    Type.ERROR,
+                    "The method "
+                            + method.getEnclosingType()
+                                    .getQualifiedSourceName()
+                            + "."
+                            + method.getName()
+                            + " returns "
+                            + method.getReturnType().getQualifiedSourceName()
+                            + " but only void is supported for methods in RPC interfaces.");
+            throw new UnableToCompleteException();
         }
     }
 }
