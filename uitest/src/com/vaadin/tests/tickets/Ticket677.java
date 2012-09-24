@@ -133,7 +133,7 @@ public class Ticket677 extends LegacyApplication {
         table.addContainerProperty("Text", String.class, null);
         for (int i = 0; i < 150; i++) {
             Item item = table.addItem("Item" + i);
-            Property<?> p = item.getItemProperty("Text");
+            Property<String> p = item.getItemProperty("Text");
             p.setValue(i % 5 == 0 ? "enabled" : "disabled");
         }
 

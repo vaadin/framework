@@ -67,40 +67,6 @@ public class AbstractFieldValueConversions extends TestCase {
         assertEquals("abc", paulaBean.getFirstName());
     }
 
-    public void testFailingConversion() {
-        TextField tf = new TextField();
-        tf.setConverter(new Converter<String, Integer>() {
-
-            @Override
-            public Integer convertToModel(String value, Locale locale) {
-                throw new ConversionException("Failed");
-            }
-
-            @Override
-            public String convertToPresentation(Integer value, Locale locale) {
-                throw new ConversionException("Failed");
-            }
-
-            @Override
-            public Class<Integer> getModelType() {
-                // TODO Auto-generated method stub
-                return null;
-            }
-
-            @Override
-            public Class<String> getPresentationType() {
-                // TODO Auto-generated method stub
-                return null;
-            }
-        });
-        try {
-            tf.setValue(1);
-            fail("setValue(Integer) should throw an exception");
-        } catch (Converter.ConversionException e) {
-            // OK, expected
-        }
-    }
-
     public void testIntegerStringConversion() {
         TextField tf = new TextField();
 

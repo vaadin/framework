@@ -153,7 +153,7 @@ public class ProgressIndicator extends AbstractField<Number> implements
      * @see com.vaadin.ui.AbstractField#setValue()
      */
     @Override
-    public void setValue(Object newValue) {
+    public void setValue(Number newValue) {
         if (dataSource == null) {
             throw new IllegalStateException("Datasource must be set");
         }

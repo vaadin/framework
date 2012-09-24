@@ -481,7 +481,7 @@ public class FilesystemContainer implements Container.Hierarchical {
      * @return the requested property's value, or <code>null</code>
      */
     @Override
-    public Property<?> getContainerProperty(Object itemId, Object propertyId) {
+    public Property getContainerProperty(Object itemId, Object propertyId) {
 
         if (!(itemId instanceof File)) {
             return null;
@@ -633,7 +633,7 @@ public class FilesystemContainer implements Container.Hierarchical {
          * here, we use the default documentation from implemented interface.
          */
         @Override
-        public Property<?> getItemProperty(Object id) {
+        public Property getItemProperty(Object id) {
             return getContainerProperty(file, id);
         }
 

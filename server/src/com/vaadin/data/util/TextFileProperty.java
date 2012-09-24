@@ -129,7 +129,7 @@ public class TextFileProperty extends AbstractProperty<String> {
      * @see com.vaadin.data.Property#setValue(java.lang.Object)
      */
     @Override
-    public void setValue(Object newValue) throws ReadOnlyException {
+    public void setValue(String newValue) throws ReadOnlyException {
         if (isReadOnly()) {
             throw new ReadOnlyException();
         }
