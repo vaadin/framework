@@ -67,8 +67,10 @@ public interface Validatable extends Serializable {
     /**
      * <p>
      * Returns a collection of all validators currently registered for the
-     * object. The collection may be immutable and it may not be safe to call
-     * <code>removeValidator</code> for this object while iterating over it.
+     * object. The collection may be immutable. Calling
+     * <code>removeValidator</code> for this Validatable while iterating over
+     * the collection may be unsafe (e.g. may throw
+     * <code>ConcurrentModificationException</code>.)
      * </p>
      * 
      * @return A collection of validators
