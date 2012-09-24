@@ -415,6 +415,15 @@ public class Page implements Serializable {
         return uI.getSession().getBrowser();
     }
 
+    /**
+     * Updates the internal state with the given values. Does not resize the
+     * Page or browser window.
+     * 
+     * @param width
+     *            The new width
+     * @param height
+     *            The new height
+     */
     public void setBrowserWindowSize(int width, int height) {
         boolean fireEvent = false;
 
