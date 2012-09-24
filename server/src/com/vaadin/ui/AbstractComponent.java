@@ -403,6 +403,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
 
         this.visible = visible;
+        markAsDirty();
         if (getParent() != null) {
             // Must always repaint the parent (at least the hierarchy) when
             // visibility of a child component changes.
