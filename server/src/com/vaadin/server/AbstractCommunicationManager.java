@@ -2525,9 +2525,11 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
         // No existing UI found - go on by creating and initializing one
 
+        Integer uiId = Integer.valueOf(session.getNextUIid());
+
         // Explicit Class.cast to detect if the UIProvider does something
         // unexpected
-        UICreateEvent event = new UICreateEvent(request, uiClass);
+        UICreateEvent event = new UICreateEvent(request, uiClass, uiId);
         UI ui = uiClass.cast(provider.createInstance(event));
 
         // Initialize some fields for a newly created UI
@@ -2535,7 +2537,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
             // Session already set for LegacyWindow
             ui.setSession(session);
         }
-        Integer uiId = Integer.valueOf(session.getNextUIid());
 
         // Set thread local here so it is available in init
         UI.setCurrent(ui);
