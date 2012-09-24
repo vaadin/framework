@@ -19,7 +19,6 @@ package com.vaadin.server;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-import com.vaadin.server.VaadinServlet.ServletService;
 
 /**
  * Wrapper for {@link HttpServletResponse}.
@@ -33,7 +32,7 @@ import com.vaadin.server.VaadinServlet.ServletService;
 public class VaadinServletResponse extends HttpServletResponseWrapper implements
         VaadinResponse {
 
-    private ServletService vaadinService;
+    private VaadinServletService vaadinService;
 
     /**
      * Wraps a http servlet response and an associated vaadin service
@@ -44,7 +43,7 @@ public class VaadinServletResponse extends HttpServletResponseWrapper implements
      *            the associated vaadin service
      */
     public VaadinServletResponse(HttpServletResponse response,
-            ServletService vaadinService) {
+            VaadinServletService vaadinService) {
         super(response);
         this.vaadinService = vaadinService;
     }
@@ -80,7 +79,7 @@ public class VaadinServletResponse extends HttpServletResponseWrapper implements
     }
 
     @Override
-    public ServletService getVaadinService() {
+    public VaadinServletService getVaadinService() {
         return vaadinService;
     }
 }

@@ -26,7 +26,6 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 import javax.portlet.ResourceRequest;
 
-import com.vaadin.server.VaadinPortlet.PortletService;
 import com.vaadin.shared.ApplicationConstants;
 
 /**
@@ -41,7 +40,7 @@ import com.vaadin.shared.ApplicationConstants;
 public class VaadinPortletRequest implements VaadinRequest {
 
     private final PortletRequest request;
-    private final PortletService vaadinService;
+    private final VaadinPortletService vaadinService;
 
     /**
      * Wraps a portlet request and an associated vaadin service
@@ -52,7 +51,7 @@ public class VaadinPortletRequest implements VaadinRequest {
      *            the associated vaadin service
      */
     public VaadinPortletRequest(PortletRequest request,
-            PortletService vaadinService) {
+            VaadinPortletService vaadinService) {
         this.request = request;
         this.vaadinService = vaadinService;
     }
@@ -203,7 +202,7 @@ public class VaadinPortletRequest implements VaadinRequest {
     }
 
     @Override
-    public PortletService getVaadinService() {
+    public VaadinPortletService getVaadinService() {
         return vaadinService;
     }
 

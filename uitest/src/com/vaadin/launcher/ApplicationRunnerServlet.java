@@ -37,6 +37,7 @@ import com.vaadin.server.ServiceException;
 import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServletRequest;
+import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.server.VaadinSessionInitializationListener;
 import com.vaadin.server.VaadinSessionInitializeEvent;
@@ -291,9 +292,9 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     }
 
     @Override
-    protected ServletService createServletService(
+    protected VaadinServletService createServletService(
             DeploymentConfiguration deploymentConfiguration) {
-        return new ServletService(this, deploymentConfiguration) {
+        return new VaadinServletService(this, deploymentConfiguration) {
             @Override
             public String getStaticFileLocation(VaadinRequest request) {
                 URIS uris = getApplicationRunnerURIs(VaadinServletRequest

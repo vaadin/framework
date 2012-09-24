@@ -29,7 +29,7 @@ public class LegacyVaadinPortlet extends VaadinPortlet {
             VaadinPortlet portlet = VaadinPortlet.getCurrent();
             if (portlet instanceof LegacyVaadinPortlet) {
                 LegacyVaadinPortlet legacyPortlet = (LegacyVaadinPortlet) portlet;
-                PortletRequest request = PortletService
+                PortletRequest request = VaadinPortletService
                         .getCurrentPortletRequest();
                 if (legacyPortlet.shouldCreateApplication(request)) {
                     try {

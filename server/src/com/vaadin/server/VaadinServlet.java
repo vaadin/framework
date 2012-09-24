@@ -16,7 +16,6 @@
 package com.vaadin.server;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -52,181 +51,6 @@ import com.vaadin.util.CurrentInstance;
 @SuppressWarnings("serial")
 public class VaadinServlet extends HttpServlet implements Constants {
 
-    public static class ServletService extends VaadinService {
-        private final VaadinServlet servlet;
-
-        public ServletService(VaadinServlet servlet,
-                DeploymentConfiguration deploymentConfiguration) {
-            super(deploymentConfiguration);
-            this.servlet = servlet;
-        }
-
-        protected VaadinServlet getServlet() {
-            return servlet;
-        }
-
-        @Override
-        public String getStaticFileLocation(VaadinRequest request) {
-            HttpServletRequest servletRequest = VaadinServletRequest
-                    .cast(request);
-            String staticFileLocation;
-            // if property is defined in configurations, use that
-            staticFileLocation = getDeploymentConfiguration()
-                    .getApplicationOrSystemProperty(PARAMETER_VAADIN_RESOURCES,
-                            null);
-            if (staticFileLocation != null) {
-                return staticFileLocation;
-            }
-
-            // the last (but most common) option is to generate default location
-            // from request
-
-            // if context is specified add it to widgetsetUrl
-            String ctxPath = servletRequest.getContextPath();
-
-            // FIXME: ctxPath.length() == 0 condition is probably unnecessary
-            // and
-            // might even be wrong.
-
-            if (ctxPath.length() == 0
-                    && request
-                            .getAttribute("javax.servlet.include.context_path") != null) {
-                // include request (e.g portlet), get context path from
-                // attribute
-                ctxPath = (String) request
-                        .getAttribute("javax.servlet.include.context_path");
-            }
-
-            // Remove heading and trailing slashes from the context path
-            ctxPath = removeHeadingOrTrailing(ctxPath, "/");
-
-            if (ctxPath.equals("")) {
-                return "";
-            } else {
-                return "/" + ctxPath;
-            }
-        }
-
-        @Override
-        public String getConfiguredWidgetset(VaadinRequest request) {
-            return getDeploymentConfiguration().getApplicationOrSystemProperty(
-                    VaadinServlet.PARAMETER_WIDGETSET,
-                    VaadinServlet.DEFAULT_WIDGETSET);
-        }
-
-        @Override
-        public String getConfiguredTheme(VaadinRequest request) {
-            // Use the default
-            return VaadinServlet.getDefaultTheme();
-        }
-
-        @Override
-        public boolean isStandalone(VaadinRequest request) {
-            return true;
-        }
-
-        @Override
-        public String getMimeType(String resourceName) {
-            return getServlet().getServletContext().getMimeType(resourceName);
-        }
-
-        @Override
-        public SystemMessages getSystemMessages() {
-            return ServletPortletHelper.DEFAULT_SYSTEM_MESSAGES;
-        }
-
-        @Override
-        public File getBaseDirectory() {
-            final String realPath = VaadinServlet.getResourcePath(
-                    servlet.getServletContext(), "/");
-            if (realPath == null) {
-                return null;
-            }
-            return new File(realPath);
-        }
-
-        @Override
-        protected boolean requestCanCreateSession(VaadinRequest request) {
-            RequestType requestType = getRequestType(request);
-            if (requestType == RequestType.BROWSER_DETAILS) {
-                // This is the first request if you are embedding by writing the
-                // embedding code yourself
-                return true;
-            } else if (requestType == RequestType.OTHER) {
-                /*
-                 * I.e URIs that are not RPC calls or static (theme) files.
-                 */
-                return true;
-            }
-
-            return false;
-        }
-
-        /**
-         * Gets the request type for the request.
-         * 
-         * @param request
-         *            the request to get a request type for
-         * @return the request type
-         * 
-         * @deprecated might be refactored or removed before 7.0.0
-         */
-        @Deprecated
-        protected RequestType getRequestType(VaadinRequest request) {
-            RequestType type = (RequestType) request
-                    .getAttribute(RequestType.class.getName());
-            if (type == null) {
-                type = getServlet().getRequestType(
-                        VaadinServletRequest.cast(request));
-                request.setAttribute(RequestType.class.getName(), type);
-            }
-            return type;
-        }
-
-        @Override
-        protected URL getApplicationUrl(VaadinRequest request)
-                throws MalformedURLException {
-            return getServlet().getApplicationUrl(
-                    VaadinServletRequest.cast(request));
-        }
-
-        @Override
-        protected AbstractCommunicationManager createCommunicationManager(
-                VaadinSession session) {
-            return new CommunicationManager(session);
-        }
-
-        public static HttpServletRequest getCurrentServletRequest() {
-            VaadinRequest currentRequest = VaadinService.getCurrentRequest();
-            try {
-                VaadinServletRequest request = VaadinServletRequest
-                        .cast(currentRequest);
-                if (request != null) {
-                    return request.getHttpServletRequest();
-                } else {
-                    return null;
-                }
-            } catch (ClassCastException e) {
-                return null;
-            }
-        }
-
-        public static VaadinServletResponse getCurrentResponse() {
-            return (VaadinServletResponse) VaadinService.getCurrentResponse();
-        }
-
-        @Override
-        protected VaadinSession createVaadinSession(VaadinRequest request)
-                throws ServiceException {
-            return new VaadinServletSession();
-        }
-
-        @Override
-        public String getServiceName() {
-            return getServlet().getServletName();
-        }
-    }
-
     private static class AbstractApplicationServletWrapper implements Callback {
 
         private final VaadinServlet servlet;
@@ -250,7 +74,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     private final String resourcePath = null;
 
-    private ServletService servletService;
+    private VaadinServletService servletService;
 
     private AddonContext addonContext;
 
@@ -350,9 +174,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
         return new DefaultDeploymentConfiguration(getClass(), initParameters);
     }
 
-    protected ServletService createServletService(
+    protected VaadinServletService createServletService(
             DeploymentConfiguration deploymentConfiguration) {
-        return new ServletService(this, deploymentConfiguration);
+        return new VaadinServletService(this, deploymentConfiguration);
     }
 
     @Override
@@ -525,7 +349,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * 
      * @return the vaadin service
      */
-    protected ServletService getVaadinService() {
+    protected VaadinServletService getVaadinService() {
         return servletService;
     }
 
@@ -1263,7 +1087,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @param what
      * @return
      */
-    private static String removeHeadingOrTrailing(String string, String what) {
+    static String removeHeadingOrTrailing(String string, String what) {
         while (string.startsWith(what)) {
             string = string.substring(1);
         }

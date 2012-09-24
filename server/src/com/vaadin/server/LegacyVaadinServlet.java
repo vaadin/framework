@@ -31,7 +31,7 @@ public class LegacyVaadinServlet extends VaadinServlet {
             VaadinServlet servlet = VaadinServlet.getCurrent();
             if (servlet instanceof LegacyVaadinServlet) {
                 LegacyVaadinServlet legacyServlet = (LegacyVaadinServlet) servlet;
-                HttpServletRequest request = ServletService
+                HttpServletRequest request = VaadinServletService
                         .getCurrentServletRequest();
                 try {
                     if (legacyServlet.shouldCreateApplication(request)) {

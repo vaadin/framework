@@ -16,7 +16,6 @@
 package com.vaadin.server;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -25,12 +24,10 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.portlet.ActionRequest;
@@ -74,199 +71,12 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
     @Deprecated
     public static final String RESOURCE_URL_ID = "APP";
 
-    public static class PortletService extends VaadinService {
-        private final VaadinPortlet portlet;
-
-        public PortletService(VaadinPortlet portlet,
-                DeploymentConfiguration deploymentConfiguration) {
-            super(deploymentConfiguration);
-            this.portlet = portlet;
-        }
-
-        protected VaadinPortlet getPortlet() {
-            return portlet;
-        }
-
-        @Override
-        public String getConfiguredWidgetset(VaadinRequest request) {
-
-            String widgetset = getDeploymentConfiguration()
-                    .getApplicationOrSystemProperty(PARAMETER_WIDGETSET, null);
-
-            if (widgetset == null) {
-                // If no widgetset defined for the application, check the
-                // portal property
-                widgetset = VaadinPortletRequest.cast(request)
-                        .getPortalProperty(PORTAL_PARAMETER_VAADIN_WIDGETSET);
-            }
-
-            if (widgetset == null) {
-                // If no widgetset defined for the portal, use the default
-                widgetset = DEFAULT_WIDGETSET;
-            }
-
-            return widgetset;
-        }
-
-        @Override
-        public String getConfiguredTheme(VaadinRequest request) {
-
-            // is the default theme defined by the portal?
-            String themeName = VaadinPortletRequest.cast(request)
-                    .getPortalProperty(Constants.PORTAL_PARAMETER_VAADIN_THEME);
-
-            if (themeName == null) {
-                // no, using the default theme defined by Vaadin
-                themeName = DEFAULT_THEME_NAME;
-            }
-
-            return themeName;
-        }
-
-        @Override
-        public boolean isStandalone(VaadinRequest request) {
-            return false;
-        }
-
-        @Override
-        public String getStaticFileLocation(VaadinRequest request) {
-            String staticFileLocation = VaadinPortletRequest.cast(request)
-                    .getPortalProperty(
-                            Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH);
-            if (staticFileLocation != null) {
-                // remove trailing slash if any
-                while (staticFileLocation.endsWith(".")) {
-                    staticFileLocation = staticFileLocation.substring(0,
-                            staticFileLocation.length() - 1);
-                }
-                return staticFileLocation;
-            } else {
-                // default for Liferay
-                return "/html";
-            }
-        }
-
-        @Override
-        public String getMimeType(String resourceName) {
-            return getPortlet().getPortletContext().getMimeType(resourceName);
-        }
-
-        @Override
-        public SystemMessages getSystemMessages() {
-            return ServletPortletHelper.DEFAULT_SYSTEM_MESSAGES;
-        }
-
-        @Override
-        public File getBaseDirectory() {
-            PortletContext context = getPortlet().getPortletContext();
-            String resultPath = context.getRealPath("/");
-            if (resultPath != null) {
-                return new File(resultPath);
-            } else {
-                try {
-                    final URL url = context.getResource("/");
-                    return new File(url.getFile());
-                } catch (final Exception e) {
-                    // FIXME: Handle exception
-                    getLogger()
-                            .log(Level.INFO,
-                                    "Cannot access base directory, possible security issue "
-                                            + "with Application Server or Servlet Container",
-                                    e);
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected boolean requestCanCreateSession(VaadinRequest request) {
-            RequestType requestType = getRequestType(request);
-            if (requestType == RequestType.RENDER) {
-                // In most cases the first request is a render request that
-                // renders the HTML fragment. This should create a Vaadin
-                // session unless there is already one.
-                return true;
-            } else if (requestType == RequestType.EVENT) {
-                // A portlet can also be sent an event even though it has not
-                // been rendered, e.g. portlet on one page sends an event to a
-                // portlet on another page and then moves the user to that page.
-                return true;
-            }
-            return false;
-        }
-
-        /**
-         * Gets the request type for the request.
-         * 
-         * @param request
-         *            the request to get a request type for
-         * @return the request type
-         * 
-         * @deprecated might be refactored or removed before 7.0.0
-         */
-        @Deprecated
-        protected RequestType getRequestType(VaadinRequest request) {
-            RequestType type = (RequestType) request
-                    .getAttribute(RequestType.class.getName());
-            if (type == null) {
-                type = getPortlet().getRequestType(
-                        VaadinPortletRequest.cast(request));
-                request.setAttribute(RequestType.class.getName(), type);
-            }
-            return type;
-        }
-
-        @Override
-        protected AbstractCommunicationManager createCommunicationManager(
-                VaadinSession session) {
-            return new PortletCommunicationManager(session);
-        }
-
-        public static PortletRequest getCurrentPortletRequest() {
-            VaadinRequest currentRequest = VaadinService.getCurrentRequest();
-            try {
-                VaadinPortletRequest request = VaadinPortletRequest
-                        .cast(currentRequest);
-                if (request != null) {
-                    return request.getPortletRequest();
-                } else {
-                    return null;
-                }
-            } catch (ClassCastException e) {
-                return null;
-            }
-        }
-
-        public static VaadinPortletResponse getCurrentResponse() {
-            return (VaadinPortletResponse) VaadinService.getCurrentResponse();
-        }
-
-        @Override
-        protected VaadinSession createVaadinSession(VaadinRequest request)
-                throws ServiceException {
-            return new VaadinPortletSession();
-        }
-
-        @Override
-        public String getServiceName() {
-            return getPortlet().getPortletName();
-        }
-
-        /**
-         * Always preserve UIs in portlets to make portlet actions work.
-         */
-        @Override
-        public boolean preserveUIOnRefresh(VaadinRequest request, UI ui,
-                UIProvider provider) {
-            return true;
-        }
-    }
-
     public static class VaadinHttpAndPortletRequest extends
             VaadinPortletRequest {
 
         public VaadinHttpAndPortletRequest(PortletRequest request,
-                HttpServletRequest originalRequest, PortletService vaadinService) {
+                HttpServletRequest originalRequest,
+                VaadinPortletService vaadinService) {
             super(request, vaadinService);
             this.originalRequest = originalRequest;
         }
@@ -308,7 +118,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
     public static class VaadinGateinRequest extends VaadinHttpAndPortletRequest {
         public VaadinGateinRequest(PortletRequest request,
-                PortletService vaadinService) {
+                VaadinPortletService vaadinService) {
             super(request, getOriginalRequest(request), vaadinService);
         }
 
@@ -331,7 +141,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             VaadinHttpAndPortletRequest {
 
         public VaadinLiferayRequest(PortletRequest request,
-                PortletService vaadinService) {
+                VaadinPortletService vaadinService) {
             super(request, getOriginalRequest(request), vaadinService);
         }
 
@@ -409,7 +219,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
     // TODO Can we close the application when the portlet is removed? Do we know
     // when the portlet is removed?
 
-    private PortletService vaadinService;
+    private VaadinPortletService vaadinService;
     private AddonContext addonContext;
 
     @Override
@@ -455,9 +265,9 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         return new DefaultDeploymentConfiguration(getClass(), initParameters);
     }
 
-    protected PortletService createPortletService(
+    protected VaadinPortletService createPortletService(
             DeploymentConfiguration deploymentConfiguration) {
-        return new PortletService(this, deploymentConfiguration);
+        return new VaadinPortletService(this, deploymentConfiguration);
     }
 
     @Override
@@ -705,7 +515,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
     }
 
-    protected PortletService getVaadinService() {
+    protected VaadinPortletService getVaadinService() {
         return vaadinService;
     }
 

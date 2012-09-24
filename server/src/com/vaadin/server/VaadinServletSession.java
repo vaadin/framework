@@ -24,7 +24,6 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
-import com.vaadin.server.VaadinServlet.ServletService;
 
 /**
  * Web application context for Vaadin applications.
@@ -59,7 +58,7 @@ public class VaadinServletSession extends VaadinSession {
      * to avoid session fixation attacks.
      */
     public void reinitializeSession() {
-        HttpServletRequest currentRequest = ServletService
+        HttpServletRequest currentRequest = VaadinServletService
                 .getCurrentServletRequest();
         if (currentRequest == null) {
             throw new IllegalStateException(

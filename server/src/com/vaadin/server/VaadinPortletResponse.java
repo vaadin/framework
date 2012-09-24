@@ -29,7 +29,6 @@ import javax.portlet.MimeResponse;
 import javax.portlet.PortletResponse;
 import javax.portlet.ResourceResponse;
 
-import com.vaadin.server.VaadinPortlet.PortletService;
 
 /**
  * Wrapper for {@link PortletResponse} and its subclasses.
@@ -48,7 +47,7 @@ public class VaadinPortletResponse implements VaadinResponse {
     }
 
     private final PortletResponse response;
-    private PortletService vaadinService;
+    private VaadinPortletService vaadinService;
 
     /**
      * Wraps a portlet response and an associated vaadin service
@@ -59,7 +58,7 @@ public class VaadinPortletResponse implements VaadinResponse {
      *            the associated vaadin service
      */
     public VaadinPortletResponse(PortletResponse response,
-            PortletService vaadinService) {
+            VaadinPortletService vaadinService) {
         this.response = response;
         this.vaadinService = vaadinService;
     }
@@ -116,7 +115,7 @@ public class VaadinPortletResponse implements VaadinResponse {
     }
 
     @Override
-    public PortletService getVaadinService() {
+    public VaadinPortletService getVaadinService() {
         return vaadinService;
     }
 }
