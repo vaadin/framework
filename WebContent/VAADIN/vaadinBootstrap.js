@@ -134,6 +134,8 @@
 							
 							// Try bootstrapping again, this time without fetching missing info
 							bootstrapApp(false);
+						} else if (r.status == 500) {
+							document.write(r.responseText);
 						} else {
 							log('Error', r.statusText);  
 						}
