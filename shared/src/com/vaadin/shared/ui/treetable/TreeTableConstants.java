@@ -15,6 +15,7 @@
  */
 package com.vaadin.shared.ui.treetable;
 
+
 @Deprecated
 public class TreeTableConstants {
     @Deprecated

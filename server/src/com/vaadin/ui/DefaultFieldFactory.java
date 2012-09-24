@@ -57,9 +57,9 @@ public class DefaultFieldFactory implements FormFieldFactory, TableFieldFactory 
     }
 
     @Override
-    public Field<?> createField(Container container, Object itemId,
+    public Field createField(Container container, Object itemId,
             Object propertyId, Component uiContext) {
-        Property<?> containerProperty = container.getContainerProperty(itemId,
+        Property containerProperty = container.getContainerProperty(itemId,
                 propertyId);
         Class<?> type = containerProperty.getType();
         Field<?> field = createFieldByPropertyType(type);

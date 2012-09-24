@@ -526,7 +526,7 @@ public class LiferayThemeDemo extends LegacyApplication {
         Slider s = new Slider();
         s.setWidth("200px");
         try {
-            s.setValue(50);
+            s.setValue(50.0);
         } catch (ValueOutOfBoundsException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -538,7 +538,7 @@ public class LiferayThemeDemo extends LegacyApplication {
         s.setOrientation(SliderOrientation.VERTICAL);
         s.setHeight("200px");
         try {
-            s.setValue(50);
+            s.setValue(50.0);
         } catch (ValueOutOfBoundsException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

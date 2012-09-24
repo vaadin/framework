@@ -217,19 +217,13 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
      * @see #invokeSetMethod(Object)
      */
     @Override
-    public void setValue(Object newValue) throws ReadOnlyException {
+    public void setValue(T newValue) throws ReadOnlyException {
         // Checks the mode
         if (isReadOnly()) {
             throw new Property.ReadOnlyException();
         }
 
-        // Checks the type of the value
-        if (newValue != null && !type.isAssignableFrom(newValue.getClass())) {
-            throw new IllegalArgumentException(
-                    "Invalid value type for NestedMethodProperty.");
-        }
-
-        invokeSetMethod((T) newValue);
+        invokeSetMethod(newValue);
         fireValueChange();
     }
 

@@ -671,7 +671,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
      * documentation from implemented interface.
      */
     @Override
-    public Property<?> getContainerProperty(Object itemId, Object propertyId) {
+    public Property getContainerProperty(Object itemId, Object propertyId) {
         return container.getContainerProperty(itemId, propertyId);
     }
 
