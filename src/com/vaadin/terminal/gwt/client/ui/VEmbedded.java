@@ -22,7 +22,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
-import com.vaadin.terminal.gwt.client.BrowserInfo;
 import com.vaadin.terminal.gwt.client.Paintable;
 import com.vaadin.terminal.gwt.client.UIDL;
 import com.vaadin.terminal.gwt.client.Util;
@@ -40,6 +39,13 @@ public class VEmbedded extends HTML implements Paintable {
     private Element browserElement;
 
     private String type;
+
+    /**
+     * The src of browser type embeddeds is set to about:blank on detach so
+     * unload events are properly fired on the embedded page. Store the src here
+     * so it can be restored on attach() (#6046)
+     */
+    private String src;
 
     private ApplicationConnection client;
 
@@ -132,8 +138,8 @@ public class VEmbedded extends HTML implements Paintable {
                             + " name=\"" + uidl.getId() + "\"></iframe>");
                     browserElement = DOM.getFirstChild(getElement());
                 }
-                DOM.setElementAttribute(browserElement, "src",
-                        getSrc(uidl, client));
+                src = getSrc(uidl, client);
+                DOM.setElementAttribute(browserElement, "src", src);
                 clearBrowserElement = false;
             } else {
                 VConsole.log("Unknown Embedded type '" + type + "'");
@@ -402,21 +408,31 @@ public class VEmbedded extends HTML implements Paintable {
 
     @Override
     protected void onDetach() {
-        if (BrowserInfo.get().isIE()) {
-            // Force browser to fire unload event when component is detached
-            // from the view (IE doesn't do this automatically)
-            if (browserElement != null) {
-                /*
-                 * src was previously set to javascript:false, but this was not
-                 * enough to overcome a bug when detaching an iframe with a pdf
-                 * loaded in IE9. about:blank seems to cause the adobe reader
-                 * plugin to unload properly before the iframe is removed. See
-                 * #7855
-                 */
-                DOM.setElementAttribute(browserElement, "src", "about:blank");
-            }
+        if (browserElement != null) {
+            /*
+             * Try to trigger an unload event on the embedded page.
+             * 
+             * This tries to ensure e.g. that close listeners in an embedded
+             * Vaadin application are properly invoked. (#6046)
+             * 
+             * src was previously set to javascript:false, but this was not
+             * enough to overcome a bug when detaching an iframe with a pdf
+             * loaded in IE9. about:blank seems to cause the adobe reader plugin
+             * to unload properly before the iframe is removed. (#7855)
+             */
+            browserElement.setAttribute("src", "about:blank");
         }
         super.onDetach();
+    }
+
+    @Override
+    protected void onAttach() {
+        if (browserElement != null && src != null
+                && !src.equals(browserElement.getAttribute("src"))) {
+            // Restore the original src if detached, then re-attached
+            browserElement.setAttribute("src", src);
+        }
+        super.onAttach();
     }
 
     @Override
