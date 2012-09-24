@@ -508,7 +508,6 @@ public abstract class VaadinService implements Serializable {
 
     private void onVaadinSessionStarted(VaadinRequest request,
             VaadinSession session) throws ServiceException {
-        addonContext.fireApplicationStarted(session);
         eventRouter.fireEvent(new VaadinSessionInitializeEvent(this, session,
                 request));
 

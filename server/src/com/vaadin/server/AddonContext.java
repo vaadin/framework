@@ -17,14 +17,10 @@
 package com.vaadin.server;
 
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
-
-import com.vaadin.event.EventRouter;
-import com.vaadin.util.ReflectTools;
 
 /**
  * Point of entry for add-ons for integrating into various aspects of the
@@ -43,13 +39,7 @@ import com.vaadin.util.ReflectTools;
  * @since 7.0.0
  */
 public class AddonContext implements Serializable {
-    private static final Method APPLICATION_STARTED_METHOD = ReflectTools
-            .findMethod(ApplicationStartedListener.class, "applicationStarted",
-                    ApplicationStartedEvent.class);
-
     private final VaadinService vaadinService;
-
-    private final EventRouter eventRouter = new EventRouter();
 
     private List<BootstrapListener> bootstrapListeners = new ArrayList<BootstrapListener>();
 
@@ -64,6 +54,17 @@ public class AddonContext implements Serializable {
      */
     public AddonContext(VaadinService vaadinService) {
         this.vaadinService = vaadinService;
+        vaadinService
+                .addVaadinSessionInitializationListener(new VaadinSessionInitializationListener() {
+                    @Override
+                    public void vaadinSessionInitialized(
+                            VaadinSessionInitializeEvent event)
+                            throws ServiceException {
+                        for (BootstrapListener l : bootstrapListeners) {
+                            event.getVaadinSession().addBootstrapListener(l);
+                        }
+                    }
+                });
         vaadinService.setAddonContext(this);
     }
 
@@ -110,9 +111,8 @@ public class AddonContext implements Serializable {
 
     /**
      * Shorthand for adding a bootstrap listener that will be added to every new
-     * application.
+     * Vaadin session.
      * 
-     * @see #addApplicationStartedListener(ApplicationStartedListener)
      * @see VaadinSession#addBootstrapListener(BootstrapListener)
      * 
      * @param listener
@@ -122,50 +122,4 @@ public class AddonContext implements Serializable {
     public void addBootstrapListener(BootstrapListener listener) {
         bootstrapListeners.add(listener);
     }
-
-    /**
-     * Fires an {@link ApplicationStartedEvent} to all registered listeners.
-     * This method is not intended to be used by add-ons, but instead by the
-     * part of the framework that creates new Application instances.
-     * 
-     * @see #addApplicationStartedListener(ApplicationStartedListener)
-     * 
-     * @param application
-     *            the newly started application
-     */
-    public void fireApplicationStarted(VaadinSession application) {
-        eventRouter.fireEvent(new ApplicationStartedEvent(this, application));
-        for (BootstrapListener l : bootstrapListeners) {
-            application.addBootstrapListener(l);
-        }
-    }
-
-    /**
-     * Adds a listener that will be notified any time a new
-     * {@link VaadinSession} instance is started or more precisely directly
-     * after {@link VaadinSession#init()} has been invoked.
-     * 
-     * @param applicationStartListener
-     *            the application start listener that should be added
-     */
-    public void addApplicationStartedListener(
-            ApplicationStartedListener applicationStartListener) {
-        eventRouter.addListener(ApplicationStartedEvent.class,
-                applicationStartListener, APPLICATION_STARTED_METHOD);
-    }
-
-    /**
-     * Removes an application start listener.
-     * 
-     * @see #addApplicationStartedListener(ApplicationStartedListener)
-     * 
-     * @param applicationStartListener
-     *            the application start listener to remove
-     */
-    public void removeApplicationStartedListener(
-            ApplicationStartedListener applicationStartListener) {
-        eventRouter.removeListener(ApplicationStartedEvent.class,
-                applicationStartListener, APPLICATION_STARTED_METHOD);
-    }
-
 }
