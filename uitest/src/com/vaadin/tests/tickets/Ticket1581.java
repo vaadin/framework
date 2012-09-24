@@ -35,7 +35,7 @@ public class Ticket1581 extends com.vaadin.LegacyApplication {
             public void run() {
                 super.run();
                 while (true) {
-                    time.setValue(new Date());
+                    time.setValue(new Date().toString());
                     try {
                         sleep(200);
                     } catch (InterruptedException e) {

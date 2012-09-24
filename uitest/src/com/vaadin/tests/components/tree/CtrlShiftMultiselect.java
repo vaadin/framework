@@ -39,10 +39,10 @@ public class CtrlShiftMultiselect extends TestBase {
                     if (itemIds.size() == 0) {
                         valueLbl.setValue("No selection");
                     } else {
-                        valueLbl.setValue(itemIds);
+                        valueLbl.setValue(itemIds.toString());
                     }
                 } else {
-                    valueLbl.setValue(tree.getValue());
+                    valueLbl.setValue(tree.getValue().toString());
                 }
             }
         });
