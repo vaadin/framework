@@ -20,9 +20,28 @@ import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 
 import com.vaadin.LegacyApplication;
-import com.vaadin.server.ServletPortletHelper.ApplicationClassException;
 
 public class LegacyVaadinPortlet extends VaadinPortlet {
+
+    private static final LegacyApplicationUIProvider provider = new LegacyApplicationUIProvider() {
+        @Override
+        protected LegacyApplication createApplication() {
+            VaadinPortlet portlet = VaadinPortlet.getCurrent();
+            if (portlet instanceof LegacyVaadinPortlet) {
+                LegacyVaadinPortlet legacyPortlet = (LegacyVaadinPortlet) portlet;
+                PortletRequest request = PortletService
+                        .getCurrentPortletRequest();
+                if (legacyPortlet.shouldCreateApplication(request)) {
+                    try {
+                        return legacyPortlet.getNewApplication(request);
+                    } catch (PortletException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+            return null;
+        }
+    };
 
     @Override
     public void init() throws PortletException {
@@ -51,7 +70,7 @@ public class LegacyVaadinPortlet extends VaadinPortlet {
         try {
             return ServletPortletHelper
                     .getLegacyApplicationClass(getVaadinService());
-        } catch (ApplicationClassException e) {
+        } catch (ServiceException e) {
             throw new RuntimeException(e);
         }
     }
@@ -68,21 +87,10 @@ public class LegacyVaadinPortlet extends VaadinPortlet {
 
     private void onVaadinSessionStarted(WrappedPortletRequest request,
             VaadinPortletSession session) throws PortletException {
-        if (shouldCreateApplication(request)) {
-            // Must set current before running init()
-            VaadinSession.setCurrent(session);
-
-            // XXX Must update details here so they are available in init.
-            session.getBrowser().updateRequestDetails(request);
-
-            LegacyApplication legacyApplication = getNewApplication(request
-                    .getPortletRequest());
-            legacyApplication.doInit();
-            session.addUIProvider(legacyApplication);
-        }
+        session.addUIProvider(provider);
     }
 
-    protected boolean shouldCreateApplication(WrappedPortletRequest request) {
+    protected boolean shouldCreateApplication(PortletRequest request) {
         return true;
     }
 }

@@ -129,7 +129,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     }
 
     @Override
-    protected boolean shouldCreateApplication(WrappedHttpServletRequest request)
+    protected boolean shouldCreateApplication(HttpServletRequest request)
             throws ServletException {
         try {
             return LegacyApplication.class.isAssignableFrom(getClassToRun());

@@ -74,6 +74,15 @@ public class NavigatorTest extends UI {
         }
     }
 
+    class ErrorView extends Label implements View {
+        @Override
+        public void enter(ViewChangeEvent event) {
+            log.log("View '" + event.getViewName() + "' not found!");
+            setValue("Tried to navigate to " + event.getViewName()
+                    + " but such a view could not be found :(");
+        }
+    }
+
     class NaviListener implements ViewChangeListener {
 
         @Override
@@ -113,6 +122,8 @@ public class NavigatorTest extends UI {
             navi.addView("forbidden", new ForbiddenView());
 
             navi.addViewChangeListener(new NaviListener());
+
+            navi.setErrorView(new ErrorView());
 
             navi.navigate();
 

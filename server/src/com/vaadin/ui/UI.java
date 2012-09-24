@@ -1123,11 +1123,11 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * Adds a close listener to the UI. Close listeners are invoked when the UI
-     * is removed from the session due to UI or session expiration.
+     * Adds a cleanup listener to the UI. Cleanup listeners are invoked when the
+     * UI is removed from the session due to UI or session expiration.
      * 
      * @param listener
-     *            The CloseListener that should be added.
+     *            The CleanupListener that should be added.
      */
     public void addCleanupListener(CleanupListener listener) {
         addListener(CleanupEvent.CLEANUP_EVENT_IDENTIFIER, CleanupEvent.class,
@@ -1156,11 +1156,11 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * Removes a close listener from the UI, if previously added with
+     * Removes a cleanup listener from the UI, if previously added with
      * {@link #addCleanupListener(CleanupListener)}.
      * 
      * @param listener
-     *            The CloseListener that should be removed
+     *            The CleanupListener that should be removed
      */
     public void removeCleanupListener(CleanupListener listener) {
         removeListener(CleanupEvent.CLEANUP_EVENT_IDENTIFIER,

@@ -43,6 +43,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FinishedEvent;
 import com.vaadin.ui.Upload.StartedEvent;
@@ -244,7 +245,8 @@ public class TestForUpload extends CustomComponent implements
 
             @Override
             public void buttonClick(ClickEvent event) {
-                getSession().close();
+                LegacyWindow window = (LegacyWindow) event.getButton().getUI();
+                window.getApplication().close();
             }
         });
         main.addComponent(restart);

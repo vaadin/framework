@@ -83,6 +83,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Window;
 import com.vaadin.util.CurrentInstance;
 
@@ -576,18 +577,11 @@ public abstract class AbstractCommunicationManager implements Serializable {
         session.getLock().lock();
         try {
 
-            // Finds the UI within the session
-            if (session.isRunning()) {
-                // Returns if no window found
-                if (uI == null) {
-                    // This should not happen, no windows exists but
-                    // session is still open.
-                    getLogger().warning("Could not get UI for session");
-                    return;
-                }
-            } else {
-                // session has been closed
-                endApplication(request, response, session);
+            // Verify that there's an UI
+            if (uI == null) {
+                // This should not happen, no windows exists but
+                // session is still open.
+                getLogger().warning("Could not get UI for session");
                 return;
             }
 
@@ -653,6 +647,16 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * 
      */
     protected void postPaint(UI uI) {
+        if (uI instanceof LegacyWindow) {
+            LegacyWindow legacyWindow = (LegacyWindow) uI;
+            if (!legacyWindow.getApplication().isRunning()) {
+                // Detach LegacyWindow if it belongs to a closed
+                // LegacyApplication
+                legacyWindow.setApplication(null);
+                legacyWindow.setSession(null);
+            }
+        }
+
         // Remove connectors that have been detached from the session during
         // handling of the request
         uI.getConnectorTracker().cleanConnectorMap();
@@ -752,13 +756,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
             WrappedResponse response, Callback callback, boolean repaintAll,
             final PrintWriter outWriter, UI uI, boolean analyzeLayouts)
             throws PaintException, IOException, JSONException {
-
-        // Removes session if it has stopped during variable changes
-        if (!session.isRunning()) {
-            endApplication(request, response, session);
-            return;
-        }
-
         openJsonMessage(outWriter, response);
 
         // security key
@@ -2175,45 +2172,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
             }
         }
         outWriter.print("]"); // Close locales
-    }
-
-    /**
-     * Ends the Application.
-     * 
-     * The browser is redirected to the Application logout URL set with
-     * {@link VaadinSession#setLogoutURL(String)}, or to the application URL if
-     * no logout URL is given.
-     * 
-     * @param request
-     *            the request instance.
-     * @param response
-     *            the response to write to.
-     * @param application
-     *            the Application to end.
-     * @throws IOException
-     *             if the writing failed due to input/output error.
-     */
-    private void endApplication(WrappedRequest request,
-            WrappedResponse response, VaadinSession application)
-            throws IOException {
-
-        String logoutUrl = application.getLogoutURL();
-        if (logoutUrl == null) {
-            logoutUrl = application.getURL().toString();
-        }
-        // clients JS app is still running, send a special json file to tell
-        // client that application has quit and where to point browser now
-        // Set the response type
-        final OutputStream out = response.getOutputStream();
-        final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
-                new OutputStreamWriter(out, "UTF-8")));
-        openJsonMessage(outWriter, response);
-        outWriter.print("\"redirect\":{");
-        outWriter.write("\"url\":\"" + logoutUrl + "\"}");
-        closeJsonMessage(outWriter);
-        outWriter.flush();
-        outWriter.close();
-        out.flush();
     }
 
     protected void closeJsonMessage(PrintWriter outWriter) {

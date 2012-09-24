@@ -41,7 +41,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.vaadin.DefaultDeploymentConfiguration;
 import com.vaadin.sass.ScssStylesheet;
@@ -198,10 +197,16 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return new CommunicationManager(session);
         }
 
-        public static WrappedHttpServletRequest getCurrentRequest() {
+        public static HttpServletRequest getCurrentServletRequest() {
             WrappedRequest currentRequest = VaadinService.getCurrentRequest();
             try {
-                return WrappedHttpServletRequest.cast(currentRequest);
+                WrappedHttpServletRequest request = WrappedHttpServletRequest
+                        .cast(currentRequest);
+                if (request != null) {
+                    return request.getHttpServletRequest();
+                } else {
+                    return null;
+                }
             } catch (ClassCastException e) {
                 return null;
             }
@@ -210,6 +215,12 @@ public class VaadinServlet extends HttpServlet implements Constants {
         public static WrappedHttpServletResponse getCurrentResponse() {
             return (WrappedHttpServletResponse) VaadinService
                     .getCurrentResponse();
+        }
+
+        @Override
+        protected VaadinSession createVaadinSession(WrappedRequest request)
+                throws ServiceException {
+            return new VaadinServletSession();
         }
     }
 
@@ -466,13 +477,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 // Browser details - not related to a specific UI
                 applicationManager.handleBrowserDetailsRequest(request,
                         response, application);
-                return;
-            }
-
-            // Removes application if it has stopped (maybe by thread or
-            // transactionlistener)
-            if (!application.isRunning()) {
-                endApplication(request, response, application);
                 return;
             }
 
@@ -1333,35 +1337,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
         URL u = new URL(reqURL, servletPath);
         return u;
-    }
-
-    /**
-     * Ends the application.
-     * 
-     * @param request
-     *            the HTTP request.
-     * @param response
-     *            the HTTP response to write to.
-     * @param application
-     *            the application to end.
-     * @throws IOException
-     *             if the writing failed due to input/output error.
-     */
-    private void endApplication(HttpServletRequest request,
-            HttpServletResponse response, VaadinSession application)
-            throws IOException {
-
-        String logoutUrl = application.getLogoutURL();
-        if (logoutUrl == null) {
-            logoutUrl = application.getURL().toString();
-        }
-
-        final HttpSession session = request.getSession();
-        if (session != null) {
-            application.removeFromSession();
-        }
-
-        response.sendRedirect(response.encodeRedirectURL(logoutUrl));
     }
 
     /**

@@ -16,18 +16,20 @@
 
 package com.vaadin.server;
 
-public class ServiceException extends Exception {
-
-    public ServiceException(Throwable t) {
-        super(t);
-    }
-
-    public ServiceException(String message) {
-        super(message);
-    }
-
-    public ServiceException(String message, Throwable t) {
-        super(message, t);
-    }
-
+/**
+ * A listener that gets notified when a Vaadin session is no longer used.
+ * 
+ * @see VaadinService#addVaadinSessionDestroyListener(VaadinSessionDestroyListener)
+ * 
+ * @author Vaadin Ltd
+ * @since 7.0.0
+ */
+public interface VaadinSessionDestroyListener {
+    /**
+     * Called when a Vaadin session is no longer used.
+     * 
+     * @param event
+     *            the event with details about the destroyed session
+     */
+    public void vaadinSessionDestroyed(VaadinSessionDestroyEvent event);
 }

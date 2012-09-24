@@ -112,7 +112,7 @@ public class Navigator implements Serializable {
         public String getState() {
             String fragment = page.getFragment();
             if (fragment.startsWith("!")) {
-                return page.getFragment().substring(1);
+                return fragment.substring(1);
             } else {
                 return "";
             }
@@ -338,6 +338,7 @@ public class Navigator implements Serializable {
     private View currentView = null;
     private List<ViewChangeListener> listeners = new LinkedList<ViewChangeListener>();
     private List<ViewProvider> providers = new LinkedList<ViewProvider>();
+    private ViewProvider errorProvider;
 
     /**
      * Creates a navigator that is tracking the active view using URI fragments
@@ -443,6 +444,8 @@ public class Navigator implements Serializable {
      * 
      * @param navigationState
      *            view name and parameters
+     * 
+     * @throws IllegalArgumentException
      */
     public void navigateTo(String navigationState) {
         String longestViewName = null;
@@ -459,6 +462,10 @@ public class Navigator implements Serializable {
                 }
             }
         }
+        if (viewWithLongestName == null && errorProvider != null) {
+            longestViewName = errorProvider.getViewName(navigationState);
+            viewWithLongestName = errorProvider.getView(longestViewName);
+        }
         if (viewWithLongestName != null) {
             String parameters = "";
             if (navigationState.length() > longestViewName.length() + 1) {
@@ -466,8 +473,12 @@ public class Navigator implements Serializable {
                         .substring(longestViewName.length() + 1);
             }
             navigateTo(viewWithLongestName, longestViewName, parameters);
+        } else {
+            throw new IllegalArgumentException(
+                    "Trying to navigate to an unknown state '"
+                            + navigationState
+                            + "' and an error view provider not present");
         }
-        // TODO if no view is found, what to do?
     }
 
     /**
@@ -600,11 +611,11 @@ public class Navigator implements Serializable {
     }
 
     /**
-     * Register a view class for a view name.
+     * Registers a view class for a view name.
      * <p>
      * Registering another view with a name that is already registered
      * overwrites the old registration of the same type.
-     * 
+     * <p>
      * A new view instance is created every time a view is requested.
      * 
      * @param viewName
@@ -676,9 +687,76 @@ public class Navigator implements Serializable {
     }
 
     /**
-     * Adds a listener for listening to changes of the active view.
+     * Registers a view class that is instantiated when no other view matches
+     * the navigation state. This implicitly sets an appropriate error view
+     * provider and overrides any previous
+     * {@link #setErrorProvider(ViewProvider)} call.
+     * 
+     * @param viewClass
+     *            The View class whose instance should be used as the error
+     *            view.
+     */
+    public void setErrorView(final Class<? extends View> viewClass) {
+        setErrorProvider(new ViewProvider() {
+            @Override
+            public View getView(String viewName) {
+                try {
+                    return viewClass.newInstance();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            @Override
+            public String getViewName(String navigationState) {
+                return navigationState;
+            }
+        });
+    }
+
+    /**
+     * Registers a view that is displayed when no other view matches the
+     * navigation state. This implicitly sets an appropriate error view provider
+     * and overrides any previous {@link #setErrorProvider(ViewProvider)} call.
+     * 
+     * @param view
+     *            The View that should be used as the error view.
+     */
+    public void setErrorView(final View view) {
+        setErrorProvider(new ViewProvider() {
+            @Override
+            public View getView(String viewName) {
+                return view;
+            };
+
+            @Override
+            public String getViewName(String navigationState) {
+                return navigationState;
+            }
+        });
+    }
+
+    /**
+     * Registers a view provider that is queried for a view when no other view
+     * matches the navigation state. An error view provider should match any
+     * navigation state, but could return different views for different states.
+     * Its <code>getViewName(String navigationState)</code> should return
+     * <code>navigationState</code>.
+     * 
+     * @param provider
+     */
+    public void setErrorProvider(ViewProvider provider) {
+        errorProvider = provider;
+    }
+
+    /**
+     * Listen to changes of the active view.
      * <p>
-     * The listener will get notified after the view has changed.
+     * Registered listeners are invoked in registration order before (
+     * {@link ViewChangeListener#beforeViewChange(ViewChangeEvent)
+     * beforeViewChange()}) and after (
+     * {@link ViewChangeListener#afterViewChange(ViewChangeEvent)
+     * afterViewChange()}) a view change occurs.
      * 
      * @param listener
      *            Listener to invoke during a view change.
