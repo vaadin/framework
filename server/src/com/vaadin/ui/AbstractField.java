@@ -776,15 +776,16 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     /**
      * Gets the validators of the field.
      * 
-     * @return the Unmodifiable collection that holds all validators for the
+     * @return An unmodifiable collection that holds all validators for the
      *         field.
      */
     @Override
     public Collection<Validator> getValidators() {
-        if (validators == null || validators.isEmpty()) {
-            return null;
+        if (validators == null) {
+            return Collections.emptyList();
+        } else {
+            return Collections.unmodifiableCollection(validators);
         }
-        return Collections.unmodifiableCollection(validators);
     }
 
     /**

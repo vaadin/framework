@@ -59,11 +59,12 @@ public interface Validatable extends Serializable {
 
     /**
      * <p>
-     * Lists all validators currently registered for the object. If no
-     * validators are registered, returns <code>null</code>.
+     * Returns a collection of all validators currently registered for the
+     * object. The collection may be immutable and it may not be safe to call
+     * <code>removeValidator</code> for this object while iterating over it.
      * </p>
      * 
-     * @return collection of validators or <code>null</code>
+     * @return A collection of validators
      */
     public Collection<Validator> getValidators();
 
