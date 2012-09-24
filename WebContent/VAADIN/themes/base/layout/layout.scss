@@ -54,7 +54,7 @@ TODO
 
 .v-vertical,
 .v-horizontal {
-	display: inline-block;
+	display: block;	
 }
 
 div.v-layout.v-horizontal.v-widget {
@@ -79,12 +79,12 @@ div.v-layout.v-horizontal.v-widget {
 
 /* Clear any floats inside the slot, to prevent unwanted collapsing */
 .v-vertical > .v-slot:after {
-	content: "";
 	display: inline-block;
 	clear: both;
 	width: 0;
 	height: 0;
 	overflow: hidden;
+	line-height:0;
 }
 
 .v-vertical > .v-slot,
@@ -114,7 +114,7 @@ div.v-layout.v-horizontal.v-widget {
 .v-align-bottom:before,
 .v-expand > .v-align-middle:before,
 .v-expand > .v-align-bottom:before {
-	content: "";
+	
 	display: inline-block;
 	height: 100%;
 	vertical-align: middle;

@@ -229,12 +229,9 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         Document document = response.getDocument();
 
-        DocumentType doctype = new DocumentType("html",
-                "-//W3C//DTD XHTML 1.0 Transitional//EN",
-                "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd",
+        DocumentType doctype = new DocumentType("html", "", "",
                 document.baseUri());
         document.child(0).before(doctype);
-        document.body().parent().attr("xmlns", "http://www.w3.org/1999/xhtml");
 
         Element head = document.head();
         head.appendElement("meta").attr("http-equiv", "Content-Type")

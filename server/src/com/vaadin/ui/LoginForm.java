@@ -161,7 +161,7 @@ public class LoginForm extends CustomComponent {
                     + "\">"
                     + "<div class='v-app v-app-loginpage' style=\"background:transparent;\">"
                     + "<iframe name='logintarget' style='width:0;height:0;"
-                    + "border:0;margin:0;padding:0;'></iframe>"
+                    + "border:0;margin:0;padding:0;display:block'></iframe>"
                     + "<form id='loginf' target='logintarget' onkeypress=\"submitOnEnter(event)\" method=\"post\">"
                     + "<div>"
                     + usernameCaption
