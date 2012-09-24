@@ -53,7 +53,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
      */
     private LinkedHashSet<String> defaultPackages = new LinkedHashSet<String>();
 
-    private final ThreadLocal<HttpServletRequest> request = new ThreadLocal<HttpServletRequest>();
+    private transient final ThreadLocal<HttpServletRequest> request = new ThreadLocal<HttpServletRequest>();
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {

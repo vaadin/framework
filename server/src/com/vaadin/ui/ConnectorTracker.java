@@ -59,7 +59,7 @@ public class ConnectorTracker implements Serializable {
     private boolean writingResponse = false;
 
     private UI uI;
-    private Map<ClientConnector, Object> diffStates = new HashMap<ClientConnector, Object>();
+    private transient Map<ClientConnector, Object> diffStates = new HashMap<ClientConnector, Object>();
 
     /**
      * Gets a logger for this class

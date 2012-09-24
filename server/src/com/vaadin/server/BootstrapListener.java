@@ -16,6 +16,7 @@
 
 package com.vaadin.server;
 
+import java.io.Serializable;
 import java.util.EventListener;
 
 import javax.portlet.RenderResponse;
@@ -29,7 +30,7 @@ import javax.portlet.RenderResponse;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public interface BootstrapListener extends EventListener {
+public interface BootstrapListener extends EventListener, Serializable {
     /**
      * Lets this listener make changes to the fragment that makes up the actual
      * Vaadin application. In a typical Servlet deployment, this is the contents

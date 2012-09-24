@@ -16,6 +16,8 @@
 
 package com.vaadin.server;
 
+import java.io.Serializable;
+
 /**
  * Event listener that can be registered to a {@link VaadinService} to get an
  * event when a new Vaadin session is initialized for that service.
@@ -30,7 +32,7 @@ package com.vaadin.server;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public interface VaadinSessionInitializationListener {
+public interface VaadinSessionInitializationListener extends Serializable {
     /**
      * Invoked when a new Vaadin session is initialized for that service.
      * <p>

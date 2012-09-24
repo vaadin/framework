@@ -16,6 +16,7 @@
 
 package com.vaadin.server;
 
+import java.io.Serializable;
 import java.util.EventListener;
 
 /**
@@ -29,7 +30,7 @@ import java.util.EventListener;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public interface AddonContextListener extends EventListener {
+public interface AddonContextListener extends EventListener, Serializable {
     /**
      * Notifies the listener that the add-on context has been created and
      * initialized. An add-on can use this method to get access to an
