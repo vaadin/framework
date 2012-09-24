@@ -76,7 +76,7 @@ public interface Property<T> extends Serializable {
      * @throws Property.ReadOnlyException
      *             if the object is in read-only mode
      */
-    public void setValue(Object newValue) throws Property.ReadOnlyException;
+    public void setValue(T newValue) throws Property.ReadOnlyException;
 
     /**
      * Returns the type of the Property. The methods <code>getValue</code> and

@@ -80,9 +80,7 @@ class TreeExample extends CustomComponent {
         // get the created item
         final Item item = tree.getItem(id);
         // set our "caption" property
-        @SuppressWarnings("unchecked")
-        final Property<String> p = (Property<String>) item
-                .getItemProperty(CAPTION_PROPERTY);
+        final Property<String> p = item.getItemProperty(CAPTION_PROPERTY);
         p.setValue(caption);
         if (parent != null) {
             tree.setChildrenAllowed(parent, true);

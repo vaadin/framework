@@ -74,7 +74,7 @@ public class TransactionalPropertyWrapper<T> extends AbstractProperty<T>
     }
 
     @Override
-    public void setValue(Object newValue) throws ReadOnlyException {
+    public void setValue(T newValue) throws ReadOnlyException {
         // Causes a value change to be sent to this listener which in turn fires
         // a new value change event for this property
         wrappedProperty.setValue(newValue);
