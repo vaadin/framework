@@ -77,7 +77,11 @@ public class NavigatorTest extends TestCase {
         }
 
         public View getView(String viewAndParameters) {
-            navigateTo(viewAndParameters);
+            try {
+                navigateTo(viewAndParameters);
+            } catch (IllegalArgumentException e) {
+                // ignore
+            }
             return ((TestDisplay) getDisplay()).getCurrentView();
         }
     }
@@ -592,5 +596,44 @@ public class NavigatorTest extends TestCase {
 
         assertEquals("Incorrect view name found", TestView.class, navigator2
                 .getView("test").getClass());
+    }
+
+    public void testNavigateToUnknownView() {
+        TestNavigator navigator = new TestNavigator();
+
+        View errorView = EasyMock.createMock(View.class);
+        errorView.enter(EasyMock.anyObject(ViewChangeEvent.class));
+        EasyMock.replay(errorView);
+
+        try {
+            navigator.navigateTo("doesnotexist");
+            fail("Should throw IllegalArgumentException");
+        } catch (IllegalArgumentException iae) {
+        }
+
+        navigator.setErrorView(errorView);
+        navigator.navigateTo("doesnotexist");
+
+        View testView = EasyMock.createMock(View.class);
+        testView.enter(EasyMock.anyObject(ViewChangeEvent.class));
+        EasyMock.replay(testView);
+
+        navigator.addView("doesnotexist", testView);
+        navigator.navigateTo("doesnotexist");
+
+        View errorView2 = EasyMock.createMock(View.class);
+        errorView2.enter(EasyMock.anyObject(ViewChangeEvent.class));
+        EasyMock.replay(errorView2);
+
+        ViewProvider errorProvider = EasyMock.createMock(ViewProvider.class);
+        EasyMock.expect(errorProvider.getView("doesnotexist2")).andReturn(
+                errorView2);
+        EasyMock.expect(errorProvider.getViewName("doesnotexist2")).andReturn(
+                "doesnotexist2");
+        EasyMock.replay(errorProvider);
+
+        navigator.setErrorProvider(errorProvider);
+        navigator.navigateTo("doesnotexist2");
+
     }
 }
