@@ -192,14 +192,9 @@ public class Label extends AbstractComponent implements Property<String>,
      *            the New value of the label.
      */
     @Override
-    public void setValue(Object newStringValue) {
-        if (newStringValue != null && newStringValue.getClass() != String.class) {
-            throw new Converter.ConversionException("Value of type "
-                    + newStringValue.getClass() + " cannot be assigned to "
-                    + String.class.getName());
-        }
+    public void setValue(String newStringValue) {
         if (getPropertyDataSource() == null) {
-            getState().text = (String) newStringValue;
+            getState().text = newStringValue;
         } else {
             throw new IllegalStateException(
                     "Label is only a Property.Viewer and cannot update its data source");

@@ -123,7 +123,7 @@ public abstract class AbstractTestFieldValueChange<T> extends TestCase {
      * Override in subclasses to set value with changeVariables().
      */
     protected void setValue(AbstractField<T> field) {
-        field.setValue("newValue");
+        field.setValue((T) "newValue");
     }
 
 }

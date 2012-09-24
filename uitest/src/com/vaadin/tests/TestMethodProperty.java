@@ -15,7 +15,7 @@ public class TestMethodProperty {
                 Integer.TYPE, myTest, "getInt", "setInt", new Object[0],
                 new Object[] { null }, 0);
 
-        methodProperty2.setValue("3");
+        methodProperty2.setValue(3);
 
         System.out.println("Succeeded");
 

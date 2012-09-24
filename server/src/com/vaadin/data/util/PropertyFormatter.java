@@ -212,7 +212,7 @@ public abstract class PropertyFormatter<T> extends AbstractProperty<String>
     }
 
     @Override
-    public void setValue(Object newValue) throws ReadOnlyException {
+    public void setValue(String newValue) throws ReadOnlyException {
         if (dataSource == null) {
             return;
         }

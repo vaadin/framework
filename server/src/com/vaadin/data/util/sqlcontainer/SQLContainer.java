@@ -248,7 +248,7 @@ public class SQLContainer implements Container, Container.Filterable,
      */
 
     @Override
-    public Property<?> getContainerProperty(Object itemId, Object propertyId) {
+    public Property getContainerProperty(Object itemId, Object propertyId) {
         Item item = getItem(itemId);
         if (item == null) {
             return null;

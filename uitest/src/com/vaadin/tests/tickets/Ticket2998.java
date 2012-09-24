@@ -165,7 +165,7 @@ public class Ticket2998 extends LegacyApplication {
                 return getSecondaryTypesList(itemId);
             }
 
-            final Field<?> f = super.createField(container, itemId, propertyId,
+            final Field f = super.createField(container, itemId, propertyId,
                     uiContext);
             if (f != null) {
                 if (f instanceof TextField) {

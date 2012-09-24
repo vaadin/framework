@@ -274,8 +274,7 @@ public class FieldGroup implements Serializable {
      *             If the property was not found in the item or no item has been
      *             set
      */
-    protected Property<?> getItemProperty(Object propertyId)
-            throws BindException {
+    protected Property getItemProperty(Object propertyId) throws BindException {
         Item item = getItemDataSource();
         if (item == null) {
             throw new BindException("Could not lookup property with id "
