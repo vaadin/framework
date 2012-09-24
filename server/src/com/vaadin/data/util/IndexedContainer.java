@@ -163,7 +163,7 @@ public class IndexedContainer extends
      * java.lang.Object)
      */
     @Override
-    public Property<?> getContainerProperty(Object itemId, Object propertyId) {
+    public Property getContainerProperty(Object itemId, Object propertyId) {
         if (!containsId(itemId)) {
             return null;
         }
@@ -734,7 +734,7 @@ public class IndexedContainer extends
          * @see com.vaadin.data.Item#getItemProperty(java.lang.Object)
          */
         @Override
-        public Property<?> getItemProperty(Object id) {
+        public Property getItemProperty(Object id) {
             return new IndexedContainerProperty(itemId, id);
         }
 
