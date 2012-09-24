@@ -81,7 +81,7 @@ public class CustomUIClassLoader extends TestCase {
 
         // Mock a VaadinRequest to give the mocked vaadin service
         VaadinRequest requestMock = EasyMock.createMock(VaadinRequest.class);
-        EasyMock.expect(requestMock.getVaadinService()).andReturn(
+        EasyMock.expect(requestMock.getService()).andReturn(
                 configurationMock);
 
         EasyMock.replay(configurationMock, requestMock);

@@ -217,7 +217,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         RequestTimer requestTimer = new RequestTimer();
         requestTimer.start();
 
-        getVaadinService().setCurrentInstances(request, response);
+        getService().setCurrentInstances(request, response);
 
         AbstractApplicationServletWrapper servletWrapper = new AbstractApplicationServletWrapper(
                 this);
@@ -249,13 +249,13 @@ public class VaadinServlet extends HttpServlet implements Constants {
                     && request.getParameterMap().containsKey(
                             ApplicationConstants.PARAM_UNLOADBURST)
                     && request.getContentLength() < 1
-                    && getVaadinService().getExistingSession(request, false) == null) {
+                    && getService().getExistingSession(request, false) == null) {
                 redirectToApplication(request, response);
                 return;
             }
 
             // Find out the Vaadin session this request is related to
-            vaadinSession = (VaadinServletSession) getVaadinService()
+            vaadinSession = (VaadinServletSession) getService()
                     .findVaadinSession(request);
             if (vaadinSession == null) {
                 return;
@@ -285,7 +285,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                         response);
                 return;
             } else if (requestType == RequestType.UIDL) {
-                UI uI = getVaadinService().findUI(request);
+                UI uI = getService().findUI(request);
                 if (uI == null) {
                     throw new ServletException(ERROR_NO_UI_FOUND);
                 }
@@ -330,7 +330,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     private VaadinServletResponse createVaadinResponse(
             HttpServletResponse response) {
-        return new VaadinServletResponse(response, getVaadinService());
+        return new VaadinServletResponse(response, getService());
     }
 
     /**
@@ -343,7 +343,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      */
     protected VaadinServletRequest createVaadinRequest(
             HttpServletRequest request) {
-        return new VaadinServletRequest(request, getVaadinService());
+        return new VaadinServletRequest(request, getService());
     }
 
     /**
@@ -351,7 +351,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * 
      * @return the vaadin service
      */
-    protected VaadinServletService getVaadinService() {
+    protected VaadinServletService getService() {
         return servletService;
     }
 
@@ -378,7 +378,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // This can be removed if cookieless mode (#3228) is supported
             if (request.getRequestedSessionId() == null) {
                 // User has cookies disabled
-                SystemMessages systemMessages = getVaadinService()
+                SystemMessages systemMessages = getService()
                         .getSystemMessages();
                 criticalNotification(request, response,
                         systemMessages.getCookiesDisabledCaption(),
@@ -535,7 +535,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             Throwable e) throws IOException, ServletException {
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {
-            SystemMessages ci = getVaadinService().getSystemMessages();
+            SystemMessages ci = getService().getSystemMessages();
             criticalNotification(request, response,
                     ci.getInternalErrorCaption(), ci.getInternalErrorMessage(),
                     null, ci.getInternalErrorURL());
@@ -610,7 +610,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         try {
-            SystemMessages ci = getVaadinService().getSystemMessages();
+            SystemMessages ci = getService().getSystemMessages();
             RequestType requestType = getRequestType(request);
             if (requestType == RequestType.UIDL) {
                 /*
@@ -655,7 +655,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         try {
-            SystemMessages ci = getVaadinService().getSystemMessages();
+            SystemMessages ci = getService().getSystemMessages();
             RequestType requestType = getRequestType(request);
             if (requestType == RequestType.UIDL) {
                 // send uidl redirect
@@ -822,7 +822,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
              * cache timeout can be configured by setting the resourceCacheTime
              * parameter in web.xml
              */
-            int resourceCacheTime = getVaadinService()
+            int resourceCacheTime = getService()
                     .getDeploymentConfiguration().getResourceCacheTime();
             response.setHeader("Cache-Control",
                     "max-age= " + String.valueOf(resourceCacheTime));
@@ -850,7 +850,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 filename = filename.substring(1);
             }
 
-            resourceUrl = getVaadinService().getClassLoader().getResource(
+            resourceUrl = getService().getClassLoader().getResource(
                     filename);
         }
         return resourceUrl;
@@ -859,7 +859,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     private boolean serveOnTheFlyCompiledScss(String filename,
             HttpServletRequest request, HttpServletResponse response,
             ServletContext sc) throws IOException {
-        if (getVaadinService().getDeploymentConfiguration().isProductionMode()) {
+        if (getService().getDeploymentConfiguration().isProductionMode()) {
             // This is not meant for production mode.
             return false;
         }
@@ -909,7 +909,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         // This is for development mode only so instruct the browser to never
         // cache it
         response.setHeader("Cache-Control", "no-cache");
-        final String mimetype = getVaadinService().getMimeType(filename);
+        final String mimetype = getService().getMimeType(filename);
         writeResponse(response, mimetype, scss.toString());
 
         return true;

@@ -76,8 +76,8 @@ public abstract class BootstrapHandler implements RequestHandler {
             return bootstrapResponse.getRequest();
         }
 
-        public VaadinSession getVaadinSession() {
-            return bootstrapResponse.getVaadinSession();
+        public VaadinSession getSession() {
+            return bootstrapResponse.getSession();
         }
 
         public Class<? extends UI> getUIClass() {
@@ -116,8 +116,8 @@ public abstract class BootstrapHandler implements RequestHandler {
             VaadinResponse response) throws IOException {
 
         try {
-            List<UIProvider> uiProviders = request.getVaadinService()
-                    .getUIProviders(session);
+            List<UIProvider> uiProviders = request.getService().getUIProviders(
+                    session);
 
             UIClassSelectionEvent classSelectionEvent = new UIClassSelectionEvent(
                     request);
@@ -162,7 +162,7 @@ public abstract class BootstrapHandler implements RequestHandler {
     private String getBootstrapHtml(BootstrapContext context) {
         VaadinRequest request = context.getRequest();
         VaadinResponse response = context.getResponse();
-        VaadinService vaadinService = request.getVaadinService();
+        VaadinService vaadinService = request.getService();
 
         BootstrapFragmentResponse fragmentResponse = context
                 .getBootstrapResponse();
@@ -171,9 +171,8 @@ public abstract class BootstrapHandler implements RequestHandler {
             Map<String, Object> headers = new LinkedHashMap<String, Object>();
             Document document = Document.createShell("");
             BootstrapPageResponse pageResponse = new BootstrapPageResponse(
-                    this, request, context.getVaadinSession(),
-                    context.getUIClass(), document, headers,
-                    fragmentResponse.getUIProvider());
+                    this, request, context.getSession(), context.getUIClass(),
+                    document, headers, fragmentResponse.getUIProvider());
             List<Node> fragmentNodes = fragmentResponse.getFragmentNodes();
             Element body = document.body();
             for (Node node : fragmentNodes) {
@@ -181,7 +180,7 @@ public abstract class BootstrapHandler implements RequestHandler {
             }
 
             setupStandaloneDocument(context, pageResponse);
-            context.getVaadinSession().modifyBootstrapResponse(pageResponse);
+            context.getSession().modifyBootstrapResponse(pageResponse);
 
             sendBootstrapHeaders(response, headers);
 
@@ -246,8 +245,7 @@ public abstract class BootstrapHandler implements RequestHandler {
                 .attr("content", "chrome=1");
 
         String title = response.getUIProvider().getPageTitle(
-                new UICreateEvent(context.getRequest(), context
-                        .getUIClass()));
+                new UICreateEvent(context.getRequest(), context.getUIClass()));
         if (title != null) {
             head.appendElement("title").appendText(title);
         }
@@ -289,12 +287,12 @@ public abstract class BootstrapHandler implements RequestHandler {
     public String getWidgetsetForUI(BootstrapContext context) {
         VaadinRequest request = context.getRequest();
 
-        UICreateEvent event = new UICreateEvent(context.getRequest(), context.getUIClass());
+        UICreateEvent event = new UICreateEvent(context.getRequest(),
+                context.getUIClass());
         String widgetset = context.getBootstrapResponse().getUIProvider()
                 .getWidgetset(event);
         if (widgetset == null) {
-            widgetset = request.getVaadinService().getConfiguredWidgetset(
-                    request);
+            widgetset = request.getService().getConfiguredWidgetset(request);
         }
 
         widgetset = VaadinServlet.stripSpecialChars(widgetset);
@@ -327,7 +325,7 @@ public abstract class BootstrapHandler implements RequestHandler {
          */
 
         String appClass = "v-app-"
-                + context.getVaadinSession().getClass().getSimpleName();
+                + context.getSession().getClass().getSimpleName();
 
         String classNames = "v-app " + appClass;
         List<Node> fragmentNodes = context.getBootstrapResponse()
@@ -346,7 +344,7 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         VaadinRequest request = context.getRequest();
 
-        VaadinService vaadinService = request.getVaadinService();
+        VaadinService vaadinService = request.getService();
         String staticFileLocation = vaadinService
                 .getStaticFileLocation(request);
 
@@ -385,7 +383,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         JSONObject defaults = getDefaultParameters(context);
         JSONObject appConfig = getApplicationParameters(context);
 
-        boolean isDebug = !context.getVaadinSession().getConfiguration()
+        boolean isDebug = !context.getSession().getConfiguration()
                 .isProductionMode();
 
         builder.append("vaadin.setDefaults(");
@@ -442,8 +440,8 @@ public abstract class BootstrapHandler implements RequestHandler {
         JSONObject defaults = new JSONObject();
 
         VaadinRequest request = context.getRequest();
-        VaadinSession session = context.getVaadinSession();
-        VaadinService vaadinService = request.getVaadinService();
+        VaadinSession session = context.getSession();
+        VaadinService vaadinService = request.getService();
 
         // Get system messages
         SystemMessages systemMessages = vaadinService.getSystemMessages();
@@ -505,7 +503,7 @@ public abstract class BootstrapHandler implements RequestHandler {
      */
     public String getThemeUri(BootstrapContext context, String themeName) {
         VaadinRequest request = context.getRequest();
-        final String staticFilePath = request.getVaadinService()
+        final String staticFilePath = request.getService()
                 .getStaticFileLocation(request);
         return staticFilePath + "/" + VaadinServlet.THEME_DIRECTORY_PATH
                 + themeName;
@@ -518,7 +516,8 @@ public abstract class BootstrapHandler implements RequestHandler {
      * @return
      */
     public String getThemeName(BootstrapContext context) {
-        UICreateEvent event = new UICreateEvent(context.getRequest(), context.getUIClass());
+        UICreateEvent event = new UICreateEvent(context.getRequest(),
+                context.getUIClass());
         return context.getBootstrapResponse().getUIProvider().getTheme(event);
     }
 
@@ -532,7 +531,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         String themeName = getThemeName(context);
         if (themeName == null) {
             VaadinRequest request = context.getRequest();
-            themeName = request.getVaadinService().getConfiguredTheme(request);
+            themeName = request.getService().getConfiguredTheme(request);
         }
 
         // XSS preventation, theme names shouldn't contain special chars anyway.

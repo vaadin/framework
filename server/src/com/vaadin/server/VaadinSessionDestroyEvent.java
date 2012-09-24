@@ -54,7 +54,7 @@ public class VaadinSessionDestroyEvent extends EventObject {
      * 
      * @return the Vaadin service
      */
-    public VaadinService getVaadinService() {
+    public VaadinService getService() {
         return getSource();
     }
 
@@ -63,7 +63,7 @@ public class VaadinSessionDestroyEvent extends EventObject {
      * 
      * @return the Vaadin session
      */
-    public VaadinSession getVaadinSession() {
+    public VaadinSession getSession() {
         return session;
     }
 

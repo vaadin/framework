@@ -64,7 +64,7 @@ public class VaadinSessionInitializeEvent extends EventObject {
      * 
      * @return the Vaadin service instance
      */
-    public VaadinService getVaadinService() {
+    public VaadinService getService() {
         return getSource();
     }
 
@@ -73,7 +73,7 @@ public class VaadinSessionInitializeEvent extends EventObject {
      * 
      * @return the Vaadin session
      */
-    public VaadinSession getVaadinSession() {
+    public VaadinSession getSession() {
         return session;
     }
 

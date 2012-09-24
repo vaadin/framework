@@ -360,9 +360,9 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             VaadinPortletRequest vaadinRequest = createVaadinRequest(request);
 
             VaadinPortletResponse vaadinResponse = new VaadinPortletResponse(
-                    response, getVaadinService());
+                    response, getService());
 
-            getVaadinService().setCurrentInstances(vaadinRequest,
+            getService().setCurrentInstances(vaadinRequest,
                     vaadinResponse);
 
             RequestType requestType = getRequestType(vaadinRequest);
@@ -393,7 +393,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                     // TODO What about PARAM_UNLOADBURST &
                     // redirectToApplication??
 
-                    vaadinSession = (VaadinPortletSession) getVaadinService()
+                    vaadinSession = (VaadinPortletSession) getService()
                             .findVaadinSession(vaadinRequest);
                     if (vaadinSession == null) {
                         return;
@@ -423,7 +423,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                     // Finds the right UI
                     UI uI = null;
                     if (requestType == RequestType.UIDL) {
-                        uI = getVaadinService().findUI(vaadinRequest);
+                        uI = getService().findUI(vaadinRequest);
                     }
 
                     // TODO Should this happen before or after the transaction
@@ -506,16 +506,16 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         String portalInfo = request.getPortalContext().getPortalInfo()
                 .toLowerCase();
         if (portalInfo.contains("liferay")) {
-            return new VaadinLiferayRequest(request, getVaadinService());
+            return new VaadinLiferayRequest(request, getService());
         } else if (portalInfo.contains("gatein")) {
-            return new VaadinGateinRequest(request, getVaadinService());
+            return new VaadinGateinRequest(request, getService());
         } else {
-            return new VaadinPortletRequest(request, getVaadinService());
+            return new VaadinPortletRequest(request, getService());
         }
 
     }
 
-    protected VaadinPortletService getVaadinService() {
+    protected VaadinPortletService getService() {
         return vaadinService;
     }
 
@@ -635,7 +635,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {
-            SystemMessages ci = getVaadinService().getSystemMessages();
+            SystemMessages ci = getService().getSystemMessages();
             criticalNotification(request, response,
                     ci.getInternalErrorCaption(), ci.getInternalErrorMessage(),
                     null, ci.getInternalErrorURL());

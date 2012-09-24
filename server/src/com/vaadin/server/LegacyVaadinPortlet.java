@@ -47,7 +47,7 @@ public class LegacyVaadinPortlet extends VaadinPortlet {
     public void init() throws PortletException {
         super.init();
 
-        getVaadinService().addVaadinSessionInitializationListener(
+        getService().addVaadinSessionInitializationListener(
                 new VaadinSessionInitializationListener() {
                     @Override
                     public void vaadinSessionInitialized(
@@ -57,7 +57,7 @@ public class LegacyVaadinPortlet extends VaadinPortlet {
                             onVaadinSessionStarted(VaadinPortletRequest
                                     .cast(event.getRequest()),
                                     (VaadinPortletSession) event
-                                            .getVaadinSession());
+                                            .getSession());
                         } catch (PortletException e) {
                             throw new ServiceException(e);
                         }
@@ -69,7 +69,7 @@ public class LegacyVaadinPortlet extends VaadinPortlet {
             throws ClassNotFoundException {
         try {
             return ServletPortletHelper
-                    .getLegacyApplicationClass(getVaadinService());
+                    .getLegacyApplicationClass(getService());
         } catch (ServiceException e) {
             throw new RuntimeException(e);
         }
@@ -87,7 +87,7 @@ public class LegacyVaadinPortlet extends VaadinPortlet {
 
     private void onVaadinSessionStarted(VaadinPortletRequest request,
             VaadinPortletSession session) throws PortletException {
-        getVaadinService().addUIProvider(session, provider);
+        getService().addUIProvider(session, provider);
     }
 
     protected boolean shouldCreateApplication(PortletRequest request) {

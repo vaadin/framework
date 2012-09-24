@@ -30,14 +30,14 @@ public class DefaultUIProvider extends UIProvider {
             return null;
         }
 
-        Object uiClassNameObj = request.getVaadinService()
+        Object uiClassNameObj = request.getService()
                 .getDeploymentConfiguration().getInitParameters()
                 .getProperty(VaadinSession.UI_PARAMETER);
 
         if (uiClassNameObj instanceof String) {
             String uiClassName = uiClassNameObj.toString();
 
-            ClassLoader classLoader = request.getVaadinService()
+            ClassLoader classLoader = request.getService()
                     .getClassLoader();
             if (classLoader == null) {
                 classLoader = getClass().getClassLoader();

@@ -110,7 +110,7 @@ public abstract class VaadinService implements Serializable {
          * 
          * @return the Vaadin service that htis data belongs to
          */
-        public VaadinService getVaadinService() {
+        public VaadinService getService() {
             return vaadinService;
         }
 
@@ -651,7 +651,7 @@ public abstract class VaadinService implements Serializable {
      * @return an unmodifiable list of UI providers
      */
     public List<UIProvider> getUIProviders(VaadinSession session) {
-        return session.getVaadinServiceData(this).getUIProviders();
+        return session.getServiceData(this).getUIProviders();
     }
 
     /**
@@ -696,7 +696,7 @@ public abstract class VaadinService implements Serializable {
      *            the UI provider that should be added
      */
     public void addUIProvider(VaadinSession vaadinSession, UIProvider uiProvider) {
-        vaadinSession.getVaadinServiceData(this).addUIProvider(uiProvider);
+        vaadinSession.getServiceData(this).addUIProvider(uiProvider);
     }
 
     /**
@@ -709,7 +709,7 @@ public abstract class VaadinService implements Serializable {
      */
     public void removeUIProvider(VaadinSession vaadinSession,
             UIProvider uiProvider) {
-        vaadinSession.getVaadinServiceData(this).removeUIProvider(uiProvider);
+        vaadinSession.getServiceData(this).removeUIProvider(uiProvider);
     }
 
     /**

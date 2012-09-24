@@ -212,7 +212,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         // closing
         // Notify all services that have used this session.
         for (VaadinServiceData vaadinServiceData : serviceData.values()) {
-            vaadinServiceData.getVaadinService().fireSessionDestroy(this);
+            vaadinServiceData.getService().fireSessionDestroy(this);
         }
     }
 
@@ -1057,7 +1057,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *         the passed Vaadin service; otherwise <code>false</code>
      */
     public boolean hasVaadinServiceData(VaadinService vaadinService) {
-        return getVaadinServiceData(vaadinService) != null;
+        return getServiceData(vaadinService) != null;
     }
 
     /**
@@ -1071,21 +1071,21 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @return the Vaadin service data for the provided Vaadin service; or
      *         <code>null</code> if there is no data for the service
      */
-    public VaadinServiceData getVaadinServiceData(VaadinService vaadinService) {
+    public VaadinServiceData getServiceData(VaadinService vaadinService) {
         return serviceData.get(getServiceKey(vaadinService));
     }
 
     /**
      * Adds Vaadin service specific data to this session.
      * 
-     * @see #getVaadinServiceData(VaadinService)
+     * @see #getServiceData(VaadinService)
      * @see VaadinServiceData
      * 
      * @param serviceData
      *            the Vaadin service data to add
      */
     public void addVaadinServiceData(VaadinServiceData serviceData) {
-        VaadinService vaadinService = serviceData.getVaadinService();
+        VaadinService vaadinService = serviceData.getService();
         assert !hasVaadinServiceData(vaadinService);
 
         this.serviceData.put(getServiceKey(vaadinService), serviceData);

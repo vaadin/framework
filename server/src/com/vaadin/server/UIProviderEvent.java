@@ -38,7 +38,7 @@ public class UIProviderEvent extends EventObject implements Serializable {
      *            the request for which the event is UI provider is invoked
      */
     public UIProviderEvent(VaadinRequest request) {
-        super(request.getVaadinService());
+        super(request.getService());
         this.request = request;
     }
 

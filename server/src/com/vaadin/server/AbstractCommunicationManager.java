@@ -185,7 +185,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         requireLocale(session.getLocale().toString());
     }
 
-    protected VaadinSession getVaadinSession() {
+    protected VaadinSession getSession() {
         return session;
     }
 
@@ -379,7 +379,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     "StreamVariable for the post not found");
         }
 
-        final VaadinSession session = getVaadinSession();
+        final VaadinSession session = getSession();
 
         OutputStream out = null;
         int totalBytes = 0;
@@ -593,7 +593,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             if (!handleVariables(request, response, callback, session, uI)) {
 
                 // var inconsistency; the client is probably out-of-sync
-                SystemMessages ci = response.getVaadinService()
+                SystemMessages ci = response.getService()
                         .getSystemMessages();
                 String msg = ci.getOutOfSyncMessage();
                 String cap = ci.getOutOfSyncCaption();
@@ -1050,7 +1050,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 }
             }
 
-            SystemMessages ci = request.getVaadinService().getSystemMessages();
+            SystemMessages ci = request.getService().getSystemMessages();
 
             // meta instruction for client to enable auto-forward to
             // sessionExpiredURL after timer expires.
@@ -2460,7 +2460,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
     }
 
     private UI getBrowserDetailsUI(VaadinRequest request) {
-        VaadinService vaadinService = request.getVaadinService();
+        VaadinService vaadinService = request.getService();
         VaadinSession session = VaadinSession.getForSession(request
                 .getWrappedSession());
 
@@ -2614,7 +2614,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 .substring(ApplicationConstants.CONNECTOR_RESOURCE_PREFIX
                         .length() + 2);
 
-        final String mimetype = response.getVaadinService().getMimeType(
+        final String mimetype = response.getService().getMimeType(
                 resourceName);
 
         // Security check: avoid accidentally serving from the UI of the
