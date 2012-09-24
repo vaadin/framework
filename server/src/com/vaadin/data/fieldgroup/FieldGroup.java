@@ -267,6 +267,8 @@ public class FieldGroup implements Serializable {
     /**
      * Gets the property with the given property id from the item.
      * 
+     * @param <T>
+     *            The type of the Property
      * @param propertyId
      *            The id if the property to find
      * @return The property with the given id from the item
@@ -274,14 +276,14 @@ public class FieldGroup implements Serializable {
      *             If the property was not found in the item or no item has been
      *             set
      */
-    protected Property<?> getItemProperty(Object propertyId)
+    protected <T> Property<T> getItemProperty(Object propertyId)
             throws BindException {
         Item item = getItemDataSource();
         if (item == null) {
             throw new BindException("Could not lookup property with id "
                     + propertyId + " as no item has been set");
         }
-        Property<?> p = item.getItemProperty(propertyId);
+        Property<T> p = item.getItemProperty(propertyId);
         if (p == null) {
             throw new BindException("A property with id " + propertyId
                     + " was not found in the item");

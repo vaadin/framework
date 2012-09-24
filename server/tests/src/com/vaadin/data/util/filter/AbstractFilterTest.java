@@ -30,7 +30,7 @@ public abstract class AbstractFilterTest<FILTERTYPE extends Filter> extends
         }
 
         @Override
-        public void setValue(Object newValue) throws ReadOnlyException {
+        public void setValue(String newValue) throws ReadOnlyException {
             throw new ReadOnlyException();
         }
 

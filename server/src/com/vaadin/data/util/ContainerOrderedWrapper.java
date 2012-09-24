@@ -463,7 +463,7 @@ public class ContainerOrderedWrapper implements Container.Ordered,
      * documentation from implemented interface.
      */
     @Override
-    public Property<?> getContainerProperty(Object itemId, Object propertyId) {
+    public <T> Property<T> getContainerProperty(Object itemId, Object propertyId) {
         return container.getContainerProperty(itemId, propertyId);
     }
 

@@ -481,29 +481,29 @@ public class FilesystemContainer implements Container.Hierarchical {
      * @return the requested property's value, or <code>null</code>
      */
     @Override
-    public Property<?> getContainerProperty(Object itemId, Object propertyId) {
+    public <T> Property<T> getContainerProperty(Object itemId, Object propertyId) {
 
         if (!(itemId instanceof File)) {
             return null;
         }
 
         if (propertyId.equals(PROPERTY_NAME)) {
-            return new MethodProperty<Object>(getType(propertyId),
+            return new MethodProperty<T>((Class<T>) getType(propertyId),
                     new FileItem((File) itemId), FILEITEM_NAME, null);
         }
 
         if (propertyId.equals(PROPERTY_ICON)) {
-            return new MethodProperty<Object>(getType(propertyId),
+            return new MethodProperty<T>((Class<T>) getType(propertyId),
                     new FileItem((File) itemId), FILEITEM_ICON, null);
         }
 
         if (propertyId.equals(PROPERTY_SIZE)) {
-            return new MethodProperty<Object>(getType(propertyId),
+            return new MethodProperty<T>((Class<T>) getType(propertyId),
                     new FileItem((File) itemId), FILEITEM_SIZE, null);
         }
 
         if (propertyId.equals(PROPERTY_LASTMODIFIED)) {
-            return new MethodProperty<Object>(getType(propertyId),
+            return new MethodProperty<T>((Class<T>) getType(propertyId),
                     new FileItem((File) itemId), FILEITEM_LASTMODIFIED, null);
         }
 
@@ -633,7 +633,7 @@ public class FilesystemContainer implements Container.Hierarchical {
          * here, we use the default documentation from implemented interface.
          */
         @Override
-        public Property<?> getItemProperty(Object id) {
+        public Property getItemProperty(Object id) {
             return getContainerProperty(file, id);
         }
 

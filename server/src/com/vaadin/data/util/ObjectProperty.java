@@ -128,23 +128,14 @@ public class ObjectProperty<T> extends AbstractProperty<T> {
      *         read-only mode
      */
     @Override
-    @SuppressWarnings("unchecked")
-    public void setValue(Object newValue) throws Property.ReadOnlyException {
+    public void setValue(T newValue) throws Property.ReadOnlyException {
 
         // Checks the mode
         if (isReadOnly()) {
             throw new Property.ReadOnlyException();
         }
 
-        // Checks the type of the value
-        if (newValue != null && !type.isAssignableFrom(newValue.getClass())) {
-            throw new IllegalArgumentException("Invalid value type "
-                    + newValue.getClass().getName()
-                    + " for ObjectProperty of type " + type.getName() + ".");
-        }
-
-        // the cast is safe after an isAssignableFrom check
-        this.value = (T) newValue;
+        this.value = newValue;
 
         fireValueChange();
     }

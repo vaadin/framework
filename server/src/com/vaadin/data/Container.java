@@ -126,13 +126,15 @@ public interface Container extends Serializable {
      * out, or the Container does not have the Property, <code>null</code> is
      * returned.
      * 
+     * @param <T>
+     *            The type of the Property
      * @param itemId
      *            ID of the visible Item which contains the Property
      * @param propertyId
      *            ID of the Property to retrieve
      * @return Property with the given ID or <code>null</code>
      */
-    public Property<?> getContainerProperty(Object itemId, Object propertyId);
+    public <T> Property<T> getContainerProperty(Object itemId, Object propertyId);
 
     /**
      * Gets the data type of all Properties identified by the given Property ID.

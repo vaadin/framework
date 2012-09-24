@@ -21,7 +21,6 @@ public class TestComboBoxValueChange extends
         super.setUp(combo);
     }
 
-    @Override
     protected void setValue(AbstractField<Object> field) {
         Map<String, Object> variables = new HashMap<String, Object>();
         variables.put("selected", new String[] { "myvalue" });

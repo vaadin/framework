@@ -163,12 +163,12 @@ public class IndexedContainer extends
      * java.lang.Object)
      */
     @Override
-    public Property<?> getContainerProperty(Object itemId, Object propertyId) {
+    public <T> Property<T> getContainerProperty(Object itemId, Object propertyId) {
         if (!containsId(itemId)) {
             return null;
         }
 
-        return new IndexedContainerProperty(itemId, propertyId);
+        return new IndexedContainerProperty<T>(itemId, propertyId);
     }
 
     /*
@@ -734,7 +734,7 @@ public class IndexedContainer extends
          * @see com.vaadin.data.Item#getItemProperty(java.lang.Object)
          */
         @Override
-        public Property<?> getItemProperty(Object id) {
+        public Property getItemProperty(Object id) {
             return new IndexedContainerProperty(itemId, id);
         }
 
@@ -841,7 +841,7 @@ public class IndexedContainer extends
      * 
      * @since 3.0
      */
-    private class IndexedContainerProperty implements Property<Object>,
+    private class IndexedContainerProperty<T> implements Property<T>,
             Property.ValueChangeNotifier {
 
         /**
@@ -881,8 +881,8 @@ public class IndexedContainer extends
          * @see com.vaadin.data.Property#getType()
          */
         @Override
-        public Class<?> getType() {
-            return types.get(propertyId);
+        public Class<T> getType() {
+            return (Class<T>) types.get(propertyId);
         }
 
         /*
@@ -891,8 +891,8 @@ public class IndexedContainer extends
          * @see com.vaadin.data.Property#getValue()
          */
         @Override
-        public Object getValue() {
-            return items.get(itemId).get(propertyId);
+        public T getValue() {
+            return (T) items.get(itemId).get(propertyId);
         }
 
         /*

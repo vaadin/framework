@@ -572,7 +572,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * @see com.vaadin.data.Item#getItemProperty(Object)
      */
     @Override
-    public Property<?> getItemProperty(Object id) {
+    public Property getItemProperty(Object id) {
         final Field<?> field = fields.get(id);
         if (field == null) {
             // field does not exist or it is not (yet) created for this property
@@ -593,7 +593,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * @param propertyId
      *            the id of the property.
      */
-    public Field<?> getField(Object propertyId) {
+    public Field getField(Object propertyId) {
         return fields.get(propertyId);
     }
 

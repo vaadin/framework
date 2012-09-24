@@ -36,11 +36,13 @@ public interface Item extends Serializable {
      * Item. If the Item does not contain the Property, <code>null</code> is
      * returned.
      * 
+     * @param <T>
+     *            The type of the Property
      * @param id
      *            identifier of the Property to get
      * @return the Property with the given ID or <code>null</code>
      */
-    public Property<?> getItemProperty(Object id);
+    public <T> Property<T> getItemProperty(Object id);
 
     /**
      * Gets the collection of IDs of all Properties stored in the Item.

@@ -274,7 +274,7 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * java.lang.Object)
      */
     @Override
-    public Property<?> getContainerProperty(Object itemId, Object propertyId) {
+    public <T> Property<T> getContainerProperty(Object itemId, Object propertyId) {
         Item item = getItem(itemId);
         if (item == null) {
             return null;
