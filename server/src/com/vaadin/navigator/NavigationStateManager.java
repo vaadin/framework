@@ -19,15 +19,15 @@ package com.vaadin.navigator;
 import java.io.Serializable;
 
 /**
- * An interface for handling interaction between Navigator and the browser
- * location URI or other similar view identification and bookmarking system. The
- * state is limited to a single string because in the usual cases it forms a
- * part of a URI.
+ * An interface for handling interaction between {@link Navigator} and the
+ * browser location URI or other similar view identification and bookmarking
+ * system. The state is limited to a single string because in the usual cases it
+ * forms a part of a URI.
  * <p>
  * Different implementations can be created for hashbang URIs, HTML5 pushState,
  * portlet URL navigation and other similar systems.
  * <p>
- * This interface is mostly for internal use by {@link Navigator}.
+ * This interface is mostly for internal use by Navigator.
  * 
  * @author Vaadin Ltd
  * @since 7.0
@@ -42,11 +42,22 @@ public interface NavigationStateManager extends Serializable {
     public String getState();
 
     /**
-     * Set the current navigation state in the location URI or similar location,
-     * including view name and any optional parameters.
+     * Sets the current navigation state in the location URI or similar
+     * location, including view name and any optional parameters.
+     * <p>
+     * This method should be only called by a Navigator.
      * 
      * @param fragment
      *            new view and parameter string, not null
      */
     public void setState(String state);
+
+    /**
+     * Sets the Navigator used with this state manager. The state manager should
+     * notify the provided navigator of user-triggered navigation state changes
+     * by invoking <code>navigator.navigateTo(getState())</code>.
+     * <p>
+     * This method should only be called by a Navigator.
+     */
+    public void setNavigator(Navigator navigator);
 }
