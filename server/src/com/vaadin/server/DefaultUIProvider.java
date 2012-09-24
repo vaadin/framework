@@ -23,6 +23,13 @@ public class DefaultUIProvider extends UIProvider {
     @Override
     public Class<? extends UI> getUIClass(UIClassSelectionEvent event) {
         VaadinRequest request = event.getRequest();
+
+        // Only use UI from web.xml for requests to the root
+        String pathInfo = request.getRequestPathInfo();
+        if (pathInfo != null && !"/".equals(pathInfo)) {
+            return null;
+        }
+
         Object uiClassNameObj = request.getVaadinService()
                 .getDeploymentConfiguration().getInitParameters()
                 .getProperty(VaadinSession.UI_PARAMETER);

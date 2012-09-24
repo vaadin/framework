@@ -303,7 +303,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
             if (communicationManager.handleOtherRequest(request, response)) {
                 return;
             }
-            // TODO Should return 404 error here and not do anything more
+
+            // Request not handled by any RequestHandler -> 404
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
 
         } catch (final SessionExpiredException e) {
             // Session has expired, notify user

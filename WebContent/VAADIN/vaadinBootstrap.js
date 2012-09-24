@@ -106,7 +106,10 @@
 					url += "&rootId=" + rootId;
 				}
 
-				url += '&initialPath=' + encodeURIComponent(getConfig("initialPath"));
+				var initialPath = getConfig("initialPath");
+				if (initialPath === null) {
+					url += '&initialPath=' + encodeURIComponent(initialPath);
+				}
 				url += '&initialParams=' + encodeURIComponent(JSON.stringify(getConfig("initialParams")));
 				
 				url += '&' + vaadin.getBrowserDetailsParameters(appId); 
