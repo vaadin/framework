@@ -39,6 +39,7 @@ public class ComponentState extends SharedState {
     public String caption = null;
     public List<String> styles = null;
     public String id = null;
+    public String primaryStyleName = null;
     /**
      * A set of event identifiers with registered listeners.
      */

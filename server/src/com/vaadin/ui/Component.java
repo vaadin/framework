@@ -198,6 +198,19 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public void removeStyleName(String style);
 
     /**
+     * FIXME Javadoc
+     */
+    public String getPrimaryStyleName();
+
+    /**
+     * FIXME Javadoc
+     * 
+     * @param style
+     *            The stylename to set
+     */
+    public void setPrimaryStylename(String style);
+
+    /**
      * Tests whether the component is enabled or not. A user can not interact
      * with disabled components. Disabled components are rendered in a style
      * that indicates the status, usually in gray color. Children of a disabled
