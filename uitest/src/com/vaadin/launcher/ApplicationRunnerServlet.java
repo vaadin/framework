@@ -30,10 +30,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.LegacyApplication;
-import com.vaadin.server.UIProvider;
 import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.LegacyVaadinServlet;
 import com.vaadin.server.ServiceException;
+import com.vaadin.server.UIClassSelectionEvent;
 import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServletRequest;
@@ -144,14 +144,13 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
         try {
             final Class<?> classToRun = getClassToRun();
             if (UI.class.isAssignableFrom(classToRun)) {
-                getVaadinService().addUIProvider(session,
-                        new UIProvider() {
-                            @Override
-                            public Class<? extends UI> getUIClass(
-                                    VaadinRequest request) {
-                                return (Class<? extends UI>) classToRun;
-                            }
-                        });
+                getVaadinService().addUIProvider(session, new UIProvider() {
+                    @Override
+                    public Class<? extends UI> getUIClass(
+                            UIClassSelectionEvent event) {
+                        return (Class<? extends UI>) classToRun;
+                    }
+                });
             } else if (LegacyApplication.class.isAssignableFrom(classToRun)) {
                 // Avoid using own UIProvider for legacy Application
             } else if (UIProvider.class.isAssignableFrom(classToRun)) {

@@ -25,7 +25,6 @@ import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
 
 import com.vaadin.server.VaadinPortlet.RequestType;
-import com.vaadin.ui.UI;
 
 public class VaadinPortletService extends VaadinService {
     private final VaadinPortlet portlet;
@@ -214,8 +213,7 @@ public class VaadinPortletService extends VaadinService {
      * Always preserve UIs in portlets to make portlet actions work.
      */
     @Override
-    public boolean preserveUIOnRefresh(VaadinRequest request, UI ui,
-            UIProvider provider) {
+    public boolean preserveUIOnRefresh(UIProvider provider, UICreateEvent event) {
         return true;
     }
 }

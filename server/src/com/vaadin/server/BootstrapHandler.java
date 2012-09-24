@@ -119,11 +119,14 @@ public abstract class BootstrapHandler implements RequestHandler {
             List<UIProvider> uiProviders = request.getVaadinService()
                     .getUIProviders(session);
 
+            UIClassSelectionEvent classSelectionEvent = new UIClassSelectionEvent(
+                    request);
+
             // Find UI provider and UI class
             Class<? extends UI> uiClass = null;
             UIProvider provider = null;
             for (UIProvider p : uiProviders) {
-                uiClass = p.getUIClass(request);
+                uiClass = p.getUIClass(classSelectionEvent);
                 // If we found something
                 if (uiClass != null) {
                     provider = p;
@@ -243,7 +246,8 @@ public abstract class BootstrapHandler implements RequestHandler {
                 .attr("content", "chrome=1");
 
         String title = response.getUIProvider().getPageTitle(
-                context.getRequest(), context.getUIClass());
+                new UICreateEvent(context.getRequest(), context
+                        .getUIClass()));
         if (title != null) {
             head.appendElement("title").appendText(title);
         }
@@ -285,8 +289,9 @@ public abstract class BootstrapHandler implements RequestHandler {
     public String getWidgetsetForUI(BootstrapContext context) {
         VaadinRequest request = context.getRequest();
 
+        UICreateEvent event = new UICreateEvent(context.getRequest(), context.getUIClass());
         String widgetset = context.getBootstrapResponse().getUIProvider()
-                .getWidgetset(context.getRequest(), context.getUIClass());
+                .getWidgetset(event);
         if (widgetset == null) {
             widgetset = request.getVaadinService().getConfiguredWidgetset(
                     request);
@@ -513,8 +518,8 @@ public abstract class BootstrapHandler implements RequestHandler {
      * @return
      */
     public String getThemeName(BootstrapContext context) {
-        return context.getBootstrapResponse().getUIProvider()
-                .getTheme(context.getRequest(), context.getUIClass());
+        UICreateEvent event = new UICreateEvent(context.getRequest(), context.getUIClass());
+        return context.getBootstrapResponse().getUIProvider().getTheme(event);
     }
 
     /**

@@ -2466,6 +2466,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
         List<UIProvider> uiProviders = vaadinService.getUIProviders(session);
 
+        UIClassSelectionEvent classSelectionEvent = new UIClassSelectionEvent(
+                request);
+
         UIProvider provider = null;
         Class<? extends UI> uiClass = null;
         for (UIProvider p : uiProviders) {
@@ -2473,14 +2476,15 @@ public abstract class AbstractCommunicationManager implements Serializable {
             if (p instanceof LegacyApplicationUIProvider) {
                 LegacyApplicationUIProvider legacyProvider = (LegacyApplicationUIProvider) p;
 
-                UI existingUi = legacyProvider.getExistingUI(request);
+                UI existingUi = legacyProvider
+                        .getExistingUI(classSelectionEvent);
                 if (existingUi != null) {
                     UI.setCurrent(existingUi);
                     return existingUi;
                 }
             }
 
-            uiClass = p.getUIClass(request);
+            uiClass = p.getUIClass(classSelectionEvent);
             if (uiClass != null) {
                 provider = p;
                 break;
@@ -2523,7 +2527,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
         // Explicit Class.cast to detect if the UIProvider does something
         // unexpected
-        UI ui = uiClass.cast(provider.createInstance(request, uiClass));
+        UICreateEvent event = new UICreateEvent(request, uiClass);
+        UI ui = uiClass.cast(provider.createInstance(event));
 
         // Initialize some fields for a newly created UI
         if (ui.getSession() != session) {
@@ -2540,7 +2545,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         session.addUI(ui);
 
         // Remember if it should be remembered
-        if (vaadinService.preserveUIOnRefresh(request, ui, provider)) {
+        if (vaadinService.preserveUIOnRefresh(provider, event)) {
             // Remember this UI
             String windowName = request.getBrowserDetails().getWindowName();
             if (windowName == null) {

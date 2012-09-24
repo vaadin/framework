@@ -11,6 +11,7 @@ import org.easymock.EasyMock;
 import com.vaadin.DefaultDeploymentConfiguration;
 import com.vaadin.server.DefaultUIProvider;
 import com.vaadin.server.DeploymentConfiguration;
+import com.vaadin.server.UIClassSelectionEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
@@ -59,7 +60,7 @@ public class CustomUIClassLoader extends TestCase {
 
         DefaultUIProvider uiProvider = new DefaultUIProvider();
         Class<? extends UI> uiClass = uiProvider
-                .getUIClass(createRequestMock(null));
+                .getUIClass(new UIClassSelectionEvent(createRequestMock(null)));
 
         assertEquals(MyUI.class, uiClass);
     }
@@ -103,7 +104,7 @@ public class CustomUIClassLoader extends TestCase {
 
         DefaultUIProvider uiProvider = new DefaultUIProvider();
         Class<? extends UI> uiClass = uiProvider
-                .getUIClass(createRequestMock(loggingClassLoader));
+                .getUIClass(new UIClassSelectionEvent(createRequestMock(null)));
 
         assertEquals(MyUI.class, uiClass);
         assertEquals(1, loggingClassLoader.requestedClasses.size());

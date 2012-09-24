@@ -21,7 +21,8 @@ import com.vaadin.ui.UI;
 public class DefaultUIProvider extends UIProvider {
 
     @Override
-    public Class<? extends UI> getUIClass(VaadinRequest request) {
+    public Class<? extends UI> getUIClass(UIClassSelectionEvent event) {
+        VaadinRequest request = event.getRequest();
         Object uiClassNameObj = request.getVaadinService()
                 .getDeploymentConfiguration().getInitParameters()
                 .getProperty(VaadinSession.UI_PARAMETER);
