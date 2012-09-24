@@ -40,20 +40,20 @@ public abstract class UIProvider implements Serializable {
 
     /**
      * Helper to get an annotation for a class. If the annotation is not present
-     * on the target class, it's super classes and implemented interfaces are
+     * on the target class, its super classes and implemented interfaces are
      * also searched for the annotation.
      * 
-     * @param event
-     *            the UI create event to get required info from
+     * @param clazz
+     *            the class from which the annotation should be found
      * @param annotationType
      *            the annotation type to look for
      * @return an annotation of the given type, or <code>null</code> if the
      *         annotation is not present on the class
      */
-    protected static <T extends Annotation> T getAnnotationFor(
-            UICreateEvent event, Class<T> annotationType) {
+    protected static <T extends Annotation> T getAnnotationFor(Class<?> clazz,
+            Class<T> annotationType) {
         // Find from the class hierarchy
-        Class<?> currentType = event.getUIClass();
+        Class<?> currentType = clazz;
         while (currentType != Object.class) {
             T annotation = currentType.getAnnotation(annotationType);
             if (annotation != null) {
@@ -64,7 +64,7 @@ public abstract class UIProvider implements Serializable {
         }
 
         // Find from an implemented interface
-        for (Class<?> iface : event.getUIClass().getInterfaces()) {
+        for (Class<?> iface : clazz.getInterfaces()) {
             T annotation = iface.getAnnotation(annotationType);
             if (annotation != null) {
                 return annotation;
@@ -89,7 +89,7 @@ public abstract class UIProvider implements Serializable {
      * 
      */
     public String getTheme(UICreateEvent event) {
-        Theme uiTheme = getAnnotationFor(event, Theme.class);
+        Theme uiTheme = getAnnotationFor(event.getUIClass(), Theme.class);
         if (uiTheme != null) {
             return uiTheme.value();
         } else {
@@ -112,7 +112,8 @@ public abstract class UIProvider implements Serializable {
      * 
      */
     public String getWidgetset(UICreateEvent event) {
-        Widgetset uiWidgetset = getAnnotationFor(event, Widgetset.class);
+        Widgetset uiWidgetset = getAnnotationFor(event.getUIClass(),
+                Widgetset.class);
         if (uiWidgetset != null) {
             return uiWidgetset.value();
         } else {
@@ -134,13 +135,14 @@ public abstract class UIProvider implements Serializable {
      *         when the browser window is refreshed.
      */
     public boolean isPreservedOnRefresh(UICreateEvent event) {
-        PreserveOnRefresh preserveOnRefresh = getAnnotationFor(event,
-                PreserveOnRefresh.class);
+        PreserveOnRefresh preserveOnRefresh = getAnnotationFor(
+                event.getUIClass(), PreserveOnRefresh.class);
         return preserveOnRefresh != null;
     }
 
     public String getPageTitle(UICreateEvent event) {
-        Title titleAnnotation = getAnnotationFor(event, Title.class);
+        Title titleAnnotation = getAnnotationFor(event.getUIClass(),
+                Title.class);
         if (titleAnnotation == null) {
             return null;
         } else {
