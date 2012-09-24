@@ -35,6 +35,11 @@
 	width: 6px;
 }
 
+.v-ie .v-spacing,
+.v-op .v-spacing {
+    height: 4px;
+}
+
 /* Blue background */
 .v-verticallayout-blue,
 .v-horizontallayout-blue,
