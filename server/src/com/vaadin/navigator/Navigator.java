@@ -52,8 +52,6 @@ import com.vaadin.ui.UI;
  */
 public class Navigator implements Serializable {
 
-    // TODO divert navigation e.g. if no permissions? Or just show another view
-    // but keep URL? how best to intercept
     // TODO investigate relationship with TouchKit navigation support
 
     /**
@@ -446,6 +444,8 @@ public class Navigator implements Serializable {
      *            view name and parameters
      * 
      * @throws IllegalArgumentException
+     *             if <code>navigationState</code> does not map to a known view
+     *             and no error view is registered
      */
     public void navigateTo(String navigationState) {
         String longestViewName = null;
