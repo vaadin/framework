@@ -107,7 +107,7 @@
 				}
 
 				var initialPath = getConfig("initialPath");
-				if (initialPath === null) {
+				if (initialPath !== undefined) {
 					url += '&initialPath=' + encodeURIComponent(initialPath);
 				}
 				url += '&initialParams=' + encodeURIComponent(JSON.stringify(getConfig("initialParams")));
