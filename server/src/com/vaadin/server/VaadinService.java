@@ -59,7 +59,7 @@ public abstract class VaadinService implements Serializable {
      * 
      * @author Vaadin Ltd
      */
-    public static class VaadinServiceData {
+    public static class VaadinServiceData implements Serializable {
         private final VaadinService vaadinService;
         private LinkedList<UIProvider> uiProviders = new LinkedList<UIProvider>();
 
