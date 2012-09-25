@@ -3,8 +3,6 @@ package com.vaadin.tests.components.table;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -50,18 +48,8 @@ public class AddItemToEmptyTable extends TestBase {
         addComponent(cb);
 
         rightTable = new Table();
-        // rightTable.setSizeFull();
+        rightTable.setSizeFull();
         rightTable.setPageLength(7);
-        // rightTable.setHeight("200px");
-        rightTable.setWidth("500px");
-        // rightTable.setEditable(true);
-        // rightTable.setSelectable(true);
-        rightTable.addListener(new ItemClickListener() {
-
-            public void itemClick(ItemClickEvent event) {
-                rightTable.select(event.getItemId());
-            }
-        });
 
         rightTable.setColumnReorderingAllowed(false);
         rightTable.setColumnCollapsingAllowed(true);
@@ -78,8 +66,6 @@ public class AddItemToEmptyTable extends TestBase {
         rightTable.addContainerProperty("info", Button.class, null);
         rightTable.setColumnWidth("info", 20);
         rightTable.setColumnAlignment("info", Table.ALIGN_LEFT);
-
-        rightTable.setFooterVisible(true);
 
         addComponent(rightTable);
 

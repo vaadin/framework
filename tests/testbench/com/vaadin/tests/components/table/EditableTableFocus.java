@@ -9,13 +9,11 @@ public class EditableTableFocus extends TestBase {
         Table table = new Table();
 
         table.addContainerProperty("TextField", String.class, null);
-        table.addContainerProperty("Checkbox", Boolean.class, false);
         table.setColumnWidth("TextField", 150);
         for (int i = 1; i < 100; i++) {
-            table.addItem(new Object[] { "", false, }, i);
+            table.addItem(new String[] { "" }, new Integer(i));
         }
         table.setEditable(true);
-        table.setSelectable(true);
 
         addComponent(table);
     }

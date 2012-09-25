@@ -110,8 +110,6 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
      */
     private Element parentFrame;
 
-    private boolean closeEventSent = false;
-
     private ClickEventHandler clickEventHandler = new ClickEventHandler(this,
             VPanel.CLICK_EVENT_IDENTIFIER) {
 
@@ -144,7 +142,6 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
      * Start to periodically monitor for parent element resizes if embedded
      * application (e.g. portlet).
      */
-    @Override
     protected void onLoad() {
         super.onLoad();
         if (isMonitoringParentSize()) {
@@ -170,20 +167,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
             resizeTimer.cancel();
             resizeTimer = null;
         }
-        // Invoked both in onWindowClosing() and here
-        sendCloseEvent();
         super.onUnload();
-    }
-
-    /**
-     * Sends a window close event to the server if one is not already sent.
-     */
-    private void sendCloseEvent() {
-        if (!closeEventSent) {
-            connection.updateVariable(id, "close", true, false);
-            connection.sendPendingVariableChangesSync();
-            closeEventSent = true;
-        }
     }
 
     /**
@@ -684,8 +668,9 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         // might be usable here.
         VTextField.flushChangesFromFocusedTextField();
 
-        // Invoked both in onUnload() and here
-        sendCloseEvent();
+        // Send the closing state to server
+        connection.updateVariable(id, "close", true, false);
+        connection.sendPendingVariableChangesSync();
     }
 
     private final RenderSpace myRenderSpace = new RenderSpace() {

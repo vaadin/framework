@@ -242,13 +242,6 @@ public abstract class AbstractFieldTest<T extends AbstractField> extends
         for (String value : values) {
             createClickAction(value, subCategory, setValueCommand, value);
         }
-
-        StringBuilder multiline = new StringBuilder();
-        for (int i = 0; i < 100; ++i) {
-            multiline.append("A very long value with multiple lines.");
-        }
-        createClickAction("A very long value with multiple lines", subCategory,
-                setValueCommand, multiline);
-
     }
+
 }

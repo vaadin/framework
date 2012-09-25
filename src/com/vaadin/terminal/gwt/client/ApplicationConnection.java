@@ -662,7 +662,6 @@ public class ApplicationConnection {
         // TODO enable timeout
         // rb.setTimeoutMillis(timeoutMillis);
         rb.setHeader("Content-Type", "text/plain;charset=utf-8");
-        rb.setHeader("Cache-Control", "no-cache");
         rb.setRequestData(payload);
         rb.setCallback(requestCallback);
 
