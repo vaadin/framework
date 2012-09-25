@@ -9,7 +9,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Table;
+import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -46,7 +46,7 @@ public class TableClickValueChangeInteraction extends AbstractTestCase {
     private Component makeTable(boolean immediate, boolean selectable,
             boolean listenClicks, boolean listenValueChanges) {
 
-        final Table table = new Table((immediate ? "I" : "i")
+        final Tree table = new Tree((immediate ? "I" : "i")
                 + (selectable ? "S" : "s") + (listenClicks ? "C" : "c")
                 + (listenValueChanges ? "V" : "v"));
         final Label clickLabel = new Label("Click?");

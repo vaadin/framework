@@ -466,6 +466,9 @@ public class VDebugConsole extends VOverlay implements Console {
         // consoleLog(u.getChildrenAsXML());
     }
 
+    public void dirSharedState() {
+    }
+
     private static native void consoleDir(ValueMap u)
     /*-{
          if($wnd.console && $wnd.console.log) {

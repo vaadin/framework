@@ -28,6 +28,8 @@ public class ContainerSizeChange extends TestBase {
         ds = new MyDataSource();
         table.setContainerDataSource(ds);
         table.setPageLength(5);
+        table.setWriteThrough(true);
+        table.setReadThrough(true);
         addComponent(table);
 
         Button b = new Button("Decrease size", new Button.ClickListener() {
