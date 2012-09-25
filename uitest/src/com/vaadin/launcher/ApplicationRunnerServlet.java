@@ -39,8 +39,8 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.server.VaadinSessionInitializationListener;
-import com.vaadin.server.VaadinSessionInitializeEvent;
+import com.vaadin.server.SessionInitListener;
+import com.vaadin.server.SessionInitEvent;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.UI;
 
@@ -76,11 +76,11 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     @Override
     protected void servletInitialized() {
         super.servletInitialized();
-        getService().addVaadinSessionInitializationListener(
-                new VaadinSessionInitializationListener() {
+        getService().addSessionInitListener(
+                new SessionInitListener() {
                     @Override
-                    public void vaadinSessionInitialized(
-                            VaadinSessionInitializeEvent event)
+                    public void sessionInit(
+                            SessionInitEvent event)
                             throws ServiceException {
                         onVaadinSessionStarted(event.getRequest(),
                                 event.getSession());

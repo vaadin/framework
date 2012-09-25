@@ -55,10 +55,10 @@ public class AddonContext implements Serializable {
     public AddonContext(VaadinService vaadinService) {
         this.vaadinService = vaadinService;
         vaadinService
-                .addVaadinSessionInitializationListener(new VaadinSessionInitializationListener() {
+                .addSessionInitListener(new SessionInitListener() {
                     @Override
-                    public void vaadinSessionInitialized(
-                            VaadinSessionInitializeEvent event)
+                    public void sessionInit(
+                            SessionInitEvent event)
                             throws ServiceException {
                         for (BootstrapListener l : bootstrapListeners) {
                             event.getSession().addBootstrapListener(l);

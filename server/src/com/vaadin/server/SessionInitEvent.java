@@ -19,29 +19,39 @@ package com.vaadin.server;
 import java.util.EventObject;
 
 /**
- * Event fired when a Vaadin session is no longer in use.
+ * Event gets fired when a new Vaadin session is initialized for a Vaadin
+ * service.
+ * <p>
+ * Because of the way different service instances share the same session, the
+ * event is not necessarily fired immediately when the session is created but
+ * only when the first request for that session is handled by a specific
+ * service.
  * 
- * @see VaadinSessionDestroyListener#vaadinSessionDestroyed(VaadinSessionDestroyEvent)
+ * @see SessionInitListener#sessionInit(SessionInitEvent)
  * 
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public class VaadinSessionDestroyEvent extends EventObject {
+public class SessionInitEvent extends EventObject {
 
     private final VaadinSession session;
+    private final VaadinRequest request;
 
     /**
      * Creates a new event.
      * 
      * @param service
-     *            the Vaadin service from which the even originates
+     *            the Vaadin service from which the event originates
      * @param session
-     *            the Vaadin session that is no longer used
+     *            the Vaadin session that has been initialized
+     * @param request
+     *            the request that triggered the initialization
      */
-    public VaadinSessionDestroyEvent(VaadinService service,
-            VaadinSession session) {
+    public SessionInitEvent(VaadinService service, VaadinSession session,
+            VaadinRequest request) {
         super(service);
         this.session = session;
+        this.request = request;
     }
 
     @Override
@@ -50,21 +60,30 @@ public class VaadinSessionDestroyEvent extends EventObject {
     }
 
     /**
-     * Gets the Vaadin service from which the even originates.
+     * Gets the Vaadin service from which this event originates
      * 
-     * @return the Vaadin service
+     * @return the Vaadin service instance
      */
     public VaadinService getService() {
         return getSource();
     }
 
     /**
-     * Gets the Vaadin session that is no longer used.
+     * Gets the Vaadin session that has been initialized.
      * 
      * @return the Vaadin session
      */
     public VaadinSession getSession() {
         return session;
+    }
+
+    /**
+     * Gets the request that triggered the initialization.
+     * 
+     * @return the request
+     */
+    public VaadinRequest getRequest() {
+        return request;
     }
 
 }

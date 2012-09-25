@@ -24,12 +24,12 @@ package com.vaadin.server;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public interface VaadinSessionDestroyListener {
+public interface SessionDestroyListener {
     /**
      * Called when a Vaadin session is no longer used.
      * 
      * @param event
      *            the event with details about the destroyed session
      */
-    public void vaadinSessionDestroyed(VaadinSessionDestroyEvent event);
+    public void sessionDestroy(SessionDestroyEvent event);
 }
