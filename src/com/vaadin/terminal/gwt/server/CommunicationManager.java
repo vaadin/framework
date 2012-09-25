@@ -303,6 +303,11 @@ public class CommunicationManager extends AbstractCommunicationManager {
             AbstractApplicationServlet applicationServlet, Window window)
             throws IOException, ServletException,
             InvalidUIDLSecurityKeyException {
+
+        // Ensure that the browser does not cache UIDL responses.
+        // iOS 6 Safari requires this (#9732)
+        response.setHeader("Cache-Control", "no-cache");
+
         doHandleUidlRequest(new HttpServletRequestWrapper(request),
                 new HttpServletResponseWrapper(response),
                 new AbstractApplicationServletWrapper(applicationServlet),
