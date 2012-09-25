@@ -288,6 +288,11 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 // Handles AJAX UIDL requests
                 communicationManager.handleUidlRequest(request, response,
                         servletWrapper, uI);
+
+                // Ensure that the browser does not cache UIDL responses.
+                // iOS 6 Safari requires this (#9732)
+                response.setHeader("Cache-Control", "no-cache");
+
                 return;
             } else if (requestType == RequestType.BROWSER_DETAILS) {
                 // Browser details - not related to a specific UI
