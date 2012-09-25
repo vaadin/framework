@@ -58,12 +58,22 @@ public interface Validatable extends Serializable {
     void removeValidator(Validator validator);
 
     /**
+     * Removes all validators from this object, as if
+     * {@link #removeValidator(Validator) removeValidator} was called for each
+     * registered validator.
+     */
+    void removeAllValidators();
+
+    /**
      * <p>
-     * Lists all validators currently registered for the object. If no
-     * validators are registered, returns <code>null</code>.
+     * Returns a collection of all validators currently registered for the
+     * object. The collection may be immutable. Calling
+     * <code>removeValidator</code> for this Validatable while iterating over
+     * the collection may be unsafe (e.g. may throw
+     * <code>ConcurrentModificationException</code>.)
      * </p>
      * 
-     * @return collection of validators or <code>null</code>
+     * @return A collection of validators
      */
     public Collection<Validator> getValidators();
 

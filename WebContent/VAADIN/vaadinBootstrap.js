@@ -106,7 +106,10 @@
 					url += "&rootId=" + rootId;
 				}
 
-				url += '&initialPath=' + encodeURIComponent(getConfig("initialPath"));
+				var initialPath = getConfig("initialPath");
+				if (initialPath === null) {
+					url += '&initialPath=' + encodeURIComponent(initialPath);
+				}
 				url += '&initialParams=' + encodeURIComponent(JSON.stringify(getConfig("initialParams")));
 				
 				url += '&' + vaadin.getBrowserDetailsParameters(appId); 
@@ -131,6 +134,8 @@
 							
 							// Try bootstrapping again, this time without fetching missing info
 							bootstrapApp(false);
+						} else if (r.status == 500) {
+							document.write(r.responseText);
 						} else {
 							log('Error', r.statusText);  
 						}

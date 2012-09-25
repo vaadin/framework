@@ -285,6 +285,6 @@ public interface VaadinRequest extends Serializable {
      * 
      * @see VaadinService
      */
-    public VaadinService getVaadinService();
+    public VaadinService getService();
 
 }

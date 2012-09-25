@@ -98,12 +98,6 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                  */
                 JSONObject defaults = super.getDefaultParameters(context);
 
-                ResourceURL portletResourceUrl = getRenderResponse(context)
-                        .createResourceURL();
-                portletResourceUrl.setResourceID(VaadinPortlet.RESOURCE_URL_ID);
-                defaults.put(ApplicationConstants.PORTLET_RESOUCE_URL_BASE,
-                        portletResourceUrl.toString());
-
                 defaults.put("pathInfo", "");
 
                 return defaults;
@@ -131,8 +125,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
 
             @Override
             protected String getMainDivStyle(BootstrapContext context) {
-                VaadinService vaadinService = context.getRequest()
-                        .getVaadinService();
+                VaadinService vaadinService = context.getRequest().getService();
                 return vaadinService.getDeploymentConfiguration()
                         .getApplicationOrSystemProperty(
                                 VaadinPortlet.PORTLET_PARAMETER_STYLE, null);
@@ -150,6 +143,13 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                 ResourceURL resourceURL = portletResponse.createResourceURL();
                 resourceURL.setResourceID("browserDetails");
                 parameters.put("browserDetailsUrl", resourceURL.toString());
+
+                ResourceURL portletResourceUrl = getRenderResponse(context)
+                        .createResourceURL();
+                portletResourceUrl.setResourceID(VaadinPortlet.RESOURCE_URL_ID);
+                parameters.put(ApplicationConstants.PORTLET_RESOUCE_URL_BASE,
+                        portletResourceUrl.toString());
+
                 return parameters;
             }
 

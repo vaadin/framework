@@ -83,7 +83,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
                 URL url;
 
                 try {
-                    url = context.getRequest().getVaadinService()
+                    url = context.getRequest().getService()
                             .getApplicationUrl(context.getRequest());
                 } catch (MalformedURLException e) {
                     throw new RuntimeException(e);

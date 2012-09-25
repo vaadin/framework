@@ -30,10 +30,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.LegacyApplication;
-import com.vaadin.server.UIProvider;
 import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.LegacyVaadinServlet;
 import com.vaadin.server.ServiceException;
+import com.vaadin.server.UIClassSelectionEvent;
 import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServletRequest;
@@ -64,7 +64,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
             Collections.addAll(defaultPackages, initParameter.split(","));
         }
         String str = TestBase.class.getName().replace('.', '/') + ".class";
-        URL url = getVaadinService().getClassLoader().getResource(str);
+        URL url = getService().getClassLoader().getResource(str);
         if ("file".equals(url.getProtocol())) {
             File comVaadinTests = new File(url.getPath()).getParentFile()
                     .getParentFile();
@@ -76,14 +76,14 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     @Override
     protected void servletInitialized() {
         super.servletInitialized();
-        getVaadinService().addVaadinSessionInitializationListener(
+        getService().addVaadinSessionInitializationListener(
                 new VaadinSessionInitializationListener() {
                     @Override
                     public void vaadinSessionInitialized(
                             VaadinSessionInitializeEvent event)
                             throws ServiceException {
                         onVaadinSessionStarted(event.getRequest(),
-                                event.getVaadinSession());
+                                event.getSession());
                     }
                 });
     }
@@ -144,18 +144,17 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
         try {
             final Class<?> classToRun = getClassToRun();
             if (UI.class.isAssignableFrom(classToRun)) {
-                getVaadinService().addUIProvider(session,
-                        new UIProvider() {
-                            @Override
-                            public Class<? extends UI> getUIClass(
-                                    VaadinRequest request) {
-                                return (Class<? extends UI>) classToRun;
-                            }
-                        });
+                getService().addUIProvider(session, new UIProvider() {
+                    @Override
+                    public Class<? extends UI> getUIClass(
+                            UIClassSelectionEvent event) {
+                        return (Class<? extends UI>) classToRun;
+                    }
+                });
             } else if (LegacyApplication.class.isAssignableFrom(classToRun)) {
                 // Avoid using own UIProvider for legacy Application
             } else if (UIProvider.class.isAssignableFrom(classToRun)) {
-                getVaadinService().addUIProvider(session,
+                getService().addUIProvider(session,
                         (UIProvider) classToRun.newInstance());
             } else {
                 throw new ServiceException(classToRun.getCanonicalName()
@@ -312,7 +311,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     @Override
     protected VaadinServletRequest createVaadinRequest(
             HttpServletRequest request) {
-        return new VaadinServletRequest(request, getVaadinService()) {
+        return new VaadinServletRequest(request, getService()) {
             @Override
             public String getRequestPathInfo() {
                 return ApplicationRunnerServlet.this.getRequestPathInfo(this);

@@ -1,8 +1,11 @@
 package com.vaadin.tests.components.ui;
 
 import com.vaadin.server.ExternalResource;
-import com.vaadin.server.VaadinSession;
+import com.vaadin.server.UIClassSelectionEvent;
+import com.vaadin.server.UICreateEvent;
+import com.vaadin.server.UIProviderEvent;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestUIProvider;
 import com.vaadin.ui.Label;
@@ -20,17 +23,17 @@ public class LazyInitUIs extends AbstractTestUIProvider {
     }
 
     @Override
-    public UI createInstance(VaadinRequest request,
-            Class<? extends UI> type) {
-        return getUI(request);
+    public UI createInstance(UICreateEvent event) {
+        return getUI(event);
     }
 
     @Override
-    public Class<? extends UI> getUIClass(VaadinRequest request) {
-        return getUI(request).getClass();
+    public Class<? extends UI> getUIClass(UIClassSelectionEvent event) {
+        return getUI(event).getClass();
     }
 
-    private UI getUI(VaadinRequest request) {
+    private UI getUI(UIProviderEvent event) {
+        VaadinRequest request = event.getRequest();
         if (request.getParameter("lazyCreate") != null) {
             // UI created on second request
             UI uI = new UI() {

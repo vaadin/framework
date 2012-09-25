@@ -3,8 +3,9 @@ package com.vaadin.tests.components.ui;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.vaadin.server.VaadinSession;
+import com.vaadin.server.UIClassSelectionEvent;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.components.AbstractTestUIProvider;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
@@ -32,7 +33,7 @@ public class UIsInMultipleTabs extends AbstractTestUIProvider {
     }
 
     @Override
-    public Class<? extends UI> getUIClass(VaadinRequest request) {
+    public Class<? extends UI> getUIClass(UIClassSelectionEvent event) {
         return TabUI.class;
     }
 

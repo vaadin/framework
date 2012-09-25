@@ -238,12 +238,12 @@ public class AttachDetachWindow {
     private void assertUnattached(TestContainer win) {
         assertSame("window not detached", win.getSession(), null);
         assertSame("window content not detached",
-                getVaadinSession(win.getTestContent()), null);
+                getSession(win.getTestContent()), null);
         assertSame("window children not detached",
-                getVaadinSession(win.getTestContent().child), null);
+                getSession(win.getTestContent().child), null);
     }
 
-    private VaadinSession getVaadinSession(ClientConnector testContainer) {
+    private VaadinSession getSession(ClientConnector testContainer) {
         UI ui = testContainer.getUI();
         if (ui != null) {
             return ui.getSession();

@@ -87,7 +87,7 @@ public class Navigator implements Serializable {
     public static class UriFragmentManager implements NavigationStateManager,
             FragmentChangedListener {
         private final Page page;
-        private final Navigator navigator;
+        private Navigator navigator;
 
         /**
          * Creates a new URIFragmentManager and attach it to listen to URI
@@ -95,20 +95,20 @@ public class Navigator implements Serializable {
          * 
          * @param page
          *            page whose URI fragment to get and modify
-         * @param navigator
-         *            {@link Navigator} to notify of fragment changes (using
-         *            {@link Navigator#navigateTo(String)}
          */
-        public UriFragmentManager(Page page, Navigator navigator) {
+        public UriFragmentManager(Page page) {
             this.page = page;
-            this.navigator = navigator;
-
             page.addFragmentChangedListener(this);
         }
 
         @Override
+        public void setNavigator(Navigator navigator) {
+            this.navigator = navigator;
+        }
+
+        @Override
         public String getState() {
-            String fragment = page.getFragment();
+            String fragment = getFragment();
             if (fragment.startsWith("!")) {
                 return fragment.substring(1);
             } else {
@@ -118,12 +118,31 @@ public class Navigator implements Serializable {
 
         @Override
         public void setState(String state) {
-            page.setFragment("!" + state, false);
+            setFragment("!" + state);
         }
 
         @Override
         public void fragmentChanged(FragmentChangedEvent event) {
             navigator.navigateTo(getState());
+        }
+
+        /**
+         * Returns the current URI fragment tracked by this UriFragentManager.
+         * 
+         * @return The URI fragment.
+         */
+        protected String getFragment() {
+            return page.getFragment();
+        }
+
+        /**
+         * Sets the URI fragment to the given string.
+         * 
+         * @param fragment
+         *            The new URI fragment.
+         */
+        protected void setFragment(String fragment) {
+            page.setFragment(fragment, false);
         }
     }
 
@@ -379,10 +398,7 @@ public class Navigator implements Serializable {
      *            The ViewDisplay used to display the views.
      */
     public Navigator(UI ui, ViewDisplay display) {
-        this.ui = ui;
-        this.ui.setNavigator(this);
-        this.display = display;
-        stateManager = new UriFragmentManager(ui.getPage(), this);
+        this(ui, new UriFragmentManager(ui.getPage()), display);
     }
 
     /**
@@ -409,8 +425,9 @@ public class Navigator implements Serializable {
             ViewDisplay display) {
         this.ui = ui;
         this.ui.setNavigator(this);
-        this.display = display;
         this.stateManager = stateManager;
+        this.stateManager.setNavigator(this);
+        this.display = display;
     }
 
     /**

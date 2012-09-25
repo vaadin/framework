@@ -183,8 +183,8 @@ public class CombinedRequest implements VaadinRequest {
     }
 
     @Override
-    public VaadinService getVaadinService() {
-        return secondRequest.getVaadinService();
+    public VaadinService getService() {
+        return secondRequest.getService();
     }
 
     @Override

@@ -13,23 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.server.widgetsetutils;
 
-import com.vaadin.client.ServerConnector;
-import com.vaadin.shared.ui.Connect.LoadStyle;
+package com.vaadin.server;
 
 /**
- * WidgetMap generator that builds a widgetset that optimizes the transferred
- * data. Widgets are loaded only when used if the widgetset is built with this
- * generator.
+ * Contains information used by
+ * {@link UIProvider#getUIClass(UIClassSelectionEvent)} to choose a UI class to
+ * use in a specific situation.
  * 
- * @see WidgetMapGenerator
- * 
+ * @author Vaadin Ltd
+ * @since 7.0.0
  */
-public class LazyWidgetMapGenerator extends WidgetMapGenerator {
-    @Override
-    protected LoadStyle getLoadStyle(Class<? extends ServerConnector> connector) {
-        return LoadStyle.LAZY;
+public class UIClassSelectionEvent extends UIProviderEvent {
+
+    /**
+     * Creates a new event for a specific request.
+     * 
+     * @param request
+     *            the Vaadin request for which a UI class is wanted.
+     */
+    public UIClassSelectionEvent(VaadinRequest request) {
+        super(request);
     }
 
 }

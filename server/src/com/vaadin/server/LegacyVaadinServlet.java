@@ -49,7 +49,7 @@ public class LegacyVaadinServlet extends VaadinServlet {
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
 
-        getVaadinService().addVaadinSessionInitializationListener(
+        getService().addVaadinSessionInitializationListener(
                 new VaadinSessionInitializationListener() {
                     @Override
                     public void vaadinSessionInitialized(
@@ -57,7 +57,7 @@ public class LegacyVaadinServlet extends VaadinServlet {
                             throws ServiceException {
                         try {
                             onVaadinSessionStarted(event.getRequest(),
-                                    event.getVaadinSession());
+                                    event.getSession());
                         } catch (ServletException e) {
                             throw new ServiceException(e);
                         }
@@ -69,7 +69,7 @@ public class LegacyVaadinServlet extends VaadinServlet {
             throws ClassNotFoundException {
         try {
             return ServletPortletHelper
-                    .getLegacyApplicationClass(getVaadinService());
+                    .getLegacyApplicationClass(getService());
         } catch (ServiceException e) {
             throw new RuntimeException(e);
         }
@@ -92,7 +92,7 @@ public class LegacyVaadinServlet extends VaadinServlet {
 
     private void onVaadinSessionStarted(VaadinRequest request,
             VaadinSession session) throws ServletException {
-        getVaadinService().addUIProvider(session, provider);
+        getService().addUIProvider(session, provider);
     }
 
 }

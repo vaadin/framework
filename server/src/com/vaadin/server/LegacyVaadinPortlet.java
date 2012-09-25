@@ -16,6 +16,7 @@
 
 package com.vaadin.server;
 
+import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 
@@ -44,10 +45,10 @@ public class LegacyVaadinPortlet extends VaadinPortlet {
     };
 
     @Override
-    public void init() throws PortletException {
-        super.init();
+    public void init(PortletConfig portletConfig) throws PortletException {
+        super.init(portletConfig);
 
-        getVaadinService().addVaadinSessionInitializationListener(
+        getService().addVaadinSessionInitializationListener(
                 new VaadinSessionInitializationListener() {
                     @Override
                     public void vaadinSessionInitialized(
@@ -56,8 +57,7 @@ public class LegacyVaadinPortlet extends VaadinPortlet {
                         try {
                             onVaadinSessionStarted(VaadinPortletRequest
                                     .cast(event.getRequest()),
-                                    (VaadinPortletSession) event
-                                            .getVaadinSession());
+                                    (VaadinPortletSession) event.getSession());
                         } catch (PortletException e) {
                             throw new ServiceException(e);
                         }
@@ -68,8 +68,7 @@ public class LegacyVaadinPortlet extends VaadinPortlet {
     protected Class<? extends LegacyApplication> getApplicationClass()
             throws ClassNotFoundException {
         try {
-            return ServletPortletHelper
-                    .getLegacyApplicationClass(getVaadinService());
+            return ServletPortletHelper.getLegacyApplicationClass(getService());
         } catch (ServiceException e) {
             throw new RuntimeException(e);
         }
@@ -87,7 +86,7 @@ public class LegacyVaadinPortlet extends VaadinPortlet {
 
     private void onVaadinSessionStarted(VaadinPortletRequest request,
             VaadinPortletSession session) throws PortletException {
-        getVaadinService().addUIProvider(session, provider);
+        getService().addUIProvider(session, provider);
     }
 
     protected boolean shouldCreateApplication(PortletRequest request) {

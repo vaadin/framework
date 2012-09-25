@@ -155,5 +155,5 @@ public interface VaadinResponse extends Serializable {
      * 
      * @see VaadinService
      */
-    public VaadinService getVaadinService();
+    public VaadinService getService();
 }

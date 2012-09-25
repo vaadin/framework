@@ -12,10 +12,10 @@ import com.vaadin.ui.Label;
 public class LabelTest extends AbstractComponentTest<Label> implements
         ValueChangeListener {
 
-    private Command<Label, Object> setValueCommand = new Command<Label, Object>() {
+    private Command<Label, String> setValueCommand = new Command<Label, String>() {
 
         @Override
-        public void execute(Label c, Object value, Object data) {
+        public void execute(Label c, String value, Object data) {
             c.setValue(value);
         }
     };

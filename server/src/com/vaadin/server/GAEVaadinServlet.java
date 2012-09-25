@@ -172,9 +172,9 @@ public class GAEVaadinServlet extends VaadinServlet {
             HttpServletResponse unwrappedResponse) throws ServletException,
             IOException {
         VaadinServletRequest request = new VaadinServletRequest(
-                unwrappedRequest, getVaadinService());
+                unwrappedRequest, getService());
         VaadinServletResponse response = new VaadinServletResponse(
-                unwrappedResponse, getVaadinService());
+                unwrappedResponse, getService());
 
         if (isCleanupRequest(request)) {
             cleanDatastore();
@@ -199,7 +199,7 @@ public class GAEVaadinServlet extends VaadinServlet {
             return;
         }
 
-        final HttpSession session = request.getSession(getVaadinService()
+        final HttpSession session = request.getSession(getService()
                 .requestCanCreateSession(request));
         if (session == null) {
             handleServiceSessionExpired(request, response);
@@ -341,7 +341,7 @@ public class GAEVaadinServlet extends VaadinServlet {
 
         // will create new context if the above did not
         try {
-            return getVaadinService().findVaadinSession(
+            return getService().findVaadinSession(
                     createVaadinRequest(request));
         } catch (Exception e) {
             throw new ServletException(e);

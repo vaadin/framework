@@ -33,6 +33,7 @@ import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.navigator.ViewProvider;
 import com.vaadin.tests.server.navigator.ClassBasedViewProviderTest.TestView;
 import com.vaadin.tests.server.navigator.ClassBasedViewProviderTest.TestView2;
+import com.vaadin.ui.UI;
 
 public class NavigatorTest extends TestCase {
 
@@ -56,6 +57,11 @@ public class NavigatorTest extends TestCase {
         public void setState(String fragment) {
             // do nothing
         }
+
+        @Override
+        public void setNavigator(Navigator navigator) {
+            // do nothing
+        }
     }
 
     public static class TestDisplay implements ViewDisplay {
@@ -73,7 +79,7 @@ public class NavigatorTest extends TestCase {
 
     public static class TestNavigator extends Navigator {
         public TestNavigator() {
-            super(null, new NullFragmentManager(), new TestDisplay());
+            super(createMockUI(), new NullFragmentManager(), new TestDisplay());
         }
 
         public View getView(String viewAndParameters) {
@@ -190,6 +196,18 @@ public class NavigatorTest extends TestCase {
         return null;
     }
 
+    private static UI createMockUI() {
+        UI ui = EasyMock.createMock(UI.class);
+        ui.setNavigator(EasyMock.anyObject(Navigator.class));
+        EasyMock.replay(ui);
+        return ui;
+    }
+
+    private static Navigator createNavigator(NavigationStateManager manager,
+            ViewDisplay display) {
+        return new Navigator(createMockUI(), manager, display);
+    }
+
     public void testBasicNavigation() {
         IMocksControl control = EasyMock.createControl();
         NavigationStateManager manager = control
@@ -200,6 +218,8 @@ public class NavigatorTest extends TestCase {
         View view2 = control.createMock(View.class);
 
         // prepare mocks: what to expect
+        manager.setNavigator(EasyMock.anyObject(Navigator.class));
+
         EasyMock.expect(provider.getViewName("test1")).andReturn("test1");
         EasyMock.expect(provider.getView("test1")).andReturn(view1);
         EasyMock.expect(manager.getState()).andReturn("");
@@ -225,7 +245,7 @@ public class NavigatorTest extends TestCase {
         control.replay();
 
         // create and test navigator
-        Navigator navigator = new Navigator(null, manager, display);
+        Navigator navigator = createNavigator(manager, display);
         navigator.addProvider(provider);
 
         navigator.navigateTo("test1");
@@ -243,6 +263,8 @@ public class NavigatorTest extends TestCase {
         View view2 = control.createMock(View.class);
 
         // prepare mocks: what to expect
+        manager.setNavigator(EasyMock.anyObject(Navigator.class));
+
         EasyMock.expect(provider.getViewName("test2")).andReturn("test2");
         EasyMock.expect(provider.getView("test2")).andReturn(view2);
         EasyMock.expect(manager.getState()).andReturn("view1");
@@ -268,7 +290,7 @@ public class NavigatorTest extends TestCase {
         control.replay();
 
         // create and test navigator
-        Navigator navigator = new Navigator(null, manager, display);
+        Navigator navigator = createNavigator(manager, display);
         navigator.addProvider(provider);
 
         navigator.navigateTo("test2");
@@ -287,7 +309,7 @@ public class NavigatorTest extends TestCase {
         ViewChangeTestListener listener = new ViewChangeTestListener();
 
         // create navigator to test
-        Navigator navigator = new Navigator(null, manager, display);
+        Navigator navigator = createNavigator(manager, display);
 
         // prepare mocks: what to expect
         EasyMock.expect(provider.getViewName("test1")).andReturn("test1");
@@ -337,7 +359,7 @@ public class NavigatorTest extends TestCase {
         ViewChangeTestListener listener1 = new ViewChangeTestListener();
         ViewChangeTestListener listener2 = new ViewChangeTestListener();
 
-        Navigator navigator = new Navigator(null, manager, display);
+        Navigator navigator = createNavigator(manager, display);
 
         // prepare mocks: what to expect
         // first listener blocks first view change
@@ -471,8 +493,7 @@ public class NavigatorTest extends TestCase {
     }
 
     public void testAddViewWithNullName() throws Exception {
-        Navigator navigator = new Navigator(null, new NullFragmentManager(),
-                new NullDisplay());
+        Navigator navigator = new TestNavigator();
 
         try {
             navigator.addView(null, new TestView());
@@ -487,8 +508,7 @@ public class NavigatorTest extends TestCase {
     }
 
     public void testAddViewWithNullInstance() throws Exception {
-        Navigator navigator = new Navigator(null, new NullFragmentManager(),
-                new NullDisplay());
+        Navigator navigator = new TestNavigator();
 
         try {
             navigator.addView("test", (View) null);
@@ -498,8 +518,7 @@ public class NavigatorTest extends TestCase {
     }
 
     public void testAddViewWithNullClass() throws Exception {
-        Navigator navigator = new Navigator(null, new NullFragmentManager(),
-                new NullDisplay());
+        Navigator navigator = new TestNavigator();
 
         try {
             navigator.addView("test", (Class<View>) null);

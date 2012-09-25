@@ -86,7 +86,7 @@ public abstract class BootstrapResponse extends EventObject {
      * 
      * @return the vaadin session
      */
-    public VaadinSession getVaadinSession() {
+    public VaadinSession getSession() {
         return session;
     }
 

@@ -115,7 +115,7 @@ public class VaadinPortletResponse implements VaadinResponse {
     }
 
     @Override
-    public VaadinPortletService getVaadinService() {
+    public VaadinPortletService getService() {
         return vaadinService;
     }
 }

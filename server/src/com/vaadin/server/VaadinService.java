@@ -110,7 +110,7 @@ public abstract class VaadinService implements Serializable {
          * 
          * @return the Vaadin service that htis data belongs to
          */
-        public VaadinService getVaadinService() {
+        public VaadinService getService() {
             return vaadinService;
         }
 
@@ -651,7 +651,7 @@ public abstract class VaadinService implements Serializable {
      * @return an unmodifiable list of UI providers
      */
     public List<UIProvider> getUIProviders(VaadinSession session) {
-        return session.getVaadinServiceData(this).getUIProviders();
+        return session.getServiceData(this).getUIProviders();
     }
 
     /**
@@ -696,7 +696,7 @@ public abstract class VaadinService implements Serializable {
      *            the UI provider that should be added
      */
     public void addUIProvider(VaadinSession vaadinSession, UIProvider uiProvider) {
-        vaadinSession.getVaadinServiceData(this).addUIProvider(uiProvider);
+        vaadinSession.getServiceData(this).addUIProvider(uiProvider);
     }
 
     /**
@@ -709,7 +709,7 @@ public abstract class VaadinService implements Serializable {
      */
     public void removeUIProvider(VaadinSession vaadinSession,
             UIProvider uiProvider) {
-        vaadinSession.getVaadinServiceData(this).removeUIProvider(uiProvider);
+        vaadinSession.getServiceData(this).removeUIProvider(uiProvider);
     }
 
     /**
@@ -719,19 +719,16 @@ public abstract class VaadinService implements Serializable {
      * typically checks the @{@link PreserveOnRefresh} annotation but UI
      * providers and ultimately VaadinService implementations may choose to
      * override the defaults.
-     * 
-     * @param request
-     *            the Vaadin request used to initialize the UI
-     * @param ui
-     *            the UI for which the preserve setting should be returned
      * @param provider
      *            the UI provider responsible for the UI
+     * @param event
+     *            the UI create event with details about the UI
+     * 
      * @return <code>true</code> if the UI should be preserved on refresh;
      *         <code>false</code> if a new UI instance should be initialized on
      *         refreshed.
      */
-    public boolean preserveUIOnRefresh(VaadinRequest request, UI ui,
-            UIProvider provider) {
-        return provider.isPreservedOnRefresh(request, ui.getClass());
+    public boolean preserveUIOnRefresh(UIProvider provider, UICreateEvent event) {
+        return provider.isPreservedOnRefresh(event);
     }
 }

@@ -39,8 +39,8 @@ public abstract class LegacyApplicationUIProvider extends UIProvider {
             .compile("^/?([^/]+).*");
 
     @Override
-    public Class<? extends UI> getUIClass(VaadinRequest request) {
-        UI uiInstance = getUIInstance(request);
+    public Class<? extends UI> getUIClass(UIClassSelectionEvent event) {
+        UI uiInstance = getUIInstance(event);
         if (uiInstance != null) {
             return uiInstance.getClass();
         }
@@ -48,12 +48,12 @@ public abstract class LegacyApplicationUIProvider extends UIProvider {
     }
 
     @Override
-    public UI createInstance(VaadinRequest request, Class<? extends UI> type) {
-        return getUIInstance(request);
+    public UI createInstance(UICreateEvent event) {
+        return getUIInstance(event);
     }
 
     @Override
-    public String getTheme(VaadinRequest request, Class<? extends UI> uiClass) {
+    public String getTheme(UICreateEvent event) {
         LegacyApplication application = getApplication();
         if (application != null) {
             return application.getTheme();
@@ -63,17 +63,17 @@ public abstract class LegacyApplicationUIProvider extends UIProvider {
     }
 
     @Override
-    public String getPageTitle(VaadinRequest request,
-            Class<? extends UI> uiClass) {
-        UI uiInstance = getUIInstance(request);
+    public String getPageTitle(UICreateEvent event) {
+        UI uiInstance = getUIInstance(event);
         if (uiInstance != null) {
             return uiInstance.getCaption();
         } else {
-            return super.getPageTitle(request, uiClass);
+            return super.getPageTitle(event);
         }
     }
 
-    private UI getUIInstance(VaadinRequest request) {
+    private UI getUIInstance(UIProviderEvent event) {
+        VaadinRequest request = event.getRequest();
         String pathInfo = request.getRequestPathInfo();
         String name = null;
         if (pathInfo != null && pathInfo.length() > 0) {
@@ -99,11 +99,11 @@ public abstract class LegacyApplicationUIProvider extends UIProvider {
      * Hack used to return existing LegacyWindow instances without regard for
      * out-of-sync problems.
      * 
-     * @param request
+     * @param event
      * @return
      */
-    public UI getExistingUI(VaadinRequest request) {
-        UI uiInstance = getUIInstance(request);
+    public UI getExistingUI(UIClassSelectionEvent event) {
+        UI uiInstance = getUIInstance(event);
         if (uiInstance == null || uiInstance.getUIId() == -1) {
             // Not initialized -> Let go through createUIInstance to make it
             // initialized

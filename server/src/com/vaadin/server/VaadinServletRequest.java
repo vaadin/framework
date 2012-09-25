@@ -79,7 +79,7 @@ public class VaadinServletRequest extends HttpServletRequestWrapper implements
     }
 
     @Override
-    public VaadinServletService getVaadinService() {
+    public VaadinServletService getService() {
         return vaadinService;
     }
 

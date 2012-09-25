@@ -61,7 +61,7 @@ public class AddonContext implements Serializable {
                             VaadinSessionInitializeEvent event)
                             throws ServiceException {
                         for (BootstrapListener l : bootstrapListeners) {
-                            event.getVaadinSession().addBootstrapListener(l);
+                            event.getSession().addBootstrapListener(l);
                         }
                     }
                 });
@@ -73,7 +73,7 @@ public class AddonContext implements Serializable {
      * 
      * @return the vaadin service
      */
-    public VaadinService getVaadinService() {
+    public VaadinService getService() {
         return vaadinService;
     }
 

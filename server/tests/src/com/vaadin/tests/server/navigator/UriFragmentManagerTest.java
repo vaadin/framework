@@ -30,12 +30,12 @@ public class UriFragmentManagerTest extends TestCase {
 
     public void testGetSetFragment() {
         Page page = EasyMock.createMock(Page.class);
-        UriFragmentManager manager = new UriFragmentManager(page, null);
+        UriFragmentManager manager = new UriFragmentManager(page);
 
         // prepare mock
         EasyMock.expect(page.getFragment()).andReturn("");
-        page.setFragment("test", false);
-        EasyMock.expect(page.getFragment()).andReturn("test");
+        page.setFragment("!test", false);
+        EasyMock.expect(page.getFragment()).andReturn("!test");
         EasyMock.replay(page);
 
         // test manager using the mock
@@ -50,9 +50,10 @@ public class UriFragmentManagerTest extends TestCase {
         Navigator navigator = control.createMock(Navigator.class);
         Page page = control.createMock(Page.class);
 
-        UriFragmentManager manager = new UriFragmentManager(page, navigator);
+        UriFragmentManager manager = new UriFragmentManager(page);
+        manager.setNavigator(navigator);
 
-        EasyMock.expect(page.getFragment()).andReturn("test");
+        EasyMock.expect(page.getFragment()).andReturn("!test");
         navigator.navigateTo("test");
         control.replay();
 

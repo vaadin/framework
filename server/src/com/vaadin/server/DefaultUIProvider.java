@@ -21,15 +21,23 @@ import com.vaadin.ui.UI;
 public class DefaultUIProvider extends UIProvider {
 
     @Override
-    public Class<? extends UI> getUIClass(VaadinRequest request) {
-        Object uiClassNameObj = request.getVaadinService()
+    public Class<? extends UI> getUIClass(UIClassSelectionEvent event) {
+        VaadinRequest request = event.getRequest();
+
+        // Only use UI from web.xml for requests to the root
+        String pathInfo = request.getRequestPathInfo();
+        if (pathInfo != null && !"/".equals(pathInfo)) {
+            return null;
+        }
+
+        Object uiClassNameObj = request.getService()
                 .getDeploymentConfiguration().getInitParameters()
                 .getProperty(VaadinSession.UI_PARAMETER);
 
         if (uiClassNameObj instanceof String) {
             String uiClassName = uiClassNameObj.toString();
 
-            ClassLoader classLoader = request.getVaadinService()
+            ClassLoader classLoader = request.getService()
                     .getClassLoader();
             if (classLoader == null) {
                 classLoader = getClass().getClassLoader();

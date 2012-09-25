@@ -27,9 +27,9 @@ import java.util.Map;
 import com.vaadin.server.ConnectorResource;
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.RequestHandler;
-import com.vaadin.server.VaadinSession;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ApplicationConstants;
 
 /**
@@ -49,7 +49,11 @@ import com.vaadin.shared.ApplicationConstants;
  * default component tries to guess the right place for theme css.
  * 
  * @since 5.3
+ * @deprecated as of Vaadin 7.0. This component no longer fulfills its duty
+ *             reliably in the supported browsers and a {@link VerticalLayout}
+ *             with two {@link TextField}s can be used instead.
  */
+@Deprecated
 public class LoginForm extends CustomComponent {
 
     private String usernameCaption = "Username";
@@ -161,7 +165,7 @@ public class LoginForm extends CustomComponent {
                     + "\">"
                     + "<div class='v-app v-app-loginpage' style=\"background:transparent;\">"
                     + "<iframe name='logintarget' style='width:0;height:0;"
-                    + "border:0;margin:0;padding:0;'></iframe>"
+                    + "border:0;margin:0;padding:0;display:block'></iframe>"
                     + "<form id='loginf' target='logintarget' onkeypress=\"submitOnEnter(event)\" method=\"post\">"
                     + "<div>"
                     + usernameCaption

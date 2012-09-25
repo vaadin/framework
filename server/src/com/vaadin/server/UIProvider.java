@@ -26,11 +26,11 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.ui.UI;
 
 public abstract class UIProvider implements Serializable {
-    public abstract Class<? extends UI> getUIClass(VaadinRequest request);
+    public abstract Class<? extends UI> getUIClass(UIClassSelectionEvent event);
 
-    public UI createInstance(VaadinRequest request, Class<? extends UI> type) {
+    public UI createInstance(UICreateEvent event) {
         try {
-            return type.newInstance();
+            return event.getUIClass().newInstance();
         } catch (InstantiationException e) {
             throw new RuntimeException("Could not instantiate root class", e);
         } catch (IllegalAccessException e) {
@@ -40,20 +40,20 @@ public abstract class UIProvider implements Serializable {
 
     /**
      * Helper to get an annotation for a class. If the annotation is not present
-     * on the target class, it's superclasses and implemented interfaces are
+     * on the target class, its super classes and implemented interfaces are
      * also searched for the annotation.
      * 
-     * @param type
-     *            the target class from which the annotation should be found
+     * @param clazz
+     *            the class from which the annotation should be found
      * @param annotationType
      *            the annotation type to look for
      * @return an annotation of the given type, or <code>null</code> if the
      *         annotation is not present on the class
      */
-    protected static <T extends Annotation> T getAnnotationFor(Class<?> type,
+    protected static <T extends Annotation> T getAnnotationFor(Class<?> clazz,
             Class<T> annotationType) {
         // Find from the class hierarchy
-        Class<?> currentType = type;
+        Class<?> currentType = clazz;
         while (currentType != Object.class) {
             T annotation = currentType.getAnnotation(annotationType);
             if (annotation != null) {
@@ -64,7 +64,7 @@ public abstract class UIProvider implements Serializable {
         }
 
         // Find from an implemented interface
-        for (Class<?> iface : type.getInterfaces()) {
+        for (Class<?> iface : clazz.getInterfaces()) {
             T annotation = iface.getAnnotation(annotationType);
             if (annotation != null) {
                 return annotation;
@@ -77,17 +77,19 @@ public abstract class UIProvider implements Serializable {
     /**
      * Finds the theme to use for a specific UI. If no specific theme is
      * required, <code>null</code> is returned.
+     * <p>
+     * The default implementation checks for a @{@link Theme} annotation on the
+     * UI class.
      * 
-     * TODO Tell what the default implementation does once it does something.
-     * 
-     * @param uI
-     *            the UI to get a theme for
+     * @param event
+     *            the UI create event with information about the UI and the
+     *            current request.
      * @return the name of the theme, or <code>null</code> if the default theme
      *         should be used
      * 
      */
-    public String getTheme(VaadinRequest request, Class<? extends UI> uiClass) {
-        Theme uiTheme = getAnnotationFor(uiClass, Theme.class);
+    public String getTheme(UICreateEvent event) {
+        Theme uiTheme = getAnnotationFor(event.getUIClass(), Theme.class);
         if (uiTheme != null) {
             return uiTheme.value();
         } else {
@@ -102,17 +104,16 @@ public abstract class UIProvider implements Serializable {
      * The default implementation uses the @{@link Widgetset} annotation if it's
      * defined for the UI class.
      * 
-     * @param request
-     *            the Vaadin request for which to get a widgetset
-     * @param uiClass
-     *            the UI class to get a widgetset for
+     * @param event
+     *            the UI create event with information about the UI and the
+     *            current request.
      * @return the name of the widgetset, or <code>null</code> if the default
      *         widgetset should be used
      * 
      */
-    public String getWidgetset(VaadinRequest request,
-            Class<? extends UI> uiClass) {
-        Widgetset uiWidgetset = getAnnotationFor(uiClass, Widgetset.class);
+    public String getWidgetset(UICreateEvent event) {
+        Widgetset uiWidgetset = getAnnotationFor(event.getUIClass(),
+                Widgetset.class);
         if (uiWidgetset != null) {
             return uiWidgetset.value();
         } else {
@@ -126,22 +127,22 @@ public abstract class UIProvider implements Serializable {
      * previously been open. The framework attempts to discover this by checking
      * the value of window.name in the browser.
      * 
-     * @param request
-     * @param uiClass
+     * @param event
+     *            the UI create event with information about the UI and the
+     *            current request.
      * 
      * @return <code>true</code>if the same UI instance should be reused e.g.
      *         when the browser window is refreshed.
      */
-    public boolean isPreservedOnRefresh(VaadinRequest request,
-            Class<? extends UI> uiClass) {
-        PreserveOnRefresh preserveOnRefresh = getAnnotationFor(uiClass,
-                PreserveOnRefresh.class);
+    public boolean isPreservedOnRefresh(UICreateEvent event) {
+        PreserveOnRefresh preserveOnRefresh = getAnnotationFor(
+                event.getUIClass(), PreserveOnRefresh.class);
         return preserveOnRefresh != null;
     }
 
-    public String getPageTitle(VaadinRequest request,
-            Class<? extends UI> uiClass) {
-        Title titleAnnotation = getAnnotationFor(uiClass, Title.class);
+    public String getPageTitle(UICreateEvent event) {
+        Title titleAnnotation = getAnnotationFor(event.getUIClass(),
+                Title.class);
         if (titleAnnotation == null) {
             return null;
         } else {

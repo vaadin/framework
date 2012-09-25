@@ -185,7 +185,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         requireLocale(session.getLocale().toString());
     }
 
-    protected VaadinSession getVaadinSession() {
+    protected VaadinSession getSession() {
         return session;
     }
 
@@ -379,7 +379,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     "StreamVariable for the post not found");
         }
 
-        final VaadinSession session = getVaadinSession();
+        final VaadinSession session = getSession();
 
         OutputStream out = null;
         int totalBytes = 0;
@@ -593,7 +593,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             if (!handleVariables(request, response, callback, session, uI)) {
 
                 // var inconsistency; the client is probably out-of-sync
-                SystemMessages ci = response.getVaadinService()
+                SystemMessages ci = response.getService()
                         .getSystemMessages();
                 String msg = ci.getOutOfSyncMessage();
                 String cap = ci.getOutOfSyncCaption();
@@ -1050,7 +1050,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 }
             }
 
-            SystemMessages ci = request.getVaadinService().getSystemMessages();
+            SystemMessages ci = request.getService().getSystemMessages();
 
             // meta instruction for client to enable auto-forward to
             // sessionExpiredURL after timer expires.
@@ -2460,11 +2460,14 @@ public abstract class AbstractCommunicationManager implements Serializable {
     }
 
     private UI getBrowserDetailsUI(VaadinRequest request) {
-        VaadinService vaadinService = request.getVaadinService();
+        VaadinService vaadinService = request.getService();
         VaadinSession session = VaadinSession.getForSession(request
                 .getWrappedSession());
 
         List<UIProvider> uiProviders = vaadinService.getUIProviders(session);
+
+        UIClassSelectionEvent classSelectionEvent = new UIClassSelectionEvent(
+                request);
 
         UIProvider provider = null;
         Class<? extends UI> uiClass = null;
@@ -2473,14 +2476,15 @@ public abstract class AbstractCommunicationManager implements Serializable {
             if (p instanceof LegacyApplicationUIProvider) {
                 LegacyApplicationUIProvider legacyProvider = (LegacyApplicationUIProvider) p;
 
-                UI existingUi = legacyProvider.getExistingUI(request);
+                UI existingUi = legacyProvider
+                        .getExistingUI(classSelectionEvent);
                 if (existingUi != null) {
                     UI.setCurrent(existingUi);
                     return existingUi;
                 }
             }
 
-            uiClass = p.getUIClass(request);
+            uiClass = p.getUIClass(classSelectionEvent);
             if (uiClass != null) {
                 provider = p;
                 break;
@@ -2521,16 +2525,18 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
         // No existing UI found - go on by creating and initializing one
 
+        Integer uiId = Integer.valueOf(session.getNextUIid());
+
         // Explicit Class.cast to detect if the UIProvider does something
         // unexpected
-        UI ui = uiClass.cast(provider.createInstance(request, uiClass));
+        UICreateEvent event = new UICreateEvent(request, uiClass, uiId);
+        UI ui = uiClass.cast(provider.createInstance(event));
 
         // Initialize some fields for a newly created UI
         if (ui.getSession() != session) {
             // Session already set for LegacyWindow
             ui.setSession(session);
         }
-        Integer uiId = Integer.valueOf(session.getNextUIid());
 
         // Set thread local here so it is available in init
         UI.setCurrent(ui);
@@ -2540,7 +2546,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         session.addUI(ui);
 
         // Remember if it should be remembered
-        if (vaadinService.preserveUIOnRefresh(request, ui, provider)) {
+        if (vaadinService.preserveUIOnRefresh(provider, event)) {
             // Remember this UI
             String windowName = request.getBrowserDetails().getWindowName();
             if (windowName == null) {
@@ -2608,7 +2614,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 .substring(ApplicationConstants.CONNECTOR_RESOURCE_PREFIX
                         .length() + 2);
 
-        final String mimetype = response.getVaadinService().getMimeType(
+        final String mimetype = response.getService().getMimeType(
                 resourceName);
 
         // Security check: avoid accidentally serving from the UI of the

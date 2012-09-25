@@ -86,7 +86,8 @@ public class ComboBoxDataSourceChange extends TestBase {
         cb2.addListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                currentValue.setValue(event.getProperty().getValue());
+                currentValue
+                        .setValue(event.getProperty().getValue().toString());
             }
         });
     }

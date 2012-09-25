@@ -202,7 +202,7 @@ public class VaadinPortletRequest implements VaadinRequest {
     }
 
     @Override
-    public VaadinPortletService getVaadinService() {
+    public VaadinPortletService getService() {
         return vaadinService;
     }
 
