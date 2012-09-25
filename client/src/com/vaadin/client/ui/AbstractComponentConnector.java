@@ -271,8 +271,14 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     protected void updateWidgetStyleNames() {
         ComponentState state = getState();
 
-        String primaryStyleName = state.primaryStyleName == null ? ""
-                : state.primaryStyleName;
+        String primaryStyleName = getWidget().getStylePrimaryName();
+        if (state.primaryStyleName != null) {
+            /*
+             * We overwrite the widgets primary stylename if state defines a
+             * primary stylename
+             */
+            getWidget().setStylePrimaryName(state.primaryStyleName);
+        }
 
         // should be in AbstractFieldConnector ?
         // add / remove read-only style name
