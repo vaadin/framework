@@ -114,7 +114,7 @@ div.v-layout.v-horizontal.v-widget {
 .v-align-bottom:before,
 .v-expand > .v-align-middle:before,
 .v-expand > .v-align-bottom:before {
-	
+	content: "";
 	display: inline-block;
 	height: 100%;
 	vertical-align: middle;
