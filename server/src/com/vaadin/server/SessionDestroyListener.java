@@ -19,7 +19,7 @@ package com.vaadin.server;
 /**
  * A listener that gets notified when a Vaadin session is no longer used.
  * 
- * @see VaadinService#addVaadinSessionDestroyListener(VaadinSessionDestroyListener)
+ * @see VaadinService#addSessionDestroyListener(SessionDestroyListener)
  * 
  * @author Vaadin Ltd
  * @since 7.0.0

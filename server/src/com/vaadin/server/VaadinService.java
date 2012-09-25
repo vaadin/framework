@@ -331,7 +331,7 @@ public abstract class VaadinService implements Serializable {
      * @param listener
      *            the vaadin session destroy listener
      */
-    public void addVaadinSessionDestroyListener(SessionDestroyListener listener) {
+    public void addSessionDestroyListener(SessionDestroyListener listener) {
         eventRouter.addListener(SessionDestroyEvent.class, listener,
                 SESSION_DESTROY_METHOD);
     }
@@ -347,13 +347,12 @@ public abstract class VaadinService implements Serializable {
     /**
      * Removes a Vaadin session destroy listener from this service.
      * 
-     * @see #addVaadinSessionDestroyListener(SessionDestroyListener)
+     * @see #addSessionDestroyListener(SessionDestroyListener)
      * 
      * @param listener
      *            the vaadin session destroy listener
      */
-    public void removeVaadinSessionDestroyListener(
-            SessionDestroyListener listener) {
+    public void removeSessionDestroyListener(SessionDestroyListener listener) {
         eventRouter.removeListener(SessionDestroyEvent.class, listener,
                 SESSION_DESTROY_METHOD);
     }
