@@ -51,6 +51,13 @@ public class VaadinPortletService extends VaadinService {
             // portal property
             widgetset = VaadinPortletRequest.cast(request).getPortalProperty(
                     VaadinPortlet.PORTAL_PARAMETER_VAADIN_WIDGETSET);
+            if ("com.vaadin.portal.gwt.PortalDefaultWidgetSet"
+                    .equals(widgetset)) {
+                // For backwards compatibility - automatically map old portal
+                // default widget set to default widget set
+                widgetset = VaadinPortlet.DEFAULT_WIDGETSET;
+
+            }
         }
 
         if (widgetset == null) {
