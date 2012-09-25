@@ -14,6 +14,11 @@
 		<param-value>false</param-value>
 		<description>Vaadin production mode</description>
 	</context-param>
+
+	<context-param>
+		<param-name>resourceCacheTime</param-name>
+		<param-value>3600</param-value>
+	</context-param>	
 	<servlet>
 		<servlet-name>Embed App 1</servlet-name>
 		<servlet-class>com.vaadin.server.LegacyVaadinServlet</servlet-class>
@@ -42,11 +47,6 @@
 			<param-value>com.vaadin.tests.VerifyAssertionsEnabled</param-value>
 		</init-param>
 	</servlet>
-
-	<context-param>
-		<param-name>resourceCacheTime</param-name>
-		<param-value>3600</param-value>
-	</context-param>
 
 	<servlet>
 		<servlet-name>VaadinApplicationRunner</servlet-name>
