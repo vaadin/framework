@@ -72,8 +72,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
         getConnection().getVTooltip().connectHandlersToWidget(getWidget());
 
-        // Set the core 'v' style name for the widget
-        getWidget().setStyleName(StyleConstants.UI_WIDGET, true);
     }
 
     /**
@@ -275,10 +273,13 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         if (state.primaryStyleName != null) {
             /*
              * We overwrite the widgets primary stylename if state defines a
-             * primary stylename
+             * primary stylename. Clears all previous stylenames.
              */
-            getWidget().setStylePrimaryName(state.primaryStyleName);
+            getWidget().setStyleName(state.primaryStyleName);
         }
+
+        // Set the core 'v' style name for the widget
+        setWidgetStyleName(StyleConstants.UI_WIDGET, true);
 
         // should be in AbstractFieldConnector ?
         // add / remove read-only style name
