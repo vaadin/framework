@@ -1,10 +1,4 @@
-@import "../base/styles.scss";
 @import "chameleon.scss";
-
-@include chameleon-app;
-
-// .v-theme-chameleon {
-@include chameleon-common;
-@include chameleon-components;
-@include chameleon-compound;
-// }
+.chameleon {
+	@include chameleon;
+}

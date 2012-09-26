@@ -1,32 +1,4 @@
-@import "../base/styles.scss";
 @import "runo.scss";
-
-// .v-theme-runo {
-@include runo-absolutelayout;
-@include runo-accordion;
-@include runo-button;
-@include runo-caption;
-
-@include runo-common;
-
-@include runo-datefield;
-@include runo-formlayout;
-@include runo-gridlayout;
-@include runo-label;
-@include runo-link;
-@include runo-menubar;
-@include runo-notification;
-@include runo-orderedlayout;
-@include runo-panel;
-@include runo-popupview;
-@include runo-progressindicator;
-@include runo-select;
-@include runo-shadow;
-@include runo-slider;
-@include runo-splitpanel;
-@include runo-table;
-@include runo-tabsheet;
-@include runo-textfield;
-@include runo-tree;
-@include runo-window;
-// }
+.runo {
+	@include runo;	
+}

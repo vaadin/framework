@@ -1,10 +1,12 @@
-// this file just defines all chameleon mixins by importing them
-
-// common (mostly application or page level) parts of the theme
-
+@import "../base/styles.scss";
 @import "common/common.scss";
-
-// components - can override or replace in user themes
-
 @import "components/components.scss";
 @import "compound/compound.scss";
+
+@mixin chameleon {
+	// TODO each
+	@include chameleon-app;
+	@include chameleon-common;
+	@include chameleon-components;
+	@include chameleon-compound;
+}
