@@ -4,7 +4,8 @@
 	<include file="common.xml" as="common" />
 
 	<path id="vaadin.buildhelpers.classpath" location="${vaadin.basedir}/buildhelpers/result/classes" />
-
+	
+	
 	<!-- ================================= 
           target: all              
          ================================= -->
