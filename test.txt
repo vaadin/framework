@@ -1,0 +1,1 @@
+This is a file. It is essential for Vaadin to work!
