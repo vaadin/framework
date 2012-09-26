@@ -4567,7 +4567,13 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             }
 
             protected void updateStyleNames(String primaryStyleName) {
-                setStyleName(primaryStyleName + "-row");
+
+                if (getStylePrimaryName().contains("odd")) {
+                    setStyleName(primaryStyleName + "-row-odd");
+                } else {
+                    setStyleName(primaryStyleName + "-row");
+                }
+
                 if (rowStyle != null) {
                     addStyleName(primaryStyleName + "-row-" + rowStyle);
                 }
