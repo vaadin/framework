@@ -132,6 +132,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         ScrollHandler, VHasDropHandler, FocusHandler, BlurHandler, Focusable,
         ActionOwner {
 
+    public static final String STYLENAME = "v-table";
+
     public enum SelectMode {
         NONE(0), SINGLE(1), MULTI(2);
         private int id;
@@ -542,7 +544,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             }
         }, ContextMenuEvent.getType());
 
-        setStyleName("v-table");
+        setStyleName(STYLENAME);
 
         add(tHead);
         add(scrollBodyPanel);
