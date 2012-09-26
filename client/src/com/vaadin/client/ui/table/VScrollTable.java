@@ -35,6 +35,7 @@ import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.Visibility;
@@ -556,6 +557,11 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 .removeStyleName(getStylePrimaryName() + "-body-wrapper");
         scrollBodyPanel.removeStyleName(getStylePrimaryName() + "-body");
 
+        if (scrollBody != null) {
+            scrollBody.removeStyleName(getStylePrimaryName()
+                    + "-body-noselection");
+        }
+
         super.setStyleName(style);
 
         scrollBodyPanel.addStyleName(getStylePrimaryName() + "-body-wrapper");
@@ -563,6 +569,10 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         tHead.updateStyleNames(getStylePrimaryName());
         tFoot.updateStyleNames(getStylePrimaryName());
+
+        if (scrollBody != null) {
+            scrollBody.updateStyleNames(getStylePrimaryName());
+        }
     }
 
 
@@ -1665,9 +1675,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     void sizeInit() {
         sizeNeedsInit = false;
 
-        // Ensure stylenames are set
-        setStyleName(getStyleName());
-
         scrollBody.setContainerHeight();
 
         /*
@@ -2197,12 +2204,13 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
             setText(headerText);
 
-            DOM.appendChild(td, colResizeWidget);
+            td.appendChild(colResizeWidget);
 
             // ensure no clipping initially (problem on column additions)
-            DOM.setStyleAttribute(captionContainer, "overflow", "visible");
+            captionContainer.getStyle().setOverflow(Overflow.VISIBLE);
 
-            DOM.appendChild(td, captionContainer);
+            td.appendChild(sortIndicator);
+            td.appendChild(captionContainer);
 
             DOM.sinkEvents(td, Event.MOUSEEVENTS | Event.ONDBLCLICK
                     | Event.ONCONTEXTMENU | Event.TOUCHEVENTS);
@@ -2215,7 +2223,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         protected void updateStyleNames(String primaryStyleName) {
             colResizeWidget.setClassName(primaryStyleName + "-resizer");
             sortIndicator.setClassName(primaryStyleName + "-sort-indicator");
-            captionContainer.setClassName(primaryStyleName + "-sort-indicator");
+            captionContainer.setClassName(primaryStyleName
+                    + "-caption-container");
             if (sorted) {
                 if (sortAscending) {
                     setStyleName(primaryStyleName + "-header-cell-asc");
@@ -2231,6 +2240,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             captionContainer.removeClassName(ALIGN_PREFIX + "center");
             captionContainer.removeClassName(ALIGN_PREFIX + "right");
             captionContainer.removeClassName(ALIGN_PREFIX + "left");
+            
             switch (align) {
             case ALIGN_CENTER:
                 captionContainer.addClassName(ALIGN_PREFIX + "center");
@@ -2240,8 +2250,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 break;
             default:
                 captionContainer.addClassName(ALIGN_PREFIX + "left");
-                break;
+                    break;
             }
+           
         }
 
         public void disableAutoWidthCalculation() {
@@ -2619,8 +2630,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
 
         public void setAlign(char c) {
-            align = c;
             updateStyleNames(VScrollTable.this.getStylePrimaryName());
+            align = c;
         }
 
         public char getAlign() {
@@ -2692,6 +2703,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         RowHeadersHeaderCell() {
             super(ROW_HEADER_COLUMN_KEY, "");
+            updateStyleNames(VScrollTable.this.getStylePrimaryName());
         }
 
         @Override
@@ -2746,8 +2758,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
             availableCells.put(ROW_HEADER_COLUMN_KEY,
                     new RowHeadersHeaderCell());
-
-            updateStyleNames(VScrollTable.this.getStylePrimaryName());
         }
 
         protected void updateStyleNames(String primaryStyleName) {
@@ -4406,6 +4416,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             if (rows.getLength() == 0) {
                 /* need to temporary add empty row and detect */
                 VScrollTableRow scrollTableRow = new VScrollTableRow();
+                scrollTableRow.updateStyleNames(VScrollTable.this
+                        .getStylePrimaryName());
                 tBodyElement.appendChild(scrollTableRow.getElement());
                 detectExtrawidth();
                 tBodyElement.removeChild(scrollTableRow.getElement());
@@ -4501,6 +4513,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             private TooltipInfo tooltipInfo = null;
             private Map<TableCellElement, TooltipInfo> cellToolTips = new HashMap<TableCellElement, TooltipInfo>();
             private boolean isDragging = false;
+            private String rowStyle = null;
 
             private VScrollTableRow(int rowKey) {
                 this.rowKey = rowKey;
@@ -4520,11 +4533,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                  */
                 getElement().getStyle().setProperty("visibility", "hidden");
 
-                String rowStyle = uidl.getStringAttribute("rowstyle");
-                if (rowStyle != null) {
-                    addStyleName(VScrollTable.this.getStylePrimaryName()
-                            + "-row-" + rowStyle);
-                }
+                rowStyle = uidl.getStringAttribute("rowstyle");
+                updateStyleNames(VScrollTable.this.getStylePrimaryName());
 
                 String rowDescription = uidl.getStringAttribute("rowdescr");
                 if (rowDescription != null && !rowDescription.equals("")) {
@@ -4557,7 +4567,16 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             }
 
             protected void updateStyleNames(String primaryStyleName) {
+                setStyleName(primaryStyleName + "-row");
+                if (rowStyle != null) {
+                    addStyleName(primaryStyleName + "-row-" + rowStyle);
+                }
 
+                for (int i = 0; i < rowElement.getChildCount(); i++) {
+                    TableCellElement cell = (TableCellElement) rowElement
+                            .getChild(i);
+                    updateCellStyleNames(cell, primaryStyleName);
+                }
             }
 
             public TooltipInfo getTooltipInfo() {
@@ -4569,7 +4588,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
              */
             public VScrollTableRow() {
                 this(0);
-                addStyleName(VScrollTable.this.getStylePrimaryName() + "-row");
                 addCell(null, "_", 'b', "", true, false);
             }
 
@@ -4725,19 +4743,22 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     String style, boolean textIsHTML, boolean sorted,
                     String description, final TableCellElement td) {
                 final Element container = DOM.createDiv();
-                String className = VScrollTable.this.getStylePrimaryName()
-                        + "-cell-content";
-                if (style != null && !style.equals("")) {
-                    className += " " + VScrollTable.this.getStylePrimaryName()
-                            + "-cell-content-" + style;
-                }
-                if (sorted) {
-                    className += " " + VScrollTable.this.getStylePrimaryName()
-                            + "-cell-content-sorted";
-                }
-                td.setClassName(className);
                 container.setClassName(VScrollTable.this.getStylePrimaryName()
                         + "-cell-wrapper");
+
+                td.setClassName(VScrollTable.this.getStylePrimaryName()
+                        + "-cell-content");
+
+                if (style != null && !style.equals("")) {
+                    td.addClassName(VScrollTable.this.getStylePrimaryName()
+                            + "-cell-content-" + style);
+                }
+
+                if (sorted) {
+                    td.addClassName(VScrollTable.this.getStylePrimaryName()
+                            + "-cell-content-sorted");
+                }
+
                 if (textIsHTML) {
                     container.setInnerHTML(text);
                 } else {
@@ -4764,6 +4785,20 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
                 td.appendChild(container);
                 getElement().appendChild(td);
+            }
+
+            protected void updateCellStyleNames(TableCellElement td,
+                    String primaryStyleName) {
+                Element container = td.getFirstChild().cast();
+                container.setClassName(primaryStyleName + "-cell-wrapper");
+
+                /*
+                 * Replace old primary style name with new one
+                 */
+                String className = td.getClassName();
+                String oldPrimaryName = className.split("-cell-content")[0];
+                td.setClassName(className.replaceAll(oldPrimaryName,
+                        primaryStyleName));
             }
 
             public void addCell(UIDL rowUidl, Widget w, char align,
