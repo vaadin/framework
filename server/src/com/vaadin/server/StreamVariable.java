@@ -151,7 +151,7 @@ public interface StreamVariable extends Serializable {
      * the streaming ended before the end of the input. The streaming may fail
      * due an interruption by {@link } or due an other unknown exception in
      * communication. In the latter case the exception is also passed to
-     * {@link VaadinSession#terminalError(com.vaadin.server.Terminal.ErrorEvent)}
+     * {@link VaadinServiceSession#terminalError(com.vaadin.server.Terminal.ErrorEvent)}
      * .
      */
     public interface StreamingErrorEvent extends StreamingEvent {

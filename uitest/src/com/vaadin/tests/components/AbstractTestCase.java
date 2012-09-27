@@ -1,7 +1,7 @@
 package com.vaadin.tests.components;
 
 import com.vaadin.LegacyApplication;
-import com.vaadin.server.VaadinSession;
+import com.vaadin.server.VaadinServiceSession;
 import com.vaadin.server.WebBrowser;
 
 public abstract class AbstractTestCase extends LegacyApplication {
@@ -11,7 +11,7 @@ public abstract class AbstractTestCase extends LegacyApplication {
     protected abstract Integer getTicketNumber();
 
     protected WebBrowser getBrowser() {
-        WebBrowser webBrowser = VaadinSession.getCurrent().getBrowser();
+        WebBrowser webBrowser = VaadinServiceSession.getCurrent().getBrowser();
         return webBrowser;
 
     }

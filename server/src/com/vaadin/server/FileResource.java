@@ -73,7 +73,7 @@ public class FileResource implements ConnectorResource {
             return ds;
         } catch (final FileNotFoundException e) {
             // Log the exception using the application error handler
-            VaadinSession.getCurrent().getErrorHandler()
+            VaadinServiceSession.getCurrent().getErrorHandler()
                     .terminalError(new ErrorEvent() {
 
                         @Override

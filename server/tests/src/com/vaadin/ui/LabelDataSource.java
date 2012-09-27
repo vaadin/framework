@@ -23,7 +23,7 @@ import org.junit.Test;
 
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinSession;
+import com.vaadin.server.VaadinServiceSession;
 
 public class LabelDataSource {
 
@@ -35,12 +35,12 @@ public class LabelDataSource {
     private static final Object INTEGER_STRING_VALUE_DE = "1.587";
     ObjectProperty<String> stringDataSource;
     private ObjectProperty<Integer> integerDataSource;
-    VaadinSession vaadinSession;
+    VaadinServiceSession vaadinSession;
 
     @Before
     public void setup() {
-        vaadinSession = new VaadinSession();
-        VaadinSession.setCurrent(vaadinSession);
+        vaadinSession = new VaadinServiceSession();
+        VaadinServiceSession.setCurrent(vaadinSession);
 
         label = new Label();
         stringDataSource = new ObjectProperty<String>(STRING_DS_VALUE);

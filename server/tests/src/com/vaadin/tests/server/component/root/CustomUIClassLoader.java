@@ -14,8 +14,8 @@ import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.UIClassSelectionEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
-import com.vaadin.server.VaadinSession;
-import com.vaadin.server.VaadinSession.SessionStartEvent;
+import com.vaadin.server.VaadinServiceSession;
+import com.vaadin.server.VaadinServiceSession.SessionStartEvent;
 import com.vaadin.ui.UI;
 
 public class CustomUIClassLoader extends TestCase {
@@ -54,7 +54,7 @@ public class CustomUIClassLoader extends TestCase {
      *             if thrown
      */
     public void testWithNullClassLoader() throws Exception {
-        VaadinSession application = createStubApplication();
+        VaadinServiceSession application = createStubApplication();
         application.start(new SessionStartEvent(null,
                 createConfigurationMock(), null));
 
@@ -67,7 +67,7 @@ public class CustomUIClassLoader extends TestCase {
 
     private static DeploymentConfiguration createConfigurationMock() {
         Properties properties = new Properties();
-        properties.put(VaadinSession.UI_PARAMETER, MyUI.class.getName());
+        properties.put(VaadinServiceSession.UI_PARAMETER, MyUI.class.getName());
         return new DefaultDeploymentConfiguration(CustomUIClassLoader.class,
                 properties);
     }
@@ -97,7 +97,7 @@ public class CustomUIClassLoader extends TestCase {
     public void testWithClassLoader() throws Exception {
         LoggingClassLoader loggingClassLoader = new LoggingClassLoader();
 
-        VaadinSession application = createStubApplication();
+        VaadinServiceSession application = createStubApplication();
         application.start(new SessionStartEvent(null,
                 createConfigurationMock(), null));
 
@@ -112,8 +112,8 @@ public class CustomUIClassLoader extends TestCase {
 
     }
 
-    private VaadinSession createStubApplication() {
-        return new VaadinSession() {
+    private VaadinServiceSession createStubApplication() {
+        return new VaadinServiceSession() {
             @Override
             public DeploymentConfiguration getConfiguration() {
                 return createConfigurationMock();

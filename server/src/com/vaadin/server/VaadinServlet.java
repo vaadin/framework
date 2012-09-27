@@ -254,7 +254,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 return;
             }
 
-            // Find out the Vaadin session this request is related to
+            // Find out the service session this request is related to
             vaadinSession = (VaadinServletSession) getService()
                     .findVaadinSession(request);
             if (vaadinSession == null) {
@@ -531,7 +531,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     }
 
     private void handleServiceException(VaadinServletRequest request,
-            VaadinServletResponse response, VaadinSession vaadinSession,
+            VaadinServletResponse response, VaadinServiceSession vaadinSession,
             Throwable e) throws IOException, ServletException {
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {

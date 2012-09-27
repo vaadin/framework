@@ -18,7 +18,7 @@ package com.vaadin.data.util.converter;
 import java.io.Serializable;
 import java.util.Locale;
 
-import com.vaadin.server.VaadinSession;
+import com.vaadin.server.VaadinServiceSession;
 
 public class ConverterUtil implements Serializable {
 
@@ -26,7 +26,7 @@ public class ConverterUtil implements Serializable {
      * Finds a converter that can convert from the given presentation type to
      * the given model type and back. Uses the given application to find a
      * {@link ConverterFactory} or, if application is null, uses the
-     * {@link VaadinSession#getCurrent()}.
+     * {@link VaadinServiceSession#getCurrent()}.
      * 
      * @param <PRESENTATIONTYPE>
      *            The presentation type
@@ -44,10 +44,10 @@ public class ConverterUtil implements Serializable {
      */
     public static <PRESENTATIONTYPE, MODELTYPE> Converter<PRESENTATIONTYPE, MODELTYPE> getConverter(
             Class<PRESENTATIONTYPE> presentationType,
-            Class<MODELTYPE> modelType, VaadinSession session) {
+            Class<MODELTYPE> modelType, VaadinServiceSession session) {
         Converter<PRESENTATIONTYPE, MODELTYPE> converter = null;
         if (session == null) {
-            session = VaadinSession.getCurrent();
+            session = VaadinServiceSession.getCurrent();
         }
 
         if (session != null) {

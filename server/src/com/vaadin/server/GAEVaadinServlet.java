@@ -240,7 +240,7 @@ public class GAEVaadinServlet extends VaadinServlet {
             }
 
             // de-serialize or create application context, store in session
-            VaadinSession ctx = getApplicationContext(request, memcache);
+            VaadinServiceSession ctx = getApplicationContext(request, memcache);
 
             super.service(request, response);
 
@@ -290,8 +290,9 @@ public class GAEVaadinServlet extends VaadinServlet {
         }
     }
 
-    protected VaadinSession getApplicationContext(HttpServletRequest request,
-            MemcacheService memcache) throws ServletException {
+    protected VaadinServiceSession getApplicationContext(
+            HttpServletRequest request, MemcacheService memcache)
+            throws ServletException {
         HttpSession session = request.getSession();
         String id = AC_BASE + session.getId();
         byte[] serializedAC = (byte[]) memcache.get(id);
@@ -319,7 +320,7 @@ public class GAEVaadinServlet extends VaadinServlet {
             ObjectInputStream ois;
             try {
                 ois = new ObjectInputStream(bais);
-                VaadinSession applicationContext = (VaadinSession) ois
+                VaadinServiceSession applicationContext = (VaadinServiceSession) ois
                         .readObject();
                 applicationContext.storeInSession(getService(),
                         new WrappedHttpSession(session));

@@ -97,7 +97,7 @@ public class VaadinServletRequest extends HttpServletRequestWrapper implements
 
             @Override
             public WebBrowser getWebBrowser() {
-                return VaadinSession.getCurrent().getBrowser();
+                return VaadinServiceSession.getCurrent().getBrowser();
             }
         };
     }

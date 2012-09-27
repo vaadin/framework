@@ -147,7 +147,7 @@ public class CombinedRequest implements VaadinRequest {
 
             @Override
             public WebBrowser getWebBrowser() {
-                return VaadinSession.getCurrent().getBrowser();
+                return VaadinServiceSession.getCurrent().getBrowser();
             }
         };
     }

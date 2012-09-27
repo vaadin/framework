@@ -55,15 +55,16 @@ import com.vaadin.util.ReflectTools;
  * typically stored in a {@link HttpSession} or {@link PortletSession}, but
  * others storage mechanisms might also be used.
  * <p>
- * Everything inside a {@link VaadinSession} should be serializable to ensure
- * compatibility with schemes using serialization for persisting the session
- * data.
+ * Everything inside a {@link VaadinServiceSession} should be serializable to
+ * ensure compatibility with schemes using serialization for persisting the
+ * session data.
  * 
  * @author Vaadin Ltd
  * @since 7.0.0
  */
 @SuppressWarnings("serial")
-public class VaadinSession implements HttpSessionBindingListener, Serializable {
+public class VaadinServiceSession implements HttpSessionBindingListener,
+        Serializable {
 
     /**
      * The name of the parameter that is by default used in e.g. web.xml to
@@ -116,7 +117,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
          * @return the URL the application should respond to or
          *         <code>null</code> if the URL is not defined.
          * 
-         * @see VaadinSession#getURL()
+         * @see VaadinServiceSession#getURL()
          */
         public URL getApplicationUrl() {
             return applicationUrl;
@@ -136,7 +137,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
          * 
          * @return the communication manager for this application.
          * 
-         * @see VaadinSession#getCommunicationManager
+         * @see VaadinServiceSession#getCommunicationManager
          */
         public AbstractCommunicationManager getCommunicationManager() {
             return communicationManager;
@@ -254,7 +255,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     /**
-     * Gets the underlying session to which this vaadin session is currently
+     * Gets the underlying session to which this service session is currently
      * associated.
      * 
      * @return the wrapped session for this context
@@ -302,12 +303,13 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
-    public static VaadinSession getForSession(VaadinService service,
+    public static VaadinServiceSession getForSession(VaadinService service,
             WrappedSession underlyingSession) {
-        Object attribute = underlyingSession.getAttribute(VaadinSession.class
-                .getName() + "." + service.getServiceName());
-        if (attribute instanceof VaadinSession) {
-            VaadinSession vaadinSession = (VaadinSession) attribute;
+        Object attribute = underlyingSession
+                .getAttribute(VaadinServiceSession.class.getName() + "."
+                        + service.getServiceName());
+        if (attribute instanceof VaadinServiceSession) {
+            VaadinServiceSession vaadinSession = (VaadinServiceSession) attribute;
             vaadinSession.session = underlyingSession;
             return vaadinSession;
         }
@@ -325,9 +327,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     public void removeFromSession(VaadinService service) {
         assert (getForSession(service, session) == this);
 
-        session.setAttribute(
-                VaadinSession.class.getName() + "." + service.getServiceName(),
-                null);
+        session.setAttribute(VaadinServiceSession.class.getName() + "."
+                + service.getServiceName(), null);
     }
 
     /**
@@ -337,9 +338,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      */
     @Deprecated
     public void storeInSession(VaadinService service, WrappedSession session) {
-        session.setAttribute(
-                VaadinSession.class.getName() + "." + service.getServiceName(),
-                this);
+        session.setAttribute(VaadinServiceSession.class.getName() + "."
+                + service.getServiceName(), this);
         this.session = session;
     }
 
@@ -415,7 +415,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * Window detach event.
      * 
      * This event is sent each time a window is removed from the application
-     * with {@link com.vaadin.server.VaadinSession#removeWindow(Window)}.
+     * with {@link com.vaadin.server.VaadinServiceSession#removeWindow(Window)}.
      * 
      * @deprecated might be refactored or removed before 7.0.0
      */
@@ -432,7 +432,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
          * @param window
          *            the Detached window.
          */
-        public WindowDetachEvent(VaadinSession application, Window window) {
+        public WindowDetachEvent(VaadinServiceSession application, Window window) {
             super(application);
             this.window = window;
         }
@@ -451,8 +451,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
          * 
          * @return the Application.
          */
-        public VaadinSession getApplication() {
-            return (VaadinSession) getSource();
+        public VaadinServiceSession getApplication() {
+            return (VaadinServiceSession) getSource();
         }
     }
 
@@ -460,7 +460,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * Window attach event.
      * 
      * This event is sent each time a window is attached tothe application with
-     * {@link com.vaadin.server.VaadinSession#addWindow(Window)}.
+     * {@link com.vaadin.server.VaadinServiceSession#addWindow(Window)}.
      * 
      * @deprecated might be refactored or removed before 7.0.0
      */
@@ -477,7 +477,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
          * @param window
          *            the Attached window.
          */
-        public WindowAttachEvent(VaadinSession application, Window window) {
+        public WindowAttachEvent(VaadinServiceSession application, Window window) {
             super(application);
             this.window = window;
         }
@@ -496,8 +496,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
          * 
          * @return the Application.
          */
-        public VaadinSession getApplication() {
-            return (VaadinSession) getSource();
+        public VaadinServiceSession getApplication() {
+            return (VaadinServiceSession) getSource();
         }
     }
 
@@ -665,12 +665,12 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @return the current session instance if available, otherwise
      *         <code>null</code>
      * 
-     * @see #setCurrent(VaadinSession)
+     * @see #setCurrent(VaadinServiceSession)
      * 
      * @since 7.0
      */
-    public static VaadinSession getCurrent() {
-        return CurrentInstance.get(VaadinSession.class);
+    public static VaadinServiceSession getCurrent() {
+        return CurrentInstance.get(VaadinServiceSession.class);
     }
 
     /**
@@ -690,8 +690,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * 
      * @since 7.0
      */
-    public static void setCurrent(VaadinSession session) {
-        CurrentInstance.setInheritable(VaadinSession.class, session);
+    public static void setCurrent(VaadinServiceSession session) {
+        CurrentInstance.setInheritable(VaadinServiceSession.class, session);
     }
 
     /**
@@ -725,7 +725,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     private static final Logger getLogger() {
-        return Logger.getLogger(VaadinSession.class.getName());
+        return Logger.getLogger(VaadinServiceSession.class.getName());
     }
 
     /**
@@ -947,9 +947,9 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     /**
-     * Stores a value in this vaadin session. This can be used to associate data
-     * with the current user so that it can be retrieved at a later point from
-     * some other part of the application. Setting the value to
+     * Stores a value in this service session. This can be used to associate
+     * data with the current user so that it can be retrieved at a later point
+     * from some other part of the application. Setting the value to
      * <code>null</code> clears the stored value.
      * 
      * @see #getAttribute(String)
@@ -973,9 +973,9 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     /**
-     * Stores a value in this vaadin session. This can be used to associate data
-     * with the current user so that it can be retrieved at a later point from
-     * some other part of the application. Setting the value to
+     * Stores a value in this service session. This can be used to associate
+     * data with the current user so that it can be retrieved at a later point
+     * from some other part of the application. Setting the value to
      * <code>null</code> clears the stored value.
      * <p>
      * The fully qualified name of the type is used as the name when storing the

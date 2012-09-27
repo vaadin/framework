@@ -30,7 +30,7 @@ import com.vaadin.ui.Window;
  * 
  * @author Vaadin Ltd.
  * @since 4.0.1
- * @see com.vaadin.server.VaadinSession
+ * @see com.vaadin.server.VaadinServiceSession
  * @see com.vaadin.ui.Window
  * @see com.vaadin.ui.Label
  */

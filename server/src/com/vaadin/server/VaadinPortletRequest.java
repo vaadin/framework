@@ -162,7 +162,7 @@ public class VaadinPortletRequest implements VaadinRequest {
 
             @Override
             public WebBrowser getWebBrowser() {
-                VaadinPortletSession context = (VaadinPortletSession) VaadinSession
+                VaadinPortletSession context = (VaadinPortletSession) VaadinServiceSession
                         .getCurrent();
                 return context.getBrowser();
             }

@@ -21,8 +21,8 @@ import java.io.Serializable;
 
 /**
  * Handler for producing a response to non-UIDL requests. Handlers can be added
- * to vaadin sessions using
- * {@link VaadinSession#addRequestHandler(RequestHandler)}
+ * to service sessions using
+ * {@link VaadinServiceSession#addRequestHandler(RequestHandler)}
  */
 public interface RequestHandler extends Serializable {
 
@@ -41,7 +41,7 @@ public interface RequestHandler extends Serializable {
      *         handlers should be called, otherwise false
      * @throws IOException
      */
-    boolean handleRequest(VaadinSession session, VaadinRequest request,
+    boolean handleRequest(VaadinServiceSession session, VaadinRequest request,
             VaadinResponse response) throws IOException;
 
 }

@@ -19,7 +19,7 @@ package com.vaadin.server;
 import java.util.EventObject;
 
 /**
- * Event fired when a Vaadin session is no longer in use.
+ * Event fired when a Vaadin service session is no longer in use.
  * 
  * @see SessionDestroyListener#sessionDestroy(SessionDestroyEvent)
  * 
@@ -28,7 +28,7 @@ import java.util.EventObject;
  */
 public class SessionDestroyEvent extends EventObject {
 
-    private final VaadinSession session;
+    private final VaadinServiceSession session;
 
     /**
      * Creates a new event.
@@ -36,9 +36,10 @@ public class SessionDestroyEvent extends EventObject {
      * @param service
      *            the Vaadin service from which the even originates
      * @param session
-     *            the Vaadin session that is no longer used
+     *            the Vaadin service session that is no longer used
      */
-    public SessionDestroyEvent(VaadinService service, VaadinSession session) {
+    public SessionDestroyEvent(VaadinService service,
+            VaadinServiceSession session) {
         super(service);
         this.session = session;
     }
@@ -58,11 +59,11 @@ public class SessionDestroyEvent extends EventObject {
     }
 
     /**
-     * Gets the Vaadin session that is no longer used.
+     * Gets the Vaadin service session that is no longer used.
      * 
-     * @return the Vaadin session
+     * @return the Vaadin service session
      */
-    public VaadinSession getSession() {
+    public VaadinServiceSession getSession() {
         return session;
     }
 

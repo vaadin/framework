@@ -54,7 +54,7 @@ class ServletPortletHelper implements Serializable {
     private static void verifyUIClass(String className, ClassLoader classLoader)
             throws ServiceException {
         if (className == null) {
-            throw new ServiceException(VaadinSession.UI_PARAMETER
+            throw new ServiceException(VaadinServiceSession.UI_PARAMETER
                     + " init parameter not defined");
         }
 
@@ -117,11 +117,11 @@ class ServletPortletHelper implements Serializable {
                 ApplicationConstants.HEARTBEAT_REQUEST_PATH);
     }
 
-    public static void initDefaultUIProvider(VaadinSession session,
+    public static void initDefaultUIProvider(VaadinServiceSession session,
             VaadinService vaadinService) throws ServiceException {
         String uiProperty = vaadinService.getDeploymentConfiguration()
-                .getApplicationOrSystemProperty(VaadinSession.UI_PARAMETER,
-                        null);
+                .getApplicationOrSystemProperty(
+                        VaadinServiceSession.UI_PARAMETER, null);
 
         // Add provider for UI parameter first to give it lower priority
         // (providers are FILO)
@@ -163,12 +163,13 @@ class ServletPortletHelper implements Serializable {
         }
     }
 
-    public static void checkUiProviders(VaadinSession session,
+    public static void checkUiProviders(VaadinServiceSession session,
             VaadinService vaadinService) throws ServiceException {
         if (session.getUIProviders().isEmpty()) {
             throw new ServiceException(
                     "No UIProvider has been added and there is no \""
-                            + VaadinSession.UI_PARAMETER + "\" init parameter.");
+                            + VaadinServiceSession.UI_PARAMETER
+                            + "\" init parameter.");
         }
     }
 

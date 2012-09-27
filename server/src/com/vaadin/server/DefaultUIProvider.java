@@ -26,7 +26,7 @@ public class DefaultUIProvider extends UIProvider {
 
         Object uiClassNameObj = request.getService()
                 .getDeploymentConfiguration().getInitParameters()
-                .getProperty(VaadinSession.UI_PARAMETER);
+                .getProperty(VaadinServiceSession.UI_PARAMETER);
 
         if (uiClassNameObj instanceof String) {
             String uiClassName = uiClassNameObj.toString();

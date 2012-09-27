@@ -311,7 +311,7 @@ public class TestBench extends com.vaadin.LegacyApplication implements
                         final Class<?> c = Class.forName(p);
                         if (c.getSuperclass() != null) {
                             if ((c.getSuperclass()
-                                    .equals(com.vaadin.server.VaadinSession.class))) {
+                                    .equals(com.vaadin.server.VaadinServiceSession.class))) {
                                 classes.add(c);
                             } else if ((c.getSuperclass()
                                     .equals(com.vaadin.ui.CustomComponent.class))) {

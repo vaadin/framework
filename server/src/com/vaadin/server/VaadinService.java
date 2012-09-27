@@ -34,7 +34,7 @@ import javax.servlet.ServletException;
 import com.vaadin.LegacyApplication;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.event.EventRouter;
-import com.vaadin.server.VaadinSession.SessionStartEvent;
+import com.vaadin.server.VaadinServiceSession.SessionStartEvent;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
@@ -223,7 +223,7 @@ public abstract class VaadinService implements Serializable {
     public abstract File getBaseDirectory();
 
     /**
-     * Adds a listener that gets notified when a new Vaadin session is
+     * Adds a listener that gets notified when a new Vaadin service session is
      * initialized for this service.
      * <p>
      * Because of the way different service instances share the same session,
@@ -235,7 +235,7 @@ public abstract class VaadinService implements Serializable {
      * @see SessionInitListener
      * 
      * @param listener
-     *            the vaadin session initialization listener
+     *            the Vaadin service session initialization listener
      */
     public void addSessionInitListener(SessionInitListener listener) {
         eventRouter.addListener(SessionInitEvent.class, listener,
@@ -243,12 +243,13 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
-     * Removes a Vaadin session initialization listener from this service.
+     * Removes a Vaadin service session initialization listener from this
+     * service.
      * 
      * @see #addSessionInitListener(SessionInitListener)
      * 
      * @param listener
-     *            the Vaadin session initialization listener to remove.
+     *            the Vaadin service session initialization listener to remove.
      */
     public void removeSessionInitListener(SessionInitListener listener) {
         eventRouter.removeListener(SessionInitEvent.class, listener,
@@ -256,20 +257,20 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
-     * Adds a listener that gets notified when a Vaadin session that has been
-     * initialized for this service is destroyed.
+     * Adds a listener that gets notified when a Vaadin service session that has
+     * been initialized for this service is destroyed.
      * 
      * @see #addSessionInitListener(SessionInitListener)
      * 
      * @param listener
-     *            the vaadin session destroy listener
+     *            the vaadin service session destroy listener
      */
     public void addSessionDestroyListener(SessionDestroyListener listener) {
         eventRouter.addListener(SessionDestroyEvent.class, listener,
                 SESSION_DESTROY_METHOD);
     }
 
-    public void fireSessionDestroy(VaadinSession vaadinSession) {
+    public void fireSessionDestroy(VaadinServiceSession vaadinSession) {
         for (UI ui : new ArrayList<UI>(vaadinSession.getUIs())) {
             vaadinSession.cleanupUI(ui);
         }
@@ -278,12 +279,12 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
-     * Removes a Vaadin session destroy listener from this service.
+     * Removes a Vaadin service session destroy listener from this service.
      * 
      * @see #addSessionDestroyListener(SessionDestroyListener)
      * 
      * @param listener
-     *            the vaadin session destroy listener
+     *            the vaadin service session destroy listener
      */
     public void removeSessionDestroyListener(SessionDestroyListener listener) {
         eventRouter.removeListener(SessionDestroyEvent.class, listener,
@@ -291,36 +292,37 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
-     * Attempts to find a Vaadin session associated with this request.
+     * Attempts to find a Vaadin service session associated with this request.
      * 
      * @param request
-     *            the request to get a vaadin session for.
+     *            the request to get a vaadin service session for.
      * 
-     * @see VaadinSession
+     * @see VaadinServiceSession
      * 
-     * @return the vaadin session for the request, or <code>null</code> if no
-     *         session is found and this is a request for which a new session
-     *         shouldn't be created.
+     * @return the vaadin service session for the request, or <code>null</code>
+     *         if no session is found and this is a request for which a new
+     *         session shouldn't be created.
      */
-    public VaadinSession findVaadinSession(VaadinRequest request)
+    public VaadinServiceSession findVaadinSession(VaadinRequest request)
             throws ServiceException, SessionExpiredException {
-        VaadinSession vaadinSession = findOrCreateVaadinSession(request);
+        VaadinServiceSession vaadinSession = findOrCreateVaadinSession(request);
         if (vaadinSession == null) {
             return null;
         }
 
-        VaadinSession.setCurrent(vaadinSession);
-        request.setAttribute(VaadinSession.class.getName(), vaadinSession);
+        VaadinServiceSession.setCurrent(vaadinSession);
+        request.setAttribute(VaadinServiceSession.class.getName(),
+                vaadinSession);
 
         return vaadinSession;
     }
 
-    private VaadinSession findOrCreateVaadinSession(VaadinRequest request)
+    private VaadinServiceSession findOrCreateVaadinSession(VaadinRequest request)
             throws SessionExpiredException, ServiceException {
         boolean requestCanCreateSession = requestCanCreateSession(request);
 
         /* Find an existing session for this request. */
-        VaadinSession session = getExistingSession(request,
+        VaadinServiceSession session = getExistingSession(request,
                 requestCanCreateSession);
 
         if (session != null) {
@@ -363,9 +365,9 @@ public abstract class VaadinService implements Serializable {
 
     }
 
-    private VaadinSession createAndRegisterSession(VaadinRequest request)
+    private VaadinServiceSession createAndRegisterSession(VaadinRequest request)
             throws ServiceException {
-        VaadinSession session = createVaadinSession(request);
+        VaadinServiceSession session = createVaadinSession(request);
 
         session.storeInSession(this, request.getWrappedSession());
 
@@ -408,35 +410,35 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
-     * Create a communication manager to use for the given Vaadin session.
+     * Create a communication manager to use for the given service session.
      * 
      * @param session
-     *            the vaadin session for which a new communication manager is
+     *            the service session for which a new communication manager is
      *            needed
      * @return a new communication manager
      */
     protected abstract AbstractCommunicationManager createCommunicationManager(
-            VaadinSession session);
+            VaadinServiceSession session);
 
     /**
-     * Creates a new vaadin session.
+     * Creates a new Vaadin service session.
      * 
      * @param request
      * @return
      * @throws ServletException
      * @throws MalformedURLException
      */
-    protected abstract VaadinSession createVaadinSession(VaadinRequest request)
-            throws ServiceException;
+    protected abstract VaadinServiceSession createVaadinSession(
+            VaadinRequest request) throws ServiceException;
 
     private void onVaadinSessionStarted(VaadinRequest request,
-            VaadinSession session) throws ServiceException {
+            VaadinServiceSession session) throws ServiceException {
         eventRouter.fireEvent(new SessionInitEvent(this, session, request));
 
         ServletPortletHelper.checkUiProviders(session, this);
     }
 
-    private void closeSession(VaadinSession vaadinSession,
+    private void closeSession(VaadinServiceSession vaadinSession,
             WrappedSession session) {
         if (vaadinSession == null) {
             return;
@@ -447,7 +449,7 @@ public abstract class VaadinService implements Serializable {
         }
     }
 
-    protected VaadinSession getExistingSession(VaadinRequest request,
+    protected VaadinServiceSession getExistingSession(VaadinRequest request,
             boolean allowSessionCreation) throws SessionExpiredException {
 
         // Ensures that the session is still valid
@@ -457,7 +459,7 @@ public abstract class VaadinService implements Serializable {
             throw new SessionExpiredException();
         }
 
-        VaadinSession vaadinSession = VaadinSession
+        VaadinServiceSession vaadinSession = VaadinServiceSession
                 .getForSession(this, session);
 
         if (vaadinSession == null) {
@@ -468,12 +470,12 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
-     * Checks whether it's valid to create a new Vaadin session as a result of
+     * Checks whether it's valid to create a new service session as a result of
      * the given request.
      * 
      * @param request
      *            the request
-     * @return <code>true</code> if it's valid to create a new Vaadin session
+     * @return <code>true</code> if it's valid to create a new service session
      *         for the request; else <code>false</code>
      */
     protected abstract boolean requestCanCreateSession(VaadinRequest request);
@@ -578,7 +580,7 @@ public abstract class VaadinService implements Serializable {
      * 
      */
     public UI findUI(VaadinRequest request) {
-        VaadinSession session = VaadinSession.getForSession(this,
+        VaadinServiceSession session = VaadinServiceSession.getForSession(this,
                 request.getWrappedSession());
 
         // Get UI id from the request

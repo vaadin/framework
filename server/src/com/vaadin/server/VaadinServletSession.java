@@ -37,7 +37,7 @@ import javax.servlet.http.HttpSessionBindingListener;
  */
 @Deprecated
 @SuppressWarnings("serial")
-public class VaadinServletSession extends VaadinSession {
+public class VaadinServletSession extends VaadinServiceSession {
 
     private transient boolean reinitializingSession = false;
 

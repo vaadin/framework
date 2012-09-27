@@ -24,8 +24,8 @@ public class ConnectorResourceHandler implements RequestHandler {
     }
 
     @Override
-    public boolean handleRequest(VaadinSession session, VaadinRequest request,
-            VaadinResponse response) throws IOException {
+    public boolean handleRequest(VaadinServiceSession session,
+            VaadinRequest request, VaadinResponse response) throws IOException {
         String requestPath = request.getRequestPathInfo();
         if (requestPath == null) {
             return false;
@@ -43,7 +43,7 @@ public class ConnectorResourceHandler implements RequestHandler {
             }
 
             UI.setCurrent(ui);
-            VaadinSession.setCurrent(ui.getSession());
+            VaadinServiceSession.setCurrent(ui.getSession());
 
             ClientConnector connector = ui.getConnectorTracker().getConnector(
                     cid);
