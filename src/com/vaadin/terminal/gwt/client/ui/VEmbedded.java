@@ -427,12 +427,12 @@ public class VEmbedded extends HTML implements Paintable {
 
     @Override
     protected void onAttach() {
+        super.onAttach();
         if (browserElement != null && src != null
                 && !src.equals(browserElement.getAttribute("src"))) {
             // Restore the original src if detached, then re-attached
             browserElement.setAttribute("src", src);
         }
-        super.onAttach();
     }
 
     @Override
