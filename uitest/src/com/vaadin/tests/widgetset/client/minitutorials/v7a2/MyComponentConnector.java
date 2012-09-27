@@ -46,7 +46,7 @@ public class MyComponentConnector extends AbstractComponentConnector {
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
-        final String text = getState().getText();
+        final String text = getState().text;
         getWidget().setText(text);
     }
 

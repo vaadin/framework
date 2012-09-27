@@ -27,12 +27,12 @@ import java.io.Serializable;
  * but only when the first request for that session is handled by a specific
  * service.
  * 
- * @see VaadinService#addVaadinSessionInitializationListener(VaadinSessionInitializationListener)
+ * @see VaadinService#addSessionInitListener(SessionInitListener)
  * 
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public interface VaadinSessionInitializationListener extends Serializable {
+public interface SessionInitListener extends Serializable {
     /**
      * Invoked when a new Vaadin session is initialized for that service.
      * <p>
@@ -46,6 +46,6 @@ public interface VaadinSessionInitializationListener extends Serializable {
      * @throws ServiceException
      *             a problem occurs when processing the event
      */
-    public void vaadinSessionInitialized(VaadinSessionInitializeEvent event)
+    public void sessionInit(SessionInitEvent event)
             throws ServiceException;
 }

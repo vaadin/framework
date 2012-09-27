@@ -49,11 +49,11 @@ public class LegacyVaadinServlet extends VaadinServlet {
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
 
-        getService().addVaadinSessionInitializationListener(
-                new VaadinSessionInitializationListener() {
+        getService().addSessionInitListener(
+                new SessionInitListener() {
                     @Override
-                    public void vaadinSessionInitialized(
-                            VaadinSessionInitializeEvent event)
+                    public void sessionInit(
+                            SessionInitEvent event)
                             throws ServiceException {
                         try {
                             onVaadinSessionStarted(event.getRequest(),

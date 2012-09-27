@@ -2,8 +2,6 @@ package com.vaadin.tests.widgetset.client.minitutorials.v7a2;
 
 import java.util.List;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
@@ -17,7 +15,7 @@ public class WidgetContainerConnector extends
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
         List<ComponentConnector> children = getChildComponents();
-        VWidgetContainer widget = (VWidgetContainer) getWidget();
+        VWidgetContainer widget = getWidget();
         widget.clear();
         for (ComponentConnector connector : children) {
             widget.add(connector.getWidget());
@@ -26,8 +24,8 @@ public class WidgetContainerConnector extends
     }
 
     @Override
-    protected Widget createWidget() {
-        return GWT.create(VWidgetContainer.class);
+    public VWidgetContainer getWidget() {
+        return (VWidgetContainer) super.getWidget();
     }
 
     @Override

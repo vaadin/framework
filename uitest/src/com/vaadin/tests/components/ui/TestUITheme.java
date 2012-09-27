@@ -10,14 +10,14 @@ public class TestUITheme extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Label label = new Label("A red label");
-        label.setStyleName("red");
+        Label label = new Label("A green label");
+        label.setStyleName("green");
         addComponent(label);
     }
 
     @Override
     public String getTestDescription() {
-        return "UI with @Theme(\"tests-tickets\")";
+        return "UI with @Theme(\"tests-tickets\"). The label uses a stylename that should only be defined in the test-tickets theme.";
     }
 
     @Override

@@ -50,10 +50,10 @@ public class MyComponent extends AbstractComponent {
     }
 
     public void setText(String text) {
-        getState().setText(text);
+        getState().text = text;
     }
 
     public String getText() {
-        return getState().getText();
+        return getState().text;
     }
 }
