@@ -2632,8 +2632,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
 
         public void setAlign(char c) {
-            updateStyleNames(VScrollTable.this.getStylePrimaryName());
             align = c;
+            updateStyleNames(VScrollTable.this.getStylePrimaryName());
         }
 
         public char getAlign() {
