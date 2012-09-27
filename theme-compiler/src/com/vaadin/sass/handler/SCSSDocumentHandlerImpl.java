@@ -306,9 +306,10 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
     }
 
     @Override
-    public void removeDirective(ArrayList<String> list,
-            ArrayList<String> remove, String separator) {
-        ListRemoveNode node = new ListRemoveNode(list, remove, separator);
+    public void removeDirective(String variable, String list, String remove,
+            String separator) {
+        ListRemoveNode node = new ListRemoveNode(variable, list, remove,
+                separator);
         nodeStack.peek().appendChild(node);
     }
 }

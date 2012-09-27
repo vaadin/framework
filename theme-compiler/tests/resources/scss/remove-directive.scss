@@ -7,10 +7,18 @@ $remove : duck;
 	}
 }
 
-remove($animals, $remove, space);
+$exotic : remove($animals, $remove, space);
 
-@each $animal in $animals{
+@each $animal in $exotic{
 	.exotic-animals .#{$animal}-icon {
 		background-image: url('/images/#{$animal}.png');
+	}
+}
+
+$things : remove((ball,cube,duck), duck); 
+
+@each $thing in $things{
+	.#{$thing}{
+		font-size: 12px;
 	}
 }

@@ -35,7 +35,6 @@ public class VariableNode extends Node implements IVariableNode {
         this.name = name;
         this.expr = expr;
         this.guarded = guarded;
-        checkSeparators();
     }
 
     public LexicalUnitImpl getExpr() {
@@ -44,15 +43,10 @@ public class VariableNode extends Node implements IVariableNode {
 
     public void setExpr(LexicalUnitImpl expr) {
         this.expr = expr;
-        checkSeparators();
     }
 
-    private void checkSeparators() {
-        if (expr != null) {
-            if (expr.toString().contains(",")) {
-
-            }
-        }
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getName() {

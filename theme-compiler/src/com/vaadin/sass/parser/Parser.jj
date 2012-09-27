@@ -737,7 +737,7 @@ void afterImportDeclaration() :
 }
 {
   ( 
-     ( variable() | removeDirective() | mixinDirective()|eachDirective() | includeDirective() | styleRule() | media()| page() | fontFace() 
+     ( (LOOKAHEAD(5)removeDirective()|variable()) | mixinDirective()| eachDirective() | includeDirective() | styleRule() | media()| page() | fontFace() 
       | { l = getLocator(); } ret=skipStatement() 
       {
 	  if ((ret == null) || (ret.length() == 0)) {
@@ -1051,7 +1051,7 @@ void styleRule() :
 	 start = true;
 	 documentHandler.startSelector(l);
      }
-     ( ifDirective() | removeDirective() | includeDirective() | media() | extendDirective()| eachDirective() | variable() | LOOKAHEAD(3) (microsoftExtension()|declarationOrNestedProperties()) | styleRule())*
+     ( ifDirective() | LOOKAHEAD(5)removeDirective() | includeDirective() | media() | extendDirective()| eachDirective() | variable() | LOOKAHEAD(3) (microsoftExtension()|declarationOrNestedProperties()) | styleRule())*
      <RBRACE> (<S>)*
  } catch (ThrowedParseException e) {
      if (errorHandler != null) {
@@ -1445,12 +1445,11 @@ void eachDirective() :
   var = < VARIABLE > (< S >)* < EACH_IN > (< S >)*
   (list = stringList()
   {documentHandler.startEachDirective(var.image, list);}
-  |{documentHandler.startEachDirective(var.image, list);}removeDirective()
   |listVariable = variableName()
   {documentHandler.startEachDirective(var.image, listVariable);}
   )
   < LBRACE >(< S >)*
-  ( includeDirective() | removeDirective() | media() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*	  
+  ( includeDirective() | LOOKAHEAD(5)removeDirective() | media() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*	  
   < RBRACE >(< S >)*
   { documentHandler.endEachDirective();}
 }
@@ -1547,44 +1546,63 @@ void includeDirective() :
 /**
  * @exception ParseException exception during the parse
  */
-void removeDirective() :{	ArrayList<String> list = null;
-	ArrayList<String> remove = null;
+void removeDirective() :{	String list = null;
+	String remove = null;
 	String separator = null;
+	String variable = null;
 	Token n = null;
 }
 {
+  n = < VARIABLE >{ variable = n.image; }(< S >)* ":" (< S >)*
   < REMOVE >(< S >)*
   (list = removeDirectiveArgs(0))
-  < COMMA >(< S >)*  (remove = removeDirectiveArgs(1))
+  (< RPARAN >)? < COMMA >(< S >)*
+  (remove = removeDirectiveArgs(1))
   ( < COMMA >(< S >)* n = < IDENT >{ separator = n.image; } (< S >)*)?
   < RPARAN >(< S >)* < SEMICOLON >(< S >)*
 
-  { documentHandler.removeDirective(list,remove,separator); }}
+  { documentHandler.removeDirective(variable,list,remove,separator); }
+}
 
 JAVACODE
-ArrayList<String > removeDirectiveArgs(int nest){
-  	ArrayList<String> list = new ArrayList<String>();
-	// Start at one due to "remove(" containing one.
+String removeDirectiveArgs(int nest){
+  	String list = "";
 	int nesting = nest;
 	Token t = null;
 	
 	while(true)	{		t = getToken(1);
-		if(t.kind == VARIABLE)		{
-		  list.add(t.image);
-		}else if(t.kind == STRING)		{
-			list.add(t.image.substring(1,t.image.length()).substring(0,t.image.length()-2));
+		String s = t.image;
+		if(t.kind == VARIABLE||t.kind == IDENT)		{
+		  list += s;
+		}else if(s.toLowerCase().equals("auto")||s.toLowerCase().equals("space")||s.toLowerCase().equals("comma"))		{
+			int i = 2;
+			Token temp = getToken(i);
+			boolean isLast = true;
+			while(temp.kind != SEMICOLON)
+			{				if(temp.kind != RPARAN || temp.kind != S)
+				{				  isLast = false;				}
+				i++;
+				temp = getToken(i);
+			}
+
+		  	if(isLast)		  	{			return list;
+			}
+		}		else if(t.kind == STRING)		{			list += s.substring(1,s.length()).substring(0,s.length()-2);
 			
 		}else if(t.kind == LPARAN)		{			nesting++;
 			if(nesting > nest+1)			{				throw new CSSParseException("Only one ( ) pair per parameter allowed", getLocator());
 			}
 		}else if(t.kind == RPARAN)		{			nesting--;
 			if(nesting == 0)			{
-			  	getNextToken();				return list;
+				return list;
 			}
 		} else if(t.kind == COMMA)		{
 			if(nesting == nest)			{
-			  return list;			}
-		} else if(t.kind == LBRACE)		{
+			  return list;			}else			{
+			  list += ",";			}
+			  
+		}else if(t.kind == S)		{
+		  list += " ";		} else if(t.kind == LBRACE)		{
 		  throw new CSSParseException("Invalid token,'{' found", getLocator());		}
 				getNextToken();
 	}

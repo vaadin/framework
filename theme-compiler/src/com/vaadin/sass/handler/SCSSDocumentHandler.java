@@ -82,7 +82,7 @@ public interface SCSSDocumentHandler extends DocumentHandler {
 
     EachDefNode startEachDirective(String var, String listVariable);
 
-    void removeDirective(ArrayList<String> list, ArrayList<String> remove,
+    void removeDirective(String variable, String list, String remove,
             String separator);
 
 }

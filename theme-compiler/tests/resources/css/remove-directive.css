@@ -29,3 +29,11 @@
 .exotic-animals .llama-icon {
 	background-image: url('/images/llama.png');
 }
+
+.ball {
+	font-size: 12px;
+}
+
+.cube {
+	font-size: 12px;
+}
