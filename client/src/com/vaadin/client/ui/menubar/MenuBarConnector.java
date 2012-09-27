@@ -33,6 +33,7 @@ import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.menubar.MenuBarConstants;
+import com.vaadin.shared.ui.menubar.MenuBarState;
 
 @Connect(value = com.vaadin.ui.MenuBar.class, loadStyle = LoadStyle.LAZY)
 public class MenuBarConnector extends AbstractComponentConnector implements
@@ -175,6 +176,11 @@ public class MenuBarConnector extends AbstractComponentConnector implements
     @Override
     public VMenuBar getWidget() {
         return (VMenuBar) super.getWidget();
+    }
+
+    @Override
+    public MenuBarState getState() {
+        return (MenuBarState) super.getState();
     }
 
     @Override

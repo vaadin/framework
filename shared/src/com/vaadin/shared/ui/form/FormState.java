@@ -15,10 +15,14 @@
  */
 package com.vaadin.shared.ui.form;
 
+import com.vaadin.client.ui.form.VForm;
 import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.Connector;
 
 public class FormState extends AbstractFieldState {
+    {
+        primaryStyleName = VForm.CLASSNAME;
+    }
     public Connector layout;
     public Connector footer;
 }

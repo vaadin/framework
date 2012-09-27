@@ -15,9 +15,13 @@
  */
 package com.vaadin.shared.ui.checkbox;
 
+import com.vaadin.client.ui.checkbox.VCheckBox;
 import com.vaadin.shared.AbstractFieldState;
 
 public class CheckBoxState extends AbstractFieldState {
-    public boolean checked = false;
+    {
+        primaryStyleName = VCheckBox.CLASSNAME;
+    }
 
+    public boolean checked = false;
 }

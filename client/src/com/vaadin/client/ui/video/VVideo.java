@@ -25,7 +25,7 @@ import com.vaadin.client.ui.VMediaBase;
 
 public class VVideo extends VMediaBase {
 
-    private static String CLASSNAME = "v-video";
+    public static String CLASSNAME = "v-video";
 
     private VideoElement video;
 

@@ -20,7 +20,7 @@ package com.vaadin.client.ui.orderedlayout;
  */
 public class VHorizontalLayout extends VOrderedLayout {
 
-    private static final String CLASSNAME = "v-horizontallayout";
+    public static final String CLASSNAME = "v-horizontallayout";
 
     /**
      * Default constructor

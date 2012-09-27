@@ -21,6 +21,7 @@ import com.vaadin.client.DirectionalManagedLayout;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.optiongroup.OptionGroupBaseConnector;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.twincolselect.TwinColSelectState;
 import com.vaadin.ui.TwinColSelect;
 
 @Connect(TwinColSelect.class)
@@ -55,6 +56,11 @@ public class TwinColSelectConnector extends OptionGroupBaseConnector implements
     @Override
     public VTwinColSelect getWidget() {
         return (VTwinColSelect) super.getWidget();
+    }
+
+    @Override
+    public TwinColSelectState getState() {
+        return (TwinColSelectState) super.getState();
     }
 
     @Override

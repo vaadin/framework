@@ -28,10 +28,10 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.tree.VTree.TreeNode;
-import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.tree.TreeConstants;
+import com.vaadin.shared.ui.tree.TreeState;
 import com.vaadin.ui.Tree;
 
 @Connect(Tree.class)
@@ -262,8 +262,8 @@ public class TreeConnector extends AbstractComponentConnector implements
     }
 
     @Override
-    public AbstractFieldState getState() {
-        return (AbstractFieldState) super.getState();
+    public TreeState getState() {
+        return (TreeState) super.getState();
     }
 
     @Override

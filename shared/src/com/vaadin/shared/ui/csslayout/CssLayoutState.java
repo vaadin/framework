@@ -18,9 +18,13 @@ package com.vaadin.shared.ui.csslayout;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.vaadin.client.ui.csslayout.VCssLayout;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.AbstractLayoutState;
 
 public class CssLayoutState extends AbstractLayoutState {
+    {
+        primaryStyleName = VCssLayout.CLASSNAME;
+    }
     public Map<Connector, String> childCss = new HashMap<Connector, String>();
 }

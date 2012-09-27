@@ -18,9 +18,14 @@ package com.vaadin.shared.ui.absolutelayout;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.vaadin.client.ui.absolutelayout.VAbsoluteLayout;
 import com.vaadin.shared.ui.AbstractLayoutState;
 
 public class AbsoluteLayoutState extends AbstractLayoutState {
+    {
+        primaryStyleName = VAbsoluteLayout.CLASSNAME;
+    }
+
     // Maps each component to a position
     public Map<String, String> connectorToCssPosition = new HashMap<String, String>();
 }

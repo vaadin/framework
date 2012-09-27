@@ -15,9 +15,13 @@
  */
 package com.vaadin.shared.ui.label;
 
+import com.vaadin.client.ui.label.VLabel;
 import com.vaadin.shared.ComponentState;
 
 public class LabelState extends ComponentState {
+    {
+        primaryStyleName = VLabel.CLASSNAME;
+    }
     public ContentMode contentMode = ContentMode.TEXT;
     public String text = "";
 }

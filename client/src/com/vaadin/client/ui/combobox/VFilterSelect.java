@@ -835,7 +835,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     @Deprecated
     public static final FilteringMode FILTERINGMODE_CONTAINS = FilteringMode.CONTAINS;
 
-    private static final String CLASSNAME = "v-filterselect";
+    public static final String CLASSNAME = "v-filterselect";
     private static final String STYLE_NO_INPUT = "no-input";
 
     protected int pageLength = 10;

@@ -27,6 +27,7 @@ import com.vaadin.client.ui.Icon;
 import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.link.LinkConstants;
+import com.vaadin.shared.ui.link.LinkState;
 import com.vaadin.ui.Link;
 
 @Connect(Link.class)
@@ -46,6 +47,11 @@ public class LinkConnector extends AbstractComponentConnector implements
 
                     }
                 });
+    }
+
+    @Override
+    public LinkState getState() {
+        return (LinkState) super.getState();
     }
 
     @Override

@@ -18,10 +18,14 @@ package com.vaadin.shared.ui.customlayout;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.vaadin.client.ui.customlayout.VCustomLayout;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.AbstractLayoutState;
 
 public class CustomLayoutState extends AbstractLayoutState {
+    {
+        primaryStyleName = VCustomLayout.CLASSNAME;
+    }
     public Map<Connector, String> childLocations = new HashMap<Connector, String>();
     public String templateContents;
     public String templateName;
