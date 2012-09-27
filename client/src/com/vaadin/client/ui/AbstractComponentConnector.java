@@ -275,7 +275,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
              * We overwrite the widgets primary stylename if state defines a
              * primary stylename. Clears all previous stylenames.
              */
-            getWidget().setStyleName(state.primaryStyleName);
+            getWidget().setStylePrimaryName(state.primaryStyleName);
         }
 
         // Set the core 'v' style name for the widget

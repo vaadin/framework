@@ -71,8 +71,8 @@ public class VGridLayout extends ComplexPanel {
         spacingStyle.setPosition(Position.ABSOLUTE);
         getElement().appendChild(spacingMeasureElement);
 
-        setStyleName(StyleConstants.UI_LAYOUT);
-        addStyleName(CLASSNAME);
+        setStyleName(CLASSNAME);
+        addStyleName(StyleConstants.UI_LAYOUT);
     }
 
     private GridLayoutConnector getConnector() {
