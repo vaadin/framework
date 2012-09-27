@@ -72,6 +72,7 @@ public class TablesCssTest extends GridLayout {
 
         // Actions (a.k.a context menu)
         t.addActionHandler(new Action.Handler() {
+            @Override
             public Action[] getActions(Object target, Object sender) {
                 if (markedRows.contains(target)) {
                     return ACTIONS_MARKED;

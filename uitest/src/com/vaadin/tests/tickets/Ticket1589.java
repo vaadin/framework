@@ -14,9 +14,9 @@ import com.vaadin.LegacyApplication;
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.RequestHandler;
-import com.vaadin.server.VaadinSession;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.UI.LegacyWindow;
 
@@ -52,9 +52,8 @@ class MyDynamicResource implements RequestHandler {
      * stream that contains the response from the server.
      */
     @Override
-    public boolean handleRequest(VaadinSession session,
-            VaadinRequest request, VaadinResponse response)
-            throws IOException {
+    public boolean handleRequest(VaadinSession session, VaadinRequest request,
+            VaadinResponse response) throws IOException {
         String relativeUri = request.getRequestPathInfo();
         // Catch the given URI that identifies the resource, otherwise let other
         // URI handlers or the Application to handle the response.

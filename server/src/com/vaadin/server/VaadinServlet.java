@@ -822,8 +822,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
              * cache timeout can be configured by setting the resourceCacheTime
              * parameter in web.xml
              */
-            int resourceCacheTime = getService()
-                    .getDeploymentConfiguration().getResourceCacheTime();
+            int resourceCacheTime = getService().getDeploymentConfiguration()
+                    .getResourceCacheTime();
             response.setHeader("Cache-Control",
                     "max-age= " + String.valueOf(resourceCacheTime));
         }
@@ -850,8 +850,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 filename = filename.substring(1);
             }
 
-            resourceUrl = getService().getClassLoader().getResource(
-                    filename);
+            resourceUrl = getService().getClassLoader().getResource(filename);
         }
         return resourceUrl;
     }

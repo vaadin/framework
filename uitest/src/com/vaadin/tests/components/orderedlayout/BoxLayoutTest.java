@@ -121,40 +121,40 @@ public class BoxLayoutTest extends AbstractTestUI {
 
         Button addComponent = new Button("Add Component",
                 new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                GridLayout grid = new GridLayout(2, 2);
-                Button grow = new Button("Grow Me",
-                        new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        if (event.getButton().getWidth() == -1) {
-                            event.getButton().setHeight("50px");
-                            event.getButton().setWidth("200px");
-                        } else {
-                            event.getButton()
-                            .setSizeUndefined();
-                        }
+                        GridLayout grid = new GridLayout(2, 2);
+                        Button grow = new Button("Grow Me",
+                                new Button.ClickListener() {
+                                    @Override
+                                    public void buttonClick(ClickEvent event) {
+                                        if (event.getButton().getWidth() == -1) {
+                                            event.getButton().setHeight("50px");
+                                            event.getButton().setWidth("200px");
+                                        } else {
+                                            event.getButton()
+                                                    .setSizeUndefined();
+                                        }
+                                    }
+                                });
+                        grid.addComponent(new Label("Grid cell 1"));
+                        grid.addComponent(new Label("Grid cell 2"));
+                        grid.addComponent(grow);
+                        grid.addComponent(new Label("Grid cell 4"));
+                        l.addComponent(grid);
+                        // l.addComponent(new TextField("Some field"));
                     }
                 });
-                grid.addComponent(new Label("Grid cell 1"));
-                grid.addComponent(new Label("Grid cell 2"));
-                grid.addComponent(grow);
-                grid.addComponent(new Label("Grid cell 4"));
-                l.addComponent(grid);
-                // l.addComponent(new TextField("Some field"));
-            }
-        });
         header.addComponent(addComponent);
 
         Button removeComponent = new Button("Remove Component",
                 new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                Component last = l.getComponent(l.getComponentCount() - 1);
-                l.removeComponent(last);
-            }
-        });
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        Component last = l.getComponent(l.getComponentCount() - 1);
+                        l.removeComponent(last);
+                    }
+                });
         header.addComponent(removeComponent);
 
         // Second row
@@ -430,15 +430,15 @@ public class BoxLayoutTest extends AbstractTestUI {
                 if (target != null) {
                     if (target.getWidth() > -1) {
                         componentWidth.select(new Float(target.getWidth())
-                        .intValue()
-                        + target.getWidthUnits().getSymbol());
+                                .intValue()
+                                + target.getWidthUnits().getSymbol());
                     } else {
                         componentWidth.select(null);
                     }
                     if (target.getHeight() > -1) {
                         componentHeight.select(new Float(target.getHeight())
-                        .intValue()
-                        + target.getHeightUnits().getSymbol());
+                                .intValue()
+                                + target.getHeightUnits().getSymbol());
                     } else {
                         componentHeight.select(null);
                     }

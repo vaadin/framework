@@ -24,7 +24,6 @@ import com.vaadin.sass.tree.IVariableNode;
 import com.vaadin.sass.tree.ListModifyNode;
 import com.vaadin.sass.tree.Node;
 import com.vaadin.sass.tree.VariableNode;
-import com.vaadin.sass.util.DeepCopy;
 
 public class VariableVisitor implements Visitor {
 

@@ -133,8 +133,8 @@ public class GAEVaadinServlet extends VaadinServlet {
     private static final String PROPERTY_APPENGINE_EXPIRES = "_expires";
 
     protected void sendDeadlineExceededNotification(
-            VaadinServletRequest request,
-            VaadinServletResponse response) throws IOException {
+            VaadinServletRequest request, VaadinServletResponse response)
+            throws IOException {
         criticalNotification(
                 request,
                 response,
@@ -144,8 +144,8 @@ public class GAEVaadinServlet extends VaadinServlet {
     }
 
     protected void sendNotSerializableNotification(
-            VaadinServletRequest request,
-            VaadinServletResponse response) throws IOException {
+            VaadinServletRequest request, VaadinServletResponse response)
+            throws IOException {
         criticalNotification(
                 request,
                 response,
@@ -155,8 +155,7 @@ public class GAEVaadinServlet extends VaadinServlet {
                         + "?restartApplication");
     }
 
-    protected void sendCriticalErrorNotification(
-            VaadinServletRequest request,
+    protected void sendCriticalErrorNotification(VaadinServletRequest request,
             VaadinServletResponse response) throws IOException {
         criticalNotification(
                 request,
@@ -341,8 +340,7 @@ public class GAEVaadinServlet extends VaadinServlet {
 
         // will create new context if the above did not
         try {
-            return getService().findVaadinSession(
-                    createVaadinRequest(request));
+            return getService().findVaadinSession(createVaadinRequest(request));
         } catch (Exception e) {
             throw new ServletException(e);
         }

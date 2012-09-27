@@ -26,11 +26,13 @@ public class TableReduceContainerSize extends TestBase {
     }
 
     private static class DecimateFilter implements Filter {
+        @Override
         public boolean passesFilter(Object itemId, Item item)
                 throws UnsupportedOperationException {
             return ((((TestObject) itemId).property3 % 10) == 0);
         }
 
+        @Override
         public boolean appliesToProperty(Object propertyId) {
             return true;
         }
@@ -63,6 +65,7 @@ public class TableReduceContainerSize extends TestBase {
             addComponent(label);
             Button button = new Button("Click");
             button.addListener(new Button.ClickListener() {
+                @Override
                 public void buttonClick(ClickEvent event) {
                     try {
                         reduceData = !reduceData;
@@ -78,6 +81,7 @@ public class TableReduceContainerSize extends TestBase {
             addComponent(button);
             Button button2 = new Button("Filter");
             button2.addListener(new Button.ClickListener() {
+                @Override
                 public void buttonClick(ClickEvent event) {
                     try {
                         if (filter != null) {

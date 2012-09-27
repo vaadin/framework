@@ -46,6 +46,5 @@ public interface SessionInitListener extends Serializable {
      * @throws ServiceException
      *             a problem occurs when processing the event
      */
-    public void sessionInit(SessionInitEvent event)
-            throws ServiceException;
+    public void sessionInit(SessionInitEvent event) throws ServiceException;
 }

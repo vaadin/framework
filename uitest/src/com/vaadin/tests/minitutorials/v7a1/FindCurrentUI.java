@@ -16,8 +16,8 @@
 
 package com.vaadin.tests.minitutorials.v7a1;
 
-import com.vaadin.server.VaadinSession;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;

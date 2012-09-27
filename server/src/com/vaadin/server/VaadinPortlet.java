@@ -362,8 +362,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             VaadinPortletResponse vaadinResponse = new VaadinPortletResponse(
                     response, getService());
 
-            getService().setCurrentInstances(vaadinRequest,
-                    vaadinResponse);
+            getService().setCurrentInstances(vaadinRequest, vaadinResponse);
 
             RequestType requestType = getRequestType(vaadinRequest);
 

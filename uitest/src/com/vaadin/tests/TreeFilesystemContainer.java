@@ -41,8 +41,8 @@ import com.vaadin.ui.VerticalLayout;
  * @since 4.0.0
  * 
  */
-public class TreeFilesystemContainer extends com.vaadin.LegacyApplication implements
-        Listener {
+public class TreeFilesystemContainer extends com.vaadin.LegacyApplication
+        implements Listener {
 
     // Filesystem explorer panel and it's components
     private final Panel explorerPanel = new Panel("Filesystem explorer");

@@ -197,6 +197,7 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
         property(name, (LexicalUnitImpl) value, important, null);
     }
 
+    @Override
     public void property(String name, LexicalUnitImpl value, boolean important,
             String comment) {
         RuleNode node = new RuleNode(name, value, important, comment);

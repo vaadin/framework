@@ -48,6 +48,7 @@ public class DateFieldExtendedRange extends TestBase {
         addComponent(layout);
 
         addComponent(new Button("Change date", new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 date.set(2010, 1, 16);
                 for (DateField f : fields) {

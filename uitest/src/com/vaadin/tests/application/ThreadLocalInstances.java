@@ -2,8 +2,8 @@ package com.vaadin.tests.application;
 
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.PaintException;
-import com.vaadin.server.VaadinSession;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.integration.FlagSeResource;
 import com.vaadin.tests.util.Log;
