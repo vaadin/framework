@@ -20,5 +20,5 @@ window.com_vaadin_tests_extensions_SimpleJavaScriptExtensionTest_SimpleJavascrip
 		if (response !== null) {
 			self.greetToServer(response);
 		}
-	} 
+	};
 }
