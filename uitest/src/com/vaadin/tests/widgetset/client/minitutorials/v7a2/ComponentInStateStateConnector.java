@@ -35,7 +35,7 @@ public class ComponentInStateStateConnector extends AbstractComponentConnector {
     }
 
     public ComponentConnector getOtherComponent() {
-        return (ComponentConnector) getState().getOtherComponent();
+        return (ComponentConnector) getState().otherComponent;
     }
 
     @Override

@@ -28,10 +28,10 @@ public class ComponentInStateComponent extends AbstractComponent {
     }
 
     public void setOtherComponent(Component component) {
-        getState().setOtherComponent(component);
+        getState().otherComponent = component;
     }
 
     public Component getOtherComponent() {
-        return (Component) getState().getOtherComponent();
+        return (Component) getState().otherComponent;
     }
 }
