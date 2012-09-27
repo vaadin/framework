@@ -116,8 +116,7 @@ public abstract class BootstrapHandler implements RequestHandler {
             VaadinResponse response) throws IOException {
 
         try {
-            List<UIProvider> uiProviders = request.getService().getUIProviders(
-                    session);
+            List<UIProvider> uiProviders = session.getUIProviders();
 
             UIClassSelectionEvent classSelectionEvent = new UIClassSelectionEvent(
                     request);

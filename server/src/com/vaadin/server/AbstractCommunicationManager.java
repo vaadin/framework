@@ -2460,10 +2460,10 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     private UI getBrowserDetailsUI(VaadinRequest request) {
         VaadinService vaadinService = request.getService();
-        VaadinSession session = VaadinSession.getForSession(request
-                .getWrappedSession());
+        VaadinSession session = VaadinSession.getForSession(vaadinService,
+                request.getWrappedSession());
 
-        List<UIProvider> uiProviders = vaadinService.getUIProviders(session);
+        List<UIProvider> uiProviders = session.getUIProviders();
 
         UIClassSelectionEvent classSelectionEvent = new UIClassSelectionEvent(
                 request);

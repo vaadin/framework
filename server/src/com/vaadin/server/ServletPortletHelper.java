@@ -127,7 +127,7 @@ class ServletPortletHelper implements Serializable {
         // (providers are FILO)
         if (uiProperty != null) {
             verifyUIClass(uiProperty, vaadinService.getClassLoader());
-            vaadinService.addUIProvider(session, new DefaultUIProvider());
+            session.addUIProvider(new DefaultUIProvider());
         }
 
         String uiProviderProperty = vaadinService.getDeploymentConfiguration()
@@ -137,7 +137,7 @@ class ServletPortletHelper implements Serializable {
         if (uiProviderProperty != null) {
             UIProvider uiProvider = getUIProvider(uiProviderProperty,
                     vaadinService.getClassLoader());
-            vaadinService.addUIProvider(session, uiProvider);
+            session.addUIProvider(uiProvider);
         }
     }
 
@@ -165,7 +165,7 @@ class ServletPortletHelper implements Serializable {
 
     public static void checkUiProviders(VaadinSession session,
             VaadinService vaadinService) throws ServiceException {
-        if (vaadinService.getUIProviders(session).isEmpty()) {
+        if (session.getUIProviders().isEmpty()) {
             throw new ServiceException(
                     "No UIProvider has been added and there is no \""
                             + VaadinSession.UI_PARAMETER + "\" init parameter.");

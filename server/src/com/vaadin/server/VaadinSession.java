@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
@@ -42,7 +43,6 @@ import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterFactory;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
 import com.vaadin.event.EventRouter;
-import com.vaadin.server.VaadinService.VaadinServiceData;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
@@ -193,7 +193,9 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     private final Map<String, Object> attributes = new HashMap<String, Object>();
 
-    private Map<String, VaadinServiceData> serviceData = new HashMap<String, VaadinServiceData>();
+    private LinkedList<UIProvider> uiProviders = new LinkedList<UIProvider>();
+
+    private VaadinService service;
 
     /**
      * @see javax.servlet.http.HttpSessionBindingListener#valueBound(HttpSessionBindingEvent)
@@ -210,10 +212,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     public void valueUnbound(HttpSessionBindingEvent event) {
         // If we are going to be unbound from the session, the session must be
         // closing
-        // Notify all services that have used this session.
-        for (VaadinServiceData vaadinServiceData : serviceData.values()) {
-            vaadinServiceData.getService().fireSessionDestroy(this);
-        }
+        // Notify the service
+        service.fireSessionDestroy(this);
     }
 
     /**
@@ -294,15 +294,18 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     /**
+     * @param service
+     *            TODO
      * @param underlyingSession
      * @return
      * 
      * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
-    public static VaadinSession getForSession(WrappedSession underlyingSession) {
+    public static VaadinSession getForSession(VaadinService service,
+            WrappedSession underlyingSession) {
         Object attribute = underlyingSession.getAttribute(VaadinSession.class
-                .getName());
+                .getName() + "." + service.getServiceName());
         if (attribute instanceof VaadinSession) {
             VaadinSession vaadinSession = (VaadinSession) attribute;
             vaadinSession.session = underlyingSession;
@@ -314,13 +317,17 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     /**
      * 
+     * @param service
+     *            TODO
      * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
-    public void removeFromSession() {
-        assert (getForSession(session) == this);
+    public void removeFromSession(VaadinService service) {
+        assert (getForSession(service, session) == this);
 
-        session.setAttribute(VaadinSession.class.getName(), null);
+        session.setAttribute(
+                VaadinSession.class.getName() + "." + service.getServiceName(),
+                null);
     }
 
     /**
@@ -329,8 +336,10 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
-    public void storeInSession(WrappedSession session) {
-        session.setAttribute(VaadinSession.class.getName(), this);
+    public void storeInSession(VaadinService service, WrappedSession session) {
+        session.setAttribute(
+                VaadinSession.class.getName() + "." + service.getServiceName(),
+                this);
         this.session = session;
     }
 
@@ -1045,59 +1054,6 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     /**
-     * Checks whether there this session has any Vaadin service data for a
-     * particular Vaadin service.
-     * 
-     * @see #addVaadinServiceData(VaadinServiceData)
-     * @see VaadinServiceData
-     * 
-     * @param vaadinService
-     *            the Vaadin service to check for
-     * @return <code>true</code> if there is a Vaadin service data object for
-     *         the passed Vaadin service; otherwise <code>false</code>
-     */
-    public boolean hasVaadinServiceData(VaadinService vaadinService) {
-        return getServiceData(vaadinService) != null;
-    }
-
-    /**
-     * Gets the data stored for the passed Vaadin service.
-     * 
-     * @see #addVaadinServiceData(VaadinServiceData)
-     * @see VaadinServiceData
-     * 
-     * @param vaadinService
-     *            the Vaadin service to get the data for
-     * @return the Vaadin service data for the provided Vaadin service; or
-     *         <code>null</code> if there is no data for the service
-     */
-    public VaadinServiceData getServiceData(VaadinService vaadinService) {
-        return serviceData.get(getServiceKey(vaadinService));
-    }
-
-    /**
-     * Adds Vaadin service specific data to this session.
-     * 
-     * @see #getServiceData(VaadinService)
-     * @see VaadinServiceData
-     * 
-     * @param serviceData
-     *            the Vaadin service data to add
-     */
-    public void addVaadinServiceData(VaadinServiceData serviceData) {
-        VaadinService vaadinService = serviceData.getService();
-        assert !hasVaadinServiceData(vaadinService);
-
-        this.serviceData.put(getServiceKey(vaadinService), serviceData);
-    }
-
-    private static String getServiceKey(VaadinService vaadinService) {
-        String serviceKey = vaadinService.getClass().getName() + "."
-                + vaadinService.getServiceName();
-        return serviceKey;
-    }
-
-    /**
      * Creates a new unique id for a UI.
      * 
      * @return a unique UI id
@@ -1136,6 +1092,35 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         }
 
         uIs.put(Integer.valueOf(ui.getUIId()), ui);
+    }
+
+    /**
+     * Adds a UI provider to this session.
+     * 
+     * @param uiProvider
+     *            the UI provider that should be added
+     */
+    public void addUIProvider(UIProvider uiProvider) {
+        uiProviders.addFirst(uiProvider);
+    }
+
+    /**
+     * Removes a UI provider association from this session.
+     * 
+     * @param uiProvider
+     *            the UI provider that should be removed
+     */
+    public void removeUIProvider(UIProvider uiProvider) {
+        uiProviders.remove(uiProvider);
+    }
+
+    /**
+     * Gets the UI providers configured for this session.
+     * 
+     * @return an unmodifiable list of UI providers
+     */
+    public List<UIProvider> getUIProviders() {
+        return Collections.unmodifiableList(uiProviders);
     }
 
 }

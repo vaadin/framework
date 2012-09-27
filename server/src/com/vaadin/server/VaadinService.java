@@ -23,10 +23,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 import java.util.ServiceLoader;
 
@@ -52,70 +49,6 @@ import com.vaadin.util.ReflectTools;
  * @since 7.0
  */
 public abstract class VaadinService implements Serializable {
-
-    /**
-     * Service specific data that is stored in VaadinSession separately for each
-     * VaadinService using that particular session.
-     * 
-     * @author Vaadin Ltd
-     */
-    public static class VaadinServiceData implements Serializable {
-        private final VaadinService vaadinService;
-        private LinkedList<UIProvider> uiProviders = new LinkedList<UIProvider>();
-
-        /**
-         * Create a new service data object for the given Vaadin service
-         * 
-         * @param vaadinService
-         *            the Vaadin service to which the data belongs
-         */
-        public VaadinServiceData(VaadinService vaadinService) {
-            this.vaadinService = vaadinService;
-        }
-
-        /**
-         * Gets a list of all the UI providers registered for a particular
-         * Vaadin service
-         * 
-         * @see #addUIProvider(UIProvider)
-         * 
-         * @return and unmodifiable list of UI providers
-         */
-        public List<UIProvider> getUIProviders() {
-            return Collections.unmodifiableList(uiProviders);
-        }
-
-        /**
-         * Adds a UI provider for a Vaadin service.
-         * 
-         * @param uiProvider
-         *            the UI provider to add
-         */
-        public void addUIProvider(UIProvider uiProvider) {
-            uiProviders.addFirst(uiProvider);
-        }
-
-        /**
-         * Removes a UI provider from a Vaadin service.
-         * 
-         * @param uiProvider
-         *            the UI provider to remove
-         */
-        public void removeUIProvider(UIProvider uiProvider) {
-            uiProviders.remove(uiProvider);
-        }
-
-        /**
-         * Gets the Vaadin service that this data belongs to.
-         * 
-         * @return the Vaadin service that htis data belongs to
-         */
-        public VaadinService getService() {
-            return vaadinService;
-        }
-
-    }
-
     private static final Method SESSION_INIT_METHOD = ReflectTools.findMethod(
             SessionInitListener.class, "sessionInit", SessionInitEvent.class);
 
@@ -375,13 +308,6 @@ public abstract class VaadinService implements Serializable {
         if (vaadinSession == null) {
             return null;
         }
-        if (!vaadinSession.hasVaadinServiceData(this)) {
-            vaadinSession.addVaadinServiceData(new VaadinServiceData(this));
-
-            ServletPortletHelper.initDefaultUIProvider(vaadinSession, this);
-
-            onVaadinSessionStarted(request, vaadinSession);
-        }
 
         VaadinSession.setCurrent(vaadinSession);
         request.setAttribute(VaadinSession.class.getName(), vaadinSession);
@@ -441,7 +367,7 @@ public abstract class VaadinService implements Serializable {
             throws ServiceException {
         VaadinSession session = createVaadinSession(request);
 
-        session.storeInSession(request.getWrappedSession());
+        session.storeInSession(this, request.getWrappedSession());
 
         URL applicationUrl;
         try {
@@ -456,6 +382,9 @@ public abstract class VaadinService implements Serializable {
         session.start(new SessionStartEvent(applicationUrl,
                 getDeploymentConfiguration(),
                 createCommunicationManager(session)));
+
+        ServletPortletHelper.initDefaultUIProvider(session, this);
+        onVaadinSessionStarted(request, session);
 
         return session;
     }
@@ -514,7 +443,7 @@ public abstract class VaadinService implements Serializable {
         }
 
         if (session != null) {
-            vaadinSession.removeFromSession();
+            vaadinSession.removeFromSession(this);
         }
     }
 
@@ -528,7 +457,8 @@ public abstract class VaadinService implements Serializable {
             throw new SessionExpiredException();
         }
 
-        VaadinSession vaadinSession = VaadinSession.getForSession(session);
+        VaadinSession vaadinSession = VaadinSession
+                .getForSession(this, session);
 
         if (vaadinSession == null) {
             return null;
@@ -636,18 +566,6 @@ public abstract class VaadinService implements Serializable {
     public abstract String getServiceName();
 
     /**
-     * Gets all the UI providers from a session that are configured for this
-     * service.
-     * 
-     * @param session
-     *            the Vaadin session to get the UI providers from
-     * @return an unmodifiable list of UI providers
-     */
-    public List<UIProvider> getUIProviders(VaadinSession session) {
-        return session.getServiceData(this).getUIProviders();
-    }
-
-    /**
      * Finds the {@link UI} that belongs to the provided request. This is
      * generally only supported for UIDL requests as other request types are not
      * related to any particular UI or have the UI information encoded in a
@@ -660,8 +578,8 @@ public abstract class VaadinService implements Serializable {
      * 
      */
     public UI findUI(VaadinRequest request) {
-        VaadinSession session = VaadinSession.getForSession(request
-                .getWrappedSession());
+        VaadinSession session = VaadinSession.getForSession(this,
+                request.getWrappedSession());
 
         // Get UI id from the request
         String uiIdString = request.getParameter(UIConstants.UI_ID_PARAMETER);
@@ -677,32 +595,6 @@ public abstract class VaadinService implements Serializable {
         } finally {
             session.getLock().unlock();
         }
-    }
-
-    /**
-     * Adds a UI provider to a Vaadin session and associates it with this Vaadin
-     * service.
-     * 
-     * @param vaadinSession
-     *            the Vaadin session to store the UI provider in
-     * @param uiProvider
-     *            the UI provider that should be added
-     */
-    public void addUIProvider(VaadinSession vaadinSession, UIProvider uiProvider) {
-        vaadinSession.getServiceData(this).addUIProvider(uiProvider);
-    }
-
-    /**
-     * Removes a UI provider association for this service from a Vaadin session.
-     * 
-     * @param vaadinSession
-     *            the Vaadin session where the UI provider is stored
-     * @param uiProvider
-     *            the UI provider that should be removed
-     */
-    public void removeUIProvider(VaadinSession vaadinSession,
-            UIProvider uiProvider) {
-        vaadinSession.getServiceData(this).removeUIProvider(uiProvider);
     }
 
     /**

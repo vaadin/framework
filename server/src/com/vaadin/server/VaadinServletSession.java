@@ -91,7 +91,8 @@ public class VaadinServletSession extends VaadinSession {
         }
 
         // Update the "current session" variable
-        storeInSession(new WrappedHttpSession(newSession));
+        storeInSession(VaadinService.getCurrent(), new WrappedHttpSession(
+                newSession));
     }
 
     /**

@@ -84,7 +84,7 @@ public class LegacyVaadinPortlet extends VaadinPortlet {
 
     private void onVaadinSessionStarted(VaadinPortletRequest request,
             VaadinPortletSession session) throws PortletException {
-        getService().addUIProvider(session, provider);
+        session.addUIProvider(provider);
     }
 
     protected boolean shouldCreateApplication(PortletRequest request) {

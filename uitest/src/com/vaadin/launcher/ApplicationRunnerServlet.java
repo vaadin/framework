@@ -141,7 +141,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
         try {
             final Class<?> classToRun = getClassToRun();
             if (UI.class.isAssignableFrom(classToRun)) {
-                getService().addUIProvider(session, new UIProvider() {
+                session.addUIProvider(new UIProvider() {
                     @Override
                     public Class<? extends UI> getUIClass(
                             UIClassSelectionEvent event) {
@@ -151,8 +151,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
             } else if (LegacyApplication.class.isAssignableFrom(classToRun)) {
                 // Avoid using own UIProvider for legacy Application
             } else if (UIProvider.class.isAssignableFrom(classToRun)) {
-                getService().addUIProvider(session,
-                        (UIProvider) classToRun.newInstance());
+                session.addUIProvider((UIProvider) classToRun.newInstance());
             } else {
                 throw new ServiceException(classToRun.getCanonicalName()
                         + " is neither an Application nor a UI");
