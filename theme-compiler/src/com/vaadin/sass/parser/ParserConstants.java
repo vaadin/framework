@@ -69,7 +69,7 @@ public interface ParserConstants {
   /** RegularExpression Id. */
   int COLON = 35;
   /** RegularExpression Id. */
-  int EACH_VAR = 36;
+  int INTERPOLATION = 36;
   /** RegularExpression Id. */
   int NONASCII = 37;
   /** RegularExpression Id. */
@@ -264,7 +264,7 @@ public interface ParserConstants {
     "\"&&\"",
     "\"!=\"",
     "\":\"",
-    "<EACH_VAR>",
+    "<INTERPOLATION>",
     "<NONASCII>",
     "<H>",
     "<UNICODE>",

@@ -24,6 +24,10 @@
 	border: 1px solid black;
 }
 
+.interpolation-test {
+	font-size: 14px;
+}
+
 .header {
 	width: 100%;
 }

@@ -522,7 +522,7 @@ TOKEN :
 < DEFAULT >
 TOKEN :
 {
-	< EACH_VAR : "#{"< VARIABLE > "}">
+	< INTERPOLATION : "#{"< VARIABLE > "}">
 }
 
 <DEFAULT>
@@ -999,7 +999,7 @@ void microsoftExtension() :
 	< COLON >
 	((n = < IDENT > { value += n.image; })
 	| (n = < NUMBER > { value += n.image; }) 
-	| (n = < EACH_VAR > { value += n.image; })
+	| (n = < INTERPOLATION > { value += n.image; })
 	| (n = < COLON > { value += n.image; })
 	| (n = < FUNCTION > { value += n.image; })
 	| (n = < RPARAN > { value += n.image; })
@@ -1188,7 +1188,7 @@ String _class(String pred) :
 String s = ".";
 }
 {
-  "." (t = <IDENT>{s += t.image; }|t = < EACH_VAR >{ s += t.image; })+
+  "." (t = <IDENT>{s += t.image; }|t =  < INTERPOLATION >{ s += t.image; })+
       { 
 	  
 	  if (pred == null) {
@@ -1205,7 +1205,7 @@ String s = ".";
 String element_name() :
 {Token t; String s = "";}
 {
-    (t = <IDENT>{s += t.image; }|t = < EACH_VAR >{ s += t.image; })+
+    (t = <IDENT>{s += t.image; }|t = < INTERPOLATION >{ s += t.image; })+
     { 
       return s; 
     }
@@ -1483,7 +1483,6 @@ void mixinDirective() :
       args = arglist()) <RPARAN> (<S>)*) <LBRACE> (<S>)*
     {documentHandler.startMixinDirective(name, args);}
     ( includeDirective() | media() | eachDirective() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*
-    //(includeDirective() | media() | LOOKAHEAD(declaration()) declaration()";"(<S>)* | styleRule())*
     <RBRACE>(<S>)*
     {documentHandler.endMixinDirective(name, args);}
 }

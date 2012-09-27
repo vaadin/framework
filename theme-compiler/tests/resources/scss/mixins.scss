@@ -62,4 +62,12 @@ $mixinVar : 1px;
 	border : $border;
 }
 
+@include interpolation(interpolation);
+
+@mixin interpolation($interpolation){
+	.#{$interpolation}-test {
+		font-size: 14px;
+	}
+}
+
 @include layout;
