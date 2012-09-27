@@ -30,6 +30,6 @@ public class VHorizontalLayout extends VOrderedLayout {
     public VHorizontalLayout() {
         setStyleName(CLASSNAME);
         addStyleName(StyleConstants.UI_LAYOUT);
-        addStyleName("v-vertical");
+        addStyleName("v-horizontal");
     }
 }
