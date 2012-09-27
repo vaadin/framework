@@ -2,12 +2,11 @@ package com.vaadin.shared.ui.flash;
 
 import java.util.Map;
 
-import com.vaadin.client.ui.flash.VFlash;
 import com.vaadin.shared.ui.AbstractEmbeddedState;
 
 public class FlashState extends AbstractEmbeddedState {
     {
-        primaryStyleName = VFlash.CLASSNAME;
+        primaryStyleName = "v-flash";
     }
 
     public String classId;

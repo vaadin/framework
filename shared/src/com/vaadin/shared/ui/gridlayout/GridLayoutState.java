@@ -15,12 +15,11 @@
  */
 package com.vaadin.shared.ui.gridlayout;
 
-import com.vaadin.client.ui.gridlayout.VGridLayout;
 import com.vaadin.shared.ui.AbstractLayoutState;
 
 public class GridLayoutState extends AbstractLayoutState {
     {
-        primaryStyleName = VGridLayout.CLASSNAME;
+        primaryStyleName = "v-gridlayout";
     }
     public boolean spacing = false;
     public int rows = 0;

@@ -15,12 +15,11 @@
  */
 package com.vaadin.shared.ui.panel;
 
-import com.vaadin.client.ui.panel.VPanel;
 import com.vaadin.shared.ComponentState;
 
 public class PanelState extends ComponentState {
     {
-        primaryStyleName = VPanel.CLASSNAME;
+        primaryStyleName = "v-panel";
     }
     public int tabIndex;
     public int scrollLeft, scrollTop;

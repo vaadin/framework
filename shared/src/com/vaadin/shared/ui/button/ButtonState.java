@@ -16,7 +16,6 @@
 
 package com.vaadin.shared.ui.button;
 
-import com.vaadin.client.ui.button.VButton;
 import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.ui.TabIndexState;
 
@@ -30,7 +29,7 @@ import com.vaadin.shared.ui.TabIndexState;
  */
 public class ButtonState extends TabIndexState {
     {
-        primaryStyleName = VButton.CLASSNAME;
+        primaryStyleName = "v-button";
     }
     public boolean disableOnClick = false;
     public int clickShortcutKeyCode = 0;

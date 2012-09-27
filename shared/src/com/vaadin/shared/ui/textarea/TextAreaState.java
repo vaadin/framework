@@ -15,13 +15,12 @@
  */
 package com.vaadin.shared.ui.textarea;
 
-import com.vaadin.client.ui.textarea.VTextArea;
 import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldState;
 
 public class TextAreaState extends AbstractTextFieldState {
     {
-        primaryStyleName = VTextArea.CLASSNAME;
+        primaryStyleName = "v-textarea";
     }
 
     /**
