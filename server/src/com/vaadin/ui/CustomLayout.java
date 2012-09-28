@@ -53,8 +53,6 @@ import com.vaadin.shared.ui.customlayout.CustomLayoutState;
  * </p>
  * 
  * @author Vaadin Ltd.
- * @author Duy B. Vo (<a
- *         href="mailto:devduy@gmail.com?subject=Vaadin">devduy@gmail.com</a>)
  * @since 3.0
  */
 @SuppressWarnings("serial")
