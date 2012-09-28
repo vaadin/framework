@@ -21,7 +21,7 @@ public class TestStreamVariableMapping extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-        final VaadinServiceSession application = new VaadinServiceSession();
+        final VaadinServiceSession application = new VaadinServiceSession(null);
         final UI uI = new UI() {
             @Override
             protected void init(VaadinRequest request) {
@@ -66,7 +66,7 @@ public class TestStreamVariableMapping extends TestCase {
     }
 
     private CommunicationManager createCommunicationManager() {
-        return new CommunicationManager(new VaadinServiceSession());
+        return new CommunicationManager(new VaadinServiceSession(null));
     }
 
 }

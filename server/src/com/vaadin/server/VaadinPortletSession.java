@@ -66,6 +66,16 @@ public class VaadinPortletSession extends VaadinServiceSession {
     private final Map<String, String> sharedParameterActionNameMap = new HashMap<String, String>();
     private final Map<String, String> sharedParameterActionValueMap = new HashMap<String, String>();
 
+    /**
+     * Create a portlet service session for the given portlet service
+     * 
+     * @param service
+     *            the portlet service to which the new session belongs
+     */
+    public VaadinPortletSession(VaadinPortletService service) {
+        super(service);
+    }
+
     public PortletSession getPortletSession() {
         WrappedSession wrappedSession = getSession();
         PortletSession session = ((WrappedPortletSession) wrappedSession)

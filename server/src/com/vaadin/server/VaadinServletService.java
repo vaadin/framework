@@ -188,7 +188,7 @@ public class VaadinServletService extends VaadinService {
     @Override
     protected VaadinServiceSession createVaadinSession(VaadinRequest request)
             throws ServiceException {
-        return new VaadinServletSession();
+        return new VaadinServletSession(this);
     }
 
     @Override

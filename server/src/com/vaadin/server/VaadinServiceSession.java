@@ -199,6 +199,16 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
     private VaadinService service;
 
     /**
+     * Create a new service session tied to a Vaadin service
+     * 
+     * @param service
+     *            the Vaadin service for the new session
+     */
+    public VaadinServiceSession(VaadinService service) {
+        this.service = service;
+    }
+
+    /**
      * @see javax.servlet.http.HttpSessionBindingListener#valueBound(HttpSessionBindingEvent)
      */
     @Override
@@ -1121,6 +1131,10 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
      */
     public List<UIProvider> getUIProviders() {
         return Collections.unmodifiableList(uiProviders);
+    }
+
+    public VaadinService getService() {
+        return service;
     }
 
 }

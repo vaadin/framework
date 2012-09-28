@@ -66,7 +66,8 @@ public class ConverterFactory extends TestCase {
 
     public void testApplicationConverterFactoryInBackgroundThread() {
         VaadinServiceSession.setCurrent(null);
-        final VaadinServiceSession appWithCustomIntegerConverter = new VaadinServiceSession();
+        final VaadinServiceSession appWithCustomIntegerConverter = new VaadinServiceSession(
+                null);
         appWithCustomIntegerConverter
                 .setConverterFactory(new ConverterFactory42());
 
@@ -83,7 +84,8 @@ public class ConverterFactory extends TestCase {
     }
 
     public void testApplicationConverterFactoryForDetachedComponent() {
-        final VaadinServiceSession appWithCustomIntegerConverter = new VaadinServiceSession();
+        final VaadinServiceSession appWithCustomIntegerConverter = new VaadinServiceSession(
+                null);
         appWithCustomIntegerConverter
                 .setConverterFactory(new ConverterFactory42());
         VaadinServiceSession.setCurrent(appWithCustomIntegerConverter);
@@ -96,10 +98,11 @@ public class ConverterFactory extends TestCase {
     }
 
     public void testApplicationConverterFactoryForDifferentThanCurrentApplication() {
-        final VaadinServiceSession fieldAppWithCustomIntegerConverter = new VaadinServiceSession();
+        final VaadinServiceSession fieldAppWithCustomIntegerConverter = new VaadinServiceSession(
+                null);
         fieldAppWithCustomIntegerConverter
                 .setConverterFactory(new ConverterFactory42());
-        VaadinServiceSession.setCurrent(new VaadinServiceSession());
+        VaadinServiceSession.setCurrent(new VaadinServiceSession(null));
 
         TextField tf = new TextField("", "123") {
             @Override

@@ -15,7 +15,7 @@ import com.vaadin.ui.Window;
 
 public class AttachDetachWindow {
 
-    private VaadinServiceSession testApp = new VaadinServiceSession();
+    private VaadinServiceSession testApp = new VaadinServiceSession(null);
 
     private interface TestContainer {
         public boolean attachCalled();

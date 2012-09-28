@@ -186,7 +186,7 @@ public class AbstractFieldValueConversions extends TestCase {
     }
 
     public void testNumberDoubleConverterChange() {
-        final VaadinServiceSession a = new VaadinServiceSession();
+        final VaadinServiceSession a = new VaadinServiceSession(null);
         VaadinServiceSession.setCurrent(a);
         TextField tf = new TextField() {
             @Override

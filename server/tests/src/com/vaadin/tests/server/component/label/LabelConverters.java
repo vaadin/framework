@@ -37,7 +37,7 @@ public class LabelConverters extends TestCase {
     }
 
     public void testIntegerDataSource() {
-        VaadinServiceSession.setCurrent(new VaadinServiceSession());
+        VaadinServiceSession.setCurrent(new VaadinServiceSession(null));
         Label l = new Label("Foo");
         Property ds = new MethodProperty<Integer>(Person.createTestPerson1(),
                 "age");

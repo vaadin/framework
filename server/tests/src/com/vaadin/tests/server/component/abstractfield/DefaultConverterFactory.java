@@ -26,7 +26,7 @@ public class DefaultConverterFactory extends TestCase {
     }
 
     public void testDefaultNumberConversion() {
-        VaadinServiceSession app = new VaadinServiceSession();
+        VaadinServiceSession app = new VaadinServiceSession(null);
         VaadinServiceSession.setCurrent(app);
         TextField tf = new TextField();
         tf.setLocale(new Locale("en", "US"));

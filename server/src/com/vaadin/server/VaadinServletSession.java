@@ -41,6 +41,16 @@ public class VaadinServletSession extends VaadinServiceSession {
 
     private transient boolean reinitializingSession = false;
 
+    /**
+     * Create a servlet service session for the given servlet service
+     * 
+     * @param service
+     *            the servlet service to which the new session belongs
+     */
+    public VaadinServletSession(VaadinServletService service) {
+        super(service);
+    }
+
     @Override
     public void valueUnbound(HttpSessionBindingEvent event) {
         if (!reinitializingSession) {

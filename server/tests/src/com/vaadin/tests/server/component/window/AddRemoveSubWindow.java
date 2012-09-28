@@ -25,7 +25,7 @@ public class AddRemoveSubWindow {
 
     @Test
     public void addSubWindow() {
-        VaadinServiceSession.setCurrent(new VaadinServiceSession());
+        VaadinServiceSession.setCurrent(new VaadinServiceSession(null));
         TestApp app = new TestApp();
         app.init();
         Window subWindow = new Window("Sub window");

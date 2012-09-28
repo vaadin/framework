@@ -113,7 +113,7 @@ public class CustomUIClassLoader extends TestCase {
     }
 
     private VaadinServiceSession createStubApplication() {
-        return new VaadinServiceSession() {
+        return new VaadinServiceSession(null) {
             @Override
             public DeploymentConfiguration getConfiguration() {
                 return createConfigurationMock();

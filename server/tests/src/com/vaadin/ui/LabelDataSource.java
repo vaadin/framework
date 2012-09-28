@@ -39,7 +39,7 @@ public class LabelDataSource {
 
     @Before
     public void setup() {
-        vaadinSession = new VaadinServiceSession();
+        vaadinSession = new VaadinServiceSession(null);
         VaadinServiceSession.setCurrent(vaadinSession);
 
         label = new Label();
