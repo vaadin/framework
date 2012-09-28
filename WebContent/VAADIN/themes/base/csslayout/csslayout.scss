@@ -1,35 +1,35 @@
-@mixin base-csslayout {
+@mixin base-csslayout($name : v-csslayout) {
 
-.v-csslayout {
+.#{$name} {
 	overflow: hidden;
 }
 /* More specific selector to override 'v-connector' */
-div.v-csslayout {
+div.#{$name} {
 	display: block;
 }
-.v-csslayout-margin, .v-csslayout-container {
+.#{$name}-margin, .#{$name}-container {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
-.v-has-width > .v-csslayout-margin,
-.v-has-width > .v-csslayout-margin > .v-csslayout-container {
+.v-has-width > .#{$name}-margin,
+.v-has-width > .#{$name}-margin > .#{$name}-container {
 	width: 100%;
 }
-.v-has-height > .v-csslayout-margin,
-.v-has-height > .v-csslayout-margin > .v-csslayout-container {
+.v-has-height > .#{$name}-margin,
+.v-has-height > .#{$name}-margin > .#{$name}-container {
 	height: 100%;
 }
-.v-csslayout-margin-top {
+.#{$name}-margin-top {
 	padding-top: 12px;	
 }
-.v-csslayout-margin-bottom {
+.#{$name}-margin-bottom {
 	padding-bottom: 12px;	
 }
-.v-csslayout-margin-left {
+.#{$name}-margin-left {
 	padding-left: 12px;	
 }
-.v-csslayout-margin-right {
+.#{$name}-margin-right {
 	padding-right: 12px;	
 }
 

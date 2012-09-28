@@ -1,4 +1,4 @@
-@mixin base-table {
+@mixin base-table($name : v-table) {
 
 /* Table theme building instructions
  * 
@@ -8,82 +8,82 @@
  * these instructions.
  * 
  * Borders in table header and in table body need to be same width
- * - specify vertical borders on .v-table-header-wrap and .v-table-body
+ * - specify vertical borders on .#{$name}-header-wrap and .#{$name}-body
  *
  * Table cells in body:
- *  - padding/border for cells is to be defined for td elements (class name: .v-table-cell-content)
+ *  - padding/border for cells is to be defined for td elements (class name: .#{$name}-cell-content)
  *  - in default theme there are no borders, but they should work. Just set border-right or border-bottom
- *  - no padding or border is allowed for div inside cells (class name: .v-table-cell-wrapper) element
+ *  - no padding or border is allowed for div inside cells (class name: .#{$name}-cell-wrapper) element
  *  - background is allowed for both elements
  *
  * Table headers:
- *  - table cells in header contain .v-table-resizer and 
- *	  .v-table-caption-container div elements, which are both floated to right
- *  - to align header caption to body content resizer width + .v-table-caption-container
+ *  - table cells in header contain .#{$name}-resizer and 
+ *	  .#{$name}-caption-container div elements, which are both floated to right
+ *  - to align header caption to body content resizer width + .#{$name}-caption-container
  *    padding right should be equal to content cells padding-right and border-right.
  *  - Possible cell border in header must be themed into column resizer.
  *
  */
-.v-table {
+.#{$name} {
 	overflow: hidden;
 	text-align: left; /* Force default alignment */
 }
-.v-table-header-wrap {
+.#{$name}-header-wrap {
 	overflow: hidden;
 	border: 1px solid #aaa;
 	border-bottom: none;
 	background: #efefef;
 }
-.v-table-header table,
-.v-table-table {
+.#{$name}-header table,
+.#{$name}-table {
 	border-spacing: 0;
 	border-collapse: separate;
 	margin: 0;
 	padding: 0;
 	border: 0;
 }
-.v-table-header td {
+.#{$name}-header td {
 	padding: 0;
 }
-.v-table-header-cell,
-.v-table-header-cell-asc,
-.v-table-header-cell-desc {
+.#{$name}-header-cell,
+.#{$name}-header-cell-asc,
+.#{$name}-header-cell-desc {
 	cursor: pointer;
 }
 
-.v-table.v-disabled .v-table-header-cell,
-.v-table.v-disabled .v-table-header-cell-asc,
-.v-table.v-disabled .v-table-header-cell-desc {
+.#{$name}.v-disabled .#{$name}-header-cell,
+.#{$name}.v-disabled .#{$name}-header-cell-asc,
+.#{$name}.v-disabled .#{$name}-header-cell-desc {
 	cursor: default;
 }
 
-.v-table-footer-wrap {
+.#{$name}-footer-wrap {
 	overflow: hidden;
 	border: 1px solid #aaa;
 	border-top: none;
 	background: #efefef;
 }
-.v-table-footer table {
+.#{$name}-footer table {
 	border-spacing: 0;
 	border-collapse: collapse;
 	margin: 0;
 	padding: 0;
 	border: 0;
 }
-.v-table-footer td {
+.#{$name}-footer td {
 	padding: 0;
 	border-right: 1px solid #aaa;
 }
-.v-table-footer-cell {
+.#{$name}-footer-cell {
 	cursor: pointer;
 }
-.v-table-footer-container {	
+.#{$name}-footer-container {	
 	float:right;	
 	padding-right:6px;
 	overflow:hidden;
 	white-space:nowrap;
 }
-.v-table-resizer {
+.#{$name}-resizer {
 	display: block;
 	height: 1.2em;
 	float: right;
@@ -93,53 +93,53 @@
 	width: 1px;
 	overflow: hidden;
 }
-.v-table.v-disabled .v-table-resizer {
+.#{$name}.v-disabled .#{$name}-resizer {
 	cursor: default;	
 }
-.v-table-caption-container {
+.#{$name}-caption-container {
 	overflow: hidden;
 	white-space: nowrap;
 	margin-left: 6px;
 }
-.v-table-caption-container-align-right {
+.#{$name}-caption-container-align-right {
 	float: right;
 }
-.v-table-sort-indicator {
+.#{$name}-sort-indicator {
 	width: 0px;
 	height: 1.2em;
 	float: right;
 }
-.v-table-header-cell-asc .v-table-sort-indicator,
-.v-table-header-cell-desc .v-table-sort-indicator {
+.#{$name}-header-cell-asc .#{$name}-sort-indicator,
+.#{$name}-header-cell-desc .#{$name}-sort-indicator {
 	width: 16px;
 	height: 1.2em;
 	float: right;
 }		
-.v-table-header-cell-asc .v-table-sort-indicator {
+.#{$name}-header-cell-asc .#{$name}-sort-indicator {
 	background: transparent url(../common/img/sprites.png) no-repeat right 6px;
 }
-.v-table-header-cell-desc .v-table-sort-indicator {
+.#{$name}-header-cell-desc .#{$name}-sort-indicator {
 	background: transparent url(../common/img/sprites.png) no-repeat right -10px;
 }
-.v-table-caption-container-align-center {
+.#{$name}-caption-container-align-center {
 	text-align: center;
 }
-.v-table-caption-container-align-right {
+.#{$name}-caption-container-align-right {
 	text-align: right;
 }
-.v-table-caption-container .v-icon,
-.v-table-header-drag .v-icon {
+.#{$name}-caption-container .v-icon,
+.#{$name}-header-drag .v-icon {
 	vertical-align: middle;
 }
-.v-table-body {
+.#{$name}-body {
 	border: 1px solid #aaa;
 }
-.v-table-row-spacer {
+.#{$name}-row-spacer {
 	height: 10px;
 	overflow: hidden; /* IE hack to allow < one line height divs */
 }
-.v-table-row,
-.v-table-row-odd {
+.#{$name}-row,
+.#{$name}-row-odd {
     background: #fff;
 	border: 0;
 	margin: 0;
@@ -147,36 +147,36 @@
 	cursor: pointer;
 }
 
-.v-table-generated-row {
+.#{$name}-generated-row {
 	   background: #efefef;
 }
 
-.v-table-body-noselection .v-table-row,
-.v-table-body-noselection .v-table-row-odd {
+.#{$name}-body-noselection .#{$name}-row,
+.#{$name}-body-noselection .#{$name}-row-odd {
 	cursor: default;
 }
-.v-table .v-selected {
+.#{$name} .v-selected {
 	background: #999;
 	color: #fff;
 }
-.v-table-cell-content {
+.#{$name}-cell-content {
 	white-space: nowrap;
 	overflow: hidden;
 	padding: 0 6px;
 	border-right: 1px solid #aaa;
 }
-.v-table-cell-wrapper {
+.#{$name}-cell-wrapper {
 	/* Do not specify any margins, paddings or borders here */
 	white-space: nowrap;
 	overflow: hidden;
 }
-.v-table-cell-wrapper-align-center {
+.#{$name}-cell-wrapper-align-center {
 	text-align: center;
 }
-.v-table-cell-wrapper-align-right {
+.#{$name}-cell-wrapper-align-right {
 	text-align: right;
 }
-.v-table-column-selector {
+.#{$name}-column-selector {
 	float: right;
 	background: transparent url(../common/img/sprites.png) no-repeat 4px -37px;
 	margin: -1.2em 0 0 0;
@@ -185,10 +185,10 @@
 	position: relative; /* hide this from IE, it works without it */
 	cursor: pointer;
 }
-.v-table.v-disabled .v-table-column-selector {
+.#{$name}.v-disabled .#{$name}-column-selector {
 	cursor: default;
 }
-.v-table-focus-slot-left {
+.#{$name}-focus-slot-left {
 	border-left: 2px solid #999;
 	float: none;
 	margin-bottom: -1.2em;
@@ -196,11 +196,11 @@
 	background: transparent;
 	border-right: 1px solid #aaa;
 }
-.v-table-focus-slot-right {
+.#{$name}-focus-slot-right {
 	border-right: 2px solid #999;
 	margin-left: -2px;
 }
-.v-table-header-drag {
+.#{$name}-header-drag {
 	position: absolute;
 	background: #efefef;
 	border: 1px solid #eee;
@@ -209,30 +209,30 @@
 	margin-top: 20px;
 	z-index: 30000;
 }
-.v-table-header-drag .v-icon {
+.#{$name}-header-drag .v-icon {
 	vertical-align: middle;
 }
-.v-table-scrollposition {
+.#{$name}-scrollposition {
 	width: 160px;
 	background: #eee;
 	border: 1px solid #aaa;
 }
-.v-table-scrollposition span {
+.#{$name}-scrollposition span {
 	display: block;
 	text-align: center;
 }
-.v-table-body:focus,
-.v-table-body-wrapper:focus {
+.#{$name}-body:focus,
+.#{$name}-body-wrapper:focus {
 	outline: none;
 }
-.v-table-body.focused {
+.#{$name}-body.focused {
 	border-color: #388ddd;
 }
-.v-table-focus .v-table-cell-content {
+.#{$name}-focus .#{$name}-cell-content {
 	border-top: 1px dotted #0066bd;
 	border-bottom: 1px dotted #0066bd;
 }
-.v-table-focus .v-table-cell-wrapper {
+.#{$name}-focus .#{$name}-cell-wrapper {
 	margin-top: -1px;
 	margin-bottom: -1px;
 }
@@ -246,26 +246,26 @@
 /*************************************
  * Drag'n'drop styles
  *************************************/
-.v-table-drag .v-table-body {
+.#{$name}-drag .#{$name}-body {
 	border-color: #1d9dff;
 }
-.v-table-row-drag-middle .v-table-cell-content {
+.#{$name}-row-drag-middle .#{$name}-cell-content {
 	background-color: #bcdcff;
 }
-.v-table-row-drag-top .v-table-cell-content {
+.#{$name}-row-drag-top .#{$name}-cell-content {
 	border-top: 2px solid #1d9dff;
 }
-.v-table-row-drag-top .v-table-cell-wrapper {
+.#{$name}-row-drag-top .#{$name}-cell-wrapper {
 	margin-top: -2px; /* compensate the space consumed by border hint */
 }
-.v-table-row-drag-bottom .v-table-cell-content {
+.#{$name}-row-drag-bottom .#{$name}-cell-content {
 	border-bottom: 2px solid #1d9dff;
 }
-.v-table-row-drag-bottom .v-table-cell-wrapper {
+.#{$name}-row-drag-bottom .#{$name}-cell-wrapper {
 	margin-bottom: -2px; /* compensate the space consumed by border hint */
 }
-.v-table-row-drag-top .v-table-cell-content:first-child:before,
-.v-table-row-drag-bottom .v-table-cell-content:first-child:after {
+.#{$name}-row-drag-top .#{$name}-cell-content:first-child:before,
+.#{$name}-row-drag-bottom .#{$name}-cell-content:first-child:after {
 	display: block;
 	
 	position: absolute;
@@ -275,8 +275,8 @@
 	margin-left: -6px;
 	background: transparent url(../common/img/drag-slot-dot.png);
 }
-.v-ff .v-table-row-drag-bottom .v-table-cell-content:first-child:after,
-.v-ie .v-table-row-drag-bottom .v-table-cell-content:first-child:after {
+.v-ff .#{$name}-row-drag-bottom .#{$name}-cell-content:first-child:after,
+.v-ie .#{$name}-row-drag-bottom .#{$name}-cell-content:first-child:after {
 	margin-top: -2px;
 }
 

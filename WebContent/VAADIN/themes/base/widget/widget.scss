@@ -1,6 +1,6 @@
-@mixin base-widget {
+@mixin base-widget($name : v-widget) {
 
-.v-widget {
+.#{$name} {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;

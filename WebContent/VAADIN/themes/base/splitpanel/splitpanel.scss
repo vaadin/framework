@@ -1,13 +1,13 @@
-@mixin base-splitpanel {
+@mixin base-splitpanel($name : v-splitpanel) {
 
-.v-splitpanel-horizontal,
-.v-splitpanel-vertical {
+.#{$name}-horizontal,
+.#{$name}-vertical {
 	overflow: hidden;
 }
-.v-splitpanel-hsplitter {
+.#{$name}-hsplitter {
 	width: 6px;
 }
-.v-splitpanel-hsplitter div {
+.#{$name}-hsplitter div {
 	width: 6px;
 	position: absolute;
 	top: 0;
@@ -16,19 +16,19 @@
 	cursor: e-resize;
 	cursor: col-resize;
 }
-.v-disabled .v-splitpanel-hsplitter div {
+.v-disabled .#{$name}-hsplitter div {
 	cursor: default;
 }
-.v-splitpanel-vsplitter {
+.#{$name}-vsplitter {
 	height: 6px;
 }
-.v-splitpanel-vsplitter div {
+.#{$name}-vsplitter div {
 	height: 6px;
 	background: #ddd;
 	cursor: s-resize;
 	cursor: row-resize;
 }
-.v-disabled .v-splitpanel-vsplitter div {
+.v-disabled .#{$name}-vsplitter div {
 	cursor: default;
 }
 

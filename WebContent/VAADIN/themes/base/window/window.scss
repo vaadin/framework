@@ -1,29 +1,29 @@
-@mixin base-window {
+@mixin base-window($name : v-window) {
 
-.v-window {
+.#{$name} {
 	background: #fff;
 }
-.v-window-contents {
+.#{$name}-contents {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
-.v-window.v-has-width > div.popupContent,
-.v-window.v-has-width .v-window-wrap,
-.v-window.v-has-width .v-window-contents,
-.v-window.v-has-width .v-window-contents > div {
+.#{$name}.v-has-width > div.popupContent,
+.#{$name}.v-has-width .#{$name}-wrap,
+.#{$name}.v-has-width .#{$name}-contents,
+.#{$name}.v-has-width .#{$name}-contents > div {
 	width: 100%;
 }
 
-.v-window.v-has-height > div.popupContent,
-.v-window.v-has-height .v-window-wrap,
-.v-window.v-has-height .v-window-contents,
-.v-window.v-has-height .v-window-contents > div {
+.#{$name}.v-has-height > div.popupContent,
+.#{$name}.v-has-height .#{$name}-wrap,
+.#{$name}.v-has-height .#{$name}-contents,
+.#{$name}.v-has-height .#{$name}-contents > div {
 	height: 100%;
 }
 
-.v-window-outerheader {
+.#{$name}-outerheader {
 	padding: 0.3em 1em;
 	height: 1.6em;
 	position: relative;
@@ -32,35 +32,35 @@
 	box-sizing: border-box;
 }
 
-.v-window-outerheader,
-.v-window-draggingCurtain {
+.#{$name}-outerheader,
+.#{$name}-draggingCurtain {
  	cursor: move;	
 }
-.v-window-header {
+.#{$name}-header {
 	font-weight: bold;
 }
 /* A more specific selector to make sure padding isn't so easily overridden */
-div.v-window-header {
+div.#{$name}-header {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	-ms-text-overflow: ellipsis;
 	overflow: hidden;
 	padding: 0;
 }
-.v-window-header .v-icon {
+.#{$name}-header .v-icon {
 	vertical-align: middle; /* This has to be 'middle', not 'bottom', to allow larger icons than 16px */
 }
-.v-window-contents > div {
+.#{$name}-contents > div {
 	outline: none;
 }
-.v-window-footer {
+.#{$name}-footer {
 	overflow: hidden;
 	zoom: 1;
 	height: 10px;
 	position: relative;
 	cursor: move;
 }
-.v-window-resizebox {
+.#{$name}-resizebox {
 	width: 10px;
 	height: 10px;
 	background: #ddd;
@@ -69,19 +69,19 @@ div.v-window-header {
 	right: 0;
 }
 
-.v-window-resizebox,
-.v-window-resizingCurtain {
+.#{$name}-resizebox,
+.#{$name}-resizingCurtain {
 	cursor: se-resize;
 }
 
-.v-window div.v-window-footer-noresize {
+.#{$name} div.#{$name}-footer-noresize {
 	height: 0;
 }
-.v-window-resizebox-disabled {
+.#{$name}-resizebox-disabled {
 	cursor: default;
 	display: none;
 }
-.v-window-closebox {
+.#{$name}-closebox {
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -91,7 +91,7 @@ div.v-window-header {
 	cursor: pointer;
 	overflow: hidden;
 }
-.v-window-modalitycurtain {
+.#{$name}-modalitycurtain {
 	top: 0;
 	left: 0;
 	background: #999;

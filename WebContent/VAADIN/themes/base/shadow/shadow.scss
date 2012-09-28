@@ -1,31 +1,31 @@
-@mixin base-shadow {
+@mixin base-shadow($name : v-shadow) {
 
-.v-shadow {
+.#{$name} {
 	position: absolute;
 }
 
-.v-shadow .top-left {
+.#{$name} .top-left {
     position: absolute; overflow: hidden;
     top: -3px;             left: -5px;
     width: 10px;         height: 10px;
     background: transparent url(img/top-left.png);
 }
 
-.v-shadow .top {
+.#{$name} .top {
     position: absolute; overflow: hidden;
     top: -3px;             left: 5px;
     height: 10px;           right: 5px;
     background: transparent url(img/top.png);
 }
 
-.v-shadow .top-right {
+.#{$name} .top-right {
     position: absolute; overflow: hidden;
     top: -3px;             right: -5px;
     width: 10px;         height: 10px;
     background: transparent url(img/top-right.png);
 }
 
-.v-shadow .left {
+.#{$name} .left {
     position: absolute; overflow: hidden;
     top: 7px;           left: -5px;
     width: 10px;
@@ -33,14 +33,14 @@
     background: transparent url(img/left.png);
 }
 
-.v-shadow .center {
+.#{$name} .center {
     position: absolute; overflow: hidden;
     top: 7px;           left: 5px;
     bottom: 3px;        right: 5px;
     background: transparent url(img/center.png);
 }
 
-.v-shadow .right {
+.#{$name} .right {
     position: absolute; overflow: hidden;
     top: 7px;           right: -5px;
     width: 10px;
@@ -48,21 +48,21 @@
     background: transparent url(img/right.png);
 }
 
-.v-shadow .bottom-left {
+.#{$name} .bottom-left {
     position: absolute; overflow: hidden;
     bottom: -7px;           left: -5px;
     width: 10px;          height: 10px;
     background: transparent url(img/bottom-left.png);
 }
 
-.v-shadow .bottom {
+.#{$name} .bottom {
     position: absolute; overflow: hidden;
     bottom: -7px;           left: 5px;
     right: 5px;          height: 10px;
     background: transparent url(img/bottom.png);
 }
 
-.v-shadow .bottom-right {
+.#{$name} .bottom-right {
     position: absolute; overflow: hidden;
     bottom: -7px;           right: -5px;
     width: 10px;          height: 10px;

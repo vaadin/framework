@@ -1,11 +1,11 @@
-@mixin base-menubar {
+@mixin base-menubar($name : v-menubar) {
 
-.v-menubar {
+.#{$name} {
 	display: inline-block;
 	white-space: nowrap;
 	overflow: hidden;
 }
-.v-menubar .v-menubar-menuitem {
+.#{$name} .#{$name}-menuitem {
 	cursor: default;
 	vertical-align: middle;
 	white-space: nowrap;
@@ -13,36 +13,36 @@
 	display: inline-block;
 	zoom: 1;
 }
-.v-menubar .v-menubar-menuitem-caption .v-icon {
+.#{$name} .#{$name}-menuitem-caption .v-icon {
 	vertical-align: middle;
 	white-space: nowrap;
 }
-.v-menubar-submenu {
+.#{$name}-submenu {
 	background: #fff;
 }
-.v-menubar-menuitem-selected {
+.#{$name}-menuitem-selected {
 	background: #333;
 	color: #fff;
 }
-.v-menubar-submenu .v-menubar-menuitem { 
+.#{$name}-submenu .#{$name}-menuitem { 
 	cursor: default;
 	display: block;
 	position: relative;
 	padding-right: 1.5em;
 }
-.v-menubar-submenu .v-menubar-menuitem-caption {
+.#{$name}-submenu .#{$name}-menuitem-caption {
 	display: block;
 }
-.v-menubar-submenu .v-menubar-menuitem *,
-.v-menubar-submenu .v-menubar-menuitem-caption * {
+.#{$name}-submenu .#{$name}-menuitem *,
+.#{$name}-submenu .#{$name}-menuitem-caption * {
 	white-space: nowrap;
 }
-.v-menubar-submenu-indicator {
+.#{$name}-submenu-indicator {
 	display: none;
 	/* Arial has the most coverage for geometric entity characters */
 	font-family: arial, helvetica, sans-serif;
 }
-.v-menubar-submenu .v-menubar-submenu-indicator {
+.#{$name}-submenu .#{$name}-submenu-indicator {
 	display: block;
 	position: absolute;
 	right: 0;
@@ -50,20 +50,20 @@
 	height: 1em;
 	font-size: 0.9em;
 }
-.v-menubar-menuitem-disabled,
-.v-menubar span.v-menubar-menuitem-disabled:hover,
-.v-menubar span.v-menubar-menuitem-disabled:focus,
-.v-menubar span.v-menubar-menuitem-disabled:active {
+.#{$name}-menuitem-disabled,
+.#{$name} span.#{$name}-menuitem-disabled:hover,
+.#{$name} span.#{$name}-menuitem-disabled:focus,
+.#{$name} span.#{$name}-menuitem-disabled:active {
 	color: #999;
 }
-.v-menubar-more-menuitem {
+.#{$name}-more-menuitem {
 	/* Arial has the most coverage for geometric entity characters */
 	font-family: arial, helvetica, sans-serif;
 }
-.v-menubar-separator {
+.#{$name}-separator {
 	overflow: hidden;
 }
-.v-menubar-separator span {
+.#{$name}-separator span {
 	display: block;
 	text-indent: -9999px;
 	font-size: 1px;
@@ -72,26 +72,26 @@
 	margin: 3px 0 2px;
 	overflow: hidden;
 }
-.v-menubar .v-icon,
-.v-menubar-submenu .v-icon {
+.#{$name} .v-icon,
+.#{$name}-submenu .v-icon {
 	margin-right: 3px;
 }
 
-.v-menubar:focus,
-.v-menubar-popup:focus,
-.v-menubar-popup .popupContent:focus,
-.v-menubar-popup .popupContent .v-menubar-submenu:focus{
+.#{$name}:focus,
+.#{$name}-popup:focus,
+.#{$name}-popup .popupContent:focus,
+.#{$name}-popup .popupContent .#{$name}-submenu:focus{
 	outline: none;	
 }
 /* Checkboxes for checkable/checked menu items */
 /* Checked/unchecked requires combined style selected-(un)checked for IE6 */
-.v-menubar-submenu-check-column .v-menubar-menuitem {
+.#{$name}-submenu-check-column .#{$name}-menuitem {
 	padding-left: 6px;
 }
-.v-menubar-submenu-check-column .v-menubar-menuitem-caption {
+.#{$name}-submenu-check-column .#{$name}-menuitem-caption {
 	padding-left: 18px;
 }
-.v-menubar-submenu .v-menubar-menuitem-checked .v-menubar-menuitem-caption { 
+.#{$name}-submenu .#{$name}-menuitem-checked .#{$name}-menuitem-caption { 
 	background: transparent url(img/check.gif) no-repeat left;
 }
 

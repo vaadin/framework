@@ -1,22 +1,22 @@
-@mixin base-upload {
+@mixin base-upload($name : v-upload) {
 
-.v-upload {
+.#{$name} {
 	white-space: nowrap;
 }
 
 
-.v-upload-immediate {
+.#{$name}-immediate {
 	position: relative;
 	margin: 0;
 	overflow: hidden;
 }
 
-.v-ff .v-upload-immediate,
-.v-op .v-upload-immediate {
+.v-ff .#{$name}-immediate,
+.v-op .#{$name}-immediate {
 	display: inline-block;
 }
 
-.v-upload-immediate input {
+.#{$name}-immediate input {
 	opacity: 0;
 	filter: alpha(opacity=0);
 	z-index: 2;
@@ -28,7 +28,7 @@
 	background: transparent;
 }
 
-.v-upload-immediate button {
+.#{$name}-immediate button {
 	position: relative;
 	left: 0;
 	top: 0;

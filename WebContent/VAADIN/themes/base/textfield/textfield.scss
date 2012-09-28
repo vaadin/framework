@@ -1,23 +1,23 @@
 // textfield-normal.css
 
-@mixin base-textfield {
+@mixin base-textfield($name : v-textfield) {
 
-.v-textfield {
+.#{$name} {
 	text-align: left; /* Force default alignment */
 }
 .v-textarea {
 	resize: none;
 	white-space: pre-wrap;
 }
-.v-textfield-focus,
+.#{$name}-focus,
 .v-textarea-focus {
 }
-input.v-textfield-prompt,
+input.#{$name}-prompt,
 textarea.v-textarea-prompt {
 	color: #999;
 	font-style: italic;
 }
-input.v-textfield-readonly,
+input.#{$name}-readonly,
 textarea.v-textarea-readonly {
 	background: transparent;
 	border: none;
@@ -27,20 +27,20 @@ input.v-disabled,
 textarea.v-disabled {
 	resize: none;
 }
-input.v-textfield-readonly:focus,
+input.#{$name}-readonly:focus,
 textarea.v-textarea-readonly:focus {
 	outline: none;
 }
 /* Disabled by default
 .v-textarea-error,
-.v-textfield-error,
+.#{$name}-error,
 .v-richtextarea-error iframe.gwt-RichTextArea {
 	background: #FFE0E0;	
 }
 */
 /* Disabled by default
 .v-textarea-required,
-.v-textfield-required,
+.#{$name}-required,
 .v-richtextarea-required iframe.gwt-RichTextArea {
 	background: #FFE0E0;	
 }

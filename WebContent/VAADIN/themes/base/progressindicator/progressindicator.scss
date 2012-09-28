@@ -1,17 +1,17 @@
-@mixin base-progressindicator {
+@mixin base-progressindicator($name : v-progressindicator) {
 
-.v-progressindicator {
+.#{$name} {
 	width: 150px;
 }
-.v-progressindicator-wrapper {
+.#{$name}-wrapper {
 	height: 7px;
 	border: 1px solid #ddd;
 }
-.v-progressindicator-indicator {
+.#{$name}-indicator {
 	height: 7px;
 	background: #ddd;
 }
-div.v-progressindicator-indeterminate {
+div.#{$name}-indeterminate {
 	height: 20px;
 	width: 20px;
 	background: #fff url(../common/img/ajax-loader-medium.gif) no-repeat 50%;
@@ -20,13 +20,13 @@ div.v-progressindicator-indeterminate {
 	-moz-border-radius: 4px;
 }
 /* Hide obsolete elements in indeterminate mode */
-.v-progressindicator-indeterminate .v-progressindicator-wrapper,
-.v-progressindicator-indeterminate .v-progressindicator-indicator,
-.v-progressindicator-indeterminate-disabled .v-progressindicator-wrapper,
-.v-progressindicator-indeterminate-disabled .v-progressindicator-indicator {
+.#{$name}-indeterminate .#{$name}-wrapper,
+.#{$name}-indeterminate .#{$name}-indicator,
+.#{$name}-indeterminate-disabled .#{$name}-wrapper,
+.#{$name}-indeterminate-disabled .#{$name}-indicator {
 	display: none;
 }
-div.v-progressindicator-indeterminate-disabled {
+div.#{$name}-indeterminate-disabled {
 	height: 20px;
 	width: 20px;
 	background: transparent;
