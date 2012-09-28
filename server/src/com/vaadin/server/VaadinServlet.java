@@ -233,7 +233,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         VaadinServletSession vaadinSession = null;
-        boolean sessionProcessed = false;
 
         try {
             // If a duplicate "close application" URL is received for an
@@ -276,8 +275,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
             /* Update browser information from the request */
             vaadinSession.getBrowser().updateRequestDetails(request);
 
-            sessionProcessed = true;
-
             /* Handle the request */
             if (requestType == RequestType.FILE_UPLOAD) {
                 // UI is resolved in communication manager
@@ -315,8 +312,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         } catch (final Throwable e) {
             handleServiceException(request, response, vaadinSession, e);
         } finally {
-
-            if (sessionProcessed) {
+            if (vaadinSession != null) {
                 vaadinSession.cleanupInactiveUIs();
             }
 
