@@ -386,7 +386,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                         (ResourceResponse) response);
             } else {
                 VaadinPortletSession vaadinSession = null;
-                boolean sessionProcessed = false;
 
                 try {
                     // TODO What about PARAM_UNLOADBURST &
@@ -414,8 +413,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                     /* Update browser information from request */
                     vaadinSession.getBrowser().updateRequestDetails(
                             vaadinRequest);
-
-                    sessionProcessed = true;
 
                     /* Notify listeners */
 
@@ -479,12 +476,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                     handleServiceException(vaadinRequest, vaadinResponse,
                             vaadinSession, e);
                 } finally {
-
-                    if (sessionProcessed) {
-                        vaadinSession.cleanupInactiveUIs();
-                    }
-
                     if (vaadinSession != null) {
+                        vaadinSession.cleanupInactiveUIs();
                         requestTimer.stop(vaadinSession);
                     }
                 }
