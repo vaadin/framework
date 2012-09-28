@@ -16,6 +16,11 @@
 
 package com.vaadin.server;
 
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.servlet.http.HttpSession;
 
 /**
@@ -61,6 +66,26 @@ public class WrappedHttpSession implements WrappedSession {
      */
     public HttpSession getHttpSession() {
         return session;
+    }
+
+    @Override
+    public Set<String> getAttributeNames() {
+        Enumeration<String> attributeNames = session.getAttributeNames();
+        return enumerationToSet(attributeNames);
+    }
+
+    // Helper shared with WrappedPortletSession
+    static <T> Set<T> enumerationToSet(Enumeration<T> values) {
+        HashSet<T> set = new HashSet<T>();
+        while (values.hasMoreElements()) {
+            set.add(values.nextElement());
+        }
+        return Collections.unmodifiableSet(set);
+    }
+
+    @Override
+    public void invalidate() {
+        session.invalidate();
     }
 
 }
