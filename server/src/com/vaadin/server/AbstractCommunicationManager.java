@@ -1279,7 +1279,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 stateType, uI.getConnectorTracker());
         if (supportsDiffState) {
             connectorTracker.setDiffState(connector,
-                    encodeResult.getEncodedValue());
+                    (JSONObject) encodeResult.getEncodedValue());
         }
         return (JSONObject) encodeResult.getDiff();
     }
