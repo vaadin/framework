@@ -1,6 +1,8 @@
 @import "absolutelayout/absolutelayout.scss";
 @import "accordion/accordion.scss";
 @import "button/button.scss";
+@import "button/nativebutton.scss";
+@import "button/checkbox.scss";
 @import "layout/layout.scss";
 @import "caption/caption.scss";
 @import "common/common.scss";
@@ -46,6 +48,8 @@
 	@include base-absolutelayout;
 	@include base-accordion;
 	@include base-button;
+	@include base-nativebutton;
+	@include base-checkbox;
 	@include base-caption;
 	
 	// here for now to preserve old semantics

@@ -4,6 +4,7 @@
 @import "accordion/accordion.scss";
 @import "a-sprite-definitions/a-sprite-definitions.scss";
 @import "button/button.scss";
+@import "button/nativebutton.scss";
 
 @import "common/common.scss";
 
@@ -35,6 +36,7 @@
 	@include reindeer-accordion;
 	// TODO @include a-sprite-definitions;
 	@include reindeer-button;
+	@include reindeer-nativebutton;
 	@include reindeer-common;
 	@include reindeer-datefield;
 	@include reindeer-formlayout;

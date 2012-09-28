@@ -22,8 +22,7 @@
 	cursor: default;
 	}
 	
-.#{$name}-link .#{$name}-caption,
-.v-nativebutton-link .v-nativebutton-caption {
+.#{$name}-link .#{$name}-caption {
 	line-height: inherit;
 	font-weight: normal;
 	color: #1b699f;
@@ -31,8 +30,7 @@
 	text-shadow: none;
 	}
 	
-.#{$name}-link:focus .#{$name}-caption,
-.v-nativebutton-link:focus .v-nativebutton-caption {
+.#{$name}-link:focus .#{$name}-caption {
 	outline: 1px dotted #1b699f;
 	}
 

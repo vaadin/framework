@@ -6,17 +6,10 @@
 @import "button-small-style.scss";
 @import "button-link-style.scss";
 
-/* Browser-specific corrections to the standard implementation */
-@import "button-ie.scss";
-
-@mixin reindeer-button {
+@mixin reindeer-button($name : v-button) {
 	// TODO use $exclude 
 	@include reindeer-button-standard;
 	@include reindeer-button-primary-style;
 	@include reindeer-button-small-style;
 	@include reindeer-button-link-style;
-
-	/* Browser-specific corrections to the standard implementation */
-	@include reindeer-button-ie;
-
 }

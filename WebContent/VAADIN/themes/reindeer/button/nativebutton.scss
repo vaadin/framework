@@ -1,0 +1,25 @@
+/* Browser-specific corrections to the standard implementation */
+@import "button-ie.scss";
+
+@mixin reindeer-nativebutton-link($name : v-nativebutton) {
+
+.#{$name}-link .#{$name}-caption {
+	line-height: inherit;
+	font-weight: normal;
+	color: #1b699f;
+	font-size: 12px;
+	text-shadow: none;
+	}
+	
+.#{$name}-link:focus .#{$name}-caption {
+	outline: 1px dotted #1b699f;
+	}
+
+}
+
+@mixin reindeer-nativebutton($name : v-nativebutton) {
+	@include reindeer-nativebutton-link($name);
+	
+	/* Browser-specific corrections to the standard implementation */
+	@include reindeer-button-ie($name);
+}
