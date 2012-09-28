@@ -361,11 +361,18 @@ public class GAEVaadinServlet extends VaadinServlet {
      * 
      * @param request
      */
-    private void cleanSession(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.removeAttribute(VaadinServletSession.class.getName());
+    private void cleanSession(VaadinServletRequest request) {
+        // Should really be replaced with a session storage API...
+        WrappedSession wrappedSession = request.getWrappedSession(false);
+        if (wrappedSession == null) {
+            return;
         }
+        VaadinServiceSession serviceSession = VaadinServiceSession
+                .getForSession(getService(), wrappedSession);
+        if (serviceSession == null) {
+            return;
+        }
+        serviceSession.removeFromSession(getService());
     }
 
     /**

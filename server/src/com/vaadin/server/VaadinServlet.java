@@ -232,7 +232,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return;
         }
 
-        VaadinServletSession vaadinSession = null;
+        VaadinServiceSession vaadinSession = null;
         boolean sessionProcessed = false;
 
         try {
@@ -255,8 +255,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             }
 
             // Find out the service session this request is related to
-            vaadinSession = (VaadinServletSession) getService()
-                    .findVaadinSession(request);
+            vaadinSession = getService().findVaadinSession(request);
             if (vaadinSession == null) {
                 return;
             }

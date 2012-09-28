@@ -1,7 +1,6 @@
 package com.vaadin.tests.applicationcontext;
 
 import com.vaadin.server.VaadinService;
-import com.vaadin.server.VaadinServletSession;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
@@ -30,15 +29,13 @@ public class ChangeSessionId extends AbstractTestCase {
                 }));
         setMainWindow(mainWindow);
 
-        loginButton.addListener(new ClickListener() {
+        loginButton.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                VaadinServletSession context = ((VaadinServletSession) getContext());
-
-                String oldSessionId = context.getHttpSession().getId();
-                context.getService().reinitializeSession(
-                        VaadinService.getCurrentRequest());
-                String newSessionId = context.getHttpSession().getId();
+                String oldSessionId = getSessionId();
+                VaadinService.reinitializeSession(VaadinService
+                        .getCurrentRequest());
+                String newSessionId = getSessionId();
                 if (oldSessionId.equals(newSessionId)) {
                     log.log("FAILED! Both old and new session id is "
                             + newSessionId);
@@ -57,7 +54,7 @@ public class ChangeSessionId extends AbstractTestCase {
     }
 
     protected String getSessionId() {
-        return ((VaadinServletSession) getContext()).getHttpSession().getId();
+        return getContext().getSession().getId();
     }
 
     @Override
