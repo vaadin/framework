@@ -16,6 +16,8 @@
 
 package com.vaadin.server;
 
+import java.util.Set;
+
 import javax.portlet.PortletSession;
 
 /**
@@ -61,5 +63,15 @@ public class WrappedPortletSession implements WrappedSession {
      */
     public PortletSession getPortletSession() {
         return session;
+    }
+
+    @Override
+    public Set<String> getAttributeNames() {
+        return WrappedHttpSession.enumerationToSet(session.getAttributeNames());
+    }
+
+    @Override
+    public void invalidate() {
+        session.invalidate();
     }
 }

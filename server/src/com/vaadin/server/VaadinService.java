@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.ServiceLoader;
@@ -49,6 +50,9 @@ import com.vaadin.util.ReflectTools;
  * @since 7.0
  */
 public abstract class VaadinService implements Serializable {
+    private static final String REINITIALIZING_SESSION_MARKER = VaadinService.class
+            .getName() + ".reinitializing";
+
     private static final Method SESSION_INIT_METHOD = ReflectTools.findMethod(
             SessionInitListener.class, "sessionInit", SessionInitEvent.class);
 
@@ -271,6 +275,11 @@ public abstract class VaadinService implements Serializable {
     }
 
     public void fireSessionDestroy(VaadinServiceSession vaadinSession) {
+        // Ignore if the session is being moved to a different backing session
+        if (vaadinSession.getAttribute(REINITIALIZING_SESSION_MARKER) == Boolean.TRUE) {
+            return;
+        }
+
         for (UI ui : new ArrayList<UI>(vaadinSession.getUIs())) {
             vaadinSession.cleanupUI(ui);
         }
@@ -618,5 +627,59 @@ public abstract class VaadinService implements Serializable {
      */
     public boolean preserveUIOnRefresh(UIProvider provider, UICreateEvent event) {
         return provider.isPreservedOnRefresh(event);
+    }
+
+    /**
+     * Discards the current session and creates a new session with the same
+     * contents. The purpose of this is to introduce a new session key in order
+     * to avoid session fixation attacks.
+     * <p>
+     * Please note that this method makes certain assumptions about how data is
+     * stored in the underlying session and may thus not be compatible with some
+     * environments.
+     * 
+     * @param request
+     *            The Vaadin request for which the session should be
+     *            reinitialized
+     */
+    public static void reinitializeSession(VaadinRequest request) {
+        WrappedSession oldSession = request.getWrappedSession();
+
+        // Stores all attributes (security key, reference to this context
+        // instance) so they can be added to the new session
+        HashMap<String, Object> attrs = new HashMap<String, Object>();
+        for (String name : oldSession.getAttributeNames()) {
+            Object value = oldSession.getAttribute(name);
+            if (value instanceof VaadinServiceSession) {
+                // set flag to avoid cleanup
+                VaadinServiceSession serviceSession = (VaadinServiceSession) value;
+                serviceSession.setAttribute(REINITIALIZING_SESSION_MARKER,
+                        Boolean.TRUE);
+            }
+            attrs.put(name, value);
+        }
+
+        // Invalidate the current session
+        oldSession.invalidate();
+
+        // Create a new session
+        WrappedSession newSession = request.getWrappedSession();
+
+        // Restores all attributes (security key, reference to this context
+        // instance)
+        for (String name : attrs.keySet()) {
+            Object value = attrs.get(name);
+            newSession.setAttribute(name, value);
+
+            // Ensure VaadinServiceSession knows where it's stored
+            if (value instanceof VaadinServiceSession) {
+                VaadinServiceSession serviceSession = (VaadinServiceSession) value;
+                serviceSession.storeInSession(serviceSession.getService(),
+                        newSession);
+                serviceSession
+                        .setAttribute(REINITIALIZING_SESSION_MARKER, null);
+            }
+        }
+
     }
 }

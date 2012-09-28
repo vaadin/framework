@@ -16,6 +16,8 @@
 
 package com.vaadin.server;
 
+import java.util.Set;
+
 import javax.portlet.PortletSession;
 import javax.servlet.http.HttpSession;
 
@@ -66,4 +68,22 @@ public interface WrappedSession {
      * @see javax.portlet.PortletSession#setAttribute(String, Object)
      */
     public void setAttribute(String name, Object value);
+
+    /**
+     * Gets the current set of attribute names stored in this session.
+     * 
+     * @return an unmodifiable set of the current attribute names
+     * 
+     * @see HttpSession#getAttributeNames()
+     * @see PortletSession#getAttributeNames()
+     */
+    public Set<String> getAttributeNames();
+
+    /**
+     * Invalidates this session then unbinds any objects bound to it.
+     * 
+     * @see HttpSession#invalidate()
+     * @see PortletSession#invalidate()
+     */
+    public void invalidate();
 }

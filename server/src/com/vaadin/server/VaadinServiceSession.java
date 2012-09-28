@@ -225,6 +225,7 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
         // closing
         // Notify the service
         service.fireSessionDestroy(this);
+        session = null;
     }
 
     /**
