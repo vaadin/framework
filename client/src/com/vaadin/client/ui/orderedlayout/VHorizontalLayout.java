@@ -28,7 +28,13 @@ public class VHorizontalLayout extends VOrderedLayout {
      * Default constructor
      */
     public VHorizontalLayout() {
+        super(false);
         setStyleName(CLASSNAME);
+    }
+
+    @Override
+    public void setStyleName(String style) {
+        super.setStyleName(style);
         addStyleName(StyleConstants.UI_LAYOUT);
         addStyleName("v-horizontal");
     }

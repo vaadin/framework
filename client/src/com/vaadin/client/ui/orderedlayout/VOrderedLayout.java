@@ -57,6 +57,10 @@ public class VOrderedLayout extends FlowPanel {
     private LayoutManager layoutManager;
 
 
+    public VOrderedLayout(boolean vertical) {
+        this.vertical = vertical;
+    }
+
     /**
      * Add or move a slot to another index
      * 

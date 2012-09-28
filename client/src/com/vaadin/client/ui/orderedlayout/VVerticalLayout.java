@@ -28,6 +28,7 @@ public class VVerticalLayout extends VOrderedLayout {
      * Default constructor
      */
     public VVerticalLayout() {
+        super(true);
         setStyleName(CLASSNAME);
     }
 
