@@ -1,12 +1,12 @@
-@mixin reindeer-popupview {
+@mixin reindeer-popupview($name : v-popupview) {
 
-.v-popupview {
+.#{$name} {
 	color: #1b699f;
 }
-.v-popupview:hover {
+.#{$name}:hover {
 	color: #2483c4;
 }
-.v-popupview-popup {
+.#{$name}-popup {
 	background: #fff;
 	padding: 3px;
 }

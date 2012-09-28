@@ -1,22 +1,22 @@
-@mixin reindeer-tabsheet-normal-style {
+@mixin reindeer-tabsheet-normal-style($name : v-tabsheet) {
 
 /* Default Tabsheet styles */
 
-.v-tabsheet-tabitemcell,
-.v-tabsheet-spacertd {
+.#{$name}-tabitemcell,
+.#{$name}-spacertd {
 	height: 32px;
 }
-.v-tabsheet-tabitemcell {
+.#{$name}-tabitemcell {
 	background: no-repeat;
 	background-image: url(img/framed/tab-left.png); /** sprite-ref: verticals */
 	padding-left: 3px;
 }
-.v-tabsheet-tabitemcell-first {
+.#{$name}-tabitemcell-first {
 	padding-left: 10px;
 	background-image: url(img/framed/tab-first-left.png); /** sprite-ref: verticals */
 }
-.v-tabsheet-tabitem,
-.v-tabsheet-spacertd div {
+.#{$name}-tabitem,
+.#{$name}-spacertd div {
 	border: none;
 	height: 32px;
 	background: transparent repeat-x;
@@ -25,23 +25,23 @@
 	color: #222;
 	text-shadow: #fff 0 1px 0;
 }
-.v-tabsheet-tabitem .v-caption {
+.#{$name}-tabitem .v-caption {
 	border: none;
 	height: 23px;
 	background: no-repeat right top;
 	background-image: url(img/framed/tab-right.png); /** sprite-ref: verticals; sprite-alignment: right */
 	padding: 9px 8px 0 6px;
 }
-.v-tabsheet-tabitem .v-caption-closable {
+.#{$name}-tabitem .v-caption-closable {
 	padding-right: 0;
 	padding-left: 17px;
 }
-.v-tabsheet-tabitem .v-captiontext {
+.#{$name}-tabitem .v-captiontext {
 	height: 16px;
 	line-height: 16px;
 	vertical-align:baseline;
 }
-.v-tabsheet-caption-close {
+.#{$name}-caption-close {
 	float: right;
 	width: 19px;
 	height: 18px;
@@ -55,70 +55,70 @@
 	font-size: 14px;
 	font-weight: normal;
 }
-.v-tabsheet-caption-close:hover {
+.#{$name}-caption-close:hover {
 	background-image: url(img/close-btn-hover.png); /** sprite-ref: verticals */
 }
-.v-tabsheet-caption-close:active {
+.#{$name}-caption-close:active {
 	background-image: url(img/close-btn-pressed.png); /** sprite-ref: verticals */
 }
-.v-tabsheet-tabitem-selected .v-tabsheet-caption-close {
+.#{$name}-tabitem-selected .#{$name}-caption-close {
 	background-image: url(img/close-btn-sel.png); /** sprite-ref: verticals */
 }
-.v-tabsheet-tabitem-selected .v-tabsheet-caption-close:hover {
+.#{$name}-tabitem-selected .#{$name}-caption-close:hover {
 	background-image: url(img/close-btn-sel-hover.png); /** sprite-ref: verticals */
 }
-.v-tabsheet-tabitem-selected .v-tabsheet-caption-close:active {
+.#{$name}-tabitem-selected .#{$name}-caption-close:active {
 	background-image: url(img/close-btn-sel-pressed.png); /** sprite-ref: verticals */
 }
-.v-tabsheet-tabitemcell-selected {
+.#{$name}-tabitemcell-selected {
 	background-image: url(img/framed/tab-left-sel.png); /** sprite-ref: verticals */
 }
-.v-tabsheet-tabitemcell-selected-first {
+.#{$name}-tabitemcell-selected-first {
 	background-image: url(img/framed/tab-first-left-sel.png); /** sprite-ref: verticals */
 }
-.v-tabsheet-tabitem-selected {
+.#{$name}-tabitem-selected {
 	background-image: url(img/framed/tab-bg-sel.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	color: #232930;
 }
-.v-tabsheet-tabitem-selected .v-caption {
+.#{$name}-tabitem-selected .v-caption {
 	background-image: url(img/framed/tab-right-sel.png); /** sprite-ref: verticals; sprite-alignment: right */
 }
-.v-tabsheet-spacertd div {
+.#{$name}-spacertd div {
 	margin-right: 4px;
 }
-.v-tabsheet-spacertd {
+.#{$name}-spacertd {
 	background: transparent no-repeat right top;
 	background-image: url(img/framed/tab-spacer-right.png); /** sprite-ref: verticals; sprite-alignment: right */
 }
-.blue .v-tabsheet-content {
+.blue .#{$name}-content {
 	border-color: #a8bcc5;
 }
-.v-tabsheet-content,
-.white .v-tabsheet-content {
+.#{$name}-content,
+.white .#{$name}-content {
 	border: 1px solid #dcdcdc;
 	border-bottom: none;
 	border-top: none;
 	color: #222;
 	text-shadow: none;
 }
-.v-tabsheet-tabsheetpanel {
+.#{$name}-tabsheetpanel {
 	background: #fff;
 }
-.v-sa .v-tabsheet-content {
+.v-sa .#{$name}-content {
 	border-color: rgba(0,0,0,.1);
 }
-.blue .v-tabsheet-deco {
+.blue .#{$name}-deco {
 	border-color: #92a3ac;
 	background: #adc2cd;
 }
-.v-tabsheet-deco,
-.white .v-tabsheet-deco {
+.#{$name}-deco,
+.white .#{$name}-deco {
 	height: 1px;
 	border-top: 1px solid #bebebe;
 	background: #e2e2e2;
 	overflow: hidden;
 }
-.v-sa .v-tabsheet-deco {
+.v-sa .#{$name}-deco {
 	border-top-color: rgba(0,0,0,.1);
 	background: rgba(0,0,0,.08);
 }
@@ -126,31 +126,31 @@
 
 /* Icons & error indicators */
 
-.v-tabsheet-tabs .v-icon,
-.v-tabsheet-tabs .v-captiontext,
-.v-tabsheet-tabs .v-errorindicator {
+.#{$name}-tabs .v-icon,
+.#{$name}-tabs .v-captiontext,
+.#{$name}-tabs .v-errorindicator {
 	display: inline;
 	float: none;
 }
-.v-sa .v-tabsheet-tabs .v-captiontext {
+.v-sa .#{$name}-tabs .v-captiontext {
 	display: inline-block;
 }
-.v-tabsheet-tabs .v-icon {
+.#{$name}-tabs .v-icon {
 	width: 16px !important;
 	height: 16px !important;
 }
-.v-tabsheet-tabs .v-errorindicator {
+.#{$name}-tabs .v-errorindicator {
 	display: inline-block;
 	width: 13px;
 	height: 16px;
 	background: transparent url(../common/icons/error.png) no-repeat 50%;
 }
-.v-ie .v-tabsheet-tabs .v-errorindicator {
+.v-ie .#{$name}-tabs .v-errorindicator {
 	zoom: 1;
 	display: inline;
 }
-.v-ie8 .v-tabsheet-tabs .v-errorindicator,
-.v-ie9 .v-tabsheet-tabs .v-errorindicator {
+.v-ie8 .#{$name}-tabs .v-errorindicator,
+.v-ie9 .#{$name}-tabs .v-errorindicator {
 	display: inline-block;
 }
 

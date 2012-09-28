@@ -1,42 +1,42 @@
-@mixin reindeer-tabsheet-small-style {
+@mixin reindeer-tabsheet-small-style($name : v-tabsheet) {
 
 /**
  * Tabsheet bar style ---------------
  */
-.v-tabsheet-tabs-bar .v-tabsheet-tabitemcell,
-.v-tabsheet-tabs-bar .v-tabsheet-spacertd {
+.#{$name}-tabs-bar .#{$name}-tabitemcell,
+.#{$name}-tabs-bar .#{$name}-spacertd {
 	height: 20px;
 }
-.v-tabsheet-tabs-bar .v-tabsheet-spacertd {
+.#{$name}-tabs-bar .#{$name}-spacertd {
 	background: transparent;
 }
-.v-tabsheet-tabs-bar .v-tabsheet-tabitemcell {
+.#{$name}-tabs-bar .#{$name}-tabitemcell {
 	background-image: url(img/bar/tab-left.png); /** sprite-ref: verticals */
 }
-.v-tabsheet-tabs-bar .v-tabsheet-tabitemcell-first {
+.#{$name}-tabs-bar .#{$name}-tabitemcell-first {
 	padding-left: 6px;
 	background-image: url(img/bar/tab-first-left.png); /** sprite-ref: verticals */
 }
-.v-tabsheet-tabs-bar .v-tabsheet-tabitem,
-.v-tabsheet-tabs-bar .v-tabsheet-spacertd div {
+.#{$name}-tabs-bar .#{$name}-tabitem,
+.#{$name}-tabs-bar .#{$name}-spacertd div {
 	height: 20px;
 	background-image: url(img/bar/tab-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	font-size: 11px;
 	margin: 0;
 }
-.v-tabsheet-tabs-bar .v-tabsheet-tabitem .v-caption {
+.#{$name}-tabs-bar .#{$name}-tabitem .v-caption {
 	height: 18px;
 	background-image: url(img/bar/tab-right.png); /** sprite-ref: verticals; sprite-alignment: right */
 	padding: 2px 12px 0 10px;
 }
-.v-tabsheet-tabs-bar .v-tabsheet-tabitem .v-caption-closable,
-.v-tabsheet-tabs-bar .v-tabsheet-tabitem-selected .v-caption-closable {
+.#{$name}-tabs-bar .#{$name}-tabitem .v-caption-closable,
+.#{$name}-tabs-bar .#{$name}-tabitem-selected .v-caption-closable {
 	padding-right: 8px;
 	padding-left: 14px;
 }
-.v-tabsheet-tabs-bar .v-tabsheet-caption-close,
-.v-tabsheet-tabs-bar .v-tabsheet-caption-close:hover,
-.v-tabsheet-tabs-bar .v-tabsheet-caption-close:active {
+.#{$name}-tabs-bar .#{$name}-caption-close,
+.#{$name}-tabs-bar .#{$name}-caption-close:hover,
+.#{$name}-tabs-bar .#{$name}-caption-close:active {
 	text-indent: 0;
 	background: transparent;
 	margin-left: 3px;
@@ -49,62 +49,62 @@
 	-webkit-border-radius: 7px;
 	-moz-border-radius: 7px;
 }
-.v-tabsheet-tabs-bar .v-tabsheet-caption-close {
+.#{$name}-tabs-bar .#{$name}-caption-close {
 	margin-top: 1px;
 }
-.v-ff .v-tabsheet-tabs-bar .v-tabsheet-caption-close {
+.v-ff .#{$name}-tabs-bar .#{$name}-caption-close {
 	margin-top: -14px;
 }
-.v-tabsheet-tabs-bar .v-tabsheet-caption-close:hover {
+.#{$name}-tabs-bar .#{$name}-caption-close:hover {
 	background: #bfbfbf;
 	-webkit-box-shadow: 0 1px 0 #fff;
 }
-.v-tabsheet-tabs-bar .v-tabsheet-caption-close:active {
+.#{$name}-tabs-bar .#{$name}-caption-close:active {
 	background: #a9a9a9;
 }
-.v-tabsheet-tabs-bar .v-tabsheet-tabitem-selected .v-tabsheet-caption-close {
+.#{$name}-tabs-bar .#{$name}-tabitem-selected .#{$name}-caption-close {
 	color: #404142;
 }
-.v-tabsheet-tabs-bar .v-tabsheet-tabitem-selected .v-tabsheet-caption-close:hover {
+.#{$name}-tabs-bar .#{$name}-tabitem-selected .#{$name}-caption-close:hover {
 	background: #5e666e;
 	color: #fff;
 	text-shadow: 0 -1px 0 #222;
 }
-.v-tabsheet-tabs-bar .v-tabsheet-tabitem-selected .v-tabsheet-caption-close:active {
+.#{$name}-tabs-bar .#{$name}-tabitem-selected .#{$name}-caption-close:active {
 	background: #404142;
 }
 
-.v-tabsheet-tabs-bar .v-tabsheet-tabitemcell-selected {
+.#{$name}-tabs-bar .#{$name}-tabitemcell-selected {
 	background-image: url(img/bar/tab-left-sel.png); /** sprite-ref: verticals */
 }
-.v-tabsheet-tabs-bar .v-tabsheet-tabitemcell-selected-first {
+.#{$name}-tabs-bar .#{$name}-tabitemcell-selected-first {
 	background-image: url(img/bar/tab-first-left-sel.png); /** sprite-ref: verticals */
 }
-.v-tabsheet-tabs-bar .v-tabsheet-tabitem-selected {
+.#{$name}-tabs-bar .#{$name}-tabitem-selected {
 	background-image: url(img/bar/tab-bg-sel.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	color: #232930;
 }
-.v-tabsheet-tabs-bar .v-tabsheet-tabitem-selected .v-caption {
+.#{$name}-tabs-bar .#{$name}-tabitem-selected .v-caption {
 	background-image: url(img/bar/tab-right-sel.png); /** sprite-ref: verticals; sprite-alignment: right */
 }
-.v-tabsheet-tabcontainer-bar .v-tabsheet-scroller {
+.#{$name}-tabcontainer-bar .#{$name}-scroller {
 	margin-top: -20px;
 	height: 19px;
 	border-right: none;
 	background-image: url(img/bar/tab-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 }
-.v-tabsheet-tabcontainer-bar .v-tabsheet-scroller button {
+.#{$name}-tabcontainer-bar .#{$name}-scroller button {
 	margin-top: 1px;
 }
-.v-tabsheet-content-bar,
-.white .v-tabsheet-content-bar {
+.#{$name}-content-bar,
+.white .#{$name}-content-bar {
 	border: none;
 }
-.v-tabsheet-content-bar .v-tabsheet-tabsheetpanel {
+.#{$name}-content-bar .#{$name}-tabsheetpanel {
 	background: transparent;
 }
-.v-tabsheet-deco-bar,
-.white .v-tabsheet-deco-bar {
+.#{$name}-deco-bar,
+.white .#{$name}-deco-bar {
 	height: 0;
 	border: none;
 }

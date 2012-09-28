@@ -10,7 +10,7 @@
 @import "button-ie.scss";
 
 @mixin reindeer-button {
-
+	// TODO use $exclude 
 	@include reindeer-button-standard;
 	@include reindeer-button-primary-style;
 	@include reindeer-button-small-style;

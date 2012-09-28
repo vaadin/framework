@@ -1,9 +1,9 @@
-@mixin reindeer-tabsheet-hover-closable-style {
+@mixin reindeer-tabsheet-hover-closable-style($name : v-tabsheet) {
 
-.v-tabsheet-tabs-hover-closable .v-tabsheet-caption-close {
+.#{$name}-tabs-hover-closable .#{$name}-caption-close {
 	visibility: hidden;
 }
-.v-tabsheet-tabs-hover-closable .v-tabsheet-tabitem:hover .v-tabsheet-caption-close {
+.#{$name}-tabs-hover-closable .#{$name}-tabitem:hover .#{$name}-caption-close {
 	visibility: visible;
 }
 
