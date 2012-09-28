@@ -1,4 +1,4 @@
-@import "../base/styles.scss";
+@import "../base/base.scss";
 
 @import "accordion/accordion.scss";
 @import "button/button.scss";
@@ -23,6 +23,9 @@
 @import "window/window.scss";
 	
 @mixin liferay {
+	// TODO move?
+	@include base;
+	// TODO @each
 	@include liferay-accordion;
 	@include liferay-button;
 	

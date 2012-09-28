@@ -1,9 +1,11 @@
-@import "../base/styles.scss";
+@import "../base/base.scss";
 @import "common/common.scss";
 @import "components/components.scss";
 @import "compound/compound.scss";
 
 @mixin chameleon {
+	// TODO move this?
+	@include base;
 	// TODO each
 	@include chameleon-app;
 	@include chameleon-common;

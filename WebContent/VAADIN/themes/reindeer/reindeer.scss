@@ -1,5 +1,4 @@
-// move this(?)
-@import "base.scss";
+@import "../base/base.scss";
 
 // common between others for now for backwards compatibility
 @import "accordion/accordion.scss";
@@ -28,6 +27,9 @@
 @import "window/window.scss";
 
 @mixin reindeer {
+	// should this be here?
+	@include base;
+	
 	// TODO @each
 
 	@include reindeer-accordion;

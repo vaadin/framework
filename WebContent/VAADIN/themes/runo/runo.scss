@@ -1,4 +1,4 @@
-@import "../base/styles.scss";
+@import "../base/base.scss";
 
 @import "absolutelayout/absolutelayout.scss";
 @import "accordion/accordion.scss";
@@ -27,6 +27,8 @@
 @import "window/window.scss";
 
 @mixin runo {
+	// TODO move?
+	@include base;
 	// TODO each
 	@include runo-absolutelayout;
 	@include runo-accordion;
