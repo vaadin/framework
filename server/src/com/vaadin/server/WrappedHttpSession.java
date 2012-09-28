@@ -88,4 +88,9 @@ public class WrappedHttpSession implements WrappedSession {
         session.invalidate();
     }
 
+    @Override
+    public String getId() {
+        return session.getId();
+    }
+
 }
