@@ -58,7 +58,7 @@ $mixinVar : 1px;
 	@include fontType(1px solid black, $color : red);
 }
 
-@mixin fontType($border, $color : black){
+@mixin fontType($border : 2px solid red, $color : black){
 	border : $border;
 	font-color: $color;
 }

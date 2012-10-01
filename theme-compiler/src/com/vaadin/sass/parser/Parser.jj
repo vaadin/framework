@@ -1507,40 +1507,46 @@ ArrayList<VariableNode> arglist() :
 {
     ArrayList<VariableNode> args = new ArrayList<VariableNode>();
     VariableNode arg;
+    boolean hasNonOptionalArgument = false;
 }
 {
-    arg=mixinArg() ( <COMMA> (<S>)* { args.add(arg); } 
+    arg=mixinArg() ( <COMMA> (<S>)* { hasNonOptionalArgument = checkMixinForNonOptionalArguments(arg, hasNonOptionalArgument); args.add(arg); } 
         arg=mixinArg() )* 
-    { args.add(arg); 
+    { hasNonOptionalArgument = checkMixinForNonOptionalArguments(arg, hasNonOptionalArgument); args.add(arg); 
         return args;
     }
 }
 
 JAVACODE
-void checkMixinOptionalArguments(LexicalUnitImpl arg, String name){
-	boolean currentArgHasArguments = arg.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE;
-  	if(currentArgHasArguments)	{			throw new ParseException("Sass Error: Required argument "+ name +" must come before any optional arguments.");
+boolean checkMixinForNonOptionalArguments(VariableNode arg, boolean hasNonOptionalArguments){
+	boolean currentArgHasArguments = arg.getExpr() != null && arg.getExpr().getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE && arg.getExpr().getNextLexicalUnit() != null;
+  	if(currentArgHasArguments)	{
+		if(hasNonOptionalArguments)		{			throw new ParseException("Sass Error: Required argument $"+ arg.getName() +" must come before any optional arguments.");
+		}
+		return hasNonOptionalArguments;
+	}else	{	return true;
 	}
 }
 
 VariableNode mixinArg() :
 {
     String name;
+    Token variable = null;
     LexicalUnitImpl first = null;
-    LexicalUnitImpl next = null;
     LexicalUnitImpl prev = null;
+    LexicalUnitImpl next = null;
 }
 {
-    name=variableName() (":" (<S>)* first=term(null){ prev = first; }
-    (LOOKAHEAD(2)(< COMMA >(< S >)*)?
-    next=term(prev){
-       if(next.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE)
-       {
-         throw new ParseException("Sass Error: Required argument "+ next.toString() +" must come before any optional arguments.");
-       }
-       prev.setNextLexicalUnit(next); prev = next;
-       
-    })* )?
+    name=variableName() (< COLON > (< S >)*
+
+    (      first = nonVariableTerm(null)      {
+        prev = first;      }
+	  (LOOKAHEAD(3)(< COMMA >(< S >)*)? prev = nonVariableTerm(prev))*	)
+	| (variable = < VARIABLE >{ first = LexicalUnitImpl.createVariable(token.beginLine, token.beginColumn,
+                 prev, variable.image);}
+		
+       )
+    )?
     {
         VariableNode arg = new VariableNode(name, first, false);
         return arg;
@@ -1905,10 +1911,28 @@ LexicalUnitImpl term(LexicalUnitImpl prev) :
 { LexicalUnitImpl result = null;
   Token n = null;
   char op = ' ';
+}
+{
+  (result = nonVariableTerm(prev)| result = variableTerm(prev))
+      {
+	  return result;
+      }
+}
+
+LexicalUnitImpl variableTerm(LexicalUnitImpl prev) :{
+  LexicalUnitImpl result = null;
+  String varName = "";}{
+  varName = variableName()
+         {result = LexicalUnitImpl.createVariable(token.beginLine, token.beginColumn,
+                 prev, varName); return result;}}
+
+LexicalUnitImpl nonVariableTerm(LexicalUnitImpl prev) :{LexicalUnitImpl result = null;
+  Token n = null;
+  char op = ' ';
   String varName;
 }
 {
-  (( ( ( op=unaryOperator() )?
+( ( ( op=unaryOperator() )?
     (
       n=<NUMBER>
 	{ result = LexicalUnitImpl.createNumber(n.beginLine, n.beginColumn,
@@ -2016,13 +2040,8 @@ LexicalUnitImpl term(LexicalUnitImpl prev) :
         | result=url(prev)
 	| result=unicode(prev)
          ) ) ( <S> )*
-        | varName = variableName()
-         {result = LexicalUnitImpl.createVariable(token.beginLine, token.beginColumn,
-                 prev, varName);})
-      {
-	  return result;
-      }
-}
+  {
+    return result;  }}
 
 /**
  * Handle all CSS2 functions.
