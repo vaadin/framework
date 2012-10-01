@@ -59,7 +59,7 @@ public class GlobalResourceHandler implements RequestHandler {
     private int nextLegacyId = 0;
 
     // APP/global/[uiid]/[type]/[id]
-    private final Matcher matcher = Pattern.compile(
+    private static final Matcher matcher = Pattern.compile(
             "^/?" + ApplicationConstants.APP_REQUEST_PATH
                     + RESOURCE_REQUEST_PATH + "(\\d+)/(([^/]+)(/.*))").matcher(
             "");
