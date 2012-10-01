@@ -197,7 +197,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     }
 
     @Override
-    public void setPrimaryStylename(String style) {
+    public void setPrimaryStyleName(String style) {
         getState().primaryStyleName = style;
     }
 
