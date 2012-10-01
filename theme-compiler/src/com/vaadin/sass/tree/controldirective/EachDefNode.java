@@ -67,7 +67,7 @@ public class EachDefNode extends Node implements IVariableNode {
             for (final VariableNode var : variables) {
                 if (listVariable.equals(var.getName())) {
 
-                    LexicalUnitImpl current = (LexicalUnitImpl) var.getExpr();
+                    LexicalUnitImpl current = var.getExpr();
                     list = new ArrayList<String>();
 
                     while (current != null) {
@@ -75,8 +75,7 @@ public class EachDefNode extends Node implements IVariableNode {
                                 && current.getLexicalUnitType() != LexicalUnitImpl.SAC_OPERATOR_COMMA) {
                             list.add(current.getValue().toString());
                         }
-                        current = (LexicalUnitImpl) current
-                                .getNextLexicalUnit();
+                        current = current.getNextLexicalUnit();
                     }
                     listVariable = null;
                     break;

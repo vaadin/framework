@@ -113,11 +113,11 @@ public class AddComponentsTest {
         HorizontalLayout layout1 = new HorizontalLayout();
         layout1.addComponents(children);
         assertOrder(layout1, new int[] { 0, 1, 2, 3 });
-        
+
         Label extra = new Label("Extra");
         layout1.addComponents(extra);
         assertSame(extra, layout1.getComponent(4));
-        
+
         layout1.removeAllComponents();
         layout1.addComponents(children[3], children[2], children[1],
                 children[0]);
@@ -126,10 +126,10 @@ public class AddComponentsTest {
         VerticalLayout layout2 = new VerticalLayout(children);
         layout2.addComponents(children);
         assertOrder(layout2, new int[] { 0, 1, 2, 3 });
-        
+
         layout2.addComponents(extra);
         assertSame(extra, layout2.getComponent(4));
-        
+
         layout2.removeAllComponents();
         layout2.addComponents(children[3], children[2], children[1],
                 children[0]);

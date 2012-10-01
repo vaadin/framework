@@ -6,8 +6,8 @@ import org.easymock.EasyMock;
 
 import com.vaadin.server.CommunicationManager;
 import com.vaadin.server.StreamVariable;
-import com.vaadin.server.VaadinSession;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
 

@@ -1,7 +1,7 @@
 package com.vaadin.tests.components;
 
-import com.vaadin.server.WebBrowser;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.WebBrowser;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;

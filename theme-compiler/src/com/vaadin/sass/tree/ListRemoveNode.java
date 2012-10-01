@@ -42,7 +42,7 @@ public class ListRemoveNode extends Node implements ListModifyNode,
         VariableNode clone = (VariableNode) DeepCopy.copy(variableNode);
 
         LexicalUnitImpl first = null;
-        LexicalUnitImpl current = (LexicalUnitImpl) clone.getExpr();
+        LexicalUnitImpl current = clone.getExpr();
         LexicalUnitImpl lastAccepted = null;
         while (current != null) {
 
@@ -60,7 +60,7 @@ public class ListRemoveNode extends Node implements ListModifyNode,
                     first = lastAccepted;
                 }
             }
-            current = (LexicalUnitImpl) current.getNextLexicalUnit();
+            current = current.getNextLexicalUnit();
         }
 
         clone.setExpr(first);

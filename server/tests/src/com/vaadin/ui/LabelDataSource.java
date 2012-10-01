@@ -22,8 +22,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.data.util.ObjectProperty;
-import com.vaadin.server.VaadinSession;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinSession;
 
 public class LabelDataSource {
 

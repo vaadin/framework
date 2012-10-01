@@ -593,8 +593,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             if (!handleVariables(request, response, callback, session, uI)) {
 
                 // var inconsistency; the client is probably out-of-sync
-                SystemMessages ci = response.getService()
-                        .getSystemMessages();
+                SystemMessages ci = response.getService().getSystemMessages();
                 String msg = ci.getOutOfSyncMessage();
                 String cap = ci.getOutOfSyncCaption();
                 if (msg != null || cap != null) {
@@ -2614,8 +2613,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 .substring(ApplicationConstants.CONNECTOR_RESOURCE_PREFIX
                         .length() + 2);
 
-        final String mimetype = response.getService().getMimeType(
-                resourceName);
+        final String mimetype = response.getService().getMimeType(resourceName);
 
         // Security check: avoid accidentally serving from the UI of the
         // classpath instead of relative to the context class

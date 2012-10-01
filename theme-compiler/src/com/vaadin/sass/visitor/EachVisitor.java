@@ -15,7 +15,7 @@ public class EachVisitor implements Visitor {
 
     @Override
     public void traverse(Node node) throws Exception {
-        this.rootNode = node;
+        rootNode = node;
         for (Node child : node.getChildren()) {
             if (child instanceof EachDefNode) {
                 controlDefs.add((EachDefNode) child);

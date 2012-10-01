@@ -12,9 +12,9 @@ import javax.imageio.ImageIO;
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.RequestHandler;
-import com.vaadin.server.VaadinSession;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
@@ -48,9 +48,8 @@ public class Ticket2292 extends com.vaadin.LegacyApplication implements
     }
 
     @Override
-    public boolean handleRequest(VaadinSession session,
-            VaadinRequest request, VaadinResponse response)
-            throws IOException {
+    public boolean handleRequest(VaadinSession session, VaadinRequest request,
+            VaadinResponse response) throws IOException {
         String relativeUri = request.getRequestPathInfo();
 
         if (!relativeUri.contains("icon.png")) {

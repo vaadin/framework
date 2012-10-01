@@ -256,7 +256,7 @@ public class VaadinTunesLayout extends AbstractTestUI {
                 "Bullet For My Valentine", "Chasing Victory", "Chimaira",
                 "Danko Jones", "Deadlock", "Deftones", "From Autumn To Ashes",
                 "Haste The Day", "Four Year Strong", "In Flames", "Kemopetrol",
-        "John Legend" };
+                "John Legend" };
         String[] albums = new String[] { "Once Again", "The Caitiff Choir",
                 "The Devil And God", "Light Grenades", "Dicthonomy",
                 "Back In Black", "Dreamer", "Come Clarity", "Year Zero",
@@ -265,7 +265,7 @@ public class VaadinTunesLayout extends AbstractTestUI {
         String[] genres = new String[] { "Rock", "Metal", "Hardcore", "Indie",
                 "Pop", "Alternative", "Blues", "Jazz", "Hip Hop",
                 "Electronica", "Punk", "Hard Rock", "Dance", "R'n'B", "Gospel",
-        "Country" };
+                "Country" };
         for (int i = 0; i < 1000; i++) {
             NativeSelect s = new NativeSelect();
             s.addItem("1 star");

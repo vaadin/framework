@@ -13,7 +13,8 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI.LegacyWindow;
 
-public class Ticket2242 extends LegacyApplication implements ValueChangeListener {
+public class Ticket2242 extends LegacyApplication implements
+        ValueChangeListener {
 
     private Object tableValue = null;
     private Table t;

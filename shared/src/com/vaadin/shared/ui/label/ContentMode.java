@@ -15,7 +15,6 @@
  */
 package com.vaadin.shared.ui.label;
 
-
 /**
  * Content modes defining how the client should interpret a Label's value.
  * 

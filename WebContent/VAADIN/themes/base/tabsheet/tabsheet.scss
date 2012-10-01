@@ -33,7 +33,7 @@
 	height: 1em;
 	padding: 0.2em 0;
 }
-.v-tabsheet-hidetabs .v-tabsheet-tabcontainer {
+.v-tabsheet-hidetabs > .v-tabsheet-tabcontainer {
 	display: none;
 }
 .v-tabsheet-scroller {

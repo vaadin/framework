@@ -24,7 +24,6 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
-
 /**
  * Web application context for Vaadin applications.
  * 

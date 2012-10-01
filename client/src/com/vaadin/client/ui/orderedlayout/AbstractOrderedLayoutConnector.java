@@ -410,15 +410,15 @@ public abstract class AbstractOrderedLayoutConnector extends
         boolean allChildrenHasVerticalAlignmentCenterOrBottom = hasVerticalAlignment
                 .size() == getChildren().size();
         boolean hasChildrenWithRelativeHeight = !hasRelativeHeight.isEmpty();
-        
-        if(isVertical){
+
+        if (isVertical) {
             return false;
         }
-        
-        else if(!isUndefinedHeight()){
+
+        else if (!isUndefinedHeight()) {
             return false;
         }
-        
+
         else if (!hasChildrenWithRelativeHeight) {
             return false;
         }
@@ -513,7 +513,7 @@ public abstract class AbstractOrderedLayoutConnector extends
     private void updateLayoutHeight() {
         if (needsFixedHeight()) {
             int h = getMaxHeight();
-            assert(h >= 0);
+            assert (h >= 0);
             h += getLayoutManager().getBorderHeight(getWidget().getElement())
                     + getLayoutManager().getPaddingHeight(
                             getWidget().getElement());
