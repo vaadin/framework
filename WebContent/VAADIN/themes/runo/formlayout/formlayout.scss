@@ -9,25 +9,25 @@
 	text-align:right;
 	white-space: nowrap;
 }
-.v-formlayout-spacing .v-formlayout-row .v-formlayout-captioncell, 
-.v-formlayout-spacing .v-formlayout-row .v-formlayout-contentcell,
-.v-formlayout-spacing .v-formlayout-row .v-formlayout-errorcell {
+.v-formlayout-spacing > tbody > .v-formlayout-row > .v-formlayout-captioncell, 
+.v-formlayout-spacing > tbody > .v-formlayout-row > .v-formlayout-contentcell,
+.v-formlayout-spacing > tbody > .v-formlayout-row > .v-formlayout-errorcell {
 	padding-top: 8px;
 }
-.v-formlayout-margin-top .v-formlayout-firstrow .v-formlayout-captioncell, 
-.v-formlayout-margin-top .v-formlayout-firstrow .v-formlayout-contentcell,
-.v-formlayout-margin-top .v-formlayout-firstrow .v-formlayout-errorcell {
+.v-formlayout-margin-top > tbody > .v-formlayout-firstrow > .v-formlayout-captioncell, 
+.v-formlayout-margin-top > tbody > .v-formlayout-firstrow > .v-formlayout-contentcell,
+.v-formlayout-margin-top > tbody > .v-formlayout-firstrow > .v-formlayout-errorcell {
 	padding-top: 15px;
 }
-.v-formlayout-margin-bottom .v-formlayout-lastrow .v-formlayout-captioncell,
-.v-formlayout-margin-bottom .v-formlayout-lastrow .v-formlayout-contentcell,
-.v-formlayout-margin-bottom .v-formlayout-lastrow .v-formlayout-errorcell {
+.v-formlayout-margin-bottom > tbody > .v-formlayout-lastrow > .v-formlayout-captioncell,
+.v-formlayout-margin-bottom > tbody > .v-formlayout-lastrow > .v-formlayout-contentcell,
+.v-formlayout-margin-bottom > tbody > .v-formlayout-lastrow > .v-formlayout-errorcell {
 	padding-bottom: 15px;
 }
-.v-formlayout-margin-left .v-formlayout-captioncell {
+.v-formlayout-margin-left > tbody > .v-formlayout-row > .v-formlayout-captioncell {
 	padding-left: 18px;
 } 
-.v-formlayout-margin-right .v-formlayout-contentcell {
+.v-formlayout-margin-right > tbody > .v-formlayout-row > .v-formlayout-contentcell {
 	padding-right: 18px;
 }
 /* form */
