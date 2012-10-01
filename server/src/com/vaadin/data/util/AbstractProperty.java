@@ -18,6 +18,7 @@ package com.vaadin.data.util;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.logging.Logger;
 
 import com.vaadin.data.Property;
 
@@ -78,9 +79,17 @@ public abstract class AbstractProperty<T> implements Property<T>,
     @Deprecated
     @Override
     public String toString() {
-        throw new UnsupportedOperationException(
-                "Use Property.getValue() instead of " + getClass()
-                        + ".toString()");
+        getLogger()
+                .warning(
+                        "You are using Property.toString() instead of getValue() to get the value for a "
+                                + getClass().getSimpleName()
+                                + ". This will not be supported starting from Vaadin 7.1 "
+                                + "(your debugger might call toString() and cause this message to appear).");
+        T v = getValue();
+        if (v == null) {
+            return null;
+        }
+        return v.toString();
     }
 
     /* Events */
@@ -277,4 +286,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
         return Collections.EMPTY_LIST;
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(AbstractProperty.class.getName());
+    }
 }
