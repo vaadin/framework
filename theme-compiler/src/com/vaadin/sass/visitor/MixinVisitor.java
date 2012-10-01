@@ -25,6 +25,7 @@ import com.vaadin.sass.tree.IVariableNode;
 import com.vaadin.sass.tree.MixinDefNode;
 import com.vaadin.sass.tree.MixinNode;
 import com.vaadin.sass.tree.Node;
+import com.vaadin.sass.tree.VariableNode;
 import com.vaadin.sass.util.DeepCopy;
 
 public class MixinVisitor implements Visitor {
@@ -78,12 +79,7 @@ public class MixinVisitor implements Visitor {
 
             MixinDefNode defClone = (MixinDefNode) DeepCopy.copy(mixinDef);
 
-            int i = 0;
-            for (final LexicalUnitImpl unit : mixinNode.getArglist()) {
-                defClone.getArglist().get(i)
-                        .setExpr((LexicalUnitImpl) DeepCopy.copy(unit));
-                i++;
-            }
+            replacePossibleArguments(mixinNode, defClone);
 
             Node previous = mixinNode;
             for (final Node child : defClone.getChildren()) {
@@ -100,6 +96,48 @@ public class MixinVisitor implements Visitor {
 
         }
         current.removeChild(mixinNode);
+    }
+
+    /**
+     * We have to replace all the mixin parameters. This is done in two phases.
+     * First phase replaces all the named parameters while the second replaces
+     * in order of remaining unmodified parameters.
+     * 
+     * @param mixinNode
+     * @param def
+     */
+    private void replacePossibleArguments(MixinNode mixinNode, MixinDefNode def) {
+
+        if (mixinNode.getArglist().size() > 0) {
+            ArrayList<VariableNode> remainingNodes = new ArrayList<VariableNode>(
+                    def.getArglist());
+            ArrayList<LexicalUnitImpl> remainingUnits = new ArrayList<LexicalUnitImpl>(
+                    mixinNode.getArglist());
+
+            for (final LexicalUnitImpl unit : mixinNode.getArglist()) {
+                if (unit.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE
+                        && unit.getNextLexicalUnit() != null) {
+                    for (final VariableNode node : def.getArglist()) {
+                        if (node.getName().equals(unit.getValue().toString())) {
+                            node.setExpr((LexicalUnitImpl) DeepCopy.copy(unit
+                                    .getNextLexicalUnit()));
+                            remainingNodes.remove(node);
+                            remainingUnits.remove(unit);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            int i = 0;
+            for (final LexicalUnitImpl unit : remainingUnits) {
+                remainingNodes.get(i).setExpr(
+                        (LexicalUnitImpl) DeepCopy.copy(unit));
+                i++;
+            }
+
+        }
+
     }
 
     private void replaceChildVariables(MixinDefNode mixinDef, Node node) {

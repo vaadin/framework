@@ -10,6 +10,10 @@
 /.externalToolBuilders
 /extras
 
+/theme-compiler/build.xml
+
+/gwt-files.xml
+
 # /WebContent/VAADIN/themes/base/
 /WebContent/VAADIN/themes/base/styles.css
 

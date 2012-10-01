@@ -1516,6 +1516,13 @@ ArrayList<VariableNode> arglist() :
     }
 }
 
+JAVACODE
+void checkMixinOptionalArguments(LexicalUnitImpl arg, String name){
+	boolean currentArgHasArguments = arg.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE;
+  	if(currentArgHasArguments)	{			throw new ParseException("Sass Error: Required argument "+ name +" must come before any optional arguments.");
+	}
+}
+
 VariableNode mixinArg() :
 {
     String name;
@@ -1524,7 +1531,16 @@ VariableNode mixinArg() :
     LexicalUnitImpl prev = null;
 }
 {
-    name=variableName() (":" (<S>)* first=term(null){ prev = first; } (LOOKAHEAD(2)(< COMMA >(< S >)*)?next=term(prev){prev.setNextLexicalUnit(next); prev = next;})* )?
+    name=variableName() (":" (<S>)* first=term(null){ prev = first; }
+    (LOOKAHEAD(2)(< COMMA >(< S >)*)?
+    next=term(prev){
+       if(next.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE)
+       {
+         throw new ParseException("Sass Error: Required argument "+ next.toString() +" must come before any optional arguments.");
+       }
+       prev.setNextLexicalUnit(next); prev = next;
+       
+    })* )?
     {
         VariableNode arg = new VariableNode(name, first, false);
         return arg;
@@ -1539,9 +1555,9 @@ ArrayList<LexicalUnitImpl> argValuelist() :
     LexicalUnitImpl prev = null;
 }
 {
-    first = term(null) { args.add(first); prev = first;}(next=term(prev){prev.setNextLexicalUnit(next); prev = next;})*
+    first = term(null) { args.add(first); prev = first;}((< COLON > (< S >)*)?next=term(prev){prev.setNextLexicalUnit(next); prev = next;})*
     ( <COMMA> (<S>)*
-    first = term(null) { args.add(first); prev = first;}(next=term(prev){prev.setNextLexicalUnit(next); prev = next;})*
+    first = term(null) { args.add(first); prev = first;}((< COLON > (< S >)*)?next=term(prev){prev.setNextLexicalUnit(next); prev = next;})*
     )* 
     {return args;}
 }
