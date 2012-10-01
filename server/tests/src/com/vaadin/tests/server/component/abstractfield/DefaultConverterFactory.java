@@ -6,7 +6,7 @@ import java.util.Locale;
 import junit.framework.TestCase;
 
 import com.vaadin.data.util.MethodProperty;
-import com.vaadin.server.VaadinSession;
+import com.vaadin.server.VaadinServiceSession;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
@@ -26,8 +26,8 @@ public class DefaultConverterFactory extends TestCase {
     }
 
     public void testDefaultNumberConversion() {
-        VaadinSession app = new VaadinSession();
-        VaadinSession.setCurrent(app);
+        VaadinServiceSession app = new VaadinServiceSession(null);
+        VaadinServiceSession.setCurrent(app);
         TextField tf = new TextField();
         tf.setLocale(new Locale("en", "US"));
         tf.setPropertyDataSource(new MethodProperty<Integer>(paulaBean,

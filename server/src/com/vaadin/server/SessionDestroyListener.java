@@ -17,7 +17,8 @@
 package com.vaadin.server;
 
 /**
- * A listener that gets notified when a Vaadin session is no longer used.
+ * A listener that gets notified when a Vaadin service session is no longer
+ * used.
  * 
  * @see VaadinService#addSessionDestroyListener(SessionDestroyListener)
  * 
@@ -26,7 +27,7 @@ package com.vaadin.server;
  */
 public interface SessionDestroyListener {
     /**
-     * Called when a Vaadin session is no longer used.
+     * Called when a Vaadin service session is no longer used.
      * 
      * @param event
      *            the event with details about the destroyed session

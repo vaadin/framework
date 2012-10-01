@@ -7,7 +7,7 @@ import junit.framework.TestCase;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
-import com.vaadin.server.VaadinSession;
+import com.vaadin.server.VaadinServiceSession;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
@@ -186,11 +186,11 @@ public class AbstractFieldValueConversions extends TestCase {
     }
 
     public void testNumberDoubleConverterChange() {
-        final VaadinSession a = new VaadinSession();
-        VaadinSession.setCurrent(a);
+        final VaadinServiceSession a = new VaadinServiceSession(null);
+        VaadinServiceSession.setCurrent(a);
         TextField tf = new TextField() {
             @Override
-            public VaadinSession getSession() {
+            public VaadinServiceSession getSession() {
                 return a;
             }
         };

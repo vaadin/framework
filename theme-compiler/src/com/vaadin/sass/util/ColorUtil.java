@@ -40,12 +40,11 @@ public class ColorUtil {
 
         LexicalUnitImpl hslParams = createHslParameters(hsl[0], hsl[1], hsl[2],
                 hexColor.getLineNumber(), hexColor.getColumnNumber(),
-                (LexicalUnitImpl) hexColor.getPreviousLexicalUnit());
+                hexColor.getPreviousLexicalUnit());
 
         return LexicalUnitImpl.createFunction(hexColor.getLineNumber(),
-                hexColor.getColumnNumber(),
-                (LexicalUnitImpl) hexColor.getPreviousLexicalUnit(), "hsl",
-                hslParams);
+                hexColor.getColumnNumber(), hexColor.getPreviousLexicalUnit(),
+                "hsl", hslParams);
     }
 
     public static LexicalUnitImpl hslToHexColor(LexicalUnitImpl hsl, int lengh) {
@@ -64,8 +63,7 @@ public class ColorUtil {
             builder.append(color);
         }
         return LexicalUnitImpl.createIdent(hsl.getLineNumber(),
-                hsl.getColumnNumber(),
-                (LexicalUnitImpl) hsl.getPreviousLexicalUnit(),
+                hsl.getColumnNumber(), hsl.getPreviousLexicalUnit(),
                 builder.toString());
     }
 
@@ -90,7 +88,7 @@ public class ColorUtil {
             case 3:
                 break;
             }
-            hslParam = (LexicalUnitImpl) hslParam.getNextLexicalUnit();
+            hslParam = hslParam.getNextLexicalUnit();
             i++;
         }
         float h = ((hue.getIntegerValue() % 360) + 360) % 360 / 360f;
@@ -127,7 +125,7 @@ public class ColorUtil {
             case 3:
                 break;
             }
-            rgbParam = (LexicalUnitImpl) rgbParam.getNextLexicalUnit();
+            rgbParam = rgbParam.getNextLexicalUnit();
             i++;
         }
 
@@ -138,11 +136,10 @@ public class ColorUtil {
 
         LexicalUnitImpl hslParams = createHslParameters(hsl[0], hsl[1], hsl[2],
                 rgbParam.getLineNumber(), rgbParam.getColumnNumber(),
-                (LexicalUnitImpl) rgbParam.getPreviousLexicalUnit());
+                rgbParam.getPreviousLexicalUnit());
 
         return LexicalUnitImpl.createFunction(rgb.getLineNumber(),
-                rgb.getColumnNumber(),
-                (LexicalUnitImpl) rgb.getPreviousLexicalUnit(), "hsl",
+                rgb.getColumnNumber(), rgb.getPreviousLexicalUnit(), "hsl",
                 hslParams);
     }
 
@@ -192,11 +189,10 @@ public class ColorUtil {
         LexicalUnitImpl hslParam = hsl.getParameters();
         LexicalUnitImpl rgbParams = createRgbParameters(rgb[0], rgb[1], rgb[2],
                 hslParam.getLineNumber(), hslParam.getColumnNumber(),
-                (LexicalUnitImpl) hslParam.getPreviousLexicalUnit());
+                hslParam.getPreviousLexicalUnit());
 
         return LexicalUnitImpl.createFunction(hsl.getLineNumber(),
-                hsl.getColumnNumber(),
-                (LexicalUnitImpl) hsl.getPreviousLexicalUnit(), "rgb",
+                hsl.getColumnNumber(), hsl.getPreviousLexicalUnit(), "rgb",
                 rgbParams);
     }
 
@@ -246,8 +242,7 @@ public class ColorUtil {
     public static LexicalUnitImpl darken(LexicalUnitImpl darkenFunc) {
         LexicalUnitImpl color = darkenFunc.getParameters();
         float amount = getAmountValue(color);
-        LexicalUnitImpl pre = (LexicalUnitImpl) darkenFunc
-                .getPreviousLexicalUnit();
+        LexicalUnitImpl pre = darkenFunc.getPreviousLexicalUnit();
 
         return adjust(color, amount, ColorOperation.Darken, pre);
     }
@@ -293,8 +288,7 @@ public class ColorUtil {
     public static LexicalUnitImpl lighten(LexicalUnitImpl lightenFunc) {
         LexicalUnitImpl color = lightenFunc.getParameters();
         float amount = getAmountValue(color);
-        LexicalUnitImpl pre = (LexicalUnitImpl) lightenFunc
-                .getPreviousLexicalUnit();
+        LexicalUnitImpl pre = lightenFunc.getPreviousLexicalUnit();
 
         return adjust(color, amount, ColorOperation.Lighten, pre);
     }

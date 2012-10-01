@@ -49,27 +49,24 @@ public class LegacyVaadinServlet extends VaadinServlet {
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
 
-        getService().addSessionInitListener(
-                new SessionInitListener() {
-                    @Override
-                    public void sessionInit(
-                            SessionInitEvent event)
-                            throws ServiceException {
-                        try {
-                            onVaadinSessionStarted(event.getRequest(),
-                                    event.getSession());
-                        } catch (ServletException e) {
-                            throw new ServiceException(e);
-                        }
-                    }
-                });
+        getService().addSessionInitListener(new SessionInitListener() {
+            @Override
+            public void sessionInit(SessionInitEvent event)
+                    throws ServiceException {
+                try {
+                    onVaadinSessionStarted(event.getRequest(),
+                            event.getSession());
+                } catch (ServletException e) {
+                    throw new ServiceException(e);
+                }
+            }
+        });
     }
 
     protected Class<? extends LegacyApplication> getApplicationClass()
             throws ClassNotFoundException {
         try {
-            return ServletPortletHelper
-                    .getLegacyApplicationClass(getService());
+            return ServletPortletHelper.getLegacyApplicationClass(getService());
         } catch (ServiceException e) {
             throw new RuntimeException(e);
         }
@@ -91,8 +88,8 @@ public class LegacyVaadinServlet extends VaadinServlet {
     }
 
     private void onVaadinSessionStarted(VaadinRequest request,
-            VaadinSession session) throws ServletException {
-        getService().addUIProvider(session, provider);
+            VaadinServiceSession session) throws ServletException {
+        session.addUIProvider(provider);
     }
 
 }

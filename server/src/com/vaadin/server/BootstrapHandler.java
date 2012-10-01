@@ -76,7 +76,7 @@ public abstract class BootstrapHandler implements RequestHandler {
             return bootstrapResponse.getRequest();
         }
 
-        public VaadinSession getSession() {
+        public VaadinServiceSession getSession() {
             return bootstrapResponse.getSession();
         }
 
@@ -112,12 +112,11 @@ public abstract class BootstrapHandler implements RequestHandler {
     }
 
     @Override
-    public boolean handleRequest(VaadinSession session, VaadinRequest request,
-            VaadinResponse response) throws IOException {
+    public boolean handleRequest(VaadinServiceSession session,
+            VaadinRequest request, VaadinResponse response) throws IOException {
 
         try {
-            List<UIProvider> uiProviders = request.getService().getUIProviders(
-                    session);
+            List<UIProvider> uiProviders = session.getUIProviders();
 
             UIClassSelectionEvent classSelectionEvent = new UIClassSelectionEvent(
                     request);
@@ -440,7 +439,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         JSONObject defaults = new JSONObject();
 
         VaadinRequest request = context.getRequest();
-        VaadinSession session = context.getSession();
+        VaadinServiceSession session = context.getSession();
         VaadinService vaadinService = request.getService();
 
         // Get system messages

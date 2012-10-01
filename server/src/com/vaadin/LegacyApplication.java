@@ -26,7 +26,7 @@ import java.util.Map.Entry;
 import com.vaadin.server.DefaultErrorListener;
 import com.vaadin.server.Terminal.ErrorEvent;
 import com.vaadin.server.Terminal.ErrorListener;
-import com.vaadin.server.VaadinSession;
+import com.vaadin.server.VaadinServiceSession;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.UI.LegacyWindow;
 
@@ -81,7 +81,7 @@ public abstract class LegacyApplication implements ErrorListener {
     }
 
     public void doInit() {
-        VaadinSession.getCurrent().setErrorHandler(this);
+        VaadinServiceSession.getCurrent().setErrorHandler(this);
         init();
     }
 
@@ -108,7 +108,7 @@ public abstract class LegacyApplication implements ErrorListener {
      * Sets the application's theme.
      * <p>
      * Note that this theme can be overridden for a specific UI with
-     * {@link VaadinSession#getThemeForUI(UI)}. Setting theme to be
+     * {@link VaadinServiceSession#getThemeForUI(UI)}. Setting theme to be
      * <code>null</code> selects the default theme. For the available theme
      * names, see the contents of the VAADIN/themes directory.
      * </p>
@@ -172,7 +172,7 @@ public abstract class LegacyApplication implements ErrorListener {
         uI.setApplication(this);
 
         legacyUINames.put(uI.getName(), uI);
-        uI.setSession(VaadinSession.getCurrent());
+        uI.setSession(VaadinServiceSession.getCurrent());
     }
 
     /**
@@ -214,8 +214,8 @@ public abstract class LegacyApplication implements ErrorListener {
         DefaultErrorListener.doDefault(event);
     }
 
-    public VaadinSession getContext() {
-        return VaadinSession.getCurrent();
+    public VaadinServiceSession getContext() {
+        return VaadinServiceSession.getCurrent();
     }
 
     public void close() {
@@ -241,7 +241,7 @@ public abstract class LegacyApplication implements ErrorListener {
     }
 
     public URL getURL() {
-        return VaadinSession.getCurrent().getURL();
+        return VaadinServiceSession.getCurrent().getURL();
     }
 
     /**

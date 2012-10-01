@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
 
-
 /**
  * Wrapper for {@link HttpServletRequest}.
  * 
@@ -98,7 +97,7 @@ public class VaadinServletRequest extends HttpServletRequestWrapper implements
 
             @Override
             public WebBrowser getWebBrowser() {
-                return VaadinSession.getCurrent().getBrowser();
+                return VaadinServiceSession.getCurrent().getBrowser();
             }
         };
     }

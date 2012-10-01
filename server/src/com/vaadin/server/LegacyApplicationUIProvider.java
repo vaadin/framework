@@ -115,21 +115,21 @@ public abstract class LegacyApplicationUIProvider extends UIProvider {
     }
 
     private LegacyApplication getApplication() {
-        LegacyApplication application = VaadinSession.getCurrent()
+        LegacyApplication application = VaadinServiceSession.getCurrent()
                 .getAttribute(LegacyApplication.class);
         if (application == null) {
             application = createApplication();
             if (application == null) {
                 return null;
             }
-            VaadinSession.getCurrent().setAttribute(LegacyApplication.class,
-                    application);
+            VaadinServiceSession.getCurrent().setAttribute(
+                    LegacyApplication.class, application);
             application.doInit();
         }
 
         if (application != null && !application.isRunning()) {
-            VaadinSession.getCurrent().setAttribute(LegacyApplication.class,
-                    null);
+            VaadinServiceSession.getCurrent().setAttribute(
+                    LegacyApplication.class, null);
             // Run again without a current application
             return getApplication();
         }

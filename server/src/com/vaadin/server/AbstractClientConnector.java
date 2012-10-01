@@ -355,12 +355,12 @@ public abstract class AbstractClientConnector implements ClientConnector {
     }
 
     /**
-     * Finds the {@link VaadinSession} to which this connector belongs. If the
-     * connector has not been attached, <code>null</code> is returned.
+     * Finds the {@link VaadinServiceSession} to which this connector belongs.
+     * If the connector has not been attached, <code>null</code> is returned.
      * 
      * @return The connector's session, or <code>null</code> if not attached
      */
-    protected VaadinSession getSession() {
+    protected VaadinServiceSession getSession() {
         UI uI = getUI();
         if (uI == null) {
             return null;

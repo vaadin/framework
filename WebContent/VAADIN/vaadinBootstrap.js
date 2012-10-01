@@ -29,18 +29,18 @@
 			document.getElementsByTagName('head')[0].appendChild(stylesheet);
 			themesLoaded[url] = true;
 		}		
-	}
+	};
 	
 	var isWidgetsetLoaded = function(widgetset) {
 		var className = widgetset.replace(/\./g, "_");
 		return (typeof window[className]) != "undefined";
-	}
+	};
 	
 	var loadWidgetset = function(basePath, widgetset) {
 		if (widgetsets[widgetset]) {
 			return;
 		}
-		log("load widgetset", basePath, widgetset)
+		log("load widgetset", basePath, widgetset);
 		setTimeout(function() {
 			if (!isWidgetsetLoaded(widgetset)) {
 				alert("Failed to load the widgetset: " + url);
@@ -57,7 +57,7 @@
 		widgetsets[widgetset] = {
 			pendingApps: []
 		};
-	}
+	};
 	
 	window.vaadin = window.vaadin || {
 		setDefaults: function(d) {
@@ -65,7 +65,7 @@
 				log("Ignoring new defaults as defaults have already been loaded");
 				return;
 			}
-			log("Got defaults", d)
+			log("Got defaults", d);
 			defaults = d;
 		},
 		initApplication: function(appId, config) {
@@ -79,7 +79,7 @@
 					isActive: function() {
 						return true;
 					}
-			}
+			};
 			
 			var getConfig = function(name) {
 				var value = config[name];
@@ -87,7 +87,7 @@
 					value = defaults[name];
 				}
 				return value;
-			}
+			};
 			
 			var fetchRootConfig = function() {
 				log('Fetching root config');
@@ -179,7 +179,7 @@
 						widgetsets[widgetset].pendingApps.push(appId);
 					}
 				}
-			}
+			};
 			bootstrapApp(true);
 
 			if (getConfig("debug")) {
@@ -196,7 +196,7 @@
 		},
 		loadTheme: loadTheme,
 		registerWidgetset: function(widgetset, callback) {
-			log("Widgetset registered", widgetset)
+			log("Widgetset registered", widgetset);
 			widgetsets[widgetset].callback = callback;
 			for(var i = 0; i < widgetsets[widgetset].pendingApps.length; i++) {
 				var appId = widgetsets[widgetset].pendingApps[i];

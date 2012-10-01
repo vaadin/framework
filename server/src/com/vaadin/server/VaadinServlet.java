@@ -233,7 +233,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         VaadinServletSession vaadinSession = null;
-        boolean sessionProcessed = false;
 
         try {
             // If a duplicate "close application" URL is received for an
@@ -254,7 +253,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 return;
             }
 
-            // Find out the Vaadin session this request is related to
+            // Find out the service session this request is related to
             vaadinSession = (VaadinServletSession) getService()
                     .findVaadinSession(request);
             if (vaadinSession == null) {
@@ -275,8 +274,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
             /* Update browser information from the request */
             vaadinSession.getBrowser().updateRequestDetails(request);
-
-            sessionProcessed = true;
 
             /* Handle the request */
             if (requestType == RequestType.FILE_UPLOAD) {
@@ -315,8 +312,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         } catch (final Throwable e) {
             handleServiceException(request, response, vaadinSession, e);
         } finally {
-
-            if (sessionProcessed) {
+            if (vaadinSession != null) {
                 vaadinSession.cleanupInactiveUIs();
             }
 
@@ -531,7 +527,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     }
 
     private void handleServiceException(VaadinServletRequest request,
-            VaadinServletResponse response, VaadinSession vaadinSession,
+            VaadinServletResponse response, VaadinServiceSession vaadinSession,
             Throwable e) throws IOException, ServletException {
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {
@@ -822,8 +818,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
              * cache timeout can be configured by setting the resourceCacheTime
              * parameter in web.xml
              */
-            int resourceCacheTime = getService()
-                    .getDeploymentConfiguration().getResourceCacheTime();
+            int resourceCacheTime = getService().getDeploymentConfiguration()
+                    .getResourceCacheTime();
             response.setHeader("Cache-Control",
                     "max-age= " + String.valueOf(resourceCacheTime));
         }
@@ -850,8 +846,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 filename = filename.substring(1);
             }
 
-            resourceUrl = getService().getClassLoader().getResource(
-                    filename);
+            resourceUrl = getService().getClassLoader().getResource(filename);
         }
         return resourceUrl;
     }

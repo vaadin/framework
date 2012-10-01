@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.vaadin.LegacyApplication;
-import com.vaadin.server.VaadinSession;
+import com.vaadin.server.VaadinServiceSession;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Window;
@@ -25,7 +25,7 @@ public class AddRemoveSubWindow {
 
     @Test
     public void addSubWindow() {
-        VaadinSession.setCurrent(new VaadinSession());
+        VaadinServiceSession.setCurrent(new VaadinServiceSession(null));
         TestApp app = new TestApp();
         app.init();
         Window subWindow = new Window("Sub window");

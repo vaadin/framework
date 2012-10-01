@@ -133,8 +133,8 @@ public class GAEVaadinServlet extends VaadinServlet {
     private static final String PROPERTY_APPENGINE_EXPIRES = "_expires";
 
     protected void sendDeadlineExceededNotification(
-            VaadinServletRequest request,
-            VaadinServletResponse response) throws IOException {
+            VaadinServletRequest request, VaadinServletResponse response)
+            throws IOException {
         criticalNotification(
                 request,
                 response,
@@ -144,8 +144,8 @@ public class GAEVaadinServlet extends VaadinServlet {
     }
 
     protected void sendNotSerializableNotification(
-            VaadinServletRequest request,
-            VaadinServletResponse response) throws IOException {
+            VaadinServletRequest request, VaadinServletResponse response)
+            throws IOException {
         criticalNotification(
                 request,
                 response,
@@ -155,8 +155,7 @@ public class GAEVaadinServlet extends VaadinServlet {
                         + "?restartApplication");
     }
 
-    protected void sendCriticalErrorNotification(
-            VaadinServletRequest request,
+    protected void sendCriticalErrorNotification(VaadinServletRequest request,
             VaadinServletResponse response) throws IOException {
         criticalNotification(
                 request,
@@ -241,7 +240,7 @@ public class GAEVaadinServlet extends VaadinServlet {
             }
 
             // de-serialize or create application context, store in session
-            VaadinSession ctx = getApplicationContext(request, memcache);
+            VaadinServiceSession ctx = getApplicationContext(request, memcache);
 
             super.service(request, response);
 
@@ -291,8 +290,9 @@ public class GAEVaadinServlet extends VaadinServlet {
         }
     }
 
-    protected VaadinSession getApplicationContext(HttpServletRequest request,
-            MemcacheService memcache) throws ServletException {
+    protected VaadinServiceSession getApplicationContext(
+            HttpServletRequest request, MemcacheService memcache)
+            throws ServletException {
         HttpSession session = request.getSession();
         String id = AC_BASE + session.getId();
         byte[] serializedAC = (byte[]) memcache.get(id);
@@ -320,10 +320,10 @@ public class GAEVaadinServlet extends VaadinServlet {
             ObjectInputStream ois;
             try {
                 ois = new ObjectInputStream(bais);
-                VaadinSession applicationContext = (VaadinSession) ois
+                VaadinServiceSession applicationContext = (VaadinServiceSession) ois
                         .readObject();
-                applicationContext.storeInSession(new WrappedHttpSession(
-                        session));
+                applicationContext.storeInSession(getService(),
+                        new WrappedHttpSession(session));
             } catch (IOException e) {
                 getLogger().log(
                         Level.WARNING,
@@ -341,8 +341,7 @@ public class GAEVaadinServlet extends VaadinServlet {
 
         // will create new context if the above did not
         try {
-            return getService().findVaadinSession(
-                    createVaadinRequest(request));
+            return getService().findVaadinSession(createVaadinRequest(request));
         } catch (Exception e) {
             throw new ServletException(e);
         }

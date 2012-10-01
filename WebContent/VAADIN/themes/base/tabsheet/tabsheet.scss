@@ -33,7 +33,7 @@
 	height: 1em;
 	padding: 0.2em 0;
 }
-.#{$name}-hidetabs .#{$name}-tabcontainer {
+.#{$name}-hidetabs > .#{$name}-tabcontainer {
 	display: none;
 }
 .#{$name}-scroller {

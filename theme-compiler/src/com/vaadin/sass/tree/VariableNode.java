@@ -71,7 +71,7 @@ public class VariableNode extends Node implements IVariableNode {
     @Override
     public void replaceVariables(ArrayList<VariableNode> variables) {
         for (final VariableNode node : variables) {
-            if (!this.equals(node)) {
+            if (!equals(node)) {
 
                 if (name.equals(node.getName())) {
                     expr = (LexicalUnitImpl) DeepCopy.copy(node.getExpr());

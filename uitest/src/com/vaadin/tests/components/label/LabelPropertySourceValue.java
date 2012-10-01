@@ -17,6 +17,7 @@ public class LabelPropertySourceValue extends AbstractTestUI {
         addComponent(label);
         Button button = new Button("Give label a new property data source...");
         button.addClickListener(new ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 ObjectProperty<String> p = new ObjectProperty<String>(
                         "This text should appear on the label after clicking the button.");

@@ -20,7 +20,7 @@ import java.io.File;
 
 import com.vaadin.data.util.FilesystemContainer;
 import com.vaadin.data.util.FilesystemContainer.FileItem;
-import com.vaadin.server.VaadinSession;
+import com.vaadin.server.VaadinServiceSession;
 import com.vaadin.tests.util.SampleDirectory;
 import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.Component.Listener;
@@ -41,8 +41,8 @@ import com.vaadin.ui.VerticalLayout;
  * @since 4.0.0
  * 
  */
-public class TreeFilesystemContainer extends com.vaadin.LegacyApplication implements
-        Listener {
+public class TreeFilesystemContainer extends com.vaadin.LegacyApplication
+        implements Listener {
 
     // Filesystem explorer panel and it's components
     private final Panel explorerPanel = new Panel("Filesystem explorer");
@@ -79,7 +79,7 @@ public class TreeFilesystemContainer extends com.vaadin.LegacyApplication implem
 
         // Get sample directory
         final File sampleDir = SampleDirectory.getDirectory(
-                VaadinSession.getCurrent(), w);
+                VaadinServiceSession.getCurrent(), w);
         // Populate tree with FilesystemContainer
         final FilesystemContainer fsc = new FilesystemContainer(sampleDir, true);
         filesystem.setContainerDataSource(fsc);

@@ -40,7 +40,7 @@
 
 		<property name="javadoc.dir" location="${result.dir}/javadoc" />
 		<property name="title" value="Vaadin" />
-		<javadoc destdir="${javadoc.dir}" author="true" version="true" use="true" windowtitle="${title}" encoding="utf-8">
+		<javadoc maxmemory="1024m" destdir="${javadoc.dir}" author="true" version="true" use="true" windowtitle="${title}" encoding="utf-8">
 			<packageset dir="${javadoc.temp.dir}">
 				<!-- TODO Javadoc throws ClassCastException if this is included (#9660)-->
 				<exclude name="com/google/gwt/uibinder/elementparsers" />

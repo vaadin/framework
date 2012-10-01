@@ -33,14 +33,14 @@ import com.vaadin.LegacyApplication;
 import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.LegacyVaadinServlet;
 import com.vaadin.server.ServiceException;
+import com.vaadin.server.SessionInitEvent;
+import com.vaadin.server.SessionInitListener;
 import com.vaadin.server.UIClassSelectionEvent;
 import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinServiceSession;
 import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.server.VaadinServletService;
-import com.vaadin.server.VaadinSession;
-import com.vaadin.server.SessionInitListener;
-import com.vaadin.server.SessionInitEvent;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.UI;
 
@@ -76,16 +76,13 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     @Override
     protected void servletInitialized() {
         super.servletInitialized();
-        getService().addSessionInitListener(
-                new SessionInitListener() {
-                    @Override
-                    public void sessionInit(
-                            SessionInitEvent event)
-                            throws ServiceException {
-                        onVaadinSessionStarted(event.getRequest(),
-                                event.getSession());
-                    }
-                });
+        getService().addSessionInitListener(new SessionInitListener() {
+            @Override
+            public void sessionInit(SessionInitEvent event)
+                    throws ServiceException {
+                onVaadinSessionStarted(event.getRequest(), event.getSession());
+            }
+        });
     }
 
     private void addDirectories(File parent, LinkedHashSet<String> packages,
@@ -140,11 +137,11 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     }
 
     protected void onVaadinSessionStarted(VaadinRequest request,
-            VaadinSession session) throws ServiceException {
+            VaadinServiceSession session) throws ServiceException {
         try {
             final Class<?> classToRun = getClassToRun();
             if (UI.class.isAssignableFrom(classToRun)) {
-                getService().addUIProvider(session, new UIProvider() {
+                session.addUIProvider(new UIProvider() {
                     @Override
                     public Class<? extends UI> getUIClass(
                             UIClassSelectionEvent event) {
@@ -154,8 +151,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
             } else if (LegacyApplication.class.isAssignableFrom(classToRun)) {
                 // Avoid using own UIProvider for legacy Application
             } else if (UIProvider.class.isAssignableFrom(classToRun)) {
-                getService().addUIProvider(session,
-                        (UIProvider) classToRun.newInstance());
+                session.addUIProvider((UIProvider) classToRun.newInstance());
             } else {
                 throw new ServiceException(classToRun.getCanonicalName()
                         + " is neither an Application nor a UI");

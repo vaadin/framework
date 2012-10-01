@@ -4,14 +4,6 @@ import com.vaadin.shared.ComponentState;
 
 public class MyComponentState extends ComponentState {
 
-    private String text;
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
+    public String text;
 
 }

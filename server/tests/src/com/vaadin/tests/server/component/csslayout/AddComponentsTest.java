@@ -102,11 +102,11 @@ public class AddComponentsTest {
         CssLayout layout = new CssLayout();
         layout.addComponents(children);
         assertOrder(layout, new int[] { 0, 1, 2, 3 });
-        
+
         Label extra = new Label("Extra");
         layout.addComponents(extra);
         assertSame(extra, layout.getComponent(4));
-        
+
         layout.removeAllComponents();
         layout.addComponents(children[3], children[2], children[1], children[0]);
         assertOrder(layout, new int[] { 3, 2, 1, 0 });

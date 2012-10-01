@@ -1,5 +1,6 @@
 package com.vaadin.tests.applicationcontext;
 
+import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServletSession;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.util.Log;
@@ -35,7 +36,8 @@ public class ChangeSessionId extends AbstractTestCase {
                 VaadinServletSession context = ((VaadinServletSession) getContext());
 
                 String oldSessionId = context.getHttpSession().getId();
-                context.reinitializeSession();
+                context.getService().reinitializeSession(
+                        VaadinService.getCurrentRequest());
                 String newSessionId = context.getHttpSession().getId();
                 if (oldSessionId.equals(newSessionId)) {
                     log.log("FAILED! Both old and new session id is "

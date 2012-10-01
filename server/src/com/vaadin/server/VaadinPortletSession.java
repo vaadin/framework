@@ -56,7 +56,7 @@ import com.vaadin.util.CurrentInstance;
  */
 @Deprecated
 @SuppressWarnings("serial")
-public class VaadinPortletSession extends VaadinSession {
+public class VaadinPortletSession extends VaadinServiceSession {
 
     private final Set<PortletListener> portletListeners = new LinkedHashSet<PortletListener>();
 
@@ -65,6 +65,16 @@ public class VaadinPortletSession extends VaadinSession {
 
     private final Map<String, String> sharedParameterActionNameMap = new HashMap<String, String>();
     private final Map<String, String> sharedParameterActionValueMap = new HashMap<String, String>();
+
+    /**
+     * Create a portlet service session for the given portlet service
+     * 
+     * @param service
+     *            the portlet service to which the new session belongs
+     */
+    public VaadinPortletSession(VaadinPortletService service) {
+        super(service);
+    }
 
     public PortletSession getPortletSession() {
         WrappedSession wrappedSession = getSession();

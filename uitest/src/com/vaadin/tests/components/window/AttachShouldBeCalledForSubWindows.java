@@ -1,8 +1,8 @@
 package com.vaadin.tests.components.window;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinService;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;

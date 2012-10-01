@@ -20,7 +20,7 @@ import java.io.Serializable;
 
 /**
  * Event listener that can be registered to a {@link VaadinService} to get an
- * event when a new Vaadin session is initialized for that service.
+ * event when a new Vaadin service session is initialized for that service.
  * <p>
  * Because of the way different service instances share the same session, the
  * listener is not necessarily notified immediately when the session is created
@@ -34,7 +34,8 @@ import java.io.Serializable;
  */
 public interface SessionInitListener extends Serializable {
     /**
-     * Invoked when a new Vaadin session is initialized for that service.
+     * Invoked when a new Vaadin service session is initialized for that
+     * service.
      * <p>
      * Because of the way different service instances share the same session,
      * the listener is not necessarily notified immediately when the session is
@@ -46,6 +47,5 @@ public interface SessionInitListener extends Serializable {
      * @throws ServiceException
      *             a problem occurs when processing the event
      */
-    public void sessionInit(SessionInitEvent event)
-            throws ServiceException;
+    public void sessionInit(SessionInitEvent event) throws ServiceException;
 }

@@ -15,8 +15,10 @@
  */
 package com.vaadin.tests.components.ui;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Date;
@@ -69,6 +71,18 @@ public class UISerialization extends AbstractTestUI {
                 long elapsed = new Date().getTime() - d.getTime();
                 log.log("Serialized UI in " + elapsed + "ms into "
                         + result.length + " bytes");
+                Object diffStateBefore = getConnectorTracker().getDiffState(
+                        UISerialization.this);
+                UISerialization app = (UISerialization) deserialize(result);
+                log.log("Deserialized UI in " + elapsed + "ms");
+                Object diffStateAfter = getConnectorTracker().getDiffState(
+                        UISerialization.this);
+                if (diffStateBefore.equals(diffStateAfter)) {
+                    log.log("Diff states match, size: "
+                            + diffStateBefore.toString().length());
+                } else {
+                    log.log("Diff states do not match");
+                }
 
             }
         }));
@@ -109,6 +123,17 @@ public class UISerialization extends AbstractTestUI {
             return os.toByteArray();
         } catch (IOException e) {
             throw new RuntimeException("Serialization failed", e);
+        }
+    }
+
+    protected Object deserialize(byte[] result) {
+        ByteArrayInputStream is = new ByteArrayInputStream(result);
+        ObjectInputStream ois;
+        try {
+            ois = new ObjectInputStream(is);
+            return ois.readObject();
+        } catch (Exception e) {
+            throw new RuntimeException("Deserialization failed", e);
         }
     }
 

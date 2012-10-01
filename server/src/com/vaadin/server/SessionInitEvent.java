@@ -19,8 +19,8 @@ package com.vaadin.server;
 import java.util.EventObject;
 
 /**
- * Event gets fired when a new Vaadin session is initialized for a Vaadin
- * service.
+ * Event gets fired when a new Vaadin service session is initialized for a
+ * Vaadin service.
  * <p>
  * Because of the way different service instances share the same session, the
  * event is not necessarily fired immediately when the session is created but
@@ -34,7 +34,7 @@ import java.util.EventObject;
  */
 public class SessionInitEvent extends EventObject {
 
-    private final VaadinSession session;
+    private final VaadinServiceSession session;
     private final VaadinRequest request;
 
     /**
@@ -43,12 +43,12 @@ public class SessionInitEvent extends EventObject {
      * @param service
      *            the Vaadin service from which the event originates
      * @param session
-     *            the Vaadin session that has been initialized
+     *            the Vaadin service session that has been initialized
      * @param request
      *            the request that triggered the initialization
      */
-    public SessionInitEvent(VaadinService service, VaadinSession session,
-            VaadinRequest request) {
+    public SessionInitEvent(VaadinService service,
+            VaadinServiceSession session, VaadinRequest request) {
         super(service);
         this.session = session;
         this.request = request;
@@ -69,11 +69,11 @@ public class SessionInitEvent extends EventObject {
     }
 
     /**
-     * Gets the Vaadin session that has been initialized.
+     * Gets the Vaadin service session that has been initialized.
      * 
-     * @return the Vaadin session
+     * @return the Vaadin service session
      */
-    public VaadinSession getSession() {
+    public VaadinServiceSession getSession() {
         return session;
     }
 

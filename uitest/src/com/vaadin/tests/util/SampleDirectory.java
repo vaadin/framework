@@ -20,7 +20,7 @@ import java.io.File;
 
 import com.vaadin.server.SystemError;
 import com.vaadin.server.VaadinService;
-import com.vaadin.server.VaadinSession;
+import com.vaadin.server.VaadinServiceSession;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
@@ -42,7 +42,7 @@ public class SampleDirectory {
      * @param application
      * @return file pointing to sample directory
      */
-    public static File getDirectory(VaadinSession application, UI uI) {
+    public static File getDirectory(VaadinServiceSession application, UI uI) {
         String errorMessage = "Access to application "
                 + "context base directory failed, "
                 + "possible security constraint with Application "

@@ -9,9 +9,9 @@ import javax.imageio.ImageIO;
 
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.RequestHandler;
-import com.vaadin.server.VaadinSession;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
+import com.vaadin.server.VaadinServiceSession;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Embedded;
 
@@ -56,9 +56,8 @@ class DynamicImageRequestHandler implements RequestHandler {
     public static final String IMAGE_URL = "myimage.png";
 
     @Override
-    public boolean handleRequest(VaadinSession session,
-            VaadinRequest request, VaadinResponse response)
-            throws IOException {
+    public boolean handleRequest(VaadinServiceSession session,
+            VaadinRequest request, VaadinResponse response) throws IOException {
         String pathInfo = request.getRequestPathInfo();
         if (("/" + IMAGE_URL).equals(pathInfo)) {
             // Create an image, draw the "text" parameter to it and output it to

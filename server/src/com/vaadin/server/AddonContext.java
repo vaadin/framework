@@ -54,17 +54,15 @@ public class AddonContext implements Serializable {
      */
     public AddonContext(VaadinService vaadinService) {
         this.vaadinService = vaadinService;
-        vaadinService
-                .addSessionInitListener(new SessionInitListener() {
-                    @Override
-                    public void sessionInit(
-                            SessionInitEvent event)
-                            throws ServiceException {
-                        for (BootstrapListener l : bootstrapListeners) {
-                            event.getSession().addBootstrapListener(l);
-                        }
-                    }
-                });
+        vaadinService.addSessionInitListener(new SessionInitListener() {
+            @Override
+            public void sessionInit(SessionInitEvent event)
+                    throws ServiceException {
+                for (BootstrapListener l : bootstrapListeners) {
+                    event.getSession().addBootstrapListener(l);
+                }
+            }
+        });
         vaadinService.setAddonContext(this);
     }
 
@@ -111,9 +109,9 @@ public class AddonContext implements Serializable {
 
     /**
      * Shorthand for adding a bootstrap listener that will be added to every new
-     * Vaadin session.
+     * service session.
      * 
-     * @see VaadinSession#addBootstrapListener(BootstrapListener)
+     * @see VaadinServiceSession#addBootstrapListener(BootstrapListener)
      * 
      * @param listener
      *            the bootstrap listener that should be added to all new

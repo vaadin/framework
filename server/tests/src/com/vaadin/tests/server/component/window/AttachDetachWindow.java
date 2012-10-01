@@ -6,8 +6,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.vaadin.server.ClientConnector;
-import com.vaadin.server.VaadinSession;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinServiceSession;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -15,7 +15,7 @@ import com.vaadin.ui.Window;
 
 public class AttachDetachWindow {
 
-    private VaadinSession testApp = new VaadinSession();
+    private VaadinServiceSession testApp = new VaadinServiceSession(null);
 
     private interface TestContainer {
         public boolean attachCalled();
@@ -24,7 +24,7 @@ public class AttachDetachWindow {
 
         public TestContent getTestContent();
 
-        public VaadinSession getSession();
+        public VaadinServiceSession getSession();
     }
 
     private class TestWindow extends Window implements TestContainer {
@@ -64,7 +64,7 @@ public class AttachDetachWindow {
         }
 
         @Override
-        public VaadinSession getSession() {
+        public VaadinServiceSession getSession() {
             return super.getSession();
         }
     }
@@ -243,7 +243,7 @@ public class AttachDetachWindow {
                 getSession(win.getTestContent().child), null);
     }
 
-    private VaadinSession getSession(ClientConnector testContainer) {
+    private VaadinServiceSession getSession(ClientConnector testContainer) {
         UI ui = testContainer.getUI();
         if (ui != null) {
             return ui.getSession();

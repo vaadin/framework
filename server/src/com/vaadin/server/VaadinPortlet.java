@@ -362,8 +362,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             VaadinPortletResponse vaadinResponse = new VaadinPortletResponse(
                     response, getService());
 
-            getService().setCurrentInstances(vaadinRequest,
-                    vaadinResponse);
+            getService().setCurrentInstances(vaadinRequest, vaadinResponse);
 
             RequestType requestType = getRequestType(vaadinRequest);
 
@@ -387,7 +386,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                         (ResourceResponse) response);
             } else {
                 VaadinPortletSession vaadinSession = null;
-                boolean sessionProcessed = false;
 
                 try {
                     // TODO What about PARAM_UNLOADBURST &
@@ -415,8 +413,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                     /* Update browser information from request */
                     vaadinSession.getBrowser().updateRequestDetails(
                             vaadinRequest);
-
-                    sessionProcessed = true;
 
                     /* Notify listeners */
 
@@ -480,12 +476,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                     handleServiceException(vaadinRequest, vaadinResponse,
                             vaadinSession, e);
                 } finally {
-
-                    if (sessionProcessed) {
-                        vaadinSession.cleanupInactiveUIs();
-                    }
-
                     if (vaadinSession != null) {
+                        vaadinSession.cleanupInactiveUIs();
                         requestTimer.stop(vaadinSession);
                     }
                 }
@@ -543,7 +535,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
      */
     private void handleOtherRequest(VaadinPortletRequest request,
             VaadinResponse response, RequestType requestType,
-            VaadinSession vaadinSession,
+            VaadinServiceSession vaadinSession,
             PortletCommunicationManager communicationManager)
             throws PortletException, IOException, MalformedURLException {
         if (requestType == RequestType.APP || requestType == RequestType.RENDER) {
@@ -628,7 +620,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
     }
 
     private void handleServiceException(VaadinPortletRequest request,
-            VaadinPortletResponse response, VaadinSession vaadinSession,
+            VaadinPortletResponse response, VaadinServiceSession vaadinSession,
             Throwable e) throws IOException, PortletException {
         // TODO Check that this error handler is working when running inside a
         // portlet

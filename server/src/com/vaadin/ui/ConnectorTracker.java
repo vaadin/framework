@@ -15,6 +15,7 @@
  */
 package com.vaadin.ui;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,6 +25,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractCommunicationManager;
@@ -59,7 +63,7 @@ public class ConnectorTracker implements Serializable {
     private boolean writingResponse = false;
 
     private UI uI;
-    private transient Map<ClientConnector, Object> diffStates = new HashMap<ClientConnector, Object>();
+    private transient Map<ClientConnector, JSONObject> diffStates = new HashMap<ClientConnector, JSONObject>();
 
     /**
      * Gets a logger for this class
@@ -409,11 +413,11 @@ public class ConnectorTracker implements Serializable {
         return dirtyConnectors;
     }
 
-    public Object getDiffState(ClientConnector connector) {
+    public JSONObject getDiffState(ClientConnector connector) {
         return diffStates.get(connector);
     }
 
-    public void setDiffState(ClientConnector connector, Object diffState) {
+    public void setDiffState(ClientConnector connector, JSONObject diffState) {
         diffStates.put(connector, diffState);
     }
 
@@ -456,5 +460,40 @@ public class ConnectorTracker implements Serializable {
                     "The old value is same as the new value");
         }
         this.writingResponse = writingResponse;
+    }
+
+    /* Special serialization to JSONObjects which are not serializable */
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        // Convert JSONObjects in diff state to String representation as
+        // JSONObject is not serializable
+        HashMap<ClientConnector, String> stringDiffStates = new HashMap<ClientConnector, String>(
+                diffStates.size());
+        for (ClientConnector key : diffStates.keySet()) {
+            stringDiffStates.put(key, diffStates.get(key).toString());
+        }
+        out.writeObject(stringDiffStates);
+    };
+
+    /* Special serialization to JSONObjects which are not serializable */
+    private void readObject(java.io.ObjectInputStream in) throws IOException,
+            ClassNotFoundException {
+        in.defaultReadObject();
+
+        // Read String versions of JSONObjects and parse into JSONObjects as
+        // JSONObject is not serializable
+        diffStates = new HashMap<ClientConnector, JSONObject>();
+        @SuppressWarnings("unchecked")
+        HashMap<ClientConnector, String> stringDiffStates = (HashMap<ClientConnector, String>) in
+                .readObject();
+        diffStates = new HashMap<ClientConnector, JSONObject>();
+        for (ClientConnector key : stringDiffStates.keySet()) {
+            try {
+                diffStates.put(key, new JSONObject(stringDiffStates.get(key)));
+            } catch (JSONException e) {
+                throw new IOException(e);
+            }
+        }
+
     }
 }
