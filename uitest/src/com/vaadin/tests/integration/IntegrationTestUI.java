@@ -1,0 +1,42 @@
+package com.vaadin.tests.integration;
+
+import com.vaadin.data.Item;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
+import com.vaadin.server.ClassResource;
+import com.vaadin.server.Resource;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.UI;
+
+public class IntegrationTestUI extends UI {
+    @Override
+    protected void init(VaadinRequest request) {
+        final Table table = new Table();
+        table.addContainerProperty("icon", Resource.class, null);
+        table.setItemIconPropertyId("icon");
+        table.addContainerProperty("country", String.class, null);
+        table.setRowHeaderMode(Table.RowHeaderMode.ICON_ONLY);
+        table.setImmediate(true);
+        table.setSelectable(true);
+        table.setVisibleColumns(new Object[] { "country" });
+        addComponent(table);
+
+        Item item = table.addItem("FI");
+        item.getItemProperty("icon").setValue(new ClassResource("fi.gif"));
+        item.getItemProperty("country").setValue("Finland");
+        item = table.addItem("SE");
+        item.getItemProperty("icon").setValue(new FlagSeResource());
+        item.getItemProperty("country").setValue("Sweden");
+
+        final Label selectedLabel = new Label();
+        table.addValueChangeListener(new ValueChangeListener() {
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                selectedLabel.setValue(table.getValue().toString());
+            }
+        });
+        addComponent(selectedLabel);
+    }
+}

@@ -18,7 +18,7 @@
 	<context-param>
 		<param-name>resourceCacheTime</param-name>
 		<param-value>3600</param-value>
-	</context-param>	
+	</context-param>
 	<servlet>
 		<servlet-name>Embed App 1</servlet-name>
 		<servlet-class>com.vaadin.server.LegacyVaadinServlet</servlet-class>
@@ -58,8 +58,8 @@
 		<servlet-name>IntegrationTest</servlet-name>
 		<servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
 		<init-param>
-			<param-name>application</param-name>
-			<param-value>com.vaadin.tests.integration.IntegrationTestApplication</param-value>
+			<param-name>UI</param-name>
+			<param-value>com.vaadin.tests.integration.IntegrationTestUI</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
@@ -71,12 +71,12 @@
 		<servlet-name>Embed App 2</servlet-name>
 		<url-pattern>/embed2/*</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet-mapping>
 		<servlet-name>UI provider app</servlet-name>
 		<url-pattern>/uiprovider/*</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet-mapping>
 		<servlet-name>VaadinApplicationRunner</servlet-name>
 		<url-pattern>/run/*</url-pattern>
