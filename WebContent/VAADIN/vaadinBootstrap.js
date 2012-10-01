@@ -100,7 +100,7 @@
 						url += '/';
 					}
 				}
-				url += ((/\?/).test(url) ? "&" : "?") + "browserDetails";
+				url += ((/\?/).test(url) ? "&" : "?") + "browserDetails=1";
 				var rootId = getConfig("rootId");
 				if (rootId !== undefined) {
 					url += "&rootId=" + rootId;
