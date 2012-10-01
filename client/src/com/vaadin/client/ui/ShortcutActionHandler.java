@@ -35,6 +35,7 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.richtextarea.VRichTextArea;
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.ui.ShortCutConstants;
 
 /**
  * A helper class to implement keyboard shorcut handling. Keeps a list of owners
@@ -44,15 +45,6 @@ import com.vaadin.shared.Connector;
  * @author Vaadin Ltd
  */
 public class ShortcutActionHandler {
-
-    public static final String ACTION_TARGET_ATTRIBUTE = "sat";
-    public static final String ACTION_TARGET_ACTION_ATTRIBUTE = "sata";
-    public static final String ACTION_CAPTION_ATTRIBUTE = "caption";
-    public static final String ACTION_KEY_ATTRIBUTE = "key";
-    public static final String ACTION_SHORTCUT_KEY_ATTRIBUTE = "kc";
-    public static final String ACTION_MODIFIER_KEYS_ATTRIBUTE = "mk";
-    public static final String ACTION_TARGET_VARIABLE = "actiontarget";
-    public static final String ACTION_TARGET_ACTION_VARIABLE = "action";
 
     /**
      * An interface implemented by those users of this helper class that want to
@@ -119,21 +111,23 @@ public class ShortcutActionHandler {
             final UIDL action = (UIDL) it.next();
 
             int[] modifiers = null;
-            if (action.hasAttribute(ACTION_MODIFIER_KEYS_ATTRIBUTE)) {
+            if (action
+                    .hasAttribute(ShortCutConstants.ACTION_MODIFIER_KEYS_ATTRIBUTE)) {
                 modifiers = action
-                        .getIntArrayAttribute(ACTION_MODIFIER_KEYS_ATTRIBUTE);
+                        .getIntArrayAttribute(ShortCutConstants.ACTION_MODIFIER_KEYS_ATTRIBUTE);
             }
 
             final ShortcutKeyCombination kc = new ShortcutKeyCombination(
-                    action.getIntAttribute(ACTION_SHORTCUT_KEY_ATTRIBUTE),
+                    action.getIntAttribute(ShortCutConstants.ACTION_SHORTCUT_KEY_ATTRIBUTE),
                     modifiers);
-            final String key = action.getStringAttribute(ACTION_KEY_ATTRIBUTE);
+            final String key = action
+                    .getStringAttribute(ShortCutConstants.ACTION_KEY_ATTRIBUTE);
             final String caption = action
-                    .getStringAttribute(ACTION_CAPTION_ATTRIBUTE);
+                    .getStringAttribute(ShortCutConstants.ACTION_CAPTION_ATTRIBUTE);
             final String targetPID = action
-                    .getStringAttribute(ACTION_TARGET_ATTRIBUTE);
+                    .getStringAttribute(ShortCutConstants.ACTION_TARGET_ATTRIBUTE);
             final String targetAction = action
-                    .getStringAttribute(ACTION_TARGET_ACTION_ATTRIBUTE);
+                    .getStringAttribute(ShortCutConstants.ACTION_TARGET_ACTION_ATTRIBUTE);
             actions.add(new ShortcutAction(key, kc, caption, targetPID,
                     targetAction));
         }
@@ -201,10 +195,12 @@ public class ShortcutActionHandler {
                 if (!handledClientSide) {
                     if (finalTarget != null) {
                         client.updateVariable(paintableId,
-                                ACTION_TARGET_VARIABLE, finalTarget, false);
+                                ShortCutConstants.ACTION_TARGET_VARIABLE,
+                                finalTarget, false);
                     }
                     client.updateVariable(paintableId,
-                            ACTION_TARGET_ACTION_VARIABLE, a.getKey(), true);
+                            ShortCutConstants.ACTION_TARGET_ACTION_VARIABLE,
+                            a.getKey(), true);
                 }
             }
         });
