@@ -23,6 +23,7 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.datefield.VCalendarPanel.FocusChangeListener;
 import com.vaadin.client.ui.datefield.VCalendarPanel.TimeChangeListener;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.datefield.InlineDateFieldState;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.InlineDateField;
 
@@ -110,5 +111,10 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
     @Override
     public VDateFieldCalendar getWidget() {
         return (VDateFieldCalendar) super.getWidget();
+    }
+
+    @Override
+    public InlineDateFieldState getState() {
+        return (InlineDateFieldState) super.getState();
     }
 }

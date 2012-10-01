@@ -18,5 +18,7 @@ package com.vaadin.shared.ui.video;
 import com.vaadin.shared.ui.AbstractMediaState;
 
 public class VideoState extends AbstractMediaState {
-
+    {
+        primaryStyleName = "v-video";
+    }
 }

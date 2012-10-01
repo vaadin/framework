@@ -19,6 +19,9 @@ import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldState;
 
 public class TextAreaState extends AbstractTextFieldState {
+    {
+        primaryStyleName = "v-textarea";
+    }
 
     /**
      * Number of visible rows in the text area. The default is 5.

@@ -39,6 +39,7 @@ import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.embedded.EmbeddedConstants;
 import com.vaadin.shared.ui.embedded.EmbeddedServerRpc;
+import com.vaadin.shared.ui.embedded.EmbeddedState;
 import com.vaadin.ui.Embedded;
 
 @Connect(Embedded.class)
@@ -219,6 +220,11 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
     @Override
     public VEmbedded getWidget() {
         return (VEmbedded) super.getWidget();
+    }
+
+    @Override
+    public EmbeddedState getState() {
+        return (EmbeddedState) super.getState();
     }
 
     protected final ClickEventHandler clickEventHandler = new ClickEventHandler(

@@ -3,6 +3,9 @@ package com.vaadin.shared.ui.slider;
 import com.vaadin.shared.AbstractFieldState;
 
 public class SliderState extends AbstractFieldState {
+    {
+        primaryStyleName = "v-slider";
+    }
 
     public double value;
 

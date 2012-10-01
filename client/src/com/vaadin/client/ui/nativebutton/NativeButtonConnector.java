@@ -29,7 +29,7 @@ import com.vaadin.client.ui.Icon;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.button.ButtonServerRpc;
-import com.vaadin.shared.ui.button.ButtonState;
+import com.vaadin.shared.ui.button.NativeButtonState;
 import com.vaadin.ui.NativeButton;
 
 @Connect(NativeButton.class)
@@ -115,8 +115,8 @@ public class NativeButtonConnector extends AbstractComponentConnector implements
     }
 
     @Override
-    public ButtonState getState() {
-        return (ButtonState) super.getState();
+    public NativeButtonState getState() {
+        return (NativeButtonState) super.getState();
     }
 
     @Override

@@ -28,6 +28,9 @@ import com.vaadin.shared.ui.TabIndexState;
  * @since 7.0
  */
 public class ButtonState extends TabIndexState {
+    {
+        primaryStyleName = "v-button";
+    }
     public boolean disableOnClick = false;
     public int clickShortcutKeyCode = 0;
     /**

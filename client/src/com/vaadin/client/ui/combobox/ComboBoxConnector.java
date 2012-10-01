@@ -27,6 +27,7 @@ import com.vaadin.client.ui.combobox.VFilterSelect.FilterSelectSuggestion;
 import com.vaadin.client.ui.menubar.MenuItem;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.combobox.ComboBoxConstants;
+import com.vaadin.shared.ui.combobox.ComboBoxState;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.ComboBox;
 
@@ -243,6 +244,11 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
     @Override
     public VFilterSelect getWidget() {
         return (VFilterSelect) super.getWidget();
+    }
+
+    @Override
+    public ComboBoxState getState() {
+        return (ComboBoxState) super.getState();
     }
 
     @Override

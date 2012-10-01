@@ -26,6 +26,7 @@ import com.vaadin.client.UIDL;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.optiongroup.OptionGroupConstants;
+import com.vaadin.shared.ui.optiongroup.OptionGroupState;
 import com.vaadin.ui.OptionGroup;
 
 @Connect(OptionGroup.class)
@@ -76,5 +77,10 @@ public class OptionGroupConnector extends OptionGroupBaseConnector {
     @Override
     public VOptionGroup getWidget() {
         return (VOptionGroup) super.getWidget();
+    }
+
+    @Override
+    public OptionGroupState getState() {
+        return (OptionGroupState) super.getState();
     }
 }

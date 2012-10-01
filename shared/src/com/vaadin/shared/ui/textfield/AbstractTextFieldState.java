@@ -18,6 +18,10 @@ package com.vaadin.shared.ui.textfield;
 import com.vaadin.shared.AbstractFieldState;
 
 public class AbstractTextFieldState extends AbstractFieldState {
+    {
+        primaryStyleName = "v-textfield";
+    }
+
     /**
      * Maximum character count in text field.
      */

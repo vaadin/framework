@@ -21,6 +21,10 @@ import java.util.Map;
 import com.vaadin.shared.ui.AbstractLayoutState;
 
 public class AbsoluteLayoutState extends AbstractLayoutState {
+    {
+        primaryStyleName = "v-absolutelayout";
+    }
+
     // Maps each component to a position
     public Map<String, String> connectorToCssPosition = new HashMap<String, String>();
 }

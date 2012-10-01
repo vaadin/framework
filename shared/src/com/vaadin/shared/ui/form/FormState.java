@@ -19,6 +19,9 @@ import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.Connector;
 
 public class FormState extends AbstractFieldState {
+    {
+        primaryStyleName = "v-form";
+    }
     public Connector layout;
     public Connector footer;
 }
