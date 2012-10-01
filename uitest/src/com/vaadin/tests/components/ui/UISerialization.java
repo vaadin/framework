@@ -24,14 +24,11 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.tests.VaadinClasses;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Log;
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Component;
 
 public class UISerialization extends AbstractTestUI {
 
@@ -40,28 +37,6 @@ public class UISerialization extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         addComponent(log);
-        for (Class<? extends Component> cls : VaadinClasses.getComponents()) {
-            try {
-                AbstractComponent c = (AbstractComponent) cls.newInstance();
-                if (c instanceof LegacyWindow) {
-                    continue;
-                }
-                if (!(c instanceof Button)) {
-                    continue;
-                }
-
-                c.setId(cls.getName());
-                c.setCaption(cls.getName());
-                c.setDescription(cls.getName());
-                c.setWidth("100px");
-                c.setHeight("100px");
-                addComponent(c);
-                System.out.println("Added " + cls.getName());
-            } catch (Exception e) {
-                System.err.println("Could not instatiate " + cls.getName());
-            }
-        }
-
         addComponent(new Button("Serialize UI", new ClickListener() {
 
             @Override
@@ -86,27 +61,6 @@ public class UISerialization extends AbstractTestUI {
 
             }
         }));
-        addComponent(new Button(
-                "Instantiate and serialize server classes with no-arg constructors",
-                new ClickListener() {
-
-                    @Override
-                    public void buttonClick(ClickEvent event) {
-                        for (Class<?> cls : VaadinClasses
-                                .getAllServerSideClasses()) {
-                            try {
-                                serializeInstance(cls);
-                            } catch (InstantiationException e) {
-                                // No no-arg constructor probably, ignore
-                            } catch (Throwable t) {
-                                log.log("Failed to create and serialize instance of "
-                                        + cls.getName());
-                            }
-                        }
-                        log.log("Serialization done");
-
-                    }
-                }));
     }
 
     protected void serializeInstance(Class<?> cls)
