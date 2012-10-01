@@ -10,7 +10,7 @@
 	<!-- global properties -->
 	<property name="module.name" value="vaadin-all" />
 	<property name="result.dir" value="result" />
-	<property name="javadoc.jar" location="${result.dir}/vaadin-all-${vaadin.version}-javadoc.jar" />
+	<property name="javadoc.jar" location="${result.dir}/lib/vaadin-all-${vaadin.version}-javadoc.jar" />
 	<property name="temp.dir" location="${result.dir}/temp" />
 	<property name="temp.deps.dir" value="${temp.dir}/lib" />
 	<property name="javadoc.temp.dir" location="${result.dir}/javadoc-temp" />
@@ -75,7 +75,7 @@
 
 
 	</target>
-	<target name="zip" depends="copy-jars">
+	<target name="zip" depends="copy-jars, javadoc">
 		<zip destfile="${zip.file}">
 			<fileset dir="${temp.dir}">
 				<!-- Avoid conflicts with servlet and portlet API. They are provided by the container -->
