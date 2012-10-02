@@ -82,6 +82,8 @@ public class JsonPaintTarget implements PaintTarget {
 
     private Collection<Paintable> identifiersCreatedDueRefPaint;
 
+    private Collection<Paintable> dirtyPaintables;
+
     private final Collection<Class<? extends Paintable>> usedPaintableTypes = new LinkedList<Class<? extends Paintable>>();
 
     /**
@@ -99,7 +101,7 @@ public class JsonPaintTarget implements PaintTarget {
      */
     public JsonPaintTarget(AbstractCommunicationManager manager,
             PrintWriter outWriter, boolean cachingRequired)
-            throws PaintException {
+                    throws PaintException {
 
         this.manager = manager;
 
@@ -710,6 +712,35 @@ public class JsonPaintTarget implements PaintTarget {
             identifiersCreatedDueRefPaint.add(paintable);
         }
         return manager.getPaintableId(paintable);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.terminal.PaintTarget#isMarkedDirty(com.vaadin.terminal.Paintable
+     * )
+     */
+    public boolean isMarkedDirty(Paintable paintable) {
+        return dirtyPaintables != null && dirtyPaintables.contains(paintable);
+    }
+
+    /**
+     * Mark a paintable as dirty which means it will be painted regardless if it
+     * otherwise would be cached.
+     * 
+     * @param paintable
+     *            The paintable to mark as dirty. Note that the paintable must
+     *            have been painted, <code>getPaintableId</code> has been
+     *            called, before this is called.
+     */
+    public void markAsDirty(Paintable paintable) {
+        if (manager.hasPaintableId(paintable)) {
+            if (dirtyPaintables == null) {
+                dirtyPaintables = new LinkedList<Paintable>();
+            }
+            dirtyPaintables.add(paintable);
+        }
     }
 
     /*

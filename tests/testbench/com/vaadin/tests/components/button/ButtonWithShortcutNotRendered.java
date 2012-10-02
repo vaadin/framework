@@ -145,7 +145,9 @@ public class ButtonWithShortcutNotRendered extends Application {
 
         public void buttonClick(ClickEvent event) {
             // TODO Auto-generated method stub
-
+            if (event.getButton() == defaultButton) {
+                getWindow().showNotification("Default button clicked");
+            }
         }
 
     }
