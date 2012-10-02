@@ -65,7 +65,21 @@ public class BlockNode extends Node implements IVariableNode {
 
     @Override
     public void replaceVariables(ArrayList<VariableNode> variables) {
+        if (selectorList == null || selectorList.isEmpty()) {
+            return;
+        }
 
+        for (final VariableNode var : variables) {
+            for (final String selector : new ArrayList<String>(selectorList)) {
+                String interpolation = "#{$" + var.getName() + "}";
+                if (selector.contains(interpolation)) {
+                    String replace = selector.replace(interpolation, var
+                            .getExpr().toString());
+                    selectorList.add(selectorList.indexOf(selector), replace);
+                    selectorList.remove(selector);
+                }
+            }
+        }
     }
 
     public String getSelectors() {
