@@ -1,10 +1,12 @@
 package com.vaadin.buildhelpers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 import java.util.jar.Attributes;
 import java.util.jar.Attributes.Name;
@@ -24,13 +26,12 @@ import java.util.jar.Manifest;
  * @author magi
  */
 public class GeneratePackageExports {
-    public static final String VAADIN_PACKAGE_PATH_PREFIX = "com/vaadin/";
-    public static final String GOOGLE_PACKAGE_PATH_PREFIX = "com/google/";
 
     public static void main(String[] args) {
-        if (args.length < 1) {
-            System.err.println("Invalid number of parameters\n"
-                    + "Usage: java -cp .. GenerateManifest <package.jar>");
+        if (args.length < 2) {
+            System.err
+                    .println("Invalid number of parameters\n"
+                            + "Usage: java -cp .. GenerateManifest <package.jar> <accepted package prefixes>");
             System.exit(1);
         }
 
@@ -44,18 +45,35 @@ public class GeneratePackageExports {
             System.exit(1);
         }
 
+        // Accepted packages
+        List<String> acceptedPackagePrefixes = new ArrayList<String>();
+        for (int i = 1; i < args.length; i++) {
+            acceptedPackagePrefixes.add(args[i]);
+        }
+
         // List the included Java packages
         HashSet<String> packages = new HashSet<String>();
         for (Enumeration<JarEntry> it = jar.entries(); it.hasMoreElements();) {
             JarEntry entry = it.nextElement();
-            if ((entry.getName().startsWith(VAADIN_PACKAGE_PATH_PREFIX) || entry
-                    .getName().startsWith(GOOGLE_PACKAGE_PATH_PREFIX))
-                    && entry.getName().endsWith(".class")) {
-                int lastSlash = entry.getName().lastIndexOf('/');
-                String pkg = entry.getName().substring(0, lastSlash)
-                        .replace('/', '.');
-                packages.add(pkg);
+            if (!entry.getName().endsWith(".class")) {
+                continue;
             }
+
+            boolean accept = false;
+            for (String prefix : acceptedPackagePrefixes) {
+                if (entry.getName().startsWith(prefix)) {
+                    accept = true;
+                    break;
+                }
+            }
+            if (!accept) {
+                continue;
+            }
+
+            int lastSlash = entry.getName().lastIndexOf('/');
+            String pkg = entry.getName().substring(0, lastSlash)
+                    .replace('/', '.');
+            packages.add(pkg);
         }
 
         // List theme packages
@@ -148,5 +166,4 @@ public class GeneratePackageExports {
             System.exit(status);
         }
     }
-
 }
