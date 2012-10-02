@@ -555,6 +555,15 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     @Override
     public void setStyleName(String style) {
+        updateStyleNames(style, false);
+    }
+
+    @Override
+    public void setStylePrimaryName(String style) {
+        updateStyleNames(style, true);
+    }
+
+    private void updateStyleNames(String newStyle, boolean isPrimary) {
         scrollBodyPanel
                 .removeStyleName(getStylePrimaryName() + "-body-wrapper");
         scrollBodyPanel.removeStyleName(getStylePrimaryName() + "-body");
@@ -564,7 +573,11 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     + "-body-noselection");
         }
 
-        super.setStyleName(style);
+        if (isPrimary) {
+            super.setStylePrimaryName(newStyle);
+        } else {
+            super.setStyleName(newStyle);
+        }
 
         scrollBodyPanel.addStyleName(getStylePrimaryName() + "-body-wrapper");
         scrollBodyPanel.addStyleName(getStylePrimaryName() + "-body");
@@ -576,7 +589,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             scrollBody.updateStyleNames(getStylePrimaryName());
         }
     }
-
 
     public void init(ApplicationConnection client) {
         this.client = client;
