@@ -68,22 +68,37 @@ public class LargeContainer extends AbstractContainer implements
     }
 
     public Object firstItemId() {
+        if (0 == size()) {
+            return null;
+        }
         return 0;
     }
 
     public Object lastItemId() {
+        if (0 == size()) {
+            return null;
+        }
         return (size() - 1);
     }
 
     public boolean isFirstId(Object itemId) {
-        return Integer.valueOf(0).equals(itemId);
+        if (null == itemId) {
+            return false;
+        }
+        return itemId.equals(firstItemId());
     }
 
     public boolean isLastId(Object itemId) {
-        return Integer.valueOf(size() - 1).equals(itemId);
+        if (null == itemId) {
+            return false;
+        }
+        return itemId.equals(lastItemId());
     }
 
     public TestItem getItem(Object itemId) {
+        if (!containsId(itemId)) {
+            return null;
+        }
         return new TestItem(itemId);
     }
 
@@ -112,7 +127,10 @@ public class LargeContainer extends AbstractContainer implements
     }
 
     public int indexOfId(Object itemId) {
-        return 0;
+        if (!containsId(itemId)) {
+            return -1;
+        }
+        return (Integer) itemId;
     }
 
     public Object getIdByIndex(int index) {
