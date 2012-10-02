@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -961,8 +962,21 @@ public class IndexedContainer extends
         @Deprecated
         @Override
         public String toString() {
-            throw new UnsupportedOperationException(
-                    "Use Property.getValue() instead of IndexedContainerProperty.toString()");
+            getLogger()
+                    .warning(
+                            "You are using IndexedContainerProperty.toString() instead of getValue() to get the value for a "
+                                    + getClass().getSimpleName()
+                                    + ". This will not be supported starting from Vaadin 7.1 "
+                                    + "(your debugger might call toString() and cause this message to appear).");
+            Object v = getValue();
+            if (v == null) {
+                return null;
+            }
+            return v.toString();
+        }
+
+        private Logger getLogger() {
+            return Logger.getLogger(IndexedContainerProperty.class.getName());
         }
 
         /**
