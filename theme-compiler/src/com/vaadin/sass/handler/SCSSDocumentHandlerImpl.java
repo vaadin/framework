@@ -214,12 +214,6 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
     }
 
     @Override
-    public MixinDefNode mixinDirective(String name, String args, String body) {
-        MixinDefNode node = new MixinDefNode(name, args, body);
-        return node;
-    }
-
-    @Override
     public void startNestedProperties(String name) {
         NestPropertiesNode node = new NestPropertiesNode(name);
         nodeStack.peek().appendChild(node);
