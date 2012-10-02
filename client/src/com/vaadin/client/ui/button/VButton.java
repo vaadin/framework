@@ -115,6 +115,13 @@ public class VButton extends FocusWidget implements ClickHandler {
         captionElement.setClassName(getStylePrimaryName() + "-caption");
     }
 
+    @Override
+    public void setStylePrimaryName(String style) {
+        super.setStylePrimaryName(style);
+        wrapper.setClassName(getStylePrimaryName() + "-wrap");
+        captionElement.setClassName(getStylePrimaryName() + "-caption");
+    }
+
     public void setText(String text) {
         captionElement.setInnerText(text);
     }
