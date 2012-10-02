@@ -39,4 +39,9 @@
 		<antcall target="common.tests.run" />
 	</target>
 
+	<target name="compile-theme-compiler-parser">
+		<javacc target="src/com/vaadin/sass/parser/Parser.jj" javacchome="/home/hellis/workspace/vaadin7/javacc-5.0/">
+		</javacc>
+	</target>
+	
 </project>

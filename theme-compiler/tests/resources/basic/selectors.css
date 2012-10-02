@@ -101,3 +101,7 @@ p::abc {
 p:first {
 	color: red;
 }
+
+.foo a[class^=icon-] {
+	color: red;
+}
