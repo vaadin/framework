@@ -720,8 +720,7 @@ public abstract class AbstractComponent implements Component, MethodEventSource 
      */
     public void paint(PaintTarget target) throws PaintException {
         final String tag = target.getTag(this);
-        if (!target.startTag(this, tag) || repaintRequestListenersNotified
-                || target.isMarkedDirty(this)) {
+        if (!target.startTag(this, tag) || repaintRequestListenersNotified) {
 
             // Paint the contents of the component
 

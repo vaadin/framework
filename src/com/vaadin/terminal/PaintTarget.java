@@ -480,19 +480,4 @@ public interface PaintTarget extends Serializable {
      *         browser window or such.
      */
     public boolean isFullRepaint();
-
-    /**
-     * Has a Paintable been marked as dirty and will be forced to be painted
-     * even if it otherwise would be cached.
-     * 
-     * <p>
-     * This is done for instance when resolving the PID before the actual
-     * Component is painted. ShortcutActions is a good example of this.
-     * </p>
-     * 
-     * @param paintable
-     *            The paintable to check for dirtyness
-     * @return Returns true if paintable is dirty
-     */
-    public boolean isMarkedDirty(Paintable paintable);
 }

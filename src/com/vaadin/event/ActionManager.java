@@ -12,8 +12,6 @@ import com.vaadin.terminal.KeyMapper;
 import com.vaadin.terminal.PaintException;
 import com.vaadin.terminal.PaintTarget;
 import com.vaadin.terminal.gwt.client.ui.ShortcutActionHandler;
-import com.vaadin.terminal.gwt.server.CommunicationManager;
-import com.vaadin.terminal.gwt.server.JsonPaintTarget;
 import com.vaadin.ui.Component;
 
 /**
@@ -186,24 +184,10 @@ public class ActionManager implements Action.Container, Action.Handler,
                                 ShortcutActionHandler.ACTION_MODIFIER_KEYS_ATTRIBUTE,
                                 smodifiers);
                     }
-                    if (sa.getTarget() != null
-                            && paintTarget instanceof JsonPaintTarget) {
-                        JsonPaintTarget target = (JsonPaintTarget) paintTarget;
-
-                        String pid = target.getPaintIdentifier(sa.getTarget());
-
-                        /*
-                         * We need to mark the paintable specifically as dirty
-                         * so it will not be rendered as cached since it might
-                         * have gotten its PID from the above invocation.
-                         */
-                        target.markAsDirty(sa.getTarget());
-
-                        paintTarget
-                        .addAttribute(
+                    if (sa.getTarget() != null) {
+                        paintTarget.addAttribute(
                                 ShortcutActionHandler.ACTION_TARGET_ATTRIBUTE,
-                                pid);
-
+                                sa.getTarget());
                         paintTarget
                         .addAttribute(
                                 ShortcutActionHandler.ACTION_TARGET_ACTION_ATTRIBUTE,

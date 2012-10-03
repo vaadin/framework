@@ -17,9 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import junit.framework.TestCase;
 
-import com.vaadin.terminal.gwt.server.AbstractApplicationServlet;
-import com.vaadin.terminal.gwt.server.ApplicationServlet;
-
 public class TestAbstractApplicationServletStaticFilesLocation extends TestCase {
 
     ApplicationServlet servlet;
@@ -54,7 +51,7 @@ public class TestAbstractApplicationServletStaticFilesLocation extends TestCase 
             return null;
         }
 
-        public Enumeration<Object> getInitParameterNames() {
+        public Enumeration getInitParameterNames() {
             return new Enumeration<Object>() {
 
                 public boolean hasMoreElements() {
@@ -141,12 +138,12 @@ public class TestAbstractApplicationServletStaticFilesLocation extends TestCase 
 
     private HttpServletRequest createIncludeRequest(String base,
             String realContextPath, String realServletPath, String pathInfo)
-            throws Exception {
+                    throws Exception {
         HttpServletRequest request = createRequest(base, "", "", pathInfo);
         expect(request.getAttribute("javax.servlet.include.context_path"))
-                .andReturn(realContextPath).anyTimes();
+        .andReturn(realContextPath).anyTimes();
         expect(request.getAttribute("javax.servlet.include.servlet_path"))
-                .andReturn(realServletPath).anyTimes();
+        .andReturn(realServletPath).anyTimes();
         expect(
                 request.getAttribute(AbstractApplicationServlet.REQUEST_VAADIN_STATIC_FILE_PATH))
                 .andReturn(null).anyTimes();
@@ -156,13 +153,13 @@ public class TestAbstractApplicationServletStaticFilesLocation extends TestCase 
 
     private HttpServletRequest createNonIncludeRequest(String base,
             String realContextPath, String realServletPath, String pathInfo)
-            throws Exception {
+                    throws Exception {
         HttpServletRequest request = createRequest(base, realContextPath,
                 realServletPath, pathInfo);
         expect(request.getAttribute("javax.servlet.include.context_path"))
-                .andReturn(null).anyTimes();
+        .andReturn(null).anyTimes();
         expect(request.getAttribute("javax.servlet.include.servlet_path"))
-                .andReturn(null).anyTimes();
+        .andReturn(null).anyTimes();
         expect(
                 request.getAttribute(ApplicationServlet.REQUEST_VAADIN_STATIC_FILE_PATH))
                 .andReturn(null).anyTimes();
