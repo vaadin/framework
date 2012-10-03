@@ -37,6 +37,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
+import com.vaadin.client.LayoutManager;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.ShortcutActionHandler;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
@@ -286,7 +287,12 @@ public class VUI extends SimplePanel implements ResizeHandler,
 
             sendClientResized();
 
-            connector.getLayoutManager().layoutNow();
+            LayoutManager layoutManager = connector.getLayoutManager();
+            if (layoutManager.isLayoutRunning()) {
+                layoutManager.layoutLater();
+            } else {
+                layoutManager.layoutNow();
+            }
         }
     }
 
