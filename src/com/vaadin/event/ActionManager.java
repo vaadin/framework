@@ -184,15 +184,6 @@ public class ActionManager implements Action.Container, Action.Handler,
                                 ShortcutActionHandler.ACTION_MODIFIER_KEYS_ATTRIBUTE,
                                 smodifiers);
                     }
-                    if (sa.getTarget() != null) {
-                        paintTarget.addAttribute(
-                                ShortcutActionHandler.ACTION_TARGET_ATTRIBUTE,
-                                sa.getTarget());
-                        paintTarget
-                        .addAttribute(
-                                ShortcutActionHandler.ACTION_TARGET_ACTION_ATTRIBUTE,
-                                sa.getTargetAction());
-                    }
                 }
                 paintTarget.endTag("action");
             }

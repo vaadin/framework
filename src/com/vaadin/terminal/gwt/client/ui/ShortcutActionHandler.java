@@ -120,12 +120,7 @@ public class ShortcutActionHandler {
             final String key = action.getStringAttribute(ACTION_KEY_ATTRIBUTE);
             final String caption = action
                     .getStringAttribute(ACTION_CAPTION_ATTRIBUTE);
-            final String targetPID = action
-                    .getStringAttribute(ACTION_TARGET_ATTRIBUTE);
-            final String targetAction = action
-                    .getStringAttribute(ACTION_TARGET_ACTION_ATTRIBUTE);
-            actions.add(new ShortcutAction(key, kc, caption, targetPID,
-                    targetAction));
+            actions.add(new ShortcutAction(key, kc, caption));
         }
     }
 
@@ -182,22 +177,13 @@ public class ShortcutActionHandler {
 
         Scheduler.get().scheduleDeferred(new Command() {
             public void execute() {
-                Paintable shortcutTarget = client.getPaintable(a.getTargetPID());
-                boolean handledClientSide = false;
-                if (shortcutTarget instanceof ShortcutActionTarget) {
-                    handledClientSide = ((ShortcutActionTarget) shortcutTarget)
-                            .handleAction(a);
-                }
-                if (!handledClientSide) {
-                    if (finalTarget != null) {
-                        client.updateVariable(paintableId,
-                                ACTION_TARGET_VARIABLE,
-                                finalTarget, false);
-                    }
+                if (finalTarget != null) {
                     client.updateVariable(paintableId,
-                            ACTION_TARGET_ACTION_VARIABLE, a.getKey(),
-                            true);
+                            ACTION_TARGET_VARIABLE,
+                            finalTarget, false);
                 }
+                client.updateVariable(paintableId,
+                        ACTION_TARGET_ACTION_VARIABLE, a.getKey(), true);
             }
         });
     }
@@ -312,8 +298,6 @@ class ShortcutAction {
     private final ShortcutKeyCombination sc;
     private final String caption;
     private final String key;
-    private String targetPID;
-    private String targetAction;
 
     /**
      * Constructor
@@ -327,35 +311,9 @@ class ShortcutAction {
      */
     public ShortcutAction(String key, ShortcutKeyCombination sc,
             String caption) {
-        this(key, sc, caption, null, null);
-    }
-
-    /**
-     * Constructor
-     * 
-     * @param key
-     *            The @link {@link KeyMapper} key of the action.
-     * @param sc
-     *            The key combination that triggers the action
-     * @param caption
-     *            The caption of the action
-     * @param targetPID
-     *            The pid of the component the action is targeting. We use the
-     *            pid, instead of the actual Paintable here, so we can delay the
-     *            fetching of the Paintable in cases where the Paintable does
-     *            not yet exist when the action is painted.
-     * @param targetAction
-     *            The target string of the action. The target string is given to
-     *            the targeted Paintable if the paintable implements the
-     *            {@link ShortcutActionTarget} interface.
-     */
-    public ShortcutAction(String key, ShortcutKeyCombination sc,
-            String caption, String targetPID, String targetAction) {
         this.sc = sc;
         this.key = key;
         this.caption = caption;
-        this.targetPID = targetPID;
-        this.targetAction = targetAction;
     }
 
     /**
@@ -377,21 +335,5 @@ class ShortcutAction {
      */
     public String getKey() {
         return key;
-    }
-
-    /**
-     * Get the pid of the target of the action. Use
-     * {@link ApplicationConnection#getPaintable(String)} to get the actual
-     * Paintable
-     */
-    public String getTargetPID() {
-        return targetPID;
-    }
-
-    /**
-     * Get the target string of the action
-     */
-    public String getTargetAction() {
-        return targetAction;
     }
 }
