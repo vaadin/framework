@@ -37,7 +37,7 @@ import com.vaadin.ui.themes.BaseTheme;
 @SuppressWarnings("serial")
 @ClientWidget(value = VButton.class, loadStyle = LoadStyle.EAGER)
 public class Button extends AbstractField implements FieldEvents.BlurNotifier,
-        FieldEvents.FocusNotifier {
+FieldEvents.FocusNotifier {
 
     /* Private members */
 
@@ -694,6 +694,10 @@ public class Button extends AbstractField implements FieldEvents.BlurNotifier,
      * <p>
      * Note that this is only used when the click comes from the user, not when
      * calling {@link #click()}.
+     * </p>
+     * <p>
+     * Also note that click shortcuts are not supported with this feature in
+     * Vaadin 6.x.
      * </p>
      * 
      * @param disableOnClick
