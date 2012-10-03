@@ -48,6 +48,9 @@ body input.v-filterselect-input[type=text] {
 .v-filterselect-suggestpopup {
 	margin-top: .4em;
 	}
+.v-filterselect-suggestmenu tr {
+    line-height:1.4em;
+}	
 
 body .v-filterselect-suggestpopup-small td {
 	font-size: .85em;
