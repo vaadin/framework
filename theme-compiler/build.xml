@@ -12,8 +12,6 @@
 	<property name="module.name" value="vaadin-theme-compiler" />
 	<property name="result.dir" value="result" />
 	<path id="classpath.compile.custom">
-		<!-- This is only temporary until there is a packaged modified flute jar -->
-		<pathelement path="${gwt.user.jar.files}" />
 	</path>
 	<path id="classpath.tests.custom" />
 
@@ -21,7 +19,7 @@
 
 	<target name="jar">
 		<antcall target="common.jar">
-			<reference torefid="extra.jar.includes" refid="theme-compiler.gwt.includes" />
+			<reference torefid="extra.jar.includes"	refid="empty.reference" />
 		</antcall>
 	</target>
 	<target name="publish-local" depends="jar">

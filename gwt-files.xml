@@ -80,13 +80,6 @@
 		</fileset>
 	</union>
 
-	<union id="theme-compiler.gwt.includes">
-		<!-- This is only temporary. Flute must be packaged separately as it is not in Maven and this version is also modified by the GWT team -->
-		<fileset dir="${gwt.user.jar.files}">
-			<include name="org/w3c/flute/**" />
-		</fileset>
-	</union>
-
 	<union id="client.gwt.includes">
 		<fileset dir="${gwt.user.jar.files}">
 			<exclude name="META-INF/**" />
