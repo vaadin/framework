@@ -31,7 +31,6 @@ import com.vaadin.sass.parser.LexicalUnitImpl;
 import com.vaadin.sass.tree.BlockNode;
 import com.vaadin.sass.tree.CommentNode;
 import com.vaadin.sass.tree.ExtendNode;
-import com.vaadin.sass.tree.FontFaceNode;
 import com.vaadin.sass.tree.ForNode;
 import com.vaadin.sass.tree.ImportNode;
 import com.vaadin.sass.tree.ListRemoveNode;
@@ -172,14 +171,12 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
 
     @Override
     public void startFontFace() throws CSSException {
-        FontFaceNode node = new FontFaceNode();
-        nodeStack.peek().appendChild(node);
-        nodeStack.push(node);
+        System.out.println("startFontFace()");
     }
 
     @Override
     public void endFontFace() throws CSSException {
-        nodeStack.pop();
+        System.out.println("endFontFace()");
     }
 
     @Override
