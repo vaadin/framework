@@ -23,7 +23,8 @@
 
 	<target name="jar">
 		<antcall target="common.jar">
-			<param name="conf" value="build" />
+			<param name="import-package" value="javax.servlet;version=&quot;2.4.0&quot;,org.jsoup;version=1.6.3,com.vaadin.shared;version=&quot;${vaadin.version}&quot;" />
+			<param name="export-package" value="javax.servlet;version=&quot;2.4.0&quot;,org.jsoup;version=1.6.3" />
 			<reference torefid="extra.jar.includes" refid="jar.includes" />
 		</antcall>
 	</target>
