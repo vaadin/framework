@@ -491,6 +491,9 @@ TOKEN :
   | < LBRACE : "{" >
   | < RBRACE : "}">
   | < DASHMATCH : "|=" >
+  | < CARETMATCH : "^=" >
+  | < DOLLARMATCH : "$=" >
+  | < STARMATCH : "*=" >
   | < INCLUDES  : "~=" >
   | < EQ        : "=" >
   | < PLUS      : "+" >
@@ -1229,7 +1232,10 @@ String attrib(String pred) :
   "[" ( <S> )* att=<IDENT> ( <S> )*
       ( ( "="           { cases = 1; }
 	  | <INCLUDES>  { cases = 2; }	  
-	  | <DASHMATCH> { cases = 3; } ) ( <S> )* 
+	  | <DASHMATCH> { cases = 3; }
+	  | <CARETMATCH> { cases = 4; }
+	  | <DOLLARMATCH> { cases = 5; }
+	  | <STARMATCH> { cases = 6; } ) ( <S> )* 
 	( val=<IDENT> { attValue = val.image; }
 	  | val=<STRING> { attValue = val.image; }
 	)
@@ -1250,6 +1256,15 @@ String attrib(String pred) :
 	  break;
 	  case 3:
 	  c = name + "|=" +attValue;
+	  break;
+	  case 4:
+	  c = name + "^=" +attValue;
+	  break;
+	  case 5:
+	  c = name + "$=" +attValue;
+	  break;
+	  case 6:
+	  c = name + "*=" +attValue;
 	  break;
 	  default:
 	  // never reached.
