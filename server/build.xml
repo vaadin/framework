@@ -23,7 +23,8 @@
 
 	<target name="jar">
 		<antcall target="common.jar">
-			<param name="conf" value="build" />
+			<param name="module.require-bundle" value="javax.servlet;bundle-version=&quot;3.0.0&quot;,com.vaadin.shared;bundle-version=&quot;7.0.0&quot;,org.json,org.jsoup" />
+			<param name="module.export-package" value="javax.servlet,org.jsoup" />
 			<reference torefid="extra.jar.includes" refid="jar.includes" />
 		</antcall>
 	</target>
