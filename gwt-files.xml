@@ -49,15 +49,29 @@
 			<exclude name="license*" />
 			<exclude name="LICENSE*" />
 
-			<!-- Package in vaadin-shared-deps.jar -->
+			<!-- Packages in vaadin-shared-deps.jar or declared
+			as dependencies -->
 			<exclude name="com/google/gwt/thirdparty/guava/**" />
+			<exclude name="javax/servlet/**" />
+			<exclude name="javax/xml/**" />
+			<!-- cssparser -->
+			<exclude name="com/steadystate/css/**" />
+			<!-- Ant & AntLauncher -->
+			<exclude name="org/apache/tools/**"/>
+			<!-- Jetty & jetty-util -->
+			<exclude name="org/mortbay/**"/>
+			<!-- Swing Worker-->
+			<exclude name="org/jdesktop/swingworker/**"/>
+			<!-- Apache commons codec & io & lang -->
+			<exclude name="org/apache/commons/codec/**"/>
+			<exclude name="org/apache/commons/io/**"/>
+			<exclude name="org/apache/commons/lang/**"/>
+			<!-- apache mime4j -->
+			<exclude name="org/apache/james/mime4j/**"/>
 
 			<!-- Overridden in Vaadin -->
 			<exclude name="com/google/gwt/dev/About.properties" />
 
-			<!-- external dependencies declared in ixy.xml/pom.xml -->
-			<exclude name="javax/servlet/**" />
-			<exclude name="javax/xml/**" />
 		</fileset>
 
 		<!-- GWT SuperDevMode -->
