@@ -72,3 +72,17 @@ $mixinVar : 1px;
 }
 
 @include layout;
+
+@mixin parent($color : green, $name : default) {
+	.#{$name}-inner {
+		color: $color;
+	}
+}
+
+.default {
+	@include parent;
+}
+
+.custom {
+	@include parent($name : custom);
+}
