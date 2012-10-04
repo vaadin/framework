@@ -55,11 +55,12 @@ $mixinVar : 1px;
 }
 
 .banner {
-	@include fontType(1px solid black);
+	@include fontType(1px solid black, $color : red);
 }
 
-@mixin fontType($border){
+@mixin fontType($border, $color : black){
 	border : $border;
+	font-color: $color;
 }
 
 @include interpolation(interpolation);
