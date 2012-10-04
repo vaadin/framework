@@ -38,7 +38,7 @@ public class IntegrationTestApplication extends LegacyApplication {
         table.addListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                selectedLabel.setValue(table.getValue().toString());
+                selectedLabel.setValue(String.valueOf(table.getValue()));
             }
         });
         window.addComponent(selectedLabel);

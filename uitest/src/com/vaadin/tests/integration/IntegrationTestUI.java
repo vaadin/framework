@@ -34,7 +34,7 @@ public class IntegrationTestUI extends UI {
         table.addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                selectedLabel.setValue(table.getValue().toString());
+                selectedLabel.setValue(String.valueOf(table.getValue()));
             }
         });
         addComponent(selectedLabel);
