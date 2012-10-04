@@ -166,32 +166,71 @@
 			<fileset refid="common.files.for.all.jars" />
 			<union refid="extra.jar.includes" />
 		</union>
+
 		<jar destfile="${result.jar}" duplicate="fail" index="true">
 			<manifest>
-				<attribute name="Implementation-Vendor" value="Vaadin Ltd" />
+				<attribute name="Implementation-Vendor" value="${vaadin.vendor}" />
 				<attribute name="Implementation-URL" value="http://vaadin.com" />
 				<attribute name="Implementation-Version" value="${vaadin.version}" />
-				<attribute name="Bundle-Version" value="${vaadin.version}" />
-				<attribute name="Bundle-ManifestVersion" value="2" />
-				<attribute name="Bundle-Name" value="${module.name}" />
-				<attribute name="Bundle-SymbolicName" value="${module.symbolic}" />
-				<attribute name="Bundle-Vendor" value="${vaadin.vendor}" />
-				<attribute name="Bundle-RequiredExecutionEnvironment" value="JavaSE-1.6" />
 			</manifest>
 			<union refid="jar.files" />
 		</jar>
 
-		<antcall target="common.generate-osgi-exports">
+		<antcall target="common.make-osgi-bundle">
 			<param name="jar" value="${result.jar}" />
+			<param name="bundle-version" value="${vaadin.version}" />
+			<param name="bundle-name" value="${module.name}" />
+			<param name="bundle-symbolicname" value="${module.symbolic}" />
+			<param name="bundle-vendor" value="${vaadin.vendor}" />
+			<param name="require-bundle" value="${module.require-bundle}" />
+			<param name="export-module" value="${module.export-module}" />
 		</antcall>
 
 	</target>
 
-	<target name="generate-osgi-exports">
+	<!-- Add OSGi attributes to the manifest of the given jar -->
+	<target name="make-osgi-bundle">
 		<fail unless="jar" message="No jar parameter given" />
+		<fail unless="bundle-name" message="No bundle-name parameter given" />
+		<fail unless="bundle-symbolicname" message="No bundle-symbolicname parameter given" />
+		<fail unless="bundle-version" message="No bundle-version parameter given" />
+		<fail unless="bundle-vendor" message="No bundle-vendor parameter given" />
 
-		<!-- Generate the Export-Package attribute in the manifest of the 
-            JAR -->
+		<property name="bundle-manifestversion" value="2" />
+		
+		<jar file="${jar}" update="true">
+			<manifest>
+				<attribute name="Bundle-Version" value="${bundle-version}" />
+				<attribute name="Bundle-ManifestVersion" value="${bundle-manifestversion}" />
+				<attribute name="Bundle-Name" value="${bundle-name}" />
+				<attribute name="Bundle-SymbolicName" value="${bundle-symbolic}" />
+				<attribute name="Bundle-Vendor" value="${bundle-vendor}" />
+				<attribute name="Bundle-RequiredExecutionEnvironment" value="JavaSE-1.6" />
+			</manifest>
+		</jar>
+
+		<antcontrib:if>
+			<isset property="require-bundle" />
+			<then>
+				<jar file="${result.jar}" update="true">
+					<manifest>
+						<attribute name="Require-Bundle" value="${require-bundle}" />
+					</manifest>
+				</jar>
+			</then>
+		</antcontrib:if>
+		<antcontrib:if>
+			<isset property="export-module" />
+			<then>
+				<jar file="${result.jar}" update="true">
+					<manifest>
+						<attribute name="Export-Module" value="${export-module}" />
+					</manifest>
+				</jar>
+			</then>
+		</antcontrib:if>
+
+		<!-- Generate the Export-Package attribute in the manifest -->
 		<java classname="com.vaadin.buildhelpers.GeneratePackageExports" failonerror="true" fork="yes">
 			<arg value="${jar}" />
 			<arg value="com/vaadin" />
@@ -268,8 +307,9 @@
 	</target>
 
 	<target name="dependencies" description="Resolves dependencies needed by this module" depends="filter.webcontent">
-		<ivy:resolve resolveid="common" conf="build, build-provided" />
-		<ivy:cachepath pathid="classpath.compile.dependencies" conf="build, build-provided" />
+		<property name='conf' value="build, build-provided" />
+		<ivy:resolve resolveid="common" conf="${conf}" />
+		<ivy:cachepath pathid="classpath.compile.dependencies" conf="${conf}" />
 	</target>
 
 	<target name="dependencies.tests" description="Resolves dependencies needed by tests">

@@ -17,6 +17,8 @@
 
 	<target name="jar">
 		<antcall target="common.jar">
+			<param name="module.require-bundle" value="org.json" />
+			<param name="module.export-package" value="org.json" />
 			<reference refid="shared.gwt.includes" torefid="extra.jar.includes" />
 		</antcall>
 	</target>
