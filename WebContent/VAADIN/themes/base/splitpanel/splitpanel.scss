@@ -32,4 +32,14 @@
 	cursor: default;
 }
 
+/*
+ * In IE8 we need to do magic things to avoid scrollbars since it does not completely
+ * support the HTML5 doctype. Setting the contained element to float will not add
+ * magical bottom paddings to the contained inline-block element.
+ */
+.v-ie8 .v-splitpanel-first-container > .w-widget,
+.v-ie8 .v-splitpanel-second-container > .w-widget{
+    display:block;
+}
+
 }
