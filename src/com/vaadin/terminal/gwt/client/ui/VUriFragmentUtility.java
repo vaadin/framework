@@ -82,6 +82,8 @@ public class VUriFragmentUtility extends Widget implements Paintable,
             // this method
             return;
         }
+        // TODO hack limited to VTextField - see VView.onWindowClosing()
+        VTextField.flushChangesFromFocusedTextField();
 
         String historyToken = event.getValue();
         if (fragment != null && fragment.equals(historyToken)) {
