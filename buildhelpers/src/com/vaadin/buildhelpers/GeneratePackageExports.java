@@ -16,11 +16,10 @@ import java.util.jar.Manifest;
 
 /**
  * Generates Export-Packages attribute for OSGi compatible manifest.
- * 
- * Reads the included Java packages in Vaadin JAR, generates a corresponding
- * MANIFEST.MF file, and replaces the dummy one in the JAR with the generated
- * one.
- * 
+ * <p>
+ * Reads the included Java packages in a jar file, generates a corresponding
+ * Export-Package attribute, and appends it to the jar's MANIFEST.MF.
+ * <p>
  * See #3521 for details.
  * 
  * @author magi
@@ -87,6 +86,11 @@ public class GeneratePackageExports {
                         .replace('/', '.');
                 packages.add(pkg);
             }
+        }
+
+        // Avoid writing empty Export-Package attribute
+        if (packages.isEmpty()) {
+            return;
         }
 
         // Replacement for the "Export-Package" attribute in the manifest

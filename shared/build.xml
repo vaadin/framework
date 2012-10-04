@@ -17,6 +17,8 @@
 
 	<target name="jar">
 		<antcall target="common.jar">
+			<param name="import-package" value="org.json;version=20080701" />
+			<param name="export-package" value="org.json;version=20080701" />
 			<reference refid="shared.gwt.includes" torefid="extra.jar.includes" />
 		</antcall>
 	</target>

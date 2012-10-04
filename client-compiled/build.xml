@@ -18,6 +18,12 @@
 	<property name="compiled.jar" location="${result.dir}/lib/${module.name}-${vaadin.version}.jar" />
 	<property name="compiled-cache.jar" location="${result.dir}/lib/${module.name}-cache-${vaadin.version}.jar" />
 
+	<union id="jar.includes">
+		<fileset dir="${result.dir}">
+			<include name="VAADIN/widgetsets/com.vaadin*/**" />
+		</fileset>
+	</union>
+	
 	<target name="default-widgetset-cache">
 		<antcall target="compile-module-cache">
 			<param name="module" value="com.vaadin.DefaultWidgetSet" />
@@ -29,7 +35,6 @@
 			<param name="module" value="com.vaadin.DefaultWidgetSet" />
 		</antcall>
 	</target>
-
 
 	<target name="compile-module-cache">
 		<fail unless="module" message="You must give the module to compile in the 'module' parameter" />
@@ -100,26 +105,13 @@
 		</jar>
 	</target>
 
-	<target name="client-compiled.jar" depends="default-widgetset">
-		<antcall target="common.pom.xml">
+	<target name="jar" depends="default-widgetset">
+		<antcall target="common.jar">
+			<reference torefid="extra.jar.includes" refid="jar.includes" />
 		</antcall>
-
-		<jar file="${compiled.jar}" compress="true">
-			<manifest>
-				<attribute name="Implementation-Vendor" value="Vaadin Ltd" />
-				<attribute name="Implementation-URL" value="http://vaadin.com" />
-				<attribute name="Implementation-Version" value="${vaadin.version}" />
-			</manifest>
-			<fileset dir="${result.dir}">
-				<include name="VAADIN/widgetsets/com.vaadin*/**" />
-			</fileset>
-			<fileset refid="common.files.for.all.jars" />
-		</jar>
-
-
 	</target>
-
-	<target name="publish-local" depends="client-compiled.jar">
+	
+	<target name="publish-local" depends="jar">
 		<antcall target="common.publish-local">
 			<param name="conf" value="build" />
 		</antcall>
