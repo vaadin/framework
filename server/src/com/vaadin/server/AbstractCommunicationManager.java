@@ -2498,7 +2498,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // Check for an existing UI based on window.name
         BrowserDetails browserDetails = request.getBrowserDetails();
         boolean hasBrowserDetails = browserDetails != null
-                && browserDetails.getUriFragment() != null;
+                && browserDetails.getLocation() != null;
 
         Map<String, Integer> retainOnRefreshUIs = session
                 .getPreserveOnRefreshUIs();

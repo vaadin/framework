@@ -249,11 +249,9 @@
 				url += '&vh=' + pe.offsetHeight;
 			}
 			
-			// Uri fragment
-			if (location.hash) {
-				//Remove initial #
-				url += '&fr=' + encodeURIComponent(location.hash.replace(/^#/, ""));
-			}
+			// Location
+			url += '&loc=' + encodeURIComponent(location.href);
+
 			// Window name
 			if (window.name) {
 				url += '&wn=' + encodeURIComponent(window.name);

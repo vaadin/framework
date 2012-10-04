@@ -131,8 +131,8 @@ public class VUI extends SimplePanel implements ResizeHandler,
             // Send the new fragment to the server if it has changed
             if (!newFragment.equals(currentFragment) && connection != null) {
                 currentFragment = newFragment;
-                connection.updateVariable(id, UIConstants.FRAGMENT_VARIABLE,
-                        newFragment, true);
+                connection.updateVariable(id, UIConstants.LOCATION_VARIABLE,
+                        Window.Location.getHref(), true);
             }
         }
     };

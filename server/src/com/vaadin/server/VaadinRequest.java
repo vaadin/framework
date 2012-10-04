@@ -19,6 +19,7 @@ package com.vaadin.server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.net.URI;
 import java.util.Locale;
 import java.util.Map;
 
@@ -46,12 +47,12 @@ public interface VaadinRequest extends Serializable {
     @Deprecated
     public interface BrowserDetails extends Serializable {
         /**
-         * Gets the URI hash fragment for the request. This is typically used to
-         * encode navigation within an application.
+         * Gets the URI in the browser address bar, including the fragment
+         * (Javascript window.location)
          * 
-         * @return the URI hash fragment
+         * @return the browser location URI
          */
-        public String getUriFragment();
+        public URI getLocation();
 
         /**
          * Gets the value of window.name from the browser. This can be used to

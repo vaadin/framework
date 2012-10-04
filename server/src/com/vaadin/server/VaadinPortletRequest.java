@@ -18,6 +18,7 @@ package com.vaadin.server;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.Locale;
 import java.util.Map;
 
@@ -151,7 +152,7 @@ public class VaadinPortletRequest implements VaadinRequest {
     public BrowserDetails getBrowserDetails() {
         return new BrowserDetails() {
             @Override
-            public String getUriFragment() {
+            public URI getLocation() {
                 return null;
             }
 

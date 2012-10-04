@@ -18,6 +18,8 @@ package com.vaadin.server;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -293,17 +295,17 @@ public class Page implements Serializable {
 
     private EventRouter eventRouter;
 
-    /**
-     * The current URI fragment.
-     */
-    private String fragment;
-
     private final UI uI;
 
     private int browserWindowWidth = -1;
     private int browserWindowHeight = -1;
 
     private JavaScript javaScript;
+
+    /**
+     * The current browser location.
+     */
+    private URI location;
 
     public Page(UI uI) {
         this.uI = uI;
@@ -365,8 +367,15 @@ public class Page implements Serializable {
         if (newFragment == null) {
             throw new NullPointerException("The fragment may not be null");
         }
-        if (!newFragment.equals(fragment)) {
-            fragment = newFragment;
+        if (!newFragment.equals(location.getFragment())) {
+            try {
+                location = new URI(location.getScheme(),
+                        location.getSchemeSpecificPart(), newFragment);
+            } catch (URISyntaxException e) {
+                // This should not actually happen as the fragment syntax is not
+                // constrained
+                throw new RuntimeException(e);
+            }
             if (fireEvents) {
                 fireEvent(new FragmentChangedEvent(this, newFragment));
             }
@@ -398,16 +407,22 @@ public class Page implements Serializable {
      * To listen changes in fragment, hook a
      * {@link Page.FragmentChangedListener}.
      * 
+     * @see #getLocation()
+     * 
      * @return the current fragment in browser uri or null if not known
      */
     public String getFragment() {
-        return fragment;
+        // URI.getFragment() returns null if there is no '#' and an empty
+        // string if there is a '#' without a suffix. Return an empty string in
+        // both cases for backwards compatibility.
+        String fragment = location.getFragment();
+        return fragment == null ? "" : fragment;
     }
 
     public void init(VaadinRequest request) {
         BrowserDetails browserDetails = request.getBrowserDetails();
         if (browserDetails != null) {
-            fragment = browserDetails.getUriFragment();
+            location = browserDetails.getLocation();
         }
     }
 
@@ -573,22 +588,61 @@ public class Page implements Serializable {
             notifications = null;
         }
 
-        if (fragment != null) {
-            target.addAttribute(UIConstants.FRAGMENT_VARIABLE, fragment);
+        if (location != null) {
+            target.addAttribute(UIConstants.LOCATION_VARIABLE,
+                    location.toString());
         }
 
     }
 
     /**
-     * Navigates this page to the given URL. The contents of this page in the
-     * browser is replaced with whatever is returned for the given URL.
+     * Navigates this page to the given URI. The contents of this page in the
+     * browser is replaced with whatever is returned for the given URI.
      * 
-     * @param url
-     *            the URL to show
+     * @param uri
+     *            the URI to show
      */
-    public void setLocation(String url) {
-        openList.add(new OpenResource(url, null, -1, -1, BORDER_DEFAULT));
+    public void setLocation(String uri) {
+        openList.add(new OpenResource(uri, null, -1, -1, BORDER_DEFAULT));
         uI.markAsDirty();
+    }
+
+    /**
+     * Navigates this page to the given URI. The contents of this page in the
+     * browser is replaced with whatever is returned for the given URI.
+     * 
+     * @param uri
+     *            the URI to show
+     */
+    public void setLocation(URI uri) {
+        setLocation(uri.toString());
+    }
+
+    /**
+     * Returns the location URI of this page, as reported by the browser.
+     * 
+     * @return The browser location URI.
+     */
+    public URI getLocation() {
+        return location;
+    }
+
+    /**
+     * For internal use only. Used to update the server-side location when the
+     * client-side location changes.
+     */
+    public void updateLocation(String location) {
+        try {
+            String oldFragment = this.location.getFragment();
+            this.location = new URI(location);
+            String newFragment = this.location.getFragment();
+            if (newFragment == null && oldFragment != null
+                    || !newFragment.equals(oldFragment)) {
+                fireEvent(new FragmentChangedEvent(this, newFragment));
+            }
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
