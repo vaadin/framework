@@ -1,5 +1,4 @@
 (function() {
-	var defaults;
 	var apps = {};
 	var themesLoaded = {};
 	var widgetsets = {};
@@ -60,14 +59,6 @@
 	};
 	
 	window.vaadin = window.vaadin || {
-		setDefaults: function(d) {
-			if (defaults) {
-				log("Ignoring new defaults as defaults have already been loaded");
-				return;
-			}
-			log("Got defaults", d);
-			defaults = d;
-		},
 		initApplication: function(appId, config) {
 			if (apps[appId]) {
 				throw "Application " + appId + " already initialized";
@@ -83,9 +74,6 @@
 			
 			var getConfig = function(name) {
 				var value = config[name];
-				if (value === undefined) {
-					value = defaults[name];
-				}
 				return value;
 			};
 			

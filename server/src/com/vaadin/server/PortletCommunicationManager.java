@@ -89,21 +89,6 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             }
 
             @Override
-            protected JSONObject getDefaultParameters(BootstrapContext context)
-                    throws JSONException {
-                /*
-                 * We need this in order to get uploads to work. TODO this is
-                 * not needed for uploads anymore, check if this is needed for
-                 * some other things
-                 */
-                JSONObject defaults = super.getDefaultParameters(context);
-
-                defaults.put("pathInfo", "");
-
-                return defaults;
-            }
-
-            @Override
             protected void appendMainScriptTagContents(
                     BootstrapContext context, StringBuilder builder)
                     throws JSONException, IOException {
