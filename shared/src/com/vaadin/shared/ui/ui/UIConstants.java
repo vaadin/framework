@@ -26,7 +26,7 @@ public class UIConstants {
     public static final String NOTIFICATION_HTML_CONTENT_NOT_ALLOWED = "useplain";
 
     @Deprecated
-    public static final String FRAGMENT_VARIABLE = "fragment";
+    public static final String LOCATION_VARIABLE = "location";
 
     @Deprecated
     public static final String ATTRIBUTE_NOTIFICATION_STYLE = "style";

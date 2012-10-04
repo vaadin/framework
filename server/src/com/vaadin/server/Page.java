@@ -18,6 +18,8 @@ package com.vaadin.server;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -293,17 +295,17 @@ public class Page implements Serializable {
 
     private EventRouter eventRouter;
 
-    /**
-     * The current URI fragment.
-     */
-    private String fragment;
-
     private final UI uI;
 
     private int browserWindowWidth = -1;
     private int browserWindowHeight = -1;
 
     private JavaScript javaScript;
+
+    /**
+     * The current browser location.
+     */
+    private URI location;
 
     public Page(UI uI) {
         this.uI = uI;
@@ -352,21 +354,40 @@ public class Page implements Serializable {
     }
 
     /**
-     * Sets URI fragment. Optionally fires a {@link FragmentChangedEvent}
+     * Sets the fragment part in the current location URI. Optionally fires a
+     * {@link FragmentChangedEvent}.
+     * <p>
+     * The fragment is the optional last component of a URI, prefixed with a
+     * hash sign ("#").
+     * <p>
+     * Passing <code>null</code> as <code>newFragment</code> clears the fragment
+     * (no "#" in the URI); passing an empty string sets an empty fragment (a
+     * trailing "#" in the URI.) This is consistent with the semantics of
+     * {@link java.net.URI}.
      * 
      * @param newFragment
-     *            id of the new fragment
+     *            The new fragment.
      * @param fireEvent
      *            true to fire event
+     * 
+     * @see #getFragment()
+     * @see #setLocation(URI)
      * @see FragmentChangedEvent
      * @see Page.FragmentChangedListener
+     * 
      */
     public void setFragment(String newFragment, boolean fireEvents) {
-        if (newFragment == null) {
-            throw new NullPointerException("The fragment may not be null");
-        }
-        if (!newFragment.equals(fragment)) {
-            fragment = newFragment;
+        String oldFragment = location.getFragment();
+        if (newFragment == null && oldFragment != null
+                || !newFragment.equals(oldFragment)) {
+            try {
+                location = new URI(location.getScheme(),
+                        location.getSchemeSpecificPart(), newFragment);
+            } catch (URISyntaxException e) {
+                // This should not actually happen as the fragment syntax is not
+                // constrained
+                throw new RuntimeException(e);
+            }
             if (fireEvents) {
                 fireEvent(new FragmentChangedEvent(this, newFragment));
             }
@@ -393,21 +414,28 @@ public class Page implements Serializable {
     }
 
     /**
-     * Gets currently set URI fragment.
+     * Gets the currently set URI fragment.
      * <p>
-     * To listen changes in fragment, hook a
+     * Returns <code>null</code> if there is no fragment and an empty string if
+     * there is an empty fragment.
+     * <p>
+     * To listen to changes in fragment, hook a
      * {@link Page.FragmentChangedListener}.
      * 
-     * @return the current fragment in browser uri or null if not known
+     * @return the current fragment in browser location URI.
+     * 
+     * @see #getLocation()
+     * @see #setFragment(String)
+     * @see #addFragmentChangedListener(FragmentChangedListener)
      */
     public String getFragment() {
-        return fragment;
+        return location.getFragment();
     }
 
     public void init(VaadinRequest request) {
         BrowserDetails browserDetails = request.getBrowserDetails();
         if (browserDetails != null) {
-            fragment = browserDetails.getUriFragment();
+            location = browserDetails.getLocation();
         }
     }
 
@@ -573,22 +601,63 @@ public class Page implements Serializable {
             notifications = null;
         }
 
-        if (fragment != null) {
-            target.addAttribute(UIConstants.FRAGMENT_VARIABLE, fragment);
+        if (location != null) {
+            target.addAttribute(UIConstants.LOCATION_VARIABLE,
+                    location.toString());
         }
 
     }
 
     /**
-     * Navigates this page to the given URL. The contents of this page in the
-     * browser is replaced with whatever is returned for the given URL.
+     * Navigates this page to the given URI. The contents of this page in the
+     * browser is replaced with whatever is returned for the given URI.
      * 
-     * @param url
-     *            the URL to show
+     * @param uri
+     *            the URI to show
      */
-    public void setLocation(String url) {
-        openList.add(new OpenResource(url, null, -1, -1, BORDER_DEFAULT));
+    public void setLocation(String uri) {
+        openList.add(new OpenResource(uri, null, -1, -1, BORDER_DEFAULT));
         uI.markAsDirty();
+    }
+
+    /**
+     * Navigates this page to the given URI. The contents of this page in the
+     * browser is replaced with whatever is returned for the given URI.
+     * 
+     * @param uri
+     *            the URI to show
+     */
+    public void setLocation(URI uri) {
+        setLocation(uri.toString());
+    }
+
+    /**
+     * Returns the location URI of this page, as reported by the browser. Note
+     * that this may not be consistent with the server URI the application is
+     * deployed in due to potential proxies, redirections and similar.
+     * 
+     * @return The browser location URI.
+     */
+    public URI getLocation() {
+        return location;
+    }
+
+    /**
+     * For internal use only. Used to update the server-side location when the
+     * client-side location changes.
+     */
+    public void updateLocation(String location) {
+        try {
+            String oldFragment = this.location.getFragment();
+            this.location = new URI(location);
+            String newFragment = this.location.getFragment();
+            if (newFragment == null && oldFragment != null
+                    || !newFragment.equals(oldFragment)) {
+                fireEvent(new FragmentChangedEvent(this, newFragment));
+            }
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

@@ -135,7 +135,8 @@ public class NavigatorTest extends UI {
             addComponent(log);
             addComponent(naviLayout);
         } catch (Exception e) {
-            log.log("Exception: " + e.getMessage());
+            e.printStackTrace();
+            log.log("Exception: " + e);
         }
     }
 }

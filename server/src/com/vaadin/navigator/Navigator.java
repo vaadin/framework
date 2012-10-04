@@ -109,10 +109,10 @@ public class Navigator implements Serializable {
         @Override
         public String getState() {
             String fragment = getFragment();
-            if (fragment.startsWith("!")) {
-                return fragment.substring(1);
-            } else {
+            if (fragment == null || !fragment.startsWith("!")) {
                 return "";
+            } else {
+                return fragment.substring(1);
             }
         }
 

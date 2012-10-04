@@ -264,21 +264,17 @@ public class UIConnector extends AbstractComponentContainerConnector implements
             scrollIntoView(connector);
         }
 
-        if (uidl.hasAttribute(UIConstants.FRAGMENT_VARIABLE)) {
-            getWidget().currentFragment = uidl
-                    .getStringAttribute(UIConstants.FRAGMENT_VARIABLE);
+        if (uidl.hasAttribute(UIConstants.LOCATION_VARIABLE)) {
+            String location = uidl
+                    .getStringAttribute(UIConstants.LOCATION_VARIABLE);
+            int fragmentIndex = location.indexOf('#');
+            if (fragmentIndex >= 0) {
+                getWidget().currentFragment = location
+                        .substring(fragmentIndex + 1);
+            }
             if (!getWidget().currentFragment.equals(History.getToken())) {
                 History.newItem(getWidget().currentFragment, true);
             }
-        } else {
-            // Initial request for which the server doesn't yet have a fragment
-            // (and haven't shown any interest in getting one)
-            getWidget().currentFragment = History.getToken();
-
-            // Include current fragment in the next request
-            client.updateVariable(getWidget().id,
-                    UIConstants.FRAGMENT_VARIABLE, getWidget().currentFragment,
-                    false);
         }
 
         if (firstPaint) {
