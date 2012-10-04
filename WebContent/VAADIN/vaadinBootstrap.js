@@ -81,12 +81,8 @@
 				log('Fetching root config');
 				var url = getConfig('browserDetailsUrl');
 				if (!url) {
-					// No special url defined, use the default URL
-					url = getConfig('appUri');
-					// Add a slash to the end, because ApplicationConiguration.loadFromDOM does so...
-					if (url.length == 0 || url.substr(url.length-1) !== "/") {
-						url += '/';
-					}
+					// No special url defined, use the same URL that loaded this page
+					url = window.location.href;
 				}
 				url += ((/\?/).test(url) ? "&" : "?") + "browserDetails=1";
 				var rootId = getConfig("rootId");
@@ -94,11 +90,11 @@
 					url += "&rootId=" + rootId;
 				}
 
-				var initialPath = getConfig("initialPath");
-				if (initialPath !== undefined) {
-					url += '&initialPath=' + encodeURIComponent(initialPath);
+				// Tell the UI what theme it is configured to use
+				var theme = getConfig('theme');
+				if (theme !== undefined) {
+					url += '&theme=' + encodeURIComponent(theme);
 				}
-				url += '&initialParams=' + encodeURIComponent(JSON.stringify(getConfig("initialParams")));
 				
 				url += '&' + vaadin.getBrowserDetailsParameters(appId); 
 				
@@ -145,12 +141,13 @@
 			}
 			
 			var bootstrapApp = function(mayDefer) {
-				var themeUri = getConfig('themeUri');
+				var vaadinDir = getConfig('staticFiles') + '/VAADIN';
+				
+				var themeUri = vaadinDir + '/themes/' + getConfig('theme')
 				loadTheme(themeUri);
 				
-				var widgetsetBase = getConfig('widgetsetBase');
 				var widgetset = getConfig('widgetset');
-				loadWidgetset(widgetsetBase, widgetset);
+				loadWidgetset(vaadinDir + '/widgetsets/', widgetset);
 				
 				if (getConfig('uidl') === undefined) {
 					if (mayDefer) {

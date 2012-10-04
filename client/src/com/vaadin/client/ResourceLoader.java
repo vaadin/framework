@@ -26,7 +26,6 @@ import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
-import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LinkElement;
@@ -205,7 +204,7 @@ public class ResourceLoader {
      */
     public void loadScript(final String scriptUrl,
             final ResourceLoadListener resourceLoadListener) {
-        final String url = getAbsoluteUrl(scriptUrl);
+        final String url = Util.getAbsoluteUrl(scriptUrl);
         ResourceLoadEvent event = new ResourceLoadEvent(this, url, false);
         if (loadedResources.contains(url)) {
             if (resourceLoadListener != null) {
@@ -252,12 +251,6 @@ public class ResourceLoader {
         }
     }
 
-    private static String getAbsoluteUrl(String url) {
-        AnchorElement a = Document.get().createAnchorElement();
-        a.setHref(url);
-        return a.getHref();
-    }
-
     /**
      * Download a resource and notify a listener when the resource is loaded
      * without attempting to interpret the resource. When a resource has been
@@ -278,7 +271,7 @@ public class ResourceLoader {
      */
     public void preloadResource(String url,
             ResourceLoadListener resourceLoadListener) {
-        url = getAbsoluteUrl(url);
+        url = Util.getAbsoluteUrl(url);
         ResourceLoadEvent event = new ResourceLoadEvent(this, url, true);
         if (loadedResources.contains(url) || preloadedResources.contains(url)) {
             // Already loaded or preloaded -> just fire listener
@@ -363,7 +356,7 @@ public class ResourceLoader {
      */
     public void loadStylesheet(final String stylesheetUrl,
             final ResourceLoadListener resourceLoadListener) {
-        final String url = getAbsoluteUrl(stylesheetUrl);
+        final String url = Util.getAbsoluteUrl(stylesheetUrl);
         final ResourceLoadEvent event = new ResourceLoadEvent(this, url, false);
         if (loadedResources.contains(url)) {
             if (resourceLoadListener != null) {

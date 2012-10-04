@@ -189,7 +189,7 @@ public class ApplicationConfiguration implements EntryPoint {
     private static WidgetSet widgetSet = GWT.create(WidgetSet.class);
 
     private String id;
-    private String themeUri;
+    private String staticFilesBase;
     private String appUri;
     private int uiId;
     private boolean standalone;
@@ -238,14 +238,13 @@ public class ApplicationConfiguration implements EntryPoint {
     }
 
     public String getThemeName() {
-        String uri = getThemeUri();
-        String themeName = uri.substring(uri.lastIndexOf('/'));
+        String themeName = getJsoConfiguration(id).getConfigString("theme");
         themeName = themeName.replaceAll("[^a-zA-Z0-9]", "");
         return themeName;
     }
 
     public String getThemeUri() {
-        return themeUri;
+        return staticFilesBase + "/VAADIN/themes/" + getThemeName();
     }
 
     public void setAppId(String appId) {
@@ -307,10 +306,27 @@ public class ApplicationConfiguration implements EntryPoint {
     private void loadFromDOM() {
         JsoConfiguration jsoConfiguration = getJsoConfiguration(id);
         appUri = jsoConfiguration.getConfigString("appUri");
-        if (appUri != null && !appUri.endsWith("/")) {
+        if (appUri == null || "".equals(appUri)) {
+            /*
+             * Use the current url without query parameters as the default
+             * value.
+             */
+            appUri = Window.Location.getHref().replaceFirst("\\?.*", "");
+        } else {
+            /*
+             * Resolve potentially relative URLs to ensure they point to the
+             * desired locations even if the base URL of the page changes later
+             * (e.g. with pushState)
+             */
+            appUri = Util.getAbsoluteUrl(appUri);
+        }
+        // Ensure there's an ending slash (to make appending e.g. UIDL work)
+        if (!appUri.endsWith("/")) {
             appUri += '/';
         }
-        themeUri = jsoConfiguration.getConfigString("themeUri");
+
+        staticFilesBase = Util.getAbsoluteUrl(jsoConfiguration
+                .getConfigString("staticFiles"));
         uiId = jsoConfiguration.getConfigInteger(UIConstants.UI_ID_PARAMETER)
                 .intValue();
 

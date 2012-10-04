@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,7 +99,8 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         public String getAppId() {
             if (appId == null) {
-                appId = getApplicationId(this);
+                appId = getRequest().getService().getMainDivId(getSession(),
+                        getRequest(), getUIClass());
             }
             return appId;
         }
@@ -273,16 +273,6 @@ public abstract class BootstrapHandler implements RequestHandler {
         return null;
     }
 
-    /**
-     * Creates and returns a unique ID for the DIV where the application is to
-     * be rendered.
-     * 
-     * @param context
-     * 
-     * @return the id to use in the DOM
-     */
-    protected abstract String getApplicationId(BootstrapContext context);
-
     public String getWidgetsetForUI(BootstrapContext context) {
         VaadinRequest request = context.getRequest();
 
@@ -410,7 +400,7 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         String themeName = context.getThemeName();
         if (themeName != null) {
-            appConfig.put("themeUri", getThemeUri(context, themeName));
+            appConfig.put("theme", themeName);
         }
 
         JSONObject versionInfo = new JSONObject();
@@ -418,17 +408,6 @@ public abstract class BootstrapHandler implements RequestHandler {
         appConfig.put("versionInfo", versionInfo);
 
         appConfig.put("widgetset", context.getWidgetsetName());
-
-        appConfig.put("initialPath", request.getRequestPathInfo());
-
-        Map<String, String[]> parameterMap = new HashMap<String, String[]>(
-                request.getParameterMap());
-
-        // Include theme as a fake initial param so that UI can know its theme
-        // for serving CustomLayout templates
-        parameterMap.put("theme", new String[] { themeName });
-
-        appConfig.put("initialParams", parameterMap);
 
         // Get system messages
         SystemMessages systemMessages = vaadinService.getSystemMessages();
@@ -455,9 +434,7 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         String staticFileLocation = vaadinService
                 .getStaticFileLocation(request);
-        String widgetsetBase = staticFileLocation + "/"
-                + VaadinServlet.WIDGETSET_DIRECTORY_PATH;
-        appConfig.put("widgetsetBase", widgetsetBase);
+        appConfig.put("staticFiles", staticFileLocation);
 
         if (!session.getConfiguration().isProductionMode()) {
             appConfig.put("debug", true);
@@ -470,7 +447,10 @@ public abstract class BootstrapHandler implements RequestHandler {
         appConfig.put("heartbeatInterval", vaadinService
                 .getDeploymentConfiguration().getHeartbeatInterval());
 
-        appConfig.put("appUri", getAppUri(context));
+        String appUri = getAppUri(context);
+        if (appUri != null) {
+            appConfig.put("appUri", appUri);
+        }
 
         return appConfig;
     }

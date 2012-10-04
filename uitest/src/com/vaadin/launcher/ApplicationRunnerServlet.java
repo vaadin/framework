@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.LegacyApplication;
-import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.LegacyVaadinServlet;
 import com.vaadin.server.ServiceException;
 import com.vaadin.server.SessionInitEvent;
@@ -40,7 +39,6 @@ import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServiceSession;
 import com.vaadin.server.VaadinServletRequest;
-import com.vaadin.server.VaadinServletService;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.UI;
 
@@ -272,47 +270,6 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
         }
 
         throw new ClassNotFoundException();
-    }
-
-    @Override
-    protected String getRequestPathInfo(HttpServletRequest request) {
-        String path = request.getPathInfo();
-        if (path == null) {
-            return null;
-        }
-
-        path = path.substring(1 + getApplicationRunnerApplicationClassName(
-                request).length());
-        return path;
-    }
-
-    @Override
-    protected VaadinServletService createServletService(
-            DeploymentConfiguration deploymentConfiguration) {
-        return new VaadinServletService(this, deploymentConfiguration) {
-            @Override
-            public String getStaticFileLocation(VaadinRequest request) {
-                URIS uris = getApplicationRunnerURIs(VaadinServletRequest
-                        .cast(request));
-                String staticFilesPath = uris.staticFilesPath;
-                if (staticFilesPath.equals("/")) {
-                    staticFilesPath = "";
-                }
-
-                return staticFilesPath;
-            }
-        };
-    }
-
-    @Override
-    protected VaadinServletRequest createVaadinRequest(
-            HttpServletRequest request) {
-        return new VaadinServletRequest(request, getService()) {
-            @Override
-            public String getRequestPathInfo() {
-                return ApplicationRunnerServlet.this.getRequestPathInfo(this);
-            }
-        };
     }
 
     private Logger getLogger() {
