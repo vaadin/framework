@@ -232,7 +232,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return;
         }
 
-        VaadinServletSession vaadinSession = null;
+        VaadinServiceSession vaadinSession = null;
 
         try {
             // If a duplicate "close application" URL is received for an
@@ -254,8 +254,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             }
 
             // Find out the service session this request is related to
-            vaadinSession = (VaadinServletSession) getService()
-                    .findVaadinSession(request);
+            vaadinSession = getService().findVaadinSession(request);
             if (vaadinSession == null) {
                 return;
             }
@@ -289,6 +288,11 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 // Handles AJAX UIDL requests
                 communicationManager.handleUidlRequest(request, response,
                         servletWrapper, uI);
+
+                // Ensure that the browser does not cache UIDL responses.
+                // iOS 6 Safari requires this (#9732)
+                response.setHeader("Cache-Control", "no-cache");
+
                 return;
             } else if (requestType == RequestType.BROWSER_DETAILS) {
                 // Browser details - not related to a specific UI
@@ -1171,26 +1175,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
     @Deprecated
     protected String getRequestPathInfo(HttpServletRequest request) {
         return request.getPathInfo();
-    }
-
-    /**
-     * Gets relative location of a theme resource.
-     * 
-     * @param theme
-     *            the Theme name.
-     * @param resource
-     *            the Theme resource.
-     * @return External URI specifying the resource
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    public String getResourceLocation(String theme, ThemeResource resource) {
-
-        if (resourcePath == null) {
-            return resource.getResourceId();
-        }
-        return resourcePath + theme + "/" + resource.getResourceId();
     }
 
     public class RequestError implements Terminal.ErrorEvent, Serializable {

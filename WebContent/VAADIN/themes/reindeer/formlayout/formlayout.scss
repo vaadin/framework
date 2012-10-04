@@ -12,25 +12,25 @@
 	text-align: right;
 	white-space: nowrap;
 }
-.#{$name}-spacing .#{$name}-row .#{$name}-captioncell, 
-.#{$name}-spacing .#{$name}-row .#{$name}-contentcell,
-.#{$name}-spacing .#{$name}-row .#{$name}-errorcell {
+.#{$name}-spacing > tbody > .#{$name}-row > .#{$name}-captioncell, 
+.#{$name}-spacing > tbody > .#{$name}-row > .#{$name}-contentcell,
+.#{$name}-spacing > tbody > .#{$name}-row > .#{$name}-errorcell {
 	padding-top: 8px;
 }
-.#{$name}-margin-top .#{$name}-firstrow .#{$name}-captioncell, 
-.#{$name}-margin-top .#{$name}-firstrow .#{$name}-contentcell,
-.#{$name}-margin-top .#{$name}-firstrow .#{$name}-errorcell {
+.#{$name}-margin-top > tbody > .#{$name}-firstrow > .#{$name}-captioncell, 
+.#{$name}-margin-top > tbody > .#{$name}-firstrow > .#{$name}-contentcell,
+.#{$name}-margin-top > tbody > .#{$name}-firstrow > .#{$name}-errorcell {
 	padding-top: 15px;
 }
-.#{$name}-margin-bottom .#{$name}-lastrow .#{$name}-captioncell,
-.#{$name}-margin-bottom .#{$name}-lastrow .#{$name}-contentcell,
-.#{$name}-margin-bottom .#{$name}-lastrow .#{$name}-errorcell {
+.#{$name}-margin-bottom > tbody > .#{$name}-lastrow > .#{$name}-captioncell,
+.#{$name}-margin-bottom > tbody > .#{$name}-lastrow > .#{$name}-contentcell,
+.#{$name}-margin-bottom > tbody > .#{$name}-lastrow > .#{$name}-errorcell {
 	padding-bottom: 15px;
 }
-.#{$name}-margin-left .#{$name}-captioncell {
+.#{$name}-margin-left > tbody > .#{$name}-row > .#{$name}-captioncell {
 	padding-left: 18px;
 } 
-.#{$name}-margin-right .#{$name}-contentcell {
+.#{$name}-margin-right > tbody > .#{$name}-row > .#{$name}-contentcell {
 	padding-right: 18px;
 }
 /* form */

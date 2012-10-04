@@ -86,4 +86,11 @@ public interface WrappedSession {
      * @see PortletSession#invalidate()
      */
     public void invalidate();
+
+    /**
+     * Gets a string with a unique identifier for the session.
+     * 
+     * @return a unique session id string
+     */
+    public String getId();
 }

@@ -436,8 +436,10 @@ public class ComponentLocator {
         if (w == null) {
             return null;
         }
-
-        if (w instanceof VUI) {
+        String elementId = w.getElement().getId();
+        if (elementId != null && !elementId.isEmpty()) {
+            return "PID_S" + elementId;
+        } else if (w instanceof VUI) {
             return "";
         } else if (w instanceof VWindow) {
             Connector windowConnector = ConnectorMap.get(client)

@@ -23,30 +23,30 @@
 .#{$name}-captioncell .v-caption {
 	overflow: visible;
 }
-.#{$name}-spacing .#{$name}-row .#{$name}-captioncell, 
-.#{$name}-spacing .#{$name}-row .#{$name}-contentcell,
-.#{$name}-spacing .#{$name}-row .#{$name}-errorcell {
+.#{$name}-spacing > tbody > .#{$name}-row > .#{$name}-captioncell, 
+.#{$name}-spacing > tbody > .#{$name}-row > .#{$name}-contentcell,
+.#{$name}-spacing > tbody > .#{$name}-row > .#{$name}-errorcell {
 	padding-top: 6px;
 }
-.#{$name}-spacing .#{$name}-firstrow .#{$name}-captioncell, 
-.#{$name}-spacing .#{$name}-firstrow .#{$name}-contentcell,
-.#{$name}-spacing .#{$name}-firstrow .#{$name}-errorcell {
+.#{$name}-spacing > tbody > .#{$name}-firstrow > .#{$name}-captioncell, 
+.#{$name}-spacing > tbody > .#{$name}-firstrow > .#{$name}-contentcell,
+.#{$name}-spacing > tbody > .#{$name}-firstrow > .#{$name}-errorcell {
 	padding-top: 0;
 }
-.#{$name}-margin-top .#{$name}-firstrow .#{$name}-captioncell, 
-.#{$name}-margin-top .#{$name}-firstrow .#{$name}-contentcell,
-.#{$name}-margin-top .#{$name}-firstrow .#{$name}-errorcell {
+.#{$name}-margin-top > tbody > .#{$name}-firstrow > .#{$name}-captioncell, 
+.#{$name}-margin-top > tbody > .#{$name}-firstrow > .#{$name}-contentcell,
+.#{$name}-margin-top > tbody > .#{$name}-firstrow > .#{$name}-errorcell {
 	padding-top: 12px;
 }
-.#{$name}-margin-bottom .#{$name}-lastrow .#{$name}-captioncell,
-.#{$name}-margin-bottom .#{$name}-lastrow .#{$name}-contentcell,
-.#{$name}-margin-bottom .#{$name}-lastrow .#{$name}-errorcell {
+.#{$name}-margin-bottom > tbody > .#{$name}-lastrow > .#{$name}-captioncell,
+.#{$name}-margin-bottom > tbody > .#{$name}-lastrow > .#{$name}-contentcell,
+.#{$name}-margin-bottom > tbody > .#{$name}-lastrow > .#{$name}-errorcell {
 	padding-bottom: 12px;
 }
-.#{$name}-margin-left .#{$name}-captioncell {
+.#{$name}-margin-left > tbody > .#{$name}-row > .#{$name}-captioncell {
 	padding-left: 12px;
 } 
-.#{$name}-margin-right .#{$name}-contentcell {
+.#{$name}-margin-right > tbody > .#{$name}-row > .#{$name}-contentcell {
 	padding-right: 12px;
 }
 .#{$name}-captioncell .v-caption .v-required-field-indicator {

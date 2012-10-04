@@ -30,9 +30,12 @@ import com.google.gwt.user.client.ui.KeyboardListenerCollection;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.richtextarea.VRichTextArea;
+import com.vaadin.shared.Connector;
+import com.vaadin.shared.ui.ShortCutConstants;
 
 /**
  * A helper class to implement keyboard shorcut handling. Keeps a list of owners
@@ -108,15 +111,25 @@ public class ShortcutActionHandler {
             final UIDL action = (UIDL) it.next();
 
             int[] modifiers = null;
-            if (action.hasAttribute("mk")) {
-                modifiers = action.getIntArrayAttribute("mk");
+            if (action
+                    .hasAttribute(ShortCutConstants.ACTION_MODIFIER_KEYS_ATTRIBUTE)) {
+                modifiers = action
+                        .getIntArrayAttribute(ShortCutConstants.ACTION_MODIFIER_KEYS_ATTRIBUTE);
             }
 
             final ShortcutKeyCombination kc = new ShortcutKeyCombination(
-                    action.getIntAttribute("kc"), modifiers);
-            final String key = action.getStringAttribute("key");
-            final String caption = action.getStringAttribute("caption");
-            actions.add(new ShortcutAction(key, kc, caption));
+                    action.getIntAttribute(ShortCutConstants.ACTION_SHORTCUT_KEY_ATTRIBUTE),
+                    modifiers);
+            final String key = action
+                    .getStringAttribute(ShortCutConstants.ACTION_KEY_ATTRIBUTE);
+            final String caption = action
+                    .getStringAttribute(ShortCutConstants.ACTION_CAPTION_ATTRIBUTE);
+            final String targetPID = action
+                    .getStringAttribute(ShortCutConstants.ACTION_TARGET_ATTRIBUTE);
+            final String targetAction = action
+                    .getStringAttribute(ShortCutConstants.ACTION_TARGET_ACTION_ATTRIBUTE);
+            actions.add(new ShortcutAction(key, kc, caption, targetPID,
+                    targetAction));
         }
     }
 
@@ -171,11 +184,24 @@ public class ShortcutActionHandler {
         Scheduler.get().scheduleDeferred(new Command() {
             @Override
             public void execute() {
-                if (finalTarget != null) {
-                    client.updateVariable(paintableId, "actiontarget",
-                            finalTarget, false);
+                Connector shortcutTarget = ConnectorMap.get(client)
+                        .getConnector(a.getTargetCID());
+
+                boolean handledClientSide = false;
+                if (shortcutTarget instanceof ShortcutActionTarget) {
+                    handledClientSide = ((ShortcutActionTarget) shortcutTarget)
+                            .handleAction(a);
                 }
-                client.updateVariable(paintableId, "action", a.getKey(), true);
+                if (!handledClientSide) {
+                    if (finalTarget != null) {
+                        client.updateVariable(paintableId,
+                                ShortCutConstants.ACTION_TARGET_VARIABLE,
+                                finalTarget, false);
+                    }
+                    client.updateVariable(paintableId,
+                            ShortCutConstants.ACTION_TARGET_ACTION_VARIABLE,
+                            a.getKey(), true);
+                }
             }
         });
     }
@@ -281,30 +307,4 @@ class ShortcutKeyCombination {
         }
         return false;
     }
-}
-
-class ShortcutAction {
-
-    private final ShortcutKeyCombination sc;
-    private final String caption;
-    private final String key;
-
-    public ShortcutAction(String key, ShortcutKeyCombination sc, String caption) {
-        this.sc = sc;
-        this.key = key;
-        this.caption = caption;
-    }
-
-    public ShortcutKeyCombination getShortcutCombination() {
-        return sc;
-    }
-
-    public String getCaption() {
-        return caption;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
 }

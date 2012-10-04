@@ -115,7 +115,7 @@ public abstract class AbstractOrderedLayoutConnector extends
 
             if (captionElement == widgetElement) {
                 // Caption element already detached
-                rmeoveResizeListener(captionElement, slotCaptionResizeListener);
+                removeResizeListener(captionElement, slotCaptionResizeListener);
                 childCaptionElementHeight.remove(widgetElement);
                 return;
             }
@@ -460,14 +460,14 @@ public abstract class AbstractOrderedLayoutConnector extends
         Slot slot = getWidget().getSlot(child.getWidget());
 
         // Clear all possible listeners first
-        rmeoveResizeListener(slot.getWidget().getElement(),
+        removeResizeListener(slot.getWidget().getElement(),
                 childComponentResizeListener);
         if (slot.hasCaption()) {
-            rmeoveResizeListener(slot.getCaptionElement(),
+            removeResizeListener(slot.getCaptionElement(),
                     slotCaptionResizeListener);
         }
         if (slot.hasSpacing()) {
-            rmeoveResizeListener(slot.getSpacingElement(),
+            removeResizeListener(slot.getSpacingElement(),
                     spacingResizeListener);
         }
 
@@ -579,16 +579,16 @@ public abstract class AbstractOrderedLayoutConnector extends
         for (ComponentConnector child : getChildComponents()) {
             Slot slot = getWidget().getSlot(child.getWidget());
             if (slot.hasCaption()) {
-                rmeoveResizeListener(slot.getCaptionElement(),
+                removeResizeListener(slot.getCaptionElement(),
                         slotCaptionResizeListener);
             }
 
             if (slot.getSpacingElement() != null) {
-                rmeoveResizeListener(slot.getSpacingElement(),
+                removeResizeListener(slot.getSpacingElement(),
                         spacingResizeListener);
             }
 
-            rmeoveResizeListener(slot.getWidget().getElement(),
+            removeResizeListener(slot.getWidget().getElement(),
                     childComponentResizeListener);
         }
 
@@ -613,9 +613,9 @@ public abstract class AbstractOrderedLayoutConnector extends
      * @param el
      *            The element from where the resize listener should be removed
      * @param listener
-     *            THe listener to remove
+     *            The listener to remove
      */
-    private void rmeoveResizeListener(Element el, ElementResizeListener listener) {
+    private void removeResizeListener(Element el, ElementResizeListener listener) {
         getLayoutManager().removeElementResizeListener(el, listener);
     }
 

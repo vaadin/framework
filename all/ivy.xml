@@ -11,6 +11,7 @@
     </configurations>
     <publications>
         <artifact type="zip" ext="zip" />
+        <artifact type="javadoc" ext="jar" m:classifier="javadoc" />
     </publications>
     <dependencies defaultconf="build">
         <!-- API DEPENDENCIES -->

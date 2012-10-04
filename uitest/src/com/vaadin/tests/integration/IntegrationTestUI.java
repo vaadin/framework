@@ -1,31 +1,27 @@
 package com.vaadin.tests.integration;
 
-import com.vaadin.LegacyApplication;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.Resource;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.UI.LegacyWindow;
+import com.vaadin.ui.UI;
 
-public class IntegrationTestApplication extends LegacyApplication {
-
+public class IntegrationTestUI extends UI {
     @Override
-    public void init() {
-        LegacyWindow window = new LegacyWindow("Vaadin Application");
-        setMainWindow(window);
-
+    protected void init(VaadinRequest request) {
         final Table table = new Table();
         table.addContainerProperty("icon", Resource.class, null);
         table.setItemIconPropertyId("icon");
         table.addContainerProperty("country", String.class, null);
-        table.setRowHeaderMode(Table.ROW_HEADER_MODE_ICON_ONLY);
+        table.setRowHeaderMode(Table.RowHeaderMode.ICON_ONLY);
         table.setImmediate(true);
         table.setSelectable(true);
         table.setVisibleColumns(new Object[] { "country" });
-        window.addComponent(table);
+        addComponent(table);
 
         Item item = table.addItem("FI");
         item.getItemProperty("icon").setValue(new ClassResource("fi.gif"));
@@ -35,12 +31,12 @@ public class IntegrationTestApplication extends LegacyApplication {
         item.getItemProperty("country").setValue("Sweden");
 
         final Label selectedLabel = new Label();
-        table.addListener(new ValueChangeListener() {
+        table.addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
                 selectedLabel.setValue(String.valueOf(table.getValue()));
             }
         });
-        window.addComponent(selectedLabel);
+        addComponent(selectedLabel);
     }
 }

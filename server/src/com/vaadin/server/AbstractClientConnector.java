@@ -290,6 +290,11 @@ public abstract class AbstractClientConnector implements ClientConnector {
         @Override
         public Object invoke(Object proxy, Method method, Object[] args)
                 throws Throwable {
+            if (method.getDeclaringClass() == Object.class) {
+                // Don't add Object methods such as toString and hashCode as
+                // invocations
+                return method.invoke(this, args);
+            }
             addMethodInvocationToQueue(rpcInterfaceName, method, args);
             return null;
         }

@@ -437,8 +437,10 @@ public abstract class VaadinService implements Serializable {
      * @throws ServletException
      * @throws MalformedURLException
      */
-    protected abstract VaadinServiceSession createVaadinSession(
-            VaadinRequest request) throws ServiceException;
+    protected VaadinServiceSession createVaadinSession(VaadinRequest request)
+            throws ServiceException {
+        return new VaadinServiceSession(this);
+    }
 
     private void onVaadinSessionStarted(VaadinRequest request,
             VaadinServiceSession session) throws ServiceException {

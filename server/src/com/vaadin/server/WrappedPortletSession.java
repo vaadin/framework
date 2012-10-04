@@ -74,4 +74,9 @@ public class WrappedPortletSession implements WrappedSession {
     public void invalidate() {
         session.invalidate();
     }
+
+    @Override
+    public String getId() {
+        return session.getId();
+    }
 }
