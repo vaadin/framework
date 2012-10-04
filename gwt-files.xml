@@ -49,7 +49,7 @@
 			<exclude name="license*" />
 			<exclude name="LICENSE*" />
 
-			<!-- Used by client and server apparently... -->
+			<!-- Package in vaadin-shared-deps.jar -->
 			<exclude name="com/google/gwt/thirdparty/guava/**" />
 
 			<!-- Overridden in Vaadin -->
@@ -109,10 +109,6 @@
 			<include name="com/google/gwt/*/shared/**" />
 			<include name="com/google/gwt/*/*/shared/**" />
 			<include name="com/google/web/bindery/*/shared/**" />
-		</fileset>
-		<fileset dir="${gwt.dev.jar.files}">
-			<!-- Used by client and server apparently... -->
-			<include name="com/google/gwt/thirdparty/guava/**" />
 		</fileset>
 	</union>
 
