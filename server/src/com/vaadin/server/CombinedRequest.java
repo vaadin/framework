@@ -18,6 +18,8 @@ package com.vaadin.server;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -131,12 +133,17 @@ public class CombinedRequest implements VaadinRequest {
     public BrowserDetails getBrowserDetails() {
         return new BrowserDetails() {
             @Override
-            public String getUriFragment() {
-                String fragment = secondRequest.getParameter("fr");
-                if (fragment == null) {
-                    return "";
+            public URI getLocation() {
+                String location = secondRequest.getParameter("loc");
+                if (location == null) {
+                    return null;
                 } else {
-                    return fragment;
+                    try {
+                        return new URI(location);
+                    } catch (URISyntaxException e) {
+                        throw new RuntimeException(
+                                "Invalid location URI received from client", e);
+                    }
                 }
             }
 

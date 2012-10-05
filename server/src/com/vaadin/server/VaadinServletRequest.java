@@ -16,6 +16,8 @@
 
 package com.vaadin.server;
 
+import java.net.URI;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
@@ -86,7 +88,7 @@ public class VaadinServletRequest extends HttpServletRequestWrapper implements
     public BrowserDetails getBrowserDetails() {
         return new BrowserDetails() {
             @Override
-            public String getUriFragment() {
+            public URI getLocation() {
                 return null;
             }
 

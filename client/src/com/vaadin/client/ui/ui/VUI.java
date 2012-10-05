@@ -128,11 +128,11 @@ public class VUI extends SimplePanel implements ResizeHandler,
         public void onValueChange(ValueChangeEvent<String> event) {
             String newFragment = event.getValue();
 
-            // Send the new fragment to the server if it has changed
+            // Send the location to the server if the fragment has changed
             if (!newFragment.equals(currentFragment) && connection != null) {
                 currentFragment = newFragment;
-                connection.updateVariable(id, UIConstants.FRAGMENT_VARIABLE,
-                        newFragment, true);
+                connection.updateVariable(id, UIConstants.LOCATION_VARIABLE,
+                        Window.Location.getHref(), true);
             }
         }
     };

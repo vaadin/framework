@@ -78,7 +78,7 @@ public class LazyInitUIs extends AbstractTestUIProvider {
         info += "<br />pathInfo: " + request.getRequestPathInfo();
         info += "<br />parameters: " + request.getParameterMap().keySet();
         info += "<br />uri fragment: "
-                + request.getBrowserDetails().getUriFragment();
+                + request.getBrowserDetails().getLocation().getFragment();
         return new Label(info, ContentMode.HTML);
     }
 

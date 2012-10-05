@@ -680,10 +680,10 @@ public abstract class UI extends AbstractComponentContainer implements
             actionManager.handleActions(variables, this);
         }
 
-        if (variables.containsKey(UIConstants.FRAGMENT_VARIABLE)) {
-            String fragment = (String) variables
-                    .get(UIConstants.FRAGMENT_VARIABLE);
-            getPage().setFragment(fragment, true);
+        if (variables.containsKey(UIConstants.LOCATION_VARIABLE)) {
+            String location = (String) variables
+                    .get(UIConstants.LOCATION_VARIABLE);
+            getPage().updateLocation(location);
         }
     }
 
