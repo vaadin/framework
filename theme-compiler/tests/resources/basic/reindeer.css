@@ -830,10 +830,6 @@ div.v-app-loading {
 	width: 200px;
 }
 
-.v-app-loginpage .v-button, .v-app-loginpage .v-button {
-	float: left;
-}
-
 .v-menubar {
 	float: left;
 	white-space: nowrap;
@@ -2406,7 +2402,6 @@ div.v-window-header {
 
 .v-ie6 .v-window-modalitycurtain {
 	position: absolute;
-	top: expression(document.documentElement.scrollTop +   "px");
 }
 
 .v-ie6 .v-window {
@@ -2528,7 +2523,7 @@ div.v-window-header {
 	background: #e4e4e4 repeat-x;
 	background-image: url(common/img/vertical-sprites.png);
 	-background-image: url(common/img/vertical-sprites-ie6.png);
-	background-position: left -0px;
+	background-position: left 0px;
 	font-size: 11px;
 	line-height: normal;
 	border-top: 1px solid #bebebe;
@@ -2572,7 +2567,7 @@ div.v-window-header {
 .v-button:focus {
 	background-image: url(button/img/button-sprites.png);
 	-background-image: url(button/img/button-sprites-ie6.png);
-	background-position: left -0px;
+	background-position: left 0px;
 	outline: none;
 }
 
@@ -2632,7 +2627,7 @@ div.v-window-header {
 .black .v-button:focus {
 	background-image: url(button/img/black-button-sprites.png);
 	-background-image: url(button/img/black-button-sprites-ie6.png);
-	background-position: left -0px;
+	background-position: left 0px;
 }
 
 .black .v-button:focus .v-button-wrap {
@@ -3378,7 +3373,7 @@ td.v-datefield-calendarpanel-nextyear {
 .black .v-datefield-popupcalendar .v-datefield-button {
 	background-image: url(common/img/black-vertical-sprites.png);
 	-background-image: url(common/img/black-vertical-sprites-ie6.png);
-	background-position: left -0px;
+	background-position: left 0px;
 }
 
 .black .v-datefield-popupcalendar .v-datefield-button:active {
@@ -4424,7 +4419,7 @@ td.v-datefield-calendarpanel-nextyear {
 	width: 7px;
 	background-repeat: repeat-y;
 	background-image: url(common/img/horizontal-sprites.png);
-	background-position: -0px top;
+	background-position: 0px top;
 }
 
 .v-splitpanel-hsplitter div {
