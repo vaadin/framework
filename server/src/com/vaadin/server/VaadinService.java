@@ -77,6 +77,9 @@ public abstract class VaadinService implements Serializable {
 
     private final EventRouter eventRouter = new EventRouter();
 
+    private SystemMessagesProvider systemMessagesProvider = DefaultSystemMessagesProvider
+            .get();
+
     /**
      * Creates a new vaadin service based on a deployment configuration
      * 
@@ -206,11 +209,54 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
-     * Gets the system messages object
+     * Sets the system messages provider to use for getting system messages to
+     * display to users of this service.
      * 
-     * @return the system messages object
+     * @see #getSystemMessagesProvider()
+     * 
+     * @param systemMessagesProvider
+     *            the system messages provider; <code>null</code> is not
+     *            allowed.
      */
-    public abstract SystemMessages getSystemMessages();
+    public void setSystemMessagesProvider(
+            SystemMessagesProvider systemMessagesProvider) {
+        if (systemMessagesProvider == null) {
+            throw new IllegalArgumentException(
+                    "SystemMessagesProvider can not be null.");
+        }
+        this.systemMessagesProvider = systemMessagesProvider;
+    }
+
+    /**
+     * Gets the system messages provider currently defined for this service.
+     * <p>
+     * By default, the {@link DefaultSystemMessagesProvider} which always
+     * provides the built-in default {@link SystemMessages} is used.
+     * </p>
+     * 
+     * @see #setSystemMessagesProvider(SystemMessagesProvider)
+     * @see SystemMessagesProvider
+     * @see SystemMessages
+     * 
+     * @return the system messages provider; not <code>null</code>
+     */
+    public SystemMessagesProvider getSystemMessagesProvider() {
+        return systemMessagesProvider;
+    }
+
+    /**
+     * Gets the system message to use for a specific locale. This method may
+     * also be implemented to use information from current instances of various
+     * objects, which means that this method might return different values for
+     * the same locale under different circumstances.
+     * 
+     * @param locale
+     *            the desired locale for the system messages
+     * @return the system messages to use
+     */
+    public SystemMessages getSystemMessages(Locale locale) {
+        return getSystemMessagesProvider().getSystemMessages(locale);
+    }
 
     /**
      * Returns the context base directory.

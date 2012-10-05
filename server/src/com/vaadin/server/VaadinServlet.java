@@ -378,8 +378,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // This can be removed if cookieless mode (#3228) is supported
             if (request.getRequestedSessionId() == null) {
                 // User has cookies disabled
-                SystemMessages systemMessages = getService()
-                        .getSystemMessages();
+                SystemMessages systemMessages = getService().getSystemMessages(
+                        ServletPortletHelper.findLocale(null, null, request));
                 criticalNotification(request, response,
                         systemMessages.getCookiesDisabledCaption(),
                         systemMessages.getCookiesDisabledMessage(), null,
@@ -535,7 +535,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
             Throwable e) throws IOException, ServletException {
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {
-            SystemMessages ci = getService().getSystemMessages();
+            SystemMessages ci = getService().getSystemMessages(
+                    ServletPortletHelper.findLocale(null, vaadinSession,
+                            request));
             criticalNotification(request, response,
                     ci.getInternalErrorCaption(), ci.getInternalErrorMessage(),
                     null, ci.getInternalErrorURL());
@@ -610,7 +612,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         try {
-            SystemMessages ci = getService().getSystemMessages();
+            SystemMessages ci = getService().getSystemMessages(
+                    ServletPortletHelper.findLocale(null, null, request));
             RequestType requestType = getRequestType(request);
             if (requestType == RequestType.UIDL) {
                 /*
@@ -655,7 +658,12 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         try {
-            SystemMessages ci = getService().getSystemMessages();
+            /*
+             * We might have a UI, but we don't want to leak any information in
+             * this case so just use the info provided in the request.
+             */
+            SystemMessages ci = getService().getSystemMessages(
+                    request.getLocale());
             RequestType requestType = getRequestType(request);
             if (requestType == RequestType.UIDL) {
                 // send uidl redirect

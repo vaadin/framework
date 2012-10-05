@@ -101,11 +101,6 @@ public class VaadinServletService extends VaadinService {
     }
 
     @Override
-    public SystemMessages getSystemMessages() {
-        return ServletPortletHelper.DEFAULT_SYSTEM_MESSAGES;
-    }
-
-    @Override
     public File getBaseDirectory() {
         final String realPath = VaadinServlet.getResourcePath(
                 servlet.getServletContext(), "/");

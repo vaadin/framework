@@ -1,10 +1,12 @@
 package com.vaadin.server;
 
 import java.io.Serializable;
+import java.util.Locale;
 import java.util.Properties;
 
 import com.vaadin.LegacyApplication;
 import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
 
 /*
@@ -171,6 +173,54 @@ class ServletPortletHelper implements Serializable {
                             + VaadinServiceSession.UI_PARAMETER
                             + "\" init parameter.");
         }
+    }
+
+    /**
+     * Helper to find the most most suitable Locale. These potential sources are
+     * checked in order until a Locale is found:
+     * <ol>
+     * <li>The passed component (or UI) if not null</li>
+     * <li>{@link UI#getCurrent()} if defined</li>
+     * <li>The passed session if not null</li>
+     * <li>{@link VaadinServiceSession#getCurrent()} if defined</li>
+     * <li>The passed request if not null</li>
+     * <li>{@link VaadinService#getCurrentRequest()} if defined</li>
+     * <li>{@link Locale#getDefault()}</li>
+     * </ol>
+     */
+    static Locale findLocale(Component component, VaadinServiceSession session,
+            VaadinRequest request) {
+        if (component == null) {
+            component = UI.getCurrent();
+        }
+        if (component != null) {
+            Locale locale = component.getLocale();
+            if (locale != null) {
+                return locale;
+            }
+        }
+
+        if (session == null) {
+            session = VaadinServiceSession.getCurrent();
+        }
+        if (session != null) {
+            Locale locale = session.getLocale();
+            if (locale != null) {
+                return locale;
+            }
+        }
+
+        if (request == null) {
+            request = VaadinService.getCurrentRequest();
+        }
+        if (request != null) {
+            Locale locale = request.getLocale();
+            if (locale != null) {
+                return locale;
+            }
+        }
+
+        return Locale.getDefault();
     }
 
 }

@@ -627,7 +627,9 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {
-            SystemMessages ci = getService().getSystemMessages();
+            SystemMessages ci = getService().getSystemMessages(
+                    ServletPortletHelper.findLocale(null, vaadinSession,
+                            request));
             criticalNotification(request, response,
                     ci.getInternalErrorCaption(), ci.getInternalErrorMessage(),
                     null, ci.getInternalErrorURL());

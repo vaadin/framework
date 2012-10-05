@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -430,8 +431,11 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         appConfig.put("initialParams", parameterMap);
 
+        // Use locale from session if set, else from the request
+        Locale locale = ServletPortletHelper.findLocale(null,
+                context.getSession(), context.getRequest());
         // Get system messages
-        SystemMessages systemMessages = vaadinService.getSystemMessages();
+        SystemMessages systemMessages = vaadinService.getSystemMessages(locale);
         if (systemMessages != null) {
             // Write the CommunicationError -message to client
             JSONObject comErrMsg = new JSONObject();
