@@ -58,7 +58,7 @@ public class Flot extends AbstractJavaScriptComponent {
                     Double.valueOf(points[i])));
         }
 
-        getState().getSeries().add(pointList);
+        getState().series.add(pointList);
     }
 
     public void highlight(int seriesIndex, int dataIndex) {
