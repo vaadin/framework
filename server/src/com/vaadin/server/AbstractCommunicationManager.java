@@ -593,7 +593,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
             if (!handleVariables(request, response, callback, session, uI)) {
 
                 // var inconsistency; the client is probably out-of-sync
-                SystemMessages ci = response.getService().getSystemMessages();
+                SystemMessages ci = response.getService().getSystemMessages(
+                        uI.getLocale());
                 String msg = ci.getOutOfSyncMessage();
                 String cap = ci.getOutOfSyncCaption();
                 if (msg != null || cap != null) {
@@ -1049,7 +1050,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 }
             }
 
-            SystemMessages ci = request.getService().getSystemMessages();
+            SystemMessages ci = request.getService().getSystemMessages(
+                    ui.getLocale());
 
             // meta instruction for client to enable auto-forward to
             // sessionExpiredURL after timer expires.

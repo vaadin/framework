@@ -112,11 +112,6 @@ public class VaadinPortletService extends VaadinService {
     }
 
     @Override
-    public SystemMessages getSystemMessages() {
-        return ServletPortletHelper.DEFAULT_SYSTEM_MESSAGES;
-    }
-
-    @Override
     public File getBaseDirectory() {
         PortletContext context = getPortlet().getPortletContext();
         String resultPath = context.getRealPath("/");
