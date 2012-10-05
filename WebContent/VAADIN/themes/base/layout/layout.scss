@@ -126,7 +126,7 @@ div.v-layout.v-horizontal.v-widget {
 	white-space: nowrap;
 }
 
-.v-align-middle > .v,
+.v-align-middle > .v-widget,
 .v-align-bottom > .v-widget {
 	display: inline-block;
 }
@@ -186,7 +186,7 @@ div.v-layout.v-horizontal.v-widget {
  	vertical-align:top;
 }
 
-.v-caption-on-left > .v,
+.v-caption-on-left > .v-widget,
 .v-caption-on-right > .v-widget {
 	display: inline-block;
 	vertical-align: middle;
