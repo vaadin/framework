@@ -65,17 +65,6 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             }
 
             @Override
-            protected String getApplicationId(BootstrapContext context) {
-                PortletRequest portletRequest = VaadinPortletRequest.cast(
-                        context.getRequest()).getPortletRequest();
-                /*
-                 * We need to generate a unique ID because some portals already
-                 * create a DIV with the portlet's Window ID as the DOM ID.
-                 */
-                return "v-" + portletRequest.getWindowID();
-            }
-
-            @Override
             protected String getAppUri(BootstrapContext context) {
                 return getRenderResponse(context).createActionURL().toString();
             }
