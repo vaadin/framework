@@ -2589,14 +2589,14 @@ public class ApplicationConnection {
             uidlUri = themeUri + uidlUri.substring(7);
         }
 
-        if (uidlUri.startsWith(ApplicationConstants.CONNECTOR_PROTOCOL_PREFIX)) {
+        if (uidlUri.startsWith(ApplicationConstants.DEPENDENCY_PROTOCOL_PREFIX)) {
             // getAppUri *should* always end with /
-            // substring *should* always start with / (connector:///foo.bar
-            // without connector://)
+            // substring *should* always start with / (dependency:///foo.bar
+            // without dependency://)
             uidlUri = ApplicationConstants.APP_PROTOCOL_PREFIX
-                    + ApplicationConstants.CONNECTOR_RESOURCE_PREFIX
+                    + ApplicationConstants.DEPENDENCY_RESOURCE_PREFIX
                     + uidlUri
-                            .substring(ApplicationConstants.CONNECTOR_PROTOCOL_PREFIX
+                            .substring(ApplicationConstants.DEPENDENCY_PROTOCOL_PREFIX
                                     .length());
             // Let translation of app:// urls take care of the rest
         }
