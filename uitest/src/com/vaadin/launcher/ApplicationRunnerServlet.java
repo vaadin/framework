@@ -74,7 +74,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     }
 
     @Override
-    protected void servletInitialized() {
+    protected void servletInitialized() throws ServletException {
         super.servletInitialized();
         getService().addSessionInitListener(new SessionInitListener() {
             @Override

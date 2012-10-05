@@ -85,13 +85,13 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @param servletConfig
      *            the object containing the servlet's configuration and
      *            initialization parameters
-     * @throws javax.servlet.ServletException
+     * @throws ServletException
      *             if an exception has occurred that interferes with the
      *             servlet's normal operation.
      */
     @Override
     public void init(javax.servlet.ServletConfig servletConfig)
-            throws javax.servlet.ServletException {
+            throws ServletException {
         CurrentInstance.clearAll();
         setCurrent(this);
         super.init(servletConfig);
@@ -126,7 +126,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         CurrentInstance.clearAll();
     }
 
-    protected void servletInitialized() {
+    protected void servletInitialized() throws ServletException {
         // Empty by default
     }
 

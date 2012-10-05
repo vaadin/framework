@@ -256,7 +256,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         CurrentInstance.clearAll();
     }
 
-    protected void portletInitialized() {
+    protected void portletInitialized() throws PortletException {
 
     }
 
