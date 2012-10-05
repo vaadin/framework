@@ -3,6 +3,7 @@
 .v-datefield {
 	white-space: nowrap;
 	display: inline-block; /* Force minimum width */
+	line-height:0; /* Force minimum height */
 }
 .v-datefield-textfield {
 	vertical-align: top;
