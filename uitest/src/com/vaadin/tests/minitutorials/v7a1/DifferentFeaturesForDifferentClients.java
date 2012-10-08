@@ -67,7 +67,7 @@ class DefaultRoot extends UI {
 class TouchRoot extends UI {
     @Override
     protected void init(VaadinRequest request) {
-        WebBrowser webBrowser = request.getBrowserDetails().getWebBrowser();
+        WebBrowser webBrowser = getSession().getBrowser();
         String screenSize = "" + webBrowser.getScreenWidth() + "x"
                 + webBrowser.getScreenHeight();
         getContent().addComponent(

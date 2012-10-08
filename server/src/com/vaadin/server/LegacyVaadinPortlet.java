@@ -54,7 +54,7 @@ public class LegacyVaadinPortlet extends VaadinPortlet {
                     throws ServiceException {
                 try {
                     onVaadinSessionStarted(
-                            VaadinPortletRequest.cast(event.getRequest()),
+                            (VaadinPortletRequest) event.getRequest(),
                             (VaadinPortletSession) event.getSession());
                 } catch (PortletException e) {
                     throw new ServiceException(e);

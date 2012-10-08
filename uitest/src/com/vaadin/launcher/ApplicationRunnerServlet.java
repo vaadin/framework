@@ -162,8 +162,7 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
             throw new ServiceException(
                     new InstantiationException(
                             "Failed to load application class: "
-                                    + getApplicationRunnerApplicationClassName(VaadinServletRequest
-                                            .cast(request))));
+                                    + getApplicationRunnerApplicationClassName((VaadinServletRequest) request)));
         }
     }
 

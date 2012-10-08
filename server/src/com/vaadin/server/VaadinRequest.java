@@ -27,8 +27,6 @@ import javax.portlet.PortletRequest;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
-import com.vaadin.ui.UI;
-
 /**
  * A generic request to the server, wrapping a more specific request type, e.g.
  * HttpServletReqest or PortletRequest.
@@ -214,24 +212,6 @@ public interface VaadinRequest extends Serializable {
      * 
      */
     public String getContentType();
-
-    /**
-     * Gets detailed information about the browser from which the request
-     * originated. This consists of information that is not available from
-     * normal HTTP requests, but requires additional information to be extracted
-     * for instance using javascript in the browser.
-     * 
-     * This information is only guaranteed to be available in some special
-     * cases, for instance in {@link UI#init(VaadinRequest)}.
-     * 
-     * @return the browser details, or <code>null</code> if details are not
-     *         available
-     * 
-     * @see BrowserDetails
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    public BrowserDetails getBrowserDetails();
 
     /**
      * Gets locale information from the query, e.g. using the Accept-Language

@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.ui;
 
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.Page;
 import com.vaadin.server.UIClassSelectionEvent;
 import com.vaadin.server.UICreateEvent;
 import com.vaadin.server.UIProviderEvent;
@@ -76,7 +77,7 @@ public class LazyInitUIs extends AbstractTestUIProvider {
         info += "<br />pathInfo: " + request.getRequestPathInfo();
         info += "<br />parameters: " + request.getParameterMap().keySet();
         info += "<br />uri fragment: "
-                + request.getBrowserDetails().getLocation().getFragment();
+                + Page.getCurrent().getLocation().getFragment();
         return new Label(info, ContentMode.HTML);
     }
 

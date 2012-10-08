@@ -18,7 +18,6 @@ package com.vaadin.server;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.util.Locale;
 import java.util.Map;
 
@@ -149,28 +148,6 @@ public class VaadinPortletRequest implements VaadinRequest {
     }
 
     @Override
-    public BrowserDetails getBrowserDetails() {
-        return new BrowserDetails() {
-            @Override
-            public URI getLocation() {
-                return null;
-            }
-
-            @Override
-            public String getWindowName() {
-                return null;
-            }
-
-            @Override
-            public WebBrowser getWebBrowser() {
-                VaadinPortletSession context = (VaadinPortletSession) VaadinServiceSession
-                        .getCurrent();
-                return context.getBrowser();
-            }
-        };
-    }
-
-    @Override
     public Locale getLocale() {
         return request.getLocale();
     }
@@ -205,25 +182,6 @@ public class VaadinPortletRequest implements VaadinRequest {
     @Override
     public VaadinPortletService getService() {
         return vaadinService;
-    }
-
-    /**
-     * Helper method to get a {@link VaadinPortletRequest} from a
-     * {@link VaadinRequest}. Aside from casting, this method also takes care of
-     * situations where there's another level of wrapping.
-     * 
-     * @param request
-     *            a Vaadin request
-     * @return a Vaadin portlet request
-     * @throws ClassCastException
-     *             if the Vaadin request doesn't wrap a portlet request
-     */
-    public static VaadinPortletRequest cast(VaadinRequest request) {
-        if (request instanceof CombinedRequest) {
-            CombinedRequest combinedRequest = (CombinedRequest) request;
-            request = combinedRequest.getSecondRequest();
-        }
-        return (VaadinPortletRequest) request;
     }
 
     @Override
