@@ -40,7 +40,7 @@ public class VaadinServletService extends VaadinService {
 
     @Override
     public String getStaticFileLocation(VaadinRequest request) {
-        HttpServletRequest servletRequest = VaadinServletRequest.cast(request);
+        VaadinServletRequest servletRequest = (VaadinServletRequest) request;
         String staticFileLocation;
         // if property is defined in configurations, use that
         staticFileLocation = getDeploymentConfiguration()
@@ -146,8 +146,7 @@ public class VaadinServletService extends VaadinService {
         RequestType type = (RequestType) request.getAttribute(RequestType.class
                 .getName());
         if (type == null) {
-            type = getServlet().getRequestType(
-                    VaadinServletRequest.cast(request));
+            type = getServlet().getRequestType((VaadinServletRequest) request);
             request.setAttribute(RequestType.class.getName(), type);
         }
         return type;
@@ -156,8 +155,7 @@ public class VaadinServletService extends VaadinService {
     @Override
     protected URL getApplicationUrl(VaadinRequest request)
             throws MalformedURLException {
-        return getServlet().getApplicationUrl(
-                VaadinServletRequest.cast(request));
+        return getServlet().getApplicationUrl((VaadinServletRequest) request);
     }
 
     @Override
@@ -168,15 +166,9 @@ public class VaadinServletService extends VaadinService {
 
     public static HttpServletRequest getCurrentServletRequest() {
         VaadinRequest currentRequest = VaadinService.getCurrentRequest();
-        try {
-            VaadinServletRequest request = VaadinServletRequest
-                    .cast(currentRequest);
-            if (request != null) {
-                return request.getHttpServletRequest();
-            } else {
-                return null;
-            }
-        } catch (ClassCastException e) {
+        if (currentRequest instanceof VaadinServletRequest) {
+            return (VaadinServletRequest) currentRequest;
+        } else {
             return null;
         }
     }
@@ -196,7 +188,7 @@ public class VaadinServletService extends VaadinService {
         String appId = null;
         try {
             URL appUrl = getServlet().getApplicationUrl(
-                    VaadinServletRequest.cast(request));
+                    (VaadinServletRequest) request);
             appId = appUrl.getPath();
         } catch (MalformedURLException e) {
             // Just ignore problem here

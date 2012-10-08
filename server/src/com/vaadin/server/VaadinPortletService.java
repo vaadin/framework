@@ -40,6 +40,12 @@ public class VaadinPortletService extends VaadinService {
         return portlet;
     }
 
+    private static String getPortalProperty(VaadinRequest request,
+            String portalParameterVaadinWidgetset) {
+        return ((VaadinPortletRequest) request)
+                .getPortalProperty(portalParameterVaadinWidgetset);
+    }
+
     @Override
     public String getConfiguredWidgetset(VaadinRequest request) {
 
@@ -50,7 +56,7 @@ public class VaadinPortletService extends VaadinService {
         if (widgetset == null) {
             // If no widgetset defined for the application, check the
             // portal property
-            widgetset = VaadinPortletRequest.cast(request).getPortalProperty(
+            widgetset = getPortalProperty(request,
                     VaadinPortlet.PORTAL_PARAMETER_VAADIN_WIDGETSET);
             if ("com.vaadin.portal.gwt.PortalDefaultWidgetSet"
                     .equals(widgetset)) {
@@ -73,8 +79,8 @@ public class VaadinPortletService extends VaadinService {
     public String getConfiguredTheme(VaadinRequest request) {
 
         // is the default theme defined by the portal?
-        String themeName = VaadinPortletRequest.cast(request)
-                .getPortalProperty(Constants.PORTAL_PARAMETER_VAADIN_THEME);
+        String themeName = getPortalProperty(request,
+                Constants.PORTAL_PARAMETER_VAADIN_THEME);
 
         if (themeName == null) {
             // no, using the default theme defined by Vaadin
@@ -91,9 +97,8 @@ public class VaadinPortletService extends VaadinService {
 
     @Override
     public String getStaticFileLocation(VaadinRequest request) {
-        String staticFileLocation = VaadinPortletRequest.cast(request)
-                .getPortalProperty(
-                        Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH);
+        String staticFileLocation = getPortalProperty(request,
+                Constants.PORTAL_PARAMETER_VAADIN_RESOURCE_PATH);
         if (staticFileLocation != null) {
             // remove trailing slash if any
             while (staticFileLocation.endsWith(".")) {
@@ -169,8 +174,7 @@ public class VaadinPortletService extends VaadinService {
         RequestType type = (RequestType) request.getAttribute(RequestType.class
                 .getName());
         if (type == null) {
-            type = getPortlet().getRequestType(
-                    VaadinPortletRequest.cast(request));
+            type = getPortlet().getRequestType((VaadinPortletRequest) request);
             request.setAttribute(RequestType.class.getName(), type);
         }
         return type;
@@ -184,15 +188,9 @@ public class VaadinPortletService extends VaadinService {
 
     public static PortletRequest getCurrentPortletRequest() {
         VaadinRequest currentRequest = VaadinService.getCurrentRequest();
-        try {
-            VaadinPortletRequest request = VaadinPortletRequest
-                    .cast(currentRequest);
-            if (request != null) {
-                return request.getPortletRequest();
-            } else {
-                return null;
-            }
-        } catch (ClassCastException e) {
+        if (currentRequest instanceof VaadinPortletRequest) {
+            return ((VaadinPortletRequest) currentRequest).getPortletRequest();
+        } else {
             return null;
         }
     }
@@ -223,7 +221,7 @@ public class VaadinPortletService extends VaadinService {
     @Override
     public String getMainDivId(VaadinServiceSession session,
             VaadinRequest request, Class<? extends UI> uiClass) {
-        PortletRequest portletRequest = VaadinPortletRequest.cast(request)
+        PortletRequest portletRequest = ((VaadinPortletRequest) request)
                 .getPortletRequest();
         /*
          * We need to generate a unique ID because some portals already create a

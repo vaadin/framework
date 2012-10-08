@@ -37,17 +37,15 @@ public class UnsupportedBrowserHandler implements RequestHandler {
     public boolean handleRequest(VaadinServiceSession session,
             VaadinRequest request, VaadinResponse response) throws IOException {
 
-        if (request.getBrowserDetails() != null) {
-            // Check if the browser is supported
-            // If Chrome Frame is available we'll assume it's ok
-            WebBrowser b = request.getBrowserDetails().getWebBrowser();
-            if (b.isTooOldToFunctionProperly() && !b.isChromeFrameCapable()) {
-                // bypass if cookie set
-                String c = request.getHeader("Cookie");
-                if (c == null || !c.contains(FORCE_LOAD_COOKIE)) {
-                    writeBrowserTooOldPage(request, response);
-                    return true; // request handled
-                }
+        // Check if the browser is supported
+        // If Chrome Frame is available we'll assume it's ok
+        WebBrowser b = session.getBrowser();
+        if (b.isTooOldToFunctionProperly() && !b.isChromeFrameCapable()) {
+            // bypass if cookie set
+            String c = request.getHeader("Cookie");
+            if (c == null || !c.contains(FORCE_LOAD_COOKIE)) {
+                writeBrowserTooOldPage(request, response);
+                return true; // request handled
             }
         }
 
@@ -64,7 +62,7 @@ public class UnsupportedBrowserHandler implements RequestHandler {
     protected void writeBrowserTooOldPage(VaadinRequest request,
             VaadinResponse response) throws IOException {
         Writer page = response.getWriter();
-        WebBrowser b = request.getBrowserDetails().getWebBrowser();
+        WebBrowser b = VaadinServiceSession.getCurrent().getBrowser();
 
         page.write("<html><body><h1>I'm sorry, but your browser is not supported</h1>"
                 + "<p>The version ("

@@ -43,7 +43,6 @@ import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
 import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinRequest.BrowserDetails;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServiceSession;
 import com.vaadin.server.VaadinServlet;
@@ -1003,8 +1002,7 @@ public abstract class UI extends AbstractComponentContainer implements
      * state of the UI is not properly set up when the constructor is invoked.
      * <p>
      * The {@link VaadinRequest} can be used to get information about the
-     * request that caused this UI to be created. {@link BrowserDetails} will be
-     * available in the request.
+     * request that caused this UI to be created.
      * </p>
      * 
      * @param request

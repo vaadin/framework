@@ -16,8 +16,6 @@
 
 package com.vaadin.server;
 
-import java.net.URI;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
@@ -83,44 +81,4 @@ public class VaadinServletRequest extends HttpServletRequestWrapper implements
     public VaadinServletService getService() {
         return vaadinService;
     }
-
-    @Override
-    public BrowserDetails getBrowserDetails() {
-        return new BrowserDetails() {
-            @Override
-            public URI getLocation() {
-                return null;
-            }
-
-            @Override
-            public String getWindowName() {
-                return null;
-            }
-
-            @Override
-            public WebBrowser getWebBrowser() {
-                return VaadinServiceSession.getCurrent().getBrowser();
-            }
-        };
-    }
-
-    /**
-     * Helper method to get a {@link VaadinServletRequest} from a
-     * {@link VaadinRequest}. Aside from casting, this method also takes care of
-     * situations where there's another level of wrapping.
-     * 
-     * @param request
-     *            a Vaadin request
-     * @return a Vaadin http servlet request
-     * @throws ClassCastException
-     *             if the Vaadin request doesn't wrap a http servlet request
-     */
-    public static VaadinServletRequest cast(VaadinRequest request) {
-        if (request instanceof CombinedRequest) {
-            CombinedRequest combinedRequest = (CombinedRequest) request;
-            request = combinedRequest.getSecondRequest();
-        }
-        return (VaadinServletRequest) request;
-    }
-
 }

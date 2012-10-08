@@ -26,7 +26,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.vaadin.event.EventRouter;
-import com.vaadin.server.VaadinRequest.BrowserDetails;
 import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.ui.PageClientRpc;
 import com.vaadin.shared.ui.ui.UIConstants;
@@ -433,9 +432,15 @@ public class Page implements Serializable {
     }
 
     public void init(VaadinRequest request) {
-        BrowserDetails browserDetails = request.getBrowserDetails();
-        if (browserDetails != null) {
-            location = browserDetails.getLocation();
+        // Extract special parameter sent by vaadinBootstrap.js
+        String loc = request.getParameter("loc");
+        if (loc != null) {
+            try {
+                location = new URI(loc);
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(
+                        "Invalid location URI received from client", e);
+            }
         }
     }
 
