@@ -194,6 +194,9 @@
             JAR -->
 		<java classname="com.vaadin.buildhelpers.GeneratePackageExports" failonerror="true" fork="yes">
 			<arg value="${jar}" />
+			<arg value="com/vaadin" />
+			<arg value="com/google" />
+			
 			<classpath refid="vaadin.buildhelpers.classpath" />
 		</java>
 	</target>

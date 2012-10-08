@@ -379,15 +379,10 @@ public abstract class BootstrapHandler implements RequestHandler {
 
     protected void appendMainScriptTagContents(BootstrapContext context,
             StringBuilder builder) throws JSONException, IOException {
-        JSONObject defaults = getDefaultParameters(context);
         JSONObject appConfig = getApplicationParameters(context);
 
         boolean isDebug = !context.getSession().getConfiguration()
                 .isProductionMode();
-
-        builder.append("vaadin.setDefaults(");
-        appendJsonObject(builder, defaults, isDebug);
-        builder.append(");\n");
 
         builder.append("vaadin.initApplication(\"");
         builder.append(context.getAppId());
@@ -407,6 +402,10 @@ public abstract class BootstrapHandler implements RequestHandler {
 
     protected JSONObject getApplicationParameters(BootstrapContext context)
             throws JSONException, PaintException {
+        VaadinRequest request = context.getRequest();
+        VaadinServiceSession session = context.getSession();
+        VaadinService vaadinService = request.getService();
+
         JSONObject appConfig = new JSONObject();
 
         String themeName = context.getThemeName();
@@ -420,27 +419,16 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         appConfig.put("widgetset", context.getWidgetsetName());
 
-        appConfig.put("initialPath", context.getRequest().getRequestPathInfo());
+        appConfig.put("initialPath", request.getRequestPathInfo());
 
         Map<String, String[]> parameterMap = new HashMap<String, String[]>(
-                context.getRequest().getParameterMap());
+                request.getParameterMap());
 
         // Include theme as a fake initial param so that UI can know its theme
         // for serving CustomLayout templates
         parameterMap.put("theme", new String[] { themeName });
 
         appConfig.put("initialParams", parameterMap);
-
-        return appConfig;
-    }
-
-    protected JSONObject getDefaultParameters(BootstrapContext context)
-            throws JSONException {
-        JSONObject defaults = new JSONObject();
-
-        VaadinRequest request = context.getRequest();
-        VaadinServiceSession session = context.getSession();
-        VaadinService vaadinService = request.getService();
 
         // Get system messages
         SystemMessages systemMessages = vaadinService.getSystemMessages();
@@ -453,7 +441,7 @@ public abstract class BootstrapHandler implements RequestHandler {
                     systemMessages.getCommunicationErrorMessage());
             comErrMsg.put("url", systemMessages.getCommunicationErrorURL());
 
-            defaults.put("comErrMsg", comErrMsg);
+            appConfig.put("comErrMsg", comErrMsg);
 
             JSONObject authErrMsg = new JSONObject();
             authErrMsg.put("caption",
@@ -462,29 +450,29 @@ public abstract class BootstrapHandler implements RequestHandler {
                     systemMessages.getAuthenticationErrorMessage());
             authErrMsg.put("url", systemMessages.getAuthenticationErrorURL());
 
-            defaults.put("authErrMsg", authErrMsg);
+            appConfig.put("authErrMsg", authErrMsg);
         }
 
         String staticFileLocation = vaadinService
                 .getStaticFileLocation(request);
         String widgetsetBase = staticFileLocation + "/"
                 + VaadinServlet.WIDGETSET_DIRECTORY_PATH;
-        defaults.put("widgetsetBase", widgetsetBase);
+        appConfig.put("widgetsetBase", widgetsetBase);
 
         if (!session.getConfiguration().isProductionMode()) {
-            defaults.put("debug", true);
+            appConfig.put("debug", true);
         }
 
         if (vaadinService.isStandalone(request)) {
-            defaults.put("standalone", true);
+            appConfig.put("standalone", true);
         }
 
-        defaults.put("heartbeatInterval", vaadinService
+        appConfig.put("heartbeatInterval", vaadinService
                 .getDeploymentConfiguration().getHeartbeatInterval());
 
-        defaults.put("appUri", getAppUri(context));
+        appConfig.put("appUri", getAppUri(context));
 
-        return defaults;
+        return appConfig;
     }
 
     protected abstract String getAppUri(BootstrapContext context);
