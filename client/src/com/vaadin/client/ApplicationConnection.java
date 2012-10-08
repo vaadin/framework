@@ -528,16 +528,6 @@ public class ApplicationConnection {
     }-*/;
 
     /**
-     * Gets the application base URI. Using this other than as the download
-     * action URI can cause problems in Portlet 2.0 deployments.
-     * 
-     * @return application base URI
-     */
-    public String getAppUri() {
-        return configuration.getApplicationUri();
-    };
-
-    /**
      * Indicates whether or not there are currently active UIDL requests. Used
      * internally to sequence requests properly, seldom needed in Widgets.
      * 
@@ -2604,29 +2594,29 @@ public class ApplicationConnection {
             String relativeUrl = uidlUri
                     .substring(ApplicationConstants.APP_PROTOCOL_PREFIX
                             .length());
-            if (getConfiguration().usePortletURLs()) {
+            ApplicationConfiguration conf = getConfiguration();
+            String serviceUrl = conf.getServiceUrl();
+            if (conf.useServiceUrlPathParam()) {
                 // Should put path in v-resourcePath parameter and append query
                 // params to base portlet url
                 String[] parts = relativeUrl.split("\\?", 2);
                 String path = parts[0];
 
-                String url = getConfiguration().getPortletResourceUrl();
-
                 // If there's a "?" followed by something, append it as a query
                 // string to the base URL
                 if (parts.length > 1) {
                     String appUrlParams = parts[1];
-                    url = addGetParameters(url, appUrlParams);
+                    serviceUrl = addGetParameters(serviceUrl, appUrlParams);
                 }
                 if (!path.startsWith("/")) {
                     path = '/' + path;
                 }
                 String pathParam = ApplicationConstants.V_RESOURCE_PATH + "="
                         + URL.encodeQueryString(path);
-                url = addGetParameters(url, pathParam);
-                uidlUri = url;
+                serviceUrl = addGetParameters(serviceUrl, pathParam);
+                uidlUri = serviceUrl;
             } else {
-                uidlUri = getAppUri() + relativeUrl;
+                uidlUri = serviceUrl + relativeUrl;
             }
         }
         return uidlUri;

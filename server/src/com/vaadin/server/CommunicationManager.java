@@ -17,8 +17,6 @@
 package com.vaadin.server;
 
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.servlet.ServletContext;
 
@@ -54,45 +52,19 @@ public class CommunicationManager extends AbstractCommunicationManager {
     protected BootstrapHandler createBootstrapHandler() {
         return new BootstrapHandler() {
             @Override
-            protected String getApplicationId(BootstrapContext context) {
-                String appUrl = getAppUri(context);
-
-                String appId = appUrl;
-                if ("".equals(appUrl)) {
-                    appId = "ROOT";
+            protected String getServiceUrl(BootstrapContext context) {
+                String pathInfo = context.getRequest().getRequestPathInfo();
+                if (pathInfo == null) {
+                    return null;
+                } else {
+                    /*
+                     * Make a relative URL to the servlet by adding one ../ for
+                     * each path segment in pathInfo (i.e. the part of the
+                     * requested path that comes after the servlet mapping)
+                     */
+                    return VaadinServletService
+                            .getCancelingRelativePath(pathInfo);
                 }
-                appId = appId.replaceAll("[^a-zA-Z0-9]", "");
-                // Add hashCode to the end, so that it is still (sort of)
-                // predictable, but indicates that it should not be used in CSS
-                // and
-                // such:
-                int hashCode = appId.hashCode();
-                if (hashCode < 0) {
-                    hashCode = -hashCode;
-                }
-                appId = appId + "-" + hashCode;
-                return appId;
-            }
-
-            @Override
-            protected String getAppUri(BootstrapContext context) {
-                /* Fetch relative url to application */
-                // don't use server and port in uri. It may cause problems with
-                // some
-                // virtual server configurations which lose the server name
-                URL url;
-
-                try {
-                    url = context.getRequest().getService()
-                            .getApplicationUrl(context.getRequest());
-                } catch (MalformedURLException e) {
-                    throw new RuntimeException(e);
-                }
-                String appUrl = url.getPath();
-                if (appUrl.endsWith("/")) {
-                    appUrl = appUrl.substring(0, appUrl.length() - 1);
-                }
-                return appUrl;
             }
 
             @Override

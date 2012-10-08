@@ -39,7 +39,9 @@ public class ApplicationConstants {
     @Deprecated
     public static final String UPDATE_VARIABLE_METHOD = "v";
 
-    public static final String PORTLET_RESOUCE_URL_BASE = "portletAppURLBase";
+    public static final String SERVICE_URL = "serviceUrl";
+
+    public static final String SERVICE_URL_PATH_AS_PARAMETER = "usePathParameter";
 
     public static final String V_RESOURCE_PATH = "v-resourcePath";
 
@@ -52,4 +54,14 @@ public class ApplicationConstants {
      * changes.
      */
     public static final String URL_PARAMETER_REPAINT_ALL = "repaintAll";
+
+    /**
+     * Configuration parameter giving the (in some cases relative) URL to the
+     * VAADIN folder from where themes and widgetsets are loaded.
+     * <p>
+     * <b>Refactor warning:</b> This value is also hardcoded in
+     * vaadinBootstrap.js.
+     * </p>
+     */
+    public static final String VAADIN_DIR_URL = "vaadinDir";
 }

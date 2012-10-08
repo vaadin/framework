@@ -24,6 +24,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
@@ -1195,5 +1196,19 @@ public class Util {
             return "null";
         }
         return getSimpleName(p) + " (" + p.getConnectorId() + ")";
+    }
+
+    /**
+     * Resolve a relative URL to an absolute URL based on the current document's
+     * location.
+     * 
+     * @param url
+     *            a string with the relative URL to resolve
+     * @return the corresponding absolute URL as a string
+     */
+    public static String getAbsoluteUrl(String url) {
+        AnchorElement a = Document.get().createAnchorElement();
+        a.setHref(url);
+        return a.getHref();
     }
 }

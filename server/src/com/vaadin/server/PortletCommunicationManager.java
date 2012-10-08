@@ -65,19 +65,11 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             }
 
             @Override
-            protected String getApplicationId(BootstrapContext context) {
-                PortletRequest portletRequest = VaadinPortletRequest.cast(
-                        context.getRequest()).getPortletRequest();
-                /*
-                 * We need to generate a unique ID because some portals already
-                 * create a DIV with the portlet's Window ID as the DOM ID.
-                 */
-                return "v-" + portletRequest.getWindowID();
-            }
-
-            @Override
-            protected String getAppUri(BootstrapContext context) {
-                return getRenderResponse(context).createActionURL().toString();
+            protected String getServiceUrl(BootstrapContext context) {
+                ResourceURL portletResourceUrl = getRenderResponse(context)
+                        .createResourceURL();
+                portletResourceUrl.setResourceID(VaadinPortlet.RESOURCE_URL_ID);
+                return portletResourceUrl.toString();
             }
 
             private RenderResponse getRenderResponse(BootstrapContext context) {
@@ -129,11 +121,10 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                 resourceURL.setResourceID("browserDetails");
                 parameters.put("browserDetailsUrl", resourceURL.toString());
 
-                ResourceURL portletResourceUrl = getRenderResponse(context)
-                        .createResourceURL();
-                portletResourceUrl.setResourceID(VaadinPortlet.RESOURCE_URL_ID);
-                parameters.put(ApplicationConstants.PORTLET_RESOUCE_URL_BASE,
-                        portletResourceUrl.toString());
+                // Always send path info as a query parameter
+                parameters.put(
+                        ApplicationConstants.SERVICE_URL_PATH_AS_PARAMETER,
+                        true);
 
                 return parameters;
             }

@@ -189,8 +189,12 @@ public class ApplicationConfiguration implements EntryPoint {
     private static WidgetSet widgetSet = GWT.create(WidgetSet.class);
 
     private String id;
-    private String themeUri;
-    private String appUri;
+    /**
+     * The URL to the VAADIN directory containing themes and widgetsets. Should
+     * always end with a slash (/).
+     */
+    private String vaadinDirUrl;
+    private String serviceUrl;
     private int uiId;
     private boolean standalone;
     private ErrorMessage communicationError;
@@ -214,13 +218,20 @@ public class ApplicationConfiguration implements EntryPoint {
     private Map<Integer, Integer> componentInheritanceMap = new HashMap<Integer, Integer>();
     private Map<Integer, String> tagToServerSideClassName = new HashMap<Integer, String>();
 
-    public boolean usePortletURLs() {
-        return getPortletResourceUrl() != null;
-    }
-
-    public String getPortletResourceUrl() {
-        return getJsoConfiguration(id).getConfigString(
-                ApplicationConstants.PORTLET_RESOUCE_URL_BASE);
+    /**
+     * Checks whether path info in requests to the server-side service should be
+     * in a request parameter (named
+     * {@value ApplicationConstants#V_RESOURCE_PATH}) or appended to the end of
+     * the service URL.
+     * 
+     * @see #getServiceUrl()
+     * 
+     * @return <code>true</code> if path info should be a request parameter;
+     *         <code>false</code> if the path info goes after the service URL
+     */
+    public boolean useServiceUrlPathParam() {
+        return getJsoConfiguration(id).getConfigBoolean(
+                ApplicationConstants.SERVICE_URL_PATH_AS_PARAMETER) == Boolean.TRUE;
     }
 
     public String getRootPanelId() {
@@ -228,24 +239,28 @@ public class ApplicationConfiguration implements EntryPoint {
     }
 
     /**
-     * Gets the application base URI. Using this other than as the download
-     * action URI can cause problems in Portlet 2.0 deployments.
+     * Gets the URL to the server-side VaadinService. If
+     * {@link #useServiceUrlPathParam()} return <code>true</code>, the requested
+     * path info should be in the {@value ApplicationConstants#V_RESOURCE_PATH}
+     * query parameter; else the path info should be appended to the end of the
+     * URL.
      * 
-     * @return application base URI
+     * @see #useServiceUrlPathParam()
+     * 
+     * @return the URL to the server-side service as a string
      */
-    public String getApplicationUri() {
-        return appUri;
+    public String getServiceUrl() {
+        return serviceUrl;
     }
 
     public String getThemeName() {
-        String uri = getThemeUri();
-        String themeName = uri.substring(uri.lastIndexOf('/'));
+        String themeName = getJsoConfiguration(id).getConfigString("theme");
         themeName = themeName.replaceAll("[^a-zA-Z0-9]", "");
         return themeName;
     }
 
     public String getThemeUri() {
-        return themeUri;
+        return vaadinDirUrl + "themes/" + getThemeName();
     }
 
     public void setAppId(String appId) {
@@ -306,11 +321,29 @@ public class ApplicationConfiguration implements EntryPoint {
      */
     private void loadFromDOM() {
         JsoConfiguration jsoConfiguration = getJsoConfiguration(id);
-        appUri = jsoConfiguration.getConfigString("appUri");
-        if (appUri != null && !appUri.endsWith("/")) {
-            appUri += '/';
+        serviceUrl = jsoConfiguration
+                .getConfigString(ApplicationConstants.SERVICE_URL);
+        if (serviceUrl == null || "".equals(serviceUrl)) {
+            /*
+             * Use the current url without query parameters and fragment as the
+             * default value.
+             */
+            serviceUrl = Window.Location.getHref().replaceFirst("[?#].*", "");
+        } else {
+            /*
+             * Resolve potentially relative URLs to ensure they point to the
+             * desired locations even if the base URL of the page changes later
+             * (e.g. with pushState)
+             */
+            serviceUrl = Util.getAbsoluteUrl(serviceUrl);
         }
-        themeUri = jsoConfiguration.getConfigString("themeUri");
+        // Ensure there's an ending slash (to make appending e.g. UIDL work)
+        if (!useServiceUrlPathParam() && !serviceUrl.endsWith("/")) {
+            serviceUrl += '/';
+        }
+
+        vaadinDirUrl = Util.getAbsoluteUrl(jsoConfiguration
+                .getConfigString(ApplicationConstants.VAADIN_DIR_URL));
         uiId = jsoConfiguration.getConfigInteger(UIConstants.UI_ID_PARAMETER)
                 .intValue();
 
