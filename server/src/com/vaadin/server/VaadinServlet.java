@@ -63,7 +63,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         public void criticalNotification(VaadinRequest request,
                 VaadinResponse response, String cap, String msg,
                 String details, String outOfSyncURL) throws IOException {
-            servlet.criticalNotification(VaadinServletRequest.cast(request),
+            servlet.criticalNotification((VaadinServletRequest) request,
                     ((VaadinServletResponse) response), cap, msg, details,
                     outOfSyncURL);
         }

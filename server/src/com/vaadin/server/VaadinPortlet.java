@@ -184,7 +184,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         public void criticalNotification(VaadinRequest request,
                 VaadinResponse response, String cap, String msg,
                 String details, String outOfSyncURL) throws IOException {
-            portlet.criticalNotification(VaadinPortletRequest.cast(request),
+            portlet.criticalNotification((VaadinPortletRequest) request,
                     (VaadinPortletResponse) response, cap, msg, details,
                     outOfSyncURL);
         }

@@ -36,7 +36,7 @@ public class UsingUriFragments extends UI {
     @Override
     protected void init(VaadinRequest request) {
         Label label = new Label("Hello, your fragment is "
-                + request.getBrowserDetails().getLocation().getFragment());
+                + getPage().getLocation().getFragment());
         getContent().addComponent(label);
 
         // React to fragment changes
@@ -48,7 +48,7 @@ public class UsingUriFragments extends UI {
         });
 
         // Handle the fragment received in the initial request
-        handleFragment(request.getBrowserDetails().getLocation().getFragment());
+        handleFragment(getPage().getLocation().getFragment());
 
         addComponent(new Button("Show and set fragment",
                 new Button.ClickListener() {

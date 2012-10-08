@@ -68,7 +68,6 @@ import com.vaadin.server.StreamVariable.StreamingEndEvent;
 import com.vaadin.server.StreamVariable.StreamingErrorEvent;
 import com.vaadin.server.Terminal.ErrorEvent;
 import com.vaadin.server.Terminal.ErrorListener;
-import com.vaadin.server.VaadinRequest.BrowserDetails;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.JavaScriptConnectorState;
@@ -86,7 +85,6 @@ import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Window;
-import com.vaadin.util.CurrentInstance;
 
 /**
  * This is a common base class for the server-side implementations of the
@@ -2430,16 +2428,13 @@ public abstract class AbstractCommunicationManager implements Serializable {
         try {
             assert UI.getCurrent() == null;
 
-            CombinedRequest combinedRequest = new CombinedRequest(request);
-            CurrentInstance.set(VaadinRequest.class, combinedRequest);
-
             response.setContentType("application/json; charset=UTF-8");
 
-            UI uI = getBrowserDetailsUI(combinedRequest);
+            UI uI = getBrowserDetailsUI(request);
 
             JSONObject params = new JSONObject();
             params.put(UIConstants.UI_ID_PARAMETER, uI.getUIId());
-            String initialUIDL = getInitialUIDL(combinedRequest, uI);
+            String initialUIDL = getInitialUIDL(request, uI);
             params.put("uidl", initialUIDL);
 
             // NOTE! GateIn requires, for some weird reason, getOutputStream
@@ -2498,17 +2493,15 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
 
         // Check for an existing UI based on window.name
-        BrowserDetails browserDetails = request.getBrowserDetails();
-        boolean hasBrowserDetails = browserDetails != null
-                && browserDetails.getLocation() != null;
+
+        // Special parameter sent by vaadinBootstrap.js
+        String windowName = request.getParameter("wn");
 
         Map<String, Integer> retainOnRefreshUIs = session
                 .getPreserveOnRefreshUIs();
-        if (hasBrowserDetails && !retainOnRefreshUIs.isEmpty()) {
+        if (windowName != null && !retainOnRefreshUIs.isEmpty()) {
             // Check for a known UI
 
-            @SuppressWarnings("null")
-            String windowName = browserDetails.getWindowName();
             Integer retainedUIId = retainOnRefreshUIs.get(windowName);
 
             if (retainedUIId != null) {
@@ -2550,7 +2543,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // Remember if it should be remembered
         if (vaadinService.preserveUIOnRefresh(provider, event)) {
             // Remember this UI
-            String windowName = request.getBrowserDetails().getWindowName();
             if (windowName == null) {
                 getLogger().warning(
                         "There is no window.name available for UI " + uiClass

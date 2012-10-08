@@ -55,8 +55,8 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             public boolean handleRequest(VaadinServiceSession session,
                     VaadinRequest request, VaadinResponse response)
                     throws IOException {
-                PortletRequest portletRequest = VaadinPortletRequest.cast(
-                        request).getPortletRequest();
+                PortletRequest portletRequest = ((VaadinPortletRequest) request)
+                        .getPortletRequest();
                 if (portletRequest instanceof RenderRequest) {
                     return super.handleRequest(session, request, response);
                 } else {
@@ -86,9 +86,9 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                     throws JSONException, IOException {
                 // fixed base theme to use - all portal pages with Vaadin
                 // applications will load this exactly once
-                String portalTheme = VaadinPortletRequest.cast(
-                        context.getRequest()).getPortalProperty(
-                        VaadinPortlet.PORTAL_PARAMETER_VAADIN_THEME);
+                String portalTheme = ((VaadinPortletRequest) context
+                        .getRequest())
+                        .getPortalProperty(VaadinPortlet.PORTAL_PARAMETER_VAADIN_THEME);
                 if (portalTheme != null
                         && !portalTheme.equals(context.getThemeName())) {
                     String portalThemeUri = getThemeUri(context, portalTheme);

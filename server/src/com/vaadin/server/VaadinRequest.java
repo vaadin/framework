@@ -19,15 +19,12 @@ package com.vaadin.server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.net.URI;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.portlet.PortletRequest;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
-
-import com.vaadin.ui.UI;
 
 /**
  * A generic request to the server, wrapping a more specific request type, e.g.
@@ -37,40 +34,6 @@ import com.vaadin.ui.UI;
  * @since 7.0.0
  */
 public interface VaadinRequest extends Serializable {
-
-    /**
-     * Detailed information extracted from the browser.
-     * 
-     * @see VaadinRequest#getBrowserDetails()
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    public interface BrowserDetails extends Serializable {
-        /**
-         * Gets the URI in the browser address bar, including the fragment
-         * (Javascript window.location)
-         * 
-         * @return the browser location URI
-         */
-        public URI getLocation();
-
-        /**
-         * Gets the value of window.name from the browser. This can be used to
-         * keep track of the specific window between browser reloads.
-         * 
-         * @return the string value of window.name in the browser
-         */
-        public String getWindowName();
-
-        /**
-         * Gets a reference to the {@link WebBrowser} object containing
-         * additional information, e.g. screen size and the time zone offset.
-         * 
-         * @return the web browser object
-         */
-        public WebBrowser getWebBrowser();
-    }
-
     /**
      * Gets the named request parameter This is typically a HTTP GET or POST
      * parameter, though other request types might have other ways of
@@ -214,24 +177,6 @@ public interface VaadinRequest extends Serializable {
      * 
      */
     public String getContentType();
-
-    /**
-     * Gets detailed information about the browser from which the request
-     * originated. This consists of information that is not available from
-     * normal HTTP requests, but requires additional information to be extracted
-     * for instance using javascript in the browser.
-     * 
-     * This information is only guaranteed to be available in some special
-     * cases, for instance in {@link UI#init(VaadinRequest)}.
-     * 
-     * @return the browser details, or <code>null</code> if details are not
-     *         available
-     * 
-     * @see BrowserDetails
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    public BrowserDetails getBrowserDetails();
 
     /**
      * Gets locale information from the query, e.g. using the Accept-Language
