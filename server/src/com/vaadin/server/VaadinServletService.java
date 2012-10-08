@@ -23,6 +23,7 @@ import java.net.URL;
 import javax.servlet.http.HttpServletRequest;
 
 import com.vaadin.server.VaadinServlet.RequestType;
+import com.vaadin.ui.UI;
 
 public class VaadinServletService extends VaadinService {
     private final VaadinServlet servlet;
@@ -50,31 +51,35 @@ public class VaadinServletService extends VaadinService {
         }
 
         // the last (but most common) option is to generate default location
-        // from request
+        // from request by finding how many "../" should be added to the
+        // requested path before we get to the context root
 
-        // if context is specified add it to widgetsetUrl
-        String ctxPath = servletRequest.getContextPath();
-
-        // FIXME: ctxPath.length() == 0 condition is probably unnecessary
-        // and
-        // might even be wrong.
-
-        if (ctxPath.length() == 0
-                && request.getAttribute("javax.servlet.include.context_path") != null) {
-            // include request (e.g portlet), get context path from
-            // attribute
-            ctxPath = (String) request
-                    .getAttribute("javax.servlet.include.context_path");
+        String requestedPath = servletRequest.getServletPath();
+        String pathInfo = servletRequest.getPathInfo();
+        if (pathInfo != null) {
+            requestedPath += pathInfo;
         }
 
-        // Remove heading and trailing slashes from the context path
-        ctxPath = VaadinServlet.removeHeadingOrTrailing(ctxPath, "/");
+        return getCancelingRelativePath(requestedPath);
+    }
 
-        if (ctxPath.equals("")) {
-            return "";
-        } else {
-            return "/" + ctxPath;
+    /**
+     * Gets a relative path that cancels the provided path. This essentially
+     * adds one .. for each part of the path to cancel.
+     * 
+     * @param pathToCancel
+     *            the path that should be canceled
+     * @return a relative path that cancels out the provided path segment
+     */
+    public static String getCancelingRelativePath(String pathToCancel) {
+        StringBuilder sb = new StringBuilder(".");
+        // Start from i = 1 to ignore first slash
+        for (int i = 1; i < pathToCancel.length(); i++) {
+            if (pathToCancel.charAt(i) == '/') {
+                sb.append("/..");
+            }
         }
+        return sb.toString();
     }
 
     @Override
@@ -188,5 +193,33 @@ public class VaadinServletService extends VaadinService {
     @Override
     public String getServiceName() {
         return getServlet().getServletName();
+    }
+
+    @Override
+    public String getMainDivId(VaadinServiceSession session,
+            VaadinRequest request, Class<? extends UI> uiClass) {
+        String appId = null;
+        try {
+            URL appUrl = getServlet().getApplicationUrl(
+                    VaadinServletRequest.cast(request));
+            appId = appUrl.getPath();
+        } catch (MalformedURLException e) {
+            // Just ignore problem here
+        }
+
+        if (appId == null || "".equals(appId)) {
+            appId = "ROOT";
+        }
+        appId = appId.replaceAll("[^a-zA-Z0-9]", "");
+        // Add hashCode to the end, so that it is still (sort of)
+        // predictable, but indicates that it should not be used in CSS
+        // and
+        // such:
+        int hashCode = appId.hashCode();
+        if (hashCode < 0) {
+            hashCode = -hashCode;
+        }
+        appId = appId + "-" + hashCode;
+        return appId;
     }
 }

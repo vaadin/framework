@@ -684,4 +684,20 @@ public abstract class VaadinService implements Serializable {
         }
 
     }
+
+    /**
+     * Creates and returns a unique ID for the DIV where the UI is to be
+     * rendered.
+     * 
+     * @param session
+     *            The service session to which the bootstrapped UI will belong.
+     * @param request
+     *            The request for which a div id is needed
+     * @param uiClass
+     *            The class of the UI that will be bootstrapped
+     * 
+     * @return the id to use in the DOM
+     */
+    public abstract String getMainDivId(VaadinServiceSession session,
+            VaadinRequest request, Class<? extends UI> uiClass);
 }

@@ -24,7 +24,7 @@
 		<servlet-class>com.vaadin.server.LegacyVaadinServlet</servlet-class>
 		<init-param>
 			<param-name>application</param-name>
-			<param-value>com.vaadin.tests.components.absolutelayout.AbsoluteLayoutClipping</param-value>
+			<param-value>com.vaadin.tests.components.button.Buttons</param-value>
 		</init-param>
 	</servlet>
 	<servlet>
