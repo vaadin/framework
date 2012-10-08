@@ -49,6 +49,8 @@
             mapping problem) -->
         <dependency org="org.eclipse.jetty" name="jetty-server"
             rev="7.4.5.v20110725" conf="build-provided, ide, jetty-run->default" />
+        <dependency org="org.eclipse.jetty" name="jetty-servlets"
+            rev="7.4.5.v20110725" conf="build-provided, ide, jetty-run->default" />
         <!-- <dependency org="org.mortbay.jetty" name="jetty-util" -->
         <!-- rev="8.1.5.v20120716" conf="build,ide,jetty-run->default" /> -->
         <dependency org="org.eclipse.jetty" name="jetty-webapp"

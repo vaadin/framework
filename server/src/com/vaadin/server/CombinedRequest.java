@@ -20,15 +20,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * A {@link VaadinRequest} with path and parameters from one request and
@@ -42,7 +37,6 @@ import org.json.JSONObject;
 public class CombinedRequest implements VaadinRequest {
 
     private final VaadinRequest secondRequest;
-    private Map<String, String[]> parameterMap;
 
     /**
      * Creates a new combined request based on the second request and some
@@ -56,37 +50,16 @@ public class CombinedRequest implements VaadinRequest {
      */
     public CombinedRequest(VaadinRequest secondRequest) throws JSONException {
         this.secondRequest = secondRequest;
-
-        HashMap<String, String[]> map = new HashMap<String, String[]>();
-        JSONObject initialParams = new JSONObject(
-                secondRequest.getParameter("initialParams"));
-        for (Iterator<?> keys = initialParams.keys(); keys.hasNext();) {
-            String name = (String) keys.next();
-            JSONArray jsonValues = initialParams.getJSONArray(name);
-            String[] values = new String[jsonValues.length()];
-            for (int i = 0; i < values.length; i++) {
-                values[i] = jsonValues.getString(i);
-            }
-            map.put(name, values);
-        }
-
-        parameterMap = Collections.unmodifiableMap(map);
-
     }
 
     @Override
     public String getParameter(String parameter) {
-        String[] strings = getParameterMap().get(parameter);
-        if (strings == null || strings.length == 0) {
-            return null;
-        } else {
-            return strings[0];
-        }
+        return secondRequest.getParameter(parameter);
     }
 
     @Override
     public Map<String, String[]> getParameterMap() {
-        return parameterMap;
+        return secondRequest.getParameterMap();
     }
 
     @Override
@@ -111,7 +84,7 @@ public class CombinedRequest implements VaadinRequest {
 
     @Override
     public String getRequestPathInfo() {
-        return secondRequest.getParameter("initialPath");
+        return secondRequest.getRequestPathInfo();
     }
 
     @Override

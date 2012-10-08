@@ -1165,26 +1165,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
         return u;
     }
 
-    /**
-     * Returns the path info; note that this _can_ be different than
-     * request.getPathInfo(). Examples where this might be useful:
-     * <ul>
-     * <li>An application runner servlet that runs different Vaadin applications
-     * based on an identifier.</li>
-     * <li>Providing a REST interface in the context root, while serving a
-     * Vaadin UI on a sub-URI using only one servlet (e.g. REST on
-     * http://example.com/foo, UI on http://example.com/foo/vaadin)</li>
-     * 
-     * @param request
-     * @return
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    protected String getRequestPathInfo(HttpServletRequest request) {
-        return request.getPathInfo();
-    }
-
     public class RequestError implements Terminal.ErrorEvent, Serializable {
 
         private final Throwable throwable;

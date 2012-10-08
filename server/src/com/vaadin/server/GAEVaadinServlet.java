@@ -348,7 +348,7 @@ public class GAEVaadinServlet extends VaadinServlet {
     }
 
     private boolean isCleanupRequest(HttpServletRequest request) {
-        String path = getRequestPathInfo(request);
+        String path = request.getPathInfo();
         if (path != null && path.equals(CLEANUP_PATH)) {
             return true;
         }

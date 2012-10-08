@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -101,7 +100,8 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         public String getAppId() {
             if (appId == null) {
-                appId = getApplicationId(this);
+                appId = getRequest().getService().getMainDivId(getSession(),
+                        getRequest(), getUIClass());
             }
             return appId;
         }
@@ -274,16 +274,6 @@ public abstract class BootstrapHandler implements RequestHandler {
         return null;
     }
 
-    /**
-     * Creates and returns a unique ID for the DIV where the application is to
-     * be rendered.
-     * 
-     * @param context
-     * 
-     * @return the id to use in the DOM
-     */
-    protected abstract String getApplicationId(BootstrapContext context);
-
     public String getWidgetsetForUI(BootstrapContext context) {
         VaadinRequest request = context.getRequest();
 
@@ -411,7 +401,7 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         String themeName = context.getThemeName();
         if (themeName != null) {
-            appConfig.put("themeUri", getThemeUri(context, themeName));
+            appConfig.put("theme", themeName);
         }
 
         JSONObject versionInfo = new JSONObject();
@@ -419,17 +409,6 @@ public abstract class BootstrapHandler implements RequestHandler {
         appConfig.put("versionInfo", versionInfo);
 
         appConfig.put("widgetset", context.getWidgetsetName());
-
-        appConfig.put("initialPath", request.getRequestPathInfo());
-
-        Map<String, String[]> parameterMap = new HashMap<String, String[]>(
-                request.getParameterMap());
-
-        // Include theme as a fake initial param so that UI can know its theme
-        // for serving CustomLayout templates
-        parameterMap.put("theme", new String[] { themeName });
-
-        appConfig.put("initialParams", parameterMap);
 
         // Use locale from session if set, else from the request
         Locale locale = ServletPortletHelper.findLocale(null,
@@ -457,11 +436,11 @@ public abstract class BootstrapHandler implements RequestHandler {
             appConfig.put("authErrMsg", authErrMsg);
         }
 
-        String staticFileLocation = vaadinService
-                .getStaticFileLocation(request);
-        String widgetsetBase = staticFileLocation + "/"
-                + VaadinServlet.WIDGETSET_DIRECTORY_PATH;
-        appConfig.put("widgetsetBase", widgetsetBase);
+        // getStaticFileLocation documented to never end with a slash
+        // vaadinDir should always end with a slash
+        String vaadinDir = vaadinService.getStaticFileLocation(request)
+                + "/VAADIN/";
+        appConfig.put(ApplicationConstants.VAADIN_DIR_URL, vaadinDir);
 
         if (!session.getConfiguration().isProductionMode()) {
             appConfig.put("debug", true);
@@ -474,12 +453,15 @@ public abstract class BootstrapHandler implements RequestHandler {
         appConfig.put("heartbeatInterval", vaadinService
                 .getDeploymentConfiguration().getHeartbeatInterval());
 
-        appConfig.put("appUri", getAppUri(context));
+        String serviceUrl = getServiceUrl(context);
+        if (serviceUrl != null) {
+            appConfig.put(ApplicationConstants.SERVICE_URL, serviceUrl);
+        }
 
         return appConfig;
     }
 
-    protected abstract String getAppUri(BootstrapContext context);
+    protected abstract String getServiceUrl(BootstrapContext context);
 
     /**
      * Get the URI for the application theme.

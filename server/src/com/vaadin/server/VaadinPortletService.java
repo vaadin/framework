@@ -25,6 +25,7 @@ import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
 
 import com.vaadin.server.VaadinPortlet.RequestType;
+import com.vaadin.ui.UI;
 
 public class VaadinPortletService extends VaadinService {
     private final VaadinPortlet portlet;
@@ -217,5 +218,17 @@ public class VaadinPortletService extends VaadinService {
     @Override
     public boolean preserveUIOnRefresh(UIProvider provider, UICreateEvent event) {
         return true;
+    }
+
+    @Override
+    public String getMainDivId(VaadinServiceSession session,
+            VaadinRequest request, Class<? extends UI> uiClass) {
+        PortletRequest portletRequest = VaadinPortletRequest.cast(request)
+                .getPortletRequest();
+        /*
+         * We need to generate a unique ID because some portals already create a
+         * DIV with the portlet's Window ID as the DOM ID.
+         */
+        return "v-" + portletRequest.getWindowID();
     }
 }
