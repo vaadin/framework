@@ -2251,9 +2251,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
             final String ALIGN_PREFIX = primaryStyleName
                     + "-caption-container-align-";
-            captionContainer.removeClassName(ALIGN_PREFIX + "center");
-            captionContainer.removeClassName(ALIGN_PREFIX + "right");
-            captionContainer.removeClassName(ALIGN_PREFIX + "left");
             
             switch (align) {
             case ALIGN_CENTER:
@@ -4515,10 +4512,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             private final TableRowElement rowElement;
             private int index;
             private Event touchStart;
-            // private static final String ROW_CLASSNAME_EVEN = CLASSNAME +
-            // "-row";
-            // private static final String ROW_CLASSNAME_ODD = CLASSNAME
-            // + "-row-odd";
+
             private static final int TOUCH_CONTEXT_MENU_TIMEOUT = 500;
             private Timer contextTouchTimeout;
             private Timer dragTouchTimeout;
