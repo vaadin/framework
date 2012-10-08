@@ -18,7 +18,6 @@ package com.vaadin.server;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -82,77 +81,9 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
     private final Lock lock = new ReentrantLock();
 
     /**
-     * An event sent to {@link #start(SessionStartEvent)} when a new Application
-     * is being started.
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    public static class SessionStartEvent implements Serializable {
-        private final URL applicationUrl;
-
-        private final DeploymentConfiguration configuration;
-
-        private final AbstractCommunicationManager communicationManager;
-
-        /**
-         * @param applicationUrl
-         *            the URL the application should respond to.
-         * @param configuration
-         *            the deployment configuration for the session.
-         * @param communicationManager
-         *            the communication manager for the session.
-         */
-        public SessionStartEvent(URL applicationUrl,
-                DeploymentConfiguration configuration,
-                AbstractCommunicationManager communicationManager) {
-            this.applicationUrl = applicationUrl;
-            this.configuration = configuration;
-            this.communicationManager = communicationManager;
-        }
-
-        /**
-         * Gets the URL the application should respond to.
-         * 
-         * @return the URL the application should respond to or
-         *         <code>null</code> if the URL is not defined.
-         * 
-         * @see VaadinServiceSession#getURL()
-         */
-        public URL getApplicationUrl() {
-            return applicationUrl;
-        }
-
-        /**
-         * Returns the deployment configuration used by this session.
-         * 
-         * @return the deployment configuration.
-         */
-        public DeploymentConfiguration getConfiguration() {
-            return configuration;
-        }
-
-        /**
-         * Gets the communication manager for this application.
-         * 
-         * @return the communication manager for this application.
-         * 
-         * @see VaadinServiceSession#getCommunicationManager
-         */
-        public AbstractCommunicationManager getCommunicationManager() {
-            return communicationManager;
-        }
-    }
-
-    /**
      * Configuration for the session.
      */
     private DeploymentConfiguration configuration;
-
-    /**
-     * The application's URL.
-     */
-    private URL applicationUrl;
 
     /**
      * Default locale of the session.
@@ -286,26 +217,6 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
     }
 
     /**
-     * Gets the URL of the application.
-     * 
-     * <p>
-     * This is the URL what can be entered to a browser window to start the
-     * application. Navigating to the application URL shows the main window (
-     * {@link #getMainWindow()}) of the application. Note that the main window
-     * can also be shown by navigating to the window url (
-     * {@link com.vaadin.ui.Window#getURL()}).
-     * </p>
-     * 
-     * @return the application's URL.
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    public URL getURL() {
-        return applicationUrl;
-    }
-
-    /**
      * @param service
      *            TODO
      * @param underlyingSession
@@ -354,34 +265,21 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
         this.session = session;
     }
 
-    /**
-     * Starts the application on the given URL.
-     * 
-     * <p>
-     * This method is called by Vaadin framework when a user navigates to the
-     * application. After this call the application corresponds to the given URL
-     * and it will return windows when asked for them. There is no need to call
-     * this method directly.
-     * </p>
-     * 
-     * <p>
-     * Application properties are defined by servlet configuration object
-     * {@link javax.servlet.ServletConfig} and they are overridden by
-     * context-wide initialization parameters
-     * {@link javax.servlet.ServletContext}.
-     * </p>
-     * 
-     * @param event
-     *            the application start event containing details required for
-     *            starting the application.
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    public void start(SessionStartEvent event) {
-        applicationUrl = event.getApplicationUrl();
-        configuration = event.getConfiguration();
-        communicationManager = event.getCommunicationManager();
+    public void setCommunicationManager(
+            AbstractCommunicationManager communicationManager) {
+        if (communicationManager == null) {
+            throw new IllegalArgumentException("Can not set to null");
+        }
+        assert this.communicationManager == null : "Communication manager can only be set once";
+        this.communicationManager = communicationManager;
+    }
+
+    public void setConfiguration(DeploymentConfiguration configuration) {
+        if (configuration == null) {
+            throw new IllegalArgumentException("Can not set to null");
+        }
+        assert this.configuration == null : "Configuration can only be set once";
+        this.configuration = configuration;
     }
 
     /**
