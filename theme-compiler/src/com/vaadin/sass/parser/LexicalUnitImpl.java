@@ -628,4 +628,8 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
     public void setFunctionName(String functionName) {
         fname = functionName;
     }
+
+    public static LexicalUnitImpl createIdent(String s) {
+        return new LexicalUnitImpl(0, 0, null, SAC_IDENT, s);
+    }
 }

@@ -219,9 +219,13 @@ public interface ParserConstants {
   /** RegularExpression Id. */
   int REMOVE = 110;
   /** RegularExpression Id. */
-  int FUNCTION = 111;
+  int APPEND = 111;
   /** RegularExpression Id. */
-  int UNKNOWN = 112;
+  int CONTAINS = 112;
+  /** RegularExpression Id. */
+  int FUNCTION = 113;
+  /** RegularExpression Id. */
+  int UNKNOWN = 114;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -345,6 +349,8 @@ public interface ParserConstants {
     "<UNI>",
     "<UNICODERANGE>",
     "<REMOVE>",
+    "<APPEND>",
+    "<CONTAINS>",
     "<FUNCTION>",
     "<UNKNOWN>",
   };
