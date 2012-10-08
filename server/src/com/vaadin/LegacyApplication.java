@@ -55,6 +55,7 @@ public abstract class LegacyApplication implements ErrorListener {
      * application is just closed without redirection.
      */
     private String logoutURL = null;
+    private URL url;
 
     /**
      * Sets the main window of this application. Setting window as a main window
@@ -80,7 +81,8 @@ public abstract class LegacyApplication implements ErrorListener {
         this.mainWindow = mainWindow;
     }
 
-    public void doInit() {
+    public void doInit(URL url) {
+        this.url = url;
         VaadinServiceSession.getCurrent().setErrorHandler(this);
         init();
     }
@@ -241,7 +243,7 @@ public abstract class LegacyApplication implements ErrorListener {
     }
 
     public URL getURL() {
-        return VaadinServiceSession.getCurrent().getURL();
+        return url;
     }
 
     /**

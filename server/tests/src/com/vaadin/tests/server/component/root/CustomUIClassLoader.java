@@ -15,7 +15,6 @@ import com.vaadin.server.UIClassSelectionEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServiceSession;
-import com.vaadin.server.VaadinServiceSession.SessionStartEvent;
 import com.vaadin.ui.UI;
 
 public class CustomUIClassLoader extends TestCase {
@@ -55,8 +54,7 @@ public class CustomUIClassLoader extends TestCase {
      */
     public void testWithNullClassLoader() throws Exception {
         VaadinServiceSession application = createStubApplication();
-        application.start(new SessionStartEvent(null,
-                createConfigurationMock(), null));
+        application.setConfiguration(createConfigurationMock());
 
         DefaultUIProvider uiProvider = new DefaultUIProvider();
         Class<? extends UI> uiClass = uiProvider
@@ -76,11 +74,15 @@ public class CustomUIClassLoader extends TestCase {
         // Mock a VaadinService to give the passed classloader
         VaadinService configurationMock = EasyMock
                 .createMock(VaadinService.class);
+        EasyMock.expect(configurationMock.getDeploymentConfiguration())
+                .andReturn(createConfigurationMock());
         EasyMock.expect(configurationMock.getClassLoader()).andReturn(
                 classloader);
 
         // Mock a VaadinRequest to give the mocked vaadin service
         VaadinRequest requestMock = EasyMock.createMock(VaadinRequest.class);
+        EasyMock.expect(requestMock.getService()).andReturn(configurationMock);
+        EasyMock.expect(requestMock.getService()).andReturn(configurationMock);
         EasyMock.expect(requestMock.getService()).andReturn(configurationMock);
 
         EasyMock.replay(configurationMock, requestMock);
@@ -97,13 +99,10 @@ public class CustomUIClassLoader extends TestCase {
     public void testWithClassLoader() throws Exception {
         LoggingClassLoader loggingClassLoader = new LoggingClassLoader();
 
-        VaadinServiceSession application = createStubApplication();
-        application.start(new SessionStartEvent(null,
-                createConfigurationMock(), null));
-
         DefaultUIProvider uiProvider = new DefaultUIProvider();
         Class<? extends UI> uiClass = uiProvider
-                .getUIClass(new UIClassSelectionEvent(createRequestMock(null)));
+                .getUIClass(new UIClassSelectionEvent(
+                        createRequestMock(loggingClassLoader)));
 
         assertEquals(MyUI.class, uiClass);
         assertEquals(1, loggingClassLoader.requestedClasses.size());

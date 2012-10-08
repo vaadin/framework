@@ -149,7 +149,7 @@ public abstract class UI extends AbstractComponentContainer implements
          * to a window. All windows can be accessed through
          * {@code http://host:port/app/win} where {@code http://host:port/app}
          * is the application URL (as returned by
-         * {@link VaadinServiceSession#getURL()} and {@code win} is the window
+         * {@link LegacyApplication#getURL()} and {@code win} is the window
          * name.
          * </p>
          * <p>
@@ -170,7 +170,7 @@ public abstract class UI extends AbstractComponentContainer implements
          * to a window. All windows can be accessed through
          * {@code http://host:port/app/win} where {@code http://host:port/app}
          * is the application URL (as returned by
-         * {@link VaadinServiceSession#getURL()} and {@code win} is the window
+         * {@link LegacyApplication#getURL()} and {@code win} is the window
          * name.
          * </p>
          * <p>
@@ -208,13 +208,13 @@ public abstract class UI extends AbstractComponentContainer implements
          *         to an application
          */
         public URL getURL() {
-            VaadinServiceSession session = getSession();
-            if (session == null) {
+            LegacyApplication application = getApplication();
+            if (application == null) {
                 return null;
             }
 
             try {
-                return new URL(session.getURL(), getName() + "/");
+                return new URL(application.getURL(), getName() + "/");
             } catch (MalformedURLException e) {
                 throw new RuntimeException(
                         "Internal problem getting window URL, please report");

@@ -35,7 +35,6 @@ import javax.servlet.ServletException;
 import com.vaadin.LegacyApplication;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.event.EventRouter;
-import com.vaadin.server.VaadinServiceSession.SessionStartEvent;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
@@ -426,19 +425,11 @@ public abstract class VaadinService implements Serializable {
 
         session.storeInSession(this, request.getWrappedSession());
 
-        URL applicationUrl;
-        try {
-            applicationUrl = getApplicationUrl(request);
-        } catch (MalformedURLException e) {
-            throw new ServiceException(e);
-        }
-
         // Initial locale comes from the request
         Locale locale = request.getLocale();
         session.setLocale(locale);
-        session.start(new SessionStartEvent(applicationUrl,
-                getDeploymentConfiguration(),
-                createCommunicationManager(session)));
+        session.setConfiguration(getDeploymentConfiguration());
+        session.setCommunicationManager(createCommunicationManager(session));
 
         ServletPortletHelper.initDefaultUIProvider(session, this);
         onVaadinSessionStarted(request, session);
