@@ -17,6 +17,7 @@ package com.vaadin.client.ui.orderedlayout;
 
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
+import com.vaadin.shared.ui.orderedlayout.HorizontalLayoutState;
 import com.vaadin.ui.HorizontalLayout;
 
 /**
@@ -36,6 +37,11 @@ public class HorizontalLayoutConnector extends AbstractOrderedLayoutConnector {
     @Override
     public VHorizontalLayout getWidget() {
         return (VHorizontalLayout) super.getWidget();
+    }
+
+    @Override
+    public HorizontalLayoutState getState() {
+        return (HorizontalLayoutState) super.getState();
     }
 
 }

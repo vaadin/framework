@@ -18,7 +18,7 @@ package com.vaadin.sass.tree;
 
 import java.util.ArrayList;
 
-public class BlockNode extends Node implements IVariableNode {
+public class BlockNode extends Node implements IVariableNode, InterpolationNode {
 
     private static final long serialVersionUID = 5742962631468325048L;
 
@@ -66,6 +66,21 @@ public class BlockNode extends Node implements IVariableNode {
     @Override
     public void replaceVariables(ArrayList<VariableNode> variables) {
 
+        if (selectorList == null || selectorList.isEmpty()) {
+            return;
+        }
+
+        for (final VariableNode var : variables) {
+            for (final String selector : new ArrayList<String>(selectorList)) {
+                String interpolation = "#{$" + var.getName() + "}";
+                if (selector.contains(interpolation)) {
+                    String replace = selector.replace(interpolation, var
+                            .getExpr().toString());
+                    selectorList.add(selectorList.indexOf(selector), replace);
+                    selectorList.remove(selector);
+                }
+            }
+        }
     }
 
     public String getSelectors() {
@@ -75,6 +90,27 @@ public class BlockNode extends Node implements IVariableNode {
         }
 
         return b.toString();
+    }
+
+    @Override
+    public void replaceInterpolation(String variableName, String variable) {
+        if (selectorList == null || selectorList.isEmpty()) {
+            return;
+        }
+
+        for (final String selector : new ArrayList<String>(selectorList)) {
+            String interpolation = "#{" + variableName + "}";
+            if (selector.contains(interpolation)) {
+                String replace = selector.replace(interpolation, variable);
+                selectorList.add(selectorList.indexOf(selector), replace);
+                selectorList.remove(selector);
+            }
+        }
+    }
+
+    @Override
+    public boolean containsInterpolationVariable(String variable) {
+        return getSelectors().contains(variable);
     }
 
 }

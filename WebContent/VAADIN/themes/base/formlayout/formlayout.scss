@@ -1,55 +1,55 @@
-@mixin base-formlayout {
+@mixin base-formlayout($name : v-formlayout) {
 
-.v-formlayout.v-has-width > table {
+.#{$name}.v-has-width > table {
 	width: 100%;
 }
-.v-formlayout.v-has-height > table {
+.#{$name}.v-has-height > table {
 	height: 100%;
 }
-.v-formlayout-cell .v-errorindicator {
+.#{$name}-cell .v-errorindicator {
 	display: block;
 }
-.v-formlayout-error-indicator {
+.#{$name}-error-indicator {
 	/* fix width so layout is not jumpy when error disappears */
 	width: 12px;
 }
-.v-formlayout-captioncell {
+.#{$name}-captioncell {
 	text-align:right;
 	white-space: nowrap;
 }
-.v-formlayout-errorcell, .v-formlayout-captioncell {
+.#{$name}-errorcell, .#{$name}-captioncell {
 	width: 1px; /* Don't use any extra space */
 }
-.v-formlayout-captioncell .v-caption {
+.#{$name}-captioncell .v-caption {
 	overflow: visible;
 }
-.v-formlayout-spacing > tbody > .v-formlayout-row > .v-formlayout-captioncell, 
-.v-formlayout-spacing > tbody > .v-formlayout-row > .v-formlayout-contentcell,
-.v-formlayout-spacing > tbody > .v-formlayout-row > .v-formlayout-errorcell {
+.#{$name}-spacing > tbody > .#{$name}-row > .#{$name}-captioncell, 
+.#{$name}-spacing > tbody > .#{$name}-row > .#{$name}-contentcell,
+.#{$name}-spacing > tbody > .#{$name}-row > .#{$name}-errorcell {
 	padding-top: 6px;
 }
-.v-formlayout-spacing > tbody > .v-formlayout-firstrow > .v-formlayout-captioncell, 
-.v-formlayout-spacing > tbody > .v-formlayout-firstrow > .v-formlayout-contentcell,
-.v-formlayout-spacing > tbody > .v-formlayout-firstrow > .v-formlayout-errorcell {
+.#{$name}-spacing > tbody > .#{$name}-firstrow > .#{$name}-captioncell, 
+.#{$name}-spacing > tbody > .#{$name}-firstrow > .#{$name}-contentcell,
+.#{$name}-spacing > tbody > .#{$name}-firstrow > .#{$name}-errorcell {
 	padding-top: 0;
 }
-.v-formlayout-margin-top > tbody > .v-formlayout-firstrow > .v-formlayout-captioncell, 
-.v-formlayout-margin-top > tbody > .v-formlayout-firstrow > .v-formlayout-contentcell,
-.v-formlayout-margin-top > tbody > .v-formlayout-firstrow > .v-formlayout-errorcell {
+.#{$name}-margin-top > tbody > .#{$name}-firstrow > .#{$name}-captioncell, 
+.#{$name}-margin-top > tbody > .#{$name}-firstrow > .#{$name}-contentcell,
+.#{$name}-margin-top > tbody > .#{$name}-firstrow > .#{$name}-errorcell {
 	padding-top: 12px;
 }
-.v-formlayout-margin-bottom > tbody > .v-formlayout-lastrow > .v-formlayout-captioncell,
-.v-formlayout-margin-bottom > tbody > .v-formlayout-lastrow > .v-formlayout-contentcell,
-.v-formlayout-margin-bottom > tbody > .v-formlayout-lastrow > .v-formlayout-errorcell {
+.#{$name}-margin-bottom > tbody > .#{$name}-lastrow > .#{$name}-captioncell,
+.#{$name}-margin-bottom > tbody > .#{$name}-lastrow > .#{$name}-contentcell,
+.#{$name}-margin-bottom > tbody > .#{$name}-lastrow > .#{$name}-errorcell {
 	padding-bottom: 12px;
 }
-.v-formlayout-margin-left > tbody > .v-formlayout-row > .v-formlayout-captioncell {
+.#{$name}-margin-left > tbody > .#{$name}-row > .#{$name}-captioncell {
 	padding-left: 12px;
 } 
-.v-formlayout-margin-right > tbody > .v-formlayout-row > .v-formlayout-contentcell {
+.#{$name}-margin-right > tbody > .#{$name}-row > .#{$name}-contentcell {
 	padding-right: 12px;
 }
-.v-formlayout-captioncell .v-caption .v-required-field-indicator {
+.#{$name}-captioncell .v-caption .v-required-field-indicator {
 	float: none;
 }
 

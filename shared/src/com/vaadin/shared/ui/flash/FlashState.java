@@ -5,6 +5,9 @@ import java.util.Map;
 import com.vaadin.shared.ui.AbstractEmbeddedState;
 
 public class FlashState extends AbstractEmbeddedState {
+    {
+        primaryStyleName = "v-flash";
+    }
 
     public String classId;
 

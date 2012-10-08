@@ -22,5 +22,8 @@ import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.AbstractLayoutState;
 
 public class CssLayoutState extends AbstractLayoutState {
+    {
+        primaryStyleName = "v-csslayout";
+    }
     public Map<Connector, String> childCss = new HashMap<Connector, String>();
 }

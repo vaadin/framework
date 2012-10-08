@@ -33,8 +33,8 @@ public class VCssLayout extends FlowPanel {
      */
     public VCssLayout() {
         super();
-        setStyleName(StyleConstants.UI_LAYOUT);
-        addStyleName(CLASSNAME);
+        setStyleName(CLASSNAME);
+        addStyleName(StyleConstants.UI_LAYOUT);
     }
 
     /**

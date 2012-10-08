@@ -55,11 +55,34 @@ $mixinVar : 1px;
 }
 
 .banner {
-	@include fontType(1px solid black);
+	@include fontType(1px solid black, $color : red);
 }
 
-@mixin fontType($border){
+@mixin fontType($border : 2px solid red, $color : black){
 	border : $border;
+	font-color: $color;
+}
+
+@include interpolation(interpolation);
+
+@mixin interpolation($interpolation){
+	.#{$interpolation}-test {
+		font-size: 14px;
+	}
 }
 
 @include layout;
+
+@mixin parent($color : green, $name : default) {
+	.#{$name}-inner {
+		color: $color;
+	}
+}
+
+.default {
+	@include parent;
+}
+
+.custom {
+	@include parent($name : custom);
+}

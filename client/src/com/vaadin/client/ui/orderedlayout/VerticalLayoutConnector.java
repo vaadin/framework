@@ -17,6 +17,7 @@ package com.vaadin.client.ui.orderedlayout;
 
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
+import com.vaadin.shared.ui.orderedlayout.VerticalLayoutState;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -38,4 +39,8 @@ public class VerticalLayoutConnector extends AbstractOrderedLayoutConnector {
         return (VVerticalLayout) super.getWidget();
     }
 
+    @Override
+    public VerticalLayoutState getState() {
+        return (VerticalLayoutState) super.getState();
+    }
 }

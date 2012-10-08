@@ -198,6 +198,35 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public void removeStyleName(String style);
 
     /**
+     * Gets the primary style name of the component. See
+     * {@link Component#setPrimaryStyleName(String)} for a better description of
+     * the primary stylename.
+     */
+    public String getPrimaryStyleName();
+
+    /**
+     * Changes the primary style name of the component.
+     * 
+     * <p>
+     * The primary style name identifies the component when applying the CSS
+     * theme to the Component. By changing the style name all CSS rules targeted
+     * for that style name will no longer apply, and might result in the
+     * component not working as intended.
+     * </p>
+     * 
+     * <p>
+     * To preserve the original style of the component when changing to a new
+     * primary style you should make your new primary style inherit the old
+     * primary style using the SASS @include directive. See more in the SASS
+     * tutorials.
+     * </p>
+     * 
+     * @param style
+     *            The new primary style name
+     */
+    public void setPrimaryStyleName(String style);
+
+    /**
      * Tests whether the component is enabled or not. A user can not interact
      * with disabled components. Disabled components are rendered in a style
      * that indicates the status, usually in gray color. Children of a disabled

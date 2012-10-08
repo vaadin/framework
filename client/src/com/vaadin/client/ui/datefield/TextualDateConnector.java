@@ -19,6 +19,7 @@ package com.vaadin.client.ui.datefield;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.UIDL;
 import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.shared.ui.datefield.TextualDateFieldState;
 
 public class TextualDateConnector extends AbstractDateFieldConnector {
 
@@ -58,5 +59,10 @@ public class TextualDateConnector extends AbstractDateFieldConnector {
     @Override
     public VTextualDate getWidget() {
         return (VTextualDate) super.getWidget();
+    }
+
+    @Override
+    public TextualDateFieldState getState() {
+        return (TextualDateFieldState) super.getState();
     }
 }

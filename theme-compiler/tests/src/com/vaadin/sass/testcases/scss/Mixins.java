@@ -19,8 +19,7 @@ package com.vaadin.sass.testcases.scss;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.LexicalUnit;
@@ -64,7 +63,7 @@ public class Mixins extends AbstractTestBase {
         Assert.assertEquals(LexicalUnit.SAC_PIXEL, mixinDefNode1.getArglist()
                 .get(1).getExpr().getLexicalUnitType());
         Assert.assertEquals(3f, mixinDefNode1.getArglist().get(1).getExpr()
-                .getFloatValue());
+                .getFloatValue(), 0f);
 
         Assert.assertEquals(4, mixinDefNode1.getChildren().size());
 

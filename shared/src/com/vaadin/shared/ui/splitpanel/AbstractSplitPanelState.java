@@ -21,7 +21,6 @@ import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.Connector;
 
 public class AbstractSplitPanelState extends ComponentState {
-
     public Connector firstChild = null;
     public Connector secondChild = null;
     public SplitterState splitterState = new SplitterState();

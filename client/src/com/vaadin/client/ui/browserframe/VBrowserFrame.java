@@ -11,11 +11,13 @@ public class VBrowserFrame extends Widget {
     protected Element altElement;
     protected String altText;
 
+    public static final String CLASSNAME = "v-browserframe";
+
     public VBrowserFrame() {
         Element root = Document.get().createDivElement();
         setElement(root);
 
-        setStylePrimaryName("v-browserframe");
+        setStyleName(CLASSNAME);
 
         createAltTextElement();
     }

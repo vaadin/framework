@@ -1,20 +1,20 @@
-@mixin reindeer-table {
+@mixin reindeer-table($name : v-table) {
 
 /* Table on blue background */
-.blue .v-table-header-wrap {
+.blue .#{$name}-header-wrap {
 	border-color: #92a2aa;
 }
-.blue .v-table-body {
+.blue .#{$name}-body {
 	border-color: #92a2aa;
 	border-top-color: #c2c3c4;
 }
 
 /* Default & white style */
-.v-table-header-wrap,
-.white .v-table-header-wrap,
-.v-table-footer-wrap,
-.white .v-table-footer-wrap,
-.v-table-header-drag {
+.#{$name}-header-wrap,
+.white .#{$name}-header-wrap,
+.#{$name}-footer-wrap,
+.white .#{$name}-footer-wrap,
+.#{$name}-header-drag {
 	border-color: #c2c3c4;
 	background: transparent repeat-x;
 	background-image: url(img/header-bg-light.png); /** sprite-ref: verticals; sprite-alignment: repeat */
@@ -27,85 +27,85 @@
 	line-height: normal;
 }
 
-.v-table-footer-wrap,
-.white .v-table-footer-wrap {
+.#{$name}-footer-wrap,
+.white .#{$name}-footer-wrap {
 	text-transform: none;
 	font-size: 12px;
 	font-weight: normal;
 }
 
-.v-table-footer td,
-.white .v-table-footer td {
+.#{$name}-footer td,
+.white .#{$name}-footer td {
 	border-color: #c2c3c4;
 }
 
-.v-table-footer-container {
+.#{$name}-footer-container {
 	padding-right: 7px;
 }
 
 
-.v-table-header,
-.v-table-footer,
-.v-table-footer table {
+.#{$name}-header,
+.#{$name}-footer,
+.#{$name}-footer table {
 	height: 20px;
 }
 
-.v-table-caption-container,
-.v-table-header-drag {
+.#{$name}-caption-container,
+.#{$name}-header-drag {
 	padding-top: 4px;
 	padding-right: 4px;
 }
-.v-table-caption-container .v-icon,
-.v-table-header-drag .v-icon {
+.#{$name}-caption-container .v-icon,
+.#{$name}-header-drag .v-icon {
 	height: 16px;
 	margin: -4px 3px 0 0;
 	vertical-align: middle;
 }
-.v-ie .v-table-caption-container .v-icon,
-.v-ie .v-table-header-drag .v-icon {
+.v-ie .#{$name}-caption-container .v-icon,
+.v-ie .#{$name}-header-drag .v-icon {
 	margin-top: -3px;
 }
-.v-table-resizer {
+.#{$name}-resizer {
 	height: 20px;
 	width: 2px;
 	background: transparent;
 	border-right: 1px solid #c2c3c4;
 }
 
-.v-table-sort-indicator {
+.#{$name}-sort-indicator {
 	background: transparent;
 	width: 0px;
 	height: 20px;
 }
 
-.v-table-header-cell-asc .v-table-sort-indicator {
+.#{$name}-header-cell-asc .#{$name}-sort-indicator {
 	background: transparent no-repeat right 7px;
 	background-image: url(img/asc-light.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
 	width: 16px;
 }
-.v-table-header-cell-desc .v-table-sort-indicator {
+.#{$name}-header-cell-desc .#{$name}-sort-indicator {
 	background: transparent no-repeat right 7px;
 	background-image: url(img/desc-light.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
 	width: 16px;
 }
-.v-table-body,
-.white .v-table-body {
+.#{$name}-body,
+.white .#{$name}-body {
 	border-color: #c2c3c4;
 	background: #fff;
 }
-.v-table-cell-content {
+.#{$name}-cell-content {
 	padding-top: 0;
 	border-right-color: #d3d4d5;
 	vertical-align: top;
 }
-.v-table-cell-wrapper {
+.#{$name}-cell-wrapper {
 	padding-top: 3px;
 	padding-bottom: 3px;
 }
-.v-table-row-odd {
+.#{$name}-row-odd {
 	background: #eff0f1;
 }
-.v-table-generated-row {
+.#{$name}-generated-row {
     background: #dcdee0;
     text-transform: uppercase;
     font-size: 10px;
@@ -114,55 +114,55 @@
     text-shadow: #f3f5f8 0 1px 0;
     line-height: normal;
 }
-.v-table-generated-row .v-table-cell-wrapper {
+.#{$name}-generated-row .#{$name}-cell-wrapper {
     padding-top: 4px;
     padding-bottom: 5px;
 }
-.v-table-cell-content:last-child {
+.#{$name}-cell-content:last-child {
 	border-right-color: transparent;
 }
-.v-table .v-selected,
-.black .v-table .v-selected {
+.#{$name} .v-selected,
+.black .#{$name} .v-selected {
 	background: #4d749f url(../common/img/sel-bg.png) repeat-x; /* We can't include this in the sprite, since we don't know the row height */
 	color: #fff;
 	text-shadow: #3b5a7a 0 1px 0;
 }
-.v-table .v-selected .v-table-cell-content {
+.#{$name} .v-selected .#{$name}-cell-content {
 	border-right-color: #466c90;
 }
-.v-table-column-selector {
+.#{$name}-column-selector {
 	width: 16px;
 	height: 20px;
 	margin-top: -20px;
 	background: transparent no-repeat;
 	background-image: url(img/col-sel-light.png); /** sprite-ref: verticals */
 }
-.v-table-column-selector:active {
+.#{$name}-column-selector:active {
 	background-image: url(img/col-sel-light-pressed.png); /** sprite-ref: verticals */
 }
-.v-table-focus-slot-left {
+.#{$name}-focus-slot-left {
 	border-left: 1px solid #222;
 	margin-bottom: -20px;
 	width: auto;
 }
-.v-table-focus-slot-right {
+.#{$name}-focus-slot-right {
 	border-right-color: #222;
 	margin-right: 0;
 }
-.v-table-header-drag {
+.#{$name}-header-drag {
 	padding-left: 6px;
 	height: 16px;
 }
-.v-table-header-drag img {
+.#{$name}-header-drag img {
 	height: 16px;
 	margin: -3px 3px 0 0;
 }
-.v-table-scrollposition {
+.#{$name}-scrollposition {
 	width: auto;
 	background: transparent;
 	border: none;
 }
-.v-table-scrollposition span {
+.#{$name}-scrollposition span {
 	background: transparent repeat-x;
 	background-image: url(img/scroll-indic-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	border: 1px solid #939494;
@@ -183,7 +183,7 @@
 	-webkit-box-shadow: rgba(0,0,0,.5) 0 1px 2px;
 	-moz-box-shadow: rgba(0,0,0,.5) 0 1px 2px;
 }
-.v-table-borderless .v-table-scrollposition span {
+.#{$name}-borderless .#{$name}-scrollposition span {
 	top: 0;
 }
 /* row in column selector */
@@ -206,87 +206,87 @@
 
 
 /* Strong style */
-.v-table-strong .v-table-header-wrap,
-.v-table-strong .v-table-header-drag {
+.#{$name}-strong .#{$name}-header-wrap,
+.#{$name}-strong .#{$name}-header-drag {
 	border-color: #2b3033;
 	border-top-color: #2b3033;
 	background-image: url(img/header-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	color: #e7e9ea;
 	text-shadow: #000 0 -1px 0;
 }
-.v-table-strong .v-table-body {
+.#{$name}-strong .#{$name}-body {
 	border-top-color: #2b3033;
 }
-.v-table-strong .v-table-resizer {
+.#{$name}-strong .#{$name}-resizer {
 	border-right-color: #1c1f21;
 }
-.v-table-strong .v-table-header-cell-asc .v-table-sort-indicator {
+.#{$name}-strong .#{$name}-header-cell-asc .#{$name}-sort-indicator {
 	background-image: url(img/asc.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
 }
-.v-table-strong .v-table-header-cell-desc .v-table-sort-indicator {
+.#{$name}-strong .#{$name}-header-cell-desc .#{$name}-sort-indicator {
 	background-image: url(img/desc.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
 }
-.v-table-strong .v-table-column-selector {
+.#{$name}-strong .#{$name}-column-selector {
 	background-image: url(img/col-sel.png); /** sprite-ref: verticals */
 }
-.v-table-strong .v-table-column-selector:active {
+.#{$name}-strong .#{$name}-column-selector:active {
 	background-image: url(img/col-sel-pressed.png); /** sprite-ref: verticals */
 }
-.v-table-strong .v-table-focus-slot-left,
-.v-table-strong .v-table-focus-slot-right {
+.#{$name}-strong .#{$name}-focus-slot-left,
+.#{$name}-strong .#{$name}-focus-slot-right {
 	border-color: #9ca1a5;
 }
 
 
 /* Table on black background (normal style) */
-.black .v-table-header-wrap,
-.black .v-table-header-drag {
+.black .#{$name}-header-wrap,
+.black .#{$name}-header-drag {
 	border-color: #252729;
 	background-image: url(img/header-bg-black.png); /** sprite-ref: black-verticals; sprite-alignment: repeat */
 	color: #e7eaee;
 	text-shadow: #000 0 -1px 0;
 }
-.black .v-table-resizer {
+.black .#{$name}-resizer {
 	border-right-color: #252729;
 }
-.black .v-table-header-cell-asc .v-table-sort-indicator {
+.black .#{$name}-header-cell-asc .#{$name}-sort-indicator {
 	background-image: url(img/asc.png); /** sprite-ref: black-verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
 }
-.black .v-table-header-cell-desc .v-table-sort-indicator {
+.black .#{$name}-header-cell-desc .#{$name}-sort-indicator {
 	background-image: url(img/desc.png); /** sprite-ref: black-verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
 }
-.black .v-table-column-selector {
+.black .#{$name}-column-selector {
 	background-image: url(img/col-sel-black.png); /** sprite-ref: black-verticals */
 }
-.black .v-table-column-selector:active {
+.black .#{$name}-column-selector:active {
 	background-image: url(img/col-sel-black-pressed.png); /** sprite-ref: black-verticals */
 }
-.black .v-table-focus-slot-left,
-.black .v-table-focus-slot-right {
+.black .#{$name}-focus-slot-left,
+.black .#{$name}-focus-slot-right {
 	border-color: #9ca1a5;
 }
-.black .v-table-body {
+.black .#{$name}-body {
 	border-color: #252729;
 	background: transparent;
 }
-.black .v-table-cell-content {
+.black .#{$name}-cell-content {
 	border-right-color: #252729;
 	border-bottom: 1px solid #252729;
 }
-.black .v-table-cell-wrapper {
+.black .#{$name}-cell-wrapper {
 	padding-bottom: 2px;
 }
-.black .v-table-row-odd {
+.black .#{$name}-row-odd {
 	background: transparent;
 }
 /* Selection background-color combined with the default (white) style selector, so we don't have to duplicate the sprite image in the final sprite collection */
-.black .v-table .v-selected .v-table-cell-content {
+.black .#{$name} .v-selected .#{$name}-cell-content {
 	border-bottom: 1px solid #4d749f;
 }
 
 /* Borderless style */
-.v-table-borderless .v-table-header-wrap,
-.v-table-borderless .v-table-body {
+.#{$name}-borderless .#{$name}-header-wrap,
+.#{$name}-borderless .#{$name}-body {
 	border: none;
 }
 

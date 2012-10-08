@@ -1,36 +1,36 @@
-@mixin reindeer-formlayout {
+@mixin reindeer-formlayout($name : v-formlayout) {
 
-.v-formlayout-errorcell {
+.#{$name}-errorcell {
 	width: 13px;
 }
-.v-formlayout-cell .v-errorindicator {
+.#{$name}-cell .v-errorindicator {
 	width: 13px;
 	height: 16px;
 	background: transparent url(../common/icons/error.png) no-repeat 50%;
 }
-.v-formlayout-captioncell {
+.#{$name}-captioncell {
 	text-align: right;
 	white-space: nowrap;
 }
-.v-formlayout-spacing > tbody > .v-formlayout-row > .v-formlayout-captioncell, 
-.v-formlayout-spacing > tbody > .v-formlayout-row > .v-formlayout-contentcell,
-.v-formlayout-spacing > tbody > .v-formlayout-row > .v-formlayout-errorcell {
+.#{$name}-spacing > tbody > .#{$name}-row > .#{$name}-captioncell, 
+.#{$name}-spacing > tbody > .#{$name}-row > .#{$name}-contentcell,
+.#{$name}-spacing > tbody > .#{$name}-row > .#{$name}-errorcell {
 	padding-top: 8px;
 }
-.v-formlayout-margin-top > tbody > .v-formlayout-firstrow > .v-formlayout-captioncell, 
-.v-formlayout-margin-top > tbody > .v-formlayout-firstrow > .v-formlayout-contentcell,
-.v-formlayout-margin-top > tbody > .v-formlayout-firstrow > .v-formlayout-errorcell {
+.#{$name}-margin-top > tbody > .#{$name}-firstrow > .#{$name}-captioncell, 
+.#{$name}-margin-top > tbody > .#{$name}-firstrow > .#{$name}-contentcell,
+.#{$name}-margin-top > tbody > .#{$name}-firstrow > .#{$name}-errorcell {
 	padding-top: 15px;
 }
-.v-formlayout-margin-bottom > tbody > .v-formlayout-lastrow > .v-formlayout-captioncell,
-.v-formlayout-margin-bottom > tbody > .v-formlayout-lastrow > .v-formlayout-contentcell,
-.v-formlayout-margin-bottom > tbody > .v-formlayout-lastrow > .v-formlayout-errorcell {
+.#{$name}-margin-bottom > tbody > .#{$name}-lastrow > .#{$name}-captioncell,
+.#{$name}-margin-bottom > tbody > .#{$name}-lastrow > .#{$name}-contentcell,
+.#{$name}-margin-bottom > tbody > .#{$name}-lastrow > .#{$name}-errorcell {
 	padding-bottom: 15px;
 }
-.v-formlayout-margin-left > tbody > .v-formlayout-row > .v-formlayout-captioncell {
+.#{$name}-margin-left > tbody > .#{$name}-row > .#{$name}-captioncell {
 	padding-left: 18px;
 } 
-.v-formlayout-margin-right > tbody > .v-formlayout-row > .v-formlayout-contentcell {
+.#{$name}-margin-right > tbody > .#{$name}-row > .#{$name}-contentcell {
 	padding-right: 18px;
 }
 /* form */

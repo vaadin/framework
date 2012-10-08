@@ -23,6 +23,7 @@ import com.vaadin.client.ui.table.VScrollTable.VScrollTableBody.VScrollTableRow;
 import com.vaadin.client.ui.treetable.VTreeTable.PendingNavigationEvent;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.treetable.TreeTableConstants;
+import com.vaadin.shared.ui.treetable.TreeTableState;
 import com.vaadin.ui.TreeTable;
 
 @Connect(TreeTable.class)
@@ -104,5 +105,10 @@ public class TreeTableConnector extends TableConnector {
     @Override
     public VTreeTable getWidget() {
         return (VTreeTable) super.getWidget();
+    }
+
+    @Override
+    public TreeTableState getState() {
+        return (TreeTableState) super.getState();
     }
 }

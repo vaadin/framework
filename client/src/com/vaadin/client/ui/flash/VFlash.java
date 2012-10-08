@@ -8,6 +8,8 @@ import com.vaadin.client.Util;
 
 public class VFlash extends HTML {
 
+    public static final String CLASSNAME = "v-flash";
+
     protected String source;
     protected String altText;
     protected String classId;
@@ -21,7 +23,7 @@ public class VFlash extends HTML {
     protected String height;
 
     public VFlash() {
-        setStylePrimaryName("v-flash");
+        setStyleName(CLASSNAME);
     }
 
     public void setSource(String source) {

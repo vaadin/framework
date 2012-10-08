@@ -18,6 +18,9 @@ package com.vaadin.shared.ui.window;
 import com.vaadin.shared.ui.panel.PanelState;
 
 public class WindowState extends PanelState {
+    {
+        primaryStyleName = "v-window";
+    }
     public boolean modal = false;
     public boolean resizable = true;
     public boolean resizeLazy = false;

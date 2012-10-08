@@ -15,18 +15,27 @@
  */
 package com.vaadin.client.ui.orderedlayout;
 
+import com.vaadin.client.StyleConstants;
+
 /**
  * Represents a layout where the children is ordered vertically
  */
 public class VVerticalLayout extends VOrderedLayout {
 
-    private static final String CLASSNAME = "v-verticallayout";
+    public static final String CLASSNAME = "v-verticallayout";
 
     /**
      * Default constructor
      */
     public VVerticalLayout() {
-        setVertical(true);
-        addStyleName(CLASSNAME);
+        super(true);
+        setStyleName(CLASSNAME);
+    }
+
+    @Override
+    public void setStyleName(String style) {
+        super.setStyleName(style);
+        addStyleName(StyleConstants.UI_LAYOUT);
+        addStyleName("v-vertical");
     }
 }

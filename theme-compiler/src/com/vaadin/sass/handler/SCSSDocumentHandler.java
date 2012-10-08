@@ -26,7 +26,6 @@ import org.w3c.css.sac.SACMediaList;
 import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.parser.LexicalUnitImpl;
 import com.vaadin.sass.tree.ForNode;
-import com.vaadin.sass.tree.MixinDefNode;
 import com.vaadin.sass.tree.VariableNode;
 import com.vaadin.sass.tree.WhileNode;
 import com.vaadin.sass.tree.controldirective.EachDefNode;
@@ -39,8 +38,6 @@ public interface SCSSDocumentHandler extends DocumentHandler {
     void startMixinDirective(String name, Collection<VariableNode> args);
 
     void endMixinDirective(String name, Collection<VariableNode> args);
-
-    MixinDefNode mixinDirective(String name, String args, String body);
 
     void debugDirective();
 
@@ -82,7 +79,7 @@ public interface SCSSDocumentHandler extends DocumentHandler {
 
     EachDefNode startEachDirective(String var, String listVariable);
 
-    void removeDirective(ArrayList<String> list, ArrayList<String> remove,
+    void removeDirective(String variable, String list, String remove,
             String separator);
 
 }

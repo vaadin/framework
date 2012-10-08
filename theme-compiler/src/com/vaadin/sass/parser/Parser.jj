@@ -491,6 +491,9 @@ TOKEN :
   | < LBRACE : "{" >
   | < RBRACE : "}">
   | < DASHMATCH : "|=" >
+  | < CARETMATCH : "^=" >
+  | < DOLLARMATCH : "$=" >
+  | < STARMATCH : "*=" >
   | < INCLUDES  : "~=" >
   | < EQ        : "=" >
   | < PLUS      : "+" >
@@ -522,7 +525,7 @@ TOKEN :
 < DEFAULT >
 TOKEN :
 {
-	< EACH_VAR : "#{"< VARIABLE > "}">
+	< INTERPOLATION : "#{"< VARIABLE > "}">
 }
 
 <DEFAULT>
@@ -737,7 +740,7 @@ void afterImportDeclaration() :
 }
 {
   ( 
-     ( variable() | removeDirective() | mixinDirective()|eachDirective() | includeDirective() | styleRule() | media()| page() | fontFace() 
+     ( (LOOKAHEAD(5)removeDirective()|variable()) | mixinDirective()| eachDirective() | includeDirective() | styleRule() | media()| page() | fontFace() 
       | { l = getLocator(); } ret=skipStatement() 
       {
 	  if ((ret == null) || (ret.length() == 0)) {
@@ -999,7 +1002,7 @@ void microsoftExtension() :
 	< COLON >
 	((n = < IDENT > { value += n.image; })
 	| (n = < NUMBER > { value += n.image; }) 
-	| (n = < EACH_VAR > { value += n.image; })
+	| (n = < INTERPOLATION > { value += n.image; })
 	| (n = < COLON > { value += n.image; })
 	| (n = < FUNCTION > { value += n.image; })
 	| (n = < RPARAN > { value += n.image; })
@@ -1051,7 +1054,7 @@ void styleRule() :
 	 start = true;
 	 documentHandler.startSelector(l);
      }
-     ( ifDirective() | removeDirective() | includeDirective() | media() | extendDirective()| eachDirective() | variable() | LOOKAHEAD(3) (microsoftExtension()|declarationOrNestedProperties()) | styleRule())*
+     ( ifDirective() | LOOKAHEAD(5)removeDirective() | includeDirective() | media() | extendDirective()| eachDirective() | variable() | LOOKAHEAD(3) (microsoftExtension()|declarationOrNestedProperties()) | styleRule())*
      <RBRACE> (<S>)*
  } catch (ThrowedParseException e) {
      if (errorHandler != null) {
@@ -1188,7 +1191,7 @@ String _class(String pred) :
 String s = ".";
 }
 {
-  "." (t = <IDENT>{s += t.image; }|t = < EACH_VAR >{ s += t.image; })+
+  "." (t = <IDENT>{s += t.image; }|t =  < INTERPOLATION >{ s += t.image; })+
       { 
 	  
 	  if (pred == null) {
@@ -1205,7 +1208,7 @@ String s = ".";
 String element_name() :
 {Token t; String s = "";}
 {
-    (t = <IDENT>{s += t.image; }|t = < EACH_VAR >{ s += t.image; })+
+    (t = <IDENT>{s += t.image; }|t = < INTERPOLATION >{ s += t.image; })+
     { 
       return s; 
     }
@@ -1229,7 +1232,10 @@ String attrib(String pred) :
   "[" ( <S> )* att=<IDENT> ( <S> )*
       ( ( "="           { cases = 1; }
 	  | <INCLUDES>  { cases = 2; }	  
-	  | <DASHMATCH> { cases = 3; } ) ( <S> )* 
+	  | <DASHMATCH> { cases = 3; }
+	  | <CARETMATCH> { cases = 4; }
+	  | <DOLLARMATCH> { cases = 5; }
+	  | <STARMATCH> { cases = 6; } ) ( <S> )* 
 	( val=<IDENT> { attValue = val.image; }
 	  | val=<STRING> { attValue = val.image; }
 	)
@@ -1250,6 +1256,15 @@ String attrib(String pred) :
 	  break;
 	  case 3:
 	  c = name + "|=" +attValue;
+	  break;
+	  case 4:
+	  c = name + "^=" +attValue;
+	  break;
+	  case 5:
+	  c = name + "$=" +attValue;
+	  break;
+	  case 6:
+	  c = name + "*=" +attValue;
 	  break;
 	  default:
 	  // never reached.
@@ -1445,12 +1460,11 @@ void eachDirective() :
   var = < VARIABLE > (< S >)* < EACH_IN > (< S >)*
   (list = stringList()
   {documentHandler.startEachDirective(var.image, list);}
-  |{documentHandler.startEachDirective(var.image, list);}removeDirective()
   |listVariable = variableName()
   {documentHandler.startEachDirective(var.image, listVariable);}
   )
   < LBRACE >(< S >)*
-  ( includeDirective() | removeDirective() | media() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*	  
+  ( includeDirective() | LOOKAHEAD(5)removeDirective() | media() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*	  
   < RBRACE >(< S >)*
   { documentHandler.endEachDirective();}
 }
@@ -1483,7 +1497,6 @@ void mixinDirective() :
       args = arglist()) <RPARAN> (<S>)*) <LBRACE> (<S>)*
     {documentHandler.startMixinDirective(name, args);}
     ( includeDirective() | media() | eachDirective() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*
-    //(includeDirective() | media() | LOOKAHEAD(declaration()) declaration()";"(<S>)* | styleRule())*
     <RBRACE>(<S>)*
     {documentHandler.endMixinDirective(name, args);}
 }
@@ -1492,24 +1505,46 @@ ArrayList<VariableNode> arglist() :
 {
     ArrayList<VariableNode> args = new ArrayList<VariableNode>();
     VariableNode arg;
+    boolean hasNonOptionalArgument = false;
 }
 {
-    arg=mixinArg() ( <COMMA> (<S>)* { args.add(arg); } 
+    arg=mixinArg() ( <COMMA> (<S>)* { hasNonOptionalArgument = checkMixinForNonOptionalArguments(arg, hasNonOptionalArgument); args.add(arg); } 
         arg=mixinArg() )* 
-    { args.add(arg); 
+    { hasNonOptionalArgument = checkMixinForNonOptionalArguments(arg, hasNonOptionalArgument); args.add(arg); 
         return args;
     }
+}
+
+JAVACODE
+boolean checkMixinForNonOptionalArguments(VariableNode arg, boolean hasNonOptionalArguments){
+	boolean currentArgHasArguments = arg.getExpr() != null && arg.getExpr().getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE && arg.getExpr().getNextLexicalUnit() != null;
+  	if(currentArgHasArguments)	{
+		if(hasNonOptionalArguments)		{			throw new ParseException("Sass Error: Required argument $"+ arg.getName() +" must come before any optional arguments.");
+		}
+		return hasNonOptionalArguments;
+	}else	{	return true;
+	}
 }
 
 VariableNode mixinArg() :
 {
     String name;
+    Token variable = null;
     LexicalUnitImpl first = null;
-    LexicalUnitImpl next = null;
     LexicalUnitImpl prev = null;
+    LexicalUnitImpl next = null;
 }
 {
-    name=variableName() (":" (<S>)* first=term(null){ prev = first; } (LOOKAHEAD(2)(< COMMA >(< S >)*)?next=term(prev){prev.setNextLexicalUnit(next); prev = next;})* )?
+    name=variableName() (< COLON > (< S >)*
+
+    (      first = nonVariableTerm(null)      {
+        prev = first;      }
+	  (LOOKAHEAD(3)(< COMMA >(< S >)*)? prev = nonVariableTerm(prev))*	)
+	| (variable = < VARIABLE >{ first = LexicalUnitImpl.createVariable(token.beginLine, token.beginColumn,
+                 prev, variable.image);}
+		
+       )
+    )?
     {
         VariableNode arg = new VariableNode(name, first, false);
         return arg;
@@ -1524,9 +1559,9 @@ ArrayList<LexicalUnitImpl> argValuelist() :
     LexicalUnitImpl prev = null;
 }
 {
-    first = term(null) { args.add(first); prev = first;}(next=term(prev){prev.setNextLexicalUnit(next); prev = next;})*
+    first = term(null) { args.add(first); prev = first;}((< COLON > (< S >)*)?next=term(prev){prev.setNextLexicalUnit(next); prev = next;})*
     ( <COMMA> (<S>)*
-    first = term(null) { args.add(first); prev = first;}(next=term(prev){prev.setNextLexicalUnit(next); prev = next;})*
+    first = term(null) { args.add(first); prev = first;}((< COLON > (< S >)*)?next=term(prev){prev.setNextLexicalUnit(next); prev = next;})*
     )* 
     {return args;}
 }
@@ -1548,44 +1583,63 @@ void includeDirective() :
 /**
  * @exception ParseException exception during the parse
  */
-void removeDirective() :{	ArrayList<String> list = null;
-	ArrayList<String> remove = null;
+void removeDirective() :{	String list = null;
+	String remove = null;
 	String separator = null;
+	String variable = null;
 	Token n = null;
 }
 {
+  n = < VARIABLE >{ variable = n.image; }(< S >)* ":" (< S >)*
   < REMOVE >(< S >)*
   (list = removeDirectiveArgs(0))
-  < COMMA >(< S >)*  (remove = removeDirectiveArgs(1))
+  (< RPARAN >)? < COMMA >(< S >)*
+  (remove = removeDirectiveArgs(1))
   ( < COMMA >(< S >)* n = < IDENT >{ separator = n.image; } (< S >)*)?
   < RPARAN >(< S >)* < SEMICOLON >(< S >)*
 
-  { documentHandler.removeDirective(list,remove,separator); }}
+  { documentHandler.removeDirective(variable,list,remove,separator); }
+}
 
 JAVACODE
-ArrayList<String > removeDirectiveArgs(int nest){
-  	ArrayList<String> list = new ArrayList<String>();
-	// Start at one due to "remove(" containing one.
+String removeDirectiveArgs(int nest){
+  	String list = "";
 	int nesting = nest;
 	Token t = null;
 	
 	while(true)	{		t = getToken(1);
-		if(t.kind == VARIABLE)		{
-		  list.add(t.image);
-		}else if(t.kind == STRING)		{
-			list.add(t.image.substring(1,t.image.length()).substring(0,t.image.length()-2));
+		String s = t.image;
+		if(t.kind == VARIABLE||t.kind == IDENT)		{
+		  list += s;
+		}else if(s.toLowerCase().equals("auto")||s.toLowerCase().equals("space")||s.toLowerCase().equals("comma"))		{
+			int i = 2;
+			Token temp = getToken(i);
+			boolean isLast = true;
+			while(temp.kind != SEMICOLON)
+			{				if(temp.kind != RPARAN || temp.kind != S)
+				{				  isLast = false;				}
+				i++;
+				temp = getToken(i);
+			}
+
+		  	if(isLast)		  	{			return list;
+			}
+		}		else if(t.kind == STRING)		{			list += s.substring(1,s.length()).substring(0,s.length()-2);
 			
 		}else if(t.kind == LPARAN)		{			nesting++;
 			if(nesting > nest+1)			{				throw new CSSParseException("Only one ( ) pair per parameter allowed", getLocator());
 			}
 		}else if(t.kind == RPARAN)		{			nesting--;
 			if(nesting == 0)			{
-			  	getNextToken();				return list;
+				return list;
 			}
 		} else if(t.kind == COMMA)		{
 			if(nesting == nest)			{
-			  return list;			}
-		} else if(t.kind == LBRACE)		{
+			  return list;			}else			{
+			  list += ",";			}
+			  
+		}else if(t.kind == S)		{
+		  list += " ";		} else if(t.kind == LBRACE)		{
 		  throw new CSSParseException("Invalid token,'{' found", getLocator());		}
 				getNextToken();
 	}
@@ -1874,10 +1928,28 @@ LexicalUnitImpl term(LexicalUnitImpl prev) :
 { LexicalUnitImpl result = null;
   Token n = null;
   char op = ' ';
+}
+{
+  (result = nonVariableTerm(prev)| result = variableTerm(prev))
+      {
+	  return result;
+      }
+}
+
+LexicalUnitImpl variableTerm(LexicalUnitImpl prev) :{
+  LexicalUnitImpl result = null;
+  String varName = "";}{
+  varName = variableName()
+         {result = LexicalUnitImpl.createVariable(token.beginLine, token.beginColumn,
+                 prev, varName); return result;}}
+
+LexicalUnitImpl nonVariableTerm(LexicalUnitImpl prev) :{LexicalUnitImpl result = null;
+  Token n = null;
+  char op = ' ';
   String varName;
 }
 {
-  (( ( ( op=unaryOperator() )?
+( ( ( op=unaryOperator() )?
     (
       n=<NUMBER>
 	{ result = LexicalUnitImpl.createNumber(n.beginLine, n.beginColumn,
@@ -1985,13 +2057,8 @@ LexicalUnitImpl term(LexicalUnitImpl prev) :
         | result=url(prev)
 	| result=unicode(prev)
          ) ) ( <S> )*
-        | varName = variableName()
-         {result = LexicalUnitImpl.createVariable(token.beginLine, token.beginColumn,
-                 prev, varName);})
-      {
-	  return result;
-      }
-}
+  {
+    return result;  }}
 
 /**
  * Handle all CSS2 functions.

@@ -197,6 +197,16 @@ public abstract class AbstractComponent extends AbstractClientConnector
     }
 
     @Override
+    public void setPrimaryStyleName(String style) {
+        getState().primaryStyleName = style;
+    }
+
+    @Override
+    public String getPrimaryStyleName() {
+        return getState().primaryStyleName;
+    }
+
+    @Override
     public void addStyleName(String style) {
         if (style == null || "".equals(style)) {
             return;

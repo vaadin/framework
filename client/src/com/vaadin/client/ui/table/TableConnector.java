@@ -36,9 +36,9 @@ import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.table.VScrollTable.ContextMenuDetails;
 import com.vaadin.client.ui.table.VScrollTable.VScrollTableBody.VScrollTableRow;
-import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.table.TableConstants;
+import com.vaadin.shared.ui.table.TableState;
 
 @Connect(com.vaadin.ui.Table.class)
 public class TableConnector extends AbstractComponentContainerConnector
@@ -212,10 +212,12 @@ public class TableConnector extends AbstractComponentContainerConnector
         showSavedContextMenu(contextMenuBeforeUpdate);
 
         if (!getWidget().isSelectable()) {
-            getWidget().scrollBody.addStyleName(VScrollTable.CLASSNAME
+            getWidget().scrollBody.addStyleName(getWidget()
+                    .getStylePrimaryName()
                     + "-body-noselection");
         } else {
-            getWidget().scrollBody.removeStyleName(VScrollTable.CLASSNAME
+            getWidget().scrollBody.removeStyleName(getWidget()
+                    .getStylePrimaryName()
                     + "-body-noselection");
         }
 
@@ -338,8 +340,8 @@ public class TableConnector extends AbstractComponentContainerConnector
     }
 
     @Override
-    public AbstractFieldState getState() {
-        return (AbstractFieldState) super.getState();
+    public TableState getState() {
+        return (TableState) super.getState();
     }
 
     /**

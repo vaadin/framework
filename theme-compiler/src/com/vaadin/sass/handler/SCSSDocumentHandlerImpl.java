@@ -31,6 +31,7 @@ import com.vaadin.sass.parser.LexicalUnitImpl;
 import com.vaadin.sass.tree.BlockNode;
 import com.vaadin.sass.tree.CommentNode;
 import com.vaadin.sass.tree.ExtendNode;
+import com.vaadin.sass.tree.FontFaceNode;
 import com.vaadin.sass.tree.ForNode;
 import com.vaadin.sass.tree.ImportNode;
 import com.vaadin.sass.tree.ListRemoveNode;
@@ -171,12 +172,14 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
 
     @Override
     public void startFontFace() throws CSSException {
-        System.out.println("startFontFace()");
+        FontFaceNode node = new FontFaceNode();
+        nodeStack.peek().appendChild(node);
+        nodeStack.push(node);
     }
 
     @Override
     public void endFontFace() throws CSSException {
-        System.out.println("endFontFace()");
+        nodeStack.pop();
     }
 
     @Override
@@ -208,12 +211,6 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
     public void extendDirective(ArrayList<String> list) {
         ExtendNode node = new ExtendNode(list);
         nodeStack.peek().appendChild(node);
-    }
-
-    @Override
-    public MixinDefNode mixinDirective(String name, String args, String body) {
-        MixinDefNode node = new MixinDefNode(name, args, body);
-        return node;
     }
 
     @Override
@@ -307,9 +304,10 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
     }
 
     @Override
-    public void removeDirective(ArrayList<String> list,
-            ArrayList<String> remove, String separator) {
-        ListRemoveNode node = new ListRemoveNode(list, remove, separator);
+    public void removeDirective(String variable, String list, String remove,
+            String separator) {
+        ListRemoveNode node = new ListRemoveNode(variable, list, remove,
+                separator);
         nodeStack.peek().appendChild(node);
     }
 }

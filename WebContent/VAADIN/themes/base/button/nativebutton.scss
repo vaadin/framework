@@ -1,0 +1,73 @@
+@mixin base-nativebutton($name : v-nativebutton) {
+
+
+.#{$name} .v-icon {
+	vertical-align: middle;
+	margin-right: 3px;
+	border: none;
+	}
+
+.#{$name} .v-errorindicator {
+	display: inline-block;
+	zoom: 1;
+	vertical-align: middle;
+	float: none;
+}
+
+/* Link style (we really should deprecate this) */
+.#{$name}-link {
+	border: none;
+	text-align: left !important;
+	background: transparent;
+	padding: 0;
+	color: inherit;
+	-khtml-user-select: text;
+	-moz-user-select: text;
+	-ie-user-select: text;
+	user-select: text;
+}
+
+.#{$name}-link .#{$name}-caption {
+	text-decoration: underline;
+	color: inherit;
+	text-align: left;
+	}
+
+.#{$name} {
+	text-align: center !important;
+	cursor: pointer;
+	white-space: nowrap;
+	margin: 0;
+	color: inherit;
+	font: inherit;
+	line-height: normal;
+	}
+.#{$name} .#{$name}-caption {
+	vertical-align: middle;
+	white-space: nowrap;
+	font: inherit;
+	color: inherit;
+	}
+
+.#{$name} .v-icon {
+	vertical-align: middle;
+	margin-right: 3px;
+	}
+
+.#{$name} .v-errorindicator {
+	display: inline-block;
+	zoom: 1;
+	float: none;
+}
+/* Fixes stretched buttons in IE7*/
+.v-ie .#{$name} {
+	overflow: visible;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+.v-ie .#{$name}-link {
+	padding: 0;
+}
+
+}

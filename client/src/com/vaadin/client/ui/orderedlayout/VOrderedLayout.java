@@ -56,31 +56,9 @@ public class VOrderedLayout extends FlowPanel {
 
     private LayoutManager layoutManager;
 
-    /**
-     * Constructor
-     */
-    public VOrderedLayout() {
-        setStyleName(StyleConstants.UI_LAYOUT);
-        setVertical(true);
-    }
 
-    /**
-     * Does the layout order its children horizontally or vertically
-     * 
-     * @param vertical
-     *            true to order the childer vertically, false to order them
-     *            horizontally
-     * 
-     */
-    protected void setVertical(boolean vertical) {
+    public VOrderedLayout(boolean vertical) {
         this.vertical = vertical;
-        if (vertical) {
-            addStyleName("v-vertical");
-            removeStyleName("v-horizontal");
-        } else {
-            addStyleName("v-horizontal");
-            removeStyleName("v-vertical");
-        }
     }
 
     /**

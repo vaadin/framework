@@ -97,17 +97,29 @@ public class VButton extends FocusWidget implements ClickHandler {
         sinkEvents(Event.ONCLICK | Event.MOUSEEVENTS | Event.FOCUSEVENTS
                 | Event.KEYEVENTS);
 
-        setStyleName(CLASSNAME);
-
         // Add a11y role "button"
         Accessibility.setRole(getElement(), Accessibility.ROLE_BUTTON);
 
-        wrapper.setClassName(getStylePrimaryName() + "-wrap");
         getElement().appendChild(wrapper);
-        captionElement.setClassName(getStylePrimaryName() + "-caption");
         wrapper.appendChild(captionElement);
 
+        setStyleName(CLASSNAME);
+
         addClickHandler(this);
+    }
+
+    @Override
+    public void setStyleName(String style) {
+        super.setStyleName(style);
+        wrapper.setClassName(getStylePrimaryName() + "-wrap");
+        captionElement.setClassName(getStylePrimaryName() + "-caption");
+    }
+
+    @Override
+    public void setStylePrimaryName(String style) {
+        super.setStylePrimaryName(style);
+        wrapper.setClassName(getStylePrimaryName() + "-wrap");
+        captionElement.setClassName(getStylePrimaryName() + "-caption");
     }
 
     public void setText(String text) {

@@ -1,41 +1,41 @@
-@mixin reindeer-tabsheet-minimal-style {
+@mixin reindeer-tabsheet-minimal-style($name : v-tabsheet) {
 
 /**
  * Tabsheet "minimal" style --------------
  */
 
 /* Minimal tabsheet on blue background */
-.blue .v-tabsheet-tabs-minimal .v-tabsheet-spacertd div,
-.blue .v-tabsheet-tabs-minimal .v-tabsheet-tabitem,
-.blue .v-tabsheet-tabs-minimal .v-tabsheet-tabitem-selected  {
+.blue .#{$name}-tabs-minimal .#{$name}-spacertd div,
+.blue .#{$name}-tabs-minimal .#{$name}-tabitem,
+.blue .#{$name}-tabs-minimal .#{$name}-tabitem-selected  {
 	border-color: #7c8a91;
 }
-.blue .v-tabsheet-tabs-minimal .v-tabsheet-caption-close {
+.blue .#{$name}-tabs-minimal .#{$name}-caption-close {
 	color: #7c8a91;
 }
-.blue .v-tabsheet-tabs-minimal .v-tabsheet-caption-close:hover {
+.blue .#{$name}-tabs-minimal .#{$name}-caption-close:hover {
 	color: #BCD3DE;
 	background: #778d98;
 }
-.blue .v-tabsheet-tabs-minimal .v-tabsheet-caption-close:active {
+.blue .#{$name}-tabs-minimal .#{$name}-caption-close:active {
 	background: #4f6874;
 }
 
 /* Default & white styles */
-.v-tabsheet-tabs-minimal .v-tabsheet-spacertd div,
-.white .v-tabsheet-tabs-minimal .v-tabsheet-spacertd div {
+.#{$name}-tabs-minimal .#{$name}-spacertd div,
+.white .#{$name}-tabs-minimal .#{$name}-spacertd div {
 	border-bottom: 1px solid #bfbfbf;
 	height: auto;
 	background: transparent;
 }
-.v-tabsheet-tabs-minimal .v-tabsheet-tabitemcell,
-.v-tabsheet-tabs-minimal .v-tabsheet-spacertd {
+.#{$name}-tabs-minimal .#{$name}-tabitemcell,
+.#{$name}-tabs-minimal .#{$name}-spacertd {
 	height: auto;
 	background: transparent;
 	padding-left: 0;
 }
-.v-tabsheet-tabs-minimal .v-tabsheet-tabitem,
-.white .v-tabsheet-tabs-minimal .v-tabsheet-tabitem {
+.#{$name}-tabs-minimal .#{$name}-tabitem,
+.white .#{$name}-tabs-minimal .#{$name}-tabitem {
 	border: none;
 	border-bottom: 1px solid #bfbfbf;
 	color: #4d748f;
@@ -44,54 +44,54 @@
 	background: transparent;
 	text-shadow: none;
 }
-.v-tabsheet-tabs-minimal .v-tabsheet-tabitem .v-caption {
+.#{$name}-tabs-minimal .#{$name}-tabitem .v-caption {
 	padding: 5px 16px;
 	height: auto;
 	background: transparent;
 }
-.v-tabsheet-tabs-minimal .v-tabsheet-tabitemcell-selected {
+.#{$name}-tabs-minimal .#{$name}-tabitemcell-selected {
 	background: transparent;
 }
-.v-tabsheet-tabs-minimal .v-tabsheet-tabitem-selected,
-.white .v-tabsheet-tabs-minimal .v-tabsheet-tabitem-selected {
+.#{$name}-tabs-minimal .#{$name}-tabitem-selected,
+.white .#{$name}-tabs-minimal .#{$name}-tabitem-selected {
 	background: transparent;
 	border: 1px solid #bfbfbf;
 	border-bottom: none;
 	color: #222;
 }
-.v-tabsheet-tabs-minimal .v-tabsheet-tabitem-selected .v-caption {
+.#{$name}-tabs-minimal .#{$name}-tabitem-selected .v-caption {
 	background: transparent;
 	padding: 4px 15px 6px 15px;
 }
-.v-tabsheet-tabs-minimal .v-tabsheet-tabitem .v-caption-closable,
-.v-tabsheet-tabs-minimal .v-tabsheet-tabitem-selected .v-caption-closable {
+.#{$name}-tabs-minimal .#{$name}-tabitem .v-caption-closable,
+.#{$name}-tabs-minimal .#{$name}-tabitem-selected .v-caption-closable {
 	padding-right: 6px;
 }
-.v-tabsheet-content-minimal,
-.white .v-tabsheet-content-minimal {
+.#{$name}-content-minimal,
+.white .#{$name}-content-minimal {
 	border: none;
 }
-.v-tabsheet-content-minimal .v-tabsheet-tabsheetpanel {
+.#{$name}-content-minimal .#{$name}-tabsheetpanel {
 	background: transparent;
 }
-.v-tabsheet-deco-minimal,
-.white .v-tabsheet-deco-minimal {
+.#{$name}-deco-minimal,
+.white .#{$name}-deco-minimal {
 	height: 0;
 	border: none;
 }
-.v-tabsheet-tabcontainer-minimal .v-tabsheet-scroller {
+.#{$name}-tabcontainer-minimal .#{$name}-scroller {
 	margin-top: -20px;
 	height: 17px;
 	padding: 0;
 	border: none;
 	background: transparent;
 }
-.v-tabsheet-tabcontainer-minimal .v-tabsheet-scroller button {
+.#{$name}-tabcontainer-minimal .#{$name}-scroller button {
 	margin-top: 0;
 }
-.v-tabsheet-tabs-minimal .v-tabsheet-caption-close,
-.v-tabsheet-tabs-minimal .v-tabsheet-caption-close:hover,
-.v-tabsheet-tabs-minimal .v-tabsheet-caption-close:active {
+.#{$name}-tabs-minimal .#{$name}-caption-close,
+.#{$name}-tabs-minimal .#{$name}-caption-close:hover,
+.#{$name}-tabs-minimal .#{$name}-caption-close:active {
 	text-indent: 0;
 	background: transparent;
 	margin-left: 3px;
@@ -104,45 +104,45 @@
 	-webkit-border-radius: 7px;
 	-moz-border-radius: 7px;
 }
-.v-tabsheet-tabs-minimal .v-tabsheet-caption-close {
+.#{$name}-tabs-minimal .#{$name}-caption-close {
 	margin-top: 1px;
 }
-.v-ff .v-tabsheet-tabs-minimal .v-tabsheet-caption-close {
+.v-ff .#{$name}-tabs-minimal .#{$name}-caption-close {
 	margin-top: -15px;
 }
-.v-tabsheet-tabs-minimal .v-tabsheet-caption-close:hover,
-.white .v-tabsheet-tabs-minimal .v-tabsheet-caption-close:hover {
+.#{$name}-tabs-minimal .#{$name}-caption-close:hover,
+.white .#{$name}-tabs-minimal .#{$name}-caption-close:hover {
 	color: #fff;
 	background: #aaa;
 }
-.v-tabsheet-tabs-minimal .v-tabsheet-caption-close:active,
-.white .v-tabsheet-tabs-minimal .v-tabsheet-caption-close:active {
+.#{$name}-tabs-minimal .#{$name}-caption-close:active,
+.white .#{$name}-tabs-minimal .#{$name}-caption-close:active {
 	background: #777;
 }
 
 /* Minimal tabsheet on black background */
-.black .v-tabsheet-tabs-minimal .v-tabsheet-spacertd div,
-.black .v-tabsheet-tabs-minimal .v-tabsheet-tabitem,
-.black .v-tabsheet-tabs-minimal .v-tabsheet-tabitem-selected  {
+.black .#{$name}-tabs-minimal .#{$name}-spacertd div,
+.black .#{$name}-tabs-minimal .#{$name}-tabitem,
+.black .#{$name}-tabs-minimal .#{$name}-tabitem-selected  {
 	border-color: #3e4044;
 	color: #6a7f89;
 }
-.black .v-tabsheet-tabs-minimal .v-tabsheet-tabitem-selected {
+.black .#{$name}-tabs-minimal .#{$name}-tabitem-selected {
 	color: #c9ccce;
 }
-.black .v-tabsheet-content-minimal,
-.black .v-tabsheet-content-bar {
+.black .#{$name}-content-minimal,
+.black .#{$name}-content-bar {
 	color: #c9ccce;
 	text-shadow: #000 0 0 1px;
 }
-.black .v-tabsheet-tabs-minimal .v-tabsheet-caption-close {
+.black .#{$name}-tabs-minimal .#{$name}-caption-close {
 	color: #72787c;
 }
-.black .v-tabsheet-tabs-minimal .v-tabsheet-caption-close:hover {
+.black .#{$name}-tabs-minimal .#{$name}-caption-close:hover {
 	color: #1d2021;
 	background: #4d5154;
 }
-.black .v-tabsheet-tabs-minimal .v-tabsheet-caption-close:active {
+.black .#{$name}-tabs-minimal .#{$name}-caption-close:active {
 	background: #626669;
 }
 

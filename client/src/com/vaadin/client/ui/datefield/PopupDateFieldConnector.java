@@ -24,6 +24,7 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.datefield.VCalendarPanel.FocusChangeListener;
 import com.vaadin.client.ui.datefield.VCalendarPanel.TimeChangeListener;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.datefield.PopupDateFieldState;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.DateField;
 
@@ -120,6 +121,11 @@ public class PopupDateFieldConnector extends TextualDateConnector {
     @Override
     public VPopupCalendar getWidget() {
         return (VPopupCalendar) super.getWidget();
+    }
+
+    @Override
+    public PopupDateFieldState getState() {
+        return (PopupDateFieldState) super.getState();
     }
 
     @Override

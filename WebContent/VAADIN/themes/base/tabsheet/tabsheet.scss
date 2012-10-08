@@ -1,12 +1,12 @@
-@mixin base-tabsheet {
+@mixin base-tabsheet($name : v-tabsheet) {
 
-.v-tabsheet,
-.v-tabsheet-content,
-.v-tabsheet-deco {
+.#{$name},
+.#{$name}-content,
+.#{$name}-deco {
 	outline: none; /* Prevent selection outline which might break layouts or cause scrollbars */
 	text-align: left; /* Force default alignment */
 }
-.v-tabsheet-tabs {
+.#{$name}-tabs {
 	empty-cells: hide;
 	border-collapse: collapse;
 	margin: 0;
@@ -15,55 +15,55 @@
 	width: 100%;
 	overflow:hidden;
 }
-.v-tabsheet-tabitemcell:focus {
+.#{$name}-tabitemcell:focus {
 	outline: none;
 }
-.v-tabsheet-tabitemcell,
-.v-tabsheet-spacertd {
+.#{$name}-tabitemcell,
+.#{$name}-spacertd {
 	margin: 0;
 	padding: 0;
 	vertical-align: bottom;
 }
-.v-tabsheet-spacertd {
+.#{$name}-spacertd {
 	width: 100%;
 }
-.v-tabsheet-spacertd div {
+.#{$name}-spacertd div {
 	border-left: 1px solid #aaa;
 	border-bottom: 1px solid #aaa;
 	height: 1em;
 	padding: 0.2em 0;
 }
-.v-tabsheet-hidetabs > .v-tabsheet-tabcontainer {
+.#{$name}-hidetabs > .#{$name}-tabcontainer {
 	display: none;
 }
-.v-tabsheet-scroller {
+.#{$name}-scroller {
 	white-space: nowrap;
 	text-align: right;
 	margin-top: -1em;
 }
-.v-disabled .v-tabsheet-scroller {
+.v-disabled .#{$name}-scroller {
 	display: none;
 }
-.v-tabsheet-scrollerPrev,
-.v-tabsheet-scrollerNext,
-.v-tabsheet-scrollerPrev-disabled,
-.v-tabsheet-scrollerNext-disabled {
+.#{$name}-scrollerPrev,
+.#{$name}-scrollerNext,
+.#{$name}-scrollerPrev-disabled,
+.#{$name}-scrollerNext-disabled {
 	border: 1px solid #aaa;
 	background: #fff;
 	width: 12px;
 	height: 1em;
 	cursor: pointer;
 }
-.v-tabsheet-scrollerPrev-disabled,
-.v-tabsheet-scrollerNext-disabled {
+.#{$name}-scrollerPrev-disabled,
+.#{$name}-scrollerNext-disabled {
 	opacity: 0.5;
 	cursor: default;
 }
-.v-tabsheet-tabs .v-caption,
-.v-tabsheet-tabs .v-caption span {
+.#{$name}-tabs .v-caption,
+.#{$name}-tabs .v-caption span {
 	white-space: nowrap;
 }
-.v-tabsheet-caption-close {
+.#{$name}-caption-close {
 	display: inline;
 	display: inline-block;
 	zoom: 1;
@@ -79,49 +79,49 @@
 	-moz-user-select: none;
 	-webkit-user-select: none;
 }
-.v-tabsheet .v-disabled .v-tabsheet-caption-close {
+.#{$name} .v-disabled .#{$name}-caption-close {
 	cursor: default;
 	visibility: hidden;
 }
-.v-tabsheet-tabitem:hover .v-tabsheet-caption-close {
+.#{$name}-tabitem:hover .#{$name}-caption-close {
 	visibility: visible;
 }
-.v-tabsheet-tabitem {
+.#{$name}-tabitem {
 	border: 1px solid #aaa;
 	border-right: none;
 	cursor: pointer;
 	padding: 0.2em 0.5em;
 }
-.v-tabsheet-tabitem .v-caption {
+.#{$name}-tabitem .v-caption {
 	cursor: inherit;
 }
-.v-tabsheet.v-disabled .v-tabsheet-tabitem,
-.v-tabsheet-tabitemcell-disabled .v-tabsheet-tabitem {
+.#{$name}.v-disabled .#{$name}-tabitem,
+.#{$name}-tabitemcell-disabled .#{$name}-tabitem {
 	cursor: default;
 }
-.v-tabsheet-tabitem-selected {
+.#{$name}-tabitem-selected {
 	cursor: default;
 	border-bottom-color: #fff;
 }
-.v-tabsheet-tabitem-selected .v-caption {
+.#{$name}-tabitem-selected .v-caption {
 	cursor: default;
 }
-.v-tabsheet-content {
+.#{$name}-content {
 	border: 1px solid #aaa;
 	/* Vertical borders are not supported, use v-tabsheet-tabcontainer and v-tabsheet-deco to present these borders */
 	border-top: none;
 	border-bottom: none;
 	position: relative;
 }
-.v-tabsheet-deco {
+.#{$name}-deco {
 	height: 1px;
 	background: #aaa;
 	overflow: hidden;
 }
-.v-tabsheet-hidetabs .v-tabsheet-content {
+.#{$name}-hidetabs .#{$name}-content {
 	border: none;
 }
-.v-tabsheet-hidetabs .v-tabsheet-deco {
+.#{$name}-hidetabs .#{$name}-deco {
 	height: 0;
 }
 

@@ -8,7 +8,7 @@
 @import "tabsheet-hover-closable-style.scss";
 
 @mixin reindeer-tabsheet {
-
+	// TODO use $exclude
 	@include reindeer-tabsheet-normal-style;
 	@include reindeer-tabsheet-scroller;
 	@include reindeer-tabsheet-borderless-style;

@@ -1,16 +1,16 @@
-@mixin reindeer-accordion {
+@mixin reindeer-accordion($name : v-accordion) {
 
-.v-accordion {
+.#{$name} {
 	border: 1px solid #bebebe;
 	border-radius: 2px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	overflow: hidden;
 }
-.v-accordion-item {
+.#{$name}-item {
 	background-color: #fff;
 }
-.v-accordion-item-caption {
+.#{$name}-item-caption {
 	height: 19px;
 	background: #e4e4e4 repeat-x;
 	background-image: url(../tabsheet/img/tabbar-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
@@ -20,31 +20,31 @@
 	text-shadow: #fff 0 1px 0;
 }
 
-.v-accordion-item-caption .v-captiontext{
+.#{$name}-item-caption .v-captiontext{
 	vertical-align:baseline;
 }
 
-.v-accordion-item-first .v-accordion-item-caption {
+.#{$name}-item-first .#{$name}-item-caption {
 	border-top: none;
 }
-.v-accordion-item-caption .v-caption {
+.#{$name}-item-caption .v-caption {
 	padding: 3px 0 5px 10px;
 }
-.v-ie .v-accordion-item-caption .v-caption {
+.v-ie .#{$name}-item-caption .v-caption {
 	padding: 2px 0 6px 10px;
 }
-.v-accordion-item-open .v-accordion-item-caption {
+.#{$name}-item-open .#{$name}-item-caption {
 	background-image: url(../tabsheet/img/tabbar-bg-sel.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	border-bottom: 1px solid #bbb;
 }
-.v-accordion-item-caption .v-icon {
+.#{$name}-item-caption .v-icon {
 	margin-top: -1px;
 }
-.v-ie .v-accordion-item-caption .v-icon {
+.v-ie .#{$name}-item-caption .v-icon {
 	vertical-align: top;
 }
 /* Borderless style */
-.v-accordion-borderless {
+.#{$name}-borderless {
 	border: none;
 	border-radius: 0;
 	-webkit-border-radius: 0;

@@ -1,6 +1,4 @@
-// this file just defines all reindeer mixins by importing them
-
-// common between others for now for backwards compatibility
+@import "../base/base.scss";
 
 @import "accordion/accordion.scss";
 @import "button/button.scss";
@@ -23,3 +21,29 @@
 @import "textfield/textfield.scss";
 @import "tree/tree.scss";
 @import "window/window.scss";
+	
+@mixin liferay {
+	// TODO move?
+	@include base;
+	// TODO @each
+	@include liferay-accordion;
+	@include liferay-button;
+	
+	@include liferay-common;
+	@include liferay-contextmenu;
+	@include liferay-datefield;
+	@include liferay-formlayout;
+	@include liferay-menubar;
+	@include liferay-notification;
+	@include liferay-panel;
+	@include liferay-popupview;
+	@include liferay-progressindicator;
+	@include liferay-select;
+	@include liferay-slider;
+	@include liferay-splitpanel;
+	@include liferay-table;
+	@include liferay-tabsheet;
+	@include liferay-textfield;
+	@include liferay-tree;
+	@include liferay-window;
+}

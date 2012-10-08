@@ -48,7 +48,7 @@ import com.vaadin.shared.ui.twincolselect.TwinColSelectConstants;
 public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         MouseDownHandler, DoubleClickHandler, SubPartAware {
 
-    private static final String CLASSNAME = "v-select-twincol";
+    public static final String CLASSNAME = "v-select-twincol";
 
     private static final int VISIBLE_COUNT = 10;
 

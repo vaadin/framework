@@ -1,8 +1,8 @@
-@mixin reindeer-tabsheet-scroller {
+@mixin reindeer-tabsheet-scroller($name : v-tabsheet) {
 
 /* Tabsheet scroller styles */
 
-.v-tabsheet-scroller {
+.#{$name}-scroller {
 	height: 31px;
 	margin-top: -31px;
 	padding: 0 3px 0 4px;
@@ -13,13 +13,13 @@
 	background: transparent url(img/framed/tab-bg.png) repeat-x left -1px;
 	width: 36px;
 }
-.v-tabsheet-scroller button {
+.#{$name}-scroller button {
 	margin-top: 7px;
 }
-.v-tabsheet-scrollerPrev,
-.v-tabsheet-scrollerNext,
-.v-tabsheet-scrollerPrev-disabled,
-.v-tabsheet-scrollerNext-disabled {
+.#{$name}-scrollerPrev,
+.#{$name}-scrollerNext,
+.#{$name}-scrollerPrev-disabled,
+.#{$name}-scrollerNext-disabled {
 	border: none;
 	background: transparent;
 	background-image: url(img/tab-prev.png); /** sprite-ref: verticals */
@@ -27,26 +27,26 @@
 	height: 17px;
 	overflow: hidden;
 }
-.v-tabsheet-scroller button::-moz-focus-inner {
+.#{$name}-scroller button::-moz-focus-inner {
 	border: none;
 }
-.v-tabsheet-scrollerNext {
+.#{$name}-scrollerNext {
 	background-image: url(img/tab-next.png); /** sprite-ref: verticals */
 }
-.v-tabsheet-scrollerPrev:active {
+.#{$name}-scrollerPrev:active {
 	background-image: url(img/tab-prev-pressed.png); /** sprite-ref: verticals */
 }
-.v-tabsheet-scrollerNext:active {
+.#{$name}-scrollerNext:active {
 	background-image: url(img/tab-next-pressed.png); /** sprite-ref: verticals */
 }
-.v-tabsheet-scrollerPrev-disabled,
-.v-tabsheet-scrollerPrev-disabled:active {
+.#{$name}-scrollerPrev-disabled,
+.#{$name}-scrollerPrev-disabled:active {
 	background-image: url(img/tab-prev-disabled.png); /** sprite-ref: verticals */
 	opacity: 1;
 	filter: none;
 }
-.v-tabsheet-scrollerNext-disabled,
-.v-tabsheet-scrollerNext-disabled:active {
+.#{$name}-scrollerNext-disabled,
+.#{$name}-scrollerNext-disabled:active {
 	background-image: url(img/tab-next-disabled.png); /** sprite-ref: verticals; sprite-margin-bottom: 1px */
 	opacity: 1;
 	filter: none;

@@ -1,0 +1,37 @@
+@mixin base-checkbox($name : v-checkbox) {
+
+ .#{$name} {
+ 	display: block;
+ }
+
+.#{$name},
+.#{$name} label,
+.#{$name} input,
+.#{$name} .v-icon {
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+.#{$name} .v-icon {
+	margin: 0 2px;
+}
+.#{$name} .v-errorindicator {
+	float: none;
+	display: inline;
+	display: inline-block;
+	zoom: 1;
+}
+
+
+/* Disabled by default
+.#{$name}-error {
+	background: #ffe0e0;
+}
+*/
+/* Disabled by default
+.#{$name}-required {
+	background: #ffe0e0;
+}
+*/
+
+}

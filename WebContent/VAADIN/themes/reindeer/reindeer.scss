@@ -1,10 +1,10 @@
-// this file just defines all reindeer mixins by importing them
+@import "../base/base.scss";
 
 // common between others for now for backwards compatibility
-
 @import "accordion/accordion.scss";
 @import "a-sprite-definitions/a-sprite-definitions.scss";
 @import "button/button.scss";
+@import "button/nativebutton.scss";
 
 @import "common/common.scss";
 
@@ -26,3 +26,36 @@
 @import "textfield/textfield.scss";
 @import "tree/tree.scss";
 @import "window/window.scss";
+
+@mixin reindeer {
+	// should this be here?
+	@include base;
+	
+	// TODO @each
+
+	@include reindeer-accordion;
+	// TODO @include a-sprite-definitions;
+	@include reindeer-button;
+	@include reindeer-nativebutton;
+	@include reindeer-common;
+	@include reindeer-datefield;
+	@include reindeer-formlayout;
+	@include reindeer-label;
+	@include reindeer-layouts;
+	@include reindeer-link;
+	@include reindeer-menubar;
+	@include reindeer-notification;
+	@include reindeer-panel;
+	@include reindeer-popupview;
+	@include reindeer-progressindicator;
+	@include reindeer-select;
+	@include reindeer-slider;
+	@include reindeer-splitpanel;
+	@include reindeer-table;
+	@include reindeer-tabsheet;
+	@include reindeer-textfield;
+	@include reindeer-tree;
+	@include reindeer-window;
+}
+
+

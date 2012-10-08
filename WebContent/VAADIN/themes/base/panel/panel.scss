@@ -1,48 +1,48 @@
-@mixin base-panel {
+@mixin base-panel($name : v-panel) {
 
-.v-panel,
-.v-panel-caption,
-.v-panel-content,
-.v-panel-deco,
-.v-panel-light,
-.v-panel-caption-light,
-.v-panel-content-light,
-.v-panel-deco-light {
+.#{$name},
+.#{$name}-caption,
+.#{$name}-content,
+.#{$name}-deco,
+.#{$name}-light,
+.#{$name}-caption-light,
+.#{$name}-content-light,
+.#{$name}-deco-light {
 	outline: none; /* Prevent selection outline which might break layouts or cause scrollbars */
 	text-align: left; /* Force default alignment */
 }
-.v-panel-caption .v-errorindicator {
+.#{$name}-caption .v-errorindicator {
 	float: none;
 	display: inline;
 }
-.v-panel-caption .v-icon {
+.#{$name}-caption .v-icon {
 	display: inline;
 	vertical-align: middle;
 }
-.v-panel-caption span {
+.#{$name}-caption span {
 	vertical-align: middle;
 	display: table-row;
 }
-.v-panel-caption {
+.#{$name}-caption {
 	white-space: nowrap;
 	overflow:hidden;
 	font-weight: bold;
 }
-.v-panel-nocaption {
+.#{$name}-nocaption {
 	overflow: hidden;
 }
-.v-panel-content {
+.#{$name}-content {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
-.v-panel.v-has-width > .v-panel-content {
+.#{$name}.v-has-width > .#{$name}-content {
 	width: 100%;
 }
-.v-panel.v-has-height > .v-panel-content {
+.#{$name}.v-has-height > .#{$name}-content {
 	height: 100%;
 }
-.v-panel-deco {
+.#{$name}-deco {
 }
 
 }

@@ -25,6 +25,7 @@ import com.vaadin.client.Util;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.tabsheet.TabsheetState;
 import com.vaadin.ui.TabSheet;
 
 @Connect(TabSheet.class)
@@ -79,6 +80,11 @@ public class TabsheetConnector extends TabsheetBaseConnector implements
     @Override
     public VTabsheet getWidget() {
         return (VTabsheet) super.getWidget();
+    }
+
+    @Override
+    public TabsheetState getState() {
+        return (TabsheetState) super.getState();
     }
 
     @Override
