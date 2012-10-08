@@ -264,7 +264,7 @@ public class VDragAndDropManager {
     }
 
     /* Singleton */
-    private VDragAndDropManager() {
+    protected VDragAndDropManager() {
     }
 
     private NativePreviewHandler defaultDragAndDropEventHandler = new DefaultDragAndDropEventHandler();
