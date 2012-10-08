@@ -2,8 +2,6 @@ package com.vaadin.tests.minitutorials.v7a1;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.imageio.ImageIO;
 
@@ -23,14 +21,8 @@ public class DynamicImageUI extends AbstractTestUI {
         getSession().addRequestHandler(new DynamicImageRequestHandler());
 
         // Create a URL that we can handle in DynamicImageRequestHandler
-        URL imageUrl;
-        try {
-            imageUrl = new URL(getSession().getURL(),
-                    DynamicImageRequestHandler.IMAGE_URL + "?text=Hello!");
-        } catch (MalformedURLException e) {
-            // This should never happen
-            throw new RuntimeException(e);
-        }
+        String imageUrl = "app://" + DynamicImageRequestHandler.IMAGE_URL
+                + "?text=Hello!";
 
         // Add an embedded using the created URL
         Embedded embedded = new Embedded("A dynamically generated image",

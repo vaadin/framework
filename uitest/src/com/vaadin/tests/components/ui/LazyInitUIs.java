@@ -5,7 +5,6 @@ import com.vaadin.server.UIClassSelectionEvent;
 import com.vaadin.server.UICreateEvent;
 import com.vaadin.server.UIProviderEvent;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinServiceSession;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestUIProvider;
 import com.vaadin.ui.Label;
@@ -53,17 +52,16 @@ public class LazyInitUIs extends AbstractTestUIProvider {
                 protected void init(VaadinRequest request) {
                     addComponent(getRequestInfo("NormalUI", request));
 
+                    String location = getPage().getLocation().toString();
                     Link lazyCreateLink = new Link("Open lazyCreate UI",
-                            new ExternalResource(VaadinServiceSession
-                                    .getCurrent().getURL()
-                                    + "?lazyCreate#lazyCreate"));
+                            new ExternalResource(location.replaceFirst(
+                                    "(\\?|#|$).*", "?lazyCreate#lazyCreate")));
                     lazyCreateLink.setTargetName("_blank");
                     addComponent(lazyCreateLink);
 
                     Link lazyInitLink = new Link("Open eagerInit UI",
-                            new ExternalResource(VaadinServiceSession
-                                    .getCurrent().getURL()
-                                    + "?eagerInit#eagerInit"));
+                            new ExternalResource(location.replaceFirst(
+                                    "(\\?|#|$).*", "?eagerInit#eagerInit")));
                     lazyInitLink.setTargetName("_blank");
                     addComponent(lazyInitLink);
                 }

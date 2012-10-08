@@ -224,7 +224,7 @@ public class TestBench extends com.vaadin.LegacyApplication implements
     private Component createTestable(Class<?> c) {
         try {
             final LegacyApplication app = (LegacyApplication) c.newInstance();
-            app.doInit();
+            app.doInit(null);
             Layout lo = (Layout) app.getMainWindow().getContent();
             lo.setParent(null);
             return lo;

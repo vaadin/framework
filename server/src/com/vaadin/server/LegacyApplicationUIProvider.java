@@ -16,6 +16,8 @@
 
 package com.vaadin.server;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -124,7 +126,15 @@ public abstract class LegacyApplicationUIProvider extends UIProvider {
             }
             VaadinServiceSession.getCurrent().setAttribute(
                     LegacyApplication.class, application);
-            application.doInit();
+
+            URL applicationUrl;
+            try {
+                applicationUrl = VaadinService.getCurrent().getApplicationUrl(
+                        VaadinService.getCurrentRequest());
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+            application.doInit(applicationUrl);
         }
 
         if (application != null && !application.isRunning()) {
