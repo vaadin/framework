@@ -29,9 +29,11 @@ public class GeneratePackageExports {
         if (args.length < 2) {
             System.err
                     .println("Invalid number of parameters\n"
-                            + "Usage: java -cp .. GenerateManifest <package.jar> <accepted package prefixes>");
+                            + "Usage: java -cp .. GenerateManifest <package.jar> <accepted package prefixes>\n"
+                            + "Use -Dvaadin.version to specify the version to be used for the packages");
             System.exit(1);
         }
+        String vaadinVersion = System.getProperty("vaadin.version");
 
         // Open the JAR
         String jarFilename = args[0];
@@ -57,7 +59,7 @@ public class GeneratePackageExports {
             return;
         }
 
-        String exportPackage = sortAndJoinPackages(packages);
+        String exportPackage = sortAndJoinPackages(packages, vaadinVersion);
 
         // Read old manifest
         Manifest oldMF = null;
@@ -95,7 +97,8 @@ public class GeneratePackageExports {
         }
     }
 
-    private static String sortAndJoinPackages(HashSet<String> packages) {
+    private static String sortAndJoinPackages(HashSet<String> packages,
+            String vaadinVersion) {
         // Produce an ordered listing of the package names
         String packageArray[] = new String[packages.size()];
         packages.toArray(packageArray);
@@ -105,8 +108,11 @@ public class GeneratePackageExports {
             if (i != 0) {
                 joinedPackages.append(",");
             }
-
-            joinedPackages.append(packageArray[i]);
+            String packageAndVersion = packageArray[i];
+            if (vaadinVersion != null) {
+                packageAndVersion += ";version=\"" + vaadinVersion + "\"";
+            }
+            joinedPackages.append(packageAndVersion);
         }
 
         return joinedPackages.toString();

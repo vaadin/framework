@@ -244,6 +244,7 @@
 			<arg value="com/vaadin" />
 			<arg value="com/google" />
 			<classpath refid="vaadin.buildhelpers.classpath" />
+			<jvmarg value="-Dvaadin.version=${vaadin.version}" />
 		</java>
 	</target>
 
