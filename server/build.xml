@@ -27,6 +27,7 @@
 		<antcall target="common.jar">
 			<param name="require-bundle" value="com.vaadin.shared;bundle-version=&quot;${vaadin.version}&quot;"/>
 			<param name="import-package" value="${server.osgi.import}" />
+			<param name="osgi.extra.package.prefixes" value="VAADIN" />
 			<reference torefid="extra.jar.includes" refid="jar.includes" />
 		</antcall>
 	</target>

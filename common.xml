@@ -240,8 +240,7 @@
 		<!-- Generate the Export-Package attribute in the manifest -->
 		<java classname="com.vaadin.buildhelpers.GeneratePackageExports" failonerror="true" fork="yes">
 			<arg value="${jar}" />
-			<arg value="com/vaadin" />
-			<arg value="com/google" />
+			<arg line="com/vaadin com/google ${osgi.extra.package.prefixes}" />
 			<classpath refid="vaadin.buildhelpers.classpath" />
 			<jvmarg value="-Dvaadin.version=${vaadin.version}" />
 		</java>

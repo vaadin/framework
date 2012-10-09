@@ -123,18 +123,15 @@ public class GeneratePackageExports {
         HashSet<String> packages = new HashSet<String>();
         for (Enumeration<JarEntry> it = jar.entries(); it.hasMoreElements();) {
             JarEntry entry = it.nextElement();
-            if (!entry.getName().endsWith(".class")) {
+
+            boolean classFile = entry.getName().endsWith(".class");
+            boolean directory = entry.isDirectory();
+
+            if (!classFile && !directory) {
                 continue;
             }
 
-            boolean accept = false;
-            for (String prefix : acceptedPackagePrefixes) {
-                if (entry.getName().startsWith(prefix)) {
-                    accept = true;
-                    break;
-                }
-            }
-            if (!accept) {
+            if (!acceptEntry(entry.getName(), acceptedPackagePrefixes)) {
                 continue;
             }
 
@@ -144,19 +141,16 @@ public class GeneratePackageExports {
             packages.add(pkg);
         }
 
-        // List theme packages
-        for (Enumeration<JarEntry> it = jar.entries(); it.hasMoreElements();) {
-            JarEntry entry = it.nextElement();
-            if (entry.isDirectory()
-                    && entry.getName().startsWith("VAADIN/themes")) {
-                // Strip ending slash
-                int lastSlash = entry.getName().lastIndexOf('/');
-                String pkg = entry.getName().substring(0, lastSlash)
-                        .replace('/', '.');
-                packages.add(pkg);
+        return packages;
+    }
+
+    private static boolean acceptEntry(String name,
+            List<String> acceptedPackagePrefixes) {
+        for (String prefix : acceptedPackagePrefixes) {
+            if (name.startsWith(prefix)) {
+                return true;
             }
         }
-
-        return packages;
+        return false;
     }
 }
