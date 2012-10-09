@@ -125,4 +125,16 @@
 	height: 0;
 }
 
+/*
+ * In IE8 and IE9 we need to do magic things to avoid scrollbars since it does not completely
+ * support the HTML5 doctype. Changing the contained element to a block element will not add
+ * magical bottom paddings to the contained element and cause scrollbars.
+ */
+.v-ie8, .v-ie9 {
+    .#{$name} .v-scrollable > .v-widget {
+        display: block;
+    }
+}
+
+
 }
