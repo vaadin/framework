@@ -13,7 +13,7 @@
 
 	<ivy:settings file="${vaadin.basedir}/ivysettings.xml" />
 	<ivy:settings file="${vaadin.basedir}/ivysettings.xml" id="ivysettings" />
-	<ivy:resolve file="${vaadin.basedir}/ivy-taskdefs.xml" conf="taskdefs" />
+	<ivy:resolve file="${vaadin.basedir}/ivy-taskdefs.xml" conf="taskdefs" log="quiet" />
 	<ivy:cachepath pathid="taskdefs.classpath" conf="taskdefs" />
 	<taskdef uri="antlib:net.sf.antcontrib" resource="net/sf/antcontrib/antlib.xml" classpathref="taskdefs.classpath" />
 	<!-- ant contrib for Maven integration -->
