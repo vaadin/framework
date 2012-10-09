@@ -632,4 +632,18 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
     public static LexicalUnitImpl createIdent(String s) {
         return new LexicalUnitImpl(0, 0, null, SAC_IDENT, s);
     }
+
+    public static void replaceValues(LexicalUnitImpl unit,
+            LexicalUnitImpl replaceWith) {
+        unit.setLexicalUnitType(replaceWith.getLexicalUnitType());
+        unit.setStringValue(replaceWith.getStringValue());
+        unit.setFloatValue(replaceWith.getFloatValue());
+        unit.setIntegerValue(replaceWith.getIntegerValue());
+        unit.setFunctionName(replaceWith.getFunctionName());
+
+        if (replaceWith.getParameters() != null) {
+            unit.setParameters(replaceWith.getParameters());
+        }
+
+    }
 }
