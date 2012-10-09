@@ -248,13 +248,15 @@ public class VaadinServlet extends HttpServlet implements Constants {
                     && request.getParameterMap().containsKey(
                             ApplicationConstants.PARAM_UNLOADBURST)
                     && request.getContentLength() < 1
-                    && getService().getExistingSession(request, false) == null) {
+                    && getService().getSessionStorage().loadSession(
+                            new SessionStorageEvent(getService(), request,
+                                    response)) == null) {
                 redirectToApplication(request, response);
                 return;
             }
 
             // Find out the service session this request is related to
-            vaadinSession = getService().findVaadinSession(request);
+            vaadinSession = getService().findVaadinSession(request, response);
             if (vaadinSession == null) {
                 return;
             }
@@ -281,7 +283,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                         response);
                 return;
             } else if (requestType == RequestType.UIDL) {
-                UI uI = getService().findUI(request);
+                UI uI = getService().findUI(request, vaadinSession);
                 if (uI == null) {
                     throw new ServletException(ERROR_NO_UI_FOUND);
                 }
@@ -328,7 +330,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
     }
 
-    private VaadinServletResponse createVaadinResponse(
+    protected VaadinServletResponse createVaadinResponse(
             HttpServletResponse response) {
         return new VaadinServletResponse(response, getService());
     }

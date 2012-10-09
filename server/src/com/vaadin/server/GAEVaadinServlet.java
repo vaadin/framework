@@ -185,16 +185,16 @@ public class GAEVaadinServlet extends VaadinServlet {
         if (requestType == RequestType.STATIC_FILE) {
             // no locking needed, let superclass handle
             super.service(request, response);
-            cleanSession(request);
+            cleanSession(request, response);
             return;
         }
 
         if (requestType == RequestType.APP) {
             // no locking needed, let superclass handle
-            getApplicationContext(request,
+            getApplicationContext(request, response,
                     MemcacheServiceFactory.getMemcacheService());
             super.service(request, response);
-            cleanSession(request);
+            cleanSession(request, response);
             return;
         }
 
@@ -202,7 +202,7 @@ public class GAEVaadinServlet extends VaadinServlet {
                 .requestCanCreateSession(request));
         if (session == null) {
             handleServiceSessionExpired(request, response);
-            cleanSession(request);
+            cleanSession(request, response);
             return;
         }
 
@@ -240,7 +240,8 @@ public class GAEVaadinServlet extends VaadinServlet {
             }
 
             // de-serialize or create application context, store in session
-            VaadinServiceSession ctx = getApplicationContext(request, memcache);
+            VaadinServiceSession ctx = getApplicationContext(request, response,
+                    memcache);
 
             super.service(request, response);
 
@@ -286,13 +287,13 @@ public class GAEVaadinServlet extends VaadinServlet {
             if (locked) {
                 memcache.delete(mutex);
             }
-            cleanSession(request);
+            cleanSession(request, response);
         }
     }
 
     protected VaadinServiceSession getApplicationContext(
-            HttpServletRequest request, MemcacheService memcache)
-            throws ServletException {
+            HttpServletRequest request, HttpServletResponse response,
+            MemcacheService memcache) throws ServletException {
         HttpSession session = request.getSession();
         String id = AC_BASE + session.getId();
         byte[] serializedAC = (byte[]) memcache.get(id);
@@ -322,8 +323,11 @@ public class GAEVaadinServlet extends VaadinServlet {
                 ois = new ObjectInputStream(bais);
                 VaadinServiceSession applicationContext = (VaadinServiceSession) ois
                         .readObject();
-                applicationContext.storeInSession(getService(),
-                        new WrappedHttpSession(session));
+                getService().getSessionStorage().storeSession(
+                        applicationContext,
+                        new SessionStorageEvent(getService(),
+                                createVaadinRequest(request),
+                                createVaadinResponse(response)));
             } catch (IOException e) {
                 getLogger().log(
                         Level.WARNING,
@@ -341,7 +345,8 @@ public class GAEVaadinServlet extends VaadinServlet {
 
         // will create new context if the above did not
         try {
-            return getService().findVaadinSession(createVaadinRequest(request));
+            return getService().findVaadinSession(createVaadinRequest(request),
+                    createVaadinResponse(response));
         } catch (Exception e) {
             throw new ServletException(e);
         }
@@ -360,19 +365,20 @@ public class GAEVaadinServlet extends VaadinServlet {
      * data serialized to datastore and memcache.
      * 
      * @param request
+     * @param response
      */
-    private void cleanSession(VaadinServletRequest request) {
-        // Should really be replaced with a session storage API...
-        WrappedSession wrappedSession = request.getWrappedSession(false);
-        if (wrappedSession == null) {
-            return;
-        }
-        VaadinServiceSession serviceSession = VaadinServiceSession
-                .getForSession(getService(), wrappedSession);
+    private void cleanSession(VaadinServletRequest request,
+            VaadinResponse response) {
+        // Should really be replaced with a separate storage method for GAE
+        VaadinServiceSessionStorage sessionStorage = getService()
+                .getSessionStorage();
+        SessionStorageEvent event = new SessionStorageEvent(getService(),
+                request, response);
+        VaadinServiceSession serviceSession = sessionStorage.loadSession(event);
         if (serviceSession == null) {
             return;
         }
-        serviceSession.removeFromSession(getService());
+        sessionStorage.removeSession(serviceSession, event);
     }
 
     /**

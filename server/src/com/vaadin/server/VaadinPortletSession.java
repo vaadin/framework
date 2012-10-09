@@ -76,13 +76,6 @@ public class VaadinPortletSession extends VaadinServiceSession {
         super(service);
     }
 
-    public PortletSession getPortletSession() {
-        WrappedSession wrappedSession = getSession();
-        PortletSession session = ((WrappedPortletSession) wrappedSession)
-                .getPortletSession();
-        return session;
-    }
-
     private PortletResponse getCurrentResponse() {
         VaadinPortletResponse currentResponse = (VaadinPortletResponse) CurrentInstance
                 .get(VaadinResponse.class);

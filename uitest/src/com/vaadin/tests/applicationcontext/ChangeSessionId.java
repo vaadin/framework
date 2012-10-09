@@ -54,7 +54,7 @@ public class ChangeSessionId extends AbstractTestCase {
     }
 
     protected String getSessionId() {
-        return getContext().getSession().getId();
+        return VaadinService.getCurrentRequest().getWrappedSession().getId();
     }
 
     @Override

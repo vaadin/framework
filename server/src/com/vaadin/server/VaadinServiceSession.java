@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
 import javax.portlet.PortletSession;
@@ -78,8 +77,6 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
             .findMethod(BootstrapListener.class, "modifyBootstrapPage",
                     BootstrapPageResponse.class);
 
-    private final Lock lock = new ReentrantLock();
-
     /**
      * Configuration for the session.
      */
@@ -121,8 +118,6 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
 
     private long lastRequestTime = -1;
 
-    private transient WrappedSession session;
-
     private final Map<String, Object> attributes = new HashMap<String, Object>();
 
     private LinkedList<UIProvider> uiProviders = new LinkedList<UIProvider>();
@@ -156,7 +151,6 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
         // closing
         // Notify the service
         service.fireSessionDestroy(this);
-        session = null;
     }
 
     /**
@@ -197,16 +191,6 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
     }
 
     /**
-     * Gets the underlying session to which this service session is currently
-     * associated.
-     * 
-     * @return the wrapped session for this context
-     */
-    public WrappedSession getSession() {
-        return session;
-    }
-
-    /**
      * @return
      * 
      * @deprecated might be refactored or removed before 7.0.0
@@ -214,55 +198,6 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
     @Deprecated
     public AbstractCommunicationManager getCommunicationManager() {
         return communicationManager;
-    }
-
-    /**
-     * @param service
-     *            TODO
-     * @param underlyingSession
-     * @return
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    public static VaadinServiceSession getForSession(VaadinService service,
-            WrappedSession underlyingSession) {
-        Object attribute = underlyingSession
-                .getAttribute(VaadinServiceSession.class.getName() + "."
-                        + service.getServiceName());
-        if (attribute instanceof VaadinServiceSession) {
-            VaadinServiceSession vaadinSession = (VaadinServiceSession) attribute;
-            vaadinSession.session = underlyingSession;
-            return vaadinSession;
-        }
-
-        return null;
-    }
-
-    /**
-     * 
-     * @param service
-     *            TODO
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    public void removeFromSession(VaadinService service) {
-        assert (getForSession(service, session) == this);
-
-        session.setAttribute(VaadinServiceSession.class.getName() + "."
-                + service.getServiceName(), null);
-    }
-
-    /**
-     * @param session
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    public void storeInSession(VaadinService service, WrappedSession session) {
-        session.setAttribute(VaadinServiceSession.class.getName() + "."
-                + service.getServiceName(), this);
-        this.session = session;
     }
 
     public void setCommunicationManager(
@@ -786,8 +721,15 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
      *         timeout never occurs.
      */
     protected int getUidlRequestTimeout() {
-        return configuration.isIdleUICleanupEnabled() ? getSession()
-                .getMaxInactiveInterval() : -1;
+        if (configuration.isIdleUICleanupEnabled()) {
+            VaadinService service = getService();
+            SessionStorageEvent event = new SessionStorageEvent(service,
+                    VaadinService.getCurrentRequest(),
+                    VaadinService.getCurrentResponse());
+            return service.getSessionStorage().getSessionStorageTime(event);
+        } else {
+            return -1;
+        }
     }
 
     /**
@@ -852,7 +794,7 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
      * @return the lock that should be used for synchronization
      */
     public Lock getLock() {
-        return lock;
+        return getService().getSessionStorage().getSessionLock(this);
     }
 
     /**

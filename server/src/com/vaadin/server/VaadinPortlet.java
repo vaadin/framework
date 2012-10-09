@@ -392,7 +392,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                     // redirectToApplication??
 
                     vaadinSession = (VaadinPortletSession) getService()
-                            .findVaadinSession(vaadinRequest);
+                            .findVaadinSession(vaadinRequest, vaadinResponse);
                     if (vaadinSession == null) {
                         return;
                     }
@@ -419,7 +419,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                     // Finds the right UI
                     UI uI = null;
                     if (requestType == RequestType.UIDL) {
-                        uI = getService().findUI(vaadinRequest);
+                        uI = getService().findUI(vaadinRequest, vaadinSession);
                     }
 
                     // TODO Should this happen before or after the transaction

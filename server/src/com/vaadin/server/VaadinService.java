@@ -79,6 +79,8 @@ public abstract class VaadinService implements Serializable {
     private SystemMessagesProvider systemMessagesProvider = DefaultSystemMessagesProvider
             .get();
 
+    private VaadinServiceSessionStorage sessionStorage = null;
+
     /**
      * Creates a new vaadin service based on a deployment configuration
      * 
@@ -349,7 +351,9 @@ public abstract class VaadinService implements Serializable {
      * Attempts to find a Vaadin service session associated with this request.
      * 
      * @param request
-     *            the request to get a vaadin service session for.
+     *            the request to get a Vaadin service session for.
+     * @param response
+     *            the Vaadin response corresponding to the request parameter
      * 
      * @see VaadinServiceSession
      * 
@@ -357,9 +361,11 @@ public abstract class VaadinService implements Serializable {
      *         if no session is found and this is a request for which a new
      *         session shouldn't be created.
      */
-    public VaadinServiceSession findVaadinSession(VaadinRequest request)
-            throws ServiceException, SessionExpiredException {
-        VaadinServiceSession vaadinSession = findOrCreateVaadinSession(request);
+    public VaadinServiceSession findVaadinSession(VaadinRequest request,
+            VaadinResponse response) throws ServiceException,
+            SessionExpiredException {
+        VaadinServiceSession vaadinSession = findOrCreateVaadinSession(request,
+                response);
         if (vaadinSession == null) {
             return null;
         }
@@ -371,13 +377,14 @@ public abstract class VaadinService implements Serializable {
         return vaadinSession;
     }
 
-    private VaadinServiceSession findOrCreateVaadinSession(VaadinRequest request)
+    private VaadinServiceSession findOrCreateVaadinSession(
+            VaadinRequest request, VaadinResponse response)
             throws SessionExpiredException, ServiceException {
         boolean requestCanCreateSession = requestCanCreateSession(request);
 
         /* Find an existing session for this request. */
-        VaadinServiceSession session = getExistingSession(request,
-                requestCanCreateSession);
+        VaadinServiceSession session = getSessionStorage().loadSession(
+                new SessionStorageEvent(this, request, response));
 
         if (session != null) {
             /*
@@ -391,10 +398,10 @@ public abstract class VaadinService implements Serializable {
                     .getParameter(URL_PARAMETER_CLOSE_APPLICATION) != null);
 
             if (restartApplication) {
-                closeSession(session, request.getWrappedSession(false));
-                return createAndRegisterSession(request);
+                closeSession(session, request, response);
+                return createAndRegisterSession(request, response);
             } else if (closeApplication) {
-                closeSession(session, request.getWrappedSession(false));
+                closeSession(session, request, response);
                 return null;
             } else {
                 return session;
@@ -408,7 +415,7 @@ public abstract class VaadinService implements Serializable {
              * If the request is such that it should create a new session if one
              * as not found, we do that.
              */
-            return createAndRegisterSession(request);
+            return createAndRegisterSession(request, response);
         } else {
             /*
              * The session was not found and a new one should not be created.
@@ -419,11 +426,13 @@ public abstract class VaadinService implements Serializable {
 
     }
 
-    private VaadinServiceSession createAndRegisterSession(VaadinRequest request)
+    private VaadinServiceSession createAndRegisterSession(
+            VaadinRequest request, VaadinResponse response)
             throws ServiceException {
         VaadinServiceSession session = createVaadinSession(request);
 
-        session.storeInSession(this, request.getWrappedSession());
+        getSessionStorage().storeSession(session,
+                new SessionStorageEvent(this, request, response));
 
         // Initial locale comes from the request
         Locale locale = request.getLocale();
@@ -487,34 +496,9 @@ public abstract class VaadinService implements Serializable {
     }
 
     private void closeSession(VaadinServiceSession vaadinSession,
-            WrappedSession session) {
-        if (vaadinSession == null) {
-            return;
-        }
-
-        if (session != null) {
-            vaadinSession.removeFromSession(this);
-        }
-    }
-
-    protected VaadinServiceSession getExistingSession(VaadinRequest request,
-            boolean allowSessionCreation) throws SessionExpiredException {
-
-        // Ensures that the session is still valid
-        final WrappedSession session = request
-                .getWrappedSession(allowSessionCreation);
-        if (session == null) {
-            throw new SessionExpiredException();
-        }
-
-        VaadinServiceSession vaadinSession = VaadinServiceSession
-                .getForSession(this, session);
-
-        if (vaadinSession == null) {
-            return null;
-        }
-
-        return vaadinSession;
+            VaadinRequest request, VaadinResponse response) {
+        getSessionStorage().removeSession(vaadinSession,
+                new SessionStorageEvent(this, request, response));
     }
 
     /**
@@ -616,21 +600,21 @@ public abstract class VaadinService implements Serializable {
     public abstract String getServiceName();
 
     /**
-     * Finds the {@link UI} that belongs to the provided request. This is
-     * generally only supported for UIDL requests as other request types are not
-     * related to any particular UI or have the UI information encoded in a
-     * non-standard way. The returned UI is also set as the current UI (
+     * Finds the {@link UI} that belongs to the provided request and session.
+     * This is generally only supported for UIDL requests as other request types
+     * are not related to any particular UI or have the UI information encoded
+     * in a non-standard way. The returned UI is also set as the current UI (
      * {@link UI#setCurrent(UI)}).
      * 
      * @param request
      *            the request for which a UI is desired
+     * @param session
+     *            the Vaadin service session where existing UI instances are
+     *            stored
      * @return the UI belonging to the request
      * 
      */
-    public UI findUI(VaadinRequest request) {
-        VaadinServiceSession session = VaadinServiceSession.getForSession(this,
-                request.getWrappedSession());
-
+    public UI findUI(VaadinRequest request, VaadinServiceSession session) {
         // Get UI id from the request
         String uiIdString = request.getParameter(UIConstants.UI_ID_PARAMETER);
         int uiId = Integer.parseInt(uiIdString);
@@ -710,11 +694,9 @@ public abstract class VaadinService implements Serializable {
             Object value = attrs.get(name);
             newSession.setAttribute(name, value);
 
-            // Ensure VaadinServiceSession knows where it's stored
             if (value instanceof VaadinServiceSession) {
+                // Clear cleanup flag
                 VaadinServiceSession serviceSession = (VaadinServiceSession) value;
-                serviceSession.storeInSession(serviceSession.getService(),
-                        newSession);
                 serviceSession
                         .setAttribute(REINITIALIZING_SESSION_MARKER, null);
             }
@@ -737,4 +719,30 @@ public abstract class VaadinService implements Serializable {
      */
     public abstract String getMainDivId(VaadinServiceSession session,
             VaadinRequest request, Class<? extends UI> uiClass);
+
+    /**
+     * Gets the session storage manager that is used to store, retrieve and
+     * manage Vaadin service sessions for this service.
+     * 
+     * @return the Vaadin service session storage object
+     */
+    public VaadinServiceSessionStorage getSessionStorage() {
+        if (sessionStorage == null) {
+            sessionStorage = new WrappedSessionStorage();
+        }
+        return sessionStorage;
+    }
+
+    /**
+     * Sets the session storage manager that is used to store, retrieve and
+     * manage Vaadin service sessions for this service.
+     * 
+     * @param sessionStorage
+     *            the Vaadin service session storage instance to use for this
+     *            service; not <code>null</code>
+     */
+    public void setSessionStorage(VaadinServiceSessionStorage sessionStorage) {
+        assert sessionStorage != null;
+        this.sessionStorage = sessionStorage;
+    }
 }
