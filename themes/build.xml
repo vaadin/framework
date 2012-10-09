@@ -14,6 +14,12 @@
 	<property name="result.dir" value="result" />
 	<property name="theme.result.dir" value="${result.dir}/VAADIN/themes" />
 
+	<union id="jar.includes">
+		<fileset dir="${result.dir}">
+			<include name="VAADIN/themes/**" />
+		</fileset>
+	</union>
+
 	<target name="compile-themes">
 		<ivy:resolve resolveid="common" conf="build" />
 		<ivy:cachepath pathid="classpath.compile.theme" conf="build" />
@@ -34,23 +40,13 @@
 			<param name="theme" value="liferay" />
 		</antcall>
 	</target>
-
+	
 	<target name="jar" depends="compile-themes">
-		<fail unless="module.name" message="No module.name parameter given" />
-
-		<property name="result.dir" location="result" />
-		<property name="result.jar" location="${result.dir}/lib/${module.name}-${vaadin.version}.jar" />
-		<property name="classes" location="{$result.dir}/classes" />
-		<antcall target="common.pom.xml" />
-		
-		<jar jarfile="${result.jar}">
-			<fileset dir="${result.dir}">
-				<include name="VAADIN/themes/**" />
-			</fileset>
-			<fileset refid="common.files.for.all.jars" />
-		</jar>
-
+		<antcall target="common.jar">
+			<reference torefid="extra.jar.includes" refid="jar.includes" />
+		</antcall>
 	</target>
+
 	<target name="copy-theme">
 		<fail unless="theme" message="You must give the theme name to copy n the 'theme' parameter" />
 		<property name="theme.source.dir" location="../WebContent/VAADIN/themes" />
