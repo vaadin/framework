@@ -26,6 +26,8 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
     private static final String IE9_BETA_IN_IE8_MODE_WINDOWS_7 = "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C)";
     private static final String IE9_BETA_WINDOWS_7 = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
 
+    private static final String IE10_WINDOWS_8 = "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)";
+
     // "Version/" was added in 10.00
     private static final String OPERA964_WINDOWS = "Opera/9.64(Windows NT 5.1; U; en) Presto/2.1.1";
     private static final String OPERA1010_WINDOWS = "Opera/9.80 (Windows NT 5.1; U; en) Presto/2.2.15 Version/10.10";
@@ -350,6 +352,15 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
         assertBrowserMajorVersion(bd, 8);
         assertBrowserMinorVersion(bd, 0);
 
+        assertWindows(bd);
+    }
+
+    public void testIE10() {
+        VBrowserDetails bd = new VBrowserDetails(IE10_WINDOWS_8);
+        assertEngineVersion(bd, 6);
+        assertIE(bd);
+        assertBrowserMajorVersion(bd, 10);
+        assertBrowserMinorVersion(bd, 0);
         assertWindows(bd);
     }
 
