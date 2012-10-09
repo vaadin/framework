@@ -62,7 +62,7 @@ public class GeneratePackageExports {
         for (Enumeration<JarEntry> it = jar.entries(); it.hasMoreElements();) {
             JarEntry entry = it.nextElement();
             if (entry.isDirectory()
-                    && entry.getName().startsWith("VAADIN/themes")) {
+                    && entry.getName().startsWith("VAADIN/")) {
                 // Strip ending slash
                 int lastSlash = entry.getName().lastIndexOf('/');
                 String pkg = entry.getName().substring(0, lastSlash)
