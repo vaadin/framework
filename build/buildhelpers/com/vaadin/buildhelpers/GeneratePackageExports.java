@@ -7,17 +7,17 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.jar.Attributes;
+import java.util.jar.Attributes.Name;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-import java.util.jar.Attributes.Name;
 
 /**
  * Generates Export-Packages attribute for OSGi compatible manifest.
  * 
  * Reads the included Java packages in Vaadin JAR, generates a corresponding
- * MANIFEST.MF file, and replaces the dummy one in the JAR with the
- * generated one.
+ * MANIFEST.MF file, and replaces the dummy one in the JAR with the generated
+ * one.
  * 
  * See #3521 for details.
  * 
@@ -26,10 +26,14 @@ import java.util.jar.Attributes.Name;
 public class GeneratePackageExports {
     public static void main(String[] args) {
         if (args.length < 1) {
-            System.err.println("Invalid number of parameters\n"+
-                               "Usage: java -cp .. GenerateManifest <package.jar>");
+            System.err
+                    .println("Invalid number of parameters\n"
+                            + "Usage: java -cp .. GenerateManifest <package.jar>\n"
+                            + "Use -Dvaadin.version to specify the version to be used for the packages");
             System.exit(1);
         }
+
+        String vaadinVersion = System.getProperty("vaadin.version");
 
         // Open tje JAR
         String jarFilename = args[0];
@@ -71,10 +75,15 @@ public class GeneratePackageExports {
         packages.toArray(packageArray);
         Arrays.sort(packageArray);
         for (int i=0; i<packageArray.length; i++) {
+            String packageAndVersion = packageArray[i];
+            if (vaadinVersion != null) {
+                packageAndVersion += ";version=\"" + vaadinVersion + "\"";
+            }
             if (i == 0)
-                exportPackage = packageArray[i];
+                exportPackage = packageAndVersion;
             else
-                exportPackage += ", " + packageArray[i];
+                exportPackage += ", " + packageAndVersion;
+            
         }
         
         // Read old manifest
