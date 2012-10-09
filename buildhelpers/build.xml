@@ -8,6 +8,7 @@
 	<include file="../common.xml" as="common" />
 
 	<property name="module.name" value="vaadin-buildhelpers" />
+	<property name="module.symbolic" value="com.vaadin.buildhelpers" />
 	<property name="result.dir" location="result" />
 	<path id="classpath.compile.custom" />
 

@@ -10,6 +10,7 @@
 
 	<!-- global properties -->
 	<property name="module.name" value="vaadin-client-compiler" />
+	<property name="module.symbolic" value="com.vaadin.client-compiler" />
 	<property name="result.dir" value="result" />
 	<path id="classpath.compile.custom">
 		<fileset file="${gwt.dev.jar}" />
