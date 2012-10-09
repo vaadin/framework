@@ -10,6 +10,7 @@
 
 	<!-- global properties -->
 	<property name="module.name" value="vaadin-theme-compiler" />
+	<property name="module.symbolic" value="com.vaadin.theme-compiler" />
 	<property name="result.dir" value="result" />
 	<path id="classpath.compile.custom">
 	</path>

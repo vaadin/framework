@@ -11,6 +11,7 @@
 
 	<!-- global properties -->
 	<property name="module.name" value="vaadin-client-compiled" />
+	<property name="module.symbolic" value="com.vaadin.client-compiled" />
 	<property name="result.dir" value="result" />
 	<property name="gwtar.dir" location="${result.dir}/gwtar" />
 	<property name="work.dir" location="${result.dir}/work" />
