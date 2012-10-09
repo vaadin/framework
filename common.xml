@@ -156,7 +156,6 @@
 		<fail unless="module.name" message="No module.name parameter given" />
 
 		<property name="result.jar" location="${result.dir}/lib/${module.name}-${vaadin.version}.jar" />
-		<property name="module.symbolic" value="com.vaadin.${module.name}" />
 		<property name="classes" location="{$result.dir}/classes" />
 		<property name="src" location="{$result.dir}/../src" />
 

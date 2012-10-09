@@ -10,6 +10,7 @@
 
 	<!-- global properties -->
 	<property name="module.name" value="vaadin-server" />
+	<property name="module.symbolic" value="com.vaadin.server" />
 	<property name="result.dir" value="result" />
 	<path id="classpath.compile.custom" />
 	<path id="classpath.tests.custom" />
@@ -24,7 +25,7 @@
 	<target name="jar">
 		<property name="server.osgi.import" value="javax.servlet;version=&quot;2.4.0&quot;,javax.servlet.http;version=&quot;2.4.0&quot;,org.jsoup;version=&quot;1.6.3&quot;"/>
 		<antcall target="common.jar">
-			<param name="require-bundle" value="com.vaadin.vaadin-shared;bundle-version=&quot;${vaadin.version}&quot;"/>
+			<param name="require-bundle" value="com.vaadin.shared;bundle-version=&quot;${vaadin.version}&quot;"/>
 			<param name="import-package" value="${server.osgi.import}" />
 			<param name="osgi.extra.package.prefixes" value="VAADIN" />
 			<reference torefid="extra.jar.includes" refid="jar.includes" />

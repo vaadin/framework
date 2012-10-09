@@ -11,6 +11,7 @@
 
 	<!-- global properties -->
 	<property name="module.name" value="vaadin-themes" />
+	<property name="module.symbolic" value="com.vaadin.themes" />
 	<property name="result.dir" value="result" />
 	<property name="theme.result.dir" value="${result.dir}/VAADIN/themes/" />
 
