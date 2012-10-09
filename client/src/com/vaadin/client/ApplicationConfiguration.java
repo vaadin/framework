@@ -254,9 +254,7 @@ public class ApplicationConfiguration implements EntryPoint {
     }
 
     public String getThemeName() {
-        String themeName = getJsoConfiguration(id).getConfigString("theme");
-        themeName = themeName.replaceAll("[^a-zA-Z0-9]", "");
-        return themeName;
+        return getJsoConfiguration(id).getConfigString("theme");
     }
 
     public String getThemeUri() {

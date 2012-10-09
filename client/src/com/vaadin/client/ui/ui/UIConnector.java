@@ -300,8 +300,11 @@ public class UIConnector extends AbstractComponentContainerConnector implements
         // the user
         root.getElement().setInnerHTML("");
 
-        root.addStyleName("v-theme-"
-                + applicationConnection.getConfiguration().getThemeName());
+        String themeName = applicationConnection.getConfiguration()
+                .getThemeName();
+        // Remove chars that are not suitable for style names
+        themeName = themeName.replaceAll("[^a-zA-Z0-9]", "");
+        root.addStyleName("v-theme-" + themeName);
 
         root.add(getWidget());
 
