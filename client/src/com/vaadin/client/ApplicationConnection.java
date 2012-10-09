@@ -1606,12 +1606,36 @@ public class ApplicationConnection {
                 VConsole.log(" * Sending hierarchy change events");
                 for (ConnectorHierarchyChangeEvent event : pendingHierarchyChangeEvents) {
                     try {
+                        logHierarchyChange(event);
                         event.getConnector().fireEvent(event);
                     } catch (final Throwable e) {
                         VConsole.error(e);
                     }
                 }
 
+            }
+
+            private void logHierarchyChange(ConnectorHierarchyChangeEvent event) {
+                if (true) {
+                    // Always disabled for now. Can be enabled manually
+                    return;
+                }
+
+                VConsole.log("Hierarchy changed for "
+                        + Util.getConnectorString(event.getConnector()));
+                String oldChildren = "* Old children: ";
+                for (ComponentConnector child : event.getOldChildren()) {
+                    oldChildren += Util.getConnectorString(child) + " ";
+                }
+                VConsole.log(oldChildren);
+
+                String newChildren = "* New children: ";
+                ComponentContainerConnector parent = (ComponentContainerConnector) event
+                        .getConnector();
+                for (ComponentConnector child : parent.getChildComponents()) {
+                    newChildren += Util.getConnectorString(child) + " ";
+                }
+                VConsole.log(newChildren);
             }
 
             private Collection<StateChangeEvent> updateConnectorState(

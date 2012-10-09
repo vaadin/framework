@@ -17,6 +17,7 @@ package com.vaadin.client.ui.popupview;
 
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.VCaption;
@@ -125,6 +126,12 @@ public class PopupViewConnector extends AbstractComponentContainerConnector
             centerAfterLayout = false;
             getWidget().center();
         }
+    }
+
+    @Override
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
+        // TODO Move code from updateFromUIDL to this method
     }
 
 }

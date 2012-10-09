@@ -394,8 +394,6 @@ public class UIConnector extends AbstractComponentContainerConnector implements
 
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
-        super.onConnectorHierarchyChange(event);
-
         ComponentConnector oldChild = null;
         ComponentConnector newChild = getContent();
 

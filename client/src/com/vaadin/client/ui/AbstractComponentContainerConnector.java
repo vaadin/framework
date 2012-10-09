@@ -23,8 +23,6 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ComponentContainerConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
-import com.vaadin.client.Util;
-import com.vaadin.client.VConsole;
 
 public abstract class AbstractComponentContainerConnector extends
         AbstractComponentConnector implements ComponentContainerConnector,
@@ -64,32 +62,6 @@ public abstract class AbstractComponentContainerConnector extends
     @Override
     public void setChildComponents(List<ComponentConnector> childComponents) {
         this.childComponents = childComponents;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.client.ComponentContainerConnector#
-     * connectorHierarchyChanged
-     * (com.vaadin.client.ConnectorHierarchyChangedEvent)
-     */
-    @Override
-    public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
-        if (debugLogging) {
-            VConsole.log("Hierarchy changed for "
-                    + Util.getConnectorString(this));
-            String oldChildren = "* Old children: ";
-            for (ComponentConnector child : event.getOldChildren()) {
-                oldChildren += Util.getConnectorString(child) + " ";
-            }
-            VConsole.log(oldChildren);
-
-            String newChildren = "* New children: ";
-            for (ComponentConnector child : getChildComponents()) {
-                newChildren += Util.getConnectorString(child) + " ";
-            }
-            VConsole.log(newChildren);
-        }
     }
 
     @Override

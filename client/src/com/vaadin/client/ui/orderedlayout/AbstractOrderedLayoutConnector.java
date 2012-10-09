@@ -288,7 +288,6 @@ public abstract class AbstractOrderedLayoutConnector extends
      */
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
-        super.onConnectorHierarchyChange(event);
 
         List<ComponentConnector> previousChildren = event.getOldChildren();
         int currentIndex = 0;

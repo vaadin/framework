@@ -53,8 +53,6 @@ public class FormLayoutConnector extends AbstractLayoutConnector {
 
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
-        super.onConnectorHierarchyChange(event);
-
         VFormLayout formLayout = getWidget();
         VFormLayoutTable formLayoutTable = getWidget().table;
 

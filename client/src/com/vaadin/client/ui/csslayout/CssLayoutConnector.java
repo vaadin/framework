@@ -123,8 +123,6 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
      */
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
-        super.onConnectorHierarchyChange(event);
-
         clickEventHandler.handleEventHandlerRegistration();
 
         int index = 0;

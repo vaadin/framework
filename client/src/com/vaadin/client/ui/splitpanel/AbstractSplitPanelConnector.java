@@ -212,8 +212,6 @@ public abstract class AbstractSplitPanelConnector extends
 
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
-        super.onConnectorHierarchyChange(event);
-
         Widget newFirstChildWidget = null;
         if (getFirstChild() != null) {
             newFirstChildWidget = getFirstChild().getWidget();
