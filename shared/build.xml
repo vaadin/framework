@@ -16,7 +16,11 @@
 
 
 	<target name="jar">
+		<property name="shared.osgi.importexport" value="org.json;version=&quot;20080701&quot;" />
 		<antcall target="common.jar">
+			<param name="require-bundle" value="com.vaadin.shared.deps;version=&quot;1.0.0&quot;"/>
+			<param name="import-package" value="${shared.osgi.importexport}" />
+			<param name="export-package" value="${shared.osgi.importexport}" />
 			<reference refid="shared.gwt.includes" torefid="extra.jar.includes" />
 		</antcall>
 	</target>

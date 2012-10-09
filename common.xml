@@ -218,6 +218,16 @@
 			</then>
 		</antcontrib:if>
 		<antcontrib:if>
+			<isset property="require-bundle" />
+			<then>
+				<jar file="${result.jar}" update="true">
+					<manifest>
+						<attribute name="Require-Bundle" value="${require-bundle}" />
+					</manifest>
+				</jar>
+			</then>
+		</antcontrib:if>
+		<antcontrib:if>
 			<isset property="export-package" />
 			<then>
 				<jar file="${result.jar}" update="true">
