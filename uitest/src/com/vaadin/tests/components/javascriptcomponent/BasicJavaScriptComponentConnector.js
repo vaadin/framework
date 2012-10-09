@@ -26,7 +26,8 @@ window.com_vaadin_tests_components_javascriptcomponent_BasicJavaScriptComponent_
 		}
 		
 		var url = this.getState().url;
-		log("Url: " + this.translateVaadinUri(url.uRL)); //Strange format, see #9210
+		//Strip hostname to make more easily testable
+		log("Url: " + this.translateVaadinUri(url.uRL).replace(/http:\/\/[^/]*/, '')); //Strange format, see #9210
 	}
 	
 	this.registerRpc({
