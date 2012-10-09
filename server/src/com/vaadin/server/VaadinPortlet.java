@@ -284,7 +284,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
      */
     @Deprecated
     protected enum RequestType {
-        FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APP, DUMMY, EVENT, ACTION, UNKNOWN, BROWSER_DETAILS, CONNECTOR_RESOURCE, HEARTBEAT;
+        FILE_UPLOAD, UIDL, RENDER, STATIC_FILE, APP, DUMMY, EVENT, ACTION, UNKNOWN, BROWSER_DETAILS, DEPENDENCY_RESOURCE, HEARTBEAT;
     }
 
     /**
@@ -307,8 +307,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             } else if (ServletPortletHelper.isFileUploadRequest(vaadinRequest)) {
                 return RequestType.FILE_UPLOAD;
             } else if (ServletPortletHelper
-                    .isConnectorResourceRequest(vaadinRequest)) {
-                return RequestType.CONNECTOR_RESOURCE;
+                    .isDependencyResourceRequest(vaadinRequest)) {
+                return RequestType.DEPENDENCY_RESOURCE;
             } else if (ServletPortletHelper.isAppRequest(vaadinRequest)) {
                 return RequestType.APP;
             } else if (ServletPortletHelper.isHeartbeatRequest(vaadinRequest)) {
@@ -400,8 +400,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                     PortletCommunicationManager communicationManager = (PortletCommunicationManager) vaadinSession
                             .getCommunicationManager();
 
-                    if (requestType == RequestType.CONNECTOR_RESOURCE) {
-                        communicationManager.serveConnectorResource(
+                    if (requestType == RequestType.DEPENDENCY_RESOURCE) {
+                        communicationManager.serveDependencyResource(
                                 vaadinRequest, vaadinResponse);
                         return;
                     } else if (requestType == RequestType.HEARTBEAT) {

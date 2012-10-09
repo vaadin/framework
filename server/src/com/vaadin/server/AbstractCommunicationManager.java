@@ -164,7 +164,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     private Connector highlightedConnector;
 
-    private Map<String, Class<?>> connectorResourceContexts = new HashMap<String, Class<?>>();
+    private Map<String, Class<?>> dependencyResourceContexts = new HashMap<String, Class<?>>();
 
     private Map<String, Map<String, StreamVariable>> pidToNameToStreamVariable;
 
@@ -1205,7 +1205,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                         .getAnnotation(JavaScript.class);
                 if (jsAnnotation != null) {
                     for (String resource : jsAnnotation.value()) {
-                        scriptDependencies.add(registerResource(resource,
+                        scriptDependencies.add(registerDependency(resource,
                                 class1));
                     }
                 }
@@ -1214,8 +1214,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
                         .getAnnotation(StyleSheet.class);
                 if (styleAnnotation != null) {
                     for (String resource : styleAnnotation.value()) {
-                        styleDependencies
-                                .add(registerResource(resource, class1));
+                        styleDependencies.add(registerDependency(resource,
+                                class1));
                     }
                 }
             }
@@ -1285,27 +1285,27 @@ public abstract class AbstractCommunicationManager implements Serializable {
     }
 
     /**
-     * Resolves a resource URI, registering the URI with this
+     * Resolves a dependency URI, registering the URI with this
      * {@code AbstractCommunicationManager} if needed and returns a fully
      * qualified URI.
      */
-    private String registerResource(String resourceUri, Class<?> context) {
+    private String registerDependency(String resourceUri, Class<?> context) {
         try {
             URI uri = new URI(resourceUri);
             String protocol = uri.getScheme();
 
-            if ("connector".equals(protocol)) {
+            if (ApplicationConstants.DEPENDENCY_PROTOCOL_NAME.equals(protocol)) {
                 // Strip initial slash
                 String resourceName = uri.getPath().substring(1);
-                return registerConnectorResource(resourceName, context);
+                return registerDependencyResource(resourceName, context);
             }
 
             if (protocol != null || uri.getHost() != null) {
                 return resourceUri;
             }
 
-            // Bare path interpreted as connector resource
-            return registerConnectorResource(resourceUri, context);
+            // Bare path interpreted as dependency resource
+            return registerDependencyResource(resourceUri, context);
         } catch (URISyntaxException e) {
             getLogger().log(Level.WARNING,
                     "Could not parse resource url " + resourceUri, e);
@@ -1313,23 +1313,23 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
     }
 
-    private String registerConnectorResource(String name, Class<?> context) {
-        synchronized (connectorResourceContexts) {
-            // Add to map of names accepted by serveConnectorResource
-            if (connectorResourceContexts.containsKey(name)) {
-                Class<?> oldContext = connectorResourceContexts.get(name);
+    private String registerDependencyResource(String name, Class<?> context) {
+        synchronized (dependencyResourceContexts) {
+            // Add to map of names accepted by serveDependencyResource
+            if (dependencyResourceContexts.containsKey(name)) {
+                Class<?> oldContext = dependencyResourceContexts.get(name);
                 if (oldContext != context) {
                     getLogger().warning(
-                            "Resource " + name + " defined by both " + context
-                                    + " and " + oldContext + ". Resource from "
+                            "Dependency " + name + " defined by both " + context
+                                    + " and " + oldContext + ". Dependency from "
                                     + oldContext + " will be used.");
                 }
             } else {
-                connectorResourceContexts.put(name, context);
+                dependencyResourceContexts.put(name, context);
             }
         }
 
-        return ApplicationConstants.CONNECTOR_PROTOCOL_PREFIX + "/" + name;
+        return ApplicationConstants.DEPENDENCY_PROTOCOL_PREFIX + "/" + name;
     }
 
     /**
@@ -2588,7 +2588,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
     /**
      * Serve a connector resource from the classpath if the resource has
      * previously been registered by calling
-     * {@link #registerResource(String, Class)}. Sending arbitrary files from
+     * {@link #registerDependency(String, Class)}. Sending arbitrary files from
      * the classpath is prevented by only accepting resource names that have
      * explicitly been registered. Resources can currently only be registered by
      * including a {@link JavaScript} or {@link StyleSheet} annotation on a
@@ -2599,13 +2599,13 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * 
      * @throws IOException
      */
-    public void serveConnectorResource(VaadinRequest request,
+    public void serveDependencyResource(VaadinRequest request,
             VaadinResponse response) throws IOException {
 
         String pathInfo = request.getRequestPathInfo();
         // + 2 to also remove beginning and ending slashes
         String resourceName = pathInfo
-                .substring(ApplicationConstants.CONNECTOR_RESOURCE_PREFIX
+                .substring(ApplicationConstants.DEPENDENCY_RESOURCE_PREFIX
                         .length() + 2);
 
         final String mimetype = response.getService().getMimeType(resourceName);
@@ -2614,7 +2614,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // classpath instead of relative to the context class
         if (resourceName.startsWith("/")) {
             getLogger().warning(
-                    "Connector resource request starting with / rejected: "
+                    "Dependency resource request starting with / rejected: "
                             + resourceName);
             response.sendError(HttpServletResponse.SC_NOT_FOUND, resourceName);
             return;
@@ -2622,15 +2622,15 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
         // Check that the resource name has been registered
         Class<?> context;
-        synchronized (connectorResourceContexts) {
-            context = connectorResourceContexts.get(resourceName);
+        synchronized (dependencyResourceContexts) {
+            context = dependencyResourceContexts.get(resourceName);
         }
 
         // Security check: don't serve resource if the name hasn't been
         // registered in the map
         if (context == null) {
             getLogger().warning(
-                    "Connector resource request for unknown resource rejected: "
+                    "Dependency resource request for unknown resource rejected: "
                             + resourceName);
             response.sendError(HttpServletResponse.SC_NOT_FOUND, resourceName);
             return;
