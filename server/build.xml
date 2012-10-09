@@ -22,10 +22,10 @@
 	</union>
 
 	<target name="jar">
-		<property name="server.osgi.import" value="org.jsoup;version=&quot;1.6.3&quot;"/>
+		<property name="server.osgi.import" value="javax.servlet;version=&quot;2.4.0&quot;,javax.servlet.http;version=&quot;2.4.0&quot;,org.jsoup;version=&quot;1.6.3&quot;"/>
 		<antcall target="common.jar">
-			<param name="require-bundle" value="com.vaadin.vaadin-shared;version=&quot;${vaadin.version}&quot;"/>
-			<param name="import-package" value="javax.servlet;version=&quot;2.4.0&quot;,${server.osgi.import}" />
+			<param name="require-bundle" value="com.vaadin.vaadin-shared;bundle-version=&quot;${vaadin.version}&quot;"/>
+			<param name="import-package" value="${server.osgi.import}" />
 			<reference torefid="extra.jar.includes" refid="jar.includes" />
 		</antcall>
 	</target>
