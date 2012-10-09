@@ -22,8 +22,11 @@
 	</union>
 
 	<target name="jar">
+		<property name="server.osgi.importexport" value="org.jsoup;version=&quot;1.6.3&quot;"/>
 		<antcall target="common.jar">
-			<param name="conf" value="build" />
+			<param name="require-bundle" value="com.vaadin.vaadin-shared;version=&quot;${vaadin.version}&quot;"/>
+			<param name="import-package" value="javax.servlet;version=&quot;2.4.0&quot;,${server.osgi.importexport}" />
+			<param name="export-package" value="${server.osgi.importexport}" />
 			<reference torefid="extra.jar.includes" refid="jar.includes" />
 		</antcall>
 	</target>
