@@ -1,24 +1,32 @@
 package com.vaadin.sass.resolver;
 
+import java.io.File;
+
 import org.w3c.css.sac.InputSource;
 
 public class VaadinResolver implements ScssStylesheetResolver {
 
     @Override
     public InputSource resolve(String identifier) {
-        String ext = ".scss";
         if (identifier.endsWith(".css")) {
-            ext = ".css";
+            ScssStylesheetResolver resolver = new FilesystemResolver();
+            return resolver.resolve(identifier);
         }
 
-        // 'normalize' identifier to use in themeFile
-        String fileName = identifier;
-        if (identifier.endsWith(ext)) {
+        if (identifier.endsWith(".scss")) {
             identifier = identifier.substring(0,
-                    identifier.length() - ext.length());
+                    identifier.length() - ".scss".length());
         }
-        // also look here
-        String themeFile = "VAADIN/themes/" + identifier + "/" + fileName;
+        String fileName = identifier + ".scss";
+
+        String name = new File(identifier).getName();
+        File parent = new File(identifier).getParentFile();
+        if (parent != null) {
+            parent = parent.getParentFile();
+        }
+
+        String themeFile = (parent == null ? "" : parent + "/") + name + "/"
+                + name + ".scss";
 
         // first plain file
         ScssStylesheetResolver resolver = new FilesystemResolver();
@@ -37,10 +45,9 @@ public class VaadinResolver implements ScssStylesheetResolver {
         }
         if (source == null) {
             // then try theme via classloader
-            source = resolver.resolve(themeFile);
+            source = resolver.resolve("VAADIN/themes/" + themeFile);
         }
 
         return source;
     }
-
 }
