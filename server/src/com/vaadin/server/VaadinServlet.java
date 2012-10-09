@@ -206,9 +206,34 @@ public class VaadinServlet extends HttpServlet implements Constants {
     @Override
     protected void service(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
+        /*
+         * Some servlet containers cause problems with requests to the context
+         * root without any ending slash - ensure we avoid such problems by
+         * redirecting to an ending slash in these cases. See #9921
+         */
+        if (handleContextRootWithoutSlash(request, response)) {
+            return;
+        }
         CurrentInstance.clearAll();
         setCurrent(this);
         service(createVaadinRequest(request), createVaadinResponse(response));
+    }
+
+    private boolean handleContextRootWithoutSlash(HttpServletRequest request,
+            HttpServletResponse response) {
+        if ("/".equals(request.getPathInfo())
+                && "".equals(request.getServletPath())
+                && !request.getRequestURI().endsWith("/")) {
+            /*
+             * Path info is for the root but request URI doesn't end with a
+             * slash -> redirect to the same URI but with an ending slash.
+             */
+            response.setStatus(HttpServletResponse.SC_FOUND);
+            response.setHeader("Location", request.getRequestURI() + "/");
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void service(VaadinServletRequest request,
