@@ -123,7 +123,11 @@ public class GeneratePackageExports {
         HashSet<String> packages = new HashSet<String>();
         for (Enumeration<JarEntry> it = jar.entries(); it.hasMoreElements();) {
             JarEntry entry = it.nextElement();
-            if (!entry.getName().endsWith(".class")) {
+
+            boolean classFile = entry.getName().endsWith(".class");
+            boolean directory = entry.isDirectory();
+
+            if (!classFile && !directory) {
                 continue;
             }
 
@@ -142,19 +146,6 @@ public class GeneratePackageExports {
             String pkg = entry.getName().substring(0, lastSlash)
                     .replace('/', '.');
             packages.add(pkg);
-        }
-
-        // List theme packages
-        for (Enumeration<JarEntry> it = jar.entries(); it.hasMoreElements();) {
-            JarEntry entry = it.nextElement();
-            if (entry.isDirectory()
-                    && entry.getName().startsWith("VAADIN/themes")) {
-                // Strip ending slash
-                int lastSlash = entry.getName().lastIndexOf('/');
-                String pkg = entry.getName().substring(0, lastSlash)
-                        .replace('/', '.');
-                packages.add(pkg);
-            }
         }
 
         return packages;
