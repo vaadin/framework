@@ -33,13 +33,14 @@
 }
 
 /*
- * In IE8 we need to do magic things to avoid scrollbars since it does not completely
+ * In IE8 and IE9 we need to do magic things to avoid scrollbars since it does not completely
  * support the HTML5 doctype. Changing the contained element to a block element will not add
- * magical bottom paddings to the contained element and cause scrollbars.
+ * magical bottom paddings to the contained element and cause scrollbars. Doing this for all
+ * browsers for consistency.
  */
-.v-ie8 .v-splitpanel-first-container > .v-widget,
-.v-ie8 .v-splitpanel-second-container > .v-widget{
+.v-splitpanel-first-container > .v-widget,
+.v-splitpanel-second-container > .v-widget{
     display:block;
 }
-
+ 
 }
