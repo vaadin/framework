@@ -147,14 +147,27 @@ public class GeneratePackageExports {
         // List theme packages
         for (Enumeration<JarEntry> it = jar.entries(); it.hasMoreElements();) {
             JarEntry entry = it.nextElement();
-            if (entry.isDirectory()
-                    && entry.getName().startsWith("VAADIN/themes")) {
-                // Strip ending slash
-                int lastSlash = entry.getName().lastIndexOf('/');
-                String pkg = entry.getName().substring(0, lastSlash)
-                        .replace('/', '.');
-                packages.add(pkg);
+            if (!entry.isDirectory()) {
+                continue;
             }
+
+            boolean accept = false;
+
+            for (String prefix : acceptedPackagePrefixes) {
+                if (entry.getName().startsWith(prefix)) {
+                    accept = true;
+                    break;
+                }
+            }
+            if (!accept) {
+                continue;
+            }
+
+            // Strip ending slash
+            int lastSlash = entry.getName().lastIndexOf('/');
+            String pkg = entry.getName().substring(0, lastSlash)
+                    .replace('/', '.');
+            packages.add(pkg);
         }
 
         return packages;
