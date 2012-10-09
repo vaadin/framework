@@ -179,8 +179,6 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
 
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
-        super.onConnectorHierarchyChange(event);
-
         VGridLayout layout = getWidget();
 
         // clean non rendered components

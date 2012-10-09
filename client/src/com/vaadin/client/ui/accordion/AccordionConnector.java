@@ -19,6 +19,7 @@ import java.util.Iterator;
 
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.accordion.VAccordion.StackItem;
@@ -87,4 +88,9 @@ public class AccordionConnector extends TabsheetBaseConnector implements
 
     }
 
+    @Override
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
+        // TODO Move code from updateFromUIDL to this method
+    }
 }

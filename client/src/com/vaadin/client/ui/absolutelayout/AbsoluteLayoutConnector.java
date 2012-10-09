@@ -147,7 +147,6 @@ public class AbsoluteLayoutConnector extends
 
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
-        super.onConnectorHierarchyChange(event);
 
         for (ComponentConnector child : getChildComponents()) {
             getWrapper(child);

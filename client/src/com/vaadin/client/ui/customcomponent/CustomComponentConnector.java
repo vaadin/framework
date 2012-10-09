@@ -38,8 +38,6 @@ public class CustomComponentConnector extends
 
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
-        super.onConnectorHierarchyChange(event);
-
         ComponentConnector newChild = null;
         if (getChildComponents().size() == 1) {
             newChild = getChildComponents().get(0);

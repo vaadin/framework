@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.DirectionalManagedLayout;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.ServerConnector;
@@ -213,12 +214,10 @@ public class TableConnector extends AbstractComponentContainerConnector
 
         if (!getWidget().isSelectable()) {
             getWidget().scrollBody.addStyleName(getWidget()
-                    .getStylePrimaryName()
-                    + "-body-noselection");
+                    .getStylePrimaryName() + "-body-noselection");
         } else {
             getWidget().scrollBody.removeStyleName(getWidget()
-                    .getStylePrimaryName()
-                    + "-body-noselection");
+                    .getStylePrimaryName() + "-body-noselection");
         }
 
         getWidget().hideScrollPositionAnnotation();
@@ -386,6 +385,12 @@ public class TableConnector extends AbstractComponentContainerConnector
         }
 
         return info;
+    }
+
+    @Override
+    public void onConnectorHierarchyChange(
+            ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
+        // TODO Move code from updateFromUIDL to this method
     }
 
 }

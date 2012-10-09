@@ -83,8 +83,6 @@ public class CustomLayoutConnector extends AbstractLayoutConnector implements
 
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
-        super.onConnectorHierarchyChange(event);
-
         // Must do this once here so the HTML has been set up before we start
         // adding child widgets.
 

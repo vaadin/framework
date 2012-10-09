@@ -20,7 +20,6 @@ public class WidgetContainerConnector extends
         for (ComponentConnector connector : children) {
             widget.add(connector.getWidget());
         }
-        super.onConnectorHierarchyChange(event);
     }
 
     @Override

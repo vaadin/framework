@@ -243,7 +243,6 @@ public class PanelConnector extends AbstractComponentContainerConnector
 
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
-        super.onConnectorHierarchyChange(event);
         // We always have 1 child, unless the child is hidden
         Widget newChildWidget = null;
         if (getChildComponents().size() == 1) {
