@@ -23,7 +23,6 @@
 
 	<target name="jar">
 		<antcall target="common.jar">
-			<param name="conf" value="build" />
 			<reference torefid="extra.jar.includes" refid="jar.includes" />
 		</antcall>
 	</target>
