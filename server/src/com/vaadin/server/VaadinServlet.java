@@ -220,7 +220,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     }
 
     private boolean handleContextRootWithoutSlash(HttpServletRequest request,
-            HttpServletResponse response) {
+            HttpServletResponse response) throws IOException {
         if ("/".equals(request.getPathInfo())
                 && "".equals(request.getServletPath())
                 && !request.getRequestURI().endsWith("/")) {
@@ -228,8 +228,12 @@ public class VaadinServlet extends HttpServlet implements Constants {
              * Path info is for the root but request URI doesn't end with a
              * slash -> redirect to the same URI but with an ending slash.
              */
-            response.setStatus(HttpServletResponse.SC_FOUND);
-            response.setHeader("Location", request.getRequestURI() + "/");
+            String location = request.getRequestURI() + "/";
+            String queryString = request.getQueryString();
+            if (queryString != null) {
+                location += '?' + queryString;
+            }
+            response.sendRedirect(location);
             return true;
         } else {
             return false;
