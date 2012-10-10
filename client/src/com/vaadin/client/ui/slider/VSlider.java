@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -13,11 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-// 
+//
 package com.vaadin.client.ui.slider;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -66,8 +70,6 @@ public class VSlider extends SimpleFocusablePanel implements Field,
     protected Double value;
     protected SliderOrientation orientation = SliderOrientation.HORIZONTAL;
 
-    private boolean valueChangeHandlerInitialized = false;
-
     private final HTML feedback = new HTML("", false);
     private final VOverlay feedbackPopup = new VOverlay(true, false, true) {
 
@@ -113,26 +115,51 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         bigger = DOM.createDiv();
 
         setStyleName(CLASSNAME);
-        DOM.setElementProperty(base, "className", CLASSNAME + "-base");
-        DOM.setElementProperty(handle, "className", CLASSNAME + "-handle");
-        DOM.setElementProperty(smaller, "className", CLASSNAME + "-smaller");
-        DOM.setElementProperty(bigger, "className", CLASSNAME + "-bigger");
 
-        DOM.appendChild(getElement(), bigger);
-        DOM.appendChild(getElement(), smaller);
-        DOM.appendChild(getElement(), base);
-        DOM.appendChild(base, handle);
+        getElement().appendChild(bigger);
+        getElement().appendChild(smaller);
+        getElement().appendChild(base);
+        base.appendChild(handle);
 
         // Hide initially
-        DOM.setStyleAttribute(smaller, "display", "none");
-        DOM.setStyleAttribute(bigger, "display", "none");
-        DOM.setStyleAttribute(handle, "visibility", "hidden");
+        smaller.getStyle().setDisplay(Display.NONE);
+        bigger.getStyle().setDisplay(Display.NONE);
+        handle.getStyle().setVisibility(Visibility.HIDDEN);
 
         sinkEvents(Event.MOUSEEVENTS | Event.ONMOUSEWHEEL | Event.KEYEVENTS
                 | Event.FOCUSEVENTS | Event.TOUCHEVENTS);
 
-        feedbackPopup.addStyleName(CLASSNAME + "-feedback");
+
         feedbackPopup.setWidget(feedback);
+    }
+
+    @Override
+    public void setStyleName(String style) {
+        super.setStyleName(style);
+        updateStyleNames(style);
+    }
+
+    @Override
+    public void setStylePrimaryName(String style) {
+        updateStyleNames(style);
+    }
+
+    protected void updateStyleNames(String newPrimaryStyleName) {
+
+        feedbackPopup.removeStyleName(getStylePrimaryName() + "-feedback");
+        removeStyleName(getStylePrimaryName() + "-vertical");
+
+        super.setStylePrimaryName(newPrimaryStyleName);
+
+        feedbackPopup.addStyleName(getStylePrimaryName() + "-feedback");
+        base.setClassName(getStylePrimaryName() + "-base");
+        handle.setClassName(getStylePrimaryName() + "-handle");
+        smaller.setClassName(getStylePrimaryName() + "-smaller");
+        bigger.setClassName(getStylePrimaryName() + "-bigger");
+
+        if (isVertical()) {
+            addStyleName(getStylePrimaryName() + "-vertical");
+        }
     }
 
     void setFeedbackValue(double value) {
@@ -146,14 +173,14 @@ public class VSlider extends SimpleFocusablePanel implements Field,
     private void updateFeedbackPosition() {
         if (isVertical()) {
             feedbackPopup.setPopupPosition(
-                    DOM.getAbsoluteLeft(handle) + handle.getOffsetWidth(),
-                    DOM.getAbsoluteTop(handle) + handle.getOffsetHeight() / 2
+                    handle.getAbsoluteLeft() + handle.getOffsetWidth(),
+                    handle.getAbsoluteTop() + handle.getOffsetHeight() / 2
                             - feedbackPopup.getOffsetHeight() / 2);
         } else {
             feedbackPopup.setPopupPosition(
-                    DOM.getAbsoluteLeft(handle) + handle.getOffsetWidth() / 2
+                    handle.getAbsoluteLeft() + handle.getOffsetWidth() / 2
                             - feedbackPopup.getOffsetWidth() / 2,
-                    DOM.getAbsoluteTop(handle)
+                    handle.getAbsoluteTop()
                             - feedbackPopup.getOffsetHeight());
         }
     }
@@ -165,29 +192,29 @@ public class VSlider extends SimpleFocusablePanel implements Field,
                 : "offsetWidth";
 
         // clear unnecessary opposite style attribute
-        DOM.setStyleAttribute(base, oppositeStyleAttribute, "");
+        base.getStyle().clearProperty(oppositeStyleAttribute);
 
-        final Element p = DOM.getParent(getElement());
-        if (DOM.getElementPropertyInt(p, domProperty) > 50) {
+        final Element p = getElement().getParentElement().cast();
+        if (p.getPropertyInt(domProperty) > 50) {
             if (isVertical()) {
                 setHeight();
             } else {
-                DOM.setStyleAttribute(base, styleAttribute, "");
+                base.getStyle().clearProperty(styleAttribute);
             }
         } else {
             // Set minimum size and adjust after all components have
             // (supposedly) been drawn completely.
-            DOM.setStyleAttribute(base, styleAttribute, MIN_SIZE + "px");
+            base.getStyle().setPropertyPx(styleAttribute, MIN_SIZE);
             Scheduler.get().scheduleDeferred(new Command() {
 
                 @Override
                 public void execute() {
-                    final Element p = DOM.getParent(getElement());
-                    if (DOM.getElementPropertyInt(p, domProperty) > (MIN_SIZE + 5)) {
+                    final Element p = getElement().getParentElement().cast();
+                    if (p.getPropertyInt(domProperty) > (MIN_SIZE + 5)) {
                         if (isVertical()) {
                             setHeight();
                         } else {
-                            DOM.setStyleAttribute(base, styleAttribute, "");
+                            base.getStyle().clearProperty(styleAttribute);
                         }
                         // Ensure correct position
                         setValue(value, false);
@@ -219,14 +246,13 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         final String oppositeHandleAttribute = isVertical() ? "marginLeft"
                 : "marginTop";
 
-        DOM.setStyleAttribute(handle, handleAttribute, "0");
+        handle.getStyle().setProperty(handleAttribute, "0");
 
         // clear unnecessary opposite handle attribute
-        DOM.setStyleAttribute(handle, oppositeHandleAttribute, "");
+        handle.getStyle().clearProperty(oppositeHandleAttribute);
 
         // Restore visibility
-        DOM.setStyleAttribute(handle, "visibility", "visible");
-
+        handle.getStyle().setVisibility(Visibility.VISIBLE);
     }
 
     @Override
@@ -297,8 +323,9 @@ public class VSlider extends SimpleFocusablePanel implements Field,
                 focus();
                 feedbackPopup.show();
                 dragging = true;
-                DOM.setElementProperty(handle, "className", CLASSNAME
-                        + "-handle " + CLASSNAME + "-handle-active");
+                handle.setClassName(getStylePrimaryName() + "-handle");
+                handle.addClassName(getStylePrimaryName() + "-handle-active");
+
                 DOM.setCapture(getElement());
                 DOM.eventPreventDefault(event); // prevent selecting text
                 DOM.eventCancelBubble(event, true);
@@ -321,7 +348,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
             // feedbackPopup.hide();
             VConsole.log("Slider move end");
             dragging = false;
-            DOM.setElementProperty(handle, "className", CLASSNAME + "-handle");
+            handle.setClassName(getStylePrimaryName() + "-handle");
             DOM.releaseCapture(getElement());
             setValueByEvent(event, true);
             event.stopPropagation();
@@ -411,14 +438,14 @@ public class VSlider extends SimpleFocusablePanel implements Field,
 
     private void setHeight() {
         // Calculate decoration size
-        DOM.setStyleAttribute(base, "height", "0");
-        DOM.setStyleAttribute(base, "overflow", "hidden");
-        int h = DOM.getElementPropertyInt(getElement(), "offsetHeight");
+        base.getStyle().setHeight(0, Unit.PX);
+        base.getStyle().setOverflow(Overflow.HIDDEN);
+        int h = getElement().getOffsetHeight();
         if (h < MIN_SIZE) {
             h = MIN_SIZE;
         }
-        DOM.setStyleAttribute(base, "height", h + "px");
-        DOM.setStyleAttribute(base, "overflow", "");
+        base.getStyle().setHeight(h, Unit.PX);
+        base.getStyle().clearOverflow();
     }
 
     private void fireValueChanged() {
@@ -537,12 +564,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
     public void setOrientation(SliderOrientation orientation) {
         if (this.orientation != orientation) {
             this.orientation = orientation;
-
-            if (isVertical()) {
-                addStyleName(VSlider.CLASSNAME + "-vertical");
-            } else {
-                removeStyleName(VSlider.CLASSNAME + "-vertical");
-            }
+            updateStyleNames(getStylePrimaryName());
         }
     }
 
@@ -581,10 +603,9 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         final String styleAttribute = isVertical() ? "marginTop" : "marginLeft";
         final String domProperty = isVertical() ? "offsetHeight"
                 : "offsetWidth";
-        final int handleSize = Integer.parseInt(DOM.getElementProperty(handle,
-                domProperty));
-        final int baseSize = Integer.parseInt(DOM.getElementProperty(base,
-                domProperty)) - (2 * BASE_BORDER_WIDTH);
+        final int handleSize = handle.getPropertyInt(domProperty);
+        final int baseSize = base.getPropertyInt(domProperty)
+                - (2 * BASE_BORDER_WIDTH);
 
         final int range = baseSize - handleSize;
         double v = value.doubleValue();
@@ -609,7 +630,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         }
         final double pos = p;
 
-        DOM.setStyleAttribute(handle, styleAttribute, (Math.round(pos)) + "px");
+        handle.getStyle().setPropertyPx(styleAttribute, (int) Math.round(pos));
 
         // Update value
         this.value = new Double(v);
