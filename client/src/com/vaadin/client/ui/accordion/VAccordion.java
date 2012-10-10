@@ -87,6 +87,26 @@ public class VAccordion extends VTabsheetBase {
         }
     }
 
+    @Override
+    public void setStylePrimaryName(String style) {
+        updateStyleNames(style);
+    }
+
+    @Override
+    public void setStyleName(String style) {
+        updateStyleNames(style);
+    }
+
+    protected void updateStyleNames(String primaryStyleName) {
+        super.setStyleName(primaryStyleName);
+        for (Widget w : getChildren()) {
+            if (w instanceof StackItem) {
+                StackItem item = (StackItem) w;
+                item.updateStyleNames(primaryStyleName);
+            }
+        }
+    }
+
     /**
      * This method tries to find out if a tab has been rendered with a different
      * index previously. If this is the case it re-orders the children so the
@@ -359,13 +379,21 @@ public class VAccordion extends VTabsheetBase {
             DOM.appendChild(getElement(), captionNode);
             DOM.appendChild(getElement(), content);
 
-            getElement().addClassName(CLASSNAME + "-item");
-            captionNode.addClassName(CLASSNAME + "-item-caption");
-            content.addClassName(CLASSNAME + "-item-content");
+            updateStyleNames(VAccordion.this.getStylePrimaryName());
 
             touchScrollHandler.addElement(getContainerElement());
 
             close();
+        }
+
+        private void updateStyleNames(String primaryStyleName) {
+            content.removeClassName(getStylePrimaryName() + "-content");
+            captionNode.removeClassName(getStylePrimaryName() + "-caption");
+
+            setStylePrimaryName(primaryStyleName + "-item");
+
+            captionNode.addClassName(getStylePrimaryName() + "-caption");
+            content.addClassName(getStylePrimaryName() + "-content");
         }
 
         @Override
