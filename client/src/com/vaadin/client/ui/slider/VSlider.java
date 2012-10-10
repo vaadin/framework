@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-// 
+//
 package com.vaadin.client.ui.slider;
 
 import com.google.gwt.core.client.Scheduler;
@@ -66,8 +66,6 @@ public class VSlider extends SimpleFocusablePanel implements Field,
     protected Double value;
     protected SliderOrientation orientation = SliderOrientation.HORIZONTAL;
 
-    private boolean valueChangeHandlerInitialized = false;
-
     private final HTML feedback = new HTML("", false);
     private final VOverlay feedbackPopup = new VOverlay(true, false, true) {
 
@@ -113,10 +111,6 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         bigger = DOM.createDiv();
 
         setStyleName(CLASSNAME);
-        DOM.setElementProperty(base, "className", CLASSNAME + "-base");
-        DOM.setElementProperty(handle, "className", CLASSNAME + "-handle");
-        DOM.setElementProperty(smaller, "className", CLASSNAME + "-smaller");
-        DOM.setElementProperty(bigger, "className", CLASSNAME + "-bigger");
 
         DOM.appendChild(getElement(), bigger);
         DOM.appendChild(getElement(), smaller);
@@ -131,8 +125,36 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         sinkEvents(Event.MOUSEEVENTS | Event.ONMOUSEWHEEL | Event.KEYEVENTS
                 | Event.FOCUSEVENTS | Event.TOUCHEVENTS);
 
-        feedbackPopup.addStyleName(CLASSNAME + "-feedback");
+
         feedbackPopup.setWidget(feedback);
+    }
+
+    @Override
+    public void setStyleName(String style) {
+        updateStyleNames(style);
+    }
+
+    @Override
+    public void setStylePrimaryName(String style) {
+        updateStyleNames(style);
+    }
+
+    protected void updateStyleNames(String newPrimaryStyleName) {
+
+        feedbackPopup.removeStyleName(getStylePrimaryName() + "-feedback");
+        removeStyleName(getStylePrimaryName() + "-vertical");
+
+        super.setStyleName(newPrimaryStyleName);
+
+        feedbackPopup.addStyleName(getStylePrimaryName() + "-feedback");
+        base.setClassName(getStylePrimaryName() + "-base");
+        handle.setClassName(getStylePrimaryName() + "-handle");
+        smaller.setClassName(getStylePrimaryName() + "-smaller");
+        bigger.setClassName(getStylePrimaryName() + "-bigger");
+
+        if (isVertical()) {
+            addStyleName(getStylePrimaryName() + "-vertical");
+        }
     }
 
     void setFeedbackValue(double value) {
@@ -297,8 +319,9 @@ public class VSlider extends SimpleFocusablePanel implements Field,
                 focus();
                 feedbackPopup.show();
                 dragging = true;
-                DOM.setElementProperty(handle, "className", CLASSNAME
-                        + "-handle " + CLASSNAME + "-handle-active");
+                handle.setClassName(getStylePrimaryName() + "-handle");
+                handle.addClassName(getStylePrimaryName() + "-handle-active");
+
                 DOM.setCapture(getElement());
                 DOM.eventPreventDefault(event); // prevent selecting text
                 DOM.eventCancelBubble(event, true);
@@ -321,7 +344,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
             // feedbackPopup.hide();
             VConsole.log("Slider move end");
             dragging = false;
-            DOM.setElementProperty(handle, "className", CLASSNAME + "-handle");
+            handle.setClassName(getStylePrimaryName() + "-handle");
             DOM.releaseCapture(getElement());
             setValueByEvent(event, true);
             event.stopPropagation();
@@ -537,12 +560,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
     public void setOrientation(SliderOrientation orientation) {
         if (this.orientation != orientation) {
             this.orientation = orientation;
-
-            if (isVertical()) {
-                addStyleName(VSlider.CLASSNAME + "-vertical");
-            } else {
-                removeStyleName(VSlider.CLASSNAME + "-vertical");
-            }
+            updateStyleNames(getStylePrimaryName());
         }
     }
 
