@@ -38,11 +38,13 @@ public class BlockNode extends Node implements IVariableNode, InterpolationNode 
 
     public String toString(boolean indent) {
         StringBuilder string = new StringBuilder();
+        int i = 0;
         for (final String s : selectorList) {
             string.append(s);
-            if (selectorList.indexOf(s) != selectorList.size() - 1) {
+            if (i != selectorList.size() - 1) {
                 string.append(", ");
             }
+            i++;
         }
         string.append(" {\n");
         for (Node child : children) {
