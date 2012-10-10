@@ -41,32 +41,40 @@ public class TestAbstractApplicationServletStaticFilesLocation extends TestCase 
 
         /* SERVLETS */
         // http://dummy.host:8080/contextpath/servlet
-        // should return /contextpath
+        // should return . (relative url resolving to /contextpath)
         location = testLocation("http://dummy.host:8080", "/contextpath",
                 "/servlet", "");
-        assertEquals("/contextpath", location);
+        assertEquals(".", location);
+
+        // http://dummy.host:8080/contextpath/servlet/
+        // should return ./.. (relative url resolving to /contextpath)
+        location = testLocation("http://dummy.host:8080", "/contextpath",
+                "/servlet", "/");
+        assertEquals("./..", location);
 
         // http://dummy.host:8080/servlet
-        // should return ""
+        // should return "."
         location = testLocation("http://dummy.host:8080", "", "/servlet", "");
-        assertEquals("", location);
+        assertEquals(".", location);
 
         // http://dummy.host/contextpath/servlet/extra/stuff
-        // should return /contextpath
+        // should return ./../.. (relative url resolving to /contextpath)
         location = testLocation("http://dummy.host", "/contextpath",
                 "/servlet", "/extra/stuff");
-        assertEquals("/contextpath", location);
+        assertEquals("./../..", location);
 
         // http://dummy.host/context/path/servlet/extra/stuff
-        // should return /context/path
+        // should return ./../.. (relative url resolving to /context/path)
         location = testLocation("http://dummy.host", "/context/path",
                 "/servlet", "/extra/stuff");
-        assertEquals("/context/path", location);
+        assertEquals("./../..", location);
 
         /* Include requests */
-        location = testIncludedLocation("http://my.portlet.server", "/user",
-                "/tmpservletlocation1", "");
-        assertEquals("Wrong widgetset location", "/user", location);
+        // Include request support dropped with support for portlet1
+        // Might reconsider when JSP integration support is implemented
+        // location = testIncludedLocation("http://my.portlet.server", "/user",
+        // "/tmpservletlocation1", "");
+        // assertEquals("Wrong widgetset location", "/user", location);
 
     }
 
