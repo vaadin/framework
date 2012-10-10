@@ -15,13 +15,7 @@
  */
 package com.vaadin.client.ui.absolutelayout;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.DirectionalManagedLayout;
@@ -31,13 +25,16 @@ import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.client.ui.LayoutClickEventHandler;
-import com.vaadin.client.ui.absolutelayout.VAbsoluteLayout.AbsoluteWrapper;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.LayoutClickRpc;
 import com.vaadin.shared.ui.absolutelayout.AbsoluteLayoutServerRpc;
 import com.vaadin.shared.ui.absolutelayout.AbsoluteLayoutState;
 import com.vaadin.ui.AbsoluteLayout;
 
+/**
+ * Connects the server side {@link AbsoluteLayout} with the client side
+ * counterpart {@link VAbsoluteLayout}
+ */
 @Connect(AbsoluteLayout.class)
 public class AbsoluteLayoutConnector extends
         AbstractComponentContainerConnector implements DirectionalManagedLayout {
@@ -54,13 +51,15 @@ public class AbsoluteLayoutConnector extends
         protected LayoutClickRpc getLayoutClickRPC() {
             return rpc;
         };
-
     };
 
     private AbsoluteLayoutServerRpc rpc;
 
-    private Map<String, AbsoluteWrapper> connectorIdToComponentWrapper = new HashMap<String, AbsoluteWrapper>();
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.client.ui.AbstractComponentConnector#init()
+     */
     @Override
     protected void init() {
         super.init();
@@ -82,41 +81,58 @@ public class AbsoluteLayoutConnector extends
                 element);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.client.ComponentContainerConnector#updateCaption(com.vaadin
+     * .client.ComponentConnector)
+     */
     @Override
     public void updateCaption(ComponentConnector component) {
         VAbsoluteLayout absoluteLayoutWidget = getWidget();
-        AbsoluteWrapper componentWrapper = getWrapper(component);
-
         boolean captionIsNeeded = VCaption.isNeeded(component.getState());
 
-        VCaption caption = componentWrapper.getCaption();
-
+        VCaption caption = absoluteLayoutWidget.getWidgetCaption(component
+                .getWidget());
         if (captionIsNeeded) {
             if (caption == null) {
                 caption = new VCaption(component, getConnection());
-                absoluteLayoutWidget.add(caption);
-                componentWrapper.setCaption(caption);
             }
-            caption.updateCaption();
-            componentWrapper.updateCaptionPosition();
-        } else {
-            if (caption != null) {
-                caption.removeFromParent();
-            }
+            absoluteLayoutWidget.setWidgetCaption(component.getWidget(),
+                    caption);
+        } else if (caption != null) {
+            absoluteLayoutWidget.setWidgetCaption(component.getWidget(), null);
         }
-
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.client.ui.AbstractComponentConnector#getWidget()
+     */
     @Override
     public VAbsoluteLayout getWidget() {
         return (VAbsoluteLayout) super.getWidget();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.client.ui.AbstractComponentConnector#getState()
+     */
     @Override
     public AbsoluteLayoutState getState() {
         return (AbsoluteLayoutState) super.getState();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.client.ui.AbstractComponentConnector#onStateChanged(com.vaadin
+     * .client.communication.StateChangeEvent)
+     */
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
@@ -125,107 +141,64 @@ public class AbsoluteLayoutConnector extends
         // TODO Margin handling
 
         for (ComponentConnector child : getChildComponents()) {
-            getWrapper(child).setPosition(
+            getWidget().setWidgetPosition(
+                    child.getWidget(),
                     getState().connectorToCssPosition.get(child
                             .getConnectorId()));
         }
     };
 
-    private AbsoluteWrapper getWrapper(ComponentConnector child) {
-        String childId = child.getConnectorId();
-        AbsoluteWrapper wrapper = connectorIdToComponentWrapper.get(childId);
-        if (wrapper != null) {
-            return wrapper;
-        }
-
-        wrapper = new AbsoluteWrapper(child.getWidget());
-        connectorIdToComponentWrapper.put(childId, wrapper);
-        getWidget().add(wrapper);
-        return wrapper;
-
-    }
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.client.ui.AbstractComponentContainerConnector#
+     * onConnectorHierarchyChange
+     * (com.vaadin.client.ConnectorHierarchyChangeEvent)
+     */
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
         super.onConnectorHierarchyChange(event);
-
         for (ComponentConnector child : getChildComponents()) {
-            getWrapper(child);
+            if (!getWidget().contains(child.getWidget())) {
+                getWidget().add(child.getWidget());
+            }
         }
-
         for (ComponentConnector oldChild : event.getOldChildren()) {
             if (oldChild.getParent() != this) {
-                String connectorId = oldChild.getConnectorId();
-                AbsoluteWrapper absoluteWrapper = connectorIdToComponentWrapper
-                        .remove(connectorId);
-                absoluteWrapper.destroy();
+                getWidget().remove(oldChild.getWidget());
             }
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.client.DirectionalManagedLayout#layoutVertically()
+     */
     @Override
     public void layoutVertically() {
-        VAbsoluteLayout layout = getWidget();
-        for (ComponentConnector paintable : getChildComponents()) {
-            Widget widget = paintable.getWidget();
-            AbsoluteWrapper wrapper = (AbsoluteWrapper) widget.getParent();
-            Style wrapperStyle = wrapper.getElement().getStyle();
-
-            if (paintable.isRelativeHeight()) {
-                int h;
-                if (wrapper.top != null && wrapper.bottom != null) {
-                    h = wrapper.getOffsetHeight();
-                } else if (wrapper.bottom != null) {
-                    // top not defined, available space 0... bottom of
-                    // wrapper
-                    h = wrapper.getElement().getOffsetTop()
-                            + wrapper.getOffsetHeight();
-                } else {
-                    // top defined or both undefined, available space ==
-                    // canvas - top
-                    h = layout.canvas.getOffsetHeight()
-                            - wrapper.getElement().getOffsetTop();
-                }
-                wrapperStyle.setHeight(h, Unit.PX);
-                getLayoutManager().reportHeightAssignedToRelative(paintable, h);
-            } else {
-                wrapperStyle.clearHeight();
+        getWidget().layoutVertically();
+        for (ComponentConnector connector : getChildComponents()) {
+            if (connector.isRelativeHeight()) {
+                getLayoutManager().reportHeightAssignedToRelative(connector,
+                        getWidget().getWidgetSlotHeight(connector.getWidget()));
             }
-
-            wrapper.updateCaptionPosition();
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.client.DirectionalManagedLayout#layoutHorizontally()
+     */
     @Override
     public void layoutHorizontally() {
-        VAbsoluteLayout layout = getWidget();
-        for (ComponentConnector paintable : getChildComponents()) {
-            AbsoluteWrapper wrapper = getWrapper(paintable);
-            Style wrapperStyle = wrapper.getElement().getStyle();
-
-            if (paintable.isRelativeWidth()) {
-                int w;
-                if (wrapper.left != null && wrapper.right != null) {
-                    w = wrapper.getOffsetWidth();
-                } else if (wrapper.right != null) {
-                    // left == null
-                    // available width == right edge == offsetleft + width
-                    w = wrapper.getOffsetWidth()
-                            + wrapper.getElement().getOffsetLeft();
-                } else {
-                    // left != null && right == null || left == null &&
-                    // right == null
-                    // available width == canvas width - offset left
-                    w = layout.canvas.getOffsetWidth()
-                            - wrapper.getElement().getOffsetLeft();
-                }
-                wrapperStyle.setWidth(w, Unit.PX);
-                getLayoutManager().reportWidthAssignedToRelative(paintable, w);
-            } else {
-                wrapperStyle.clearWidth();
+        getWidget().layoutHorizontally();
+        for (ComponentConnector connector : getChildComponents()) {
+            if (connector.isRelativeWidth()) {
+                getLayoutManager().reportWidthAssignedToRelative(connector,
+                        getWidget().getWidgetSlotWidth(connector.getWidget()));
             }
-
-            wrapper.updateCaptionPosition();
         }
     }
 }
