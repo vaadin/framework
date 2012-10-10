@@ -22,7 +22,7 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
     private static final String IE8_WINDOWS = "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; InfoPath.2)";
     private static final String IE8_IN_IE7_MODE_WINDOWS = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; InfoPath.2)";
 
-    private static final String IE9_BETA_IN_IE7_MODE_WINDOWS_7 = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C)";
+    private static final String IE9_IN_IE7_MODE_WINDOWS_7 = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C)";
     private static final String IE9_BETA_IN_IE8_MODE_WINDOWS_7 = "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C)";
     private static final String IE9_BETA_WINDOWS_7 = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
 
@@ -279,7 +279,7 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
 
     public void testIE6() {
         VBrowserDetails bd = new VBrowserDetails(IE6_WINDOWS);
-        // assertTrident(bd);
+        assertEngineVersion(bd, -1);
         assertIE(bd);
         assertBrowserMajorVersion(bd, 6);
         assertBrowserMinorVersion(bd, 0);
@@ -288,7 +288,7 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
 
     public void testIE7() {
         VBrowserDetails bd = new VBrowserDetails(IE7_WINDOWS);
-        // assertTrident(bd);
+        assertEngineVersion(bd, -1);
         assertIE(bd);
         assertBrowserMajorVersion(bd, 7);
         assertBrowserMinorVersion(bd, 0);
@@ -297,7 +297,7 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
 
     public void testIE8() {
         VBrowserDetails bd = new VBrowserDetails(IE8_WINDOWS);
-        // assertTrident(bd);
+        assertEngineVersion(bd, 4);
         assertIE(bd);
         assertBrowserMajorVersion(bd, 8);
         assertBrowserMinorVersion(bd, 0);
@@ -308,7 +308,7 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
         VBrowserDetails bd = new VBrowserDetails(IE8_IN_IE7_MODE_WINDOWS);
         bd.setIEMode(7);
 
-        // assertTrident(bd);
+        assertEngineVersion(bd, 4);
         assertIE(bd);
         assertBrowserMajorVersion(bd, 7);
         assertBrowserMinorVersion(bd, 0);
@@ -318,7 +318,7 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
 
     public void testIE9() {
         VBrowserDetails bd = new VBrowserDetails(IE9_BETA_WINDOWS_7);
-        // assertTrident(bd);
+        assertEngineVersion(bd, 5);
         assertIE(bd);
         assertBrowserMajorVersion(bd, 9);
         assertBrowserMinorVersion(bd, 0);
@@ -326,10 +326,10 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
     }
 
     public void testIE9InIE7CompatibilityMode() {
-        VBrowserDetails bd = new VBrowserDetails(IE9_BETA_IN_IE7_MODE_WINDOWS_7);
+        VBrowserDetails bd = new VBrowserDetails(IE9_IN_IE7_MODE_WINDOWS_7);
         // bd.setIE8InCompatibilityMode();
 
-        // assertTrident(bd);
+        assertEngineVersion(bd, 5);
         assertIE(bd);
         assertBrowserMajorVersion(bd, 7);
         assertBrowserMinorVersion(bd, 0);
@@ -341,7 +341,11 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
         VBrowserDetails bd = new VBrowserDetails(IE9_BETA_IN_IE8_MODE_WINDOWS_7);
         // bd.setIE8InCompatibilityMode();
 
-        // assertTrident(bd);
+        /*
+         * Trident/4.0 in example user agent string based on beta even though it
+         * should be Trident/5.0 in real (non-beta) user agent strings
+         */
+        assertEngineVersion(bd, 4);
         assertIE(bd);
         assertBrowserMajorVersion(bd, 8);
         assertBrowserMinorVersion(bd, 0);
