@@ -95,6 +95,14 @@ public class VBrowserDetails implements Serializable {
                         .substring(userAgent.indexOf("webkit/") + 7);
                 tmp = tmp.replaceFirst("([0-9]+)[^0-9].+", "$1");
                 browserEngineVersion = Float.parseFloat(tmp);
+            } else if (isIE) {
+                int tridentPos = userAgent.indexOf("trident/");
+                if (tridentPos >= 0) {
+                    String tmp = userAgent.substring(tridentPos
+                            + "Trident/".length());
+                    tmp = tmp.replaceFirst("([0-9]+\\.[0-9]+).*", "$1");
+                    browserEngineVersion = Float.parseFloat(tmp);
+                }
             }
         } catch (Exception e) {
             // Browser engine version parsing failed
@@ -456,7 +464,9 @@ public class VBrowserDetails implements Serializable {
      *         supported or might work
      */
     public boolean isTooOldToFunctionProperly() {
-        if (isIE() && getBrowserMajorVersion() < 8) {
+        // Check Trident version to detect compatibility mode
+        if (isIE() && getBrowserMajorVersion() < 8
+                && getBrowserEngineVersion() < 4) {
             return true;
         }
         // Webkit 533 in Safari 4.1+, Android 2.2+, iOS 4+
