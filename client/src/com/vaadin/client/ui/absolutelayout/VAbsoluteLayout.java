@@ -18,12 +18,12 @@ package com.vaadin.client.ui.absolutelayout;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.VCaption;
 
@@ -39,52 +39,386 @@ public class VAbsoluteLayout extends ComplexPanel {
 
     protected final Element canvas = DOM.createDiv();
 
-    private Object previousStyleName;
-
-    protected ApplicationConnection client;
-
+    /**
+     * Default constructor
+     */
     public VAbsoluteLayout() {
         setElement(Document.get().createDivElement());
-        setStyleName(CLASSNAME);
-        addStyleName(StyleConstants.UI_LAYOUT);
         marginElement = Document.get().createDivElement();
         canvas.getStyle().setProperty("position", "relative");
         canvas.getStyle().setProperty("overflow", "hidden");
         marginElement.appendChild(canvas);
         getElement().appendChild(marginElement);
-
-        canvas.setClassName(CLASSNAME + "-canvas");
-        canvas.setClassName(CLASSNAME + "-margin");
+        setStyleName(CLASSNAME);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.user.client.ui.Panel#add(com.google.gwt.user.client.ui
+     * .Widget)
+     */
     @Override
     public void add(Widget child) {
-        super.add(child, canvas);
+        AbsoluteWrapper wrapper = new AbsoluteWrapper(child);
+        wrapper.setStyleName(getStylePrimaryName() + "-wrapper");
+        super.add(wrapper, canvas);
     }
 
-    public static class AbsoluteWrapper extends SimplePanel {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.user.client.ui.ComplexPanel#remove(com.google.gwt.user
+     * .client.ui.Widget)
+     */
+    @Override
+    public boolean remove(Widget w) {
+        AbsoluteWrapper wrapper = getChildWrapper(w);
+        if (wrapper != null) {
+            wrapper.destroy();
+            return super.remove(wrapper);
+        }
+        return false;
+    }
+
+    /**
+     * Does this layout contain a widget
+     * 
+     * @param widget
+     *            The widget to check
+     * @return Returns true if the widget is in this layout, false if not
+     */
+    public boolean contains(Widget widget) {
+        return getChildWrapper(widget) != null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.gwt.user.client.ui.ComplexPanel#getWidget(int)
+     */
+    @Override
+    public Widget getWidget(int index) {
+        for (int i = 0, j = 0; i < super.getWidgetCount(); i++) {
+            Widget w = getWidget(i);
+            if (w instanceof AbsoluteWrapper) {
+                if (j == index) {
+                    return w;
+                } else {
+                    j++;
+                }
+            }
+        }
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.gwt.user.client.ui.ComplexPanel#getWidgetCount()
+     */
+    @Override
+    public int getWidgetCount() {
+        int counter = 0;
+        for (int i = 0; i < super.getWidgetCount(); i++) {
+            if (getWidget(i) instanceof AbsoluteWrapper) {
+                counter++;
+            }
+        }
+        return counter;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.user.client.ui.ComplexPanel#getWidgetIndex(com.google.
+     * gwt.user.client.ui.Widget)
+     */
+    @Override
+    public int getWidgetIndex(Widget child) {
+        for (int i = 0, j = 0; i < super.getWidgetCount(); i++) {
+            Widget w = getWidget(i);
+            if (w instanceof AbsoluteWrapper) {
+                if (child == w) {
+                    return j;
+                } else {
+                    j++;
+                }
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Sets a caption for a contained widget
+     * 
+     * @param child
+     *            The child widget to set the caption for
+     * @param caption
+     *            The caption of the widget
+     */
+    public void setWidgetCaption(Widget child, VCaption caption) {
+        AbsoluteWrapper wrapper = getChildWrapper(child);
+        if (wrapper != null) {
+            if (caption != null) {
+                if (!getChildren().contains(caption)) {
+                    add(caption);
+                }
+                wrapper.setCaption(caption);
+                caption.updateCaption();
+                wrapper.updateCaptionPosition();
+            } else if (wrapper.getCaption() != null) {
+                wrapper.setCaption(null);
+            }
+        }
+    }
+
+    /**
+     * Set the position of the widget in the layout. The position is a CSS
+     * property string using properties such as top,left,right,top
+     * 
+     * @param child
+     *            The child widget to set the position for
+     * @param position
+     *            The position string
+     */
+    public void setWidgetPosition(Widget child, String position) {
+        AbsoluteWrapper wrapper = getChildWrapper(child);
+        if (wrapper != null) {
+            wrapper.setPosition(position);
+        }
+    }
+
+    /**
+     * Get the caption for a widget
+     * 
+     * @param child
+     *            The child widget to get the caption of
+     */
+    public VCaption getWidgetCaption(Widget child) {
+        AbsoluteWrapper wrapper = getChildWrapper(child);
+        if (wrapper != null) {
+            return wrapper.getCaption();
+        }
+        return null;
+    }
+
+    /**
+     * Get the pixel width of an slot in the layout
+     * 
+     * @param child
+     *            The widget in the layout.
+     * @return Returns the size in pixels, or 0 if child is not in the layout
+     */
+    public int getWidgetSlotWidth(Widget child) {
+        AbsoluteWrapper wrapper = getChildWrapper(child);
+        if (wrapper != null) {
+            return wrapper.getOffsetWidth();
+        }
+        return 0;
+    }
+
+    /**
+     * Get the pixel height of an slot in the layout
+     * 
+     * @param child
+     *            The widget in the layout
+     * @return Returns the size in pixels, or 0 if the child is not in the
+     *         layout
+     */
+    public int getWidgetSlotHeight(Widget child) {
+        AbsoluteWrapper wrapper = getChildWrapper(child);
+        if (wrapper != null) {
+            return wrapper.getOffsetHeight();
+        }
+        return 0;
+    }
+
+    /**
+     * Get the wrapper for a widget
+     * 
+     * @param child
+     *            The child to get the wrapper for
+     * @return
+     */
+    protected AbsoluteWrapper getChildWrapper(Widget child) {
+        for (Widget w : getChildren()) {
+            AbsoluteWrapper wrapper = (AbsoluteWrapper) w;
+            if (wrapper.getWidget() == child) {
+                return wrapper;
+            }
+        }
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.user.client.ui.UIObject#setStylePrimaryName(java.lang.
+     * String)
+     */
+    @Override
+    public void setStylePrimaryName(String style) {
+        updateStylenames(style);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.user.client.ui.UIObject#setStyleName(java.lang.String)
+     */
+    @Override
+    public void setStyleName(String style) {
+        super.setStyleName(style);
+        updateStylenames(style);
+        addStyleName(StyleConstants.UI_LAYOUT);
+    }
+
+    /**
+     * Updates all style names contained in the layout
+     * 
+     * @param primaryStyleName
+     *            The style name to use as primary
+     */
+    protected void updateStylenames(String primaryStyleName) {
+        super.setStylePrimaryName(primaryStyleName);
+        canvas.setClassName(getStylePrimaryName() + "-canvas");
+        canvas.setClassName(getStylePrimaryName() + "-margin");
+        for (Widget w : getChildren()) {
+            if (w instanceof AbsoluteWrapper) {
+                AbsoluteWrapper wrapper = (AbsoluteWrapper) w;
+                wrapper.setStyleName(getStylePrimaryName() + "-wrapper");
+            }
+        }
+    }
+
+    /**
+     * Performs a vertical layout of the layout. Should be called when a widget
+     * is added or removed
+     */
+    public void layoutVertically() {
+        for (Widget widget : getChildren()) {
+            if (widget instanceof AbsoluteWrapper) {
+                AbsoluteWrapper wrapper = (AbsoluteWrapper) widget;
+                Style wrapperStyle = wrapper.getElement().getStyle();
+                Style widgetStyle = wrapper.getWidget().getElement().getStyle();
+                if (widgetStyle.getHeight() != null
+                        && widgetStyle.getHeight().endsWith("%")) {
+                    int h;
+                    if (wrapper.top != null && wrapper.bottom != null) {
+                        h = wrapper.getOffsetHeight();
+                    } else if (wrapper.bottom != null) {
+                        // top not defined, available space 0... bottom of
+                        // wrapper
+                        h = wrapper.getElement().getOffsetTop()
+                                + wrapper.getOffsetHeight();
+                    } else {
+                        // top defined or both undefined, available space ==
+                        // canvas - top
+                        h = canvas.getOffsetHeight()
+                                - wrapper.getElement().getOffsetTop();
+                    }
+                    wrapperStyle.setHeight(h, Unit.PX);
+                } else {
+                    wrapperStyle.clearHeight();
+                }
+
+                wrapper.updateCaptionPosition();
+            }
+        }
+    }
+
+    /**
+     * Performs an horizontal layout. Should be called when a widget is add or
+     * removed
+     */
+    public void layoutHorizontally() {
+        for (Widget widget : getChildren()) {
+            if (widget instanceof AbsoluteWrapper) {
+                AbsoluteWrapper wrapper = (AbsoluteWrapper) widget;
+                Style wrapperStyle = wrapper.getElement().getStyle();
+                Style widgetStyle = wrapper.getWidget().getElement().getStyle();
+
+                if (widgetStyle.getWidth() != null
+                        && widgetStyle.getWidth().endsWith("%")) {
+                    int w;
+                    if (wrapper.left != null && wrapper.right != null) {
+                        w = wrapper.getOffsetWidth();
+                    } else if (wrapper.right != null) {
+                        // left == null
+                        // available width == right edge == offsetleft + width
+                        w = wrapper.getOffsetWidth()
+                                + wrapper.getElement().getOffsetLeft();
+                    } else {
+                        // left != null && right == null || left == null &&
+                        // right == null
+                        // available width == canvas width - offset left
+                        w = canvas.getOffsetWidth()
+                                - wrapper.getElement().getOffsetLeft();
+                    }
+                    wrapperStyle.setWidth(w, Unit.PX);
+                } else {
+                    wrapperStyle.clearWidth();
+                }
+
+                wrapper.updateCaptionPosition();
+            }
+        }
+    }
+
+    /**
+     * Internal wrapper for wrapping widgets in the Absolute layout
+     */
+    protected class AbsoluteWrapper extends SimplePanel {
         private String css;
-        String left;
-        String top;
-        String right;
-        String bottom;
+        private String left;
+        private String top;
+        private String right;
+        private String bottom;
         private String zIndex;
 
         private VCaption caption;
 
+        /**
+         * Constructor
+         * 
+         * @param child
+         *            The child to wrap
+         */
         public AbsoluteWrapper(Widget child) {
             setWidget(child);
-            setStyleName(CLASSNAME + "-wrapper");
         }
 
+        /**
+         * Get the caption of the wrapper
+         */
         public VCaption getCaption() {
             return caption;
         }
 
+        /**
+         * Set the caption for the wrapper
+         * 
+         * @param caption
+         *            The caption for the wrapper
+         */
         public void setCaption(VCaption caption) {
-            this.caption = caption;
+            if (caption != null) {
+                this.caption = caption;
+            } else if (this.caption != null) {
+                this.caption.removeFromParent();
+                this.caption = caption;
+            }
         }
 
+        /**
+         * Removes the wrapper caption and itself from the layout
+         */
         public void destroy() {
             if (caption != null) {
                 caption.removeFromParent();
@@ -92,9 +426,15 @@ public class VAbsoluteLayout extends ComplexPanel {
             removeFromParent();
         }
 
-        public void setPosition(String stringAttribute) {
-            if (css == null || !css.equals(stringAttribute)) {
-                css = stringAttribute;
+        /**
+         * Set the position for the wrapper in the layout
+         * 
+         * @param position
+         *            The position string
+         */
+        public void setPosition(String position) {
+            if (css == null || !css.equals(position)) {
+                css = position;
                 top = right = bottom = left = zIndex = null;
                 if (!css.equals("")) {
                     String[] properties = css.split(";");
@@ -134,7 +474,10 @@ public class VAbsoluteLayout extends ComplexPanel {
             updateCaptionPosition();
         }
 
-        void updateCaptionPosition() {
+        /**
+         * Updates the caption position by using element offset left and top
+         */
+        private void updateCaptionPosition() {
             if (caption != null) {
                 Style style = caption.getElement().getStyle();
                 style.setProperty("position", "absolute");
@@ -144,5 +487,4 @@ public class VAbsoluteLayout extends ComplexPanel {
             }
         }
     }
-
 }
