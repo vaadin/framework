@@ -17,20 +17,15 @@
 package com.vaadin.tests.minitutorials.v7a2;
 
 import com.vaadin.server.Resource;
-import com.vaadin.tests.widgetset.client.minitutorials.v7a2.ResourceInStateState;
 import com.vaadin.ui.AbstractComponent;
 
 public class ResourceInStateComponent extends AbstractComponent {
-    @Override
-    public ResourceInStateState getState() {
-        return (ResourceInStateState) super.getState();
-    }
 
     public void setMyIcon(Resource icon) {
-        setResource(ResourceInStateState.MY_ICON_RESOURCE, icon);
+        setResource("myIcon", icon);
     }
 
     public Resource getMyIcon() {
-        return getResource(ResourceInStateState.MY_ICON_RESOURCE);
+        return getResource("myIcon");
     }
 }

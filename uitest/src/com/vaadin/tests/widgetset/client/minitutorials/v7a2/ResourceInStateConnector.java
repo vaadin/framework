@@ -27,19 +27,14 @@ public class ResourceInStateConnector extends AbstractComponentConnector {
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
-        String icon = getResourceUrl(ResourceInStateState.MY_ICON_RESOURCE);
+        String iconUrl = getResourceUrl("myIcon");
 
-        if (icon != null) {
-            getWidget().setUrl(icon);
+        if (iconUrl != null) {
+            getWidget().setUrl(iconUrl);
         } else {
             getWidget().setUrl("");
         }
 
-    }
-
-    @Override
-    public ResourceInStateState getState() {
-        return (ResourceInStateState) super.getState();
     }
 
     @Override
