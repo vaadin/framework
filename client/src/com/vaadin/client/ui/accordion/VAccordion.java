@@ -89,16 +89,17 @@ public class VAccordion extends VTabsheetBase {
 
     @Override
     public void setStylePrimaryName(String style) {
+        super.setStylePrimaryName(style);
         updateStyleNames(style);
     }
 
     @Override
     public void setStyleName(String style) {
+        super.setStyleName(style);
         updateStyleNames(style);
     }
 
     protected void updateStyleNames(String primaryStyleName) {
-        super.setStyleName(primaryStyleName);
         for (Widget w : getChildren()) {
             if (w instanceof StackItem) {
                 StackItem item = (StackItem) w;
