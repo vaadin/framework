@@ -105,19 +105,22 @@ public class CompileTheme {
     private static void createSprites(String themeFolder, String themeName)
             throws FileNotFoundException, IOException {
         try {
-            String[] parameters = new String[] { "--sprite-png-depth", "AUTO",
-                    "--css-file-suffix", "-sprite", "--css-file-encoding",
-                    "UTF-8", "--root-dir-path",
-                    themeFolder + File.separator + themeName, "--log-level",
-                    "WARN" };
-
-            org.carrot2.labs.smartsprites.SmartSprites.main(parameters);
-            System.out.println("Generated sprites");
-
+            // Try loading the class separately from using it to avoid
+            // hiding other classpath issues
+            Class<?> smartSpritesClass = org.carrot2.labs.smartsprites.SmartSprites.class;
         } catch (NoClassDefFoundError e) {
             System.err
                     .println("Could not find smartsprites. No sprites were generated. The theme should still work.");
+            return;
         }
+
+        String[] parameters = new String[] { "--sprite-png-depth", "AUTO",
+                "--css-file-suffix", "-sprite", "--css-file-encoding", "UTF-8",
+                "--root-dir-path", themeFolder + File.separator + themeName,
+                "--log-level", "WARN" };
+
+        org.carrot2.labs.smartsprites.SmartSprites.main(parameters);
+        System.out.println("Generated sprites");
 
     }
 }
