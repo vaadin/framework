@@ -583,10 +583,12 @@ public class ConnectorBundleLoaderFactory extends Generator {
         JClassType connectorType = typeOracle.getType(ServerConnector.class
                 .getName());
         JClassType[] subtypes = connectorType.getSubtypes();
-        for (JClassType connectorSubtype : subtypes) {
-            if (!connectorSubtype.isAnnotationPresent(Connect.class)) {
-                continue;
-            }
+
+        // Find all types with a valid mapping
+        Collection<JClassType> selectedTypes = getMappedTypes(logger, subtypes);
+
+        // Group by load style
+        for (JClassType connectorSubtype : selectedTypes) {
             LoadStyle loadStyle = getLoadStyle(connectorSubtype);
             if (loadStyle != null) {
                 connectorsByLoadStyle.get(loadStyle).add(connectorSubtype);
@@ -635,6 +637,79 @@ public class ConnectorBundleLoaderFactory extends Generator {
         }
 
         return bundles;
+    }
+
+    private Collection<JClassType> getMappedTypes(TreeLogger logger,
+            JClassType[] types) throws UnableToCompleteException {
+        Map<String, JClassType> mappings = new HashMap<String, JClassType>();
+
+        // Keep track of what has happened to avoid logging intermediate state
+        Map<JClassType, List<JClassType>> replaced = new HashMap<JClassType, List<JClassType>>();
+
+        for (JClassType type : types) {
+            Connect connectAnnotation = type.getAnnotation(Connect.class);
+            if (connectAnnotation == null) {
+                continue;
+            }
+
+            String identifier = connectAnnotation.value().getCanonicalName();
+
+            JClassType previousMapping = mappings.put(identifier, type);
+            if (previousMapping != null) {
+                // There are multiple mappings, pick the subclass
+                JClassType subclass;
+                JClassType superclass;
+                if (previousMapping.isAssignableFrom(type)) {
+                    subclass = type;
+                    superclass = previousMapping;
+                } else if (type.isAssignableFrom(previousMapping)) {
+                    subclass = previousMapping;
+                    superclass = type;
+                } else {
+                    // Neither inherits from the other - this is a conflict
+                    logger.log(
+                            Type.ERROR,
+                            "Conflicting @Connect mappings detected for "
+                                    + identifier
+                                    + ": "
+                                    + type.getQualifiedSourceName()
+                                    + " and "
+                                    + previousMapping.getQualifiedSourceName()
+                                    + ". There can only be multiple @Connect mappings for the same server-side type if one is the subclass of the other.");
+                    throw new UnableToCompleteException();
+                }
+
+                mappings.put(identifier, subclass);
+
+                // Inherit any previous replacements
+                List<JClassType> previousReplacements = replaced
+                        .remove(superclass);
+                if (previousReplacements == null) {
+                    previousReplacements = new ArrayList<JClassType>();
+                }
+
+                previousReplacements.add(superclass);
+                replaced.put(subclass, previousReplacements);
+            }
+        }
+
+        // Log the final set of replacements
+        for (Entry<JClassType, List<JClassType>> entry : replaced.entrySet()) {
+            String msg = entry.getKey().getQualifiedSourceName() + " replaces ";
+
+            List<JClassType> list = entry.getValue();
+            for (int i = 0; i < list.size(); i++) {
+                if (i != 0) {
+                    msg += ", ";
+                }
+                msg += list.get(i).getQualifiedSourceName();
+            }
+
+            logger.log(Type.INFO, msg);
+        }
+
+        // Return the types of the final mapping
+        return mappings.values();
     }
 
     private Collection<TypeVisitor> getVisitors(TypeOracle oracle)
