@@ -26,6 +26,7 @@ import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -179,7 +180,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     public class SuggestionPopup extends VOverlay implements PositionCallback,
             CloseHandler<PopupPanel> {
 
-        private static final String Z_INDEX = "30000";
+        private static final int Z_INDEX = 30000;
 
         protected final SuggestionMenu menu;
 
@@ -202,19 +203,22 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             super(true, false, true);
             menu = new SuggestionMenu();
             setWidget(menu);
-            setStyleName(CLASSNAME + "-suggestpopup");
-            DOM.setStyleAttribute(getElement(), "zIndex", Z_INDEX);
+
+            getElement().getStyle().setZIndex(Z_INDEX);
 
             final Element root = getContainerElement();
 
-            DOM.setInnerHTML(up, "<span>Prev</span>");
+            up.setInnerHTML("<span>Prev</span>");
             DOM.sinkEvents(up, Event.ONCLICK);
-            DOM.setInnerHTML(down, "<span>Next</span>");
+
+            down.setInnerHTML("<span>Next</span>");
             DOM.sinkEvents(down, Event.ONCLICK);
-            DOM.insertChild(root, up, 0);
-            DOM.appendChild(root, down);
-            DOM.appendChild(root, status);
-            DOM.setElementProperty(status, "className", CLASSNAME + "-status");
+
+            root.insertFirst(up);
+            root.appendChild(down);
+            root.appendChild(status);
+
+
             DOM.sinkEvents(root, Event.ONMOUSEDOWN | Event.ONMOUSEWHEEL);
             addCloseHandler(this);
         }
@@ -234,8 +238,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 int currentPage, int totalSuggestions) {
 
             // Add TT anchor point
-            DOM.setElementProperty(getElement(), "id",
-                    "VAADIN_COMBOBOX_OPTIONLIST");
+            getElement().setId("VAADIN_COMBOBOX_OPTIONLIST");
 
             menu.setSuggestions(currentSuggestions);
             final int x = VFilterSelect.this.getAbsoluteLeft();
@@ -253,10 +256,10 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             final int matches = totalSuggestions - nullOffset;
             if (last > 0) {
                 // nullsel not counted, as requested by user
-                DOM.setInnerText(status, (matches == 0 ? 0 : first) + "-"
-                        + last + "/" + matches);
+                status.setInnerText((matches == 0 ? 0 : first) + "-" + last
+                        + "/" + matches);
             } else {
-                DOM.setInnerText(status, "");
+                status.setInnerText("");
             }
             // We don't need to show arrows or statusbar if there is only one
             // page
@@ -270,8 +273,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
             // clear previously fixed width
             menu.setWidth("");
-            DOM.setStyleAttribute(DOM.getFirstChild(menu.getElement()),
-                    "width", "");
+            menu.getElement().getFirstChildElement().getStyle().clearWidth();
 
             setPopupPositionAndShow(this);
 
@@ -285,11 +287,11 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         private void setNextButtonActive(boolean active) {
             if (active) {
                 DOM.sinkEvents(down, Event.ONCLICK);
-                DOM.setElementProperty(down, "className", CLASSNAME
+                down.setClassName(VFilterSelect.this.getStylePrimaryName()
                         + "-nextpage");
             } else {
                 DOM.sinkEvents(down, 0);
-                DOM.setElementProperty(down, "className", CLASSNAME
+                down.setClassName(VFilterSelect.this.getStylePrimaryName()
                         + "-nextpage-off");
             }
         }
@@ -302,10 +304,11 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         private void setPrevButtonActive(boolean active) {
             if (active) {
                 DOM.sinkEvents(up, Event.ONCLICK);
-                DOM.setElementProperty(up, "className", CLASSNAME + "-prevpage");
+                up.setClassName(VFilterSelect.this.getStylePrimaryName()
+                        + "-prevpage");
             } else {
                 DOM.sinkEvents(up, 0);
-                DOM.setElementProperty(up, "className", CLASSNAME
+                up.setClassName(VFilterSelect.this.getStylePrimaryName()
                         + "-prevpage-off");
             }
 
@@ -452,13 +455,13 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 return;
             }
             if (paging) {
-                DOM.setStyleAttribute(down, "display", "");
-                DOM.setStyleAttribute(up, "display", "");
-                DOM.setStyleAttribute(status, "display", "");
+                down.getStyle().clearDisplay();
+                up.getStyle().clearDisplay();
+                status.getStyle().clearDisplay();
             } else {
-                DOM.setStyleAttribute(down, "display", "none");
-                DOM.setStyleAttribute(up, "display", "none");
-                DOM.setStyleAttribute(status, "display", "none");
+                down.getStyle().setDisplay(Display.NONE);
+                up.getStyle().setDisplay(Display.NONE);
+                status.getStyle().setDisplay(Display.NONE);
             }
             isPagingEnabled = paging;
         }
@@ -486,8 +489,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             offsetHeight = getOffsetHeight();
 
             final int desiredWidth = getMainWidth();
-            int naturalMenuWidth = DOM.getElementPropertyInt(
-                    DOM.getFirstChild(menu.getElement()), "offsetWidth");
+            Element menuFirstChild = menu.getElement().getFirstChildElement()
+                    .cast();
+            int naturalMenuWidth = menuFirstChild.getOffsetWidth();
 
             if (popupOuterPadding == -1) {
                 popupOuterPadding = Util.measureHorizontalPaddingAndBorder(
@@ -496,8 +500,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
             if (naturalMenuWidth < desiredWidth) {
                 menu.setWidth((desiredWidth - popupOuterPadding) + "px");
-                DOM.setStyleAttribute(DOM.getFirstChild(menu.getElement()),
-                        "width", "100%");
+                menuFirstChild.getStyle().setWidth(100, Unit.PCT);
                 naturalMenuWidth = desiredWidth;
             }
 
@@ -507,8 +510,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                  * element. Otherwise it will be 100% wide
                  */
                 int rootWidth = naturalMenuWidth - popupOuterPadding;
-                DOM.setStyleAttribute(getContainerElement(), "width", rootWidth
-                        + "px");
+                getContainerElement().getStyle().setWidth(rootWidth, Unit.PX);
             }
 
             if (offsetHeight + getPopupTop() > Window.getClientHeight()
@@ -531,8 +533,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             }
 
             // fetch real width (mac FF bugs here due GWT popups overflow:auto )
-            offsetWidth = DOM.getElementPropertyInt(
-                    DOM.getFirstChild(menu.getElement()), "offsetWidth");
+            offsetWidth = menuFirstChild.getOffsetWidth();
             if (offsetWidth + getPopupLeft() > Window.getClientWidth()
                     + Window.getScrollLeft()) {
                 left = VFilterSelect.this.getAbsoluteLeft()
@@ -581,7 +582,12 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          *            shared state of the combo box
          */
         public void updateStyleNames(UIDL uidl, ComponentState componentState) {
-            setStyleName(CLASSNAME + "-suggestpopup");
+            setStyleName(VFilterSelect.this.getStylePrimaryName()
+                    + "-suggestpopup");
+            menu.setStyleName(VFilterSelect.this.getStylePrimaryName()
+                    + "-suggestmenu");
+            status.setClassName(VFilterSelect.this.getStylePrimaryName()
+                    + "-status");
             if (ComponentStateUtil.hasStyles(componentState)) {
                 for (String style : componentState.styles) {
                     if (!"".equals(style)) {
@@ -614,9 +620,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                         if (suggestionPopup.isVisible()
                                 && suggestionPopup.isAttached()) {
                             setWidth("");
-                            DOM.setStyleAttribute(
-                                    DOM.getFirstChild(getElement()), "width",
-                                    "");
+                            getElement().getFirstChildElement().getStyle()
+                                    .clearWidth();
                             suggestionPopup
                                     .setPopupPositionAndShow(suggestionPopup);
                         }
@@ -629,7 +634,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          */
         SuggestionMenu() {
             super(true);
-            setStyleName(CLASSNAME + "-suggestmenu");
             addDomHandler(this, LoadEvent.getType());
         }
 
@@ -981,15 +985,34 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         panel.add(tb);
         panel.add(popupOpener);
         initWidget(panel);
-        setStyleName(CLASSNAME);
         tb.addKeyDownHandler(this);
         tb.addKeyUpHandler(this);
-        tb.setStyleName(CLASSNAME + "-input");
+
         tb.addFocusHandler(this);
         tb.addBlurHandler(this);
         tb.addClickHandler(this);
-        popupOpener.setStyleName(CLASSNAME + "-button");
+
         popupOpener.addClickHandler(this);
+
+        setStyleName(CLASSNAME);
+    }
+
+    @Override
+    public void setStyleName(String style) {
+        super.setStyleName(style);
+        updateStyleNames();
+    }
+
+    @Override
+    public void setStylePrimaryName(String style) {
+        super.setStylePrimaryName(style);
+        updateStyleNames();
+    }
+
+    protected void updateStyleNames() {
+        tb.setStyleName(getStylePrimaryName() + "-input");
+        popupOpener.setStyleName(getStylePrimaryName() + "-button");
+        suggestionPopup.setStyleName(getStylePrimaryName() + "-suggestpopup");
     }
 
     /**
