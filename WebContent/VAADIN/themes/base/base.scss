@@ -10,6 +10,7 @@
 @import "customcomponent/customcomponent.scss";
 @import "customlayout/customlayout.scss";
 @import "datefield/datefield.scss";
+@import "inlinedatefield/inlinedatefield.scss";
 @import "dragwrapper/dragwrapper.scss";
 @import "embedded/embedded.scss";
 @import "formlayout/formlayout.scss";
@@ -60,6 +61,7 @@
 	@include base-customcomponent;
 	@include base-customlayout;
 	@include base-datefield;
+	@include base-inline-datefield;
 	@include base-dragwrapper;
 	@include base-embedded;
 	@include base-formlayout;

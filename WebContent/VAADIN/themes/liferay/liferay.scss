@@ -7,6 +7,7 @@
 
 @import "contextmenu/contextmenu.scss";
 @import "datefield/datefield.scss";
+@import "inlinedatefield/inlinedatefield.scss";
 @import "formlayout/formlayout.scss";
 @import "menubar/menubar.scss";
 @import "notification/notification.scss";
@@ -32,6 +33,7 @@
 	@include liferay-common;
 	@include liferay-contextmenu;
 	@include liferay-datefield;
+	@include liferay-inlinedatefield;
 	@include liferay-formlayout;
 	@include liferay-menubar;
 	@include liferay-notification;

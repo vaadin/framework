@@ -55,10 +55,7 @@ import com.vaadin.shared.ui.datefield.Resolution;
 public class VPopupCalendar extends VTextualDate implements Field,
         ClickHandler, CloseHandler<PopupPanel>, SubPartAware {
 
-    protected static final String POPUP_PRIMARY_STYLE_NAME = VDateField.CLASSNAME
-            + "-popup";
-
-    protected final Button calendarToggle;
+    protected final Button calendarToggle = new Button();
 
     protected VCalendarPanel calendar;
 
@@ -69,8 +66,6 @@ public class VPopupCalendar extends VTextualDate implements Field,
     public VPopupCalendar() {
         super();
 
-        calendarToggle = new Button();
-        calendarToggle.setStyleName(CLASSNAME + "-button");
         calendarToggle.setText("");
         calendarToggle.addClickHandler(this);
         // -2 instead of -1 to avoid FocusWidget.onAttach to reset it
@@ -78,6 +73,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
         add(calendarToggle);
 
         calendar = GWT.create(VCalendarPanel.class);
+        calendar.setParentField(this);
         calendar.setFocusOutListener(new FocusOutListener() {
             @Override
             public boolean onFocusOut(DomEvent<?> event) {
@@ -106,7 +102,6 @@ public class VPopupCalendar extends VTextualDate implements Field,
         });
 
         popup = new VOverlay(true, true, true);
-        popup.setStyleName(POPUP_PRIMARY_STYLE_NAME);
         popup.setWidget(calendar);
         popup.addCloseHandler(this);
 
@@ -115,6 +110,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
 
         sinkEvents(Event.ONKEYDOWN);
 
+        updateStyleNames();
     }
 
     @SuppressWarnings("deprecation")
@@ -163,8 +159,26 @@ public class VPopupCalendar extends VTextualDate implements Field,
      */
     @Override
     public void setStyleName(String style) {
-        // make sure the style is there before size calculation
-        super.setStyleName(style + " " + CLASSNAME + "-popupcalendar");
+        super.setStyleName(style);
+        updateStyleNames();
+    }
+
+    @Override
+    public void setStylePrimaryName(String style) {
+        removeStyleName(getStylePrimaryName() + "-popupcalendar");
+        super.setStylePrimaryName(style);
+        updateStyleNames();
+    }
+
+    @Override
+    protected void updateStyleNames() {
+        super.updateStyleNames();
+        if (getStylePrimaryName() != null && calendarToggle != null) {
+            addStyleName(getStylePrimaryName() + "-popupcalendar");
+            calendarToggle.setStyleName(getStylePrimaryName() + "-button");
+            popup.setStyleName(getStylePrimaryName() + "-popup");
+            calendar.setStyleName(getStylePrimaryName() + "-calendarpanel");
+        }
     }
 
     /**

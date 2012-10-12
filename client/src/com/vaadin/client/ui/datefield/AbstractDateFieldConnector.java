@@ -80,7 +80,7 @@ public class AbstractDateFieldConnector extends AbstractFieldConnector
 
         // Remove old stylename that indicates current resolution
         setWidgetStyleName(
-                VDateField.CLASSNAME
+                getWidget().getStylePrimaryName()
                         + "-"
                         + VDateField
                                 .resolutionToString(getWidget().currentResolution),
@@ -90,7 +90,7 @@ public class AbstractDateFieldConnector extends AbstractFieldConnector
 
         // Add stylename that indicates current resolution
         setWidgetStyleName(
-                VDateField.CLASSNAME
+                getWidget().getStylePrimaryName()
                         + "-"
                         + VDateField
                                 .resolutionToString(getWidget().currentResolution),
