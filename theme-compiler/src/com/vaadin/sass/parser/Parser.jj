@@ -679,6 +679,8 @@ TOKEN :
 TOKEN :
 {
   	< REMOVE : "remove" (< S >)? "(" >
+    | < APPEND : "append" (< S >)? "(" >
+  	| < CONTAINS : "contains" (< S >)? "(" >
 }
 
 <DEFAULT>
@@ -740,7 +742,7 @@ void afterImportDeclaration() :
 }
 {
   ( 
-     ( (LOOKAHEAD(5)removeDirective()|variable()) | mixinDirective()| eachDirective() | includeDirective() | styleRule() | media()| page() | fontFace() 
+     ( (LOOKAHEAD(5)listModifyDirective()|variable()) | ifDirective()|mixinDirective()| eachDirective() | includeDirective() | styleRule() | media()| page() | fontFace() 
       | { l = getLocator(); } ret=skipStatement() 
       {
 	  if ((ret == null) || (ret.length() == 0)) {
@@ -1054,7 +1056,7 @@ void styleRule() :
 	 start = true;
 	 documentHandler.startSelector(l);
      }
-     ( ifDirective() | LOOKAHEAD(5)removeDirective() | includeDirective() | media() | extendDirective()| eachDirective() | variable() | LOOKAHEAD(3) (microsoftExtension()|declarationOrNestedProperties()) | styleRule())*
+     ( ifDirective() | LOOKAHEAD(5)listModifyDirective() | includeDirective() | media() | extendDirective()| eachDirective() | variable() | LOOKAHEAD(3) (microsoftExtension()|declarationOrNestedProperties()) | styleRule())*
      <RBRACE> (<S>)*
  } catch (ThrowedParseException e) {
      if (errorHandler != null) {
@@ -1442,7 +1444,7 @@ Token booleanExpressionToken() :
    |n = < OR >
    |n = < AND >
    |n = < S >
-   |n = < NOT_EQ >
+   |n = < NOT_EQ > 
 ){
    return n;
  }
@@ -1464,7 +1466,7 @@ void eachDirective() :
   {documentHandler.startEachDirective(var.image, listVariable);}
   )
   < LBRACE >(< S >)*
-  ( includeDirective() | LOOKAHEAD(5)removeDirective() | media() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*	  
+  ( includeDirective() | LOOKAHEAD(5)listModifyDirective() | media() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*	  
   < RBRACE >(< S >)*
   { documentHandler.endEachDirective();}
 }
@@ -1496,7 +1498,7 @@ void mixinDirective() :
     |(name = functionName() 
       args = arglist()) <RPARAN> (<S>)*) <LBRACE> (<S>)*
     {documentHandler.startMixinDirective(name, args);}
-    ( includeDirective() | media() | eachDirective() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*
+    ( includeDirective() | media() | LOOKAHEAD(5)listModifyDirective()|eachDirective() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*
     <RBRACE>(<S>)*
     {documentHandler.endMixinDirective(name, args);}
 }
@@ -1580,6 +1582,37 @@ void includeDirective() :
            {documentHandler.includeDirective(name, args);}
 }
 
+
+void listModifyDirective() :{
+}
+{
+LOOKAHEAD(5)removeDirective()|LOOKAHEAD(5)appendDirective()|LOOKAHEAD(5)containsDirective()
+}
+
+
+/**
+ * @exception ParseException exception during the parse
+ */
+void appendDirective() :
+{
+	String list = null;
+	String remove = null;
+	String separator = null;
+	String variable = null;
+	Token n = null;
+}
+{
+  n = < VARIABLE >{ variable = n.image; }(< S >)* ":" (< S >)*
+  < APPEND >(< S >)*
+  (list = listModifyDirectiveArgs(0))
+  (< RPARAN >)? < COMMA >(< S >)*
+  (remove = listModifyDirectiveArgs(1))
+  ( < COMMA >(< S >)* n = < IDENT >{ separator = n.image; } (< S >)*)?
+  < RPARAN >(< S >)* < SEMICOLON >(< S >)*
+
+  { documentHandler.appendDirective(variable,list,remove,separator); }
+}
+
 /**
  * @exception ParseException exception during the parse
  */
@@ -1592,17 +1625,40 @@ void removeDirective() :{	String list = null;
 {
   n = < VARIABLE >{ variable = n.image; }(< S >)* ":" (< S >)*
   < REMOVE >(< S >)*
-  (list = removeDirectiveArgs(0))
+  (list = listModifyDirectiveArgs(0))
   (< RPARAN >)? < COMMA >(< S >)*
-  (remove = removeDirectiveArgs(1))
+  (remove = listModifyDirectiveArgs(1))
   ( < COMMA >(< S >)* n = < IDENT >{ separator = n.image; } (< S >)*)?
   < RPARAN >(< S >)* < SEMICOLON >(< S >)*
 
   { documentHandler.removeDirective(variable,list,remove,separator); }
 }
 
+/**
+ * @exception ParseException exception during the parse
+ */
+void containsDirective() :
+{
+	String list = null;
+	String remove = null;
+	String separator = null;
+	String variable = null;
+	Token n = null;
+}
+{
+  n = < VARIABLE >{ variable = n.image; }(< S >)* ":" (< S >)*
+  < CONTAINS >(< S >)*
+  (list = listModifyDirectiveArgs(0))
+  (< RPARAN >)? < COMMA >(< S >)*
+  (remove = listModifyDirectiveArgs(1))
+  ( < COMMA >(< S >)* n = < IDENT >{ separator = n.image; } (< S >)*)?
+  < RPARAN >(< S >)* < SEMICOLON >(< S >)*
+
+  { documentHandler.containsDirective(variable,list,remove,separator); }
+}
+
 JAVACODE
-String removeDirectiveArgs(int nest){
+String listModifyDirectiveArgs(int nest){
   	String list = "";
 	int nesting = nest;
 	Token t = null;
@@ -1947,6 +2003,7 @@ LexicalUnitImpl nonVariableTerm(LexicalUnitImpl prev) :{LexicalUnitImpl result
   Token n = null;
   char op = ' ';
   String varName;
+  String s = "";
 }
 {
 ( ( ( op=unaryOperator() )?
@@ -2004,7 +2061,7 @@ LexicalUnitImpl nonVariableTerm(LexicalUnitImpl prev) :{LexicalUnitImpl result
 					     prev, number(op, n, 3)); }
     | n=<DIMEN>
 	{
-	    String s = n.image;
+	    s = n.image;
 	    int i = 0;
 	    while (i < s.length() 
 		   && (Character.isDigit(s.charAt(i)) || (s.charAt(i) == '.'))) {
@@ -2020,8 +2077,8 @@ LexicalUnitImpl nonVariableTerm(LexicalUnitImpl prev) :{LexicalUnitImpl result
 	  LexicalUnitImpl.createString(n.beginLine, n.beginColumn, prev,
 				       convertStringIndex(n.image, 1, 
 							  n.image.length() -1));}
-       | n=<IDENT> 
-      { String s = convertIdent(n.image);
+       | (< DOT >{ s+="."; })?n=<IDENT> 
+      { s += convertIdent(n.image);
 	if ("inherit".equals(s)) {
 	    result = LexicalUnitImpl.createInherit(n.beginLine, n.beginColumn,
 					       prev);

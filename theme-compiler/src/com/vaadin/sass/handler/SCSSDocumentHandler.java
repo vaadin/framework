@@ -82,4 +82,10 @@ public interface SCSSDocumentHandler extends DocumentHandler {
     void removeDirective(String variable, String list, String remove,
             String separator);
 
+    void appendDirective(String variable, String list, String remove,
+            String separator);
+
+    void containsDirective(String variable, String list, String contains,
+            String separator);
+
 }

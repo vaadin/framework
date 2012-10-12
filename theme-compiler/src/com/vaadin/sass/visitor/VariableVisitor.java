@@ -70,15 +70,15 @@ public class VariableVisitor implements Visitor {
 
                 ListModifyNode modify = (ListModifyNode) node;
 
-                String variable = modify.getNewVariable().substring(1,
-                        modify.getNewVariable().length());
+                String variable = modify.getNewVariable().substring(1);
 
-                VariableNode modifiedList = modify
-                        .getModifiedList(this.variables.get(modify
-                                .getModifyingList()));
-                modifiedList.setName(variable);
-                this.variables.put(variable, modifiedList);
+                try {
+                    VariableNode modifiedList = modify.getModifiedList();
 
+                    this.variables.put(variable, modifiedList);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (node instanceof IVariableNode) {
                 ((IVariableNode) node)
                         .replaceVariables(new ArrayList<VariableNode>(
