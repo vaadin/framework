@@ -114,7 +114,8 @@ public abstract class UI extends AbstractComponentContainer implements
          *            the caption of the window
          */
         public LegacyWindow(String caption) {
-            super(caption);
+            super();
+            setCaption(caption);
         }
 
         /**
@@ -124,7 +125,8 @@ public abstract class UI extends AbstractComponentContainer implements
          * @param content
          */
         public LegacyWindow(String caption, ComponentContainer content) {
-            super(caption, content);
+            super(content);
+            setCaption(caption);
         }
 
         @Override
@@ -528,38 +530,6 @@ public abstract class UI extends AbstractComponentContainer implements
         registerRpc(rpc);
         setSizeFull();
         setContent(content);
-    }
-
-    /**
-     * Creates a new empty UI with the given caption. This UI will have a
-     * {@link VerticalLayout} with margins enabled as its content.
-     * 
-     * @param caption
-     *            the caption of the UI, used as the page title if there's
-     *            nothing but the application on the web page
-     * 
-     * @see #setCaption(String)
-     */
-    public UI(String caption) {
-        this((ComponentContainer) null);
-        setCaption(caption);
-    }
-
-    /**
-     * Creates a new UI with the given caption and content.
-     * 
-     * @param caption
-     *            the caption of the UI, used as the page title if there's
-     *            nothing but the application on the web page
-     * @param content
-     *            the content container to use as this UIs content.
-     * 
-     * @see #setContent(ComponentContainer)
-     * @see #setCaption(String)
-     */
-    public UI(String caption, ComponentContainer content) {
-        this(content);
-        setCaption(caption);
     }
 
     @Override
@@ -1219,7 +1189,7 @@ public abstract class UI extends AbstractComponentContainer implements
     @Override
     @Deprecated
     public void setCaption(String caption) {
-        throw new IllegalStateException(
+        throw new UnsupportedOperationException(
                 "You can not set the title of a UI. To set the title of the HTML page, use Page.setTitle");
     }
 
