@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -39,8 +39,8 @@ import com.vaadin.shared.ui.datefield.Resolution;
 public class VTextualDate extends VDateField implements Field, ChangeHandler,
         Focusable, SubPartAware {
 
-    private static final String PARSE_ERROR_CLASSNAME = CLASSNAME
-            + "-parseerror";
+    // private static final String PARSE_ERROR_CLASSNAME = CLASSNAME
+    // + "-parseerror";
 
     protected final TextBox text;
 
@@ -54,13 +54,8 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
     private boolean prompting = false;
 
     public VTextualDate() {
-
         super();
         text = new TextBox();
-        // use normal textfield styles as a basis
-        text.setStyleName(VTextField.CLASSNAME);
-        // add datefield spesific style name also
-        text.addStyleName(CLASSNAME + "-textfield");
         text.addChangeHandler(this);
         text.addFocusHandler(new FocusHandler() {
             @Override
@@ -98,6 +93,13 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
             }
         });
         add(text);
+    }
+
+    protected void updateStyleNames() {
+        if (text != null) {
+            text.setStyleName(VTextField.CLASSNAME);
+            text.addStyleName(getStylePrimaryName() + "-textfield");
+        }
     }
 
     protected String getFormatString() {
@@ -153,7 +155,7 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
      * is what usually is needed except for updateFromUIDL.
      */
     protected void buildDate() {
-        removeStyleName(PARSE_ERROR_CLASSNAME);
+        removeStyleName(getStylePrimaryName() + "-parseerror");
         // Create the initial text for the textfield
         String dateText;
         Date currentDate = getDate();
@@ -206,11 +208,11 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
                 }
 
                 // remove possibly added invalid value indication
-                removeStyleName(PARSE_ERROR_CLASSNAME);
+                removeStyleName(getStylePrimaryName() + "-parseerror");
             } catch (final Exception e) {
                 VConsole.log(e);
 
-                addStyleName(PARSE_ERROR_CLASSNAME);
+                addStyleName(getStylePrimaryName() + "-parseerror");
                 // this is a hack that may eventually be removed
                 getClient().updateVariable(getId(), "lastInvalidDateString",
                         text.getText(), false);
@@ -219,7 +221,7 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
         } else {
             setDate(null);
             // remove possibly added invalid value indication
-            removeStyleName(PARSE_ERROR_CLASSNAME);
+            removeStyleName(getStylePrimaryName() + "-parseerror");
         }
         // always send the date string
         getClient()

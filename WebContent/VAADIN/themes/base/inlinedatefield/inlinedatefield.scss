@@ -1,0 +1,5 @@
+@mixin base-inline-datefield($name : v-inline-datefield){
+        
+    /* FIXME $name should be passed to the the mixing instead of the default. Fix when SASS compiler works. #9821 */
+    @include base-datefield(v-inline-datefield);
+}
