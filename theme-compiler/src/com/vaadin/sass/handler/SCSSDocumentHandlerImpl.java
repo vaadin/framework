@@ -34,6 +34,8 @@ import com.vaadin.sass.tree.ExtendNode;
 import com.vaadin.sass.tree.FontFaceNode;
 import com.vaadin.sass.tree.ForNode;
 import com.vaadin.sass.tree.ImportNode;
+import com.vaadin.sass.tree.ListAppendNode;
+import com.vaadin.sass.tree.ListContainsNode;
 import com.vaadin.sass.tree.ListRemoveNode;
 import com.vaadin.sass.tree.MediaNode;
 import com.vaadin.sass.tree.MicrosoftRuleNode;
@@ -307,6 +309,22 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
     public void removeDirective(String variable, String list, String remove,
             String separator) {
         ListRemoveNode node = new ListRemoveNode(variable, list, remove,
+                separator);
+        nodeStack.peek().appendChild(node);
+    }
+
+    @Override
+    public void appendDirective(String variable, String list, String append,
+            String separator) {
+        ListAppendNode node = new ListAppendNode(variable, list, append,
+                separator);
+        nodeStack.peek().appendChild(node);
+    }
+
+    @Override
+    public void containsDirective(String variable, String list,
+            String contains, String separator) {
+        ListContainsNode node = new ListContainsNode(variable, list, contains,
                 separator);
         nodeStack.peek().appendChild(node);
     }

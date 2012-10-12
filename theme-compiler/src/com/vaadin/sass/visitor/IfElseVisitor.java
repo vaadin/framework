@@ -42,12 +42,21 @@ public class IfElseVisitor implements Visitor {
                         expression = replaceStrings(expression);
                         Expression e = evaluator.createExpression(expression);
                         try {
-                            Boolean result = (Boolean) e.evaluate(null);
+                            Object eval = e.evaluate(null);
+
+                            Boolean result = false;
+                            if (eval instanceof Boolean) {
+                                result = (Boolean) eval;
+                            } else if (eval instanceof String) {
+                                result = Boolean.valueOf((String) eval);
+                            }
+
                             if (result) {
                                 replaceDefNodeWithCorrectChild(defNode, parent,
                                         child);
                                 break;
                             }
+                            System.out.println();
                         } catch (ClassCastException ex) {
                             throw new ParseException(
                                     "Invalid @if/@else in scss file, not a boolean expression : "
@@ -81,13 +90,14 @@ public class IfElseVisitor implements Visitor {
     }
 
     private String replaceStrings(String expression) {
+        expression = expression.replaceAll("\"", "");
         Matcher m = pattern.matcher(expression);
         StringBuffer b = new StringBuffer();
         while (m.find()) {
             String group = m.group();
             m.appendReplacement(b, "'" + group + "'");
         }
-
+        m.appendTail(b);
         if (b.length() != 0) {
             return b.toString();
         }
