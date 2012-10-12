@@ -70,7 +70,9 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
         // When we click to open the popup...
         addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
-                updateState(true);
+                if (!popup.isAttached()) {
+                    updateState(true);
+                }
             }
         });
 
