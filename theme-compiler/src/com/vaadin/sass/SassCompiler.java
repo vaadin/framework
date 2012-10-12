@@ -36,6 +36,7 @@ public class SassCompiler {
             output = args[1];
         }
 
+        // You can set the resolver; if none is set, VaadinResolver will be used
         // ScssStylesheet.setStylesheetResolvers(new VaadinResolver());
 
         ScssStylesheet scss = ScssStylesheet.get(input);
