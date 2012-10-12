@@ -21,6 +21,10 @@ import java.util.Iterator;
 
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -75,16 +79,17 @@ public class VCustomLayout extends ComplexPanel {
     public VCustomLayout() {
         setElement(DOM.createDiv());
         // Clear any unwanted styling
-        DOM.setStyleAttribute(getElement(), "border", "none");
-        DOM.setStyleAttribute(getElement(), "margin", "0");
-        DOM.setStyleAttribute(getElement(), "padding", "0");
+        Style style = getElement().getStyle();
+        style.setBorderStyle(BorderStyle.NONE);
+        style.setMargin(0, Unit.PX);
+        style.setPadding(0, Unit.PX);
 
         if (BrowserInfo.get().isIE()) {
-            DOM.setStyleAttribute(getElement(), "position", "relative");
+            style.setPosition(Position.RELATIVE);
         }
 
-        setStyleName(StyleConstants.UI_LAYOUT);
-        addStyleName(CLASSNAME);
+        setStyleName(CLASSNAME);
+        addStyleName(StyleConstants.UI_LAYOUT);
     }
 
     /**
