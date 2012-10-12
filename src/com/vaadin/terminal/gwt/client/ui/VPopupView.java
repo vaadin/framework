@@ -70,6 +70,8 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
         // When we click to open the popup...
         addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
+                // Reopening the popup while the close animation is running
+                // causes a race condition in PopupPanel code (#8786)
                 if (!popup.isAttached()) {
                     updateState(true);
                 }
