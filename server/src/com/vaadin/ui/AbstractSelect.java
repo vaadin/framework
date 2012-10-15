@@ -1858,6 +1858,15 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                 break;
 
             }
+            if (getItemIconPropertyId() != null) {
+                final Property p = getContainerProperty(itemId,
+                        getItemIconPropertyId());
+                if (p != null && p instanceof Property.ValueChangeNotifier) {
+                    ((Property.ValueChangeNotifier) p)
+                            .addListener(getCaptionChangeListener());
+                    captionChangeNotifiers.add(p);
+                }
+            }
         }
 
         public void clear() {
