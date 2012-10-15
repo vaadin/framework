@@ -2430,7 +2430,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
             response.setContentType("application/json; charset=UTF-8");
 
-            UI uI = getBrowserDetailsUI(request);
+            UI uI = getBrowserDetailsUI(request, session);
 
             JSONObject params = new JSONObject();
             params.put(UIConstants.UI_ID_PARAMETER, uI.getUIId());
@@ -2456,10 +2456,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
     }
 
-    private UI getBrowserDetailsUI(VaadinRequest request) {
+    private UI getBrowserDetailsUI(VaadinRequest request,
+            VaadinServiceSession session) {
         VaadinService vaadinService = request.getService();
-        VaadinServiceSession session = VaadinServiceSession.getForSession(
-                vaadinService, request.getWrappedSession());
 
         List<UIProvider> uiProviders = session.getUIProviders();
 
