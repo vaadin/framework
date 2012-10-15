@@ -830,6 +830,10 @@ div.v-app-loading {
 	width: 200px;
 }
 
+.v-app-loginpage .v-button, .v-app-loginpage .v-button {
+	float: left;
+}
+
 .v-menubar {
 	float: left;
 	white-space: nowrap;
