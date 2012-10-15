@@ -18,10 +18,7 @@ package com.vaadin.sass.tree;
 
 import java.util.ArrayList;
 
-import org.w3c.css.sac.LexicalUnit;
-
 import com.vaadin.sass.parser.LexicalUnitImpl;
-import com.vaadin.sass.util.DeepCopy;
 
 public class VariableNode extends Node implements IVariableNode {
     private static final long serialVersionUID = 7003372557547748734L;
@@ -73,23 +70,26 @@ public class VariableNode extends Node implements IVariableNode {
         for (final VariableNode node : variables) {
             if (!equals(node)) {
 
-                if (name.equals(node.getName())) {
-                    expr = (LexicalUnitImpl) DeepCopy.copy(node.getExpr());
-                    guarded = node.isGuarded();
-                    continue;
-                }
-
-                LexicalUnit current = expr;
-                while (current != null) {
-                    if (current.toString().contains(node.getName())) {
-                        ((LexicalUnitImpl) current)
-                                .replaceValue(node.getExpr());
+                if (expr.toString().contains("$" + node.getName())) {
+                    if (expr.getParameters() != null
+                            && expr.getParameters().toString()
+                                    .contains("$" + node.getName())) {
+                        replaceValues(expr.getParameters(), node);
                     }
-
-                    current = current.getNextLexicalUnit();
                 }
-
             }
+        }
+    }
+
+    private void replaceValues(LexicalUnitImpl unit, VariableNode node) {
+        while (unit != null) {
+
+            if (unit.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE
+                    && unit.getValue().toString().equals(node.getName())) {
+                LexicalUnitImpl.replaceValues(unit, node.getExpr());
+            }
+
+            unit = unit.getNextLexicalUnit();
         }
     }
 }
