@@ -54,8 +54,14 @@ public class VariableVisitor implements Visitor {
                 this.variables.values());
 
         for (Node node : children) {
-            if (node instanceof VariableNode) {
 
+            if (node instanceof IVariableNode) {
+                ((IVariableNode) node)
+                        .replaceVariables(new ArrayList<VariableNode>(
+                                this.variables.values()));
+            }
+
+            if (node instanceof VariableNode) {
                 VariableNode variableNode = (VariableNode) node;
                 if (this.variables.containsKey(variableNode.getName())
                         && variableNode.isGuarded()) {
@@ -63,10 +69,6 @@ public class VariableVisitor implements Visitor {
                 }
                 this.variables.put(variableNode.getName(), variableNode);
             } else if (node instanceof ListModifyNode) {
-
-                ((IVariableNode) node)
-                        .replaceVariables(new ArrayList<VariableNode>(
-                                this.variables.values()));
 
                 ListModifyNode modify = (ListModifyNode) node;
 
@@ -79,10 +81,6 @@ public class VariableVisitor implements Visitor {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            } else if (node instanceof IVariableNode) {
-                ((IVariableNode) node)
-                        .replaceVariables(new ArrayList<VariableNode>(
-                                this.variables.values()));
             }
 
             replaceVariables(node, node.getChildren());
