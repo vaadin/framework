@@ -66,7 +66,7 @@ public class EachVisitor implements Visitor {
 
             last = child;
         }
-        rootNode.removeChild(defNode);
+        parent.removeChild(defNode);
     }
 
 }
