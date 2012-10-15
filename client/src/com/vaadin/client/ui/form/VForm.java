@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -62,16 +62,35 @@ public class VForm extends ComplexPanel implements KeyDownHandler {
         setStyleName(CLASSNAME);
         fieldSet.appendChild(legend);
         legend.appendChild(caption);
-        desc.setClassName("v-form-description");
+
         fieldSet.appendChild(desc); // Adding description for initial padding
                                     // measurements, removed later if no
                                     // description is set
-        fieldContainer.setClassName(CLASSNAME + "-content");
+
         fieldSet.appendChild(fieldContainer);
         errorMessage.setVisible(false);
-        errorMessage.setStyleName(CLASSNAME + "-errormessage");
+
         fieldSet.appendChild(errorMessage.getElement());
         fieldSet.appendChild(footerContainer);
+    }
+
+    @Override
+    public void setStyleName(String style) {
+        super.setStyleName(style);
+        updateStyleNames();
+    }
+
+    @Override
+    public void setStylePrimaryName(String style) {
+        super.setStylePrimaryName(style);
+        updateStyleNames();
+    }
+
+    protected void updateStyleNames() {
+        fieldContainer.setClassName(getStylePrimaryName() + "-content");
+        errorMessage.setStyleName(getStylePrimaryName() + "-errormessage");
+        desc.setClassName(getStylePrimaryName() + "-description");
+        footerContainer.setClassName(getStylePrimaryName() + "-footer");
     }
 
     @Override
