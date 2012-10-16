@@ -1880,6 +1880,10 @@ public class ApplicationConnection {
                             // TODO This could probably be optimized
                             if (!newChildren.contains(oldChild)) {
                                 oldChild.setParent(null);
+                                for (ServerConnector child : oldChild
+                                        .getChildren()) {
+                                    generateHierarchyEventsForRemovedChildren(oldChild, child, events);
+                                }
                             }
                         }
                     } catch (final Throwable e) {
@@ -1888,6 +1892,36 @@ public class ApplicationConnection {
                 }
                 return events;
 
+            }
+            
+            private void generateHierarchyEventsForRemovedChildren(ServerConnector root,
+                    ServerConnector child,
+                    List<ConnectorHierarchyChangeEvent> events) {
+                if (child instanceof ComponentContainerConnector) {
+                    for (ServerConnector c : child.getChildren()) {
+                        generateHierarchyEventsForRemovedChildren(root, c, events);
+                    }
+
+                    /*
+                     * Remove children from container so layout can do cleanup
+                     * in its hierarchy change listener
+                     */
+                    ((ComponentContainerConnector) child)
+                            .setChildren(new LinkedList<ServerConnector>());
+
+                    child.setParent(null);
+
+                    /*
+                     * Create a artificial hierarchy event for the layout to
+                     * process
+                     */
+                    ConnectorHierarchyChangeEvent event = GWT
+                            .create(ConnectorHierarchyChangeEvent.class);
+                    event.setConnector(child);
+                    event.setOldChildren(((ComponentContainerConnector) child)
+                            .getChildComponents());
+                    events.add(event);
+                }
             }
 
             private void handleRpcInvocations(ValueMap json) {
