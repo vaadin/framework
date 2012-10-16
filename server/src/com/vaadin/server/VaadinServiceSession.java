@@ -1036,4 +1036,24 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
         return service;
     }
 
+    /**
+     * Closes this session and discards all associated UI state. After the
+     * session has been discarded, any UIs that have been left open will give an
+     * Out of sync error ({@link SystemMessages#getOutOfSyncCaption()}) error
+     * and a new session will be created for serving new UIs.
+     * <p>
+     * To avoid causing out of sync errors, you should typically redirect to
+     * some other page using {@link Page#setLocation(String)} to make the
+     * browser unload the invalidated UI.
+     * <p>
+     * This method is just a shorthand to
+     * {@link VaadinService#closeSession(VaadinServiceSession)}
+     * 
+     * @see VaadinService#closeSession(VaadinServiceSession)
+     * 
+     */
+    public void close() {
+        getService().closeSession(this);
+    }
+
 }

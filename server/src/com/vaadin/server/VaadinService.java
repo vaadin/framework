@@ -737,4 +737,22 @@ public abstract class VaadinService implements Serializable {
      */
     public abstract String getMainDivId(VaadinServiceSession session,
             VaadinRequest request, Class<? extends UI> uiClass);
+
+    /**
+     * Closes the VaadinServiceSession and discards all associated UI state.
+     * After the session has been discarded, any UIs that have been left open
+     * will give an Out of sync error (
+     * {@link SystemMessages#getOutOfSyncCaption()}) error and a new session
+     * will be created for serving new UIs.
+     * <p>
+     * To avoid causing out of sync errors, you should typically redirect to
+     * some other page using {@link Page#setLocation(String)} to make the
+     * browser unload the invalidated UI.
+     * 
+     * @param session
+     *            the session to close
+     */
+    public void closeSession(VaadinServiceSession session) {
+        session.removeFromSession(this);
+    }
 }
