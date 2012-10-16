@@ -111,7 +111,8 @@ class ServletPortletHelper implements Serializable {
     }
 
     public static boolean isAppRequest(VaadinRequest request) {
-        return hasPathPrefix(request, ApplicationConstants.APP_REQUEST_PATH);
+        return hasPathPrefix(request,
+                ApplicationConstants.APP_REQUEST_PATH + '/');
     }
 
     public static boolean isHeartbeatRequest(VaadinRequest request) {

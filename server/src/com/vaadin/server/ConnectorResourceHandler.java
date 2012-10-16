@@ -14,7 +14,7 @@ import com.vaadin.ui.UI;
 public class ConnectorResourceHandler implements RequestHandler {
     // APP/connector/[uiid]/[cid]/[filename.xyz]
     private static final Pattern CONNECTOR_RESOURCE_PATTERN = Pattern
-            .compile("^/?" + ApplicationConstants.APP_REQUEST_PATH
+            .compile("^/?" + ApplicationConstants.APP_REQUEST_PATH + '/'
                     + ConnectorResource.CONNECTOR_REQUEST_PATH
                     + "(\\d+)/(\\d+)/(.*)");
 
@@ -62,6 +62,15 @@ public class ConnectorResourceHandler implements RequestHandler {
             }
 
             return true;
+        } else if (requestPath.matches('/'
+                + ApplicationConstants.APP_REQUEST_PATH + "(/.*)?")) {
+            /*
+             * This should be the last request handler before we get to
+             * bootstrap logic. Prevent /APP requests from reaching bootstrap
+             * handlers to help protect the /APP name space for framework usage.
+             */
+            return error(request, response,
+                    "Returning 404 for /APP request not yet handled.");
         } else {
             return false;
         }

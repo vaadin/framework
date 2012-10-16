@@ -103,7 +103,7 @@ public class ResourceReference extends URLReference {
     private static String getConnectorResourceBase(String filename,
             ClientConnector connector) {
         String uri = ApplicationConstants.APP_PROTOCOL_PREFIX
-                + ApplicationConstants.APP_REQUEST_PATH
+                + ApplicationConstants.APP_REQUEST_PATH + '/'
                 + ConnectorResource.CONNECTOR_REQUEST_PATH
                 + connector.getUI().getUIId() + '/'
                 + connector.getConnectorId() + '/' + encodeFileName(filename);
