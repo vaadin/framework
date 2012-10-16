@@ -38,9 +38,26 @@ public class VListSelect extends VOptionGroupBase {
         super(new ListBox(true), CLASSNAME);
         select = getOptionsContainer();
         select.addChangeHandler(this);
-        select.addClickHandler(this);
-        select.setStyleName(CLASSNAME + "-select");
-        select.setVisibleItemCount(VISIBLE_COUNT);
+        select.addClickHandler(this);       
+        select.setVisibleItemCount(VISIBLE_COUNT);        
+        setStyleName(CLASSNAME_OPTION);
+    }
+
+    @Override
+    public void setStyleName(String style) {
+        super.setStyleName(style);
+        updateStyleNames();
+    }
+
+    @Override
+    public void setStylePrimaryName(String style) {
+        super.setStylePrimaryName(style);
+        updateStyleNames();
+    }
+
+    protected void updateStyleNames() {
+        container.setStyleName(getStylePrimaryName());
+        select.setStyleName(getStylePrimaryName() + "-select");
     }
 
     protected ListBox getOptionsContainer() {
