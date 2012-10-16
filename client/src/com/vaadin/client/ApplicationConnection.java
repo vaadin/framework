@@ -1880,6 +1880,10 @@ public class ApplicationConnection {
                             // TODO This could probably be optimized
                             if (!newChildren.contains(oldChild)) {
                                 oldChild.setParent(null);
+                                for (ServerConnector child : oldChild
+                                        .getChildren()) {
+                                    generateHierarchyEventsForRemovedChildren(oldChild, child, events);
+                                }
                             }
                         }
                     } catch (final Throwable e) {
@@ -1888,6 +1892,58 @@ public class ApplicationConnection {
                 }
                 return events;
 
+            }
+            
+            private void generateHierarchyEventsForRemovedChildren(
+                    ServerConnector root, ServerConnector child,
+                    List<ConnectorHierarchyChangeEvent> events) {
+
+                /*
+                 * Ensure child is still a child of the original layout. Might
+                 * not be the case if the child has previously been moved to
+                 * another layout.
+                 */
+                if (!Util.isAncestor(root, child)) {
+                    return;
+                }
+
+                /*
+                 * Recursively iterate the children
+                 */
+                for (ServerConnector c : child.getChildren()) {
+                    generateHierarchyEventsForRemovedChildren(root, c, events);
+                }
+
+                /*
+                 * Remove children from container so layout can do cleanup in
+                 * its hierarchy change listener
+                 */
+                List<ServerConnector> emptySCList = Collections.emptyList();
+                ((ComponentContainerConnector) child).setChildren(emptySCList);
+
+                child.setParent(null);
+
+                if (child instanceof ComponentContainerConnector) {
+                    ComponentContainerConnector ccc = (ComponentContainerConnector) child;
+
+                    /*
+                     * Create a artificial hierarchy event for the layout to
+                     * process
+                     */
+                    ConnectorHierarchyChangeEvent event = GWT
+                            .create(ConnectorHierarchyChangeEvent.class);
+                    event.setConnector(child);
+                    event.setOldChildren(ccc.getChildComponents());
+                    events.add(event);
+
+                    /*
+                     * ComponentContainerConnector also has a own child
+                     * components list
+                     */
+                    List<ComponentConnector> emptyCCList = Collections
+                            .emptyList();
+                    ccc.setChildComponents(emptyCCList);
+                }
             }
 
             private void handleRpcInvocations(ValueMap json) {
