@@ -1,0 +1,53 @@
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.applicationcontext.CloseSession?restartApplication</td>
+	<td></td>
+</tr>
+<!--Close, reload and assert there's a new VaadinServiceSession in the old HttpSession-->
+<tr>
+	<td>clickAndWait</td>
+	<td>vaadin=runcomvaadintestsapplicationcontextCloseSession::/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VVerticalLayout[0]/VOrderedLayout$Slot[2]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestsapplicationcontextCloseSession::PID_SLog_row_2</td>
+	<td>exact:4. Same hash as current? false</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestsapplicationcontextCloseSession::PID_SLog_row_0</td>
+	<td>exact:6. Same WrappedSession id? true</td>
+</tr>
+<!--Test closing session and redirecting to google-->
+<tr>
+	<td>clickAndWait</td>
+	<td>vaadin=runcomvaadintestsapplicationcontextCloseSession::/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertLocation</td>
+	<td>https://www.google.com/</td>
+	<td>https://www.google.com/</td>
+</tr>
+<!--Open again and verify we get a Session Expired error if doing something after closing the session-->
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.applicationcontext.CloseSession?restartApplication</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestsapplicationcontextCloseSession::/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VVerticalLayout[0]/VOrderedLayout$Slot[3]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestsapplicationcontextCloseSession::/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VVerticalLayout[0]/VOrderedLayout$Slot[3]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestsapplicationcontextCloseSession::Root/VNotification[0]/HTML[0]/domChild[0]</td>
+	<td>Session Expired</td>
+</tr>
