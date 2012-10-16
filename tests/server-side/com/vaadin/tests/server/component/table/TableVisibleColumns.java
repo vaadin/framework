@@ -51,8 +51,13 @@ public class TableVisibleColumns {
     @Test
     public void duplicateVisibleColumnIds() {
         Table t = TableGenerator.createTableWithDefaultContainer(3, 10);
-        t.setVisibleColumns(new Object[] { "Property 0", "Property 1",
-                "Property 2", "Property 1" });
+        try {
+            t.setVisibleColumns(new Object[] { "Property 0", "Property 1",
+                    "Property 2", "Property 1" });
+            junit.framework.Assert.fail("IllegalArgumentException expected");
+        } catch (IllegalArgumentException e) {
+            // OK, expected
+        }
         assertArrayEquals(defaultColumns3, t.getVisibleColumns());
     }
 

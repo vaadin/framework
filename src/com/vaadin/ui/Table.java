@@ -488,8 +488,12 @@ public class Table extends AbstractSelect implements Action.Container,
                     "Can not set visible columns to null value");
         }
 
-        // Checks that the new visible columns contains no nulls and properties
-        // exist
+        // If this is called before the constructor is finished, it might be
+        // uninitialized
+        final LinkedList<Object> newVC = new LinkedList<Object>();
+
+        // Checks that the new visible columns contains no nulls, properties
+        // exist and that there are no duplicates before adding them to newVC.
         final Collection<?> properties = getContainerPropertyIds();
         for (int i = 0; i < visibleColumns.length; i++) {
             if (visibleColumns[i] == null) {
@@ -497,17 +501,13 @@ public class Table extends AbstractSelect implements Action.Container,
             } else if (!properties.contains(visibleColumns[i])
                     && !columnGenerators.containsKey(visibleColumns[i])) {
                 throw new IllegalArgumentException(
-                        "Ids must exist in the Container or as a generated column , missing id: "
+                        "Ids must exist in the Container or as a generated column, missing id: "
                                 + visibleColumns[i]);
-            }
-        }
-
-        // If this is called before the constructor is finished, it might be
-        // uninitialized
-        final LinkedList<Object> newVC = new LinkedList<Object>();
-        for (int i = 0; i < visibleColumns.length; i++) {
-            // do not add duplicates
-            if (!newVC.contains(visibleColumns[i])) {
+            } else if (newVC.contains(visibleColumns[i])) {
+                throw new IllegalArgumentException(
+                        "Ids must be unique, duplicate id: "
+                                + visibleColumns[i]);
+            } else {
                 newVC.add(visibleColumns[i]);
             }
         }
