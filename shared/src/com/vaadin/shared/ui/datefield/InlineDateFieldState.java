@@ -4,6 +4,6 @@ import com.vaadin.shared.AbstractFieldState;
 
 public class InlineDateFieldState extends AbstractFieldState {
     {
-        primaryStyleName = "v-datefield";
+        primaryStyleName = "v-inline-datefield";
     }
 }

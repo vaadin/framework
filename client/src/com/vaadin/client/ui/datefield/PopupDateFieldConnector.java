@@ -144,12 +144,12 @@ public class PopupDateFieldConnector extends TextualDateConnector {
         // update the style change to popup calendar widget with the correct
         // prefix
         if (!styleName.startsWith("-")) {
-            getWidget().popup.setStyleName(
-                    VPopupCalendar.POPUP_PRIMARY_STYLE_NAME + "-" + styleName,
+            getWidget().popup.setStyleName(getWidget().getStylePrimaryName()
+                    + "-popup-" + styleName,
                     add);
         } else {
-            getWidget().popup.setStyleName(
-                    VPopupCalendar.POPUP_PRIMARY_STYLE_NAME + styleName, add);
+            getWidget().popup.setStyleName(getWidget().getStylePrimaryName()
+                    + "-popup" + styleName, add);
         }
     }
 

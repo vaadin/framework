@@ -6,6 +6,7 @@
 @import "caption/caption.scss";
 @import "common/common.scss";
 @import "datefield/datefield.scss";
+@import "inlinedatefield/inlinedatefield.scss";
 @import "formlayout/formlayout.scss";
 @import "gridlayout/gridlayout.scss";
 @import "label/label.scss";
@@ -38,6 +39,7 @@
 	@include runo-common;
 	
 	@include runo-datefield;
+	@include runo-inline-datefield;
 	@include runo-formlayout;
 	@include runo-gridlayout;
 	@include runo-label;

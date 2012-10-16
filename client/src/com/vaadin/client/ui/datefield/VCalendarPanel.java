@@ -197,9 +197,11 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     private boolean hasFocus = false;
 
-    public VCalendarPanel() {
+    private VDateField parent;
 
-        setStyleName(VDateField.CLASSNAME + "-calendarpanel");
+    private boolean initialRenderDone = false;
+
+    public VCalendarPanel() {
 
         /*
          * Firefox auto-repeat works correctly only if we use a key press
@@ -213,7 +215,10 @@ public class VCalendarPanel extends FocusableFlexTable implements
         }
         addFocusHandler(this);
         addBlurHandler(this);
+    }
 
+    public void setParentField(VDateField parent) {
+        this.parent = parent;
     }
 
     /**
@@ -342,6 +347,26 @@ public class VCalendarPanel extends FocusableFlexTable implements
         return enabled;
     }
 
+    @Override
+    public void setStyleName(String style) {
+        super.setStyleName(style);
+        if (initialRenderDone) {
+            // Dynamic updates to the stylename needs to render the calendar to
+            // update the inner element stylenames
+            renderCalendar();
+        }
+    }
+
+    @Override
+    public void setStylePrimaryName(String style) {
+        super.setStylePrimaryName(style);
+        if (initialRenderDone) {
+            // Dynamic updates to the stylename needs to render the calendar to
+            // update the inner element stylenames
+            renderCalendar();
+        }
+    }
+
     private void clearCalendarBody(boolean remove) {
         if (!remove) {
             // Leave the cells in place but clear their contents
@@ -368,7 +393,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
     private void buildCalendarHeader(boolean needsMonth) {
 
         getRowFormatter().addStyleName(0,
-                VDateField.CLASSNAME + "-calendarpanel-header");
+                parent.getStylePrimaryName() + "-calendarpanel-header");
 
         if (prevMonth == null && needsMonth) {
             prevMonth = new VEventButton();
@@ -379,10 +404,6 @@ public class VCalendarPanel extends FocusableFlexTable implements
             nextMonth.setHTML("&rsaquo;");
             nextMonth.setStyleName("v-button-nextmonth");
             nextMonth.setTabIndex(-1);
-            getFlexCellFormatter().setStyleName(0, 3,
-                    VDateField.CLASSNAME + "-calendarpanel-nextmonth");
-            getFlexCellFormatter().setStyleName(0, 1,
-                    VDateField.CLASSNAME + "-calendarpanel-prevmonth");
 
             setWidget(0, 3, nextMonth);
             setWidget(0, 1, prevMonth);
@@ -405,18 +426,24 @@ public class VCalendarPanel extends FocusableFlexTable implements
             nextYear.setTabIndex(-1);
             setWidget(0, 0, prevYear);
             setWidget(0, 4, nextYear);
-            getFlexCellFormatter().setStyleName(0, 0,
-                    VDateField.CLASSNAME + "-calendarpanel-prevyear");
-            getFlexCellFormatter().setStyleName(0, 4,
-                    VDateField.CLASSNAME + "-calendarpanel-nextyear");
         }
 
         final String monthName = needsMonth ? getDateTimeService().getMonth(
                 displayedMonth.getMonth()) : "";
         final int year = displayedMonth.getYear() + 1900;
+
         getFlexCellFormatter().setStyleName(0, 2,
-                VDateField.CLASSNAME + "-calendarpanel-month");
-        setHTML(0, 2, "<span class=\"" + VDateField.CLASSNAME
+                parent.getStylePrimaryName() + "-calendarpanel-month");
+        getFlexCellFormatter().setStyleName(0, 0,
+                parent.getStylePrimaryName() + "-calendarpanel-prevyear");
+        getFlexCellFormatter().setStyleName(0, 4,
+                parent.getStylePrimaryName() + "-calendarpanel-nextyear");
+        getFlexCellFormatter().setStyleName(0, 3,
+                parent.getStylePrimaryName() + "-calendarpanel-nextmonth");
+        getFlexCellFormatter().setStyleName(0, 1,
+                parent.getStylePrimaryName() + "-calendarpanel-prevmonth");
+
+        setHTML(0, 2, "<span class=\"" + parent.getStylePrimaryName()
                 + "-calendarpanel-month\">" + monthName + " " + year
                 + "</span>");
     }
@@ -458,7 +485,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
         setCellSpacing(0);
         getFlexCellFormatter().setColSpan(1, 0, 5);
         getFlexCellFormatter().setStyleName(1, 0,
-                VDateField.CLASSNAME + "-calendarpanel-body");
+                parent.getStylePrimaryName() + "-calendarpanel-body");
 
         days.getFlexCellFormatter().setStyleName(headerRow, weekColumn,
                 "v-week");
@@ -468,7 +495,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 isShowISOWeekNumbers());
 
         days.getRowFormatter().setStyleName(headerRow,
-                VDateField.CLASSNAME + "-calendarpanel-weekdays");
+                parent.getStylePrimaryName() + "-calendarpanel-weekdays");
 
         if (isShowISOWeekNumbers()) {
             days.getFlexCellFormatter().setStyleName(headerRow, weekColumn,
@@ -476,7 +503,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
             days.getFlexCellFormatter().setStyleName(headerRow,
                     firstWeekdayColumn, "");
             days.getRowFormatter().addStyleName(headerRow,
-                    VDateField.CLASSNAME + "-calendarpanel-weeknumbers");
+                            parent.getStylePrimaryName()
+                                    + "-calendarpanel-weeknumbers");
         } else {
             days.getFlexCellFormatter().setStyleName(headerRow, weekColumn, "");
             days.getFlexCellFormatter().setStyleName(headerRow,
@@ -524,6 +552,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
                 // Actually write the day of month
                 Day day = new Day((Date) curr.clone());
+                day.setStyleName(parent.getStylePrimaryName()
+                        + "-calendarpanel-day");
 
                 if (curr.equals(selectedDate)) {
                     day.addStyleDependentName(CN_SELECTED);
@@ -549,7 +579,7 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 days.getCellFormatter().setVisible(weekOfMonth, weekColumn,
                         isShowISOWeekNumbers());
                 if (isShowISOWeekNumbers()) {
-                    final String baseCssClass = VDateField.CLASSNAME
+                    final String baseCssClass = parent.getStylePrimaryName()
                             + "-calendarpanel-weeknumber";
                     String weekCssClass = baseCssClass;
 
@@ -605,12 +635,14 @@ public class VCalendarPanel extends FocusableFlexTable implements
             setWidget(2, 0, time);
             getFlexCellFormatter().setColSpan(2, 0, 5);
             getFlexCellFormatter().setStyleName(2, 0,
-                    VDateField.CLASSNAME + "-calendarpanel-time");
+                    parent.getStylePrimaryName() + "-calendarpanel-time");
         } else if (isTimeSelectorNeeded()) {
             time.updateTimes();
         } else if (time != null) {
             remove(time);
         }
+
+        initialRenderDone = true;
     }
 
     /**
@@ -1539,13 +1571,10 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * A widget representing a single day in the calendar panel.
      */
     private class Day extends InlineHTML {
-        private static final String BASECLASS = VDateField.CLASSNAME
-                + "-calendarpanel-day";
         private final Date date;
 
         Day(Date date) {
             super("" + date.getDate());
-            setStyleName(BASECLASS);
             this.date = date;
             addClickHandler(dayClickHandler);
         }

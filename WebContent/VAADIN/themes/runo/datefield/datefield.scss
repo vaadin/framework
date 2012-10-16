@@ -1,10 +1,10 @@
-@mixin runo-datefield {
+@mixin runo-datefield($name : v-datefield) {
 
-.v-datefield input.v-textfield,
-.v-datefield input.v-textfield[type=text] {
+.#{$name} input.v-textfield,
+.#{$name} input.v-textfield[type=text] {
 	height: 18px;
 }
-.v-datefield-button {
+.#{$name}-button {
 	font-size:13px;
 	width: 22px;
 	height: 24px;
@@ -14,7 +14,7 @@
 	background: transparent url(img/open-button.png) no-repeat right 0;
 	vertical-align: top;
 }
-.v-datefield-popup {
+.#{$name}-popup {
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	color: #464f52;
 	font-size: 12px;
@@ -25,39 +25,39 @@
 	-moz-border-radius: 4px;
 	border-radius: 4px;
 }
-.v-datefield-calendarpanel {
+.#{$name}-calendarpanel {
 	width: 230px;
 }
-.v-datefield-popup .v-datefield-calendarpanel {
+.#{$name}-popup .#{$name}-calendarpanel {
 	width: 200px;
 }
-.v-datefield-year .v-datefield-calendarpanel {
+.#{$name}-year .#{$name}-calendarpanel {
 	width: 100px;
 }
-.v-datefield-calendarpanel td {
+.#{$name}-calendarpanel td {
 	text-align: right;
 }
-.v-datefield-calendarpanel td span {
+.#{$name}-calendarpanel td span {
 	display: block;
 }
-.v-datefield-calendarpanel-header {
+.#{$name}-calendarpanel-header {
 	height: 30px;
 	font-size: 13px;
 }
-td.v-datefield-calendarpanel-month {
+td.#{$name}-calendarpanel-month {
 	font-weight: bold;
 	text-shadow: 0 1px 0 #fff;
 	width: 150px;
 }
-.v-datefield-calendarpanel-prevyear,
-.v-datefield-calendarpanel-nextyear,
-.v-datefield-calendarpanel-prevmonth,
-.v-datefield-calendarpanel-nextmonth {
+.#{$name}-calendarpanel-prevyear,
+.#{$name}-calendarpanel-nextyear,
+.#{$name}-calendarpanel-prevmonth,
+.#{$name}-calendarpanel-nextmonth {
 	width: 16px;
 }
 /* Year buttons */
-.v-datefield-calendarpanel .v-button-prevyear,
-.v-datefield-calendarpanel .v-button-nextyear {
+.#{$name}-calendarpanel .v-button-prevyear,
+.#{$name}-calendarpanel .v-button-nextyear {
 	display: block;
 	width: 16px;
 	height: 16px;
@@ -67,16 +67,16 @@ td.v-datefield-calendarpanel-month {
 	text-indent: -90000px;
 	margin: 0 auto;
 }
-.v-datefield-calendarpanel .v-button-nextyear {
+.#{$name}-calendarpanel .v-button-nextyear {
 	background: transparent url(img/nextyear.png) no-repeat;
 }
-.v-datefield-calendarpanel .v-button-prevyear:hover,
-.v-datefield-calendarpanel .v-button-nextyear:hover {
+.#{$name}-calendarpanel .v-button-prevyear:hover,
+.#{$name}-calendarpanel .v-button-nextyear:hover {
 	background-position: left bottom;
 }
 /* Month buttons */
-.v-datefield-calendarpanel .v-button-prevmonth,
-.v-datefield-calendarpanel .v-button-nextmonth {
+.#{$name}-calendarpanel .v-button-prevmonth,
+.#{$name}-calendarpanel .v-button-nextmonth {
 	display: block;
 	width: 11px;
 	height: 16px;
@@ -86,42 +86,42 @@ td.v-datefield-calendarpanel-month {
 	text-indent: -90000px;
 	margin: 0 auto;
 }
-.v-datefield-calendarpanel .v-button-nextmonth {
+.#{$name}-calendarpanel .v-button-nextmonth {
 	background: transparent url(img/nextmonth.png) no-repeat;
 }
-.v-datefield-calendarpanel .v-button-prevmonth:hover,
-.v-datefield-calendarpanel .v-button-nextmonth:hover {
+.#{$name}-calendarpanel .v-button-prevmonth:hover,
+.#{$name}-calendarpanel .v-button-nextmonth:hover {
 	background-position: left bottom;
 }
-.v-datefield-calendarpanel strong {
+.#{$name}-calendarpanel strong {
 	color: #ee5311;
 	display: block;
 	width: 20px;
 	font-size: 12px;
 }
-.v-datefield-calendarpanel-day,
-.v-datefield-calendarpanel-weeknumber,
-.v-datefield-calendarpanel-day-today {
+.#{$name}-calendarpanel-day,
+.#{$name}-calendarpanel-weeknumber,
+.#{$name}-calendarpanel-day-today {
 	padding: 1px 3px;
 	width: 14px;
 	height: 16px;
 }
-.v-datefield-calendarpanel-day-today {
+.#{$name}-calendarpanel-day-today {
 	border: 1px solid #429ce9;
 	width: 12px;
 	height: 14px;
 }
-.v-datefield-calendarpanel-day-entry {
+.#{$name}-calendarpanel-day-entry {
 	color: #6a98b5;
 }
-.v-datefield-calendarpanel-day-disabled {
+.#{$name}-calendarpanel-day-disabled {
 	font-weight: normal;
 	color: #dddddd;
 }
-.v-datefield-calendarpanel-day-entry.v-datefield-calendarpanel-day-disabled {
+.#{$name}-calendarpanel-day-entry.#{$name}-calendarpanel-day-disabled {
 	color: #afd6f8;
 }
-.v-datefield-calendarpanel-day-selected {
+.#{$name}-calendarpanel-day-selected {
 	font-weight: bold;
 	width: 14px;
 	height: 16px;
@@ -130,18 +130,18 @@ td.v-datefield-calendarpanel-month {
 	background: transparent url(img/selected-bg.png) no-repeat 50% 50%;
 	border: none;
 }
-.v-datefield-time {
+.#{$name}-time {
 	font-size: 11px;
 }
-.v-datefield-time .v-select {
+.#{$name}-time .v-select {
 	font-size: 10px;
 	padding: 0;
 	margin: 0;
 }
-.v-datefield-rendererror .v-textfield {
+.#{$name}-rendererror .v-textfield {
 	background: #ff9999;
 }
-.v-datefield-prompt .v-datefield-textfield {
+.#{$name}-prompt .#{$name}-textfield {
 	color: #999;
 	font-style: normal;
 }

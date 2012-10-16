@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -34,6 +34,7 @@ public class VDateFieldCalendar extends VDateField {
     public VDateFieldCalendar() {
         super();
         calendarPanel = new VCalendarPanel();
+        calendarPanel.setParentField(this);
         add(calendarPanel);
         calendarPanel.setSubmitListener(new SubmitListener() {
             @Override
@@ -55,7 +56,7 @@ public class VDateFieldCalendar extends VDateField {
             }
         });
     }
-
+    
     /**
      * TODO refactor: almost same method as in VPopupCalendar.updateValue
      */

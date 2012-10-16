@@ -9,6 +9,7 @@
 @import "common/common.scss";
 
 @import "datefield/datefield.scss";
+@import "inlinedatefield/inlinedatefield.scss";
 @import "formlayout/formlayout.scss";
 @import "label/label.scss";
 @import "layouts/layouts.scss";
@@ -39,6 +40,7 @@
 	@include reindeer-nativebutton;
 	@include reindeer-common;
 	@include reindeer-datefield;
+	@include reindeer-inlinedatefield;
 	@include reindeer-formlayout;
 	@include reindeer-label;
 	@include reindeer-layouts;
