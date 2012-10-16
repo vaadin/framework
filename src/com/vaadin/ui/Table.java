@@ -488,8 +488,6 @@ public class Table extends AbstractSelect implements Action.Container,
                     "Can not set visible columns to null value");
         }
 
-        // If this is called before the constructor is finished, it might be
-        // uninitialized
         final LinkedList<Object> newVC = new LinkedList<Object>();
 
         // Checks that the new visible columns contains no nulls, properties
