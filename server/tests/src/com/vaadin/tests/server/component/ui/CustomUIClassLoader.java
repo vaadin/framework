@@ -1,4 +1,4 @@
-package com.vaadin.tests.server.component.root;
+package com.vaadin.tests.server.component.ui;
 
 import java.util.ArrayList;
 import java.util.List;
