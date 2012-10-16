@@ -51,18 +51,9 @@ public class TableVisibleColumns {
     @Test
     public void duplicateVisibleColumnIds() {
         Table t = TableGenerator.createTableWithDefaultContainer(3, 10);
-        try {
-            t.setVisibleColumns(new Object[] { "Property 0", "Property 1",
-                    "Property 2", "Property 1" });
-            // FIXME: Multiple properties in the Object array should be detected
-            // (#6476)
-            // junit.framework.Assert.fail("IllegalArgumentException expected");
-        } catch (IllegalArgumentException e) {
-            // OK, expected
-        }
-        // FIXME: Multiple properties in the Object array should be detected
-        // (#6476)
-        // assertArrayEquals(defaultColumns3, t.getVisibleColumns());
+        t.setVisibleColumns(new Object[] { "Property 0", "Property 1",
+                "Property 2", "Property 1" });
+        assertArrayEquals(defaultColumns3, t.getVisibleColumns());
     }
 
     @Test
