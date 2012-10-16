@@ -33,7 +33,9 @@ import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.navigator.ViewProvider;
 import com.vaadin.tests.server.navigator.ClassBasedViewProviderTest.TestView;
 import com.vaadin.tests.server.navigator.ClassBasedViewProviderTest.TestView2;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 
 public class NavigatorTest extends TestCase {
 
@@ -346,6 +348,34 @@ public class NavigatorTest extends TestCase {
         if (!listener.isReady()) {
             fail("Missing listener calls");
         }
+    }
+
+    public void testComponentContainerViewDisplay() {
+        abstract class TestView implements Component, View {
+        }
+
+        TestView tv1 = EasyMock.createNiceMock(TestView.class);
+        TestView tv2 = EasyMock.createNiceMock(TestView.class);
+        EasyMock.replay(tv1, tv2);
+
+        VerticalLayout container = new VerticalLayout();
+        ViewDisplay display = new Navigator.ComponentContainerViewDisplay(
+                container);
+        Navigator navigator = createNavigator(new NullFragmentManager(),
+                display);
+
+        navigator.addView("tv1", tv1);
+        navigator.addView("tv2", tv2);
+
+        navigator.navigateTo("tv1");
+
+        assertSame(tv1, container.getComponent(0));
+        assertEquals(1, container.getComponentCount());
+
+        navigator.navigateTo("tv2");
+
+        assertSame(tv2, container.getComponent(0));
+        assertEquals(1, container.getComponentCount());
     }
 
     public void testBlockNavigation() {

@@ -28,7 +28,6 @@ import com.vaadin.server.Page.FragmentChangedListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.UI;
 
 /**
@@ -143,38 +142,6 @@ public class Navigator implements Serializable {
          */
         protected void setFragment(String fragment) {
             page.setFragment(fragment, false);
-        }
-    }
-
-    /**
-     * A ViewDisplay that is a component itself and replaces its contents with
-     * the view.
-     * <p>
-     * This display only supports views that are {@link Component}s themselves.
-     * Attempting to display a view that is not a component causes an exception
-     * to be thrown.
-     * <p>
-     * By default, the view display has full size.
-     */
-    public static class SimpleViewDisplay extends CustomComponent implements
-            ViewDisplay {
-
-        /**
-         * Create new {@link ViewDisplay} that is itself a component displaying
-         * the view.
-         */
-        public SimpleViewDisplay() {
-            setSizeFull();
-        }
-
-        @Override
-        public void showView(View view) {
-            if (view instanceof Component) {
-                setCompositionRoot((Component) view);
-            } else {
-                throw new IllegalArgumentException("View is not a component: "
-                        + view);
-            }
         }
     }
 
