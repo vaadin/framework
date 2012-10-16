@@ -1,6 +1,9 @@
 package com.vaadin.tests.requesthandlers;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.VaadinServletService;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.integration.FlagSeResource;
 import com.vaadin.ui.Link;
@@ -13,9 +16,17 @@ public class AppResource404 extends TestBase {
         final FlagSeResource resource = new FlagSeResource();
         resource.setCacheTime(0);
 
+        HttpServletRequest request = VaadinServletService
+                .getCurrentServletRequest();
+        String baseUrl = request.getContextPath() + request.getServletPath();
+
         addComponent(new Link("Existing resource", resource));
         addComponent(new Link("Non-existing resource", new ExternalResource(
-                getURL().toString() + "APP/12341234/")));
+                baseUrl + "/APP/connector/0/4/asdfasdf")));
+        addComponent(new Link("/APP url that should give 404",
+                new ExternalResource(baseUrl + "/APP")));
+        addComponent(new Link("/APPLE url that should go to UI providers",
+                new ExternalResource(baseUrl + "/APPLE")));
     }
 
     @Override
