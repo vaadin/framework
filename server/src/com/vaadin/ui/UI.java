@@ -556,9 +556,13 @@ public abstract class UI extends AbstractComponentContainer implements
         return this;
     }
 
+    /**
+     * This implementation replaces a component in the content container (
+     * {@link #getContent()}) instead of in the actual UI.
+     */
     @Override
     public void replaceComponent(Component oldComponent, Component newComponent) {
-        throw new UnsupportedOperationException();
+        getContent().replaceComponent(oldComponent, newComponent);
     }
 
     /**
