@@ -1282,6 +1282,36 @@ public class ApplicationConnection {
                 // Update hierarchy, do not fire events
                 Collection<ConnectorHierarchyChangeEvent> pendingHierarchyChangeEvents = updateConnectorHierarchy(json);
 
+                /*
+                 * Check if we are detaching a ComponentContainer and if we are
+                 * then generate artificial hierarchy events for the component
+                 * containers which are going to be removed so they can perform
+                 * proper cleanup. #9815
+                 */
+                Collection<ConnectorHierarchyChangeEvent> artificialHierarchyChangeEvents = new LinkedList<ConnectorHierarchyChangeEvent>();
+                for (ConnectorHierarchyChangeEvent e : pendingHierarchyChangeEvents) {
+                    ServerConnector c = e.getConnector();
+                    for (ServerConnector oldChild : e.getOldChildren()) {
+                        if (oldChild instanceof ComponentContainerConnector
+                                && !c.getChildren().contains(oldChild)) {
+                            /*
+                             * Component container is going to be removed,
+                             * generate hierarchy change events for the removed
+                             * layouts
+                             */
+                            recursivelyGenerateHierarchyChangeEventsForComponentContainers(
+                                    (ComponentContainerConnector) oldChild,
+                                    artificialHierarchyChangeEvents);
+                        }
+                    }
+                }
+
+                // Ensure proper order by processing the artifical hierarchy
+                // changes first
+                artificialHierarchyChangeEvents
+                        .addAll(pendingHierarchyChangeEvents);
+                pendingHierarchyChangeEvents = artificialHierarchyChangeEvents;
+
                 updateDuration.logDuration(
                         " * Update of connector hierarchy completed", 10);
 
@@ -1408,6 +1438,40 @@ public class ApplicationConnection {
 
                 endRequest();
 
+            }
+
+            private void recursivelyGenerateHierarchyChangeEventsForComponentContainers(
+                    ComponentContainerConnector c,
+                    Collection<ConnectorHierarchyChangeEvent> events) {
+
+                List<ComponentConnector> oldComponents = c.getChildComponents();
+
+                /*
+                 * Notify each child component container to perform the same
+                 * operation on its children
+                 */
+                for (ComponentConnector occ : oldComponents) {
+                    if (occ instanceof ComponentContainerConnector) {
+                        recursivelyGenerateHierarchyChangeEventsForComponentContainers(
+                                (ComponentContainerConnector) occ, events);
+                    }
+                }
+
+                /*
+                 * Remove child components from connector. This will make the
+                 * container connector notice that the child widgets will be
+                 * removed and properly detach and remove state change handlers
+                 */
+                c.setChildComponents(new ArrayList<ComponentConnector>());
+
+                /*
+                 * Create a artificial hierarchy event for the layout to process
+                 */
+                ConnectorHierarchyChangeEvent event = GWT
+                        .create(ConnectorHierarchyChangeEvent.class);
+                event.setConnector(c);
+                event.setOldChildren(oldComponents);
+                events.add(event);
             }
 
             private void delegateToWidget(
@@ -1787,6 +1851,7 @@ public class ApplicationConnection {
                 List<ConnectorHierarchyChangeEvent> events = new LinkedList<ConnectorHierarchyChangeEvent>();
 
                 VConsole.log(" * Updating connector hierarchy");
+
                 if (!json.containsKey("hierarchy")) {
                     return events;
                 }
