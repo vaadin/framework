@@ -44,8 +44,8 @@
         <li><a href="#overview">Overview of Vaadin @version-minor@ Release</a></li>
         <li><a href="#changes">Changes in Vaadin @version@</a></li>
         <li><a href="#enhancements">Enhancements in Vaadin @version-minor@</a></li>
-        <!--<li><a href="#backwardsincompatibilities">Backwards
-            incompatible changes in Vaadin @version-minor@</a></li> -->
+        <li><a href="#backwardsincompatibilities">Backwards
+            incompatible changes in Vaadin @version-minor@</a></li>
         <li><a href="#overview">Package contents</a></li>
         <li><a href="#dependencies">Vaadin @version@ dependencies</a></li>
         <li><a href="#upgrading">Upgrading to Vaadin @version-minor@</a></li>
@@ -172,13 +172,16 @@
 
       <!-- ================================================================ -->
 
-      <!--
       <h3 id="backwardsincompatibilities">Backwards incompatible changes in Vaadin
       @version-minor@</h3>
 
       <p>
+        The following backward incompatible changes have been introduced since Vaadin 6.7:
       </p>
-      -->
+
+      <ul>
+        <li>Splitter position in <b>SplitPanel</b> is now <tt>float</tt> instead if <tt>int</tt> (<a href="http://dev.vaadin.com/ticket/4296">#4296</a>)</li>
+      </ul>
 
       <!--  <h2 id="security-fixes">Security fixes in Vaadin @version-minor@</h2>-->
 
