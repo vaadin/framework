@@ -62,6 +62,14 @@ public class ConnectorResourceHandler implements RequestHandler {
             }
 
             return true;
+        } else if (requestPath.matches("/APP(/.*)?")) {
+            /*
+             * This should be the last request handler before we get to
+             * bootstrap logic. Prevent /APP requests from reaching bootstrap
+             * handlers to help protect the /APP name space for framework usage.
+             */
+            return error(request, response,
+                    "Returning 404 for /APP request not yet handled.");
         } else {
             return false;
         }
