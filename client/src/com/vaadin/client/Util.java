@@ -1199,6 +1199,27 @@ public class Util {
     }
 
     /**
+     * Checks if a child connector is related to an ancestor connector.
+     * 
+     * @param child
+     *            The child to check
+     * @param ancestor
+     *            The ancestor to check for
+     * 
+     */
+    public static boolean isAncestor(ServerConnector child,
+            ServerConnector ancestor) {
+        ServerConnector c = child.getParent();
+        while (c != null) {
+            if (c == ancestor) {
+                return true;
+            }
+            c = c.getParent();
+        }
+        return false;
+    }
+
+    /**
      * Resolve a relative URL to an absolute URL based on the current document's
      * location.
      * 
