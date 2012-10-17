@@ -543,6 +543,16 @@ public class Navigator implements Serializable {
     }
 
     /**
+     * Returns the current navigation state reported by this Navigator's
+     * {@link NavigationStateManager}.
+     * 
+     * @return The navigation state.
+     */
+    public String getState() {
+        return getStateManager().getState();
+    }
+
+    /**
      * Return the ViewDisplay used by the navigator. Unless another display is
      * specified, a {@link SimpleViewDisplay} (which is a {@link Component}) is
      * used by default.

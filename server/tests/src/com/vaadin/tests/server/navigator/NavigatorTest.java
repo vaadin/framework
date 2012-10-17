@@ -228,21 +228,24 @@ public class NavigatorTest extends TestCase {
         view1.enter(eventParametersEqual(""));
         display.showView(view1);
         manager.setState("test1");
+        EasyMock.expect(manager.getState()).andReturn("test1");
 
         EasyMock.expect(provider.getViewName("test2/")).andReturn("test2");
         EasyMock.expect(provider.getView("test2")).andReturn(view2);
-        EasyMock.expect(manager.getState()).andReturn("view1");
+        EasyMock.expect(manager.getState()).andReturn("test1");
         view2.enter(eventParametersEqual(""));
         display.showView(view2);
         manager.setState("test2");
+        EasyMock.expect(manager.getState()).andReturn("test2");
 
         EasyMock.expect(provider.getViewName("test1/params"))
                 .andReturn("test1");
         EasyMock.expect(provider.getView("test1")).andReturn(view1);
-        EasyMock.expect(manager.getState()).andReturn("view2");
+        EasyMock.expect(manager.getState()).andReturn("test2");
         view1.enter(eventParametersEqual("params"));
         display.showView(view1);
         manager.setState("test1/params");
+        EasyMock.expect(manager.getState()).andReturn("test1/params");
 
         control.replay();
 
@@ -251,8 +254,13 @@ public class NavigatorTest extends TestCase {
         navigator.addProvider(provider);
 
         navigator.navigateTo("test1");
+        assertEquals("test1", navigator.getState());
+
         navigator.navigateTo("test2/");
+        assertEquals("test2", navigator.getState());
+
         navigator.navigateTo("test1/params");
+        assertEquals("test1/params", navigator.getState());
     }
 
     public void testMainView() {
@@ -284,7 +292,7 @@ public class NavigatorTest extends TestCase {
         EasyMock.expect(provider.getViewName("test1/params"))
                 .andReturn("test1");
         EasyMock.expect(provider.getView("test1")).andReturn(view1);
-        EasyMock.expect(manager.getState()).andReturn("view2");
+        EasyMock.expect(manager.getState()).andReturn("test2");
         view1.enter(eventParametersEqual("params"));
         display.showView(view1);
         manager.setState("test1/params");
@@ -330,7 +338,7 @@ public class NavigatorTest extends TestCase {
         ViewChangeEvent event2 = new ViewChangeEvent(navigator, view1, view2,
                 "test2", "");
         listener.addExpectedIsViewChangeAllowed(event2, true);
-        EasyMock.expect(manager.getState()).andReturn("view1");
+        EasyMock.expect(manager.getState()).andReturn("test1");
         view2.enter(eventParametersEqual(""));
         display.showView(view2);
         manager.setState("test2");
