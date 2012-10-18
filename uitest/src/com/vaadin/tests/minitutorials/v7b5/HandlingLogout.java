@@ -14,36 +14,40 @@
  * the License.
  */
 
-package com.vaadin.tests.minitutorials.v7a3;
+package com.vaadin.tests.minitutorials.v7b5;
 
-import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinServletService;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.tests.minitutorials.v7a3.Refresher.RefreshListener;
-import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 
-@Widgetset(TestingWidgetSet.NAME)
-public class RefresherTestUI extends AbstractTestUI {
+public class HandlingLogout extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        final Refresher refresher = new Refresher();
-        refresher.extend(this);
-        refresher.setInterval(1000);
-        refresher.addListener(new RefreshListener() {
-            @Override
-            public void refresh(Refresher source) {
-                System.out.println("Got refresh");
-            }
-        });
-        addComponent(new Button("Remove refresher", new Button.ClickListener() {
+        addComponent(new Button("Logout", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                removeExtension(refresher);
+                logout();
             }
         }));
+    }
+
+    private void logout() {
+        // Close the VaadinServiceSession
+        getUI().getSession().close();
+
+        // Invalidate underlying session instead if login info is stored there
+        // VaadinService.getCurrentRequest().getWrappedSession().invalidate();
+
+        // Redirect to avoid keeping the removed UI open in the browser
+        getUI().getPage().setLocation(getLogoutPageLocation());
+    }
+
+    protected String getLogoutPageLocation() {
+        return VaadinServletService.getCurrentRequest().getContextPath()
+                + "logout.html";
     }
 
     @Override
@@ -54,8 +58,7 @@ public class RefresherTestUI extends AbstractTestUI {
 
     @Override
     protected Integer getTicketNumber() {
-        // TODO Auto-generated method stub
-        return null;
+        return Integer.valueOf(9646);
     }
 
 }
