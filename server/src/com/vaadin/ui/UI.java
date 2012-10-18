@@ -709,7 +709,10 @@ public abstract class UI extends AbstractComponentContainer implements
     public void setSession(VaadinServiceSession session) {
         if ((session == null) == (this.session == null)) {
             throw new IllegalStateException(
-                    "VaadinSession has already been set");
+                    "VaadinServiceSession has already been set. Old session: "
+                            + getSessionDetails(this.session)
+                            + ". New session: " + getSessionDetails(session)
+                            + ".");
         } else {
             if (session == null) {
                 detach();
@@ -719,6 +722,15 @@ public abstract class UI extends AbstractComponentContainer implements
 
         if (session != null) {
             attach();
+        }
+    }
+
+    private static String getSessionDetails(VaadinServiceSession session) {
+        if (session == null) {
+            return null;
+        } else {
+            return session.toString() + " for "
+                    + session.getService().getServiceName();
         }
     }
 
