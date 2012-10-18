@@ -777,16 +777,16 @@ public class SQLContainer implements Container, Container.Filterable,
     }
 
     /**
-     * Refreshes the container. If <code>sizeDirty</code> is <code>false</code>,
-     * assumes that the current size is up to date. This is used in
-     * {@link #updateCount()} to refresh the contents when we know the size was
-     * just updated.
+     * Refreshes the container. If <code>setSizeDirty</code> is
+     * <code>false</code>, assumes that the current size is up to date. This is
+     * used in {@link #updateCount()} to refresh the contents when we know the
+     * size was just updated.
      * 
      * @param sizeDirty
      */
-    private void refresh(boolean sizeDirty) {
-        if (sizeDirty) {
-            this.sizeDirty = true;
+    private void refresh(boolean setSizeDirty) {
+        if (setSizeDirty) {
+            sizeDirty = true;
         }
         currentOffset = 0;
         cachedItems.clear();
@@ -1040,7 +1040,7 @@ public class SQLContainer implements Container, Container.Filterable,
             int newSize = delegate.getCount();
             sizeUpdated = new Date();
             sizeDirty = false;
-            if (true || newSize != size) {
+            if (newSize != size) {
                 size = newSize;
                 // Size is up to date so don't set it back to dirty in
                 // refresh().
