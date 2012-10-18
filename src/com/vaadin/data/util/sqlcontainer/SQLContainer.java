@@ -773,7 +773,21 @@ public class SQLContainer implements Container, Container.Filterable,
      * Does NOT remove sorting or filtering rules!
      */
     public void refresh() {
-        sizeDirty = true;
+        refresh(true);
+    }
+
+    /**
+     * Refreshes the container. If <code>sizeDirty</code> is <code>false</code>,
+     * assumes that the current size is up to date. This is used in
+     * {@link #updateCount()} to refresh the contents when we know the size was
+     * just updated.
+     * 
+     * @param sizeDirty
+     */
+    private void refresh(boolean sizeDirty) {
+        if (sizeDirty) {
+            this.sizeDirty = true;
+        }
         currentOffset = 0;
         cachedItems.clear();
         itemIndexes.clear();
@@ -1024,12 +1038,14 @@ public class SQLContainer implements Container, Container.Filterable,
                         "The query delegate doesn't support filtering", e);
             }
             int newSize = delegate.getCount();
-            if (newSize != size) {
-                size = newSize;
-                refresh();
-            }
             sizeUpdated = new Date();
             sizeDirty = false;
+            if (true || newSize != size) {
+                size = newSize;
+                // Size is up to date so don't set it back to dirty in
+                // refresh().
+                refresh(false);
+            }
             getLogger().log(Level.FINER,
                     "Updated row count. New count is: " + size);
         } catch (SQLException e) {
