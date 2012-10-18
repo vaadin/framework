@@ -273,7 +273,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         if (state.primaryStyleName != null) {
             /*
              * We overwrite the widgets primary stylename if state defines a
-             * primary stylename. Clears all previous stylenames.
+             * primary stylename.
              */
             getWidget().setStylePrimaryName(state.primaryStyleName);
         }
@@ -293,24 +293,24 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         // add additional user defined style names as class names, prefixed with
         // component default class name. remove nonexistent style names.
         if (ComponentStateUtil.hasStyles(state)) {
-            // add new style names
-            List<String> newStyles = new ArrayList<String>();
-            newStyles.addAll(state.styles);
-            newStyles.removeAll(styleNames);
-            for (String newStyle : newStyles) {
-                setWidgetStyleName(newStyle, true);
-                setWidgetStyleNameWithPrefix(primaryStyleName + "-", newStyle,
-                        true);
-            }
-            // remove nonexistent style names
-            styleNames.removeAll(state.styles);
+
+            // Remove all old stylenames
             for (String oldStyle : styleNames) {
                 setWidgetStyleName(oldStyle, false);
                 setWidgetStyleNameWithPrefix(primaryStyleName + "-", oldStyle,
                         false);
             }
+
+            // add new style names
+            for (String newStyle : state.styles) {
+                setWidgetStyleName(newStyle, true);
+                setWidgetStyleNameWithPrefix(primaryStyleName + "-", newStyle,
+                        true);
+            }
+
             styleNames.clear();
             styleNames.addAll(state.styles);
+
         } else {
             // remove all old style names
             for (String oldStyle : styleNames) {
