@@ -96,7 +96,7 @@ public class MenuBarConnector extends AbstractComponentConnector implements
 
             getWidget().collapsedRootItems = new VMenuBar(true, getWidget());
             getWidget().moreItem.setSubMenu(getWidget().collapsedRootItems);
-            getWidget().moreItem.addStyleName(VMenuBar.CLASSNAME
+            getWidget().moreItem.addStyleName(getWidget().getStylePrimaryName()
                     + "-more-menuitem");
         }
 

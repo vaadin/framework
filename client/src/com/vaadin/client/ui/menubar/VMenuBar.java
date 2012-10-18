@@ -64,6 +64,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
 
     /** Set the CSS class name to allow styling. */
     public static final String CLASSNAME = "v-menubar";
+    public static final String SUBMENU_CLASSNAME_PREFIX = "-submenu";
 
     /** For server connections **/
     protected String uidlId;
@@ -128,19 +129,51 @@ public class VMenuBar extends SimpleFocusablePanel implements
         items = new ArrayList<CustomMenuItem>();
         popup = null;
         visibleChildMenu = null;
+        this.subMenu = subMenu;
 
         containerElement = getElement();
 
-        if (!subMenu) {
-            setStyleName(CLASSNAME);
-        } else {
-            setStyleName(CLASSNAME + "-submenu");
-            this.parentMenu = parentMenu;
-        }
-        this.subMenu = subMenu;
-
         sinkEvents(Event.ONCLICK | Event.ONMOUSEOVER | Event.ONMOUSEOUT
                 | Event.ONLOAD);
+
+        if (parentMenu == null) {
+            // Root menu
+            setStyleName(CLASSNAME);
+        } else {
+            // Child menus inherits style name
+            setStyleName(parentMenu.getStyleName());
+        }
+    }
+
+    @Override
+    public void setStyleName(String style) {
+        super.setStyleName(style);
+        updateStyleNames();
+    }
+
+    @Override
+    public void setStylePrimaryName(String style) {
+        super.setStylePrimaryName(style);
+        updateStyleNames();
+    }
+
+    protected void updateStyleNames() {
+        String primaryStyleName = getParentMenu() != null ? getParentMenu()
+                .getStylePrimaryName() : getStylePrimaryName();
+
+        // Reset the style name for all the items
+        for (CustomMenuItem item : items) {
+            item.setStyleName(primaryStyleName + "-menuitem");
+        }
+
+        if (subMenu
+                && !getStylePrimaryName().endsWith(SUBMENU_CLASSNAME_PREFIX)) {
+            /*
+             * Sub-menus should get the sub-menu prefix
+             */
+            super.setStylePrimaryName(primaryStyleName
+                    + SUBMENU_CLASSNAME_PREFIX);
+        }
     }
 
     @Override
@@ -178,11 +211,11 @@ public class VMenuBar extends SimpleFocusablePanel implements
             // Add submenu indicator
             if (item.getChildCount() > 0) {
                 String bgStyle = "";
-                itemHTML.append("<span class=\"" + CLASSNAME
+                itemHTML.append("<span class=\"" + getStylePrimaryName()
                         + "-submenu-indicator\"" + bgStyle + ">&#x25BA;</span>");
             }
 
-            itemHTML.append("<span class=\"" + CLASSNAME
+            itemHTML.append("<span class=\"" + getStylePrimaryName()
                     + "-menuitem-caption\">");
             if (item.hasAttribute("icon")) {
                 itemHTML.append("<img src=\""
@@ -261,7 +294,6 @@ public class VMenuBar extends SimpleFocusablePanel implements
         CustomMenuItem item = GWT.create(CustomMenuItem.class);
         item.setHTML(html);
         item.setCommand(cmd);
-
         addItem(item);
         return item;
     }
@@ -528,6 +560,18 @@ public class VMenuBar extends SimpleFocusablePanel implements
 
         popup = new VOverlay(true, false, true);
 
+        /*
+         * Use parents primary style name if possible and remove the submenu
+         * prefix if needed
+         */
+        String primaryStyleName = parentMenu != null ? parentMenu
+                .getStylePrimaryName() : getStylePrimaryName();
+        if (subMenu) {
+            primaryStyleName = primaryStyleName.replace(
+                    SUBMENU_CLASSNAME_PREFIX, "");
+        }
+        popup.setStyleName(primaryStyleName + "-popup");
+
         // Setting owner and handlers to support tooltips. Needed for tooltip
         // handling of overlay widgets (will direct queries to parent menu)
         if (parentMenu == null) {
@@ -543,7 +587,6 @@ public class VMenuBar extends SimpleFocusablePanel implements
             client.getVTooltip().connectHandlersToWidget(popup);
         }
 
-        popup.setStyleName(CLASSNAME + "-popup");
         popup.setWidget(item.getSubMenu());
         popup.addCloseHandler(this);
         popup.addAutoHidePartner(item.getElement());
@@ -737,6 +780,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
         protected boolean isSeparator = false;
         protected boolean checkable = false;
         protected boolean checked = false;
+        protected boolean selected = false;
         protected String description = null;
 
         /**
@@ -765,48 +809,31 @@ public class VMenuBar extends SimpleFocusablePanel implements
             setHTML(html);
             setCommand(cmd);
             setSelected(false);
-            setStyleName(CLASSNAME + "-menuitem");
+        }
 
+        @Override
+        public void setStyleName(String style) {
+            super.setStyleName(style);
+            updateStyleNames();
+
+            // Pass stylename down to submenus
+            if (getSubMenu() != null) {
+                getSubMenu().setStyleName(style);
+            }
         }
 
         public void setSelected(boolean selected) {
-            if (selected && isSelectable()) {
-                addStyleDependentName("selected");
-                // needed for IE6 to have a single style name to match for an
-                // element
-                // TODO Can be optimized now that IE6 is not supported any more
-                if (checkable) {
-                    if (checked) {
-                        removeStyleDependentName("selected-unchecked");
-                        addStyleDependentName("selected-checked");
-                    } else {
-                        removeStyleDependentName("selected-checked");
-                        addStyleDependentName("selected-unchecked");
-                    }
-                }
-            } else {
-                removeStyleDependentName("selected");
-                // needed for IE6 to have a single style name to match for an
-                // element
-                removeStyleDependentName("selected-checked");
-                removeStyleDependentName("selected-unchecked");
-            }
+            this.selected = selected;
+            updateStyleNames();
         }
 
         public void setChecked(boolean checked) {
             if (checkable && !isSeparator) {
                 this.checked = checked;
-
-                if (checked) {
-                    addStyleDependentName("checked");
-                    removeStyleDependentName("unchecked");
-                } else {
-                    addStyleDependentName("unchecked");
-                    removeStyleDependentName("checked");
-                }
             } else {
                 this.checked = false;
             }
+            updateStyleNames();
         }
 
         public boolean isChecked() {
@@ -840,6 +867,65 @@ public class VMenuBar extends SimpleFocusablePanel implements
 
         public void setParentMenu(VMenuBar parentMenu) {
             this.parentMenu = parentMenu;
+            updateStyleNames();
+        }
+
+        protected void updateStyleNames() {
+            if (parentMenu == null) {
+                // Style names depend on the parent menu's primary style name so
+                // don't do updates until the item has a parent
+                return;
+            }
+
+            String primaryStyleName = parentMenu.getStylePrimaryName();
+            if (parentMenu.subMenu) {
+                primaryStyleName = primaryStyleName.replace(
+                        SUBMENU_CLASSNAME_PREFIX, "");
+            }
+
+            if (isSeparator) {
+                super.setStyleName(primaryStyleName + "-separator");
+            } else {
+                super.setStyleName(primaryStyleName + "-menuitem");
+            }
+
+            if (enabled) {
+                removeStyleDependentName("disabled");
+            } else {
+                addStyleDependentName("disabled");
+            }
+            
+            if (selected && isSelectable()) {
+                addStyleDependentName("selected");
+                // needed for IE6 to have a single style name to match for an
+                // element
+                // TODO Can be optimized now that IE6 is not supported any more
+                if (checkable) {
+                    if (checked) {
+                        removeStyleDependentName("selected-unchecked");
+                        addStyleDependentName("selected-checked");
+                    } else {
+                        removeStyleDependentName("selected-checked");
+                        addStyleDependentName("selected-unchecked");
+                    }
+                }
+            } else {
+                removeStyleDependentName("selected");
+                // needed for IE6 to have a single style name to match for an
+                // element
+                removeStyleDependentName("selected-checked");
+                removeStyleDependentName("selected-unchecked");
+            }
+
+            if (checkable && !isSeparator) {
+                if (checked) {
+                    addStyleDependentName("checked");
+                    removeStyleDependentName("unchecked");
+                } else {
+                    addStyleDependentName("unchecked");
+                    removeStyleDependentName("checked");
+                }
+            }
         }
 
         public VMenuBar getParentMenu() {
@@ -881,11 +967,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
 
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
-            if (enabled) {
-                removeStyleDependentName("disabled");
-            } else {
-                addStyleDependentName("disabled");
-            }
+            updateStyleNames();
         }
 
         public boolean isEnabled() {
@@ -894,10 +976,8 @@ public class VMenuBar extends SimpleFocusablePanel implements
 
         private void setSeparator(boolean separator) {
             isSeparator = separator;
-            if (separator) {
-                setStyleName(CLASSNAME + "-separator");
-            } else {
-                setStyleName(CLASSNAME + "-menuitem");
+            updateStyleNames();
+            if (!separator) {
                 setEnabled(enabled);
             }
         }
