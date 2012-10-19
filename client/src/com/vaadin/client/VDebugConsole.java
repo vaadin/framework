@@ -153,7 +153,7 @@ public class VDebugConsole extends VOverlay implements Console {
                     }
 
                     if (paintable != null) {
-                        a.highlightComponent(paintable);
+                        a.highlightConnector(paintable);
                         return;
                     }
                 }

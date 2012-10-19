@@ -579,13 +579,14 @@ public class ApplicationConnection {
 
     /**
      * Sends a request to the server to print details to console that will help
-     * developer to locate component in the source code.
+     * the developer to locate the corresponding server-side connector in the
+     * source code.
      * 
-     * @param componentConnector
+     * @param serverConnector
      */
-    void highlightComponent(ComponentConnector componentConnector) {
-        String params = getRepaintAllParameters() + "&highlightComponent="
-                + componentConnector.getConnectorId();
+    void highlightConnector(ServerConnector serverConnector) {
+        String params = getRepaintAllParameters() + "&highlightConnector="
+                + serverConnector.getConnectorId();
         makeUidlRequest("", params, false);
     }
 
