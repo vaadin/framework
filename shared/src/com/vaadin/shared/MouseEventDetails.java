@@ -46,7 +46,7 @@ public class MouseEventDetails implements Serializable {
      * 
      */
     public enum MouseButton {
-        LEFT("left"), RIGHT("right"), MIDDLE("middle");
+        LEFT("left"), RIGHT("right"), MIDDLE("middle"), UNKNOWN("unknown");
 
         private String name;
 

@@ -65,6 +65,9 @@ public class MouseEventDetailsBuilder {
             mouseEventDetails.setButton(MouseButton.RIGHT);
         } else if (evt.getButton() == NativeEvent.BUTTON_MIDDLE) {
             mouseEventDetails.setButton(MouseButton.MIDDLE);
+        } else {
+            // Some browsers may not always report a correct button (see #9956)
+            mouseEventDetails.setButton(MouseButton.UNKNOWN);
         }
         mouseEventDetails.setAltKey(evt.getAltKey());
         mouseEventDetails.setCtrlKey(evt.getCtrlKey());
