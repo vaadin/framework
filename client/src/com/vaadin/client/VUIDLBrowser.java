@@ -40,7 +40,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.UnknownComponentConnector;
 import com.vaadin.client.ui.window.VWindow;
-import com.vaadin.shared.Connector;
 
 /**
  * TODO Rename to something more Vaadin7-ish?
@@ -115,10 +114,22 @@ public class VUIDLBrowser extends SimpleTree {
 
         @Override
         protected void select(ClickEvent event) {
-            ComponentConnector connector = getConnector();
-            highlight(connector);
-            if (event != null && event.getNativeEvent().getShiftKey()) {
-                connector.getConnection().highlightComponent(connector);
+            ServerConnector connector = getConnector();
+
+            if (connector != null && event != null
+                    && event.getNativeEvent().getShiftKey()) {
+                connector.getConnection().highlightConnector(connector);
+            }
+
+            // For connectors that do not have a widget, highlight the widget of
+            // their ancestor component connector if any
+            while (connector != null
+                    && !(connector instanceof ComponentConnector)) {
+                connector = connector.getParent();
+            }
+            if (connector != null) {
+                ComponentConnector cc = (ComponentConnector) connector;
+                highlight(cc);
             }
             super.select(event);
         }
@@ -126,15 +137,8 @@ public class VUIDLBrowser extends SimpleTree {
         /**
          * Returns the Connector associated with this state change.
          */
-        protected ComponentConnector getConnector() {
-            Connector connector = client.getConnectorMap().getConnector(
-                    getConnectorId());
-
-            if (connector instanceof ComponentConnector) {
-                return (ComponentConnector) connector;
-            } else {
-                return null;
-            }
+        protected ServerConnector getConnector() {
+            return client.getConnectorMap().getConnector(getConnectorId());
         }
 
         protected abstract String getConnectorId();
@@ -149,11 +153,11 @@ public class VUIDLBrowser extends SimpleTree {
 
         SharedStateItem(String connectorId, ValueMap stateChanges) {
             this.connectorId = connectorId;
-            ComponentConnector connector = getConnector();
+            ServerConnector connector = getConnector();
             if (connector != null) {
                 setText(Util.getConnectorString(connector));
             } else {
-                setText("Unknown connector " + connectorId);
+                setText("Unknown connector (" + connectorId + ")");
             }
             dir(new JSONObject(stateChanges), this);
         }

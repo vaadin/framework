@@ -77,7 +77,6 @@ import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.communication.UidlValue;
 import com.vaadin.shared.ui.ui.UIConstants;
-import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ConnectorTracker;
@@ -162,7 +161,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     private int maxInactiveInterval;
 
-    private Connector highlightedConnector;
+    private ClientConnector highlightedConnector;
 
     private Map<String, Class<?>> dependencyResourceContexts = new HashMap<String, Class<?>>();
 
@@ -193,7 +192,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     private static final String UTF8 = "UTF8";
 
-    private static final String GET_PARAM_HIGHLIGHT_COMPONENT = "highlightComponent";
+    private static final String GET_PARAM_HIGHLIGHT_CONNECTOR = "highlightConnector";
 
     private static String readLine(InputStream stream) throws IOException {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
@@ -558,9 +557,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
             // analyzing can be done only with repaintAll
             analyzeLayouts = (request.getParameter(GET_PARAM_ANALYZE_LAYOUTS) != null);
 
-            if (request.getParameter(GET_PARAM_HIGHLIGHT_COMPONENT) != null) {
+            if (request.getParameter(GET_PARAM_HIGHLIGHT_CONNECTOR) != null) {
                 String pid = request
-                        .getParameter(GET_PARAM_HIGHLIGHT_COMPONENT);
+                        .getParameter(GET_PARAM_HIGHLIGHT_CONNECTOR);
                 highlightedConnector = uI.getConnectorTracker().getConnector(
                         pid);
                 highlightConnector(highlightedConnector);
@@ -678,59 +677,55 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
     }
 
-    protected void highlightConnector(Connector highlightedConnector) {
+    protected void highlightConnector(ClientConnector highlightedConnector) {
         StringBuilder sb = new StringBuilder();
-        sb.append("*** Debug details of a component:  *** \n");
+        sb.append("*** Debug details of a connector:  *** \n");
         sb.append("Type: ");
         sb.append(highlightedConnector.getClass().getName());
-        if (highlightedConnector instanceof AbstractComponent) {
-            AbstractComponent component = (AbstractComponent) highlightedConnector;
-            sb.append("\nId:");
-            sb.append(highlightedConnector.getConnectorId());
+        sb.append("\nId:");
+        sb.append(highlightedConnector.getConnectorId());
+        if (highlightedConnector instanceof Component) {
+            Component component = (Component) highlightedConnector;
             if (component.getCaption() != null) {
                 sb.append("\nCaption:");
                 sb.append(component.getCaption());
             }
-
-            printHighlightedComponentHierarchy(sb, component);
         }
+        printHighlightedConnectorHierarchy(sb, highlightedConnector);
         getLogger().info(sb.toString());
     }
 
-    protected void printHighlightedComponentHierarchy(StringBuilder sb,
-            AbstractComponent component) {
-        LinkedList<Component> h = new LinkedList<Component>();
-        h.add(component);
-        Component parent = component.getParent();
+    protected void printHighlightedConnectorHierarchy(StringBuilder sb,
+            ClientConnector connector) {
+        LinkedList<ClientConnector> h = new LinkedList<ClientConnector>();
+        h.add(connector);
+        ClientConnector parent = connector.getParent();
         while (parent != null) {
             h.addFirst(parent);
             parent = parent.getParent();
         }
 
-        sb.append("\nComponent hierarchy:\n");
-        VaadinServiceSession session2 = component.getUI().getSession();
+        sb.append("\nConnector hierarchy:\n");
+        VaadinServiceSession session2 = connector.getUI().getSession();
         sb.append(session2.getClass().getName());
-        sb.append(".");
-        sb.append(session2.getClass().getSimpleName());
         sb.append("(");
         sb.append(session2.getClass().getSimpleName());
         sb.append(".java");
         sb.append(":1)");
         int l = 1;
-        for (Component component2 : h) {
+        for (ClientConnector conector2 : h) {
             sb.append("\n");
             for (int i = 0; i < l; i++) {
                 sb.append("  ");
             }
             l++;
-            Class<? extends Component> componentClass = component2.getClass();
+            Class<? extends ClientConnector> componentClass = conector2
+                    .getClass();
             Class<?> topClass = componentClass;
             while (topClass.getEnclosingClass() != null) {
                 topClass = topClass.getEnclosingClass();
             }
             sb.append(componentClass.getName());
-            sb.append(".");
-            sb.append(componentClass.getSimpleName());
             sb.append("(");
             sb.append(topClass.getSimpleName());
             sb.append(".java:1)");
@@ -1320,9 +1315,10 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 Class<?> oldContext = dependencyResourceContexts.get(name);
                 if (oldContext != context) {
                     getLogger().warning(
-                            "Dependency " + name + " defined by both " + context
-                                    + " and " + oldContext + ". Dependency from "
-                                    + oldContext + " will be used.");
+                            "Dependency " + name + " defined by both "
+                                    + context + " and " + oldContext
+                                    + ". Dependency from " + oldContext
+                                    + " will be used.");
                 }
             } else {
                 dependencyResourceContexts.put(name, context);
