@@ -20,12 +20,19 @@ then
 	echo "No unmerged commits"
 else 
 	command="$command --format=short"
-	message="There are $change_count commits that have not been merged from $UNTIL to $SINCE"
+	message="There are $change_count commits in $UNTIL that are missing from $SINCE"
 	echo $message
 	echo ""
 	$command
-	details=`$command|perl -p -e 's/\n/|n/' | sed "s/['\|\[\]]/|\&/g"`
+	# Escape []|' and newline with | to make teamcity happy
+	details=`$command|sed "s/[]['\|]/|&/g"|perl -p -e 's/\n/|n/'`
 	echo "##teamcity[testFailed name='$testname' message='$message' details='|n$details']"
 fi
 
 echo "##teamcity[testFinished name='$testname']"
+
+# Give non-ok exit status
+if [ "$change_count" != "0" ]
+then
+	exit 1
+fi
