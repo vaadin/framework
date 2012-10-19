@@ -423,6 +423,8 @@ public abstract class VaadinService implements Serializable {
             throws ServiceException {
         VaadinServiceSession session = createVaadinSession(request);
 
+        VaadinServiceSession.setCurrent(session);
+
         session.storeInSession(this, request.getWrappedSession());
 
         // Initial locale comes from the request
