@@ -22,7 +22,10 @@ public abstract class TypeDataBundle implements RunAsyncCallback {
 
     @Override
     public void onFailure(Throwable reason) {
-        ConnectorBundleLoader.get().setLoadFailure(getName(), reason);
+        ConnectorBundleLoader.get().setLoadFailure(
+                getName(),
+                new RuntimeException("Failed to load bundle " + getName()
+                        + ": " + reason.getMessage(), reason));
     }
 
     public abstract void load();
