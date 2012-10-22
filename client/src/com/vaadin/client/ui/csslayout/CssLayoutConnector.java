@@ -93,6 +93,7 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
+        clickEventHandler.handleEventHandlerRegistration();
 
         for (ComponentConnector child : getChildComponents()) {
             if (!getState().childCss.containsKey(child)) {
@@ -123,8 +124,6 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
      */
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
-        clickEventHandler.handleEventHandlerRegistration();
-
         int index = 0;
         for (ComponentConnector child : getChildComponents()) {
             VCaption childCaption = childToCaption.get(child);
