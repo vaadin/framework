@@ -18,6 +18,8 @@ package com.vaadin.sass.tree;
 
 import java.util.ArrayList;
 
+import com.vaadin.sass.visitor.ExtendNodeHandler;
+
 public class ExtendNode extends Node implements IVariableNode {
     private static final long serialVersionUID = 3301805078983796878L;
 
@@ -44,5 +46,15 @@ public class ExtendNode extends Node implements IVariableNode {
         }
 
         return b.toString();
+    }
+
+    @Override
+    public void traverse() {
+        try {
+            ExtendNodeHandler.traverse(this);
+            getParentNode().removeChild(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

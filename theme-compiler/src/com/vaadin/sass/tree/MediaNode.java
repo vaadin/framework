@@ -57,4 +57,9 @@ public class MediaNode extends Node {
         return builder.toString();
     }
 
+    @Override
+    public void traverse() {
+
+    }
+
 }

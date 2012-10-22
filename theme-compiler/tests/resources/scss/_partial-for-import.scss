@@ -1,9 +1,13 @@
 $foo : red;
 
-.caption {
-	$side: right;
-	border: 1px solid black;
-	background: #ff0000;
-	padding: 10px;
-	margin: 10px;
+@mixin caption {
+	.caption {
+		$side: right;
+		border: 1px solid black;
+		background: #ff0000;
+		padding: 10px;
+		margin: 10px;
+	}
 }
+
+@include caption;

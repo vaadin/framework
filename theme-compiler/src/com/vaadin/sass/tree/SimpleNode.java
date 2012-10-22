@@ -2,6 +2,8 @@ package com.vaadin.sass.tree;
 
 import java.util.ArrayList;
 
+import com.vaadin.sass.ScssStylesheet;
+
 /**
  * A simple BlockNode where input text equals output. <b>Note : </b> ignores any
  * possible children so only use it when you are sure no child nodes will be
@@ -32,5 +34,10 @@ public class SimpleNode extends Node implements IVariableNode {
                         .toString());
             }
         }
+    }
+
+    @Override
+    public void traverse() {
+        replaceVariables(ScssStylesheet.getVariables());
     }
 }

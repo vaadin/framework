@@ -19,6 +19,7 @@ package com.vaadin.sass.tree;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
+import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.parser.LexicalUnitImpl;
 
 public class RuleNode extends Node implements IVariableNode, InterpolationNode {
@@ -156,5 +157,10 @@ public class RuleNode extends Node implements IVariableNode, InterpolationNode {
     public boolean containsInterpolationVariable(String variable) {
         return value.toString().contains(variable)
                 || this.variable.contains(variable);
+    }
+
+    @Override
+    public void traverse() {
+        replaceVariables(ScssStylesheet.getVariables());
     }
 }
