@@ -19,9 +19,10 @@ package com.vaadin.sass.tree;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
+import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.parser.LexicalUnitImpl;
 
-public class RuleNode extends Node implements IVariableNode, InterpolationNode {
+public class RuleNode extends Node implements IVariableNode {
     private static final long serialVersionUID = 6653493127869037022L;
 
     String variable;
@@ -83,35 +84,50 @@ public class RuleNode extends Node implements IVariableNode, InterpolationNode {
     @Override
     public void replaceVariables(ArrayList<VariableNode> variables) {
         for (final VariableNode node : variables) {
+
+            String interpolation = "#{$" + node.getName() + "}";
+
             if (value.getLexicalUnitType() == LexicalUnitImpl.SAC_FUNCTION) {
-                if (value.getParameters().toString()
-                        .contains("$" + node.getName())) {
-                    if (value.getParameters() != null) {
-                        if (value.getParameters().toString()
-                                .contains(node.getName())) {
 
-                            LexicalUnitImpl param = value.getParameters();
-                            while (param != null) {
-                                if (param.getValue().toString()
-                                        .contains(node.getName())) {
+                if (value.getParameters() != null) {
+                    if (value.getParameters().toString()
+                            .contains(node.getName())) {
 
-                                    LexicalUnitImpl expr = node.getExpr();
+                        LexicalUnitImpl param = value.getParameters();
+                        while (param != null) {
+                            if (param.getValue().toString()
+                                    .contains(node.getName())) {
 
-                                    LexicalUnitImpl prev = param
-                                            .getPreviousLexicalUnit();
-                                    LexicalUnitImpl next = param
-                                            .getNextLexicalUnit();
+                                LexicalUnitImpl expr = node.getExpr();
 
-                                    if (param.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE) {
-                                        param.replaceValue(expr);
-                                        param.setPrevLexicalUnit(prev);
-                                        param.setNextLexicalUnit(next);
-                                    }
+                                LexicalUnitImpl prev = param
+                                        .getPreviousLexicalUnit();
+                                LexicalUnitImpl next = param
+                                        .getNextLexicalUnit();
+
+                                if (param.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE) {
+                                    param.replaceValue(expr);
+                                    param.setPrevLexicalUnit(prev);
+                                    param.setNextLexicalUnit(next);
                                 }
-                                param = param.getNextLexicalUnit();
                             }
+                            param = param.getNextLexicalUnit();
                         }
                     }
+                }
+            } else if (value.getStringValue() != null
+                    && value.getStringValue().contains(interpolation)) {
+                LexicalUnitImpl current = value;
+                while (current != null) {
+                    if (current.getValue().toString().contains(interpolation)) {
+
+                        current.setStringValue(current
+                                .getValue()
+                                .toString()
+                                .replaceAll(Pattern.quote(interpolation),
+                                        node.getExpr().toString()));
+                    }
+                    current = current.getNextLexicalUnit();
                 }
             } else {
                 LexicalUnitImpl current = value;
@@ -129,32 +145,7 @@ public class RuleNode extends Node implements IVariableNode, InterpolationNode {
     }
 
     @Override
-    public void replaceInterpolation(String variableName, String variable) {
-        if (this.variable.contains(variableName)) {
-            this.variable = this.variable.replaceAll(variableName, variable);
-        }
-
-        if (value.toString().contains(variableName)) {
-
-            LexicalUnitImpl current = value;
-            while (current != null) {
-                if (current.getValue().toString().contains(variableName)) {
-                    current.setStringValue(current
-                            .getValue()
-                            .toString()
-                            .replaceAll(
-                                    Pattern.quote("#{" + variableName + "}"),
-                                    variable));
-                }
-
-                current = value.getNextLexicalUnit();
-            }
-        }
-    }
-
-    @Override
-    public boolean containsInterpolationVariable(String variable) {
-        return value.toString().contains(variable)
-                || this.variable.contains(variable);
+    public void traverse() {
+        replaceVariables(ScssStylesheet.getVariables());
     }
 }

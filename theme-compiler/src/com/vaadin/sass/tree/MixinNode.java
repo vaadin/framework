@@ -19,7 +19,9 @@ package com.vaadin.sass.tree;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.parser.LexicalUnitImpl;
+import com.vaadin.sass.visitor.MixinNodeHandler;
 
 public class MixinNode extends Node implements IVariableNode {
     private static final long serialVersionUID = 4725008226813110658L;
@@ -67,6 +69,27 @@ public class MixinNode extends Node implements IVariableNode {
                     arg.replaceValue(var.getExpr());
                 }
             }
+
+            if (name.startsWith("$")) {
+                if (name.equals("$" + var.getName())) {
+                    name = var.getExpr().toString();
+                }
+            } else if (name.startsWith("#{") && name.endsWith("}")) {
+                if (name.equals("#{$" + var.getName() + "}")) {
+                    name = var.getExpr().toString();
+                }
+            }
+
+        }
+    }
+
+    @Override
+    public void traverse() {
+        try {
+            replaceVariables(ScssStylesheet.getVariables());
+            MixinNodeHandler.traverse(this);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

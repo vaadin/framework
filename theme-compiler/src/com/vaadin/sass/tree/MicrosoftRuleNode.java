@@ -2,6 +2,8 @@ package com.vaadin.sass.tree;
 
 import java.util.ArrayList;
 
+import com.vaadin.sass.ScssStylesheet;
+
 public class MicrosoftRuleNode extends Node implements IVariableNode {
 
     private final String name;
@@ -25,5 +27,10 @@ public class MicrosoftRuleNode extends Node implements IVariableNode {
     @Override
     public String toString() {
         return name + ": " + value + ";";
+    }
+
+    @Override
+    public void traverse() {
+        replaceVariables(ScssStylesheet.getVariables());
     }
 }

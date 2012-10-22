@@ -22,21 +22,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.tree.BlockNode;
 import com.vaadin.sass.tree.ExtendNode;
 import com.vaadin.sass.tree.Node;
 
-public class ExtendVisitor implements Visitor {
-    private Map<String, List<ArrayList<String>>> extendsMap = new HashMap<String, List<ArrayList<String>>>();
+public class ExtendNodeHandler {
+    private static Map<String, List<ArrayList<String>>> extendsMap = new HashMap<String, List<ArrayList<String>>>();
 
-    @Override
-    public void traverse(Node node) throws Exception {
+    public static void traverse(ExtendNode node) throws Exception {
         buildExtendsMap(node);
-        modifyTree(node);
+        modifyTree(ScssStylesheet.get());
     }
 
-    @SuppressWarnings("unchecked")
-    private void modifyTree(Node node) throws Exception {
+    private static void modifyTree(Node node) throws Exception {
         for (Node child : node.getChildren()) {
             if (child instanceof BlockNode) {
                 BlockNode blockNode = (BlockNode) child;
@@ -62,42 +61,22 @@ public class ExtendVisitor implements Visitor {
                         }
                     }
                 }
-            } else {
-                buildExtendsMap(child);
             }
         }
 
     }
 
-    private void buildExtendsMap(Node node) {
-        if (node instanceof BlockNode) {
-            BlockNode blockNode = (BlockNode) node;
-            for (Node child : new ArrayList<Node>(node.getChildren())) {
-                if (child instanceof ExtendNode) {
-                    ExtendNode extendNode = (ExtendNode) child;
-
-                    String extendedString = extendNode.getListAsString();
-                    if (extendsMap.get(extendedString) == null) {
-                        extendsMap.put(extendedString,
-                                new ArrayList<ArrayList<String>>());
-                    }
-                    extendsMap.get(extendedString).add(
-                            blockNode.getSelectorList());
-                    node.removeChild(child);
-                } else {
-                    buildExtendsMap(child);
-                }
-            }
-        } else {
-            for (Node child : node.getChildren()) {
-                buildExtendsMap(child);
-            }
+    private static void buildExtendsMap(ExtendNode node) {
+        String extendedString = node.getListAsString();
+        if (extendsMap.get(extendedString) == null) {
+            extendsMap.put(extendedString, new ArrayList<ArrayList<String>>());
         }
-
+        extendsMap.get(extendedString).add(
+                ((BlockNode) node.getParentNode()).getSelectorList());
     }
 
-    private void addAdditionalSelectorListToBlockNode(BlockNode blockNode,
-            ArrayList<String> list, String selectorString) {
+    private static void addAdditionalSelectorListToBlockNode(
+            BlockNode blockNode, ArrayList<String> list, String selectorString) {
         if (list != null) {
             for (int i = 0; i < list.size(); i++) {
                 if (selectorString == null) {

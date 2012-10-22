@@ -1,6 +1,7 @@
 package com.vaadin.sass.tree.controldirective;
 
 import com.vaadin.sass.tree.Node;
+import com.vaadin.sass.visitor.IfElseNodeHandler;
 
 public class IfElseDefNode extends Node {
 
@@ -12,6 +13,19 @@ public class IfElseDefNode extends Node {
             b.append("\n");
         }
         return b.toString();
+    }
+
+    public void traverse() {
+        try {
+
+            for (final Node child : children) {
+                child.traverse();
+            }
+
+            IfElseNodeHandler.traverse(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
