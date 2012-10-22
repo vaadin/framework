@@ -41,4 +41,9 @@ public class ForNode extends Node {
                 + to + ", exclusive: " + exclusive + ", body" + body;
     }
 
+    @Override
+    public void traverse() {
+
+    }
+
 }

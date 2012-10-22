@@ -9,4 +9,9 @@ public class ElseNode extends Node implements IfElseNode {
         return null;
     }
 
+    @Override
+    public void traverse() {
+
+    }
+
 }

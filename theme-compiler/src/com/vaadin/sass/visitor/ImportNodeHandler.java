@@ -31,17 +31,15 @@ import com.vaadin.sass.tree.Node;
 import com.vaadin.sass.tree.RuleNode;
 import com.vaadin.sass.util.StringUtil;
 
-public class ImportVisitor implements Visitor {
+public class ImportNodeHandler {
 
-    @Override
-    public void traverse(Node node) {
-        for (Node child : new ArrayList<Node>(node.getChildren())) {
-            if (child instanceof ImportNode) {
-                ImportNode importNode = (ImportNode) child;
+    public static void traverse(ScssStylesheet node) {
+        ArrayList<Node> c = new ArrayList<Node>(node.getChildren());
+        for (Node n : c) {
+            if (n instanceof ImportNode) {
+                ImportNode importNode = (ImportNode) n;
                 if (!importNode.isPureCssImport()) {
-
                     try {
-
                         StringBuilder filePathBuilder = new StringBuilder(
                                 node.getFileName());
                         filePathBuilder.append(File.separatorChar).append(
@@ -57,16 +55,20 @@ public class ImportVisitor implements Visitor {
                         }
                         if (imported == null) {
                             throw new FileNotFoundException(importNode.getUri()
-                                    + " (parent: " + node.getFileName() + ")");
+                                    + " (parent: "
+                                    + ScssStylesheet.get().getFileName() + ")");
                         }
 
-                        traverse(imported);
                         String prefix = getUrlPrefix(importNode.getUri());
                         if (prefix != null) {
                             updateUrlInImportedSheet(imported, prefix);
                         }
+
+                        traverse(imported);
+
                         Node pre = importNode;
-                        for (Node importedChild : imported.getChildren()) {
+                        for (Node importedChild : new ArrayList<Node>(
+                                imported.getChildren())) {
                             node.appendChild(importedChild, pre);
                             pre = importedChild;
                         }
@@ -81,7 +83,7 @@ public class ImportVisitor implements Visitor {
         }
     }
 
-    private String getUrlPrefix(String url) {
+    private static String getUrlPrefix(String url) {
         if (url == null) {
             return null;
         }
@@ -92,7 +94,7 @@ public class ImportVisitor implements Visitor {
         return url.substring(0, pos + 1);
     }
 
-    private void updateUrlInImportedSheet(Node node, String prefix) {
+    private static void updateUrlInImportedSheet(Node node, String prefix) {
         for (Node child : node.getChildren()) {
             if (child instanceof RuleNode) {
                 LexicalUnit value = ((RuleNode) child).getValue();
