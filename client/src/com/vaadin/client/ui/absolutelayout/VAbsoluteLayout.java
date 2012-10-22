@@ -62,7 +62,7 @@ public class VAbsoluteLayout extends ComplexPanel {
     @Override
     public void add(Widget child) {
         AbsoluteWrapper wrapper = new AbsoluteWrapper(child);
-        wrapper.setStyleName(getStylePrimaryName() + "-wrapper");
+        wrapper.updateStyleNames();
         super.add(wrapper, canvas);
     }
 
@@ -292,7 +292,7 @@ public class VAbsoluteLayout extends ComplexPanel {
         for (Widget w : getChildren()) {
             if (w instanceof AbsoluteWrapper) {
                 AbsoluteWrapper wrapper = (AbsoluteWrapper) w;
-                wrapper.setStyleName(getStylePrimaryName() + "-wrapper");
+                wrapper.updateStyleNames();
             }
         }
     }
@@ -372,6 +372,24 @@ public class VAbsoluteLayout extends ComplexPanel {
     }
 
     /**
+     * Sets style names for the wrapper wrapping the widget in the layout. The
+     * style names will be prefixed with v-absolutelayout-wrapper.
+     * 
+     * @param widget
+     *            The widget which wrapper we want to add the stylenames to
+     * @param stylenames
+     *            The style names that should be added to the wrapper
+     */
+    public void setWidgetWrapperStyleNames(Widget widget, String... stylenames) {
+        AbsoluteWrapper wrapper = getChildWrapper(widget);
+        if (wrapper == null) {
+            throw new IllegalArgumentException(
+                    "No wrapper for widget found, has the widget been added to the layout?");
+        }
+        wrapper.setWrapperStyleNames(stylenames);
+    }
+
+    /**
      * Internal wrapper for wrapping widgets in the Absolute layout
      */
     protected class AbsoluteWrapper extends SimplePanel {
@@ -383,6 +401,7 @@ public class VAbsoluteLayout extends ComplexPanel {
         private String zIndex;
 
         private VCaption caption;
+        private String[] extraStyleNames;
 
         /**
          * Constructor
@@ -484,6 +503,31 @@ public class VAbsoluteLayout extends ComplexPanel {
                 style.setPropertyPx("left", getElement().getOffsetLeft());
                 style.setPropertyPx("top", getElement().getOffsetTop()
                         - caption.getHeight());
+            }
+        }
+
+        /**
+         * Sets the style names of the wrapper. Will be prefixed with the
+         * v-absolutelayout-wrapper prefix
+         * 
+         * @param stylenames
+         *            The wrapper style names
+         */
+        public void setWrapperStyleNames(String... stylenames) {
+            extraStyleNames = stylenames;
+            updateStyleNames();
+        }
+
+        /**
+         * Updates the style names using the primary style name as prefix
+         */
+        protected void updateStyleNames() {
+            setStyleName(VAbsoluteLayout.this.getStylePrimaryName()
+                    + "-wrapper");
+            if(extraStyleNames != null){
+                for (String stylename : extraStyleNames) {
+                    addStyleDependentName(stylename);
+                }
             }
         }
     }

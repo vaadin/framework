@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.ui.absolutelayout;
 
+import java.util.List;
+
 import com.google.gwt.user.client.Element;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
@@ -23,6 +25,7 @@ import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.client.ui.LayoutClickEventHandler;
 import com.vaadin.shared.ui.Connect;
@@ -51,6 +54,22 @@ public class AbsoluteLayoutConnector extends
         protected LayoutClickRpc getLayoutClickRPC() {
             return rpc;
         };
+    };
+
+    private StateChangeHandler childStateChangeHandler = new StateChangeHandler() {
+        @Override
+        public void onStateChanged(StateChangeEvent stateChangeEvent) {
+            ComponentConnector child = (ComponentConnector) stateChangeEvent
+                    .getConnector();
+            List<String> childStyles = child.getState().styles;
+            if (childStyles == null) {
+                getWidget().setWidgetWrapperStyleNames(child.getWidget(),
+                        (String[]) null);
+            } else {
+                getWidget().setWidgetWrapperStyleNames(child.getWidget(),
+                        childStyles.toArray(new String[childStyles.size()]));
+            }
+        }
     };
 
     private AbsoluteLayoutServerRpc rpc;
@@ -160,11 +179,13 @@ public class AbsoluteLayoutConnector extends
         for (ComponentConnector child : getChildComponents()) {
             if (!getWidget().contains(child.getWidget())) {
                 getWidget().add(child.getWidget());
+                child.addStateChangeHandler(childStateChangeHandler);
             }
         }
         for (ComponentConnector oldChild : event.getOldChildren()) {
             if (oldChild.getParent() != this) {
                 getWidget().remove(oldChild.getWidget());
+                oldChild.removeStateChangeHandler(childStateChangeHandler);
             }
         }
     }
