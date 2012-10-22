@@ -21,7 +21,7 @@ public class ProgressIndicatorInvisible extends TestBase {
         final Button b = new Button("Hide container of progress indicator");
         addComponent(b);
 
-        b.addListener(new Button.ClickListener() {
+        b.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 // If we skip hiding the layout, hiding the ProgressIndicator

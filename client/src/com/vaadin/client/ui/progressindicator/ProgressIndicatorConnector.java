@@ -16,52 +16,45 @@
 
 package com.vaadin.client.ui.progressindicator;
 
-import com.google.gwt.user.client.DOM;
-import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.Paintable;
-import com.vaadin.client.UIDL;
+import com.google.gwt.user.client.Timer;
+import com.vaadin.client.communication.RpcProxy;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.progressindicator.ProgressIndicatorServerRpc;
+import com.vaadin.shared.ui.progressindicator.ProgressIndicatorState;
 import com.vaadin.ui.ProgressIndicator;
 
 @Connect(ProgressIndicator.class)
-public class ProgressIndicatorConnector extends AbstractFieldConnector
-        implements Paintable {
+public class ProgressIndicatorConnector extends AbstractFieldConnector {
 
     @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+    public ProgressIndicatorState getState() {
+        return (ProgressIndicatorState) super.getState();
+    }
 
-        if (!isRealUpdate(uidl)) {
-            return;
+    ProgressIndicatorServerRpc rpc = RpcProxy.create(
+            ProgressIndicatorServerRpc.class, this);
+
+    private Timer poller = new Timer() {
+
+        @Override
+        public void run() {
+            rpc.poll();
         }
 
-        // Save details
-        getWidget().client = client;
+    };
 
-        getWidget().indeterminate = uidl.getBooleanAttribute("indeterminate");
-
-        if (getWidget().indeterminate) {
-            String basename = VProgressIndicator.CLASSNAME + "-indeterminate";
-            getWidget().addStyleName(basename);
-            if (!isEnabled()) {
-                getWidget().addStyleName(basename + "-disabled");
-            } else {
-                getWidget().removeStyleName(basename + "-disabled");
-            }
-        } else {
-            try {
-                final float f = Float.parseFloat(uidl
-                        .getStringAttribute("state"));
-                final int size = Math.round(100 * f);
-                DOM.setStyleAttribute(getWidget().indicator, "width", size
-                        + "%");
-            } catch (final Exception e) {
-            }
-        }
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+        getWidget().setIndeterminate(getState().indeterminate);
+        getWidget().setState(getState().state);
 
         if (isEnabled()) {
-            getWidget().interval = uidl.getIntAttribute("pollinginterval");
-            getWidget().poller.scheduleRepeating(getWidget().interval);
+            poller.scheduleRepeating(getState().pollingInterval);
+        } else {
+            poller.cancel();
         }
     }
 
