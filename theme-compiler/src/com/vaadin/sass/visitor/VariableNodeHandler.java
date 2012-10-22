@@ -14,12 +14,19 @@
  * the License.
  */
 
-package com.vaadin.sass.testcases.visitor;
+package com.vaadin.sass.visitor;
 
-import org.junit.Test;
+import com.vaadin.sass.ScssStylesheet;
+import com.vaadin.sass.tree.VariableNode;
 
-public class ImportVisitorTest {
-    @Test
-    public void canHandleNestedImports() {
+public class VariableNodeHandler {
+
+    public static void traverse(VariableNode node) {
+        if (ScssStylesheet.getVariable(node.getName()) == null
+                || !node.isGuarded()) {
+            ScssStylesheet.addVariable(node);
+        }
+        node.getParentNode().removeChild(node);
     }
+
 }

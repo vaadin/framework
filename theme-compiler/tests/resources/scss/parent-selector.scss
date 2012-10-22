@@ -22,3 +22,9 @@ a {
 .mixin-parent {
 	@include parent;
 }
+
+.part {
+	&.one, &.two {
+		color: blue;
+	}
+}

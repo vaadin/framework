@@ -18,6 +18,7 @@ package com.vaadin.sass.tree.controldirective;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
+import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.tree.IVariableNode;
 import com.vaadin.sass.tree.Node;
 import com.vaadin.sass.tree.VariableNode;
@@ -46,11 +47,17 @@ public class IfNode extends Node implements IfElseNode, IVariableNode {
     @Override
     public void replaceVariables(ArrayList<VariableNode> variables) {
         for (final VariableNode node : variables) {
-            if (expression.contains("$" + node.getName())) {
-                expression = expression.replaceAll(Pattern.quote("$"
-                        + node.getName()), node.getExpr().toString());
+            String variable = "$" + node.getName();
+            if (expression.contains(variable)) {
+                expression = expression.replaceAll(Pattern.quote(variable),
+                        node.getExpr().toString());
             }
         }
+    }
+
+    @Override
+    public void traverse() {
+        replaceVariables(ScssStylesheet.getVariables());
     }
 
 }
