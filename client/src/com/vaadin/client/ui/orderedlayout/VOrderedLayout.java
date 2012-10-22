@@ -177,8 +177,8 @@ public class VOrderedLayout extends FlowPanel {
          */
         private Slot(Widget widget, VOrderedLayout layout) {
             this.layout = layout;
-            setWidget(widget);
             setStylePrimaryName("v-slot");
+            setWidget(widget);
         }
 
         /**
@@ -187,6 +187,26 @@ public class VOrderedLayout extends FlowPanel {
          */
         public AlignmentInfo getAlignment() {
             return alignment;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.google.gwt.user.client.ui.SimplePanel#setWidget(com.google.gwt
+         * .user.client.ui.Widget)
+         */
+        @Override
+        public void setWidget(Widget w) {
+            if (getWidget() != null) {
+                removeStyleDependentName(w.getStylePrimaryName());
+            }
+
+            super.setWidget(w);
+
+            if (getWidget() != null) {
+                addStyleDependentName(w.getStylePrimaryName());
+            }
         }
 
         /**
