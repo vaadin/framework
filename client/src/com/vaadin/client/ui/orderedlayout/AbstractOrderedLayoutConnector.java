@@ -83,8 +83,15 @@ public abstract class AbstractOrderedLayoutConnector extends
             slot.setRelativeWidth(child.isRelativeWidth());
             slot.setRelativeHeight(child.isRelativeHeight());
 
+            // Update slot style names
+            List<String> childStyles = child.getState().styles;
+            if (childStyles != null && !childStyles.isEmpty()) {
+                getWidget().setSlotStyleNames(child.getWidget(),
+                        childStyles.toArray(new String[childStyles
+                                .size()]));
+            }
+
             updateSlotListeners(child);
-            // updateAllSlotListeners();
 
             updateLayoutHeight();
         }

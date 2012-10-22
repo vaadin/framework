@@ -149,6 +149,8 @@ public class VOrderedLayout extends FlowPanel {
      */
     public static final class Slot extends SimplePanel {
 
+        public static final String SLOT_CLASSNAME = "v-slot";
+
         private Element spacer;
         private Element captionWrap;
         private Element caption;
@@ -177,8 +179,8 @@ public class VOrderedLayout extends FlowPanel {
          */
         private Slot(Widget widget, VOrderedLayout layout) {
             this.layout = layout;
+            setStyleName(SLOT_CLASSNAME);
             setWidget(widget);
-            setStylePrimaryName("v-slot");
         }
 
         /**
@@ -190,6 +192,22 @@ public class VOrderedLayout extends FlowPanel {
         }
 
         /**
+         * Sets the style names for the slot containing the widget
+         * 
+         * @param stylenames
+         *            The style names for the slot
+         */
+        protected void setStyleNames(String... stylenames) {
+            setStyleName(SLOT_CLASSNAME);
+            for (String stylename : stylenames) {
+                addStyleDependentName(stylename);
+            }
+
+            // Ensure alignment style names are correct
+            setAlignment(alignment);
+        }
+
+        /**
          * Sets how the widget is aligned inside the slot
          * 
          * @param alignment
@@ -198,20 +216,21 @@ public class VOrderedLayout extends FlowPanel {
         public void setAlignment(AlignmentInfo alignment) {
             this.alignment = alignment;
 
-            if (alignment.isHorizontalCenter()) {
+            if (alignment != null && alignment.isHorizontalCenter()) {
                 addStyleName(ALIGN_CLASS_PREFIX + "center");
                 removeStyleName(ALIGN_CLASS_PREFIX + "right");
-            } else if (alignment.isRight()) {
+            } else if (alignment != null && alignment.isRight()) {
                 addStyleName(ALIGN_CLASS_PREFIX + "right");
                 removeStyleName(ALIGN_CLASS_PREFIX + "center");
             } else {
                 removeStyleName(ALIGN_CLASS_PREFIX + "right");
                 removeStyleName(ALIGN_CLASS_PREFIX + "center");
             }
-            if (alignment.isVerticalCenter()) {
+
+            if (alignment != null && alignment.isVerticalCenter()) {
                 addStyleName(ALIGN_CLASS_PREFIX + "middle");
                 removeStyleName(ALIGN_CLASS_PREFIX + "bottom");
-            } else if (alignment.isBottom()) {
+            } else if (alignment != null && alignment.isBottom()) {
                 addStyleName(ALIGN_CLASS_PREFIX + "bottom");
                 removeStyleName(ALIGN_CLASS_PREFIX + "middle");
             } else {
@@ -969,5 +988,21 @@ public class VOrderedLayout extends FlowPanel {
     public void setHeight(String height) {
         super.setHeight(height);
         definedHeight = (height != null && !"".equals(height));
+    }
+
+    /**
+     * Sets the slots style names. The style names will be prefixed with the
+     * v-slot prefix.
+     * 
+     * @param stylenames
+     *            The style names of the slot.
+     */
+    public void setSlotStyleNames(Widget widget, String... stylenames) {
+        Slot slot = getSlot(widget);
+        if (slot == null) {
+            throw new IllegalArgumentException(
+                    "A slot for the widget could not be found. Has the widget been added to the layout?");
+        }
+        slot.setStyleNames(stylenames);
     }
 }
