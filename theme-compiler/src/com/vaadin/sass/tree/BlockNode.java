@@ -18,6 +18,10 @@ package com.vaadin.sass.tree;
 
 import java.util.ArrayList;
 
+import com.vaadin.sass.ScssStylesheet;
+import com.vaadin.sass.visitor.BlockNodeHandler;
+import com.vaadin.sass.visitor.ParentSelectorHandler;
+
 public class BlockNode extends Node implements IVariableNode, InterpolationNode {
 
     private static final long serialVersionUID = 5742962631468325048L;
@@ -113,6 +117,22 @@ public class BlockNode extends Node implements IVariableNode, InterpolationNode 
     @Override
     public boolean containsInterpolationVariable(String variable) {
         return getSelectors().contains(variable);
+    }
+
+    public void setParentNode(Node node) {
+        parentNode.removeChild(this);
+        node.appendChild(this);
+    }
+
+    @Override
+    public void traverse() {
+        try {
+            ParentSelectorHandler.traverse(this);
+            BlockNodeHandler.traverse(this);
+            replaceVariables(ScssStylesheet.getVariables());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
