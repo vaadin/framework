@@ -8,14 +8,20 @@
  */
 package com.vaadin.sass.parser;
 
+import java.io.Serializable;
+
 import org.w3c.css.sac.SACMediaList;
 
 /**
  * @version $Revision: 1.4 $
  * @author Philippe Le Hegaret
  */
-public class MediaListImpl implements SACMediaList {
+public class MediaListImpl implements SACMediaList, Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     String[] array = new String[10];
     int current;
 
