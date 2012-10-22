@@ -18,7 +18,11 @@ package com.vaadin.sass.tree;
 
 import java.util.ArrayList;
 
-public class BlockNode extends Node implements IVariableNode, InterpolationNode {
+import com.vaadin.sass.ScssStylesheet;
+import com.vaadin.sass.visitor.BlockNodeHandler;
+import com.vaadin.sass.visitor.ParentSelectorHandler;
+
+public class BlockNode extends Node implements IVariableNode {
 
     private static final long serialVersionUID = 5742962631468325048L;
 
@@ -94,25 +98,20 @@ public class BlockNode extends Node implements IVariableNode, InterpolationNode 
         return b.toString();
     }
 
-    @Override
-    public void replaceInterpolation(String variableName, String variable) {
-        if (selectorList == null || selectorList.isEmpty()) {
-            return;
-        }
-
-        for (final String selector : new ArrayList<String>(selectorList)) {
-            String interpolation = "#{" + variableName + "}";
-            if (selector.contains(interpolation)) {
-                String replace = selector.replace(interpolation, variable);
-                selectorList.add(selectorList.indexOf(selector), replace);
-                selectorList.remove(selector);
-            }
-        }
+    public void setParentNode(Node node) {
+        parentNode.removeChild(this);
+        node.appendChild(this);
     }
 
     @Override
-    public boolean containsInterpolationVariable(String variable) {
-        return getSelectors().contains(variable);
+    public void traverse() {
+        try {
+            ParentSelectorHandler.traverse(this);
+            BlockNodeHandler.traverse(this);
+            replaceVariables(ScssStylesheet.getVariables());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

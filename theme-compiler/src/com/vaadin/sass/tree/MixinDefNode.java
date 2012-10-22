@@ -19,6 +19,7 @@ package com.vaadin.sass.tree;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.util.DeepCopy;
 
 public class MixinDefNode extends Node implements IVariableNode {
@@ -68,6 +69,17 @@ public class MixinDefNode extends Node implements IVariableNode {
                     arglist.add(arglist.indexOf(arg),
                             (VariableNode) DeepCopy.copy(var));
                     arglist.remove(arg);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void traverse() {
+        if (!arglist.isEmpty()) {
+            for (final VariableNode arg : arglist) {
+                if (arg.getExpr() != null) {
+                    ScssStylesheet.addVariable(arg);
                 }
             }
         }

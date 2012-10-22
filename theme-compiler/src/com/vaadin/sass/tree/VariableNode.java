@@ -18,7 +18,9 @@ package com.vaadin.sass.tree;
 
 import java.util.ArrayList;
 
+import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.parser.LexicalUnitImpl;
+import com.vaadin.sass.visitor.VariableNodeHandler;
 
 public class VariableNode extends Node implements IVariableNode {
     private static final long serialVersionUID = 7003372557547748734L;
@@ -91,5 +93,11 @@ public class VariableNode extends Node implements IVariableNode {
 
             unit = unit.getNextLexicalUnit();
         }
+    }
+
+    @Override
+    public void traverse() {
+        replaceVariables(ScssStylesheet.getVariables());
+        VariableNodeHandler.traverse(this);
     }
 }

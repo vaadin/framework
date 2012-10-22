@@ -26,3 +26,7 @@ body.firefox a {
 .mixin-parent:hover {
 	color: blue;
 }
+
+.part.one, .part.two {
+	color: blue;
+}

@@ -17,9 +17,8 @@
 package com.vaadin.sass.visitor;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
+import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.parser.LexicalUnitImpl;
 import com.vaadin.sass.tree.IVariableNode;
 import com.vaadin.sass.tree.MixinDefNode;
@@ -28,56 +27,34 @@ import com.vaadin.sass.tree.Node;
 import com.vaadin.sass.tree.VariableNode;
 import com.vaadin.sass.util.DeepCopy;
 
-public class MixinVisitor implements Visitor {
-    Map<String, MixinDefNode> mixinDefs = new HashMap<String, MixinDefNode>();
+public class MixinNodeHandler {
 
-    @Override
-    public void traverse(Node node) throws Exception {
-        // create mixin map.
-        for (Node child : node.getChildren()) {
-            if (child instanceof MixinDefNode) {
-                mixinDefs.put(((MixinDefNode) child).getName(),
-                        (MixinDefNode) child);
-            }
-        }
-
+    public static void traverse(MixinNode node) throws Exception {
         replaceMixins(node);
-
-        // delete MixinDefNode
-        for (Node child : new ArrayList<Node>(node.getChildren())) {
-            if (child instanceof MixinDefNode) {
-                node.removeChild(child);
-            }
-        }
-
     }
 
-    private void replaceMixins(Node node) throws Exception {
-        for (Node child : new ArrayList<Node>(node.getChildren())) {
-            replaceMixins(child);
-            if (child instanceof MixinNode) {
-                MixinNode mixinNode = (MixinNode) child;
-                MixinDefNode mixinDef = mixinDefs.get(mixinNode.getName());
-                if (mixinDef == null) {
-                    throw new Exception("Mixin Definition: "
-                            + mixinNode.getName() + " not found");
-                }
-                replaceMixinNode(node, mixinNode, mixinDef);
-            }
+    private static void replaceMixins(MixinNode node) throws Exception {
+        MixinDefNode mixinDef = ScssStylesheet.getMixinDefinition(node
+                .getName());
+        if (mixinDef == null) {
+            throw new Exception("Mixin Definition: " + node.getName()
+                    + " not found");
         }
+        replaceMixinNode(node, mixinDef);
     }
 
-    private void replaceMixinNode(Node current, MixinNode mixinNode,
+    private static void replaceMixinNode(MixinNode mixinNode,
             MixinDefNode mixinDef) {
         Node pre = mixinNode;
+
+        MixinDefNode defClone = (MixinDefNode) DeepCopy.copy(mixinDef);
+
         if (mixinDef.getArglist().isEmpty()) {
-            for (Node child : mixinDef.getChildren()) {
-                current.appendChild(child, pre);
+            for (Node child : new ArrayList<Node>(defClone.getChildren())) {
+                mixinNode.getParentNode().appendChild(child, pre);
                 pre = child;
             }
         } else {
-
-            MixinDefNode defClone = (MixinDefNode) DeepCopy.copy(mixinDef);
 
             replacePossibleArguments(mixinNode, defClone);
 
@@ -88,14 +65,15 @@ public class MixinVisitor implements Visitor {
 
                 replaceChildVariables(defClone, clone);
 
-                current.appendChild(clone, previous);
+                mixinNode.getParentNode().appendChild(clone, previous);
 
                 previous = clone;
 
             }
 
         }
-        current.removeChild(mixinNode);
+
+        mixinNode.getParentNode().removeChild(mixinNode);
     }
 
     /**
@@ -106,7 +84,8 @@ public class MixinVisitor implements Visitor {
      * @param mixinNode
      * @param def
      */
-    private void replacePossibleArguments(MixinNode mixinNode, MixinDefNode def) {
+    private static void replacePossibleArguments(MixinNode mixinNode,
+            MixinDefNode def) {
 
         if (mixinNode.getArglist().size() > 0) {
             ArrayList<VariableNode> remainingNodes = new ArrayList<VariableNode>(
@@ -140,7 +119,7 @@ public class MixinVisitor implements Visitor {
 
     }
 
-    private void replaceChildVariables(MixinDefNode mixinDef, Node node) {
+    private static void replaceChildVariables(MixinDefNode mixinDef, Node node) {
         for (final Node child : node.getChildren()) {
             replaceChildVariables(mixinDef, child);
         }

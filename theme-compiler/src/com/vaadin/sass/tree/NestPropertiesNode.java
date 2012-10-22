@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.vaadin.sass.visitor.NestedNodeHandler;
+
 public class NestPropertiesNode extends Node implements IVariableNode {
     private static final long serialVersionUID = 3671253315690598308L;
 
@@ -41,7 +43,8 @@ public class NestPropertiesNode extends Node implements IVariableNode {
     public Collection<RuleNode> unNesting() {
         List<RuleNode> result = new ArrayList<RuleNode>();
         for (Node child : children) {
-            result.add(createNewRuleNodeFromChild((RuleNode) child));
+            RuleNode createNewRuleNodeFromChild = createNewRuleNodeFromChild((RuleNode) child);
+            result.add(createNewRuleNodeFromChild);
         }
         return result;
     }
@@ -63,4 +66,10 @@ public class NestPropertiesNode extends Node implements IVariableNode {
             }
         }
     }
+
+    @Override
+    public void traverse() {
+        NestedNodeHandler.traverse(this);
+    }
+
 }
