@@ -332,6 +332,11 @@ public class ComponentLocator {
                 } catch (Exception e) {
                     return null;
                 }
+
+                if (element == null) {
+                    return null;
+                }
+
             }
         }
 
