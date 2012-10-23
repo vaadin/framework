@@ -49,6 +49,8 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>VaadinApplicationRunner</servlet-name>
+		<servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
 		<!-- Non-default values for testing purposes -->
 		<init-param>
 			<param-name>heartbeatInterval</param-name>
@@ -66,8 +68,6 @@
 			<param-name>testParam</param-name>
 			<param-value>42</param-value>
 		</init-param>
-		<servlet-name>VaadinApplicationRunner</servlet-name>
-		<servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
 	</servlet>
 
 	<!-- For testing GAE - the deployment script changes this to use GAEVaadinServlet -->
