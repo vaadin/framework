@@ -85,7 +85,10 @@ public abstract class AbstractOrderedLayoutConnector extends
 
             // Update slot style names
             List<String> childStyles = child.getState().styles;
-            if (childStyles != null && !childStyles.isEmpty()) {
+            if (childStyles == null) {
+                getWidget().setSlotStyleNames(child.getWidget(),
+                        (String[]) null);
+            } else {
                 getWidget().setSlotStyleNames(child.getWidget(),
                         childStyles.toArray(new String[childStyles
                                 .size()]));

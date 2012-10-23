@@ -199,8 +199,10 @@ public class VOrderedLayout extends FlowPanel {
          */
         protected void setStyleNames(String... stylenames) {
             setStyleName(SLOT_CLASSNAME);
-            for (String stylename : stylenames) {
-                addStyleDependentName(stylename);
+            if (stylenames != null) {
+                for (String stylename : stylenames) {
+                    addStyleDependentName(stylename);
+                }
             }
 
             // Ensure alignment style names are correct
