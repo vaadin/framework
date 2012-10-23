@@ -34,15 +34,8 @@ public class TextFieldWithPropertyFormatter extends TestBase {
             }
 
             @Override
-            public void setValue(Object newValue) throws ReadOnlyException {
-                if (newValue == null) {
-                    value = null;
-                } else if (newValue instanceof BigDecimal) {
-                    value = (BigDecimal) newValue;
-                } else {
-                    throw new IllegalArgumentException(
-                            "Value must be of type BigDecimal");
-                }
+            public void setValue(BigDecimal newValue) throws ReadOnlyException {
+                value = newValue;
             }
 
             @Override

@@ -542,7 +542,7 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         fields[0].setRequiredError("required error");
 
         fields[1] = new TextField();
-        fields[1].setValue("TEXTFIELD2");
+        ((TextField) fields[1]).setValue("TEXTFIELD2");
         fields[1]
                 .setComponentError(new UserError("component error, user error"));
 

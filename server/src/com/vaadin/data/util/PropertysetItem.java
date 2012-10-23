@@ -68,7 +68,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
      * @return the Property with the given ID or <code>null</code>
      */
     @Override
-    public Property<?> getItemProperty(Object id) {
+    public Property getItemProperty(Object id) {
         return map.get(id);
     }
 

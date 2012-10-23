@@ -289,14 +289,9 @@ public class Slider extends AbstractField<Double> {
     }
 
     @Override
-    public void setValue(Object newFieldValue) {
-        if (newFieldValue instanceof Number) {
-            // Support setting all types of Numbers
-            newFieldValue = ((Number) newFieldValue).doubleValue();
-        }
+    public void setValue(Double newFieldValue) {
         super.setValue(newFieldValue);
-        // The cast is safe if the above call returned without throwing
-        getState().value = (Double) newFieldValue;
+        getState().value = newFieldValue;
     }
 
     /**

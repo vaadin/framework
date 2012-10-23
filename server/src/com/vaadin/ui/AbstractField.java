@@ -427,17 +427,9 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @throws Property.ReadOnlyException
      */
     @Override
-    public void setValue(Object newFieldValue)
-            throws Property.ReadOnlyException, Converter.ConversionException {
-        // This check is needed as long as setValue accepts Object instead of T
-        if (newFieldValue != null) {
-            if (!getType().isAssignableFrom(newFieldValue.getClass())) {
-                throw new Converter.ConversionException("Value of type "
-                        + newFieldValue.getClass() + " cannot be assigned to "
-                        + getType().getName());
-            }
-        }
-        setValue((T) newFieldValue, false);
+    public void setValue(T newFieldValue) throws Property.ReadOnlyException,
+            Converter.ConversionException {
+        setValue(newFieldValue, false);
     }
 
     /**
