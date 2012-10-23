@@ -305,6 +305,23 @@ public class VAbsoluteLayout extends ComplexPanel {
         for (Widget widget : getChildren()) {
             if (widget instanceof AbsoluteWrapper) {
                 AbsoluteWrapper wrapper = (AbsoluteWrapper) widget;
+
+                /*
+                 * Cleanup old wrappers which have been left empty by other
+                 * inner layouts moving the widget from the wrapper into their
+                 * own hierarchy. This usually happens when a call to
+                 * setWidget(widget) is done in an inner layout which
+                 * automatically detaches the widget from the parent, in this
+                 * case the wrapper, and re-attaches it somewhere else. This has
+                 * to be done in the layout phase since the order of the
+                 * hierarchy events are not defined.
+                 */
+                if (wrapper.getWidget() == null) {
+                    wrapper.destroy();
+                    super.remove(wrapper);
+                    continue;
+                }
+
                 Style wrapperStyle = wrapper.getElement().getStyle();
                 Style widgetStyle = wrapper.getWidget().getElement().getStyle();
                 if (widgetStyle.getHeight() != null
@@ -341,6 +358,23 @@ public class VAbsoluteLayout extends ComplexPanel {
         for (Widget widget : getChildren()) {
             if (widget instanceof AbsoluteWrapper) {
                 AbsoluteWrapper wrapper = (AbsoluteWrapper) widget;
+
+                /*
+                 * Cleanup old wrappers which have been left empty by other
+                 * inner layouts moving the widget from the wrapper into their
+                 * own hierarchy. This usually happens when a call to
+                 * setWidget(widget) is done in an inner layout which
+                 * automatically detaches the widget from the parent, in this
+                 * case the wrapper, and re-attaches it somewhere else. This has
+                 * to be done in the layout phase since the order of the
+                 * hierarchy events are not defined.
+                 */
+                if (wrapper.getWidget() == null) {
+                    wrapper.destroy();
+                    super.remove(wrapper);
+                    continue;
+                }
+
                 Style wrapperStyle = wrapper.getElement().getStyle();
                 Style widgetStyle = wrapper.getWidget().getElement().getStyle();
 
