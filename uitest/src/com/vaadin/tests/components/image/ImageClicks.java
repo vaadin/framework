@@ -7,7 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Random;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 
@@ -20,8 +20,6 @@ import com.vaadin.ui.Label;
 
 public class ImageClicks extends TestBase {
 
-    private final Random rng = new Random(0);
-
     private int clickCounter = 0;
 
     @Override
@@ -30,7 +28,7 @@ public class ImageClicks extends TestBase {
         final Label label = new Label(labelText());
         addComponent(label);
 
-        Image image = new Image();
+        final Image image = new Image();
         final MyImageSource imageSource = new MyImageSource();
         final StreamResource imageResource = new StreamResource(imageSource,
                 "testimage.png");
@@ -40,6 +38,9 @@ public class ImageClicks extends TestBase {
             @Override
             public void click(ClickEvent event) {
                 ++clickCounter;
+                imageResource.setFilename("testimage.png?"
+                        + new Date().getTime());
+                image.markAsDirty();
                 label.setValue(labelText());
             }
 
@@ -58,7 +59,7 @@ public class ImageClicks extends TestBase {
 
     @Override
     protected String getDescription() {
-        return "Test click event handling of images";
+        return "Each click on the dynamically generated image should update the image and add another black square";
     }
 
     @Override
@@ -110,11 +111,13 @@ public class ImageClicks extends TestBase {
                     }
 
                     // Cell
-                    if (rng.nextFloat() < 0.5f) {
-                        drawable.setColor(Color.white);
-                    } else {
+                    int cellIndex = col + row * cols;
+                    if (clickCounter > cellIndex) {
                         drawable.setColor(Color.black);
+                    } else {
+                        drawable.setColor(Color.white);
                     }
+
                     drawable.fillRect(gridx + 1, gridy + 1, gridxnext - gridx
                             - 1, gridynext - gridy - 1);
                 }
