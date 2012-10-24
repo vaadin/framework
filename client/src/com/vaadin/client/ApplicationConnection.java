@@ -573,7 +573,8 @@ public class ApplicationConnection {
      * for debugging during development.
      */
     public void analyzeLayouts() {
-        String params = getRepaintAllParameters() + "&analyzeLayouts=1";
+        String params = getRepaintAllParameters() + "&"
+                + ApplicationConstants.PARAM_ANALYZE_LAYOUTS + "=1";
         makeUidlRequest("", params, false);
     }
 
@@ -585,7 +586,8 @@ public class ApplicationConnection {
      * @param serverConnector
      */
     void highlightConnector(ServerConnector serverConnector) {
-        String params = getRepaintAllParameters() + "&highlightConnector="
+        String params = getRepaintAllParameters() + "&"
+                + ApplicationConstants.PARAM_HIGHLIGHT_CONNECTOR + "="
                 + serverConnector.getConnectorId();
         makeUidlRequest("", params, false);
     }

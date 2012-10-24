@@ -142,8 +142,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
     /* Same as in apache commons file upload library that was previously used. */
     private static final int MAX_UPLOAD_BUFFER_SIZE = 4 * 1024;
 
-    private static final String GET_PARAM_ANALYZE_LAYOUTS = "analyzeLayouts";
-
     /**
      * The session this communication manager is used for
      */
@@ -191,8 +189,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
     private static final String CRLF = "\r\n";
 
     private static final String UTF8 = "UTF8";
-
-    private static final String GET_PARAM_HIGHLIGHT_CONNECTOR = "highlightConnector";
 
     private static String readLine(InputStream stream) throws IOException {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
@@ -555,11 +551,12 @@ public abstract class AbstractCommunicationManager implements Serializable {
         boolean analyzeLayouts = false;
         if (repaintAll) {
             // analyzing can be done only with repaintAll
-            analyzeLayouts = (request.getParameter(GET_PARAM_ANALYZE_LAYOUTS) != null);
+            analyzeLayouts = (request
+                    .getParameter(ApplicationConstants.PARAM_ANALYZE_LAYOUTS) != null);
 
-            if (request.getParameter(GET_PARAM_HIGHLIGHT_CONNECTOR) != null) {
-                String pid = request
-                        .getParameter(GET_PARAM_HIGHLIGHT_CONNECTOR);
+            String pid = request
+                    .getParameter(ApplicationConstants.PARAM_HIGHLIGHT_CONNECTOR);
+            if (pid != null) {
                 highlightedConnector = uI.getConnectorTracker().getConnector(
                         pid);
                 highlightConnector(highlightedConnector);
@@ -713,19 +710,19 @@ public abstract class AbstractCommunicationManager implements Serializable {
         sb.append(".java");
         sb.append(":1)");
         int l = 1;
-        for (ClientConnector conector2 : h) {
+        for (ClientConnector connector2 : h) {
             sb.append("\n");
             for (int i = 0; i < l; i++) {
                 sb.append("  ");
             }
             l++;
-            Class<? extends ClientConnector> componentClass = conector2
+            Class<? extends ClientConnector> connectorClass = connector2
                     .getClass();
-            Class<?> topClass = componentClass;
+            Class<?> topClass = connectorClass;
             while (topClass.getEnclosingClass() != null) {
                 topClass = topClass.getEnclosingClass();
             }
-            sb.append(componentClass.getName());
+            sb.append(connectorClass.getName());
             sb.append("(");
             sb.append(topClass.getSimpleName());
             sb.append(".java:1)");

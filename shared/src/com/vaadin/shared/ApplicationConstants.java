@@ -36,6 +36,8 @@ public class ApplicationConstants {
     public static final String UIDL_SECURITY_TOKEN_ID = "Vaadin-Security-Key";
 
     public static final String PARAM_UNLOADBURST = "onunloadburst";
+    public static final String PARAM_ANALYZE_LAYOUTS = "analyzeLayouts";
+    public static final String PARAM_HIGHLIGHT_CONNECTOR = "highlightConnector";
 
     @Deprecated
     public static final String UPDATE_VARIABLE_INTERFACE = "v";
