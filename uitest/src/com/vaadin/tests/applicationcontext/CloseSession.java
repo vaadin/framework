@@ -62,7 +62,8 @@ public class CloseSession extends AbstractTestUI {
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        getPage().setLocation("https://www.google.com");
+                        getPage().setLocation(
+                                "http://vaadin.com/download/nightly/");
                         getSession().close();
                     }
                 }));
