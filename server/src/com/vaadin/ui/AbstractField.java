@@ -687,19 +687,18 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     private Object convertToModel(T fieldValue)
             throws Converter.ConversionException {
+        Class<?> modelType = null;
+        Property pd = getPropertyDataSource();
+        if (pd != null) {
+            modelType = pd.getType();
+        } else if (getConverter() != null) {
+            modelType = getConverter().getModelType();
+        }
         try {
-            Class<?> modelType = null;
-            Property pd = getPropertyDataSource();
-            if (pd != null) {
-                modelType = pd.getType();
-            } else if (getConverter() != null) {
-                modelType = getConverter().getModelType();
-            }
             return ConverterUtil.convertToModel(fieldValue,
                     (Class<Object>) modelType, getConverter(), getLocale());
         } catch (ConversionException e) {
-            throw new ConversionException(
-                    getConversionError(converter.getModelType()), e);
+            throw new ConversionException(getConversionError(modelType), e);
         }
     }
 
