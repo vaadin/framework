@@ -21,6 +21,9 @@ import java.util.List;
 
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.TouchCancelEvent;
 import com.google.gwt.event.dom.client.TouchCancelHandler;
 import com.google.gwt.event.dom.client.TouchEndEvent;
@@ -68,7 +71,11 @@ public class VAbstractSplitPanel extends ComplexPanel {
 
     private final Element firstContainer = DOM.createDiv();
 
+    private final Element firstContainerWrapper = DOM.createDiv();
+
     private final Element secondContainer = DOM.createDiv();
+
+    private final Element secondContainerWrapper = DOM.createDiv();
 
     final Element splitter = DOM.createDiv();
 
@@ -171,34 +178,51 @@ public class VAbstractSplitPanel extends ComplexPanel {
     }
 
     protected void constructDom() {
-        DOM.appendChild(splitter, DOM.createDiv()); // for styling
-        DOM.appendChild(getElement(), wrapper);
-        DOM.setStyleAttribute(wrapper, "position", "relative");
-        DOM.setStyleAttribute(wrapper, "width", "100%");
-        DOM.setStyleAttribute(wrapper, "height", "100%");
 
-        DOM.appendChild(wrapper, secondContainer);
-        DOM.appendChild(wrapper, firstContainer);
-        DOM.appendChild(wrapper, splitter);
+        getElement().appendChild(wrapper);
 
-        DOM.setStyleAttribute(splitter, "position", "absolute");
-        DOM.setStyleAttribute(secondContainer, "position", "absolute");
+        Style wrapperStyle = wrapper.getStyle();
+        wrapperStyle.setPosition(Position.RELATIVE);
+        wrapperStyle.setWidth(100, Unit.PCT);
+        wrapperStyle.setHeight(100, Unit.PCT);
+
+        Style secondContainerWrapperStyle = secondContainerWrapper.getStyle();
+        secondContainerWrapperStyle.setOverflow(Overflow.HIDDEN);
+
+        secondContainer.getStyle().setPosition(Position.ABSOLUTE);
+        secondContainer.appendChild(secondContainerWrapper);
+        wrapper.appendChild(secondContainer);
+
+        Style firstContainerWrapperStyle = firstContainerWrapper.getStyle();
+        firstContainerWrapperStyle.setOverflow(Overflow.HIDDEN);
+
+        firstContainerWrapper.getStyle().setOverflow(Overflow.HIDDEN);
+        firstContainer.appendChild(firstContainerWrapper);
+        wrapper.appendChild(firstContainer);
+
+        splitter.getStyle().setPosition(Position.ABSOLUTE);
+        splitter.appendChild(DOM.createDiv()); // for styling
+        wrapper.appendChild(splitter);
 
         setStylenames();
     }
 
     private void setOrientation(Orientation orientation) {
         this.orientation = orientation;
+        Style splitterStyle = splitter.getStyle();
+        Style firstContStyle = firstContainer.getStyle();
+        Style secondContStyle = secondContainer.getStyle();
+
         if (orientation == Orientation.HORIZONTAL) {
-            DOM.setStyleAttribute(splitter, "height", "100%");
-            DOM.setStyleAttribute(splitter, "top", "0");
-            DOM.setStyleAttribute(firstContainer, "height", "100%");
-            DOM.setStyleAttribute(secondContainer, "height", "100%");
+            splitterStyle.setHeight(100, Unit.PCT);
+            splitterStyle.setTop(0, Unit.PX);
+            firstContStyle.setHeight(100, Unit.PCT);
+            secondContStyle.setHeight(100, Unit.PCT);
         } else {
-            DOM.setStyleAttribute(splitter, "width", "100%");
-            DOM.setStyleAttribute(splitter, "left", "0");
-            DOM.setStyleAttribute(firstContainer, "width", "100%");
-            DOM.setStyleAttribute(secondContainer, "width", "100%");
+            splitterStyle.setWidth(100, Unit.PCT);
+            splitterStyle.setLeft(0, Unit.PX);
+            firstContStyle.setWidth(100, Unit.PCT);
+            secondContStyle.setWidth(100, Unit.PCT);
         }
     }
 
@@ -375,6 +399,38 @@ public class VAbstractSplitPanel extends ComplexPanel {
             return;
         }
 
+        if (firstChild != null) {
+            Style firstChildStyle = firstChild.getElement().getStyle();
+
+            if (firstChildStyle.getWidth().endsWith("%")) {
+                firstContainerWrapper.getStyle().setWidth(100, Unit.PCT);
+            } else {
+                firstContainerWrapper.getStyle().clearWidth();
+            }
+
+            if (firstChildStyle.getHeight().endsWith("%")) {
+                firstContainerWrapper.getStyle().setHeight(100, Unit.PCT);
+            } else {
+                firstContainerWrapper.getStyle().clearWidth();
+            }
+        }
+
+        if (secondChild != null) {
+            Style secondChildStyle = secondChild.getElement().getStyle();
+
+            if (secondChildStyle.getWidth().endsWith("%")) {
+                secondContainerWrapper.getStyle().setWidth(100, Unit.PCT);
+            } else {
+                secondContainerWrapper.getStyle().clearWidth();
+            }
+
+            if (secondChildStyle.getHeight().endsWith("%")) {
+                secondContainerWrapper.getStyle().setHeight(100, Unit.PCT);
+            } else {
+                secondContainerWrapper.getStyle().clearWidth();
+            }
+        }
+
         int wholeSize;
         int pixelPosition;
 
@@ -484,7 +540,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
             firstChild.removeFromParent();
         }
         if (w != null) {
-            super.add(w, firstContainer);
+            super.add(w, firstContainerWrapper);
         }
         firstChild = w;
     }
@@ -494,7 +550,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
             secondChild.removeFromParent();
         }
         if (w != null) {
-            super.add(w, secondContainer);
+            super.add(w, secondContainerWrapper);
         }
         secondChild = w;
     }

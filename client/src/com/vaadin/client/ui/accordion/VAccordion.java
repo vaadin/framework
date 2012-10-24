@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
@@ -437,6 +438,7 @@ public class VAccordion extends VTabsheetBase {
 
         public void hide() {
             DOM.setStyleAttribute(content, "visibility", "hidden");
+            content.getStyle().setDisplay(Display.NONE);
         }
 
         public void close() {
@@ -447,6 +449,7 @@ public class VAccordion extends VTabsheetBase {
             setHeight(-1);
             setWidth("");
             open = false;
+            content.getStyle().setDisplay(Display.NONE);
         }
 
         public boolean isOpen() {
