@@ -2,10 +2,15 @@ package com.vaadin.tests.server.component.abstractfield;
 
 import java.util.Locale;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.junit.Test;
+
 import com.vaadin.data.util.MethodProperty;
+import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.server.VaadinServiceSession;
 import com.vaadin.tests.data.bean.Address;
@@ -177,6 +182,21 @@ public class AbstractFieldValueConversions extends TestCase {
         assertEquals(490, tf.getPropertyDataSource().getValue());
         assertEquals("490", tf.getValue());
 
+    }
+
+    @Test
+    public void testNullConverter() {
+        TextField tf = new TextField("foo");
+        tf.setPropertyDataSource(new ObjectProperty<Integer>(12));
+        tf.setConverter((Converter) null);
+        try {
+            Object v = tf.getConvertedValue();
+            System.out.println(v);
+            Assert.fail("Trying to convert String -> Integer should fail when there is no converter");
+        } catch (ConversionException e) {
+            // ok, should happen when there is no converter but conversion is
+            // needed
+        }
     }
 
 }
