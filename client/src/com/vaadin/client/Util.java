@@ -25,6 +25,7 @@ import java.util.List;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.AnchorElement;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
@@ -1207,8 +1208,21 @@ public class Util {
      * @return the corresponding absolute URL as a string
      */
     public static String getAbsoluteUrl(String url) {
-        AnchorElement a = Document.get().createAnchorElement();
-        a.setHref(url);
-        return a.getHref();
+        if (BrowserInfo.get().isIE8()) {
+            // The hard way - must use innerHTML and attach to DOM in IE8
+            DivElement divElement = Document.get().createDivElement();
+            RootPanel.getBodyElement().appendChild(divElement);
+            divElement.setInnerHTML("<a href='" + escapeHTML(url) + "' ></a>");
+
+            AnchorElement a = divElement.getChild(0).cast();
+            String href = a.getHref();
+
+            RootPanel.getBodyElement().removeChild(divElement);
+            return href;
+        } else {
+            AnchorElement a = Document.get().createAnchorElement();
+            a.setHref(url);
+            return a.getHref();
+        }
     }
 }
