@@ -94,8 +94,6 @@ public abstract class AbstractOrderedLayoutConnector extends
                                 .size()]));
             }
 
-            updateSlotListeners(child);
-
             updateLayoutHeight();
         }
     };
@@ -307,6 +305,7 @@ public abstract class AbstractOrderedLayoutConnector extends
             Slot slot = layout.getSlot(child.getWidget());
             if (slot.getParent() != layout) {
                 child.addStateChangeHandler(childStateChangeHandler);
+                updateSlotListeners(child);
             }
             layout.addOrMoveSlot(slot, currentIndex++);
         }
@@ -335,6 +334,7 @@ public abstract class AbstractOrderedLayoutConnector extends
                 }
                 child.removeStateChangeHandler(childStateChangeHandler);
                 layout.removeWidget(child.getWidget());
+                updateSlotListeners(child);
             }
         }
 
@@ -344,7 +344,6 @@ public abstract class AbstractOrderedLayoutConnector extends
         } else {
             getWidget().clearExpand();
         }
-
     }
 
     /*
@@ -404,8 +403,6 @@ public abstract class AbstractOrderedLayoutConnector extends
             }
         }
 
-        updateAllSlotListeners();
-
         updateLayoutHeight();
     }
 
@@ -453,15 +450,6 @@ public abstract class AbstractOrderedLayoutConnector extends
     }
 
     /**
-     * Add slot listeners
-     */
-    private void updateAllSlotListeners() {
-        for (ComponentConnector child : getChildComponents()) {
-            updateSlotListeners(child);
-        }
-    }
-
-    /**
      * Add/remove necessary ElementResizeListeners for one slot. This should be
      * called after each update to the slot's or it's widget.
      */
@@ -480,29 +468,34 @@ public abstract class AbstractOrderedLayoutConnector extends
                     spacingResizeListener);
         }
 
-        // Add all necessary listeners
-        if (needsFixedHeight()) {
-            addResizeListener(slot.getWidget().getElement(),
-                    childComponentResizeListener);
-            if (slot.hasCaption()) {
+        if (child.getParent() != null) {
+
+            // Add all necessary listeners
+            if (needsFixedHeight()) {
+                addResizeListener(slot.getWidget().getElement(),
+                        childComponentResizeListener);
+                if (slot.hasCaption()) {
+                    addResizeListener(slot.getCaptionElement(),
+                            slotCaptionResizeListener);
+                }
+            } else if ((child.isRelativeHeight() || child.isRelativeWidth())
+                    && slot.hasCaption()) {
+                // If the slot has caption, we need to listen for it's size
+                // changes
+                // in order to update the padding/margin offset for relative
+                // sized
+                // components
                 addResizeListener(slot.getCaptionElement(),
                         slotCaptionResizeListener);
             }
-        } else if ((child.isRelativeHeight() || child.isRelativeWidth())
-                && slot.hasCaption()) {
-            // If the slot has caption, we need to listen for it's size changes
-            // in order to update the padding/margin offset for relative sized
-            // components
-            addResizeListener(slot.getCaptionElement(),
-                    slotCaptionResizeListener);
-        }
 
-        if (needsExpand()) {
-            addResizeListener(slot.getWidget().getElement(),
-                    childComponentResizeListener);
-            if (slot.hasSpacing()) {
-                addResizeListener(slot.getSpacingElement(),
-                        spacingResizeListener);
+            if (needsExpand()) {
+                addResizeListener(slot.getWidget().getElement(),
+                        childComponentResizeListener);
+                if (slot.hasSpacing()) {
+                    addResizeListener(slot.getSpacingElement(),
+                            spacingResizeListener);
+                }
             }
         }
 
@@ -513,7 +506,6 @@ public abstract class AbstractOrderedLayoutConnector extends
             hasRelativeHeight.remove(child);
             needsMeasure.add(child.getWidget().getElement());
         }
-
     }
 
     /**
@@ -575,33 +567,6 @@ public abstract class AbstractOrderedLayoutConnector extends
             }
         }
         return highestNonRelative > -1 ? highestNonRelative : highestRelative;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.client.ui.AbstractComponentConnector#onUnregister()
-     */
-    @Override
-    public void onUnregister() {
-        // Cleanup all ElementResizeListeners
-        for (ComponentConnector child : getChildComponents()) {
-            Slot slot = getWidget().getSlot(child.getWidget());
-            if (slot.hasCaption()) {
-                removeResizeListener(slot.getCaptionElement(),
-                        slotCaptionResizeListener);
-            }
-
-            if (slot.getSpacingElement() != null) {
-                removeResizeListener(slot.getSpacingElement(),
-                        spacingResizeListener);
-            }
-
-            removeResizeListener(slot.getWidget().getElement(),
-                    childComponentResizeListener);
-        }
-
-        super.onUnregister();
     }
 
     /**
