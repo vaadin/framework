@@ -12,6 +12,7 @@
 @import "textfield/textfield.scss";
 // datefield and selects must be after textfield
 @import "datefield/datefield.scss";
+@import "inlinedatefield/inlinedatefield.scss";
 @import "selects/selects.scss";
 @import "tabsheet/tabsheet.scss";
 @import "tree/tree.scss";
@@ -31,8 +32,11 @@
 	@include chameleon-splitpanel;
 	@include chameleon-table;
 	@include chameleon-textfield;
+	
 	// datefield and selects must be after textfield
 	@include chameleon-datefield;
+	@include chameleon-inline-datefield;
+	
 	@include chameleon-selects;
 	@include chameleon-tabsheet;
 	@include chameleon-tree;

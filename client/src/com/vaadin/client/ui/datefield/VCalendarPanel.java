@@ -203,6 +203,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     public VCalendarPanel() {
 
+        setStyleName(VDateField.CLASSNAME + "-calendarpanel");
+
         /*
          * Firefox auto-repeat works correctly only if we use a key press
          * handler, other browsers handle it correctly when using a key down
@@ -610,6 +612,10 @@ public class VCalendarPanel extends FocusableFlexTable implements
      * Updates the calendar and text field with the selected dates.
      */
     public void renderCalendar() {
+
+        super.setStylePrimaryName(parent.getStylePrimaryName()
+                + "-calendarpanel");
+
         if (focusedDate == null) {
             Date now = new Date();
             // focusedDate must have zero hours, mins, secs, millisecs
