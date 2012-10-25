@@ -16,21 +16,23 @@
 
 package com.vaadin.client.ui.progressindicator;
 
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.HasEnabled;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.Util;
 
-public class VProgressIndicator extends Widget implements HasEnabled {
+public class VProgressIndicator extends Widget {
 
     public static final String CLASSNAME = "v-progressindicator";
     Element wrapper = DOM.createDiv();
     Element indicator = DOM.createDiv();
-
+    protected ApplicationConnection client;
+    protected final Poller poller;
     protected boolean indeterminate = false;
-    protected float state = 0.0f;
-    private boolean enabled;
+    private boolean pollerSuspendedDueDetach;
+    protected int interval;
 
     public VProgressIndicator() {
         setElement(DOM.createDiv());
@@ -39,36 +41,43 @@ public class VProgressIndicator extends Widget implements HasEnabled {
         wrapper.appendChild(indicator);
         indicator.setClassName(CLASSNAME + "-indicator");
         wrapper.setClassName(CLASSNAME + "-wrapper");
-    }
-
-    public void setIndeterminate(boolean indeterminate) {
-        this.indeterminate = indeterminate;
-        setStyleName(CLASSNAME + "-indeterminate", indeterminate);
-    }
-
-    public void setState(float state) {
-        final int size = Math.round(100 * state);
-        indicator.getStyle().setWidth(size, Unit.PCT);
-    }
-
-    public boolean isIndeterminate() {
-        return indeterminate;
-    }
-
-    public float getState() {
-        return state;
+        poller = new Poller();
     }
 
     @Override
-    public boolean isEnabled() {
-        return enabled;
+    protected void onAttach() {
+        super.onAttach();
+        if (pollerSuspendedDueDetach) {
+            poller.scheduleRepeating(interval);
+        }
     }
 
     @Override
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-        setStyleName("v-disabled", !enabled);
-
+    protected void onDetach() {
+        super.onDetach();
+        if (interval > 0) {
+            poller.cancel();
+            pollerSuspendedDueDetach = true;
+        }
     }
 
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        if (!visible) {
+            poller.cancel();
+        }
+    }
+
+    class Poller extends Timer {
+
+        @Override
+        public void run() {
+            if (!client.hasActiveRequest()
+                    && Util.isAttachedAndDisplayed(VProgressIndicator.this)) {
+                client.sendPendingVariableChanges();
+            }
+        }
+
+    }
 }
