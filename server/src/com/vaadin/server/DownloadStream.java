@@ -250,6 +250,11 @@ public class DownloadStream implements Serializable {
 
         // Download from given stream
         final InputStream data = getStream();
+        if (data == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
         if (data != null) {
 
             OutputStream out = null;
