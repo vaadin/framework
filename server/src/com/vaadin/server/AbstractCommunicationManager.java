@@ -820,22 +820,21 @@ public abstract class AbstractCommunicationManager implements Serializable {
             requireLocale(session.getLocale().toString());
         }
 
+        dirtyVisibleConnectors
+                .addAll(getDirtyVisibleConnectors(uiConnectorTracker));
+
+        getLogger().log(
+                Level.FINE,
+                "Found " + dirtyVisibleConnectors.size()
+                        + " dirty connectors to paint");
+        for (ClientConnector connector : dirtyVisibleConnectors) {
+            boolean initialized = uiConnectorTracker
+                    .isClientSideInitialized(connector);
+            connector.beforeClientResponse(!initialized);
+        }
+
         uiConnectorTracker.setWritingResponse(true);
         try {
-
-            dirtyVisibleConnectors
-                    .addAll(getDirtyVisibleConnectors(uiConnectorTracker));
-
-            getLogger().log(
-                    Level.FINE,
-                    "Found " + dirtyVisibleConnectors.size()
-                            + " dirty connectors to paint");
-            for (ClientConnector connector : dirtyVisibleConnectors) {
-                boolean initialized = uiConnectorTracker
-                        .isClientSideInitialized(connector);
-                connector.beforeClientResponse(!initialized);
-            }
-
             outWriter.print("\"changes\":[");
 
             List<InvalidLayout> invalidComponentRelativeSizes = null;
