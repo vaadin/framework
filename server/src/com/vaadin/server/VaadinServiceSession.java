@@ -742,12 +742,7 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
         Integer id = Integer.valueOf(ui.getUIId());
         uIs.remove(id);
         retainOnRefreshUIs.values().remove(id);
-
-        UI current = UI.getCurrent();
-        UI.setCurrent(ui);
         ui.fireCleanupEvent();
-        ui.setSession(null);
-        UI.setCurrent(current);
     }
 
     /**
