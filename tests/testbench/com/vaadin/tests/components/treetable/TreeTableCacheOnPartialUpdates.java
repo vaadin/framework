@@ -77,33 +77,11 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
             String identifier = "Item " + itemId + "/" + columnId;
             System.out.println("Generating new Button for " + identifier);
             Button btnCol3 = new NativeButton(identifier);
-            btnCol3.setDebugId("cacheTestButton-" + tb.getCol1() + "-"
-                    + tb.getCol2());
             btnCol3.addListener(new Button.ClickListener() {
                 public void buttonClick(ClickEvent event) {
                     log.log("Button " + event.getButton().getCaption()
                             + " clicked. Row index: "
                             + indexOfId(source, itemId));
-                }
-            });
-            return btnCol3;
-        }
-
-    }
-
-    public class Col4ColumnGenerator implements ColumnGenerator {
-        public Component generateCell(final com.vaadin.ui.Table source,
-                final Object itemId, Object columnId) {
-            TestBean tb = (TestBean) itemId;
-            String identifier = "Expand/Collapse";
-            System.out.println("Generating new Button for " + identifier);
-            Button btnCol3 = new NativeButton(identifier);
-            btnCol3.setDebugId("cacheTestButtonToggle-" + tb.getCol1() + "-"
-                    + tb.getCol2());
-            btnCol3.addListener(new Button.ClickListener() {
-                public void buttonClick(ClickEvent event) {
-                    treeTable.setCollapsed(itemId,
-                            !treeTable.isCollapsed(itemId));
                 }
             });
             return btnCol3;
@@ -125,9 +103,9 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
     private TreeTable treeTable;
     private BeanItemContainer<TestBean> testBeanContainer;
     private static String[] columnHeaders = new String[] { "Col1", "Col2",
-            "Col3", "Col4" };
+            "Col3" };
     private static Object[] visibleColumns = new Object[] { "col1", "col2",
-            "col3", "col4" };
+            "col3" };
 
     @Override
     public void setup() {
@@ -174,7 +152,6 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
         hasChildren.put("99", 20);
         treeTable.setContainerDataSource(createContainer(100, hasChildren));
         treeTable.addGeneratedColumn("col3", new Col3ColumnGenerator());
-        treeTable.addGeneratedColumn("col4", new Col4ColumnGenerator());
         treeTable.addListener(new ExpandListener() {
 
             public void nodeExpand(ExpandEvent event) {
@@ -189,8 +166,8 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
 
             }
         });
-        treeTable.setVisibleColumns(visibleColumns);
         treeTable.setColumnHeaders(columnHeaders);
+        treeTable.setVisibleColumns(visibleColumns);
         treeTable.setColumnWidth("col1", 150);
         treeTable.setColumnWidth("col2", 50);
         treeTable.setHeight("430px");
