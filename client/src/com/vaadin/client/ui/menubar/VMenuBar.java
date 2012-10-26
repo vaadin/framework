@@ -894,7 +894,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
             } else {
                 addStyleDependentName("disabled");
             }
-            
+
             if (selected && isSelectable()) {
                 addStyleDependentName("selected");
                 // needed for IE6 to have a single style name to match for an

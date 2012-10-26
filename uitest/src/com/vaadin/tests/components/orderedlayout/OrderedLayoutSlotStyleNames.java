@@ -24,7 +24,6 @@ public class OrderedLayoutSlotStyleNames extends TestBase {
 
         addComponent(vl);
 
-
         HorizontalLayout hl = new HorizontalLayout();
 
         lbl = new Label("A label");

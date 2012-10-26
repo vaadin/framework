@@ -502,7 +502,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
                     "v-first");
             days.getFlexCellFormatter().setStyleName(headerRow,
                     firstWeekdayColumn, "");
-            days.getRowFormatter().addStyleName(headerRow,
+            days.getRowFormatter()
+                    .addStyleName(
+                            headerRow,
                             parent.getStylePrimaryName()
                                     + "-calendarpanel-weeknumbers");
         } else {

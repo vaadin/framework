@@ -145,8 +145,7 @@ public class PopupDateFieldConnector extends TextualDateConnector {
         // prefix
         if (!styleName.startsWith("-")) {
             getWidget().popup.setStyleName(getWidget().getStylePrimaryName()
-                    + "-popup-" + styleName,
-                    add);
+                    + "-popup-" + styleName, add);
         } else {
             getWidget().popup.setStyleName(getWidget().getStylePrimaryName()
                     + "-popup" + styleName, add);

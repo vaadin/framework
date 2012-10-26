@@ -2251,7 +2251,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
             final String ALIGN_PREFIX = primaryStyleName
                     + "-caption-container-align-";
-            
+
             switch (align) {
             case ALIGN_CENTER:
                 captionContainer.addClassName(ALIGN_PREFIX + "center");
@@ -2261,9 +2261,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 break;
             default:
                 captionContainer.addClassName(ALIGN_PREFIX + "left");
-                    break;
+                break;
             }
-           
+
         }
 
         public void disableAutoWidthCalculation() {

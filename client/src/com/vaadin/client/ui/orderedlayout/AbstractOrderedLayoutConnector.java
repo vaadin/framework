@@ -90,8 +90,7 @@ public abstract class AbstractOrderedLayoutConnector extends
                         (String[]) null);
             } else {
                 getWidget().setSlotStyleNames(child.getWidget(),
-                        childStyles.toArray(new String[childStyles
-                                .size()]));
+                        childStyles.toArray(new String[childStyles.size()]));
             }
 
             updateSlotListeners(child);

@@ -129,7 +129,6 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         sinkEvents(Event.MOUSEEVENTS | Event.ONMOUSEWHEEL | Event.KEYEVENTS
                 | Event.FOCUSEVENTS | Event.TOUCHEVENTS);
 
-
         feedbackPopup.setWidget(feedback);
     }
 
@@ -183,8 +182,7 @@ public class VSlider extends SimpleFocusablePanel implements Field,
             feedbackPopup.setPopupPosition(
                     handle.getAbsoluteLeft() + handle.getOffsetWidth() / 2
                             - feedbackPopup.getOffsetWidth() / 2,
-                    handle.getAbsoluteTop()
-                            - feedbackPopup.getOffsetHeight());
+                    handle.getAbsoluteTop() - feedbackPopup.getOffsetHeight());
         }
     }
 

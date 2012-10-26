@@ -218,7 +218,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             root.appendChild(down);
             root.appendChild(status);
 
-
             DOM.sinkEvents(root, Event.ONMOUSEDOWN | Event.ONMOUSEWHEEL);
             addCloseHandler(this);
         }

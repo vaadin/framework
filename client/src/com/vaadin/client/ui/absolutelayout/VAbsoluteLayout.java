@@ -558,7 +558,7 @@ public class VAbsoluteLayout extends ComplexPanel {
         protected void updateStyleNames() {
             setStyleName(VAbsoluteLayout.this.getStylePrimaryName()
                     + "-wrapper");
-            if(extraStyleNames != null){
+            if (extraStyleNames != null) {
                 for (String stylename : extraStyleNames) {
                     addStyleDependentName(stylename);
                 }

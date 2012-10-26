@@ -56,7 +56,7 @@ public class VDateFieldCalendar extends VDateField {
             }
         });
     }
-    
+
     /**
      * TODO refactor: almost same method as in VPopupCalendar.updateValue
      */

@@ -13,19 +13,19 @@ public class DateFieldPrimaryStyleNames extends TestBase {
         final DateField df = new DateField();
         df.setPrimaryStyleName("my-datefield");
         addComponent(df);
-        
+
         final InlineDateField idf = new InlineDateField();
         idf.setPrimaryStyleName("my-inline-datefield");
         addComponent(idf);
-        
+
         addComponent(new Button("Set primary stylename",
                 new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
                         df.setPrimaryStyleName("my-second-datefield");
                         idf.setPrimaryStyleName("my-second-inline-datefield");
-            }
-        }));
+                    }
+                }));
 
     }
 

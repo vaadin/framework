@@ -219,7 +219,8 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
         try {
             heartbeatInterval = Integer
                     .parseInt(getApplicationOrSystemProperty(
-                            Constants.SERVLET_PARAMETER_HEARTBEAT_INTERVAL, "300"));
+                            Constants.SERVLET_PARAMETER_HEARTBEAT_INTERVAL,
+                            "300"));
         } catch (NumberFormatException e) {
             getLogger().warning(
                     Constants.WARNING_HEARTBEAT_INTERVAL_NOT_NUMERIC);
