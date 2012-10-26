@@ -634,7 +634,10 @@ public abstract class UI extends AbstractComponentContainer implements
      * For internal use only.
      */
     public void fireCleanupEvent() {
+        UI current = UI.getCurrent();
+        UI.setCurrent(this);
         fireEvent(new CleanupEvent(this));
+        UI.setCurrent(current);
     }
 
     @Override
