@@ -28,8 +28,9 @@ public class OrderedLayoutCases extends AbstractTestUI {
             "800px", "100%", "50%" };
 
     private static class SampleChild extends VerticalLayout {
-        public SampleChild() {
-            setStyleName("sampleChild");
+        public SampleChild(int i) {
+            addStyleName("sampleChild");
+            addStyleName("sampleChild" + i);
             addComponent(createSimpleSelector("Child width",
                     new ValueChangeListener() {
                         @Override
@@ -118,17 +119,15 @@ public class OrderedLayoutCases extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        TestUtils
-                .injectCSS(
-                        getUI(),
-                        ".sampleChild, .theLayout {border: 1px solid black;}"
-                                + ".theLayout > div:first-child {background: aqua;}"
-                                + ".theLayout > div:first-child + div {background: yellow;}"
-                                + ".theLayout > div:first-child + div + div {background: lightgrey;}");
+        TestUtils.injectCSS(getUI(),
+                ".sampleChild, .theLayout {border: 1px solid black;}"
+                        + ".sampleChild1 {background: aqua;}"
+                        + ".sampleChild2 {background: yellow;}"
+                        + ".sampleChild3 {background: lightgrey;}");
 
         currentLayout = new HorizontalLayout();
         for (int i = 0; i < 3; i++) {
-            currentLayout.addComponent(new SampleChild());
+            currentLayout.addComponent(new SampleChild(i + 1));
         }
 
         sizeBar = new HorizontalLayout();
