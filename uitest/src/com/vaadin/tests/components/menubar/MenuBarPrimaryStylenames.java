@@ -14,6 +14,8 @@ public class MenuBarPrimaryStylenames extends TestBase {
         mainMenu.setPrimaryStyleName("my-menu-bar");
 
         MenuItem submenu1 = mainMenu.addItem("Submenu1", null);
+        submenu1.setStyleName("normal icon-white icon-headphones");
+
         MenuItem item1 = submenu1.addItem("Item1", null);
         item1.setCheckable(true);
         item1.setStyleName("my-menu-item");

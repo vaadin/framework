@@ -783,6 +783,8 @@ public class VMenuBar extends SimpleFocusablePanel implements
         protected boolean selected = false;
         protected String description = null;
 
+        private String styleName;
+
         /**
          * Default menu item {@link Widget} constructor for GWT.create().
          * 
@@ -887,6 +889,10 @@ public class VMenuBar extends SimpleFocusablePanel implements
                 super.setStyleName(primaryStyleName + "-separator");
             } else {
                 super.setStyleName(primaryStyleName + "-menuitem");
+            }
+
+            if (styleName != null) {
+                addStyleDependentName(styleName);
             }
 
             if (enabled) {
@@ -1003,15 +1009,16 @@ public class VMenuBar extends SimpleFocusablePanel implements
             }
 
             if (uidl.hasAttribute(MenuBarConstants.ATTRIBUTE_ITEM_STYLE)) {
-                String itemStyle = uidl
+                styleName = uidl
                         .getStringAttribute(MenuBarConstants.ATTRIBUTE_ITEM_STYLE);
-                addStyleDependentName(itemStyle);
             }
 
             if (uidl.hasAttribute(MenuBarConstants.ATTRIBUTE_ITEM_DESCRIPTION)) {
                 description = uidl
                         .getStringAttribute(MenuBarConstants.ATTRIBUTE_ITEM_DESCRIPTION);
             }
+
+            updateStyleNames();
         }
 
         public TooltipInfo getTooltip() {
