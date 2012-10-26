@@ -17,7 +17,6 @@
 package com.vaadin.ui;
 
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.util.Iterator;
 
 import com.vaadin.data.Property;
@@ -45,7 +44,7 @@ import com.vaadin.data.Property;
  * @since 7.0
  */
 public abstract class CustomField<T> extends AbstractField<T> implements
-        ComponentContainer {
+        HasComponents {
 
     /**
      * The root component implementing the custom component.
@@ -78,14 +77,9 @@ public abstract class CustomField<T> extends AbstractField<T> implements
         // not yet been created)
         super.attach();
 
-        // If the content has not yet been created, we create and attach it at
-        // this point.
-        if (root == null) {
-            // Ensure content is created and its parent is set.
-            // The getContent() call creates the content and attaches the
-            // content
-            fireComponentAttachEvent(getContent());
-        }
+        // If the content has not yet been created, create and attach it at
+        // this point by calling getContent()
+        getContent();
     }
 
     /**
@@ -160,127 +154,6 @@ public abstract class CustomField<T> extends AbstractField<T> implements
     @Override
     public Iterator<Component> iterator() {
         return getComponentIterator();
-    }
-
-    @Override
-    public int getComponentCount() {
-        return (null != getContent()) ? 1 : 0;
-    }
-
-    /**
-     * Fires the component attached event. This should be called by the
-     * addComponent methods after the component have been added to this
-     * container.
-     * 
-     * @param component
-     *            the component that has been added to this container.
-     */
-    protected void fireComponentAttachEvent(Component component) {
-        fireEvent(new ComponentAttachEvent(this, component));
-    }
-
-    // TODO remove these methods when ComponentContainer interface is cleaned up
-
-    @Override
-    public void addComponent(Component c) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void removeComponent(Component c) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void removeAllComponents() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void replaceComponent(Component oldComponent, Component newComponent) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void moveComponentsFrom(ComponentContainer source) {
-        throw new UnsupportedOperationException();
-    }
-
-    private static final Method COMPONENT_ATTACHED_METHOD;
-
-    static {
-        try {
-            COMPONENT_ATTACHED_METHOD = ComponentAttachListener.class
-                    .getDeclaredMethod("componentAttachedToContainer",
-                            new Class[] { ComponentAttachEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
-            // This should never happen
-            throw new java.lang.RuntimeException(
-                    "Internal error finding methods in CustomField");
-        }
-    }
-
-    @Override
-    public void addComponentAttachListener(ComponentAttachListener listener) {
-        addListener(ComponentContainer.ComponentAttachEvent.class, listener,
-                COMPONENT_ATTACHED_METHOD);
-    }
-
-    /**
-     * @deprecated Since 7.0, replaced by
-     *             {@link #addComponentAttachListener(com.vaadin.ui.ComponentContainer.ComponentAttachListener)}
-     **/
-    @Override
-    @Deprecated
-    public void addListener(ComponentAttachListener listener) {
-        addComponentAttachListener(listener);
-    }
-
-    @Override
-    public void removeComponentAttachListener(ComponentAttachListener listener) {
-        removeListener(ComponentContainer.ComponentAttachEvent.class, listener,
-                COMPONENT_ATTACHED_METHOD);
-    }
-
-    /**
-     * @deprecated Since 7.0, replaced by
-     *             {@link #removeComponentAttachListener(com.vaadin.ui.ComponentContainer.ComponentAttachListener)}
-     **/
-    @Override
-    @Deprecated
-    public void removeListener(ComponentAttachListener listener) {
-        removeComponentAttachListener(listener);
-    }
-
-    @Override
-    public void addComponentDetachListener(ComponentDetachListener listener) {
-        // content never detached
-    }
-
-    /**
-     * @deprecated Since 7.0, replaced by
-     *             {@link #addComponentDetachListener(com.vaadin.ui.ComponentContainer.ComponentDetachListener)}
-     **/
-    @Override
-    @Deprecated
-    public void addListener(ComponentDetachListener listener) {
-        addComponentDetachListener(listener);
-
-    }
-
-    @Override
-    public void removeComponentDetachListener(ComponentDetachListener listener) {
-        // content never detached
-    }
-
-    /**
-     * @deprecated Since 7.0, replaced by
-     *             {@link #removeComponentDetachListener(com.vaadin.ui.ComponentContainer.ComponentDetachListener)}
-     **/
-    @Override
-    @Deprecated
-    public void removeListener(ComponentDetachListener listener) {
-        removeComponentDetachListener(listener);
     }
 
     @Override
