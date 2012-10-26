@@ -226,6 +226,11 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
             ResourceResponse response,
             AbstractApplicationPortlet applicationPortlet, Window window)
             throws InvalidUIDLSecurityKeyException, IOException {
+
+        // Ensure that the browser does not cache UIDL responses.
+        // iOS 6 Safari requires this (#9732)
+        response.setProperty("Cache-Control", "no-cache");
+
         currentUidlResponse = response;
         doHandleUidlRequest(new PortletRequestWrapper(request),
                 new PortletResponseWrapper(response),
