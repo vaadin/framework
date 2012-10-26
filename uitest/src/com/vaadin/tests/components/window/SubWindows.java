@@ -63,7 +63,7 @@ public class SubWindows extends TestBase {
         getMainWindow().addWindow(autoWideWindow);
 
         {
-            Window dialog = new Window("Dialog - width defined by caption");
+            Window dialog = new Window("Dialog - undefined width");
             dialog.addComponent(new TextField("Field 1"));
 
             TextField tf2 = new TextField("Field 2");
