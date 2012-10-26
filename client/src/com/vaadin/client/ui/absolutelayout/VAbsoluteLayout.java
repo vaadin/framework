@@ -165,7 +165,7 @@ public class VAbsoluteLayout extends ComplexPanel {
         if (wrapper != null) {
             if (caption != null) {
                 if (!getChildren().contains(caption)) {
-                    add(caption);
+                    super.add(caption, canvas);
                 }
                 wrapper.setCaption(caption);
                 caption.updateCaption();
