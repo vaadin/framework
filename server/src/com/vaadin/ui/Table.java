@@ -2867,6 +2867,15 @@ public class Table extends AbstractSelect implements Action.Container,
         }
     }
 
+    @Override
+    public void beforeClientResponse(boolean initial) {
+        super.beforeClientResponse(initial);
+
+        // Ensure pageBuffer is filled before sending the response to avoid
+        // calls to markAsDirty during paint
+        getVisibleCells();
+    }
+
     /*
      * (non-Javadoc)
      * 

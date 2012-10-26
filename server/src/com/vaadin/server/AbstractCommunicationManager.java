@@ -820,7 +820,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
             requireLocale(session.getLocale().toString());
         }
 
-        uiConnectorTracker.setWritingResponse(true);
         try {
 
             dirtyVisibleConnectors
@@ -835,6 +834,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
                         .isClientSideInitialized(connector);
                 connector.beforeClientResponse(!initialized);
             }
+
+            uiConnectorTracker.setWritingResponse(true);
 
             outWriter.print("\"changes\":[");
 
