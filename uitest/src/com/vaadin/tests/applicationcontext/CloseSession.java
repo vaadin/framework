@@ -62,8 +62,8 @@ public class CloseSession extends AbstractTestUI {
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        getPage().setLocation(
-                                "http://vaadin.com/download/nightly/");
+                        // Assuming Vaadin is deployed to the root context
+                        getPage().setLocation("/statictestfiles/static.html");
                         getSession().close();
                     }
                 }));
