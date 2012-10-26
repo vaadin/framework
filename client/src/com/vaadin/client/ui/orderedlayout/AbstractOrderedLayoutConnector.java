@@ -258,7 +258,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         if (child instanceof AbstractFieldConnector) {
             required = ((AbstractFieldConnector) child).isRequired();
         }
-        boolean enabled = child.getState().enabled;
+        boolean enabled = child.isEnabled();
 
         slot.setCaption(caption, iconUrlString, styles, error, showError,
                 required, enabled);
