@@ -7,7 +7,10 @@
 	text-align: left;
 	display: inline-block;
 	white-space: normal;
-	vertical-align: top;
+	
+	/* Workaround for scrollbar issues in IE8+ */
+	vertical-align: bottom;
+	font-size: 12px;
 }
 
 }

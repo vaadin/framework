@@ -257,4 +257,18 @@ div.v-app-loading {
         -webkit-overflow-scrolling: touch; 
 }
 
+/* Workaround for scrollbar issues in IE8+ */
+.v-ie {
+	.v-splitpanel-first-container.v-scrollable,
+	.v-splitpanel-second-container.v-scrollable,
+	.v-panel-content.v-scrollable,
+	.v-view.v-scrollable,
+	.v-tabsheet-tabsheetpanel > .v-scrollable,
+	.v-accordion-item-content.v-scrollable,
+	.v-gridlayout.v-layout,
+	.v-verticallayout.v-layout,
+	.v-horizontallayout.v-layout {
+		font-size: 0px;
+	}
+}
 }
