@@ -377,21 +377,22 @@ public class Page implements Serializable {
      */
     public void setFragment(String newFragment, boolean fireEvents) {
         String oldFragment = location.getFragment();
-        if (newFragment == null && oldFragment != null
-                || !newFragment.equals(oldFragment)) {
-            try {
-                location = new URI(location.getScheme(),
-                        location.getSchemeSpecificPart(), newFragment);
-            } catch (URISyntaxException e) {
-                // This should not actually happen as the fragment syntax is not
-                // constrained
-                throw new RuntimeException(e);
-            }
-            if (fireEvents) {
-                fireEvent(new FragmentChangedEvent(this, newFragment));
-            }
-            uI.markAsDirty();
+        if (newFragment == oldFragment
+                || (newFragment != null && newFragment.equals(oldFragment))) {
+            return;
         }
+        try {
+            location = new URI(location.getScheme(),
+                    location.getSchemeSpecificPart(), newFragment);
+        } catch (URISyntaxException e) {
+            // This should not actually happen as the fragment syntax is not
+            // constrained
+            throw new RuntimeException(e);
+        }
+        if (fireEvents) {
+            fireEvent(new FragmentChangedEvent(this, newFragment));
+        }
+        uI.markAsDirty();
     }
 
     private void fireEvent(EventObject event) {
