@@ -114,7 +114,7 @@ public class Util {
         }
     }
 
-    private static ComponentConnector findConnectorFor(Widget widget) {
+    public static ComponentConnector findConnectorFor(Widget widget) {
         List<ApplicationConnection> runningApplications = ApplicationConfiguration
                 .getRunningApplications();
         for (ApplicationConnection applicationConnection : runningApplications) {
@@ -702,8 +702,9 @@ public class Util {
         // If the overlay has an owner, try to find the owner's connector
         VOverlay overlay = findWidget(element, VOverlay.class);
         if (overlay != null && overlay.getOwner() != null) {
-            return getConnectorForElement(client, RootPanel.get(), overlay
-                    .getOwner().getElement());
+
+            return getConnectorForElement(client, client.getRootConnector()
+                    .getWidget(), overlay.getOwner().getElement());
         } else {
             return null;
         }

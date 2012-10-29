@@ -201,6 +201,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          */
         SuggestionPopup() {
             super(true, false, true);
+            setOwner(VFilterSelect.this);
             menu = new SuggestionMenu();
             setWidget(menu);
 

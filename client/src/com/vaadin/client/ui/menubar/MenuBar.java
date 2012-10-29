@@ -398,6 +398,7 @@ public class MenuBar extends Widget implements PopupListener {
             {
                 setWidget(item.getSubMenu());
                 item.getSubMenu().onShow();
+                setOwner(MenuBar.this);
             }
 
             @Override

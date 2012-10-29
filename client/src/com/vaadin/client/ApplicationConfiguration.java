@@ -378,8 +378,8 @@ public class ApplicationConfiguration implements EntryPoint {
                 ApplicationConnection a = GWT
                         .create(ApplicationConnection.class);
                 a.init(widgetSet, appConf);
-                a.start();
                 runningApplications.add(a);
+                a.start();
             }
         });
     }

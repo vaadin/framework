@@ -424,10 +424,11 @@ public class VNotification extends VOverlay {
 
         final int delay = notification
                 .getIntAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_DELAY);
-        createNotification(delay).show(html, position, style);
+        createNotification(delay, client.getRootConnector().getWidget()).show(
+                html, position, style);
     }
 
-    public static VNotification createNotification(int delayMsec) {
+    public static VNotification createNotification(int delayMsec, Widget owner) {
         final VNotification notification = GWT.create(VNotification.class);
         notification.delayMsec = delayMsec;
         if (BrowserInfo.get().isTouchDevice()) {
@@ -440,6 +441,7 @@ public class VNotification extends VOverlay {
                 }
             }.schedule(notification.delayMsec + TOUCH_DEVICE_IDLE_DELAY);
         }
+        notification.setOwner(owner);
         return notification;
     }
 

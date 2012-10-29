@@ -36,7 +36,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
@@ -433,16 +432,11 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     private void showModalityCurtain() {
         DOM.setStyleAttribute(getModalityCurtain(), "zIndex",
                 "" + (windowOrder.indexOf(this) + Z_INDEX));
-        if (isShowing()) {
-            RootPanel.getBodyElement().insertBefore(getModalityCurtain(),
-                    getElement());
-        } else {
-            DOM.appendChild(RootPanel.getBodyElement(), getModalityCurtain());
-        }
+        getOverlayContainer().appendChild(getModalityCurtain());
     }
 
     private void hideModalityCurtain() {
-        DOM.removeChild(RootPanel.getBodyElement(), modalityCurtain);
+        modalityCurtain.removeFromParent();
     }
 
     /*
@@ -450,12 +444,13 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      * iframes (etc) do not steal event.
      */
     private void showDraggingCurtain() {
-        DOM.appendChild(RootPanel.getBodyElement(), getDraggingCurtain());
+        getElement().getParentElement().insertBefore(getDraggingCurtain(),
+                getElement());
     }
 
     private void hideDraggingCurtain() {
         if (draggingCurtain != null) {
-            DOM.removeChild(RootPanel.getBodyElement(), draggingCurtain);
+            draggingCurtain.removeFromParent();
         }
     }
 
@@ -464,12 +459,13 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
      * that iframes (etc) do not steal event.
      */
     private void showResizingCurtain() {
-        DOM.appendChild(RootPanel.getBodyElement(), getResizingCurtain());
+        getElement().getParentElement().insertBefore(getResizingCurtain(),
+                getElement());
     }
 
     private void hideResizingCurtain() {
         if (resizingCurtain != null) {
-            DOM.removeChild(RootPanel.getBodyElement(), resizingCurtain);
+            resizingCurtain.removeFromParent();
         }
     }
 

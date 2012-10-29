@@ -400,9 +400,9 @@ public class LayoutManager {
 
             if (passes > 100) {
                 VConsole.log(LOOP_ABORT_MESSAGE);
-                VNotification.createNotification(VNotification.DELAY_FOREVER)
-                        .show(LOOP_ABORT_MESSAGE, VNotification.CENTERED,
-                                "error");
+                VNotification.createNotification(VNotification.DELAY_FOREVER,
+                        connection.getRootConnector().getWidget()).show(
+                        LOOP_ABORT_MESSAGE, VNotification.CENTERED, "error");
                 break;
             }
         }

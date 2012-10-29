@@ -23,6 +23,7 @@ public class CapsLockWarningWithRpcConnector extends AbstractExtensionConnector 
         final Widget passwordWidget = ((ComponentConnector) target).getWidget();
 
         final VOverlay warning = new VOverlay();
+        warning.setOwner(passwordWidget);
         warning.add(new HTML("Caps Lock is enabled!"));
 
         passwordWidget.addDomHandler(new KeyPressHandler() {

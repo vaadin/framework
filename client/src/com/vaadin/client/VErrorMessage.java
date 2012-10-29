@@ -20,14 +20,31 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.VOverlay;
 
 public class VErrorMessage extends FlowPanel {
     public static final String CLASSNAME = "v-errormessage";
 
+    private Widget owner;
+
     public VErrorMessage() {
         super();
         setStyleName(CLASSNAME);
+    }
+
+    /**
+     * Set the owner, i.e the Widget that created this {@link VErrorMessage}.
+     * The owner must be set if the {@link VErrorMessage} is created
+     * 'stand-alone' (not within a {@link VOverlay}), or theming might not work
+     * properly.
+     * 
+     * @see VOverlay#setOwner(Widget)
+     * @param owner
+     *            the owner (creator Widget)
+     */
+    public void setOwner(Widget owner) {
+        this.owner = owner;
     }
 
     public void updateMessage(String htmlErrorMessage) {
@@ -50,6 +67,7 @@ public class VErrorMessage extends FlowPanel {
         if (errorContainer == null) {
             errorContainer = new VOverlay();
             errorContainer.setWidget(this);
+            errorContainer.setOwner(owner);
         }
         errorContainer.setPopupPosition(
                 DOM.getAbsoluteLeft(indicatorElement)

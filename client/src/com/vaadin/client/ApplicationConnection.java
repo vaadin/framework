@@ -343,6 +343,7 @@ public class ApplicationConnection {
         rpcManager = GWT.create(RpcManager.class);
         layoutManager = GWT.create(LayoutManager.class);
         layoutManager.setConnection(this);
+        tooltip = GWT.create(VTooltip.class);
     }
 
     public void init(WidgetSet widgetSet, ApplicationConfiguration cnf) {
@@ -371,6 +372,9 @@ public class ApplicationConnection {
         initializeClientHooks();
 
         uIConnector.init(cnf.getRootPanelId(), this);
+
+        tooltip.setOwner(uIConnector.getWidget());
+
         showLoadingIndicator();
 
         scheduleHeartbeat();
@@ -926,7 +930,8 @@ public class ApplicationConnection {
             html.append(details);
             html.append("</I></p>");
 
-            VNotification n = VNotification.createNotification(1000 * 60 * 45);
+            VNotification n = VNotification.createNotification(1000 * 60 * 45,
+                    uIConnector.getWidget());
             n.addEventListener(new NotificationRedirect(url));
             n.show(html.toString(), VNotification.CENTERED_TOP,
                     VNotification.STYLE_SYSTEM);
@@ -1375,8 +1380,8 @@ public class ApplicationConnection {
 
                         if (html.length() != 0) {
                             /* 45 min */
-                            VNotification n = VNotification
-                                    .createNotification(1000 * 60 * 45);
+                            VNotification n = VNotification.createNotification(
+                                    1000 * 60 * 45, uIConnector.getWidget());
                             n.addEventListener(new NotificationRedirect(url));
                             n.show(html, VNotification.CENTERED_TOP,
                                     VNotification.STYLE_SYSTEM);
@@ -2578,6 +2583,7 @@ public class ApplicationConnection {
     public VContextMenu getContextMenu() {
         if (contextMenu == null) {
             contextMenu = new VContextMenu();
+            contextMenu.setOwner(uIConnector.getWidget());
             DOM.setElementProperty(contextMenu.getElement(), "id",
                     "PID_VAADIN_CM");
         }
@@ -2680,7 +2686,7 @@ public class ApplicationConnection {
 
     /* Extended title handling */
 
-    private final VTooltip tooltip = new VTooltip(this);
+    private final VTooltip tooltip;
 
     private ConnectorMap connectorMap = GWT.create(ConnectorMap.class);
 

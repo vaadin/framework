@@ -559,6 +559,7 @@ public class VMenuBar extends SimpleFocusablePanel implements
         final int shadowSpace = 10;
 
         popup = new VOverlay(true, false, true);
+        popup.setOwner(this);
 
         /*
          * Use parents primary style name if possible and remove the submenu
