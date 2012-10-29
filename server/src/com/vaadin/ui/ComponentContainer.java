@@ -17,6 +17,7 @@
 package com.vaadin.ui;
 
 import java.io.Serializable;
+import java.util.Iterator;
 
 /**
  * Extension to the {@link Component} interface which adds to it the capacity to
@@ -68,6 +69,18 @@ public interface ComponentContainer extends HasComponents {
      *            the new component to be replaced.
      */
     public void replaceComponent(Component oldComponent, Component newComponent);
+
+    /**
+     * Gets an iterator to the collection of contained components. Using this
+     * iterator it is possible to step through all components contained in this
+     * container.
+     * 
+     * @return the component iterator.
+     * 
+     * @deprecated As of 7.0, use {@link #iterator()} instead.
+     */
+    @Deprecated
+    public Iterator<Component> getComponentIterator();
 
     /**
      * Gets the number of children this {@link ComponentContainer} has. This

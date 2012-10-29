@@ -5564,17 +5564,19 @@ public class Table extends AbstractSelect implements Action.Container,
 
     @Override
     public Iterator<Component> iterator() {
-        return getComponentIterator();
-    }
-
-    @Override
-    public Iterator<Component> getComponentIterator() {
         if (visibleComponents == null) {
             Collection<Component> empty = Collections.emptyList();
             return empty.iterator();
         }
-
         return visibleComponents.iterator();
+    }
+
+    /**
+     * @deprecated As of 7.0, use {@link #iterator()} instead.
+     */
+    @Deprecated
+    public Iterator<Component> getComponentIterator() {
+        return iterator();
     }
 
     @Override
