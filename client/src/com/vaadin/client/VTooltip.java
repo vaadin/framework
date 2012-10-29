@@ -50,13 +50,19 @@ public class VTooltip extends VOverlay {
 
     private boolean closing = false;
     private boolean opening = false;
-    private ApplicationConnection ac;
+
     // Open next tooltip faster. Disabled after 2 sec of showTooltip-silence.
     private boolean justClosed = false;
 
-    public VTooltip(ApplicationConnection client) {
+    /**
+     * Used to show tooltips; usually used via the singleton in
+     * {@link ApplicationConnection}. NOTE that #setOwner(Widget)} should be
+     * called after instantiating.
+     * 
+     * @see ApplicationConnection#getVTooltip()
+     */
+    public VTooltip() {
         super(false, false, true);
-        ac = client;
         setStyleName(CLASSNAME);
         FlowPanel layout = new FlowPanel();
         setWidget(layout);
@@ -268,6 +274,7 @@ public class VTooltip extends VOverlay {
          */
         private boolean resolveConnector(Element element) {
 
+            ApplicationConnection ac = getApplicationConnection();
             ComponentConnector connector = Util.getConnectorForElement(ac,
                     RootPanel.get(), element);
 

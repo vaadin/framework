@@ -204,7 +204,7 @@ public class VPopupView extends HTML {
 
         public CustomPopup() {
             super(true, false, true); // autoHide, not modal, dropshadow
-
+            setOwner(VPopupView.this);
             // Delegate popup keyboard events to the relevant handler. The
             // events do not propagate automatically because the popup is
             // directly attached to the RootPanel.

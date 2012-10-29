@@ -30,7 +30,10 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.Util;
 
 /**
  * In Vaadin UI this Overlay should always be used for all elements that
@@ -125,6 +128,15 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      * parent)
      */
     private Widget owner;
+
+    /*
+     * ApplicationConnection that this overlay belongs to, which is needed to
+     * create the overlay in the correct container so that the correct styles
+     * are applied. If not given, owner will be used to figure out, and as a
+     * last fallback, the overlay is created w/o container, potentially missing
+     * styles.
+     */
+    protected ApplicationConnection ac;
 
     /**
      * The shim iframe behind the overlay, allowing PDFs and applets to be
@@ -328,14 +340,25 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         return leftFix;
     }
 
+    /*
+     * A "thread local" of sorts, set temporarily so that VOverlayImpl knows
+     * which VOverlay is using it, so that it can be attached to the correct
+     * overlay container.
+     * 
+     * TODO this is a strange pattern that we should get rid of when possible.
+     */
+    protected static VOverlay current;
+
     @Override
     public void show() {
+        current = this;
         super.show();
         if (isAnimationEnabled()) {
             new ResizeAnimation().run(POPUP_PANEL_ANIMATION_DURATION);
         } else {
             positionOrSizeUpdated(1.0);
         }
+        current = null;
     }
 
     @Override
@@ -482,14 +505,14 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
                             DOM.getChild(shadow, 5).getOffsetHeight());
         }
 
+        Element container = getElement().getParentElement().cast();
         // Attach to dom if not there already
         if (isShadowEnabled() && !isShadowAttached()) {
-            RootPanel.get().getElement().insertBefore(shadow, getElement());
+            container.insertBefore(shadow, getElement());
             sinkShadowEvents();
         }
         if (needsShimElement() && !isShimElementAttached()) {
-            RootPanel.get().getElement()
-                    .insertBefore(getShimElement(), getElement());
+            container.insertBefore(getShimElement(), getElement());
         }
 
     }
@@ -591,5 +614,55 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
      */
     public void setOwner(Widget owner) {
         this.owner = owner;
+    }
+
+    /**
+     * Get the {@link ApplicationConnection} that this overlay belongs to. If
+     * it's not set, {@link #getOwner()} is used to figure it out.
+     * 
+     * @return
+     */
+    protected ApplicationConnection getApplicationConnection() {
+        if (ac != null) {
+            return ac;
+        } else if (owner != null) {
+            ComponentConnector c = Util.findConnectorFor(owner);
+            if (c != null) {
+                ac = c.getConnection();
+            }
+            return ac;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Gets the 'overlay container' element pertaining to the given
+     * {@link ApplicationConnection}. Each overlay should be created in a
+     * overlay container element, so that the correct theme and styles can be
+     * applied.
+     * 
+     * @param ac
+     * @return
+     */
+    public Element getOverlayContainer() {
+        ApplicationConnection ac = getApplicationConnection();
+        if (ac == null) {
+            // could not figure out which one we belong to, styling might fail
+            return RootPanel.get().getElement();
+        } else {
+            String id = ac.getConfiguration().getRootPanelId();
+            id = id += "-overlays";
+            Element container = DOM.getElementById(id);
+            if (container == null) {
+                container = DOM.createDiv();
+                container.setId(id);
+                String styles = ac.getRootConnector().getWidget().getParent()
+                        .getStyleName();
+                container.setClassName(styles);
+                RootPanel.get().getElement().appendChild(container);
+            }
+            return container;
+        }
     }
 }

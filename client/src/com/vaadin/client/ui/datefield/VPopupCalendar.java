@@ -102,6 +102,8 @@ public class VPopupCalendar extends VTextualDate implements Field,
         });
 
         popup = new VOverlay(true, true, true);
+        popup.setOwner(this);
+
         popup.setWidget(calendar);
         popup.addCloseHandler(this);
 

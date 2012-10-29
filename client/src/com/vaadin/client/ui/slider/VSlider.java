@@ -72,6 +72,9 @@ public class VSlider extends SimpleFocusablePanel implements Field,
 
     private final HTML feedback = new HTML("", false);
     private final VOverlay feedbackPopup = new VOverlay(true, false, true) {
+        {
+            setOwner(VSlider.this);
+        }
 
         @Override
         public void show() {

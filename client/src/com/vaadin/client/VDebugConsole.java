@@ -694,8 +694,8 @@ public class VDebugConsole extends VOverlay implements Console {
             e.printStackTrace();
         }
         try {
-            VNotification.createNotification(VNotification.DELAY_FOREVER).show(
-                    "<h1>Uncaught client side exception</h1><br />"
+            VNotification.createNotification(VNotification.DELAY_FOREVER, null)
+                    .show("<h1>Uncaught client side exception</h1><br />"
                             + exceptionText, VNotification.CENTERED, "error");
         } catch (Exception e2) {
             // Just swallow this exception

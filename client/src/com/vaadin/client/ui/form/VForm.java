@@ -72,6 +72,8 @@ public class VForm extends ComplexPanel implements KeyDownHandler {
 
         fieldSet.appendChild(errorMessage.getElement());
         fieldSet.appendChild(footerContainer);
+
+        errorMessage.setOwner(this);
     }
 
     @Override
