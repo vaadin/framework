@@ -1306,7 +1306,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
 
     @Override
     public Iterator<Component> iterator() {
-        return getComponentIterator();
+        return new ComponentIterator();
     }
 
     /**
@@ -1355,9 +1355,12 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         }
     }
 
-    @Override
+    /**
+     * @deprecated As of 7.0, use {@link #iterator()} instead.
+     */
+    @Deprecated
     public Iterator<Component> getComponentIterator() {
-        return new ComponentIterator();
+        return iterator();
     }
 
     public int getComponentCount() {

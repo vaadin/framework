@@ -32,11 +32,9 @@ public interface HasComponents extends Component, Iterable<Component> {
      * container.
      * 
      * @return the component iterator.
-     * 
-     * @deprecated Use {@link #iterator()} instead.
      */
-    @Deprecated
-    public Iterator<Component> getComponentIterator();
+    @Override
+    public Iterator<Component> iterator();
 
     /**
      * Checks if the child component is visible. This method allows hiding a
