@@ -34,6 +34,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.Util;
+import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.shared.ui.MarginInfo;
 
@@ -120,7 +121,8 @@ public class VOrderedLayout extends FlowPanel {
     }
 
     /**
-     * Get the containing slot for a widget
+     * Get the containing slot for a widget. If no slot is found a new slot is
+     * created and returned.
      * 
      * @param widget
      *            The widget whose slot you want to get
@@ -137,6 +139,23 @@ public class VOrderedLayout extends FlowPanel {
     }
 
     /**
+     * Gets a slot based on the widget element. If no slot is found then null is
+     * returned.
+     * 
+     * @param widgetElement
+     *            The element of the widget ( Same as getWidget().getElement() )
+     * @return
+     */
+    public Slot getSlot(Element widgetElement) {
+        for (Map.Entry<Widget, Slot> entry : widgetToSlot.entrySet()) {
+            if (entry.getKey().getElement() == widgetElement) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
+
+    /**
      * Defines where the caption should be placed
      */
     public enum CaptionPosition {
@@ -146,7 +165,7 @@ public class VOrderedLayout extends FlowPanel {
     /**
      * Represents a slot which contains the actual widget in the layout.
      */
-    public static final class Slot extends SimplePanel {
+    public final class Slot extends SimplePanel {
 
         public static final String SLOT_CLASSNAME = "v-slot";
 
@@ -157,7 +176,12 @@ public class VOrderedLayout extends FlowPanel {
         private Icon icon;
         private Element errorIcon;
         private Element requiredIcon;
-        private final VOrderedLayout layout;
+
+        private ElementResizeListener captionResizeListener;
+
+        private ElementResizeListener widgetResizeListener;
+
+        private ElementResizeListener spacingResizeListener;
 
         // Caption is placed after component unless there is some part which
         // moves it above.
@@ -177,9 +201,115 @@ public class VOrderedLayout extends FlowPanel {
          *            The layout manager used by the layout
          */
         private Slot(Widget widget, VOrderedLayout layout) {
-            this.layout = layout;
             setStyleName(SLOT_CLASSNAME);
             setWidget(widget);
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.google.gwt.user.client.ui.SimplePanel#remove(com.google.gwt.user
+         * .client.ui.Widget)
+         */
+        @Override
+        public boolean remove(Widget w) {
+            detachListeners();
+            return super.remove(w);
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * com.google.gwt.user.client.ui.SimplePanel#setWidget(com.google.gwt
+         * .user.client.ui.Widget)
+         */
+        @Override
+        public void setWidget(Widget w) {
+            detachListeners();
+            super.setWidget(w);
+            attachListeners();
+        }
+
+        /**
+         * Attached resize listeners to the widget, caption and spacing elements
+         */
+        private void attachListeners() {
+            if (getWidget() != null && getLayoutManager() != null) {
+                LayoutManager lm = getLayoutManager();
+                if (getCaptionElement() != null
+                        && captionResizeListener != null) {
+                    lm.addElementResizeListener(getCaptionElement(),
+                            captionResizeListener);
+                }
+                if (widgetResizeListener != null) {
+                    lm.addElementResizeListener(getWidget().getElement(),
+                            widgetResizeListener);
+                }
+                if (getSpacingElement() != null
+                        && spacingResizeListener != null) {
+                    lm.addElementResizeListener(getSpacingElement(),
+                            spacingResizeListener);
+                }
+            }
+        }
+
+        /**
+         * Detaches resize listeners from the widget, caption and spacing
+         * elements
+         */
+        private void detachListeners() {
+            if (getWidget() == null && getLayoutManager() != null) {
+                LayoutManager lm = getLayoutManager();
+                if (getCaptionElement() != null
+                        && captionResizeListener != null) {
+                    lm.removeElementResizeListener(getCaptionElement(),
+                            captionResizeListener);
+                }
+                if (widgetResizeListener != null) {
+                    lm.removeElementResizeListener(getWidget().getElement(),
+                            widgetResizeListener);
+                }
+                if (getSpacingElement() != null
+                        && spacingResizeListener != null) {
+                    lm.removeElementResizeListener(getSpacingElement(),
+                            spacingResizeListener);
+                }
+            }
+        }
+
+        public ElementResizeListener getCaptionResizeListener() {
+            return captionResizeListener;
+        }
+
+        public void setCaptionResizeListener(
+                ElementResizeListener captionResizeListener) {
+            detachListeners();
+            this.captionResizeListener = captionResizeListener;
+            attachListeners();
+        }
+
+        public ElementResizeListener getWidgetResizeListener() {
+            return widgetResizeListener;
+        }
+
+        public void setWidgetResizeListener(
+                ElementResizeListener widgetResizeListener) {
+            detachListeners();
+            this.widgetResizeListener = widgetResizeListener;
+            attachListeners();
+        }
+
+        public ElementResizeListener getSpacingResizeListener() {
+            return spacingResizeListener;
+        }
+
+        public void setSpacingResizeListener(
+                ElementResizeListener spacingResizeListener) {
+            detachListeners();
+            this.spacingResizeListener = spacingResizeListener;
+            attachListeners();
         }
 
         /**
@@ -302,8 +432,8 @@ public class VOrderedLayout extends FlowPanel {
         protected int getVerticalSpacing() {
             if (spacer == null) {
                 return 0;
-            } else if (layout.getLayoutManager() != null) {
-                return layout.getLayoutManager().getOuterHeight(spacer);
+            } else if (getLayoutManager() != null) {
+                return getLayoutManager().getOuterHeight(spacer);
             }
             return spacer.getOffsetHeight();
         }
@@ -316,8 +446,8 @@ public class VOrderedLayout extends FlowPanel {
         protected int getHorizontalSpacing() {
             if (spacer == null) {
                 return 0;
-            } else if (layout.getLayoutManager() != null) {
-                return layout.getLayoutManager().getOuterWidth(spacer);
+            } else if (getLayoutManager() != null) {
+                return getLayoutManager().getOuterWidth(spacer);
             }
             return spacer.getOffsetWidth();
         }
@@ -565,10 +695,10 @@ public class VOrderedLayout extends FlowPanel {
             super.onBrowserEvent(event);
             if (DOM.eventGetType(event) == Event.ONLOAD
                     && icon.getElement() == DOM.eventGetTarget(event)) {
-                if (layout.getLayoutManager() != null) {
-                    layout.getLayoutManager().layoutLater();
+                if (getLayoutManager() != null) {
+                    getLayoutManager().layoutLater();
                 } else {
-                    layout.updateCaptionOffset(caption);
+                    updateCaptionOffset(caption);
                 }
             }
         }
@@ -1006,4 +1136,5 @@ public class VOrderedLayout extends FlowPanel {
         }
         slot.setStyleNames(stylenames);
     }
+
 }
