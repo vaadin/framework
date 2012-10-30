@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -371,14 +372,17 @@ public class ComponentLocator {
             path = PARENTCHILD_SEPARATOR + "domChild[" + childIndex + "]"
                     + path;
 
-            Element parent = e.getParentElement().cast();
+            JavaScriptObject parent = e.getParentElement();
+            if (parent == null) {
+                return null;
+            }
             // The parent check is a work around for Firefox 15 which fails to
             // compare elements properly (#9534)
             if (parent == baseElement) {
                 break;
             }
 
-            e = parent;
+            e = parent.cast();
         }
 
         return path;
