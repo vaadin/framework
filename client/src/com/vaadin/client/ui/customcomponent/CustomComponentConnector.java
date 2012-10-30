@@ -38,13 +38,13 @@ public class CustomComponentConnector extends
 
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
-        ComponentConnector newChild = null;
-        if (getChildComponents().size() == 1) {
-            newChild = getChildComponents().get(0);
-        }
-
         VCustomComponent customComponent = getWidget();
-        customComponent.setWidget(newChild.getWidget());
+        if (getChildComponents().size() == 1) {
+            ComponentConnector newChild = getChildComponents().get(0);
+            customComponent.setWidget(newChild.getWidget());
+        } else {
+            customComponent.setWidget(null);
+        }
 
     }
 }
