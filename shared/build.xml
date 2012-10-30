@@ -16,9 +16,8 @@
 
 
 	<target name="jar">
-		<property name="shared.osgi.import" value="org.json;version=&quot;20080701&quot;" />
+		<property name="shared.osgi.import" value="org.json;version=&quot;20080701&quot;, com.google.gwt.thirdparty.guava.common.annotations, com.google.gwt.thirdparty.guava.common.base, com.google.gwt.thirdparty.guava.common.base.internal, com.google.gwt.thirdparty.guava.common.cache, com.google.gwt.thirdparty.guava.common.collect, com.google.gwt.thirdparty.guava.common.eventbus, com.google.gwt.thirdparty.guava.common.io, com.google.gwt.thirdparty.guava.common.net, com.google.gwt.thirdparty.guava.common.primitives, com.google.gwt.thirdparty.guava.common.util.concurrent, com.google.gwt.thirdparty.streamhtmlparser, com.google.gwt.thirdparty.streamhtmlparser.impl, com.google.gwt.thirdparty.streamhtmlparser.util, org.w3c.flute.parser, org.w3c.flute.parser.selectors, org.w3c.flute.util" />
 		<antcall target="common.jar">
-			<param name="require-bundle" value="com.vaadin.shared.deps;bundle-version=&quot;1.0.0&quot;"/>
 			<param name="import-package" value="${shared.osgi.import}" />
 			<reference refid="shared.gwt.includes" torefid="extra.jar.includes" />
 		</antcall>
