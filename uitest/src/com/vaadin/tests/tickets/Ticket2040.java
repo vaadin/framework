@@ -3,9 +3,9 @@ package com.vaadin.tests.tickets;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout.MarginHandler;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket2040 extends com.vaadin.LegacyApplication {
 

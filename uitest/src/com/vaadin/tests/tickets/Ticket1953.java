@@ -4,7 +4,7 @@ import com.vaadin.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.UI.LegacyWindow;
+import com.vaadin.ui.LegacyWindow;
 
 public class Ticket1953 extends LegacyApplication {
     public static final String cellStyle = "test-cell";

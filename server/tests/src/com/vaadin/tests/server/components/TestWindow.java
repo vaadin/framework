@@ -7,7 +7,7 @@ import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
 
-import com.vaadin.ui.UI.LegacyWindow;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;

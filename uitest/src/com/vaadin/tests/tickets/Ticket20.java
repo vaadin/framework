@@ -8,8 +8,8 @@ import com.vaadin.data.validator.CompositeValidator.CombinationMode;
 import com.vaadin.data.validator.IntegerValidator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket20 extends LegacyApplication {
 

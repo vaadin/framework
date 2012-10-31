@@ -23,9 +23,9 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
-import com.vaadin.ui.UI.LegacyWindow;
 
 public class UsingObjectsInSelect extends com.vaadin.LegacyApplication
         implements ValueChangeListener {

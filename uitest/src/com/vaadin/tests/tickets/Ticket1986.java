@@ -5,12 +5,12 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
-import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket1986 extends LegacyApplication {
 

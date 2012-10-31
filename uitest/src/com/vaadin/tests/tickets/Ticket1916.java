@@ -4,8 +4,8 @@ import com.vaadin.LegacyApplication;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket1916 extends LegacyApplication {
 

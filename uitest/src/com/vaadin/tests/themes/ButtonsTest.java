@@ -9,14 +9,13 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.UI.LegacyWindow;
 
 @SuppressWarnings("serial")
 public class ButtonsTest extends com.vaadin.LegacyApplication {
 
-    final UI.LegacyWindow main = new LegacyWindow("Button states & themes");
+    final LegacyWindow main = new LegacyWindow("Button states & themes");
 
     CheckBox styleToggle;
     CheckBox iconToggle;

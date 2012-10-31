@@ -6,8 +6,8 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket2090 extends LegacyApplication {
 

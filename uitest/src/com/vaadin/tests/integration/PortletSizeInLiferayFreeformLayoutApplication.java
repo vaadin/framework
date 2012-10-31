@@ -2,7 +2,7 @@ package com.vaadin.tests.integration;
 
 import com.vaadin.LegacyApplication;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.UI.LegacyWindow;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 /**

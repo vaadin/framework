@@ -22,6 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.vaadin.LegacyApplication;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.UI;
 
 /**
@@ -90,7 +91,7 @@ public abstract class LegacyApplicationUIProvider extends UIProvider {
         if (application == null) {
             return null;
         }
-        UI.LegacyWindow window = application.getWindow(name);
+        LegacyWindow window = application.getWindow(name);
         if (window != null) {
             return window;
         }

@@ -2,8 +2,8 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.LegacyApplication;
 import com.vaadin.ui.AbstractOrderedLayout;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.TextArea;
-import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket2235 extends LegacyApplication {
 

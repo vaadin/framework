@@ -7,7 +7,7 @@ import java.io.ObjectOutputStream;
 import com.vaadin.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.UI.LegacyWindow;
+import com.vaadin.ui.LegacyWindow;
 
 @SuppressWarnings("serial")
 public class Ticket695 extends LegacyApplication {
