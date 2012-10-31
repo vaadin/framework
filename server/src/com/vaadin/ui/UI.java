@@ -530,6 +530,8 @@ public abstract class UI extends AbstractComponentContainer implements
         registerRpc(rpc);
         setSizeFull();
         setContent(content);
+        addStyleName(getState().primaryStyleName + "-"
+                + getClass().getSimpleName());
     }
 
     @Override
