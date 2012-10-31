@@ -24,28 +24,36 @@ public abstract class Node implements Serializable {
     private static final long serialVersionUID = 5914711715839294816L;
 
     protected ArrayList<Node> children;
-    private String fileName;
 
-    protected String rawString;
+    protected Node parentNode;
+
+    private String fileName;
 
     public Node() {
         children = new ArrayList<Node>();
     }
 
-    public Node(String raw) {
-        this();
-        rawString = raw;
-    }
-
     public void appendAll(Collection<Node> nodes) {
         if (nodes != null && !nodes.isEmpty()) {
             children.addAll(nodes);
+
+            for (final Node n : nodes) {
+                if (n.getParentNode() != null) {
+                    n.getParentNode().removeChild(n);
+                }
+                n.setParentNode(this);
+            }
+
         }
     }
 
     public void appendChild(Node node) {
         if (node != null) {
             children.add(node);
+            if (node.getParentNode() != null) {
+                node.getParentNode().removeChild(node);
+            }
+            node.setParentNode(this);
         }
     }
 
@@ -54,6 +62,10 @@ public abstract class Node implements Serializable {
             int index = children.indexOf(after);
             if (index != -1) {
                 children.add(index + 1, node);
+                if (node.getParentNode() != null) {
+                    node.getParentNode().removeChild(node);
+                }
+                node.setParentNode(this);
             } else {
                 throw new NullPointerException("after-node was not found");
             }
@@ -62,7 +74,10 @@ public abstract class Node implements Serializable {
 
     public void removeChild(Node node) {
         if (node != null) {
-            children.remove(node);
+            boolean removed = children.remove(node);
+            if (removed) {
+                node.setParentNode(null);
+            }
         }
     }
 
@@ -91,8 +106,17 @@ public abstract class Node implements Serializable {
         return "";
     }
 
-    public String getRawString() {
-        return rawString;
+    /**
+     * Method for manipulating the data contained within the {@link Node}.
+     */
+    public abstract void traverse();
+
+    public Node getParentNode() {
+        return parentNode;
+    }
+
+    private void setParentNode(Node parentNode) {
+        this.parentNode = parentNode;
     }
 
 }

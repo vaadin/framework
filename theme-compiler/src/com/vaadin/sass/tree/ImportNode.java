@@ -18,6 +18,8 @@ package com.vaadin.sass.tree;
 
 import org.w3c.css.sac.SACMediaList;
 
+import com.vaadin.sass.visitor.ImportNodeHandler;
+
 public class ImportNode extends Node {
     private static final long serialVersionUID = 5671255892282668438L;
 
@@ -67,5 +69,10 @@ public class ImportNode extends Node {
 
     public SACMediaList getMl() {
         return ml;
+    }
+
+    @Override
+    public void traverse() {
+        ImportNodeHandler.traverse(this);
     }
 }

@@ -20,7 +20,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.InputSource;
@@ -31,23 +33,23 @@ import com.vaadin.sass.handler.SCSSErrorHandler;
 import com.vaadin.sass.parser.Parser;
 import com.vaadin.sass.resolver.ScssStylesheetResolver;
 import com.vaadin.sass.resolver.VaadinResolver;
+import com.vaadin.sass.tree.MixinDefNode;
 import com.vaadin.sass.tree.Node;
 import com.vaadin.sass.tree.VariableNode;
-import com.vaadin.sass.visitor.BlockVisitor;
-import com.vaadin.sass.visitor.EachVisitor;
-import com.vaadin.sass.visitor.ExtendVisitor;
-import com.vaadin.sass.visitor.IfElseVisitor;
-import com.vaadin.sass.visitor.ImportVisitor;
-import com.vaadin.sass.visitor.ListModifyVisitor;
-import com.vaadin.sass.visitor.MixinVisitor;
-import com.vaadin.sass.visitor.NestPropertiesVisitor;
-import com.vaadin.sass.visitor.ParentSelectorVisitor;
-import com.vaadin.sass.visitor.VariableVisitor;
-import com.vaadin.sass.visitor.Visitor;
+import com.vaadin.sass.tree.controldirective.IfElseDefNode;
+import com.vaadin.sass.visitor.ParentSelectorHandler;
 
 public class ScssStylesheet extends Node {
 
     private static final long serialVersionUID = 3849790204404961608L;
+
+    private static ScssStylesheet mainStyleSheet = null;
+
+    private static final HashMap<String, VariableNode> variables = new HashMap<String, VariableNode>();
+
+    private static final Map<String, MixinDefNode> mixinDefs = new HashMap<String, MixinDefNode>();
+
+    private static final HashSet<IfElseDefNode> ifElseDefNodes = new HashSet<IfElseDefNode>();
 
     /**
      * Read in a file SCSS and parse it into a ScssStylesheet
@@ -121,20 +123,27 @@ public class ScssStylesheet extends Node {
      * @throws Exception
      */
     public void compile() throws Exception {
-        List<Visitor> visitors = new ArrayList<Visitor>();
-        visitors.add(new ImportVisitor());
-        visitors.add(new VariableVisitor());
-        visitors.add(new MixinVisitor());
-        visitors.add(new IfElseVisitor());
-        visitors.add(new ParentSelectorVisitor());
-        visitors.add(new BlockVisitor());
-        visitors.add(new NestPropertiesVisitor());
-        visitors.add(new ExtendVisitor());
-        visitors.add(new EachVisitor());
-        visitors.add(new ListModifyVisitor());
-        for (Visitor visitor : visitors) {
-            visitor.traverse(this);
+        mainStyleSheet = this;
+        mixinDefs.clear();
+        variables.clear();
+        ifElseDefNodes.clear();
+        ParentSelectorHandler.clear();
+        populateDefinitions(this);
+        traverse(this);
+    }
+
+    private void populateDefinitions(Node node) {
+        if (node instanceof MixinDefNode) {
+            mixinDefs.put(((MixinDefNode) node).getName(), (MixinDefNode) node);
+            node.getParentNode().removeChild(node);
+        } else if (node instanceof IfElseDefNode) {
+            ifElseDefNodes.add((IfElseDefNode) node);
         }
+
+        for (final Node child : new ArrayList<Node>(node.getChildren())) {
+            populateDefinitions(child);
+        }
+
     }
 
     /**
@@ -167,6 +176,56 @@ public class ScssStylesheet extends Node {
         if (node != null) {
             children.add(index, node);
         }
+    }
+
+    public static ScssStylesheet get() {
+        return mainStyleSheet;
+    }
+
+    @Override
+    public void traverse() {
+        // Not used for ScssStylesheet
+    }
+
+    public void traverse(Node node) {
+        node.traverse();
+
+        @SuppressWarnings("unchecked")
+        HashMap<String, VariableNode> variableScope = (HashMap<String, VariableNode>) variables
+                .clone();
+
+        int maxSize = node.getChildren().size();
+        ArrayList<Node> oldChildren = new ArrayList<Node>(node.getChildren());
+        for (int i = 0; i < maxSize; i++) {
+
+            Node current = node.getChildren().get(i);
+            traverse(current);
+
+            if (!node.getChildren().equals(oldChildren)) {
+                oldChildren = new ArrayList<Node>(node.getChildren());
+                maxSize = node.getChildren().size();
+                i = i - 1;
+            }
+
+        }
+        variables.clear();
+        variables.putAll(variableScope);
+    }
+
+    public static void addVariable(VariableNode node) {
+        variables.put(node.getName(), node);
+    }
+
+    public static VariableNode getVariable(String string) {
+        return variables.get(string);
+    }
+
+    public static ArrayList<VariableNode> getVariables() {
+        return new ArrayList<VariableNode>(variables.values());
+    }
+
+    public static MixinDefNode getMixinDefinition(String name) {
+        return mixinDefs.get(name);
     }
 
 }

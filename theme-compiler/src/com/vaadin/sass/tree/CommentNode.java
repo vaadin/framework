@@ -35,4 +35,9 @@ public class CommentNode extends Node {
     public String toString() {
         return comment;
     }
+
+    @Override
+    public void traverse() {
+        // Not used in CommentNode
+    }
 }

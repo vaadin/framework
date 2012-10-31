@@ -1,45 +1,18 @@
 package com.vaadin.sass.visitor;
 
-import java.util.HashMap;
-import java.util.Map.Entry;
-
 import com.vaadin.sass.tree.BlockNode;
 import com.vaadin.sass.tree.Node;
 import com.vaadin.sass.tree.RuleNode;
 import com.vaadin.sass.tree.controldirective.EachDefNode;
 import com.vaadin.sass.util.DeepCopy;
 
-public class EachVisitor implements Visitor {
+public class EachNodeHandler {
 
-    HashMap<EachDefNode, Node> controlDefs = new HashMap<EachDefNode, Node>();
-    private Node rootNode;
-
-    @Override
-    public void traverse(Node node) throws Exception {
-        this.rootNode = node;
-
-        findDefNodes(null, node);
-
-        replaceControlNodes();
-
+    public static void traverse(EachDefNode node) {
+        replaceEachDefNode(node);
     }
 
-    private void findDefNodes(Node parent, Node node) {
-        for (Node child : node.getChildren()) {
-            findDefNodes(node, child);
-        }
-        if (node instanceof EachDefNode) {
-            controlDefs.put((EachDefNode) node, parent);
-        }
-    }
-
-    private void replaceControlNodes() {
-        for (final Entry<EachDefNode, Node> entry : controlDefs.entrySet()) {
-            replaceEachDefNode(entry.getKey(), entry.getValue());
-        }
-    }
-
-    private void replaceEachDefNode(EachDefNode defNode, Node parent) {
+    private static void replaceEachDefNode(EachDefNode defNode) {
         Node last = defNode;
         for (final Node child : defNode.getChildren()) {
             if (child instanceof BlockNode) {
@@ -58,7 +31,7 @@ public class EachVisitor implements Visitor {
                             }
                         }
 
-                        parent.appendChild(copy, last);
+                        defNode.getParentNode().appendChild(copy, last);
                         last = copy;
                     }
                 }
@@ -66,7 +39,7 @@ public class EachVisitor implements Visitor {
 
             last = child;
         }
-        parent.removeChild(defNode);
+        defNode.getParentNode().removeChild(defNode);
     }
 
 }

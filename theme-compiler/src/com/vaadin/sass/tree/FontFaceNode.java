@@ -15,4 +15,9 @@ public class FontFaceNode extends Node {
         return builder.toString();
     }
 
+    @Override
+    public void traverse() {
+        // Not in use for FontFaceNode
+    }
+
 }
