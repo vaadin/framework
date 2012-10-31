@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
-import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.NoInputStreamException;
 import com.vaadin.server.NoOutputStreamException;
 import com.vaadin.server.PaintException;

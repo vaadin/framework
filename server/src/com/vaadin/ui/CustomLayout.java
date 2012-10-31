@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.vaadin.server.JsonPaintTarget;
-import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.ui.customlayout.CustomLayoutState;

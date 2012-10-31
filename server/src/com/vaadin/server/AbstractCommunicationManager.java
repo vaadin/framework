@@ -81,6 +81,7 @@ import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.HasComponents;
+import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Window;
