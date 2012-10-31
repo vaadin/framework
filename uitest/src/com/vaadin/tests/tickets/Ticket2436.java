@@ -3,8 +3,8 @@ package com.vaadin.tests.tickets;
 import com.vaadin.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.PopupView;
-import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket2436 extends LegacyApplication {
 

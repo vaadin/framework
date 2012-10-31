@@ -30,10 +30,10 @@ import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.ui.PageClientRpc;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.JavaScript;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.util.ReflectTools;
 
 public class Page implements Serializable {

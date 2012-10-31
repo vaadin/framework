@@ -8,7 +8,7 @@ import com.vaadin.server.SystemMessages;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.UI.LegacyWindow;
+import com.vaadin.ui.LegacyWindow;
 
 public class Ticket2106 extends LegacyApplication {
 

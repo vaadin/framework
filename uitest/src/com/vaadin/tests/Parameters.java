@@ -28,10 +28,10 @@ import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinServiceSession;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout.MarginHandler;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 /**

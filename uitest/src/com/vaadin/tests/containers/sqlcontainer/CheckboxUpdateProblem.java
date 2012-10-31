@@ -12,8 +12,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.UI.LegacyWindow;
 
 public class CheckboxUpdateProblem extends LegacyApplication implements
         Property.ValueChangeListener {

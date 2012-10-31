@@ -2,7 +2,7 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.LegacyApplication;
 import com.vaadin.ui.CustomLayout;
-import com.vaadin.ui.UI.LegacyWindow;
+import com.vaadin.ui.LegacyWindow;
 
 public class Ticket2022 extends LegacyApplication {
 

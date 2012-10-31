@@ -4,7 +4,7 @@ import com.vaadin.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.UI.LegacyWindow;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 

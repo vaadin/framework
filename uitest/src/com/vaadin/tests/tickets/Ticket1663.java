@@ -1,8 +1,8 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.server.SystemError;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket1663 extends com.vaadin.LegacyApplication {
 

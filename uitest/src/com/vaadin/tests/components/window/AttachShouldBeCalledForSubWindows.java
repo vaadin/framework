@@ -10,7 +10,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.UI;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Window;
 
 public class AttachShouldBeCalledForSubWindows extends AbstractTestCase {
@@ -30,7 +30,7 @@ public class AttachShouldBeCalledForSubWindows extends AbstractTestCase {
             addSubWindowBeforeMainWindow = true;
         }
 
-        UI.LegacyWindow mainWindow = new UI.LegacyWindow() {
+        LegacyWindow mainWindow = new LegacyWindow() {
             @Override
             public void attach() {
                 log(this);

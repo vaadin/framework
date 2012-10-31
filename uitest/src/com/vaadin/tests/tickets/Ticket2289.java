@@ -7,8 +7,8 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket2289 extends LegacyApplication {

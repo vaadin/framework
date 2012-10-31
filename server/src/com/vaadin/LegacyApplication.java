@@ -27,8 +27,8 @@ import com.vaadin.server.DefaultErrorListener;
 import com.vaadin.server.Terminal.ErrorEvent;
 import com.vaadin.server.Terminal.ErrorListener;
 import com.vaadin.server.VaadinServiceSession;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.UI.LegacyWindow;
 
 /**
  * A special application designed to help migrating applications from Vaadin 6
@@ -43,10 +43,10 @@ import com.vaadin.ui.UI.LegacyWindow;
  */
 @Deprecated
 public abstract class LegacyApplication implements ErrorListener {
-    private UI.LegacyWindow mainWindow;
+    private LegacyWindow mainWindow;
     private String theme;
 
-    private Map<String, UI.LegacyWindow> legacyUINames = new HashMap<String, UI.LegacyWindow>();
+    private Map<String, LegacyWindow> legacyUINames = new HashMap<String, LegacyWindow>();
 
     private boolean isRunning = true;
 
@@ -64,7 +64,7 @@ public abstract class LegacyApplication implements ErrorListener {
      * @param mainWindow
      *            the UI to set as the default window
      */
-    public void setMainWindow(UI.LegacyWindow mainWindow) {
+    public void setMainWindow(LegacyWindow mainWindow) {
         if (this.mainWindow != null) {
             throw new IllegalStateException("mainWindow has already been set");
         }
@@ -102,7 +102,7 @@ public abstract class LegacyApplication implements ErrorListener {
      * 
      * @return the UI used as the default window
      */
-    public UI.LegacyWindow getMainWindow() {
+    public LegacyWindow getMainWindow() {
         return mainWindow;
     }
 
@@ -145,7 +145,7 @@ public abstract class LegacyApplication implements ErrorListener {
      * @return a UI corresponding to the name, or <code>null</code> to use the
      *         default window
      */
-    public UI.LegacyWindow getWindow(String name) {
+    public LegacyWindow getWindow(String name) {
         return legacyUINames.get(name);
     }
 
@@ -165,7 +165,7 @@ public abstract class LegacyApplication implements ErrorListener {
      * 
      * @see #addWindow(UI, String)
      */
-    public void addWindow(UI.LegacyWindow uI) {
+    public void addWindow(LegacyWindow uI) {
         if (uI.getName() == null) {
             String name = Integer.toString(namelessUIIndex++);
             uI.setName(name);
@@ -190,8 +190,8 @@ public abstract class LegacyApplication implements ErrorListener {
      * @param uI
      *            the UI to remove
      */
-    public void removeWindow(UI.LegacyWindow uI) {
-        for (Entry<String, UI.LegacyWindow> entry : legacyUINames.entrySet()) {
+    public void removeWindow(LegacyWindow uI) {
+        for (Entry<String, LegacyWindow> entry : legacyUINames.entrySet()) {
             if (entry.getValue() == uI) {
                 legacyUINames.remove(entry.getKey());
             }
@@ -207,7 +207,7 @@ public abstract class LegacyApplication implements ErrorListener {
      * 
      * @return the unmodifiable collection of windows.
      */
-    public Collection<UI.LegacyWindow> getWindows() {
+    public Collection<LegacyWindow> getWindows() {
         return Collections.unmodifiableCollection(legacyUINames.values());
     }
 

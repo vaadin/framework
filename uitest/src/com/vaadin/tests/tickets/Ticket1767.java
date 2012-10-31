@@ -1,7 +1,7 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.UI.LegacyWindow;
+import com.vaadin.ui.LegacyWindow;
 
 public class Ticket1767 extends com.vaadin.LegacyApplication {
 

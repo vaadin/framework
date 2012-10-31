@@ -24,11 +24,11 @@ import com.vaadin.ui.Component.Listener;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
-import com.vaadin.ui.UI.LegacyWindow;
 
 /**
  * This example demonstrates custom layout. All components created here are

@@ -1,8 +1,8 @@
 package com.vaadin.tests.tickets;
 
 import com.vaadin.LegacyApplication;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket1940 extends LegacyApplication {

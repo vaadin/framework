@@ -26,11 +26,11 @@ import com.vaadin.server.VaadinPortletSession.PortletListener;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.Receiver;
 

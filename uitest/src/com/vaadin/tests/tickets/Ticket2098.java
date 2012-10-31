@@ -2,8 +2,8 @@ package com.vaadin.tests.tickets;
 
 import com.vaadin.LegacyApplication;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket2098 extends LegacyApplication {
 

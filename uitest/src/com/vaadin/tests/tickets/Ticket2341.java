@@ -3,8 +3,8 @@ package com.vaadin.tests.tickets;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket2341 extends com.vaadin.LegacyApplication {
     @Override

@@ -26,9 +26,9 @@ import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.Component.Listener;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Tree;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 /**

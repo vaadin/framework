@@ -3,7 +3,7 @@ package com.vaadin.tests.containers.sqlcontainer;
 import com.vaadin.LegacyApplication;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.UI;
+import com.vaadin.ui.LegacyWindow;
 
 /**
  * See http://dev.vaadin.com/ticket/9155 .
@@ -13,7 +13,7 @@ public class ComboBoxUpdateProblem extends LegacyApplication {
 
     @Override
     public void init() {
-        setMainWindow(new UI.LegacyWindow("Test window"));
+        setMainWindow(new LegacyWindow("Test window"));
 
         ComboBox combo = new ComboBox("Names",
                 databaseHelper.getTestContainer());

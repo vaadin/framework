@@ -7,8 +7,8 @@ import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.tests.components.AbstractTestCase;
 import com.vaadin.tests.util.Person;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.UI.LegacyWindow;
 
 public class ScrollCausesRequestLoop extends AbstractTestCase {
 

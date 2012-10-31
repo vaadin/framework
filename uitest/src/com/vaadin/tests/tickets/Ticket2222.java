@@ -5,7 +5,7 @@ import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.UI.LegacyWindow;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket2222 extends LegacyApplication {
