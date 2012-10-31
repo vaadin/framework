@@ -32,7 +32,6 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.FocusNotifier;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.KeyMapper;
-import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.LegacyPaint;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;

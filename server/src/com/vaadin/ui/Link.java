@@ -18,7 +18,6 @@ package com.vaadin.ui;
 
 import java.util.Map;
 
-import com.vaadin.server.LegacyComponent;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;

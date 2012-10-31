@@ -19,6 +19,8 @@ package com.vaadin.server;
 import java.io.Serializable;
 import java.util.Map;
 
+import com.vaadin.ui.LegacyComponent;
+
 /**
  * <p>
  * Listener interface for UI variable changes. The user communicates with the

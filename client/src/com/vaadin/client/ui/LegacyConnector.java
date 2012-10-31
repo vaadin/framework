@@ -19,6 +19,11 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 
+/**
+ * @deprecated This class is only intended to ease migration and should not be
+ *             used for new projects.
+ */
+@Deprecated
 public abstract class LegacyConnector extends AbstractComponentConnector
         implements Paintable {
 

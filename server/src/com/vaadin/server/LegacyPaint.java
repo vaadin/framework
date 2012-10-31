@@ -20,6 +20,7 @@ import java.io.Serializable;
 import com.vaadin.server.PaintTarget.PaintStatus;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HasComponents;
+import com.vaadin.ui.LegacyComponent;
 
 public class LegacyPaint implements Serializable {
     /**

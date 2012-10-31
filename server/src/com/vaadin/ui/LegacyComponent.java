@@ -13,11 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.server;
+package com.vaadin.ui;
 
 import java.util.EventListener;
 
-import com.vaadin.ui.Component;
+import com.vaadin.server.ClientConnector;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
+import com.vaadin.server.VariableOwner;
 
 /**
  * Interface provided to ease porting of Vaadin 6 components to Vaadin 7. By
@@ -25,10 +28,13 @@ import com.vaadin.ui.Component;
  * {@link #paintContent(PaintTarget)} and
  * {@link #changeVariables(Object, java.util.Map)} just like in Vaadin 6.
  * 
+ * @deprecated This class is only intended to ease migration and should not be
+ *             used for new projects.
+ * 
  * @author Vaadin Ltd
  * @since 7.0.0
- * 
  */
+@Deprecated
 public interface LegacyComponent extends VariableOwner, Component,
         EventListener {
 
