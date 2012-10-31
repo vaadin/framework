@@ -432,7 +432,14 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     private void showModalityCurtain() {
         DOM.setStyleAttribute(getModalityCurtain(), "zIndex",
                 "" + (windowOrder.indexOf(this) + Z_INDEX));
-        getOverlayContainer().appendChild(getModalityCurtain());
+
+        if (isShowing()) {
+            getOverlayContainer().insertBefore(getModalityCurtain(),
+                    getElement());
+        } else {
+            getOverlayContainer().appendChild(getModalityCurtain());
+        }
+
     }
 
     private void hideModalityCurtain() {
