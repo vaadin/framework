@@ -19,5 +19,8 @@ import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.Connector;
 
 public class UIState extends ComponentState {
+    {
+        primaryStyleName = "v-ui";
+    }
     public Connector content;
 }

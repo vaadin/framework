@@ -28,7 +28,7 @@ div.v-app-loading {
 	width: 100%;
 	height: 100%;
 }
-.v-view {
+.v-ui {
 	height: 100%;
 	width: 100%;
 	/* avoid scrollbars with margins in root layout */
@@ -36,7 +36,7 @@ div.v-app-loading {
 	position: relative;
 }
 /* Prevent margin collapse */
-.v-view.v-view-embedded {
+.v-ui.v-ui-embedded {
 	margin-top: -1px;
 	border-top: 1px solid transparent;
 }
@@ -54,15 +54,15 @@ div.v-app-loading {
 		height: auto;
 		min-height: 20cm;
 	}
-	.v-view {
+	.v-ui {
 		overflow: visible;
 	}
 	.v-gridlayout {
 		overflow: visible !important;
 	}
 }
-.v-view:active,
-.v-view:focus {
+.v-ui:active,
+.v-ui:focus {
 	outline: none;
 }
 .v-app select,
