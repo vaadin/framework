@@ -51,8 +51,6 @@ public class VUI extends SimplePanel implements ResizeHandler,
         Window.ClosingHandler, ShortcutActionHandlerOwner, Focusable,
         HasResizeHandlers {
 
-    private static final String CLASSNAME = "v-view";
-
     private static int MONITOR_PARENT_TIMER_INTERVAL = 1000;
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -157,8 +155,6 @@ public class VUI extends SimplePanel implements ResizeHandler,
 
     public VUI() {
         super();
-        setStyleName(CLASSNAME);
-
         // Allow focusing the view by using the focus() method, the view
         // should not be in the document focus flow
         getElement().setTabIndex(-1);

@@ -18,4 +18,7 @@ package com.vaadin.shared.ui.ui;
 import com.vaadin.shared.ComponentState;
 
 public class UIState extends ComponentState {
+    {
+        primaryStyleName = "v-ui";
+    }
 }
