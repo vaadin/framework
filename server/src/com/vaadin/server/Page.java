@@ -657,8 +657,8 @@ public class Page implements Serializable {
             String oldFragment = this.location.getFragment();
             this.location = new URI(location);
             String newFragment = this.location.getFragment();
-            if (newFragment == null && oldFragment != null
-                    || !newFragment.equals(oldFragment)) {
+            if (newFragment == null ? oldFragment != null : !newFragment
+                    .equals(oldFragment)) {
                 fireEvent(new FragmentChangedEvent(this, newFragment));
             }
         } catch (URISyntaxException e) {
