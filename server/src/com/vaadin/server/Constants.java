@@ -62,7 +62,7 @@ public interface Constants {
     static final String SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION = "disable-xsrf-protection";
     static final String SERVLET_PARAMETER_RESOURCE_CACHE_TIME = "resourceCacheTime";
     static final String SERVLET_PARAMETER_HEARTBEAT_INTERVAL = "heartbeatInterval";
-    static final String SERVLET_PARAMETER_CLOSE_IDLE_UIS = "closeIdleUIs";
+    static final String SERVLET_PARAMETER_CLOSE_IDLE_SESSIONS = "closeIdleSessions";
     static final String SERVLET_PARAMETER_UI_PROVIDER = "UIProvider";
 
     // Configurable parameter names

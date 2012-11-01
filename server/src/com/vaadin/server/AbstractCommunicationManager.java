@@ -580,8 +580,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 return;
             }
 
-            // Keep the UI alive
-            uI.setLastUidlRequestTime(System.currentTimeMillis());
+            session.setLastUidlRequestTimestamp(System.currentTimeMillis());
 
             // Change all variables based on request parameters
             if (!handleVariables(request, response, callback, session, uI)) {
