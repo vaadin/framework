@@ -1799,6 +1799,8 @@ public class ApplicationConnection {
                     return events;
                 }
 
+                HashSet<ServerConnector> maybeDetached = new HashSet<ServerConnector>();
+
                 ValueMap hierarchies = json.getValueMap("hierarchy");
                 JsArrayString hierarchyKeys = hierarchies.getKeyArray();
                 for (int i = 0; i < hierarchyKeys.length(); i++) {
@@ -1837,8 +1839,10 @@ public class ApplicationConnection {
                                                 + " is not a ComponentConnector nor an AbstractExtensionConnector");
                             }
                             if (childConnector.getParent() != parentConnector) {
-                                // Avoid extra calls to setParent
                                 childConnector.setParent(parentConnector);
+                                // Not detached even if previously removed from
+                                // parent
+                                maybeDetached.remove(childConnector);
                             }
                         }
 
@@ -1877,25 +1881,93 @@ public class ApplicationConnection {
 
                         parentConnector.setChildren(newChildren);
 
-                        // Remove parent for children that are no longer
-                        // attached to this (avoid updating children if they
-                        // have already been assigned to a new parent)
+                        /*
+                         * Find children removed from this parent and mark for
+                         * removal unless they are already attached to some
+                         * other parent.
+                         */
                         for (ServerConnector oldChild : oldChildren) {
                             if (oldChild.getParent() != parentConnector) {
+                                // Ignore if moved to some other connector
                                 continue;
                             }
 
-                            // TODO This could probably be optimized
                             if (!newChildren.contains(oldChild)) {
-                                oldChild.setParent(null);
+                                /*
+                                 * Consider child detached for now, will be
+                                 * cleared if it is later on added to some other
+                                 * parent.
+                                 */
+                                maybeDetached.add(oldChild);
                             }
                         }
                     } catch (final Throwable e) {
                         VConsole.error(e);
                     }
                 }
+
+                /*
+                 * Connector is in maybeDetached at this point if it has been
+                 * removed from its parent but not added to any other parent
+                 */
+                for (ServerConnector removed : maybeDetached) {
+                    recursivelyDetach(removed, events);
+                }
+
                 return events;
 
+            }
+
+            private void recursivelyDetach(ServerConnector connector,
+                    List<ConnectorHierarchyChangeEvent> events) {
+                /*
+                 * Recursively detach children to make sure they get
+                 * setParent(null) and hierarchy change events as needed.
+                 */
+                for (ServerConnector child : connector.getChildren()) {
+                    /*
+                     * Server doesn't send updated child data for removed
+                     * connectors -> ignore child that still seems to be a child
+                     * of this connector although it has been moved to some part
+                     * of the hierarchy that is not detached.
+                     */
+                    if (child.getParent() != connector) {
+                        continue;
+                    }
+                    recursivelyDetach(child, events);
+                }
+
+                /*
+                 * Clear child list and parent
+                 */
+                connector
+                        .setChildren(Collections.<ServerConnector> emptyList());
+                connector.setParent(null);
+
+                /*
+                 * Create an artificial hierarchy event for containers to give
+                 * it a chance to clean up after its children if it has any
+                 */
+                if (connector instanceof ComponentContainerConnector) {
+                    ComponentContainerConnector ccc = (ComponentContainerConnector) connector;
+                    List<ComponentConnector> oldChildren = ccc
+                            .getChildComponents();
+                    if (!oldChildren.isEmpty()) {
+                        /*
+                         * ComponentContainerConnector has a separate child
+                         * component list that should also be cleared
+                         */
+                        ccc.setChildComponents(Collections
+                                .<ComponentConnector> emptyList());
+
+                        // Create event and add it to the list of pending events
+                        ConnectorHierarchyChangeEvent event = GWT
+                                .create(ConnectorHierarchyChangeEvent.class);
+                        event.setConnector(connector);
+                        event.setOldChildren(oldChildren);
+                        events.add(event);
+                    }
+                }
             }
 
             private void handleRpcInvocations(ValueMap json) {
