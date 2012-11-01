@@ -48,9 +48,12 @@ public class ImageConnector extends AbstractComponentConnector {
 
         clickEventHandler.handleEventHandlerRegistration();
 
-        getWidget().setUrl(
-                getResourceUrl(AbstractEmbeddedState.SOURCE_RESOURCE));
-        getWidget().setAltText(getState().alternateText);
+        String url = getResourceUrl(AbstractEmbeddedState.SOURCE_RESOURCE);
+        getWidget().setUrl(url != null ? url : "");
+
+        String alt = getState().alternateText;
+        // Some browsers turn a null alt text into a literal "null"
+        getWidget().setAltText(alt != null ? alt : "");
     }
 
     protected final ClickEventHandler clickEventHandler = new ClickEventHandler(
