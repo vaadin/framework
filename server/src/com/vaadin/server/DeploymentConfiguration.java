@@ -58,19 +58,24 @@ public interface DeploymentConfiguration extends Serializable {
     public int getHeartbeatInterval();
 
     /**
-     * Returns whether UIs that have no other activity than heartbeat requests
-     * should be removed from the session after they have been idle the maximum
-     * inactivity time enforced by the session.
+     * Returns whether a session should be closed when all its open UIs have
+     * been idle for longer than its configured maximum inactivity time.
+     * <p>
+     * A UI is idle if it is open on the client side but has no activity other
+     * than heartbeat requests. If {@code isCloseIdleSessions() == false},
+     * heartbeat requests cause the session to stay open for as long as there
+     * are open UIs on the client side. If it is {@code true}, the session is
+     * eventually closed if the open UIs do not have any user interaction.
      * 
      * @see WrappedSession#getMaxInactiveInterval()
      * 
      * @since 7.0.0
      * 
-     * @return True if UIs receiving only heartbeat requests are eventually
-     *         removed; false if heartbeat requests extend UI lifetime
-     *         indefinitely.
+     * @return True if UIs and sessions receiving only heartbeat requests are
+     *         eventually closed; false if heartbeat requests extend UI and
+     *         session lifetime indefinitely.
      */
-    public boolean isIdleUICleanupEnabled();
+    public boolean isCloseIdleSessions();
 
     /**
      * Gets the properties configured for the deployment, e.g. as init

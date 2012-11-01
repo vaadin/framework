@@ -583,8 +583,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 return;
             }
 
-            // Keep the UI alive
-            uI.setLastUidlRequestTime(System.currentTimeMillis());
+            session.setLastRequestTimestamp(System.currentTimeMillis());
 
             // Change all variables based on request parameters
             if (!handleVariables(request, response, callback, session, uI)) {
@@ -1333,7 +1332,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      */
     private void writePerformanceData(final PrintWriter outWriter) {
         outWriter.write(String.format(", \"timings\":[%d, %d]",
-                session.getTotalSessionTime(), session.getLastRequestTime()));
+                session.getCumulativeRequestDuration(), session.getLastRequestDuration()));
     }
 
     private void legacyPaint(PaintTarget paintTarget,
@@ -2798,7 +2797,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             // null-check below handles this as well
         }
         if (ui != null) {
-            ui.setLastHeartbeatTime(System.currentTimeMillis());
+            ui.setLastHeartbeatTimestamp(System.currentTimeMillis());
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "UI not found");
         }
