@@ -1,26 +1,19 @@
-/*
-@VaadinApache2LicenseForJavaFiles@
- */
 package com.google.gwt.dom.client;
 
 /**
- * Overridden to workaround GWT issue #6194. Remove this when updating to a
- * newer GWT that fixes the problem (2.3.0 possibly). Must be in this package as
- * the whole DOMImpl hierarchy is package private and I really did not want to
- * copy all the parent classes into this one...
+ * Forcing rounding down to zero for pixels values which could be double values
+ * due to subpixel rendering. This has been addressed in Vaadin 7 GWT already
+ * and is only needed for Vaadin 6.
  */
-class VaadinDOMImplSafari extends DOMImplWebkit {
+class VaadinDOMImplMozilla extends DOMImplMozilla {
+
     @Override
     public int getAbsoluteLeft(Element elem) {
-        // Chrome returns a float in certain cases (at least when zoom != 100%).
-        // The |0 ensures it is converted to an int.
         return super.getAbsoluteLeft(elem) | 0;
     }
 
     @Override
     public int getAbsoluteTop(Element elem) {
-        // Chrome returns a float in certain cases (at least when zoom != 100%).
-        // The |0 ensures it is converted to an int.
         return super.getAbsoluteTop(elem) | 0;
     }
 
