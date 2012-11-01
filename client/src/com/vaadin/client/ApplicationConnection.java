@@ -902,6 +902,13 @@ public class ApplicationConnection {
                 authorizationError.getMessage(), authorizationError.getUrl());
     }
 
+    protected void showSessionExpiredError(String details) {
+        VConsole.error("Session expired: " + details);
+        ErrorMessage sessionExpired = configuration.getSessionExpiredError();
+        showError(details, sessionExpired.getCaption(),
+                sessionExpired.getMessage(), sessionExpired.getUrl());
+    }
+
     /**
      * Shows the error notification.
      * 
@@ -926,9 +933,11 @@ public class ApplicationConnection {
         if (html.length() > 0) {
 
             // Add error description
-            html.append("<br/><p><I style=\"font-size:0.7em\">");
-            html.append(details);
-            html.append("</I></p>");
+            if (details != null) {
+                html.append("<p><i style=\"font-size:0.7em\">");
+                html.append(details);
+                html.append("</i></p>");
+            }
 
             VNotification n = VNotification.createNotification(1000 * 60 * 45,
                     uIConnector.getWidget());
@@ -1362,32 +1371,11 @@ public class ApplicationConnection {
                 if (meta != null) {
                     if (meta.containsKey("appError")) {
                         ValueMap error = meta.getValueMap("appError");
-                        String html = "";
-                        if (error.containsKey("caption")
-                                && error.getString("caption") != null) {
-                            html += "<h1>" + error.getAsString("caption")
-                                    + "</h1>";
-                        }
-                        if (error.containsKey("message")
-                                && error.getString("message") != null) {
-                            html += "<p>" + error.getAsString("message")
-                                    + "</p>";
-                        }
-                        String url = null;
-                        if (error.containsKey("url")) {
-                            url = error.getString("url");
-                        }
 
-                        if (html.length() != 0) {
-                            /* 45 min */
-                            VNotification n = VNotification.createNotification(
-                                    1000 * 60 * 45, uIConnector.getWidget());
-                            n.addEventListener(new NotificationRedirect(url));
-                            n.show(html, VNotification.CENTERED_TOP,
-                                    VNotification.STYLE_SYSTEM);
-                        } else {
-                            redirect(url);
-                        }
+                        showError(null, error.getString("caption"),
+                                error.getString("message"),
+                                error.getString("url"));
+
                         applicationRunning = false;
                     }
                     if (validatingLayouts) {
@@ -2899,16 +2887,19 @@ public class ApplicationConnection {
                     // TODO Permit retry in some error situations
                     VConsole.log("Heartbeat response OK");
                     scheduleHeartbeat();
+                } else if (status == Response.SC_GONE) {
+                    showSessionExpiredError(null);
                 } else {
-                    VConsole.error("Heartbeat request failed with status code "
-                            + status);
+                    showCommunicationError(
+                            "Failed sending heartbeat to server. Error code: "
+                                    + status, status);
                 }
             }
 
             @Override
             public void onError(Request request, Throwable exception) {
-                VConsole.error("Heartbeat request resulted in exception");
-                VConsole.error(exception);
+                showCommunicationError("Exception sending heartbeat: "
+                        + exception, 0);
             }
         };
 

@@ -35,7 +35,7 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
     private boolean xsrfProtectionEnabled;
     private int resourceCacheTime;
     private int heartbeatInterval;
-    private boolean idleRootCleanupEnabled;
+    private boolean closeIdleSessions;
     private final Class<?> systemPropertyBaseClass;
 
     /**
@@ -57,7 +57,7 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
         checkXsrfProtection();
         checkResourceCacheTime();
         checkHeartbeatInterval();
-        checkIdleUICleanup();
+        checkCloseIdleSessions();
     }
 
     @Override
@@ -171,8 +171,8 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
     }
 
     @Override
-    public boolean isIdleUICleanupEnabled() {
-        return idleRootCleanupEnabled;
+    public boolean isCloseIdleSessions() {
+        return closeIdleSessions;
     }
 
     /**
@@ -228,9 +228,9 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
         }
     }
 
-    private void checkIdleUICleanup() {
-        idleRootCleanupEnabled = getApplicationOrSystemProperty(
-                Constants.SERVLET_PARAMETER_CLOSE_IDLE_UIS, "false").equals(
+    private void checkCloseIdleSessions() {
+        closeIdleSessions = getApplicationOrSystemProperty(
+                Constants.SERVLET_PARAMETER_CLOSE_IDLE_SESSIONS, "false").equals(
                 "true");
     }
 

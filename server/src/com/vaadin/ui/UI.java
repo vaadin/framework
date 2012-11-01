@@ -508,8 +508,6 @@ public abstract class UI extends AbstractComponentContainer implements
      */
     private long lastHeartbeat = System.currentTimeMillis();
 
-    private long lastUidlRequest = System.currentTimeMillis();
-
     /**
      * Creates a new empty UI without a caption. This UI will have a
      * {@link VerticalLayout} with margins enabled as its content.
@@ -1380,30 +1378,12 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * Returns the timestamp (milliseconds since the epoch) of the last received
-     * UIDL request for this UI.
-     * 
-     * @return
-     */
-    public long getLastUidlRequestTime() {
-        return lastUidlRequest;
-    }
-
-    /**
      * Sets the last heartbeat request timestamp for this UI. Called by the
      * framework whenever the application receives a valid heartbeat request for
      * this UI.
      */
     public void setLastHeartbeatTime(long lastHeartbeat) {
         this.lastHeartbeat = lastHeartbeat;
-    }
-
-    /**
-     * Sets the last UIDL request timestamp for this UI. Called by the framework
-     * whenever the application receives a valid UIDL request for this UI.
-     */
-    public void setLastUidlRequestTime(long lastUidlRequest) {
-        this.lastUidlRequest = lastUidlRequest;
     }
 
     /**

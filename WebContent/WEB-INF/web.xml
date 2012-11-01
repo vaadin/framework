@@ -61,7 +61,7 @@
 			<param-value>3601</param-value>
 		</init-param>
 		<init-param>
-			<param-name>closeIdleUIs</param-name>
+			<param-name>closeIdleSessions</param-name>
 			<param-value>true</param-value>
 		</init-param>
 		<init-param>
