@@ -121,6 +121,8 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
 
     private long lastRequestTime = -1;
 
+    private long lastUidlRequestTimestamp = System.currentTimeMillis();
+
     private transient WrappedSession session;
 
     private final Map<String, Object> attributes = new HashMap<String, Object>();
@@ -194,6 +196,10 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
      */
     public long getLastRequestTime() {
         return lastRequestTime;
+    }
+
+    public void setLastUidlRequestTimestamp(long timestamp) {
+        lastUidlRequestTimestamp = timestamp;
     }
 
     /**
@@ -717,11 +723,17 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
      */
     @Deprecated
     public void cleanupInactiveUIs() {
-        for (UI ui : new ArrayList<UI>(uIs.values())) {
-            if (!isUIAlive(ui)) {
-                cleanupUI(ui);
-                getLogger().fine(
-                        "Closed UI #" + ui.getUIId() + " due to inactivity");
+        if (getUidlRequestTimeout() >= 0
+                && System.currentTimeMillis() - lastUidlRequestTimestamp > 1000 * getUidlRequestTimeout()) {
+            close();
+        } else {
+            for (UI ui : new ArrayList<UI>(uIs.values())) {
+                if (!isUIAlive(ui)) {
+                    cleanupUI(ui);
+                    getLogger()
+                            .fine("Closed UI #" + ui.getUIId()
+                                    + " due to inactivity");
+                }
             }
         }
     }
@@ -810,10 +822,6 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
         long now = System.currentTimeMillis();
         if (getHeartbeatTimeout() >= 0
                 && now - ui.getLastHeartbeatTime() > 1000 * getHeartbeatTimeout()) {
-            return false;
-        }
-        if (getUidlRequestTimeout() >= 0
-                && now - ui.getLastUidlRequestTime() > 1000 * getUidlRequestTimeout()) {
             return false;
         }
         return true;
