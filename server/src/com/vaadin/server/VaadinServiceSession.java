@@ -117,9 +117,11 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
 
     private AbstractCommunicationManager communicationManager;
 
-    private long totalSessionTime = 0;
+    private long cumulativeRequestDuration = 0;
 
-    private long lastRequestTime = -1;
+    private long lastRequestDuration = -1;
+
+    private long lastRequestTimestamp = System.currentTimeMillis();
 
     private transient WrappedSession session;
 
@@ -171,10 +173,11 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
     }
 
     /**
-     * @return The total time spent servicing requests in this session.
+     * @return The total time spent servicing requests in this session, in
+     *         milliseconds.
      */
-    public long getTotalSessionTime() {
-        return totalSessionTime;
+    public long getCumulativeRequestDuration() {
+        return cumulativeRequestDuration;
     }
 
     /**
@@ -182,18 +185,31 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
      * the total time spent servicing requests in this session.
      * 
      * @param time
-     *            the time spent in the last request.
+     *            The time spent in the last request, in milliseconds.
      */
-    public void setLastRequestTime(long time) {
-        lastRequestTime = time;
-        totalSessionTime += time;
+    public void setLastRequestDuration(long time) {
+        lastRequestDuration = time;
+        cumulativeRequestDuration += time;
     }
 
     /**
-     * @return the time spent servicing the last request in this session.
+     * @return The time spent servicing the last request in this session, in
+     *         milliseconds.
      */
-    public long getLastRequestTime() {
-        return lastRequestTime;
+    public long getLastRequestDuration() {
+        return lastRequestDuration;
+    }
+
+    /**
+     * Sets the time when the last UIDL request was serviced in this session.
+     * 
+     * @param timestamp
+     *            The time when the last request was handled, in milliseconds
+     *            since the epoch.
+     * 
+     */
+    public void setLastRequestTimestamp(long timestamp) {
+        lastRequestTimestamp = timestamp;
     }
 
     /**
@@ -717,11 +733,17 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
      */
     @Deprecated
     public void cleanupInactiveUIs() {
-        for (UI ui : new ArrayList<UI>(uIs.values())) {
-            if (!isUIAlive(ui)) {
-                cleanupUI(ui);
-                getLogger().fine(
-                        "Closed UI #" + ui.getUIId() + " due to inactivity");
+        if (getUidlRequestTimeout() >= 0
+                && System.currentTimeMillis() - lastRequestTimestamp > 1000 * getUidlRequestTimeout()) {
+            close();
+        } else {
+            for (UI ui : new ArrayList<UI>(uIs.values())) {
+                if (!isUIAlive(ui)) {
+                    cleanupUI(ui);
+                    getLogger()
+                            .fine("Closed UI #" + ui.getUIId()
+                                    + " due to inactivity");
+                }
             }
         }
     }
@@ -776,7 +798,7 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
      * otherwise heartbeat requests are enough to extend UI lifetime
      * indefinitely.
      * 
-     * @see DeploymentConfiguration#isIdleUICleanupEnabled()
+     * @see DeploymentConfiguration#isCloseIdleSessions()
      * @see #getHeartbeatTimeout()
      * @see #cleanupInactiveUIs()
      * 
@@ -786,7 +808,7 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
      *         timeout never occurs.
      */
     protected int getUidlRequestTimeout() {
-        return configuration.isIdleUICleanupEnabled() ? getSession()
+        return configuration.isCloseIdleSessions() ? getSession()
                 .getMaxInactiveInterval() : -1;
     }
 
@@ -809,11 +831,7 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
     protected boolean isUIAlive(UI ui) {
         long now = System.currentTimeMillis();
         if (getHeartbeatTimeout() >= 0
-                && now - ui.getLastHeartbeatTime() > 1000 * getHeartbeatTimeout()) {
-            return false;
-        }
-        if (getUidlRequestTimeout() >= 0
-                && now - ui.getLastUidlRequestTime() > 1000 * getUidlRequestTimeout()) {
+                && now - ui.getLastHeartbeatTimestamp() > 1000 * getHeartbeatTimeout()) {
             return false;
         }
         return true;

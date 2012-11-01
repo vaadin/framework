@@ -50,6 +50,6 @@ public class RequestTimer implements Serializable {
 
         // The timings must be stored in the context, since a new
         // RequestTimer is created for every request.
-        context.setLastRequestTime(time);
+        context.setLastRequestDuration(time);
     }
 }

@@ -506,9 +506,7 @@ public abstract class UI extends AbstractComponentContainer implements
      * current time whenever the application receives a heartbeat or UIDL
      * request from the client for this UI.
      */
-    private long lastHeartbeat = System.currentTimeMillis();
-
-    private long lastUidlRequest = System.currentTimeMillis();
+    private long lastHeartbeatTimestamp = System.currentTimeMillis();
 
     /**
      * Creates a new empty UI without a caption. This UI will have a
@@ -1367,43 +1365,29 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * Returns the timestamp (milliseconds since the epoch) of the last received
-     * heartbeat for this UI.
+     * Returns the timestamp of the last received heartbeat for this UI.
      * 
      * @see #heartbeat()
      * @see VaadinServiceSession#cleanupInactiveUIs()
      * 
-     * @return The time the last heartbeat request occurred.
+     * @return The time the last heartbeat request occurred, in milliseconds
+     *         since the epoch.
      */
-    public long getLastHeartbeatTime() {
-        return lastHeartbeat;
-    }
-
-    /**
-     * Returns the timestamp (milliseconds since the epoch) of the last received
-     * UIDL request for this UI.
-     * 
-     * @return
-     */
-    public long getLastUidlRequestTime() {
-        return lastUidlRequest;
+    public long getLastHeartbeatTimestamp() {
+        return lastHeartbeatTimestamp;
     }
 
     /**
      * Sets the last heartbeat request timestamp for this UI. Called by the
      * framework whenever the application receives a valid heartbeat request for
      * this UI.
+     * 
+     * @param lastHeartbeat
+     *            The time the last heartbeat request occurred, in milliseconds
+     *            since the epoch.
      */
-    public void setLastHeartbeatTime(long lastHeartbeat) {
-        this.lastHeartbeat = lastHeartbeat;
-    }
-
-    /**
-     * Sets the last UIDL request timestamp for this UI. Called by the framework
-     * whenever the application receives a valid UIDL request for this UI.
-     */
-    public void setLastUidlRequestTime(long lastUidlRequest) {
-        this.lastUidlRequest = lastUidlRequest;
+    public void setLastHeartbeatTimestamp(long lastHeartbeat) {
+        lastHeartbeatTimestamp = lastHeartbeat;
     }
 
     /**
