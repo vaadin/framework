@@ -199,6 +199,7 @@ public class ApplicationConfiguration implements EntryPoint {
     private boolean standalone;
     private ErrorMessage communicationError;
     private ErrorMessage authorizationError;
+    private ErrorMessage sessionExpiredError;
     private int heartbeatInterval;
 
     private HashMap<Integer, String> unknownComponents;
@@ -314,6 +315,10 @@ public class ApplicationConfiguration implements EntryPoint {
         return authorizationError;
     }
 
+    public ErrorMessage getSessionExpiredError() {
+        return sessionExpiredError;
+    }
+
     /**
      * Reads the configuration values defined by the bootstrap javascript.
      */
@@ -353,6 +358,7 @@ public class ApplicationConfiguration implements EntryPoint {
 
         communicationError = jsoConfiguration.getConfigError("comErrMsg");
         authorizationError = jsoConfiguration.getConfigError("authErrMsg");
+        sessionExpiredError = jsoConfiguration.getConfigError("sessExpMsg");
 
         // boostrap sets initPending to false if it has sent the browser details
         if (jsoConfiguration.getConfigBoolean("initPending") == Boolean.FALSE) {
