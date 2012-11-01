@@ -580,8 +580,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 return;
             }
 
-            // Keep the UI alive
-            uI.setLastUidlRequestTime(System.currentTimeMillis());
+            session.setLastRequestTimestamp(System.currentTimeMillis());
 
             // Change all variables based on request parameters
             if (!handleVariables(request, response, callback, session, uI)) {
@@ -1330,7 +1329,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      */
     private void writePerformanceData(final PrintWriter outWriter) {
         outWriter.write(String.format(", \"timings\":[%d, %d]",
-                session.getTotalSessionTime(), session.getLastRequestTime()));
+                session.getCumulativeRequestDuration(), session.getLastRequestDuration()));
     }
 
     private void legacyPaint(PaintTarget paintTarget,
