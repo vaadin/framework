@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
@@ -234,49 +235,68 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          *            The total amount of suggestions
          */
         public void showSuggestions(
-                Collection<FilterSelectSuggestion> currentSuggestions,
-                int currentPage, int totalSuggestions) {
+                final Collection<FilterSelectSuggestion> currentSuggestions,
+                final int currentPage, final int totalSuggestions) {
 
-            // Add TT anchor point
-            getElement().setId("VAADIN_COMBOBOX_OPTIONLIST");
+            /*
+             * We need to defer the opening of the popup so that the parent DOM
+             * has stabilized so we can calculate an absolute top and left
+             * correctly. This issue manifests when a Combobox is placed in
+             * another popupView which also needs to calculate the absoluteTop()
+             * to position itself. #9768
+             */
+            final SuggestionPopup popup = this;
+            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    // Add TT anchor point
+                    getElement().setId("VAADIN_COMBOBOX_OPTIONLIST");
 
-            menu.setSuggestions(currentSuggestions);
-            final int x = VFilterSelect.this.getAbsoluteLeft();
-            topPosition = tb.getAbsoluteTop();
-            topPosition += tb.getOffsetHeight();
-            setPopupPosition(x, topPosition);
+                    menu.setSuggestions(currentSuggestions);
+                    final int x = VFilterSelect.this.getAbsoluteLeft();
 
-            int nullOffset = (nullSelectionAllowed && "".equals(lastFilter) ? 1
-                    : 0);
-            boolean firstPage = (currentPage == 0);
-            final int first = currentPage * pageLength + 1
-                    - (firstPage ? 0 : nullOffset);
-            final int last = first + currentSuggestions.size() - 1
-                    - (firstPage && "".equals(lastFilter) ? nullOffset : 0);
-            final int matches = totalSuggestions - nullOffset;
-            if (last > 0) {
-                // nullsel not counted, as requested by user
-                status.setInnerText((matches == 0 ? 0 : first) + "-" + last
-                        + "/" + matches);
-            } else {
-                status.setInnerText("");
-            }
-            // We don't need to show arrows or statusbar if there is only one
-            // page
-            if (totalSuggestions <= pageLength || pageLength == 0) {
-                setPagingEnabled(false);
-            } else {
-                setPagingEnabled(true);
-            }
-            setPrevButtonActive(first > 1);
-            setNextButtonActive(last < matches);
+                    topPosition = tb.getAbsoluteTop();
+                    topPosition += tb.getOffsetHeight();
 
-            // clear previously fixed width
-            menu.setWidth("");
-            menu.getElement().getFirstChildElement().getStyle().clearWidth();
+                    setPopupPosition(x, topPosition);
 
-            setPopupPositionAndShow(this);
+                    int nullOffset = (nullSelectionAllowed
+                            && "".equals(lastFilter) ? 1 : 0);
+                    boolean firstPage = (currentPage == 0);
+                    final int first = currentPage * pageLength + 1
+                            - (firstPage ? 0 : nullOffset);
+                    final int last = first
+                            + currentSuggestions.size()
+                            - 1
+                            - (firstPage && "".equals(lastFilter) ? nullOffset
+                                    : 0);
+                    final int matches = totalSuggestions - nullOffset;
+                    if (last > 0) {
+                        // nullsel not counted, as requested by user
+                        status.setInnerText((matches == 0 ? 0 : first) + "-"
+                                + last + "/" + matches);
+                    } else {
+                        status.setInnerText("");
+                    }
+                    // We don't need to show arrows or statusbar if there is
+                    // only one
+                    // page
+                    if (totalSuggestions <= pageLength || pageLength == 0) {
+                        setPagingEnabled(false);
+                    } else {
+                        setPagingEnabled(true);
+                    }
+                    setPrevButtonActive(first > 1);
+                    setNextButtonActive(last < matches);
 
+                    // clear previously fixed width
+                    menu.setWidth("");
+                    menu.getElement().getFirstChildElement().getStyle()
+                            .clearWidth();
+
+                    setPopupPositionAndShow(popup);
+                }
+            });
         }
 
         /**
