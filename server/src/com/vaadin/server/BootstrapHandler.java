@@ -433,6 +433,15 @@ public abstract class BootstrapHandler implements RequestHandler {
             authErrMsg.put("url", systemMessages.getAuthenticationErrorURL());
 
             appConfig.put("authErrMsg", authErrMsg);
+
+            JSONObject sessExpMsg = new JSONObject();
+            sessExpMsg
+                    .put("caption", systemMessages.getSessionExpiredCaption());
+            sessExpMsg
+                    .put("message", systemMessages.getSessionExpiredMessage());
+            sessExpMsg.put("url", systemMessages.getSessionExpiredURL());
+
+            appConfig.put("sessExpMsg", sessExpMsg);
         }
 
         // getStaticFileLocation documented to never end with a slash
