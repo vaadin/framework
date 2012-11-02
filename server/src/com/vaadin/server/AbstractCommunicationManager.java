@@ -61,6 +61,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.vaadin.annotations.JavaScript;
+import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.server.RpcManager.RpcInvocationException;
@@ -82,8 +83,8 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.LegacyComponent;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Window;
 
 /**
@@ -2468,7 +2469,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 UI existingUi = legacyProvider
                         .getExistingUI(classSelectionEvent);
                 if (existingUi != null) {
-                    UI.setCurrent(existingUi);
+                    reinitUI(existingUi, request);
                     return existingUi;
                 }
             }
@@ -2499,6 +2500,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             if (retainedUIId != null) {
                 UI retainedUI = session.getUIById(retainedUIId.intValue());
                 if (uiClass.isInstance(retainedUI)) {
+                    reinitUI(retainedUI, request);
                     return retainedUI;
                 } else {
                     getLogger()
@@ -2545,6 +2547,23 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
 
         return ui;
+    }
+
+    /**
+     * Updates a UI that has already been initialized but is now loaded again,
+     * e.g. because of {@link PreserveOnRefresh}.
+     * 
+     * @param ui
+     * @param request
+     */
+    private void reinitUI(UI ui, VaadinRequest request) {
+        UI.setCurrent(ui);
+
+        // Fire fragment change if the fragment has changed
+        String location = request.getParameter("loc");
+        if (location != null) {
+            ui.getPage().updateLocation(location);
+        }
     }
 
     /**

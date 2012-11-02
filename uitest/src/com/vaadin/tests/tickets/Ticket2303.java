@@ -6,7 +6,7 @@ import java.io.IOException;
 import com.vaadin.LegacyApplication;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.UI.LegacyWindow;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket2303 extends LegacyApplication {

@@ -2,9 +2,9 @@ package com.vaadin.tests.components.treetable;
 
 import com.vaadin.server.ExternalResource;
 import com.vaadin.tests.components.AbstractTestCase;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.TreeTable;
-import com.vaadin.ui.UI.LegacyWindow;
 
 public class DisappearingComponents extends AbstractTestCase {
 

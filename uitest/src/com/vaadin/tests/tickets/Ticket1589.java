@@ -17,8 +17,8 @@ import com.vaadin.server.RequestHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinServiceSession;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket1589 extends LegacyApplication {
 

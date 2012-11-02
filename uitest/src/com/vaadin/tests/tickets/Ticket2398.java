@@ -3,8 +3,8 @@ package com.vaadin.tests.tickets;
 import com.vaadin.LegacyApplication;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket2398 extends LegacyApplication {
 

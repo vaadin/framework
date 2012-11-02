@@ -52,12 +52,7 @@ public abstract class AbstractEmbedded extends AbstractComponent {
      *            content.
      */
     public void setAlternateText(String altText) {
-        if (altText != getState().alternateText
-                || (altText != null && !altText
-                        .equals(getState().alternateText))) {
-            getState().alternateText = altText;
-            requestRepaint();
-        }
+        getState().alternateText = altText;
     }
 
     /**

@@ -11,7 +11,7 @@ import com.vaadin.server.VaadinServiceSession;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.UI.LegacyWindow;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.VerticalLayout;
 
 public class Ticket1921 extends LegacyApplication implements RequestHandler {

@@ -3,7 +3,7 @@ package com.vaadin.tests.tickets;
 import com.vaadin.LegacyApplication;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.UI.LegacyWindow;
+import com.vaadin.ui.LegacyWindow;
 
 public class Ticket1972 extends LegacyApplication {
 

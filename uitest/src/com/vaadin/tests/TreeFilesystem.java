@@ -23,10 +23,10 @@ import com.vaadin.server.VaadinServiceSession;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.util.SampleDirectory;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.ExpandEvent;
-import com.vaadin.ui.UI.LegacyWindow;
 
 /**
  * Browsable file explorer using Vaadin Tree component. Demonstrates: how to add

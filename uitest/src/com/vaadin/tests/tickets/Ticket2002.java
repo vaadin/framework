@@ -3,8 +3,8 @@ package com.vaadin.tests.tickets;
 import com.vaadin.LegacyApplication;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket2002 extends LegacyApplication {
     private Long long1 = new Long(1L);

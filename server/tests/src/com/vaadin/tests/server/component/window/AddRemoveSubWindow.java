@@ -8,8 +8,8 @@ import org.junit.Test;
 
 import com.vaadin.LegacyApplication;
 import com.vaadin.server.VaadinServiceSession;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.UI.LegacyWindow;
 import com.vaadin.ui.Window;
 
 public class AddRemoveSubWindow {

@@ -5,10 +5,10 @@ import com.vaadin.data.util.MethodProperty;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.CellStyleGenerator;
 import com.vaadin.ui.Table.ColumnGenerator;
-import com.vaadin.ui.UI.LegacyWindow;
 
 public class Ticket2125 extends LegacyApplication {
 

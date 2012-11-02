@@ -19,8 +19,8 @@ package com.vaadin.server;
 import java.io.Serializable;
 
 import com.vaadin.service.FileTypeResolver;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.UI.LegacyWindow;
 
 /**
  * <code>ClassResource</code> is a named resource accessed with the class

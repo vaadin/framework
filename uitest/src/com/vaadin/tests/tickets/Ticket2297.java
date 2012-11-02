@@ -6,7 +6,7 @@ import java.net.URL;
 
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.UI.LegacyWindow;
+import com.vaadin.ui.LegacyWindow;
 
 public class Ticket2297 extends Ticket2292 {
 

@@ -4,7 +4,7 @@ import com.vaadin.LegacyApplication;
 import com.vaadin.data.Item;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.UI.LegacyWindow;
+import com.vaadin.ui.LegacyWindow;
 
 public class Ticket2234 extends LegacyApplication {
 
