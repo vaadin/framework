@@ -1,4 +1,4 @@
-package com.vaadin.tests.components.customcomponent;
+package com.vaadin.tests.components.customlayout;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.LoremIpsum;

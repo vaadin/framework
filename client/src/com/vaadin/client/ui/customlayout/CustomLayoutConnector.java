@@ -50,6 +50,10 @@ public class CustomLayoutConnector extends AbstractLayoutConnector implements
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
+        // Ensure the template is initialized even if there are no children
+        // (#9725)
+        updateHtmlTemplate();
+
         // Evaluate scripts
         VCustomLayout.eval(getWidget().scripts);
         getWidget().scripts = null;
@@ -83,11 +87,9 @@ public class CustomLayoutConnector extends AbstractLayoutConnector implements
 
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
-        // Must do this once here so the HTML has been set up before we start
-        // adding child widgets.
-
+        // Must call here in addition to onStateChanged because
+        // onConnectorHierarchyChange is invoked before onStateChanged
         updateHtmlTemplate();
-
         // For all contained widgets
         for (ComponentConnector child : getChildComponents()) {
             String location = getState().childLocations.get(child);

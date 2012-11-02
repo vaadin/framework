@@ -1,4 +1,4 @@
-package com.vaadin.tests.components.customcomponent;
+package com.vaadin.tests.components.customlayout;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,6 +15,8 @@ public class CustomLayoutUsingTemplate extends TestBase implements
         ClickListener {
 
     CustomLayout layout;
+    Button button1 = new Button("Add Button to first location", this);
+    Button button2 = new Button("Add TextField to second location", this);
 
     @Override
     protected void setup() {
@@ -25,11 +27,11 @@ public class CustomLayoutUsingTemplate extends TestBase implements
         String template = thisPackage + "template.htm";
         InputStream is = getClass().getClassLoader().getResourceAsStream(
                 template);
+
+        addComponent(button1);
+
         try {
             layout = new CustomLayout(is);
-            layout.addComponent(new Button(
-                    "Click to add a TextField to second location", this),
-                    "location1");
             addComponent(layout);
         } catch (IOException e) {
             addComponent(new Label(e.getMessage()));
@@ -56,6 +58,10 @@ public class CustomLayoutUsingTemplate extends TestBase implements
 
     @Override
     public void buttonClick(ClickEvent event) {
-        layout.addComponent(new TextField("A text field!"), "location2");
+        if (event.getButton() == button1) {
+            layout.addComponent(button2, "location1");
+        } else {
+            layout.addComponent(new TextField("A text field!"), "location2");
+        }
     }
 }
