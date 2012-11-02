@@ -21,9 +21,9 @@ public class TooltipsOnScrollingWindow extends TestBase {
                                  * and breaks if height/width of body and view
                                  * are not set to auto
                                  */
-                                + ".v-generated-body { _height: auto; _width: auto;}"
-                                + ".v-app, .v-view { _height: auto; }"
-                                + ".hoverable-label { _position: absolute; _top: 1987px; _left: 1975px; }");
+                                + ".v-ie6.v-generated-body { height: auto; width: auto;}"
+                                + ".v-ie6 .v-app, .v-ie6 .v-view { height: auto; }"
+                                + ".v-ie6 .hoverable-label { position: absolute; top: 1987px; left: 1975px; }");
 
         getLayout().getParent().setHeight("4000px");
         getLayout().getParent().setWidth("4000px");
