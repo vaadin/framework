@@ -229,7 +229,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
                 String id = entry.getKey();
                 Html5File html5File = entry.getValue();
                 if (html5File.getStreamVariable() != null) {
-                    target.addVariable(this, "rec-" + id, new ProxyReceiver(
+                    target.addVariable(this, "rec-" + id, new ProxyReceiver(id,
                             html5File));
                     // these are cleaned from receivers once the upload has
                     // started
@@ -276,9 +276,11 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
     final class ProxyReceiver implements StreamVariable {
 
+        private String id;
         private Html5File file;
 
-        public ProxyReceiver(Html5File file) {
+        public ProxyReceiver(String id, Html5File file) {
+            this.id = id;
             this.file = file;
         }
 
@@ -307,7 +309,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
                         new ReceivingEventWrapper(event));
             }
             // no need tell to the client about this receiver on next paint
-            receivers.remove(file);
+            receivers.remove(id);
             // let the terminal GC the streamvariable and not to accept other
             // file uploads to this variable
             event.disposeStreamVariable();
