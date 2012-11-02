@@ -18,9 +18,13 @@ package com.vaadin.sass.visitor;
 
 import java.util.ArrayList;
 
+import com.google.gwt.dev.util.collect.HashMap;
 import com.vaadin.sass.tree.BlockNode;
+import com.vaadin.sass.tree.Node;
 
 public class BlockNodeHandler {
+
+    private static HashMap<Node, Node> lastNodeAdded = new HashMap<Node, Node>();
 
     public static void traverse(BlockNode node) {
 
@@ -47,8 +51,17 @@ public class BlockNodeHandler {
             }
 
         }
+
         node.setSelectorList(newList);
-        node.getParentNode().getParentNode()
-                .appendChild(node, node.getParentNode());
+        Node oldParent = node.getParentNode();
+        if (lastNodeAdded.get(oldParent) != null) {
+            node.getParentNode().getParentNode()
+                    .appendChild(node, lastNodeAdded.get(oldParent));
+        } else {
+            node.getParentNode().getParentNode()
+                    .appendChild(node, node.getParentNode());
+        }
+
+        lastNodeAdded.put(oldParent, node);
     }
 }
