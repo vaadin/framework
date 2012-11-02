@@ -69,6 +69,13 @@ public class MixinNode extends Node implements IVariableNode {
                     arg.replaceValue(var.getExpr());
                 }
             }
+
+            if (name.startsWith("$")) {
+                if (name.equals("$" + var.getName())) {
+                    name = var.getExpr().toString();
+                }
+            }
+
         }
     }
 

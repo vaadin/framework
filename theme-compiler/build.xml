@@ -10,9 +10,10 @@
 
 	<!-- global properties -->
 	<property name="module.name" value="vaadin-theme-compiler" />
-	<property name="module.symbolic" value="com.vaadin.theme-compiler" />
 	<property name="result.dir" value="result" />
 	<path id="classpath.compile.custom">
+		<!-- This is only temporary until there is a packaged modified flute jar -->
+		<pathelement path="${gwt.user.jar.files}" />
 	</path>
 	<path id="classpath.tests.custom" />
 
@@ -20,7 +21,7 @@
 
 	<target name="jar">
 		<antcall target="common.jar">
-			<reference torefid="extra.jar.includes"	refid="empty.reference" />
+			<reference torefid="extra.jar.includes" refid="theme-compiler.gwt.includes" />
 		</antcall>
 	</target>
 	<target name="publish-local" depends="jar">
@@ -38,4 +39,9 @@
 		<antcall target="common.tests.run" />
 	</target>
 
+	<target name="compile-theme-compiler-parser">
+		<javacc target="src/com/vaadin/sass/parser/Parser.jj" javacchome="/home/hellis/workspace/vaadin7/javacc-5.0/">
+		</javacc>
+	</target>
+	
 </project>

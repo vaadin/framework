@@ -1576,7 +1576,7 @@ void includeDirective() :
 {
     <INCLUDE_SYM>
     (<S>)*
-    (name = property()
+    (name = property()|name = variableName(){ name = "$"+name;} 
          |(name = functionName() 
            args = argValuelist()) <RPARAN>)(";"(<S>)*)+
            {documentHandler.includeDirective(name, args);}
