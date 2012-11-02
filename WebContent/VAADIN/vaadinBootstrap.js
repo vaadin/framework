@@ -78,12 +78,15 @@
 			};
 			
 			var fetchRootConfig = function() {
-				log('Fetching root config');
 				var url = getConfig('browserDetailsUrl');
+				if (!url) {
+					url = getConfig('serviceUrl');
+				}
 				if (!url) {
 					// No special url defined, use the same URL that loaded this page (without the fragment)
 					url = window.location.href.replace(/#.*/,'');
 				}
+				log('Fetching root config from ' + url);
 				url += ((/\?/).test(url) ? "&" : "?") + "browserDetails=1";
 				var rootId = getConfig("rootId");
 				if (rootId !== undefined) {
