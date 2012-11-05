@@ -59,6 +59,12 @@ public class ProgressIndicatorConnector extends AbstractFieldConnector {
     }
 
     @Override
+    public void onUnregister() {
+        super.onUnregister();
+        poller.cancel();
+    }
+
+    @Override
     public VProgressIndicator getWidget() {
         return (VProgressIndicator) super.getWidget();
     }
