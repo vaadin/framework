@@ -13,7 +13,7 @@ import java.io.Serializable;
  * 
  * @author Vaadin Ltd
  * @version @VERSION@
- * @since 7.0
+ * @since 6.8.0
  * 
  */
 public abstract class UniqueSerializable implements Serializable {
