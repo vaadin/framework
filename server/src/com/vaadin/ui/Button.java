@@ -19,6 +19,8 @@ package com.vaadin.ui;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
+import org.json.JSONException;
+
 import com.vaadin.event.Action;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
@@ -59,8 +61,24 @@ public class Button extends AbstractComponent implements
             // Could be optimized so the button is not repainted because of
             // this (client side has already disabled the button)
             setEnabled(false);
+            disabledByClick = true;
         }
     };
+    private boolean disabledByClick = false;
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (disabledByClick && enabled) {
+            try {
+                getUI().getConnectorTracker().getDiffState(Button.this)
+                        .put("enabled", !enabled);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            disabledByClick = false;
+        }
+        super.setEnabled(enabled);
+    }
 
     FocusAndBlurServerRpcImpl focusBlurRpc = new FocusAndBlurServerRpcImpl(this) {
 

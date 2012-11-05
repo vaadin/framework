@@ -156,7 +156,7 @@ public class ButtonConnector extends AbstractComponentConnector implements
     @Override
     public void onClick(ClickEvent event) {
         if (getState().disableOnClick) {
-            getWidget().setEnabled(false);
+            super.updateEnabledState(false);
             rpc.disableOnClick();
         }
 
