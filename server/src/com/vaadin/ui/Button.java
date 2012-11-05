@@ -19,6 +19,8 @@ package com.vaadin.ui;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
+import org.json.JSONException;
+
 import com.vaadin.event.Action;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
@@ -56,9 +58,13 @@ public class Button extends AbstractComponent implements
 
         @Override
         public void disableOnClick() {
-            // Could be optimized so the button is not repainted because of
-            // this (client side has already disabled the button)
             setEnabled(false);
+            try {
+                getUI().getConnectorTracker().getDiffState(Button.this)
+                        .put("enabled", false);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     };
 
