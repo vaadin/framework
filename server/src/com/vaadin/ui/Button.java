@@ -19,6 +19,8 @@ package com.vaadin.ui;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
+import org.json.JSONException;
+
 import com.vaadin.event.Action;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
@@ -55,10 +57,17 @@ public class Button extends AbstractComponent implements
         }
 
         @Override
-        public void disableOnClick() {
-            // Could be optimized so the button is not repainted because of
-            // this (client side has already disabled the button)
+        public void disableOnClick() throws RuntimeException {
             setEnabled(false);
+            // Makes sure the enabled=false state is noticed at once - otherwise
+            // a following setEnabled(true) call might have no effect. see
+            // ticket #10030
+            try {
+                getUI().getConnectorTracker().getDiffState(Button.this)
+                        .put("enabled", false);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
         }
     };
 
