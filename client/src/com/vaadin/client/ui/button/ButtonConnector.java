@@ -156,7 +156,13 @@ public class ButtonConnector extends AbstractComponentConnector implements
     @Override
     public void onClick(ClickEvent event) {
         if (getState().disableOnClick) {
-            getWidget().setEnabled(false);
+            // Simulate getting disabled from the server without waiting for the
+            // round trip. The server-side RPC handler takes care of updating
+            // the server-side state in a similar way to ensure subsequent
+            // changes are properly propagated. Changing state on client is not
+            // generally supported.
+            getState().enabled = false;
+            super.updateEnabledState(false);
             rpc.disableOnClick();
         }
 
