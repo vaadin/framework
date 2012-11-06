@@ -18,11 +18,11 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.util.EventListener;
-import java.util.EventObject;
 import java.util.Locale;
 
 import com.vaadin.event.FieldEvents;
 import com.vaadin.server.ClientConnector;
+import com.vaadin.server.ClientConnectorEvent;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
 import com.vaadin.server.Sizeable;
@@ -676,7 +676,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * @see Component.Listener
      */
     @SuppressWarnings("serial")
-    public static class Event extends EventObject {
+    public static class Event extends ClientConnectorEvent {
 
         /**
          * Constructs a new event with the specified source component.
@@ -694,7 +694,12 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
          * @return the source component of the event
          */
         public Component getComponent() {
-            return (Component) getSource();
+            return getSource();
+        }
+
+        @Override
+        public Component getSource() {
+            return (Component) super.getSource();
         }
     }
 

@@ -17,7 +17,6 @@
 package com.vaadin.shared;
 
 import java.util.List;
-import java.util.Set;
 
 import com.vaadin.shared.communication.SharedState;
 
@@ -40,10 +39,6 @@ public class ComponentState extends SharedState {
     public List<String> styles = null;
     public String id = null;
     public String primaryStyleName = null;
-    /**
-     * A set of event identifiers with registered listeners.
-     */
-    public Set<String> registeredEventListeners = null;
 
     // HTML formatted error message for the component
     // TODO this could be an object with more information, but currently the UI
