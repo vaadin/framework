@@ -25,7 +25,6 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.PostLayoutListener;
@@ -51,18 +50,15 @@ public class PanelConnector extends AbstractComponentContainerConnector
         @Override
         protected void fireClick(NativeEvent event,
                 MouseEventDetails mouseDetails) {
-            rpc.click(mouseDetails);
+            getRpcProxy(PanelServerRpc.class).click(mouseDetails);
         }
     };
 
     private Integer uidlScrollLeft;
 
-    private PanelServerRpc rpc;
-
     @Override
     public void init() {
         super.init();
-        rpc = RpcProxy.create(PanelServerRpc.class, this);
         VPanel panel = getWidget();
         LayoutManager layoutManager = getLayoutManager();
 

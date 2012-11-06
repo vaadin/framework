@@ -31,7 +31,6 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.PostLayoutListener;
@@ -53,11 +52,9 @@ public class WindowConnector extends AbstractComponentContainerConnector
         @Override
         protected void fireClick(NativeEvent event,
                 MouseEventDetails mouseDetails) {
-            rpc.click(mouseDetails);
+            getRpcProxy(WindowServerRpc.class).click(mouseDetails);
         }
     };
-
-    private WindowServerRpc rpc;
 
     boolean minWidthChecked = false;
 
@@ -69,7 +66,6 @@ public class WindowConnector extends AbstractComponentContainerConnector
     @Override
     protected void init() {
         super.init();
-        rpc = RpcProxy.create(WindowServerRpc.class, this);
 
         getLayoutManager().registerDependency(this,
                 getWidget().contentPanel.getElement());

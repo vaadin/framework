@@ -22,7 +22,6 @@ import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.vaadin.client.EventHelper;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.Icon;
@@ -39,15 +38,11 @@ public class NativeButtonConnector extends AbstractComponentConnector implements
     private HandlerRegistration focusHandlerRegistration;
     private HandlerRegistration blurHandlerRegistration;
 
-    private FocusAndBlurServerRpc focusBlurRpc = RpcProxy.create(
-            FocusAndBlurServerRpc.class, this);
-
     @Override
     public void init() {
         super.init();
 
-        getWidget().buttonRpcProxy = RpcProxy.create(ButtonServerRpc.class,
-                this);
+        getWidget().buttonRpcProxy = getRpcProxy(ButtonServerRpc.class);
         getWidget().client = getConnection();
         getWidget().paintableId = getConnectorId();
     }
@@ -123,14 +118,14 @@ public class NativeButtonConnector extends AbstractComponentConnector implements
     public void onFocus(FocusEvent event) {
         // EventHelper.updateFocusHandler ensures that this is called only when
         // there is a listener on server side
-        focusBlurRpc.focus();
+        getRpcProxy(FocusAndBlurServerRpc.class).focus();
     }
 
     @Override
     public void onBlur(BlurEvent event) {
         // EventHelper.updateFocusHandler ensures that this is called only when
         // there is a listener on server side
-        focusBlurRpc.blur();
+        getRpcProxy(FocusAndBlurServerRpc.class).blur();
     }
 
 }
