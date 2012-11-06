@@ -32,7 +32,6 @@ import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.VTooltip;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.shared.MouseEventDetails;
@@ -46,12 +45,9 @@ import com.vaadin.ui.Embedded;
 public class EmbeddedConnector extends AbstractComponentConnector implements
         Paintable {
 
-    EmbeddedServerRpc rpc;
-
     @Override
     protected void init() {
         super.init();
-        rpc = RpcProxy.create(EmbeddedServerRpc.class, this);
     }
 
     @Override
@@ -233,7 +229,7 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
         @Override
         protected void fireClick(NativeEvent event,
                 MouseEventDetails mouseDetails) {
-            rpc.click(mouseDetails);
+            getRpcProxy(EmbeddedServerRpc.class).click(mouseDetails);
         }
 
     };

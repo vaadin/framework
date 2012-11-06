@@ -27,7 +27,6 @@ import com.vaadin.client.DirectionalManagedLayout;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.VCaption;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.client.ui.LayoutClickEventHandler;
@@ -55,18 +54,16 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
 
         @Override
         protected LayoutClickRpc getLayoutClickRPC() {
-            return rpc;
+            return getRpcProxy(GridLayoutServerRpc.class);
         };
 
     };
 
-    private GridLayoutServerRpc rpc;
     private boolean needCaptionUpdate = false;
 
     @Override
     public void init() {
         super.init();
-        rpc = RpcProxy.create(GridLayoutServerRpc.class, this);
         getLayoutManager().registerDependency(this,
                 getWidget().spacingMeasureElement);
     }

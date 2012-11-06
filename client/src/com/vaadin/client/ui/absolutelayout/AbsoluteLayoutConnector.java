@@ -23,7 +23,6 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.DirectionalManagedLayout;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
@@ -52,7 +51,7 @@ public class AbsoluteLayoutConnector extends
 
         @Override
         protected LayoutClickRpc getLayoutClickRPC() {
-            return rpc;
+            return getRpcProxy(AbsoluteLayoutServerRpc.class);
         };
     };
 
@@ -72,8 +71,6 @@ public class AbsoluteLayoutConnector extends
         }
     };
 
-    private AbsoluteLayoutServerRpc rpc;
-
     /*
      * (non-Javadoc)
      * 
@@ -82,7 +79,6 @@ public class AbsoluteLayoutConnector extends
     @Override
     protected void init() {
         super.init();
-        rpc = RpcProxy.create(AbsoluteLayoutServerRpc.class, this);
     }
 
     /**

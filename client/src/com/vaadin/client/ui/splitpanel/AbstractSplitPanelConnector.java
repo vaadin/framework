@@ -29,7 +29,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.LayoutManager;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
@@ -45,12 +44,9 @@ import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState.SplitterState;
 public abstract class AbstractSplitPanelConnector extends
         AbstractComponentContainerConnector implements SimpleManagedLayout {
 
-    private AbstractSplitPanelRpc rpc;
-
     @Override
     protected void init() {
         super.init();
-        rpc = RpcProxy.create(AbstractSplitPanelRpc.class, this);
         // TODO Remove
         getWidget().client = getConnection();
 
@@ -71,7 +67,8 @@ public abstract class AbstractSplitPanelConnector extends
                             position.length() - 2));
                 }
 
-                rpc.setSplitterPosition(pos);
+                getRpcProxy(AbstractSplitPanelRpc.class).setSplitterPosition(
+                        pos);
             }
 
         }, SplitterMoveEvent.TYPE);
@@ -115,7 +112,8 @@ public abstract class AbstractSplitPanelConnector extends
         @Override
         protected void fireClick(NativeEvent event,
                 MouseEventDetails mouseDetails) {
-            rpc.splitterClick(mouseDetails);
+            getRpcProxy(AbstractSplitPanelRpc.class)
+                    .splitterClick(mouseDetails);
         }
 
     };

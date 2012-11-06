@@ -26,7 +26,6 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractLayoutConnector;
 import com.vaadin.client.ui.LayoutClickEventHandler;
@@ -54,11 +53,9 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
 
         @Override
         protected LayoutClickRpc getLayoutClickRPC() {
-            return rpc;
+            return getRpcProxy(CssLayoutServerRpc.class);
         };
     };
-
-    private CssLayoutServerRpc rpc;
 
     private Map<ComponentConnector, VCaption> childToCaption = new HashMap<ComponentConnector, VCaption>();
 
@@ -70,7 +67,6 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
     @Override
     protected void init() {
         super.init();
-        rpc = RpcProxy.create(CssLayoutServerRpc.class, this);
     }
 
     /*

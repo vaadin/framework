@@ -42,7 +42,6 @@ import com.vaadin.client.Focusable;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
@@ -64,8 +63,6 @@ import com.vaadin.ui.UI;
 @Connect(value = UI.class, loadStyle = LoadStyle.EAGER)
 public class UIConnector extends AbstractComponentContainerConnector implements
         Paintable, MayScrollChildren {
-
-    private UIServerRpc rpc = RpcProxy.create(UIServerRpc.class, this);
 
     private HandlerRegistration childStateChangeHandlerRegistration;
 
@@ -90,8 +87,9 @@ public class UIConnector extends AbstractComponentContainerConnector implements
         getWidget().addResizeHandler(new ResizeHandler() {
             @Override
             public void onResize(ResizeEvent event) {
-                rpc.resize(event.getHeight(), event.getWidth(),
-                        Window.getClientWidth(), Window.getClientHeight());
+                getRpcProxy(UIServerRpc.class).resize(event.getHeight(),
+                        event.getWidth(), Window.getClientWidth(),
+                        Window.getClientHeight());
                 if (getState().immediate) {
                     getConnection().sendPendingVariableChanges();
                 }
@@ -322,7 +320,7 @@ public class UIConnector extends AbstractComponentContainerConnector implements
         @Override
         protected void fireClick(NativeEvent event,
                 MouseEventDetails mouseDetails) {
-            rpc.click(mouseDetails);
+            getRpcProxy(UIServerRpc.class).click(mouseDetails);
         }
 
     };
