@@ -240,7 +240,7 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
      * @see com.vaadin.ui.ComponentContainer#getComponentIterator()
      */
     @Override
-    public Iterator<Component> getComponentIterator() {
+    public Iterator<Component> iterator() {
         return Collections.singleton((Component) content).iterator();
     }
 

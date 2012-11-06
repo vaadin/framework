@@ -191,7 +191,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
      * @return the Iterator of the components inside the container.
      */
     @Override
-    public Iterator<Component> getComponentIterator() {
+    public Iterator<Component> iterator() {
         return slots.values().iterator();
     }
 
