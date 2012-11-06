@@ -13,7 +13,7 @@ import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
-public class Ticket1811 extends com.vaadin.LegacyApplication {
+public class Ticket1811 extends com.vaadin.server.LegacyApplication {
 
     LinkedList<TextField> listOfAllFields = new LinkedList<TextField>();
 

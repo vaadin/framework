@@ -41,7 +41,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.vaadin.DefaultDeploymentConfiguration;
 import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
 import com.vaadin.shared.ApplicationConstants;

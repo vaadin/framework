@@ -7,7 +7,7 @@ package com.vaadin.ui;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.Page;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinRequest;
@@ -18,7 +18,7 @@ import com.vaadin.shared.ui.BorderStyle;
 /**
  * Helper class to emulate the main window from Vaadin 6 using UIs. This
  * class should be used in the same way as Window used as a browser level
- * window in Vaadin 6 with {@link com.vaadin.LegacyApplication}
+ * window in Vaadin 6 with {@link com.vaadin.server.LegacyApplication}
  */
 @Deprecated
 public class LegacyWindow extends UI {

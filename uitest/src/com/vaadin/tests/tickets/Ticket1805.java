@@ -10,7 +10,7 @@ import com.vaadin.ui.Layout.MarginHandler;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.TextField;
 
-public class Ticket1805 extends com.vaadin.LegacyApplication {
+public class Ticket1805 extends com.vaadin.server.LegacyApplication {
 
     @Override
     public void init() {

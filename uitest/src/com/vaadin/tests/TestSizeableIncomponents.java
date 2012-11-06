@@ -21,10 +21,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.vaadin.LegacyApplication;
 import com.vaadin.data.Container;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.AbstractComponent;

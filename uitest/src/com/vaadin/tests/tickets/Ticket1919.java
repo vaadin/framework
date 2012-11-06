@@ -7,7 +7,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 
-public class Ticket1919 extends com.vaadin.LegacyApplication {
+public class Ticket1919 extends com.vaadin.server.LegacyApplication {
 
     private GridLayout lo;
     private boolean on = true;

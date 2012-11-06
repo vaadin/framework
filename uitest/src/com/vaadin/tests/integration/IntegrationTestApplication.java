@@ -1,10 +1,10 @@
 package com.vaadin.tests.integration;
 
-import com.vaadin.LegacyApplication;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.ClassResource;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;

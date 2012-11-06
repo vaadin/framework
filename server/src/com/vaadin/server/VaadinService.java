@@ -32,7 +32,6 @@ import javax.portlet.PortletContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import com.vaadin.LegacyApplication;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.event.EventRouter;
 import com.vaadin.shared.ui.ui.UIConstants;

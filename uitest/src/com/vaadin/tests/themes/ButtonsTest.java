@@ -13,7 +13,7 @@ import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.NativeButton;
 
 @SuppressWarnings("serial")
-public class ButtonsTest extends com.vaadin.LegacyApplication {
+public class ButtonsTest extends com.vaadin.server.LegacyApplication {
 
     final LegacyWindow main = new LegacyWindow("Button states & themes");
 

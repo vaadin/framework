@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.textfield;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;

@@ -4,11 +4,11 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 
-import com.vaadin.LegacyApplication;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.Action;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.Page;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;

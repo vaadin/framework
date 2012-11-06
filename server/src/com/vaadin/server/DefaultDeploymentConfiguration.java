@@ -14,13 +14,11 @@
  * the License.
  */
 
-package com.vaadin;
+package com.vaadin.server;
 
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import com.vaadin.server.Constants;
-import com.vaadin.server.DeploymentConfiguration;
 
 /**
  * The default implementation of {@link DeploymentConfiguration} based on a base

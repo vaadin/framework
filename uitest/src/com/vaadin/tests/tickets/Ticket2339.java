@@ -3,7 +3,7 @@ package com.vaadin.tests.tickets;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.LegacyWindow;

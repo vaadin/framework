@@ -8,7 +8,7 @@ import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket1973 extends com.vaadin.LegacyApplication {
+public class Ticket1973 extends com.vaadin.server.LegacyApplication {
 
     LegacyWindow main = new LegacyWindow();
     Table table = new Table();

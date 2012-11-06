@@ -3,7 +3,7 @@ package com.vaadin.tests.tickets;
 import java.util.Collection;
 import java.util.HashSet;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.LegacyWindow;

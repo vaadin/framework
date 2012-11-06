@@ -3,7 +3,7 @@ package com.vaadin.tests.tickets;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 
-public class Ticket1868 extends com.vaadin.LegacyApplication {
+public class Ticket1868 extends com.vaadin.server.LegacyApplication {
 
     @Override
     public void init() {

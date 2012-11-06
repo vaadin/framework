@@ -14,7 +14,7 @@ import com.vaadin.ui.Table;
  * client.
  * 
  */
-public class Ticket2126 extends com.vaadin.LegacyApplication {
+public class Ticket2126 extends com.vaadin.server.LegacyApplication {
 
     LegacyWindow main = new LegacyWindow();
     Table table = new Table();

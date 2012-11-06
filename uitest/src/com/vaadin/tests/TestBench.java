@@ -24,10 +24,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import com.vaadin.LegacyApplication;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.FragmentChangedEvent;
 import com.vaadin.ui.Component;
@@ -51,7 +51,7 @@ import com.vaadin.ui.VerticalLayout;
  * @author Vaadin Ltd.
  * 
  */
-public class TestBench extends com.vaadin.LegacyApplication implements
+public class TestBench extends com.vaadin.server.LegacyApplication implements
         Property.ValueChangeListener {
 
     // Add here packages which are used for finding testable classes

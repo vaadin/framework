@@ -19,7 +19,7 @@ package com.vaadin.tests;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;

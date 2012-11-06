@@ -34,7 +34,7 @@ import com.vaadin.ui.Window;
  * @see com.vaadin.ui.Window
  * @see com.vaadin.ui.Label
  */
-public class ModalWindow extends com.vaadin.LegacyApplication implements
+public class ModalWindow extends com.vaadin.server.LegacyApplication implements
         ClickListener {
 
     private Window test;

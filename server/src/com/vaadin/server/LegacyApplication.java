@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin;
+package com.vaadin.server;
 
 import java.net.URL;
 import java.util.Collection;
@@ -23,10 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.vaadin.server.DefaultErrorListener;
 import com.vaadin.server.Terminal.ErrorEvent;
 import com.vaadin.server.Terminal.ErrorListener;
-import com.vaadin.server.VaadinServiceSession;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.UI;
 

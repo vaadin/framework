@@ -28,7 +28,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-public class Ticket1710 extends com.vaadin.LegacyApplication {
+public class Ticket1710 extends com.vaadin.server.LegacyApplication {
 
     @Override
     public void init() {

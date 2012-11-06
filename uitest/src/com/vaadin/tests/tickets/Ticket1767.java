@@ -3,7 +3,7 @@ package com.vaadin.tests.tickets;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.LegacyWindow;
 
-public class Ticket1767 extends com.vaadin.LegacyApplication {
+public class Ticket1767 extends com.vaadin.server.LegacyApplication {
 
     @Override
     public void init() {

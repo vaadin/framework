@@ -11,7 +11,7 @@ import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
-public class Ticket1245 extends com.vaadin.LegacyApplication {
+public class Ticket1245 extends com.vaadin.server.LegacyApplication {
 
     TextField f = new TextField();
 

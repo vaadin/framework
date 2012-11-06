@@ -4,7 +4,7 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Table;
 
-public class Ticket1991 extends com.vaadin.LegacyApplication {
+public class Ticket1991 extends com.vaadin.server.LegacyApplication {
 
     @Override
     public void init() {

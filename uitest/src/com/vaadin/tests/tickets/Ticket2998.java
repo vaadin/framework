@@ -8,10 +8,10 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import com.vaadin.LegacyApplication;
 import com.vaadin.data.Container;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;

@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Locale;
 import java.util.Properties;
 
-import com.vaadin.LegacyApplication;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;

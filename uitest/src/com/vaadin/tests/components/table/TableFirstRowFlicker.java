@@ -1,8 +1,8 @@
 package com.vaadin.tests.components.table;
 
-import com.vaadin.LegacyApplication;
 import com.vaadin.data.Container;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.ProgressIndicator;
