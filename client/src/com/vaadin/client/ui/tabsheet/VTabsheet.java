@@ -711,6 +711,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                     scrollerIndex = newFirstIndex;
                     updateTabScroller();
                 }
+                event.stopPropagation();
                 return;
             } else if (isClippedTabs()
                     && DOM.eventGetTarget(event) == scrollerNext) {
@@ -720,6 +721,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                     scrollerIndex = newFirstIndex;
                     updateTabScroller();
                 }
+                event.stopPropagation();
                 return;
             }
         }
