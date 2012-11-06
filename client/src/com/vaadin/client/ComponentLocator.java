@@ -29,7 +29,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.csslayout.VCssLayout;
 import com.vaadin.client.ui.gridlayout.VGridLayout;
-import com.vaadin.client.ui.orderedlayout.VOrderedLayout;
+import com.vaadin.client.ui.orderedlayout.VAbstractOrderedLayout;
 import com.vaadin.client.ui.tabsheet.VTabsheetPanel;
 import com.vaadin.client.ui.ui.VUI;
 import com.vaadin.client.ui.window.VWindow;
@@ -315,7 +315,7 @@ public class ComponentLocator {
                 String childIndexString = part.substring("domChild[".length(),
                         part.length() - 1);
 
-                if (Util.findWidget(baseElement, null) instanceof VOrderedLayout) {
+                if (Util.findWidget(baseElement, null) instanceof VAbstractOrderedLayout) {
                     if (element.hasChildNodes()) {
                         Element e = element.getFirstChildElement().cast();
                         String cn = e.getClassName();
@@ -564,9 +564,11 @@ public class ComponentLocator {
 
                 // ChildComponentContainer has been removed and replaced with
                 // VOrderLayout.Slot's
-                if (w instanceof VOrderedLayout
-                        && "ChildComponentContainer".equals(widgetClassName)) {
-                    widgetClassName = "VOrderedLayout$Slot";
+                if (w instanceof VAbstractOrderedLayout) {
+                    if ("ChildComponentContainer".equals(widgetClassName)
+                            || "VOrderedLayout$Slot".equals(widgetClassName)) {
+                        widgetClassName = "Slot";
+                    }
                 }
 
                 if (w instanceof VTabsheetPanel && widgetPosition != 0) {
@@ -662,8 +664,8 @@ public class ComponentLocator {
                         }
                         widgetPosition--;
 
-                    } else if (w instanceof VOrderedLayout
-                            && "VOrderedLayout$Slot".equals(simpleName2)) {
+                    } else if (w instanceof VAbstractOrderedLayout
+                            && "Slot".equals(simpleName2)) {
                         child = ((SimplePanel) child).getWidget();
                         simpleName2 = Util.getSimpleName(child);
                         if (widgetClassName.equals(simpleName2)) {

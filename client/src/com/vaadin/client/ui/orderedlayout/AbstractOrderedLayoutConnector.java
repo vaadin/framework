@@ -31,8 +31,7 @@ import com.vaadin.client.ui.AbstractLayoutConnector;
 import com.vaadin.client.ui.LayoutClickEventHandler;
 import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
-import com.vaadin.client.ui.orderedlayout.VOrderedLayout.CaptionPosition;
-import com.vaadin.client.ui.orderedlayout.VOrderedLayout.Slot;
+import com.vaadin.client.ui.orderedlayout.VAbstractOrderedLayout.CaptionPosition;
 import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.communication.URLReference;
@@ -198,37 +197,37 @@ public abstract class AbstractOrderedLayoutConnector extends
      * @see com.vaadin.client.ui.AbstractComponentConnector#getWidget()
      */
     @Override
-    public VOrderedLayout getWidget() {
-        return (VOrderedLayout) super.getWidget();
+    public VAbstractOrderedLayout getWidget() {
+        return (VAbstractOrderedLayout) super.getWidget();
     }
 
     /**
      * For bookkeeping. Used to determine if extra calculations are needed for
      * horizontal layout.
      */
-    private HashSet<ComponentConnector> hasVerticalAlignment = new HashSet<ComponentConnector>();
+    protected HashSet<ComponentConnector> hasVerticalAlignment = new HashSet<ComponentConnector>();
 
     /**
      * For bookkeeping. Used to determine if extra calculations are needed for
      * horizontal layout.
      */
-    private HashSet<ComponentConnector> hasRelativeHeight = new HashSet<ComponentConnector>();
+    protected HashSet<ComponentConnector> hasRelativeHeight = new HashSet<ComponentConnector>();
 
     /**
      * For bookkeeping. Used to determine if extra calculations are needed for
      * horizontal layout.
      */
-    private HashSet<ComponentConnector> hasExpandRatio = new HashSet<ComponentConnector>();
+    protected HashSet<ComponentConnector> hasExpandRatio = new HashSet<ComponentConnector>();
 
     /**
      * For bookkeeping. Used in extra calculations for horizontal layout.
      */
-    private HashSet<Element> needsMeasure = new HashSet<Element>();
+    protected HashSet<Element> needsMeasure = new HashSet<Element>();
 
     /**
      * For bookkeeping. Used in extra calculations for horizontal layout.
      */
-    private HashMap<Element, Integer> childCaptionElementHeight = new HashMap<Element, Integer>();
+    protected HashMap<Element, Integer> childCaptionElementHeight = new HashMap<Element, Integer>();
 
     /*
      * (non-Javadoc)
@@ -299,7 +298,7 @@ public abstract class AbstractOrderedLayoutConnector extends
 
         List<ComponentConnector> previousChildren = event.getOldChildren();
         int currentIndex = 0;
-        VOrderedLayout layout = getWidget();
+        VAbstractOrderedLayout layout = getWidget();
 
         for (ComponentConnector child : getChildComponents()) {
             Slot slot = layout.getSlot(child.getWidget());
@@ -359,8 +358,8 @@ public abstract class AbstractOrderedLayoutConnector extends
         hasRelativeHeight.clear();
         needsMeasure.clear();
 
-        boolean equalExpandRatio = getWidget().vertical ? !isUndefinedHeight()
-                : !isUndefinedWidth();
+        boolean equalExpandRatio = isEqualExpandRatio();
+
         for (ComponentConnector child : getChildComponents()) {
             double expandRatio = getState().childData.get(child).expandRatio;
             if (expandRatio > 0) {
@@ -404,45 +403,17 @@ public abstract class AbstractOrderedLayoutConnector extends
     /**
      * Does the layout need a fixed height?
      */
-    private boolean needsFixedHeight() {
-        boolean isVertical = getWidget().vertical;
-        boolean hasChildrenWithVerticalAlignmentCenterOrBottom = !hasVerticalAlignment
-                .isEmpty();
-        boolean allChildrenHasVerticalAlignmentCenterOrBottom = hasVerticalAlignment
-                .size() == getChildren().size();
-        boolean hasChildrenWithRelativeHeight = !hasRelativeHeight.isEmpty();
-
-        if (isVertical) {
-            return false;
-        }
-
-        else if (!isUndefinedHeight()) {
-            return false;
-        }
-
-        else if (!hasChildrenWithRelativeHeight) {
-            return false;
-        }
-
-        else if (!hasChildrenWithVerticalAlignmentCenterOrBottom) {
-            return false;
-        }
-
-        else if (allChildrenHasVerticalAlignmentCenterOrBottom) {
-            return false;
-        }
-
-        return true;
-    }
+    protected abstract boolean needsFixedHeight();
 
     /**
      * Does the layout need to expand?
      */
-    private boolean needsExpand() {
-        boolean canApplyExpand = (getWidget().vertical && !isUndefinedHeight())
-                || (!getWidget().vertical && !isUndefinedWidth());
-        return hasExpandRatio.size() > 0 && canApplyExpand;
-    }
+    protected abstract boolean needsExpand();
+
+    /**
+     * Should equal expansion rates be used for the slots
+     */
+    protected abstract boolean isEqualExpandRatio();
 
     /**
      * Add slot listeners
