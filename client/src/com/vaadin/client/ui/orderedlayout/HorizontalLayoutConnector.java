@@ -28,13 +28,6 @@ import com.vaadin.ui.HorizontalLayout;
 @Connect(value = HorizontalLayout.class, loadStyle = LoadStyle.EAGER)
 public class HorizontalLayoutConnector extends AbstractOrderedLayoutConnector {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.client.ui.orderedlayout.AbstractOrderedLayoutConnector#getWidget
-     * ()
-     */
     @Override
     public VHorizontalLayout getWidget() {
         return (VHorizontalLayout) super.getWidget();
@@ -43,6 +36,43 @@ public class HorizontalLayoutConnector extends AbstractOrderedLayoutConnector {
     @Override
     public HorizontalLayoutState getState() {
         return (HorizontalLayoutState) super.getState();
+    }
+
+    @Override
+    protected boolean needsFixedHeight() {
+        boolean hasChildrenWithVerticalAlignmentCenterOrBottom = !hasVerticalAlignment
+                .isEmpty();
+        boolean allChildrenHasVerticalAlignmentCenterOrBottom = hasVerticalAlignment
+                .size() == getChildren().size();
+        boolean hasChildrenWithRelativeHeight = !hasRelativeHeight.isEmpty();
+
+        if (!isUndefinedHeight()) {
+            return false;
+        }
+
+        else if (!hasChildrenWithRelativeHeight) {
+            return false;
+        }
+
+        else if (!hasChildrenWithVerticalAlignmentCenterOrBottom) {
+            return false;
+        }
+
+        else if (allChildrenHasVerticalAlignmentCenterOrBottom) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    protected boolean needsExpand() {
+        return hasExpandRatio.size() > 0 && !isUndefinedWidth();
+    }
+
+    @Override
+    protected boolean isEqualExpandRatio() {
+        return !isUndefinedWidth();
     }
 
 }
