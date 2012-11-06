@@ -244,7 +244,9 @@ public class VaadinClasses {
 
             Class<?> c = Class.forName(fullyQualifiedClassName);
             if (baseClass.isAssignableFrom(c)
-                    && !Modifier.isAbstract(c.getModifiers())) {
+                    && !Modifier.isAbstract(c.getModifiers())
+                    && !c.isAnonymousClass() && !c.isMemberClass()
+                    && !c.isLocalClass()) {
                 result.add((Class<? extends T>) c);
             }
         } catch (Exception e) {
