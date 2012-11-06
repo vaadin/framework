@@ -1,7 +1,7 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.LegacyApplication;
 import com.vaadin.data.util.MethodProperty;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.TextField;

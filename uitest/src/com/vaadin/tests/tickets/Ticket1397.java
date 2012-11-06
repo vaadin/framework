@@ -2,8 +2,8 @@ package com.vaadin.tests.tickets;
 
 import java.util.Date;
 
-import com.vaadin.LegacyApplication;
 import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.InlineDateField;

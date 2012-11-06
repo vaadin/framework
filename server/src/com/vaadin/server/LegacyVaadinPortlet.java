@@ -20,7 +20,6 @@ import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 
-import com.vaadin.LegacyApplication;
 
 public class LegacyVaadinPortlet extends VaadinPortlet {
 

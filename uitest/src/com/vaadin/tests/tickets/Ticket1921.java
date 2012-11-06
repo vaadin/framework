@@ -3,7 +3,7 @@ package com.vaadin.tests.tickets;
 import java.io.IOException;
 import java.util.Map;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;

@@ -16,7 +16,7 @@
 
 package com.vaadin.tests;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;

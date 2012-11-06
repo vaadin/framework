@@ -10,9 +10,9 @@ import java.util.Date;
 
 import javax.imageio.ImageIO;
 
-import com.vaadin.LegacyApplication;
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;

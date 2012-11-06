@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.VaadinServiceSession;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.UI;

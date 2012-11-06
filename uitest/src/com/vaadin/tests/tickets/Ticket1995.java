@@ -1,10 +1,10 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.LegacyApplication;
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.Filterable;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.filter.SimpleStringFilter;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.LegacyWindow;

@@ -9,7 +9,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 
-public class Ticket1572 extends com.vaadin.LegacyApplication {
+public class Ticket1572 extends com.vaadin.server.LegacyApplication {
 
     private Label state;
     private GridLayout gl;

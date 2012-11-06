@@ -1,10 +1,10 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.LegacyApplication;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.HierarchicalContainer;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.Sizeable;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Accordion;

@@ -15,7 +15,7 @@ import com.vaadin.ui.Tree;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
-public class Ticket2009 extends com.vaadin.LegacyApplication {
+public class Ticket2009 extends com.vaadin.server.LegacyApplication {
 
     TextField f = new TextField();
 

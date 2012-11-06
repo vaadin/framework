@@ -4,9 +4,9 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Random;
 
-import com.vaadin.LegacyApplication;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.StringLengthValidator;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;

@@ -20,7 +20,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.VerticalSplitPanel;
 
-public class TestSplitPanel extends com.vaadin.LegacyApplication {
+public class TestSplitPanel extends com.vaadin.server.LegacyApplication {
 
     VerticalSplitPanel verticalSplit = new VerticalSplitPanel();
 

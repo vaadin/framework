@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import junit.framework.TestCase;
 
-import com.vaadin.DefaultDeploymentConfiguration;
 
 public class TestAbstractApplicationServletStaticFilesLocation extends TestCase {
 

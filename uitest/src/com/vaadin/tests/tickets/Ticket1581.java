@@ -9,7 +9,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.ProgressIndicator;
 
-public class Ticket1581 extends com.vaadin.LegacyApplication {
+public class Ticket1581 extends com.vaadin.server.LegacyApplication {
 
     private Label time;
     private ProgressIndicator poller;

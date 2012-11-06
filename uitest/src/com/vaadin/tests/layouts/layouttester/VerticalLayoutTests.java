@@ -1,6 +1,6 @@
 package com.vaadin.tests.layouts.layouttester;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.Resource;
 import com.vaadin.server.SystemError;
 import com.vaadin.server.ThemeResource;

@@ -1,6 +1,6 @@
 package com.vaadin.tests.components;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.VaadinServiceSession;
 import com.vaadin.server.WebBrowser;
 

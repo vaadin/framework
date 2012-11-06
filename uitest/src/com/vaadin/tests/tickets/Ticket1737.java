@@ -1,8 +1,8 @@
 package com.vaadin.tests.tickets;
 
-import com.vaadin.LegacyApplication;
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.DownloadStream;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;

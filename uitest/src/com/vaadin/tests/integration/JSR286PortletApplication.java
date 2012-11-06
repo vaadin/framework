@@ -18,9 +18,9 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.portlet.WindowState;
 
-import com.vaadin.LegacyApplication;
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.VaadinPortletSession;
 import com.vaadin.server.VaadinPortletSession.PortletListener;
 import com.vaadin.shared.ui.label.ContentMode;

@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
 
-import com.vaadin.DefaultDeploymentConfiguration;
+import com.vaadin.server.DefaultDeploymentConfiguration;
 import com.vaadin.server.DefaultUIProvider;
 import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.UIClassSelectionEvent;

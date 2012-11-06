@@ -4,7 +4,7 @@ import com.vaadin.server.SystemError;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.TextField;
 
-public class Ticket1663 extends com.vaadin.LegacyApplication {
+public class Ticket1663 extends com.vaadin.server.LegacyApplication {
 
     @Override
     public void init() {

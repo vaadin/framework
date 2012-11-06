@@ -23,7 +23,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 
-public class TestSetVisibleAndCaching extends com.vaadin.LegacyApplication {
+public class TestSetVisibleAndCaching extends com.vaadin.server.LegacyApplication {
 
     Panel panelA = new Panel("Panel A");
     Panel panelB = new Panel("Panel B");

@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Random;
 import java.util.Set;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.Button;

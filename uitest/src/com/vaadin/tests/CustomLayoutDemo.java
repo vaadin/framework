@@ -43,7 +43,7 @@ import com.vaadin.ui.Tree;
  * @since 4.0.0
  * 
  */
-public class CustomLayoutDemo extends com.vaadin.LegacyApplication implements
+public class CustomLayoutDemo extends com.vaadin.server.LegacyApplication implements
         Listener {
 
     private CustomLayout mainLayout = null;

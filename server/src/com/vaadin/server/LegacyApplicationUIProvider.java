@@ -21,7 +21,6 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.vaadin.LegacyApplication;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.UI;
 

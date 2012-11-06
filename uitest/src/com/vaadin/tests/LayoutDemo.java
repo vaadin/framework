@@ -37,7 +37,7 @@ import com.vaadin.ui.VerticalLayout;
  * @since 4.0.0
  * 
  */
-public class LayoutDemo extends com.vaadin.LegacyApplication {
+public class LayoutDemo extends com.vaadin.server.LegacyApplication {
 
     /**
      * Initialize Application. Demo components are added to main window.

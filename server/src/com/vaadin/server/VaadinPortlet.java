@@ -50,7 +50,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.liferay.portal.kernel.util.PortalClassInvoker;
 import com.liferay.portal.kernel.util.PropsUtil;
-import com.vaadin.DefaultDeploymentConfiguration;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;

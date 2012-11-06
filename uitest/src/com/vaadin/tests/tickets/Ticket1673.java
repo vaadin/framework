@@ -6,7 +6,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.LegacyWindow;
 
-public class Ticket1673 extends com.vaadin.LegacyApplication {
+public class Ticket1673 extends com.vaadin.server.LegacyApplication {
 
     @Override
     public void init() {

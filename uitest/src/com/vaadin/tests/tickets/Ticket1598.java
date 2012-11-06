@@ -3,7 +3,7 @@ package com.vaadin.tests.tickets;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.LegacyApplication;
+import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.MenuBar;
