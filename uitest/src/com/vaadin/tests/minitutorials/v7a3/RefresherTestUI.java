@@ -19,6 +19,7 @@ package com.vaadin.tests.minitutorials.v7a3;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.minitutorials.v7a3.Refresher.RefreshEvent;
 import com.vaadin.tests.minitutorials.v7a3.Refresher.RefreshListener;
 import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.ui.Button;
@@ -32,9 +33,9 @@ public class RefresherTestUI extends AbstractTestUI {
         final Refresher refresher = new Refresher();
         refresher.extend(this);
         refresher.setInterval(1000);
-        refresher.addListener(new RefreshListener() {
+        refresher.addRefreshListener(new RefreshListener() {
             @Override
-            public void refresh(Refresher source) {
+            public void refresh(RefreshEvent event) {
                 System.out.println("Got refresh");
             }
         });
