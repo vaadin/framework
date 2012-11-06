@@ -3,6 +3,7 @@ package com.vaadin.shared.ui;
 import java.util.HashSet;
 
 import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.communication.SharedState;
 
 public final class ComponentStateUtil {
 
@@ -40,8 +41,8 @@ public final class ComponentStateUtil {
      * @param eventListenerId
      *            The event identifier to remove
      */
-    public static final void removeRegisteredEventListener(
-            ComponentState state, String eventIdentifier) {
+    public static final void removeRegisteredEventListener(SharedState state,
+            String eventIdentifier) {
         if (state.registeredEventListeners == null) {
             return;
         }
@@ -57,7 +58,7 @@ public final class ComponentStateUtil {
      * @param eventListenerId
      *            The event identifier to add
      */
-    public static final void addRegisteredEventListener(ComponentState state,
+    public static final void addRegisteredEventListener(SharedState state,
             String eventListenerId) {
         if (state.registeredEventListeners == null) {
             state.registeredEventListeners = new HashSet<String>();

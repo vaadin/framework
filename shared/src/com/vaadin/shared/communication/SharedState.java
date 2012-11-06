@@ -19,6 +19,7 @@ package com.vaadin.shared.communication;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.vaadin.shared.Connector;
 
@@ -60,4 +61,9 @@ public class SharedState implements Serializable {
     public Map<String, URLReference> resources = new HashMap<String, URLReference>();
 
     public boolean enabled = true;
+    /**
+     * A set of event identifiers with registered listeners.
+     */
+    public Set<String> registeredEventListeners = null;
+
 }
