@@ -236,7 +236,7 @@ public abstract class AbstractClientConnector implements ClientConnector {
      * 
      * @since 7.0
      */
-    public <T extends ClientRpc> T getRpcProxy(final Class<T> rpcInterface) {
+    protected <T extends ClientRpc> T getRpcProxy(final Class<T> rpcInterface) {
         // create, initialize and return a dynamic proxy for RPC
         try {
             if (!rpcProxyMap.containsKey(rpcInterface)) {

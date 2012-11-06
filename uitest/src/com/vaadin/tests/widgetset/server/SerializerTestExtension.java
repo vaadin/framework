@@ -17,10 +17,16 @@
 package com.vaadin.tests.widgetset.server;
 
 import com.vaadin.server.AbstractExtension;
+import com.vaadin.shared.communication.ClientRpc;
 import com.vaadin.tests.widgetset.client.ComplexTestBean;
 import com.vaadin.tests.widgetset.client.SerializerTestRpc;
 
 public class SerializerTestExtension extends AbstractExtension {
+
+    @Override
+    public <T extends ClientRpc> T getRpcProxy(Class<T> rpcInterface) {
+        return super.getRpcProxy(rpcInterface);
+    }
 
     @Override
     public ComplexTestBean getState() {
