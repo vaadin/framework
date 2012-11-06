@@ -4,7 +4,7 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
-import com.vaadin.service.FileTypeResolver;
+import com.vaadin.util.FileTypeResolver;
 
 public class TestFileTypeResolver extends TestCase {
 

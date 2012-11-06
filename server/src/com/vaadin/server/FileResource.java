@@ -21,7 +21,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import com.vaadin.server.Terminal.ErrorEvent;
-import com.vaadin.service.FileTypeResolver;
+import com.vaadin.util.FileTypeResolver;
 
 /**
  * <code>FileResources</code> are files or directories on local filesystem. The

@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.service;
+package com.vaadin.util;
 
 import java.io.File;
 import java.io.Serializable;

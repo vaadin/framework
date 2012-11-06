@@ -19,7 +19,7 @@ package com.vaadin.server;
 import java.io.InputStream;
 import java.io.Serializable;
 
-import com.vaadin.service.FileTypeResolver;
+import com.vaadin.util.FileTypeResolver;
 
 /**
  * <code>StreamResource</code> is a resource provided to the client directly by
