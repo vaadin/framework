@@ -182,7 +182,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      * @return the Iterator of the components inside the container.
      */
     @Override
-    public Iterator<Component> getComponentIterator() {
+    public Iterator<Component> iterator() {
         return components.iterator();
     }
 

@@ -146,14 +146,6 @@ public abstract class CustomField<T> extends AbstractField<T> implements
         }
     }
 
-    /**
-     * @deprecated As of 7.0, use {@link #iterator()} instead.
-     */
-    @Deprecated
-    public Iterator<Component> getComponentIterator() {
-        return iterator();
-    }
-
     @Override
     public Iterator<Component> iterator() {
         return new ComponentIterator();

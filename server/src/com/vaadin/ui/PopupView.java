@@ -224,7 +224,7 @@ public class PopupView extends AbstractComponentContainer implements
      * @see com.vaadin.ui.ComponentContainer#getComponentIterator()
      */
     @Override
-    public Iterator<Component> getComponentIterator() {
+    public Iterator<Component> iterator() {
         return new SingleComponentIterator(visibleComponent);
     }
 

@@ -133,7 +133,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      */
 
     @Override
-    public Iterator<Component> getComponentIterator() {
+    public Iterator<Component> iterator() {
         return Collections.unmodifiableList(components).iterator();
     }
 

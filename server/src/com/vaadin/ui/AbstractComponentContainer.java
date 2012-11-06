@@ -379,8 +379,8 @@ public abstract class AbstractComponentContainer extends AbstractComponent
     }
 
     @Override
-    public Iterator<Component> iterator() {
-        return getComponentIterator();
+    public Iterator<Component> getComponentIterator() {
+        return iterator();
     }
 
     /*

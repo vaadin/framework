@@ -43,7 +43,7 @@ public class WidgetContainer extends AbstractComponentContainer {
     }
 
     @Override
-    public Iterator<Component> getComponentIterator() {
+    public Iterator<Component> iterator() {
         return children.iterator();
     }
 }

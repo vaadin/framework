@@ -128,7 +128,7 @@ public class CustomComponent extends AbstractComponentContainer {
     }
 
     @Override
-    public Iterator<Component> getComponentIterator() {
+    public Iterator<Component> iterator() {
         return new ComponentIterator();
     }
 

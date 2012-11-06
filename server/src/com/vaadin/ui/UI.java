@@ -333,7 +333,7 @@ public abstract class UI extends AbstractComponentContainer implements
      * @see com.vaadin.ui.ComponentContainer#getComponentIterator()
      */
     @Override
-    public Iterator<Component> getComponentIterator() {
+    public Iterator<Component> iterator() {
         // TODO could directly create some kind of combined iterator instead of
         // creating a new ArrayList
         ArrayList<Component> components = new ArrayList<Component>();

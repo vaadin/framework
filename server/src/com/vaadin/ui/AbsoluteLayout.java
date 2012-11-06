@@ -70,7 +70,7 @@ public class AbsoluteLayout extends AbstractLayout implements
      * absolute layout.
      */
     @Override
-    public Iterator<Component> getComponentIterator() {
+    public Iterator<Component> iterator() {
         return componentToCoordinates.keySet().iterator();
     }
 
