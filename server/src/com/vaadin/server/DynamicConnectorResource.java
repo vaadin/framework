@@ -19,7 +19,7 @@ package com.vaadin.server;
 import java.util.Collections;
 import java.util.Map;
 
-import com.vaadin.service.FileTypeResolver;
+import com.vaadin.util.FileTypeResolver;
 
 /**
  * A resource that is served by calling

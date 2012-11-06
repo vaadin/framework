@@ -16,7 +16,7 @@
 
 package com.vaadin.server;
 
-import com.vaadin.service.FileTypeResolver;
+import com.vaadin.util.FileTypeResolver;
 
 /**
  * <code>ThemeResource</code> is a named theme dependant resource provided and

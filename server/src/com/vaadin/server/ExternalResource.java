@@ -19,7 +19,7 @@ package com.vaadin.server;
 import java.io.Serializable;
 import java.net.URL;
 
-import com.vaadin.service.FileTypeResolver;
+import com.vaadin.util.FileTypeResolver;
 
 /**
  * <code>ExternalResource</code> implements source for resources fetched from

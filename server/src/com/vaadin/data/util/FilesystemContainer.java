@@ -34,7 +34,7 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.server.Resource;
-import com.vaadin.service.FileTypeResolver;
+import com.vaadin.util.FileTypeResolver;
 
 /**
  * A hierarchical container wrapper for a filesystem.
