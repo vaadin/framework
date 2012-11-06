@@ -123,6 +123,9 @@ public class VNativeButton extends Button implements ClickHandler {
         }
         if (disableOnClick) {
             setEnabled(false);
+            // FIXME: This should be moved to NativeButtonConnector along with
+            // buttonRpcProxy
+            addStyleName(ApplicationConnection.DISABLED_CLASSNAME);
             buttonRpcProxy.disableOnClick();
         }
 
