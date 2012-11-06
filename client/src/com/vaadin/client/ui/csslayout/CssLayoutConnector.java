@@ -26,7 +26,6 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractLayoutConnector;
 import com.vaadin.client.ui.LayoutClickEventHandler;
@@ -70,7 +69,7 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
     @Override
     protected void init() {
         super.init();
-        rpc = RpcProxy.create(CssLayoutServerRpc.class, this);
+        rpc = getRpcProxy(CssLayoutServerRpc.class);
     }
 
     /*

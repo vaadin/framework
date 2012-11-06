@@ -32,7 +32,6 @@ import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.VTooltip;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.shared.MouseEventDetails;
@@ -51,7 +50,7 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
     @Override
     protected void init() {
         super.init();
-        rpc = RpcProxy.create(EmbeddedServerRpc.class, this);
+        rpc = getRpcProxy(EmbeddedServerRpc.class);
     }
 
     @Override

@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.shared.Connector;
@@ -37,8 +36,7 @@ import com.vaadin.tests.widgetset.server.SerializerTestExtension;
 @Connect(SerializerTestExtension.class)
 public class SerializerTestConnector extends AbstractExtensionConnector {
 
-    private SerializerTestRpc rpc = RpcProxy.create(SerializerTestRpc.class,
-            this);
+    private SerializerTestRpc rpc = getRpcProxy(SerializerTestRpc.class);
 
     public SerializerTestConnector() {
         registerRpc(SerializerTestRpc.class, new SerializerTestRpc() {

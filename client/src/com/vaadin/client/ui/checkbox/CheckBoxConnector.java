@@ -27,7 +27,6 @@ import com.google.gwt.user.client.Event;
 import com.vaadin.client.EventHelper;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.VTooltip;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.Icon;
@@ -45,10 +44,8 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
     private HandlerRegistration focusHandlerRegistration;
     private HandlerRegistration blurHandlerRegistration;
 
-    private CheckBoxServerRpc rpc = RpcProxy.create(CheckBoxServerRpc.class,
-            this);
-    private FocusAndBlurServerRpc focusBlurRpc = RpcProxy.create(
-            FocusAndBlurServerRpc.class, this);
+    private CheckBoxServerRpc rpc = getRpcProxy(CheckBoxServerRpc.class);
+    private FocusAndBlurServerRpc focusBlurRpc = getRpcProxy(FocusAndBlurServerRpc.class);
 
     @Override
     public boolean delegateCaptionHandling() {

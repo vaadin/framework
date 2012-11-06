@@ -22,7 +22,6 @@ import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.vaadin.client.EventHelper;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.Icon;
@@ -39,15 +38,13 @@ public class NativeButtonConnector extends AbstractComponentConnector implements
     private HandlerRegistration focusHandlerRegistration;
     private HandlerRegistration blurHandlerRegistration;
 
-    private FocusAndBlurServerRpc focusBlurRpc = RpcProxy.create(
-            FocusAndBlurServerRpc.class, this);
+    private FocusAndBlurServerRpc focusBlurRpc = getRpcProxy(FocusAndBlurServerRpc.class);
 
     @Override
     public void init() {
         super.init();
 
-        getWidget().buttonRpcProxy = RpcProxy.create(ButtonServerRpc.class,
-                this);
+        getWidget().buttonRpcProxy = getRpcProxy(ButtonServerRpc.class);
         getWidget().client = getConnection();
         getWidget().paintableId = getConnectorId();
     }

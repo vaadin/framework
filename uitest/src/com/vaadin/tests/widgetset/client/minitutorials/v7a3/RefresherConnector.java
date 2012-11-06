@@ -1,7 +1,6 @@
 package com.vaadin.tests.widgetset.client.minitutorials.v7a3;
 
 import com.google.gwt.user.client.Timer;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.shared.ui.Connect;
@@ -10,7 +9,7 @@ import com.vaadin.tests.minitutorials.v7a3.Refresher;
 @Connect(Refresher.class)
 public class RefresherConnector extends AbstractExtensionConnector {
 
-    private RefresherRpc rpc = RpcProxy.create(RefresherRpc.class, this);
+    private RefresherRpc rpc = getRpcProxy(RefresherRpc.class);
 
     private Timer timer = new Timer() {
         @Override

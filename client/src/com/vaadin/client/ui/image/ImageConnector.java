@@ -3,7 +3,6 @@ package com.vaadin.client.ui.image;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.ClickEventHandler;
@@ -21,7 +20,7 @@ public class ImageConnector extends AbstractComponentConnector {
     @Override
     protected void init() {
         super.init();
-        rpc = RpcProxy.create(ImageServerRpc.class, this);
+        rpc = getRpcProxy(ImageServerRpc.class);
         getWidget().addHandler(new LoadHandler() {
 
             @Override

@@ -28,7 +28,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.vaadin.client.EventHelper;
 import com.vaadin.client.MouseEventDetailsBuilder;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -47,9 +46,8 @@ import com.vaadin.ui.Button;
 public class ButtonConnector extends AbstractComponentConnector implements
         BlurHandler, FocusHandler, ClickHandler, ShortcutActionTarget {
 
-    private ButtonServerRpc rpc = RpcProxy.create(ButtonServerRpc.class, this);
-    private FocusAndBlurServerRpc focusBlurProxy = RpcProxy.create(
-            FocusAndBlurServerRpc.class, this);
+    private ButtonServerRpc rpc = getRpcProxy(ButtonServerRpc.class);
+    private FocusAndBlurServerRpc focusBlurProxy = getRpcProxy(FocusAndBlurServerRpc.class);
 
     private HandlerRegistration focusHandlerRegistration = null;
     private HandlerRegistration blurHandlerRegistration = null;

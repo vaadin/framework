@@ -42,7 +42,6 @@ import com.vaadin.client.Focusable;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
@@ -65,7 +64,7 @@ import com.vaadin.ui.UI;
 public class UIConnector extends AbstractComponentContainerConnector implements
         Paintable, MayScrollChildren {
 
-    private UIServerRpc rpc = RpcProxy.create(UIServerRpc.class, this);
+    private UIServerRpc rpc = getRpcProxy(UIServerRpc.class);
 
     private HandlerRegistration childStateChangeHandlerRegistration;
 

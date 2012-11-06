@@ -24,7 +24,6 @@ import com.google.gwt.user.client.Element;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.Util;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractFieldConnector;
@@ -182,7 +181,7 @@ public abstract class AbstractOrderedLayoutConnector extends
     @Override
     public void init() {
         super.init();
-        rpc = RpcProxy.create(AbstractOrderedLayoutServerRpc.class, this);
+        rpc = getRpcProxy(AbstractOrderedLayoutServerRpc.class);
         getWidget().setLayoutManager(getLayoutManager());
     }
 

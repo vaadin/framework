@@ -6,7 +6,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.shared.ui.Connect;
@@ -15,8 +14,7 @@ import com.vaadin.tests.minitutorials.v7b1.CapsLockWarningWithRpc;
 @Connect(CapsLockWarningWithRpc.class)
 public class CapsLockWarningWithRpcConnector extends AbstractExtensionConnector {
 
-    private CapsLockWarningRpc rpc = RpcProxy.create(CapsLockWarningRpc.class,
-            this);
+    private CapsLockWarningRpc rpc = getRpcProxy(CapsLockWarningRpc.class);
 
     @Override
     protected void extend(ServerConnector target) {

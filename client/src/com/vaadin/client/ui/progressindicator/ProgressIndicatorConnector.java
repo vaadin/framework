@@ -17,7 +17,6 @@
 package com.vaadin.client.ui.progressindicator;
 
 import com.google.gwt.user.client.Timer;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.shared.ui.Connect;
@@ -33,8 +32,7 @@ public class ProgressIndicatorConnector extends AbstractFieldConnector {
         return (ProgressIndicatorState) super.getState();
     }
 
-    ProgressIndicatorServerRpc rpc = RpcProxy.create(
-            ProgressIndicatorServerRpc.class, this);
+    ProgressIndicatorServerRpc rpc = getRpcProxy(ProgressIndicatorServerRpc.class);
 
     private Timer poller = new Timer() {
 

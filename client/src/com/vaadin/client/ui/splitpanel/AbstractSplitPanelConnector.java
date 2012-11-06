@@ -29,7 +29,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.LayoutManager;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
@@ -50,7 +49,7 @@ public abstract class AbstractSplitPanelConnector extends
     @Override
     protected void init() {
         super.init();
-        rpc = RpcProxy.create(AbstractSplitPanelRpc.class, this);
+        rpc = getRpcProxy(AbstractSplitPanelRpc.class);
         // TODO Remove
         getWidget().client = getConnection();
 

@@ -29,12 +29,14 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.shared.communication.ClientRpc;
+import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.communication.URLReference;
 
@@ -157,6 +159,21 @@ public abstract class AbstractConnector implements ServerConnector,
                 && null != rpcImplementations.get(rpcInterfaceId)) {
             rpcImplementations.get(rpcInterfaceId).remove(implementation);
         }
+    }
+
+    /**
+     * Returns an RPC proxy object which can be used to invoke the RPC method on
+     * the server.
+     * 
+     * @param <T>
+     *            The type of the ServerRpc interface
+     * @param rpcInterface
+     *            The ServerRpc interface to retrieve a proxy object for
+     * @return A proxy object which can be used to invoke the RPC method on the
+     *         server.
+     */
+    protected <T extends ServerRpc> T getRpcProxy(Class<T> rpcInterface) {
+        return RpcProxy.create(rpcInterface, this);
     }
 
     @Override

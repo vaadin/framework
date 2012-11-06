@@ -19,14 +19,13 @@ import com.google.gwt.user.client.Window;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
-import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.tests.extensions.HelloWorldExtension;
 
 @Connect(HelloWorldExtension.class)
 public class HelloWorldExtensionConnector extends AbstractExtensionConnector {
-    HelloWorldRpc rpc = RpcProxy.create(HelloWorldRpc.class, this);
+    HelloWorldRpc rpc = getRpcProxy(HelloWorldRpc.class);
 
     @Override
     public HelloWorldState getState() {
