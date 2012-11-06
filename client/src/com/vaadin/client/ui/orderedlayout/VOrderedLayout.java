@@ -260,7 +260,7 @@ public class VOrderedLayout extends FlowPanel {
          * elements
          */
         private void detachListeners() {
-            if (getWidget() == null && getLayoutManager() != null) {
+            if (getWidget() != null && getLayoutManager() != null) {
                 LayoutManager lm = getLayoutManager();
                 if (getCaptionElement() != null
                         && captionResizeListener != null) {
