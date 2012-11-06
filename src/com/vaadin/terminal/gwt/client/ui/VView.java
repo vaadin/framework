@@ -142,6 +142,7 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
      * Start to periodically monitor for parent element resizes if embedded
      * application (e.g. portlet).
      */
+    @Override
     protected void onLoad() {
         super.onLoad();
         if (isMonitoringParentSize()) {
@@ -299,6 +300,11 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
         return isEmbedded();
     }
 
+    private native void open(String url, String name)
+    /*-{
+        $wnd.open(url, name);
+     }-*/;
+
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
         rendering = true;
 
@@ -360,27 +366,35 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                 goTo(url);
             } else {
                 String options;
-                if (open.hasAttribute("border")) {
-                    if (open.getStringAttribute("border").equals("minimal")) {
-                        options = "menubar=yes,location=no,status=no";
+                boolean alwaysAsPopup = true;
+                if (open.hasAttribute("popup")) {
+                    alwaysAsPopup = open.getBooleanAttribute("popup");
+                }
+                if (alwaysAsPopup) {
+                    if (open.hasAttribute("border")) {
+                        if (open.getStringAttribute("border").equals("minimal")) {
+                            options = "menubar=yes,location=no,status=no";
+                        } else {
+                            options = "menubar=no,location=no,status=no";
+                        }
+
                     } else {
-                        options = "menubar=no,location=no,status=no";
+                        options = "resizable=yes,menubar=yes,toolbar=yes,directories=yes,location=yes,scrollbars=yes,status=yes";
                     }
 
+                    if (open.hasAttribute("width")) {
+                        int w = open.getIntAttribute("width");
+                        options += ",width=" + w;
+                    }
+                    if (open.hasAttribute("height")) {
+                        int h = open.getIntAttribute("height");
+                        options += ",height=" + h;
+                    }
+
+                    Window.open(url, target, options);
                 } else {
-                    options = "resizable=yes,menubar=yes,toolbar=yes,directories=yes,location=yes,scrollbars=yes,status=yes";
+                    open(url, target);
                 }
-
-                if (open.hasAttribute("width")) {
-                    int w = open.getIntAttribute("width");
-                    options += ",width=" + w;
-                }
-                if (open.hasAttribute("height")) {
-                    int h = open.getIntAttribute("height");
-                    options += ",height=" + h;
-                }
-
-                Window.open(url, target, options);
             }
             childIndex++;
         }

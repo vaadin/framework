@@ -736,7 +736,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
         synchronized (openList) {
             if (!openList.contains(resource)) {
                 openList.add(new OpenResource(resource, null, -1, -1,
-                        BORDER_DEFAULT));
+                        BORDER_DEFAULT, false));
             }
         }
         requestRepaint();
@@ -745,7 +745,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
     /* ********************************************************************* */
 
     /**
-     * Opens the given resource in a window with the given name.
+     * Opens the given resource in a window with the given name. Equivalent to
+     * {@link #open(Resource, String, boolean) open} (resource, windowName,
+     * true) .
      * <p>
      * The supplied {@code windowName} is used as the target name in a
      * window.open call in the client. This means that special values such as
@@ -775,6 +777,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
      * name, either by opening a new window/tab in the browser or by replacing
      * the contents of an existing window with that name.
      * </p>
+     * <p>
+     * 
+     * </p>
      * 
      * @param resource
      *            the resource.
@@ -782,10 +787,64 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
      *            the name of the window.
      */
     public void open(Resource resource, String windowName) {
+        open(resource, windowName, true);
+    }
+
+    /**
+     * Opens the given resource in a window with the given name and optionally
+     * tries to force the resource to open in a new window instead of a new tab.
+     * <p>
+     * The supplied {@code windowName} is used as the target name in a
+     * window.open call in the client. This means that special values such as
+     * "_blank", "_self", "_top", "_parent" have special meaning. An empty or
+     * <code>null</code> window name is also a special case.
+     * </p>
+     * <p>
+     * "", null and "_self" as {@code windowName} all causes the resource to be
+     * opened in the current window, replacing any old contents. For
+     * downloadable content you should avoid "_self" as "_self" causes the
+     * client to skip rendering of any other changes as it considers them
+     * irrelevant (the page will be replaced by the resource). This can speed up
+     * the opening of a resource, but it might also put the client side into an
+     * inconsistent state if the window content is not completely replaced e.g.,
+     * if the resource is downloaded instead of displayed in the browser.
+     * </p>
+     * <p>
+     * "_blank" as {@code windowName} causes the resource to always be opened in
+     * a new window or tab (depends on the browser and browser settings).
+     * </p>
+     * <p>
+     * "_top" and "_parent" as {@code windowName} works as specified by the HTML
+     * standard.
+     * </p>
+     * <p>
+     * Any other {@code windowName} will open the resource in a window with that
+     * name, either by opening a new window/tab in the browser or by replacing
+     * the contents of an existing window with that name.
+     * </p>
+     * <p>
+     * If {@code windowName} is set to open the resource in a new window or tab
+     * and {@code tryToOpenAsPopup} is true, this method attempts to force the
+     * browser to open a new window instead of a tab. NOTE: This is a
+     * best-effort attempt and may not work reliably with all browsers and
+     * different pop-up preferences. With most browsers using default settings,
+     * {@code tryToOpenAsPopup} works properly.
+     * </p>
+     * 
+     * @param resource
+     *            the resource.
+     * @param windowName
+     *            the name of the window.
+     * @param tryToOpenAsPopup
+     *            Whether to try to force the resource to be opened in a new
+     *            window
+     * */
+    public void open(Resource resource, String windowName,
+            boolean tryToOpenAsPopup) {
         synchronized (openList) {
             if (!openList.contains(resource)) {
                 openList.add(new OpenResource(resource, windowName, -1, -1,
-                        BORDER_DEFAULT));
+                        BORDER_DEFAULT, tryToOpenAsPopup));
             }
         }
         requestRepaint();
@@ -813,7 +872,7 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
         synchronized (openList) {
             if (!openList.contains(resource)) {
                 openList.add(new OpenResource(resource, windowName, width,
-                        height, border));
+                        height, border, true));
             }
         }
         requestRepaint();
@@ -1008,6 +1067,8 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
          */
         private final int border;
 
+        private final boolean tryToOpenAsPopup;
+
         /**
          * Creates a new open resource.
          * 
@@ -1021,14 +1082,18 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
          *            The height of the target window
          * @param border
          *            The border style of the target window
+         * @param tryToOpenAsPopup
+         *            Should try to open as a pop-up
+         * 
          */
         private OpenResource(Resource resource, String name, int width,
-                int height, int border) {
+                int height, int border, boolean tryToOpenAsPopup) {
             this.resource = resource;
             this.name = name;
             this.width = width;
             this.height = height;
             this.border = border;
+            this.tryToOpenAsPopup = tryToOpenAsPopup;
         }
 
         /**
@@ -1044,6 +1109,9 @@ public class Window extends Panel implements URIHandler, ParameterHandler,
             target.addAttribute("src", resource);
             if (name != null && name.length() > 0) {
                 target.addAttribute("name", name);
+            }
+            if (!tryToOpenAsPopup) {
+                target.addAttribute("popup", tryToOpenAsPopup);
             }
             if (width >= 0) {
                 target.addAttribute("width", width);
