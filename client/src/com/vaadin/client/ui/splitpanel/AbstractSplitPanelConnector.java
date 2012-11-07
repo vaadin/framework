@@ -212,15 +212,23 @@ public abstract class AbstractSplitPanelConnector extends
 
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+        /*
+         * When the connector gets detached, the state isn't updated but there's
+         * still a hierarchy change -> verify that the child from the state is
+         * still our child before attaching the widget. See #10150.
+         */
+
         Widget newFirstChildWidget = null;
-        if (getFirstChild() != null) {
-            newFirstChildWidget = getFirstChild().getWidget();
+        ComponentConnector firstChild = getFirstChild();
+        if (firstChild != null && firstChild.getParent() == this) {
+            newFirstChildWidget = firstChild.getWidget();
         }
         getWidget().setFirstWidget(newFirstChildWidget);
 
         Widget newSecondChildWidget = null;
-        if (getSecondChild() != null) {
-            newSecondChildWidget = getSecondChild().getWidget();
+        ComponentConnector secondChild = getSecondChild();
+        if (secondChild != null && secondChild.getParent() == this) {
+            newSecondChildWidget = secondChild.getWidget();
         }
         getWidget().setSecondWidget(newSecondChildWidget);
     }
