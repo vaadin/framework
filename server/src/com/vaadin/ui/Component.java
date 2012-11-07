@@ -753,7 +753,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
          * @return the source component of the event
          */
         public Component getComponent() {
-            return getSource();
+            return (Component) getSource();
         }
 
     }
