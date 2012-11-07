@@ -341,6 +341,10 @@ public abstract class AbstractOrderedLayoutConnector extends
             getWidget().clearExpand();
         }
 
+        /*
+         * Handle spacings if components has been moved.
+         */
+        getWidget().setSpacing(getState().spacing);
     }
 
     /*
