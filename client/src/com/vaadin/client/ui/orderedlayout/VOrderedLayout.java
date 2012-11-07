@@ -77,6 +77,12 @@ public class VOrderedLayout extends FlowPanel {
             }
         }
         insert(slot, index);
+
+        /*
+         * We need to call setSpacing once again since if the widget has moved
+         * the spacing element also needs to be moved.
+         */
+        slot.setSpacing(spacing);
     }
 
     /**
@@ -399,12 +405,30 @@ public class VOrderedLayout extends FlowPanel {
          *            Should spacing be enabled
          */
         public void setSpacing(boolean spacing) {
-            if (spacing && spacer == null) {
-                spacer = DOM.createDiv();
-                spacer.addClassName("v-spacing");
-                getElement().getParentElement().insertBefore(spacer,
-                        getElement());
-            } else if (!spacing && spacer != null) {
+            if (spacing) {
+                if (spacer == null) {
+                    spacer = DOM.createDiv();
+                    spacer.addClassName("v-spacing");
+                }
+
+                /*
+                 * We need to detach the element since the widget might have
+                 * changed the location to another place and the spacer should
+                 * follow.
+                 */
+                if (spacer.getParentElement() != null) {
+                    spacer.removeFromParent();
+                }
+
+                /*
+                 * The first slot does not have spacing so do not attach it in
+                 * that case.
+                 */
+                if (getElement().getPreviousSibling() != null) {
+                    getElement().getParentElement().insertBefore(spacer,
+                            getElement());
+                }
+            } else if (spacer != null) {
                 spacer.removeFromParent();
                 spacer = null;
             }
