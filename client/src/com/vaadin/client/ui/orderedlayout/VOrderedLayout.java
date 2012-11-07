@@ -62,12 +62,32 @@ public class VOrderedLayout extends FlowPanel {
     }
 
     /**
-     * Add or move a slot to another index
+     * Add or move a slot to another index.
+     * 
+     * <p>
+     * You should note that the index does not refer to the DOM index if
+     * spacings are used. If spacings are used then the index will be adjusted
+     * to include the spacings when inserted.
+     * </p>
+     * <p>
+     * For instance when using spacing the index converts to DOM index in the
+     * following way:
+     * 
+     * <pre>
+     * index : 0 -> DOM index: 0
+     * index : 1 -> DOM index: 1
+     * index : 2 -> DOM index: 3
+     * index : 3 -> DOM index: 5
+     * index : 4 -> DOM index: 7
+     * </pre>
+     * 
+     * When using this method never account for spacings.
+     * </p>
      * 
      * @param slot
      *            The slot to move or add
      * @param index
-     *            The index where the slot should be placed
+     *            The index where the slot should be placed.
      */
     void addOrMoveSlot(Slot slot, int index) {
         if (slot.getParent() == this) {
@@ -76,7 +96,13 @@ public class VOrderedLayout extends FlowPanel {
                 return;
             }
         }
+
         insert(slot, index);
+
+        /*
+         * We need to confirm spacings are correctly applied after each insert.
+         */
+        setSpacing(spacing);
     }
 
     /**
@@ -98,8 +124,23 @@ public class VOrderedLayout extends FlowPanel {
         // Physical attach.
         container = expandWrapper != null ? expandWrapper : getElement();
         if (domInsert) {
-            DOM.insertChild(container, child.getElement(),
-                    spacing ? beforeIndex * 2 : beforeIndex);
+            if (spacing) {
+                if (beforeIndex != 0) {
+                    /*
+                     * Since the spacing elements are located at the same DOM
+                     * level as the slots we need to take them into account when
+                     * calculating the slot position.
+                     * 
+                     * The spacing elements are always located before the actual
+                     * slot except for the first slot which do not have a
+                     * spacing element like this
+                     * 
+                     * |<slot1><spacing2><slot2><spacing3><slot3>...|
+                     */
+                    beforeIndex = beforeIndex * 2 - 1;
+                }
+            }
+            DOM.insertChild(container, child.getElement(), beforeIndex);
         } else {
             DOM.appendChild(container, child.getElement());
         }
@@ -402,6 +443,12 @@ public class VOrderedLayout extends FlowPanel {
             if (spacing && spacer == null) {
                 spacer = DOM.createDiv();
                 spacer.addClassName("v-spacing");
+                
+                /*
+                 * This has to be done here for the initial render. In other
+                 * cases where the spacer already exists onAttach will handle
+                 * it.
+                 */
                 getElement().getParentElement().insertBefore(spacer,
                         getElement());
             } else if (!spacing && spacer != null) {
@@ -916,6 +963,8 @@ public class VOrderedLayout extends FlowPanel {
         for (Slot slot : widgetToSlot.values()) {
             if (getWidgetIndex(slot) > 0) {
                 slot.setSpacing(spacing);
+            } else {
+                slot.setSpacing(false);
             }
         }
     }

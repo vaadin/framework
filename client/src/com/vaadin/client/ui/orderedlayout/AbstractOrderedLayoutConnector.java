@@ -305,6 +305,8 @@ public abstract class AbstractOrderedLayoutConnector extends
         int currentIndex = 0;
         VOrderedLayout layout = getWidget();
 
+        layout.setSpacing(getState().spacing);
+
         for (ComponentConnector child : getChildComponents()) {
             Slot slot = layout.getSlot(child.getWidget());
             if (slot.getParent() != layout) {
