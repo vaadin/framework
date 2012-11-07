@@ -106,6 +106,9 @@
 			<exclude name="com/google/gwt/*/*/shared/**" />
 			<exclude name="com/google/web/bindery/*/shared/**" />
 
+			<!-- These are in vaadin-shared-deps -->
+			<exclude name="com/google/gwt/thirdparty/streamhtmlparser/**" />
+			<exclude name="org/w3c/flute/**" />
 
 			<!-- external dependencies -->
 			<exclude name="javax/servlet/**" />
