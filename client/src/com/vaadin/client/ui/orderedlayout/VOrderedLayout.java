@@ -62,19 +62,18 @@ public class VOrderedLayout extends FlowPanel {
     }
 
     /**
-     * Add or move a slot to another index
+     * Add or move a slot to another index.
      * 
      * @param slot
      *            The slot to move or add
      * @param index
-     *            The index where the slot should be placed
+     *            The index where the slot should be placed. Does not account
+     *            for spacing elements.
      */
     void addOrMoveSlot(Slot slot, int index) {
-        if (slot.getParent() == this) {
-            int currentIndex = getWidgetIndex(slot);
-            if (index == currentIndex) {
-                return;
-            }
+        int currentIndex = getWidgetIndex(slot);
+        if (index == currentIndex) {
+            return;
         }
         insert(slot, index);
     }
@@ -98,8 +97,7 @@ public class VOrderedLayout extends FlowPanel {
         // Physical attach.
         container = expandWrapper != null ? expandWrapper : getElement();
         if (domInsert) {
-            DOM.insertChild(container, child.getElement(),
-                    spacing ? beforeIndex * 2 : beforeIndex);
+            DOM.insertChild(container, child.getElement(), beforeIndex);
         } else {
             DOM.appendChild(container, child.getElement());
         }
@@ -916,6 +914,8 @@ public class VOrderedLayout extends FlowPanel {
         for (Slot slot : widgetToSlot.values()) {
             if (getWidgetIndex(slot) > 0) {
                 slot.setSpacing(spacing);
+            } else {
+                slot.setSpacing(false);
             }
         }
     }
