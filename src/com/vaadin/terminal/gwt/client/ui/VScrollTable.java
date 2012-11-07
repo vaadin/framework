@@ -292,8 +292,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 // create range of second part unless its length is < 1
                 VScrollTableRow startOfRange = scrollBody
                         .getRowByRowIndex(startOfSecondRange);
-                ranges.add(new SelectionRange(startOfRange, getEndIndex()
-                        - startOfSecondRange + 1));
+                if (startOfRange != null) {
+                    ranges.add(new SelectionRange(startOfRange, getEndIndex()
+                            - startOfSecondRange + 1));
+                }
             }
             return ranges;
         }
@@ -4935,7 +4937,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
              */
             public boolean isInViewPort() {
                 int absoluteTop = getAbsoluteTop();
-                int scrollPosition = scrollBodyPanel.getScrollPosition();
+                int scrollPosition = scrollBodyPanel.getAbsoluteTop()
+                        + scrollBodyPanel.getScrollPosition();
                 if (absoluteTop < scrollPosition) {
                     return false;
                 }

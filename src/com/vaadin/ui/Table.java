@@ -2600,13 +2600,20 @@ public class Table extends AbstractSelect implements Action.Container,
                 try {
                     final Object[] ids = (Object[]) variables
                             .get("collapsedcolumns");
+                    Set<Object> idSet = new HashSet<Object>();
+                    for (Object id : ids) {
+                        idSet.add(columnIdMap.get(id.toString()));
+                    }
                     for (final Iterator<Object> it = visibleColumns.iterator(); it
                             .hasNext();) {
-                        setColumnCollapsed(it.next(), false);
-                    }
-                    for (int i = 0; i < ids.length; i++) {
-                        setColumnCollapsed(columnIdMap.get(ids[i].toString()),
-                                true);
+                        Object propertyId = it.next();
+                        if (isColumnCollapsed(propertyId)) {
+                            if (!idSet.contains(propertyId)) {
+                                setColumnCollapsed(propertyId, false);
+                            }
+                        } else if (idSet.contains(propertyId)) {
+                            setColumnCollapsed(propertyId, true);
+                        }
                     }
                 } catch (final Exception e) {
                     // FIXME: Handle exception
@@ -4297,9 +4304,12 @@ public class Table extends AbstractSelect implements Action.Container,
         final Container c = getContainerDataSource();
         if (c instanceof Container.Sortable) {
             final int pageIndex = getCurrentPageFirstItemIndex();
+            boolean refreshingPreviouslyEnabled = disableContentRefreshing();
             ((Container.Sortable) c).sort(propertyId, ascending);
             setCurrentPageFirstItemIndex(pageIndex);
-            refreshRowCache();
+            if (refreshingPreviouslyEnabled) {
+                enableContentRefreshing(true);
+            }
 
         } else if (c != null) {
             throw new UnsupportedOperationException(
