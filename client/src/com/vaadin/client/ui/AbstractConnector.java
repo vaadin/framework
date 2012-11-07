@@ -178,7 +178,7 @@ public abstract class AbstractConnector implements ServerConnector,
      * @return A proxy object which can be used to invoke the RPC method on the
      *         server.
      */
-    public <T extends ServerRpc> T getRpcProxy(Class<T> rpcInterface) {
+    protected <T extends ServerRpc> T getRpcProxy(Class<T> rpcInterface) {
         if (!rpcProxyMap.containsKey(rpcInterface)) {
             rpcProxyMap.put(rpcInterface, RpcProxy.create(rpcInterface, this));
         }
