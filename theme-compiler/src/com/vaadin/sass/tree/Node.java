@@ -27,8 +27,6 @@ public abstract class Node implements Serializable {
 
     protected Node parentNode;
 
-    private String fileName;
-
     public Node() {
         children = new ArrayList<Node>();
     }
@@ -91,14 +89,6 @@ public abstract class Node implements Serializable {
 
     public boolean hasChildren() {
         return !children.isEmpty();
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public String getFileName() {
-        return fileName;
     }
 
     @Override

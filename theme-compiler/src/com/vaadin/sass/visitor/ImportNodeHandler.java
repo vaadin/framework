@@ -33,51 +33,54 @@ import com.vaadin.sass.util.StringUtil;
 
 public class ImportNodeHandler {
 
-    public static void traverse(ScssStylesheet sheet, ImportNode importNode) {
-        if (!importNode.isPureCssImport()) {
+    public static void traverse(ScssStylesheet node) {
+        ArrayList<Node> c = new ArrayList<Node>(node.getChildren());
+        for (Node n : c) {
+            if (n instanceof ImportNode) {
+                ImportNode importNode = (ImportNode) n;
+                if (!importNode.isPureCssImport()) {
+                    try {
+                        StringBuilder filePathBuilder = new StringBuilder(
+                                node.getFileName());
+                        filePathBuilder.append(File.separatorChar).append(
+                                importNode.getUri());
+                        if (!filePathBuilder.toString().endsWith(".scss")) {
+                            filePathBuilder.append(".scss");
+                        }
 
-            try {
+                        ScssStylesheet imported = ScssStylesheet
+                                .get(filePathBuilder.toString());
+                        if (imported == null) {
+                            imported = ScssStylesheet.get(importNode.getUri());
+                        }
+                        if (imported == null) {
+                            throw new FileNotFoundException(importNode.getUri()
+                                    + " (parent: "
+                                    + ScssStylesheet.get().getFileName() + ")");
+                        }
 
-                StringBuilder filePathBuilder = new StringBuilder(
-                        sheet.getFileName());
-                filePathBuilder.append(File.separatorChar).append(
-                        importNode.getUri());
-                if (!filePathBuilder.toString().endsWith(".scss")) {
-                    filePathBuilder.append(".scss");
-                }
+                        String prefix = getUrlPrefix(importNode.getUri());
+                        if (prefix != null) {
+                            updateUrlInImportedSheet(imported, prefix);
+                        }
 
-                ScssStylesheet imported = ScssStylesheet.get(filePathBuilder
-                        .toString());
-                if (imported == null) {
-                    imported = ScssStylesheet.get(importNode.getUri());
-                }
-                if (imported == null) {
-                    throw new FileNotFoundException(importNode.getUri()
-                            + " (parent: " + ScssStylesheet.get().getFileName()
-                            + ")");
-                }
+                        traverse(imported);
 
-                String prefix = getUrlPrefix(importNode.getUri());
-                if (prefix != null) {
-                    updateUrlInImportedSheet(imported, prefix);
+                        Node pre = importNode;
+                        for (Node importedChild : new ArrayList<Node>(
+                                imported.getChildren())) {
+                            node.appendChild(importedChild, pre);
+                            pre = importedChild;
+                        }
+                        node.removeChild(importNode);
+                    } catch (CSSException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-                Node pre = importNode;
-                for (Node importedChild : new ArrayList<Node>(
-                        imported.getChildren())) {
-                    sheet.appendChild(importedChild, pre);
-                    pre = importedChild;
-                }
-                sheet.removeChild(importNode);
-            } catch (CSSException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
-    }
-
-    public static void traverse(ImportNode node) {
-        traverse(ScssStylesheet.get(), node);
     }
 
     private static String getUrlPrefix(String url) {

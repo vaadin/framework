@@ -33,11 +33,11 @@ import com.vaadin.sass.handler.SCSSErrorHandler;
 import com.vaadin.sass.parser.Parser;
 import com.vaadin.sass.resolver.ScssStylesheetResolver;
 import com.vaadin.sass.resolver.VaadinResolver;
-import com.vaadin.sass.tree.ImportNode;
 import com.vaadin.sass.tree.MixinDefNode;
 import com.vaadin.sass.tree.Node;
 import com.vaadin.sass.tree.VariableNode;
 import com.vaadin.sass.tree.controldirective.IfElseDefNode;
+import com.vaadin.sass.visitor.ImportNodeHandler;
 import com.vaadin.sass.visitor.ParentSelectorHandler;
 
 public class ScssStylesheet extends Node {
@@ -51,6 +51,8 @@ public class ScssStylesheet extends Node {
     private static final Map<String, MixinDefNode> mixinDefs = new HashMap<String, MixinDefNode>();
 
     private static final HashSet<IfElseDefNode> ifElseDefNodes = new HashSet<IfElseDefNode>();
+
+    private String fileName;
 
     /**
      * Read in a file SCSS and parse it into a ScssStylesheet
@@ -135,12 +137,7 @@ public class ScssStylesheet extends Node {
     }
 
     private void importOtherFiles(ScssStylesheet node) {
-        Node firstChild = node.getChildren().get(0);
-
-        while (firstChild instanceof ImportNode) {
-            firstChild.traverse();
-            firstChild = node.getChildren().get(0);
-        }
+        ImportNodeHandler.traverse(node);
     }
 
     private void populateDefinitions(Node node) {
@@ -238,6 +235,14 @@ public class ScssStylesheet extends Node {
 
     public static MixinDefNode getMixinDefinition(String name) {
         return mixinDefs.get(name);
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getFileName() {
+        return fileName;
     }
 
 }
