@@ -703,7 +703,7 @@ public class Util {
         VOverlay overlay = findWidget(element, VOverlay.class);
         if (overlay != null && overlay.getOwner() != null) {
 
-            return getConnectorForElement(client, client.getRootConnector()
+            return getConnectorForElement(client, client.getUIConnector()
                     .getWidget(), overlay.getOwner().getElement());
         } else {
             return null;

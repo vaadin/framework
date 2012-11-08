@@ -1502,10 +1502,10 @@ public class ApplicationConnection {
                         if (!c.getParent().getChildren().contains(c)) {
                             VConsole.error("ERROR: Connector is connected to a parent but the parent does not contain the connector");
                         }
-                    } else if ((c instanceof UIConnector && c == getRootConnector())) {
+                    } else if (c == getUIConnector()) {
                         // UIConnector for this connection, leave as-is
                     } else if (c instanceof WindowConnector
-                            && getRootConnector().hasSubWindow(
+                            && getUIConnector().hasSubWindow(
                                     (WindowConnector) c)) {
                         // Sub window attached to this UIConnector, leave
                         // as-is
@@ -2782,7 +2782,7 @@ public class ApplicationConnection {
      * 
      * @return the main view
      */
-    public UIConnector getRootConnector() {
+    public UIConnector getUIConnector() {
         return uIConnector;
     }
 

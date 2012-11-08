@@ -79,7 +79,7 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
                     updatedIntSet.add(Integer.valueOf(-integer.intValue()));
                 }
                 rpc.sendSet(updatedIntSet,
-                        Collections.singleton(getRootConnector()), beanSet);
+                        Collections.singleton(getUIConnector()), beanSet);
             }
 
             @Override
@@ -103,7 +103,7 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
 
                 rpc.sendMap(Collections.singletonMap("a", stringMap.get("b")),
                         Collections.singletonMap(getThisConnector(),
-                                connectorMap.get(getRootConnector())),
+                                connectorMap.get(getUIConnector())),
                         Collections.singletonMap(
                                 Integer.valueOf(stringMap.size()),
                                 getThisConnector()), updatedBeanMap);
@@ -121,7 +121,7 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
                 Collections.sort(intList);
                 Collections.reverse(beanList);
                 rpc.sendList(intList,
-                        Arrays.asList(getThisConnector(), getRootConnector()),
+                        Arrays.asList(getThisConnector(), getUIConnector()),
                         beanList);
             }
 
@@ -243,8 +243,8 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
         });
     }
 
-    private Connector getRootConnector() {
-        return getConnection().getRootConnector();
+    private Connector getUIConnector() {
+        return getConnection().getUIConnector();
     }
 
     private Connector getThisConnector() {
