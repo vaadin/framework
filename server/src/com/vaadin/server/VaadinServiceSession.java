@@ -21,7 +21,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.EventObject;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,7 +43,6 @@ import com.vaadin.event.EventRouter;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.Window;
 import com.vaadin.util.CurrentInstance;
 import com.vaadin.util.ReflectTools;
 
@@ -317,124 +315,6 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
      */
     public void setLocale(Locale locale) {
         this.locale = locale;
-    }
-
-    /**
-     * Window detach event.
-     * 
-     * This event is sent each time a window is removed from the application
-     * with {@link com.vaadin.server.VaadinServiceSession#removeWindow(Window)}.
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    public static class WindowDetachEvent extends EventObject {
-
-        private final Window window;
-
-        /**
-         * Creates a event.
-         * 
-         * @param application
-         *            the application to which the detached window belonged.
-         * @param window
-         *            the Detached window.
-         */
-        public WindowDetachEvent(VaadinServiceSession application, Window window) {
-            super(application);
-            this.window = window;
-        }
-
-        /**
-         * Gets the detached window.
-         * 
-         * @return the detached window.
-         */
-        public Window getWindow() {
-            return window;
-        }
-
-        /**
-         * Gets the application from which the window was detached.
-         * 
-         * @return the Application.
-         */
-        public VaadinServiceSession getApplication() {
-            return (VaadinServiceSession) getSource();
-        }
-    }
-
-    /**
-     * Window attach event.
-     * 
-     * This event is sent each time a window is attached tothe application with
-     * {@link com.vaadin.server.VaadinServiceSession#addWindow(Window)}.
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
-     */
-    @Deprecated
-    public static class WindowAttachEvent extends EventObject {
-
-        private final Window window;
-
-        /**
-         * Creates a event.
-         * 
-         * @param application
-         *            the application to which the detached window belonged.
-         * @param window
-         *            the Attached window.
-         */
-        public WindowAttachEvent(VaadinServiceSession application, Window window) {
-            super(application);
-            this.window = window;
-        }
-
-        /**
-         * Gets the attached window.
-         * 
-         * @return the attached window.
-         */
-        public Window getWindow() {
-            return window;
-        }
-
-        /**
-         * Gets the application to which the window was attached.
-         * 
-         * @return the Application.
-         */
-        public VaadinServiceSession getApplication() {
-            return (VaadinServiceSession) getSource();
-        }
-    }
-
-    /**
-     * Window attach listener interface.
-     */
-    public interface WindowAttachListener extends Serializable {
-
-        /**
-         * Window attached
-         * 
-         * @param event
-         *            the window attach event.
-         */
-        public void windowAttached(WindowAttachEvent event);
-    }
-
-    /**
-     * Window detach listener interface.
-     */
-    public interface WindowDetachListener extends Serializable {
-
-        /**
-         * Window detached.
-         * 
-         * @param event
-         *            the window detach event.
-         */
-        public void windowDetached(WindowDetachEvent event);
     }
 
     /**
