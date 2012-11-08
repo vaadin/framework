@@ -188,7 +188,8 @@ public class FieldGroup implements Serializable {
     }
 
     /**
-     * Returns the read only status for the fields.
+     * Returns the read only status for the fields with writable property data
+     * source.
      * <p>
      * Note that this will not accurately represent the read only status of all
      * fields if you change the read only status of the fields through some
@@ -201,16 +202,19 @@ public class FieldGroup implements Serializable {
     }
 
     /**
-     * Updates the read only state of all bound fields.
+     * Updates the read only state of all fields with writable property data
+     * source.
      * 
      * @param fieldsReadOnly
-     *            true to set all bound fields to read only, false to set them
-     *            to read write
+     *            true to set the fields to read only, false to set them to read
+     *            write
      */
     public void setReadOnly(boolean fieldsReadOnly) {
         readOnly = fieldsReadOnly;
         for (Field<?> field : getFields()) {
-            field.setReadOnly(fieldsReadOnly);
+            if (!field.getPropertyDataSource().isReadOnly()) {
+                field.setReadOnly(fieldsReadOnly);
+            }
         }
     }
 
@@ -334,7 +338,12 @@ public class FieldGroup implements Serializable {
         field.setBuffered(isBuffered());
 
         field.setEnabled(isEnabled());
-        field.setReadOnly(isReadOnly());
+
+        if (field.getPropertyDataSource().isReadOnly()) {
+            field.setReadOnly(true);
+        } else {
+            field.setReadOnly(isReadOnly());
+        }
     }
 
     /**

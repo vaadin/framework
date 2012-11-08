@@ -122,4 +122,18 @@ public class TransactionalPropertyWrapper<T> extends AbstractProperty<T>
         return wrappedProperty;
     }
 
+    @Override
+    public boolean isReadOnly() {
+        return wrappedProperty.isReadOnly();
+    }
+
+    @Override
+    public void setReadOnly(boolean newStatus) {
+        boolean oldStatus = isReadOnly();
+        wrappedProperty.setReadOnly(newStatus);
+        if (oldStatus != isReadOnly()) {
+            fireReadOnlyStatusChange();
+        }
+    }
+
 }
