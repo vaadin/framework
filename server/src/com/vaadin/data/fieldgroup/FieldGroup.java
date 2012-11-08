@@ -188,7 +188,8 @@ public class FieldGroup implements Serializable {
     }
 
     /**
-     * Returns the read only status for the fields.
+     * Returns the read only status that is used by default with all fields that
+     * have a writable data source.
      * <p>
      * Note that this will not accurately represent the read only status of all
      * fields if you change the read only status of the fields through some
@@ -201,16 +202,22 @@ public class FieldGroup implements Serializable {
     }
 
     /**
-     * Updates the read only state of all bound fields.
+     * Sets the read only state to the given value for all fields with writable
+     * data source. Fields with read only data source will always be set to read
+     * only.
      * 
      * @param fieldsReadOnly
-     *            true to set all bound fields to read only, false to set them
-     *            to read write
+     *            true to set the fields with writable data source to read only,
+     *            false to set them to read write
      */
     public void setReadOnly(boolean fieldsReadOnly) {
         readOnly = fieldsReadOnly;
         for (Field<?> field : getFields()) {
-            field.setReadOnly(fieldsReadOnly);
+            if (!field.getPropertyDataSource().isReadOnly()) {
+                field.setReadOnly(fieldsReadOnly);
+            } else {
+                field.setReadOnly(true);
+            }
         }
     }
 
@@ -325,7 +332,8 @@ public class FieldGroup implements Serializable {
      * Configures a field with the settings set for this FieldBinder.
      * <p>
      * By default this updates the buffered, read only and enabled state of the
-     * field. Also adds validators when applicable.
+     * field. Also adds validators when applicable. Fields with read only data
+     * source are always configured as read only.
      * 
      * @param field
      *            The field to update
@@ -334,7 +342,12 @@ public class FieldGroup implements Serializable {
         field.setBuffered(isBuffered());
 
         field.setEnabled(isEnabled());
-        field.setReadOnly(isReadOnly());
+
+        if (field.getPropertyDataSource().isReadOnly()) {
+            field.setReadOnly(true);
+        } else {
+            field.setReadOnly(isReadOnly());
+        }
     }
 
     /**
