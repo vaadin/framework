@@ -424,7 +424,7 @@ public class VNotification extends VOverlay {
 
         final int delay = notification
                 .getIntAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_DELAY);
-        createNotification(delay, client.getRootConnector().getWidget()).show(
+        createNotification(delay, client.getUIConnector().getWidget()).show(
                 html, position, style);
     }
 

@@ -453,7 +453,7 @@ public class ComponentLocator {
         } else if (w instanceof VWindow) {
             Connector windowConnector = ConnectorMap.get(client)
                     .getConnector(w);
-            List<WindowConnector> subWindowList = client.getRootConnector()
+            List<WindowConnector> subWindowList = client.getUIConnector()
                     .getSubWindows();
             int indexOfSubWindow = subWindowList.indexOf(windowConnector);
             return PARENTCHILD_SEPARATOR + "VWindow[" + indexOfSubWindow + "]";
@@ -514,7 +514,7 @@ public class ComponentLocator {
             if (part.equals(ROOT_ID)) {
                 w = RootPanel.get();
             } else if (part.equals("")) {
-                w = client.getRootConnector().getWidget();
+                w = client.getUIConnector().getWidget();
             } else if (w == null) {
                 String id = part;
                 // Must be old static pid (PID_S*)
@@ -523,7 +523,7 @@ public class ComponentLocator {
                 if (connector == null) {
                     // Lookup by component id
                     // TODO Optimize this
-                    connector = findConnectorById(client.getRootConnector(),
+                    connector = findConnectorById(client.getUIConnector(),
                             id.substring(5));
                 }
 
@@ -632,7 +632,7 @@ public class ComponentLocator {
                  * compatibility
                  */
                 if (widgetClassName.equals("VWindow")) {
-                    List<WindowConnector> windows = client.getRootConnector()
+                    List<WindowConnector> windows = client.getUIConnector()
                             .getSubWindows();
                     List<VWindow> windowWidgets = new ArrayList<VWindow>(
                             windows.size());

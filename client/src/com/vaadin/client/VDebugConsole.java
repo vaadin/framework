@@ -117,7 +117,7 @@ public class VDebugConsole extends VOverlay implements Console {
                 for (ApplicationConnection a : ApplicationConfiguration
                         .getRunningApplications()) {
                     ComponentConnector connector = Util.getConnectorForElement(
-                            a, a.getRootConnector().getWidget(), eventTarget);
+                            a, a.getUIConnector().getWidget(), eventTarget);
                     if (connector == null) {
                         connector = Util.getConnectorForElement(a,
                                 RootPanel.get(), eventTarget);
@@ -146,7 +146,7 @@ public class VDebugConsole extends VOverlay implements Console {
                 for (ApplicationConnection a : ApplicationConfiguration
                         .getRunningApplications()) {
                     ComponentConnector paintable = Util.getConnectorForElement(
-                            a, a.getRootConnector().getWidget(), eventTarget);
+                            a, a.getUIConnector().getWidget(), eventTarget);
                     if (paintable == null) {
                         paintable = Util.getConnectorForElement(a,
                                 RootPanel.get(), eventTarget);
@@ -922,7 +922,7 @@ public class VDebugConsole extends VOverlay implements Console {
     }
 
     protected void dumpConnectorInfo(ApplicationConnection a) {
-        UIConnector root = a.getRootConnector();
+        UIConnector root = a.getUIConnector();
         log("================");
         log("Connector hierarchy for Root: " + root.getState().caption + " ("
                 + root.getConnectorId() + ")");

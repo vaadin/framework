@@ -72,7 +72,7 @@ public class WindowConnector extends AbstractComponentContainerConnector
         getLayoutManager().registerDependency(this, getWidget().header);
         getLayoutManager().registerDependency(this, getWidget().footer);
 
-        getWidget().setOwner(getConnection().getRootConnector().getWidget());
+        getWidget().setOwner(getConnection().getUIConnector().getWidget());
     }
 
     @Override
