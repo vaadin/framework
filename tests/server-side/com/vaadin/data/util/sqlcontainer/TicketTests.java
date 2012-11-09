@@ -15,7 +15,6 @@ import org.junit.Test;
 import com.vaadin.data.Container.Filter;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.filter.Compare.Equal;
-import com.vaadin.data.util.sqlcontainer.SQLContainer;
 import com.vaadin.data.util.sqlcontainer.AllTests.DB;
 import com.vaadin.data.util.sqlcontainer.connection.SimpleJDBCConnectionPool;
 import com.vaadin.data.util.sqlcontainer.query.FreeformQuery;
@@ -179,5 +178,17 @@ public class TicketTests {
         String name3 = (String) item3.getItemProperty("NAME").getValue();
 
         Assert.assertEquals(name, name3);
+    }
+
+    @Test
+    public void ticket10032_empty_set_metadata_correctly_handled()
+            throws SQLException {
+        // If problem exists will break when method getPropertyIds()
+        // is called in constructor SQLContainer(QueryDelegate delegate).
+        SQLContainer container = new SQLContainer(new FreeformQuery(
+                "SELECT * FROM people WHERE name='does_not_exist'",
+                Arrays.asList("ID"), connectionPool));
+        Assert.assertTrue("Got items while expected empty set",
+                container.size() == 0);
     }
 }

@@ -1069,8 +1069,8 @@ public class SQLContainer implements Container, Container.Filterable,
         try {
             delegate.beginTransaction();
             rs = delegate.getResults(0, 1);
-            boolean resultExists = rs.next();
             rsmd = rs.getMetaData();
+            boolean resultExists = rs.next();
             Class<?> type = null;
             for (int i = 1; i <= rsmd.getColumnCount(); i++) {
                 if (!isColumnIdentifierValid(rsmd.getColumnLabel(i))) {
