@@ -20,4 +20,5 @@ import com.vaadin.shared.Connector;
 
 public class UIState extends ComponentState {
     public Connector content;
+    public int scrollLeft, scrollTop;
 }

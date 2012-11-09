@@ -46,6 +46,7 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
+import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.ShortcutActionHandler;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.client.ui.notification.VNotification;
@@ -62,7 +63,7 @@ import com.vaadin.ui.UI;
 
 @Connect(value = UI.class, loadStyle = LoadStyle.EAGER)
 public class UIConnector extends AbstractComponentContainerConnector implements
-        Paintable, MayScrollChildren {
+        Paintable, MayScrollChildren, PostLayoutListener {
 
     private HandlerRegistration childStateChangeHandlerRegistration;
 
@@ -244,14 +245,12 @@ public class UIConnector extends AbstractComponentContainerConnector implements
         }
 
         // finally set scroll position from UIDL
-        if (uidl.hasVariable("scrollTop")) {
+        if (getWidget().scrollTop != getState().scrollTop) {
             getWidget().scrollable = true;
-            getWidget().scrollTop = uidl.getIntVariable("scrollTop");
-            DOM.setElementPropertyInt(getWidget().getElement(), "scrollTop",
-                    getWidget().scrollTop);
-            getWidget().scrollLeft = uidl.getIntVariable("scrollLeft");
-            DOM.setElementPropertyInt(getWidget().getElement(), "scrollLeft",
-                    getWidget().scrollLeft);
+            getWidget().scrollTop = getState().scrollTop;
+            getWidget().getElement().setScrollTop(getWidget().scrollTop);
+            getWidget().scrollLeft = getState().scrollTop;
+            getWidget().getElement().setScrollLeft(getWidget().scrollLeft);
         } else {
             getWidget().scrollable = false;
         }
@@ -448,5 +447,9 @@ public class UIConnector extends AbstractComponentContainerConnector implements
                 componentConnector.getWidget().getElement().scrollIntoView();
             }
         });
+    }
+
+    @Override
+    public void postLayout() {
     }
 }

@@ -34,6 +34,7 @@ import com.vaadin.navigator.Navigator;
 import com.vaadin.server.Page;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
+import com.vaadin.server.Scrollable;
 import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
@@ -80,7 +81,7 @@ import com.vaadin.util.ReflectTools;
  * @since 7.0
  */
 public abstract class UI extends AbstractComponentContainer implements
-        Action.Container, Action.Notifier, LegacyComponent {
+        Action.Container, Action.Notifier, LegacyComponent, Scrollable {
 
     /**
      * Event fired when a UI is removed from the application.
@@ -165,6 +166,12 @@ public abstract class UI extends AbstractComponentContainer implements
                 int windowHeight) {
             // TODO We're not doing anything with the view dimensions
             getPage().setBrowserWindowSize(windowWidth, windowHeight);
+        }
+
+        @Override
+        public void scroll(int scrollLeft, int scrollTop) {
+            setScrollLeft(scrollLeft);
+            setScrollTop(scrollTop);
         }
     };
 
@@ -313,6 +320,16 @@ public abstract class UI extends AbstractComponentContainer implements
         if (variables.containsKey(EventId.CLICK_EVENT_IDENTIFIER)) {
             fireClick((Map<String, Object>) variables
                     .get(EventId.CLICK_EVENT_IDENTIFIER));
+        }
+
+        // Scrolling
+        final Integer newScrollX = (Integer) variables.get("scrollLeft");
+        final Integer newScrollY = (Integer) variables.get("scrollTop");
+        if (newScrollX != null) {
+            setScrollLeft(newScrollX);
+        }
+        if (newScrollY != null) {
+            setScrollTop(newScrollY);
         }
 
         // Actions
@@ -696,8 +713,32 @@ public abstract class UI extends AbstractComponentContainer implements
         return CurrentInstance.get(UI.class);
     }
 
+    @Override
     public void setScrollTop(int scrollTop) {
-        throw new RuntimeException("Not yet implemented");
+        if (scrollTop < 0) {
+            throw new IllegalArgumentException(
+                    "Scroll offset may not be negative");
+        }
+        getState().scrollTop = scrollTop;
+    }
+
+    @Override
+    public int getScrollTop() {
+        return getState().scrollTop;
+    }
+
+    @Override
+    public void setScrollLeft(int scrollLeft) {
+        if (scrollLeft < 0) {
+            throw new IllegalArgumentException(
+                    "Scroll offset may not be negative");
+        }
+        getState().scrollLeft = scrollLeft;
+    }
+
+    @Override
+    public int getScrollLeft() {
+        return getState().scrollLeft;
     }
 
     @Override
