@@ -19,10 +19,12 @@ package com.vaadin.sass.tree.controldirective;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.parser.LexicalUnitImpl;
 import com.vaadin.sass.tree.IVariableNode;
 import com.vaadin.sass.tree.Node;
 import com.vaadin.sass.tree.VariableNode;
+import com.vaadin.sass.visitor.EachNodeHandler;
 
 public class EachDefNode extends Node implements IVariableNode {
     private static final long serialVersionUID = 7943948981204906221L;
@@ -87,5 +89,11 @@ public class EachDefNode extends Node implements IVariableNode {
 
     public String getListVariable() {
         return listVariable;
+    }
+
+    @Override
+    public void traverse() {
+        replaceVariables(ScssStylesheet.getVariables());
+        EachNodeHandler.traverse(this);
     }
 }

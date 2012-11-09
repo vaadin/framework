@@ -3,6 +3,7 @@ package com.vaadin.sass.tree;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.parser.LexicalUnitImpl;
 
 public abstract class ListModifyNode extends Node implements IVariableNode {
@@ -97,6 +98,13 @@ public abstract class ListModifyNode extends Node implements IVariableNode {
             }
 
         }
+    }
+
+    @Override
+    public void traverse() {
+        replaceVariables(ScssStylesheet.getVariables());
+        ScssStylesheet.addVariable(getModifiedList());
+        getParentNode().removeChild(this);
     }
 
 }

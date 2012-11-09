@@ -32,4 +32,9 @@ public class WhileNode extends Node {
         return "While Node: { condition: " + condition + ", body:" + body + "}";
     }
 
+    @Override
+    public void traverse() {
+
+    }
+
 }
