@@ -56,6 +56,9 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.ClosingEvent;
+import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
@@ -169,6 +172,23 @@ public class ApplicationConnection {
     protected boolean applicationRunning = false;
 
     private boolean hasActiveRequest = false;
+
+    /**
+     * Some browsers cancel pending XHR requests when a request that might
+     * navigate away from the page starts (indicated by a beforeunload event).
+     * In that case, we should just send the request again without displaying
+     * any error.
+     */
+    private boolean retryCanceledActiveRequest = false;
+
+    /**
+     * Webkit will ignore outgoing requests while waiting for a response to a
+     * navigation event (indicated by a beforeunload event). When this happens,
+     * we should keep trying to send the request every now and then until there
+     * is a response or until it throws an exception saying that it is already
+     * being sent.
+     */
+    private boolean webkitMaybeIgnoringRequests = false;
 
     protected boolean cssLoaded = false;
 
@@ -378,6 +398,21 @@ public class ApplicationConnection {
         showLoadingIndicator();
 
         scheduleHeartbeat();
+
+        Window.addWindowClosingHandler(new ClosingHandler() {
+            @Override
+            public void onWindowClosing(ClosingEvent event) {
+                /*
+                 * Set some flags to avoid potential problems with XHR requests,
+                 * see javadocs of the flags for details
+                 */
+                if (hasActiveRequest()) {
+                    retryCanceledActiveRequest = true;
+                }
+
+                webkitMaybeIgnoringRequests = true;
+            }
+        });
     }
 
     /**
@@ -668,9 +703,21 @@ public class ApplicationConnection {
 
                     switch (statusCode) {
                     case 0:
-                        handleCommunicationError(
-                                "Invalid status code 0 (server down?)",
-                                statusCode);
+                        if (retryCanceledActiveRequest) {
+                            /*
+                             * Request was most likely canceled because the
+                             * browser is maybe navigating away from the page.
+                             * Just send the request again without displaying
+                             * any error in case the navigation isn't carried
+                             * through.
+                             */
+                            retryCanceledActiveRequest = false;
+                            doUidlRequest(uri, payload, synchronous);
+                        } else {
+                            handleCommunicationError(
+                                    "Invalid status code 0 (server down?)",
+                                    statusCode);
+                        }
                         return;
 
                     case 401:
@@ -814,8 +861,37 @@ public class ApplicationConnection {
         rb.setRequestData(payload);
         rb.setCallback(requestCallback);
 
-        rb.send();
+        final Request request = rb.send();
+        if (webkitMaybeIgnoringRequests && BrowserInfo.get().isWebkit()) {
+            final int retryTimeout = 250;
+            new Timer() {
+                @Override
+                public void run() {
+                    // Use native js to access private field in Request
+                    if (resendRequest(request) && webkitMaybeIgnoringRequests) {
+                        // Schedule retry if still needed
+                        schedule(retryTimeout);
+                    }
+                }
+            }.scheduleRepeating(retryTimeout);
+        }
     }
+
+    private static native boolean resendRequest(Request request)
+    /*-{
+        var xhr = request.@com.google.gwt.http.client.Request::xmlHttpRequest
+        if (xhr.readyState != 1) {
+            // Progressed to some other readyState -> no longer blocked
+            return false;
+        }
+        try {
+            xhr.send();
+            return true;
+        } catch (e) {
+            // send throws exception if it is running for real
+            return false;
+        }
+    }-*/;
 
     int cssWaits = 0;
 
@@ -977,6 +1053,10 @@ public class ApplicationConnection {
         // the call. Active requests used to be tracked with an integer counter,
         // so setting it after used to work but not with the #8505 changes.
         hasActiveRequest = false;
+
+        retryCanceledActiveRequest = false;
+        webkitMaybeIgnoringRequests = false;
+
         if (applicationRunning) {
             checkForPendingVariableBursts();
             runPostRequestHooks(configuration.getRootPanelId());
