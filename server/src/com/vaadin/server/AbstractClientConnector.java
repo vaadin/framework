@@ -260,7 +260,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
                 Constructor<?> constructor = proxyClass
                         .getConstructor(InvocationHandler.class);
                 T rpcProxy = rpcInterface.cast(constructor
-                        .newInstance(new RpcInvoicationHandler(rpcInterface)));
+                        .newInstance(new RpcInvocationHandler(rpcInterface)));
                 // cache the proxy
                 rpcProxyMap.put(rpcInterface, rpcProxy);
             }
@@ -293,12 +293,12 @@ public abstract class AbstractClientConnector implements ClientConnector,
         }
     }
 
-    private class RpcInvoicationHandler implements InvocationHandler,
+    private class RpcInvocationHandler implements InvocationHandler,
             Serializable {
 
         private String rpcInterfaceName;
 
-        public RpcInvoicationHandler(Class<?> rpcInterface) {
+        public RpcInvocationHandler(Class<?> rpcInterface) {
             rpcInterfaceName = rpcInterface.getName().replaceAll("\\$", ".");
         }
 
