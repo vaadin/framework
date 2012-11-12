@@ -75,8 +75,7 @@ public class Ticket2048 extends LegacyApplication {
                     public void buttonClick(ClickEvent event) {
                         Embedded newEmbedded = new Embedded(null,
                                 new ThemeResource("icons/64/folder-add.png"));
-                        getMainWindow().getContent().replaceComponent(embedded,
-                                newEmbedded);
+                        getMainWindow().replaceComponent(embedded, newEmbedded);
                         embedded = newEmbedded;
 
                     }

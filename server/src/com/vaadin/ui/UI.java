@@ -66,12 +66,14 @@ import com.vaadin.util.ReflectTools;
  * web.xml.
  * </p>
  * <p>
+ * TODO {@link #setContent(ComponentContainer)} should take a Component
+ * 
  * After a UI has been created by the application, it is initialized using
  * {@link #init(VaadinRequest)}. This method is intended to be overridden by the
  * developer to add components to the user interface and initialize
  * non-component functionality. The component hierarchy is initialized by
  * passing a {@link ComponentContainer} with the main layout of the view to
- * {@link #setContent(ComponentContainer)}.
+ * {@link #setContent(Component)}.
  * </p>
  * 
  * @see #init(VaadinRequest)
@@ -79,7 +81,7 @@ import com.vaadin.util.ReflectTools;
  * 
  * @since 7.0
  */
-public abstract class UI extends AbstractComponentContainer implements
+public abstract class UI extends AbstractBasicComponentContainer implements
         Action.Container, Action.Notifier, LegacyComponent {
 
     /**
@@ -224,15 +226,6 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * This implementation replaces a component in the content container (
-     * {@link #getContent()}) instead of in the actual UI.
-     */
-    @Override
-    public void replaceComponent(Component oldComponent, Component newComponent) {
-        getContent().replaceComponent(oldComponent, newComponent);
-    }
-
-    /**
      * Gets the application object to which the component is attached.
      * 
      * <p>
@@ -330,7 +323,7 @@ public abstract class UI extends AbstractComponentContainer implements
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.ui.ComponentContainer#getComponentIterator()
+     * @see com.vaadin.ui.HasComponents#iterator()
      */
     @Override
     public Iterator<Component> iterator() {
@@ -541,16 +534,15 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
-     * Gets the content of this UI. The content is a component container that
-     * serves as the outermost item of the visual contents of this UI.
+     * Gets the content of this UI. The content is a component that serves as
+     * the outermost item of the visual contents of this UI.
      * 
-     * @return a component container to use as content
+     * @return a component to use as content
      * 
-     * @see #setContent(ComponentContainer)
-     * @see #createDefaultLayout()
+     * @see #setContent(Component)
      */
-    public ComponentContainer getContent() {
-        return (ComponentContainer) getState().content;
+    public Component getContent() {
+        return (Component) getState().content;
     }
 
     /**
@@ -566,6 +558,8 @@ public abstract class UI extends AbstractComponentContainer implements
     }
 
     /**
+     * TODO fix javadoc
+     * 
      * Sets the content of this UI. The content is a component container that
      * serves as the outermost item of the visual contents of this UI. If no
      * content has been set, a {@link VerticalLayout} with margins enabled will
@@ -577,50 +571,43 @@ public abstract class UI extends AbstractComponentContainer implements
      * @see #UI(ComponentContainer)
      * @see #createDefaultLayout()
      */
-    public void setContent(ComponentContainer content) {
+    // TODO check, fix, document
+    public void setContent(Component content) {
+        // TODO no default
         if (content == null) {
             content = createDefaultLayout();
         }
 
-        if (getState().content != null) {
-            super.removeComponent((Component) getState().content);
+        Component oldContent = (Component) getState().content;
+        if (getState().content != null && oldContent.getParent() == this) {
+            oldContent.setParent(null);
+            fireComponentDetachEvent(oldContent);
         }
         getState().content = content;
         if (content != null) {
-            super.addComponent(content);
+            if (content instanceof ComponentContainer) {
+                // Make sure we're not adding the component inside it's own
+                // content
+                for (Component parent = this; parent != null; parent = parent
+                        .getParent()) {
+                    if (parent == content) {
+                        throw new IllegalArgumentException(
+                                "Component cannot be added inside it's own content");
+                    }
+                }
+            }
+
+            if (content.getParent() instanceof ComponentContainer) {
+                // If the component already has a parent, try to remove it
+                ComponentContainer oldParent = (ComponentContainer) content
+                        .getParent();
+                oldParent.removeComponent(content);
+
+            }
+
+            content.setParent(this);
+            fireComponentAttachEvent(content);
         }
-    }
-
-    /**
-     * Adds a component to this UI. The component is not added directly to the
-     * UI, but instead to the content container ({@link #getContent()}).
-     * 
-     * @param component
-     *            the component to add to this UI
-     * 
-     * @see #getContent()
-     */
-    @Override
-    public void addComponent(Component component) {
-        getContent().addComponent(component);
-    }
-
-    /**
-     * This implementation removes the component from the content container (
-     * {@link #getContent()}) instead of from the actual UI.
-     */
-    @Override
-    public void removeComponent(Component component) {
-        getContent().removeComponent(component);
-    }
-
-    /**
-     * This implementation removes the components from the content container (
-     * {@link #getContent()}) instead of from the actual UI.
-     */
-    @Override
-    public void removeAllComponents() {
-        getContent().removeAllComponents();
     }
 
     /**

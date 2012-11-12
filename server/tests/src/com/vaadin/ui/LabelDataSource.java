@@ -122,7 +122,7 @@ public class LabelDataSource {
         label.setPropertyDataSource(integerDataSource);
         UI ui = new MockUI();
         ui.setLocale(Locale.GERMANY);
-        ui.addComponent(label);
+        ui.setContent(label);
         Assert.assertEquals(INTEGER_STRING_VALUE_DE, label.getState().text);
     }
 }

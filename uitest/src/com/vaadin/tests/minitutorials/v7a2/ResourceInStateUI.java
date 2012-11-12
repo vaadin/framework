@@ -37,7 +37,7 @@ public class ResourceInStateUI extends UI {
         ResourceInStateComponent component = new ResourceInStateComponent();
         component.setMyIcon(new ThemeResource("../runo/icons/32/calendar.png"));
 
-        addComponent(component);
+        setContent(component);
     }
 
 }

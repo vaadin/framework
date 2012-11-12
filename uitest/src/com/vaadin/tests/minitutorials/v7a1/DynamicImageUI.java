@@ -25,7 +25,7 @@ public class DynamicImageUI extends AbstractTestUI {
         // Add an image using the resource
         Image image = new Image("A dynamically generated image", resource);
 
-        getContent().addComponent(image);
+        addComponent(image);
     }
 
     @Override

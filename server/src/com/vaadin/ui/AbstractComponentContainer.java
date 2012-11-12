@@ -16,7 +16,6 @@
 
 package com.vaadin.ui;
 
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -34,8 +33,8 @@ import com.vaadin.server.ComponentSizeValidator;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public abstract class AbstractComponentContainer extends AbstractComponent
-        implements ComponentContainer {
+public abstract class AbstractComponentContainer extends
+        AbstractBasicComponentContainer implements ComponentContainer {
 
     /**
      * Constructs a new component container.
@@ -83,34 +82,6 @@ public abstract class AbstractComponentContainer extends AbstractComponent
         }
     }
 
-    /* Events */
-
-    private static final Method COMPONENT_ATTACHED_METHOD;
-
-    private static final Method COMPONENT_DETACHED_METHOD;
-
-    static {
-        try {
-            COMPONENT_ATTACHED_METHOD = ComponentAttachListener.class
-                    .getDeclaredMethod("componentAttachedToContainer",
-                            new Class[] { ComponentAttachEvent.class });
-            COMPONENT_DETACHED_METHOD = ComponentDetachListener.class
-                    .getDeclaredMethod("componentDetachedFromContainer",
-                            new Class[] { ComponentDetachEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
-            // This should never happen
-            throw new java.lang.RuntimeException(
-                    "Internal error finding methods in AbstractComponentContainer");
-        }
-    }
-
-    /* documented in interface */
-    @Override
-    public void addComponentAttachListener(ComponentAttachListener listener) {
-        addListener(ComponentContainer.ComponentAttachEvent.class, listener,
-                COMPONENT_ATTACHED_METHOD);
-    }
-
     /**
      * @deprecated Since 7.0, replaced by
      *             {@link #addComponentAttachListener(com.vaadin.ui.ComponentContainer.ComponentAttachListener)}
@@ -119,13 +90,6 @@ public abstract class AbstractComponentContainer extends AbstractComponent
     @Deprecated
     public void addListener(ComponentAttachListener listener) {
         addComponentAttachListener(listener);
-    }
-
-    /* documented in interface */
-    @Override
-    public void addComponentDetachListener(ComponentDetachListener listener) {
-        addListener(ComponentContainer.ComponentDetachEvent.class, listener,
-                COMPONENT_DETACHED_METHOD);
     }
 
     /**
@@ -138,13 +102,6 @@ public abstract class AbstractComponentContainer extends AbstractComponent
         addComponentDetachListener(listener);
     }
 
-    /* documented in interface */
-    @Override
-    public void removeComponentAttachListener(ComponentAttachListener listener) {
-        removeListener(ComponentContainer.ComponentAttachEvent.class, listener,
-                COMPONENT_ATTACHED_METHOD);
-    }
-
     /**
      * @deprecated Since 7.0, replaced by
      *             {@link #removeComponentAttachListener(com.vaadin.ui.ComponentContainer.ComponentAttachListener)}
@@ -155,13 +112,6 @@ public abstract class AbstractComponentContainer extends AbstractComponent
         removeComponentAttachListener(listener);
     }
 
-    /* documented in interface */
-    @Override
-    public void removeComponentDetachListener(ComponentDetachListener listener) {
-        removeListener(ComponentContainer.ComponentDetachEvent.class, listener,
-                COMPONENT_DETACHED_METHOD);
-    }
-
     /**
      * @deprecated Since 7.0, replaced by
      *             {@link #removeComponentDetachListener(com.vaadin.ui.ComponentContainer.ComponentDetachListener)}
@@ -170,30 +120,6 @@ public abstract class AbstractComponentContainer extends AbstractComponent
     @Deprecated
     public void removeListener(ComponentDetachListener listener) {
         removeComponentDetachListener(listener);
-    }
-
-    /**
-     * Fires the component attached event. This should be called by the
-     * addComponent methods after the component have been added to this
-     * container.
-     * 
-     * @param component
-     *            the component that has been added to this container.
-     */
-    protected void fireComponentAttachEvent(Component component) {
-        fireEvent(new ComponentAttachEvent(this, component));
-    }
-
-    /**
-     * Fires the component detached event. This should be called by the
-     * removeComponent methods after the component have been removed from this
-     * container.
-     * 
-     * @param component
-     *            the component that has been removed from this container.
-     */
-    protected void fireComponentDetachEvent(Component component) {
-        fireEvent(new ComponentDetachEvent(this, component));
     }
 
     /**
@@ -383,14 +309,4 @@ public abstract class AbstractComponentContainer extends AbstractComponent
         return iterator();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.ui.HasComponents#isComponentVisible(com.vaadin.ui.Component)
-     */
-    @Override
-    public boolean isComponentVisible(Component childComponent) {
-        return true;
-    }
 }

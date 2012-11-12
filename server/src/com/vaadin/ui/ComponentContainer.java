@@ -200,7 +200,7 @@ public interface ComponentContainer extends HasComponents {
          * @param attachedComponent
          *            the component that has been attached.
          */
-        public ComponentAttachEvent(ComponentContainer container,
+        public ComponentAttachEvent(HasComponents container,
                 Component attachedComponent) {
             super(container);
             component = attachedComponent;
@@ -212,8 +212,8 @@ public interface ComponentContainer extends HasComponents {
          * @param the
          *            component container.
          */
-        public ComponentContainer getContainer() {
-            return (ComponentContainer) getSource();
+        public HasComponents getContainer() {
+            return (HasComponents) getSource();
         }
 
         /**
@@ -244,7 +244,7 @@ public interface ComponentContainer extends HasComponents {
          * @param detachedComponent
          *            the component that has been detached.
          */
-        public ComponentDetachEvent(ComponentContainer container,
+        public ComponentDetachEvent(HasComponents container,
                 Component detachedComponent) {
             super(container);
             component = detachedComponent;
@@ -256,8 +256,8 @@ public interface ComponentContainer extends HasComponents {
          * @param the
          *            component container.
          */
-        public ComponentContainer getContainer() {
-            return (ComponentContainer) getSource();
+        public HasComponents getContainer() {
+            return (HasComponents) getSource();
         }
 
         /**

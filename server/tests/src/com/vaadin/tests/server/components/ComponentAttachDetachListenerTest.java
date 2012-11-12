@@ -8,7 +8,6 @@ import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.AbsoluteLayout.ComponentPosition;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.ComponentContainer.ComponentAttachEvent;
 import com.vaadin.ui.ComponentContainer.ComponentAttachListener;
 import com.vaadin.ui.ComponentContainer.ComponentDetachEvent;
@@ -16,6 +15,7 @@ import com.vaadin.ui.ComponentContainer.ComponentDetachListener;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.GridLayout.Area;
+import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 
@@ -29,12 +29,12 @@ public class ComponentAttachDetachListenerTest extends TestCase {
     // General variables
     private int attachCounter = 0;
     private Component attachedComponent = null;
-    private ComponentContainer attachTarget = null;
+    private HasComponents attachTarget = null;
     private boolean foundInContainer = false;
 
     private int detachCounter = 0;
     private Component detachedComponent = null;
-    private ComponentContainer detachedTarget = null;
+    private HasComponents detachedTarget = null;
 
     // Ordered layout specific variables
     private int indexOfComponent = -1;
@@ -53,7 +53,7 @@ public class ComponentAttachDetachListenerTest extends TestCase {
             attachTarget = event.getContainer();
 
             // Search for component in container (should be found)
-            Iterator<Component> iter = attachTarget.getComponentIterator();
+            Iterator<Component> iter = attachTarget.iterator();
             while (iter.hasNext()) {
                 if (iter.next() == attachedComponent) {
                     foundInContainer = true;
@@ -83,7 +83,7 @@ public class ComponentAttachDetachListenerTest extends TestCase {
             detachedTarget = event.getContainer();
 
             // Search for component in container (should NOT be found)
-            Iterator<Component> iter = detachedTarget.getComponentIterator();
+            Iterator<Component> iter = detachedTarget.iterator();
             while (iter.hasNext()) {
                 if (iter.next() == detachedComponent) {
                     foundInContainer = true;
@@ -129,20 +129,20 @@ public class ComponentAttachDetachListenerTest extends TestCase {
         super.setUp();
 
         olayout = new HorizontalLayout();
-        olayout.addListener(new MyAttachListener());
-        olayout.addListener(new MyDetachListener());
+        olayout.addComponentAttachListener(new MyAttachListener());
+        olayout.addComponentDetachListener(new MyDetachListener());
 
         gridlayout = new GridLayout();
-        gridlayout.addListener(new MyAttachListener());
-        gridlayout.addListener(new MyDetachListener());
+        gridlayout.addComponentAttachListener(new MyAttachListener());
+        gridlayout.addComponentDetachListener(new MyDetachListener());
 
         absolutelayout = new AbsoluteLayout();
-        absolutelayout.addListener(new MyAttachListener());
-        absolutelayout.addListener(new MyDetachListener());
+        absolutelayout.addComponentAttachListener(new MyAttachListener());
+        absolutelayout.addComponentDetachListener(new MyDetachListener());
 
         csslayout = new CssLayout();
-        csslayout.addListener(new MyAttachListener());
-        csslayout.addListener(new MyDetachListener());
+        csslayout.addComponentAttachListener(new MyAttachListener());
+        csslayout.addComponentDetachListener(new MyDetachListener());
     }
 
     public void testOrderedLayoutAttachListener() {
