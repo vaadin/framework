@@ -127,50 +127,6 @@ public class FormConnector extends AbstractComponentContainerConnector
             }
         }
 
-        // first render footer so it will be easier to handle relative height of
-        // main layout
-        if (getState().footer != null) {
-            // render footer
-            ComponentConnector newFooter = (ComponentConnector) getState().footer;
-            Widget newFooterWidget = newFooter.getWidget();
-            if (getWidget().footer == null) {
-                getLayoutManager().addElementResizeListener(
-                        newFooterWidget.getElement(), footerResizeListener);
-                getWidget().add(newFooter.getWidget(),
-                        getWidget().footerContainer);
-                getWidget().footer = newFooterWidget;
-            } else if (newFooter != getWidget().footer) {
-                getLayoutManager().removeElementResizeListener(
-                        getWidget().footer.getElement(), footerResizeListener);
-                getLayoutManager().addElementResizeListener(
-                        newFooterWidget.getElement(), footerResizeListener);
-                getWidget().remove(getWidget().footer);
-                getWidget().add(newFooter.getWidget(),
-                        getWidget().footerContainer);
-            }
-            getWidget().footer = newFooterWidget;
-        } else {
-            if (getWidget().footer != null) {
-                getLayoutManager().removeElementResizeListener(
-                        getWidget().footer.getElement(), footerResizeListener);
-                getWidget().remove(getWidget().footer);
-                getWidget().footer = null;
-            }
-        }
-
-        ComponentConnector newLayout = (ComponentConnector) getState().layout;
-        Widget newLayoutWidget = newLayout.getWidget();
-        if (getWidget().lo == null) {
-            // Layout not rendered before
-            getWidget().lo = newLayoutWidget;
-            getWidget().add(newLayoutWidget, getWidget().fieldContainer);
-        } else if (getWidget().lo != newLayoutWidget) {
-            // Layout has changed
-            getWidget().remove(getWidget().lo);
-            getWidget().lo = newLayoutWidget;
-            getWidget().add(newLayoutWidget, getWidget().fieldContainer);
-        }
-
         // also recalculates size of the footer if undefined size form - see
         // #3710
         client.runDescendentsLayout(getWidget());
@@ -215,9 +171,38 @@ public class FormConnector extends AbstractComponentContainerConnector
         return (FormState) super.getState();
     }
 
+    private ComponentConnector getFooter() {
+        return (ComponentConnector) getState().footer;
+    }
+
+    private ComponentConnector getLayout() {
+        return (ComponentConnector) getState().layout;
+    }
+
     @Override
     public void onConnectorHierarchyChange(
             ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
-        // TODO Move code from updateFromUIDL to this method
+        Widget newFooterWidget = null;
+        ComponentConnector footer = getFooter();
+
+        if (footer != null) {
+            newFooterWidget = footer.getWidget();
+            Widget currentFooter = getWidget().footer;
+            if (currentFooter != null) {
+                // Remove old listener
+                getLayoutManager().removeElementResizeListener(
+                        currentFooter.getElement(), footerResizeListener);
+            }
+            getLayoutManager().addElementResizeListener(
+                    newFooterWidget.getElement(), footerResizeListener);
+        }
+        getWidget().setFooterWidget(newFooterWidget);
+
+        Widget newLayoutWidget = null;
+        ComponentConnector newLayout = getLayout();
+        if (newLayout != null) {
+            newLayoutWidget = newLayout.getWidget();
+        }
+        getWidget().setLayoutWidget(newLayoutWidget);
     }
 }

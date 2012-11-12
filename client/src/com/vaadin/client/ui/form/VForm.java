@@ -100,10 +100,31 @@ public class VForm extends ComplexPanel implements KeyDownHandler {
         shortcutHandler.handleKeyboardEvent(Event.as(event.getNativeEvent()));
     }
 
+    void setFooterWidget(Widget footerWidget) {
+        if (footer != null) {
+            remove(footer);
+        }
+        if (footerWidget != null) {
+            super.add(footerWidget, footerContainer);
+        }
+        footer = footerWidget;
+    }
+
+    public void setLayoutWidget(Widget newLayoutWidget) {
+        if (lo != null) {
+            remove(lo);
+        }
+        if (newLayoutWidget != null) {
+            super.add(newLayoutWidget, fieldContainer);
+        }
+        lo = newLayoutWidget;
+    }
+
     @Override
     protected void add(Widget child, Element container) {
         // Overridden to allow VFormPaintable to call this. Should be removed
         // once functionality from VFormPaintable is moved to VForm.
         super.add(child, container);
     }
+
 }
