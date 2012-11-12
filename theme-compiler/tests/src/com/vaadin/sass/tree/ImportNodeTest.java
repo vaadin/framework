@@ -22,11 +22,6 @@ import org.junit.Test;
 import com.steadystate.css.parser.SACMediaListImpl;
 
 public class ImportNodeTest {
-    @Test
-    public void testIsPureCssImportShouldReturnTrueWhenIsURL() {
-        ImportNode node = new ImportNode("", null, true);
-        Assert.assertTrue(node.isPureCssImport());
-    }
 
     @Test
     public void testIsPureCssImportShouldReturnTrueWhenStartsWithHttp() {
