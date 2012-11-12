@@ -691,6 +691,25 @@ public class NavigatorTest extends TestCase {
 
         navigator.setErrorProvider(errorProvider);
         navigator.navigateTo("doesnotexist2");
+    }
 
+    public void testShowViewEnterOrder() {
+        IMocksControl control = EasyMock.createStrictControl();
+
+        View view = control.createMock(View.class);
+        ViewDisplay display = control.createMock(ViewDisplay.class);
+
+        display.showView(view);
+        view.enter(EasyMock.anyObject(ViewChangeEvent.class));
+
+        control.replay();
+
+        NavigationStateManager manager = EasyMock
+                .createNiceMock(NavigationStateManager.class);
+        EasyMock.replay(manager);
+
+        Navigator navigator = new Navigator(createMockUI(), manager, display);
+        navigator.addView("view", view);
+        navigator.navigateTo("view");
     }
 }
