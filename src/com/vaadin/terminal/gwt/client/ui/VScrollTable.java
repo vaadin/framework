@@ -1168,6 +1168,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         if (uidl.hasVariable("selected")) {
             final Set<String> selectedKeys = uidl
                     .getStringArrayVariableAsSet("selected");
+            final Set<String> changedSelectedKeys = uidl
+                    .getStringArrayVariableAsSet("selectionchanged");
             if (scrollBody != null) {
                 Iterator<Widget> iterator = scrollBody.iterator();
                 while (iterator.hasNext()) {
@@ -1177,12 +1179,21 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                      */
                     VScrollTableRow row = (VScrollTableRow) iterator.next();
                     boolean selected = selectedKeys.contains(row.getKey());
+                    boolean changedOnServerSide = changedSelectedKeys
+                            .contains(row.getKey());
                     if (!selected
                             && unSyncedselectionsBeforeRowFetch != null
                             && unSyncedselectionsBeforeRowFetch.contains(row
                                     .getKey())) {
                         selected = true;
                         keyboardSelectionOverRowFetchInProgress = true;
+                    } else if (selected != row.isSelected()
+                            && !changedOnServerSide) {
+                        // ensure the previous selection doesn't override a
+                        // selection made on client side on an update that
+                        // arrives before server side has been updated (see
+                        // #6684)
+                        selected = !selected;
                     }
                     if (selected != row.isSelected()) {
                         row.toggleSelection();

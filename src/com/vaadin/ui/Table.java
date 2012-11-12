@@ -291,6 +291,13 @@ public class Table extends AbstractSelect implements Action.Container,
     private boolean selectable = false;
 
     /**
+     * Holds item keys which have had their selection changed since the previous
+     * burst to client side. This includes removed items as their selection may
+     * have changed on client side before their removal.
+     */
+    private Set<String> changedSelectedKeys;
+
+    /**
      * Holds value of property columnHeaderMode.
      */
     private int columnHeaderMode = COLUMN_HEADER_MODE_EXPLICIT_DEFAULTS_ID;
@@ -1526,7 +1533,7 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         // Saves the results to internal buffer
-        pageBuffer = getVisibleCellsNoCache(firstIndex, rows, true);
+        setPageBuffer(getVisibleCellsNoCache(firstIndex, rows, true));
 
         if (rows > 0) {
             pageBufferFirstIndex = firstIndex;
@@ -1537,6 +1544,34 @@ public class Table extends AbstractSelect implements Action.Container,
 
         setRowCacheInvalidated(true);
         requestRepaint();
+    }
+
+    private void setPageBuffer(Object[][] pageBuffer) {
+        if (changedSelectedKeys == null) {
+            changedSelectedKeys = new HashSet<String>();
+        }
+        /*
+         * All the previous pageBuffer's keys must be added to the list of keys
+         * which have had their selection changed. Otherwise the selections from
+         * the old rows won't get removed when the table is re-sorted, and focus
+         * jumps to the first row (see test MultiSelectWithRemovedRow). It is
+         * not enough to add the selected rows either, as there may be client
+         * side changes that have not arrived to the server side yet.
+         */
+        if (this.pageBuffer != null) {
+            Set<Object> newKeys = new HashSet<Object>();
+            if (pageBuffer != null) {
+                for (Object newKey : pageBuffer[CELL_KEY]) {
+                    newKeys.add(newKey);
+                }
+            }
+            for (Object key : this.pageBuffer[CELL_KEY]) {
+                if (key instanceof String && !newKeys.contains(key)) {
+                    changedSelectedKeys.add((String) key);
+                }
+            }
+        }
+        this.pageBuffer = pageBuffer;
     }
 
     /**
@@ -1669,7 +1704,7 @@ public class Table extends AbstractSelect implements Action.Container,
                         - firstAppendedRowInPageBuffer];
             }
         }
-        pageBuffer = newPageBuffer;
+        setPageBuffer(newPageBuffer);
     }
 
     private Object[][] getVisibleCellsUpdateCacheRows(int firstIndex, int rows) {
@@ -1806,7 +1841,7 @@ public class Table extends AbstractSelect implements Action.Container,
                         - rows];
             }
         }
-        pageBuffer = newPageBuffer;
+        setPageBuffer(newPageBuffer);
         pageBufferFirstIndex = Math.max(pageBufferFirstIndex
                 + rowsFromBeginning, minPageBufferIndex);
         getLogger().finest(
@@ -3336,7 +3371,18 @@ public class Table extends AbstractSelect implements Action.Container,
         // The select variable is only enabled if selectable
         if (isSelectable()) {
             target.addVariable(this, "selected", findSelectedKeys());
+            target.addVariable(this, "selectionchanged",
+                    findChangedSelectedKeys());
+            changedSelectedKeys = new HashSet<String>();
         }
+    }
+
+    private String[] findChangedSelectedKeys() {
+        if (changedSelectedKeys == null) {
+            changedSelectedKeys = new HashSet<String>();
+        }
+        return changedSelectedKeys.toArray(new String[changedSelectedKeys
+                .size()]);
     }
 
     private String[] findSelectedKeys() {
@@ -3360,6 +3406,50 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
         return selectedKeys.toArray(new String[selectedKeys.size()]);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void setValue(Object newValue) throws ReadOnlyException,
+            ConversionException {
+        final Set<String> changedSelections = new HashSet<String>();
+        for (String oldValue : findSelectedKeys()) {
+            changedSelections.add(oldValue);
+        }
+        /*
+         * All the keys that have their selection changed one way or another
+         * must be added to the list. Otherwise it becomes impossible to change
+         * client side selections from the server side (see test
+         * ProgrammaticUnselectInRange).
+         */
+        if (newValue != null) {
+            if (isMultiSelect()) {
+                if (Collection.class.isAssignableFrom(newValue.getClass())) {
+                    Iterator<Object> iterator = ((Collection<Object>) newValue)
+                            .iterator();
+                    while (iterator.hasNext()) {
+                        String key = itemIdMapper.key(iterator.next());
+                        if (changedSelections.contains(key)) {
+                            changedSelections.remove(key);
+                        } else {
+                            changedSelections.add(key);
+                        }
+                    }
+                }
+            } else {
+                String key = itemIdMapper.key(newValue);
+                if (changedSelections.contains(key)) {
+                    changedSelections.remove(key);
+                } else {
+                    changedSelections.add(key);
+                }
+            }
+        }
+        super.setValue(newValue);
+        if (changedSelectedKeys == null) {
+            changedSelectedKeys = new HashSet<String>();
+        }
+        changedSelectedKeys.addAll(changedSelections);
     }
 
     private void paintDragMode(PaintTarget target) throws PaintException {
@@ -3742,7 +3832,7 @@ public class Table extends AbstractSelect implements Action.Container,
         lastToBeRenderedInClient = -1;
         reqFirstRowToPaint = -1;
         reqRowsToPaint = -1;
-        pageBuffer = null;
+        setPageBuffer(null);
     }
 
     /**
