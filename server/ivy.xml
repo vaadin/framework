@@ -62,7 +62,7 @@
         <dependency org="commons-io" name="commons-io" rev="1.4"
             conf="tests->default" />
         <dependency org="commons-lang" name="commons-lang"
-            rev="2.3" conf="tests,ide->default" />
+            rev="2.6" conf="tests,ide->default" />
         <!-- Bean Validation implementation -->
         <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.1"
             conf="tests -> default" />
