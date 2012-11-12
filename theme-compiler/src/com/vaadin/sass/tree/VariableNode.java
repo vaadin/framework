@@ -77,6 +77,8 @@ public class VariableNode extends Node implements IVariableNode {
                             && expr.getParameters().toString()
                                     .contains("$" + node.getName())) {
                         replaceValues(expr.getParameters(), node);
+                    } else if (expr.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE) {
+                        replaceValues(expr, node);
                     }
                 }
             }
