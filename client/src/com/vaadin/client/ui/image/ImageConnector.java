@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.LoadHandler;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.ClickEventHandler;
+import com.vaadin.client.ui.VImage;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.AbstractEmbeddedState;
 import com.vaadin.shared.ui.Connect;

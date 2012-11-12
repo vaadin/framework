@@ -17,6 +17,7 @@ package com.vaadin.client.ui.video;
 
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.MediaBaseConnector;
+import com.vaadin.client.ui.VVideo;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.video.VideoConstants;
 import com.vaadin.shared.ui.video.VideoState;

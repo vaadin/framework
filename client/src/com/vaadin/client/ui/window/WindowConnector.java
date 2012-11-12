@@ -35,6 +35,7 @@ import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.ShortcutActionHandler;
+import com.vaadin.client.ui.VWindow;
 import com.vaadin.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.layout.MayScrollChildren;

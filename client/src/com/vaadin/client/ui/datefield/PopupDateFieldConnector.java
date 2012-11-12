@@ -21,8 +21,9 @@ import java.util.Date;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.DateTimeService;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.ui.datefield.VCalendarPanel.FocusChangeListener;
-import com.vaadin.client.ui.datefield.VCalendarPanel.TimeChangeListener;
+import com.vaadin.client.ui.VCalendarPanel.FocusChangeListener;
+import com.vaadin.client.ui.VCalendarPanel.TimeChangeListener;
+import com.vaadin.client.ui.VPopupCalendar;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.datefield.PopupDateFieldState;
 import com.vaadin.shared.ui.datefield.Resolution;
@@ -40,7 +41,7 @@ public class PopupDateFieldConnector extends TextualDateConnector {
     @Override
     @SuppressWarnings("deprecation")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        boolean lastReadOnlyState = getWidget().readonly;
+        boolean lastReadOnlyState = getWidget().isReadonly();
         boolean lastEnabledState = getWidget().isEnabled();
 
         getWidget().parsable = uidl.getBooleanAttribute("parsable");
@@ -51,8 +52,10 @@ public class PopupDateFieldConnector extends TextualDateConnector {
                 .getDateTimeService());
         getWidget().calendar.setShowISOWeekNumbers(getWidget()
                 .isShowISOWeekNumbers());
-        if (getWidget().calendar.getResolution() != getWidget().currentResolution) {
-            getWidget().calendar.setResolution(getWidget().currentResolution);
+        if (getWidget().calendar.getResolution() != getWidget()
+                .getCurrentResolution()) {
+            getWidget().calendar.setResolution(getWidget()
+                    .getCurrentResolution());
             if (getWidget().calendar.getDate() != null) {
                 getWidget().calendar.setDate((Date) getWidget()
                         .getCurrentDate().clone());
@@ -60,9 +63,9 @@ public class PopupDateFieldConnector extends TextualDateConnector {
                 getWidget().calendar.renderCalendar();
             }
         }
-        getWidget().calendarToggle.setEnabled(getWidget().enabled);
+        getWidget().calendarToggle.setEnabled(getWidget().isEnabled());
 
-        if (getWidget().currentResolution.getCalendarField() <= Resolution.MONTH
+        if (getWidget().getCurrentResolution().getCalendarField() <= Resolution.MONTH
                 .getCalendarField()) {
             getWidget().calendar
                     .setFocusChangeListener(new FocusChangeListener() {
@@ -79,7 +82,7 @@ public class PopupDateFieldConnector extends TextualDateConnector {
             getWidget().calendar.setFocusChangeListener(null);
         }
 
-        if (getWidget().currentResolution.getCalendarField() > Resolution.DAY
+        if (getWidget().getCurrentResolution().getCalendarField() > Resolution.DAY
                 .getCalendarField()) {
             getWidget().calendar
                     .setTimeChangeListener(new TimeChangeListener() {
@@ -107,7 +110,7 @@ public class PopupDateFieldConnector extends TextualDateConnector {
                     });
         }
 
-        if (getWidget().readonly) {
+        if (getWidget().isReadonly()) {
             getWidget().calendarToggle.addStyleName(VPopupCalendar.CLASSNAME
                     + "-button-readonly");
         } else {

@@ -23,6 +23,7 @@ import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.AbstractFieldConnector;
+import com.vaadin.client.ui.VDateField;
 import com.vaadin.shared.ui.datefield.DateFieldConstants;
 import com.vaadin.shared.ui.datefield.Resolution;
 
@@ -40,28 +41,28 @@ public class AbstractDateFieldConnector extends AbstractFieldConnector
         getWidget().paintableId = uidl.getId();
         getWidget().immediate = getState().immediate;
 
-        getWidget().readonly = isReadOnly();
-        getWidget().enabled = isEnabled();
+        getWidget().setReadonly(isReadOnly());
+        getWidget().setEnabled(isEnabled());
 
         if (uidl.hasAttribute("locale")) {
             final String locale = uidl.getStringAttribute("locale");
             try {
                 getWidget().dts.setLocale(locale);
-                getWidget().currentLocale = locale;
+                getWidget().setCurrentLocale(locale);
             } catch (final LocaleNotLoadedException e) {
-                getWidget().currentLocale = getWidget().dts.getLocale();
+                getWidget().setCurrentLocale(getWidget().dts.getLocale());
                 VConsole.error("Tried to use an unloaded locale \"" + locale
                         + "\". Using default locale ("
-                        + getWidget().currentLocale + ").");
+                        + getWidget().getCurrentLocale() + ").");
                 VConsole.error(e);
             }
         }
 
         // We show week numbers only if the week starts with Monday, as ISO 8601
         // specifies
-        getWidget().showISOWeekNumbers = uidl
-                .getBooleanAttribute(DateFieldConstants.ATTR_WEEK_NUMBERS)
-                && getWidget().dts.getFirstDayOfWeek() == 1;
+        getWidget().setShowISOWeekNumbers(
+                uidl.getBooleanAttribute(DateFieldConstants.ATTR_WEEK_NUMBERS)
+                        && getWidget().dts.getFirstDayOfWeek() == 1);
 
         Resolution newResolution;
         if (uidl.hasVariable("sec")) {
@@ -82,30 +83,29 @@ public class AbstractDateFieldConnector extends AbstractFieldConnector
         setWidgetStyleName(
                 getWidget().getStylePrimaryName()
                         + "-"
-                        + VDateField
-                                .resolutionToString(getWidget().currentResolution),
-                false);
+                        + VDateField.resolutionToString(getWidget()
+                                .getCurrentResolution()), false);
 
-        getWidget().currentResolution = newResolution;
+        getWidget().setCurrentResolution(newResolution);
 
         // Add stylename that indicates current resolution
         setWidgetStyleName(
                 getWidget().getStylePrimaryName()
                         + "-"
-                        + VDateField
-                                .resolutionToString(getWidget().currentResolution),
-                true);
+                        + VDateField.resolutionToString(getWidget()
+                                .getCurrentResolution()), true);
 
+        final Resolution resolution = getWidget().getCurrentResolution();
         final int year = uidl.getIntVariable("year");
-        final int month = (getWidget().currentResolution.getCalendarField() >= Resolution.MONTH
+        final int month = (resolution.getCalendarField() >= Resolution.MONTH
                 .getCalendarField()) ? uidl.getIntVariable("month") : -1;
-        final int day = (getWidget().currentResolution.getCalendarField() >= Resolution.DAY
+        final int day = (resolution.getCalendarField() >= Resolution.DAY
                 .getCalendarField()) ? uidl.getIntVariable("day") : -1;
-        final int hour = (getWidget().currentResolution.getCalendarField() >= Resolution.HOUR
+        final int hour = (resolution.getCalendarField() >= Resolution.HOUR
                 .getCalendarField()) ? uidl.getIntVariable("hour") : 0;
-        final int min = (getWidget().currentResolution.getCalendarField() >= Resolution.MINUTE
+        final int min = (resolution.getCalendarField() >= Resolution.MINUTE
                 .getCalendarField()) ? uidl.getIntVariable("min") : 0;
-        final int sec = (getWidget().currentResolution.getCalendarField() >= Resolution.SECOND
+        final int sec = (resolution.getCalendarField() >= Resolution.SECOND
                 .getCalendarField()) ? uidl.getIntVariable("sec") : 0;
 
         // Construct new date for this datefield (only if not null)

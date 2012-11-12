@@ -16,6 +16,7 @@
 
 package com.vaadin.client.ui.nativeselect;
 
+import com.vaadin.client.ui.VNativeSelect;
 import com.vaadin.client.ui.optiongroup.OptionGroupBaseConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.ui.NativeSelect;

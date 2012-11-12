@@ -24,6 +24,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
+import com.vaadin.client.ui.VTabsheetBase;
 import com.vaadin.shared.ui.tabsheet.TabsheetBaseConstants;
 
 public abstract class TabsheetBaseConnector extends

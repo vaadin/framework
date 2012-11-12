@@ -16,6 +16,7 @@
 
 package com.vaadin.client.ui.textarea;
 
+import com.vaadin.client.ui.VTextArea;
 import com.vaadin.client.ui.textfield.TextFieldConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.textarea.TextAreaState;

@@ -16,7 +16,7 @@
 
 package com.vaadin.tests.widgetset.client;
 
-import com.vaadin.client.ui.textarea.VTextArea;
+import com.vaadin.client.ui.VTextArea;
 
 public class VExtendedTextArea extends VTextArea {
 

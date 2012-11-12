@@ -25,6 +25,7 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractLayoutConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
+import com.vaadin.client.ui.VCustomLayout;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.customlayout.CustomLayoutState;
 import com.vaadin.ui.CustomLayout;

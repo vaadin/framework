@@ -33,7 +33,6 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
-import com.vaadin.client.ui.richtextarea.VRichTextArea;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.ShortCutConstants;
 

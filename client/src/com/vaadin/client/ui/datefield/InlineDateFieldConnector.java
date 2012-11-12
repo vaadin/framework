@@ -20,8 +20,9 @@ import java.util.Date;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.DateTimeService;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.ui.datefield.VCalendarPanel.FocusChangeListener;
-import com.vaadin.client.ui.datefield.VCalendarPanel.TimeChangeListener;
+import com.vaadin.client.ui.VCalendarPanel.FocusChangeListener;
+import com.vaadin.client.ui.VCalendarPanel.TimeChangeListener;
+import com.vaadin.client.ui.VDateFieldCalendar;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.datefield.InlineDateFieldState;
 import com.vaadin.shared.ui.datefield.Resolution;
@@ -51,7 +52,7 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
             getWidget().calendarPanel.setDate(null);
         }
 
-        if (getWidget().currentResolution.getCalendarField() > Resolution.DAY
+        if (getWidget().getCurrentResolution().getCalendarField() > Resolution.DAY
                 .getCalendarField()) {
             getWidget().calendarPanel
                     .setTimeChangeListener(new TimeChangeListener() {
@@ -77,7 +78,7 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
                     });
         }
 
-        if (getWidget().currentResolution.getCalendarField() <= Resolution.MONTH
+        if (getWidget().getCurrentResolution().getCalendarField() <= Resolution.MONTH
                 .getCalendarField()) {
             getWidget().calendarPanel
                     .setFocusChangeListener(new FocusChangeListener() {

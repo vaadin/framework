@@ -22,9 +22,9 @@ import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.vaadin.client.ui.notification.VNotification;
-import com.vaadin.client.ui.notification.VNotification.EventListener;
-import com.vaadin.client.ui.notification.VNotification.HideEvent;
+import com.vaadin.client.ui.VNotification;
+import com.vaadin.client.ui.VNotification.EventListener;
+import com.vaadin.client.ui.VNotification.HideEvent;
 
 /**
  * Class that enables SuperDevMode using a ?superdevmode parameter in the url.

@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui.orderedlayout;
 
+import com.vaadin.client.ui.VHorizontalLayout;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.orderedlayout.HorizontalLayoutState;

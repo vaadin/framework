@@ -24,6 +24,7 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.Icon;
+import com.vaadin.client.ui.VLink;
 import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.link.LinkConstants;

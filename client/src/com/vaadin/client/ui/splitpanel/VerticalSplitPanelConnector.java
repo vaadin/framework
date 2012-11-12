@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui.splitpanel;
 
+import com.vaadin.client.ui.VSplitPanelVertical;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.splitpanel.VerticalSplitPanelState;
