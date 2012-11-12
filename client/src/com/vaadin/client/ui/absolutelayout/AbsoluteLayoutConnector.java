@@ -27,6 +27,7 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.client.ui.LayoutClickEventHandler;
+import com.vaadin.client.ui.VAbsoluteLayout;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.LayoutClickRpc;
 import com.vaadin.shared.ui.absolutelayout.AbsoluteLayoutServerRpc;

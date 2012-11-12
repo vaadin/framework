@@ -24,6 +24,7 @@ import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.SimpleManagedLayout;
+import com.vaadin.client.ui.VTabsheet;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.tabsheet.TabsheetState;

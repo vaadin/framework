@@ -24,6 +24,7 @@ import com.vaadin.client.VCaption;
 import com.vaadin.client.VCaptionWrapper;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.client.ui.PostLayoutListener;
+import com.vaadin.client.ui.VPopupView;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.ui.PopupView;

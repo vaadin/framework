@@ -15,9 +15,11 @@
  */
 package com.vaadin.client.ui.upload;
 
+import com.vaadin.client.ui.VUpload;
+
 public class UploadIFrameOnloadStrategy {
 
-    native void hookEvents(com.google.gwt.dom.client.Element iframe,
+    public native void hookEvents(com.google.gwt.dom.client.Element iframe,
             VUpload upload)
     /*-{
         iframe.onload = $entry(function() {
@@ -29,7 +31,7 @@ public class UploadIFrameOnloadStrategy {
      * @param iframe
      *            the iframe whose onLoad event is to be cleaned
      */
-    native void unHookEvents(com.google.gwt.dom.client.Element iframe)
+    public native void unHookEvents(com.google.gwt.dom.client.Element iframe)
     /*-{
         iframe.onload = null;
     }-*/;

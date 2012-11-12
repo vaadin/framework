@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.MediaBaseConnector;
+import com.vaadin.client.ui.VAudio;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.ui.Audio;
 

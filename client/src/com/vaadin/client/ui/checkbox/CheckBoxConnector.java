@@ -30,6 +30,7 @@ import com.vaadin.client.VTooltip;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.Icon;
+import com.vaadin.client.ui.VCheckBox;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.ui.Connect;

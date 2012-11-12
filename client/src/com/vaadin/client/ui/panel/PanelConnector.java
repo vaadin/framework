@@ -30,6 +30,7 @@ import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.ShortcutActionHandler;
 import com.vaadin.client.ui.SimpleManagedLayout;
+import com.vaadin.client.ui.VPanel;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.ComponentStateUtil;

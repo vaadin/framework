@@ -19,6 +19,7 @@ package com.vaadin.client.ui.progressindicator;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
+import com.vaadin.client.ui.VProgressIndicator;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.progressindicator.ProgressIndicatorServerRpc;
 import com.vaadin.shared.ui.progressindicator.ProgressIndicatorState;

@@ -18,6 +18,7 @@ package com.vaadin.client.ui.datefield;
 
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.ui.VTextualDate;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.shared.ui.datefield.TextualDateFieldState;
 
@@ -25,11 +26,11 @@ public class TextualDateConnector extends AbstractDateFieldConnector {
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        Resolution origRes = getWidget().currentResolution;
-        String oldLocale = getWidget().currentLocale;
+        Resolution origRes = getWidget().getCurrentResolution();
+        String oldLocale = getWidget().getCurrentLocale();
         super.updateFromUIDL(uidl, client);
-        if (origRes != getWidget().currentResolution
-                || oldLocale != getWidget().currentLocale) {
+        if (origRes != getWidget().getCurrentResolution()
+                || oldLocale != getWidget().getCurrentLocale()) {
             // force recreating format string
             getWidget().formatStr = null;
         }
@@ -48,7 +49,7 @@ public class TextualDateConnector extends AbstractDateFieldConnector {
             getWidget().text.setTabIndex(uidl.getIntAttribute("tabindex"));
         }
 
-        if (getWidget().readonly) {
+        if (getWidget().isReadonly()) {
             getWidget().text.addStyleDependentName("readonly");
         } else {
             getWidget().text.removeStyleDependentName("readonly");

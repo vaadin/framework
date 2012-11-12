@@ -31,10 +31,10 @@ import com.vaadin.client.MeasuredSize.MeasureResult;
 import com.vaadin.client.ui.ManagedLayout;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.SimpleManagedLayout;
+import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.client.ui.layout.LayoutDependencyTree;
-import com.vaadin.client.ui.notification.VNotification;
 
 public class LayoutManager {
     private static final String LOOP_ABORT_MESSAGE = "Aborting layout after 100 passes. This would probably be an infinite loop.";

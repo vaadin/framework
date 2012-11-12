@@ -39,7 +39,7 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.UnknownComponentConnector;
-import com.vaadin.client.ui.window.VWindow;
+import com.vaadin.client.ui.VWindow;
 
 /**
  * TODO Rename to something more Vaadin7-ish?

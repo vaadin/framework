@@ -29,6 +29,7 @@ import com.vaadin.client.VCaption;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractLayoutConnector;
 import com.vaadin.client.ui.LayoutClickEventHandler;
+import com.vaadin.client.ui.VCssLayout;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.LayoutClickRpc;
 import com.vaadin.shared.ui.csslayout.CssLayoutServerRpc;

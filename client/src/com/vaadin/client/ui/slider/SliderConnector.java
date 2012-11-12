@@ -20,6 +20,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
+import com.vaadin.client.ui.VSlider;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.slider.SliderServerRpc;
 import com.vaadin.shared.ui.slider.SliderState;

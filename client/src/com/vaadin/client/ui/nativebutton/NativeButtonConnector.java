@@ -25,6 +25,7 @@ import com.vaadin.client.EventHelper;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.Icon;
+import com.vaadin.client.ui.VNativeButton;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.button.ButtonServerRpc;

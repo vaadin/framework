@@ -20,6 +20,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.AbstractFieldConnector;
+import com.vaadin.client.ui.VRichTextArea;
 import com.vaadin.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;

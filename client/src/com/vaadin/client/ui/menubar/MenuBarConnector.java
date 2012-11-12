@@ -29,6 +29,7 @@ import com.vaadin.client.Util;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.SimpleManagedLayout;
+import com.vaadin.client.ui.VMenuBar;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;

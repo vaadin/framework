@@ -34,6 +34,7 @@ import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.ShortcutAction;
 import com.vaadin.client.ui.ShortcutActionTarget;
+import com.vaadin.client.ui.VButton;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
 import com.vaadin.shared.ui.Connect;
