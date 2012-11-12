@@ -80,7 +80,7 @@ public class VAbsoluteLayout extends ComplexPanel {
             wrapper.destroy();
             return super.remove(wrapper);
         }
-        return false;
+        return super.remove(w);
     }
 
     /**
@@ -246,9 +246,11 @@ public class VAbsoluteLayout extends ComplexPanel {
      */
     protected AbsoluteWrapper getChildWrapper(Widget child) {
         for (Widget w : getChildren()) {
-            AbsoluteWrapper wrapper = (AbsoluteWrapper) w;
-            if (wrapper.getWidget() == child) {
-                return wrapper;
+            if (w instanceof AbsoluteWrapper) {
+                AbsoluteWrapper wrapper = (AbsoluteWrapper) w;
+                if (wrapper.getWidget() == child) {
+                    return wrapper;
+                }
             }
         }
         return null;
