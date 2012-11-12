@@ -162,6 +162,24 @@ public class SQLContainerTest {
     }
 
     @Test
+    public void nextItemNullAtEnd_freeformExistingItem() throws SQLException {
+        SQLContainer container = new SQLContainer(new FreeformQuery(
+                "SELECT * FROM people", connectionPool, "ID"));
+        Object lastItemId = container.lastItemId();
+        Object afterLast = container.nextItemId(lastItemId);
+        Assert.assertNull(afterLast);
+    }
+
+    @Test
+    public void prevItemNullAtStart_freeformExistingItem() throws SQLException {
+        SQLContainer container = new SQLContainer(new FreeformQuery(
+                "SELECT * FROM people", connectionPool, "ID"));
+        Object firstItemId = container.firstItemId();
+        Object beforeFirst = container.prevItemId(firstItemId);
+        Assert.assertNull(beforeFirst);
+    }
+
+    @Test
     public void getItem_freeform5000RowsWithParameter1337_returnsItemWithId1337()
             throws SQLException {
         DataGenerator.addFiveThousandPeople(connectionPool);
