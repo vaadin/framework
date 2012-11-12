@@ -92,7 +92,6 @@ import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.dd.VHasDropHandler;
 import com.vaadin.client.ui.dd.VTransferable;
-import com.vaadin.client.ui.embedded.VEmbedded;
 import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;

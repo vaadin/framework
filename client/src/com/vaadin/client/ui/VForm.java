@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.client.ui.form;
+package com.vaadin.client.ui;
 
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
@@ -26,35 +26,52 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.VErrorMessage;
-import com.vaadin.client.ui.Icon;
-import com.vaadin.client.ui.ShortcutActionHandler;
 
 public class VForm extends ComplexPanel implements KeyDownHandler {
 
-    protected String id;
-
     public static final String CLASSNAME = "v-form";
 
-    Widget lo;
-    Element legend = DOM.createLegend();
-    Element caption = DOM.createSpan();
-    Element desc = DOM.createDiv();
-    Icon icon;
-    VErrorMessage errorMessage = new VErrorMessage();
+    /** For internal use only. May be removed or replaced in the future. */
+    public String id;
 
-    Element fieldContainer = DOM.createDiv();
+    /** For internal use only. May be removed or replaced in the future. */
+    public Widget lo;
 
-    Element footerContainer = DOM.createDiv();
+    /** For internal use only. May be removed or replaced in the future. */
+    public Element legend = DOM.createLegend();
 
-    Element fieldSet = DOM.createFieldSet();
+    /** For internal use only. May be removed or replaced in the future. */
+    public Element caption = DOM.createSpan();
 
-    Widget footer;
+    /** For internal use only. May be removed or replaced in the future. */
+    public Element desc = DOM.createDiv();
 
-    ApplicationConnection client;
+    /** For internal use only. May be removed or replaced in the future. */
+    public Icon icon;
 
-    ShortcutActionHandler shortcutHandler;
+    /** For internal use only. May be removed or replaced in the future. */
+    public VErrorMessage errorMessage = new VErrorMessage();
 
-    HandlerRegistration keyDownRegistration;
+    /** For internal use only. May be removed or replaced in the future. */
+    public Element fieldContainer = DOM.createDiv();
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public Element footerContainer = DOM.createDiv();
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public Element fieldSet = DOM.createFieldSet();
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public Widget footer;
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public ApplicationConnection client;
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public ShortcutActionHandler shortcutHandler;
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public HandlerRegistration keyDownRegistration;
 
     public VForm() {
         setElement(DOM.createDiv());
@@ -100,10 +117,9 @@ public class VForm extends ComplexPanel implements KeyDownHandler {
         shortcutHandler.handleKeyboardEvent(Event.as(event.getNativeEvent()));
     }
 
+    /** For internal use only. May be removed or replaced in the future. */
     @Override
-    protected void add(Widget child, Element container) {
-        // Overridden to allow VFormPaintable to call this. Should be removed
-        // once functionality from VFormPaintable is moved to VForm.
+    public void add(Widget child, Element container) {
         super.add(child, container);
     }
 }

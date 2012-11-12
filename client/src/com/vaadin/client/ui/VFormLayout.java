@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.client.ui.formlayout;
+package com.vaadin.client.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,8 +34,6 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.VTooltip;
-import com.vaadin.client.ui.AbstractFieldConnector;
-import com.vaadin.client.ui.Icon;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.ui.ComponentStateUtil;
@@ -48,7 +46,8 @@ public class VFormLayout extends SimplePanel {
 
     private final static String CLASSNAME = "v-formlayout";
 
-    VFormLayoutTable table;
+    /** For internal use only. May be removed or replaced in the future. */
+    public VFormLayoutTable table;
 
     public VFormLayout() {
         super();
@@ -340,7 +339,8 @@ public class VFormLayout extends SimplePanel {
         }
     }
 
-    class ErrorFlag extends HTML {
+    /** For internal use only. May be removed or replaced in the future. */
+    public class ErrorFlag extends HTML {
         private static final String CLASSNAME = VFormLayout.CLASSNAME
                 + "-error-indicator";
         Element errorIndicatorElement;

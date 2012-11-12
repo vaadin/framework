@@ -1,4 +1,4 @@
-package com.vaadin.client.ui.flash;
+package com.vaadin.client.ui;
 
 import java.util.HashMap;
 import java.util.Map;

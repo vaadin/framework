@@ -27,6 +27,7 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.ShortcutActionHandler;
+import com.vaadin.client.ui.VForm;
 import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.client.ui.layout.MayScrollChildren;
