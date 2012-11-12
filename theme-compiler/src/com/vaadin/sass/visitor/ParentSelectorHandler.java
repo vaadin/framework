@@ -17,8 +17,8 @@
 package com.vaadin.sass.visitor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import com.google.gwt.dev.util.collect.HashMap;
 import com.vaadin.sass.tree.BlockNode;
 import com.vaadin.sass.tree.Node;
 
