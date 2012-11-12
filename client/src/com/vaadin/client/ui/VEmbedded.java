@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.client.ui.embedded;
+package com.vaadin.client.ui;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,12 +36,17 @@ import com.vaadin.shared.ui.embedded.EmbeddedConstants;
 public class VEmbedded extends HTML {
     public static String CLASSNAME = "v-embedded";
 
-    protected Element browserElement;
+    /** For internal use only. May be removed or replaced in the future. */
+    public Element browserElement;
 
-    protected String type;
-    protected String mimetype;
+    /** For internal use only. May be removed or replaced in the future. */
+    public String type;
 
-    protected ApplicationConnection client;
+    /** For internal use only. May be removed or replaced in the future. */
+    public String mimetype;
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public ApplicationConnection client;
 
     public VEmbedded() {
         setStyleName(CLASSNAME);
@@ -49,13 +54,15 @@ public class VEmbedded extends HTML {
 
     /**
      * Creates the Object and Embed tags for the Flash plugin so it works
-     * cross-browser
+     * cross-browser.
+     * <p>
+     * For internal use only. May be removed or replaced in the future.
      * 
      * @param uidl
      *            The UIDL
      * @return Tags concatenated into a string
      */
-    protected String createFlashEmbed(UIDL uidl) {
+    public String createFlashEmbed(UIDL uidl) {
         /*
          * To ensure cross-browser compatibility we are using the twice-cooked
          * method to embed flash i.e. we add a OBJECT tag for IE ActiveX and
@@ -179,11 +186,13 @@ public class VEmbedded extends HTML {
 
     /**
      * Returns a map (name -> value) of all parameters in the UIDL.
+     * <p>
+     * For internal use only. May be removed or replaced in the future.
      * 
      * @param uidl
      * @return
      */
-    protected static Map<String, String> getParameters(UIDL uidl) {
+    public static Map<String, String> getParameters(UIDL uidl) {
         Map<String, String> parameters = new HashMap<String, String>();
 
         Iterator<Object> childIterator = uidl.getChildIterator();
@@ -207,12 +216,14 @@ public class VEmbedded extends HTML {
 
     /**
      * Helper to return translated src-attribute from embedded's UIDL
+     * <p>
+     * For internal use only. May be removed or replaced in the future.
      * 
      * @param uidl
      * @param client
      * @return
      */
-    protected String getSrc(UIDL uidl, ApplicationConnection client) {
+    public String getSrc(UIDL uidl, ApplicationConnection client) {
         String url = client.translateVaadinUri(uidl.getStringAttribute("src"));
         if (url == null) {
             return "";

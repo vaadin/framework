@@ -34,6 +34,7 @@ import com.vaadin.client.VConsole;
 import com.vaadin.client.VTooltip;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.ClickEventHandler;
+import com.vaadin.client.ui.VEmbedded;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.embedded.EmbeddedConstants;

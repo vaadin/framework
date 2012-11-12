@@ -2,6 +2,7 @@ package com.vaadin.client.ui.flash;
 
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.client.ui.VFlash;
 import com.vaadin.shared.ui.AbstractEmbeddedState;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.flash.FlashState;
