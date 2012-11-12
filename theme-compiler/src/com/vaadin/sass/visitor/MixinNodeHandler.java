@@ -40,6 +40,7 @@ public class MixinNodeHandler {
             throw new Exception("Mixin Definition: " + node.getName()
                     + " not found");
         }
+
         replaceMixinNode(node, mixinDef);
     }
 
@@ -48,6 +49,7 @@ public class MixinNodeHandler {
         Node pre = mixinNode;
 
         MixinDefNode defClone = (MixinDefNode) DeepCopy.copy(mixinDef);
+        defClone.traverse();
 
         if (mixinDef.getArglist().isEmpty()) {
             for (Node child : new ArrayList<Node>(defClone.getChildren())) {
