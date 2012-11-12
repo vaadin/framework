@@ -131,7 +131,7 @@ public class VAccordion extends VTabsheetBase {
 
         Widget itemWidget = item.getComponent();
         if (tabContent != null) {
-            if (tabContent != itemWidget) {
+            if (tabContent.getWidget() != itemWidget) {
                 /*
                  * This is not the same widget as before, find out if it has
                  * been moved
@@ -542,8 +542,10 @@ public class VAccordion extends VTabsheetBase {
     @Override
     protected ComponentConnector getTab(int index) {
         if (index < getWidgetCount()) {
-            Widget w = getStackItem(index);
-            return ConnectorMap.get(client).getConnector(w);
+            Widget w = getStackItem(index).getChildWidget();
+            if (w != null) {
+                return ConnectorMap.get(client).getConnector(w);
+            }
         }
 
         return null;
