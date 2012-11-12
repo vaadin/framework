@@ -36,7 +36,7 @@ public class ImportNode extends Node {
     }
 
     public boolean isPureCssImport() {
-        return (isURL || uri.endsWith(".css") || uri.startsWith("http://") || hasMediaQueries());
+        return (uri.endsWith(".css") || uri.startsWith("http://") || hasMediaQueries());
     }
 
     private boolean hasMediaQueries() {
