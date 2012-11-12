@@ -35,7 +35,7 @@ public class ParentSelectorHandler {
             BlockNode parentBlock = (BlockNode) parentNode;
             for (final String s : block.getSelectorList()) {
 
-                if (s.startsWith("&") || s.endsWith("&")) {
+                if (s.contains("&")) {
                     for (final String parentSelector : parentBlock
                             .getSelectorList()) {
                         newList.add(s.replace("&", parentSelector));
