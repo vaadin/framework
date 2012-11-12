@@ -713,7 +713,12 @@ public class SQLContainer implements Container, Container.Filterable,
 
     @Override
     public Object prevItemId(Object itemId) {
-        return getIdByIndex(indexOfId(itemId) - 1);
+        int prevIndex = indexOfId(itemId) - 1;
+        try {
+            return getIdByIndex(prevIndex);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
     }
 
     /*
