@@ -1,6 +1,10 @@
 @import "_partial-for-import";
 
-.text {
-	font-weight: bold;
-	color: $foo;
+@mixin text {
+	.text {
+		font-weight: bold;
+		color: $foo;
+	}
 }
+
+@include text;

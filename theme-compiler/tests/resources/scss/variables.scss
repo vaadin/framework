@@ -1,5 +1,6 @@
 $blue: #3bbfce;
 $margin: 8px;
+$font: 12px;
 $chameleon-font-family: Arial, Helvetica, "Lucida Grande", "Lucida Sans Unicode", Tahoma, Verdana, sans-serif;
 
 .content-navigation {
@@ -8,6 +9,8 @@ $chameleon-font-family: Arial, Helvetica, "Lucida Grande", "Lucida Sans Unicode"
 	color: $blue;
 	color1: darken($blue, 9%);
 	font-family: $chameleon-font-family;
+	$font-size: $font;
+	font-size: $font-size;
 }
 
 .border {
