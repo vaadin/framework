@@ -6503,7 +6503,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         // Remove previous selection
         if (focusedRow != null && focusedRow != row) {
-            focusedRow.removeStyleName(getStylePrimaryName());
+            focusedRow.removeStyleName(getStylePrimaryName() + "-focus");
         }
 
         if (row != null) {
