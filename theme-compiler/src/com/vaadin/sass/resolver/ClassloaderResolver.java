@@ -1,5 +1,6 @@
 package com.vaadin.sass.resolver;
 
+import java.io.File;
 import java.io.InputStream;
 
 import org.w3c.css.sac.InputSource;
@@ -20,6 +21,9 @@ public class ClassloaderResolver implements ScssStylesheetResolver {
         } else {
             fileName = fileName + ext;
         }
+
+        // Ensure only "/" is used, also in Windows
+        fileName = fileName.replace(File.separatorChar, '/');
 
         // Can the classloader find it?
         InputStream is = getClass().getClassLoader().getResourceAsStream(
