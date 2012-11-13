@@ -22,7 +22,6 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
@@ -256,7 +255,7 @@ public class Components extends LegacyApplication {
         try {
             AbstractComponentTest t = cls.newInstance();
             t.init();
-            ComponentContainer c = t.getMainWindow().getContent();
+            Component c = t.getMainWindow().getContent();
             t.getMainWindow().setContent(null);
             return c;
         } catch (InstantiationException e) {

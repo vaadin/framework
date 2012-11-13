@@ -9,11 +9,11 @@ import org.junit.Test;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.UI;
+import com.vaadin.ui.LegacyWindow;
 
-public class UIAddRemoveComponents {
+public class LegacyUIAddRemoveComponents {
 
-    private static class TestUI extends UI {
+    private static class TestUI extends LegacyWindow {
         @Override
         protected void init(VaadinRequest request) {
         }
@@ -21,7 +21,7 @@ public class UIAddRemoveComponents {
 
     @Test
     public void addComponent() {
-        UI ui = new TestUI();
+        TestUI ui = new TestUI();
         Component c = new Label("abc");
 
         ui.addComponent(c);
@@ -34,7 +34,7 @@ public class UIAddRemoveComponents {
 
     @Test
     public void removeComponent() {
-        UI ui = new TestUI();
+        TestUI ui = new TestUI();
         Component c = new Label("abc");
 
         ui.addComponent(c);
@@ -49,7 +49,7 @@ public class UIAddRemoveComponents {
 
     @Test
     public void replaceComponent() {
-        UI ui = new TestUI();
+        TestUI ui = new TestUI();
         Component c = new Label("abc");
         Component d = new Label("def");
 

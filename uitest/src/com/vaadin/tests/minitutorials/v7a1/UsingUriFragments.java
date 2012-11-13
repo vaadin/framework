@@ -23,6 +23,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 
 /**
  * Mini tutorial code for
@@ -33,11 +34,17 @@ import com.vaadin.ui.UI;
  */
 public class UsingUriFragments extends UI {
 
+    private VerticalLayout layout;
+
     @Override
     protected void init(VaadinRequest request) {
+        layout = new VerticalLayout();
+        layout.setMargin(true);
+        setContent(layout);
+
         Label label = new Label("Hello, your fragment is "
                 + getPage().getUriFragment());
-        getContent().addComponent(label);
+        layout.addComponent(label);
 
         // React to fragment changes
         getPage().addListener(new UriFragmentChangedListener() {
@@ -50,7 +57,7 @@ public class UsingUriFragments extends UI {
         // Handle the fragment received in the initial request
         handleFragment(getPage().getUriFragment());
 
-        addComponent(new Button("Show and set fragment",
+        layout.addComponent(new Button("Show and set fragment",
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
@@ -61,7 +68,7 @@ public class UsingUriFragments extends UI {
     }
 
     private void handleFragment(String uriFragment) {
-        addComponent(new Label("Got new fragment: " + uriFragment));
+        layout.addComponent(new Label("Got new fragment: " + uriFragment));
     }
 
 }

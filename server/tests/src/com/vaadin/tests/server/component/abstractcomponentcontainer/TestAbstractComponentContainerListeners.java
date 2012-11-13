@@ -1,10 +1,10 @@
 package com.vaadin.tests.server.component.abstractcomponentcontainer;
 
 import com.vaadin.tests.server.component.AbstractListenerMethodsTest;
-import com.vaadin.ui.ComponentContainer.ComponentAttachEvent;
-import com.vaadin.ui.ComponentContainer.ComponentAttachListener;
-import com.vaadin.ui.ComponentContainer.ComponentDetachEvent;
-import com.vaadin.ui.ComponentContainer.ComponentDetachListener;
+import com.vaadin.ui.HasComponents.ComponentAttachEvent;
+import com.vaadin.ui.HasComponents.ComponentAttachListener;
+import com.vaadin.ui.HasComponents.ComponentDetachEvent;
+import com.vaadin.ui.HasComponents.ComponentDetachListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 

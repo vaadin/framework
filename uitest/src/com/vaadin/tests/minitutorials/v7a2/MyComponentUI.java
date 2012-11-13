@@ -41,7 +41,7 @@ public class MyComponentUI extends UI {
 
         component.setText("My component text");
 
-        addComponent(component);
+        setContent(component);
     }
 
 }

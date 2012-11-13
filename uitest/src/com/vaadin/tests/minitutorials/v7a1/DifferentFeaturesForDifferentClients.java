@@ -59,8 +59,7 @@ public class DifferentFeaturesForDifferentClients extends UIProvider {
 class DefaultRoot extends UI {
     @Override
     protected void init(VaadinRequest request) {
-        getContent().addComponent(
-                new Label("This browser does not support touch events"));
+        setContent(new Label("This browser does not support touch events"));
     }
 }
 
@@ -70,8 +69,7 @@ class TouchRoot extends UI {
         WebBrowser webBrowser = getSession().getBrowser();
         String screenSize = "" + webBrowser.getScreenWidth() + "x"
                 + webBrowser.getScreenHeight();
-        getContent().addComponent(
-                new Label("Using a touch enabled device with screen size"
-                        + screenSize));
+        setContent(new Label("Using a touch enabled device with screen size"
+                + screenSize));
     }
 }

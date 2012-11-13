@@ -16,10 +16,10 @@ public abstract class TestBase extends AbstractTestCase {
 
         Label label = new Label(getDescription(), ContentMode.HTML);
         label.setWidth("100%");
-        window.getContent().addComponent(label);
+        window.addComponent(label);
 
         layout = new VerticalLayout();
-        window.getContent().addComponent(layout);
+        window.addComponent(layout);
         ((VerticalLayout) window.getContent()).setExpandRatio(layout, 1);
 
         setup();

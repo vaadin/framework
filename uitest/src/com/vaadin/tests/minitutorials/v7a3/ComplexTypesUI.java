@@ -25,7 +25,7 @@ public class ComplexTypesUI extends UI {
     protected void init(VaadinRequest request) {
         ComplexTypesComponent complexTypesComponent = new ComplexTypesComponent();
         complexTypesComponent.sendComplexTypes();
-        addComponent(complexTypesComponent);
+        setContent(complexTypesComponent);
     }
 
 }

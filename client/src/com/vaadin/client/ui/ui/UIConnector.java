@@ -337,11 +337,19 @@ public class UIConnector extends AbstractComponentContainerConnector implements
     }
 
     protected ComponentConnector getContent() {
-        return (ComponentConnector) getState().content;
+        List<ComponentConnector> children = getChildComponents();
+        if (children.isEmpty()) {
+            return null;
+        } else {
+            return children.get(0);
+        }
     }
 
     protected void onChildSizeChange() {
         ComponentConnector child = getContent();
+        if (child == null) {
+            return;
+        }
         Style childStyle = child.getWidget().getElement().getStyle();
         /*
          * Must set absolute position if the child has relative height and
@@ -408,12 +416,16 @@ public class UIConnector extends AbstractComponentContainerConnector implements
                 childStateChangeHandlerRegistration.removeHandler();
                 childStateChangeHandlerRegistration = null;
             }
-            getWidget().setWidget(newChild.getWidget());
-            childStateChangeHandlerRegistration = newChild
-                    .addStateChangeHandler(childStateChangeHandler);
-            // Must handle new child here as state change events are already
-            // fired
-            onChildSizeChange();
+            if (newChild != null) {
+                getWidget().setWidget(newChild.getWidget());
+                childStateChangeHandlerRegistration = newChild
+                        .addStateChangeHandler(childStateChangeHandler);
+                // Must handle new child here as state change events are already
+                // fired
+                onChildSizeChange();
+            } else {
+                getWidget().setWidget(null);
+            }
         }
 
         for (ComponentConnector c : getChildComponents()) {
