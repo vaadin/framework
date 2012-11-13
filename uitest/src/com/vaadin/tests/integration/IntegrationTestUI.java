@@ -9,10 +9,15 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 
 public class IntegrationTestUI extends UI {
     @Override
     protected void init(VaadinRequest request) {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        setContent(layout);
+
         final Table table = new Table();
         table.addContainerProperty("icon", Resource.class, null);
         table.setItemIconPropertyId("icon");
@@ -21,7 +26,7 @@ public class IntegrationTestUI extends UI {
         table.setImmediate(true);
         table.setSelectable(true);
         table.setVisibleColumns(new Object[] { "country" });
-        addComponent(table);
+        layout.addComponent(table);
 
         Item item = table.addItem("FI");
         item.getItemProperty("icon").setValue(new ClassResource("fi.gif"));
@@ -37,6 +42,6 @@ public class IntegrationTestUI extends UI {
                 selectedLabel.setValue(String.valueOf(table.getValue()));
             }
         });
-        addComponent(selectedLabel);
+        layout.addComponent(selectedLabel);
     }
 }

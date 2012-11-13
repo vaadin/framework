@@ -37,7 +37,7 @@ public class CreatingPreserveState extends UI {
     public void init(VaadinRequest request) {
         TextField tf = new TextField("Window #" + (++windowCounter));
         tf.setImmediate(true);
-        getContent().addComponent(tf);
+        setContent(tf);
     }
 
 }

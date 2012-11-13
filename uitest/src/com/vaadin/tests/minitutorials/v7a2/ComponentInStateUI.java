@@ -4,6 +4,7 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 
 /**
  * Mini tutorial code for
@@ -17,10 +18,14 @@ import com.vaadin.ui.UI;
 public class ComponentInStateUI extends UI {
     @Override
     protected void init(VaadinRequest request) {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        setContent(layout);
+
         ComponentInStateComponent component = new ComponentInStateComponent();
         component.setOtherComponent(this);
-        addComponent(component);
-        addComponent(new Label("Server-side type of other component: "
+        layout.addComponent(component);
+        layout.addComponent(new Label("Server-side type of other component: "
                 + component.getOtherComponent().getClass().getName()));
     }
 }

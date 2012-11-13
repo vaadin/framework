@@ -16,7 +16,6 @@
 
 package com.vaadin.ui;
 
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -83,32 +82,11 @@ public abstract class AbstractComponentContainer extends AbstractComponent
         }
     }
 
-    /* Events */
-
-    private static final Method COMPONENT_ATTACHED_METHOD;
-
-    private static final Method COMPONENT_DETACHED_METHOD;
-
-    static {
-        try {
-            COMPONENT_ATTACHED_METHOD = ComponentAttachListener.class
-                    .getDeclaredMethod("componentAttachedToContainer",
-                            new Class[] { ComponentAttachEvent.class });
-            COMPONENT_DETACHED_METHOD = ComponentDetachListener.class
-                    .getDeclaredMethod("componentDetachedFromContainer",
-                            new Class[] { ComponentDetachEvent.class });
-        } catch (final java.lang.NoSuchMethodException e) {
-            // This should never happen
-            throw new java.lang.RuntimeException(
-                    "Internal error finding methods in AbstractComponentContainer");
-        }
-    }
-
     /* documented in interface */
     @Override
     public void addComponentAttachListener(ComponentAttachListener listener) {
-        addListener(ComponentContainer.ComponentAttachEvent.class, listener,
-                COMPONENT_ATTACHED_METHOD);
+        addListener(ComponentAttachEvent.class, listener,
+                ComponentAttachListener.attachMethod);
     }
 
     /**
@@ -123,9 +101,9 @@ public abstract class AbstractComponentContainer extends AbstractComponent
 
     /* documented in interface */
     @Override
-    public void addComponentDetachListener(ComponentDetachListener listener) {
-        addListener(ComponentContainer.ComponentDetachEvent.class, listener,
-                COMPONENT_DETACHED_METHOD);
+    public void removeComponentAttachListener(ComponentAttachListener listener) {
+        removeListener(ComponentAttachEvent.class, listener,
+                ComponentAttachListener.attachMethod);
     }
 
     /**
@@ -140,9 +118,9 @@ public abstract class AbstractComponentContainer extends AbstractComponent
 
     /* documented in interface */
     @Override
-    public void removeComponentAttachListener(ComponentAttachListener listener) {
-        removeListener(ComponentContainer.ComponentAttachEvent.class, listener,
-                COMPONENT_ATTACHED_METHOD);
+    public void addComponentDetachListener(ComponentDetachListener listener) {
+        addListener(ComponentDetachEvent.class, listener,
+                ComponentDetachListener.detachMethod);
     }
 
     /**
@@ -158,8 +136,8 @@ public abstract class AbstractComponentContainer extends AbstractComponent
     /* documented in interface */
     @Override
     public void removeComponentDetachListener(ComponentDetachListener listener) {
-        removeListener(ComponentContainer.ComponentDetachEvent.class, listener,
-                COMPONENT_DETACHED_METHOD);
+        removeListener(ComponentDetachEvent.class, listener,
+                ComponentDetachListener.detachMethod);
     }
 
     /**
@@ -218,9 +196,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
 
         if (c.getParent() != null) {
             // If the component already has a parent, try to remove it
-            ComponentContainer oldParent = (ComponentContainer) c.getParent();
-            oldParent.removeComponent(c);
-
+            AbstractSingleComponentContainer.removeFromParent(c);
         }
 
         c.setParent(this);
@@ -250,7 +226,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
 
         super.setVisible(visible);
         // If the visibility state is toggled it might affect all children
-        // aswell, e.g. make container visible should make children visible if
+        // as well, e.g. make container visible should make children visible if
         // they were only hidden because the container was hidden.
         markAsDirtyRecursive();
     }
@@ -315,30 +291,15 @@ public abstract class AbstractComponentContainer extends AbstractComponent
 
     private Collection<Component> getInvalidSizedChildren(final boolean vertical) {
         HashSet<Component> components = null;
-        if (this instanceof Panel) {
-            Panel p = (Panel) this;
-            ComponentContainer content = p.getContent();
+        for (Component component : this) {
             boolean valid = vertical ? ComponentSizeValidator
-                    .checkHeights(content) : ComponentSizeValidator
-                    .checkWidths(content);
-
+                    .checkHeights(component) : ComponentSizeValidator
+                    .checkWidths(component);
             if (!valid) {
-                components = new HashSet<Component>(1);
-                components.add(content);
-            }
-        } else {
-            for (Iterator<Component> componentIterator = getComponentIterator(); componentIterator
-                    .hasNext();) {
-                Component component = componentIterator.next();
-                boolean valid = vertical ? ComponentSizeValidator
-                        .checkHeights(component) : ComponentSizeValidator
-                        .checkWidths(component);
-                if (!valid) {
-                    if (components == null) {
-                        components = new HashSet<Component>();
-                    }
-                    components.add(component);
+                if (components == null) {
+                    components = new HashSet<Component>();
                 }
+                components.add(component);
             }
         }
         return components;

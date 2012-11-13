@@ -113,6 +113,10 @@ public class NavigatorTest extends UI {
     @Override
     protected void init(VaadinRequest req) {
         try {
+            VerticalLayout layout = new VerticalLayout();
+            layout.setMargin(true);
+            setContent(layout);
+
             navi = new Navigator(this, naviLayout);
 
             navi.addView("", new DefaultView());
@@ -127,13 +131,13 @@ public class NavigatorTest extends UI {
 
             navi.navigate();
 
-            addComponent(new NaviButton("list"));
-            addComponent(new NaviButton("edit"));
-            addComponent(new NaviButton("forbidden"));
+            layout.addComponent(new NaviButton("list"));
+            layout.addComponent(new NaviButton("edit"));
+            layout.addComponent(new NaviButton("forbidden"));
 
-            addComponent(params);
-            addComponent(log);
-            addComponent(naviLayout);
+            layout.addComponent(params);
+            layout.addComponent(log);
+            layout.addComponent(naviLayout);
         } catch (Exception e) {
             e.printStackTrace();
             log.log("Exception: " + e);
