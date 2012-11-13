@@ -29,7 +29,7 @@ import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.Page;
-import com.vaadin.server.Page.FragmentChangedEvent;
+import com.vaadin.server.Page.UriFragmentChangedEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalSplitPanel;
@@ -131,10 +131,10 @@ public class TestBench extends com.vaadin.server.LegacyApplication implements
         VerticalLayout lo = new VerticalLayout();
         lo.addComponent(menu);
 
-        mainWindow.getPage().addListener(new Page.FragmentChangedListener() {
+        mainWindow.getPage().addListener(new Page.UriFragmentChangedListener() {
             @Override
-            public void fragmentChanged(FragmentChangedEvent source) {
-                String fragment = source.getFragment();
+            public void uriFragmentChanged(UriFragmentChangedEvent source) {
+                String fragment = source.getUriFragment();
                 if (fragment != null && !"".equals(fragment)) {
                     // try to find a proper test class
 

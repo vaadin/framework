@@ -23,8 +23,8 @@ import java.util.List;
 
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
-import com.vaadin.server.Page.FragmentChangedEvent;
-import com.vaadin.server.Page.FragmentChangedListener;
+import com.vaadin.server.Page.UriFragmentChangedEvent;
+import com.vaadin.server.Page.UriFragmentChangedListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -84,7 +84,7 @@ public class Navigator implements Serializable {
      * and static to enable testing.
      */
     public static class UriFragmentManager implements NavigationStateManager,
-            FragmentChangedListener {
+            UriFragmentChangedListener {
         private final Page page;
         private Navigator navigator;
 
@@ -97,7 +97,7 @@ public class Navigator implements Serializable {
          */
         public UriFragmentManager(Page page) {
             this.page = page;
-            page.addFragmentChangedListener(this);
+            page.addUriFragmentChangedListener(this);
         }
 
         @Override
@@ -121,7 +121,7 @@ public class Navigator implements Serializable {
         }
 
         @Override
-        public void fragmentChanged(FragmentChangedEvent event) {
+        public void uriFragmentChanged(UriFragmentChangedEvent event) {
             navigator.navigateTo(getState());
         }
 
@@ -131,7 +131,7 @@ public class Navigator implements Serializable {
          * @return The URI fragment.
          */
         protected String getFragment() {
-            return page.getFragment();
+            return page.getUriFragment();
         }
 
         /**
@@ -141,7 +141,7 @@ public class Navigator implements Serializable {
          *            The new URI fragment.
          */
         protected void setFragment(String fragment) {
-            page.setFragment(fragment, false);
+            page.setUriFragment(fragment, false);
         }
     }
 

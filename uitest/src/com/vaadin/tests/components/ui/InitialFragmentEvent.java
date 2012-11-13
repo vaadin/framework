@@ -1,7 +1,7 @@
 package com.vaadin.tests.components.ui;
 
-import com.vaadin.server.Page.FragmentChangedEvent;
-import com.vaadin.server.Page.FragmentChangedListener;
+import com.vaadin.server.Page.UriFragmentChangedEvent;
+import com.vaadin.server.Page.UriFragmentChangedListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Log;
@@ -15,10 +15,10 @@ public class InitialFragmentEvent extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        getPage().addFragmentChangedListener(new FragmentChangedListener() {
+        getPage().addUriFragmentChangedListener(new UriFragmentChangedListener() {
 
-            public void fragmentChanged(FragmentChangedEvent source) {
-                String newFragment = source.getFragment();
+            public void uriFragmentChanged(UriFragmentChangedEvent source) {
+                String newFragment = source.getUriFragment();
                 log.log("Fragment changed from " + lastKnownFragment + " to "
                         + newFragment);
                 lastKnownFragment = newFragment;
@@ -42,7 +42,7 @@ public class InitialFragmentEvent extends AbstractTestUI {
     }
 
     protected void setFragment(String fragment) {
-        getPage().setFragment(fragment);
+        getPage().setUriFragment(fragment);
     }
 
     @Override

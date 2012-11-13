@@ -16,8 +16,8 @@
 
 package com.vaadin.tests.minitutorials.v7a1;
 
-import com.vaadin.server.Page.FragmentChangedEvent;
-import com.vaadin.server.Page.FragmentChangedListener;
+import com.vaadin.server.Page.UriFragmentChangedEvent;
+import com.vaadin.server.Page.UriFragmentChangedListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -36,26 +36,26 @@ public class UsingUriFragments extends UI {
     @Override
     protected void init(VaadinRequest request) {
         Label label = new Label("Hello, your fragment is "
-                + getPage().getFragment());
+                + getPage().getUriFragment());
         getContent().addComponent(label);
 
         // React to fragment changes
-        getPage().addListener(new FragmentChangedListener() {
+        getPage().addListener(new UriFragmentChangedListener() {
             @Override
-            public void fragmentChanged(FragmentChangedEvent source) {
-                handleFragment(source.getFragment());
+            public void uriFragmentChanged(UriFragmentChangedEvent source) {
+                handleFragment(source.getUriFragment());
             }
         });
 
         // Handle the fragment received in the initial request
-        handleFragment(getPage().getFragment());
+        handleFragment(getPage().getUriFragment());
 
         addComponent(new Button("Show and set fragment",
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        handleFragment(getPage().getFragment());
-                        getPage().setFragment("customFragment");
+                        handleFragment(getPage().getUriFragment());
+                        getPage().setUriFragment("customFragment");
                     }
                 }));
     }

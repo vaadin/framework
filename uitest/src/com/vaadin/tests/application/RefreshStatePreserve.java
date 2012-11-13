@@ -1,8 +1,8 @@
 package com.vaadin.tests.application;
 
 import com.vaadin.annotations.PreserveOnRefresh;
-import com.vaadin.server.Page.FragmentChangedEvent;
-import com.vaadin.server.Page.FragmentChangedListener;
+import com.vaadin.server.Page.UriFragmentChangedEvent;
+import com.vaadin.server.Page.UriFragmentChangedListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Log;
@@ -20,11 +20,11 @@ public class RefreshStatePreserve extends AbstractTestUI {
         addComponent(new Label("UI id: " + getUIId()));
         addComponent(log);
 
-        log.log("Initial fragment: " + getPage().getFragment());
-        getPage().addFragmentChangedListener(new FragmentChangedListener() {
+        log.log("Initial fragment: " + getPage().getUriFragment());
+        getPage().addUriFragmentChangedListener(new UriFragmentChangedListener() {
             @Override
-            public void fragmentChanged(FragmentChangedEvent event) {
-                log.log("Fragment changed to " + event.getFragment());
+            public void uriFragmentChanged(UriFragmentChangedEvent event) {
+                log.log("Fragment changed to " + event.getUriFragment());
             }
         });
     }
