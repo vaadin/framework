@@ -69,9 +69,9 @@ import com.vaadin.util.ReflectTools;
  * After a UI has been created by the application, it is initialized using
  * {@link #init(VaadinRequest)}. This method is intended to be overridden by the
  * developer to add components to the user interface and initialize
- * non-component functionality. The component hierarchy is initialized by
- * passing a {@link ComponentContainer} with the main layout of the view to
- * {@link #setContent(ComponentContainer)}.
+ * non-component functionality. The component hierarchy must be initialized by
+ * passing a {@link Component} with the main layout or other content of the view
+ * to {@link #setContent(Component)} or to the constructor of the UI.
  * </p>
  * 
  * @see #init(VaadinRequest)
@@ -79,7 +79,7 @@ import com.vaadin.util.ReflectTools;
  * 
  * @since 7.0
  */
-public abstract class UI extends AbstractComponentContainer implements
+public abstract class UI extends AbstractBasicComponentContainer implements
         Action.Container, Action.Notifier, LegacyComponent {
 
     /**
@@ -178,22 +178,23 @@ public abstract class UI extends AbstractComponentContainer implements
     private long lastUidlRequest = System.currentTimeMillis();
 
     /**
-     * Creates a new empty UI without a caption. This UI will have a
-     * {@link VerticalLayout} with margins enabled as its content.
+     * Creates a new empty UI without a caption. The content of the UI must be
+     * set by calling {@link #setContent(Component)} before using the UI.
      */
     public UI() {
-        this((ComponentContainer) null);
+        this(null);
     }
 
     /**
-     * Creates a new UI with the given component container as its content.
+     * Creates a new UI with the given component (often a layout) as its
+     * content.
      * 
      * @param content
-     *            the content container to use as this UIs content.
+     *            the component to use as this UIs content.
      * 
-     * @see #setContent(ComponentContainer)
+     * @see #setContent(Component)
      */
-    public UI(ComponentContainer content) {
+    public UI(Component content) {
         registerRpc(rpc);
         setSizeFull();
         setContent(content);
@@ -221,15 +222,6 @@ public abstract class UI extends AbstractComponentContainer implements
     @Override
     public UI getUI() {
         return this;
-    }
-
-    /**
-     * This implementation replaces a component in the content container (
-     * {@link #getContent()}) instead of in the actual UI.
-     */
-    @Override
-    public void replaceComponent(Component oldComponent, Component newComponent) {
-        getContent().replaceComponent(oldComponent, newComponent);
     }
 
     /**
@@ -330,7 +322,7 @@ public abstract class UI extends AbstractComponentContainer implements
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.ui.ComponentContainer#getComponentIterator()
+     * @see com.vaadin.ui.HasComponents#iterator()
      */
     @Override
     public Iterator<Component> iterator() {
@@ -538,89 +530,6 @@ public abstract class UI extends AbstractComponentContainer implements
         }
         scrollIntoView = component;
         markAsDirty();
-    }
-
-    /**
-     * Gets the content of this UI. The content is a component container that
-     * serves as the outermost item of the visual contents of this UI.
-     * 
-     * @return a component container to use as content
-     * 
-     * @see #setContent(ComponentContainer)
-     * @see #createDefaultLayout()
-     */
-    public ComponentContainer getContent() {
-        return (ComponentContainer) getState().content;
-    }
-
-    /**
-     * Helper method to create the default content layout that is used if no
-     * content has not been explicitly defined.
-     * 
-     * @return a newly created layout
-     */
-    private static VerticalLayout createDefaultLayout() {
-        VerticalLayout layout = new VerticalLayout();
-        layout.setMargin(true);
-        return layout;
-    }
-
-    /**
-     * Sets the content of this UI. The content is a component container that
-     * serves as the outermost item of the visual contents of this UI. If no
-     * content has been set, a {@link VerticalLayout} with margins enabled will
-     * be used by default - see {@link #createDefaultLayout()}. The content can
-     * also be set in a constructor.
-     * 
-     * @return a component container to use as content
-     * 
-     * @see #UI(ComponentContainer)
-     * @see #createDefaultLayout()
-     */
-    public void setContent(ComponentContainer content) {
-        if (content == null) {
-            content = createDefaultLayout();
-        }
-
-        if (getState().content != null) {
-            super.removeComponent((Component) getState().content);
-        }
-        getState().content = content;
-        if (content != null) {
-            super.addComponent(content);
-        }
-    }
-
-    /**
-     * Adds a component to this UI. The component is not added directly to the
-     * UI, but instead to the content container ({@link #getContent()}).
-     * 
-     * @param component
-     *            the component to add to this UI
-     * 
-     * @see #getContent()
-     */
-    @Override
-    public void addComponent(Component component) {
-        getContent().addComponent(component);
-    }
-
-    /**
-     * This implementation removes the component from the content container (
-     * {@link #getContent()}) instead of from the actual UI.
-     */
-    @Override
-    public void removeComponent(Component component) {
-        getContent().removeComponent(component);
-    }
-
-    /**
-     * This implementation removes the components from the content container (
-     * {@link #getContent()}) instead of from the actual UI.
-     */
-    @Override
-    public void removeAllComponents() {
-        getContent().removeAllComponents();
     }
 
     /**

@@ -31,7 +31,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.UI;
 
-public class LettingUserDownladFile extends UI {
+public class LettingUserDownloadFile extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
@@ -41,7 +41,7 @@ public class LettingUserDownladFile extends UI {
         FileDownloader fileDownloader = new FileDownloader(myResource);
         fileDownloader.extend(downloadButton);
 
-        addComponent(downloadButton);
+        setContent(downloadButton);
     }
 
     private StreamResource createResource() {

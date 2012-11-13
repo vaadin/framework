@@ -15,7 +15,7 @@ public class Ticket2101 extends LegacyApplication {
                 "Button with a long text which will not fit on 50 pixels");
         b.setWidth("50px");
 
-        w.getContent().addComponent(b);
+        w.addComponent(b);
     }
 
 }

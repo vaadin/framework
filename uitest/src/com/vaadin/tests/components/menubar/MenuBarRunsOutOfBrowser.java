@@ -23,7 +23,7 @@ public class MenuBarRunsOutOfBrowser extends AbstractTestCase {
         menuBar.addItem("ABC", new ThemeResource("icons/16/document.png"), null);
         menuBar.addItem("123", new ThemeResource("icons/16/help.png"), null);
 
-        main.getContent().addComponent(menuBar);
+        main.addComponent(menuBar);
         ((VerticalLayout) main.getContent()).setComponentAlignment(menuBar,
                 Alignment.TOP_RIGHT);
 

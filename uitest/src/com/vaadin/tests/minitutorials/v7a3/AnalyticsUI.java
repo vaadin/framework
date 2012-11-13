@@ -28,7 +28,7 @@ public class AnalyticsUI extends UI {
         final Analytics analytics = new Analytics("UA-33036133-12");
         analytics.extend(this);
 
-        addComponent(new Button("Track pageview", new Button.ClickListener() {
+        setContent(new Button("Track pageview", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 analytics.trackPageview("/fake/url");

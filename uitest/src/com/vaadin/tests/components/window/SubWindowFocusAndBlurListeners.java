@@ -10,6 +10,7 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -68,7 +69,7 @@ public class SubWindowFocusAndBlurListeners extends TestBase {
 
         main.addWindow(window);
 
-        main.addComponent(new TextField());
+        ((ComponentContainer) main.getContent()).addComponent(new TextField());
 
         Button button = new Button("Bring to front (should focus too)",
                 new Button.ClickListener() {
@@ -77,7 +78,7 @@ public class SubWindowFocusAndBlurListeners extends TestBase {
                         window.bringToFront();
                     }
                 });
-        main.addComponent(button);
+        ((ComponentContainer) main.getContent()).addComponent(button);
 
         Window window2 = new Window("Another window for testing");
         main.addWindow(window2);

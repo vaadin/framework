@@ -16,8 +16,6 @@
 package com.vaadin.shared.ui.ui;
 
 import com.vaadin.shared.ComponentState;
-import com.vaadin.shared.Connector;
 
 public class UIState extends ComponentState {
-    public Connector content;
 }

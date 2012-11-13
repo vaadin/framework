@@ -55,7 +55,7 @@ public class FindCurrentUI extends UI {
             }
         });
 
-        addComponent(helloButton);
+        setContent(helloButton);
     }
 
 }
