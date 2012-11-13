@@ -18,11 +18,9 @@ package com.vaadin.ui;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Iterator;
-import java.util.Map;
 
-import com.vaadin.server.LegacyPaint;
-import com.vaadin.server.PaintException;
-import com.vaadin.server.PaintTarget;
+import com.vaadin.client.ui.popupview.PopupViewServerRpc;
+import com.vaadin.client.ui.popupview.PopupViewState;
 
 /**
  * 
@@ -34,8 +32,7 @@ import com.vaadin.server.PaintTarget;
  * @author Vaadin Ltd.
  */
 @SuppressWarnings("serial")
-public class PopupView extends AbstractComponentContainer implements
-        LegacyComponent {
+public class PopupView extends AbstractComponentContainer {
 
     private Content content;
     private boolean hideOnMouseOut;
@@ -53,6 +50,14 @@ public class PopupView extends AbstractComponentContainer implements
                     "Internal error finding methods in PopupView");
         }
     }
+
+    private final PopupViewServerRpc rpc = new PopupViewServerRpc() {
+
+        @Override
+        public void setPopupVisibility(Boolean visible) {
+            setPopupVisible(visible);
+        }
+    };
 
     /**
      * Iterator for the visible components (zero or one components), used by
@@ -126,8 +131,11 @@ public class PopupView extends AbstractComponentContainer implements
      */
     public PopupView(PopupView.Content content) {
         super();
+        registerRpc(rpc);
         hideOnMouseOut = true;
         setContent(content);
+        getState().hideOnMouseOut = hideOnMouseOut;
+        setHtml();
     }
 
     /**
@@ -166,6 +174,8 @@ public class PopupView extends AbstractComponentContainer implements
      */
     public void setPopupVisible(boolean visible) {
         if (isPopupVisible() != visible) {
+            setHtml();
+            getState().hideOnMouseOut = hideOnMouseOut;
             if (visible) {
                 visibleComponent = content.getPopupComponent();
                 if (visibleComponent == null) {
@@ -180,6 +190,14 @@ public class PopupView extends AbstractComponentContainer implements
             fireEvent(new PopupVisibilityEvent(this));
             markAsDirty();
         }
+    }
+
+    private void setHtml() {
+        String html = content.getMinimizedValueAsHTML();
+        if (html == null) {
+            html = "";
+        }
+        getState().html = html;
     }
 
     /**
@@ -301,46 +319,9 @@ public class PopupView extends AbstractComponentContainer implements
 
     }
 
-    /*
-     * Methods for server-client communications.
-     */
-
-    /**
-     * Paint (serialize) the component for the client.
-     * 
-     * @see com.vaadin.ui.AbstractComponent#paintContent(com.vaadin.server.PaintTarget)
-     */
     @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        String html = content.getMinimizedValueAsHTML();
-        if (html == null) {
-            html = "";
-        }
-        target.addAttribute("html", html);
-        target.addAttribute("hideOnMouseOut", hideOnMouseOut);
-
-        // Only paint component to client if we know that the popup is showing
-        if (isPopupVisible()) {
-            target.startTag("popupComponent");
-            LegacyPaint.paint(visibleComponent, target);
-            target.endTag("popupComponent");
-        }
-
-        target.addVariable(this, "popupVisibility", isPopupVisible());
-    }
-
-    /**
-     * Deserialize changes received from client.
-     * 
-     * @see com.vaadin.ui.AbstractComponent#changeVariables(java.lang.Object,
-     *      java.util.Map)
-     */
-    @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-        if (variables.containsKey("popupVisibility")) {
-            setPopupVisible(((Boolean) variables.get("popupVisibility"))
-                    .booleanValue());
-        }
+    protected PopupViewState getState() {
+        return (PopupViewState) super.getState();
     }
 
     /**

@@ -26,6 +26,7 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -36,9 +37,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.UIDL;
 import com.vaadin.client.VCaptionWrapper;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.ShortcutActionHandler;
@@ -49,10 +48,6 @@ import com.vaadin.client.ui.richtextarea.VRichTextArea;
 public class VPopupView extends HTML {
 
     public static final String CLASSNAME = "v-popupview";
-
-    /** For server-client communication */
-    String uidlId;
-    ApplicationConnection client;
 
     /** This variable helps to communicate popup visibility to the server */
     boolean hostPopupVisible;
@@ -99,11 +94,7 @@ public class VPopupView extends HTML {
      * @param visibility
      */
     private void updateState(boolean visible) {
-        // If we know the server connection
-        // then update the current situation
-        if (uidlId != null && client != null && isAttached()) {
-            client.updateVariable(uidlId, "popupVisibility", visible, true);
-        }
+        fireEvent(new VisibilityChangeEvent(visible));
     }
 
     void preparePopup(final CustomPopup popup) {
@@ -191,7 +182,7 @@ public class VPopupView extends HTML {
      */
     protected class CustomPopup extends VOverlay {
 
-        private ComponentConnector popupComponentPaintable = null;
+        private ComponentConnector popupComponentConnector = null;
         Widget popupComponentWidget = null;
         VCaptionWrapper captionWrapper = null;
 
@@ -327,23 +318,20 @@ public class VPopupView extends HTML {
         @Override
         public boolean remove(Widget w) {
 
-            popupComponentPaintable = null;
+            popupComponentConnector = null;
             popupComponentWidget = null;
             captionWrapper = null;
 
             return super.remove(w);
         }
 
-        public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+        public void setPopupConnector(ComponentConnector newPopupComponent) {
 
-            ComponentConnector newPopupComponent = client.getPaintable(uidl
-                    .getChildUIDL(0));
-
-            if (newPopupComponent != popupComponentPaintable) {
+            if (newPopupComponent != popupComponentConnector) {
                 Widget newWidget = newPopupComponent.getWidget();
                 setWidget(newWidget);
                 popupComponentWidget = newWidget;
-                popupComponentPaintable = newPopupComponent;
+                popupComponentConnector = newPopupComponent;
             }
 
         }
@@ -383,5 +371,11 @@ public class VPopupView extends HTML {
         }
 
     }// class CustomPopup
+
+    public HandlerRegistration addVisibilityChangeEventHandler(
+            final VisibilityChangeEventHandler visibilityChangeEventHandler) {
+        return addHandler(visibilityChangeEventHandler,
+                VisibilityChangeEvent.getType());
+    }
 
 }// class VPopupView
