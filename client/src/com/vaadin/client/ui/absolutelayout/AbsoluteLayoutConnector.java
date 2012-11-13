@@ -155,12 +155,6 @@ public class AbsoluteLayoutConnector extends
 
         // TODO Margin handling
 
-        for (ComponentConnector child : getChildComponents()) {
-            getWidget().setWidgetPosition(
-                    child.getWidget(),
-                    getState().connectorToCssPosition.get(child
-                            .getConnectorId()));
-        }
     };
 
     /*
@@ -183,6 +177,12 @@ public class AbsoluteLayoutConnector extends
                 getWidget().remove(oldChild.getWidget());
                 oldChild.removeStateChangeHandler(childStateChangeHandler);
             }
+        }
+        for (ComponentConnector child : getChildComponents()) {
+            getWidget().setWidgetPosition(
+                    child.getWidget(),
+                    getState().connectorToCssPosition.get(child
+                            .getConnectorId()));
         }
     }
 
