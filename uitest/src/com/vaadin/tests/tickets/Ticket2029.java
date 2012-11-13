@@ -32,9 +32,9 @@ public class Ticket2029 extends LegacyApplication {
         setMainWindow(w);
         // setTheme("tests-tickets");
         Panel p = createPanel();
-        w.getContent().addComponent(p);
+        w.addComponent(p);
         // w.getLayout().addComponent(createGLPanel());
-        w.getContent().addComponent(createPanelV());
+        w.addComponent(createPanelV());
     }
 
     private Panel createPanel() {

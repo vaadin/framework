@@ -19,6 +19,7 @@ package com.vaadin.tests.minitutorials.v7a1;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 
 /**
  * Mini tutorial code for
@@ -32,18 +33,22 @@ public class UsingXyzWhenInitializing extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        setContent(layout);
+
         String name = request.getParameter("name");
         if (name == null) {
             name = "Unknown";
         }
 
-        getContent().addComponent(new Label("Hello " + name));
+        layout.addComponent(new Label("Hello " + name));
 
         String pathInfo = request.getRequestPathInfo();
         if ("/viewSource".equals(pathInfo)) {
-            getContent().addComponent(new Label("This is the source"));
+            layout.addComponent(new Label("This is the source"));
         } else {
-            getContent().addComponent(new Label("Welcome to my application"));
+            layout.addComponent(new Label("Welcome to my application"));
         }
 
         // WebBrowser browser = request.getBrowserDetails().getWebBrowser();

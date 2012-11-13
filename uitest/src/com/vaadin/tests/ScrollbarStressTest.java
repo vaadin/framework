@@ -126,7 +126,7 @@ public class ScrollbarStressTest extends LegacyApplication {
 
         el.addComponent(ol);
 
-        main.getContent().addComponent(el);
+        main.addComponent(el);
         main.removeWindow(subwindow);
 
     }

@@ -39,7 +39,7 @@ public class JSAPIUI extends UI {
                     }
                 });
 
-        addComponent(new Link(
+        setContent(new Link(
                 "Send message",
                 new ExternalResource(
                         "javascript:(function(){com.example.api.notify(prompt('Message'),2);})();")));

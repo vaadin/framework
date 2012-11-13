@@ -21,6 +21,7 @@ import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 
 /**
  * Mini tutorial code for
@@ -34,6 +35,10 @@ public class AutoGeneratingForm extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        setContent(layout);
+
         FieldGroup fieldGroup = new BeanFieldGroup<Person>(Person.class);
 
         // We need an item data source before we create the fields to be able to
@@ -44,7 +49,7 @@ public class AutoGeneratingForm extends UI {
         // Loop through the properties, build fields for them and add the fields
         // to this root
         for (Object propertyId : fieldGroup.getUnboundPropertyIds()) {
-            addComponent(fieldGroup.buildAndBind(propertyId));
+            layout.addComponent(fieldGroup.buildAndBind(propertyId));
         }
     }
 

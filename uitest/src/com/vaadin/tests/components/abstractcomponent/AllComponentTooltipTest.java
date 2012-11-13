@@ -27,7 +27,8 @@ public class AllComponentTooltipTest extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        setContent(new GridLayout(5, 5));
+        GridLayout layout = new GridLayout(5, 5);
+        setContent(layout);
         for (Class<? extends Component> cls : VaadinClasses.getComponents()) {
             try {
                 AbstractComponent c = (AbstractComponent) cls.newInstance();
@@ -40,7 +41,7 @@ public class AllComponentTooltipTest extends AbstractTestUI {
                 c.setDescription(cls.getName());
                 c.setWidth("100px");
                 c.setHeight("100px");
-                getContent().addComponent(c);
+                layout.addComponent(c);
                 System.out.println("Added " + cls.getName());
             } catch (Exception e) {
                 System.err.println("Could not instatiate " + cls.getName());

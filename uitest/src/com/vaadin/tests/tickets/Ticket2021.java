@@ -38,7 +38,7 @@ public class Ticket2021 extends LegacyApplication {
         p.setContent(new VerticalLayout());
         p.getContent().setSizeFull();
 
-        w.getContent().addComponent(p);
+        w.addComponent(p);
 
         tf1 = new TextArea();
         tf1.setRows(5);
@@ -59,7 +59,7 @@ public class Ticket2021 extends LegacyApplication {
         p2.setContent(new VerticalLayout());
         p2.getContent().setSizeFull();
 
-        w.getContent().addComponent(p2);
+        w.addComponent(p2);
 
         tf2 = new TextArea();
         tf2.setRows(5);
@@ -85,7 +85,7 @@ public class Ticket2021 extends LegacyApplication {
         gl.setSizeFull();
         gl.setMargin(false);
         p3.getContent().addComponent(gl);
-        w.getContent().addComponent(p3);
+        w.addComponent(p3);
 
         tf3 = new TextArea();
         tf3.setRows(5);
