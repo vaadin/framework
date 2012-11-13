@@ -341,9 +341,6 @@
 			<artifacts pattern="${result.dir}/lib/[artifact]-[revision](-[classifier]).[ext]" />
 
 		</ivy:publish>
-		<ivy:publish settingsref="ivysettings" conf="${conf}" resolver="local-maven" overwrite="true">
-			<artifacts pattern="${result.dir}/lib/[artifact]-[revision](-[classifier]).[ext]" />
-		</ivy:publish>
 	</target>
 
 	<target name="publish.to.local.maven">
