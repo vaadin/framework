@@ -497,12 +497,12 @@ public class Navigator implements Serializable {
             }
         }
 
-        view.enter(event);
-        currentView = view;
-
         if (display != null) {
             display.showView(view);
         }
+
+        view.enter(event);
+        currentView = view;
 
         fireAfterViewChange(event);
     }
