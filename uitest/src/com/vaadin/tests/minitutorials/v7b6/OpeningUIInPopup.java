@@ -31,7 +31,7 @@ public class OpeningUIInPopup extends UI {
         popupOpener.setFeatures("height=300,width=300");
         popupOpener.extend(popupButton);
 
-        addComponent(popupButton);
+        setContent(popupButton);
     }
 
 }

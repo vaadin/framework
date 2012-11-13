@@ -36,22 +36,28 @@ public class SettingReadingSessionAttributesUI extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        addComponent(statusHolder);
-        addComponent(textField);
-        addComponent(new Button("Set new values", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                String value = textField.getValue();
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        setContent(layout);
 
-                saveValue(SettingReadingSessionAttributesUI.this, value);
-            }
-        }));
-        addComponent(new Button("Reload page", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                getPage().setLocation(getPage().getLocation());
-            }
-        }));
+        layout.addComponent(statusHolder);
+        layout.addComponent(textField);
+        layout.addComponent(new Button("Set new values",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        String value = textField.getValue();
+
+                        saveValue(SettingReadingSessionAttributesUI.this, value);
+                    }
+                }));
+        layout.addComponent(new Button("Reload page",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        getPage().setLocation(getPage().getLocation());
+                    }
+                }));
 
         showValue(this);
     }

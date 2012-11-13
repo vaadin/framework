@@ -23,8 +23,8 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServiceSession;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
-import com.vaadin.ui.UI;
 
 /**
  * Provides sample directory based on application directory. If this fails then
@@ -42,7 +42,8 @@ public class SampleDirectory {
      * @param application
      * @return file pointing to sample directory
      */
-    public static File getDirectory(VaadinServiceSession application, UI uI) {
+    public static File getDirectory(VaadinServiceSession application,
+            LegacyWindow uI) {
         String errorMessage = "Access to application "
                 + "context base directory failed, "
                 + "possible security constraint with Application "
@@ -82,9 +83,9 @@ public class SampleDirectory {
                 "Cannot provide sample directory"));
         errorPanel.addComponent(new Label(errorMessage, ContentMode.HTML));
         // Remove all components from applications main window
-        uI.getContent().removeAllComponents();
+        uI.removeAllComponents();
         // Add error panel
-        uI.getContent().addComponent(errorPanel);
+        uI.addComponent(errorPanel);
         return null;
     }
 }

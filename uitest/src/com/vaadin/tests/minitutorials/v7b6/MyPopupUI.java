@@ -24,7 +24,7 @@ public class MyPopupUI extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        addComponent(new Label("This is MyPopupUI"));
+        setContent(new Label("This is MyPopupUI"));
     }
 
 }

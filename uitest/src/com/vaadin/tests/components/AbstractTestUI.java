@@ -17,10 +17,14 @@ public abstract class AbstractTestUI extends UI {
         Label label = new Label(getTestDescription(), ContentMode.HTML);
         label.setWidth("100%");
 
+        VerticalLayout rootLayout = new VerticalLayout();
+        rootLayout.setMargin(true);
+        setContent(rootLayout);
+
         layout = new VerticalLayout();
 
-        getContent().addComponent(label);
-        getContent().addComponent(layout);
+        rootLayout.addComponent(label);
+        rootLayout.addComponent(layout);
         ((VerticalLayout) getContent()).setExpandRatio(layout, 1);
 
         setup(request);
@@ -34,17 +38,14 @@ public abstract class AbstractTestUI extends UI {
 
     protected abstract void setup(VaadinRequest request);
 
-    @Override
     public void addComponent(Component c) {
         getLayout().addComponent(c);
     }
 
-    @Override
     public void removeComponent(Component c) {
         getLayout().removeComponent(c);
     }
 
-    @Override
     public void replaceComponent(Component oldComponent, Component newComponent) {
         getLayout().replaceComponent(oldComponent, newComponent);
     }
