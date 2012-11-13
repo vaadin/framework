@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -45,7 +46,7 @@ import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.popupview.VisibilityChangeEvent;
 import com.vaadin.client.ui.popupview.VisibilityChangeHandler;
 
-public class VPopupView extends HTML {
+public class VPopupView extends HTML implements Iterable<Widget> {
 
     public static final String CLASSNAME = "v-popupview";
 
@@ -388,6 +389,10 @@ public class VPopupView extends HTML {
             final VisibilityChangeHandler visibilityChangeHandler) {
         return addHandler(visibilityChangeHandler,
                 VisibilityChangeEvent.getType());
+    }
+
+    public Iterator<Widget> iterator() {
+        return Collections.singleton((Widget) popup).iterator();
     }
 
 }// class VPopupView
