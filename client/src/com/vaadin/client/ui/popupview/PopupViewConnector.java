@@ -15,86 +15,56 @@
  */
 package com.vaadin.client.ui.popupview;
 
-import com.vaadin.client.ApplicationConnection;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
-import com.vaadin.client.Paintable;
-import com.vaadin.client.UIDL;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.VCaptionWrapper;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.popupview.PopupViewServerRpc;
+import com.vaadin.shared.ui.popupview.PopupViewState;
 import com.vaadin.ui.PopupView;
 
 @Connect(PopupView.class)
 public class PopupViewConnector extends AbstractComponentContainerConnector
-        implements Paintable, PostLayoutListener {
+        implements PostLayoutListener, VisibilityChangeHandler {
 
     private boolean centerAfterLayout = false;
+
+    private final List<HandlerRegistration> handlerRegistration = new ArrayList<HandlerRegistration>();
+
+    @Override
+    protected void init() {
+        super.init();
+        
+        handlerRegistration.add(getWidget().addVisibilityChangeHandler(
+                this));
+    }
 
     @Override
     public boolean delegateCaptionHandling() {
         return false;
     }
 
-    /**
-     * 
-     * 
-     * @see com.vaadin.client.ComponentConnector#updateFromUIDL(com.vaadin.client.UIDL,
-     *      com.vaadin.client.ApplicationConnection)
-     */
     @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        if (!isRealUpdate(uidl)) {
-            return;
-        }
-        // These are for future server connections
-        getWidget().client = client;
-        getWidget().uidlId = uidl.getId();
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
 
-        getWidget().hostPopupVisible = uidl
-                .getBooleanVariable("popupVisibility");
+        getWidget().setHTML(getState().html);
+        getWidget().popup.setHideOnMouseOut(getState().hideOnMouseOut);
+    }
 
-        getWidget().setHTML(uidl.getStringAttribute("html"));
-
-        if (uidl.hasAttribute("hideOnMouseOut")) {
-            getWidget().popup.setHideOnMouseOut(uidl
-                    .getBooleanAttribute("hideOnMouseOut"));
-        }
-
-        // Render the popup if visible and show it.
-        if (getWidget().hostPopupVisible) {
-            UIDL popupUIDL = uidl.getChildUIDL(0);
-
-            // showPopupOnTop(popup, hostReference);
-            getWidget().preparePopup(getWidget().popup);
-            getWidget().popup.updateFromUIDL(popupUIDL, client);
-            if (ComponentStateUtil.hasStyles(getState())) {
-                final StringBuffer styleBuf = new StringBuffer();
-                final String primaryName = getWidget().popup
-                        .getStylePrimaryName();
-                styleBuf.append(primaryName);
-                for (String style : getState().styles) {
-                    styleBuf.append(" ");
-                    styleBuf.append(primaryName);
-                    styleBuf.append("-");
-                    styleBuf.append(style);
-                }
-                getWidget().popup.setStyleName(styleBuf.toString());
-            } else {
-                getWidget().popup.setStyleName(getWidget().popup
-                        .getStylePrimaryName());
-            }
-            getWidget().showPopup(getWidget().popup);
-            centerAfterLayout = true;
-
-            // The popup shouldn't be visible, try to hide it.
-        } else {
-            getWidget().popup.hide();
-        }
-    }// updateFromUIDL
+    @Override
+    public PopupViewState getState() {
+        return (PopupViewState) super.getState();
+    }
 
     @Override
     public void updateCaption(ComponentConnector component) {
@@ -131,7 +101,41 @@ public class PopupViewConnector extends AbstractComponentContainerConnector
     @Override
     public void onConnectorHierarchyChange(
             ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
-        // TODO Move code from updateFromUIDL to this method
+        // Render the popup if visible and show it.
+        if (!getChildren().isEmpty()) {
+            getWidget().preparePopup(getWidget().popup);
+            getWidget().popup
+                    .setPopupConnector((ComponentConnector) getChildren()
+                            .get(0));
+            if (ComponentStateUtil.hasStyles(getState())) {
+                final StringBuffer styleBuf = new StringBuffer();
+                final String primaryName = getWidget().popup
+                        .getStylePrimaryName();
+                styleBuf.append(primaryName);
+                for (String style : getState().styles) {
+                    styleBuf.append(" ");
+                    styleBuf.append(primaryName);
+                    styleBuf.append("-");
+                    styleBuf.append(style);
+                }
+                getWidget().popup.setStyleName(styleBuf.toString());
+            } else {
+                getWidget().popup.setStyleName(getWidget().popup
+                        .getStylePrimaryName());
+            }
+            getWidget().showPopup(getWidget().popup);
+            centerAfterLayout = true;
+
+            // The popup shouldn't be visible, try to hide it.
+        } else {
+            getWidget().popup.hide();
+        }
+    }
+
+    @Override
+    public void onVisibilityChange(VisibilityChangeEvent event) {
+        getRpcProxy(PopupViewServerRpc.class).setPopupVisibility(
+                event.isVisible());
     }
 
 }

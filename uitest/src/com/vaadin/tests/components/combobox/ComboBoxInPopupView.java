@@ -1,10 +1,10 @@
 package com.vaadin.tests.components.combobox;
 
-import java.util.Map;
-
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.PopupView;
+import com.vaadin.ui.PopupView.PopupVisibilityEvent;
+import com.vaadin.ui.PopupView.PopupVisibilityListener;
 
 public class ComboBoxInPopupView extends TestBase {
 
@@ -28,15 +28,14 @@ public class ComboBoxInPopupView extends TestBase {
 
         final ComboBox cb2 = new ComboBox();
         cb2.setWidth("260px");
-        PopupView pv2 = new PopupView("<u>2. focused (click)</u>", cb2) {
+        PopupView pv2 = new PopupView("<u>2. focused (click)</u>", cb2);
+        pv2.addListener(new PopupVisibilityListener() {
+
             @Override
-            public void changeVariables(Object source,
-                    Map<String, Object> variables) {
-                super.changeVariables(source, variables);
+            public void popupVisibilityChange(PopupVisibilityEvent event) {
                 cb2.focus();
             }
-
-        };
+        });
         getLayout().addComponent(pv2);
 
     }
