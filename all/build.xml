@@ -93,7 +93,7 @@
 			<fileset dir="${result.dir}/..">
 				<include name="README.TXT" />
 			</fileset>
-			<fileset file="${javadoc.jar}" />
+			<!-- Do not include javadoc jar in zip as it is huge (> 40MB) and most people do not need it. -->
 		</zip>
 	</target>
 
