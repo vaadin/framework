@@ -11,6 +11,7 @@ import com.vaadin.tests.components.AbstractTestUIProvider;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 
 public class LazyInitUIs extends AbstractTestUIProvider {
 
@@ -18,7 +19,11 @@ public class LazyInitUIs extends AbstractTestUIProvider {
     private static class EagerInitUI extends UI {
         @Override
         public void init(VaadinRequest request) {
-            addComponent(getRequestInfo("EagerInitUI", request));
+            VerticalLayout layout = new VerticalLayout();
+            layout.setMargin(true);
+            setContent(layout);
+
+            layout.addComponent(getRequestInfo("EagerInitUI", request));
         }
     }
 
@@ -39,7 +44,11 @@ public class LazyInitUIs extends AbstractTestUIProvider {
             UI uI = new UI() {
                 @Override
                 protected void init(VaadinRequest request) {
-                    addComponent(getRequestInfo("LazyCreateUI", request));
+                    VerticalLayout layout = new VerticalLayout();
+                    layout.setMargin(true);
+                    setContent(layout);
+
+                    layout.addComponent(getRequestInfo("LazyCreateUI", request));
                 }
             };
             return uI;
@@ -51,20 +60,24 @@ public class LazyInitUIs extends AbstractTestUIProvider {
             UI uI = new UI() {
                 @Override
                 protected void init(VaadinRequest request) {
-                    addComponent(getRequestInfo("NormalUI", request));
+                    VerticalLayout layout = new VerticalLayout();
+                    layout.setMargin(true);
+                    setContent(layout);
+
+                    layout.addComponent(getRequestInfo("NormalUI", request));
 
                     String location = getPage().getLocation().toString();
                     Link lazyCreateLink = new Link("Open lazyCreate UI",
                             new ExternalResource(location.replaceFirst(
                                     "(\\?|#|$).*", "?lazyCreate#lazyCreate")));
                     lazyCreateLink.setTargetName("_blank");
-                    addComponent(lazyCreateLink);
+                    layout.addComponent(lazyCreateLink);
 
                     Link lazyInitLink = new Link("Open eagerInit UI",
                             new ExternalResource(location.replaceFirst(
                                     "(\\?|#|$).*", "?eagerInit#eagerInit")));
                     lazyInitLink.setTargetName("_blank");
-                    addComponent(lazyInitLink);
+                    layout.addComponent(lazyInitLink);
                 }
             };
 

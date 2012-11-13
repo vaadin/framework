@@ -19,7 +19,7 @@ public class Ticket2024 extends LegacyApplication {
         layout.setWidth("700");
         w.getContent().setSizeFull();
         w.getContent().setHeight("2000");
-        w.getContent().addComponent(layout);
+        w.addComponent(layout);
 
         layout.addComponent(new Label(
                 "This should NOT get stuck when scrolling down"));
@@ -28,7 +28,7 @@ public class Ticket2024 extends LegacyApplication {
         VerticalLayout ol = new VerticalLayout();
         ol.setHeight("1000");
         ol.setWidth("200");
-        w.getContent().addComponent(ol);
+        w.addComponent(ol);
         ol.addComponent(new Label("Just a label to enable the scrollbar"));
 
     }

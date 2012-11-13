@@ -7,9 +7,9 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.ComponentContainer.ComponentAttachEvent;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HasComponents.ComponentAttachEvent;
+import com.vaadin.ui.HasComponents.ComponentAttachListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.OptionGroup;
@@ -26,7 +26,7 @@ public class LayoutAttachListenerInfo extends TestBase {
                 "AbsoluteLayout", "OrderedLayout", "GridLayout"));
         layouts.select("AbsoluteLayout");
         layouts.setImmediate(true);
-        layouts.addListener(new ValueChangeListener() {
+        layouts.addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
                 if (event.getProperty().getValue().equals("AbsoluteLayout")) {
@@ -64,7 +64,7 @@ public class LayoutAttachListenerInfo extends TestBase {
         final AbsoluteLayout a = new AbsoluteLayout();
         a.setWidth("300px");
         a.setHeight("300px");
-        a.addListener(new ComponentContainer.ComponentAttachListener() {
+        a.addComponentAttachListener(new ComponentAttachListener() {
             @Override
             public void componentAttachedToContainer(ComponentAttachEvent event) {
                 AbsoluteLayout layout = (AbsoluteLayout) event.getContainer();
@@ -93,7 +93,7 @@ public class LayoutAttachListenerInfo extends TestBase {
         final VerticalLayout v = new VerticalLayout();
         v.setWidth("300px");
         v.setHeight("300px");
-        v.addListener(new ComponentContainer.ComponentAttachListener() {
+        v.addComponentAttachListener(new ComponentAttachListener() {
             @Override
             public void componentAttachedToContainer(ComponentAttachEvent event) {
                 VerticalLayout layout = (VerticalLayout) event.getContainer();
@@ -122,7 +122,7 @@ public class LayoutAttachListenerInfo extends TestBase {
         final GridLayout g = new GridLayout(4, 4);
         g.setWidth("300px");
         g.setHeight("300px");
-        g.addListener(new ComponentContainer.ComponentAttachListener() {
+        g.addComponentAttachListener(new ComponentAttachListener() {
             @Override
             public void componentAttachedToContainer(ComponentAttachEvent event) {
                 GridLayout layout = (GridLayout) event.getContainer();

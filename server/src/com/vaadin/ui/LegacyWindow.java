@@ -1,6 +1,6 @@
 /*
 @VaadinApache2LicenseForJavaFiles@
-*/
+ */
 
 package com.vaadin.ui;
 
@@ -9,16 +9,16 @@ import java.net.URL;
 
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.Page;
-import com.vaadin.server.Resource;
-import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.Page.BrowserWindowResizeEvent;
 import com.vaadin.server.Page.BrowserWindowResizeListener;
+import com.vaadin.server.Resource;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.BorderStyle;
 
 /**
- * Helper class to emulate the main window from Vaadin 6 using UIs. This
- * class should be used in the same way as Window used as a browser level
- * window in Vaadin 6 with {@link com.vaadin.server.LegacyApplication}
+ * Helper class to emulate the main window from Vaadin 6 using UIs. This class
+ * should be used in the same way as Window used as a browser level window in
+ * Vaadin 6 with {@link com.vaadin.server.LegacyApplication}
  */
 @Deprecated
 public class LegacyWindow extends UI {
@@ -29,7 +29,8 @@ public class LegacyWindow extends UI {
      * Create a new legacy window
      */
     public LegacyWindow() {
-        super();
+        super(new VerticalLayout());
+        ((VerticalLayout) getContent()).setMargin(true);
     }
 
     /**
@@ -39,7 +40,8 @@ public class LegacyWindow extends UI {
      *            the caption of the window
      */
     public LegacyWindow(String caption) {
-        super();
+        super(new VerticalLayout());
+        ((VerticalLayout) getContent()).setMargin(true);
         setCaption(caption);
     }
 
@@ -71,12 +73,11 @@ public class LegacyWindow extends UI {
      * Gets the unique name of the window. The name of the window is used to
      * uniquely identify it.
      * <p>
-     * The name also determines the URL that can be used for direct access
-     * to a window. All windows can be accessed through
-     * {@code http://host:port/app/win} where {@code http://host:port/app}
-     * is the application URL (as returned by
-     * {@link LegacyApplication#getURL()} and {@code win} is the window
-     * name.
+     * The name also determines the URL that can be used for direct access to a
+     * window. All windows can be accessed through
+     * {@code http://host:port/app/win} where {@code http://host:port/app} is
+     * the application URL (as returned by {@link LegacyApplication#getURL()}
+     * and {@code win} is the window name.
      * </p>
      * <p>
      * Note! Portlets do not support direct window access through URLs.
@@ -92,12 +93,11 @@ public class LegacyWindow extends UI {
      * Sets the unique name of the window. The name of the window is used to
      * uniquely identify it inside the application.
      * <p>
-     * The name also determines the URL that can be used for direct access
-     * to a window. All windows can be accessed through
-     * {@code http://host:port/app/win} where {@code http://host:port/app}
-     * is the application URL (as returned by
-     * {@link LegacyApplication#getURL()} and {@code win} is the window
-     * name.
+     * The name also determines the URL that can be used for direct access to a
+     * window. All windows can be accessed through
+     * {@code http://host:port/app/win} where {@code http://host:port/app} is
+     * the application URL (as returned by {@link LegacyApplication#getURL()}
+     * and {@code win} is the window name.
      * </p>
      * <p>
      * This method can only be called before the window is added to an
@@ -107,8 +107,8 @@ public class LegacyWindow extends UI {
      * </p>
      * 
      * @param name
-     *            the new name for the window or null if the application
-     *            should automatically assign a name to it
+     *            the new name for the window or null if the application should
+     *            automatically assign a name to it
      * @throws IllegalStateException
      *             if the window is attached to an application
      */
@@ -124,14 +124,14 @@ public class LegacyWindow extends UI {
     }
 
     /**
-     * Gets the full URL of the window. The returned URL is window specific
-     * and can be used to directly refer to the window.
+     * Gets the full URL of the window. The returned URL is window specific and
+     * can be used to directly refer to the window.
      * <p>
      * Note! This method can not be used for portlets.
      * </p>
      * 
-     * @return the URL of the window or null if the window is not attached
-     *         to an application
+     * @return the URL of the window or null if the window is not attached to an
+     *         application
      */
     public URL getURL() {
         LegacyApplication application = getApplication();
@@ -148,8 +148,8 @@ public class LegacyWindow extends UI {
     }
 
     /**
-     * Opens the given resource in this UI. The contents of this UI is
-     * replaced by the {@code Resource}.
+     * Opens the given resource in this UI. The contents of this UI is replaced
+     * by the {@code Resource}.
      * 
      * @param resource
      *            the resource to show in this UI
@@ -167,41 +167,39 @@ public class LegacyWindow extends UI {
      * Opens the given resource in a window with the given name.
      * <p>
      * The supplied {@code windowName} is used as the target name in a
-     * window.open call in the client. This means that special values such
-     * as "_blank", "_self", "_top", "_parent" have special meaning. An
-     * empty or <code>null</code> window name is also a special case.
+     * window.open call in the client. This means that special values such as
+     * "_blank", "_self", "_top", "_parent" have special meaning. An empty or
+     * <code>null</code> window name is also a special case.
      * </p>
      * <p>
-     * "", null and "_self" as {@code windowName} all causes the resource to
-     * be opened in the current window, replacing any old contents. For
+     * "", null and "_self" as {@code windowName} all causes the resource to be
+     * opened in the current window, replacing any old contents. For
      * downloadable content you should avoid "_self" as "_self" causes the
      * client to skip rendering of any other changes as it considers them
-     * irrelevant (the page will be replaced by the resource). This can
-     * speed up the opening of a resource, but it might also put the client
-     * side into an inconsistent state if the window content is not
-     * completely replaced e.g., if the resource is downloaded instead of
-     * displayed in the browser.
+     * irrelevant (the page will be replaced by the resource). This can speed up
+     * the opening of a resource, but it might also put the client side into an
+     * inconsistent state if the window content is not completely replaced e.g.,
+     * if the resource is downloaded instead of displayed in the browser.
      * </p>
      * <p>
-     * "_blank" as {@code windowName} causes the resource to always be
-     * opened in a new window or tab (depends on the browser and browser
-     * settings).
+     * "_blank" as {@code windowName} causes the resource to always be opened in
+     * a new window or tab (depends on the browser and browser settings).
      * </p>
      * <p>
-     * "_top" and "_parent" as {@code windowName} works as specified by the
-     * HTML standard.
+     * "_top" and "_parent" as {@code windowName} works as specified by the HTML
+     * standard.
      * </p>
      * <p>
-     * Any other {@code windowName} will open the resource in a window with
-     * that name, either by opening a new window/tab in the browser or by
-     * replacing the contents of an existing window with that name.
+     * Any other {@code windowName} will open the resource in a window with that
+     * name, either by opening a new window/tab in the browser or by replacing
+     * the contents of an existing window with that name.
      * </p>
      * <p>
-     * As of Vaadin 7.0.0, the functionality for opening a Resource in a
-     * Page has been replaced with similar methods based on a String URL.
-     * This is because the usage of Resource is problematic with memory
-     * management and with security features in some browsers. Is is
-     * recommended to instead use {@link Link} for starting downloads.
+     * As of Vaadin 7.0.0, the functionality for opening a Resource in a Page
+     * has been replaced with similar methods based on a String URL. This is
+     * because the usage of Resource is problematic with memory management and
+     * with security features in some browsers. Is is recommended to instead use
+     * {@link Link} for starting downloads.
      * </p>
      * 
      * @param resource
@@ -220,11 +218,11 @@ public class LegacyWindow extends UI {
      * name. For more information on the meaning of {@code windowName}, see
      * {@link #open(Resource, String)}.
      * <p>
-     * As of Vaadin 7.0.0, the functionality for opening a Resource in a
-     * Page has been replaced with similar methods based on a String URL.
-     * This is because the usage of Resource is problematic with memory
-     * management and with security features in some browsers. Is is
-     * recommended to instead use {@link Link} for starting downloads.
+     * As of Vaadin 7.0.0, the functionality for opening a Resource in a Page
+     * has been replaced with similar methods based on a String URL. This is
+     * because the usage of Resource is problematic with memory management and
+     * with security features in some browsers. Is is recommended to instead use
+     * {@link Link} for starting downloads.
      * </p>
      * 
      * @param resource
@@ -246,9 +244,9 @@ public class LegacyWindow extends UI {
     }
 
     /**
-     * Adds a new {@link BrowserWindowResizeListener} to this UI. The
-     * listener will be notified whenever the browser window within which
-     * this UI resides is resized.
+     * Adds a new {@link BrowserWindowResizeListener} to this UI. The listener
+     * will be notified whenever the browser window within which this UI resides
+     * is resized.
      * 
      * @param resizeListener
      *            the listener to add
@@ -264,9 +262,8 @@ public class LegacyWindow extends UI {
     }
 
     /**
-     * Removes a {@link BrowserWindowResizeListener} from this UI. The
-     * listener will no longer be notified when the browser window is
-     * resized.
+     * Removes a {@link BrowserWindowResizeListener} from this UI. The listener
+     * will no longer be notified when the browser window is resized.
      * 
      * @param resizeListener
      *            the listener to remove
@@ -290,8 +287,7 @@ public class LegacyWindow extends UI {
     }
 
     /**
-     * Gets the last known width of the browser window in which this UI
-     * resides.
+     * Gets the last known width of the browser window in which this UI resides.
      * 
      * @return the browser window width in pixels
      * 
@@ -306,18 +302,17 @@ public class LegacyWindow extends UI {
      * Executes JavaScript in this window.
      * 
      * <p>
-     * This method allows one to inject javascript from the server to
-     * client. A client implementation is not required to implement this
-     * functionality, but currently all web-based clients do implement this.
+     * This method allows one to inject javascript from the server to client. A
+     * client implementation is not required to implement this functionality,
+     * but currently all web-based clients do implement this.
      * </p>
      * 
      * <p>
-     * Executing javascript this way often leads to cross-browser
-     * compatibility issues and regressions that are hard to resolve. Use of
-     * this method should be avoided and instead it is recommended to create
-     * new widgets with GWT. For more info on creating own, reusable
-     * client-side widgets in Java, read the corresponding chapter in Book
-     * of Vaadin.
+     * Executing javascript this way often leads to cross-browser compatibility
+     * issues and regressions that are hard to resolve. Use of this method
+     * should be avoided and instead it is recommended to create new widgets
+     * with GWT. For more info on creating own, reusable client-side widgets in
+     * Java, read the corresponding chapter in Book of Vaadin.
      * </p>
      * 
      * @param script
@@ -336,6 +331,60 @@ public class LegacyWindow extends UI {
         // Override to provide backwards compatibility
         getState().caption = caption;
         getPage().setTitle(caption);
+    }
+
+    /**
+     * This implementation replaces a component in the content container (
+     * {@link #getContent()}) instead of in the actual UI.
+     * 
+     * This method should only be called when the content is a
+     * {@link ComponentContainer} (default {@link VerticalLayout} or explicitly
+     * set).
+     */
+    public void replaceComponent(Component oldComponent, Component newComponent) {
+        ((ComponentContainer) getContent()).replaceComponent(oldComponent,
+                newComponent);
+    }
+
+    /**
+     * Adds a component to this UI. The component is not added directly to the
+     * UI, but instead to the content container ({@link #getContent()}).
+     * 
+     * This method should only be called when the content is a
+     * {@link ComponentContainer} (default {@link VerticalLayout} or explicitly
+     * set).
+     * 
+     * @param component
+     *            the component to add to this UI
+     * 
+     * @see #getContent()
+     */
+    public void addComponent(Component component) {
+        ((ComponentContainer) getContent()).addComponent(component);
+    }
+
+    /**
+     * This implementation removes the component from the content container (
+     * {@link #getContent()}) instead of from the actual UI.
+     * 
+     * This method should only be called when the content is a
+     * {@link ComponentContainer} (default {@link VerticalLayout} or explicitly
+     * set).
+     */
+    public void removeComponent(Component component) {
+        ((ComponentContainer) getContent()).removeComponent(component);
+    }
+
+    /**
+     * This implementation removes the components from the content container (
+     * {@link #getContent()}) instead of from the actual UI.
+     * 
+     * This method should only be called when the content is a
+     * {@link ComponentContainer} (default {@link VerticalLayout} or explicitly
+     * set).
+     */
+    public void removeAllComponents() {
+        ((ComponentContainer) getContent()).removeAllComponents();
     }
 
 }

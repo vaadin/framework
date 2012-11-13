@@ -11,15 +11,20 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 
 @Widgetset("com.vaadin.tests.widgetset.TestingWidgetSet")
 public class WidgetcontainerUI extends UI {
     @Override
     public void init(VaadinRequest request) {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        setContent(layout);
+
         Label label = new Label("Hello Vaadin user");
-        addComponent(label);
+        layout.addComponent(label);
         final WidgetContainer widgetContainer = new WidgetContainer();
-        addComponent(widgetContainer);
+        layout.addComponent(widgetContainer);
         widgetContainer.addComponent(new Label(
                 "Click the button to add components to the WidgetContainer."));
         Button button = new Button("Add more components", new ClickListener() {
@@ -39,7 +44,7 @@ public class WidgetcontainerUI extends UI {
                 widgetContainer.addComponent(component);
             }
         });
-        addComponent(button);
+        layout.addComponent(button);
     }
 
 }

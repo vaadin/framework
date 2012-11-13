@@ -18,7 +18,6 @@ public class TableInTabsheet extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        getUI().setCaption("test");
         VerticalLayout vPrinc = new VerticalLayout();
         vPrinc.setStyleName(Reindeer.LAYOUT_BLUE);
 
