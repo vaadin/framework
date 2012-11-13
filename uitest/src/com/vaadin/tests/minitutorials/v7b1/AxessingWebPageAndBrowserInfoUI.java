@@ -19,8 +19,8 @@ package com.vaadin.tests.minitutorials.v7b1;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.BrowserWindowResizeEvent;
 import com.vaadin.server.Page.BrowserWindowResizeListener;
-import com.vaadin.server.Page.FragmentChangedEvent;
-import com.vaadin.server.Page.FragmentChangedListener;
+import com.vaadin.server.Page.UriFragmentChangedEvent;
+import com.vaadin.server.Page.UriFragmentChangedListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Notification;
@@ -43,11 +43,11 @@ public class AxessingWebPageAndBrowserInfoUI extends AbstractTestUI {
             }
         });
 
-        page.setFragment(page.getFragment() + "foo");
-        page.addFragmentChangedListener(new FragmentChangedListener() {
+        page.setUriFragment(page.getUriFragment() + "foo");
+        page.addUriFragmentChangedListener(new UriFragmentChangedListener() {
             @Override
-            public void fragmentChanged(FragmentChangedEvent event) {
-                Notification.show("Fragment=" + event.getFragment());
+            public void uriFragmentChanged(UriFragmentChangedEvent event) {
+                Notification.show("Fragment=" + event.getUriFragment());
             }
         });
     }

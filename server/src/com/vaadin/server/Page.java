@@ -230,15 +230,15 @@ public class Page implements Serializable {
     public static final BorderStyle BORDER_DEFAULT = BorderStyle.DEFAULT;
 
     /**
-     * Listener that listens changes in URI fragment.
+     * Listener that listens to changes in URI fragment.
      */
-    public interface FragmentChangedListener extends Serializable {
-        public void fragmentChanged(FragmentChangedEvent event);
+    public interface UriFragmentChangedListener extends Serializable {
+        public void uriFragmentChanged(UriFragmentChangedEvent event);
     }
 
-    private static final Method FRAGMENT_CHANGED_METHOD = ReflectTools
-            .findMethod(Page.FragmentChangedListener.class, "fragmentChanged",
-                    FragmentChangedEvent.class);
+    private static final Method URI_FRAGMENT_CHANGED_METHOD = ReflectTools
+            .findMethod(Page.UriFragmentChangedListener.class,
+                    "uriFragmentChanged", UriFragmentChangedEvent.class);
 
     /**
      * Resources to be opened automatically on next repaint. The list is
@@ -255,12 +255,12 @@ public class Page implements Serializable {
     /**
      * Event fired when uri fragment changes.
      */
-    public static class FragmentChangedEvent extends EventObject {
+    public static class UriFragmentChangedEvent extends EventObject {
 
         /**
          * The new uri fragment
          */
-        private final String fragment;
+        private final String uriFragment;
 
         /**
          * Creates a new instance of UriFragmentReader change event.
@@ -268,9 +268,9 @@ public class Page implements Serializable {
          * @param source
          *            the Source of the event.
          */
-        public FragmentChangedEvent(Page source, String fragment) {
+        public UriFragmentChangedEvent(Page source, String uriFragment) {
             super(source);
-            this.fragment = fragment;
+            this.uriFragment = uriFragment;
         }
 
         /**
@@ -287,8 +287,8 @@ public class Page implements Serializable {
          * 
          * @return the new fragment
          */
-        public String getFragment() {
-            return fragment;
+        public String getUriFragment() {
+            return uriFragment;
         }
     }
 
@@ -323,38 +323,39 @@ public class Page implements Serializable {
         }
     }
 
-    public void addFragmentChangedListener(Page.FragmentChangedListener listener) {
-        addListener(FragmentChangedEvent.class, listener,
-                FRAGMENT_CHANGED_METHOD);
+    public void addUriFragmentChangedListener(
+            Page.UriFragmentChangedListener listener) {
+        addListener(UriFragmentChangedEvent.class, listener,
+                URI_FRAGMENT_CHANGED_METHOD);
     }
 
     /**
      * @deprecated Since 7.0, replaced by
-     *             {@link #addFragmentChangedListener(FragmentChangedListener)}
+     *             {@link #addUriFragmentChangedListener(UriFragmentChangedListener)}
      **/
     @Deprecated
-    public void addListener(Page.FragmentChangedListener listener) {
-        addFragmentChangedListener(listener);
+    public void addListener(Page.UriFragmentChangedListener listener) {
+        addUriFragmentChangedListener(listener);
     }
 
-    public void removeFragmentChangedListener(
-            Page.FragmentChangedListener listener) {
-        removeListener(FragmentChangedEvent.class, listener,
-                FRAGMENT_CHANGED_METHOD);
+    public void removeUriFragmentChangedListener(
+            Page.UriFragmentChangedListener listener) {
+        removeListener(UriFragmentChangedEvent.class, listener,
+                URI_FRAGMENT_CHANGED_METHOD);
     }
 
     /**
      * @deprecated Since 7.0, replaced by
-     *             {@link #removeFragmentChangedListener(FragmentChangedListener)}
+     *             {@link #removeUriFragmentChangedListener(UriFragmentChangedListener)}
      **/
     @Deprecated
-    public void removeListener(Page.FragmentChangedListener listener) {
-        removeFragmentChangedListener(listener);
+    public void removeListener(Page.UriFragmentChangedListener listener) {
+        removeUriFragmentChangedListener(listener);
     }
 
     /**
      * Sets the fragment part in the current location URI. Optionally fires a
-     * {@link FragmentChangedEvent}.
+     * {@link UriFragmentChangedEvent}.
      * <p>
      * The fragment is the optional last component of a URI, prefixed with a
      * hash sign ("#").
@@ -364,33 +365,34 @@ public class Page implements Serializable {
      * trailing "#" in the URI.) This is consistent with the semantics of
      * {@link java.net.URI}.
      * 
-     * @param newFragment
+     * @param newUriFragment
      *            The new fragment.
      * @param fireEvent
      *            true to fire event
      * 
-     * @see #getFragment()
+     * @see #getUriFragment()
      * @see #setLocation(URI)
-     * @see FragmentChangedEvent
-     * @see Page.FragmentChangedListener
+     * @see UriFragmentChangedEvent
+     * @see Page.UriFragmentChangedListener
      * 
      */
-    public void setFragment(String newFragment, boolean fireEvents) {
-        String oldFragment = location.getFragment();
-        if (newFragment == oldFragment
-                || (newFragment != null && newFragment.equals(oldFragment))) {
+    public void setUriFragment(String newUriFragment, boolean fireEvents) {
+        String oldUriFragment = location.getFragment();
+        if (newUriFragment == oldUriFragment
+                || (newUriFragment != null && newUriFragment
+                        .equals(oldUriFragment))) {
             return;
         }
         try {
             location = new URI(location.getScheme(),
-                    location.getSchemeSpecificPart(), newFragment);
+                    location.getSchemeSpecificPart(), newUriFragment);
         } catch (URISyntaxException e) {
             // This should not actually happen as the fragment syntax is not
             // constrained
             throw new RuntimeException(e);
         }
         if (fireEvents) {
-            fireEvent(new FragmentChangedEvent(this, newFragment));
+            fireEvent(new UriFragmentChangedEvent(this, newUriFragment));
         }
         uI.markAsDirty();
     }
@@ -402,15 +404,15 @@ public class Page implements Serializable {
     }
 
     /**
-     * Sets URI fragment. This method fires a {@link FragmentChangedEvent}
+     * Sets URI fragment. This method fires a {@link UriFragmentChangedEvent}
      * 
-     * @param newFragment
+     * @param newUriFragment
      *            id of the new fragment
-     * @see FragmentChangedEvent
-     * @see Page.FragmentChangedListener
+     * @see UriFragmentChangedEvent
+     * @see Page.UriFragmentChangedListener
      */
-    public void setFragment(String newFragment) {
-        setFragment(newFragment, true);
+    public void setUriFragment(String newUriFragment) {
+        setUriFragment(newUriFragment, true);
     }
 
     /**
@@ -420,15 +422,15 @@ public class Page implements Serializable {
      * there is an empty fragment.
      * <p>
      * To listen to changes in fragment, hook a
-     * {@link Page.FragmentChangedListener}.
+     * {@link Page.UriFragmentChangedListener}.
      * 
      * @return the current fragment in browser location URI.
      * 
      * @see #getLocation()
-     * @see #setFragment(String)
-     * @see #addFragmentChangedListener(FragmentChangedListener)
+     * @see #setUriFragment(String)
+     * @see #addUriFragmentChangedListener(UriFragmentChangedListener)
      */
-    public String getFragment() {
+    public String getUriFragment() {
         return location.getFragment();
     }
 
@@ -654,12 +656,12 @@ public class Page implements Serializable {
      */
     public void updateLocation(String location) {
         try {
-            String oldFragment = this.location.getFragment();
+            String oldUriFragment = this.location.getFragment();
             this.location = new URI(location);
-            String newFragment = this.location.getFragment();
-            if (newFragment == null ? oldFragment != null : !newFragment
-                    .equals(oldFragment)) {
-                fireEvent(new FragmentChangedEvent(this, newFragment));
+            String newUriFragment = this.location.getFragment();
+            if (newUriFragment == null ? oldUriFragment != null
+                    : !newUriFragment.equals(oldUriFragment)) {
+                fireEvent(new UriFragmentChangedEvent(this, newUriFragment));
             }
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);

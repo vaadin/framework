@@ -24,18 +24,18 @@ import org.easymock.IMocksControl;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.Navigator.UriFragmentManager;
 import com.vaadin.server.Page;
-import com.vaadin.server.Page.FragmentChangedEvent;
+import com.vaadin.server.Page.UriFragmentChangedEvent;
 
 public class UriFragmentManagerTest extends TestCase {
 
-    public void testGetSetFragment() {
+    public void testGetSetUriFragment() {
         Page page = EasyMock.createMock(Page.class);
         UriFragmentManager manager = new UriFragmentManager(page);
 
         // prepare mock
-        EasyMock.expect(page.getFragment()).andReturn("");
-        page.setFragment("!test", false);
-        EasyMock.expect(page.getFragment()).andReturn("!test");
+        EasyMock.expect(page.getUriFragment()).andReturn("");
+        page.setUriFragment("!test", false);
+        EasyMock.expect(page.getUriFragment()).andReturn("!test");
         EasyMock.replay(page);
 
         // test manager using the mock
@@ -53,11 +53,11 @@ public class UriFragmentManagerTest extends TestCase {
         UriFragmentManager manager = new UriFragmentManager(page);
         manager.setNavigator(navigator);
 
-        EasyMock.expect(page.getFragment()).andReturn("!test");
+        EasyMock.expect(page.getUriFragment()).andReturn("!test");
         navigator.navigateTo("test");
         control.replay();
 
-        FragmentChangedEvent event = new FragmentChangedEvent(page, "oldtest");
-        manager.fragmentChanged(event);
+        UriFragmentChangedEvent event = new UriFragmentChangedEvent(page, "oldtest");
+        manager.uriFragmentChanged(event);
     }
 }
