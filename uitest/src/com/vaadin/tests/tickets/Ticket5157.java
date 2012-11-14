@@ -7,6 +7,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 
 /**
  * Key codes were converted to lower case on the server (overlapping special key
@@ -22,14 +23,16 @@ public class Ticket5157 extends LegacyApplication {
                 "Forumtests Application");
         setMainWindow(mainWindow);
 
-        Panel p = new Panel();
+        VerticalLayout pl = new VerticalLayout();
+        pl.setMargin(true);
+        Panel p = new Panel(pl);
         mainWindow.addComponent(p);
 
         Label l = new Label("Panel with F8 bound");
-        p.addComponent(l);
+        pl.addComponent(l);
 
         TextField f = new TextField();
-        p.addComponent(f);
+        pl.addComponent(f);
 
         p.addAction(new ShortcutListener("F8", KeyCode.F8, null) {
 

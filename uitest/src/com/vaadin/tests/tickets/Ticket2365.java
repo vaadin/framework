@@ -43,14 +43,18 @@ public class Ticket2365 extends LegacyApplication {
 
     private Panel createMultilevelPanel(int i, Panel panel) {
         if (panel == null) {
-            panel = new Panel("Panel level " + i);
+            VerticalLayout panelLayout = new VerticalLayout();
+            panelLayout.setMargin(true);
+            panel = new Panel("Panel level " + i, panelLayout);
             panel.setSizeFull();
-            panel.getContent().setSizeFull();
+            panelLayout.setSizeFull();
         }
-        Panel p = new Panel("Panel level " + i--);
-        p.getContent().setSizeFull();
+        VerticalLayout pl = new VerticalLayout();
+        pl.setMargin(true);
+        pl.setSizeFull();
+        Panel p = new Panel("Panel level " + i--, pl);
         p.setSizeFull();
-        panel.addComponent(p);
+        pl.addComponent(p);
         if (i > 0) {
             createMultilevelPanel(i, p);
         }

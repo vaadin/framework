@@ -19,11 +19,14 @@ package com.vaadin.tests;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.VerticalLayout;
 
-public class TestSetVisibleAndCaching extends com.vaadin.server.LegacyApplication {
+public class TestSetVisibleAndCaching extends
+        com.vaadin.server.LegacyApplication {
 
     Panel panelA = new Panel("Panel A");
     Panel panelB = new Panel("Panel B");
@@ -39,12 +42,12 @@ public class TestSetVisibleAndCaching extends com.vaadin.server.LegacyApplicatio
                 "TestSetVisibleAndCaching");
         setMainWindow(mainWindow);
 
-        panelA.addComponent(new Label(
-                "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
-        panelB.addComponent(new Label(
-                "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"));
-        panelC.addComponent(new Label(
-                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"));
+        panelA.setContent(wrapInPanelLayout(new Label(
+                "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")));
+        panelB.setContent(wrapInPanelLayout(new Label(
+                "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")));
+        panelC.setContent(wrapInPanelLayout(new Label(
+                "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC")));
 
         mainWindow
                 .addComponent(new Label(
@@ -71,6 +74,13 @@ public class TestSetVisibleAndCaching extends com.vaadin.server.LegacyApplicatio
             }
         });
 
+    }
+
+    private VerticalLayout wrapInPanelLayout(Component component) {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        layout.addComponent(component);
+        return layout;
     }
 
     private void selectPanel(int selectedPanel) {

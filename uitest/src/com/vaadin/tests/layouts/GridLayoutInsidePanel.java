@@ -3,8 +3,8 @@ package com.vaadin.tests.layouts;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Layout.MarginHandler;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.VerticalLayout;
 
 public class GridLayoutInsidePanel extends TestBase {
 
@@ -26,12 +26,14 @@ public class GridLayoutInsidePanel extends TestBase {
             gl.addComponent(new Label(
                     "A label which defines the size of the GL"));
 
-            Panel p = new Panel("Panel 1");
-            ((MarginHandler) p.getContent()).setMargin(false);
+            VerticalLayout pl = new VerticalLayout();
+            pl.setMargin(true);
+            pl.setSizeUndefined();
+            Panel p = new Panel("Panel 1", pl);
+            pl.setMargin(false);
             p.setSizeUndefined();
-            p.getContent().setSizeUndefined();
 
-            p.addComponent(gl);
+            pl.addComponent(gl);
             addComponent(p);
         }
         {
@@ -41,9 +43,9 @@ public class GridLayoutInsidePanel extends TestBase {
                     "A label which defines the size of the GL"));
 
             Panel p = new Panel("Panel 2", gl);
-            ((MarginHandler) p.getContent()).setMargin(false);
+            gl.setMargin(false);
             p.setSizeUndefined();
-            p.getContent().setSizeUndefined();
+            gl.setSizeUndefined();
 
             addComponent(p);
         }

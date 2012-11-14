@@ -346,18 +346,22 @@ public class LiferayThemeDemo extends LegacyApplication {
 
         l.addComponent(new Label("Normal Panel", ContentMode.HTML));
 
-        Panel p = new Panel("Normal Panel");
+        VerticalLayout pl = new VerticalLayout();
+        pl.setMargin(true);
+        Panel p = new Panel("Normal Panel", pl);
         p.setHeight("100px");
-        p.addComponent(new Label("Panel content"));
+        pl.addComponent(new Label("Panel content"));
         l.addComponent(p);
 
         l.addComponent(new Label(
                 "Light Style (<code>LiferayTheme.PANEL_LIGHT</code>)",
                 ContentMode.HTML));
 
-        Panel p2 = new Panel("Light Style Panel");
+        VerticalLayout p2l = new VerticalLayout();
+        p2l.setMargin(true);
+        Panel p2 = new Panel("Light Style Panel", p2l);
         p2.setStyleName(LiferayTheme.PANEL_LIGHT);
-        p2.addComponent(new Label("Panel content"));
+        p2l.addComponent(new Label("Panel content"));
         l.addComponent(p2);
 
         return l;

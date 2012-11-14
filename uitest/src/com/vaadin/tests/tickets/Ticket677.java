@@ -20,6 +20,7 @@ import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 
 public class Ticket677 extends LegacyApplication {
 
@@ -83,34 +84,43 @@ public class Ticket677 extends LegacyApplication {
             }
         }));
 
-        root.setContent(new GridLayout(2, 3));
+        GridLayout content = new GridLayout(2, 3);
+        root.setContent(content);
         main.addComponent(root);
 
         TextField tf = new TextField("Enabled");
         tf.setImmediate(true);
-        root.addComponent(tf);
+        content.addComponent(tf);
         tf = new TextField("Disabled");
         tf.setImmediate(true);
         tf.setEnabled(false);
-        root.addComponent(tf);
+        content.addComponent(tf);
 
-        root.addComponent(one);
+        VerticalLayout oneLayout = new VerticalLayout();
+        oneLayout.setMargin(true);
+        one.setContent(oneLayout);
+
+        content.addComponent(one);
         tf = new TextField("Enabled");
         tf.setImmediate(true);
-        one.addComponent(tf);
+        oneLayout.addComponent(tf);
         tf = new TextField("Disabled");
         tf.setImmediate(true);
         tf.setEnabled(false);
-        one.addComponent(tf);
+        oneLayout.addComponent(tf);
 
-        root.addComponent(two);
+        VerticalLayout twoLayout = new VerticalLayout();
+        twoLayout.setMargin(true);
+        two.setContent(twoLayout);
+
+        content.addComponent(two);
         tf = new TextField("Enabled");
         tf.setImmediate(true);
-        two.addComponent(tf);
+        twoLayout.addComponent(tf);
         tf = new TextField("Disabled");
         tf.setImmediate(true);
         tf.setEnabled(false);
-        two.addComponent(tf);
+        twoLayout.addComponent(tf);
 
         form = new Form();
         form.setCaption("Enabled");
@@ -126,7 +136,7 @@ public class Ticket677 extends LegacyApplication {
 
         });
         form.setItemDataSource(new BeanItem<MyBean>(new MyBean()));
-        root.addComponent(form);
+        content.addComponent(form);
 
         table = new Table("Enabled");
         table.setPageLength(7);
@@ -154,7 +164,7 @@ public class Ticket677 extends LegacyApplication {
 
         });
         table.setEditable(true);
-        root.addComponent(table);
+        content.addComponent(table);
 
     }
 

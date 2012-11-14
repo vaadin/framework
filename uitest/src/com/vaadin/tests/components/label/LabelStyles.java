@@ -42,17 +42,18 @@ public class LabelStyles extends AbstractTestUI {
         if (styleName != null) {
             p.setCaption(styleName);
         }
-        p.setContent(new GridLayout());
+        GridLayout layout = new GridLayout();
+        p.setContent(layout);
         // ((VerticalLayout) p.getContent()).setMargin(false);
         p.setSizeUndefined();
-        p.getContent().setSizeUndefined();
+        layout.setSizeUndefined();
 
         for (int i = 0; i < labels; i++) {
             Label l = new Label("Label " + i);
             if (styleName != null) {
                 l.setStyleName(styleName);
             }
-            p.addComponent(l);
+            layout.addComponent(l);
         }
 
         return p;

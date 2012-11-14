@@ -19,10 +19,13 @@ import com.vaadin.ui.VerticalLayout;
  */
 public class TestComponentAddAndRecursion extends CustomComponent {
     Panel p;
+    VerticalLayout pl;
     Panel p2;
+    VerticalLayout p2l;
     Label l;
     Label l2;
     Panel p3;
+    VerticalLayout p3l;
 
     public TestComponentAddAndRecursion() {
 
@@ -31,15 +34,21 @@ public class TestComponentAddAndRecursion extends CustomComponent {
 
         l = new Label("A");
         l2 = new Label("B");
-        p = new Panel("p");
-        p.addComponent(l);
-        p.addComponent(l2);
+        pl = new VerticalLayout();
+        pl.setMargin(true);
+        p = new Panel("p", pl);
+        pl.addComponent(l);
+        pl.addComponent(l2);
         main.addComponent(p);
-        p2 = new Panel("p2");
-        p2.addComponent(l);
+        p2l = new VerticalLayout();
+        p2l.setMargin(true);
+        p2 = new Panel("p2", p2l);
+        p2l.addComponent(l);
         main.addComponent(p2);
-        p3 = new Panel("p3");
-        p2.addComponent(p3);
+        p3l = new VerticalLayout();
+        p3l.setMargin(true);
+        p3 = new Panel("p3", p3l);
+        p2l.addComponent(p3);
 
         Button b = new Button("use gridlayout", new Button.ClickListener() {
 
@@ -67,7 +76,7 @@ public class TestComponentAddAndRecursion extends CustomComponent {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                p2.addComponent(l2);
+                p2l.addComponent(l2);
             }
 
         });
@@ -76,7 +85,7 @@ public class TestComponentAddAndRecursion extends CustomComponent {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                p3.addComponent(p);
+                p3l.addComponent(p);
             }
 
         });
@@ -86,8 +95,8 @@ public class TestComponentAddAndRecursion extends CustomComponent {
             @Override
             public void buttonClick(ClickEvent event) {
                 Label l = new Label("both");
-                p.addComponent(l);
-                p2.addComponent(l);
+                pl.addComponent(l);
+                p2l.addComponent(l);
             }
 
         });
@@ -97,7 +106,7 @@ public class TestComponentAddAndRecursion extends CustomComponent {
             @Override
             public void buttonClick(ClickEvent event) {
                 try {
-                    p3.addComponent(p2);
+                    p3l.addComponent(p2);
                     new Notification("ERROR", "This should have failed",
                             Notification.TYPE_ERROR_MESSAGE).show(Page
                             .getCurrent());
@@ -114,10 +123,11 @@ public class TestComponentAddAndRecursion extends CustomComponent {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                Panel p = new Panel("dynamic");
-                p.addComponent(p2);
+                VerticalLayout layout = new VerticalLayout();
+                Panel p = new Panel("dynamic", layout);
+                layout.addComponent(p2);
                 try {
-                    p3.addComponent(p);
+                    p3l.addComponent(p);
                     new Notification("ERROR", "This should have failed",
                             Notification.TYPE_ERROR_MESSAGE).show(Page
                             .getCurrent());

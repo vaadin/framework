@@ -16,8 +16,6 @@
 
 package com.vaadin.tests;
 
-import com.vaadin.event.Action;
-import com.vaadin.event.Action.Handler;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -37,8 +35,7 @@ import com.vaadin.ui.VerticalLayout;
 /**
  * @author Vaadin Ltd.
  */
-public class TestForPreconfiguredComponents extends CustomComponent implements
-        Handler {
+public class TestForPreconfiguredComponents extends CustomComponent {
 
     private static final String[] firstnames = new String[] { "John", "Mary",
             "Joe", "Sarah", "Jeff", "Jane", "Peter", "Marc", "Josie", "Linus" };
@@ -48,13 +45,6 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
             "Einstein" };
 
     private final VerticalLayout main = new VerticalLayout();
-
-    private final Action[] actions = new Action[] { new Action("edit"),
-            new Action("delete") };
-
-    private Panel al;
-
-    private Tree contextTree;
 
     public TestForPreconfiguredComponents() {
 
@@ -150,25 +140,25 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
     }
 
     public Panel createTestBench(Component t) {
-        final Panel ol = new Panel();
-        ol.setContent(new HorizontalLayout());
+        final HorizontalLayout ol = new HorizontalLayout();
 
         ol.addComponent(t);
 
         final HorizontalLayout ol2 = new HorizontalLayout();
-        final Panel status = new Panel("Events");
+        final VerticalLayout statusLayout = new VerticalLayout();
+        final Panel status = new Panel("Events", statusLayout);
         final Button clear = new Button("clear event log");
-        clear.addListener(new ClickListener() {
+        clear.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                status.removeAllComponents();
-                status.addComponent(ol2);
+                statusLayout.removeAllComponents();
+                statusLayout.addComponent(ol2);
             }
         });
         ol2.addComponent(clear);
         final Button commit = new Button("commit changes");
         ol2.addComponent(commit);
-        status.addComponent(ol2);
+        statusLayout.addComponent(ol2);
 
         status.setHeight("300px");
         status.setWidth("400px");
@@ -178,29 +168,14 @@ public class TestForPreconfiguredComponents extends CustomComponent implements
         t.addListener(new Listener() {
             @Override
             public void componentEvent(Event event) {
-                status.addComponent(new Label(event.getClass().getName()));
+                statusLayout
+                        .addComponent(new Label(event.getClass().getName()));
                 // TODO should not use Field.toString()
-                status.addComponent(new Label("selected: "
+                statusLayout.addComponent(new Label("selected: "
                         + event.getSource().toString()));
             }
         });
 
-        return ol;
-    }
-
-    @Override
-    public Action[] getActions(Object target, Object sender) {
-        return actions;
-    }
-
-    @Override
-    public void handleAction(Action action, Object sender, Object target) {
-        if (action == actions[1]) {
-            al.addComponent(new Label("Delete selected on " + target));
-            contextTree.removeItem(target);
-
-        } else {
-            al.addComponent(new Label("Edit selected on " + target));
-        }
+        return new Panel(ol);
     }
 }

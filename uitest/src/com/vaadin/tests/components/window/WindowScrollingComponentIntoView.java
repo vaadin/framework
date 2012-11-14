@@ -75,17 +75,19 @@ public class WindowScrollingComponentIntoView extends AbstractTestCase {
                     }
                 }));
 
-        Panel panel = new Panel("scrollable panel");
+        VerticalLayout panelLayout = new VerticalLayout();
+        panelLayout.setMargin(true);
+        Panel panel = new Panel("scrollable panel", panelLayout);
         panel.setHeight(400, Panel.UNITS_PIXELS);
         panel.setScrollLeft(50);
         panel.setScrollTop(50);
-        panel.getContent().setSizeUndefined();
+        panelLayout.setSizeUndefined();
         window.addComponent(l("Spacer", 500, 500));
 
         l2 = null;
         for (int i = 0; i < 10; i++) {
             l2 = l("X" + i);
-            panel.addComponent(l2);
+            panelLayout.addComponent(l2);
         }
 
         final Component x29 = l2;
@@ -97,7 +99,7 @@ public class WindowScrollingComponentIntoView extends AbstractTestCase {
             l = l("Y" + i);
             horizontalLayout.addComponent(l);
         }
-        panel.addComponent(horizontalLayout);
+        panelLayout.addComponent(horizontalLayout);
         final Component y29 = l;
 
         ((VerticalLayout) getMainWindow().getContent()).addComponent(

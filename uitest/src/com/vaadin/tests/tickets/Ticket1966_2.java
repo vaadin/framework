@@ -49,13 +49,16 @@ public class Ticket1966_2 extends LegacyApplication {
     }
 
     private void gridLayout(Layout layout) {
-        Panel p = new Panel("GridLayout");
+        VerticalLayout pl = new VerticalLayout();
+        pl.setMargin(true);
+        Panel p = new Panel("GridLayout", pl);
         p.setWidth("500px");
         p.setHeight("500px");
-        p.getContent().setSizeFull();
+        pl.setSizeFull();
         layout.addComponent(p);
 
         GridLayout gl = new GridLayout(1, 4);
+        gl.setMargin(true);
         gl.setCaption("Horizontal");
         gl.setWidth("100%");
 
@@ -67,11 +70,12 @@ public class Ticket1966_2 extends LegacyApplication {
 
         addButtons(gl);
 
-        p.addComponent(gl);
+        p.setContent(gl);
 
         /* VERTICAL */
 
         gl = new GridLayout(4, 1);
+        gl.setMargin(true);
         // gl.setCaption("Vertical");
         gl.setHeight("100%");
         addButtons(gl);
@@ -80,41 +84,47 @@ public class Ticket1966_2 extends LegacyApplication {
         // b.setHeight(200);
         // gl.addComponent(b);
 
-        p.addComponent(gl);
+        p.setContent(gl);
 
     }
 
     private void orderedLayout(Layout layout) {
-        Panel p = new Panel("OrderedLayout");
+        VerticalLayout pl = new VerticalLayout();
+        pl.setMargin(true);
+        Panel p = new Panel("OrderedLayout", pl);
         p.setWidth("500px");
         p.setHeight("500px");
-        p.getContent().setWidth("100%");
+        pl.setWidth("100%");
         layout.addComponent(p);
 
         AbstractOrderedLayout ol = new VerticalLayout();
+        ol.setMargin(true);
         // ol.setCaption("Horizontal");
         ol.setWidth("100%");
         addButtons(ol);
-        p.addComponent(ol);
+        pl.addComponent(ol);
 
         /* VERTICAL */
 
         ol = new HorizontalLayout();
+        ol.setMargin(true);
         // ol.setCaption("Vertical");
         ol.setHeight("200px");
         addButtons(ol);
         // Button b = new Button("High button");
         // b.setHeight(200);
         // ol.addComponent(b);
-        p.addComponent(ol);
+        pl.addComponent(ol);
 
     }
 
     private void expandLayout(Layout layout) {
-        Panel p = new Panel("ExpandLayout");
+        VerticalLayout panelLayout = new VerticalLayout();
+        panelLayout.setMargin(true);
+        Panel p = new Panel("ExpandLayout", panelLayout);
         layout.addComponent(p);
-        p.getContent().setWidth("500");
-        p.getContent().setHeight("400");
+        panelLayout.setWidth("500");
+        panelLayout.setHeight("400");
 
         AbstractOrderedLayout el = new VerticalLayout();
         // el.setCaption("Horizontal");
@@ -130,7 +140,7 @@ public class Ticket1966_2 extends LegacyApplication {
         // el.addComponent(b);
 
         addButtons(el);
-        p.addComponent(el);
+        panelLayout.addComponent(el);
 
         /* VERTICAL */
 
@@ -145,7 +155,7 @@ public class Ticket1966_2 extends LegacyApplication {
         // b.setHeight(100);
         // el.addComponent(b);
 
-        p.addComponent(el);
+        panelLayout.addComponent(el);
 
     }
 

@@ -17,27 +17,30 @@ public class PanelShouldNotScroll extends TestBase {
 
     @Override
     protected void setup() {
-        final Panel p = new Panel(new CssLayout());
+        final CssLayout pl = new CssLayout();
+        final Panel p = new Panel(pl);
         p.setSizeFull();
         p.setHeight("600px");
-        p.addComponent(foo());
+        pl.addComponent(foo());
         addMore = new Button("Add");
         addMore.addListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                p.removeComponent(addMore);
-                p.addComponent(foo());
-                p.addComponent(addMore);
+                pl.removeComponent(addMore);
+                pl.addComponent(foo());
+                pl.addComponent(addMore);
             }
         });
-        p.addComponent(addMore);
+        pl.addComponent(addMore);
         addComponent(p);
         ((VerticalLayout) getMainWindow().getContent()).setSizeFull();
     }
 
     private Component foo() {
-        Panel panel = new Panel();
-        panel.addComponent(new Label(
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        Panel panel = new Panel(layout);
+        layout.addComponent(new Label(
                 "fooooooooo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>"
                         + "foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>foo<br/>",
                 ContentMode.HTML));

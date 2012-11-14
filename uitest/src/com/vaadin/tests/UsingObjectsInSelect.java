@@ -26,6 +26,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
+import com.vaadin.ui.VerticalLayout;
 
 public class UsingObjectsInSelect extends com.vaadin.server.LegacyApplication
         implements ValueChangeListener {
@@ -43,10 +44,14 @@ public class UsingObjectsInSelect extends com.vaadin.server.LegacyApplication
         final LegacyWindow main = new LegacyWindow("Select demo");
         setMainWindow(main);
 
-        final Panel panel = new Panel("Select demo");
-        panel.addComponent(select);
-        final Panel panel2 = new Panel("Selection");
-        panel2.addComponent(selectedTask);
+        VerticalLayout panelLayout = new VerticalLayout();
+        panelLayout.setMargin(true);
+        final Panel panel = new Panel("Select demo", panelLayout);
+        panelLayout.addComponent(select);
+        VerticalLayout panel2Layout = new VerticalLayout();
+        panel2Layout.setMargin(true);
+        final Panel panel2 = new Panel("Selection", panel2Layout);
+        panel2Layout.addComponent(selectedTask);
 
         select.setCaption("Select component");
         select.addListener(this);

@@ -67,7 +67,7 @@ public class TestBench extends com.vaadin.server.LegacyApplication implements
 
     Tree menu;
 
-    Panel bodyLayout = new Panel();
+    VerticalLayout bodyLayout = new VerticalLayout();
 
     // TODO this could probably be a simple Set
     HashMap<Class<?>, String> itemCaptions = new HashMap<Class<?>, String>();
@@ -208,11 +208,11 @@ public class TestBench extends com.vaadin.server.LegacyApplication implements
 
         mainLayout.addComponent(lo);
 
-        bodyLayout.addStyleName("light");
-        bodyLayout.setSizeFull();
-        bodyLayout.setContent(new VerticalLayout());
+        Panel bodyPanel = new Panel(bodyLayout);
+        bodyPanel.addStyleName("light");
+        bodyPanel.setSizeFull();
 
-        mainLayout.addComponent(bodyLayout);
+        mainLayout.addComponent(bodyPanel);
 
         mainLayout.setSplitPosition(30);
 

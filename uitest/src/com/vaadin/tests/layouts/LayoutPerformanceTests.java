@@ -241,9 +241,10 @@ public class LayoutPerformanceTests extends TestBase {
                 if (wrapped) {
                     Panel panel = new Panel(container);
                     panel.setSizeFull();
-                    container = panel;
+                    setTestLayout(panel);
+                } else {
+                    setTestLayout(container);
                 }
-                setTestLayout(container);
             }
         }));
 

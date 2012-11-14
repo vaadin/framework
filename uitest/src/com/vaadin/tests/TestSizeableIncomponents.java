@@ -48,6 +48,7 @@ public class TestSizeableIncomponents extends LegacyApplication {
     private ComboBox select;
     private Button prev;
     private Button next;
+    private VerticalLayout testPanelLayout;
     private Panel testPanel;
 
     @Override
@@ -112,11 +113,11 @@ public class TestSizeableIncomponents extends LegacyApplication {
             public void valueChange(ValueChangeEvent event) {
                 Testable t = (Testable) select.getValue();
                 if (t != null) {
-                    testPanel.removeAllComponents();
+                    testPanelLayout.removeAllComponents();
                     try {
                         Component c = t.getComponent();
                         if (c != null) {
-                            testPanel.addComponent(c);
+                            testPanelLayout.addComponent(c);
                         }
                     } catch (InstantiationException e) {
                         // TODO Auto-generated catch block
@@ -129,9 +130,9 @@ public class TestSizeableIncomponents extends LegacyApplication {
             }
         });
 
-        testPanel = new Panel();
+        testPanelLayout = new VerticalLayout();
+        testPanel = new Panel(testPanelLayout);
         testPanel.setSizeFull();
-        testPanel.setContent(new VerticalLayout());
         testPanel.setStyleName("testable");
         main.addComponent(testPanel);
         main.setExpandRatio(testPanel, 1);
@@ -190,12 +191,14 @@ public class TestSizeableIncomponents extends LegacyApplication {
 
                                 Component c = super.getComponent();
 
+                                VerticalLayout pl = new VerticalLayout();
+                                pl.setMargin(true);
                                 Panel p = new Panel(
-                                        "Wrapper panel (400px*400px)");
+                                        "Wrapper panel (400px*400px)", pl);
                                 p.setContent(new VerticalLayout());
                                 p.setWidth("400px");
                                 p.setHeight("400px");
-                                p.addComponent(c);
+                                pl.addComponent(c);
                                 p.addStyleName("testablew");
                                 p.addStyleName("testable");
                                 return p;

@@ -5,6 +5,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.VerticalLayout;
 
 public class Ticket2083 extends LegacyApplication {
 
@@ -19,10 +20,12 @@ public class Ticket2083 extends LegacyApplication {
     }
 
     private void createUI(GridLayout layout) {
+        VerticalLayout pl = new VerticalLayout();
+        pl.setMargin(true);
         Panel p = new Panel(
-                "This is a panel with a longer caption than it should have");
+                "This is a panel with a longer caption than it should have", pl);
         p.setWidth("100px");
-        p.getContent().addComponent(new Label("Contents"));
+        pl.addComponent(new Label("Contents"));
         layout.addComponent(p);
     }
 }

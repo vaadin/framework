@@ -64,32 +64,38 @@ public class RandomLayoutStress extends com.vaadin.server.LegacyApplication {
         setMainWindow(mainWindow);
 
         // Create horizontal ordered layout
+        VerticalLayout panelALayout = new VerticalLayout();
+        panelALayout.setMargin(true);
         final Panel panelA = new Panel(
-                "Panel containing horizontal ordered layout");
+                "Panel containing horizontal ordered layout", panelALayout);
         HorizontalLayout layoutA = new HorizontalLayout();
         // Add 4 random components
         fillLayout(layoutA, componentCountA);
         // Add layout to panel
-        panelA.addComponent(layoutA);
+        panelALayout.addComponent(layoutA);
 
         // Create vertical ordered layout
+        VerticalLayout panelBLayout = new VerticalLayout();
+        panelBLayout.setMargin(true);
         final Panel panelB = new Panel(
-                "Panel containing vertical ordered layout");
+                "Panel containing vertical ordered layout", panelBLayout);
         VerticalLayout layoutB = new VerticalLayout();
         // Add 4 random components
         fillLayout(layoutB, componentCountB);
         // Add layout to panel
-        panelB.addComponent(layoutB);
+        panelBLayout.addComponent(layoutB);
 
         // Create grid layout
         final int gridSize = (int) java.lang.Math.sqrt(componentCountC);
+        VerticalLayout panelGLayout = new VerticalLayout();
+        panelGLayout.setMargin(true);
         final Panel panelG = new Panel("Panel containing grid layout ("
-                + gridSize + " x " + gridSize + ")");
+                + gridSize + " x " + gridSize + ")", panelGLayout);
         GridLayout layoutG = new GridLayout(gridSize, gridSize);
         // Add 12 random components
         fillLayout(layoutG, componentCountC);
         // Add layout to panel
-        panelG.addComponent(layoutG);
+        panelGLayout.addComponent(layoutG);
 
         // Create TabSheet
         final TabSheet tabsheet = new TabSheet();
@@ -108,12 +114,15 @@ public class RandomLayoutStress extends com.vaadin.server.LegacyApplication {
         tabsheet.addTab(layoutG, "Grid layout (4 x 2)", null);
 
         // Create custom layout
-        final Panel panelC = new Panel("Custom layout with style exampleStyle");
+        VerticalLayout panelCLayout = new VerticalLayout();
+        panelCLayout.setMargin(true);
+        final Panel panelC = new Panel("Custom layout with style exampleStyle",
+                panelCLayout);
         final CustomLayout layoutC = new CustomLayout("exampleStyle");
         // Add 4 random components
         fillLayout(layoutC, componentCountD);
         // Add layout to panel
-        panelC.addComponent(layoutC);
+        panelCLayout.addComponent(layoutC);
 
         // Add demo panels (layouts) to main window
         mainWindow.addComponent(panelA);
@@ -157,9 +166,11 @@ public class RandomLayoutStress extends com.vaadin.server.LegacyApplication {
             break;
         case 5:
             // Link
-            result = new Panel();
+            VerticalLayout panelLayout = new VerticalLayout();
+            panelLayout.setMargin(true);
+            result = new Panel(panelLayout);
             result.setCaption("Panel component " + caption);
-            ((Panel) result)
+            panelLayout
                     .addComponent(new Label(
                             "Panel is a container for other components, by default it draws a frame around it's "
                                     + "extremities and may have a caption to clarify the nature of the contained components' purpose."

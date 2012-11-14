@@ -11,6 +11,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.VerticalLayout;
 
 public class GridLayoutInForm extends TestBase {
 
@@ -37,8 +38,10 @@ public class GridLayoutInForm extends TestBase {
 
         form.setSizeUndefined();
 
-        Panel panel = new Panel();
-        panel.addComponent(form);
+        VerticalLayout panelLayout = new VerticalLayout();
+        panelLayout.setMargin(true);
+        Panel panel = new Panel(panelLayout);
+        panelLayout.addComponent(form);
         panel.setHeight("500px");
 
         addComponent(panel);

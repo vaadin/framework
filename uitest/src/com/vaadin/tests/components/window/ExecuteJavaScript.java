@@ -5,6 +5,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.VerticalLayout;
 
 public class ExecuteJavaScript extends AbstractTestCase {
 
@@ -15,8 +16,10 @@ public class ExecuteJavaScript extends AbstractTestCase {
 
         for (final String script : new String[] { "alert('foo');",
                 "window.print()", "document.write('foo')" }) {
-            Panel p = new Panel("Example: " + script);
-            p.addComponent(createScriptButton(script));
+            VerticalLayout pl = new VerticalLayout();
+            pl.setMargin(true);
+            Panel p = new Panel("Example: " + script, pl);
+            pl.addComponent(createScriptButton(script));
             mainWindow.addComponent(p);
         }
 

@@ -11,6 +11,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextArea;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
 public class BasicPanelTest extends TestBase {
@@ -34,6 +35,10 @@ public class BasicPanelTest extends TestBase {
         actions.addComponent(scrollPosition);
         actions.addComponent(new Button("Sync"));
 
+        VerticalLayout panelLayout = new VerticalLayout();
+        panelLayout.setMargin(true);
+        panel.setContent(panelLayout);
+
         final CheckBox heightSelection = new CheckBox("Undefined height");
         heightSelection.setImmediate(true);
         heightSelection.addListener(new ValueChangeListener() {
@@ -52,12 +57,12 @@ public class BasicPanelTest extends TestBase {
         panel.setHeight("100%");
         panel.setStyleName(Reindeer.PANEL_LIGHT);
 
-        panel.getContent().setCaption("Content caption");
+        panelLayout.setCaption("Content caption");
 
         TextArea textArea = new TextArea("TextArea caption");
         textArea.setWidth("300px");
         textArea.setHeight("500px");
-        panel.addComponent(textArea);
+        panelLayout.addComponent(textArea);
 
         getLayout().addComponent(actions);
         getLayout().addComponent(panel);

@@ -81,9 +81,11 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
         test(main);
         populateLayout(main);
 
-        final Panel panel = new Panel("Panel");
+        VerticalLayout panelLayout = new VerticalLayout();
+        panelLayout.setMargin(true);
+        final Panel panel = new Panel("Panel", panelLayout);
         test(panel);
-        populateLayout((Layout) panel.getContent());
+        populateLayout(panelLayout);
 
         final TabSheet tabsheet = new TabSheet();
         test(tabsheet);
@@ -124,7 +126,9 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
         final Embedded emb = new Embedded("Embedded " + count++);
         test(layout, emb);
 
-        final Panel panel = new Panel("Panel " + count++);
+        VerticalLayout panelLayout = new VerticalLayout();
+        panelLayout.setMargin(true);
+        final Panel panel = new Panel("Panel " + count++, panelLayout);
         test(layout, panel);
 
         final Label label = new Label("Label " + count++);

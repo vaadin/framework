@@ -10,6 +10,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.VerticalLayout;
 
 public class TabSheetCaptions extends TestBase {
 
@@ -34,14 +35,17 @@ public class TabSheetCaptions extends TestBase {
         final Date date = new Date();
         date.setTime((long) 1000000000000.0);
 
-        panel1 = new Panel("Panel initial caption (should also be tab caption)");
+        VerticalLayout layout1 = new VerticalLayout();
+        layout1.setMargin(true);
+        layout1.setSizeFull();
+        panel1 = new Panel(
+                "Panel initial caption (should also be tab caption)", layout1);
         panel1.setSizeFull();
-        panel1.getContent().setSizeFull();
-        panel1.addComponent(new Label("This is a panel"));
+        layout1.addComponent(new Label("This is a panel"));
         tabSheet.addTab(panel1);
 
         Button button = new Button("Update tab caption");
-        button.addListener(new Button.ClickListener() {
+        button.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 tabSheet.getTab(panel1).setCaption(
@@ -51,7 +55,7 @@ public class TabSheetCaptions extends TestBase {
         });
 
         Button button2 = new Button("Update panel caption");
-        button2.addListener(new Button.ClickListener() {
+        button2.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 panel1.setCaption("This is a new panel caption "

@@ -29,7 +29,9 @@ public class Ticket2009 extends com.vaadin.server.LegacyApplication {
         main.setContent(ol);
         ol.setSizeFull();
 
-        Panel p = new Panel("Tree test");
+        VerticalLayout pl = new VerticalLayout();
+        pl.setMargin(true);
+        Panel p = new Panel("Tree test", pl);
         p.setSizeFull();
 
         Tree t = new Tree();
@@ -52,10 +54,12 @@ public class Ticket2009 extends com.vaadin.server.LegacyApplication {
         });
 
         main.addComponent(p);
-        p.addComponent(t);
-        p.addComponent(events);
+        pl.addComponent(t);
+        pl.addComponent(events);
 
-        Panel p2 = new Panel("Table test (try dbl click also)");
+        VerticalLayout p2l = new VerticalLayout();
+        p2l.setMargin(true);
+        Panel p2 = new Panel("Table test (try dbl click also)", p2l);
         p2.setSizeFull();
 
         final VerticalLayout events2 = new VerticalLayout();
@@ -76,8 +80,8 @@ public class Ticket2009 extends com.vaadin.server.LegacyApplication {
 
             }
         });
-        p2.addComponent(table);
-        p2.addComponent(events2);
+        p2l.addComponent(table);
+        p2l.addComponent(events2);
 
         main.addComponent(p2);
 

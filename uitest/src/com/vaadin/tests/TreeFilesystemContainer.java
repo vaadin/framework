@@ -41,8 +41,8 @@ import com.vaadin.ui.VerticalLayout;
  * @since 4.0.0
  * 
  */
-public class TreeFilesystemContainer extends com.vaadin.server.LegacyApplication
-        implements Listener {
+public class TreeFilesystemContainer extends
+        com.vaadin.server.LegacyApplication implements Listener {
 
     // Filesystem explorer panel and it's components
     private final Panel explorerPanel = new Panel("Filesystem explorer");
@@ -70,10 +70,16 @@ public class TreeFilesystemContainer extends com.vaadin.server.LegacyApplication
         main.setExpandRatio(explorerPanel, 1);
 
         // Explorer panel contains tree
-        explorerPanel.addComponent(filesystem);
+        VerticalLayout explorerLayout = new VerticalLayout();
+        explorerLayout.setMargin(true);
+        explorerPanel.setContent(explorerLayout);
+        explorerLayout.addComponent(filesystem);
 
         // Property panel contains label
-        propertyPanel.addComponent(fileProperties);
+        VerticalLayout propertyLayout = new VerticalLayout();
+        propertyLayout.setMargin(true);
+        propertyPanel.setContent(propertyLayout);
+        propertyLayout.addComponent(fileProperties);
         fileProperties.setCaption("No file selected.");
         propertyPanel.setEnabled(false);
 

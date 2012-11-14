@@ -7,6 +7,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
 
 public class SafariRenderingBugWhiteSpace extends TestBase {
 
@@ -45,7 +46,9 @@ public class SafariRenderingBugWhiteSpace extends TestBase {
 
         split.setFirstComponent(table);
         split.setSplitPosition(100, Sizeable.UNITS_PERCENTAGE);
-        Panel editor = new Panel("Editor");
+        VerticalLayout pl = new VerticalLayout();
+        pl.setMargin(true);
+        Panel editor = new Panel("Editor", pl);
         editor.setSizeFull();
         split.setSecondComponent(editor);
         getLayout().setSizeFull();

@@ -27,7 +27,7 @@ public class Ticket1966_3 extends LegacyApplication {
         Panel p = new Panel(ol);
         p.setWidth("300px");
         p.setHeight("300px");
-        p.getContent().setSizeFull();
+        ol.setSizeFull();
 
         TextField tf = new TextField("Long caption, longer than 100 pixels");
         tf.setWidth("100px");

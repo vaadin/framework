@@ -52,17 +52,18 @@ public class TestForContainerFilterable extends CustomComponent {
         }
 
         // Init filtering view
-        final Panel filterPanel = new Panel("Filter", new HorizontalLayout());
+        final HorizontalLayout filterLayout = new HorizontalLayout();
+        final Panel filterPanel = new Panel("Filter", filterLayout);
         filterPanel.setWidth(100, Panel.UNITS_PERCENTAGE);
         lo.addComponent(filterPanel);
-        filterPanel.addComponent(fooFilter);
-        filterPanel.addComponent(barFilter);
-        filterPanel.addComponent(filterButton);
+        filterLayout.addComponent(fooFilter);
+        filterLayout.addComponent(barFilter);
+        filterLayout.addComponent(filterButton);
         fooFilter
                 .setDescription("Filters foo column in case-sensitive contains manner.");
         barFilter
                 .setDescription("Filters bar column in case-insensitive prefix manner.");
-        filterPanel.addComponent(count);
+        filterLayout.addComponent(count);
 
         // Table
         lo.addComponent(t);

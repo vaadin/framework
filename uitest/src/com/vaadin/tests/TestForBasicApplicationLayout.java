@@ -64,25 +64,27 @@ public class TestForBasicApplicationLayout extends CustomComponent {
         final HorizontalSplitPanel sp2 = new HorizontalSplitPanel();
         sp2.setSplitPosition(255, Sizeable.UNITS_PIXELS);
 
-        final Panel p = new Panel("Accordion Panel");
+        VerticalLayout pl = new VerticalLayout();
+        pl.setMargin(true);
+        final Panel p = new Panel("Accordion Panel", pl);
         p.setSizeFull();
 
         tab = new TabSheet();
         tab.setSizeFull();
 
-        final Panel report = new Panel("Monthly Program Runs",
-                new VerticalLayout());
-        final VerticalLayout controls = new VerticalLayout();
+        VerticalLayout reportLayout = new VerticalLayout();
+        final Panel report = new Panel("Monthly Program Runs", reportLayout);
+        final VerticalLayout controls = reportLayout;
         controls.setMargin(true);
         controls.addComponent(new Label("Report tab"));
         controls.addComponent(click);
         controls.addComponent(click2);
-        report.addComponent(controls);
+        reportLayout.addComponent(controls);
         final DateField cal = new DateField();
         cal.setResolution(DateField.RESOLUTION_DAY);
         cal.setLocale(new Locale("en", "US"));
-        report.addComponent(cal);
-        ((VerticalLayout) report.getContent()).setExpandRatio(controls, 1);
+        reportLayout.addComponent(cal);
+        reportLayout.setExpandRatio(controls, 1);
         report.addStyleName(Reindeer.PANEL_LIGHT);
         report.setHeight(100, Sizeable.UNITS_PERCENTAGE);
 

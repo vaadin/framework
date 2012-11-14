@@ -25,6 +25,7 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.VerticalLayout;
 
 /**
  * Provides sample directory based on application directory. If this fails then
@@ -77,11 +78,14 @@ public class SampleDirectory {
             return file;
         }
         // Add failure notification as an Panel to main window
-        final Panel errorPanel = new Panel("Demo application error");
+        VerticalLayout errorLayout = new VerticalLayout();
+        errorLayout.setMargin(true);
+        final Panel errorPanel = new Panel("Demo application error",
+                errorLayout);
         errorPanel.setStyleName("strong");
         errorPanel.setComponentError(new SystemError(
                 "Cannot provide sample directory"));
-        errorPanel.addComponent(new Label(errorMessage, ContentMode.HTML));
+        errorLayout.addComponent(new Label(errorMessage, ContentMode.HTML));
         // Remove all components from applications main window
         uI.removeAllComponents();
         // Add error panel

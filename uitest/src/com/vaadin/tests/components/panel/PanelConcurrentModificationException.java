@@ -3,22 +3,25 @@ package com.vaadin.tests.components.panel;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.VerticalLayout;
 
 public class PanelConcurrentModificationException extends TestBase {
 
-    private final ComponentContainer panel = new Panel();
+    private final VerticalLayout panelLayout = new VerticalLayout();
+    private final Panel panel = new Panel(panelLayout);
 
     @Override
     protected void setup() {
+        panelLayout.setMargin(true);
+
         addComponent(new Button("Click here for exception",
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        panel.addComponent(new Label("Label"));
+                        panelLayout.addComponent(new Label("Label"));
                     }
                 }));
         addComponent(new Button("Or click here first",

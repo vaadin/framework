@@ -10,7 +10,6 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Layout.MarginHandler;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
@@ -52,7 +51,8 @@ public class Ticket1435 extends LegacyApplication {
         HorizontalLayout header = new HorizontalLayout();
 
         // This is where the actual data is put.
-        Panel container = new Panel();
+        VerticalLayout containerLayout = new VerticalLayout();
+        Panel container = new Panel(containerLayout);
 
         // Last known height before the panel was collapsed
         private float lastHeight = -1;
@@ -66,6 +66,8 @@ public class Ticket1435 extends LegacyApplication {
             header.setStyleName("toolbar");
 
             initHeader(labelString);
+
+            containerLayout.setMargin(true);
 
             initContainer();
         }
@@ -118,7 +120,7 @@ public class Ticket1435 extends LegacyApplication {
             buttonContainer.addComponent(collapse);
 
             collapse.setStyleName("collapse");
-            collapse.addListener(new Button.ClickListener() {
+            collapse.addClickListener(new Button.ClickListener() {
                 @Override
                 public void buttonClick(Button.ClickEvent event) {
                     if (useWorkaround) {
@@ -144,7 +146,7 @@ public class Ticket1435 extends LegacyApplication {
             });
 
             if (useWorkaround) {
-                expand.addListener(new Button.ClickListener() {
+                expand.addClickListener(new Button.ClickListener() {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
@@ -160,8 +162,8 @@ public class Ticket1435 extends LegacyApplication {
         private void initContainer() {
             container.setStyleName("custompanel");
             container.setSizeFull();
-            ((MarginHandler) container.getContent()).setMargin(false);
-            container.getContent().setSizeFull();
+            containerLayout.setMargin(false);
+            containerLayout.setSizeFull();
             root.addComponent(container);
             root.setExpandRatio(container, 1);
         }
@@ -197,8 +199,8 @@ public class Ticket1435 extends LegacyApplication {
         }
 
         public void setPanelComponent(Component component) {
-            container.removeAllComponents();
-            container.addComponent(component);
+            containerLayout.removeAllComponents();
+            containerLayout.addComponent(component);
         }
     }
 

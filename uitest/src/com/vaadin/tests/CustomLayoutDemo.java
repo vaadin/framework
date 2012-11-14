@@ -29,6 +29,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Tree;
+import com.vaadin.ui.VerticalLayout;
 
 /**
  * This example demonstrates custom layout. All components created here are
@@ -43,8 +44,8 @@ import com.vaadin.ui.Tree;
  * @since 4.0.0
  * 
  */
-public class CustomLayoutDemo extends com.vaadin.server.LegacyApplication implements
-        Listener {
+public class CustomLayoutDemo extends com.vaadin.server.LegacyApplication
+        implements Listener {
 
     private CustomLayout mainLayout = null;
 
@@ -79,9 +80,12 @@ public class CustomLayoutDemo extends com.vaadin.server.LegacyApplication implem
         // Create custom layout, themes/example/layout/mainLayout.html
         mainLayout = new CustomLayout("mainLayout");
         // wrap custom layout inside a panel
+        VerticalLayout customLayoutPanelLayout = new VerticalLayout();
+        customLayoutPanelLayout.setMargin(true);
         final Panel customLayoutPanel = new Panel(
-                "Panel containing custom layout (mainLayout.html)");
-        customLayoutPanel.addComponent(mainLayout);
+                "Panel containing custom layout (mainLayout.html)",
+                customLayoutPanelLayout);
+        customLayoutPanelLayout.addComponent(mainLayout);
 
         // Login components
         mainLayout.addComponent(username, "loginUser");
@@ -135,9 +139,11 @@ public class CustomLayoutDemo extends com.vaadin.server.LegacyApplication implem
      * 
      */
     public void setBody(String customLayout) {
+        VerticalLayout bodyLayout = new VerticalLayout();
+        bodyLayout.setMargin(true);
+        bodyLayout.addComponent(new CustomLayout(customLayout));
+        bodyPanel.setContent(bodyLayout);
         bodyPanel.setCaption(customLayout + ".html");
-        bodyPanel.removeAllComponents();
-        bodyPanel.addComponent(new CustomLayout(customLayout));
     }
 
     /**

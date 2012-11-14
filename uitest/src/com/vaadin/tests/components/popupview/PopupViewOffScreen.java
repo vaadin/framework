@@ -75,7 +75,7 @@ public class PopupViewOffScreen extends TestBase {
                         + "'>" + LoremIpsum.get(2000) + "</div>",
                 ContentMode.HTML);
         l.setSizeFull();
-        p.addComponent(l);
+        vl.addComponent(l);
         PopupView pv = new PopupView("Click here to popup", p);
 
         popupViews.add(pv);

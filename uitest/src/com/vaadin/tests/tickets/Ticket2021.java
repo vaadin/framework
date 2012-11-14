@@ -6,10 +6,10 @@ import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.Layout.MarginHandler;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextArea;
@@ -45,7 +45,7 @@ public class Ticket2021 extends LegacyApplication {
         tf1.setSizeFull();
         tf1.setValue(contents);
         tf1.setCaption("TextField caption");
-        p.getContent().addComponent(tf1);
+        ((ComponentContainer) p.getContent()).addComponent(tf1);
 
         /*
          * 
@@ -66,25 +66,27 @@ public class Ticket2021 extends LegacyApplication {
         tf2.setSizeFull();
         tf2.setValue(contents);
         tf2.setCaption("TextField caption");
-        p2.getContent().addComponent(tf2);
+        ((ComponentContainer) p2.getContent()).addComponent(tf2);
 
         /*
          * 
          * GridLayout
          */
 
-        Panel p3 = new Panel();
+        VerticalLayout p3l = new VerticalLayout();
+        p3l.setMargin(true);
+        Panel p3 = new Panel(p3l);
         p3.setCaption("GridLayout");
         p3.setWidth("500px");
         p3.setHeight("500px");
         // p3.setContent(new GridLayout());
-        p3.getContent().setSizeFull();
-        ((MarginHandler) p3.getContent()).setMargin(false);
+        p3l.setSizeFull();
+        p3l.setMargin(false);
 
         GridLayout gl = new GridLayout();
         gl.setSizeFull();
         gl.setMargin(false);
-        p3.getContent().addComponent(gl);
+        p3l.addComponent(gl);
         w.addComponent(p3);
 
         tf3 = new TextArea();

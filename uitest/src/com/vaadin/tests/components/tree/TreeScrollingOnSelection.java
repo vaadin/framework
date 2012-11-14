@@ -7,6 +7,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Tree;
+import com.vaadin.ui.VerticalLayout;
 
 public class TreeScrollingOnSelection extends TestBase {
     private static final long serialVersionUID = 4082075610259697145L;
@@ -36,8 +37,10 @@ public class TreeScrollingOnSelection extends TestBase {
         });
         tree.setImmediate(true);
 
-        Panel panel = new Panel();
-        panel.addComponent(tree);
+        VerticalLayout panelLayout = new VerticalLayout();
+        panelLayout.setMargin(true);
+        Panel panel = new Panel(panelLayout);
+        panelLayout.addComponent(tree);
         panel.setWidth("200px");
         panel.setHeight("300px");
 

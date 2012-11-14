@@ -27,7 +27,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinServiceSession;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Layout.MarginHandler;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Panel;
@@ -78,22 +77,24 @@ public class Parameters extends com.vaadin.server.LegacyApplication implements
         }
 
         // URI
-        final Panel panel1 = new Panel("URI Handler");
+        final VerticalLayout panel1Layout = new VerticalLayout();
+        panel1Layout.setMargin(true);
+        final Panel panel1 = new Panel("URI Handler", panel1Layout);
         context.setCaption("Last URI handler context");
-        panel1.addComponent(context);
+        panel1Layout.addComponent(context);
         relative.setCaption("Last relative URI");
-        panel1.addComponent(relative);
+        panel1Layout.addComponent(relative);
         layout.addComponent(panel1);
 
         params.addContainerProperty("Key", String.class, "");
         params.addContainerProperty("Value", String.class, "");
-        final Panel panel2 = new Panel("Parameter Handler");
+        final VerticalLayout panel2Layout = new VerticalLayout();
+        panel2Layout.setMargin(true);
+        final Panel panel2 = new Panel("Parameter Handler", panel2Layout);
         params.setSizeFull();
-        panel2.setContent(new VerticalLayout());
-        ((MarginHandler) panel2.getContent()).setMargin(true);
 
         params.setColumnHeaderMode(Table.COLUMN_HEADER_MODE_ID);
-        panel2.addComponent(params);
+        panel2Layout.addComponent(params);
         layout.addComponent(panel2);
 
         // expand parameter panel and its table

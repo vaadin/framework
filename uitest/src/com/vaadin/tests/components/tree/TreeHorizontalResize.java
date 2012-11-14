@@ -8,6 +8,7 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Tree;
+import com.vaadin.ui.VerticalLayout;
 
 public class TreeHorizontalResize extends TestBase {
 
@@ -23,10 +24,12 @@ public class TreeHorizontalResize extends TestBase {
 
     @Override
     protected void setup() {
-        Panel treePanel = new Panel();
+        VerticalLayout treeLayout = new VerticalLayout();
+        treeLayout.setMargin(true);
+        treeLayout.setSizeUndefined();
+        Panel treePanel = new Panel(treeLayout);
         treePanel.setHeight("500px");
         treePanel.setWidth(null);
-        treePanel.getContent().setSizeUndefined();
         addComponent(treePanel);
 
         Tree tree = new Tree();
@@ -35,7 +38,7 @@ public class TreeHorizontalResize extends TestBase {
         for (Iterator<?> it = tree.rootItemIds().iterator(); it.hasNext();) {
             tree.expandItemsRecursively(it.next());
         }
-        treePanel.addComponent(tree);
+        treeLayout.addComponent(tree);
     }
 
     @Override

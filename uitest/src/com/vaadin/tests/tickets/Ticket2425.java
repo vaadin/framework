@@ -5,6 +5,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.VerticalLayout;
 
 public class Ticket2425 extends LegacyApplication {
 
@@ -15,10 +16,16 @@ public class Ticket2425 extends LegacyApplication {
 
         w.addComponent(new Label("No scrollbars should be visible anywhere"));
         TabSheet ts = new TabSheet();
-        ts.addTab(new Panel(), "Panel 1", null);
-        ts.addTab(new Panel(), "Panel 2", null);
+        ts.addTab(createPanel(), "Panel 1", null);
+        ts.addTab(createPanel(), "Panel 2", null);
 
         w.addComponent(ts);
+    }
+
+    private Panel createPanel() {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        return new Panel(layout);
     }
 
 }

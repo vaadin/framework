@@ -44,7 +44,7 @@ public class Ticket2186 extends LegacyApplication {
 
         Panel right = new Panel("Panel");
 
-        right.addComponent(new Label("Some basic text might show up here."));
+        right.setContent(new Label("Some basic text might show up here."));
 
         base.addComponent(content);
 

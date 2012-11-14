@@ -67,22 +67,26 @@ public class Ticket2221 extends LegacyApplication {
             tf.setHeight("1000px");
             tf.setWidth("1000px");
 
-            outerPanel = new Panel();
+            VerticalLayout outerLayout = new VerticalLayout();
+            outerLayout.setMargin(true);
+            outerPanel = new Panel(outerLayout);
             outerPanel.setCaption("A RichTextArea");
             outerPanel.setVisible(false);
             outerPanel.setHeight("1000px");
             outerPanel.setWidth("1000px");
 
-            outerPanel.getContent().setSizeFull();
-            Panel innerPanel = new Panel("Inner panel");
+            outerLayout.setSizeFull();
+            VerticalLayout innerLayout = new VerticalLayout();
+            innerLayout.setMargin(true);
+            Panel innerPanel = new Panel("Inner panel", innerLayout);
             innerPanel.setSizeFull();
-            outerPanel.addComponent(innerPanel);
+            outerLayout.addComponent(innerPanel);
 
             tf2 = new TextField("A 2000x2000 textfield");
             tf2.setWidth("2000px");
             tf2.setHeight("2000px");
 
-            innerPanel.addComponent(tf2);
+            innerLayout.addComponent(tf2);
             main.addComponent(outerPanel);
             main.addComponent(tf);
         }

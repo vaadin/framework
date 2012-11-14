@@ -8,7 +8,6 @@ import com.vaadin.tests.util.AlwaysFailValidator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Form;
@@ -31,24 +30,26 @@ public class EmptyFieldErrorIndicators extends TestBase {
         hl.setSizeFull();
         hl.setSpacing(true);
 
-        ComponentContainer part1 = createPart(
-                "Empty required fields validation", true, false);
+        Panel part1 = createPart("Empty required fields validation", true,
+                false);
         part1.setId("emptyFieldPart");
         hl.addComponent(part1);
 
-        ComponentContainer part2 = createPart(
+        Panel part2 = createPart(
                 "Empty required fields with failing validator", true, true);
         part1.setId("validatedFieldPart");
         hl.addComponent(part2);
 
-        Panel panel = new Panel();
+        VerticalLayout panelLayout = new VerticalLayout();
+        panelLayout.setMargin(true);
+        Panel panel = new Panel(panelLayout);
         panel.setSizeFull();
         panel.setStyleName(Reindeer.PANEL_LIGHT);
-        panel.addComponent(hl);
+        panelLayout.addComponent(hl);
         addComponent(panel);
     }
 
-    private ComponentContainer createPart(String caption, boolean required,
+    private Panel createPart(String caption, boolean required,
             boolean failValidator) {
         VerticalLayout part = new VerticalLayout();
         part.setMargin(true);

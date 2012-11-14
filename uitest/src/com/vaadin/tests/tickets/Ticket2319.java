@@ -21,18 +21,18 @@ public class Ticket2319 extends LegacyApplication {
                 "This test has somewhat invalid layouts in it to detect analyzy layout function in debug dialog"));
 
         HorizontalLayout hl = new HorizontalLayout();
-        Panel panel = new Panel("p1");
-        Panel panel2 = new Panel("p2");
+        Panel panel = buildPanel("p1");
+        Panel panel2 = buildPanel("p2");
         hl.addComponent(panel);
         hl.addComponent(panel2);
 
         mainw.addComponent(hl);
 
         hl = new HorizontalLayout();
-        panel = new Panel("p1");
+        panel = buildPanel("p1");
         panel.setSizeUndefined();
         panel.setHeight("100%");
-        panel2 = new Panel("p2");
+        panel2 = buildPanel("p2");
         panel2.setSizeUndefined();
         panel2.setHeight("100%");
 
@@ -61,6 +61,12 @@ public class Ticket2319 extends LegacyApplication {
         mainw.addComponent(sp2);
 
         mainw.addComponent(new Button("click me to save split panel state"));
+    }
+
+    private Panel buildPanel(String caption) {
+        VerticalLayout pl = new VerticalLayout();
+        pl.setMargin(true);
+        return new Panel(caption, pl);
     }
 
 }

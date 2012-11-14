@@ -34,6 +34,7 @@ public class Ticket1966 extends LegacyApplication {
         layout.addComponent(p);
 
         GridLayout gl = new GridLayout(1, 4);
+        gl.setMargin(true);
         gl.setCaption("Horizontal");
         Button b;
 
@@ -43,11 +44,12 @@ public class Ticket1966 extends LegacyApplication {
 
         addButtons(gl);
 
-        p.addComponent(gl);
+        p.setContent(gl);
 
         /* VERTICAL */
 
         gl = new GridLayout(4, 1);
+        gl.setMargin(true);
         gl.setCaption("Vertical");
 
         addButtons(gl);
@@ -56,7 +58,7 @@ public class Ticket1966 extends LegacyApplication {
         b.setHeight("200px");
         gl.addComponent(b);
 
-        p.addComponent(gl);
+        p.setContent(gl);
 
     }
 
@@ -65,6 +67,7 @@ public class Ticket1966 extends LegacyApplication {
         layout.addComponent(p);
 
         AbstractOrderedLayout ol = new VerticalLayout();
+        ol.setMargin(true);
         ol.setCaption("Horizontal");
         // ol.setWidth("100%");
 
@@ -75,11 +78,12 @@ public class Ticket1966 extends LegacyApplication {
         ol.addComponent(b);
 
         addButtons(ol);
-        p.addComponent(ol);
+        p.setContent(ol);
 
         /* VERTICAL */
 
         ol = new HorizontalLayout();
+        ol.setMargin(true);
         ol.setCaption("Vertical");
 
         addButtons(ol);
@@ -87,7 +91,7 @@ public class Ticket1966 extends LegacyApplication {
         b.setHeight("200px");
         ol.addComponent(b);
 
-        p.addComponent(ol);
+        p.setContent(ol);
 
     }
 

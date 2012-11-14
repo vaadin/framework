@@ -29,7 +29,7 @@ public class Ticket2157 extends LegacyApplication {
         cb = new ComboBox();
         // cb.setCaption("A combobox");
         // cb.setWidth("100%");
-        p.addComponent(cb);
+        ol.addComponent(cb);
         layout.addComponent(p);
 
         ol = new VerticalLayout();
@@ -39,7 +39,7 @@ public class Ticket2157 extends LegacyApplication {
         cb = new ComboBox();
         cb.setCaption("A combobox");
         // cb.setWidth("100px");
-        p.addComponent(cb);
+        ol.addComponent(cb);
         layout.addComponent(p);
 
         //
@@ -50,7 +50,7 @@ public class Ticket2157 extends LegacyApplication {
         cb = new ComboBox();
         // cb.setCaption("A combobox");
         cb.setWidth("100px");
-        p.addComponent(cb);
+        ol.addComponent(cb);
         layout.addComponent(p);
 
         ol = new VerticalLayout();
@@ -60,7 +60,7 @@ public class Ticket2157 extends LegacyApplication {
         cb = new ComboBox();
         cb.setCaption("A combobox");
         cb.setWidth("100px");
-        p.addComponent(cb);
+        ol.addComponent(cb);
         layout.addComponent(p);
 
         ol = new VerticalLayout();
@@ -70,7 +70,7 @@ public class Ticket2157 extends LegacyApplication {
         cb = new ComboBox();
         // cb.setCaption("A combobox");
         cb.setWidth("500px");
-        p.addComponent(cb);
+        ol.addComponent(cb);
         layout.addComponent(p);
 
         ol = new VerticalLayout();
@@ -80,7 +80,7 @@ public class Ticket2157 extends LegacyApplication {
         cb = new ComboBox();
         cb.setCaption("A combobox");
         cb.setWidth("500px");
-        p.addComponent(cb);
+        ol.addComponent(cb);
         layout.addComponent(p);
 
         ol = new VerticalLayout();
@@ -91,7 +91,7 @@ public class Ticket2157 extends LegacyApplication {
         cb = new ComboBox();
         // cb.setCaption("A combobox");
         cb.setWidth("100%");
-        p.addComponent(cb);
+        ol.addComponent(cb);
         layout.addComponent(p);
 
         ol = new VerticalLayout();
@@ -102,7 +102,7 @@ public class Ticket2157 extends LegacyApplication {
         cb = new ComboBox();
         cb.setCaption("A combobox");
         cb.setWidth("100%");
-        p.addComponent(cb);
+        ol.addComponent(cb);
         layout.addComponent(p);
 
     }

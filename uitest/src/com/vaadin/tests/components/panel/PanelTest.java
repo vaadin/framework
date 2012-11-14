@@ -1,10 +1,9 @@
 package com.vaadin.tests.components.panel;
 
-import com.vaadin.tests.components.AbstractComponentContainerTest;
+import com.vaadin.tests.components.AbstractComponentTest;
 import com.vaadin.ui.Panel;
 
-public class PanelTest<T extends Panel> extends
-        AbstractComponentContainerTest<T> {
+public class PanelTest<T extends Panel> extends AbstractComponentTest<T> {
 
     @SuppressWarnings("unchecked")
     @Override

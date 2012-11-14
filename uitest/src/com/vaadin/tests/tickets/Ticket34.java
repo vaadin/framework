@@ -66,10 +66,12 @@ public class Ticket34 extends LegacyApplication {
 
     private void buildViews(String[] strings) {
         for (String string : strings) {
-            Panel p = new Panel(string);
+            VerticalLayout pl = new VerticalLayout();
+            pl.setMargin(true);
+            Panel p = new Panel(string, pl);
             p.setSizeFull();
-            ((VerticalLayout) p.getContent()).setSpacing(true);
-            p.addComponent(new Label("This is a simple test case for "
+            pl.setSpacing(true);
+            pl.addComponent(new Label("This is a simple test case for "
                     + "UriFragmentReader that can be used for"
                     + " adding linking, back/forward button "
                     + "and history support for ajax application. "));
@@ -81,14 +83,14 @@ public class Ticket34 extends LegacyApplication {
             }
             sb.append("Application will change to them from uri "
                     + "fragment or server initiated via textfield below.");
-            p.addComponent(new Label(sb.toString()));
+            pl.addComponent(new Label(sb.toString()));
 
             final TextField tf = new TextField(
                     "Type view name (will change to that "
                             + "view and change the uri fragment)");
-            p.addComponent(tf);
+            pl.addComponent(tf);
             Button b = new Button("Go!");
-            p.addComponent(b);
+            pl.addComponent(b);
             b.addListener(new Button.ClickListener() {
 
                 @Override

@@ -122,13 +122,15 @@ public class Ticket1710 extends com.vaadin.server.LegacyApplication {
         cl.addComponent(new Label("<<< Add customlayout testcase here >>>"));
 
         // Form
-        Panel formPanel = new Panel("Form");
+        VerticalLayout formPanelLayout = new VerticalLayout();
+        formPanelLayout.setMargin(true);
+        Panel formPanel = new Panel("Form", formPanelLayout);
         cb = new CheckBox("Form", new MethodProperty<Boolean>(formPanel,
                 "visible"));
         cb.setImmediate(true);
         hidingControls.addComponent(cb);
         formPanel.setVisible(false);
-        formPanel.addComponent(getFormPanelExample());
+        formPanelLayout.addComponent(getFormPanelExample());
         lo.addComponent(formPanel);
 
         for (Iterator<Component> i = hidingControls.getComponentIterator(); i
@@ -250,8 +252,10 @@ public class Ticket1710 extends com.vaadin.server.LegacyApplication {
             setContent(internalLayout);
             testedLayout = layout;
             testPanelLayout.setWidth("100%");
-            Panel controlWrapper = new Panel();
-            controlWrapper.addComponent(controls);
+            VerticalLayout controlWrapperLayout = new VerticalLayout();
+            controlWrapperLayout.setMargin(true);
+            Panel controlWrapper = new Panel(controlWrapperLayout);
+            controlWrapperLayout.addComponent(controls);
             controlWrapper.setWidth("100%");
             controlWrapper.setStyleName("controls");
             internalLayout.addComponent(controlWrapper);

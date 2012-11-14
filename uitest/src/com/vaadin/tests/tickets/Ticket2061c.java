@@ -37,7 +37,9 @@ public class Ticket2061c extends LegacyApplication implements
         VerticalLayout ol2 = new VerticalLayout();
         ol2.setSizeFull();
 
-        p = new Panel("This is a panel");
+        VerticalLayout pl = new VerticalLayout();
+        pl.setMargin(true);
+        p = new Panel("This is a panel", pl);
         p.setSizeFull();
 
         Label label1 = new Label("This is a table!");
@@ -45,7 +47,7 @@ public class Ticket2061c extends LegacyApplication implements
         label1.setWidth("1500px");
         p.setScrollTop(50);
 
-        p.addComponent(label1);
+        pl.addComponent(label1);
         ol2.addComponent(p);
         ol.addComponent(ol2);
 

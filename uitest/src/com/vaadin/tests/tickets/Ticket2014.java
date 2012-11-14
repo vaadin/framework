@@ -10,6 +10,7 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.VerticalLayout;
 
 public class Ticket2014 extends LegacyApplication {
 
@@ -43,12 +44,14 @@ public class Ticket2014 extends LegacyApplication {
     }
 
     private void createPanel(GridLayout layout) {
-        panel = new Panel("panel caption");
+        VerticalLayout panelLayout = new VerticalLayout();
+        panelLayout.setMargin(true);
+        panel = new Panel("panel caption", panelLayout);
         layout.addComponent(panel);
 
         innerLayout1 = new HorizontalLayout();
         innerLayout1.setSpacing(true);
-        panel.addComponent(innerLayout1);
+        panelLayout.addComponent(innerLayout1);
 
         b1 = new Button("Button inside orderedLayout", new ClickListener() {
 

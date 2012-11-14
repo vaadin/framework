@@ -3,7 +3,6 @@ package com.vaadin.tests.components.textfield;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.LegacyWindow;
-import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -19,8 +18,6 @@ public class TextFieldInLayoutInTable extends LegacyApplication {
 
         final Table table = new Table();
         table.addContainerProperty("column1", Component.class, null);
-        final Panel panel = new Panel("Panel");
-        ((VerticalLayout) panel.getContent()).setMargin(false);
         VerticalLayout vl = new VerticalLayout();
         final TextField textField = new TextField();
         vl.addComponent(textField);

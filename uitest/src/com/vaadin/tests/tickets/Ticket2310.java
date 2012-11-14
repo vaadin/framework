@@ -6,6 +6,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
 public class Ticket2310 extends LegacyApplication {
@@ -20,14 +21,16 @@ public class Ticket2310 extends LegacyApplication {
                 + "invisible -> invalid change (with disabled "
                 + "flag) is sent to client. Label is grey when panel is shown."));
 
-        final Panel p = new Panel();
+        VerticalLayout pl = new VerticalLayout();
+        pl.setMargin(true);
+        final Panel p = new Panel(pl);
         p.setStyleName(Reindeer.PANEL_LIGHT);
         main.addComponent(p);
         p.setHeight("100px");
 
         final Label l = new Label("foobar");
 
-        p.addComponent(l);
+        pl.addComponent(l);
 
         Button b = new Button("change label");
 

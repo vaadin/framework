@@ -133,8 +133,10 @@ public class LayoutsCssTest extends GridLayout {
      * Helper to create panels for different theme variants...
      */
     private Panel createPanelWith(String caption, String styleName) {
-        Panel panel = new Panel(caption);
-        panel.addComponent(new Label("Some content"));
+        VerticalLayout panelLayout = new VerticalLayout();
+        panelLayout.setMargin(true);
+        Panel panel = new Panel(caption, panelLayout);
+        panelLayout.addComponent(new Label("Some content"));
         panel.setIcon(new ThemeResource(parent.ICON_URL));
         panel.setComponentError(new UserError("A error message..."));
         panel.setId("layout" + debugIdCounter++);

@@ -13,6 +13,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 
 public class Ticket1397 extends LegacyApplication {
 
@@ -23,7 +24,9 @@ public class Ticket1397 extends LegacyApplication {
         setTheme("runo");
         main = new LegacyWindow("PopupView test");
         setMainWindow(main);
-        Panel panel = new Panel("PopupTest");
+        VerticalLayout panelLayout = new VerticalLayout();
+        panelLayout.setMargin(true);
+        Panel panel = new Panel("PopupTest", panelLayout);
 
         // First test component
         final ObjectProperty<String> prop = new ObjectProperty<String>(
@@ -43,12 +46,12 @@ public class Ticket1397 extends LegacyApplication {
 
         PopupView pe = new PopupView(content);
         pe.setDescription("Click to edit");
-        panel.addComponent(pe);
+        panelLayout.addComponent(pe);
 
         // Second test component
         PopupView pe2 = new PopupView("fooLabel", new Label("Foooooooooo..."));
         pe2.setDescription("Click to view");
-        panel.addComponent(pe2);
+        panelLayout.addComponent(pe2);
 
         // Third test component
         final ObjectProperty<StringBuffer> prop2 = new ObjectProperty<StringBuffer>(
@@ -68,8 +71,10 @@ public class Ticket1397 extends LegacyApplication {
             }
         }
 
-        final Panel panel2 = new Panel("Editor with a button");
-        panel2.addComponent(new myButton());
+        VerticalLayout panel2Layout = new VerticalLayout();
+        panel2Layout.setMargin(true);
+        final Panel panel2 = new Panel("Editor with a button", panel2Layout);
+        panel2Layout.addComponent(new myButton());
         PopupView.Content content2 = new PopupView.Content() {
             @Override
             public String getMinimizedValueAsHTML() {
@@ -83,15 +88,18 @@ public class Ticket1397 extends LegacyApplication {
         };
 
         PopupView p3 = new PopupView(content2);
-        panel.addComponent(p3);
+        panelLayout.addComponent(p3);
 
         // Fourth test component
-        final Panel panel3 = new Panel("Editor popup for a property");
+        VerticalLayout panel3Layout = new VerticalLayout();
+        panel3Layout.setMargin(true);
+        final Panel panel3 = new Panel("Editor popup for a property",
+                panel3Layout);
         TextField tf2 = new TextField("TextField for editing a property");
         final ObjectProperty<String> op = new ObjectProperty<String>(
                 "This is property text.");
         tf2.setPropertyDataSource(op);
-        panel3.addComponent(tf2);
+        panel3Layout.addComponent(tf2);
         PopupView.Content content3 = new PopupView.Content() {
 
             @Override
@@ -106,7 +114,7 @@ public class Ticket1397 extends LegacyApplication {
 
         };
         PopupView p4 = new PopupView(content3);
-        panel.addComponent(p4);
+        panelLayout.addComponent(p4);
 
         // Fifth test component
         Table table = new Table("Table for testing purposes");

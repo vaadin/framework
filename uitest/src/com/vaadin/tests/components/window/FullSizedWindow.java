@@ -2,18 +2,21 @@ package com.vaadin.tests.components.window;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.NativeButton;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class FullSizedWindow extends TestBase {
 
     @Override
     protected void setup() {
-        Window w = new Window("full sized window");
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        Window w = new Window("full sized window", layout);
         w.setSizeFull();
-        w.getContent().setSizeFull();
+        layout.setSizeFull();
         NativeButton b = new NativeButton("A large button");
         b.setSizeFull();
-        w.getContent().addComponent(b);
+        layout.addComponent(b);
         getMainWindow().addWindow(w);
         setTheme("runo");
     }

@@ -10,6 +10,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.RichTextArea;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 @SuppressWarnings("serial")
@@ -51,9 +52,11 @@ public class RichTextAreaWithKeyboardShortcuts extends TestBase {
         getLayout().getUI().addActionHandler(actionHandler);
         getLayout().addComponent(createRichTextArea("InMainLayout"));
 
-        Panel panel = new Panel("RTA Panel");
+        VerticalLayout panelLayout = new VerticalLayout();
+        panelLayout.setMargin(true);
+        Panel panel = new Panel("RTA Panel", panelLayout);
         panel.addActionHandler(actionHandler);
-        panel.getContent().addComponent(createRichTextArea("InPanel"));
+        panelLayout.addComponent(createRichTextArea("InPanel"));
         getLayout().addComponent(panel);
 
         Window w = new Window("SubWindow");

@@ -53,7 +53,7 @@ public class Ticket1919 extends com.vaadin.server.LegacyApplication {
                 toggleStyleName();
             }
         });
-        p.addComponent(b);
+        p.setContent(b);
         return p;
     }
 }

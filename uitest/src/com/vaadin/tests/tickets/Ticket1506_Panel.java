@@ -7,6 +7,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
+import com.vaadin.ui.VerticalLayout;
 
 /**
  * @author Efecte R&D
@@ -15,18 +16,22 @@ import com.vaadin.ui.Select;
 public class Ticket1506_Panel extends Panel {
 
     public Ticket1506_Panel() {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        setContent(layout);
+
         ObjectProperty<String> property1 = new ObjectProperty<String>(null,
                 String.class);
-        addComponent(initSelect(new Ticket1506_TestContainer(), "Test select",
-                property1));
-        addComponent(initButton(property1));
-        addComponent(initSelect(new Ticket1506_TestContainer2(),
+        layout.addComponent(initSelect(new Ticket1506_TestContainer(),
+                "Test select", property1));
+        layout.addComponent(initButton(property1));
+        layout.addComponent(initSelect(new Ticket1506_TestContainer2(),
                 "Test select 2", new ObjectProperty<String>(null, String.class)));
     }
 
     private Component initButton(final ObjectProperty<?> property) {
         Button button = new Button("Clear select");
-        button.addListener(new Button.ClickListener() {
+        button.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent event) {
                 property.setValue(null);

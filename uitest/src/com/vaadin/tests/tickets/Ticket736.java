@@ -16,6 +16,7 @@ import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.VerticalLayout;
 
 public class Ticket736 extends LegacyApplication {
 
@@ -75,7 +76,10 @@ public class Ticket736 extends LegacyApplication {
         f.getField("zip").setRequired(true);
 
         // Debug form properties
-        final Panel formProperties = new Panel("Form properties");
+        final VerticalLayout formPropertiesLayout = new VerticalLayout();
+        formPropertiesLayout.setMargin(true);
+        final Panel formProperties = new Panel("Form properties",
+                formPropertiesLayout);
         formProperties.setWidth("200px");
         final String[] visibleProps = { "required", "invalidAllowed",
                 "readOnly", "readThrough", "writeThrough", "invalidCommitted",
@@ -84,7 +88,7 @@ public class Ticket736 extends LegacyApplication {
             CheckBox b = new CheckBox(visibleProps[i],
                     new MethodProperty<Boolean>(f, visibleProps[i]));
             b.setImmediate(true);
-            formProperties.addComponent(b);
+            formPropertiesLayout.addComponent(b);
         }
         mainWin.addComponent(formProperties);
 

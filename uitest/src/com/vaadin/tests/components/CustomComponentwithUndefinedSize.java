@@ -49,7 +49,9 @@ public class CustomComponentwithUndefinedSize extends TestBase {
 
         public Layout buildLayout() {
             VerticalLayout layout = new VerticalLayout();
-            final Panel widePanel = new Panel("too big");
+            VerticalLayout panelLayout = new VerticalLayout();
+            panelLayout.setMargin(true);
+            final Panel widePanel = new Panel("too big", panelLayout);
             widePanel.setSizeUndefined();
             widePanel.setWidth("2000px");
             widePanel.setHeight("200px");
@@ -76,7 +78,7 @@ public class CustomComponentwithUndefinedSize extends TestBase {
 
                         }
                     });
-            widePanel.addComponent(button);
+            panelLayout.addComponent(button);
             layout.setSizeUndefined();
             return layout;
         }

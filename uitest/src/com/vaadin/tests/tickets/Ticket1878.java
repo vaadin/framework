@@ -226,15 +226,16 @@ public class Ticket1878 extends LegacyApplication {
         FormLayout formLayout = new FormLayout();
         Form form = new Form(formLayout);
 
-        Panel p = new Panel("Form " + w + "x" + h);
+        VerticalLayout vl = new VerticalLayout();
+        vl.setMargin(true);
+        vl.setSizeFull();
+        Panel p = new Panel("Form " + w + "x" + h, vl);
 
         p.setWidth(w);
         p.setHeight(h);
 
-        p.getContent().setSizeFull();
-
         parentLayout.addComponent(p);
-        p.addComponent(form);
+        vl.addComponent(form);
         formLayout.setSizeFull();
 
         return form;
@@ -258,9 +259,9 @@ public class Ticket1878 extends LegacyApplication {
         createLayout(parentLayout, newLayout, w, h, null, null, align);
     }
 
-    private static void createLayout(GridLayout parentLayout, Layout newLayout,
-            String w, String h, String componentWidth, String componentHeight,
-            boolean align) {
+    private static void createLayout(GridLayout parentLayout,
+            final Layout newLayout, String w, String h, String componentWidth,
+            String componentHeight, boolean align) {
         String dirText = "V";
         String type;
         if (newLayout instanceof VerticalLayout) {
@@ -306,7 +307,7 @@ public class Ticket1878 extends LegacyApplication {
                         tf.setValue(tf.getValue() + " h:" + componentHeight);
                     }
 
-                    p.addComponent(tf);
+                    newLayout.addComponent(tf);
 
                     if (align) {
                         ((AlignmentHandler) newLayout).setComponentAlignment(

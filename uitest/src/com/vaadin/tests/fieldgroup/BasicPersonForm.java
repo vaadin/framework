@@ -18,11 +18,13 @@ import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 
 public class BasicPersonForm extends TestBase {
 
@@ -61,7 +63,8 @@ public class BasicPersonForm extends TestBase {
     private class ConfigurationPanel extends Panel {
 
         public ConfigurationPanel() {
-            super("Configuration");
+            super("Configuration", new VerticalLayout());
+            ((VerticalLayout) getContent()).setMargin(true);
             BeanItem<Configuration> bi = new BeanItem<BasicPersonForm.Configuration>(
                     configuration);
             FieldGroup confFieldGroup = new FieldGroup(bi);
@@ -69,7 +72,8 @@ public class BasicPersonForm extends TestBase {
             confFieldGroup.setBuffered(false);
 
             for (Object propertyId : bi.getItemPropertyIds()) {
-                addComponent(confFieldGroup.buildAndBind(propertyId));
+                ((ComponentContainer) getContent()).addComponent(confFieldGroup
+                        .buildAndBind(propertyId));
             }
 
         }

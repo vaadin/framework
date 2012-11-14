@@ -27,6 +27,7 @@ import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.ExpandEvent;
+import com.vaadin.ui.VerticalLayout;
 
 /**
  * Browsable file explorer using Vaadin Tree component. Demonstrates: how to add
@@ -37,8 +38,8 @@ import com.vaadin.ui.Tree.ExpandEvent;
  * @since 4.0.0
  * 
  */
-public class TreeFilesystem extends com.vaadin.server.LegacyApplication implements
-        Tree.ExpandListener {
+public class TreeFilesystem extends com.vaadin.server.LegacyApplication
+        implements Tree.ExpandListener {
 
     // Filesystem explorer panel and it's components
     private final Panel explorerPanel = new Panel("Filesystem explorer");
@@ -54,8 +55,11 @@ public class TreeFilesystem extends com.vaadin.server.LegacyApplication implemen
         main.addComponent(new Label("<h2>Tree demo</h2>", ContentMode.HTML));
 
         // configure file structure panel
+        VerticalLayout explorerLayout = new VerticalLayout();
+        explorerLayout.setMargin(true);
+        explorerPanel.setContent(explorerLayout);
         main.addComponent(explorerPanel);
-        explorerPanel.addComponent(tree);
+        explorerLayout.addComponent(tree);
         explorerPanel.setHeight("400px");
 
         // "this" handles tree's expand event

@@ -44,7 +44,7 @@ public class Ticket2029 extends LegacyApplication {
 
         HorizontalLayout layout = new HorizontalLayout();
         p.setContent(layout);
-        p.getContent().setSizeFull();
+        layout.setSizeFull();
 
         for (int i = 0; i < COMPONENTS; i++) {
             TextField tf = new TextField();
@@ -59,7 +59,7 @@ public class Ticket2029 extends LegacyApplication {
             }
             tf.setWidth("100%");
             layout.setComponentAlignment(tf, Alignment.BOTTOM_LEFT);
-            p.addComponent(tf);
+            layout.addComponent(tf);
 
         }
 
@@ -74,7 +74,7 @@ public class Ticket2029 extends LegacyApplication {
 
         GridLayout layout = new GridLayout(COMPONENTS, 1);
         p.setContent(layout);
-        p.getContent().setSizeFull();
+        layout.setSizeFull();
 
         for (int i = 0; i < COMPONENTS; i++) {
             TextField tf = new TextField();
@@ -99,7 +99,7 @@ public class Ticket2029 extends LegacyApplication {
             }
             tf.setWidth("100%");
             layout.setComponentAlignment(tf, Alignment.MIDDLE_LEFT);
-            p.addComponent(tf);
+            layout.addComponent(tf);
 
         }
 
@@ -113,7 +113,7 @@ public class Ticket2029 extends LegacyApplication {
 
         VerticalLayout layout = new VerticalLayout();
         p.setContent(layout);
-        p.getContent().setSizeFull();
+        layout.setSizeFull();
 
         for (int i = 0; i < COMPONENTS; i++) {
             TextArea tf = new TextArea();
@@ -131,7 +131,7 @@ public class Ticket2029 extends LegacyApplication {
             tf.setSizeFull();
 
             layout.setComponentAlignment(tf, Alignment.BOTTOM_LEFT);
-            p.addComponent(tf);
+            layout.addComponent(tf);
 
         }
 

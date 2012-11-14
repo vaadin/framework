@@ -59,7 +59,8 @@ public class TestForUpload extends CustomComponent implements
 
     Buffer buffer = new MemoryBuffer();
 
-    Panel status = new Panel("Uploaded file:");
+    VerticalLayout statusLayout = new VerticalLayout();
+    Panel status = new Panel("Uploaded file:", statusLayout);
 
     private final Upload up;
 
@@ -146,24 +147,24 @@ public class TestForUpload extends CustomComponent implements
                     l.setValue("Finished with unknow event");
                 }
 
-                status.removeAllComponents();
+                statusLayout.removeAllComponents();
                 final InputStream stream = buffer.getStream();
                 if (stream == null) {
-                    status.addComponent(new Label(
+                    statusLayout.addComponent(new Label(
                             "Upload finished, but output buffer is null"));
                 } else {
-                    status.addComponent(new Label("<b>Name:</b> "
+                    statusLayout.addComponent(new Label("<b>Name:</b> "
                             + event.getFilename(), ContentMode.HTML));
-                    status.addComponent(new Label("<b>Mimetype:</b> "
+                    statusLayout.addComponent(new Label("<b>Mimetype:</b> "
                             + event.getMIMEType(), ContentMode.HTML));
-                    status.addComponent(new Label("<b>Size:</b> "
+                    statusLayout.addComponent(new Label("<b>Size:</b> "
                             + event.getLength() + " bytes.", ContentMode.HTML));
 
-                    status.addComponent(new Link("Download "
+                    statusLayout.addComponent(new Link("Download "
                             + buffer.getFileName(), new StreamResource(buffer,
                             buffer.getFileName())));
 
-                    status.setVisible(true);
+                    statusLayout.setVisible(true);
                 }
 
                 setBuffer();
@@ -237,6 +238,7 @@ public class TestForUpload extends CustomComponent implements
         memoryStatus = new Label();
         main.addComponent(memoryStatus);
 
+        statusLayout.setMargin(true);
         status.setVisible(false);
         main.addComponent(status);
 

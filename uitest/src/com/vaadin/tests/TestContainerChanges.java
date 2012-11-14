@@ -177,21 +177,23 @@ public class TestContainerChanges extends CustomComponent {
                 });
         buttons.addComponent(b);
 
-        Panel p = new Panel("Tree");
+        VerticalLayout pl = createPanelLayout();
+        Panel p = new Panel("Tree", pl);
         p.setStyleName(Reindeer.PANEL_LIGHT);
         h.addComponent(p);
         Tree tree = new Tree("ITEM_CAPTION_MODE_PROPERTY");
         tree.setContainerDataSource(ordered);
         tree.setItemCaptionPropertyId("Asd");
         tree.setItemCaptionMode(Tree.ITEM_CAPTION_MODE_PROPERTY);
-        p.addComponent(tree);
+        pl.addComponent(tree);
         tree = new Tree("ITEM_CAPTION_MODE_ITEM");
         // nonhierarchical container will get wrapped
         tree.setContainerDataSource(ordered);
         tree.setItemCaptionMode(Tree.ITEM_CAPTION_MODE_ITEM);
-        p.addComponent(tree);
+        pl.addComponent(tree);
 
-        p = new Panel("ComboBox");
+        pl = createPanelLayout();
+        p = new Panel("ComboBox", pl);
         p.setStyleName(Reindeer.PANEL_LIGHT);
         h.addComponent(p);
         ComboBox c = new ComboBox("ITEM_CAPTION_MODE_PROPERTY");
@@ -199,24 +201,31 @@ public class TestContainerChanges extends CustomComponent {
         c.setContainerDataSource(cont);
         c.setItemCaptionPropertyId("Asd");
         c.setItemCaptionMode(ComboBox.ITEM_CAPTION_MODE_PROPERTY);
-        p.addComponent(c);
+        pl.addComponent(c);
         c = new ComboBox("ITEM_CAPTION_MODE_ITEM");
         c.setImmediate(true);
         c.setContainerDataSource(cont);
         c.setItemCaptionMode(ComboBox.ITEM_CAPTION_MODE_ITEM);
-        p.addComponent(c);
+        pl.addComponent(c);
 
-        p = new Panel("ListBox");
+        pl = createPanelLayout();
+        p = new Panel("ListBox", pl);
         p.setStyleName(Reindeer.PANEL_LIGHT);
         h.addComponent(p);
         ListSelect l = new ListSelect("ITEM_CAPTION_MODE_PROPERTY");
         l.setContainerDataSource(cont);
         l.setItemCaptionPropertyId("Asd");
         l.setItemCaptionMode(ComboBox.ITEM_CAPTION_MODE_PROPERTY);
-        p.addComponent(l);
+        pl.addComponent(l);
         l = new ListSelect("ITEM_CAPTION_MODE_ITEM");
         l.setContainerDataSource(cont);
         l.setItemCaptionMode(ComboBox.ITEM_CAPTION_MODE_ITEM);
-        p.addComponent(l);
+        pl.addComponent(l);
+    }
+
+    private VerticalLayout createPanelLayout() {
+        VerticalLayout pl = new VerticalLayout();
+        pl.setMargin(true);
+        return pl;
     }
 }

@@ -128,9 +128,11 @@ public class LayoutDemo extends com.vaadin.server.LegacyApplication {
     }
 
     private Component getExampleComponent(String caption) {
-        final Panel panel = new Panel();
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        final Panel panel = new Panel(layout);
         panel.setCaption("Panel component " + caption);
-        panel.addComponent(new Label(
+        layout.addComponent(new Label(
                 "Panel is a container for other components, by default it draws a frame around it's "
                         + "extremities and may have a caption to clarify the nature of the contained components' purpose."
                         + " Panel contains an layout where the actual contained components are added, "

@@ -56,7 +56,8 @@ public class TestForStyledUpload extends LegacyApplication implements
 
     TmpFileBuffer buffer = new TmpFileBuffer();
 
-    Panel status = new Panel("Uploaded file:");
+    VerticalLayout statusLayout = new VerticalLayout();
+    Panel status = new Panel("Uploaded file:", statusLayout);
 
     private final Upload up;
 
@@ -122,6 +123,7 @@ public class TestForStyledUpload extends LegacyApplication implements
         memoryStatus = new Label();
         main.addComponent(memoryStatus);
 
+        statusLayout.setMargin(true);
         status.setVisible(false);
         main.addComponent(status);
 
@@ -175,21 +177,22 @@ public class TestForStyledUpload extends LegacyApplication implements
 
     @Override
     public void uploadFinished(FinishedEvent event) {
-        status.removeAllComponents();
+        statusLayout.removeAllComponents();
         final InputStream stream = buffer.getStream();
         if (stream == null) {
-            status.addComponent(new Label(
+            statusLayout.addComponent(new Label(
                     "Upload finished, but output buffer is null!!"));
         } else {
-            status.addComponent(new Label(
-                    "<b>Name:</b> " + event.getFilename(), ContentMode.HTML));
-            status.addComponent(new Label("<b>Mimetype:</b> "
+            statusLayout.addComponent(new Label("<b>Name:</b> "
+                    + event.getFilename(), ContentMode.HTML));
+            statusLayout.addComponent(new Label("<b>Mimetype:</b> "
                     + event.getMIMEType(), ContentMode.HTML));
-            status.addComponent(new Label("<b>Size:</b> " + event.getLength()
-                    + " bytes.", ContentMode.HTML));
+            statusLayout.addComponent(new Label("<b>Size:</b> "
+                    + event.getLength() + " bytes.", ContentMode.HTML));
 
-            status.addComponent(new Link("Download " + buffer.getFileName(),
-                    new StreamResource(buffer, buffer.getFileName())));
+            statusLayout.addComponent(new Link("Download "
+                    + buffer.getFileName(), new StreamResource(buffer, buffer
+                    .getFileName())));
 
             status.setVisible(true);
         }

@@ -106,7 +106,9 @@ public class VerticalLayoutWithEmptyLabel extends AbstractTestUI {
     }
 
     protected Component buildRootSeparator() {
-        Panel panel = new Panel();
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        Panel panel = new Panel(layout);
         panel.addStyleName("pexp-separator");
         panel.setWidth("100%");
         panel.setHeight(3.0f, Sizeable.Unit.PIXELS);

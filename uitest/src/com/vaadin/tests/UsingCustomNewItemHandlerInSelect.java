@@ -23,6 +23,7 @@ import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Select;
+import com.vaadin.ui.VerticalLayout;
 
 public class UsingCustomNewItemHandlerInSelect extends CustomComponent {
 
@@ -34,8 +35,10 @@ public class UsingCustomNewItemHandlerInSelect extends CustomComponent {
 
     public UsingCustomNewItemHandlerInSelect() {
 
-        final Panel panel = new Panel("Select demo");
-        panel.addComponent(select);
+        VerticalLayout pl = new VerticalLayout();
+        pl.setMargin(true);
+        final Panel panel = new Panel("Select demo", pl);
+        pl.addComponent(select);
 
         select.setCaption("Select component");
         select.setImmediate(true);

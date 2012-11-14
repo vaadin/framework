@@ -65,12 +65,14 @@ public class TouchScrollables extends TestBase {
         Layout cssLayout = new CssLayout();
         cssLayout.setCaption("Panel");
 
-        final Panel p = new Panel();
+        final VerticalLayout pl = new VerticalLayout();
+        pl.setMargin(true);
+        final Panel p = new Panel(pl);
         p.setHeight("400px");
         Label l50 = null;
         for (int i = 0; i < 100; i++) {
             Label c = new Label("Label" + i);
-            p.addComponent(c);
+            pl.addComponent(c);
             if (i == 50) {
                 l50 = c;
             }

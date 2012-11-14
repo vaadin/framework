@@ -4,12 +4,15 @@ import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.VerticalLayout;
 
 public class PanelClickListenerRelativeCoordinates extends TestBase {
 
     @Override
     protected void setup() {
-        Panel panel = new Panel("Panel's caption");
+        VerticalLayout panelLayout = new VerticalLayout();
+        panelLayout.setMargin(true);
+        Panel panel = new Panel("Panel's caption", panelLayout);
         panel.addListener(new ClickListener() {
 
             @Override

@@ -16,8 +16,6 @@
 
 package com.vaadin.ui;
 
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
 
 import com.vaadin.event.Action;
@@ -41,15 +39,8 @@ import com.vaadin.ui.Component.Focusable;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class Panel extends AbstractComponentContainer implements Scrollable,
-        ComponentContainer.ComponentAttachListener,
-        ComponentContainer.ComponentDetachListener, Action.Notifier, Focusable,
-        LegacyComponent {
-
-    /**
-     * Content of the panel.
-     */
-    private ComponentContainer content;
+public class Panel extends AbstractSingleComponentContainer implements
+        Scrollable, Action.Notifier, Focusable, LegacyComponent {
 
     /**
      * Keeps track of the Actions added to this component, and manages the
@@ -122,75 +113,6 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
         super.setCaption(caption);
     }
 
-    /**
-     * Returns the content of the Panel.
-     * 
-     * @return
-     */
-    public ComponentContainer getContent() {
-        return content;
-    }
-
-    /**
-     * 
-     * Set the content of the Panel. If null is given as the new content then a
-     * layout is automatically created and set as the content.
-     * 
-     * @param content
-     *            The new content
-     */
-    public void setContent(ComponentContainer newContent) {
-
-        // If the content is null we create the default content
-        if (newContent == null) {
-            newContent = createDefaultContent();
-        }
-
-        // if (newContent == null) {
-        // throw new IllegalArgumentException("Content cannot be null");
-        // }
-
-        if (newContent == content) {
-            // don't set the same content twice
-            return;
-        }
-
-        // detach old content if present
-        if (content != null) {
-            content.setParent(null);
-            content.removeListener((ComponentContainer.ComponentAttachListener) this);
-            content.removeListener((ComponentContainer.ComponentDetachListener) this);
-        }
-
-        // Sets the panel to be parent for the content
-        newContent.setParent(this);
-
-        // Sets the new content
-        content = newContent;
-
-        // Adds the event listeners for new content
-        newContent
-                .addListener((ComponentContainer.ComponentAttachListener) this);
-        newContent
-                .addListener((ComponentContainer.ComponentDetachListener) this);
-
-        content = newContent;
-        markAsDirty();
-    }
-
-    /**
-     * Create a ComponentContainer which is added by default to the Panel if
-     * user does not specify any content.
-     * 
-     * @return
-     */
-    private ComponentContainer createDefaultContent() {
-        VerticalLayout layout = new VerticalLayout();
-        // Force margins by default
-        layout.setMargin(true);
-        return layout;
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -205,53 +127,12 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     }
 
     /**
-     * Adds the component into this container.
-     * 
-     * @param c
-     *            the component to be added.
-     * @see com.vaadin.ui.AbstractComponentContainer#addComponent(com.vaadin.ui.Component)
-     */
-    @Override
-    public void addComponent(Component c) {
-        content.addComponent(c);
-        // No repaint request is made as we except the underlying container to
-        // request repaints
-    }
-
-    /**
-     * Removes the component from this container.
-     * 
-     * @param c
-     *            The component to be removed.
-     * @see com.vaadin.ui.AbstractComponentContainer#removeComponent(com.vaadin.ui.Component)
-     */
-    @Override
-    public void removeComponent(Component c) {
-        content.removeComponent(c);
-        // No repaint request is made as we except the underlying container to
-        // request repaints
-    }
-
-    /**
-     * Gets the component container iterator for going through all the
-     * components in the container.
-     * 
-     * @return the Iterator of the components inside the container.
-     * @see com.vaadin.ui.ComponentContainer#getComponentIterator()
-     */
-    @Override
-    public Iterator<Component> iterator() {
-        return Collections.singleton((Component) content).iterator();
-    }
-
-    /**
      * Called when one or more variables handled by the implementing class are
      * changed.
      * 
      * @see com.vaadin.server.VariableOwner#changeVariables(Object, Map)
      */
     @Override
-    @SuppressWarnings("unchecked")
     public void changeVariables(Object source, Map<String, Object> variables) {
         // Get new size
         final Integer newWidth = (Integer) variables.get("width");
@@ -330,47 +211,6 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
                     "Scroll offset must be at least 0");
         }
         getState().scrollTop = scrollTop;
-    }
-
-    /* Documented in superclass */
-    @Override
-    public void replaceComponent(Component oldComponent, Component newComponent) {
-
-        content.replaceComponent(oldComponent, newComponent);
-    }
-
-    /**
-     * A new component is attached to container.
-     * 
-     * @see com.vaadin.ui.ComponentContainer.ComponentAttachListener#componentAttachedToContainer(com.vaadin.ui.ComponentContainer.ComponentAttachEvent)
-     */
-    @Override
-    public void componentAttachedToContainer(ComponentAttachEvent event) {
-        if (event.getContainer() == content) {
-            fireComponentAttachEvent(event.getAttachedComponent());
-        }
-    }
-
-    /**
-     * A component has been detached from container.
-     * 
-     * @see com.vaadin.ui.ComponentContainer.ComponentDetachListener#componentDetachedFromContainer(com.vaadin.ui.ComponentContainer.ComponentDetachEvent)
-     */
-    @Override
-    public void componentDetachedFromContainer(ComponentDetachEvent event) {
-        if (event.getContainer() == content) {
-            fireComponentDetachEvent(event.getDetachedComponent());
-        }
-    }
-
-    /**
-     * Removes all components from this container.
-     * 
-     * @see com.vaadin.ui.ComponentContainer#removeAllComponents()
-     */
-    @Override
-    public void removeAllComponents() {
-        content.removeAllComponents();
     }
 
     /*
@@ -488,17 +328,6 @@ public class Panel extends AbstractComponentContainer implements Scrollable,
     @Override
     public void focus() {
         super.focus();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.ComponentContainer#getComponentCount()
-     */
-    @Override
-    public int getComponentCount() {
-        // This is so wrong... (#2924)
-        return content.getComponentCount();
     }
 
     @Override

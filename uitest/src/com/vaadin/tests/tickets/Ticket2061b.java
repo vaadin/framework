@@ -41,12 +41,14 @@ public class Ticket2061b extends LegacyApplication implements
         sp.setSizeFull();
         sp.setSplitPosition(20, Sizeable.UNITS_PIXELS);
 
-        p = new Panel("This is a panel");
+        VerticalLayout pl = new VerticalLayout();
+        pl.setMargin(true);
+        p = new Panel("This is a panel", pl);
         p.setSizeFull();
         Label label1 = new Label("This is a table!");
         label1.setHeight("1500px");
         label1.setWidth("1500px");
-        p.addComponent(label1);
+        pl.addComponent(label1);
         p.setScrollTop(50);
         // MyTable table1 = new MyTable(24, "table1");
         // table1.loadTable(1000);
@@ -80,17 +82,21 @@ public class Ticket2061b extends LegacyApplication implements
         // sp.addComponent(new Label("Filler"));
         // sp.addComponent(tab);
 
-        p = new Panel("This is a panel");
+        pl = new VerticalLayout();
+        pl.setMargin(true);
+        p = new Panel("This is a panel", pl);
         p.setWidth("2000px");
         p.setHeight("2000px");
-        Panel p2 = new Panel("This is another panel");
+        VerticalLayout p2l = new VerticalLayout();
+        p2l.setMargin(true);
+        Panel p2 = new Panel("This is another panel", p2l);
         p2.setWidth("2500px");
         p2.setHeight("2500px");
         label1 = new Label("This is a table!");
         label1.setHeight("1500px");
         label1.setWidth("1500px");
-        p2.addComponent(label1);
-        p.addComponent(p2);
+        p2l.addComponent(label1);
+        pl.addComponent(p2);
 
         tab.addTab(p, "Panel with panel", null);
     }

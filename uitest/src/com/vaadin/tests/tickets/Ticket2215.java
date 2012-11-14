@@ -14,8 +14,10 @@ public class Ticket2215 extends LegacyApplication {
         setMainWindow(new LegacyWindow());
 
         VerticalLayout ol = new VerticalLayout();
-        Panel p = new Panel("Test");
-        p.addComponent(new Label("Panel1"));
+        VerticalLayout pl = new VerticalLayout();
+        pl.setMargin(true);
+        Panel p = new Panel("Test", pl);
+        pl.addComponent(new Label("Panel1"));
         p.setHeight("500px");
         p.setWidth("500px");
         p.setStyleName(Reindeer.PANEL_LIGHT);

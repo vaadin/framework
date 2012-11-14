@@ -62,7 +62,7 @@ public class Ticket2048 extends LegacyApplication {
         p.setSizeFull();
         Label l = new Label("Spacer");
         l.setHeight("400px");
-        p.addComponent(l);
+        ol.addComponent(l);
 
         embedded = new Embedded(null, new ThemeResource(
                 "icons/64/folder-add.png"));
@@ -81,7 +81,7 @@ public class Ticket2048 extends LegacyApplication {
                     }
 
                 });
-        p.addComponent(b);
+        ol.addComponent(b);
 
         b = new Button("Change image source (is fine)", new ClickListener() {
 
@@ -98,7 +98,7 @@ public class Ticket2048 extends LegacyApplication {
 
         });
 
-        p.addComponent(b);
+        ol.addComponent(b);
         layout.addComponent(p);
     }
 }

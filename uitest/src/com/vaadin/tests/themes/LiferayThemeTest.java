@@ -5,6 +5,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.LiferayTheme;
 
 @Theme("liferay")
@@ -12,14 +13,18 @@ public class LiferayThemeTest extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Panel p = new Panel("Panel");
+        VerticalLayout pl = new VerticalLayout();
+        pl.setMargin(true);
+        Panel p = new Panel("Panel", pl);
         addComponent(p);
-        p.addComponent(new Label("Panel content"));
+        pl.addComponent(new Label("Panel content"));
 
-        p = new Panel("Light Panel");
+        pl = new VerticalLayout();
+        pl.setMargin(true);
+        p = new Panel("Light Panel", pl);
         p.addStyleName(LiferayTheme.PANEL_LIGHT);
         addComponent(p);
-        p.addComponent(new Label("Panel content"));
+        pl.addComponent(new Label("Panel content"));
     }
 
     @Override

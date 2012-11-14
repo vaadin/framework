@@ -17,11 +17,13 @@ public class Ticket1923 extends com.vaadin.server.LegacyApplication {
                 .substring(getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
-        p = new Panel("TestPanel 250x300");
+        VerticalLayout pl = new VerticalLayout();
+        pl.setMargin(true);
+        p = new Panel("TestPanel 250x300", pl);
         // p.getLayout().setWidth("100%");
         // p.setContent(new GridLayout(1, 100));
         for (int i = 0; i < ROWS; i++) {
-            p.addComponent(new Label(
+            pl.addComponent(new Label(
                     "Label"
                             + i
                             + " 5067w09adsfasdjfahlsdfjhalfjhaldjfhalsjdfhlajdhflajhdfljahdslfjahldsjfhaljdfhaljfdhlajsdhflajshdflkajhsdlfkjahsldfkjahsldfhalskjfdhlksjfdh857idifhaljsdfhlajsdhflajhdflajhdfljahldfjhaljdfhalsjdfhalkjdhflkajhdfljahsdlfjahlsdjfhaldjfhaljfdhlajdhflajshdfljahsdlfjhalsjdfhalskjhfdlhusfglksuhdflgjshflgjhslfghslfjghsljfglsjhfglsjhfgljshfgljshflgjhslfghsljfgsljdfglsdjhfglsjhflgkjshfldjgh"));
@@ -38,40 +40,47 @@ public class Ticket1923 extends com.vaadin.server.LegacyApplication {
         main.addComponent(p);
 
         VerticalLayout ol = new VerticalLayout();
-        p = new Panel("a");
-        p.addComponent(new Label("Longer than caption"));
+        pl = new VerticalLayout();
+        pl.setMargin(true);
+        p = new Panel("a", pl);
+        pl.addComponent(new Label("Longer than caption"));
         ol.addComponent(p);
 
         main.addComponent(ol);
 
         ol = new VerticalLayout();
-        p = new Panel("captionasdfjahsdjfh this should be clipped god damn it");
+        pl = new VerticalLayout();
+        pl.setMargin(true);
+        p = new Panel("captionasdfjahsdjfh this should be clipped god damn it",
+                pl);
         // p.getLayout().setSizeFull();
         p.setWidth("50px");
         p.setHeight("100px");
-        p.addComponent(new Label(
+        pl.addComponent(new Label(
                 "aasdfaasdfja dslkfj lakfdj lakjdf lkaj dflkaj ldfkj alsdfj laksdj flkajs dflkj sdfsadfasdfasd"));
         ol.addComponent(p);
 
         main.addComponent(ol);
 
         ol = new VerticalLayout();
-        p = new Panel("300x-1");
+        pl = new VerticalLayout();
+        pl.setMargin(true);
+        p = new Panel("300x-1", pl);
         // p.getLayout().setSizeFull();
         p.setWidth("300px");
-        p.addComponent(new Label("Short"));
-        p.addComponent(new Label("Short"));
-        p.addComponent(new Label("Short"));
-        p.addComponent(new Label("Short"));
-        p.addComponent(new Label("Short"));
-        p.addComponent(new Label("Short"));
-        p.addComponent(new Label("Short"));
-        p.addComponent(new Label("Short"));
-        p.addComponent(new Label("Short"));
-        p.addComponent(new Label("Short"));
-        p.addComponent(new Label("Short"));
-        p.addComponent(new Label("Short"));
-        p.addComponent(new Label("Short"));
+        pl.addComponent(new Label("Short"));
+        pl.addComponent(new Label("Short"));
+        pl.addComponent(new Label("Short"));
+        pl.addComponent(new Label("Short"));
+        pl.addComponent(new Label("Short"));
+        pl.addComponent(new Label("Short"));
+        pl.addComponent(new Label("Short"));
+        pl.addComponent(new Label("Short"));
+        pl.addComponent(new Label("Short"));
+        pl.addComponent(new Label("Short"));
+        pl.addComponent(new Label("Short"));
+        pl.addComponent(new Label("Short"));
+        pl.addComponent(new Label("Short"));
         ol.addComponent(p);
 
         main.addComponent(ol);

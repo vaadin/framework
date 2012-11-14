@@ -22,20 +22,19 @@ public class Ticket1572 extends com.vaadin.server.LegacyApplication {
                 .substring(getClass().getName().lastIndexOf(".") + 1));
         setMainWindow(main);
 
-        Panel p = new Panel("Test wrapper for gridlayout margin/spacing");
-
-        p.setContent(new HorizontalLayout());
+        HorizontalLayout pl = new HorizontalLayout();
+        Panel p = new Panel("Test wrapper for gridlayout margin/spacing", pl);
 
         gl = new GridLayout(3, 3);
         gl.setMargin(true);
         for (int i = 0; i < 3 * 3; i++) {
             gl.addComponent(new Button("test"));
         }
-        p.addComponent(gl);
-        p.addComponent(new Label("| next component"));
+        pl.addComponent(gl);
+        pl.addComponent(new Label("| next component"));
 
         Button b = new Button("next margin state");
-        b.addListener(new Button.ClickListener() {
+        b.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 nextMarginState();
@@ -49,7 +48,7 @@ public class Ticket1572 extends com.vaadin.server.LegacyApplication {
         main.addComponent(b);
 
         Button b2 = new Button("next spacing state");
-        b2.addListener(new Button.ClickListener() {
+        b2.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 nextSpacingState();

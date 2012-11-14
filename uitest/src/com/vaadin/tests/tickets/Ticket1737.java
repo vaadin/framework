@@ -34,10 +34,12 @@ public class Ticket1737 extends LegacyApplication {
         VerticalLayout el = new VerticalLayout();
         main.setContent(el);
 
-        Panel p = new Panel("Test panel");
+        VerticalLayout pl = new VerticalLayout();
+        pl.setMargin(true);
+        Panel p = new Panel("Test panel", pl);
         p.setSizeFull();
 
-        p.addComponent(new Label(
+        pl.addComponent(new Label(
                 "Second component is embedded with a slow resource "
                         + "and thus should break layout if Embedded cannot"
                         + " request re-layout after load."));

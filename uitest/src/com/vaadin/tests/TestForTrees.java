@@ -49,7 +49,7 @@ public class TestForTrees extends CustomComponent implements Handler {
     private final Action[] actions = new Action[] { new Action("edit"),
             new Action("delete") };
 
-    private Panel al;
+    private VerticalLayout al;
 
     private Tree contextTree;
 
@@ -93,8 +93,9 @@ public class TestForTrees extends CustomComponent implements Handler {
         t.setImmediate(true);
         t.addActionHandler(this);
         final AbstractOrderedLayout ol = (AbstractOrderedLayout) createTestBench(t);
-        al = new Panel("action log");
-        ol.addComponent(al);
+        al = new VerticalLayout();
+        al.setMargin(true);
+        ol.addComponent(new Panel("action log", al));
         main.addComponent(ol);
         contextTree = t;
 
@@ -141,16 +142,18 @@ public class TestForTrees extends CustomComponent implements Handler {
 
         ol.addComponent(t);
 
-        final Panel status = new Panel("Events");
+        final VerticalLayout statusLayout = new VerticalLayout();
+        statusLayout.setMargin(true);
+        final Panel status = new Panel("Events", statusLayout);
         final Button clear = new Button("c");
-        clear.addListener(new ClickListener() {
+        clear.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                status.removeAllComponents();
-                status.addComponent(clear);
+                statusLayout.removeAllComponents();
+                statusLayout.addComponent(clear);
             }
         });
-        status.addComponent(clear);
+        statusLayout.addComponent(clear);
 
         status.setHeight("300px");
         status.setWidth("400px");
@@ -160,9 +163,10 @@ public class TestForTrees extends CustomComponent implements Handler {
         t.addListener(new Listener() {
             @Override
             public void componentEvent(Event event) {
-                status.addComponent(new Label(event.getClass().getName()));
+                statusLayout
+                        .addComponent(new Label(event.getClass().getName()));
                 // TODO should not use Field.toString()
-                status.addComponent(new Label("selected: "
+                statusLayout.addComponent(new Label("selected: "
                         + event.getSource().toString()));
             }
         });

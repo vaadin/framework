@@ -38,7 +38,9 @@ public class DeepComponentTrees extends TestBase {
         Label l = new Label(
                 "This is a nice game to guess how many Layouts your FF2 (or any other browser) can deal with. Due to the worldwide attempt to decrease energy consumption, playing this game is only allowed above 60° longitude betwheen August and May (as excess energy consumed by you CPU is used to heat your room). It is considered wise to save all your work before starting the game.");
 
-        root = new Panel("Test box");
+        VerticalLayout rootLayout = new VerticalLayout();
+        rootLayout.setMargin(true);
+        root = new Panel("Test box", rootLayout);
         root.setWidth("600px");
         root.setHeight("200px");
         final Button b = new Button("Go try your luck with " + i + " layouts!");

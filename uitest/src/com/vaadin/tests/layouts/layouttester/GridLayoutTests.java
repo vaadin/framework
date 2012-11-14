@@ -372,7 +372,9 @@ public class GridLayoutTests extends AbstractLayoutTests {
         row3.setIcon(icons[1]);
 
         glo.replaceComponent(x3, x3 = new CheckBox("CHECKBOX"));
-        glo.replaceComponent(x22, x22 = new Panel("PANEL"));
+        VerticalLayout pl = new VerticalLayout();
+        pl.setMargin(true);
+        glo.replaceComponent(x22, x22 = new Panel("PANEL", pl));
         x22.setIcon(new ThemeResource(CALENDAR_32_PNG));
 
         x3.setIcon(icons[0]);
@@ -553,7 +555,9 @@ public class GridLayoutTests extends AbstractLayoutTests {
         row3.setCaption("long test caption bewucbwuebco or bmort b cbwecubw wbeucwe asdasd asdasda asdasd");
 
         glo.replaceComponent(x3, x3 = new CheckBox("CHECKBOX"));
-        glo.replaceComponent(x22, x22 = new Panel("PANEL"));
+        VerticalLayout pl = new VerticalLayout();
+        pl.setMargin(true);
+        glo.replaceComponent(x22, x22 = new Panel("PANEL", pl));
 
         x3.setComponentError(new UserError("component error, user error"));
         x22.setComponentError(new UserError("component error, user error"));

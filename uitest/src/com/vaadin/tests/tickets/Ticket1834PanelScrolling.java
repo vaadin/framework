@@ -7,14 +7,17 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.VerticalLayout;
 
-public class Ticket1834PanelScrolling extends com.vaadin.server.LegacyApplication {
+public class Ticket1834PanelScrolling extends
+        com.vaadin.server.LegacyApplication {
 
     private static final int ROWS = 50;
 
     private Label state = new Label("State");
 
     private Panel p;
+    private VerticalLayout pl;
 
     @Override
     public void init() {
@@ -55,7 +58,7 @@ public class Ticket1834PanelScrolling extends com.vaadin.server.LegacyApplicatio
 
             @Override
             public void buttonClick(ClickEvent event) {
-                p.addComponent(new Label("new Row" + ++i));
+                pl.addComponent(new Label("new Row" + ++i));
             }
         });
 
@@ -71,10 +74,12 @@ public class Ticket1834PanelScrolling extends com.vaadin.server.LegacyApplicatio
 
         main.addComponent(b);
 
-        p = new Panel("TestPanel");
+        pl = new VerticalLayout();
+        pl.setMargin(true);
+        p = new Panel("TestPanel", pl);
 
         for (int i = 0; i < ROWS; i++) {
-            p.addComponent(new Label(
+            pl.addComponent(new Label(
                     "Label"
                             + i
                             + "................................................................................................................."));
