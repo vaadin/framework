@@ -407,20 +407,24 @@ public class LiferayThemeDemo extends LegacyApplication {
         final CssLayout l = new CssLayout();
         l.setCaption("Windows");
 
-        final Window w = new Window("Normal window");
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        final Window w = new Window("Normal window", layout);
         w.setWidth("280px");
         w.setHeight("180px");
         w.setPositionX(40);
         w.setPositionY(160);
 
-        final Window w2 = new Window("Window, no resize");
+        VerticalLayout layout2 = new VerticalLayout();
+        layout2.setMargin(true);
+        final Window w2 = new Window("Window, no resize", layout2);
         w2.setResizable(false);
         w2.setWidth("280px");
         w2.setHeight("180px");
         w2.setPositionX(350);
         w2.setPositionY(160);
-        w2.addComponent(new Label("<code>Window.setResizable(false)</code>",
-                ContentMode.HTML));
+        layout2.addComponent(new Label(
+                "<code>Window.setResizable(false)</code>", ContentMode.HTML));
 
         tabs.addListener(new TabSheet.SelectedTabChangeListener() {
             @Override

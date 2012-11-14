@@ -60,21 +60,23 @@ public class ComponentSizeValidator implements Serializable {
             Component component, List<InvalidLayout> errors,
             InvalidLayout parent) {
 
-        boolean invalidHeight = !checkHeights(component);
-        boolean invalidWidth = !checkWidths(component);
+        if (component != null) {
+            boolean invalidHeight = !checkHeights(component);
+            boolean invalidWidth = !checkWidths(component);
 
-        if (invalidHeight || invalidWidth) {
-            InvalidLayout error = new InvalidLayout(component, invalidHeight,
-                    invalidWidth);
-            if (parent != null) {
-                parent.addError(error);
-            } else {
-                if (errors == null) {
-                    errors = new LinkedList<InvalidLayout>();
+            if (invalidHeight || invalidWidth) {
+                InvalidLayout error = new InvalidLayout(component,
+                        invalidHeight, invalidWidth);
+                if (parent != null) {
+                    parent.addError(error);
+                } else {
+                    if (errors == null) {
+                        errors = new LinkedList<InvalidLayout>();
+                    }
+                    errors.add(error);
                 }
-                errors.add(error);
+                parent = error;
             }
-            parent = error;
         }
 
         if (component instanceof Panel) {

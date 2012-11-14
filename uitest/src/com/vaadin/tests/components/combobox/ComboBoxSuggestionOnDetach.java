@@ -6,6 +6,7 @@ import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class ComboBoxSuggestionOnDetach extends TestBase {
@@ -13,6 +14,12 @@ public class ComboBoxSuggestionOnDetach extends TestBase {
     @Override
     protected void setup() {
         final Window popup = new Window();
+
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        layout.setSizeUndefined();
+        popup.setContent(layout);
+
         ComboBox comboBox = new ComboBox("Combo box", Arrays.asList("Option 1",
                 "Option 2", "Option 3"));
         comboBox.addListener(new FieldEvents.FocusListener() {
@@ -21,10 +28,9 @@ public class ComboBoxSuggestionOnDetach extends TestBase {
                 popup.close();
             }
         });
-        popup.addComponent(comboBox);
+        layout.addComponent(comboBox);
 
         popup.setSizeUndefined();
-        popup.getContent().setSizeUndefined();
         popup.center();
 
         getMainWindow().addWindow(popup);

@@ -46,6 +46,7 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.TreeDragMode;
 import com.vaadin.ui.Tree.TreeTargetDetails;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class DDTest6 extends TestBase {
@@ -256,9 +257,11 @@ public class DDTest6 extends TestBase {
         // ATM supports only images.
         if (file.getType().equals("image/png")) {
             Embedded embedded = new Embedded(file.getName(), file.getResource());
-            Window w = new Window(file.getName());
-            w.addComponent(embedded);
-            w.getContent().setSizeUndefined();
+            VerticalLayout layout = new VerticalLayout();
+            layout.setMargin(true);
+            Window w = new Window(file.getName(), layout);
+            layout.addComponent(embedded);
+            layout.setSizeUndefined();
             getMainWindow().addWindow(w);
         } else if (file.getType().equals("text/csv")) {
             showSpreadsheet(file);
@@ -281,10 +284,12 @@ public class DDTest6 extends TestBase {
             String[] split = rows[i].split(",");
             table.addItem(split, "" + i);
         }
-        Window w = new Window(file.getName());
-        w.getContent().setSizeUndefined();
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        Window w = new Window(file.getName(), layout);
+        layout.setSizeUndefined();
         table.setEditable(true);
-        w.addComponent(table);
+        layout.addComponent(table);
         getMainWindow().addWindow(w);
 
     }

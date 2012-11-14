@@ -11,6 +11,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class AttachShouldBeCalledForSubWindows extends AbstractTestCase {
@@ -72,7 +73,9 @@ public class AttachShouldBeCalledForSubWindows extends AbstractTestCase {
     }
 
     private Window createSubWindow() {
-        Window w = new Window("Sub window") {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        Window w = new Window("Sub window", layout) {
             @Override
             public void attach() {
                 log(this);
@@ -95,7 +98,7 @@ public class AttachShouldBeCalledForSubWindows extends AbstractTestCase {
             }
         });
         okButton.setClickShortcut(KeyCode.ENTER);
-        w.addComponent(okButton);
+        layout.addComponent(okButton);
         w.center();
         return w;
     }

@@ -8,6 +8,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 @SuppressWarnings("serial")
@@ -31,7 +32,10 @@ public class ShortCutListenerModification extends TestBase implements
 
         for (int j = 0; j < 20; j++) {
 
+            VerticalLayout layout = new VerticalLayout();
+            layout.setMargin(true);
             Window window = new Window();
+            window.setContent(layout);
             getMainWindow().addWindow(window);
 
             Button button1 = new Button("b1 (CTRL-C)");
@@ -43,8 +47,8 @@ public class ShortCutListenerModification extends TestBase implements
             button1.setClickShortcut(KeyCode.C, ModifierKey.CTRL);
             button2.setClickShortcut(KeyCode.V, ModifierKey.CTRL);
 
-            window.addComponent(button1);
-            window.addComponent(button2);
+            layout.addComponent(button1);
+            layout.addComponent(button2);
             button1.focus();
             button1.setData(prev);
             prev = button1;

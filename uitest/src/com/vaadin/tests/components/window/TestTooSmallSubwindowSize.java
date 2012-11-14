@@ -2,6 +2,7 @@ package com.vaadin.tests.components.window;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class TestTooSmallSubwindowSize extends TestBase {
@@ -18,14 +19,16 @@ public class TestTooSmallSubwindowSize extends TestBase {
 
     @Override
     protected void setup() {
-        Window w = new Window("Scroll");
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        Window w = new Window("Scroll", layout);
         Label desc = new Label(
                 "This is a new child window with a preset"
                         + " width, height and position. Resizing has been"
                         + " disabled for this window. Additionally, this text label"
                         + " is intentionally too large to fit the window. You can"
                         + " use the scrollbars to view different parts of the window content.");
-        w.addComponent(desc);
+        layout.addComponent(desc);
 
         // Set window position
         w.setPositionX(100);

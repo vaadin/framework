@@ -44,7 +44,7 @@ public class TicketTests {
                 "SELECT * FROM people", Arrays.asList("ID"), connectionPool));
         Table table = new Table();
         Window w = new Window();
-        w.addComponent(table);
+        w.setContent(table);
         table.setContainerDataSource(container);
     }
 

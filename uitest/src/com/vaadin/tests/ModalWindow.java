@@ -22,6 +22,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 /**
@@ -77,22 +78,24 @@ public class ModalWindow extends com.vaadin.server.LegacyApplication implements
 
     private void openSubWindow() {
         // Modal window
-        test = new Window("Modal window");
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        test = new Window("Modal window", layout);
         test.setModal(true);
         getMainWindow().addWindow(test);
-        test.addComponent(new Label(
+        layout.addComponent(new Label(
                 "You have to close this window before accessing others."));
 
         // Textfield for modal window
         final TextField f = new TextField();
         f.setTabIndex(4);
-        test.addComponent(f);
+        layout.addComponent(f);
         f.focus();
 
         // Modal window button
         final Button b = new Button("Test Button in modal window");
         b.setTabIndex(5);
         b.addListener(this);
-        test.addComponent(b);
+        layout.addComponent(b);
     }
 }

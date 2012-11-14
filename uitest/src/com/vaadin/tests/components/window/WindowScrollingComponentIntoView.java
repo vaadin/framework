@@ -52,13 +52,15 @@ public class WindowScrollingComponentIntoView extends AbstractTestCase {
         getMainWindow().addComponent(horizontalLayout);
         final Component y9 = l;
 
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
         final Window window = new Window();
         window.setHeight("500px");
         window.setWidth("500px");
         window.setPositionX(200);
         window.setPositionY(200);
 
-        window.addComponent(new Button("Scroll mainwin to X9",
+        layout.addComponent(new Button("Scroll mainwin to X9",
                 new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
@@ -66,7 +68,7 @@ public class WindowScrollingComponentIntoView extends AbstractTestCase {
 
                     }
                 }));
-        window.addComponent(new Button("Scroll mainwin to Y9",
+        layout.addComponent(new Button("Scroll mainwin to Y9",
                 new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
@@ -82,7 +84,7 @@ public class WindowScrollingComponentIntoView extends AbstractTestCase {
         panel.setScrollLeft(50);
         panel.setScrollTop(50);
         panelLayout.setSizeUndefined();
-        window.addComponent(l("Spacer", 500, 500));
+        layout.addComponent(l("Spacer", 500, 500));
 
         l2 = null;
         for (int i = 0; i < 10; i++) {
@@ -119,7 +121,7 @@ public class WindowScrollingComponentIntoView extends AbstractTestCase {
                     }
                 }), 0);
 
-        window.addComponent(panel);
+        layout.addComponent(panel);
         getMainWindow().addWindow(window);
 
     }

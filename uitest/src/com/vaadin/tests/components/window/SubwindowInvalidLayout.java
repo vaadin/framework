@@ -19,7 +19,9 @@ public class SubwindowInvalidLayout extends TestBase {
 
     @Override
     protected void setup() {
-        Window window = new Window("Sub window");
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        Window window = new Window("Sub window", layout);
         window.center();
 
         VerticalLayout vl = new VerticalLayout();
@@ -27,7 +29,7 @@ public class SubwindowInvalidLayout extends TestBase {
         Button b = new Button("A 100% wide button, invalid");
         b.setWidth("100%");
         vl.addComponent(b);
-        window.addComponent(vl);
+        layout.addComponent(vl);
 
         getMainWindow().addWindow(window);
     }

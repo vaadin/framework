@@ -23,7 +23,6 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Layout;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.RichTextArea;
@@ -168,7 +167,9 @@ public class Ticket2204 extends LegacyApplication {
             textArea.setSizeFull();
         }
         if (c == Panel.class) {
-            Layout layout = (Layout) ((Panel) cc).getContent();
+            VerticalLayout layout = new VerticalLayout();
+            layout.setMargin(true);
+            ((Panel) cc).setContent(layout);
             containerToComponent.put(cc, layout);
             layout.setVisible(false);
             textArea.setVisible(true);

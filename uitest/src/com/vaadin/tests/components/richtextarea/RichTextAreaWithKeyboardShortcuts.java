@@ -59,10 +59,12 @@ public class RichTextAreaWithKeyboardShortcuts extends TestBase {
         panelLayout.addComponent(createRichTextArea("InPanel"));
         getLayout().addComponent(panel);
 
-        Window w = new Window("SubWindow");
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        Window w = new Window("SubWindow", layout);
         w.addActionHandler(actionHandler);
-        w.addComponent(createRichTextArea("InSubWindow"));
-        w.getContent().setSizeUndefined();
+        layout.addComponent(createRichTextArea("InSubWindow"));
+        layout.setSizeUndefined();
 
         getLayout().getUI().addWindow(w);
 

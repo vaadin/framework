@@ -109,7 +109,7 @@ public class Ticket1804 extends com.vaadin.server.LegacyApplication {
                 Window w = new Window("Status of the fields");
                 w.setModal(true);
                 w.setHeight("80%");
-                w.addComponent(new Label(msg.toString(), ContentMode.HTML));
+                w.setContent(new Label(msg.toString(), ContentMode.HTML));
                 main.addWindow(w);
             }
         });

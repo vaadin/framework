@@ -3,6 +3,7 @@ package com.vaadin.tests.components.window;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Embedded;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class EmbeddedInSubWindow extends TestBase {
@@ -20,15 +21,17 @@ public class EmbeddedInSubWindow extends TestBase {
     @Override
     protected void setup() {
         setTheme("tests-tickets");
-        Window zoom = new Window("Image Preview");
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        layout.setSizeUndefined();
+        Window zoom = new Window("Image Preview", layout);
         zoom.setSizeUndefined();
-        zoom.getContent().setSizeUndefined();
 
         String res = "icons/EmbeddedInSubWindow-image.png";
         Embedded imagePreview = new Embedded(null, new ThemeResource(res));
         imagePreview.setSizeUndefined();
 
-        zoom.addComponent(imagePreview);
+        layout.addComponent(imagePreview);
         zoom.setModal(true);
         zoom.setResizable(false);
 

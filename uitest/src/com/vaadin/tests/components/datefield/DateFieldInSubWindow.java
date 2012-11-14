@@ -75,9 +75,10 @@ public class DateFieldInSubWindow extends AbstractTestCase {
         }
 
         protected void initWindow() {
-            VerticalLayout layout = (VerticalLayout) getContent();
+            VerticalLayout layout = new VerticalLayout();
             layout.setMargin(true);
             layout.setSpacing(true);
+            setContent(layout);
 
             /**
              * This causes the window to add the .v-readonly style!
@@ -97,7 +98,7 @@ public class DateFieldInSubWindow extends AbstractTestCase {
                 generalForm.setVisibleItemProperties(new String[] { "myDate",
                         "myString" });
                 generalForm.setValidationVisible(true);
-                addComponent(generalForm);
+                layout.addComponent(generalForm);
             }
 
             HorizontalLayout buttons = new HorizontalLayout();

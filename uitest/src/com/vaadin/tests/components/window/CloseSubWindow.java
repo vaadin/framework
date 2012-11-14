@@ -5,6 +5,7 @@ import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
@@ -30,9 +31,11 @@ public class CloseSubWindow extends TestBase {
     }
 
     private Window createClosableSubWindow(final String title) {
-        final Window window = new Window(title);
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        layout.setSizeFull();
+        final Window window = new Window(title, layout);
         window.setSizeUndefined();
-        window.getContent().setSizeFull();
         window.setClosable(true);
 
         Button closeButton = new Button("Close");
@@ -42,7 +45,7 @@ public class CloseSubWindow extends TestBase {
                 event.getButton().findAncestor(Window.class).close();
             }
         });
-        window.addComponent(closeButton);
+        layout.addComponent(closeButton);
 
         Button removeButton = new Button("Remove from parent");
         removeButton.addListener(new ClickListener() {
@@ -51,7 +54,7 @@ public class CloseSubWindow extends TestBase {
                 window.close();
             }
         });
-        window.addComponent(closeButton);
+        layout.addComponent(closeButton);
 
         window.addListener(new CloseListener() {
             @Override

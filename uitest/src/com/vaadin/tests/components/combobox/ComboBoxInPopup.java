@@ -6,15 +6,19 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class ComboBoxInPopup extends TestBase {
 
     @Override
     protected void setup() {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        layout.setSizeUndefined();
         final Window w = new Window();
-        w.getContent().setSizeUndefined();
-        w.addComponent(createComboBox());
+        w.setContent(layout);
+        layout.addComponent(createComboBox());
         Button close = new Button("Close window", new Button.ClickListener() {
 
             @Override
@@ -23,7 +27,7 @@ public class ComboBoxInPopup extends TestBase {
             }
         });
         close.setClickShortcut(KeyCode.ESCAPE, null);
-        w.addComponent(close);
+        layout.addComponent(close);
 
         getLayout().getUI().addWindow(w);
 

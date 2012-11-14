@@ -11,6 +11,7 @@ import com.vaadin.tests.util.LoremIpsum;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.ResizeEvent;
 import com.vaadin.ui.Window.ResizeListener;
@@ -54,11 +55,13 @@ public class LazyWindowResize extends AbstractTestCase {
     public void init() {
         mainWindow = new LegacyWindow("Resize test");
         setMainWindow(mainWindow);
-        subWindow = new Window("Sub window");
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        subWindow = new Window("Sub window", layout);
         subWindow.setHeight("50%");
         subWindow.setWidth("50%");
         subWindow.center();
-        subWindow.addComponent(new Label(LoremIpsum.get(1000)));
+        layout.addComponent(new Label(LoremIpsum.get(1000)));
         getMainWindow().addWindow(subWindow);
 
         lazyMode = new CheckBox("Lazy resize");

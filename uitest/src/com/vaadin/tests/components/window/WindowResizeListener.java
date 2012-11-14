@@ -8,7 +8,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Layout;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class WindowResizeListener extends TestBase {
@@ -82,10 +82,11 @@ class ResizeListenerWindow extends Window {
     Label sizeLabel = new Label();
 
     public ResizeListenerWindow() {
-        super("Subwindow");
+        super("Subwindow", new VerticalLayout());
         setWidth("400px");
 
-        Layout hl = (Layout) getContent();
+        VerticalLayout hl = (VerticalLayout) getContent();
+        hl.setMargin(true);
         hl.addComponent(new Label("Current size: "));
         hl.addComponent(sizeLabel);
 

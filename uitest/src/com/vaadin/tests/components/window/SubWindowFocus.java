@@ -7,6 +7,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class SubWindowFocus extends TestBase {
@@ -43,12 +44,14 @@ public class SubWindowFocus extends TestBase {
         Button b = new Button("new", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                final Window win = new Window("Subwin");
-                win.getContent().setWidth(null);
+                VerticalLayout layout = new VerticalLayout();
+                layout.setMargin(true);
+                final Window win = new Window("Subwin", layout);
+                layout.setWidth(null);
                 win.center();
                 win.setClosable(false);
                 getMainWindow().addWindow(win);
-                win.addComponent(new Label("SPACE notifies, ESC closes."));
+                layout.addComponent(new Label("SPACE notifies, ESC closes."));
 
                 win.addActionHandler(new Action.Handler() {
 
@@ -76,7 +79,7 @@ public class SubWindowFocus extends TestBase {
 
                 });
 
-                win.addComponent(new TextField());
+                layout.addComponent(new TextField());
             }
 
         });

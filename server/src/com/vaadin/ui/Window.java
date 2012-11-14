@@ -105,40 +105,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         setSizeUndefined();
     }
 
-    /**
-     * Add a component to the content ({@link ComponentContainer}) of a window.
-     * 
-     * This version creates an empty {@link VerticalLayout} if no container is
-     * defined, but this automatic creation will be removed in future versions.
-     * 
-     * @param c
-     *            component to add
-     * 
-     * @deprecated use Window.setContent(Component) instead
-     */
-    @Deprecated
-    public void addComponent(Component c) {
-        if (c instanceof Window) {
-            throw new IllegalArgumentException(
-                    "Window cannot be added to another via addComponent. "
-                            + "Use addWindow(Window) instead.");
-        }
-
-        if (getContent() == null) {
-            // TODO this automatic creation should be removed in the future
-            VerticalLayout content = new VerticalLayout();
-            content.setMargin(true);
-            setContent(content);
-        }
-
-        if (getContent() instanceof ComponentContainer) {
-            ((ComponentContainer) getContent()).addComponent(c);
-        } else {
-            throw new IllegalArgumentException(
-                    "Cannot add component to a window whose content is not a ComponentContainer");
-        }
-    }
-
     /* ********************************************************************* */
 
     /*

@@ -2,6 +2,7 @@ package com.vaadin.tests.components.window;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class CenteredWindowWithUndefinedSize extends TestBase {
@@ -18,14 +19,16 @@ public class CenteredWindowWithUndefinedSize extends TestBase {
 
     @Override
     protected void setup() {
-        Window centered = new Window("A window");
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        Window centered = new Window("A window", layout);
         centered.setSizeUndefined();
-        centered.getContent().setSizeFull();
+        layout.setSizeFull();
         centered.center();
 
         Label l = new Label("This window should be centered");
         l.setSizeUndefined();
-        centered.addComponent(l);
+        layout.addComponent(l);
 
         getMainWindow().addWindow(centered);
 

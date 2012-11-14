@@ -11,6 +11,7 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class SubWindowOrder extends TestBase {
@@ -23,11 +24,13 @@ public class SubWindowOrder extends TestBase {
         UI mainWindow = getMainWindow();
         HorizontalLayout controlpanels = new HorizontalLayout();
         for (int i = 1; i <= 5; i++) {
-            Window dialog = new Window("Dialog " + i);
-            dialog.getContent().setSizeUndefined();
+            VerticalLayout layout = new VerticalLayout();
+            layout.setMargin(true);
+            Window dialog = new Window("Dialog " + i, layout);
+            layout.setSizeUndefined();
             windowlist.addBean(dialog);
-            dialog.addComponent(new Label("this is dialog number " + i));
-            dialog.addComponent(new ControlPanel());
+            layout.addComponent(new Label("this is dialog number " + i));
+            layout.addComponent(new ControlPanel());
             mainWindow.addWindow(dialog);
         }
         controlpanels.addComponent(new ControlPanel());

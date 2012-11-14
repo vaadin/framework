@@ -27,8 +27,8 @@ public class PopupViewClickShortcut extends TestBase {
         addComponent(new PopupView("Show popup table", makeTable("Popup",
                 KeyCode.P)));
         addComponent(makeTable("Main window", KeyCode.M));
-        sub.addComponent(new PopupView("Show popup table", makeTable(
-                "Subwindow popup", KeyCode.U)));
+        ((ComponentContainer) sub.getContent()).addComponent(new PopupView(
+                "Show popup table", makeTable("Subwindow popup", KeyCode.U)));
     }
 
     private ComponentContainer makeTable(final String caption, int keyCode) {

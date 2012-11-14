@@ -4,6 +4,7 @@ import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class SubWindowWithUndefinedHeight extends TestBase {
@@ -20,10 +21,12 @@ public class SubWindowWithUndefinedHeight extends TestBase {
 
     @Override
     protected void setup() {
-        final Window subwindow = new Window("subwindow");
+        final VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        final Window subwindow = new Window("subwindow", layout);
         subwindow.center();
         subwindow.setSizeUndefined();
-        subwindow.getContent().setSizeUndefined();
+        layout.setSizeUndefined();
 
         final Button tabButton = new Button("A button");
         tabButton.setCaption("Tab 1");
@@ -42,17 +45,17 @@ public class SubWindowWithUndefinedHeight extends TestBase {
             public void selectedTabChange(TabSheet.SelectedTabChangeEvent event) {
                 if (tabsheet.getSelectedTab() == tabButton) {
                     tabsheet.setSizeUndefined();
-                    subwindow.getContent().setSizeUndefined();
+                    layout.setSizeUndefined();
                     subwindow.setSizeUndefined();
                 } else if (tabsheet.getSelectedTab() == table) {
                     subwindow.setWidth("500px");
                     subwindow.setHeight("500px");
-                    subwindow.getContent().setSizeFull();
+                    layout.setSizeFull();
                     tabsheet.setSizeFull();
                 }
             }
         });
-        subwindow.addComponent(tabsheet);
+        layout.addComponent(tabsheet);
 
         Button button = new Button("click me", new Button.ClickListener() {
             @Override

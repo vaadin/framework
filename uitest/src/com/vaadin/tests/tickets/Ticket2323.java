@@ -3,6 +3,7 @@ package com.vaadin.tests.tickets;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.RichTextArea;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class Ticket2323 extends LegacyApplication {
@@ -12,11 +13,13 @@ public class Ticket2323 extends LegacyApplication {
         LegacyWindow w = new LegacyWindow(getClass().getSimpleName());
         setMainWindow(w);
 
-        Window subWindow = new Window("");
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        Window subWindow = new Window("", layout);
         subWindow.setSizeUndefined();
         subWindow.getContent().setSizeUndefined();
         subWindow.center();
-        subWindow.addComponent(new RichTextArea());
+        subWindow.setContent(new RichTextArea());
         w.addWindow(subWindow);
     }
 

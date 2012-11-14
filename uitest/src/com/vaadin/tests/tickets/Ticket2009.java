@@ -100,6 +100,9 @@ public class Ticket2009 extends com.vaadin.server.LegacyApplication {
         Button done = new Button("Done");
 
         PropertyEditor(ItemClickEvent event) {
+            VerticalLayout layout = new VerticalLayout();
+            layout.setMargin(true);
+            setContent(layout);
             c = (Container) event.getSource();
 
             propertyid = event.getPropertyId();
@@ -109,8 +112,8 @@ public class Ticket2009 extends com.vaadin.server.LegacyApplication {
 
             editor.setPropertyDataSource(c.getContainerProperty(itemid,
                     propertyid));
-            addComponent(editor);
-            addComponent(done);
+            layout.addComponent(editor);
+            layout.addComponent(done);
 
             setWidth(W + "px");
             setHeight(H + "px");

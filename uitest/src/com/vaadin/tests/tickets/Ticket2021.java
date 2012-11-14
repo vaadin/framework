@@ -6,7 +6,6 @@ import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
@@ -31,12 +30,12 @@ public class Ticket2021 extends LegacyApplication {
         w.setContent(new GridLayout(2, 2));
         setMainWindow(w);
 
-        Panel p = new Panel();
+        VerticalLayout layout = new VerticalLayout();
+        Panel p = new Panel(layout);
         p.setCaption("ExpandLayout");
         p.setWidth("500px");
         p.setHeight("500px");
-        p.setContent(new VerticalLayout());
-        p.getContent().setSizeFull();
+        layout.setSizeFull();
 
         w.addComponent(p);
 
@@ -45,19 +44,19 @@ public class Ticket2021 extends LegacyApplication {
         tf1.setSizeFull();
         tf1.setValue(contents);
         tf1.setCaption("TextField caption");
-        ((ComponentContainer) p.getContent()).addComponent(tf1);
+        layout.addComponent(tf1);
 
         /*
          * 
          * OrderedLayout
          */
 
-        Panel p2 = new Panel();
+        VerticalLayout layout2 = new VerticalLayout();
+        Panel p2 = new Panel(layout2);
         p2.setCaption("OrderedLayout");
         p2.setWidth("500px");
         p2.setHeight("500px");
-        p2.setContent(new VerticalLayout());
-        p2.getContent().setSizeFull();
+        layout2.setSizeFull();
 
         w.addComponent(p2);
 
@@ -66,7 +65,7 @@ public class Ticket2021 extends LegacyApplication {
         tf2.setSizeFull();
         tf2.setValue(contents);
         tf2.setCaption("TextField caption");
-        ((ComponentContainer) p2.getContent()).addComponent(tf2);
+        layout2.addComponent(tf2);
 
         /*
          * 

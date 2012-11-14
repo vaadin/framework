@@ -6,6 +6,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class EmbeddedApplet extends TestBase {
@@ -36,8 +37,10 @@ public class EmbeddedApplet extends TestBase {
             }
         }));
 
-        Window window = new Window("Testwindow");
-        window.addComponent(new Label("I am inside the window"));
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        Window window = new Window("Testwindow", layout);
+        layout.addComponent(new Label("I am inside the window"));
         applet.getUI().addWindow(window);
     }
 }
