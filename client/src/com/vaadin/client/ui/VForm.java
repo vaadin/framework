@@ -117,7 +117,7 @@ public class VForm extends ComplexPanel implements KeyDownHandler {
         shortcutHandler.handleKeyboardEvent(Event.as(event.getNativeEvent()));
     }
 
-    void setFooterWidget(Widget footerWidget) {
+    public void setFooterWidget(Widget footerWidget) {
         if (footer != null) {
             remove(footer);
         }
