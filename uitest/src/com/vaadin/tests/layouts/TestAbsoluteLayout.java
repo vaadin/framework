@@ -26,6 +26,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextArea;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class TestAbsoluteLayout extends TestBase {
@@ -132,8 +133,11 @@ public class TestAbsoluteLayout extends TestBase {
             componentChooser.addListener(new Button.ClickListener() {
                 @Override
                 public void buttonClick(ClickEvent event) {
-                    final Window chooser = new Window("Choose component");
-                    chooser.getContent().setSizeUndefined();
+                    VerticalLayout layout = new VerticalLayout();
+                    layout.setMargin(true);
+                    final Window chooser = new Window("Choose component",
+                            layout);
+                    layout.setSizeUndefined();
                     chooser.setModal(true);
 
                     NativeSelect select = new NativeSelect(
@@ -176,7 +180,7 @@ public class TestAbsoluteLayout extends TestBase {
 
                     });
 
-                    chooser.addComponent(select);
+                    layout.addComponent(select);
 
                     getMainWindow().addWindow(chooser);
 
@@ -189,9 +193,11 @@ public class TestAbsoluteLayout extends TestBase {
             addComp.addListener(new Button.ClickListener() {
                 @Override
                 public void buttonClick(ClickEvent event) {
+                    VerticalLayout layout = new VerticalLayout();
+                    layout.setMargin(true);
                     final Window chooser = new Window(
-                            "Choose component type to add");
-                    chooser.getContent().setSizeUndefined();
+                            "Choose component type to add", layout);
+                    layout.setSizeUndefined();
                     chooser.setModal(true);
 
                     NativeSelect select = new NativeSelect(
@@ -261,7 +267,7 @@ public class TestAbsoluteLayout extends TestBase {
 
                     });
 
-                    chooser.addComponent(select);
+                    layout.addComponent(select);
 
                     getMainWindow().addWindow(chooser);
 

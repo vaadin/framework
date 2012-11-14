@@ -86,7 +86,10 @@ public class WindowsCssTest extends VerticalLayout {
             String styleName) {
 
         Window window = new Window();
-        window.addComponent(new Label("Some content"));
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        window.setContent(layout);
+        layout.addComponent(new Label("Some content"));
 
         if (caption != null) {
             window.setCaption(caption);

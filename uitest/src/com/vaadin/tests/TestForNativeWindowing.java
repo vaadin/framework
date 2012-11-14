@@ -25,6 +25,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class TestForNativeWindowing extends LegacyApplication {
@@ -40,8 +41,10 @@ public class TestForNativeWindowing extends LegacyApplication {
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
+                        VerticalLayout layout = new VerticalLayout();
+                        layout.setMargin(true);
                         final Window w = new Window("sw "
-                                + System.currentTimeMillis());
+                                + System.currentTimeMillis(), layout);
                         main.addWindow(w);
                         w.setPositionX(100);
                         w.setPositionY(100);
@@ -59,9 +62,9 @@ public class TestForNativeWindowing extends LegacyApplication {
                             }
 
                         });
-                        w.addComponent(closebutton);
+                        layout.addComponent(closebutton);
 
-                        w.addComponent(new Label(
+                        layout.addComponent(new Label(
                                 "<p>Lorem ipsum dolor sit amet.</p>"
                                         + "<p>Lorem ipsum dolor sit amet.</p>"
                                         + "<p>Lorem ipsum dolor sit amet.</p>"

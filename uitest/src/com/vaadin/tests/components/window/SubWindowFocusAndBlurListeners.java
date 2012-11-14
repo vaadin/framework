@@ -14,6 +14,7 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class SubWindowFocusAndBlurListeners extends TestBase {
@@ -32,10 +33,12 @@ public class SubWindowFocusAndBlurListeners extends TestBase {
     @Override
     protected void setup() {
 
-        final Window window = new Window("Focus test window");
-        window.getContent().setSizeUndefined();
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        final Window window = new Window("Focus test window", layout);
+        layout.setSizeUndefined();
 
-        window.addComponent(new TextField());
+        layout.addComponent(new TextField());
         window.addListener(new FocusListener() {
             @Override
             public void focus(FocusEvent event) {

@@ -73,7 +73,7 @@ public class Ticket2099 extends LegacyApplication {
         // l1.setVisible(false);
         // ts.setSelectedTab(l3);
 
-        w.addComponent(ts);
+        w.setContent(ts);
 
         return w;
     }

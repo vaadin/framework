@@ -19,16 +19,19 @@ package com.vaadin.tests.components.window;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class TooltipInWindow extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        Window window = new Window("Window");
-        window.getContent().setSizeUndefined();
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        Window window = new Window("Window", layout);
+        layout.setSizeUndefined();
         window.center();
-        window.addComponent(createTextField());
+        layout.addComponent(createTextField());
 
         addWindow(window);
         addComponent(createTextField());

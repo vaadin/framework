@@ -167,10 +167,12 @@ public class TouchScrollables extends TestBase {
         Button b = new Button("Open subwindow", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                Window w = new Window("Subwindow");
+                VerticalLayout layout = new VerticalLayout();
+                layout.setMargin(true);
+                Window w = new Window("Subwindow", layout);
                 w.center();
                 w.setHeight("200px");
-                w.addComponent(getBigComponent());
+                layout.addComponent(getBigComponent());
                 getMainWindow().addWindow(w);
             }
         });

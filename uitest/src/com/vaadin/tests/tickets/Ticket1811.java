@@ -72,7 +72,7 @@ public class Ticket1811 extends com.vaadin.server.LegacyApplication {
                 }
                 Window w = new Window("Status of the fields");
                 w.setModal(true);
-                w.addComponent(new Label(msg.toString(), ContentMode.HTML));
+                w.setContent(new Label(msg.toString(), ContentMode.HTML));
                 main.addWindow(w);
             }
         });

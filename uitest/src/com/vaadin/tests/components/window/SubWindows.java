@@ -9,6 +9,7 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 public class SubWindows extends TestBase {
@@ -45,16 +46,16 @@ public class SubWindows extends TestBase {
 
     @Override
     protected void setup() {
-        autoWideWindow = new Window("Dialog - width by contents",
-                new HorizontalLayout());
-        autoWideWindow.getContent().setSizeUndefined();
-        autoWideWindow.addComponent(new TextField("Field 1"));
-        autoWideWindow.addComponent(new TextField("Field 2"));
-        autoWideWindow.addComponent(new Button("Add", new ClickListener() {
+        final HorizontalLayout hl = new HorizontalLayout();
+        autoWideWindow = new Window("Dialog - width by contents", hl);
+        hl.setSizeUndefined();
+        hl.addComponent(new TextField("Field 1"));
+        hl.addComponent(new TextField("Field 2"));
+        hl.addComponent(new Button("Add", new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                autoWideWindow.addComponent(createRemoveButton());
+                hl.addComponent(createRemoveButton());
 
             }
 
@@ -63,29 +64,34 @@ public class SubWindows extends TestBase {
         getMainWindow().addWindow(autoWideWindow);
 
         {
-            Window dialog = new Window("Dialog - undefined width");
-            dialog.addComponent(new TextField("Field 1"));
+            VerticalLayout vl = new VerticalLayout();
+            hl.setMargin(true);
+            Window dialog = new Window("Dialog - undefined width", vl);
+            vl.addComponent(new TextField("Field 1"));
 
             TextField tf2 = new TextField("Field 2");
             tf2.setWidth("500px");
-            dialog.addComponent(tf2);
-            dialog.addComponent(new Button("Ok"));
+            vl.addComponent(tf2);
+            vl.addComponent(new Button("Ok"));
 
             dialog.center();
             getMainWindow().addWindow(dialog);
         }
 
         {
-            Window dialog = new Window("Dialog - width defined by content");
-            dialog.getContent().setHeight(null);
-            dialog.getContent().setWidth("100%");
+            VerticalLayout layout = new VerticalLayout();
+            layout.setMargin(true);
+            Window dialog = new Window("Dialog - width defined by content",
+                    layout);
+            layout.setHeight(null);
+            layout.setWidth("100%");
 
             TextArea ta = new TextArea();
             ta.setValue("The textfield should fill the window (except margins)."
                     + "\n - Try to resize the window\n");
             ta.setRows(5);
             ta.setWidth("100%");
-            dialog.addComponent(ta);
+            layout.addComponent(ta);
 
             dialog.setPositionX(20);
             dialog.setPositionY(100);
@@ -93,9 +99,12 @@ public class SubWindows extends TestBase {
         }
 
         {
-            Window dialog = new Window("Dialog - size defined by content");
-            dialog.getContent().setHeight("100%");
-            dialog.getContent().setWidth("100%");
+            VerticalLayout layout = new VerticalLayout();
+            layout.setMargin(true);
+            Window dialog = new Window("Dialog - size defined by content",
+                    layout);
+            layout.setHeight("100%");
+            layout.setWidth("100%");
 
             TextArea ta = new TextArea();
             ta.setValue("The textfield should fill the window (except margins)."
@@ -103,7 +112,7 @@ public class SubWindows extends TestBase {
             ta.setWidth("100%");
             ta.setHeight("100%");
             ta.setRows(5);
-            dialog.addComponent(ta);
+            layout.addComponent(ta);
 
             dialog.setPositionX(20);
             dialog.setPositionY(300);

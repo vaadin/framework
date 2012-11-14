@@ -105,9 +105,11 @@ public class TestCaptionWrapper extends CustomComponent implements Listener {
         test(gridLayout);
         populateLayout(gridLayout);
 
-        final Window window = new Window("TEST: Window");
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        final Window window = new Window("TEST: Window", layout);
         test(window);
-        populateLayout((Layout) window.getContent());
+        populateLayout(layout);
 
     }
 

@@ -51,7 +51,9 @@ public class TestForWindowing extends CustomComponent {
 
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        Window w = new Window("Testing Window");
+                        VerticalLayout layout = new VerticalLayout();
+                        layout.setMargin(true);
+                        Window w = new Window("Testing Window", layout);
 
                         if (asModal.getValue().booleanValue()) {
                             w.setModal(true);
@@ -85,8 +87,8 @@ public class TestForWindowing extends CustomComponent {
 
                         });
 
-                        w.addComponent(s1);
-                        w.addComponent(s2);
+                        layout.addComponent(s1);
+                        layout.addComponent(s2);
 
                         Slider s = new Slider();
                         s.setCaption("Volume");
@@ -97,7 +99,7 @@ public class TestForWindowing extends CustomComponent {
                         // s.setOrientation(Slider.ORIENTATION_VERTICAL);
                         // s.setArrows(false);
 
-                        w.addComponent(s);
+                        layout.addComponent(s);
 
                         UI.getCurrent().addWindow(w);
 

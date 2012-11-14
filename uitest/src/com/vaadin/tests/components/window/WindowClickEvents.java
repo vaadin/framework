@@ -54,7 +54,7 @@ public class WindowClickEvents extends TestBase {
 
         });
         centered.setSizeUndefined();
-        centered.getContent().setSizeUndefined();
+        layout.setSizeUndefined();
         centered.center();
 
         Label l = new Label("This window is centered");
@@ -69,8 +69,8 @@ public class WindowClickEvents extends TestBase {
             }
 
         });
-        centered.addComponent(l);
-        centered.addComponent(b);
+        layout.addComponent(l);
+        layout.addComponent(b);
 
         getMainWindow().addWindow(centered);
         log = new Log(5);

@@ -37,18 +37,20 @@ public class VerticalLayoutWidthCalculation extends AbstractTestCase {
         vlTF2.addComponent(tf2);
         hl.addComponent(vlTF2);
 
-        Window wnd = new Window("Test");
-        wnd.getContent().setSizeUndefined();
-        wnd.addComponent(hl);
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        layout.setSizeUndefined();
+        Window wnd = new Window("Test", layout);
+        layout.addComponent(hl);
         Button btn = new Button("Show/hide");
-        btn.addListener(new Button.ClickListener() {
+        btn.addClickListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
                 tf2.setVisible(!tf2.isVisible());
             }
         });
-        wnd.addComponent(btn);
+        layout.addComponent(btn);
 
         return wnd;
     }
