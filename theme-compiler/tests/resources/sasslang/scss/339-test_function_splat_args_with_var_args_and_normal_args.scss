@@ -1,0 +1,6 @@
+@function foo($a, $b, $c...) {
+  @return "a: #{$a}, b: #{$b}, c: #{$c}";
+}
+
+$list: 2, 3, 4;
+.foo {val: foo(1, $list...)}

@@ -1,0 +1,9 @@
+.foo {
+  a: b;
+}
+
+@flooblehoof {
+  .foo, .bar {
+    c: d;
+  }
+}

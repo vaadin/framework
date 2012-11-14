@@ -1,0 +1,3 @@
+.a .b .c .d .foo, .a .b .c .d .a .b .bar {
+  a: b;
+}

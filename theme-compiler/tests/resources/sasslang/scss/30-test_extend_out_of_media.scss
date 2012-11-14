@@ -1,0 +1,4 @@
+.foo {a: b}
+@media screen {
+  .bar {@extend .foo}
+}

@@ -1,0 +1,7 @@
+@media screen {
+  .foo {
+    a: b;
+  }
+
+  @flooblehoof {}
+}

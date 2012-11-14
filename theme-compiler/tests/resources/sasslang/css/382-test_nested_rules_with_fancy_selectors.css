@@ -1,0 +1,9 @@
+foo .bar {
+  a: b;
+}
+foo :baz {
+  c: d;
+}
+foo bang:bop {
+  e: f;
+}

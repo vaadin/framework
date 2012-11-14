@@ -1,0 +1,11 @@
+.base-0, .added {
+  color: green;
+}
+
+.base-1, .added {
+  display: block;
+}
+
+.base-2, .added {
+  border: 1px solid blue;
+}

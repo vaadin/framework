@@ -1,0 +1,2 @@
+%-a [foo=bar].baz {a: b}
+[foo=baz] {@extend .baz} -a {@extend %-a}

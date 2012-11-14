@@ -1,0 +1,4 @@
+$media: print;
+$key: -webkit-min-device-pixel-ratio;
+$value: 20;
+@import "foo" #{$media} and ($key + "-foo": $value + 5);
