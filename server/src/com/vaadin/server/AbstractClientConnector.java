@@ -162,16 +162,19 @@ public abstract class AbstractClientConnector implements ClientConnector,
     }
 
     protected SharedState getState() {
-        if (null == sharedState) {
-            sharedState = createState();
-        }
-
         UI uI = getUI();
         if (uI != null && !uI.getConnectorTracker().isWritingResponse()
                 && !uI.getConnectorTracker().isDirty(this)) {
             markAsDirty();
         }
 
+        return getInternalState();
+    }
+
+    protected SharedState getInternalState() {
+        if (null == sharedState) {
+            sharedState = createState();
+        }
         return sharedState;
     }
 

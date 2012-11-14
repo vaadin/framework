@@ -323,7 +323,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public boolean isEnabled() {
-        return getState().enabled;
+        return getInternalState().enabled;
     }
 
     /*
