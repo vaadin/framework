@@ -46,7 +46,7 @@ public class VVideo extends VMediaBase {
     /*-{
               var self = this;
               el.addEventListener('loadedmetadata', $entry(function(e) {
-                  self.@com.vaadin.client.ui.video.VVideo::updateElementDynamicSize(II)(el.videoWidth, el.videoHeight);
+                  self.@com.vaadin.client.ui.VVideo::updateElementDynamicSize(II)(el.videoWidth, el.videoHeight);
               }), false);
 
     }-*/;

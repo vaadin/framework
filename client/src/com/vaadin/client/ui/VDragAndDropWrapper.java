@@ -530,7 +530,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     /*-{
         var me = this;
         el.addEventListener("dragstart",  $entry(function(ev) {
-            return me.@com.vaadin.client.ui.draganddropwrapper.VDragAndDropWrapper::html5DragStart(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
+            return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragStart(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
         }), false);
     }-*/;
 
@@ -544,19 +544,19 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             var me = this;
 
             el.addEventListener("dragenter",  $entry(function(ev) {
-                return me.@com.vaadin.client.ui.draganddropwrapper.VDragAndDropWrapper::html5DragEnter(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
+                return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragEnter(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
 
             el.addEventListener("dragleave",  $entry(function(ev) {
-                return me.@com.vaadin.client.ui.draganddropwrapper.VDragAndDropWrapper::html5DragLeave(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
+                return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragLeave(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
 
             el.addEventListener("dragover",  $entry(function(ev) {
-                return me.@com.vaadin.client.ui.draganddropwrapper.VDragAndDropWrapper::html5DragOver(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
+                return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragOver(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
 
             el.addEventListener("drop",  $entry(function(ev) {
-                return me.@com.vaadin.client.ui.draganddropwrapper.VDragAndDropWrapper::html5DragDrop(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
+                return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragDrop(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
             }), false);
     }-*/;
 

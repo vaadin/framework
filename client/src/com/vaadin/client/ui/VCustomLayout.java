@@ -398,7 +398,7 @@ public class VCustomLayout extends ComplexPanel {
     /*-{
     	var self = this;
     	element.notifyChildrenOfSizeChange = $entry(function() {
-    		self.@com.vaadin.client.ui.customlayout.VCustomLayout::notifyChildrenOfSizeChange()();
+    		self.@com.vaadin.client.ui.VCustomLayout::notifyChildrenOfSizeChange()();
     	});
     }-*/;
 

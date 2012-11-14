@@ -52,7 +52,7 @@ public class VDragAndDropWrapperIE extends VDragAndDropWrapper {
         var me = this;
 
         el.attachEvent("ondragstart",  $entry(function(ev) {
-            return me.@com.vaadin.client.ui.draganddropwrapper.VDragAndDropWrapper::html5DragStart(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
+            return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragStart(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
         }));
     }-*/;
 
@@ -62,19 +62,19 @@ public class VDragAndDropWrapperIE extends VDragAndDropWrapper {
         var me = this;
 
         el.attachEvent("ondragenter",  $entry(function(ev) {
-            return me.@com.vaadin.client.ui.draganddropwrapper.VDragAndDropWrapper::html5DragEnter(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
+            return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragEnter(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
         }));
 
         el.attachEvent("ondragleave",  $entry(function(ev) {
-            return me.@com.vaadin.client.ui.draganddropwrapper.VDragAndDropWrapper::html5DragLeave(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
+            return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragLeave(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
         }));
 
         el.attachEvent("ondragover",  $entry(function(ev) {
-            return me.@com.vaadin.client.ui.draganddropwrapper.VDragAndDropWrapper::html5DragOver(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
+            return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragOver(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
         }));
 
         el.attachEvent("ondrop",  $entry(function(ev) {
-            return me.@com.vaadin.client.ui.draganddropwrapper.VDragAndDropWrapper::html5DragDrop(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
+            return me.@com.vaadin.client.ui.VDragAndDropWrapper::html5DragDrop(Lcom/vaadin/client/ui/dd/VHtml5DragEvent;)(ev);
         }));
     }-*/;
 
