@@ -26,7 +26,7 @@ public class LegacyUIAddRemoveComponents {
 
         ui.addComponent(c);
 
-        assertSame(c, ui.iterator().next());
+        assertSame(c.getParent(), ui.iterator().next());
         assertSame(c, ui.getContent().iterator().next());
         assertEquals(1, ui.getComponentCount());
         assertEquals(1, ui.getContent().getComponentCount());
@@ -41,9 +41,9 @@ public class LegacyUIAddRemoveComponents {
 
         ui.removeComponent(c);
 
-        assertFalse(ui.iterator().hasNext());
+        assertEquals(ui.getContent(), ui.iterator().next());
         assertFalse(ui.getContent().iterator().hasNext());
-        assertEquals(0, ui.getComponentCount());
+        assertEquals(1, ui.getComponentCount());
         assertEquals(0, ui.getContent().getComponentCount());
     }
 
@@ -57,7 +57,7 @@ public class LegacyUIAddRemoveComponents {
 
         ui.replaceComponent(c, d);
 
-        assertSame(d, ui.iterator().next());
+        assertSame(d.getParent(), ui.iterator().next());
         assertSame(d, ui.getContent().iterator().next());
         assertEquals(1, ui.getComponentCount());
         assertEquals(1, ui.getContent().getComponentCount());
