@@ -21,12 +21,12 @@
 	</replace-with>
 
 	<!-- Fall through to this rule for everything but IE -->
-	<replace-with class="com.vaadin.client.ui.draganddropwrapper.VDragAndDropWrapper">
-		<when-type-is class="com.vaadin.client.ui.draganddropwrapper.VDragAndDropWrapper" />
+	<replace-with class="com.vaadin.client.ui.VDragAndDropWrapper">
+		<when-type-is class="com.vaadin.client.ui.VDragAndDropWrapper" />
 	</replace-with>
 
-	<replace-with class="com.vaadin.client.ui.draganddropwrapper.VDragAndDropWrapperIE">
-		<when-type-is class="com.vaadin.client.ui.draganddropwrapper.VDragAndDropWrapper" />
+	<replace-with class="com.vaadin.client.ui.VDragAndDropWrapperIE">
+		<when-type-is class="com.vaadin.client.ui.VDragAndDropWrapper" />
 		<any>
 			<when-property-is name="user.agent" value="ie8" />
 		</any>

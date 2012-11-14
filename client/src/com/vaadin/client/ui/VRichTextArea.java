@@ -41,6 +41,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
+import com.vaadin.client.ui.richtextarea.VRichTextToolbar;
 
 /**
  * This class implements a basic client side rich text editor component.
