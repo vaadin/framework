@@ -158,17 +158,44 @@ public abstract class AbstractClientConnector implements ClientConnector,
         registerRpc(implementation, type);
     }
 
+    /**
+     * Returns the shared state for this connector. The shared state object is
+     * shared between the server connector and the client connector. Changes are
+     * only communicated from the server to the client and not in the other
+     * direction.
+     * <p>
+     * As a side effect, marks the connector dirty so any changes done to the
+     * state will be sent to the client. Use {@code getState(false)} to avoid
+     * marking the connector as dirty.
+     * </p>
+     * 
+     * @return The shared state for this connector. Never null.
+     */
     protected SharedState getState() {
+        return getState(true);
+    }
+
+    /**
+     * Returns the shared state for this connector.
+     * 
+     * @param markAsDirty
+     *            true if the connector should automatically be marked dirty,
+     *            false otherwise
+     * 
+     * @return The shared state for this connector. Never null.
+     * @see #getState()
+     */
+    protected SharedState getState(boolean markAsDirty) {
         if (null == sharedState) {
             sharedState = createState();
         }
-
-        UI uI = getUI();
-        if (uI != null && !uI.getConnectorTracker().isWritingResponse()
-                && !uI.getConnectorTracker().isDirty(this)) {
-            markAsDirty();
+        if (markAsDirty) {
+            UI ui = getUI();
+            if (ui != null && !ui.getConnectorTracker().isWritingResponse()
+                    && !ui.getConnectorTracker().isDirty(this)) {
+                markAsDirty();
+            }
         }
-
         return sharedState;
     }
 
