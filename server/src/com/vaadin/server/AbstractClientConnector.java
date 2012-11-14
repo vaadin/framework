@@ -161,17 +161,32 @@ public abstract class AbstractClientConnector implements ClientConnector,
         registerRpc(implementation, type);
     }
 
+    /**
+     * Gets the shared state and marks connector and parent connectors as dirty
+     * so they will be checked and updated.
+     * 
+     * @return
+     */
     protected SharedState getState() {
-        if (null == sharedState) {
-            sharedState = createState();
-        }
-
         UI uI = getUI();
         if (uI != null && !uI.getConnectorTracker().isWritingResponse()
                 && !uI.getConnectorTracker().isDirty(this)) {
             markAsDirty();
         }
 
+        return getInternalState();
+    }
+
+    /**
+     * Gets the shared state without unnecessary marking of parent connectors
+     * dirty as happens with {@link #getState()}.
+     * 
+     * @return sharedState
+     */
+    protected SharedState getInternalState() {
+        if (null == sharedState) {
+            sharedState = createState();
+        }
         return sharedState;
     }
 
