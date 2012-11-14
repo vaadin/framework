@@ -14,7 +14,6 @@ import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LoginForm;
 import com.vaadin.ui.PopupView;
-import com.vaadin.ui.Window;
 
 public class MovingComponentsWhileOldParentInvisible extends TestBase {
 
@@ -43,7 +42,7 @@ public class MovingComponentsWhileOldParentInvisible extends TestBase {
                 .getComponentContainers()) {
             if (cls == LoginForm.class || cls == CustomLayout.class
                     || CustomComponent.class.isAssignableFrom(cls)
-                    || cls == PopupView.class || cls == Window.class) {
+                    || cls == PopupView.class) {
                 // Does not support addComponent
                 continue;
             }
