@@ -355,7 +355,7 @@ public class UIConnector extends AbstractComponentContainerConnector implements
          * Must set absolute position if the child has relative height and
          * there's a chance of horizontal scrolling as some browsers will
          * otherwise not take the scrollbar into account when calculating the
-         * height. Assuming v-view does not have an undefined width for now, see
+         * height. Assuming v-ui does not have an undefined width for now, see
          * #8460.
          */
         if (child.isRelativeHeight() && !BrowserInfo.get().isIE9()) {

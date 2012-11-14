@@ -317,16 +317,12 @@ public abstract class BootstrapHandler implements RequestHandler {
          *      .v-theme-<themeName, remove non-alphanum>
          */
 
-        String appClass = "v-app-"
-                + context.getSession().getClass().getSimpleName();
-
-        String classNames = "v-app " + appClass;
         List<Node> fragmentNodes = context.getBootstrapResponse()
                 .getFragmentNodes();
 
         Element mainDiv = new Element(Tag.valueOf("div"), "");
         mainDiv.attr("id", context.getAppId());
-        mainDiv.addClass(classNames);
+        mainDiv.addClass("v-app");
         if (style != null && style.length() != 0) {
             mainDiv.attr("style", style);
         }
