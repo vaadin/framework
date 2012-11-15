@@ -48,6 +48,7 @@ public class MixinNodeHandler {
         Node pre = mixinNode;
 
         MixinDefNode defClone = (MixinDefNode) DeepCopy.copy(mixinDef);
+        defClone.traverse();
 
         if (mixinDef.getArglist().isEmpty()) {
             for (Node child : new ArrayList<Node>(defClone.getChildren())) {
