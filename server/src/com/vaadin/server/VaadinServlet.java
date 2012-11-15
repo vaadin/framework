@@ -937,6 +937,17 @@ public class VaadinServlet extends HttpServlet implements Constants {
         String realFilename = sc.getRealPath(scssFilename);
         ScssStylesheet scss = ScssStylesheet.get(realFilename);
         if (scss == null) {
+            // Not a file in the file system (WebContent directory). Use the
+            // identifier directly (VAADIN/themes/.../styles.css) so
+            // ScssStylesheet will try using the class loader.
+            if (scssFilename.startsWith("/")) {
+                scssFilename = scssFilename.substring(1);
+            }
+
+            scss = ScssStylesheet.get(scssFilename);
+        }
+
+        if (scss == null) {
             getLogger()
                     .warning(
                             "Scss file "
