@@ -19,12 +19,11 @@ package com.vaadin.sass.visitor;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.tree.BlockNode;
 import com.vaadin.sass.tree.Node;
 
 public class BlockNodeHandler {
-
-    private static HashMap<Node, Node> lastNodeAdded = new HashMap<Node, Node>();
 
     public static void traverse(BlockNode node) {
 
@@ -61,6 +60,7 @@ public class BlockNodeHandler {
         }
         node.setSelectorList(newList);
         Node oldParent = node.getParentNode();
+        HashMap<Node, Node> lastNodeAdded = ScssStylesheet.getLastNodeAdded();
         if (lastNodeAdded.get(oldParent) != null) {
             node.getParentNode().getParentNode()
                     .appendChild(node, lastNodeAdded.get(oldParent));
