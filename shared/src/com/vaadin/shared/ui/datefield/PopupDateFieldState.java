@@ -4,4 +4,7 @@ public class PopupDateFieldState extends TextualDateFieldState {
     {
         primaryStyleName = "v-datefield";
     }
+
+    public boolean textFieldEnabled = true;
+
 }
