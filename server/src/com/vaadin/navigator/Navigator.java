@@ -28,6 +28,7 @@ import com.vaadin.server.Page.UriFragmentChangedListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.SingleComponentContainer;
 import com.vaadin.ui.UI;
 
 /**
@@ -173,6 +174,39 @@ public class Navigator implements Serializable {
             if (view instanceof Component) {
                 container.removeAllComponents();
                 container.addComponent((Component) view);
+            } else {
+                throw new IllegalArgumentException("View is not a component: "
+                        + view);
+            }
+        }
+    }
+
+    /**
+     * A ViewDisplay that replaces the contents of a
+     * {@link SingleComponentContainer} with the active {@link View}.
+     * <p>
+     * This display only supports views that are {@link Component}s themselves.
+     * Attempting to display a view that is not a component causes an exception
+     * to be thrown.
+     */
+    public static class SingleComponentContainerViewDisplay implements
+            ViewDisplay {
+
+        private final SingleComponentContainer container;
+
+        /**
+         * Create new {@link ViewDisplay} that updates a
+         * {@link SingleComponentContainer} to show the view.
+         */
+        public SingleComponentContainerViewDisplay(
+                SingleComponentContainer container) {
+            this.container = container;
+        }
+
+        @Override
+        public void showView(View view) {
+            if (view instanceof Component) {
+                container.setContent((Component) view);
             } else {
                 throw new IllegalArgumentException("View is not a component: "
                         + view);
@@ -349,6 +383,31 @@ public class Navigator implements Serializable {
      */
     public Navigator(UI ui, ComponentContainer container) {
         this(ui, new ComponentContainerViewDisplay(container));
+    }
+
+    /**
+     * Creates a navigator that is tracking the active view using URI fragments
+     * of the current {@link Page} and replacing the contents of a
+     * {@link SingleComponentContainer} with the active view.
+     * <p>
+     * In case the container is not on the current page, use another
+     * {@link Navigator#Navigator(Page, ViewDisplay)} with an explicitly created
+     * {@link SingleComponentContainerViewDisplay}.
+     * <p>
+     * Views must implement {@link Component} when using this constructor.
+     * <p>
+     * After all {@link View}s and {@link ViewProvider}s have been registered,
+     * the application should trigger navigation to the current fragment using
+     * {@link #navigate()}.
+     * 
+     * @param ui
+     *            The UI to which this Navigator is attached.
+     * @param container
+     *            The SingleComponentContainer whose contents should be replaced
+     *            with the active view on view change
+     */
+    public Navigator(UI ui, SingleComponentContainer container) {
+        this(ui, new SingleComponentContainerViewDisplay(container));
     }
 
     /**
