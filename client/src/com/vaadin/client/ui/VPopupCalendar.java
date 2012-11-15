@@ -66,6 +66,8 @@ public class VPopupCalendar extends VTextualDate implements Field,
 
     private boolean open = false;
 
+    private boolean textFieldEnabled = true;
+
     public VPopupCalendar() {
         super();
 
@@ -153,6 +155,34 @@ public class VPopupCalendar extends VTextualDate implements Field,
             if (isImmediate()) {
                 getClient().sendPendingVariableChanges();
             }
+        }
+    }
+
+    /**
+     * Checks whether the text field is enabled.
+     * 
+     * @see VPopupCalendar#setTextFieldEnabled(boolean)
+     * @return The current state of the text field.
+     */
+    public boolean isTextFieldEnabled() {
+        return textFieldEnabled;
+    }
+
+    /**
+     * Sets the state of the text field of this component. By default the text
+     * field is enabled. Disabling it causes only the button for date selection
+     * to be active, thus preventing the user from entering invalid dates. See
+     * {@link http://dev.vaadin.com/ticket/6790}.
+     * 
+     * @param state
+     */
+    public void setTextFieldEnabled(boolean textFieldEnabled) {
+        this.textFieldEnabled = textFieldEnabled;
+        text.setEnabled(textFieldEnabled);
+        if (textFieldEnabled) {
+            calendarToggle.setTabIndex(-1);
+        } else {
+            calendarToggle.setTabIndex(0);
         }
     }
 
@@ -335,6 +365,9 @@ public class VPopupCalendar extends VTextualDate implements Field,
         if (!parsable) {
             setText(previousValue);
         }
+
+        // superclass sets the text field independently when building date
+        text.setEnabled(isEnabled() && isTextFieldEnabled());
     }
 
     /**

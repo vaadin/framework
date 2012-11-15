@@ -16,6 +16,7 @@ public class PopupDateFieldTest extends DateFieldTest<PopupDateField> {
         super.createActions();
 
         createInputPromptSelectAction(CATEGORY_FEATURES);
+        createTextEnabledAction(CATEGORY_FEATURES);
     }
 
     private void createInputPromptSelectAction(String category) {
@@ -36,4 +37,16 @@ public class PopupDateFieldTest extends DateFieldTest<PopupDateField> {
                 });
     }
 
+    private void createTextEnabledAction(String category) {
+        this.createBooleanAction("Text field enabled", category, true,
+                new Command<PopupDateField, Boolean>() {
+
+                    @Override
+                    public void execute(PopupDateField c, Boolean value,
+                            Object data) {
+                        c.setTextFieldEnabled(value);
+                    }
+
+                });
+    }
 }
