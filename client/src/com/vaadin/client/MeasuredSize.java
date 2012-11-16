@@ -19,6 +19,8 @@ import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
 
 public class MeasuredSize {
+    private final static boolean debugSizeChanges = false;
+
     public static class MeasureResult {
         private final boolean widthChanged;
         private final boolean heightChanged;
@@ -189,44 +191,77 @@ public class MeasuredSize {
         ComputedStyle computedStyle = new ComputedStyle(element);
         int[] paddings = computedStyle.getPadding();
         if (!heightChanged && hasHeightChanged(this.paddings, paddings)) {
+            debugSizeChange(element, "Height (padding)", this.paddings,
+                    paddings);
             heightChanged = true;
         }
         if (!widthChanged && hasWidthChanged(this.paddings, paddings)) {
+            debugSizeChange(element, "Width (padding)", this.paddings, paddings);
             widthChanged = true;
         }
         this.paddings = paddings;
 
         int[] margins = computedStyle.getMargin();
         if (!heightChanged && hasHeightChanged(this.margins, margins)) {
+            debugSizeChange(element, "Height (margins)", this.margins, margins);
             heightChanged = true;
         }
         if (!widthChanged && hasWidthChanged(this.margins, margins)) {
+            debugSizeChange(element, "Width (margins)", this.margins, margins);
             widthChanged = true;
         }
         this.margins = margins;
 
         int[] borders = computedStyle.getBorder();
         if (!heightChanged && hasHeightChanged(this.borders, borders)) {
+            debugSizeChange(element, "Height (borders)", this.borders, borders);
             heightChanged = true;
         }
         if (!widthChanged && hasWidthChanged(this.borders, borders)) {
+            debugSizeChange(element, "Width (borders)", this.borders, borders);
             widthChanged = true;
         }
         this.borders = borders;
 
         int requiredHeight = Util.getRequiredHeight(element);
         int marginHeight = sumHeights(margins);
+        int oldHeight = height;
+        int oldWidth = width;
         if (setOuterHeight(requiredHeight + marginHeight)) {
+            debugSizeChange(element, "Height (outer)", oldHeight, height);
             heightChanged = true;
         }
 
         int requiredWidth = Util.getRequiredWidth(element);
         int marginWidth = sumWidths(margins);
         if (setOuterWidth(requiredWidth + marginWidth)) {
+            debugSizeChange(element, "Width (outer)", oldWidth, width);
             widthChanged = true;
         }
 
         return new MeasureResult(widthChanged, heightChanged);
+    }
+
+    private void debugSizeChange(Element element, String sizeChangeType,
+            int[] changedFrom, int[] changedTo) {
+        debugSizeChange(element, sizeChangeType,
+                java.util.Arrays.asList(changedFrom).toString(),
+                java.util.Arrays.asList(changedTo).toString());
+    }
+
+    private void debugSizeChange(Element element, String sizeChangeType,
+            int changedFrom, int changedTo) {
+        debugSizeChange(element, sizeChangeType, String.valueOf(changedFrom),
+                String.valueOf(changedTo));
+    }
+
+    private void debugSizeChange(Element element, String sizeChangeType,
+            String changedFrom, String changedTo) {
+        if (debugSizeChanges) {
+            VConsole.log(sizeChangeType + " has changed for "
+                    + element.toString() + " from " + changedFrom + " to "
+                    + changedTo);
+        }
     }
 
     private static boolean hasWidthChanged(int[] sizes1, int[] sizes2) {
