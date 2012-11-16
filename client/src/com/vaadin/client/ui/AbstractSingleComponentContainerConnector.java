@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Vaadin Ltd.
+ * Copyright 2012 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,10 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.client.ui.layout;
+package com.vaadin.client.ui;
 
-import com.vaadin.client.HasComponentsConnector;
-
-public interface MayScrollChildren extends HasComponentsConnector {
+/**
+ * Client side connector for subclasses of AbstractSingleComponentConnector.
+ * 
+ * @since 7.0
+ */
+public abstract class AbstractSingleComponentContainerConnector extends
+        AbstractHasComponentsConnector {
 
 }

@@ -235,7 +235,7 @@ public abstract class AbstractOrderedLayoutConnector extends
      * (non-Javadoc)
      * 
      * @see
-     * com.vaadin.client.ComponentContainerConnector#updateCaption(com.vaadin
+     * com.vaadin.client.HasComponentsConnector#updateCaption(com.vaadin
      * .client.ComponentConnector)
      */
     @Override

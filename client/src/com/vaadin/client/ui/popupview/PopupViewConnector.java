@@ -44,9 +44,8 @@ public class PopupViewConnector extends AbstractComponentContainerConnector
     @Override
     protected void init() {
         super.init();
-        
-        handlerRegistration.add(getWidget().addVisibilityChangeHandler(
-                this));
+
+        handlerRegistration.add(getWidget().addVisibilityChangeHandler(this));
     }
 
     @Override

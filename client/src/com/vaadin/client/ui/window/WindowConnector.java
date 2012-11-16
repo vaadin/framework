@@ -31,13 +31,13 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.ui.AbstractComponentContainerConnector;
+import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.ShortcutActionHandler;
-import com.vaadin.client.ui.VWindow;
 import com.vaadin.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 import com.vaadin.client.ui.SimpleManagedLayout;
+import com.vaadin.client.ui.VWindow;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
@@ -45,7 +45,7 @@ import com.vaadin.shared.ui.window.WindowServerRpc;
 import com.vaadin.shared.ui.window.WindowState;
 
 @Connect(value = com.vaadin.ui.Window.class)
-public class WindowConnector extends AbstractComponentContainerConnector
+public class WindowConnector extends AbstractSingleComponentContainerConnector
         implements Paintable, BeforeShortcutActionListener,
         SimpleManagedLayout, PostLayoutListener, MayScrollChildren {
 

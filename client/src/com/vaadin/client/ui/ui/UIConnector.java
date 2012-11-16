@@ -44,7 +44,7 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
-import com.vaadin.client.ui.AbstractComponentContainerConnector;
+import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.ShortcutActionHandler;
 import com.vaadin.client.ui.VNotification;
@@ -62,8 +62,8 @@ import com.vaadin.shared.ui.ui.UIState;
 import com.vaadin.ui.UI;
 
 @Connect(value = UI.class, loadStyle = LoadStyle.EAGER)
-public class UIConnector extends AbstractComponentContainerConnector implements
-        Paintable, MayScrollChildren {
+public class UIConnector extends AbstractSingleComponentContainerConnector
+        implements Paintable, MayScrollChildren {
 
     private HandlerRegistration childStateChangeHandlerRegistration;
 

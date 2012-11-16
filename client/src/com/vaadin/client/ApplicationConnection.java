@@ -1638,7 +1638,7 @@ public class ApplicationConnection {
                 VConsole.log(oldChildren);
 
                 String newChildren = "* New children: ";
-                ComponentContainerConnector parent = (ComponentContainerConnector) event
+                HasComponentsConnector parent = (HasComponentsConnector) event
                         .getConnector();
                 for (ComponentConnector child : parent.getChildComponents()) {
                     newChildren += Util.getConnectorString(child) + " ";
@@ -1858,8 +1858,8 @@ public class ApplicationConnection {
                             continue;
                         }
 
-                        if (parentConnector instanceof ComponentContainerConnector) {
-                            ComponentContainerConnector ccc = (ComponentContainerConnector) parentConnector;
+                        if (parentConnector instanceof HasComponentsConnector) {
+                            HasComponentsConnector ccc = (HasComponentsConnector) parentConnector;
                             List<ComponentConnector> oldComponents = ccc
                                     .getChildComponents();
                             if (!Util.collectionsEquals(oldComponents,
@@ -1876,7 +1876,7 @@ public class ApplicationConnection {
                         } else if (!newComponents.isEmpty()) {
                             VConsole.error("Hierachy claims "
                                     + Util.getConnectorString(parentConnector)
-                                    + " has component children even though it isn't a ComponentContainerConnector");
+                                    + " has component children even though it isn't a HasComponentsConnector");
                         }
 
                         parentConnector.setChildren(newChildren);
@@ -1948,13 +1948,13 @@ public class ApplicationConnection {
                  * Create an artificial hierarchy event for containers to give
                  * it a chance to clean up after its children if it has any
                  */
-                if (connector instanceof ComponentContainerConnector) {
-                    ComponentContainerConnector ccc = (ComponentContainerConnector) connector;
+                if (connector instanceof HasComponentsConnector) {
+                    HasComponentsConnector ccc = (HasComponentsConnector) connector;
                     List<ComponentConnector> oldChildren = ccc
                             .getChildComponents();
                     if (!oldChildren.isEmpty()) {
                         /*
-                         * ComponentContainerConnector has a separate child
+                         * HasComponentsConnector has a separate child
                          * component list that should also be cleared
                          */
                         ccc.setChildComponents(Collections
