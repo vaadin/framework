@@ -7,7 +7,7 @@ import org.easymock.EasyMock;
 import com.vaadin.server.CommunicationManager;
 import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinServiceSession;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
 
@@ -21,7 +21,7 @@ public class TestStreamVariableMapping extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-        final VaadinServiceSession application = new VaadinServiceSession(null);
+        final VaadinSession application = new VaadinSession(null);
         final UI uI = new UI() {
             @Override
             protected void init(VaadinRequest request) {
@@ -30,7 +30,7 @@ public class TestStreamVariableMapping extends TestCase {
             }
 
             @Override
-            public VaadinServiceSession getSession() {
+            public VaadinSession getSession() {
                 return application;
             }
         };
@@ -66,7 +66,7 @@ public class TestStreamVariableMapping extends TestCase {
     }
 
     private CommunicationManager createCommunicationManager() {
-        return new CommunicationManager(new VaadinServiceSession(null));
+        return new CommunicationManager(new VaadinSession(null));
     }
 
 }

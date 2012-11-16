@@ -56,7 +56,7 @@ import com.vaadin.util.CurrentInstance;
  */
 @Deprecated
 @SuppressWarnings("serial")
-public class VaadinPortletSession extends VaadinServiceSession {
+public class VaadinPortletSession extends VaadinSession {
 
     private final Set<PortletListener> portletListeners = new LinkedHashSet<PortletListener>();
 

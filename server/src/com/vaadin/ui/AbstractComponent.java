@@ -33,7 +33,7 @@ import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
 import com.vaadin.server.Terminal;
-import com.vaadin.server.VaadinServiceSession;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ComponentState;
 import com.vaadin.shared.ui.ComponentStateUtil;
@@ -262,7 +262,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         if (parent != null) {
             return parent.getLocale();
         }
-        final VaadinServiceSession session = getSession();
+        final VaadinSession session = getSession();
         if (session != null) {
             return session.getLocale();
         }
@@ -569,7 +569,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     protected void focus() {
         if (this instanceof Focusable) {
-            final VaadinServiceSession session = getSession();
+            final VaadinSession session = getSession();
             if (session != null) {
                 getUI().setFocusedComponent((Focusable) this);
                 delayedFocus = false;

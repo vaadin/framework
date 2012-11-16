@@ -34,8 +34,8 @@ public interface SystemMessagesProvider extends Serializable {
      * piece of information guaranteed to be available, but in most cases some
      * or all of {@link VaadinService#getCurrent()},
      * {@link VaadinService#getCurrentRequest()},
-     * {@link VaadinServiceSession#getCurrent()} and {@link UI#getCurrent()} can
-     * also be used to find more information to help the decision.
+     * {@link VaadinSession#getCurrent()} and {@link UI#getCurrent()} can also
+     * be used to find more information to help the decision.
      * 
      * @param locale
      *            the desired locale of the system messages

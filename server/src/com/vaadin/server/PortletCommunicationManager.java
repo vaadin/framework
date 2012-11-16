@@ -44,7 +44,7 @@ import com.vaadin.ui.UI;
 @SuppressWarnings("serial")
 public class PortletCommunicationManager extends AbstractCommunicationManager {
 
-    public PortletCommunicationManager(VaadinServiceSession session) {
+    public PortletCommunicationManager(VaadinSession session) {
         super(session);
     }
 
@@ -52,7 +52,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
     protected BootstrapHandler createBootstrapHandler() {
         return new BootstrapHandler() {
             @Override
-            public boolean handleRequest(VaadinServiceSession session,
+            public boolean handleRequest(VaadinSession session,
                     VaadinRequest request, VaadinResponse response)
                     throws IOException {
                 PortletRequest portletRequest = ((VaadinPortletRequest) request)

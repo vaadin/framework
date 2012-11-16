@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.vaadin.server.UIClassSelectionEvent;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinServiceSession;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.components.AbstractTestUIProvider;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
@@ -13,12 +13,12 @@ import com.vaadin.ui.VerticalLayout;
 
 public class UIsInMultipleTabs extends AbstractTestUIProvider {
     // No cleanup -> will leak, but shouldn't matter for tests
-    private static ConcurrentHashMap<VaadinServiceSession, AtomicInteger> numberOfUIsOpened = new ConcurrentHashMap<VaadinServiceSession, AtomicInteger>();
+    private static ConcurrentHashMap<VaadinSession, AtomicInteger> numberOfUIsOpened = new ConcurrentHashMap<VaadinSession, AtomicInteger>();
 
     public static class TabUI extends UI {
         @Override
         protected void init(VaadinRequest request) {
-            VaadinServiceSession application = VaadinServiceSession
+            VaadinSession application = VaadinSession
                     .getCurrent();
             AtomicInteger count = numberOfUIsOpened.get(application);
             if (count == null) {

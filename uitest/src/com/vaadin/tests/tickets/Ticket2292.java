@@ -14,7 +14,7 @@ import com.vaadin.server.ExternalResource;
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
-import com.vaadin.server.VaadinServiceSession;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
@@ -44,11 +44,11 @@ public class Ticket2292 extends com.vaadin.server.LegacyApplication implements
         Link l = new Link("l", icon);
         main.addComponent(l);
 
-        VaadinServiceSession.getCurrent().addRequestHandler(this);
+        VaadinSession.getCurrent().addRequestHandler(this);
     }
 
     @Override
-    public boolean handleRequest(VaadinServiceSession session,
+    public boolean handleRequest(VaadinSession session,
             VaadinRequest request, VaadinResponse response) throws IOException {
         String relativeUri = request.getRequestPathInfo();
 

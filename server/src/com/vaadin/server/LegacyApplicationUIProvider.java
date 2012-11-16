@@ -117,15 +117,15 @@ public abstract class LegacyApplicationUIProvider extends UIProvider {
     }
 
     private LegacyApplication getApplication() {
-        LegacyApplication application = VaadinServiceSession.getCurrent()
+        LegacyApplication application = VaadinSession.getCurrent()
                 .getAttribute(LegacyApplication.class);
         if (application == null) {
             application = createApplication();
             if (application == null) {
                 return null;
             }
-            VaadinServiceSession.getCurrent().setAttribute(
-                    LegacyApplication.class, application);
+            VaadinSession.getCurrent().setAttribute(LegacyApplication.class,
+                    application);
 
             URL applicationUrl;
             try {
@@ -138,8 +138,8 @@ public abstract class LegacyApplicationUIProvider extends UIProvider {
         }
 
         if (application != null && !application.isRunning()) {
-            VaadinServiceSession.getCurrent().setAttribute(
-                    LegacyApplication.class, null);
+            VaadinSession.getCurrent().setAttribute(LegacyApplication.class,
+                    null);
             // Run again without a current application
             return getApplication();
         }

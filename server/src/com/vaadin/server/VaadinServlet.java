@@ -271,7 +271,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return;
         }
 
-        VaadinServiceSession vaadinSession = null;
+        VaadinSession vaadinSession = null;
 
         try {
             // If a duplicate "close application" URL is received for an
@@ -570,7 +570,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     }
 
     private void handleServiceException(VaadinServletRequest request,
-            VaadinServletResponse response, VaadinServiceSession vaadinSession,
+            VaadinServletResponse response, VaadinSession vaadinSession,
             Throwable e) throws IOException, ServletException {
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {

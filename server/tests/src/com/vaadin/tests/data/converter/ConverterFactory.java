@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
-import com.vaadin.server.VaadinServiceSession;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.TextField;
 
 public class ConverterFactory extends TestCase {
@@ -65,15 +65,15 @@ public class ConverterFactory extends TestCase {
     }
 
     public void testApplicationConverterFactoryInBackgroundThread() {
-        VaadinServiceSession.setCurrent(null);
-        final VaadinServiceSession appWithCustomIntegerConverter = new VaadinServiceSession(
+        VaadinSession.setCurrent(null);
+        final VaadinSession appWithCustomIntegerConverter = new VaadinSession(
                 null);
         appWithCustomIntegerConverter
                 .setConverterFactory(new ConverterFactory42());
 
         TextField tf = new TextField("", "123") {
             @Override
-            public VaadinServiceSession getSession() {
+            public VaadinSession getSession() {
                 return appWithCustomIntegerConverter;
             };
         };
@@ -84,11 +84,11 @@ public class ConverterFactory extends TestCase {
     }
 
     public void testApplicationConverterFactoryForDetachedComponent() {
-        final VaadinServiceSession appWithCustomIntegerConverter = new VaadinServiceSession(
+        final VaadinSession appWithCustomIntegerConverter = new VaadinSession(
                 null);
         appWithCustomIntegerConverter
                 .setConverterFactory(new ConverterFactory42());
-        VaadinServiceSession.setCurrent(appWithCustomIntegerConverter);
+        VaadinSession.setCurrent(appWithCustomIntegerConverter);
 
         TextField tf = new TextField("", "123");
         tf.setConverter(Integer.class);
@@ -98,15 +98,15 @@ public class ConverterFactory extends TestCase {
     }
 
     public void testApplicationConverterFactoryForDifferentThanCurrentApplication() {
-        final VaadinServiceSession fieldAppWithCustomIntegerConverter = new VaadinServiceSession(
+        final VaadinSession fieldAppWithCustomIntegerConverter = new VaadinSession(
                 null);
         fieldAppWithCustomIntegerConverter
                 .setConverterFactory(new ConverterFactory42());
-        VaadinServiceSession.setCurrent(new VaadinServiceSession(null));
+        VaadinSession.setCurrent(new VaadinSession(null));
 
         TextField tf = new TextField("", "123") {
             @Override
-            public VaadinServiceSession getSession() {
+            public VaadinSession getSession() {
                 return fieldAppWithCustomIntegerConverter;
             }
         };

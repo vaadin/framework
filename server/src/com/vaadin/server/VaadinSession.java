@@ -51,16 +51,15 @@ import com.vaadin.util.ReflectTools;
  * typically stored in a {@link HttpSession} or {@link PortletSession}, but
  * others storage mechanisms might also be used.
  * <p>
- * Everything inside a {@link VaadinServiceSession} should be serializable to
- * ensure compatibility with schemes using serialization for persisting the
- * session data.
+ * Everything inside a {@link VaadinSession} should be serializable to ensure
+ * compatibility with schemes using serialization for persisting the session
+ * data.
  * 
  * @author Vaadin Ltd
  * @since 7.0.0
  */
 @SuppressWarnings("serial")
-public class VaadinServiceSession implements HttpSessionBindingListener,
-        Serializable {
+public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     /**
      * The name of the parameter that is by default used in e.g. web.xml to
@@ -132,7 +131,7 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
      * @param service
      *            the Vaadin service for the new session
      */
-    public VaadinServiceSession(VaadinService service) {
+    public VaadinSession(VaadinService service) {
         this.service = service;
     }
 
@@ -222,13 +221,12 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
      * @deprecated might be refactored or removed before 7.0.0
      */
     @Deprecated
-    public static VaadinServiceSession getForSession(VaadinService service,
+    public static VaadinSession getForSession(VaadinService service,
             WrappedSession underlyingSession) {
-        Object attribute = underlyingSession
-                .getAttribute(VaadinServiceSession.class.getName() + "."
-                        + service.getServiceName());
-        if (attribute instanceof VaadinServiceSession) {
-            VaadinServiceSession vaadinSession = (VaadinServiceSession) attribute;
+        Object attribute = underlyingSession.getAttribute(VaadinSession.class
+                .getName() + "." + service.getServiceName());
+        if (attribute instanceof VaadinSession) {
+            VaadinSession vaadinSession = (VaadinSession) attribute;
             vaadinSession.session = underlyingSession;
             return vaadinSession;
         }
@@ -246,8 +244,9 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
     public void removeFromSession(VaadinService service) {
         assert (getForSession(service, session) == this);
 
-        session.setAttribute(VaadinServiceSession.class.getName() + "."
-                + service.getServiceName(), null);
+        session.setAttribute(
+                VaadinSession.class.getName() + "." + service.getServiceName(),
+                null);
     }
 
     /**
@@ -257,8 +256,9 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
      */
     @Deprecated
     public void storeInSession(VaadinService service, WrappedSession session) {
-        session.setAttribute(VaadinServiceSession.class.getName() + "."
-                + service.getServiceName(), this);
+        session.setAttribute(
+                VaadinSession.class.getName() + "." + service.getServiceName(),
+                this);
         this.session = session;
     }
 
@@ -453,12 +453,12 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
      * @return the current session instance if available, otherwise
      *         <code>null</code>
      * 
-     * @see #setCurrent(VaadinServiceSession)
+     * @see #setCurrent(VaadinSession)
      * 
      * @since 7.0
      */
-    public static VaadinServiceSession getCurrent() {
-        return CurrentInstance.get(VaadinServiceSession.class);
+    public static VaadinSession getCurrent() {
+        return CurrentInstance.get(VaadinSession.class);
     }
 
     /**
@@ -478,8 +478,8 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
      * 
      * @since 7.0
      */
-    public static void setCurrent(VaadinServiceSession session) {
-        CurrentInstance.setInheritable(VaadinServiceSession.class, session);
+    public static void setCurrent(VaadinSession session) {
+        CurrentInstance.setInheritable(VaadinSession.class, session);
     }
 
     /**
@@ -513,7 +513,7 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
     }
 
     private static final Logger getLogger() {
-        return Logger.getLogger(VaadinServiceSession.class.getName());
+        return Logger.getLogger(VaadinSession.class.getName());
     }
 
     /**
@@ -926,9 +926,9 @@ public class VaadinServiceSession implements HttpSessionBindingListener,
      * browser unload the invalidated UI.
      * <p>
      * This method is just a shorthand to
-     * {@link VaadinService#closeSession(VaadinServiceSession)}
+     * {@link VaadinService#closeSession(VaadinSession)}
      * 
-     * @see VaadinService#closeSession(VaadinServiceSession)
+     * @see VaadinService#closeSession(VaadinSession)
      * 
      */
     public void close() {

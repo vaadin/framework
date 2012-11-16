@@ -34,7 +34,7 @@ import java.util.EventObject;
  */
 public class SessionInitEvent extends EventObject {
 
-    private final VaadinServiceSession session;
+    private final VaadinSession session;
     private final VaadinRequest request;
 
     /**
@@ -47,8 +47,8 @@ public class SessionInitEvent extends EventObject {
      * @param request
      *            the request that triggered the initialization
      */
-    public SessionInitEvent(VaadinService service,
-            VaadinServiceSession session, VaadinRequest request) {
+    public SessionInitEvent(VaadinService service, VaadinSession session,
+            VaadinRequest request) {
         super(service);
         this.session = session;
         this.request = request;
@@ -73,7 +73,7 @@ public class SessionInitEvent extends EventObject {
      * 
      * @return the Vaadin service session
      */
-    public VaadinServiceSession getSession() {
+    public VaadinSession getSession() {
         return session;
     }
 

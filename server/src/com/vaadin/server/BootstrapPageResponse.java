@@ -39,7 +39,7 @@ public class BootstrapPageResponse extends BootstrapResponse {
      * Crate a new bootstrap page response.
      * 
      * @see BootstrapResponse#BootstrapResponse(BootstrapHandler, VaadinRequest,
-     *      VaadinServiceSession, Class)
+     *      VaadinSession, Class)
      * 
      * @param handler
      *            the bootstrap handler that is firing the event
@@ -59,7 +59,7 @@ public class BootstrapPageResponse extends BootstrapResponse {
      *            the UI provider for the bootstrap
      */
     public BootstrapPageResponse(BootstrapHandler handler,
-            VaadinRequest request, VaadinServiceSession session,
+            VaadinRequest request, VaadinSession session,
             Class<? extends UI> uiClass, Document document,
             Map<String, Object> headers, UIProvider uiProvider) {
         super(handler, request, session, uiClass, uiProvider);

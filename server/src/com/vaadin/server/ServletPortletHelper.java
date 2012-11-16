@@ -55,7 +55,7 @@ class ServletPortletHelper implements Serializable {
     private static void verifyUIClass(String className, ClassLoader classLoader)
             throws ServiceException {
         if (className == null) {
-            throw new ServiceException(VaadinServiceSession.UI_PARAMETER
+            throw new ServiceException(VaadinSession.UI_PARAMETER
                     + " init parameter not defined");
         }
 
@@ -119,11 +119,11 @@ class ServletPortletHelper implements Serializable {
                 ApplicationConstants.HEARTBEAT_REQUEST_PATH);
     }
 
-    public static void initDefaultUIProvider(VaadinServiceSession session,
+    public static void initDefaultUIProvider(VaadinSession session,
             VaadinService vaadinService) throws ServiceException {
         String uiProperty = vaadinService.getDeploymentConfiguration()
-                .getApplicationOrSystemProperty(
-                        VaadinServiceSession.UI_PARAMETER, null);
+                .getApplicationOrSystemProperty(VaadinSession.UI_PARAMETER,
+                        null);
 
         // Add provider for UI parameter first to give it lower priority
         // (providers are FILO)
@@ -165,13 +165,12 @@ class ServletPortletHelper implements Serializable {
         }
     }
 
-    public static void checkUiProviders(VaadinServiceSession session,
+    public static void checkUiProviders(VaadinSession session,
             VaadinService vaadinService) throws ServiceException {
         if (session.getUIProviders().isEmpty()) {
             throw new ServiceException(
                     "No UIProvider has been added and there is no \""
-                            + VaadinServiceSession.UI_PARAMETER
-                            + "\" init parameter.");
+                            + VaadinSession.UI_PARAMETER + "\" init parameter.");
         }
     }
 
@@ -182,13 +181,13 @@ class ServletPortletHelper implements Serializable {
      * <li>The passed component (or UI) if not null</li>
      * <li>{@link UI#getCurrent()} if defined</li>
      * <li>The passed session if not null</li>
-     * <li>{@link VaadinServiceSession#getCurrent()} if defined</li>
+     * <li>{@link VaadinSession#getCurrent()} if defined</li>
      * <li>The passed request if not null</li>
      * <li>{@link VaadinService#getCurrentRequest()} if defined</li>
      * <li>{@link Locale#getDefault()}</li>
      * </ol>
      */
-    static Locale findLocale(Component component, VaadinServiceSession session,
+    static Locale findLocale(Component component, VaadinSession session,
             VaadinRequest request) {
         if (component == null) {
             component = UI.getCurrent();
@@ -201,7 +200,7 @@ class ServletPortletHelper implements Serializable {
         }
 
         if (session == null) {
-            session = VaadinServiceSession.getCurrent();
+            session = VaadinSession.getCurrent();
         }
         if (session != null) {
             Locale locale = session.getLocale();

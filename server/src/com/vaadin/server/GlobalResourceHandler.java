@@ -66,8 +66,8 @@ public class GlobalResourceHandler implements RequestHandler {
             "");
 
     @Override
-    public boolean handleRequest(VaadinServiceSession session,
-            VaadinRequest request, VaadinResponse response) throws IOException {
+    public boolean handleRequest(VaadinSession session, VaadinRequest request,
+            VaadinResponse response) throws IOException {
         String pathInfo = request.getRequestPathInfo();
         if (pathInfo == null) {
             return false;

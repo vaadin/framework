@@ -22,9 +22,8 @@ import java.io.Serializable;
  * Contains the system messages used to notify the user about various critical
  * situations that can occur.
  * <p>
- * Customize by overriding the static
- * {@link VaadinServiceSession#getSystemMessages()} and returning
- * {@link CustomizedSystemMessages}.
+ * Customize by overriding the static {@link VaadinSession#getSystemMessages()}
+ * and returning {@link CustomizedSystemMessages}.
  * </p>
  * <p>
  * The defaults defined in this class are:

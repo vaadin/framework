@@ -182,7 +182,7 @@ public class VaadinPortletService extends VaadinService {
 
     @Override
     protected AbstractCommunicationManager createCommunicationManager(
-            VaadinServiceSession session) {
+            VaadinSession session) {
         return new PortletCommunicationManager(session);
     }
 
@@ -200,7 +200,7 @@ public class VaadinPortletService extends VaadinService {
     }
 
     @Override
-    protected VaadinServiceSession createVaadinSession(VaadinRequest request)
+    protected VaadinSession createVaadinSession(VaadinRequest request)
             throws ServiceException {
         return new VaadinPortletSession(this);
     }
@@ -219,8 +219,8 @@ public class VaadinPortletService extends VaadinService {
     }
 
     @Override
-    public String getMainDivId(VaadinServiceSession session,
-            VaadinRequest request, Class<? extends UI> uiClass) {
+    public String getMainDivId(VaadinSession session, VaadinRequest request,
+            Class<? extends UI> uiClass) {
         PortletRequest portletRequest = ((VaadinPortletRequest) request)
                 .getPortletRequest();
         /*

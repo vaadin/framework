@@ -76,7 +76,7 @@ public abstract class BootstrapHandler implements RequestHandler {
             return bootstrapResponse.getRequest();
         }
 
-        public VaadinServiceSession getSession() {
+        public VaadinSession getSession() {
             return bootstrapResponse.getSession();
         }
 
@@ -113,8 +113,8 @@ public abstract class BootstrapHandler implements RequestHandler {
     }
 
     @Override
-    public boolean handleRequest(VaadinServiceSession session,
-            VaadinRequest request, VaadinResponse response) throws IOException {
+    public boolean handleRequest(VaadinSession session, VaadinRequest request,
+            VaadinResponse response) throws IOException {
 
         try {
             List<UIProvider> uiProviders = session.getUIProviders();
@@ -393,7 +393,7 @@ public abstract class BootstrapHandler implements RequestHandler {
     protected JSONObject getApplicationParameters(BootstrapContext context)
             throws JSONException, PaintException {
         VaadinRequest request = context.getRequest();
-        VaadinServiceSession session = context.getSession();
+        VaadinSession session = context.getSession();
         VaadinService vaadinService = request.getService();
 
         JSONObject appConfig = new JSONObject();

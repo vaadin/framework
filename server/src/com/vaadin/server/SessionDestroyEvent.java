@@ -28,7 +28,7 @@ import java.util.EventObject;
  */
 public class SessionDestroyEvent extends EventObject {
 
-    private final VaadinServiceSession session;
+    private final VaadinSession session;
 
     /**
      * Creates a new event.
@@ -38,8 +38,7 @@ public class SessionDestroyEvent extends EventObject {
      * @param session
      *            the Vaadin service session that is no longer used
      */
-    public SessionDestroyEvent(VaadinService service,
-            VaadinServiceSession session) {
+    public SessionDestroyEvent(VaadinService service, VaadinSession session) {
         super(service);
         this.session = session;
     }
@@ -63,7 +62,7 @@ public class SessionDestroyEvent extends EventObject {
      * 
      * @return the Vaadin service session
      */
-    public VaadinServiceSession getSession() {
+    public VaadinSession getSession() {
         return session;
     }
 

@@ -20,7 +20,6 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-
 public class LegacyVaadinServlet extends VaadinServlet {
 
     private static final UIProvider provider = new LegacyApplicationUIProvider() {
@@ -87,7 +86,7 @@ public class LegacyVaadinServlet extends VaadinServlet {
     }
 
     private void onVaadinSessionStarted(VaadinRequest request,
-            VaadinServiceSession session) throws ServletException {
+            VaadinSession session) throws ServletException {
         session.addUIProvider(provider);
     }
 

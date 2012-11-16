@@ -160,7 +160,7 @@ public class VaadinServletService extends VaadinService {
 
     @Override
     protected AbstractCommunicationManager createCommunicationManager(
-            VaadinServiceSession session) {
+            VaadinSession session) {
         return new CommunicationManager(session);
     }
 
@@ -183,8 +183,8 @@ public class VaadinServletService extends VaadinService {
     }
 
     @Override
-    public String getMainDivId(VaadinServiceSession session,
-            VaadinRequest request, Class<? extends UI> uiClass) {
+    public String getMainDivId(VaadinSession session, VaadinRequest request,
+            Class<? extends UI> uiClass) {
         String appId = null;
         try {
             URL appUrl = getServlet().getApplicationUrl(

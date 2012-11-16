@@ -14,7 +14,7 @@ import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.UIClassSelectionEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
-import com.vaadin.server.VaadinServiceSession;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
 
 public class CustomUIClassLoader extends TestCase {
@@ -53,7 +53,7 @@ public class CustomUIClassLoader extends TestCase {
      *             if thrown
      */
     public void testWithNullClassLoader() throws Exception {
-        VaadinServiceSession application = createStubApplication();
+        VaadinSession application = createStubApplication();
         application.setConfiguration(createConfigurationMock());
 
         DefaultUIProvider uiProvider = new DefaultUIProvider();
@@ -65,7 +65,7 @@ public class CustomUIClassLoader extends TestCase {
 
     private static DeploymentConfiguration createConfigurationMock() {
         Properties properties = new Properties();
-        properties.put(VaadinServiceSession.UI_PARAMETER, MyUI.class.getName());
+        properties.put(VaadinSession.UI_PARAMETER, MyUI.class.getName());
         return new DefaultDeploymentConfiguration(CustomUIClassLoader.class,
                 properties);
     }
@@ -111,8 +111,8 @@ public class CustomUIClassLoader extends TestCase {
 
     }
 
-    private VaadinServiceSession createStubApplication() {
-        return new VaadinServiceSession(null) {
+    private VaadinSession createStubApplication() {
+        return new VaadinSession(null) {
             @Override
             public DeploymentConfiguration getConfiguration() {
                 return createConfigurationMock();

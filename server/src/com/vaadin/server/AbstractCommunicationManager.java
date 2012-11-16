@@ -147,7 +147,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
     /**
      * The session this communication manager is used for
      */
-    private final VaadinServiceSession session;
+    private final VaadinSession session;
 
     private List<String> locales;
 
@@ -174,7 +174,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * 
      * @param session
      */
-    public AbstractCommunicationManager(VaadinServiceSession session) {
+    public AbstractCommunicationManager(VaadinSession session) {
         this.session = session;
         session.addRequestHandler(getBootstrapHandler());
         session.addRequestHandler(UNSUPPORTED_BROWSER_HANDLER);
@@ -182,7 +182,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         requireLocale(session.getLocale().toString());
     }
 
-    protected VaadinServiceSession getSession() {
+    protected VaadinSession getSession() {
         return session;
     }
 
@@ -374,7 +374,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     "StreamVariable for the post not found");
         }
 
-        final VaadinServiceSession session = getSession();
+        final VaadinSession session = getSession();
 
         OutputStream out = null;
         int totalBytes = 0;
@@ -512,7 +512,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * Internally process a UIDL request from the client.
      * 
      * This method calls
-     * {@link #handleVariables(VaadinRequest, VaadinResponse, Callback, VaadinServiceSession, UI)}
+     * {@link #handleVariables(VaadinRequest, VaadinResponse, Callback, VaadinSession, UI)}
      * to process any changes to variables by the client and then repaints
      * affected components using {@link #paintAfterVariableChanges()}.
      * 
@@ -705,7 +705,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
 
         sb.append("\nConnector hierarchy:\n");
-        VaadinServiceSession session2 = connector.getUI().getSession();
+        VaadinSession session2 = connector.getUI().getSession();
         sb.append(session2.getClass().getName());
         sb.append("(");
         sb.append(session2.getClass().getSimpleName());
@@ -808,7 +808,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             final PrintWriter outWriter, UI ui, boolean analyzeLayouts)
             throws PaintException, JSONException {
         ArrayList<ClientConnector> dirtyVisibleConnectors = new ArrayList<ClientConnector>();
-        VaadinServiceSession session = ui.getSession();
+        VaadinSession session = ui.getSession();
         // Paints components
         ConnectorTracker uiConnectorTracker = ui.getConnectorTracker();
         getLogger().log(Level.FINE, "* Creating response to client");
@@ -1538,7 +1538,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @param session
      * @return false if the XSRF is turned off, true otherwise
      */
-    public boolean isXSRFEnabled(VaadinServiceSession session) {
+    public boolean isXSRFEnabled(VaadinSession session) {
         return session.getConfiguration().isXsrfProtectionEnabled();
     }
 
@@ -1552,9 +1552,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @return true if successful, false if there was an inconsistency
      */
     private boolean handleVariables(VaadinRequest request,
-            VaadinResponse response, Callback callback,
-            VaadinServiceSession session, UI uI) throws IOException,
-            InvalidUIDLSecurityKeyException, JSONException {
+            VaadinResponse response, Callback callback, VaadinSession session,
+            UI uI) throws IOException, InvalidUIDLSecurityKeyException,
+            JSONException {
         boolean success = true;
 
         String changes = getRequestPayload(request);
@@ -1960,7 +1960,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @param m
      *            map from variable names to values
      */
-    private void handleChangeVariablesError(VaadinServiceSession session,
+    private void handleChangeVariablesError(VaadinSession session,
             Component owner, Throwable t, Map<String, Object> m) {
         boolean handled = false;
         ChangeVariablesErrorEvent errorEvent = new ChangeVariablesErrorEvent(
@@ -2395,7 +2395,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @throws IOException
      *             if a handler throws an exception
      * 
-     * @see VaadinServiceSession#addRequestHandler(RequestHandler)
+     * @see VaadinSession#addRequestHandler(RequestHandler)
      * @see RequestHandler
      * 
      * @since 7.0
@@ -2414,8 +2414,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
     }
 
     public void handleBrowserDetailsRequest(VaadinRequest request,
-            VaadinResponse response, VaadinServiceSession session)
-            throws IOException {
+            VaadinResponse response, VaadinSession session) throws IOException {
 
         session.getLock().lock();
 
@@ -2450,8 +2449,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
     }
 
-    private UI getBrowserDetailsUI(VaadinRequest request,
-            VaadinServiceSession session) {
+    private UI getBrowserDetailsUI(VaadinRequest request, VaadinSession session) {
         VaadinService vaadinService = request.getService();
 
         List<UIProvider> uiProviders = session.getUIProviders();
@@ -2706,8 +2704,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @throws IOException
      * @throws InvalidUIDLSecurityKeyException
      */
-    public void handleFileUpload(VaadinServiceSession session,
-            VaadinRequest request, VaadinResponse response) throws IOException,
+    public void handleFileUpload(VaadinSession session, VaadinRequest request,
+            VaadinResponse response) throws IOException,
             InvalidUIDLSecurityKeyException {
 
         /*
@@ -2768,8 +2766,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @throws IOException
      */
     public void handleHeartbeatRequest(VaadinRequest request,
-            VaadinResponse response, VaadinServiceSession session)
-            throws IOException {
+            VaadinResponse response, VaadinSession session) throws IOException {
         UI ui = null;
         try {
             int uiId = Integer.parseInt(request

@@ -25,7 +25,7 @@ import com.vaadin.server.ExternalResource;
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
-import com.vaadin.server.VaadinServiceSession;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Link;
@@ -55,7 +55,7 @@ public class Parameters extends com.vaadin.server.LegacyApplication implements
         setMainWindow(main);
 
         // This class acts both as URI handler and parameter handler
-        VaadinServiceSession.getCurrent().addRequestHandler(this);
+        VaadinSession.getCurrent().addRequestHandler(this);
 
         final VerticalLayout layout = new VerticalLayout();
         final Label info = new Label("To test URI and Parameter Handlers, "
@@ -107,7 +107,7 @@ public class Parameters extends com.vaadin.server.LegacyApplication implements
     }
 
     @Override
-    public boolean handleRequest(VaadinServiceSession session,
+    public boolean handleRequest(VaadinSession session,
             VaadinRequest request, VaadinResponse response) throws IOException {
         context.setValue("Context not available");
         relative.setValue(request.getRequestPathInfo());

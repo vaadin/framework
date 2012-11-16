@@ -19,7 +19,7 @@ package com.vaadin.tests;
 import java.io.File;
 
 import com.vaadin.data.Item;
-import com.vaadin.server.VaadinServiceSession;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.util.SampleDirectory;
 import com.vaadin.ui.Label;
@@ -67,7 +67,7 @@ public class TreeFilesystem extends com.vaadin.server.LegacyApplication
 
         // Get sample directory
         final File sampleDir = SampleDirectory.getDirectory(
-                VaadinServiceSession.getCurrent(), main);
+                VaadinSession.getCurrent(), main);
         // populate tree's root node with example directory
         if (sampleDir != null) {
             populateNode(sampleDir.getAbsolutePath(), null);

@@ -37,7 +37,7 @@ import com.vaadin.server.PaintTarget;
 import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
-import com.vaadin.server.VaadinServiceSession;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
@@ -60,10 +60,9 @@ import com.vaadin.util.ReflectTools;
  * <p>
  * When a new UI instance is needed, typically because the user opens a URL in a
  * browser window which points to e.g. {@link VaadinServlet}, all
- * {@link UIProvider}s registered to the current {@link VaadinServiceSession}
- * are queried for the UI class that should be used. The selection is by defaylt
- * based on the {@value VaadinServiceSession#UI_PARAMETER} parameter from
- * web.xml.
+ * {@link UIProvider}s registered to the current {@link VaadinSession} are
+ * queried for the UI class that should be used. The selection is by defaylt
+ * based on the {@value VaadinSession#UI_PARAMETER} parameter from web.xml.
  * </p>
  * <p>
  * After a UI has been created by the application, it is initialized using
@@ -121,7 +120,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     /**
      * The application to which this UI belongs
      */
-    private VaadinServiceSession session;
+    private VaadinSession session;
 
     /**
      * List of windows in this UI.
@@ -139,7 +138,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * which a request originates. A negative value indicates that the UI id has
      * not yet been assigned by the Application.
      * 
-     * @see VaadinServiceSession#getNextUIid()
+     * @see VaadinSession#getNextUIid()
      */
     private int uiId = -1;
 
@@ -235,8 +234,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * <p>
      * Getting a null value is often a problem in constructors of regular
      * components and in the initializers of custom composite components. A
-     * standard workaround is to use {@link VaadinServiceSession#getCurrent()}
-     * to retrieve the application instance that the current request relates to.
+     * standard workaround is to use {@link VaadinSession#getCurrent()} to
+     * retrieve the application instance that the current request relates to.
      * Another way is to move the problematic initialization to
      * {@link #attach()}, as described in the documentation of the method.
      * </p>
@@ -245,7 +244,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * @see #attach()
      */
     @Override
-    public VaadinServiceSession getSession() {
+    public VaadinSession getSession() {
         return session;
     }
 
@@ -365,7 +364,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * 
      * @see #getSession()
      */
-    public void setSession(VaadinServiceSession session) {
+    public void setSession(VaadinSession session) {
         if ((session == null) == (this.session == null)) {
             throw new IllegalStateException(
                     "VaadinServiceSession has already been set. Old session: "
@@ -384,7 +383,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         }
     }
 
-    private static String getSessionDetails(VaadinServiceSession session) {
+    private static String getSessionDetails(VaadinSession session) {
         if (session == null) {
             return null;
         } else {
@@ -947,7 +946,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * heartbeat for this UI.
      * 
      * @see #heartbeat()
-     * @see VaadinServiceSession#cleanupInactiveUIs()
+     * @see VaadinSession#cleanupInactiveUIs()
      * 
      * @return The time the last heartbeat request occurred.
      */

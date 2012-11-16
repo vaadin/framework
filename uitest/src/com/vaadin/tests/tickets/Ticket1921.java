@@ -7,7 +7,7 @@ import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
-import com.vaadin.server.VaadinServiceSession;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
@@ -42,7 +42,7 @@ public class Ticket1921 extends LegacyApplication implements RequestHandler {
 
         newState();
 
-        VaadinServiceSession.getCurrent().addRequestHandler(this);
+        VaadinSession.getCurrent().addRequestHandler(this);
     }
 
     public void newState() {
@@ -94,7 +94,7 @@ public class Ticket1921 extends LegacyApplication implements RequestHandler {
     }
 
     @Override
-    public boolean handleRequest(VaadinServiceSession session,
+    public boolean handleRequest(VaadinSession session,
             VaadinRequest request, VaadinResponse response) throws IOException {
         Map<String, String[]> parameters = request.getParameterMap();
         String[] s = parameters.get("state");

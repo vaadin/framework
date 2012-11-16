@@ -111,7 +111,7 @@ public class AddonContext implements Serializable {
      * Shorthand for adding a bootstrap listener that will be added to every new
      * service session.
      * 
-     * @see VaadinServiceSession#addBootstrapListener(BootstrapListener)
+     * @see VaadinSession#addBootstrapListener(BootstrapListener)
      * 
      * @param listener
      *            the bootstrap listener that should be added to all new

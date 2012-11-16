@@ -20,7 +20,7 @@ import java.io.File;
 
 import com.vaadin.data.util.FilesystemContainer;
 import com.vaadin.data.util.FilesystemContainer.FileItem;
-import com.vaadin.server.VaadinServiceSession;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.util.SampleDirectory;
 import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.Component.Listener;
@@ -85,7 +85,7 @@ public class TreeFilesystemContainer extends
 
         // Get sample directory
         final File sampleDir = SampleDirectory.getDirectory(
-                VaadinServiceSession.getCurrent(), w);
+                VaadinSession.getCurrent(), w);
         // Populate tree with FilesystemContainer
         final FilesystemContainer fsc = new FilesystemContainer(sampleDir, true);
         filesystem.setContainerDataSource(fsc);

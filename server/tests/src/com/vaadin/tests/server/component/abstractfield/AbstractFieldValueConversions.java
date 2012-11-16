@@ -12,7 +12,7 @@ import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
-import com.vaadin.server.VaadinServiceSession;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
@@ -157,11 +157,11 @@ public class AbstractFieldValueConversions extends TestCase {
     }
 
     public void testNumberDoubleConverterChange() {
-        final VaadinServiceSession a = new VaadinServiceSession(null);
-        VaadinServiceSession.setCurrent(a);
+        final VaadinSession a = new VaadinSession(null);
+        VaadinSession.setCurrent(a);
         TextField tf = new TextField() {
             @Override
-            public VaadinServiceSession getSession() {
+            public VaadinSession getSession() {
                 return a;
             }
         };

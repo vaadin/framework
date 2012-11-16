@@ -19,7 +19,6 @@ package com.vaadin.server;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-
 /**
  * The default implementation of {@link DeploymentConfiguration} based on a base
  * class for resolving system properties and a set of init parameters.

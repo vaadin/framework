@@ -44,7 +44,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
      * 
      * @param session
      */
-    public CommunicationManager(VaadinServiceSession session) {
+    public CommunicationManager(VaadinSession session) {
         super(session);
     }
 

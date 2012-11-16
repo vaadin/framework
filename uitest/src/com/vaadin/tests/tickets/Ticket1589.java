@@ -16,7 +16,7 @@ import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
-import com.vaadin.server.VaadinServiceSession;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Link;
 
@@ -29,7 +29,7 @@ public class Ticket1589 extends LegacyApplication {
 
         MyDynamicResource res = new MyDynamicResource();
 
-        VaadinServiceSession.getCurrent().addRequestHandler(res);
+        VaadinSession.getCurrent().addRequestHandler(res);
 
         w.addComponent(new Link(
                 "Test (without Content-Disposition, should suggest generatedFile.png when saving, browser default for actual disposition)",
@@ -52,7 +52,7 @@ class MyDynamicResource implements RequestHandler {
      * stream that contains the response from the server.
      */
     @Override
-    public boolean handleRequest(VaadinServiceSession session,
+    public boolean handleRequest(VaadinSession session,
             VaadinRequest request, VaadinResponse response) throws IOException {
         String relativeUri = request.getRequestPathInfo();
         // Catch the given URI that identifies the resource, otherwise let other
