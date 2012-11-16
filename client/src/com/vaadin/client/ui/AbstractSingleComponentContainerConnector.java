@@ -16,11 +16,11 @@
 package com.vaadin.client.ui;
 
 /**
- * Client side connector for subclasses of AbstractComponentConnector.
+ * Client side connector for subclasses of AbstractSingleComponentConnector.
  * 
  * @since 7.0
  */
-public abstract class AbstractComponentContainerConnector extends
+public abstract class AbstractSingleComponentContainerConnector extends
         AbstractHasComponentsConnector {
 
 }

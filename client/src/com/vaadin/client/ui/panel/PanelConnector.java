@@ -25,7 +25,7 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.ui.AbstractComponentContainerConnector;
+import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.ShortcutActionHandler;
@@ -40,7 +40,7 @@ import com.vaadin.shared.ui.panel.PanelState;
 import com.vaadin.ui.Panel;
 
 @Connect(Panel.class)
-public class PanelConnector extends AbstractComponentContainerConnector
+public class PanelConnector extends AbstractSingleComponentContainerConnector
         implements Paintable, SimpleManagedLayout, PostLayoutListener,
         MayScrollChildren {
 

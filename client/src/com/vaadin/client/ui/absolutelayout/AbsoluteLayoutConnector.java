@@ -162,10 +162,8 @@ public class AbsoluteLayoutConnector extends
     }
 
     private void setChildWidgetPosition(ComponentConnector child) {
-        getWidget().setWidgetPosition(
-                child.getWidget(),
-                getState().connectorToCssPosition.get(child
-                        .getConnectorId()));
+        getWidget().setWidgetPosition(child.getWidget(),
+                getState().connectorToCssPosition.get(child.getConnectorId()));
     };
 
     /*
