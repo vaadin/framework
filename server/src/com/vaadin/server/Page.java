@@ -436,13 +436,25 @@ public class Page implements Serializable {
 
     public void init(VaadinRequest request) {
         // Extract special parameter sent by vaadinBootstrap.js
-        String loc = request.getParameter("loc");
-        if (loc != null) {
+        String location = request.getParameter("loc");
+        String clientWidth = request.getParameter("cw");
+        String clientHeight = request.getParameter("ch");
+
+        if (location != null) {
             try {
-                location = new URI(loc);
+                this.location = new URI(location);
             } catch (URISyntaxException e) {
                 throw new RuntimeException(
                         "Invalid location URI received from client", e);
+            }
+        }
+        if (clientWidth != null && clientHeight != null) {
+            try {
+                browserWindowWidth = Integer.parseInt(clientWidth);
+                browserWindowHeight = Integer.parseInt(clientHeight);
+            } catch (NumberFormatException e) {
+                throw new RuntimeException(
+                        "Invalid window size received from client", e);
             }
         }
     }

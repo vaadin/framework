@@ -32,8 +32,8 @@ import com.vaadin.shared.VBrowserDetails;
  */
 public class WebBrowser implements Serializable {
 
-    private int screenHeight = 0;
-    private int screenWidth = 0;
+    private int screenHeight = -1;
+    private int screenWidth = -1;
     private String browserApplication = null;
     private Locale locale;
     private String address;
@@ -364,7 +364,7 @@ public class WebBrowser implements Serializable {
                 screenHeight = Integer.parseInt(sh);
                 screenWidth = Integer.parseInt(sw);
             } catch (final NumberFormatException e) {
-                screenHeight = screenWidth = 0;
+                screenHeight = screenWidth = -1;
             }
         }
         if (tzo != null) {
