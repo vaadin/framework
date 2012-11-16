@@ -69,7 +69,7 @@ public class FileDownloaderConnector extends AbstractExtensionConnector
     @Override
     public void setParent(ServerConnector parent) {
         super.setParent(parent);
-        if (parent == null) {
+        if (parent == null && iframe != null) {
             iframe.removeFromParent();
         }
     }

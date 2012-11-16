@@ -45,9 +45,12 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeButton;
 
 public class FileDownloaderTest extends AbstractTestUI {
+
+    private AbstractComponent firstDownloadComponent;
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -104,6 +107,28 @@ public class FileDownloaderTest extends AbstractTestUI {
         // addComponents(resource, components);
         resource = new ClassResource(new EmbeddedPdf().getClass(), "test.pdf");
         addComponents("Class resource pdf", resource, components);
+
+        addComponent(new Button("Remove first download button",
+                new ClickListener() {
+
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        Layout parent = (Layout) firstDownloadComponent
+                                .getParent();
+                        parent.removeComponent(firstDownloadComponent);
+                    }
+                }));
+        addComponent(new Button(
+                "Detach FileDownloader from first download button",
+                new ClickListener() {
+
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        FileDownloader e = (FileDownloader) firstDownloadComponent
+                                .getExtensions().iterator().next();
+                        e.removeFromTarget();
+                    }
+                }));
     }
 
     public void addComponents(String caption, ConnectorResource resource,
@@ -113,6 +138,10 @@ public class FileDownloaderTest extends AbstractTestUI {
         for (Class<? extends Component> cls : components) {
             try {
                 AbstractComponent c = (AbstractComponent) cls.newInstance();
+                if (firstDownloadComponent == null) {
+                    firstDownloadComponent = c;
+                }
+
                 c.setId(cls.getName());
                 c.setCaption(cls.getName());
                 c.setDescription(resource.getMIMEType() + " / "
