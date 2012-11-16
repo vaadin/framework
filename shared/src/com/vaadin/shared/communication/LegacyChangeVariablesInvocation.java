@@ -48,9 +48,9 @@ public class LegacyChangeVariablesInvocation extends MethodInvocation {
     }
 
     @Override
-    public String getLastonlyTag() {
+    public String getLastOnlyTag() {
         assert variableChanges.size() == 1;
-        return super.getLastonlyTag()
+        return super.getLastOnlyTag()
                 + variableChanges.keySet().iterator().next();
     }
 

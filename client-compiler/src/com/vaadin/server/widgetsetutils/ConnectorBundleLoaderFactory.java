@@ -337,8 +337,8 @@ public class ConnectorBundleLoaderFactory extends Generator {
                     w.print(escape(method.getName()));
                     w.println("\");");
 
-                    if (annotation.lastonly()) {
-                        w.print("store.setLastonly(");
+                    if (annotation.lastOnly()) {
+                        w.print("store.setLastOnly(");
                         writeClassLiteral(w, type);
                         w.print(", \"");
                         w.print(escape(method.getName()));

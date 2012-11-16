@@ -23,7 +23,7 @@ public class TypeDataStore {
     private final Map<Type, Collection<Property>> properties = new HashMap<Type, Collection<Property>>();
 
     private final Set<Method> delayedMethods = new HashSet<Method>();
-    private final Set<Method> lastonlyMethods = new HashSet<Method>();
+    private final Set<Method> lastOnlyMethods = new HashSet<Method>();
 
     private final Map<Method, Type> returnTypes = new HashMap<Method, Type>();
     private final Map<Method, Invoker> invokers = new HashMap<Method, Invoker>();
@@ -159,12 +159,12 @@ public class TypeDataStore {
         delayedMethods.add(getType(type).getMethod(methodName));
     }
 
-    public static boolean isLastonly(Method method) {
-        return get().lastonlyMethods.contains(method);
+    public static boolean isLastOnly(Method method) {
+        return get().lastOnlyMethods.contains(method);
     }
 
-    public void setLastonly(Class<?> clazz, String methodName) {
-        lastonlyMethods.add(getType(clazz).getMethod(methodName));
+    public void setLastOnly(Class<?> clazz, String methodName) {
+        lastOnlyMethods.add(getType(clazz).getMethod(methodName));
     }
 
     public static Collection<Property> getProperties(Type type)

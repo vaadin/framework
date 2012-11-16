@@ -59,7 +59,7 @@ public class RpcProxy {
                     connector.getConnectorId(), rpcInterface.getName(),
                     method.getName(), params);
             connector.getConnection().addMethodInvocationToQueue(invocation,
-                    method.isDelayed(), method.isLastonly());
+                    method.isDelayed(), method.isLastOnly());
             // No RPC iface should have a return value
             return null;
         }

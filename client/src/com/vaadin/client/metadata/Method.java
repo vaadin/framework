@@ -64,8 +64,8 @@ public class Method {
         return TypeDataStore.isDelayed(this);
     }
 
-    public boolean isLastonly() {
-        return TypeDataStore.isLastonly(this);
+    public boolean isLastOnly() {
+        return TypeDataStore.isLastOnly(this);
     }
 
 }

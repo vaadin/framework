@@ -74,14 +74,14 @@ public class MethodInvocation implements Serializable {
     /**
      * Gets a String tag that is used to uniquely identify previous method
      * invocations that should be purged from the queue if
-     * <code>{@literal @}Delay(lastonly = true)</code> is used.
+     * <code>{@literal @}Delay(lastOnly = true)</code> is used.
      * <p>
      * The returned string should contain at least one non-number char to ensure
-     * it doesn't collide with the keys used for invocations without lastonly.
+     * it doesn't collide with the keys used for invocations without lastOnly.
      * 
      * @return a string identifying this method invocation
      */
-    public String getLastonlyTag() {
+    public String getLastOnlyTag() {
         return connectorId + "-" + getInterfaceName() + "-" + getMethodName();
     }
 

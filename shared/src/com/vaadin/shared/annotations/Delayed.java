@@ -37,7 +37,7 @@ import com.vaadin.shared.communication.ServerRpc;
 @Documented
 public @interface Delayed {
     /**
-     * By setting lastonly to <code>true</code>, any previous invocations of the
+     * By setting lastOnly to <code>true</code>, any previous invocations of the
      * same method will be removed from the queue when a new invocation is
      * added. This can be used in cases where only the last value is of
      * interest.
@@ -50,5 +50,5 @@ public @interface Delayed {
      *         method should be sent to the server, <code>false</code> if all
      *         enqueued invocations should be sent.
      */
-    public boolean lastonly() default false;
+    public boolean lastOnly() default false;
 }

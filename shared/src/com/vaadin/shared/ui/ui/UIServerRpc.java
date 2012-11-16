@@ -20,7 +20,7 @@ import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.ClickRpc;
 
 public interface UIServerRpc extends ClickRpc, ServerRpc {
-    @Delayed(lastonly = true)
+    @Delayed(lastOnly = true)
     public void resize(int viewWidth, int viewHeight, int windowWidth,
             int windowHeight);
 }

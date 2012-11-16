@@ -146,7 +146,7 @@ public class ApplicationConnection {
      * The pending method invocations that will be send to the server by
      * {@link #sendPendingCommand}. The key is defined differently based on
      * whether the method invocation is enqueued with lastonly. With lastonly
-     * enabled, the method signature ( {@link MethodInvocation#getLastonlyTag()}
+     * enabled, the method signature ( {@link MethodInvocation#getLastOnlyTag()}
      * ) is used as the key to make enable removing a previously enqueued
      * invocation. Without lastonly, an incremental id based on
      * {@link #lastInvocationTag} is used to get unique values.
@@ -2091,7 +2091,7 @@ public class ApplicationConnection {
      *            request), <code>true</code> to let the framework delay sending
      *            of RPC calls and variable changes until the next non-delayed
      *            change
-     * @param lastonly
+     * @param lastOnly
      *            <code>true</code> to remove all previously delayed invocations
      *            of the same method that were also enqueued with lastonly set
      *            to <code>true</code>. <code>false</code> to add invocation to
@@ -2099,11 +2099,11 @@ public class ApplicationConnection {
      *            invocations.
      */
     public void addMethodInvocationToQueue(MethodInvocation invocation,
-            boolean delayed, boolean lastonly) {
+            boolean delayed, boolean lastOnly) {
         String tag;
-        if (lastonly) {
-            tag = invocation.getLastonlyTag();
-            assert !tag.matches("\\d+") : "getLastonlyTag value must have at least one non-digit character";
+        if (lastOnly) {
+            tag = invocation.getLastOnlyTag();
+            assert !tag.matches("\\d+") : "getLastOnlyTag value must have at least one non-digit character";
             pendingInvocations.remove(tag);
         } else {
             tag = Integer.toString(lastInvocationTag++);
