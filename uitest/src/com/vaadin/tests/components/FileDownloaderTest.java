@@ -37,6 +37,7 @@ import com.vaadin.server.StreamResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.tests.components.embedded.EmbeddedPdf;
+import com.vaadin.tests.util.Log;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -45,12 +46,18 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.NativeButton;
 
 public class FileDownloaderTest extends AbstractTestUI {
 
+    private AbstractComponent firstDownloadComponent;
+    private Log log = new Log(5);
+
     @Override
     protected void setup(VaadinRequest request) {
+        addComponent(log);
+
         List<Class<? extends Component>> components = new ArrayList<Class<? extends Component>>();
         components.add(Button.class);
         components.add(NativeButton.class);
@@ -104,6 +111,29 @@ public class FileDownloaderTest extends AbstractTestUI {
         // addComponents(resource, components);
         resource = new ClassResource(new EmbeddedPdf().getClass(), "test.pdf");
         addComponents("Class resource pdf", resource, components);
+
+        addComponent(new Button("Remove first download button",
+                new ClickListener() {
+
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        Layout parent = (Layout) firstDownloadComponent
+                                .getParent();
+                        parent.removeComponent(firstDownloadComponent);
+                    }
+                }));
+        addComponent(new Button(
+                "Detach FileDownloader from first download button",
+                new ClickListener() {
+
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        FileDownloader e = (FileDownloader) firstDownloadComponent
+                                .getExtensions().iterator().next();
+                        e.removeFromTarget();
+                        log.log("FileDownload detached");
+                    }
+                }));
     }
 
     public void addComponents(String caption, ConnectorResource resource,
@@ -113,7 +143,11 @@ public class FileDownloaderTest extends AbstractTestUI {
         for (Class<? extends Component> cls : components) {
             try {
                 AbstractComponent c = (AbstractComponent) cls.newInstance();
-                c.setId(cls.getName());
+                if (firstDownloadComponent == null) {
+                    firstDownloadComponent = c;
+                }
+
+                c.setId(cls.getName() + caption.replace(" ", ""));
                 c.setCaption(cls.getName());
                 c.setDescription(resource.getMIMEType() + " / "
                         + resource.getClass());
