@@ -2,6 +2,7 @@ package com.vaadin.tests.components.button;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
+import com.vaadin.server.ErrorEvent;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -57,7 +58,7 @@ public class ShortCutListenerModification extends TestBase implements
     }
 
     @Override
-    public void terminalError(com.vaadin.server.Terminal.ErrorEvent event) {
+    public void terminalError(com.vaadin.server.ErrorEvent event) {
         super.terminalError(event);
         getMainWindow().showNotification("Failed!",
                 Notification.TYPE_ERROR_MESSAGE);

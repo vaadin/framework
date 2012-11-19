@@ -20,10 +20,9 @@ import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.vaadin.server.Terminal.ErrorEvent;
 import com.vaadin.ui.AbstractComponent;
 
-public class DefaultErrorListener implements Terminal.ErrorListener {
+public class DefaultErrorListener implements ErrorListener {
     @Override
     public void terminalError(ErrorEvent event) {
         doDefault(event);

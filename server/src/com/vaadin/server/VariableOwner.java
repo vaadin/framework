@@ -84,7 +84,7 @@ public interface VariableOwner extends Serializable {
     /**
      * VariableOwner error event.
      */
-    public interface ErrorEvent extends Terminal.ErrorEvent {
+    public interface ErrorEvent extends com.vaadin.server.ErrorEvent {
 
         /**
          * Gets the source VariableOwner.
