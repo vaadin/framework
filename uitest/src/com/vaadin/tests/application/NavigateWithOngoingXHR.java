@@ -23,7 +23,7 @@ import com.vaadin.server.ExternalResource;
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
-import com.vaadin.server.VaadinServiceSession;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.progressindicator.ProgressIndicatorServerRpc;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Link;
@@ -32,7 +32,7 @@ import com.vaadin.ui.ProgressIndicator;
 public class NavigateWithOngoingXHR extends AbstractTestUI {
     private final RequestHandler slowRequestHandler = new RequestHandler() {
         @Override
-        public boolean handleRequest(VaadinServiceSession session,
+        public boolean handleRequest(VaadinSession session,
                 VaadinRequest request, VaadinResponse response)
                 throws IOException {
             if ("/slowRequestHandler".equals(request.getRequestPathInfo())) {
