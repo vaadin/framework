@@ -219,10 +219,10 @@ public class ApplicationConnection {
     private final RpcManager rpcManager;
 
     /**
-     * If renderingLocks contains any objects, rendering is to be suspended
-     * until the collection is empty or a timeout has occurred.
+     * If responseHandlingLocks contains any objects, response handling is
+     * suspended until the collection is empty or a timeout has occurred.
      */
-    private Set<Object> renderingLocks = new HashSet<Object>();
+    private Set<Object> responseHandlingLocks = new HashSet<Object>();
 
     /**
      * Data structure holding information about pending UIDL messages.
@@ -251,10 +251,10 @@ public class ApplicationConnection {
         }
     }
 
-    /** Contains all UIDL messages received while the rendering is suspended */
+    /** Contains all UIDL messages received while response handling is suspended */
     private List<PendingUIDLMessage> pendingUIDLMessages = new ArrayList<PendingUIDLMessage>();
 
-    /** The max timeout the rendering phase may be suspended */
+    /** The max timeout that response handling may be suspended */
     private static final int MAX_SUSPENDED_TIMEOUT = 5000;
 
     /** Event bus for communication events */
@@ -1242,7 +1242,7 @@ public class ApplicationConnection {
 
     protected void handleUIDLMessage(final Date start, final String jsonText,
             final ValueMap json) {
-        if (!renderingLocks.isEmpty()) {
+        if (!responseHandlingLocks.isEmpty()) {
             // Some component is doing something that can't be interrupted
             // (e.g. animation that should be smooth). Enqueue the UIDL
             // message for later processing.
@@ -3077,14 +3077,14 @@ public class ApplicationConnection {
     }
 
     /**
-     * Timer used to make sure that no misbehaving components can lock the
-     * rendering phase forever.
+     * Timer used to make sure that no misbehaving components can delay response
+     * handling forever.
      */
     Timer forceHandleMessage = new Timer() {
         @Override
         public void run() {
-            VConsole.log("WARNING: rendering was never resumed, forcing reload...");
-            renderingLocks.clear();
+            VConsole.log("WARNING: reponse handling was never resumed, forcibly removing locks...");
+            responseHandlingLocks.clear();
             handlePendingMessages();
         }
     };
@@ -3095,8 +3095,8 @@ public class ApplicationConnection {
      * 
      * @param lock
      */
-    public void suspendRendering(Object lock) {
-        renderingLocks.add(lock);
+    public void suspendReponseHandling(Object lock) {
+        responseHandlingLocks.add(lock);
     }
 
     /**
@@ -3104,18 +3104,17 @@ public class ApplicationConnection {
      * 
      * @param lock
      */
-    public void resumeRendering(Object lock) {
-        VConsole.log("...resuming UIDL handling.");
-        renderingLocks.remove(lock);
-        if (renderingLocks.isEmpty()) {
-            VConsole.log("No more rendering locks, rendering pending requests.");
+    public void resumeResponseHandling(Object lock) {
+        responseHandlingLocks.remove(lock);
+        if (responseHandlingLocks.isEmpty()) {
+            VConsole.log("No more response handling locks, handling pending requests.");
             forceHandleMessage.cancel();
             handlePendingMessages();
         }
     }
 
     /**
-     * Handles all pending UIDL messages queued while the rendering was
+     * Handles all pending UIDL messages queued while response handling was
      * suspended.
      */
     private void handlePendingMessages() {
