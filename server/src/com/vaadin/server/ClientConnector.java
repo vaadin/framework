@@ -38,6 +38,32 @@ import com.vaadin.ui.UI;
  */
 public interface ClientConnector extends Connector {
     /**
+     * An error event for connector related errors. Use {@link #getConnector()}
+     * to find the connector where the error occurred or {@link #getComponent()}
+     * to find the nearest parent component.
+     */
+    public static class ConnectorErrorEvent extends
+            com.vaadin.server.ErrorEvent {
+
+        private Connector connector;
+
+        public ConnectorErrorEvent(Connector connector, Throwable t) {
+            super(t);
+            this.connector = connector;
+        }
+
+        /**
+         * Gets the connector for which this error occurred.
+         * 
+         * @return The connector for which the error occurred
+         */
+        public Connector getConnector() {
+            return connector;
+        }
+
+    }
+
+    /**
      * Returns the list of pending server to client RPC calls and clears the
      * list.
      * 
@@ -249,4 +275,25 @@ public interface ClientConnector extends Connector {
      * @return RpcManager or null if none found for the interface
      */
     public RpcManager getRpcManager(String rpcInterfaceName);
+
+    /**
+     * Gets the error handler for the connector.
+     * 
+     * The error handler is dispatched whenever there is an error processing the
+     * data coming from the client to this connector.
+     * 
+     * @return The error handler or null if not set
+     */
+    public ErrorHandler getErrorHandler();
+
+    /**
+     * Sets the error handler for the connector.
+     * 
+     * The error handler is dispatched whenever there is an error processing the
+     * data coming from the client for this connector.
+     * 
+     * @param errorHandler
+     *            The error handler for this connector
+     */
+    public void setErrorHandler(ErrorHandler errorHandler);
 }
