@@ -17,14 +17,94 @@ package com.vaadin.server;
 
 import java.io.Serializable;
 
+import com.vaadin.shared.Connector;
+import com.vaadin.ui.UI;
+
 /**
- * An error event implementation for Terminal.
+ * An error thrown by the framework and handled by an {@link ErrorHandler}.
+ * Typically handled by {@link VaadinSession#getErrorHandler()} but can also be
+ * handled by a {@link Connector} specific handler, set using
+ * {@link ClientConnector#setErrorHandler(ErrorHandler)}.
+ * 
  */
-public interface ErrorEvent extends Serializable {
+public class ErrorEvent implements Serializable {
+
+    private Throwable throwable;
+
+    public ErrorEvent(Throwable t) {
+        setThrowable(t);
+    }
 
     /**
      * Gets the contained throwable, the cause of the error.
+     * 
+     * @return
      */
-    public Throwable getThrowable();
+    public Throwable getThrowable() {
+        return throwable;
+    }
+
+    public void setThrowable(Throwable throwable) {
+        this.throwable = throwable;
+    }
+
+    /**
+     * Method for finding the error handler for the given connector. Uses
+     * connector hierarchy to find a connector with an error handler. Falls back
+     * to the VaadinSession error handler if no connector has specified an error
+     * handler.
+     * <p>
+     * Returns a {@link DefaultErrorHandler} if no error handler was found
+     * </p>
+     * 
+     * @param connector
+     *            The target connector
+     * @return An ErrorHandler for the connector
+     */
+    public static ErrorHandler findErrorHandler(ClientConnector connector) {
+        if (connector != null) {
+            ErrorHandler errorHandler = connector.getErrorHandler();
+            if (errorHandler != null) {
+                return errorHandler;
+            }
+
+            ClientConnector parent = connector.getParent();
+            if (parent != null) {
+                return findErrorHandler(parent);
+            }
+
+            // Reached UI and found no error handler. Try session which must
+            // have
+            // one.
+            UI ui = connector.getUI();
+            if (ui != null && ui.getSession() != null) {
+                return ui.getSession().getErrorHandler();
+            }
+        }
+
+        if (VaadinSession.getCurrent() != null) {
+            return VaadinSession.getCurrent().getErrorHandler();
+        }
+
+        // We should never really get here as at least the session should have
+        // an error
+        // handler. If for some reason UI is null and session is null we use the
+        // default error handler.
+        return new DefaultErrorHandler();
+    }
+
+    /**
+     * Method for finding the error handler for the given session.
+     * 
+     * @param connector
+     *            The target connector
+     * @return An ErrorHandler for the session or null if none was found
+     */
+    public static ErrorHandler findErrorHandler(VaadinSession session) {
+        if (session == null) {
+            return null;
+        }
+        return session.getErrorHandler();
+    }
 
 }

@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -572,6 +571,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
     private void handleServiceException(VaadinServletRequest request,
             VaadinServletResponse response, VaadinSession vaadinSession,
             Throwable e) throws IOException, ServletException {
+        ErrorHandler errorHandler = ErrorEvent.findErrorHandler(vaadinSession);
+
         // if this was an UIDL request, response UIDL back to client
         if (getRequestType(request) == RequestType.UIDL) {
             SystemMessages ci = getService().getSystemMessages(
@@ -580,15 +581,16 @@ public class VaadinServlet extends HttpServlet implements Constants {
             criticalNotification(request, response,
                     ci.getInternalErrorCaption(), ci.getInternalErrorMessage(),
                     null, ci.getInternalErrorURL());
-            if (vaadinSession != null) {
-                vaadinSession.getErrorHandler().terminalError(
-                        new RequestError(e));
-            } else {
-                throw new ServletException(e);
+            if (errorHandler != null) {
+                errorHandler.error(new ErrorEvent(e));
             }
         } else {
-            // Re-throw other exceptions
-            throw new ServletException(e);
+            if (errorHandler != null) {
+                errorHandler.error(new ErrorEvent(e));
+            } else {
+                // Re-throw other exceptions
+                throw new ServletException(e);
+            }
         }
 
     }
@@ -1202,21 +1204,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
         URL u = new URL(reqURL, servletPath);
         return u;
-    }
-
-    public class RequestError implements ErrorEvent, Serializable {
-
-        private final Throwable throwable;
-
-        public RequestError(Throwable throwable) {
-            this.throwable = throwable;
-        }
-
-        @Override
-        public Throwable getThrowable() {
-            return throwable;
-        }
-
     }
 
     /**
