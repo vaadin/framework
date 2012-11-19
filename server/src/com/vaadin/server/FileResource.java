@@ -71,18 +71,8 @@ public class FileResource implements ConnectorResource {
             ds.setCacheTime(cacheTime);
             return ds;
         } catch (final FileNotFoundException e) {
-            // Log the exception using the application error handler
-            VaadinSession.getCurrent().getErrorHandler()
-                    .terminalError(new ErrorEvent() {
-
-                        @Override
-                        public Throwable getThrowable() {
-                            return e;
-                        }
-
-                    });
-
-            return null;
+            throw new RuntimeException("File not found: "
+                    + sourceFile.getName(), e);
         }
     }
 
