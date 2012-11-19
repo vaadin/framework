@@ -90,7 +90,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * Session wide error handler which is used by default if an error is left
      * unhandled.
      */
-    private Terminal.ErrorListener errorHandler = new DefaultErrorListener();
+    private ErrorListener errorHandler = new DefaultErrorListener();
 
     /**
      * The converter factory that is used to provide default converters for the
@@ -322,7 +322,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * 
      * @return the current error handler
      */
-    public Terminal.ErrorListener getErrorHandler() {
+    public ErrorListener getErrorHandler() {
         return errorHandler;
     }
 
@@ -331,7 +331,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * 
      * @param errorHandler
      */
-    public void setErrorHandler(Terminal.ErrorListener errorHandler) {
+    public void setErrorHandler(ErrorListener errorHandler) {
         this.errorHandler = errorHandler;
     }
 
@@ -379,7 +379,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * should be used. This indicates that the problem is caused by the
      * application - not by the user.
      */
-    public class ApplicationError implements Terminal.ErrorEvent {
+    public class ApplicationError implements ErrorEvent {
         private final Throwable throwable;
 
         public ApplicationError(Throwable throwable) {

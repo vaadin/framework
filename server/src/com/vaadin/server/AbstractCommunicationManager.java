@@ -67,8 +67,6 @@ import com.vaadin.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.server.RpcManager.RpcInvocationException;
 import com.vaadin.server.StreamVariable.StreamingEndEvent;
 import com.vaadin.server.StreamVariable.StreamingErrorEvent;
-import com.vaadin.server.Terminal.ErrorEvent;
-import com.vaadin.server.Terminal.ErrorListener;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.JavaScriptConnectorState;

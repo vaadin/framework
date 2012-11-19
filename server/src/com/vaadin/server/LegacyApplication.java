@@ -23,8 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.vaadin.server.Terminal.ErrorEvent;
-import com.vaadin.server.Terminal.ErrorListener;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.UI;
 

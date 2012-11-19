@@ -646,7 +646,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
     }
 
     @SuppressWarnings("serial")
-    public class RequestError implements Terminal.ErrorEvent, Serializable {
+    public class RequestError implements ErrorEvent, Serializable {
 
         private final Throwable throwable;
 

@@ -32,7 +32,6 @@ import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
-import com.vaadin.server.Terminal;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ComponentState;
@@ -891,7 +890,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
     }
 
-    public interface ComponentErrorEvent extends Terminal.ErrorEvent {
+    public interface ComponentErrorEvent extends com.vaadin.server.ErrorEvent {
     }
 
     public interface ComponentErrorHandler extends Serializable {

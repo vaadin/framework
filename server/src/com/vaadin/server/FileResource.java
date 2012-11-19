@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import com.vaadin.server.Terminal.ErrorEvent;
 import com.vaadin.util.FileTypeResolver;
 
 /**
