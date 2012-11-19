@@ -5,6 +5,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.server.ClassResource;
 import com.vaadin.server.DownloadStream;
+import com.vaadin.server.ErrorEvent;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -29,7 +30,7 @@ public class GAESyncTest extends LegacyApplication {
     }
 
     @Override
-    public void terminalError(com.vaadin.server.Terminal.ErrorEvent event) {
+    public void terminalError(com.vaadin.server.ErrorEvent event) {
         Throwable t = event.getThrowable();
         // Was this caused by a GAE timeout?
         while (t != null) {

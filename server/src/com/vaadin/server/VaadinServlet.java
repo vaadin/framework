@@ -1204,7 +1204,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         return u;
     }
 
-    public class RequestError implements Terminal.ErrorEvent, Serializable {
+    public class RequestError implements ErrorEvent, Serializable {
 
         private final Throwable throwable;
 
