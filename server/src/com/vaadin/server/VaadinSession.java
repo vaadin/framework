@@ -373,27 +373,6 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     /**
-     * Application error is an error message defined on the application level.
-     * 
-     * When an error occurs on the application level, this error message4 type
-     * should be used. This indicates that the problem is caused by the
-     * application - not by the user.
-     */
-    public class ApplicationError implements Terminal.ErrorEvent {
-        private final Throwable throwable;
-
-        public ApplicationError(Throwable throwable) {
-            this.throwable = throwable;
-        }
-
-        @Override
-        public Throwable getThrowable() {
-            return throwable;
-        }
-
-    }
-
-    /**
      * Adds a request handler to this session. Request handlers can be added to
      * provide responses to requests that are not handled by the default
      * functionality of the framework.
