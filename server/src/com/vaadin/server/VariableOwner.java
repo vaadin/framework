@@ -81,17 +81,4 @@ public interface VariableOwner extends Serializable {
      */
     public boolean isImmediate();
 
-    /**
-     * VariableOwner error event.
-     */
-    public interface ErrorEvent extends com.vaadin.server.ErrorEvent {
-
-        /**
-         * Gets the source VariableOwner.
-         * 
-         * @return the variable owner.
-         */
-        public VariableOwner getVariableOwner();
-
-    }
 }
