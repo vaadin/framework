@@ -94,6 +94,8 @@ public abstract class AbstractClientConnector implements ClientConnector,
     @Deprecated
     private EventRouter eventRouter = null;
 
+    private ErrorHandler errorHandler = null;
+
     /**
      * @deprecated As of 7.0.0, use {@link #markAsDirty()} instead
      */
@@ -939,6 +941,25 @@ public abstract class AbstractClientConnector implements ClientConnector,
             eventRouter.fireEvent(event);
         }
 
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.server.ClientConnector#getErrorHandler()
+     */
+    public ErrorHandler getErrorHandler() {
+        return errorHandler;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.server.ClientConnector#setErrorHandler(com.vaadin.server.
+     * ErrorHandler)
+     */
+    public void setErrorHandler(ErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
     }
 
 }
