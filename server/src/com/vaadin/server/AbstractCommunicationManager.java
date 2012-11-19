@@ -63,6 +63,7 @@ import org.json.JSONObject;
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.StyleSheet;
+import com.vaadin.server.ClientConnector.ConnectorErrorEvent;
 import com.vaadin.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.server.RpcManager.RpcInvocationException;
 import com.vaadin.server.StreamVariable.StreamingEndEvent;
@@ -76,7 +77,6 @@ import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.communication.UidlValue;
 import com.vaadin.shared.ui.ui.UIConstants;
-import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.HasComponents;
@@ -297,8 +297,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         } catch (Exception e) {
             session.getLock().lock();
             try {
-                handleChangeVariablesError(session, (Component) owner, e,
-                        new HashMap<String, Object>());
+                handleConnectorRelatedException(owner, e);
             } finally {
                 session.getLock().unlock();
             }
@@ -345,8 +344,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         } catch (Exception e) {
             session.getLock().lock();
             try {
-                handleChangeVariablesError(session, (Component) owner, e,
-                        new HashMap<String, Object>());
+                handleConnectorRelatedException(owner, e);
             } finally {
                 session.getLock().unlock();
             }
@@ -1708,13 +1706,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                         ServerRpcManager.applyInvocation(connector,
                                 (ServerRpcMethodInvocation) invocation);
                     } catch (RpcInvocationException e) {
-                        Throwable realException = e.getCause();
-                        Component errorComponent = null;
-                        if (connector instanceof Component) {
-                            errorComponent = (Component) connector;
-                        }
-                        handleChangeVariablesError(uI.getSession(),
-                                errorComponent, realException, null);
+                        handleConnectorRelatedException(connector, e);
                     }
                 } else {
 
@@ -1736,17 +1728,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                                             + changes.keySet());
                         }
                     } catch (Exception e) {
-                        Component errorComponent = null;
-                        if (connector instanceof Component) {
-                            errorComponent = (Component) connector;
-                        } else if (connector instanceof DragAndDropService) {
-                            Object dropHandlerOwner = changes.get("dhowner");
-                            if (dropHandlerOwner instanceof Component) {
-                                errorComponent = (Component) dropHandlerOwner;
-                            }
-                        }
-                        handleChangeVariablesError(uI.getSession(),
-                                errorComponent, e, changes);
+                        handleConnectorRelatedException(connector, e);
                     }
                 }
             }
@@ -1759,6 +1741,24 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
 
         return success;
+    }
+
+    /**
+     * Handles an exception that occurred when processing Rpc calls or a file
+     * upload.
+     * 
+     * @param ui
+     *            The UI where the exception occured
+     * @param throwable
+     *            The exception
+     * @param connector
+     *            The Rpc target
+     */
+    private void handleConnectorRelatedException(ClientConnector connector,
+            Throwable throwable) {
+        ErrorEvent errorEvent = new ConnectorErrorEvent(connector, throwable);
+        ErrorHandler handler = ErrorEvent.findErrorHandler(connector);
+        handler.error(errorEvent);
     }
 
     /**
@@ -1924,65 +1924,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
         String result = new String(bout.toByteArray(), "utf-8");
 
         return result;
-    }
-
-    public class ErrorHandlerErrorEvent implements ErrorEvent, Serializable {
-        private final Throwable throwable;
-
-        public ErrorHandlerErrorEvent(Throwable throwable) {
-            this.throwable = throwable;
-        }
-
-        @Override
-        public Throwable getThrowable() {
-            return throwable;
-        }
-
-    }
-
-    /**
-     * Handles an error (exception) that occurred when processing variable
-     * changes from the client or a failure of a file upload.
-     * 
-     * For {@link AbstractField} components,
-     * {@link AbstractField#handleError(com.vaadin.ui.AbstractComponent.ComponentErrorEvent)}
-     * is called. In all other cases (or if the field does not handle the
-     * error), {@link ErrorListener#terminalError(ErrorEvent)} for the session
-     * error handler is called.
-     * 
-     * @param session
-     * @param owner
-     *            component that the error concerns
-     * @param e
-     *            exception that occurred
-     * @param m
-     *            map from variable names to values
-     */
-    private void handleChangeVariablesError(VaadinSession session,
-            Component owner, Throwable t, Map<String, Object> m) {
-        boolean handled = false;
-        ChangeVariablesErrorEvent errorEvent = new ChangeVariablesErrorEvent(
-                owner, t, m);
-
-        if (owner instanceof AbstractField) {
-            try {
-                handled = ((AbstractField<?>) owner).handleError(errorEvent);
-            } catch (Exception handlerException) {
-                /*
-                 * If there is an error in the component error handler we pass
-                 * the that error to the session error handler and continue
-                 * processing the actual error
-                 */
-                session.getErrorHandler().terminalError(
-                        new ErrorHandlerErrorEvent(handlerException));
-                handled = false;
-            }
-        }
-
-        if (!handled) {
-            session.getErrorHandler().terminalError(errorEvent);
-        }
-
     }
 
     /**

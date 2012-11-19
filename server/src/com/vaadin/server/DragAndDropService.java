@@ -53,6 +53,8 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
 
     private AcceptCriterion acceptCriterion;
 
+    private ErrorHandler errorHandler;
+
     public DragAndDropService(AbstractCommunicationManager manager) {
         this.manager = manager;
     }
@@ -345,5 +347,15 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     public boolean handleConnectorRequest(VaadinRequest request,
             VaadinResponse response, String path) throws IOException {
         return false;
+    }
+
+    @Override
+    public ErrorHandler getErrorHandler() {
+        return errorHandler;
+    }
+
+    @Override
+    public void setErrorHandler(ErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
     }
 }

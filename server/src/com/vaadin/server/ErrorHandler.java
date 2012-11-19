@@ -18,15 +18,15 @@ package com.vaadin.server;
 import java.io.Serializable;
 
 /**
- * Interface for listening to Terminal errors.
+ * Interface for listening to errors in the application.
  */
-public interface ErrorListener extends Serializable {
+public interface ErrorHandler extends Serializable {
 
     /**
-     * Invoked when a terminal error occurs.
+     * Invoked when an error occurs.
      * 
      * @param event
      *            the fired event.
      */
-    public void terminalError(ErrorEvent event);
+    public void error(ErrorEvent event);
 }
