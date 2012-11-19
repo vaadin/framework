@@ -418,7 +418,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
             if (request.getRequestedSessionId() == null) {
                 // User has cookies disabled
                 SystemMessages systemMessages = getService().getSystemMessages(
-                        ServletPortletHelper.findLocale(null, null, request));
+                        ServletPortletHelper.findLocale(null, null, request),
+                        request);
                 criticalNotification(request, response,
                         systemMessages.getCookiesDisabledCaption(),
                         systemMessages.getCookiesDisabledMessage(), null,
@@ -576,7 +577,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
         if (getRequestType(request) == RequestType.UIDL) {
             SystemMessages ci = getService().getSystemMessages(
                     ServletPortletHelper.findLocale(null, vaadinSession,
-                            request));
+                            request), request);
             criticalNotification(request, response,
                     ci.getInternalErrorCaption(), ci.getInternalErrorMessage(),
                     null, ci.getInternalErrorURL());
@@ -652,7 +653,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
         try {
             SystemMessages ci = getService().getSystemMessages(
-                    ServletPortletHelper.findLocale(null, null, request));
+                    ServletPortletHelper.findLocale(null, null, request),
+                    request);
             RequestType requestType = getRequestType(request);
             if (requestType == RequestType.UIDL) {
                 /*
@@ -702,7 +704,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
              * this case so just use the info provided in the request.
              */
             SystemMessages ci = getService().getSystemMessages(
-                    request.getLocale());
+                    request.getLocale(), request);
             RequestType requestType = getRequestType(request);
             if (requestType == RequestType.UIDL) {
                 // send uidl redirect

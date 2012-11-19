@@ -250,10 +250,16 @@ public abstract class VaadinService implements Serializable {
      * 
      * @param locale
      *            the desired locale for the system messages
+     * @param request
      * @return the system messages to use
      */
-    public SystemMessages getSystemMessages(Locale locale) {
-        return getSystemMessagesProvider().getSystemMessages(locale);
+    public SystemMessages getSystemMessages(Locale locale, VaadinRequest request) {
+        SystemMessagesInfo systemMessagesInfo = new SystemMessagesInfo();
+        systemMessagesInfo.setLocale(locale);
+        systemMessagesInfo.setService(this);
+        systemMessagesInfo.setRequest(request);
+        return getSystemMessagesProvider()
+                .getSystemMessages(systemMessagesInfo);
     }
 
     /**

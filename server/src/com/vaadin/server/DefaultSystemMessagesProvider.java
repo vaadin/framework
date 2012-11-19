@@ -16,7 +16,6 @@
 
 package com.vaadin.server;
 
-import java.util.Locale;
 
 /**
  * System messages provider using the built-in default system messages. This
@@ -34,7 +33,8 @@ public class DefaultSystemMessagesProvider implements SystemMessagesProvider {
     }
 
     @Override
-    public SystemMessages getSystemMessages(Locale locale) {
+    public SystemMessages getSystemMessages(
+            SystemMessagesInfo systemMessagesInfo) {
         return ServletPortletHelper.DEFAULT_SYSTEM_MESSAGES;
     }
 

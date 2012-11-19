@@ -413,7 +413,8 @@ public abstract class BootstrapHandler implements RequestHandler {
         Locale locale = ServletPortletHelper.findLocale(null,
                 context.getSession(), context.getRequest());
         // Get system messages
-        SystemMessages systemMessages = vaadinService.getSystemMessages(locale);
+        SystemMessages systemMessages = vaadinService.getSystemMessages(locale,
+                request);
         if (systemMessages != null) {
             // Write the CommunicationError -message to client
             JSONObject comErrMsg = new JSONObject();
