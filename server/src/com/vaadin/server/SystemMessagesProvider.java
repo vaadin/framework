@@ -17,7 +17,6 @@
 package com.vaadin.server;
 
 import java.io.Serializable;
-import java.util.Locale;
 
 import com.vaadin.ui.UI;
 
@@ -30,16 +29,16 @@ import com.vaadin.ui.UI;
  */
 public interface SystemMessagesProvider extends Serializable {
     /**
-     * Gets the system messages to use in the given context. Locale is the only
-     * piece of information guaranteed to be available, but in most cases some
-     * or all of {@link VaadinService#getCurrent()},
-     * {@link VaadinService#getCurrentRequest()},
-     * {@link VaadinSession#getCurrent()} and {@link UI#getCurrent()} can also
-     * be used to find more information to help the decision.
+     * Gets the system messages to use in the given context. The
+     * {@link SystemMessagesInfo} object contains available information but in
+     * most cases some or both of {@link VaadinSession#getCurrent()} and
+     * {@link UI#getCurrent()} can also be used to find more information to help
+     * the decision.
      * 
-     * @param locale
-     *            the desired locale of the system messages
+     * @param systemMessagesInfo
+     *            Locale, current request and other information available.
      * @return a system messages object
      */
-    public SystemMessages getSystemMessages(Locale locale);
+    public SystemMessages getSystemMessages(
+            SystemMessagesInfo systemMessagesInfo);
 }
