@@ -266,15 +266,74 @@ public class ApplicationConnection {
      * track of different aspects of the communication.
      */
     public interface CommunicationHandler extends EventHandler {
-        void onRequestStarted(RequestStartedEvent e);
+        void onRequestStarting(RequestStartingEvent e);
 
-        void onRequestEnded(RequestEndedEvent e);
+        void onResponseHandlingStarted(ResponseHandlingStartedEvent e);
 
-        void onResponseReceived(ResponseReceivedEvent e);
+        void onResponseHandlingEnded(ResponseHandlingEndedEvent e);
     }
 
-    public static class RequestStartedEvent extends
+    public static class RequestStartingEvent extends ApplicationConnectionEvent {
+
+        public static Type<CommunicationHandler> TYPE = new Type<CommunicationHandler>();
+
+        public RequestStartingEvent(ApplicationConnection connection) {
+            super(connection);
+        }
+
+        @Override
+        public com.google.gwt.event.shared.GwtEvent.Type<CommunicationHandler> getAssociatedType() {
+            return TYPE;
+        }
+
+        @Override
+        protected void dispatch(CommunicationHandler handler) {
+            handler.onRequestStarting(this);
+        }
+    }
+
+    public static class ResponseHandlingEndedEvent extends
+            ApplicationConnectionEvent {
+
+        public static Type<CommunicationHandler> TYPE = new Type<CommunicationHandler>();
+
+        public ResponseHandlingEndedEvent(ApplicationConnection connection) {
+            super(connection);
+        }
+
+        @Override
+        public com.google.gwt.event.shared.GwtEvent.Type<CommunicationHandler> getAssociatedType() {
+            return TYPE;
+        }
+
+        @Override
+        protected void dispatch(CommunicationHandler handler) {
+            handler.onResponseHandlingEnded(this);
+        }
+    }
+
+    public static abstract class ApplicationConnectionEvent extends
             GwtEvent<CommunicationHandler> {
+
+        private ApplicationConnection connection;
+
+        protected ApplicationConnectionEvent(ApplicationConnection connection) {
+            this.connection = connection;
+        }
+
+        public ApplicationConnection getConnection() {
+            return connection;
+        }
+
+    }
+
+    public static class ResponseHandlingStartedEvent extends
+            ApplicationConnectionEvent {
+
+        public ResponseHandlingStartedEvent(ApplicationConnection connection) {
+            super(connection);
+        }
+
         public static Type<CommunicationHandler> TYPE = new Type<CommunicationHandler>();
 
         @Override
@@ -284,44 +343,14 @@ public class ApplicationConnection {
 
         @Override
         protected void dispatch(CommunicationHandler handler) {
-            handler.onRequestStarted(this);
-        }
-    }
-
-    public static class RequestEndedEvent extends
-            GwtEvent<CommunicationHandler> {
-        public static Type<CommunicationHandler> TYPE = new Type<CommunicationHandler>();
-
-        @Override
-        public com.google.gwt.event.shared.GwtEvent.Type<CommunicationHandler> getAssociatedType() {
-            return TYPE;
-        }
-
-        @Override
-        protected void dispatch(CommunicationHandler handler) {
-            handler.onRequestEnded(this);
-        }
-    }
-
-    public static class ResponseReceivedEvent extends
-            GwtEvent<CommunicationHandler> {
-        public static Type<CommunicationHandler> TYPE = new Type<CommunicationHandler>();
-
-        @Override
-        public com.google.gwt.event.shared.GwtEvent.Type<CommunicationHandler> getAssociatedType() {
-            return TYPE;
-        }
-
-        @Override
-        protected void dispatch(CommunicationHandler handler) {
-            handler.onResponseReceived(this);
+            handler.onResponseHandlingStarted(this);
         }
     }
 
     /**
      * Allows custom handling of communication errors.
      */
-    public interface CommunicationErrorDelegate {
+    public interface CommunicationErrorHandler {
         /**
          * Called when a communication error has occurred. Returning
          * <code>true</code> from this method suppresses error handling.
@@ -336,7 +365,7 @@ public class ApplicationConnection {
         public boolean onError(String details, int statusCode);
     }
 
-    private CommunicationErrorDelegate communicationErrorDelegate = null;
+    private CommunicationErrorHandler communicationErrorDelegate = null;
 
     public static class MultiStepDuration extends Duration {
         private int previousStep = elapsedMillis();
@@ -1041,7 +1070,7 @@ public class ApplicationConnection {
             // First one kicks in at 300ms
         }
         loadTimer.schedule(300);
-        eventBus.fireEvent(new RequestStartedEvent());
+        eventBus.fireEvent(new RequestStartingEvent(this));
     }
 
     protected void endRequest() {
@@ -1078,7 +1107,7 @@ public class ApplicationConnection {
                 }
             }
         });
-        eventBus.fireEvent(new RequestEndedEvent());
+        eventBus.fireEvent(new ResponseHandlingEndedEvent(this));
     }
 
     /**
@@ -1232,7 +1261,7 @@ public class ApplicationConnection {
         }
 
         VConsole.log("Handling message from server");
-        eventBus.fireEvent(new ResponseReceivedEvent());
+        eventBus.fireEvent(new ResponseHandlingStartedEvent(this));
 
         // Handle redirect
         if (json.containsKey("redirect")) {
@@ -3137,8 +3166,7 @@ public class ApplicationConnection {
      * @param delegate
      *            the delegate.
      */
-    public void setCommunicationErrorDelegate(
-            CommunicationErrorDelegate delegate) {
+    public void setCommunicationErrorDelegate(CommunicationErrorHandler delegate) {
         communicationErrorDelegate = delegate;
     }
 
