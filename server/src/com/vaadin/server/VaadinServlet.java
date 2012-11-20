@@ -301,8 +301,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
             CommunicationManager communicationManager = (CommunicationManager) vaadinSession
                     .getCommunicationManager();
 
-            if (requestType == RequestType.DEPENDENCY_RESOURCE) {
-                communicationManager.serveDependencyResource(request, response);
+            if (requestType == RequestType.PUBLISHED_FILE) {
+                communicationManager.servePublishedFile(request, response);
                 return;
             } else if (requestType == RequestType.HEARTBEAT) {
                 communicationManager.handleHeartbeatRequest(request, response,
@@ -1074,7 +1074,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      */
     @Deprecated
     protected enum RequestType {
-        FILE_UPLOAD, BROWSER_DETAILS, UIDL, OTHER, STATIC_FILE, APP, DEPENDENCY_RESOURCE, HEARTBEAT;
+        FILE_UPLOAD, BROWSER_DETAILS, UIDL, OTHER, STATIC_FILE, APP, PUBLISHED_FILE, HEARTBEAT;
     }
 
     /**
@@ -1087,8 +1087,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
     protected RequestType getRequestType(VaadinServletRequest request) {
         if (ServletPortletHelper.isFileUploadRequest(request)) {
             return RequestType.FILE_UPLOAD;
-        } else if (ServletPortletHelper.isDependencyResourceRequest(request)) {
-            return RequestType.DEPENDENCY_RESOURCE;
+        } else if (ServletPortletHelper.isPublishedFileRequest(request)) {
+            return RequestType.PUBLISHED_FILE;
         } else if (isBrowserDetailsRequest(request)) {
             return RequestType.BROWSER_DETAILS;
         } else if (ServletPortletHelper.isUIDLRequest(request)) {

@@ -100,9 +100,9 @@ class ServletPortletHelper implements Serializable {
         return hasPathPrefix(request, UPLOAD_URL_PREFIX);
     }
 
-    public static boolean isDependencyResourceRequest(VaadinRequest request) {
+    public static boolean isPublishedFileRequest(VaadinRequest request) {
         return hasPathPrefix(request,
-                ApplicationConstants.DEPENDENCY_RESOURCE_PREFIX + "/");
+                ApplicationConstants.PUBLISHED_RESOURCE_PREFIX + "/");
     }
 
     public static boolean isUIDLRequest(VaadinRequest request) {

@@ -26,12 +26,12 @@ public class ApplicationConstants {
 
     public static final String HEARTBEAT_REQUEST_PATH = "HEARTBEAT/";
 
-    public static final String DEPENDENCY_RESOURCE_PREFIX = APP_REQUEST_PATH
-            + '/' + "DEPENDENCY";
+    public static final String PUBLISHED_RESOURCE_PREFIX = APP_REQUEST_PATH
+            + '/' + "PUBLISHED";
 
     public static final String APP_PROTOCOL_PREFIX = "app://";
-    public static final String DEPENDENCY_PROTOCOL_NAME = "dependency";
-    public static final String DEPENDENCY_PROTOCOL_PREFIX = DEPENDENCY_PROTOCOL_NAME
+    public static final String PUBLISHED_PROTOCOL_NAME = "published";
+    public static final String PUBLISHED_PROTOCOL_PREFIX = PUBLISHED_PROTOCOL_NAME
             + "://";
     public static final String UIDL_SECURITY_TOKEN_ID = "Vaadin-Security-Key";
 

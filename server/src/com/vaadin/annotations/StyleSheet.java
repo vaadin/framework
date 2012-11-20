@@ -28,6 +28,10 @@ import com.vaadin.server.ClientConnector;
  * framework ensures the referenced style sheets are loaded before the init
  * method for the corresponding client-side connector is invoked.
  * <p>
+ * Absolute URLs including protocol and host are used as is on the client-side.
+ * Relative urls are mapped to APP/PUBLISHED/[url] which are by default served
+ * from the classpath relative to the class where the annotation is defined.
+ * <p>
  * Example: {@code @StyleSheet( "http://host.com/file1.css", "file2.css"})} on
  * the class com.example.MyConnector would load the file
  * http://host.com/file1.css as is and file2.css from /com/example/file2.css on
