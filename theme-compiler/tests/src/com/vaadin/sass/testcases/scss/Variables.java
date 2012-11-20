@@ -45,7 +45,7 @@ public class Variables extends AbstractTestBase {
         parser.setDocumentHandler(handler);
         parser.parseStyleSheet(getClass().getResource(scss).getPath());
         ScssStylesheet root = handler.getStyleSheet();
-        Assert.assertEquals(5, root.getChildren().size());
+        Assert.assertEquals(6, root.getChildren().size());
 
         VariableNode varNode1 = (VariableNode) root.getChildren().get(0);
         Assert.assertEquals("blue", varNode1.getName());
@@ -58,7 +58,7 @@ public class Variables extends AbstractTestBase {
         Assert.assertEquals(8f, varNode2.getExpr().getFloatValue());
         Assert.assertEquals("px", varNode2.getExpr().getDimensionUnitText());
 
-        BlockNode blockNode1 = (BlockNode) root.getChildren().get(4);
+        BlockNode blockNode1 = (BlockNode) root.getChildren().get(5);
         Assert.assertEquals(3, blockNode1.getChildren().size());
         RuleNode ruleNode1Block1 = (RuleNode) blockNode1.getChildren().get(2);
         Assert.assertEquals("border-color", ruleNode1Block1.getVariable());
@@ -72,7 +72,7 @@ public class Variables extends AbstractTestBase {
                 .getValue().getLexicalUnitType());
         Assert.assertEquals("blue", ruleNode2Block1.getValue().getStringValue());
 
-        BlockNode blockNode2 = (BlockNode) root.getChildren().get(4);
+        BlockNode blockNode2 = (BlockNode) root.getChildren().get(5);
         RuleNode ruleNode1Block2 = (RuleNode) blockNode2.getChildren().get(0);
         Assert.assertEquals("padding", ruleNode1Block2.getVariable());
         Assert.assertEquals(SCSSLexicalUnit.SCSS_VARIABLE, ruleNode1Block2
