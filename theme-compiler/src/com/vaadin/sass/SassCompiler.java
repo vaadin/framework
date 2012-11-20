@@ -25,14 +25,20 @@ public class SassCompiler {
     public static void main(String[] args) throws Exception {
         String input = null;
         String output = null;
-        if (args.length == 0) {
+        if (args.length < 1 || args.length > 2) {
             System.out
                     .println("usage: SassCompile <scss file to compile> <css file to write>");
             return;
-        } else if (args.length == 1) {
-            input = args[0];
-        } else {
-            input = args[0];
+        }
+
+        File in = new File(args[0]);
+        if (!in.canRead()) {
+            System.err.println(in.getCanonicalPath() + " could not be read!");
+            return;
+        }
+        input = in.getCanonicalPath();
+
+        if (args.length == 2) {
             output = args[1];
         }
 
