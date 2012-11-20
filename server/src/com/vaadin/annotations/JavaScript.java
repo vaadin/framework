@@ -29,7 +29,7 @@ import com.vaadin.server.ClientConnector;
  * method for the corresponding client-side connector is invoked.
  * <p>
  * Absolute URLs including protocol and host are used as is on the client-side.
- * Relative urls are mapped to APP/CONNECTOR/[url] which are by default served
+ * Relative urls are mapped to APP/PUBLISHED/[url] which are by default served
  * from the classpath relative to the class where the annotation is defined.
  * <p>
  * Example: {@code @JavaScript( "http://host.com/file1.js", "file2.js"})} on the
