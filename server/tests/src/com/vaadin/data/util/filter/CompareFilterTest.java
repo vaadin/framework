@@ -1,5 +1,6 @@
 package com.vaadin.data.util.filter;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import junit.framework.Assert;
@@ -151,6 +152,59 @@ public class CompareFilterTest extends AbstractFilterTest<Compare> {
         Assert.assertTrue(isNonPositive.passesFilter(null, itemNegative));
         Assert.assertTrue(isNonPositive.passesFilter(null, itemZero));
         Assert.assertFalse(isNonPositive.passesFilter(null, itemPositive));
+    }
+
+    public void testCompareBigDecimal() {
+        BigDecimal negative = new BigDecimal(-1);
+        BigDecimal zero = new BigDecimal(0);
+        BigDecimal positive = new BigDecimal(1);
+        positive.setScale(1);
+        BigDecimal positiveScaleTwo = new BigDecimal(1).setScale(2);
+
+        Item itemNegative = new PropertysetItem();
+        itemNegative.addItemProperty(PROPERTY1, new ObjectProperty<BigDecimal>(
+                negative, BigDecimal.class));
+        Item itemZero = new PropertysetItem();
+        itemZero.addItemProperty(PROPERTY1, new ObjectProperty<BigDecimal>(
+                zero, BigDecimal.class));
+        Item itemPositive = new PropertysetItem();
+        itemPositive.addItemProperty(PROPERTY1, new ObjectProperty<BigDecimal>(
+                positive, BigDecimal.class));
+        Item itemPositiveScaleTwo = new PropertysetItem();
+        itemPositiveScaleTwo.addItemProperty(PROPERTY1,
+                new ObjectProperty<BigDecimal>(positiveScaleTwo,
+                        BigDecimal.class));
+
+        Filter equalZero = new Equal(PROPERTY1, zero);
+        Assert.assertFalse(equalZero.passesFilter(null, itemNegative));
+        Assert.assertTrue(equalZero.passesFilter(null, itemZero));
+        Assert.assertFalse(equalZero.passesFilter(null, itemPositive));
+
+        Filter isPositive = new Greater(PROPERTY1, zero);
+        Assert.assertFalse(isPositive.passesFilter(null, itemNegative));
+        Assert.assertFalse(isPositive.passesFilter(null, itemZero));
+        Assert.assertTrue(isPositive.passesFilter(null, itemPositive));
+
+        Filter isNegative = new Less(PROPERTY1, zero);
+        Assert.assertTrue(isNegative.passesFilter(null, itemNegative));
+        Assert.assertFalse(isNegative.passesFilter(null, itemZero));
+        Assert.assertFalse(isNegative.passesFilter(null, itemPositive));
+
+        Filter isNonNegative = new GreaterOrEqual(PROPERTY1, zero);
+        Assert.assertFalse(isNonNegative.passesFilter(null, itemNegative));
+        Assert.assertTrue(isNonNegative.passesFilter(null, itemZero));
+        Assert.assertTrue(isNonNegative.passesFilter(null, itemPositive));
+
+        Filter isNonPositive = new LessOrEqual(PROPERTY1, zero);
+        Assert.assertTrue(isNonPositive.passesFilter(null, itemNegative));
+        Assert.assertTrue(isNonPositive.passesFilter(null, itemZero));
+        Assert.assertFalse(isNonPositive.passesFilter(null, itemPositive));
+
+        Filter isPositiveScaleTwo = new Equal(PROPERTY1, positiveScaleTwo);
+        Assert.assertTrue(isPositiveScaleTwo.passesFilter(null,
+                itemPositiveScaleTwo));
+        Assert.assertTrue(isPositiveScaleTwo.passesFilter(null, itemPositive));
+
     }
 
     public void testCompareDate() {

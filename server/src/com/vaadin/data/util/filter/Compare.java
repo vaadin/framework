@@ -47,7 +47,8 @@ public abstract class Compare implements Filter {
      * A {@link Compare} filter that accepts items for which the identified
      * property value is equal to <code>value</code>.
      * 
-     * For in-memory filters, equals() is used for the comparison. For other
+     * For in-memory filters, {@link Comparable#compareTo(Object)} or, if not
+     * Comparable, {@link #equals(Object)} is used for the comparison. For other
      * containers, the comparison implementation is container dependent and may
      * use e.g. database comparison operations.
      * 
@@ -248,8 +249,7 @@ public abstract class Compare implements Filter {
         Object value = p.getValue();
         switch (getOperation()) {
         case EQUAL:
-            return (null == this.value) ? (null == value) : this.value
-                    .equals(value);
+            return compareEquals(value);
         case GREATER:
             return compareValue(value) > 0;
         case LESS:
@@ -261,6 +261,29 @@ public abstract class Compare implements Filter {
         }
         // all cases should have been processed above
         return false;
+    }
+
+    /**
+     * Checks if the this value equals the given value. Favors Comparable over
+     * equals to better support e.g. BigDecimal where equals in stricter than
+     * equals.
+     * 
+     * @param otherValue
+     *            The value to compare to
+     * @return true if the values are equal, false otherwise
+     */
+    private boolean compareEquals(Object otherValue) {
+        if (value == null || otherValue == null) {
+            return (otherValue == value);
+        } else if (value == otherValue) {
+            return true;
+        } else if (value instanceof Comparable
+                && otherValue.getClass()
+                        .isAssignableFrom(getValue().getClass())) {
+            return ((Comparable) value).compareTo(otherValue) == 0;
+        } else {
+            return value.equals(otherValue);
+        }
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
