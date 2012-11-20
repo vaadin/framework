@@ -43,9 +43,7 @@ import com.vaadin.shared.ui.window.WindowState;
  * {@link UI#addWindow(Window)}. </p>
  * <p>
  * The contents of a window is set using {@link #setContent(ComponentContainer)}
- * or by using the {@link #Window(String, ComponentContainer)} constructor. The
- * contents can in turn contain other components. By default, a
- * {@link VerticalLayout} is used as content.
+ * or by using the {@link #Window(String, ComponentContainer)} constructor.
  * </p>
  * <p>
  * A window can be positioned on the screen using absolute coordinates (pixels)
