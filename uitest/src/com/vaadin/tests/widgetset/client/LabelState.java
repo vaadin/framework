@@ -16,7 +16,7 @@
 
 package com.vaadin.tests.widgetset.client;
 
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.AbstractComponentState;
 
 /**
  * State class with the same simple name as
@@ -26,7 +26,7 @@ import com.vaadin.shared.ComponentState;
  * @version @VERSION@
  * @since 7.0.0
  */
-public class LabelState extends ComponentState {
+public class LabelState extends AbstractComponentState {
 
     private String text;
 

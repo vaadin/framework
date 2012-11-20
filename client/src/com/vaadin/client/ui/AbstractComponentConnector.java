@@ -41,7 +41,7 @@ import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.ui.datefield.PopupDateFieldConnector;
 import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.shared.ComponentConstants;
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.TabIndexState;
@@ -116,8 +116,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     }
 
     @Override
-    public ComponentState getState() {
-        return (ComponentState) super.getState();
+    public AbstractComponentState getState() {
+        return (AbstractComponentState) super.getState();
     }
 
     @Override
@@ -267,7 +267,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * </p>
      */
     protected void updateWidgetStyleNames() {
-        ComponentState state = getState();
+        AbstractComponentState state = getState();
 
         String primaryStyleName = getWidget().getStylePrimaryName();
         if (state.primaryStyleName != null) {

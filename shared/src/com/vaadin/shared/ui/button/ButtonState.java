@@ -16,14 +16,14 @@
 
 package com.vaadin.shared.ui.button;
 
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ui.TabIndexState;
 
 /**
  * Shared state for {@link com.vaadin.ui.Button} and
  * {@link com.vaadin.ui.NativeButton}.
  * 
- * @see ComponentState
+ * @see AbstractComponentState
  * 
  * @since 7.0
  */

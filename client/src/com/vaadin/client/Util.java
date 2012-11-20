@@ -45,7 +45,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.RenderInformation.FloatSize;
 import com.vaadin.client.ui.VOverlay;
 import com.vaadin.shared.ApplicationConstants;
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.ui.ComponentStateUtil;
 
@@ -523,7 +523,7 @@ public class Util {
      * @param state
      * @return
      */
-    public static FloatSize parseRelativeSize(ComponentState state) {
+    public static FloatSize parseRelativeSize(AbstractComponentState state) {
         if (ComponentStateUtil.isUndefinedHeight(state)
                 && ComponentStateUtil.isUndefinedWidth(state)) {
             return null;

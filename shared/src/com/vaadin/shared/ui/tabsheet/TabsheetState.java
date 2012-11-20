@@ -1,8 +1,8 @@
 package com.vaadin.shared.ui.tabsheet;
 
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.AbstractComponentState;
 
-public class TabsheetState extends ComponentState {
+public class TabsheetState extends AbstractComponentState {
     {
         primaryStyleName = "v-tabsheet";
     }

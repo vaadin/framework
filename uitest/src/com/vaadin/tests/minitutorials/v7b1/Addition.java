@@ -16,7 +16,7 @@
 
 package com.vaadin.tests.minitutorials.v7b1;
 
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.ui.AbstractComponent;
 
 public class Addition extends AbstractComponent {
@@ -63,6 +63,6 @@ public class Addition extends AbstractComponent {
     }
 }
 
-class AddResultState extends ComponentState {
+class AddResultState extends AbstractComponentState {
     public int sum;
 }

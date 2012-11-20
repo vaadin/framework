@@ -18,10 +18,10 @@ package com.vaadin.shared.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.communication.URLReference;
 
-public class AbstractMediaState extends ComponentState {
+public class AbstractMediaState extends AbstractComponentState {
     public boolean showControls;
 
     public String altText;

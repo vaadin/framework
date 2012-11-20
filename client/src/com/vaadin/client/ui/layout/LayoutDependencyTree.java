@@ -28,7 +28,7 @@ import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.ManagedLayout;
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.AbstractComponentState;
 
 public class LayoutDependencyTree {
     private class LayoutDependency {
@@ -309,7 +309,7 @@ public class LayoutDependencyTree {
             } else {
                 s += "Horizontal";
             }
-            ComponentState state = connector.getState();
+            AbstractComponentState state = connector.getState();
             s += " sizing: "
                     + getSizeDefinition(direction == VERTICAL ? state.height
                             : state.width) + "\n";

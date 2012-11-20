@@ -16,10 +16,10 @@
 
 package com.vaadin.tests.widgetset.client;
 
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.annotations.DelegateToWidget;
 
-public class DelegateState extends ComponentState {
+public class DelegateState extends AbstractComponentState {
     @DelegateToWidget
     public String value1;
 

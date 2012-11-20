@@ -17,10 +17,10 @@ package com.vaadin.shared.ui.splitpanel;
 
 import java.io.Serializable;
 
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.Connector;
 
-public class AbstractSplitPanelState extends ComponentState {
+public class AbstractSplitPanelState extends AbstractComponentState {
     public Connector firstChild = null;
     public Connector secondChild = null;
     public SplitterState splitterState = new SplitterState();

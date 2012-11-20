@@ -24,7 +24,7 @@ import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.ComponentConstants;
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ui.ComponentStateUtil;
 
 public class VCaption extends HTML {
@@ -393,7 +393,7 @@ public class VCaption extends HTML {
         }
     }
 
-    public static boolean isNeeded(ComponentState state) {
+    public static boolean isNeeded(AbstractComponentState state) {
         if (state.caption != null) {
             return true;
         }
