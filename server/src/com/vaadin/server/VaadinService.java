@@ -24,9 +24,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
-import java.util.ServiceLoader;
 
 import javax.portlet.PortletContext;
 import javax.servlet.ServletContext;
@@ -70,7 +68,6 @@ public abstract class VaadinService implements Serializable {
     @Deprecated
     public static final String URL_PARAMETER_CLOSE_APPLICATION = "closeApplication";
 
-    private AddonContext addonContext;
     private final DeploymentConfiguration deploymentConfiguration;
 
     private final EventRouter eventRouter = new EventRouter();
@@ -188,22 +185,6 @@ public abstract class VaadinService implements Serializable {
      */
     public DeploymentConfiguration getDeploymentConfiguration() {
         return deploymentConfiguration;
-    }
-
-    public Iterator<AddonContextListener> getAddonContextListeners() {
-        // Called once for init and then no more, so there's no point in caching
-        // the instance
-        ServiceLoader<AddonContextListener> contextListenerLoader = ServiceLoader
-                .load(AddonContextListener.class, getClassLoader());
-        return contextListenerLoader.iterator();
-    }
-
-    public AddonContext getAddonContext() {
-        return addonContext;
-    }
-
-    public void setAddonContext(AddonContext addonContext) {
-        this.addonContext = addonContext;
     }
 
     /**

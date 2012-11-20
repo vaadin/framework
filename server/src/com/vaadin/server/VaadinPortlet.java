@@ -247,7 +247,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
     // when the portlet is removed?
 
     private VaadinPortletService vaadinService;
-    private AddonContext addonContext;
 
     @Override
     public void init(PortletConfig config) throws PortletException {
@@ -276,9 +275,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         // Sets current service even though there are no request and response
         vaadinService.setCurrentInstances(null, null);
 
-        addonContext = new AddonContext(vaadinService);
-        addonContext.init();
-
         portletInitialized();
         CurrentInstance.clearAll();
     }
@@ -295,13 +291,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
     protected VaadinPortletService createPortletService(
             DeploymentConfiguration deploymentConfiguration) {
         return new VaadinPortletService(this, deploymentConfiguration);
-    }
-
-    @Override
-    public void destroy() {
-        super.destroy();
-
-        addonContext.destroy();
     }
 
     /**

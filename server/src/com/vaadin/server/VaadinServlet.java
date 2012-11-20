@@ -75,8 +75,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     private VaadinServletService servletService;
 
-    private AddonContext addonContext;
-
     /**
      * Called by the servlet container to indicate to a servlet that the servlet
      * is being placed into service.
@@ -116,9 +114,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
         servletService = createServletService(deploymentConfiguration);
         // Sets current service even though there are no request and response
         servletService.setCurrentInstances(null, null);
-
-        addonContext = new AddonContext(servletService);
-        addonContext.init();
 
         servletInitialized();
 
@@ -176,13 +171,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
     protected VaadinServletService createServletService(
             DeploymentConfiguration deploymentConfiguration) {
         return new VaadinServletService(this, deploymentConfiguration);
-    }
-
-    @Override
-    public void destroy() {
-        super.destroy();
-
-        addonContext.destroy();
     }
 
     /**
