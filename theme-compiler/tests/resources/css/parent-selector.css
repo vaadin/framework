@@ -3,6 +3,10 @@ a {
 	text-decoration: none;
 }
 
+a .sub {
+	color: blue;
+}
+
 a:hover {
 	text-decoration: underline;
 }
