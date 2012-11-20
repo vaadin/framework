@@ -56,20 +56,19 @@ public class Panel extends AbstractSingleComponentContainer implements
     };
 
     /**
-     * Creates a new empty panel. A VerticalLayout is used as content.
+     * Creates a new empty panel.
      */
     public Panel() {
         this((ComponentContainer) null);
     }
 
     /**
-     * Creates a new empty panel which contains the given content. The content
-     * cannot be null.
+     * Creates a new empty panel which contains the given content.
      * 
      * @param content
      *            the content for the panel.
      */
-    public Panel(ComponentContainer content) {
+    public Panel(Component content) {
         registerRpc(rpc);
         setContent(content);
         setWidth(100, Unit.PERCENTAGE);
@@ -77,7 +76,7 @@ public class Panel extends AbstractSingleComponentContainer implements
     }
 
     /**
-     * Creates a new empty panel with caption. Default layout is used.
+     * Creates a new empty panel with caption.
      * 
      * @param caption
      *            the caption used in the panel (HTML).
@@ -94,7 +93,7 @@ public class Panel extends AbstractSingleComponentContainer implements
      * @param content
      *            the content used in the panel.
      */
-    public Panel(String caption, ComponentContainer content) {
+    public Panel(String caption, Component content) {
         this(content);
         setCaption(caption);
     }

@@ -42,10 +42,8 @@ import com.vaadin.shared.ui.window.WindowState;
  * {@link UI}. A window is added to a {@code UI} using
  * {@link UI#addWindow(Window)}. </p>
  * <p>
- * The contents of a window is set using {@link #setContent(ComponentContainer)}
- * or by using the {@link #Window(String, ComponentContainer)} constructor. The
- * contents can in turn contain other components. By default, a
- * {@link VerticalLayout} is used as content.
+ * The contents of a window is set using {@link #setContent(Component)} or by
+ * using the {@link #Window(String, Component)} constructor.
  * </p>
  * <p>
  * A window can be positioned on the screen using absolute coordinates (pixels)
@@ -75,14 +73,14 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     };
 
     /**
-     * Creates a new unnamed window with a default layout.
+     * Creates a new, empty sub window
      */
     public Window() {
         this("", null);
     }
 
     /**
-     * Creates a new unnamed window with a default layout and given title.
+     * Creates a new, empty sub window with a given title.
      * 
      * @param caption
      *            the title of the window.
@@ -92,14 +90,14 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     /**
-     * Creates a new unnamed window with the given content and title.
+     * Creates a new, empty sub window with the given content and title.
      * 
      * @param caption
      *            the title of the window.
      * @param content
      *            the contents of the window
      */
-    public Window(String caption, ComponentContainer content) {
+    public Window(String caption, Component content) {
         super(caption, content);
         registerRpc(rpc);
         setSizeUndefined();
