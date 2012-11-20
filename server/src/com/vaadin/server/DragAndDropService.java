@@ -346,4 +346,20 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
             VaadinResponse response, String path) throws IOException {
         return false;
     }
+
+    @Override
+    public void addAttachListener(AttachListener listener) {
+    }
+
+    @Override
+    public void removeAttachListener(AttachListener listener) {
+    }
+
+    @Override
+    public void addDetachListener(DetachListener listener) {
+    }
+
+    @Override
+    public void removeDetachListener(DetachListener listener) {
+    }
 }
