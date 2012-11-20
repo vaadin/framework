@@ -29,6 +29,7 @@ import com.vaadin.server.PaintTarget;
 @SuppressWarnings("serial")
 public class ListSelect extends AbstractSelect {
 
+    @Deprecated
     private int columns = 0;
     private int rows = 0;
 
@@ -55,7 +56,12 @@ public class ListSelect extends AbstractSelect {
      * 
      * @param columns
      *            the number of columns to set.
+     * @deprecated Use {@link #setWidth(String)}/{@link #getWidth()} instead of
+     *             {@link #setColumns(int)}/{@link #getColumns()}. Calling
+     *             {@code setWidth("10em")} has the same effect as
+     *             {@code setColumns(10)}.
      */
+    @Deprecated
     public void setColumns(int columns) {
         if (columns < 0) {
             columns = 0;
@@ -66,6 +72,13 @@ public class ListSelect extends AbstractSelect {
         }
     }
 
+    /**
+     * @deprecated Use {@link #setWidth(String)}/{@link #getWidth()} instead of
+     *             {@link #setColumns(int)}/{@link #getColumns()}. Calling
+     *             {@code setWidth("10em")} has the same effect as
+     *             {@code setColumns(10)}.
+     */
+    @Deprecated
     public int getColumns() {
         return columns;
     }

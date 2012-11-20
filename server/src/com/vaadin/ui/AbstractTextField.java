@@ -331,7 +331,12 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      * adapter.
      * 
      * @return the number of columns in the editor.
+     * @deprecated Use {@link #setWidth(String)}/{@link #getWidth()} instead of
+     *             {@link #setColumns(int)}/{@link #getColumns()}. Calling
+     *             {@code setWidth("10em")} has the same effect as
+     *             {@code setColumns(10)}.
      */
+    @Deprecated
     public int getColumns() {
         return getState().columns;
     }
@@ -343,7 +348,12 @@ public abstract class AbstractTextField extends AbstractField<String> implements
      * 
      * @param columns
      *            the number of columns to set.
+     * @deprecated Use {@link #setWidth(String)}/{@link #getWidth()} instead of
+     *             {@link #setColumns(int)}/{@link #getColumns()}. Calling
+     *             {@code setWidth("10em")} has the same effect as
+     *             {@code setColumns(10)}.
      */
+    @Deprecated
     public void setColumns(int columns) {
         if (columns < 0) {
             columns = 0;

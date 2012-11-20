@@ -30,6 +30,7 @@ public class AbstractTextFieldState extends AbstractFieldState {
     /**
      * Number of visible columns in the TextField.
      */
+    @Deprecated
     public int columns = 0;
 
     /**

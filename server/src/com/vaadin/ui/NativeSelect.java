@@ -32,6 +32,7 @@ import com.vaadin.server.PaintTarget;
 public class NativeSelect extends AbstractSelect {
 
     // width in characters, mimics TextField
+    @Deprecated
     private int columns = 0;
 
     public NativeSelect() {
@@ -57,7 +58,13 @@ public class NativeSelect extends AbstractSelect {
      * 
      * @param columns
      *            the number of columns to set.
+     * 
+     * @deprecated Use {@link #setWidth(String)}/{@link #getWidth()} instead of
+     *             {@link #setColumns(int)}/{@link #getColumns()}. Calling
+     *             {@code setWidth("10em")} has the same effect as
+     *             {@code setColumns(10)}.
      */
+    @Deprecated
     public void setColumns(int columns) {
         if (columns < 0) {
             columns = 0;
@@ -68,6 +75,13 @@ public class NativeSelect extends AbstractSelect {
         }
     }
 
+    /**
+     * @deprecated Use {@link #setWidth(String)}/{@link #getWidth()} instead of
+     *             {@link #setColumns(int)}/{@link #getColumns()}. Calling
+     *             {@code setWidth("10em")} has the same effect as
+     *             {@code setColumns(10)}.
+     */
+    @Deprecated
     public int getColumns() {
         return columns;
     }
