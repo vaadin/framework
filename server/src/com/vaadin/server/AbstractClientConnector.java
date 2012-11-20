@@ -87,11 +87,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
 
     /**
      * The EventRouter used for the event model.
-     * 
-     * @deprecated The EventRouter will be replaced by an EventRouter which does
-     *             not use reflection in Vaadin 7.0.0. See #8640.
      */
-    @Deprecated
     private EventRouter eventRouter = null;
 
     /**
@@ -675,10 +671,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
      *            the activation method.
      * 
      * @since 6.2
-     * @deprecated The EventRouter will be replaced by an EventRouter which does
-     *             not use reflection in Vaadin 7.0.0. See #8640.
      */
-    @Deprecated
     protected void addListener(String eventIdentifier, Class<?> eventType,
             Object target, Method method) {
         if (eventRouter == null) {
@@ -764,11 +757,8 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * @param method
      *            the activation method.
      * 
-     * @deprecated The EventRouter will be replaced by an EventRouter which does
-     *             not use reflection in Vaadin 7.0.0. See #8640.
      */
     @Override
-    @Deprecated
     public void addListener(Class<?> eventType, Object target, Method method) {
         if (eventRouter == null) {
             eventRouter = new EventRouter();
@@ -809,8 +799,9 @@ public abstract class AbstractClientConnector implements ClientConnector,
      *            the object instance who owns the activation method.
      * @param methodName
      *            the name of the activation method.
-     * @deprecated The EventRouter will be replaced by an EventRouter which does
-     *             not use reflection in Vaadin 7.0.0. See #8640.
+     * @deprecated This method should be avoided. Use
+     *             {@link #addListener(Class, Object, Method)} or
+     *             {@link #addListener(String, Class, Object, Method)} instead.
      */
     @Override
     @Deprecated
@@ -864,11 +855,8 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * @param method
      *            the method owned by <code>target</code> that's registered to
      *            listen to events of type <code>eventType</code>.
-     * @deprecated The EventRouter will be replaced by an EventRouter which does
-     *             not use reflection in Vaadin 7.0.0. See #8640.
      */
     @Override
-    @Deprecated
     public void removeListener(Class<?> eventType, Object target, Method method) {
         if (eventRouter != null) {
             eventRouter.removeListener(eventType, target, method);
@@ -902,7 +890,10 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * @param methodName
      *            the name of the method owned by <code>target</code> that's
      *            registered to listen to events of type <code>eventType</code>.
+     * @deprecated This method should be avoided. Use
+     *             {@link #removeListener(Class, Object, Method)} instead.
      */
+    @Deprecated
     @Override
     public void removeListener(Class<?> eventType, Object target,
             String methodName) {

@@ -49,10 +49,7 @@ import java.util.logging.Logger;
  * 
  * @author Vaadin Ltd.
  * @since 3.0
- * @deprecated The EventRouter will be replaced by an EventRouter which does not
- *             use reflection in Vaadin 7.0.0. See #8640.
  */
-@Deprecated
 @SuppressWarnings("serial")
 public class ListenerMethod implements EventListener, Serializable {
 
