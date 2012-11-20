@@ -21,6 +21,7 @@ import java.util.Date;
 import com.vaadin.data.Property;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
+import com.vaadin.shared.ui.datefield.PopupDateFieldState;
 
 /**
  * <p>
@@ -85,6 +86,36 @@ public class PopupDateField extends DateField {
     public void setInputPrompt(String inputPrompt) {
         this.inputPrompt = inputPrompt;
         markAsDirty();
+    }
+
+    @Override
+    protected PopupDateFieldState getState() {
+        return (PopupDateFieldState) super.getState();
+    }
+
+    /**
+     * Checks whether the text field is enabled (default) or not.
+     * 
+     * @see PopupDateField#setTextFieldEnabled(boolean);
+     * 
+     * @return <b>true</b> if the text field is enabled, <b>false</b> otherwise.
+     */
+    public boolean isTextFieldEnabled() {
+        return getState().textFieldEnabled;
+    }
+
+    /**
+     * Enables or disables the text field. By default the text field is enabled.
+     * Disabling it causes only the button for date selection to be active, thus
+     * preventing the user from entering invalid dates.
+     * 
+     * See {@link http://dev.vaadin.com/ticket/6790}.
+     * 
+     * @param state
+     *            <b>true</b> to enable text field, <b>false</b> to disable it.
+     */
+    public void setTextFieldEnabled(boolean state) {
+        getState().textFieldEnabled = state;
     }
 
 }

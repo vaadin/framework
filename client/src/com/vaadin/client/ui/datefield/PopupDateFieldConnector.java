@@ -21,6 +21,7 @@ import java.util.Date;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.DateTimeService;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.VCalendarPanel.FocusChangeListener;
 import com.vaadin.client.ui.VCalendarPanel.TimeChangeListener;
 import com.vaadin.client.ui.VPopupCalendar;
@@ -129,6 +130,12 @@ public class PopupDateFieldConnector extends TextualDateConnector {
     @Override
     public PopupDateFieldState getState() {
         return (PopupDateFieldState) super.getState();
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+        getWidget().setTextFieldEnabled(getState().textFieldEnabled);
     }
 
     @Override
