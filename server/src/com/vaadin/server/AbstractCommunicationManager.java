@@ -2632,7 +2632,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
     public void serveDependencyResource(VaadinRequest request,
             VaadinResponse response) throws IOException {
 
-        String pathInfo = request.getRequestPathInfo();
+        String pathInfo = request.getPathInfo();
         // + 2 to also remove beginning and ending slashes
         String resourceName = pathInfo
                 .substring(ApplicationConstants.DEPENDENCY_RESOURCE_PREFIX
@@ -2734,7 +2734,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
          * #createReceiverUrl
          */
 
-        String pathInfo = request.getRequestPathInfo();
+        String pathInfo = request.getPathInfo();
         // strip away part until the data we are interested starts
         int startOfData = pathInfo
                 .indexOf(ServletPortletHelper.UPLOAD_URL_PREFIX)

@@ -110,7 +110,7 @@ public class Parameters extends com.vaadin.server.LegacyApplication implements
     public boolean handleRequest(VaadinSession session,
             VaadinRequest request, VaadinResponse response) throws IOException {
         context.setValue("Context not available");
-        relative.setValue(request.getRequestPathInfo());
+        relative.setValue(request.getPathInfo());
 
         params.removeAllItems();
         Map<String, String[]> parameters = request.getParameterMap();

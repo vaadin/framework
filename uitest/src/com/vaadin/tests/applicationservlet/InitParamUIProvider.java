@@ -27,7 +27,7 @@ public class InitParamUIProvider extends UIProvider {
     @Override
     public Class<? extends UI> getUIClass(UIClassSelectionEvent event) {
         VaadinRequest request = event.getRequest();
-        String pathInfo = request.getRequestPathInfo();
+        String pathInfo = request.getPathInfo();
         if ("/test".equals(pathInfo)) {
             return BasicJavaScriptComponent.class;
         } else {

@@ -68,7 +68,7 @@ public class GlobalResourceHandler implements RequestHandler {
     @Override
     public boolean handleRequest(VaadinSession session, VaadinRequest request,
             VaadinResponse response) throws IOException {
-        String pathInfo = request.getRequestPathInfo();
+        String pathInfo = request.getPathInfo();
         if (pathInfo == null) {
             return false;
         }
@@ -229,7 +229,7 @@ public class GlobalResourceHandler implements RequestHandler {
             VaadinResponse response, String logMessage) throws IOException {
         getLogger().log(Level.WARNING, logMessage);
         response.sendError(HttpServletResponse.SC_NOT_FOUND,
-                request.getRequestPathInfo() + " can not be found");
+                request.getPathInfo() + " can not be found");
 
         // Request handled (though not in a nice way)
         return true;

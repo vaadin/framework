@@ -87,7 +87,7 @@ public class LazyInitUIs extends AbstractTestUIProvider {
 
     public static Label getRequestInfo(String name, VaadinRequest request) {
         String info = name;
-        info += "<br />pathInfo: " + request.getRequestPathInfo();
+        info += "<br />pathInfo: " + request.getPathInfo();
         info += "<br />parameters: " + request.getParameterMap().keySet();
         info += "<br />uri fragment: "
                 + Page.getCurrent().getLocation().getFragment();

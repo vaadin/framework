@@ -79,7 +79,7 @@ class ServletPortletHelper implements Serializable {
     }
 
     private static boolean hasPathPrefix(VaadinRequest request, String prefix) {
-        String pathInfo = request.getRequestPathInfo();
+        String pathInfo = request.getPathInfo();
 
         if (pathInfo == null) {
             return false;

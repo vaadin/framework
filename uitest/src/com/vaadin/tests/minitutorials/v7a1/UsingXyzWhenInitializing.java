@@ -44,7 +44,7 @@ public class UsingXyzWhenInitializing extends UI {
 
         layout.addComponent(new Label("Hello " + name));
 
-        String pathInfo = request.getRequestPathInfo();
+        String pathInfo = request.getPathInfo();
         if ("/viewSource".equals(pathInfo)) {
             layout.addComponent(new Label("This is the source"));
         } else {

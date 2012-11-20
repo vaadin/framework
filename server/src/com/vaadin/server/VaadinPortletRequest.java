@@ -97,7 +97,7 @@ public class VaadinPortletRequest implements VaadinRequest {
     }
 
     @Override
-    public String getRequestPathInfo() {
+    public String getPathInfo() {
         if (request instanceof ResourceRequest) {
             ResourceRequest resourceRequest = (ResourceRequest) request;
             String resourceID = resourceRequest.getResourceID();

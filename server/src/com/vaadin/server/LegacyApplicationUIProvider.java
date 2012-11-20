@@ -76,7 +76,7 @@ public abstract class LegacyApplicationUIProvider extends UIProvider {
 
     private UI getUIInstance(UIProviderEvent event) {
         VaadinRequest request = event.getRequest();
-        String pathInfo = request.getRequestPathInfo();
+        String pathInfo = request.getPathInfo();
         String name = null;
         if (pathInfo != null && pathInfo.length() > 0) {
             Matcher matcher = WINDOW_NAME_PATTERN.matcher(pathInfo);

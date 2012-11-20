@@ -49,11 +49,6 @@ public class VaadinServletRequest extends HttpServletRequestWrapper implements
     }
 
     @Override
-    public String getRequestPathInfo() {
-        return getPathInfo();
-    }
-
-    @Override
     public WrappedSession getWrappedSession() {
         return getWrappedSession(true);
     }

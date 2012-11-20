@@ -35,7 +35,7 @@ public class NavigateWithOngoingXHR extends AbstractTestUI {
         public boolean handleRequest(VaadinSession session,
                 VaadinRequest request, VaadinResponse response)
                 throws IOException {
-            if ("/slowRequestHandler".equals(request.getRequestPathInfo())) {
+            if ("/slowRequestHandler".equals(request.getPathInfo())) {
                 // Make the navigation request last longer to keep the
                 // communication error visible
                 // System.out.println("Got slow content request");

@@ -54,7 +54,7 @@ class MyDynamicResource implements RequestHandler {
     @Override
     public boolean handleRequest(VaadinSession session,
             VaadinRequest request, VaadinResponse response) throws IOException {
-        String relativeUri = request.getRequestPathInfo();
+        String relativeUri = request.getPathInfo();
         // Catch the given URI that identifies the resource, otherwise let other
         // URI handlers or the Application to handle the response.
         if (!relativeUri.startsWith("myresource")) {

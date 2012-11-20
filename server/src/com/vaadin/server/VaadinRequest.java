@@ -122,7 +122,7 @@ public interface VaadinRequest extends Serializable {
      * 
      * @see javax.servlet.http.HttpServletRequest#getPathInfo()
      */
-    public String getRequestPathInfo();
+    public String getPathInfo();
 
     /**
      * Returns the portion of the request URI that indicates the context of the

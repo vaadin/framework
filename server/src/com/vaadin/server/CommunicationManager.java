@@ -53,7 +53,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
         return new BootstrapHandler() {
             @Override
             protected String getServiceUrl(BootstrapContext context) {
-                String pathInfo = context.getRequest().getRequestPathInfo();
+                String pathInfo = context.getRequest().getPathInfo();
                 if (pathInfo == null) {
                     return null;
                 } else {
