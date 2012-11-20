@@ -55,10 +55,10 @@ import com.vaadin.ui.UI;
 public abstract class AbstractClientConnector implements ClientConnector,
         MethodEventSource {
     /**
-     * A map from client to server RPC interface class to the RPC call manager
-     * that handles incoming RPC calls for that interface.
+     * A map from client to server RPC interface class name to the RPC call
+     * manager that handles incoming RPC calls for that interface.
      */
-    private Map<Class<?>, RpcManager> rpcManagerMap = new HashMap<Class<?>, RpcManager>();
+    private Map<String, RpcManager> rpcManagerMap = new HashMap<String, RpcManager>();
 
     /**
      * A map from server to client RPC interface class to the RPC proxy that
@@ -122,8 +122,9 @@ public abstract class AbstractClientConnector implements ClientConnector,
      *            RPC interface class for which the implementation should be
      *            registered
      */
-    protected <T> void registerRpc(T implementation, Class<T> rpcInterfaceType) {
-        rpcManagerMap.put(rpcInterfaceType, new ServerRpcManager<T>(
+    protected <T extends ServerRpc> void registerRpc(T implementation,
+            Class<T> rpcInterfaceType) {
+        rpcManagerMap.put(rpcInterfaceType.getName(), new ServerRpcManager<T>(
                 implementation, rpcInterfaceType));
     }
 
@@ -333,18 +334,9 @@ public abstract class AbstractClientConnector implements ClientConnector,
         requestRepaint();
     }
 
-    /**
-     * @see RpcTarget#getRpcManager(Class)
-     * 
-     * @param rpcInterface
-     *            RPC interface for which a call was made
-     * @return RPC Manager handling calls for the interface
-     * 
-     * @since 7.0
-     */
     @Override
-    public RpcManager getRpcManager(Class<?> rpcInterface) {
-        return rpcManagerMap.get(rpcInterface);
+    public RpcManager getRpcManager(String rpcInterfaceName) {
+        return rpcManagerMap.get(rpcInterfaceName);
     }
 
     @Override

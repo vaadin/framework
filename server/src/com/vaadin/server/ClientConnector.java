@@ -36,7 +36,7 @@ import com.vaadin.ui.UI;
  * @since 7.0.0
  * 
  */
-public interface ClientConnector extends Connector, RpcTarget {
+public interface ClientConnector extends Connector {
     /**
      * Returns the list of pending server to client RPC calls and clears the
      * list.
@@ -239,4 +239,14 @@ public interface ClientConnector extends Connector, RpcTarget {
      */
     public boolean handleConnectorRequest(VaadinRequest request,
             VaadinResponse response, String path) throws IOException;
+
+    /**
+     * Returns the RPC manager instance to use when receiving calls for an RPC
+     * interface.
+     * 
+     * @param rpcInterfaceName
+     *            name of the interface for which the call was made
+     * @return RpcManager or null if none found for the interface
+     */
+    public RpcManager getRpcManager(String rpcInterfaceName);
 }

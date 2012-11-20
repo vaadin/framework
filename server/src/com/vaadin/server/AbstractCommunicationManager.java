@@ -75,6 +75,7 @@ import com.vaadin.shared.JavaScriptConnectorState;
 import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.LegacyChangeVariablesInvocation;
 import com.vaadin.shared.communication.MethodInvocation;
+import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.communication.UidlValue;
 import com.vaadin.shared.ui.ui.UIConstants;
@@ -1662,17 +1663,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 final ClientConnector connector = getConnector(uI,
                         invocation.getConnectorId());
 
-                if (connector == null) {
-                    getLogger().log(
-                            Level.WARNING,
-                            "RPC call to " + invocation.getInterfaceName()
-                                    + "." + invocation.getMethodName()
-                                    + " received for connector "
-                                    + invocation.getConnectorId()
-                                    + " but no such connector could be found");
-                    continue;
-                }
-
                 if (!enabledConnectors.contains(connector)) {
 
                     if (invocation instanceof LegacyChangeVariablesInvocation) {
@@ -1790,8 +1780,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
             MethodInvocation invocation = parseInvocation(invocationJson,
                     previousInvocation, connectorTracker);
             if (invocation != null) {
-                // Can be null iff the invocation was a legacy invocation and it
-                // was merged with the previous one
+                // Can be null if the invocation was a legacy invocation and it
+                // was merged with the previous one or if the invocation was
+                // rejected because of an error.
                 invocations.add(invocation);
                 previousInvocation = invocation;
             }
@@ -1805,6 +1796,15 @@ public abstract class AbstractCommunicationManager implements Serializable {
         String connectorId = invocationJson.getString(0);
         String interfaceName = invocationJson.getString(1);
         String methodName = invocationJson.getString(2);
+
+        if (connectorTracker.getConnector(connectorId) == null) {
+            getLogger().log(
+                    Level.WARNING,
+                    "RPC call to " + interfaceName + "." + methodName
+                            + " received for connector " + connectorId
+                            + " but no such connector could be found");
+            return null;
+        }
 
         JSONArray parametersJson = invocationJson.getJSONArray(3);
 
@@ -1855,8 +1855,30 @@ public abstract class AbstractCommunicationManager implements Serializable {
             String connectorId, String interfaceName, String methodName,
             JSONArray parametersJson, ConnectorTracker connectorTracker)
             throws JSONException {
+        ClientConnector connector = connectorTracker.getConnector(connectorId);
+
+        RpcManager rpcManager = connector.getRpcManager(interfaceName);
+        if (!(rpcManager instanceof ServerRpcManager)) {
+            /*
+             * Security: Don't even decode the json parameters if no RpcManager
+             * corresponding to the received method invocation has been
+             * registered.
+             */
+            getLogger().warning(
+                    "Ignoring RPC call to " + interfaceName + "." + methodName
+                            + " in connector " + connector.getClass().getName()
+                            + "(" + connectorId
+                            + ") as no RPC implementation is regsitered");
+            return null;
+        }
+
+        // Use interface from RpcManager instead of loading the class based on
+        // the string name to avoid problems with OSGi
+        Class<? extends ServerRpc> rpcInterface = ((ServerRpcManager<?>) rpcManager)
+                .getRpcInterface();
+
         ServerRpcMethodInvocation invocation = new ServerRpcMethodInvocation(
-                connectorId, interfaceName, methodName, parametersJson.length());
+                connectorId, rpcInterface, methodName, parametersJson.length());
 
         Object[] parameters = new Object[parametersJson.length()];
         Type[] declaredRpcMethodParameterTypes = invocation.getMethod()

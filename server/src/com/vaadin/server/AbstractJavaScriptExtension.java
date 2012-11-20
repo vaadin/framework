@@ -17,6 +17,7 @@
 package com.vaadin.server;
 
 import com.vaadin.shared.JavaScriptExtensionState;
+import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.ui.JavaScriptFunction;
 
 /**
@@ -125,7 +126,8 @@ public abstract class AbstractJavaScriptExtension extends AbstractExtension {
             this);
 
     @Override
-    protected <T> void registerRpc(T implementation, Class<T> rpcInterfaceType) {
+    protected <T extends ServerRpc> void registerRpc(T implementation,
+            Class<T> rpcInterfaceType) {
         super.registerRpc(implementation, rpcInterfaceType);
         callbackHelper.registerRpc(rpcInterfaceType);
     }

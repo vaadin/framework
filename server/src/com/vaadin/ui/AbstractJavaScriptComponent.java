@@ -16,6 +16,7 @@
 package com.vaadin.ui;
 
 import com.vaadin.server.JavaScriptCallbackHelper;
+import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.JavaScriptComponentState;
 
 /**
@@ -128,7 +129,8 @@ public abstract class AbstractJavaScriptComponent extends AbstractComponent {
             this);
 
     @Override
-    protected <T> void registerRpc(T implementation, Class<T> rpcInterfaceType) {
+    protected <T extends ServerRpc> void registerRpc(T implementation,
+            Class<T> rpcInterfaceType) {
         super.registerRpc(implementation, rpcInterfaceType);
         callbackHelper.registerRpc(rpcInterfaceType);
     }
