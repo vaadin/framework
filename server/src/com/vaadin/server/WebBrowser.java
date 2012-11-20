@@ -267,7 +267,7 @@ public class WebBrowser implements Serializable {
      * @see WebBrowser#getRawTimezoneOffset()
      * @return timezone offset in milliseconds, 0 if not available
      */
-    public Integer getTimezoneOffset() {
+    public int getTimezoneOffset() {
         return timezoneOffset;
     }
 
@@ -288,7 +288,7 @@ public class WebBrowser implements Serializable {
      * 
      * @return timezone offset in milliseconds excluding DST, 0 if not available
      */
-    public Integer getRawTimezoneOffset() {
+    public int getRawTimezoneOffset() {
         return rawTimezoneOffset;
     }
 
