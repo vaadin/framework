@@ -70,7 +70,7 @@ import com.vaadin.ui.themes.Runo;
  * @since 3.0
  */
 public class TabSheet extends AbstractComponentContainer implements Focusable,
-        FocusNotifier, BlurNotifier, LegacyComponent {
+        FocusNotifier, BlurNotifier, LegacyComponent, SelectiveRenderer {
 
     /**
      * List of component tabs (tab contents). In addition to being on this list,
@@ -1290,7 +1290,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     }
 
     @Override
-    public boolean isComponentVisible(Component childComponent) {
+    public boolean isRendered(Component childComponent) {
         return childComponent == getSelectedTab();
     }
 
