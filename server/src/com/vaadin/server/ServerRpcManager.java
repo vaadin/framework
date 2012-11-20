@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.shared.Connector;
+import com.vaadin.shared.communication.ServerRpc;
 
 /**
  * Server side RPC manager that handles RPC calls coming from the client.
@@ -34,7 +35,7 @@ import com.vaadin.shared.Connector;
  * 
  * @since 7.0
  */
-public class ServerRpcManager<T> implements RpcManager {
+public class ServerRpcManager<T extends ServerRpc> implements RpcManager {
 
     private final T implementation;
     private final Class<T> rpcInterface;
@@ -80,10 +81,10 @@ public class ServerRpcManager<T> implements RpcManager {
      *            method invocation to perform
      * @throws RpcInvocationException
      */
-    public static void applyInvocation(RpcTarget target,
+    public static void applyInvocation(ClientConnector target,
             ServerRpcMethodInvocation invocation) throws RpcInvocationException {
-        RpcManager manager = target.getRpcManager(invocation
-                .getInterfaceClass());
+        RpcManager manager = target
+                .getRpcManager(invocation.getInterfaceName());
         if (manager != null) {
             manager.applyInvocation(invocation);
         } else {

@@ -29,31 +29,18 @@ public class ServerRpcMethodInvocation extends MethodInvocation {
 
     private final Method method;
 
-    private Class<? extends ServerRpc> interfaceClass;
+    private final Class<? extends ServerRpc> interfaceClass;
 
-    public ServerRpcMethodInvocation(String connectorId, String interfaceName,
-            String methodName, int parameterCount) {
-        super(connectorId, interfaceName, methodName);
+    public ServerRpcMethodInvocation(String connectorId,
+            Class<? extends ServerRpc> interfaceClass, String methodName,
+            int parameterCount) {
+        super(connectorId, interfaceClass.getName(), methodName);
 
-        interfaceClass = findClass();
+        assert ServerRpc.class.isAssignableFrom(interfaceClass);
+        this.interfaceClass = interfaceClass;
+
         method = findInvocationMethod(interfaceClass, methodName,
                 parameterCount);
-    }
-
-    private Class<? extends ServerRpc> findClass() {
-        try {
-            Class<?> rpcInterface = Class.forName(getInterfaceName());
-            if (!ServerRpc.class.isAssignableFrom(rpcInterface)) {
-                throw new IllegalArgumentException("The interface "
-                        + getInterfaceName() + "is not a server RPC interface.");
-            }
-            return (Class<? extends ServerRpc>) rpcInterface;
-        } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException("The server RPC interface "
-                    + getInterfaceName() + " could not be found", e);
-        } finally {
-
-        }
     }
 
     public Class<? extends ServerRpc> getInterfaceClass() {
