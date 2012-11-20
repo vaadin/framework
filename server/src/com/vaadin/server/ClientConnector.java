@@ -16,7 +16,10 @@
 package com.vaadin.server;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.EventListener;
+import java.util.EventObject;
 import java.util.List;
 
 import org.json.JSONException;
@@ -27,6 +30,7 @@ import com.vaadin.shared.communication.SharedState;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.UI;
+import com.vaadin.util.ReflectTools;
 
 /**
  * Interface implemented by all connectors that are capable of communicating
@@ -37,6 +41,81 @@ import com.vaadin.ui.UI;
  * 
  */
 public interface ClientConnector extends Connector {
+
+    public static abstract class ConnectorEvent extends EventObject {
+        public ConnectorEvent(ClientConnector source) {
+            super(source);
+        }
+
+        public ClientConnector getConnector() {
+            return (ClientConnector) getSource();
+        }
+    }
+
+    /**
+     * Event fired after a connector is attached to the application.
+     */
+    public static class AttachEvent extends ConnectorEvent {
+        public static final String ATTACH_EVENT_IDENTIFIER = "clientConnectorAttach";
+
+        public AttachEvent(ClientConnector source) {
+            super(source);
+        }
+    }
+
+    /**
+     * Interface for listening {@link DetachEvent connector detach events}.
+     * 
+     */
+    public static interface AttachListener extends EventListener {
+        public static final Method attachMethod = ReflectTools.findMethod(
+                AttachListener.class, "attach", AttachEvent.class);
+
+        /**
+         * Called when a AttachListener is notified of a AttachEvent.
+         * 
+         * @param event
+         *            The attach event that was fired.
+         */
+        public void attach(AttachEvent event);
+    }
+
+    /**
+     * Event fired before a connector is detached from the application.
+     */
+    public static class DetachEvent extends ConnectorEvent {
+        public static final String DETACH_EVENT_IDENTIFIER = "clientConnectorDetach";
+
+        public DetachEvent(ClientConnector source) {
+            super(source);
+        }
+    }
+
+    /**
+     * Interface for listening {@link DetachEvent connector detach events}.
+     * 
+     */
+    public static interface DetachListener extends EventListener {
+        public static final Method detachMethod = ReflectTools.findMethod(
+                DetachListener.class, "detach", DetachEvent.class);
+
+        /**
+         * Called when a DetachListener is notified of a DetachEvent.
+         * 
+         * @param event
+         *            The detach event that was fired.
+         */
+        public void detach(DetachEvent event);
+    }
+
+    public void addAttachListener(AttachListener listener);
+
+    public void removeAttachListener(AttachListener listener);
+
+    public void addDetachListener(DetachListener listener);
+
+    public void removeDetachListener(DetachListener listener);
+
     /**
      * Returns the list of pending server to client RPC calls and clears the
      * list.
@@ -148,13 +227,13 @@ public interface ClientConnector extends Connector {
     public void attach();
 
     /**
-     * Notifies the component that it is detached from the application.
+     * Notifies the connector that it is detached from the application.
      * 
      * <p>
      * The caller of this method is {@link #setParent(ClientConnector)} if the
      * parent is in the application. When the parent is detached from the
-     * application it is its response to call {@link #detach()} for all the
-     * children and to detach itself from the terminal.
+     * application it is its responsibility to call {@link #detach()} for each
+     * of its children.
      * </p>
      */
     public void detach();
