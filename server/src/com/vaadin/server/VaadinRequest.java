@@ -16,14 +16,20 @@
 
 package com.vaadin.server;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.security.Principal;
+import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.portlet.ClientDataRequest;
 import javax.portlet.PortletRequest;
 import javax.servlet.ServletRequest;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -232,5 +238,251 @@ public interface VaadinRequest extends Serializable {
      * @see VaadinService
      */
     public VaadinService getService();
+
+    /**
+     * Returns an array containing all of the <code>Cookie</code> objects the
+     * client sent with this request. This method returns <code>null</code> if
+     * no cookies were sent.
+     * 
+     * @return an array of all the <code>Cookies</code> included with this
+     *         request, or <code>null</code> if the request has no cookies
+     * 
+     * @see HttpServletRequest#getCookies()
+     * @see PortletRequest#getCookies()
+     */
+    public Cookie[] getCookies();
+
+    /**
+     * Returns the name of the authentication scheme used for the connection
+     * between client and server, for example, <code>BASIC_AUTH</code>,
+     * <code>CLIENT_CERT_AUTH</code>, a custom one or <code>null</code> if there
+     * was no authentication.
+     * 
+     * @return a string indicating the authentication scheme, or
+     *         <code>null</code> if the request was not authenticated.
+     * 
+     * @see HttpServletRequest#getAuthType()
+     * @see PortletRequest#getAuthType()
+     */
+    public String getAuthType();
+
+    /**
+     * Returns the login of the user making this request, if the user has been
+     * authenticated, or null if the user has not been authenticated. Whether
+     * the user name is sent with each subsequent request depends on the browser
+     * and type of authentication.
+     * 
+     * @return a String specifying the login of the user making this request, or
+     *         <code>null</code> if the user login is not known.
+     * 
+     * @see HttpServletRequest#getRemoteUser()
+     * @see PortletRequest#getRemoteUser()
+     */
+    public String getRemoteUser();
+
+    /**
+     * Returns a <code>java.security.Principal</code> object containing the name
+     * of the current authenticated user. If the user has not been
+     * authenticated, the method returns <code>null</code>.
+     * 
+     * @return a <code>java.security.Principal</code> containing the name of the
+     *         user making this request; <code>null</code> if the user has not
+     *         been authenticated
+     * 
+     * @see HttpServletRequest#getUserPrincipal()
+     * @see PortletRequest#getUserPrincipal()
+     */
+    public Principal getUserPrincipal();
+
+    /**
+     * Returns a boolean indicating whether the authenticated user is included
+     * in the specified logical "role". Roles and role membership can be defined
+     * using deployment descriptors. If the user has not been authenticated, the
+     * method returns <code>false</code>.
+     * 
+     * @param role
+     *            a String specifying the name of the role
+     * @return a boolean indicating whether the user making this request belongs
+     *         to a given role; <code>false</code> if the user has not been
+     *         authenticated
+     * 
+     * @see HttpServletRequest#isUserInRole(String)
+     * @see PortletRequest#isUserInRole(String)
+     */
+    public boolean isUserInRole(String role);
+
+    /**
+     * Removes an attribute from this request. This method is not generally
+     * needed as attributes only persist as long as the request is being
+     * handled.
+     * 
+     * @param name
+     *            a String specifying the name of the attribute to remove
+     * 
+     * @see ServletRequest#removeAttribute(String)
+     * @see PortletRequest#removeAttribute(String)
+     */
+    public void removeAttribute(String name);
+
+    /**
+     * Returns an Enumeration containing the names of the attributes available
+     * to this request. This method returns an empty Enumeration if the request
+     * has no attributes available to it.
+     * 
+     * @return an Enumeration of strings containing the names of the request's
+     *         attributes
+     * 
+     * @see ServletRequest#getAttributeNames()
+     * @see PortletRequest#getAttributeNames()
+     */
+    public Enumeration<String> getAttributeNames();
+
+    /**
+     * Returns an Enumeration of Locale objects indicating, in decreasing order
+     * starting with the preferred locale, the locales that are acceptable to
+     * the client based on the Accept-Language header. If the client request
+     * doesn't provide an Accept-Language header, this method returns an
+     * Enumeration containing one Locale, the default locale for the server.
+     * 
+     * @return an Enumeration of preferred Locale objects for the client
+     * 
+     * @see HttpServletRequest#getLocales()
+     * @see PortletRequest#getLocales()
+     */
+    public Enumeration<Locale> getLocales();
+
+    /**
+     * Returns the fully qualified name of the client or the last proxy that
+     * sent the request. If the engine cannot or chooses not to resolve the
+     * hostname (to improve performance), this method returns the dotted-string
+     * form of the IP address.
+     * 
+     * @return a String containing the fully qualified name of the client, or
+     *         <code>null</code> if the information is not available.
+     * 
+     * @see HttpServletRequest#getRemoteHost()
+     */
+    public String getRemoteHost();
+
+    /**
+     * Returns the Internet Protocol (IP) source port of the client or last
+     * proxy that sent the request.
+     * 
+     * @return an integer specifying the port number, or -1 if the information
+     *         is not available.
+     * 
+     * @see ServletRequest#getRemotePort()
+     */
+    public int getRemotePort();
+
+    /**
+     * Returns the name of the character encoding used in the body of this
+     * request. This method returns <code>null</code> if the request does not
+     * specify a character encoding.
+     * 
+     * @return a String containing the name of the character encoding, or null
+     *         if the request does not specify a character encoding
+     * 
+     * @see ServletRequest#getCharacterEncoding()
+     * @see ClientDataRequest#getCharacterEncoding()
+     */
+    public String getCharacterEncoding();
+
+    /**
+     * Retrieves the body of the request as character data using a
+     * <code>BufferedReader</code>. The reader translates the character data
+     * according to the character encoding used on the body. Either this method
+     * or {@link #getInputStream()} may be called to read the body, not both.
+     * 
+     * @return a BufferedReader containing the body of the request
+     * 
+     * @throws UnsupportedEncodingException
+     *             - if the character set encoding used is not supported and the
+     *             text cannot be decoded
+     * @throws IllegalStateException
+     *             - if {@link #getInputStream()} method has been called on this
+     *             request
+     * @throws IOException
+     *             if an input or output exception occurred
+     * 
+     * @see ServletRequest#getReader()
+     * @see ClientDataRequest#getReader()
+     */
+    public BufferedReader getReader() throws IOException;
+
+    /**
+     * Returns the name of the HTTP method with which this request was made, for
+     * example, GET, POST, or PUT.
+     * 
+     * @return a String specifying the name of the method with which this
+     *         request was made
+     * 
+     * @see HttpServletRequest#getMethod()
+     * @see ClientDataRequest#getMethod()
+     */
+    public String getMethod();
+
+    /**
+     * Returns the value of the specified request header as a long value that
+     * represents a Date object. Use this method with headers that contain
+     * dates, such as If-Modified-Since.
+     * <p>
+     * The date is returned as the number of milliseconds since January 1, 1970
+     * GMT. The header name is case insensitive.
+     * <p>
+     * If the request did not have a header of the specified name, this method
+     * returns -1. If the header can't be converted to a date, the method throws
+     * an IllegalArgumentException.
+     * 
+     * @param name
+     *            a String specifying the name of the header
+     * @return a long value representing the date specified in the header
+     *         expressed as the number of milliseconds since January 1, 1970
+     *         GMT, or -1 if the named header was not included with the request
+     * @throws IllegalArgumentException
+     *             If the header value can't be converted to a date
+     * @see HttpServletRequest#getDateHeader(String)
+     */
+    public long getDateHeader(String name);
+
+    /**
+     * Returns an enumeration of all the header names this request contains. If
+     * the request has no headers, this method returns an empty enumeration.
+     * <p>
+     * Some implementations do not allow access headers using this method, in
+     * which case this method returns <code>null</code>
+     * 
+     * @return an enumeration of all the header names sent with this request; if
+     *         the request has no headers, an empty enumeration; if the
+     *         implementation does not allow this method, <code>null</code>
+     * @see HttpServletRequest#getHeaderNames()
+     */
+    public Enumeration<String> getHeaderNames();
+
+    /**
+     * Returns all the values of the specified request header as an Enumeration
+     * of String objects.
+     * <p>
+     * Some headers, such as <code>Accept-Language</code> can be sent by clients
+     * as several headers each with a different value rather than sending the
+     * header as a comma separated list.
+     * <p>
+     * If the request did not include any headers of the specified name, this
+     * method returns an empty Enumeration. If the request does not support
+     * accessing headers, this method returns <code>null</code>.
+     * <p>
+     * The header name is case insensitive. You can use this method with any
+     * request header.
+     * 
+     * 
+     * @param name
+     *            a String specifying the header name
+     * @return an Enumeration containing the values of the requested header. If
+     *         the request does not have any headers of that name return an
+     *         empty enumeration. If the header information is not available,
+     *         return <code>null</code>
+     * @see HttpServletRequest#getHeaders(String)
+     */
+    public Enumeration<String> getHeaders(String name);
 
 }

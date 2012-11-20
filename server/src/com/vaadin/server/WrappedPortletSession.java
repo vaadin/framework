@@ -79,4 +79,29 @@ public class WrappedPortletSession implements WrappedSession {
     public String getId() {
         return session.getId();
     }
+
+    @Override
+    public long getCreationTime() {
+        return session.getCreationTime();
+    }
+
+    @Override
+    public long getLastAccessedTime() {
+        return session.getLastAccessedTime();
+    }
+
+    @Override
+    public boolean isNew() {
+        return session.isNew();
+    }
+
+    @Override
+    public void removeAttribute(String name) {
+        session.removeAttribute(name);
+    }
+
+    @Override
+    public void setMaxInactiveInterval(int interval) {
+        session.setMaxInactiveInterval(interval);
+    }
 }

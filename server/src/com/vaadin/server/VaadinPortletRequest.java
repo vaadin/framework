@@ -16,15 +16,17 @@
 
 package com.vaadin.server;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Locale;
-import java.util.Map;
+import java.text.ParseException;
+import java.util.Enumeration;
 
 import javax.portlet.ClientDataRequest;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 import javax.portlet.ResourceRequest;
+import javax.portlet.filter.PortletRequestWrapper;
 
 import com.vaadin.shared.ApplicationConstants;
 
@@ -37,9 +39,9 @@ import com.vaadin.shared.ApplicationConstants;
  * @see VaadinRequest
  * @see VaadinPortletResponse
  */
-public class VaadinPortletRequest implements VaadinRequest {
+public class VaadinPortletRequest extends PortletRequestWrapper implements
+        VaadinRequest {
 
-    private final PortletRequest request;
     private final VaadinPortletService vaadinService;
 
     /**
@@ -52,19 +54,14 @@ public class VaadinPortletRequest implements VaadinRequest {
      */
     public VaadinPortletRequest(PortletRequest request,
             VaadinPortletService vaadinService) {
-        this.request = request;
+        super(request);
         this.vaadinService = vaadinService;
-    }
-
-    @Override
-    public Object getAttribute(String name) {
-        return request.getAttribute(name);
     }
 
     @Override
     public int getContentLength() {
         try {
-            return ((ClientDataRequest) request).getContentLength();
+            return ((ClientDataRequest) getRequest()).getContentLength();
         } catch (ClassCastException e) {
             throw new IllegalStateException(
                     "Content lenght only available for ClientDataRequests");
@@ -74,7 +71,7 @@ public class VaadinPortletRequest implements VaadinRequest {
     @Override
     public InputStream getInputStream() throws IOException {
         try {
-            return ((ClientDataRequest) request).getPortletInputStream();
+            return ((ClientDataRequest) getRequest()).getPortletInputStream();
         } catch (ClassCastException e) {
             throw new IllegalStateException(
                     "Input data only available for ClientDataRequests");
@@ -82,22 +79,18 @@ public class VaadinPortletRequest implements VaadinRequest {
     }
 
     @Override
-    public String getParameter(String name) {
-        return request.getParameter(name);
-    }
-
-    @Override
-    public Map<String, String[]> getParameterMap() {
-        return request.getParameterMap();
-    }
-
-    @Override
-    public void setAttribute(String name, Object o) {
-        request.setAttribute(name, o);
+    public BufferedReader getReader() throws IOException {
+        try {
+            return ((ClientDataRequest) getRequest()).getReader();
+        } catch (ClassCastException e) {
+            throw new IllegalStateException(
+                    "Reader only available for ClientDataRequests");
+        }
     }
 
     @Override
     public String getPathInfo() {
+        PortletRequest request = getRequest();
         if (request instanceof ResourceRequest) {
             ResourceRequest resourceRequest = (ResourceRequest) request;
             String resourceID = resourceRequest.getResourceID();
@@ -119,8 +112,7 @@ public class VaadinPortletRequest implements VaadinRequest {
 
     @Override
     public WrappedSession getWrappedSession(boolean allowSessionCreation) {
-        PortletSession session = request
-                .getPortletSession(allowSessionCreation);
+        PortletSession session = getPortletSession(allowSessionCreation);
         if (session != null) {
             return new WrappedPortletSession(session);
         } else {
@@ -134,13 +126,13 @@ public class VaadinPortletRequest implements VaadinRequest {
      * @return the unwrapped portlet request
      */
     public PortletRequest getPortletRequest() {
-        return request;
+        return getRequest();
     }
 
     @Override
     public String getContentType() {
         try {
-            return ((ResourceRequest) request).getContentType();
+            return ((ResourceRequest) getRequest()).getContentType();
         } catch (ClassCastException e) {
             throw new IllegalStateException(
                     "Content type only available for ResourceRequests");
@@ -148,8 +140,23 @@ public class VaadinPortletRequest implements VaadinRequest {
     }
 
     @Override
-    public Locale getLocale() {
-        return request.getLocale();
+    public String getCharacterEncoding() {
+        try {
+            return ((ClientDataRequest) getRequest()).getCharacterEncoding();
+        } catch (ClassCastException e) {
+            throw new IllegalStateException(
+                    "Character encoding only available for ClientDataRequest");
+        }
+    }
+
+    @Override
+    public String getMethod() {
+        try {
+            return ((ClientDataRequest) getRequest()).getMethod();
+        } catch (ClassCastException e) {
+            throw new IllegalStateException(
+                    "Method only available for ClientDataRequest");
+        }
     }
 
     @Override
@@ -158,8 +165,13 @@ public class VaadinPortletRequest implements VaadinRequest {
     }
 
     @Override
-    public boolean isSecure() {
-        return request.isSecure();
+    public String getRemoteHost() {
+        return null;
+    }
+
+    @Override
+    public int getRemotePort() {
+        return -1;
     }
 
     @Override
@@ -176,7 +188,7 @@ public class VaadinPortletRequest implements VaadinRequest {
      *         the property is not defined
      */
     public String getPortalProperty(String name) {
-        return request.getPortalContext().getProperty(name);
+        return getRequest().getPortalContext().getProperty(name);
     }
 
     @Override
@@ -185,7 +197,28 @@ public class VaadinPortletRequest implements VaadinRequest {
     }
 
     @Override
-    public String getContextPath() {
-        return request.getContextPath();
+    public long getDateHeader(String name) {
+        String header = getHeader(name);
+        if (header == null) {
+            return -1;
+        } else {
+            try {
+                return VaadinPortletResponse.HTTP_DATE_FORMAT.parse(header)
+                        .getTime();
+            } catch (ParseException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
     }
+
+    @Override
+    public Enumeration<String> getHeaderNames() {
+        return null;
+    }
+
+    @Override
+    public Enumeration<String> getHeaders(String name) {
+        return null;
+    }
+
 }

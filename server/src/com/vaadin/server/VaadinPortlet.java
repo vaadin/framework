@@ -97,12 +97,40 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         }
 
         @Override
+        public String getRemoteHost() {
+            return originalRequest.getRemoteHost();
+        }
+
+        @Override
+        public int getRemotePort() {
+            return originalRequest.getRemotePort();
+        }
+
+        @Override
         public String getHeader(String name) {
             String header = super.getHeader(name);
             if (header == null) {
                 header = originalRequest.getHeader(name);
             }
             return header;
+        }
+
+        @Override
+        public Enumeration<String> getHeaderNames() {
+            Enumeration<String> headerNames = super.getHeaderNames();
+            if (headerNames == null) {
+                headerNames = originalRequest.getHeaderNames();
+            }
+            return headerNames;
+        }
+
+        @Override
+        public Enumeration<String> getHeaders(String name) {
+            Enumeration<String> headers = super.getHeaders(name);
+            if (headers == null) {
+                headers = originalRequest.getHeaders(name);
+            }
+            return headers;
         }
 
         @Override

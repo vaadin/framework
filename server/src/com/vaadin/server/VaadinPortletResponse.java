@@ -28,6 +28,7 @@ import java.util.TimeZone;
 import javax.portlet.MimeResponse;
 import javax.portlet.PortletResponse;
 import javax.portlet.ResourceResponse;
+import javax.servlet.http.Cookie;
 
 /**
  * Wrapper for {@link PortletResponse} and its subclasses.
@@ -39,7 +40,7 @@ import javax.portlet.ResourceResponse;
  * @see VaadinPortletRequest
  */
 public class VaadinPortletResponse implements VaadinResponse {
-    private static final DateFormat HTTP_DATE_FORMAT = new SimpleDateFormat(
+    static final DateFormat HTTP_DATE_FORMAT = new SimpleDateFormat(
             "EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH);
     static {
         HTTP_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -116,5 +117,10 @@ public class VaadinPortletResponse implements VaadinResponse {
     @Override
     public VaadinPortletService getService() {
         return vaadinService;
+    }
+
+    @Override
+    public void addCookie(Cookie cookie) {
+        response.addProperty(cookie);
     }
 }

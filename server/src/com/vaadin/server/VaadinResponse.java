@@ -25,6 +25,7 @@ import javax.portlet.MimeResponse;
 import javax.portlet.PortletResponse;
 import javax.portlet.ResourceResponse;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -156,4 +157,16 @@ public interface VaadinResponse extends Serializable {
      * @see VaadinService
      */
     public VaadinService getService();
+
+    /**
+     * Adds the specified cookie to the response. This method can be called
+     * multiple times to set more than one cookie.
+     * 
+     * @param cookie
+     *            the Cookie to return to the client
+     * 
+     * @see HttpServletResponse#addCookie(Cookie)
+     * @see PortletResponse#addProperty(Cookie)
+     */
+    public void addCookie(Cookie cookie);
 }
