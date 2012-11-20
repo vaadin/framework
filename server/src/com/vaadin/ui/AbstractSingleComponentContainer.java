@@ -102,17 +102,6 @@ public abstract class AbstractSingleComponentContainer extends
         fireEvent(new ComponentDetachEvent(this, component));
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.ui.HasComponents#isComponentVisible(com.vaadin.ui.Component)
-     */
-    @Override
-    public boolean isComponentVisible(Component childComponent) {
-        return true;
-    }
-
     @Override
     public void setVisible(boolean visible) {
         if (isVisible() == visible) {

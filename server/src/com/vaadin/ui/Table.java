@@ -5579,11 +5579,6 @@ public class Table extends AbstractSelect implements Action.Container,
         return iterator();
     }
 
-    @Override
-    public boolean isComponentVisible(Component childComponent) {
-        return true;
-    }
-
     private final Logger getLogger() {
         if (logger == null) {
             logger = Logger.getLogger(Table.class.getName());

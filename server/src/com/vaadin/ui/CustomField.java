@@ -150,9 +150,4 @@ public abstract class CustomField<T> extends AbstractField<T> implements
     public Iterator<Component> iterator() {
         return new ComponentIterator();
     }
-
-    @Override
-    public boolean isComponentVisible(Component childComponent) {
-        return true;
-    }
 }

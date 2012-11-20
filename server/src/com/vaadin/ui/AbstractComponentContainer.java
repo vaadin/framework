@@ -343,15 +343,4 @@ public abstract class AbstractComponentContainer extends AbstractComponent
     public Iterator<Component> getComponentIterator() {
         return iterator();
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.ui.HasComponents#isComponentVisible(com.vaadin.ui.Component)
-     */
-    @Override
-    public boolean isComponentVisible(Component childComponent) {
-        return true;
-    }
 }
