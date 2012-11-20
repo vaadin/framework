@@ -98,7 +98,7 @@ public class RuleNode extends Node implements IVariableNode {
                             if (param.getValue().toString()
                                     .contains(node.getName())) {
 
-                                LexicalUnitImpl expr = node.getExpr();
+                                String value = node.getExpr().toString();
 
                                 LexicalUnitImpl prev = param
                                         .getPreviousLexicalUnit();
@@ -106,7 +106,9 @@ public class RuleNode extends Node implements IVariableNode {
                                         .getNextLexicalUnit();
 
                                 if (param.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE) {
-                                    param.replaceValue(expr);
+                                    param.setStringValue(value);
+                                    param.setLexicalUnitType(node.getExpr()
+                                            .getLexicalUnitType());
                                     param.setPrevLexicalUnit(prev);
                                     param.setNextLexicalUnit(next);
                                 }
