@@ -15,8 +15,8 @@
  */
 package com.vaadin.shared.ui;
 
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.AbstractComponentState;
 
-public class AbstractLayoutState extends ComponentState {
+public class AbstractLayoutState extends AbstractComponentState {
 
 }

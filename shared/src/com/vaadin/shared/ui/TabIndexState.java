@@ -15,7 +15,7 @@
  */
 package com.vaadin.shared.ui;
 
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.AbstractComponentState;
 
 /**
  * Interface implemented by state classes that support tab indexes.
@@ -24,7 +24,7 @@ import com.vaadin.shared.ComponentState;
  * @since 7.0.0
  * 
  */
-public class TabIndexState extends ComponentState {
+public class TabIndexState extends AbstractComponentState {
 
     /**
      * The <i>tabulator index</i> of the field.

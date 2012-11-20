@@ -18,7 +18,7 @@ package com.vaadin.client;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Widget;
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.AbstractComponentState;
 
 /**
  * An interface used by client-side widgets or paintable parts to receive
@@ -36,7 +36,7 @@ public interface ComponentConnector extends ServerConnector {
      * @see com.vaadin.client.VPaintable#getState()
      */
     @Override
-    public ComponentState getState();
+    public AbstractComponentState getState();
 
     /**
      * Returns the widget for this {@link ComponentConnector}

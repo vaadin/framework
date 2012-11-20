@@ -68,7 +68,7 @@ import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.menubar.MenuBar;
 import com.vaadin.client.ui.menubar.MenuItem;
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.combobox.FilteringMode;
@@ -598,7 +598,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * @param componentState
          *            shared state of the combo box
          */
-        public void updateStyleNames(UIDL uidl, ComponentState componentState) {
+        public void updateStyleNames(UIDL uidl, AbstractComponentState componentState) {
             setStyleName(VFilterSelect.this.getStylePrimaryName()
                     + "-suggestpopup");
             menu.setStyleName(VFilterSelect.this.getStylePrimaryName()

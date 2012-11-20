@@ -19,15 +19,16 @@ package com.vaadin.shared;
 import java.util.List;
 
 import com.vaadin.shared.communication.SharedState;
+import com.vaadin.ui.AbstractComponent;
 
 /**
- * Default shared state implementation for UI components.
+ * Default shared state implementation for {@link AbstractComponent}.
  * 
- * State classes of concrete components should extend this class.
+ * State classes of components should typically extend this class.
  * 
  * @since 7.0
  */
-public class ComponentState extends SharedState {
+public class AbstractComponentState extends SharedState {
     public String height = "";
     public String width = "";
     public boolean readOnly = false;

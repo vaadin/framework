@@ -35,7 +35,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.Terminal;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ComponentConstants;
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.util.ReflectTools;
 
@@ -617,8 +617,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * @return updated component shared state
      */
     @Override
-    protected ComponentState getState() {
-        return (ComponentState) super.getState();
+    protected AbstractComponentState getState() {
+        return (AbstractComponentState) super.getState();
     }
 
     @Override

@@ -35,7 +35,7 @@ import com.vaadin.client.Focusable;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.VTooltip;
 import com.vaadin.shared.ComponentConstants;
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.MarginInfo;
 
@@ -65,7 +65,7 @@ public class VFormLayout extends SimplePanel {
      * @param enabled
      * @return An array of stylenames
      */
-    private String[] getStylesFromState(ComponentState state, boolean enabled) {
+    private String[] getStylesFromState(AbstractComponentState state, boolean enabled) {
         List<String> styles = new ArrayList<String>();
         if (ComponentStateUtil.hasStyles(state)) {
             for (String name : state.styles) {
@@ -188,7 +188,7 @@ public class VFormLayout extends SimplePanel {
 
         }
 
-        public void updateCaption(Widget widget, ComponentState state,
+        public void updateCaption(Widget widget, AbstractComponentState state,
                 boolean enabled) {
             final Caption c = widgetToCaption.get(widget);
             if (c != null) {
@@ -249,7 +249,7 @@ public class VFormLayout extends SimplePanel {
             setStyleName(styleName);
         }
 
-        public void updateCaption(ComponentState state, boolean enabled) {
+        public void updateCaption(AbstractComponentState state, boolean enabled) {
             // Update styles as they might have changed when the caption changed
             setStyles(getStylesFromState(state, enabled));
 

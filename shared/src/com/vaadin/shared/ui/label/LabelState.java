@@ -15,9 +15,9 @@
  */
 package com.vaadin.shared.ui.label;
 
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.AbstractComponentState;
 
-public class LabelState extends ComponentState {
+public class LabelState extends AbstractComponentState {
     {
         primaryStyleName = "v-label";
     }

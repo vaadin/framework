@@ -15,9 +15,9 @@
  */
 package com.vaadin.shared.ui.panel;
 
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.AbstractComponentState;
 
-public class PanelState extends ComponentState {
+public class PanelState extends AbstractComponentState {
     {
         primaryStyleName = "v-panel";
     }

@@ -92,7 +92,7 @@ import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.dd.VHasDropHandler;
 import com.vaadin.client.ui.dd.VTransferable;
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.shared.ui.table.TableConstants;
@@ -1113,7 +1113,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     }
 
     /** For internal use only. May be removed or replaced in the future. */
-    public void updateSelectionProperties(UIDL uidl, ComponentState state,
+    public void updateSelectionProperties(UIDL uidl, AbstractComponentState state,
             boolean readOnly) {
         setMultiSelectMode(uidl.hasAttribute("multiselectmode") ? uidl
                 .getIntAttribute("multiselectmode") : MULTISELECT_MODE_DEFAULT);

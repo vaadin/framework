@@ -34,7 +34,7 @@ import com.vaadin.client.ui.VTabsheetPanel;
 import com.vaadin.client.ui.VUI;
 import com.vaadin.client.ui.VWindow;
 import com.vaadin.client.ui.window.WindowConnector;
-import com.vaadin.shared.ComponentState;
+import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.communication.SharedState;
 
@@ -694,8 +694,8 @@ public class ComponentLocator {
 
     private ServerConnector findConnectorById(ServerConnector root, String id) {
         SharedState state = root.getState();
-        if (state instanceof ComponentState
-                && id.equals(((ComponentState) state).id)) {
+        if (state instanceof AbstractComponentState
+                && id.equals(((AbstractComponentState) state).id)) {
             return root;
         }
         for (ServerConnector child : root.getChildren()) {
