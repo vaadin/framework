@@ -358,4 +358,20 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     public void setErrorHandler(ErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
     }
+
+    @Override
+    public void addAttachListener(AttachListener listener) {
+    }
+
+    @Override
+    public void removeAttachListener(AttachListener listener) {
+    }
+
+    @Override
+    public void addDetachListener(DetachListener listener) {
+    }
+
+    @Override
+    public void removeDetachListener(DetachListener listener) {
+    }
 }

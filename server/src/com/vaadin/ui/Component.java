@@ -18,7 +18,6 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.util.EventListener;
-import java.util.EventObject;
 import java.util.Locale;
 
 import com.vaadin.event.FieldEvents;
@@ -580,11 +579,6 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * application, the {@code attach()} is called immediately from
      * {@link #setParent(Component)}.
      * </p>
-     * <p>
-     * This method must call {@link UI#componentAttached(Component)} to let the
-     * UI know that a new Component has been attached.
-     * </p>
-     * 
      * 
      * <pre>
      * public class AttachExample extends CustomComponent {
@@ -735,7 +729,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * @see Component.Listener
      */
     @SuppressWarnings("serial")
-    public static class Event extends EventObject {
+    public static class Event extends ConnectorEvent {
 
         /**
          * Constructs a new event with the specified source component.

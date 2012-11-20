@@ -92,6 +92,30 @@ public abstract class AbstractClientConnector implements ClientConnector,
 
     private ErrorHandler errorHandler = null;
 
+    @Override
+    public void addAttachListener(AttachListener listener) {
+        addListener(AttachEvent.ATTACH_EVENT_IDENTIFIER, AttachEvent.class,
+                listener, AttachListener.attachMethod);
+    }
+
+    @Override
+    public void removeAttachListener(AttachListener listener) {
+        removeListener(AttachEvent.ATTACH_EVENT_IDENTIFIER, AttachEvent.class,
+                listener);
+    }
+
+    @Override
+    public void addDetachListener(DetachListener listener) {
+        addListener(DetachEvent.DETACH_EVENT_IDENTIFIER, DetachEvent.class,
+                listener, DetachListener.detachMethod);
+    }
+
+    @Override
+    public void removeDetachListener(DetachListener listener) {
+        removeListener(DetachEvent.DETACH_EVENT_IDENTIFIER, DetachEvent.class,
+                listener);
+    }
+
     /**
      * @deprecated As of 7.0.0, use {@link #markAsDirty()} instead
      */
@@ -568,10 +592,11 @@ public abstract class AbstractClientConnector implements ClientConnector,
 
         getUI().getConnectorTracker().registerConnector(this);
 
+        fireEvent(new AttachEvent(this));
+
         for (ClientConnector connector : getAllChildrenIterable(this)) {
             connector.attach();
         }
-
     }
 
     /**
@@ -587,6 +612,8 @@ public abstract class AbstractClientConnector implements ClientConnector,
         for (ClientConnector connector : getAllChildrenIterable(this)) {
             connector.detach();
         }
+
+        fireEvent(new DetachEvent(this));
 
         getUI().getConnectorTracker().unregisterConnector(this);
     }
@@ -950,7 +977,6 @@ public abstract class AbstractClientConnector implements ClientConnector,
         if (eventRouter != null) {
             eventRouter.fireEvent(event);
         }
-
     }
 
     /*
@@ -971,5 +997,4 @@ public abstract class AbstractClientConnector implements ClientConnector,
     public void setErrorHandler(ErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
     }
-
 }
