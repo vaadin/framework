@@ -19,7 +19,6 @@ import java.io.Serializable;
 
 import com.vaadin.server.PaintTarget.PaintStatus;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.LegacyComponent;
 
 public class LegacyPaint implements Serializable {
@@ -51,7 +50,7 @@ public class LegacyPaint implements Serializable {
     public static void paint(Component component, PaintTarget target)
             throws PaintException {
         // Only paint content of visible components.
-        if (!isVisibleInContext(component)) {
+        if (!AbstractCommunicationManager.isComponentVisibleToClient(component)) {
             return;
         }
 
@@ -65,34 +64,9 @@ public class LegacyPaint implements Serializable {
             if (component instanceof LegacyComponent) {
                 ((LegacyComponent) component).paintContent(target);
             }
-
         }
         target.endPaintable(component);
 
-    }
-
-    /**
-     * Checks if the component is visible and its parent is visible,
-     * recursively.
-     * <p>
-     * This is only a helper until paint is moved away from this class.
-     * 
-     * @return
-     */
-    protected static boolean isVisibleInContext(Component c) {
-        HasComponents p = c.getParent();
-        while (p != null) {
-            if (!p.isVisible()) {
-                return false;
-            }
-            p = p.getParent();
-        }
-        if (c.getParent() != null && !c.getParent().isComponentVisible(c)) {
-            return false;
-        }
-
-        // All parents visible, return this state
-        return c.isVisible();
     }
 
 }

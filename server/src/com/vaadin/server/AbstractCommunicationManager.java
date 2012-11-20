@@ -85,6 +85,7 @@ import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.LegacyWindow;
+import com.vaadin.ui.SelectiveRenderer;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 
@@ -933,7 +934,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
                 for (ClientConnector child : AbstractClientConnector
                         .getAllChildrenIterable(connector)) {
-                    if (isVisible(child)) {
+                    if (isConnectorVisibleToClient(child)) {
                         children.put(child.getConnectorId());
                     }
                 }
@@ -1402,53 +1403,59 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     /**
      * Checks if the connector is visible in context. For Components,
-     * {@link #isVisible(Component)} is used. For other types of connectors, the
-     * contextual visibility of its first Component ancestor is used. If no
-     * Component ancestor is found, the connector is not visible.
+     * {@link #isComponentVisibleToClient(Component)} is used. For other types
+     * of connectors, the contextual visibility of its first Component ancestor
+     * is used. If no Component ancestor is found, the connector is not visible.
      * 
      * @param connector
      *            The connector to check
      * @return <code>true</code> if the connector is visible to the client,
      *         <code>false</code> otherwise
      */
-    public static boolean isVisible(ClientConnector connector) {
+    public static boolean isConnectorVisibleToClient(ClientConnector connector) {
         if (connector instanceof Component) {
-            return isVisible((Component) connector);
+            return isComponentVisibleToClient((Component) connector);
         } else {
             ClientConnector parent = connector.getParent();
             if (parent == null) {
                 return false;
             } else {
-                return isVisible(parent);
+                return isConnectorVisibleToClient(parent);
             }
         }
     }
 
     /**
-     * Checks if the component is visible in context, i.e. returns false if the
-     * child is hidden, the parent is hidden or the parent says the child should
-     * not be rendered (using
-     * {@link HasComponents#isComponentVisible(Component)}
+     * Checks if the component should be visible to the client. Returns false if
+     * the child should not be sent to the client, true otherwise.
      * 
      * @param child
      *            The child to check
      * @return true if the child is visible to the client, false otherwise
      */
-    static boolean isVisible(Component child) {
+    public static boolean isComponentVisibleToClient(Component child) {
         if (!child.isVisible()) {
             return false;
         }
-
         HasComponents parent = child.getParent();
-        if (parent == null) {
-            if (child instanceof UI) {
-                return child.isVisible();
-            } else {
+
+        if (parent instanceof SelectiveRenderer) {
+            if (!((SelectiveRenderer) parent).isRendered(child)) {
                 return false;
             }
         }
 
-        return parent.isComponentVisible(child) && isVisible(parent);
+        if (parent != null) {
+            return isComponentVisibleToClient(parent);
+        } else {
+            if (child instanceof UI) {
+                // UI has no parent and visibility was checked above
+                return true;
+            } else {
+                // Component which is not attached to any UI
+                return false;
+            }
+        }
     }
 
     private static class NullIterator<E> implements Iterator<E> {
@@ -2219,7 +2226,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
             ConnectorTracker connectorTracker) {
         ArrayList<ClientConnector> dirtyConnectors = new ArrayList<ClientConnector>();
         for (ClientConnector c : connectorTracker.getDirtyConnectors()) {
-            if (isVisible(c)) {
+            if (isConnectorVisibleToClient(c)) {
                 dirtyConnectors.add(c);
             }
         }

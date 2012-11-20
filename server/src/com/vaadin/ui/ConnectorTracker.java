@@ -247,7 +247,8 @@ public class ConnectorTracker implements Serializable {
                 uninitializedConnectors.remove(connector);
                 diffStates.remove(connector);
                 iterator.remove();
-            } else if (!AbstractCommunicationManager.isVisible(connector)
+            } else if (!AbstractCommunicationManager
+                    .isConnectorVisibleToClient(connector)
                     && !uninitializedConnectors.contains(connector)) {
                 uninitializedConnectors.add(connector);
                 diffStates.remove(connector);

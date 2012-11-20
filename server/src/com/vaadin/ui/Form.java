@@ -1375,11 +1375,6 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     }
 
     @Override
-    public boolean isComponentVisible(Component childComponent) {
-        return true;
-    };
-
-    @Override
     public void setVisible(boolean visible) {
         if (isVisible() == visible) {
             return;
