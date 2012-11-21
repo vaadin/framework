@@ -17,6 +17,7 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.Iterator;
 
 import com.vaadin.shared.ui.popupview.PopupViewServerRpc;
@@ -32,7 +33,7 @@ import com.vaadin.shared.ui.popupview.PopupViewState;
  * @author Vaadin Ltd.
  */
 @SuppressWarnings("serial")
-public class PopupView extends AbstractComponentContainer {
+public class PopupView extends AbstractComponent implements HasComponents {
 
     private Content content;
     private Component visibleComponent;
@@ -57,42 +58,6 @@ public class PopupView extends AbstractComponentContainer {
             setPopupVisible(visible);
         }
     };
-
-    /**
-     * Iterator for the visible components (zero or one components), used by
-     * {@link PopupView#getComponentIterator()}.
-     */
-    private static class SingleComponentIterator implements
-            Iterator<Component>, Serializable {
-
-        private final Component component;
-        private boolean first;
-
-        public SingleComponentIterator(Component component) {
-            this.component = component;
-            first = (component == null);
-        }
-
-        @Override
-        public boolean hasNext() {
-            return !first;
-        }
-
-        @Override
-        public Component next() {
-            if (!first) {
-                first = true;
-                return component;
-            } else {
-                return null;
-            }
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
-    }
 
     /* Constructors */
 
@@ -177,9 +142,16 @@ public class PopupView extends AbstractComponentContainer {
                     throw new java.lang.IllegalStateException(
                             "PopupView.Content did not return Component to set visible");
                 }
-                super.addComponent(visibleComponent);
+                if (visibleComponent.getParent() != null) {
+                    // If the component already has a parent, try to remove it
+                    AbstractSingleComponentContainer
+                            .removeFromParent(visibleComponent);
+                }
+                visibleComponent.setParent(this);
             } else {
-                super.removeComponent(visibleComponent);
+                if (visibleComponent.getParent() == this) {
+                    visibleComponent.setParent(null);
+                }
                 visibleComponent = null;
             }
             fireEvent(new PopupVisibilityEvent(this));
@@ -240,7 +212,11 @@ public class PopupView extends AbstractComponentContainer {
      */
     @Override
     public Iterator<Component> iterator() {
-        return new SingleComponentIterator(visibleComponent);
+        if (content != null) {
+            return Collections.singletonList(visibleComponent).iterator();
+        } else {
+            return Collections.<Component> emptyList().iterator();
+        }
     }
 
     /**
@@ -249,71 +225,8 @@ public class PopupView extends AbstractComponentContainer {
      * 
      * @return the number of contained components (zero or one)
      */
-    @Override
     public int getComponentCount() {
         return (visibleComponent != null ? 1 : 0);
-    }
-
-    /**
-     * Not supported in this implementation.
-     * 
-     * @see com.vaadin.ui.AbstractComponentContainer#removeAllComponents()
-     * @throws UnsupportedOperationException
-     */
-    @Override
-    public void removeAllComponents() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Not supported in this implementation.
-     * 
-     * @see com.vaadin.ui.AbstractComponentContainer#moveComponentsFrom(com.vaadin.ui.ComponentContainer)
-     * @throws UnsupportedOperationException
-     */
-    @Override
-    public void moveComponentsFrom(ComponentContainer source)
-            throws UnsupportedOperationException {
-
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Not supported in this implementation.
-     * 
-     * @see com.vaadin.ui.AbstractComponentContainer#addComponent(com.vaadin.ui.Component)
-     * @throws UnsupportedOperationException
-     */
-    @Override
-    public void addComponent(Component c) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-
-    }
-
-    /**
-     * Not supported in this implementation.
-     * 
-     * @see com.vaadin.ui.ComponentContainer#replaceComponent(com.vaadin.ui.Component,
-     *      com.vaadin.ui.Component)
-     * @throws UnsupportedOperationException
-     */
-    @Override
-    public void replaceComponent(Component oldComponent, Component newComponent)
-            throws UnsupportedOperationException {
-
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Not supported in this implementation
-     * 
-     * @see com.vaadin.ui.AbstractComponentContainer#removeComponent(com.vaadin.ui.Component)
-     */
-    @Override
-    public void removeComponent(Component c)
-            throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
-
     }
 
     @Override
