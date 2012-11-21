@@ -2765,14 +2765,14 @@ public class ApplicationConnection {
             uidlUri = themeUri + uidlUri.substring(7);
         }
 
-        if (uidlUri.startsWith(ApplicationConstants.DEPENDENCY_PROTOCOL_PREFIX)) {
+        if (uidlUri.startsWith(ApplicationConstants.PUBLISHED_PROTOCOL_PREFIX)) {
             // getAppUri *should* always end with /
-            // substring *should* always start with / (dependency:///foo.bar
-            // without dependency://)
+            // substring *should* always start with / (published:///foo.bar
+            // without published://)
             uidlUri = ApplicationConstants.APP_PROTOCOL_PREFIX
-                    + ApplicationConstants.DEPENDENCY_RESOURCE_PREFIX
+                    + ApplicationConstants.PUBLISHED_FILE_PATH
                     + uidlUri
-                            .substring(ApplicationConstants.DEPENDENCY_PROTOCOL_PREFIX
+                            .substring(ApplicationConstants.PUBLISHED_PROTOCOL_PREFIX
                                     .length());
             // Let translation of app:// urls take care of the rest
         }

@@ -163,7 +163,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     private ClientConnector highlightedConnector;
 
-    private Map<String, Class<?>> dependencyResourceContexts = new HashMap<String, Class<?>>();
+    private Map<String, Class<?>> publishedFileContexts = new HashMap<String, Class<?>>();
 
     private Map<String, Map<String, StreamVariable>> pidToNameToStreamVariable;
 
@@ -1196,18 +1196,16 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 JavaScript jsAnnotation = class1
                         .getAnnotation(JavaScript.class);
                 if (jsAnnotation != null) {
-                    for (String resource : jsAnnotation.value()) {
-                        scriptDependencies.add(registerDependency(resource,
-                                class1));
+                    for (String uri : jsAnnotation.value()) {
+                        scriptDependencies.add(registerDependency(uri, class1));
                     }
                 }
 
                 StyleSheet styleAnnotation = class1
                         .getAnnotation(StyleSheet.class);
                 if (styleAnnotation != null) {
-                    for (String resource : styleAnnotation.value()) {
-                        styleDependencies.add(registerDependency(resource,
-                                class1));
+                    for (String uri : styleAnnotation.value()) {
+                        styleDependencies.add(registerDependency(uri, class1));
                     }
                 }
             }
@@ -1286,18 +1284,18 @@ public abstract class AbstractCommunicationManager implements Serializable {
             URI uri = new URI(resourceUri);
             String protocol = uri.getScheme();
 
-            if (ApplicationConstants.DEPENDENCY_PROTOCOL_NAME.equals(protocol)) {
+            if (ApplicationConstants.PUBLISHED_PROTOCOL_NAME.equals(protocol)) {
                 // Strip initial slash
                 String resourceName = uri.getPath().substring(1);
-                return registerDependencyResource(resourceName, context);
+                return registerPublishedFile(resourceName, context);
             }
 
             if (protocol != null || uri.getHost() != null) {
                 return resourceUri;
             }
 
-            // Bare path interpreted as dependency resource
-            return registerDependencyResource(resourceUri, context);
+            // Bare path interpreted as published file
+            return registerPublishedFile(resourceUri, context);
         } catch (URISyntaxException e) {
             getLogger().log(Level.WARNING,
                     "Could not parse resource url " + resourceUri, e);
@@ -1305,24 +1303,23 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
     }
 
-    private String registerDependencyResource(String name, Class<?> context) {
-        synchronized (dependencyResourceContexts) {
-            // Add to map of names accepted by serveDependencyResource
-            if (dependencyResourceContexts.containsKey(name)) {
-                Class<?> oldContext = dependencyResourceContexts.get(name);
+    private String registerPublishedFile(String name, Class<?> context) {
+        synchronized (publishedFileContexts) {
+            // Add to map of names accepted by servePublishedFile
+            if (publishedFileContexts.containsKey(name)) {
+                Class<?> oldContext = publishedFileContexts.get(name);
                 if (oldContext != context) {
                     getLogger().warning(
-                            "Dependency " + name + " defined by both "
-                                    + context + " and " + oldContext
-                                    + ". Dependency from " + oldContext
+                            name + " published by both " + context + " and "
+                                    + oldContext + ". File from " + oldContext
                                     + " will be used.");
                 }
             } else {
-                dependencyResourceContexts.put(name, context);
+                publishedFileContexts.put(name, context);
             }
         }
 
-        return ApplicationConstants.DEPENDENCY_PROTOCOL_PREFIX + "/" + name;
+        return ApplicationConstants.PUBLISHED_PROTOCOL_PREFIX + "/" + name;
     }
 
     /**
@@ -2623,64 +2620,64 @@ public abstract class AbstractCommunicationManager implements Serializable {
     /**
      * Serve a connector resource from the classpath if the resource has
      * previously been registered by calling
-     * {@link #registerDependency(String, Class)}. Sending arbitrary files from
-     * the classpath is prevented by only accepting resource names that have
-     * explicitly been registered. Resources can currently only be registered by
-     * including a {@link JavaScript} or {@link StyleSheet} annotation on a
-     * Connector class.
+     * {@link #registerPublishedFile(String, Class)}. Sending arbitrary files
+     * from the classpath is prevented by only accepting resource names that
+     * have explicitly been registered. Resources can currently only be
+     * registered by including a {@link JavaScript} or {@link StyleSheet}
+     * annotation on a Connector class.
      * 
      * @param request
      * @param response
      * 
      * @throws IOException
      */
-    public void serveDependencyResource(VaadinRequest request,
+    public void servePublishedFile(VaadinRequest request,
             VaadinResponse response) throws IOException {
 
         String pathInfo = request.getPathInfo();
         // + 2 to also remove beginning and ending slashes
-        String resourceName = pathInfo
-                .substring(ApplicationConstants.DEPENDENCY_RESOURCE_PREFIX
+        String fileName = pathInfo
+                .substring(ApplicationConstants.PUBLISHED_FILE_PATH
                         .length() + 2);
 
-        final String mimetype = response.getService().getMimeType(resourceName);
+        final String mimetype = response.getService().getMimeType(fileName);
 
         // Security check: avoid accidentally serving from the UI of the
         // classpath instead of relative to the context class
-        if (resourceName.startsWith("/")) {
+        if (fileName.startsWith("/")) {
             getLogger().warning(
-                    "Dependency resource request starting with / rejected: "
-                            + resourceName);
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, resourceName);
+                    "Published file request starting with / rejected: "
+                            + fileName);
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, fileName);
             return;
         }
 
         // Check that the resource name has been registered
         Class<?> context;
-        synchronized (dependencyResourceContexts) {
-            context = dependencyResourceContexts.get(resourceName);
+        synchronized (publishedFileContexts) {
+            context = publishedFileContexts.get(fileName);
         }
 
         // Security check: don't serve resource if the name hasn't been
         // registered in the map
         if (context == null) {
             getLogger().warning(
-                    "Dependency resource request for unknown resource rejected: "
-                            + resourceName);
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, resourceName);
+                    "Rejecting published file request for file that has not been published: "
+                            + fileName);
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, fileName);
             return;
         }
 
         // Resolve file relative to the location of the context class
-        InputStream in = context.getResourceAsStream(resourceName);
+        InputStream in = context.getResourceAsStream(fileName);
         if (in == null) {
             getLogger().warning(
-                    resourceName + " defined by " + context.getName()
+                    fileName + " published by " + context.getName()
                             + " not found. Verify that the file "
                             + context.getPackage().getName().replace('.', '/')
-                            + '/' + resourceName
+                            + '/' + fileName
                             + " is available on the classpath.");
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, resourceName);
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, fileName);
             return;
         }
 
