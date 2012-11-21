@@ -34,11 +34,11 @@ public class ThreadLocalInstances extends AbstractTestCase {
                 Thread thread = new Thread() {
                     @Override
                     public void run() {
-                        getSession().getLock().lock();
+                        getSession().lock();
                         try {
                             reportCurrentStatus("background thread");
                         } finally {
-                            getSession().getLock().unlock();
+                            getSession().unlock();
                         }
                     }
                 };

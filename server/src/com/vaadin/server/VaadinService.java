@@ -642,14 +642,14 @@ public abstract class VaadinService implements Serializable {
         int uiId = Integer.parseInt(uiIdString);
 
         // Get lock before accessing data in session
-        session.getLock().lock();
+        session.lock();
         try {
             UI ui = session.getUIById(uiId);
 
             UI.setCurrent(ui);
             return ui;
         } finally {
-            session.getLock().unlock();
+            session.unlock();
         }
     }
 
