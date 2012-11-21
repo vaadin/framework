@@ -94,9 +94,7 @@ public abstract class OptionGroupBaseConnector extends AbstractFieldConnector
             getWidget().container.remove(getWidget().newItemButton);
         }
 
-        getWidget().setTabIndex(
-                uidl.hasAttribute("tabindex") ? uidl
-                        .getIntAttribute("tabindex") : 0);
+        getWidget().setTabIndex(getState().tabIndex);
 
     }
 

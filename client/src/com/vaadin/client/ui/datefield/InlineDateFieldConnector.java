@@ -20,6 +20,7 @@ import java.util.Date;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.DateTimeService;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.VCalendarPanel.FocusChangeListener;
 import com.vaadin.client.ui.VCalendarPanel.TimeChangeListener;
 import com.vaadin.client.ui.VDateFieldCalendar;
@@ -107,6 +108,12 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
 
         // Update possible changes
         getWidget().calendarPanel.renderCalendar();
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+        getWidget().setTabIndex(getState().tabIndex);
     }
 
     @Override

@@ -45,9 +45,7 @@ public class TextualDateConnector extends AbstractDateFieldConnector {
 
         getWidget().buildDate();
         // not a FocusWidget -> needs own tabindex handling
-        if (uidl.hasAttribute("tabindex")) {
-            getWidget().text.setTabIndex(uidl.getIntAttribute("tabindex"));
-        }
+        getWidget().text.setTabIndex(getState().tabIndex);
 
         if (getWidget().isReadonly()) {
             getWidget().text.addStyleDependentName("readonly");
