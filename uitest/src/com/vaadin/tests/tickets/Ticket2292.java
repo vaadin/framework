@@ -48,8 +48,8 @@ public class Ticket2292 extends com.vaadin.server.LegacyApplication implements
     }
 
     @Override
-    public boolean handleRequest(VaadinSession session,
-            VaadinRequest request, VaadinResponse response) throws IOException {
+    public boolean handleRequest(VaadinSession session, VaadinRequest request,
+            VaadinResponse response) throws IOException {
         String relativeUri = request.getPathInfo();
 
         if (!relativeUri.contains("icon.png")) {

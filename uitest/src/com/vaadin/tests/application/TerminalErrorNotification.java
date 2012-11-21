@@ -15,7 +15,6 @@
  */
 package com.vaadin.tests.application;
 
-import com.vaadin.server.ErrorEvent;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;

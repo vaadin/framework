@@ -22,9 +22,9 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.Icon;
+import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.ComponentConstants;
-import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ui.ComponentStateUtil;
 
 public class VCaption extends HTML {

@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.vaadin.client.ui.ShortcutActionTarget;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;

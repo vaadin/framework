@@ -598,7 +598,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * @param componentState
          *            shared state of the combo box
          */
-        public void updateStyleNames(UIDL uidl, AbstractComponentState componentState) {
+        public void updateStyleNames(UIDL uidl,
+                AbstractComponentState componentState) {
             setStyleName(VFilterSelect.this.getStylePrimaryName()
                     + "-suggestpopup");
             menu.setStyleName(VFilterSelect.this.getStylePrimaryName()

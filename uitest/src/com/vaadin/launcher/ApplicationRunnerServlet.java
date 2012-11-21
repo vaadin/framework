@@ -37,8 +37,8 @@ import com.vaadin.server.SessionInitListener;
 import com.vaadin.server.UIClassSelectionEvent;
 import com.vaadin.server.UIProvider;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinSession;
 import com.vaadin.server.VaadinServletRequest;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.UI;
 

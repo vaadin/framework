@@ -43,8 +43,7 @@ public class SampleDirectory {
      * @param application
      * @return file pointing to sample directory
      */
-    public static File getDirectory(VaadinSession application,
-            LegacyWindow uI) {
+    public static File getDirectory(VaadinSession application, LegacyWindow uI) {
         String errorMessage = "Access to application "
                 + "context base directory failed, "
                 + "possible security constraint with Application "

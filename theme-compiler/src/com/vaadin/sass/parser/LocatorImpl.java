@@ -36,14 +36,17 @@ public class LocatorImpl implements Locator {
     int line;
     int column;
 
+    @Override
     public String getURI() {
         return uri;
     }
 
+    @Override
     public int getLineNumber() {
         return line;
     }
 
+    @Override
     public int getColumnNumber() {
         return column;
     }

@@ -602,8 +602,7 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
 
     @Override
     public LexicalUnitImpl clone() {
-        LexicalUnitImpl cloned = new LexicalUnitImpl(type, line, column,
-                (LexicalUnitImpl) prev);
+        LexicalUnitImpl cloned = new LexicalUnitImpl(type, line, column, prev);
         cloned.replaceValue(this);
         return cloned;
     }
@@ -621,8 +620,9 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
             return i;
         } else if (f != -1) {
             return f;
-        } else
+        } else {
             return null;
+        }
     }
 
     public void setFunctionName(String functionName) {

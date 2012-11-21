@@ -391,6 +391,7 @@ public class VPopupView extends HTML implements Iterable<Widget> {
                 VisibilityChangeEvent.getType());
     }
 
+    @Override
     public Iterator<Widget> iterator() {
         return Collections.singleton((Widget) popup).iterator();
     }

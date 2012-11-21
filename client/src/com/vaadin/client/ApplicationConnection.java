@@ -83,8 +83,8 @@ import com.vaadin.client.ui.VNotification.HideEvent;
 import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.client.ui.window.WindowConnector;
-import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.LegacyChangeVariablesInvocation;
 import com.vaadin.shared.communication.MethodInvocation;
@@ -2890,7 +2890,8 @@ public class ApplicationConnection {
      * @return true if at least one listener has been registered on server side
      *         for the event identified by eventIdentifier.
      * @deprecated as of Vaadin 7. Use
-     *             {@link AbstractComponentState#hasEventListener(String)} instead
+     *             {@link AbstractComponentState#hasEventListener(String)}
+     *             instead
      */
     @Deprecated
     public boolean hasEventListeners(ComponentConnector paintable,
@@ -2990,7 +2991,8 @@ public class ApplicationConnection {
 
     /**
      * @deprecated as of Vaadin 7. Use
-     *             {@link AbstractComponentState#hasEventListener(String)} instead
+     *             {@link AbstractComponentState#hasEventListener(String)}
+     *             instead
      */
     @Deprecated
     public boolean hasEventListeners(Widget widget, String eventIdentifier) {

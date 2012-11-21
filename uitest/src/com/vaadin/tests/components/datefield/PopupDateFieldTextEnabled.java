@@ -9,6 +9,7 @@ public class PopupDateFieldTextEnabled extends TestBase {
 
     private static final String ENABLED = "DateField text box enabled";
     private static final String DISABLED = "DateField text box disabled";
+
     @Override
     public void setup() {
         final PopupDateField field = new PopupDateField();
@@ -19,9 +20,9 @@ public class PopupDateFieldTextEnabled extends TestBase {
             public void valueChange(Property.ValueChangeEvent event) {
                 field.setTextFieldEnabled((Boolean) event.getProperty()
                         .getValue());
-                if(field.isTextFieldEnabled()){
+                if (field.isTextFieldEnabled()) {
                     box.setCaption(ENABLED);
-                }else{
+                } else {
                     box.setCaption(DISABLED);
                 }
             }

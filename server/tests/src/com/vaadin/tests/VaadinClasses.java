@@ -144,8 +144,7 @@ public class VaadinClasses {
             String basePackage, String[] ignoredPackages) throws IOException {
         List<Class<? extends T>> classes = new ArrayList<Class<? extends T>>();
         String basePackageDirName = "/" + basePackage.replace('.', '/');
-        URL location = VaadinSession.class
-                .getResource(basePackageDirName);
+        URL location = VaadinSession.class.getResource(basePackageDirName);
         if (location.getProtocol().equals("file")) {
             try {
                 File f = new File(location.toURI());

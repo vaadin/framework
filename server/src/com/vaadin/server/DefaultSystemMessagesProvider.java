@@ -16,7 +16,6 @@
 
 package com.vaadin.server;
 
-
 /**
  * System messages provider using the built-in default system messages. This
  * singleton is accessed using {@link #get()}.

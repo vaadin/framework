@@ -26,6 +26,7 @@ public class TabsheetShouldUpdateHeight extends TestBase {
         final Button btnSwitch = new Button("switch to Tab2",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(final ClickEvent inEvent) {
                         tabsOuter.setSelectedTab(tabsInner);
                         tabsInner.setSelectedTab(tab2);

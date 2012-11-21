@@ -7,7 +7,6 @@ import com.vaadin.ui.VerticalLayout;
 
 public class HierarchyChangeForRemovedComponentContainers extends TestBase {
 
-
     private HorizontalLayout mainContent;
     private VerticalLayout lo2;
 

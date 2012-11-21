@@ -17,7 +17,6 @@ package com.vaadin.ui;
 
 import java.util.EventListener;
 
-import com.vaadin.server.ClientConnector;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.VariableOwner;

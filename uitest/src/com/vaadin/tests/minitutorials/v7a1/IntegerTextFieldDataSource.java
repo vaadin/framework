@@ -30,7 +30,7 @@ public class IntegerTextFieldDataSource extends AbstractTestUI {
         final MyBean myBean = new MyBean();
         BeanItem<MyBean> beanItem = new BeanItem<MyBean>(myBean);
 
-        final Property<Integer> integerProperty = (Property<Integer>) beanItem
+        final Property<Integer> integerProperty = beanItem
                 .getItemProperty("value");
         final TextField textField = new TextField("Text field", integerProperty);
 

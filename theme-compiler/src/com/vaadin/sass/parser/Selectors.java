@@ -13,42 +13,44 @@
  */
 package com.vaadin.sass.parser;
 
-import org.w3c.css.sac.SelectorList;
 import org.w3c.css.sac.Selector;
+import org.w3c.css.sac.SelectorList;
 
 /**
  * @version $Revision: 1.1 $
- * @author  Philippe Le Hegaret
+ * @author Philippe Le Hegaret
  */
 class Selectors implements SelectorList {
 
     Selector[] selectors = new Selector[5];
-    int      current;
+    int current;
 
+    @Override
     public Selector item(int index) {
-	if ((index < 0) || (index >= current)) {
-	    return null;
-	}
-	return selectors[index];
+        if ((index < 0) || (index >= current)) {
+            return null;
+        }
+        return selectors[index];
     }
 
     public Selector itemSelector(int index) {
-	if ((index < 0) || (index >= current)) {
-	    return null;
-	}
-	return selectors[index];
+        if ((index < 0) || (index >= current)) {
+            return null;
+        }
+        return selectors[index];
     }
 
+    @Override
     public int getLength() {
-	return current;
+        return current;
     }
 
     void addSelector(Selector selector) {
-	if (current == selectors.length) {
-	    Selector[] old = selectors;
-	    selectors = new Selector[old.length + old.length];
-	    System.arraycopy(old, 0, selectors, 0, old.length);
-	}
-	selectors[current++] = selector;
+        if (current == selectors.length) {
+            Selector[] old = selectors;
+            selectors = new Selector[old.length + old.length];
+            System.arraycopy(old, 0, selectors, 0, old.length);
+        }
+        selectors[current++] = selector;
     }
 }

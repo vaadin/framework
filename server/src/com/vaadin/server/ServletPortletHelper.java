@@ -101,8 +101,8 @@ class ServletPortletHelper implements Serializable {
     }
 
     public static boolean isPublishedFileRequest(VaadinRequest request) {
-        return hasPathPrefix(request,
-                ApplicationConstants.PUBLISHED_FILE_PATH + "/");
+        return hasPathPrefix(request, ApplicationConstants.PUBLISHED_FILE_PATH
+                + "/");
     }
 
     public static boolean isUIDLRequest(VaadinRequest request) {
