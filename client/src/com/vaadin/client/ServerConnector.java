@@ -169,6 +169,11 @@ public interface ServerConnector extends Connector {
     /**
      * Gets the current shared state of the connector.
      * 
+     * Note that state is considered an internal part of the connector. You
+     * should not rely on the state object outside of the connector who owns it.
+     * If you depend on the state of other connectors you should use their
+     * public API instead of their state object directly.
+     * 
      * @since 7.0.
      * @return state The shared state object. Can be any sub type of
      *         {@link SharedState}. Never null.
