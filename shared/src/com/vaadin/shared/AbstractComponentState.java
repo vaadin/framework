@@ -19,10 +19,9 @@ package com.vaadin.shared;
 import java.util.List;
 
 import com.vaadin.shared.communication.SharedState;
-import com.vaadin.ui.AbstractComponent;
 
 /**
- * Default shared state implementation for {@link AbstractComponent}.
+ * Default shared state implementation for AbstractComponent.
  * 
  * State classes of components should typically extend this class.
  * 
