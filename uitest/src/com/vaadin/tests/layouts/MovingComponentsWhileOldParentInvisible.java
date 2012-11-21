@@ -9,11 +9,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.LoginForm;
-import com.vaadin.ui.PopupView;
 
 public class MovingComponentsWhileOldParentInvisible extends TestBase {
 
@@ -40,9 +37,7 @@ public class MovingComponentsWhileOldParentInvisible extends TestBase {
 
         for (Class<? extends ComponentContainer> cls : VaadinClasses
                 .getComponentContainers()) {
-            if (cls == LoginForm.class || cls == CustomLayout.class
-                    || CustomComponent.class.isAssignableFrom(cls)
-                    || cls == PopupView.class) {
+            if (cls == CustomLayout.class) {
                 // Does not support addComponent
                 continue;
             }
