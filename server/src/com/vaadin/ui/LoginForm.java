@@ -22,7 +22,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.vaadin.server.DynamicConnectorResource;
+import com.vaadin.server.ConnectorResource;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinService;
@@ -108,10 +109,20 @@ public class LoginForm extends CustomComponent {
     public LoginForm() {
         iframe.setType(Embedded.TYPE_BROWSER);
         iframe.setSizeFull();
-        iframe.setSource(new DynamicConnectorResource(this, "login"));
         setSizeFull();
         setCompositionRoot(iframe);
         addStyleName("v-loginform");
+    }
+
+    @Override
+    public void beforeClientResponse(boolean initial) {
+        // Generate magic URL now when UI id and connectorId are known
+        iframe.setSource(new ExternalResource(
+                ApplicationConstants.APP_PROTOCOL_PREFIX
+                        + ApplicationConstants.APP_REQUEST_PATH + '/'
+                        + ConnectorResource.CONNECTOR_REQUEST_PATH
+                        + getUI().getUIId() + '/' + getConnectorId() + "/login"));
+        super.beforeClientResponse(initial);
     }
 
     /**

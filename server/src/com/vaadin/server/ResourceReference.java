@@ -17,8 +17,6 @@ package com.vaadin.server;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.URLReference;
@@ -44,29 +42,6 @@ public class ResourceReference extends URLReference {
     public String getURL() {
         if (resource instanceof ExternalResource) {
             return ((ExternalResource) resource).getURL();
-        } else if (resource instanceof DynamicConnectorResource) {
-            DynamicConnectorResource dcr = (DynamicConnectorResource) resource;
-
-            String filename = dcr.getPath();
-            StringBuilder builder = new StringBuilder(getConnectorResourceBase(
-                    filename, dcr.getConnector()));
-
-            Set<Entry<String, String>> entrySet = dcr.getParameters()
-                    .entrySet();
-            boolean first = true;
-            for (Entry<String, String> entry : entrySet) {
-                String key = entry.getKey();
-                String value = entry.getValue();
-                if (first) {
-                    builder.append('?');
-                    first = false;
-                } else {
-                    builder.append('&');
-                }
-                // TODO URL encode!!!
-                builder.append(key).append('=').append(value);
-            }
-            return builder.toString();
         } else if (resource instanceof ConnectorResource) {
             ConnectorResource connectorResource = (ConnectorResource) resource;
 

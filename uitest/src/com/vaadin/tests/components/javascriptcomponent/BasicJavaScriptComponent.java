@@ -23,7 +23,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import com.vaadin.annotations.JavaScript;
-import com.vaadin.server.DynamicConnectorResource;
+import com.vaadin.server.ConnectorResource;
+import com.vaadin.server.DownloadStream;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
 import com.vaadin.server.VaadinRequest;
@@ -109,8 +110,24 @@ public class BasicJavaScriptComponent extends AbstractTestUI {
                     .setMessages(
                             Arrays.asList("First state message",
                                     "Second state message"));
-            Resource resource = new DynamicConnectorResource(this, "test");
-            getState().setUrl(new ResourceReference(resource, null, null));
+            // Dummy resource used to test URL translation
+            Resource resource = new ConnectorResource() {
+                @Override
+                public String getMIMEType() {
+                    return null;
+                }
+
+                @Override
+                public DownloadStream getStream() {
+                    return null;
+                }
+
+                @Override
+                public String getFilename() {
+                    return null;
+                }
+            };
+            getState().setUrl(new ResourceReference(resource, this, "test"));
         }
 
         @Override
