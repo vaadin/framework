@@ -451,6 +451,16 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             if (isReadOnly()) {
                 throw new Property.ReadOnlyException();
             }
+            try {
+                T doubleConvertedFieldValue = convertFromDataSource(convertToModel(newFieldValue));
+                if (!equals(newFieldValue, doubleConvertedFieldValue)) {
+                    newFieldValue = doubleConvertedFieldValue;
+                    repaintIsNotNeeded = false;
+                }
+            } catch (Throwable t) {
+                // Ignore exceptions in the conversion at this stage. Any
+                // conversion error will be handled later by validate().
+            }
 
             // Repaint is needed even when the client thinks that it knows the
             // new state if validity of the component may change
