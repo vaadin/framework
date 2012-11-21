@@ -16,11 +16,9 @@
 
 package com.vaadin.ui;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.EventListener;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -45,7 +43,6 @@ import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIServerRpc;
 import com.vaadin.shared.ui.ui.UIState;
 import com.vaadin.util.CurrentInstance;
-import com.vaadin.util.ReflectTools;
 
 /**
  * The topmost component in any component hierarchy. There is one UI for every
@@ -80,42 +77,6 @@ import com.vaadin.util.ReflectTools;
  */
 public abstract class UI extends AbstractSingleComponentContainer implements
         Action.Container, Action.Notifier, LegacyComponent {
-
-    /**
-     * Event fired when a UI is removed from the application.
-     */
-    public static class CleanupEvent extends Event {
-
-        private static final String CLEANUP_EVENT_IDENTIFIER = "uiCleanup";
-
-        public CleanupEvent(UI source) {
-            super(source);
-        }
-
-        public UI getUI() {
-            return (UI) getSource();
-        }
-    }
-
-    /**
-     * Interface for listening {@link UI.CleanupEvent UI cleanup events}.
-     * 
-     */
-    public interface CleanupListener extends EventListener {
-
-        public static final Method cleanupMethod = ReflectTools.findMethod(
-                CleanupListener.class, "cleanup", CleanupEvent.class);
-
-        /**
-         * Called when a CleanupListener is notified of a CleanupEvent.
-         * {@link UI#getCurrent()} returns <code>event.getUI()</code> within
-         * this method.
-         * 
-         * @param event
-         *            The close event that was fired.
-         */
-        public void cleanup(CleanupEvent event);
-    }
 
     /**
      * The application to which this UI belongs
@@ -284,16 +245,6 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         MouseEventDetails mouseDetails = MouseEventDetails
                 .deSerialize((String) parameters.get("mouseDetails"));
         fireEvent(new ClickEvent(this, mouseDetails));
-    }
-
-    /**
-     * For internal use only.
-     */
-    public void fireCleanupEvent() {
-        UI current = UI.getCurrent();
-        UI.setCurrent(this);
-        fireEvent(new CleanupEvent(this));
-        UI.setCurrent(current);
     }
 
     @Override
@@ -683,18 +634,6 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     }
 
     /**
-     * Adds a cleanup listener to the UI. Cleanup listeners are invoked when the
-     * UI is removed from the session due to UI or session expiration.
-     * 
-     * @param listener
-     *            The CleanupListener that should be added.
-     */
-    public void addCleanupListener(CleanupListener listener) {
-        addListener(CleanupEvent.CLEANUP_EVENT_IDENTIFIER, CleanupEvent.class,
-                listener, CleanupListener.cleanupMethod);
-    }
-
-    /**
      * @deprecated Since 7.0, replaced by
      *             {@link #addClickListener(ClickListener)}
      **/
@@ -713,18 +652,6 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     public void removeClickListener(ClickListener listener) {
         removeListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
                 listener);
-    }
-
-    /**
-     * Removes a cleanup listener from the UI, if previously added with
-     * {@link #addCleanupListener(CleanupListener)}.
-     * 
-     * @param listener
-     *            The CleanupListener that should be removed
-     */
-    public void removeCleanupListener(CleanupListener listener) {
-        removeListener(CleanupEvent.CLEANUP_EVENT_IDENTIFIER,
-                CleanupEvent.class, listener);
     }
 
     /**
