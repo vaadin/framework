@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.vaadin.client.ui.ShortcutActionTarget;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -244,8 +243,8 @@ public class ShortcutAction extends Action {
 
     /**
      * Set the target for the shortcut action. If the target widget on the
-     * client side implements {@link ShortcutActionTarget} it will be notified
-     * of the action before the action is communicated to the server side
+     * client side implements ShortcutActionTarget it will be notified of the
+     * action before the action is communicated to the server side
      * 
      * @param target
      *            The component which will be thet target of the action
@@ -262,8 +261,8 @@ public class ShortcutAction extends Action {
     }
 
     /**
-     * Get the action string that is given to the {@link ShortcutActionTarget}
-     * on the client side
+     * Get the action string that is given to the ShortcutActionTarget on the
+     * client side
      * 
      * @return
      */
@@ -272,8 +271,8 @@ public class ShortcutAction extends Action {
     }
 
     /**
-     * Set the action string that is give to the {@link ShortcutActionTarget} on
-     * the client side
+     * Set the action string that is give to the ShortcutActionTarget on the
+     * client side
      * 
      * @param targetAction
      *            The target action string
