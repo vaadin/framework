@@ -16,6 +16,8 @@
 
 package com.vaadin.server;
 
+import java.io.Serializable;
+
 /**
  * A listener that gets notified when a Vaadin service session is no longer
  * used.
@@ -25,7 +27,7 @@ package com.vaadin.server;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public interface SessionDestroyListener {
+public interface SessionDestroyListener extends Serializable {
     /**
      * Called when a Vaadin service session is no longer used.
      * 
