@@ -23,7 +23,6 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
@@ -31,13 +30,13 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.ui.AbstractComponentContainerConnector;
+import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.ShortcutActionHandler;
-import com.vaadin.client.ui.VWindow;
 import com.vaadin.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 import com.vaadin.client.ui.SimpleManagedLayout;
+import com.vaadin.client.ui.VWindow;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
@@ -45,7 +44,7 @@ import com.vaadin.shared.ui.window.WindowServerRpc;
 import com.vaadin.shared.ui.window.WindowState;
 
 @Connect(value = com.vaadin.ui.Window.class)
-public class WindowConnector extends AbstractComponentContainerConnector
+public class WindowConnector extends AbstractSingleComponentContainerConnector
         implements Paintable, BeforeShortcutActionListener,
         SimpleManagedLayout, PostLayoutListener, MayScrollChildren {
 
@@ -213,15 +212,8 @@ public class WindowConnector extends AbstractComponentContainerConnector
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
         // We always have 1 child, unless the child is hidden
-        Widget newChildWidget = null;
-        ComponentConnector newChild = null;
-        if (getChildComponents().size() == 1) {
-            newChild = getChildComponents().get(0);
-            newChildWidget = newChild.getWidget();
-        }
-
-        getWidget().layout = newChild;
-        getWidget().contentPanel.setWidget(newChildWidget);
+        getWidget().layout = getContent();
+        getWidget().contentPanel.setWidget(getContentWidget());
     }
 
     @Override

@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ComponentContainerConnector;
+import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
@@ -204,8 +204,8 @@ public class LayoutDependencyTree {
                 resized.add(connector);
             }
 
-            if (connector instanceof ComponentContainerConnector) {
-                ComponentContainerConnector container = (ComponentContainerConnector) connector;
+            if (connector instanceof HasComponentsConnector) {
+                HasComponentsConnector container = (HasComponentsConnector) connector;
                 for (ComponentConnector child : container.getChildComponents()) {
                     if (isRelativeInDirection(child, direction)) {
                         resized.add(child);

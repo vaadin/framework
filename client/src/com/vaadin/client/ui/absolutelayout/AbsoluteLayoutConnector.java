@@ -101,7 +101,7 @@ public class AbsoluteLayoutConnector extends
      * (non-Javadoc)
      * 
      * @see
-     * com.vaadin.client.ComponentContainerConnector#updateCaption(com.vaadin
+     * com.vaadin.client.HasComponentsConnector#updateCaption(com.vaadin
      * .client.ComponentConnector)
      */
     @Override
@@ -162,10 +162,8 @@ public class AbsoluteLayoutConnector extends
     }
 
     private void setChildWidgetPosition(ComponentConnector child) {
-        getWidget().setWidgetPosition(
-                child.getWidget(),
-                getState().connectorToCssPosition.get(child
-                        .getConnectorId()));
+        getWidget().setWidgetPosition(child.getWidget(),
+                getState().connectorToCssPosition.get(child.getConnectorId()));
     };
 
     /*

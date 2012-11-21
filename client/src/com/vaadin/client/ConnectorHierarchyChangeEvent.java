@@ -41,7 +41,7 @@ public class ConnectorHierarchyChangeEvent extends
     public static final Type<ConnectorHierarchyChangeHandler> TYPE = new Type<ConnectorHierarchyChangeHandler>();
 
     List<ComponentConnector> oldChildren;
-    private ComponentContainerConnector parent;
+    private HasComponentsConnector parent;
 
     public ConnectorHierarchyChangeEvent() {
     }
@@ -67,25 +67,25 @@ public class ConnectorHierarchyChangeEvent extends
     }
 
     /**
-     * Returns the {@link ComponentContainerConnector} for which this event
+     * Returns the {@link HasComponentsConnector} for which this event
      * occurred.
      * 
-     * @return The {@link ComponentContainerConnector} whose child collection
+     * @return The {@link HasComponentsConnector} whose child collection
      *         has changed. Never returns null.
      */
-    public ComponentContainerConnector getParent() {
+    public HasComponentsConnector getParent() {
         return parent;
     }
 
     /**
-     * Sets the {@link ComponentContainerConnector} for which this event
+     * Sets the {@link HasComponentsConnector} for which this event
      * occurred.
      * 
      * @param The
-     *            {@link ComponentContainerConnector} whose child collection has
+     *            {@link HasComponentsConnector} whose child collection has
      *            changed.
      */
-    public void setParent(ComponentContainerConnector parent) {
+    public void setParent(HasComponentsConnector parent) {
         this.parent = parent;
     }
 
