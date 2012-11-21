@@ -487,7 +487,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         VaadinRequest request = context.getRequest();
         final String staticFilePath = request.getService()
                 .getStaticFileLocation(request);
-        return staticFilePath + "/" + VaadinServlet.THEME_DIRECTORY_PATH
+        return staticFilePath + "/" + VaadinServlet.THEME_DIR_PATH + '/'
                 + themeName;
     }
 

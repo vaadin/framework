@@ -140,7 +140,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
         PortletContext portletContext = session.getPortletSession()
                 .getPortletContext();
         return portletContext.getResourceAsStream("/"
-                + VaadinPortlet.THEME_DIRECTORY_PATH + themeName + "/"
+                + VaadinPortlet.THEME_DIR_PATH + '/' + themeName + "/"
                 + resource);
     }
 

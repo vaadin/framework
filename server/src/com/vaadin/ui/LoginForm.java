@@ -119,8 +119,8 @@ public class LoginForm extends CustomComponent {
         // Generate magic URL now when UI id and connectorId are known
         iframe.setSource(new ExternalResource(
                 ApplicationConstants.APP_PROTOCOL_PREFIX
-                        + ApplicationConstants.APP_REQUEST_PATH + '/'
-                        + ConnectorResource.CONNECTOR_REQUEST_PATH
+                        + ApplicationConstants.APP_PATH + '/'
+                        + ConnectorResource.CONNECTOR_PATH + '/'
                         + getUI().getUIId() + '/' + getConnectorId() + "/login"));
         super.beforeClientResponse(initial);
     }

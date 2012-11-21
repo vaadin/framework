@@ -61,7 +61,7 @@ public class GlobalResourceHandler implements RequestHandler {
 
     // APP/global/[uiid]/[type]/[id]
     private static final Matcher matcher = Pattern.compile(
-            "^/?" + ApplicationConstants.APP_REQUEST_PATH + '/'
+            "^/?" + ApplicationConstants.APP_PATH + '/'
                     + RESOURCE_REQUEST_PATH + "(\\d+)/(([^/]+)(/.*))").matcher(
             "");
 
@@ -189,7 +189,7 @@ public class GlobalResourceHandler implements RequestHandler {
         String uri = legacyResourceKeys.get(resource);
         if (uri != null && !uri.isEmpty()) {
             return ApplicationConstants.APP_PROTOCOL_PREFIX
-                    + ApplicationConstants.APP_REQUEST_PATH + '/'
+                    + ApplicationConstants.APP_PATH + '/'
                     + RESOURCE_REQUEST_PATH + connector.getUI().getUIId() + '/'
                     + uri;
         } else {

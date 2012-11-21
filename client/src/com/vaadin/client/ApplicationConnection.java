@@ -681,7 +681,7 @@ public class ApplicationConnection {
                 + requestData;
         VConsole.log("Making UIDL Request with params: " + payload);
         String uri = translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
-                + ApplicationConstants.UIDL_REQUEST_PATH);
+                + ApplicationConstants.UIDL_PATH + '/');
 
         if (extraParams != null && extraParams.length() > 0) {
             uri = addGetParameters(uri, extraParams);
@@ -3068,7 +3068,7 @@ public class ApplicationConnection {
     protected void sendHeartbeat() {
         final String uri = addGetParameters(
                 translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
-                        + ApplicationConstants.HEARTBEAT_REQUEST_PATH),
+                        + ApplicationConstants.HEARTBEAT_PATH + '/'),
                 UIConstants.UI_ID_PARAMETER + "="
                         + getConfiguration().getUIId());
 

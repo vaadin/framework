@@ -106,17 +106,18 @@ class ServletPortletHelper implements Serializable {
     }
 
     public static boolean isUIDLRequest(VaadinRequest request) {
-        return hasPathPrefix(request, ApplicationConstants.UIDL_REQUEST_PATH);
+        return hasPathPrefix(request,
+                ApplicationConstants.UIDL_PATH + '/');
     }
 
     public static boolean isAppRequest(VaadinRequest request) {
         return hasPathPrefix(request,
-                ApplicationConstants.APP_REQUEST_PATH + '/');
+                ApplicationConstants.APP_PATH + '/');
     }
 
     public static boolean isHeartbeatRequest(VaadinRequest request) {
         return hasPathPrefix(request,
-                ApplicationConstants.HEARTBEAT_REQUEST_PATH);
+                ApplicationConstants.HEARTBEAT_PATH + '/');
     }
 
     public static void initDefaultUIProvider(VaadinSession session,

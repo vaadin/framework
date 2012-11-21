@@ -26,7 +26,7 @@ package com.vaadin.server;
  * @since 7.0.0
  */
 public interface ConnectorResource extends Resource {
-    public static final String CONNECTOR_REQUEST_PATH = "connector/";
+    public static final String CONNECTOR_PATH = "connector";
 
     /**
      * Gets resource as stream.

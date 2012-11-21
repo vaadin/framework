@@ -14,8 +14,8 @@ import com.vaadin.ui.UI;
 public class ConnectorResourceHandler implements RequestHandler {
     // APP/connector/[uiid]/[cid]/[filename.xyz]
     private static final Pattern CONNECTOR_RESOURCE_PATTERN = Pattern
-            .compile("^/?" + ApplicationConstants.APP_REQUEST_PATH + '/'
-                    + ConnectorResource.CONNECTOR_REQUEST_PATH
+            .compile("^/?" + ApplicationConstants.APP_PATH + '/'
+                    + ConnectorResource.CONNECTOR_PATH + '/'
                     + "(\\d+)/(\\d+)/(.*)");
 
     private static Logger getLogger() {
@@ -63,7 +63,7 @@ public class ConnectorResourceHandler implements RequestHandler {
 
             return true;
         } else if (requestPath.matches('/'
-                + ApplicationConstants.APP_REQUEST_PATH + "(/.*)?")) {
+                + ApplicationConstants.APP_PATH + "(/.*)?")) {
             /*
              * This should be the last request handler before we get to
              * bootstrap logic. Prevent /APP requests from reaching bootstrap

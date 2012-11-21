@@ -87,7 +87,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
         ServletContext servletContext = service.getServlet()
                 .getServletContext();
         return servletContext.getResourceAsStream("/"
-                + VaadinServlet.THEME_DIRECTORY_PATH + themeName + "/"
+                + VaadinServlet.THEME_DIR_PATH + '/' + themeName + "/"
                 + resource);
     }
 }

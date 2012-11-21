@@ -72,11 +72,11 @@ public interface Constants {
 
     static final int MAX_BUFFER_SIZE = 64 * 1024;
 
-    final String THEME_DIRECTORY_PATH = "VAADIN/themes/";
+    final String THEME_DIR_PATH = "VAADIN/themes";
 
     static final int DEFAULT_THEME_CACHETIME = 1000 * 60 * 60 * 24;
 
-    static final String WIDGETSET_DIRECTORY_PATH = "VAADIN/widgetsets/";
+    static final String WIDGETSET_DIR_PATH = "VAADIN/widgetsets";
 
     // Name of the default widget set, used if not specified in web.xml
     static final String DEFAULT_WIDGETSET = "com.vaadin.DefaultWidgetSet";
