@@ -252,10 +252,7 @@ public abstract class LegacyApplication implements ErrorListener {
      * </p>
      * 
      * @return the URL.
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
      */
-    @Deprecated
     public String getLogoutURL() {
         return logoutURL;
     }
@@ -269,10 +266,7 @@ public abstract class LegacyApplication implements ErrorListener {
      * 
      * @param logoutURL
      *            the logoutURL to set.
-     * 
-     * @deprecated might be refactored or removed before 7.0.0
      */
-    @Deprecated
     public void setLogoutURL(String logoutURL) {
         this.logoutURL = logoutURL;
     }

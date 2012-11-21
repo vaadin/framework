@@ -161,7 +161,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * Get the web browser associated with this session.
      * 
      * @return
-     * @deprecated might be refactored or removed before 7.0.0
+     * @deprecated will likely change or be removed in a future version
      */
     @Deprecated
     public WebBrowser getBrowser() {
@@ -221,7 +221,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     /**
      * @return
      * 
-     * @deprecated might be refactored or removed before 7.0.0
+     * @deprecated will likely change or be removed in a future version
      */
     @Deprecated
     public AbstractCommunicationManager getCommunicationManager() {
@@ -234,7 +234,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @param underlyingSession
      * @return
      * 
-     * @deprecated might be refactored or removed before 7.0.0
+     * @deprecated will likely change or be removed in a future version
      */
     @Deprecated
     public static VaadinSession getForSession(VaadinService service,
@@ -254,7 +254,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * 
      * @param service
      *            TODO
-     * @deprecated might be refactored or removed before 7.0.0
+     * @deprecated will likely change or be removed in a future version
      */
     @Deprecated
     public void removeFromSession(VaadinService service) {
@@ -268,7 +268,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     /**
      * @param session
      * 
-     * @deprecated might be refactored or removed before 7.0.0
+     * @deprecated will likely change or be removed in a future version
      */
     @Deprecated
     public void storeInSession(VaadinService service, WrappedSession session) {
@@ -521,7 +521,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *            A connector that has not yet been assigned an id.
      * @return A new id for the connector
      * 
-     * @deprecated might be refactored or removed before 7.0.0
+     * @deprecated will likely change or be removed in a future version
      */
     @Deprecated
     public String createConnectorId(ClientConnector connector) {
@@ -589,7 +589,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *            the bootstrap response event for which listeners should be
      *            fired
      * 
-     * @deprecated might be refactored or removed before 7.0.0
+     * @deprecated will likely change or be removed in a future version
      */
     @Deprecated
     public void modifyBootstrapResponse(BootstrapResponse response) {
@@ -608,7 +608,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * 
      * @since 7.0.0
      * 
-     * @deprecated might be refactored or removed before 7.0.0
+     * @deprecated will likely change or be removed in a future version
      */
     @Deprecated
     public void cleanupInactiveUIs() {
@@ -698,13 +698,13 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * 
      * @since 7.0.0
      * 
-     * @deprecated Might be refactored or removed before 7.0.0
+     * @deprecated will likely change or be removed in a future version
      * 
      * @param ui
      *            The UI whose status to check
      * @return true if the UI is alive, false if it could be removed.
      * 
-     * @deprecated might be refactored or removed before 7.0.0
+     * @deprecated will likely change or be removed in a future version
      */
     @Deprecated
     protected boolean isUIAlive(UI ui) {
