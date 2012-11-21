@@ -163,7 +163,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         public void resize(int viewWidth, int viewHeight, int windowWidth,
                 int windowHeight) {
             // TODO We're not doing anything with the view dimensions
-            getPage().setBrowserWindowSize(windowWidth, windowHeight);
+            getPage().updateBrowserWindowSize(windowWidth, windowHeight);
         }
     };
 

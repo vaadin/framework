@@ -33,8 +33,6 @@ public class AxessingWebPageAndBrowserInfoUI extends AbstractTestUI {
         UI someUI = this;
 
         Page page = someUI.getPage();
-        page.setBrowserWindowSize(page.getBrowserWindowWidth() + 10,
-                page.getBrowserWindowHeight() + 10);
         page.addBrowserWindowResizeListener(new BrowserWindowResizeListener() {
             @Override
             public void browserWindowResized(BrowserWindowResizeEvent event) {

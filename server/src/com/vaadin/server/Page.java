@@ -472,7 +472,7 @@ public class Page implements Serializable {
      * @param height
      *            The new height
      */
-    public void setBrowserWindowSize(int width, int height) {
+    public void updateBrowserWindowSize(int width, int height) {
         boolean fireEvent = false;
 
         if (width != browserWindowWidth) {
