@@ -18,14 +18,13 @@ package com.vaadin.client.ui.panel;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.ui.AbstractComponentContainerConnector;
+import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.ShortcutActionHandler;
@@ -40,7 +39,7 @@ import com.vaadin.shared.ui.panel.PanelState;
 import com.vaadin.ui.Panel;
 
 @Connect(Panel.class)
-public class PanelConnector extends AbstractComponentContainerConnector
+public class PanelConnector extends AbstractSingleComponentContainerConnector
         implements Paintable, SimpleManagedLayout, PostLayoutListener,
         MayScrollChildren {
 
@@ -241,13 +240,7 @@ public class PanelConnector extends AbstractComponentContainerConnector
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
         // We always have 1 child, unless the child is hidden
-        Widget newChildWidget = null;
-        if (getChildComponents().size() == 1) {
-            ComponentConnector newChild = getChildComponents().get(0);
-            newChildWidget = newChild.getWidget();
-        }
-
-        getWidget().setWidget(newChildWidget);
+        getWidget().setWidget(getContentWidget());
     }
 
 }

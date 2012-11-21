@@ -25,7 +25,7 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ComponentContainerConnector;
+import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.ServerConnector;
@@ -150,8 +150,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         // Set captions
         if (delegateCaptionHandling()) {
             ServerConnector parent = getParent();
-            if (parent instanceof ComponentContainerConnector) {
-                ((ComponentContainerConnector) parent).updateCaption(this);
+            if (parent instanceof HasComponentsConnector) {
+                ((HasComponentsConnector) parent).updateCaption(this);
             } else if (parent == null && !(this instanceof UIConnector)) {
                 VConsole.error("Parent of connector "
                         + Util.getConnectorString(this)
@@ -180,8 +180,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             // make sure the caption has or has not v-disabled style
             if (delegateCaptionHandling()) {
                 ServerConnector parent = getParent();
-                if (parent instanceof ComponentContainerConnector) {
-                    ((ComponentContainerConnector) parent).updateCaption(this);
+                if (parent instanceof HasComponentsConnector) {
+                    ((HasComponentsConnector) parent).updateCaption(this);
                 } else if (parent == null && !(this instanceof UIConnector)) {
                     VConsole.error("Parent of connector "
                             + Util.getConnectorString(this)

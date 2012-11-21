@@ -15,8 +15,8 @@
  */
 package com.vaadin.client.ui.layout;
 
-import com.vaadin.client.ComponentContainerConnector;
+import com.vaadin.client.HasComponentsConnector;
 
-public interface MayScrollChildren extends ComponentContainerConnector {
+public interface MayScrollChildren extends HasComponentsConnector {
 
 }

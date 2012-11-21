@@ -183,7 +183,7 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
      * (non-Javadoc)
      * 
      * @see
-     * com.vaadin.client.ComponentContainerConnector#updateCaption(com.vaadin
+     * com.vaadin.client.HasComponentsConnector#updateCaption(com.vaadin
      * .client.ComponentConnector)
      */
     @Override

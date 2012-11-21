@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Vaadin Ltd.
+ * Copyright 2012 Vaadin Ltd.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,59 +15,12 @@
  */
 package com.vaadin.client.ui;
 
-import java.util.Collections;
-import java.util.List;
-
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ComponentContainerConnector;
-import com.vaadin.client.ConnectorHierarchyChangeEvent;
-import com.vaadin.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
-
+/**
+ * Client side connector for subclasses of AbstractComponentConnector.
+ * 
+ * @since 7.0
+ */
 public abstract class AbstractComponentContainerConnector extends
-        AbstractComponentConnector implements ComponentContainerConnector,
-        ConnectorHierarchyChangeHandler {
+        AbstractHasComponentsConnector {
 
-    List<ComponentConnector> childComponents;
-
-    private final boolean debugLogging = false;
-
-    /**
-     * Default constructor
-     */
-    public AbstractComponentContainerConnector() {
-        addConnectorHierarchyChangeHandler(this);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.client.ComponentContainerConnector#getChildren()
-     */
-    @Override
-    public List<ComponentConnector> getChildComponents() {
-        if (childComponents == null) {
-            return Collections.emptyList();
-        }
-
-        return childComponents;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.client.ComponentContainerConnector#setChildren
-     * (java.util.Collection)
-     */
-    @Override
-    public void setChildComponents(List<ComponentConnector> childComponents) {
-        this.childComponents = childComponents;
-    }
-
-    @Override
-    public HandlerRegistration addConnectorHierarchyChangeHandler(
-            ConnectorHierarchyChangeHandler handler) {
-        return ensureHandlerManager().addHandler(
-                ConnectorHierarchyChangeEvent.TYPE, handler);
-    }
 }

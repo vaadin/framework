@@ -33,7 +33,7 @@ import com.vaadin.client.ServerConnector;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
-import com.vaadin.client.ui.AbstractComponentContainerConnector;
+import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.VScrollTable;
 import com.vaadin.client.ui.VScrollTable.ContextMenuDetails;
@@ -43,7 +43,7 @@ import com.vaadin.shared.ui.table.TableConstants;
 import com.vaadin.shared.ui.table.TableState;
 
 @Connect(com.vaadin.ui.Table.class)
-public class TableConnector extends AbstractComponentContainerConnector
+public class TableConnector extends AbstractHasComponentsConnector
         implements Paintable, DirectionalManagedLayout, PostLayoutListener {
 
     @Override

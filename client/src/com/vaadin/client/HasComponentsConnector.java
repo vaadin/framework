@@ -26,7 +26,7 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeH
  * An interface used by client-side connectors whose widget is a component
  * container (implements {@link HasWidgets}).
  */
-public interface ComponentContainerConnector extends ServerConnector {
+public interface HasComponentsConnector extends ServerConnector {
 
     /**
      * Update child components caption, description and error message.
@@ -46,9 +46,8 @@ public interface ComponentContainerConnector extends ServerConnector {
     /**
      * Returns the children for this connector.
      * <p>
-     * The children for this connector are defined as all
-     * {@link ComponentConnector}s whose parent is this
-     * {@link ComponentContainerConnector}.
+     * The children for this connector are defined as all {@link HasComponents}s
+     * whose parent is this {@link HasComponentsConnector}.
      * </p>
      * 
      * @return A collection of children for this connector. An empty collection
