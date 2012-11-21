@@ -47,7 +47,7 @@ public class MassInsertMemoryLeakTestApp extends LegacyApplication {
 
         @Override
         public void start() {
-            getContext().getLock().lock();
+            getContext().lock();
             try {
                 proggress.setVisible(true);
                 proggress.setValue(new Float(0));
@@ -56,7 +56,7 @@ public class MassInsertMemoryLeakTestApp extends LegacyApplication {
                 proggress.setCaption("");
                 super.start();
             } finally {
-                getContext().getLock().unlock();
+                getContext().unlock();
             }
         }
 
@@ -78,14 +78,14 @@ public class MassInsertMemoryLeakTestApp extends LegacyApplication {
                                     getRandonName());
                         }
                         c.commit();
-                        getContext().getLock().lock();
+                        getContext().lock();
                         try {
                             proggress
                                     .setValue(new Float((1.0f * cent) / cents));
                             proggress.setCaption("" + 100 * cent
                                     + " rows inserted");
                         } finally {
-                            getContext().getLock().unlock();
+                            getContext().unlock();
                         }
                     }
                 } catch (SQLException e) {
@@ -95,13 +95,13 @@ public class MassInsertMemoryLeakTestApp extends LegacyApplication {
                     e.printStackTrace();
                 }
             }
-            getContext().getLock().lock();
+            getContext().lock();
             try {
                 proggress.setVisible(false);
                 proggress.setPollingInterval(0);
                 process.setEnabled(true);
             } finally {
-                getContext().getLock().unlock();
+                getContext().unlock();
             }
         }
     }

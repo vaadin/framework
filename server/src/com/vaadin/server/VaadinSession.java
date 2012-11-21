@@ -743,13 +743,61 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     /**
-     * Gets the lock that should be used to synchronize usage of data inside
-     * this session.
+     * Gets the {@link Lock} instance that is used for protecting the data of
+     * this session from concurrent access.
+     * <p>
+     * The <code>Lock</code> can be used to gain more control than what is
+     * available only using {@link #lock()} and {@link #unlock()}. The returned
+     * instance is not guaranteed to support any other features of the
+     * <code>Lock</code> interface than {@link Lock#lock()} and
+     * {@link Lock#unlock()}.
      * 
-     * @return the lock that should be used for synchronization
+     * @return the <code>Lock</code> that is used for synchronization, never
+     *         <code>null</code>
+     * 
+     * @see #lock()
+     * @see Lock
      */
-    public Lock getLock() {
+    public Lock getLockInstance() {
         return lock;
+    }
+
+    /**
+     * Locks this session to protect its data from concurrent access. Accessing
+     * the UI state from outside the normal request handling should always lock
+     * the session and unlock it when done. To ensure that the lock is always
+     * released, you should typically wrap the code in a <code>try</code> block
+     * and unlock the session in <code>finally</code>:
+     * 
+     * <pre>
+     * session.lock();
+     * try {
+     *     doSomething();
+     * } finally {
+     *     session.unlock();
+     * }
+     * </pre>
+     * <p>
+     * This method will block until the lock can be retrieved.
+     * <p>
+     * {@link #getLockInstance()} can be used if more control over the locking
+     * is required.
+     * 
+     * @see #unlock()
+     * @see #getLockInstance()
+     */
+    public void lock() {
+        getLockInstance().lock();
+    }
+
+    /**
+     * Unlocks this session. This method should always be used in a finally
+     * block after {@link #lock()} to ensure that the lock is always released.
+     * 
+     * @see #unlock()
+     */
+    public void unlock() {
+        getLockInstance().unlock();
     }
 
     /**
