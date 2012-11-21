@@ -1473,9 +1473,13 @@ public class ApplicationConnection {
                         + (updateDuration.elapsedMillis() - startProcessing)
                         + " ms");
 
-                LayoutManager layoutManager = getLayoutManager();
-                layoutManager.setEverythingNeedsMeasure();
-                layoutManager.layoutNow();
+                try {
+                    LayoutManager layoutManager = getLayoutManager();
+                    layoutManager.setEverythingNeedsMeasure();
+                    layoutManager.layoutNow();
+                } catch (final Throwable e) {
+                    VConsole.error(e);
+                }
 
                 updateDuration
                         .logDuration(" * Layout processing completed", 10);
@@ -2064,8 +2068,8 @@ public class ApplicationConnection {
                             .getChildComponents();
                     if (!oldChildren.isEmpty()) {
                         /*
-                         * HasComponentsConnector has a separate child
-                         * component list that should also be cleared
+                         * HasComponentsConnector has a separate child component
+                         * list that should also be cleared
                          */
                         ccc.setChildComponents(Collections
                                 .<ComponentConnector> emptyList());
