@@ -454,7 +454,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @throws IOException
      *             if the writing failed due to input/output error.
      * 
-     * @deprecated might be refactored or removed before 7.0.0
+     * @deprecated will likely change or be removed in a future version
      */
     @Deprecated
     protected void criticalNotification(VaadinServletRequest request,
@@ -548,7 +548,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      *            the resource path.
      * @return the resource path.
      * 
-     * @deprecated might be refactored or removed before 7.0.0
+     * @deprecated will likely change or be removed in a future version
      */
     @Deprecated
     protected static String getResourcePath(ServletContext servletContext,
@@ -602,7 +602,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @param themeName
      * @return
      * 
-     * @deprecated might be refactored or removed before 7.0.0
+     * @deprecated will likely change or be removed in a future version
      */
     @Deprecated
     protected static String stripSpecialChars(String themeName) {
@@ -636,7 +636,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @throws IOException
      * @throws ServletException
      * 
-     * @deprecated might be refactored or removed before 7.0.0
+     * @deprecated will likely change or be removed in a future version
      */
     @Deprecated
     void handleServiceSessionExpired(VaadinServletRequest request,
@@ -990,7 +990,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * 
      * @since 6.6.7
      * 
-     * @deprecated might be refactored or removed before 7.0.0
+     * @deprecated will likely change or be removed in a future version
      */
     @Deprecated
     protected boolean isAllowedVAADINResourceUrl(HttpServletRequest request,
@@ -1081,7 +1081,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @author Vaadin Ltd
      * @since 7.0.0
      * 
-     * @deprecated might be refactored or removed before 7.0.0
+     * @deprecated will likely change or be removed in a future version
      */
     @Deprecated
     protected enum RequestType {
@@ -1092,7 +1092,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @param request
      * @return
      * 
-     * @deprecated might be refactored or removed before 7.0.0
+     * @deprecated will likely change or be removed in a future version
      */
     @Deprecated
     protected RequestType getRequestType(VaadinServletRequest request) {
@@ -1184,7 +1184,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      *             if the application is denied access to the persistent data
      *             store represented by the given URL.
      * 
-     * @deprecated might be refactored or removed before 7.0.0
+     * @deprecated will likely change or be removed in a future version
      */
     @Deprecated
     protected URL getApplicationUrl(HttpServletRequest request)
@@ -1239,7 +1239,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @param unsafe
      * @return a safe string to be added inside an html tag
      * 
-     * @deprecated might be refactored or removed before 7.0.0
+     * @deprecated will likely change or be removed in a future version
      */
     @Deprecated
     public static final String safeEscapeForHtml(String unsafe) {
