@@ -38,7 +38,7 @@ import com.vaadin.ui.UI;
  * @since 7.0
  */
 @Deprecated
-public abstract class LegacyApplication implements ErrorListener {
+public abstract class LegacyApplication implements ErrorHandler {
     private LegacyWindow mainWindow;
     private String theme;
 
@@ -208,8 +208,8 @@ public abstract class LegacyApplication implements ErrorListener {
     }
 
     @Override
-    public void terminalError(ErrorEvent event) {
-        DefaultErrorListener.doDefault(event);
+    public void error(ErrorEvent event) {
+        DefaultErrorHandler.doDefault(event);
     }
 
     public VaadinSession getContext() {

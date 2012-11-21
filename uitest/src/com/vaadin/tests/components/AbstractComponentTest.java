@@ -715,7 +715,7 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
     }
 
     @Override
-    public void terminalError(com.vaadin.server.ErrorEvent event) {
+    public void error(com.vaadin.server.ErrorEvent event) {
         String logMsg = "Exception occured, "
                 + event.getThrowable().getClass().getName();
 

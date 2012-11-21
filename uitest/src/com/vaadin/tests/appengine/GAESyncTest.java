@@ -29,7 +29,7 @@ public class GAESyncTest extends LegacyApplication {
     }
 
     @Override
-    public void terminalError(com.vaadin.server.ErrorEvent event) {
+    public void error(com.vaadin.server.ErrorEvent event) {
         Throwable t = event.getThrowable();
         // Was this caused by a GAE timeout?
         while (t != null) {
@@ -41,7 +41,7 @@ public class GAESyncTest extends LegacyApplication {
             t = t.getCause();
         }
 
-        super.terminalError(event);
+        super.error(event);
 
     }
 

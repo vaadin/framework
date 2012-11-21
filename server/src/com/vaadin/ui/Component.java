@@ -954,20 +954,6 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     }
 
     /**
-     * Listener interface for receiving <code>Component.Errors</code>s.
-     */
-    public interface ErrorListener extends EventListener, Serializable {
-
-        /**
-         * Notifies the listener of a component error.
-         * 
-         * @param event
-         *            the event that has occured.
-         */
-        public void componentError(Component.ErrorEvent event);
-    }
-
-    /**
      * A sub-interface implemented by components that can obtain input focus.
      * This includes all {@link Field} components as well as some other
      * components, such as {@link Upload}.

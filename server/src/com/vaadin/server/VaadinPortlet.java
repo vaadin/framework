@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.security.GeneralSecurityException;
@@ -653,6 +652,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
         // portlet
 
         // if this was an UIDL request, response UIDL back to client
+        ErrorHandler errorHandler = ErrorEvent.findErrorHandler(vaadinSession);
         if (getRequestType(request) == RequestType.UIDL) {
             SystemMessages ci = getService().getSystemMessages(
                     ServletPortletHelper.findLocale(null, vaadinSession,
@@ -660,33 +660,17 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
             criticalNotification(request, response,
                     ci.getInternalErrorCaption(), ci.getInternalErrorMessage(),
                     null, ci.getInternalErrorURL());
-            if (vaadinSession != null) {
-                vaadinSession.getErrorHandler().terminalError(
-                        new RequestError(e));
-            } else {
-                throw new PortletException(e);
+            if (errorHandler != null) {
+                errorHandler.error(new ErrorEvent(e));
             }
         } else {
-            // Re-throw other exceptions
-            throw new PortletException(e);
+            if (errorHandler != null) {
+                errorHandler.error(new ErrorEvent(e));
+            } else {
+                // Re-throw other exceptions
+                throw new PortletException(e);
+            }
         }
-
-    }
-
-    @SuppressWarnings("serial")
-    public class RequestError implements ErrorEvent, Serializable {
-
-        private final Throwable throwable;
-
-        public RequestError(Throwable throwable) {
-            this.throwable = throwable;
-        }
-
-        @Override
-        public Throwable getThrowable() {
-            return throwable;
-        }
-
     }
 
     /**

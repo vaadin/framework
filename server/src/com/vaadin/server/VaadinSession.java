@@ -90,7 +90,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * Session wide error handler which is used by default if an error is left
      * unhandled.
      */
-    private ErrorListener errorHandler = new DefaultErrorListener();
+    private ErrorHandler errorHandler = new DefaultErrorHandler();
 
     /**
      * The converter factory that is used to provide default converters for the
@@ -338,7 +338,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * 
      * @return the current error handler
      */
-    public ErrorListener getErrorHandler() {
+    public ErrorHandler getErrorHandler() {
         return errorHandler;
     }
 
@@ -347,7 +347,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * 
      * @param errorHandler
      */
-    public void setErrorHandler(ErrorListener errorHandler) {
+    public void setErrorHandler(ErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
     }
 
@@ -386,27 +386,6 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      */
     public void setConverterFactory(ConverterFactory converterFactory) {
         this.converterFactory = converterFactory;
-    }
-
-    /**
-     * Application error is an error message defined on the application level.
-     * 
-     * When an error occurs on the application level, this error message4 type
-     * should be used. This indicates that the problem is caused by the
-     * application - not by the user.
-     */
-    public class ApplicationError implements ErrorEvent {
-        private final Throwable throwable;
-
-        public ApplicationError(Throwable throwable) {
-            this.throwable = throwable;
-        }
-
-        @Override
-        public Throwable getThrowable() {
-            return throwable;
-        }
-
     }
 
     /**

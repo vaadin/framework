@@ -30,6 +30,7 @@ import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ComponentSizeValidator;
+import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinSession;
@@ -83,7 +84,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     private static final Pattern sizePattern = Pattern
             .compile("^(-?\\d+(\\.\\d+)?)(%|px|em|ex|in|cm|mm|pt|pc)?$");
 
-    private ComponentErrorHandler errorHandler = null;
+    private ErrorHandler errorHandler = null;
 
     /**
      * Keeps track of the Actions added to this component; the actual
@@ -889,64 +890,6 @@ public abstract class AbstractComponent extends AbstractClientConnector
         public Unit getUnit() {
             return unit;
         }
-    }
-
-    public interface ComponentErrorEvent extends com.vaadin.server.ErrorEvent {
-    }
-
-    public interface ComponentErrorHandler extends Serializable {
-        /**
-         * Handle the component error
-         * 
-         * @param event
-         * @return True if the error has been handled False, otherwise
-         */
-        public boolean handleComponentError(ComponentErrorEvent event);
-    }
-
-    /**
-     * Gets the error handler for the component.
-     * 
-     * The error handler is dispatched whenever there is an error processing the
-     * data coming from the client.
-     * 
-     * @return
-     */
-    public ComponentErrorHandler getErrorHandler() {
-        return errorHandler;
-    }
-
-    /**
-     * Sets the error handler for the component.
-     * 
-     * The error handler is dispatched whenever there is an error processing the
-     * data coming from the client.
-     * 
-     * If the error handler is not set, the application error handler is used to
-     * handle the exception.
-     * 
-     * @param errorHandler
-     *            AbstractField specific error handler
-     */
-    public void setErrorHandler(ComponentErrorHandler errorHandler) {
-        this.errorHandler = errorHandler;
-    }
-
-    /**
-     * Handle the component error event.
-     * 
-     * @param error
-     *            Error event to handle
-     * @return True if the error has been handled False, otherwise. If the error
-     *         haven't been handled by this component, it will be handled in the
-     *         application error handler.
-     */
-    public boolean handleError(ComponentErrorEvent error) {
-        if (errorHandler != null) {
-            return errorHandler.handleComponentError(error);
-        }
-        return false;
-
     }
 
     /*
