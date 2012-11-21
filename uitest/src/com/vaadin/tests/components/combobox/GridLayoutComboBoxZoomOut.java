@@ -12,8 +12,7 @@ public class GridLayoutComboBoxZoomOut extends AbstractTestCase {
 
     @Override
     public void init() {
-        LegacyWindow mainWindow = new LegacyWindow(
-                "Gridlayoutbug Application");
+        LegacyWindow mainWindow = new LegacyWindow("Gridlayoutbug Application");
         setMainWindow(mainWindow);
 
         Label description = new Label(

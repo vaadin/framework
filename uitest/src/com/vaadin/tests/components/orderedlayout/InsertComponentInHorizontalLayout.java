@@ -22,7 +22,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 
@@ -56,7 +55,7 @@ public class InsertComponentInHorizontalLayout extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        setContent((ComponentContainer) getTestLayout());
+        setContent(getTestLayout());
     }
 
     @Override

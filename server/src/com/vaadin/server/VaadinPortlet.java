@@ -428,8 +428,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                             .getCommunicationManager();
 
                     if (requestType == RequestType.PUBLISHED_FILE) {
-                        communicationManager.servePublishedFile(
-                                vaadinRequest, vaadinResponse);
+                        communicationManager.servePublishedFile(vaadinRequest,
+                                vaadinResponse);
                         return;
                     } else if (requestType == RequestType.HEARTBEAT) {
                         communicationManager.handleHeartbeatRequest(

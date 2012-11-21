@@ -15,19 +15,23 @@ public class InitialFragmentEvent extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
-        getPage().addUriFragmentChangedListener(new UriFragmentChangedListener() {
+        getPage().addUriFragmentChangedListener(
+                new UriFragmentChangedListener() {
 
-            public void uriFragmentChanged(UriFragmentChangedEvent source) {
-                String newFragment = source.getUriFragment();
-                log.log("Fragment changed from " + lastKnownFragment + " to "
-                        + newFragment);
-                lastKnownFragment = newFragment;
-            }
-        });
+                    @Override
+                    public void uriFragmentChanged(
+                            UriFragmentChangedEvent source) {
+                        String newFragment = source.getUriFragment();
+                        log.log("Fragment changed from " + lastKnownFragment
+                                + " to " + newFragment);
+                        lastKnownFragment = newFragment;
+                    }
+                });
         addComponent(log);
         addComponent(new Button("Set fragment to 'foo'",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         setFragment("foo");
                     }
@@ -35,6 +39,7 @@ public class InitialFragmentEvent extends AbstractTestUI {
         addComponent(new Button("Set fragment to 'bar'",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         setFragment("bar");
                     }

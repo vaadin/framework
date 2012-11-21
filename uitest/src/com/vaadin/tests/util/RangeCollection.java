@@ -15,14 +15,17 @@ public class RangeCollection extends AbstractCollection<Integer> {
             value = 0;
         }
 
+        @Override
         public boolean hasNext() {
             return (value < max - 1);
         }
 
+        @Override
         public Integer next() {
             return value++;
         }
 
+        @Override
         public void remove() {
             throw new UnsupportedOperationException();
         }

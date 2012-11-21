@@ -93,8 +93,7 @@ public class ThreadLocalInstances extends AbstractTestCase {
         reportStatus(phase, VaadinSession.getCurrent(), UI.getCurrent());
     }
 
-    private void reportStatus(String phase, VaadinSession application,
-            UI uI) {
+    private void reportStatus(String phase, VaadinSession application, UI uI) {
         log.log(getState(application, this) + " app in " + phase);
         log.log(getState(uI, mainWindow) + " root in " + phase);
     }

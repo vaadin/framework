@@ -177,6 +177,7 @@ public class ButtonConnector extends AbstractComponentConnector implements
      * com.vaadin.terminal.gwt.client.ui.ShortcutActionTarget#handleAction(com
      * .vaadin.terminal.gwt.client.ui.ShortcutAction)
      */
+    @Override
     public boolean handleAction(ShortcutAction action) {
         if ("click".equals(action.getTargetAction())) {
             getWidget().onClick();

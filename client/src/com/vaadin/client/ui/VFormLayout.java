@@ -34,8 +34,8 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.VTooltip;
-import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.MarginInfo;
 
@@ -65,7 +65,8 @@ public class VFormLayout extends SimplePanel {
      * @param enabled
      * @return An array of stylenames
      */
-    private String[] getStylesFromState(AbstractComponentState state, boolean enabled) {
+    private String[] getStylesFromState(AbstractComponentState state,
+            boolean enabled) {
         List<String> styles = new ArrayList<String>();
         if (ComponentStateUtil.hasStyles(state)) {
             for (String name : state.styles) {

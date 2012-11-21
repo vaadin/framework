@@ -94,8 +94,8 @@ public class Ticket1921 extends LegacyApplication implements RequestHandler {
     }
 
     @Override
-    public boolean handleRequest(VaadinSession session,
-            VaadinRequest request, VaadinResponse response) throws IOException {
+    public boolean handleRequest(VaadinSession session, VaadinRequest request,
+            VaadinResponse response) throws IOException {
         Map<String, String[]> parameters = request.getParameterMap();
         String[] s = parameters.get("state");
         if (s == null || s.length != 1) {

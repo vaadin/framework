@@ -18,8 +18,7 @@ public class UIsInMultipleTabs extends AbstractTestUIProvider {
     public static class TabUI extends UI {
         @Override
         protected void init(VaadinRequest request) {
-            VaadinSession application = VaadinSession
-                    .getCurrent();
+            VaadinSession application = VaadinSession.getCurrent();
             AtomicInteger count = numberOfUIsOpened.get(application);
             if (count == null) {
                 numberOfUIsOpened.putIfAbsent(application, new AtomicInteger());

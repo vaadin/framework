@@ -16,9 +16,9 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Select;
 
-public class ListenerOrder extends com.vaadin.server.LegacyApplication implements
-        Button.ClickListener, PropertySetChangeListener, ItemSetChangeListener,
-        ValueChangeListener {
+public class ListenerOrder extends com.vaadin.server.LegacyApplication
+        implements Button.ClickListener, PropertySetChangeListener,
+        ItemSetChangeListener, ValueChangeListener {
 
     Button b1;
 

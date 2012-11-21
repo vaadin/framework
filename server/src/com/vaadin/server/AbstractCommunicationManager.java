@@ -1328,7 +1328,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
      */
     private void writePerformanceData(final PrintWriter outWriter) {
         outWriter.write(String.format(", \"timings\":[%d, %d]",
-                session.getCumulativeRequestDuration(), session.getLastRequestDuration()));
+                session.getCumulativeRequestDuration(),
+                session.getLastRequestDuration()));
     }
 
     private void legacyPaint(PaintTarget paintTarget,
@@ -2637,8 +2638,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         String pathInfo = request.getPathInfo();
         // + 2 to also remove beginning and ending slashes
         String fileName = pathInfo
-                .substring(ApplicationConstants.PUBLISHED_FILE_PATH
-                        .length() + 2);
+                .substring(ApplicationConstants.PUBLISHED_FILE_PATH.length() + 2);
 
         final String mimetype = response.getService().getMimeType(fileName);
 

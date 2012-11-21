@@ -33,8 +33,8 @@ import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.util.ReflectTools;
 

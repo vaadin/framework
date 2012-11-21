@@ -26,8 +26,8 @@ public class ApplicationConstants {
 
     public static final String HEARTBEAT_REQUEST_PATH = "HEARTBEAT/";
 
-    public static final String PUBLISHED_FILE_PATH = APP_REQUEST_PATH
-            + '/' + "PUBLISHED";
+    public static final String PUBLISHED_FILE_PATH = APP_REQUEST_PATH + '/'
+            + "PUBLISHED";
 
     public static final String APP_PROTOCOL_PREFIX = "app://";
     public static final String PUBLISHED_PROTOCOL_NAME = "published";

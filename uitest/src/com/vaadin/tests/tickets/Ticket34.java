@@ -97,7 +97,8 @@ public class Ticket34 extends LegacyApplication {
                 public void buttonClick(ClickEvent event) {
                     String viewName = tf.getValue().toString();
                     // fragmentChangedListener will change the view if possible
-                    event.getButton().getUI().getPage().setUriFragment(viewName);
+                    event.getButton().getUI().getPage()
+                            .setUriFragment(viewName);
                 }
             });
 

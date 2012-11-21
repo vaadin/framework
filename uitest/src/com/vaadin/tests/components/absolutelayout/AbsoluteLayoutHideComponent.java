@@ -74,6 +74,7 @@ public class AbsoluteLayoutHideComponent extends AbstractTestUI {
         btnLogin.setWidth("-1px");
         btnLogin.setHeight("-1px");
         btnLogin.addClickListener(new Button.ClickListener() {
+            @Override
             public void buttonClick(Button.ClickEvent event) {
                 login();
             }

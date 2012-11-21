@@ -2,8 +2,7 @@ package com.vaadin.client.ui.popupview;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-public class VisibilityChangeEvent extends
-        GwtEvent<VisibilityChangeHandler> {
+public class VisibilityChangeEvent extends GwtEvent<VisibilityChangeHandler> {
 
     private static Type<VisibilityChangeHandler> TYPE;
 

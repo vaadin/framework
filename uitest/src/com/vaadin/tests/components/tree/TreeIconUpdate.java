@@ -41,6 +41,7 @@ public class TreeIconUpdate extends TestBase {
 
         Button button = new Button("Change icon", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 tree.getItem("bar0").getItemProperty("icon").setValue(ICON2);
             }
@@ -49,6 +50,7 @@ public class TreeIconUpdate extends TestBase {
         addComponent(button);
         button = new Button("Change caption", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 tree.getItem("bar0").getItemProperty("name").setValue("foo");
             }

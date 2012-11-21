@@ -49,7 +49,7 @@ public class BlockNodeHandler {
         ArrayList<String> newList = new ArrayList<String>();
         ArrayList<String> parentSelectors = ((BlockNode) node.getParentNode())
                 .getSelectorList();
-        ArrayList<String> childSelectors = ((BlockNode) node).getSelectorList();
+        ArrayList<String> childSelectors = node.getSelectorList();
         for (int i = 0; i < parentSelectors.size(); i++) {
             String parentSelector = parentSelectors.get(i);
             for (int j = 0; j < childSelectors.size(); j++) {
