@@ -43,8 +43,8 @@ import com.vaadin.shared.ui.table.TableConstants;
 import com.vaadin.shared.ui.table.TableState;
 
 @Connect(com.vaadin.ui.Table.class)
-public class TableConnector extends AbstractHasComponentsConnector
-        implements Paintable, DirectionalManagedLayout, PostLayoutListener {
+public class TableConnector extends AbstractHasComponentsConnector implements
+        Paintable, DirectionalManagedLayout, PostLayoutListener {
 
     @Override
     protected void init() {
@@ -276,8 +276,7 @@ public class TableConnector extends AbstractHasComponentsConnector
             getWidget().selectionRangeStart = getWidget().focusedRow;
         }
 
-        getWidget().tabIndex = uidl.hasAttribute("tabindex") ? uidl
-                .getIntAttribute("tabindex") : 0;
+        getWidget().tabIndex = getState().tabIndex;
         getWidget().setProperTabIndex();
 
         getWidget().resizeSortedColumnForSortIndicator();

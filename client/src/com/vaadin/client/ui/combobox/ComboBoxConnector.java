@@ -66,9 +66,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         getWidget().setTextInputEnabled(!noTextInput);
 
         // not a FocusWidget -> needs own tabindex handling
-        if (uidl.hasAttribute("tabindex")) {
-            getWidget().tb.setTabIndex(uidl.getIntAttribute("tabindex"));
-        }
+        getWidget().tb.setTabIndex(getState().tabIndex);
 
         if (uidl.hasAttribute("filteringmode")) {
             getWidget().filteringmode = FilteringMode.valueOf(uidl

@@ -26,6 +26,7 @@ import com.vaadin.client.Paintable;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.VTree;
 import com.vaadin.client.ui.VTree.TreeNode;
@@ -143,6 +144,13 @@ public class TreeConnector extends AbstractComponentConnector implements
 
         getWidget().rendering = false;
 
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+        // VTree does not implement Focusable
+        getWidget().setTabIndex(getState().tabIndex);
     }
 
     @Override

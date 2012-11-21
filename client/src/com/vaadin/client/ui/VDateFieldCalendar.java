@@ -118,4 +118,12 @@ public class VDateFieldCalendar extends VDateField {
             }
         }
     }
+
+    public void setTabIndex(int tabIndex) {
+        calendarPanel.getElement().setTabIndex(tabIndex);
+    }
+
+    public int getTabIndex() {
+        return calendarPanel.getElement().getTabIndex();
+    }
 }
