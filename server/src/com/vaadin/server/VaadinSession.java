@@ -622,7 +622,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         Integer id = Integer.valueOf(ui.getUIId());
         uIs.remove(id);
         retainOnRefreshUIs.values().remove(id);
-        ui.fireCleanupEvent();
+        // TODO: call ui.setSession(null) when refactor done
     }
 
     /**
