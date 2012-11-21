@@ -24,7 +24,7 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.VCaptionWrapper;
 import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.ui.AbstractComponentContainerConnector;
+import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.VPopupView;
 import com.vaadin.shared.ui.ComponentStateUtil;
@@ -34,7 +34,7 @@ import com.vaadin.shared.ui.popupview.PopupViewState;
 import com.vaadin.ui.PopupView;
 
 @Connect(PopupView.class)
-public class PopupViewConnector extends AbstractComponentContainerConnector
+public class PopupViewConnector extends AbstractHasComponentsConnector
         implements PostLayoutListener, VisibilityChangeHandler {
 
     private boolean centerAfterLayout = false;
