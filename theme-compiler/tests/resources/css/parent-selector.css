@@ -31,6 +31,14 @@ body.firefox a {
 	color: blue;
 }
 
-.part.one, .part.two {
+.part.one, .part.two, .part .non-parent {
+	color: blue;
+}
+
+.root .part.one, .root .part .non-parent, .root .part2.one, .root .part2 .non-parent {
+	color: blue;
+}
+
+.root2 .part .one, .root2 .part .non-parent, .root2 .part2 .one, .root2 .part2 .non-parent {
 	color: blue;
 }
