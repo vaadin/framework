@@ -33,7 +33,6 @@ public class DragDropPane extends DragAndDropWrapper implements DropHandler {
         setDragStartMode(DragStartMode.COMPONENT);
     }
 
-    @Override
     public void addComponent(Component c) {
         root.addComponent(c);
     }

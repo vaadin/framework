@@ -16,7 +16,7 @@
 
 package com.vaadin.ui;
 
-import java.io.Serializable;
+import java.util.Collections;
 import java.util.Iterator;
 
 /**
@@ -32,7 +32,7 @@ import java.util.Iterator;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class CustomComponent extends AbstractComponentContainer {
+public class CustomComponent extends AbstractComponent implements HasComponents {
 
     /**
      * The root component implementing the custom component.
@@ -91,13 +91,18 @@ public class CustomComponent extends AbstractComponentContainer {
      */
     protected void setCompositionRoot(Component compositionRoot) {
         if (compositionRoot != root) {
-            if (root != null) {
+            if (root != null && root.getParent() == this) {
                 // remove old component
-                super.removeComponent(root);
+                root.setParent(null);
             }
             if (compositionRoot != null) {
                 // set new component
-                super.addComponent(compositionRoot);
+                if (compositionRoot.getParent() != null) {
+                    // If the component already has a parent, try to remove it
+                    AbstractSingleComponentContainer
+                            .removeFromParent(compositionRoot);
+                }
+                compositionRoot.setParent(this);
             }
             root = compositionRoot;
             markAsDirty();
@@ -106,30 +111,13 @@ public class CustomComponent extends AbstractComponentContainer {
 
     /* Basic component features ------------------------------------------ */
 
-    private class ComponentIterator implements Iterator<Component>,
-            Serializable {
-        boolean first = getCompositionRoot() != null;
-
-        @Override
-        public boolean hasNext() {
-            return first;
-        }
-
-        @Override
-        public Component next() {
-            first = false;
-            return root;
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
-    }
-
     @Override
     public Iterator<Component> iterator() {
-        return new ComponentIterator();
+        if (getCompositionRoot() != null) {
+            return Collections.singletonList(getCompositionRoot()).iterator();
+        } else {
+            return Collections.<Component> emptyList().iterator();
+        }
     }
 
     /**
@@ -138,62 +126,8 @@ public class CustomComponent extends AbstractComponentContainer {
      * 
      * @return the number of contained components (zero or one)
      */
-    @Override
     public int getComponentCount() {
         return (root != null ? 1 : 0);
-    }
-
-    /**
-     * This method is not supported by CustomComponent.
-     * 
-     * @see com.vaadin.ui.ComponentContainer#replaceComponent(com.vaadin.ui.Component,
-     *      com.vaadin.ui.Component)
-     */
-    @Override
-    public void replaceComponent(Component oldComponent, Component newComponent) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * This method is not supported by CustomComponent. Use
-     * {@link CustomComponent#setCompositionRoot(Component)} to set
-     * CustomComponents "child".
-     * 
-     * @see com.vaadin.ui.AbstractComponentContainer#addComponent(com.vaadin.ui.Component)
-     */
-    @Override
-    public void addComponent(Component c) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * This method is not supported by CustomComponent.
-     * 
-     * @see com.vaadin.ui.AbstractComponentContainer#moveComponentsFrom(com.vaadin.ui.ComponentContainer)
-     */
-    @Override
-    public void moveComponentsFrom(ComponentContainer source) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * This method is not supported by CustomComponent.
-     * 
-     * @see com.vaadin.ui.AbstractComponentContainer#removeAllComponents()
-     */
-    @Override
-    public void removeAllComponents() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * This method is not supported by CustomComponent.
-     * 
-     * @see com.vaadin.ui.AbstractComponentContainer#removeComponent(com.vaadin.ui.Component)
-     */
-    @Override
-    public void removeComponent(Component c) {
-        throw new UnsupportedOperationException();
     }
 
 }
