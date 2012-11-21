@@ -17,15 +17,14 @@ package com.vaadin.client.ui.customcomponent;
 
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
-import com.vaadin.client.ui.AbstractComponentContainerConnector;
+import com.vaadin.client.ui.AbstractHasComponentsConnector;
 import com.vaadin.client.ui.VCustomComponent;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.ui.CustomComponent;
 
 @Connect(value = CustomComponent.class, loadStyle = LoadStyle.EAGER)
-public class CustomComponentConnector extends
-        AbstractComponentContainerConnector {
+public class CustomComponentConnector extends AbstractHasComponentsConnector {
 
     @Override
     public VCustomComponent getWidget() {
