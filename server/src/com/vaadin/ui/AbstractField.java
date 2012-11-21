@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 import com.vaadin.data.Buffered;
@@ -149,6 +150,11 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * @see #removePropertyListeners()
      */
     private boolean isListeningToPropertyEvents = false;
+
+    /**
+     * The locale used when setting the value.
+     */
+    private Locale valueLocale = null;
 
     /* Component basics */
 
@@ -309,7 +315,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         }
 
         // There is no buffered value so use whatever the data model provides
-        return convertFromDataSource(getDataSourceValue());
+        return convertFromModel(getDataSourceValue());
     }
 
     /*
@@ -452,7 +458,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                 throw new Property.ReadOnlyException();
             }
             try {
-                T doubleConvertedFieldValue = convertFromDataSource(convertToModel(newFieldValue));
+                T doubleConvertedFieldValue = convertFromModel(convertToModel(newFieldValue));
                 if (!equals(newFieldValue, doubleConvertedFieldValue)) {
                     newFieldValue = doubleConvertedFieldValue;
                     repaintIsNotNeeded = false;
@@ -530,7 +536,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         }
     }
 
-    private static boolean equals(Object value1, Object value2) {
+    static boolean equals(Object value1, Object value2) {
         if (value1 == null) {
             return value2 == null;
         }
@@ -617,7 +623,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         // Gets the value from source
         try {
             if (dataSource != null) {
-                T fieldValue = convertFromDataSource(getDataSourceValue());
+                T fieldValue = convertFromModel(getDataSourceValue());
                 setInternalValue(fieldValue);
             }
             setModified(false);
@@ -679,9 +685,24 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      *             if there is no converter and the type is not compatible with
      *             the data source type.
      */
-    private T convertFromDataSource(Object newValue) {
+    private T convertFromModel(Object newValue) {
+        return convertFromModel(newValue, getLocale());
+    }
+
+    /**
+     * Convert the given value from the data source type to the UI type.
+     * 
+     * @param newValue
+     *            The data source value to convert.
+     * @return The converted value that is compatible with the UI type or the
+     *         original value if its type is compatible and no converter is set.
+     * @throws Converter.ConversionException
+     *             if there is no converter and the type is not compatible with
+     *             the data source type.
+     */
+    private T convertFromModel(Object newValue, Locale locale) {
         return ConverterUtil.convertFromModel(newValue, getType(),
-                getConverter(), getLocale());
+                getConverter(), locale);
     }
 
     /**
@@ -697,6 +718,24 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     private Object convertToModel(T fieldValue)
             throws Converter.ConversionException {
+        return convertToModel(fieldValue, getLocale());
+    }
+
+    /**
+     * Convert the given value from the UI type to the data source type.
+     * 
+     * @param fieldValue
+     *            The value to convert. Typically returned by
+     *            {@link #getFieldValue()}
+     * @param locale
+     *            The locale to use for the conversion
+     * @return The converted value that is compatible with the data source type.
+     * @throws Converter.ConversionException
+     *             if there is no converter and the type is not compatible with
+     *             the data source type.
+     */
+    private Object convertToModel(T fieldValue, Locale locale)
+            throws Converter.ConversionException {
         Class<?> modelType = null;
         Property pd = getPropertyDataSource();
         if (pd != null) {
@@ -706,7 +745,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         }
         try {
             return ConverterUtil.convertToModel(fieldValue,
-                    (Class<Object>) modelType, getConverter(), getLocale());
+                    (Class<Object>) modelType, getConverter(), locale);
         } catch (ConversionException e) {
             throw new ConversionException(getConversionError(modelType), e);
         }
@@ -753,7 +792,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      *            The value to set. Must be the same type as the data source.
      */
     public void setConvertedValue(Object value) {
-        setValue(convertFromDataSource(value));
+        setValue(convertFromModel(value));
     }
 
     /* Validation */
@@ -1212,7 +1251,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     private void readValueFromProperty(Property.ValueChangeEvent event) {
-        setInternalValue(convertFromDataSource(event.getProperty().getValue()));
+        setInternalValue(convertFromModel(event.getProperty().getValue()));
     }
 
     /**
@@ -1273,6 +1312,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     protected void setInternalValue(T newValue) {
         value = newValue;
+        valueLocale = getLocale();
         if (validators != null && !validators.isEmpty()) {
             markAsDirty();
         }
@@ -1287,12 +1327,26 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     public void attach() {
         super.attach();
 
+        localeMightHaveChanged();
         if (!isListeningToPropertyEvents) {
             addPropertyListeners();
             if (!isModified() && !isBuffered()) {
                 // Update value from data source
                 updateValueFromDataSource();
             }
+        }
+    }
+
+    @Override
+    public void setLocale(Locale locale) {
+        super.setLocale(locale);
+        localeMightHaveChanged();
+    }
+
+    private void localeMightHaveChanged() {
+        if (!equals(valueLocale, getLocale())) {
+            Object modelValue = convertToModel(getValue(), valueLocale);
+            setValue(convertFromModel(modelValue));
         }
     }
 
@@ -1516,7 +1570,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             try {
 
                 // Discards buffer by overwriting from datasource
-                newFieldValue = convertFromDataSource(getDataSourceValue());
+                newFieldValue = convertFromModel(getDataSourceValue());
 
                 // If successful, remove set the buffering state to be ok
                 if (getCurrentBufferedSourceException() != null) {

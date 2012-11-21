@@ -17,6 +17,7 @@
 package com.vaadin.ui;
 
 import java.lang.reflect.Method;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 import com.vaadin.data.Property;
@@ -174,8 +175,8 @@ public class Label extends AbstractComponent implements Property<String>,
     }
 
     /**
-     * Returns the current value of the data source. Assumes there is a data
-     * source.
+     * Returns the current value of the data source converted using the current
+     * locale.
      * 
      * @return
      */
@@ -412,10 +413,34 @@ public class Label extends AbstractComponent implements Property<String>,
      */
     @Override
     public void valueChange(Property.ValueChangeEvent event) {
-        // Update the internal value from the data source
-        getState().text = getValue();
+        updateValueFromDataSource();
+    }
 
-        fireValueChange();
+    private void updateValueFromDataSource() {
+        // Update the internal value from the data source
+        String newConvertedValue = getDataSourceValue();
+        if (!AbstractField.equals(newConvertedValue, getState().text)) {
+            getState().text = newConvertedValue;
+            fireValueChange();
+        }
+    }
+
+    @Override
+    public void attach() {
+        super.attach();
+        localeMightHaveChanged();
+    }
+
+    @Override
+    public void setLocale(Locale locale) {
+        super.setLocale(locale);
+        localeMightHaveChanged();
+    }
+
+    private void localeMightHaveChanged() {
+        if (getPropertyDataSource() != null) {
+            updateValueFromDataSource();
+        }
     }
 
     private String getComparableValue() {
