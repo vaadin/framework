@@ -80,6 +80,17 @@ public class FileDownloader extends AbstractExtension {
     }
 
     /**
+     * Sets the resource that is downloaded when the extended component is
+     * clicked.
+     * 
+     * @param resource
+     *            the resource to download
+     */
+    public void setFileDownloadResource(Resource resource) {
+        setResource("dl", resource);
+    }
+
+    /**
      * Sets whether the content type of served resources should be overriden to
      * <code>application/octet-stream</code> to reduce the risk of a browser
      * plugin choosing to display the resource instead of downloading it. This
