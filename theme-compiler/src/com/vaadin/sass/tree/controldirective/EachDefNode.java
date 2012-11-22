@@ -55,8 +55,13 @@ public class EachDefNode extends Node implements IVariableNode {
 
     @Override
     public String toString() {
-        return "Each Definition Node: {variable : " + var + ", "
-                + "children : " + list.size() + "}";
+        if (hasListVariable()) {
+            return "Each Definition Node: {variable : " + var + ", "
+                    + "listVariable : " + listVariable + "}";
+        } else {
+            return "Each Definition Node: {variable : " + var + ", "
+                    + "children : " + list.size() + "}";
+        }
     }
 
     public boolean hasListVariable() {

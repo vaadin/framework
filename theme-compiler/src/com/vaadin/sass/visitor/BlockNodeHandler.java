@@ -23,6 +23,25 @@ import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.tree.BlockNode;
 import com.vaadin.sass.tree.Node;
 
+/**
+ * Handle nesting of blocks by moving child blocks to their parent, updating
+ * their selector lists while doing so. Also parent selectors (&amp;) are
+ * handled here.
+ * 
+ * Sample SASS code (from www.sass-lang.com):
+ * 
+ * <pre>
+ * table.hl {
+ *   margin: 2em 0;
+ *   td.ln {
+ *     text-align: right;
+ *   }
+ * }
+ * </pre>
+ * 
+ * Note that nested properties are handled by {@link NestedNodeHandler}, not
+ * here.
+ */
 public class BlockNodeHandler {
 
     public static void traverse(BlockNode node) {
@@ -47,26 +66,25 @@ public class BlockNodeHandler {
 
     private static void combineParentSelectorListToChild(BlockNode node) {
         ArrayList<String> newList = new ArrayList<String>();
-        ArrayList<String> parentSelectors = ((BlockNode) node.getParentNode())
-                .getSelectorList();
-        ArrayList<String> childSelectors = node.getSelectorList();
-        for (int i = 0; i < parentSelectors.size(); i++) {
-            String parentSelector = parentSelectors.get(i);
-            for (int j = 0; j < childSelectors.size(); j++) {
-                String childSelector = childSelectors.get(j);
-                newList.add(parentSelector + " " + childSelector);
+        BlockNode parentBlock = (BlockNode) node.getParentNode();
+        for (String parentSelector : parentBlock.getSelectorList()) {
+            for (String childSelector : node.getSelectorList()) {
+                // handle parent selector
+                if (childSelector.contains("&")) {
+                    newList.add(childSelector.replace("&", parentSelector));
+                } else {
+                    newList.add(parentSelector + " " + childSelector);
+                }
             }
-
         }
         node.setSelectorList(newList);
         Node oldParent = node.getParentNode();
         HashMap<Node, Node> lastNodeAdded = ScssStylesheet.getLastNodeAdded();
         if (lastNodeAdded.get(oldParent) != null) {
-            node.getParentNode().getParentNode()
-                    .appendChild(node, lastNodeAdded.get(oldParent));
+            oldParent.getParentNode().appendChild(node,
+                    lastNodeAdded.get(oldParent));
         } else {
-            node.getParentNode().getParentNode()
-                    .appendChild(node, node.getParentNode());
+            oldParent.getParentNode().appendChild(node, oldParent);
         }
 
         lastNodeAdded.put(oldParent, node);

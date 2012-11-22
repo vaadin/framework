@@ -20,7 +20,6 @@ import java.util.ArrayList;
 
 import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.visitor.BlockNodeHandler;
-import com.vaadin.sass.visitor.ParentSelectorHandler;
 
 public class BlockNode extends Node implements IVariableNode {
 
@@ -106,7 +105,6 @@ public class BlockNode extends Node implements IVariableNode {
     @Override
     public void traverse() {
         try {
-            ParentSelectorHandler.traverse(this);
             BlockNodeHandler.traverse(this);
             replaceVariables(ScssStylesheet.getVariables());
         } catch (Exception e) {
