@@ -1799,7 +1799,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
         String interfaceName = invocationJson.getString(1);
         String methodName = invocationJson.getString(2);
 
-        if (connectorTracker.getConnector(connectorId) == null) {
+        if (connectorTracker.getConnector(connectorId) == null
+                && !connectorId.equals("DD")) {
             getLogger().log(
                     Level.WARNING,
                     "RPC call to " + interfaceName + "." + methodName
