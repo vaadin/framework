@@ -56,37 +56,37 @@ public class Label extends AbstractComponent implements Property<String>,
             .getLogger(Label.class.getName());
 
     /**
-     * @deprecated From 7.0, use {@link ContentMode#TEXT} instead
+     * @deprecated As of 7.0, use {@link ContentMode#TEXT} instead
      */
     @Deprecated
     public static final ContentMode CONTENT_TEXT = ContentMode.TEXT;
 
     /**
-     * @deprecated From 7.0, use {@link ContentMode#PREFORMATTED} instead
+     * @deprecated As of 7.0, use {@link ContentMode#PREFORMATTED} instead
      */
     @Deprecated
     public static final ContentMode CONTENT_PREFORMATTED = ContentMode.PREFORMATTED;
 
     /**
-     * @deprecated From 7.0, use {@link ContentMode#HTML} instead
+     * @deprecated As of 7.0, use {@link ContentMode#HTML} instead
      */
     @Deprecated
     public static final ContentMode CONTENT_XHTML = ContentMode.HTML;
 
     /**
-     * @deprecated From 7.0, use {@link ContentMode#XML} instead
+     * @deprecated As of 7.0, use {@link ContentMode#XML} instead
      */
     @Deprecated
     public static final ContentMode CONTENT_XML = ContentMode.XML;
 
     /**
-     * @deprecated From 7.0, use {@link ContentMode#RAW} instead
+     * @deprecated As of 7.0, use {@link ContentMode#RAW} instead
      */
     @Deprecated
     public static final ContentMode CONTENT_RAW = ContentMode.RAW;
 
     /**
-     * @deprecated From 7.0, use {@link ContentMode#TEXT} instead
+     * @deprecated As of 7.0, use {@link ContentMode#TEXT} instead
      */
     @Deprecated
     public static final ContentMode CONTENT_DEFAULT = ContentMode.TEXT;
@@ -205,7 +205,7 @@ public class Label extends AbstractComponent implements Property<String>,
      * Returns the value displayed by this label.
      * 
      * @see java.lang.Object#toString()
-     * @deprecated As of 7.0.0, use {@link #getValue()} to get the value of the
+     * @deprecated As of 7.0, use {@link #getValue()} to get the value of the
      *             label or {@link #getPropertyDataSource()} .getValue() to get
      *             the value of the data source.
      */
@@ -365,7 +365,7 @@ public class Label extends AbstractComponent implements Property<String>,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
      **/
     @Override
@@ -388,7 +388,7 @@ public class Label extends AbstractComponent implements Property<String>,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
      **/
     @Override

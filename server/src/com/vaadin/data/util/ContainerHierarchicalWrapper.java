@@ -719,7 +719,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addItemSetChangeListener(com.vaadin.data.Container.ItemSetChangeListener)}
      **/
     @Override
@@ -743,7 +743,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeItemSetChangeListener(com.vaadin.data.Container.ItemSetChangeListener)}
      **/
     @Override
@@ -768,7 +768,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addPropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)}
      **/
     @Override
@@ -793,7 +793,7 @@ public class ContainerHierarchicalWrapper implements Container.Hierarchical,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removePropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)}
      **/
     @Override

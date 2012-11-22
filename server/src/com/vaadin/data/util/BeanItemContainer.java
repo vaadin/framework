@@ -110,7 +110,8 @@ public class BeanItemContainer<BEANTYPE> extends
      * @throws IllegalArgumentException
      *             If the collection is null or empty.
      * 
-     * @deprecated use {@link #BeanItemContainer(Class, Collection)} instead
+     * @deprecated As of 6.5, use {@link #BeanItemContainer(Class, Collection)}
+     *             instead
      */
     @SuppressWarnings("unchecked")
     @Deprecated

@@ -348,7 +348,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addCloseListener(CloseListener)}
      **/
     @Deprecated
@@ -371,7 +371,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeCloseListener(CloseListener)}
      **/
     @Deprecated
@@ -442,7 +442,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addResizeListener(ResizeListener)}
      **/
     @Deprecated
@@ -460,7 +460,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeResizeListener(ResizeListener)}
      **/
     @Deprecated
@@ -771,7 +771,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addFocusListener(FocusListener)}
      **/
     @Override
@@ -786,7 +786,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeFocusListener(FocusListener)}
      **/
     @Override
@@ -810,7 +810,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by {@link #addBlurListener(BlurListener)}
+     * @deprecated As of 7.0, replaced by {@link #addBlurListener(BlurListener)}
      **/
     @Override
     @Deprecated
@@ -824,7 +824,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeBlurListener(BlurListener)}
      **/
     @Override

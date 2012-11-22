@@ -125,7 +125,7 @@ public class CheckBox extends AbstractField<Boolean> {
     }
 
     /**
-     * @deprecated Since 7.0, replaced by {@link #addBlurListener(BlurListener)}
+     * @deprecated As of 7.0, replaced by {@link #addBlurListener(BlurListener)}
      **/
     @Deprecated
     public void addListener(BlurListener listener) {
@@ -137,7 +137,7 @@ public class CheckBox extends AbstractField<Boolean> {
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeBlurListener(BlurListener)}
      **/
     @Deprecated
@@ -151,7 +151,7 @@ public class CheckBox extends AbstractField<Boolean> {
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addFocusListener(FocusListener)}
      **/
     @Deprecated
@@ -164,7 +164,7 @@ public class CheckBox extends AbstractField<Boolean> {
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeFocusListener(FocusListener)}
      **/
     @Deprecated
@@ -177,8 +177,8 @@ public class CheckBox extends AbstractField<Boolean> {
      * 
      * @return True iff the button is pressed down or checked.
      * 
-     * @deprecated Use {@link #getValue()} instead and, if needed, handle null
-     *             values.
+     * @deprecated As of 7.0, use {@link #getValue()} instead and, if needed,
+     *             handle null values.
      */
     @Deprecated
     public boolean booleanValue() {

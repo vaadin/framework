@@ -309,7 +309,7 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addLayoutClickListener(LayoutClickListener)}
      **/
     @Override
@@ -325,7 +325,7 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeLayoutClickListener(LayoutClickListener)}
      **/
     @Override

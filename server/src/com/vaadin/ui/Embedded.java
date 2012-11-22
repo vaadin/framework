@@ -536,7 +536,7 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addClickListener(ClickListener)}
      **/
     @Deprecated
@@ -557,7 +557,7 @@ public class Embedded extends AbstractComponent implements LegacyComponent {
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeClickListener(ClickListener)}
      **/
     @Deprecated

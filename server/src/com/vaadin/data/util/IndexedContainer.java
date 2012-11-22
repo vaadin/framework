@@ -490,7 +490,7 @@ public class IndexedContainer extends
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addPropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)}
      **/
     @Deprecated
@@ -506,7 +506,7 @@ public class IndexedContainer extends
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removePropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)}
      **/
     @Deprecated
@@ -530,7 +530,7 @@ public class IndexedContainer extends
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
      **/
     @Override
@@ -553,7 +553,7 @@ public class IndexedContainer extends
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
      **/
     @Override
@@ -956,8 +956,8 @@ public class IndexedContainer extends
          * 
          * @return <code>String</code> representation of the value stored in the
          *         Property
-         * @deprecated use {@link #getValue()} instead and possibly toString on
-         *             that
+         * @deprecated As of 7.0, use {@link #getValue()} instead and possibly
+         *             toString on that
          */
         @Deprecated
         @Override
@@ -1026,7 +1026,7 @@ public class IndexedContainer extends
         }
 
         /**
-         * @deprecated Since 7.0, replaced by
+         * @deprecated As of 7.0, replaced by
          *             {@link #addValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
          **/
         @Override
@@ -1048,7 +1048,7 @@ public class IndexedContainer extends
         }
 
         /**
-         * @deprecated Since 7.0, replaced by
+         * @deprecated As of 7.0, replaced by
          *             {@link #removeValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
          **/
         @Override
@@ -1101,8 +1101,8 @@ public class IndexedContainer extends
      * @throws CloneNotSupportedException
      *             if an object cannot be cloned. .
      * 
-     * @deprecated cloning support might be removed from IndexedContainer in the
-     *             future
+     * @deprecated As of 6.6. Cloning support might be removed from
+     *             IndexedContainer in the future
      */
     @Deprecated
     @Override

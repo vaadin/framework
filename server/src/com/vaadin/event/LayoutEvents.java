@@ -81,7 +81,7 @@ public interface LayoutEvents {
         public void addLayoutClickListener(LayoutClickListener listener);
 
         /**
-         * @deprecated Since 7.0, replaced by
+         * @deprecated As of 7.0, replaced by
          *             {@link #addLayoutClickListener(LayoutClickListener)}
          **/
         @Deprecated
@@ -96,7 +96,7 @@ public interface LayoutEvents {
         public void removeLayoutClickListener(LayoutClickListener listener);
 
         /**
-         * @deprecated Since 7.0, replaced by
+         * @deprecated As of 7.0, replaced by
          *             {@link #removeLayoutClickListener(LayoutClickListener)}
          **/
         @Deprecated

@@ -35,7 +35,7 @@ import com.vaadin.data.Container;
  * 
  * @author Vaadin Ltd.
  * @since 3.0
- * @deprecated as of 7.0. Use {@link ComboBox} instead.
+ * @deprecated As of 7.0. Use {@link ComboBox} instead.
  */
 @Deprecated
 public class Select extends ComboBox {
