@@ -168,19 +168,19 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * @deprecated from 7.0, use {@link Align#LEFT} instead
+     * @deprecated As of 7.0, use {@link Align#LEFT} instead
      */
     @Deprecated
     public static final Align ALIGN_LEFT = Align.LEFT;
 
     /**
-     * @deprecated from 7.0, use {@link Align#CENTER} instead
+     * @deprecated As of 7.0, use {@link Align#CENTER} instead
      */
     @Deprecated
     public static final Align ALIGN_CENTER = Align.CENTER;
 
     /**
-     * @deprecated from 7.0, use {@link Align#RIGHT} instead
+     * @deprecated As of 7.0, use {@link Align#RIGHT} instead
      */
     @Deprecated
     public static final Align ALIGN_RIGHT = Align.RIGHT;
@@ -210,25 +210,25 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * @deprecated from 7.0, use {@link ColumnHeaderMode#HIDDEN} instead
+     * @deprecated As of 7.0, use {@link ColumnHeaderMode#HIDDEN} instead
      */
     @Deprecated
     public static final ColumnHeaderMode COLUMN_HEADER_MODE_HIDDEN = ColumnHeaderMode.HIDDEN;
 
     /**
-     * @deprecated from 7.0, use {@link ColumnHeaderMode#ID} instead
+     * @deprecated As of 7.0, use {@link ColumnHeaderMode#ID} instead
      */
     @Deprecated
     public static final ColumnHeaderMode COLUMN_HEADER_MODE_ID = ColumnHeaderMode.ID;
 
     /**
-     * @deprecated from 7.0, use {@link ColumnHeaderMode#EXPLICIT} instead
+     * @deprecated As of 7.0, use {@link ColumnHeaderMode#EXPLICIT} instead
      */
     @Deprecated
     public static final ColumnHeaderMode COLUMN_HEADER_MODE_EXPLICIT = ColumnHeaderMode.EXPLICIT;
 
     /**
-     * @deprecated from 7.0, use {@link ColumnHeaderMode#EXPLICIT_DEFAULTS_ID}
+     * @deprecated As of 7.0, use {@link ColumnHeaderMode#EXPLICIT_DEFAULTS_ID}
      *             instead
      */
     @Deprecated
@@ -286,50 +286,50 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * @deprecated from 7.0, use {@link RowHeaderMode#HIDDEN} instead
+     * @deprecated As of 7.0, use {@link RowHeaderMode#HIDDEN} instead
      */
     @Deprecated
     public static final RowHeaderMode ROW_HEADER_MODE_HIDDEN = RowHeaderMode.HIDDEN;
 
     /**
-     * @deprecated from 7.0, use {@link RowHeaderMode#ID} instead
+     * @deprecated As of 7.0, use {@link RowHeaderMode#ID} instead
      */
     @Deprecated
     public static final RowHeaderMode ROW_HEADER_MODE_ID = RowHeaderMode.ID;
 
     /**
-     * @deprecated from 7.0, use {@link RowHeaderMode#ITEM} instead
+     * @deprecated As of 7.0, use {@link RowHeaderMode#ITEM} instead
      */
     @Deprecated
     public static final RowHeaderMode ROW_HEADER_MODE_ITEM = RowHeaderMode.ITEM;
 
     /**
-     * @deprecated from 7.0, use {@link RowHeaderMode#INDEX} instead
+     * @deprecated As of 7.0, use {@link RowHeaderMode#INDEX} instead
      */
     @Deprecated
     public static final RowHeaderMode ROW_HEADER_MODE_INDEX = RowHeaderMode.INDEX;
 
     /**
-     * @deprecated from 7.0, use {@link RowHeaderMode#EXPLICIT_DEFAULTS_ID}
+     * @deprecated As of 7.0, use {@link RowHeaderMode#EXPLICIT_DEFAULTS_ID}
      *             instead
      */
     @Deprecated
     public static final RowHeaderMode ROW_HEADER_MODE_EXPLICIT_DEFAULTS_ID = RowHeaderMode.EXPLICIT_DEFAULTS_ID;
 
     /**
-     * @deprecated from 7.0, use {@link RowHeaderMode#EXPLICIT} instead
+     * @deprecated As of 7.0, use {@link RowHeaderMode#EXPLICIT} instead
      */
     @Deprecated
     public static final RowHeaderMode ROW_HEADER_MODE_EXPLICIT = RowHeaderMode.EXPLICIT;
 
     /**
-     * @deprecated from 7.0, use {@link RowHeaderMode#ICON_ONLY} instead
+     * @deprecated As of 7.0, use {@link RowHeaderMode#ICON_ONLY} instead
      */
     @Deprecated
     public static final RowHeaderMode ROW_HEADER_MODE_ICON_ONLY = RowHeaderMode.ICON_ONLY;
 
     /**
-     * @deprecated from 7.0, use {@link RowHeaderMode#PROPERTY} instead
+     * @deprecated As of 7.0, use {@link RowHeaderMode#PROPERTY} instead
      */
     @Deprecated
     public static final RowHeaderMode ROW_HEADER_MODE_PROPERTY = RowHeaderMode.PROPERTY;
@@ -1656,7 +1656,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * this method has been called. See {@link #refreshRowCache()} for forcing
      * an update of the contents.
      * 
-     * @deprecated As of 7.0.0, use {@link #markAsDirty()} instead
+     * @deprecated As of 7.0, use {@link #markAsDirty()} instead
      */
 
     @Deprecated
@@ -4632,7 +4632,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addItemClickListener(ItemClickListener)}
      **/
     @Override
@@ -4648,7 +4648,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeItemClickListener(ItemClickListener)}
      **/
     @Override
@@ -5004,7 +5004,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addHeaderClickListener(HeaderClickListener)}
      **/
     @Deprecated
@@ -5024,7 +5024,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeHeaderClickListener(HeaderClickListener)}
      **/
     @Deprecated
@@ -5050,7 +5050,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addFooterClickListener(FooterClickListener)}
      **/
     @Deprecated
@@ -5070,7 +5070,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeFooterClickListener(FooterClickListener)}
      **/
     @Deprecated
@@ -5236,7 +5236,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addColumnResizeListener(ColumnResizeListener)}
      **/
     @Deprecated
@@ -5256,7 +5256,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeColumnResizeListener(ColumnResizeListener)}
      **/
     @Deprecated
@@ -5319,7 +5319,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addColumnReorderListener(ColumnReorderListener)}
      **/
     @Deprecated
@@ -5339,7 +5339,7 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeColumnReorderListener(ColumnReorderListener)}
      **/
     @Deprecated

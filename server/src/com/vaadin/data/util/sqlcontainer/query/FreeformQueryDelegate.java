@@ -34,8 +34,8 @@ public interface FreeformQueryDelegate extends Serializable {
      * @param pagelength
      *            the number of records (rows) to fetch. 0 means all records
      *            starting from offset.
-     * @deprecated Implement {@link FreeformStatementDelegate} instead of
-     *             {@link FreeformQueryDelegate}
+     * @deprecated As of 6.7. Implement {@link FreeformStatementDelegate}
+     *             instead of {@link FreeformQueryDelegate}
      */
     @Deprecated
     public String getQueryString(int offset, int limit)
@@ -48,8 +48,8 @@ public interface FreeformQueryDelegate extends Serializable {
      * 
      * @return row count
      * @throws SQLException
-     * @deprecated Implement {@link FreeformStatementDelegate} instead of
-     *             {@link FreeformQueryDelegate}
+     * @deprecated As of 6.7. Implement {@link FreeformStatementDelegate}
+     *             instead of {@link FreeformQueryDelegate}
      */
     @Deprecated
     public String getCountQuery() throws UnsupportedOperationException;
@@ -121,8 +121,8 @@ public interface FreeformQueryDelegate extends Serializable {
      *            the values of the primary keys
      * @throws UnsupportedOperationException
      *             to use the default logic in FreeformQuery
-     * @deprecated Implement {@link FreeformStatementDelegate} instead of
-     *             {@link FreeformQueryDelegate}
+     * @deprecated As of 6.7. Implement {@link FreeformStatementDelegate}
+     *             instead of {@link FreeformQueryDelegate}
      */
     @Deprecated
     public String getContainsRowQueryString(Object... keys)

@@ -117,7 +117,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
     }
 
     /**
-     * @deprecated As of 7.0.0, use {@link #markAsDirty()} instead
+     * @deprecated As of 7.0, use {@link #markAsDirty()} instead
      */
     @Deprecated
     @Override
@@ -455,7 +455,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
     }
 
     /**
-     * @deprecated As of 7.0.0, use {@link #markAsDirtyRecursive()} instead
+     * @deprecated As of 7.0, use {@link #markAsDirtyRecursive()} instead
      */
     @Override
     @Deprecated
@@ -847,7 +847,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
      *            the object instance who owns the activation method.
      * @param methodName
      *            the name of the activation method.
-     * @deprecated This method should be avoided. Use
+     * @deprecated As of 7.0. This method should be avoided. Use
      *             {@link #addListener(Class, Object, Method)} or
      *             {@link #addListener(String, Class, Object, Method)} instead.
      */
@@ -938,7 +938,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * @param methodName
      *            the name of the method owned by <code>target</code> that's
      *            registered to listen to events of type <code>eventType</code>.
-     * @deprecated This method should be avoided. Use
+     * @deprecated As of 7.0. This method should be avoided. Use
      *             {@link #removeListener(Class, Object, Method)} instead.
      */
     @Deprecated

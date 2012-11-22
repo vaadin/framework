@@ -574,7 +574,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addStartedListener(StartedListener)}
      **/
     @Deprecated
@@ -593,7 +593,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeStartedListener(StartedListener)}
      **/
     @Deprecated
@@ -612,7 +612,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addFinishedListener(FinishedListener)}
      **/
     @Deprecated
@@ -631,7 +631,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeFinishedListener(FinishedListener)}
      **/
     @Deprecated
@@ -650,7 +650,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addFailedListener(FailedListener)}
      **/
     @Deprecated
@@ -669,7 +669,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeFailedListener(FailedListener)}
      **/
     @Deprecated
@@ -688,7 +688,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addSucceededListener(SucceededListener)}
      **/
     @Deprecated
@@ -707,7 +707,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeSucceededListener(SucceededListener)}
      **/
     @Deprecated
@@ -729,7 +729,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addProgressListener(ProgressListener)}
      **/
     @Deprecated
@@ -750,7 +750,7 @@ public class Upload extends AbstractComponent implements Component.Focusable,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeProgressListener(ProgressListener)}
      **/
     @Deprecated

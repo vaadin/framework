@@ -307,7 +307,7 @@ public interface Property<T> extends Serializable {
         public void addValueChangeListener(Property.ValueChangeListener listener);
 
         /**
-         * @deprecated Since 7.0, replaced by
+         * @deprecated As of 7.0, replaced by
          *             {@link #addValueChangeListener(ValueChangeListener)}
          **/
         @Deprecated
@@ -323,7 +323,7 @@ public interface Property<T> extends Serializable {
                 Property.ValueChangeListener listener);
 
         /**
-         * @deprecated Since 7.0, replaced by
+         * @deprecated As of 7.0, replaced by
          *             {@link #removeValueChangeListener(ValueChangeListener)}
          **/
         @Deprecated
@@ -398,7 +398,7 @@ public interface Property<T> extends Serializable {
                 Property.ReadOnlyStatusChangeListener listener);
 
         /**
-         * @deprecated Since 7.0, replaced by
+         * @deprecated As of 7.0, replaced by
          *             {@link #addReadOnlyStatusChangeListener(ReadOnlyStatusChangeListener)}
          **/
         @Deprecated
@@ -414,7 +414,7 @@ public interface Property<T> extends Serializable {
                 Property.ReadOnlyStatusChangeListener listener);
 
         /**
-         * @deprecated Since 7.0, replaced by
+         * @deprecated As of 7.0, replaced by
          *             {@link #removeReadOnlyStatusChangeListener(ReadOnlyStatusChangeListener)}
          **/
         @Deprecated

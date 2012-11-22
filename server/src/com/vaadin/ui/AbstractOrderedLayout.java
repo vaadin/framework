@@ -344,7 +344,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addLayoutClickListener(LayoutClickListener)}
      **/
     @Override
@@ -360,7 +360,7 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeLayoutClickListener(LayoutClickListener)}
      **/
     @Override

@@ -161,7 +161,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * Get the web browser associated with this session.
      * 
      * @return
-     * @deprecated will likely change or be removed in a future version
+     * @deprecated As of 7.0. Will likely change or be removed in a future
+     *             version
      */
     @Deprecated
     public WebBrowser getBrowser() {
@@ -221,7 +222,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     /**
      * @return
      * 
-     * @deprecated will likely change or be removed in a future version
+     * @deprecated As of 7.0. Will likely change or be removed in a future
+     *             version
      */
     @Deprecated
     public AbstractCommunicationManager getCommunicationManager() {
@@ -234,7 +236,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @param underlyingSession
      * @return
      * 
-     * @deprecated will likely change or be removed in a future version
+     * @deprecated As of 7.0. Will likely change or be removed in a future
+     *             version
      */
     @Deprecated
     public static VaadinSession getForSession(VaadinService service,
@@ -254,7 +257,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * 
      * @param service
      *            TODO
-     * @deprecated will likely change or be removed in a future version
+     * @deprecated As of 7.0. Will likely change or be removed in a future
+     *             version
      */
     @Deprecated
     public void removeFromSession(VaadinService service) {
@@ -268,7 +272,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     /**
      * @param session
      * 
-     * @deprecated will likely change or be removed in a future version
+     * @deprecated As of 7.0. Will likely change or be removed in a future
+     *             version
      */
     @Deprecated
     public void storeInSession(VaadinService service, WrappedSession session) {
@@ -500,7 +505,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *            A connector that has not yet been assigned an id.
      * @return A new id for the connector
      * 
-     * @deprecated will likely change or be removed in a future version
+     * @deprecated As of 7.0. Will likely change or be removed in a future
+     *             version
      */
     @Deprecated
     public String createConnectorId(ClientConnector connector) {
@@ -568,7 +574,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *            the bootstrap response event for which listeners should be
      *            fired
      * 
-     * @deprecated will likely change or be removed in a future version
+     * @deprecated As of 7.0. Will likely change or be removed in a future
+     *             version
      */
     @Deprecated
     public void modifyBootstrapResponse(BootstrapResponse response) {
@@ -587,7 +594,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * 
      * @since 7.0.0
      * 
-     * @deprecated will likely change or be removed in a future version
+     * @deprecated As of 7.0. Will likely change or be removed in a future
+     *             version
      */
     @Deprecated
     public void cleanupInactiveUIs() {
@@ -613,7 +621,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @param ui
      *            the UI to remove
      * 
-     * @deprecated Method is declared as public only to support
+     * @deprecated As of 7.0. Method is declared as public only to support
      *             {@link LegacyApplication#close()} and will be removed when
      *             LegacyApplciation support is removed.
      */
@@ -677,13 +685,15 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * 
      * @since 7.0.0
      * 
-     * @deprecated will likely change or be removed in a future version
+     * @deprecated As of 7.0. Will likely change or be removed in a future
+     *             version
      * 
      * @param ui
      *            The UI whose status to check
      * @return true if the UI is alive, false if it could be removed.
      * 
-     * @deprecated will likely change or be removed in a future version
+     * @deprecated As of 7.0. Will likely change or be removed in a future
+     *             version
      */
     @Deprecated
     protected boolean isUIAlive(UI ui) {

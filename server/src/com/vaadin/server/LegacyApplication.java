@@ -32,8 +32,8 @@ import com.vaadin.ui.UI;
  * additional browser level windows and defining the theme for the entire
  * application.
  * 
- * @deprecated This class is only intended to ease migration and should not be
- *             used for new projects.
+ * @deprecated As of 7.0. This class is only intended to ease migration and
+ *             should not be used for new projects.
  * 
  * @since 7.0
  */

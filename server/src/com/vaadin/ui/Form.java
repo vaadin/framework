@@ -72,8 +72,8 @@ import com.vaadin.shared.ui.form.FormState;
  * 
  * @author Vaadin Ltd.
  * @since 3.0
- * @deprecated Use {@link FieldGroup} instead of {@link Form} for more
- *             flexibility.
+ * @deprecated As of 7.0, use {@link FieldGroup} instead of {@link Form} for
+ *             more flexibility.
  */
 @Deprecated
 public class Form extends AbstractField<Object> implements Item.Editor,

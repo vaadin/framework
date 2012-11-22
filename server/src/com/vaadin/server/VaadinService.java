@@ -57,13 +57,13 @@ public abstract class VaadinService implements Serializable {
                     SessionDestroyEvent.class);
 
     /**
-     * @deprecated Only supported for {@link LegacyApplication}.
+     * @deprecated As of 7.0. Only supported for {@link LegacyApplication}.
      */
     @Deprecated
     public static final String URL_PARAMETER_RESTART_APPLICATION = "restartApplication";
 
     /**
-     * @deprecated Only supported for {@link LegacyApplication}.
+     * @deprecated As of 7.0. Only supported for {@link LegacyApplication}.
      */
     @Deprecated
     public static final String URL_PARAMETER_CLOSE_APPLICATION = "closeApplication";
@@ -434,7 +434,7 @@ public abstract class VaadinService implements Serializable {
      * @return
      * @throws MalformedURLException
      * 
-     * @deprecated Only used to support {@link LegacyApplication}.
+     * @deprecated As of 7.0. Only used to support {@link LegacyApplication}.
      */
     @Deprecated
     protected URL getApplicationUrl(VaadinRequest request)

@@ -66,7 +66,7 @@ public class Image extends AbstractEmbedded {
     }
 
     /**
-     * @deprecated As of 7.0.0, use {@link #addClickListener(ClickListener)}
+     * @deprecated As of 7.0, use {@link #addClickListener(ClickListener)}
      *             instead
      */
     @Deprecated
@@ -90,7 +90,7 @@ public class Image extends AbstractEmbedded {
     }
 
     /**
-     * @deprecated As of 7.0.0, use {@link #removeClickListener(ClickListener)}
+     * @deprecated As of 7.0, use {@link #removeClickListener(ClickListener)}
      *             instead
      */
     @Deprecated

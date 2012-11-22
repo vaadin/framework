@@ -212,19 +212,19 @@ public class Page implements Serializable {
                     "browserWindowResized", BrowserWindowResizeEvent.class);
 
     /**
-     * @deprecated from 7.0, use {@link BorderStyle#NONE} instead.
+     * @deprecated As of 7.0, use {@link BorderStyle#NONE} instead.
      */
     @Deprecated
     public static final BorderStyle BORDER_NONE = BorderStyle.NONE;
 
     /**
-     * @deprecated from 7.0, use {@link BorderStyle#MINIMAL} instead.
+     * @deprecated As of 7.0, use {@link BorderStyle#MINIMAL} instead.
      */
     @Deprecated
     public static final BorderStyle BORDER_MINIMAL = BorderStyle.MINIMAL;
 
     /**
-     * @deprecated from 7.0, use {@link BorderStyle#DEFAULT} instead.
+     * @deprecated As of 7.0, use {@link BorderStyle#DEFAULT} instead.
      */
     @Deprecated
     public static final BorderStyle BORDER_DEFAULT = BorderStyle.DEFAULT;
@@ -330,7 +330,7 @@ public class Page implements Serializable {
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addUriFragmentChangedListener(UriFragmentChangedListener)}
      **/
     @Deprecated
@@ -345,7 +345,7 @@ public class Page implements Serializable {
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeUriFragmentChangedListener(UriFragmentChangedListener)}
      **/
     @Deprecated
@@ -510,7 +510,7 @@ public class Page implements Serializable {
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addBrowserWindowResizeListener(BrowserWindowResizeListener)}
      **/
     @Deprecated
@@ -532,7 +532,7 @@ public class Page implements Serializable {
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeBrowserWindowResizeListener(BrowserWindowResizeListener)}
      **/
     @Deprecated
@@ -762,7 +762,7 @@ public class Page implements Serializable {
     }
 
     /**
-     * @deprecated only retained to maintain compatibility with
+     * @deprecated As of 7.0, only retained to maintain compatibility with
      *             LegacyWindow.open methods. See documentation for
      *             {@link LegacyWindow#open(Resource, String, int, int, BorderStyle)}
      *             for discussion about replacing API.
@@ -797,7 +797,7 @@ public class Page implements Serializable {
      * @param notification
      *            The notification message to show
      * 
-     * @deprecated Use Notification.show(Page) instead.
+     * @deprecated As of 7.0, use Notification.show(Page) instead.
      */
     @Deprecated
     public void showNotification(Notification notification) {

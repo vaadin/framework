@@ -74,7 +74,8 @@ public abstract class AbstractProperty<T> implements Property<T>,
      * format.
      * 
      * @return String representation of the value stored in the Property
-     * @deprecated use {@link #getValue()} instead and possibly toString on that
+     * @deprecated As of 7.0, use {@link #getValue()} instead and possibly
+     *             toString on that
      */
     @Deprecated
     @Override
@@ -139,7 +140,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addReadOnlyStatusChangeListener(com.vaadin.data.Property.ReadOnlyStatusChangeListener)}
      **/
     @Override
@@ -163,7 +164,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeReadOnlyStatusChangeListener(com.vaadin.data.Property.ReadOnlyStatusChangeListener)}
      **/
     @Override
@@ -226,7 +227,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
      **/
     @Override
@@ -244,7 +245,7 @@ public abstract class AbstractProperty<T> implements Property<T>,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
      **/
     @Override

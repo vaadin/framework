@@ -1520,7 +1520,7 @@ public class SQLContainer implements Container, Container.Filterable,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addItemSetChangeListener(com.vaadin.data.Container.ItemSetChangeListener)}
      **/
     @Override
@@ -1546,7 +1546,7 @@ public class SQLContainer implements Container, Container.Filterable,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeItemSetChangeListener(com.vaadin.data.Container.ItemSetChangeListener)}
      **/
     @Override
@@ -1601,7 +1601,7 @@ public class SQLContainer implements Container, Container.Filterable,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addRowIdChangeListener(RowIdChangeListener)}
      **/
     @Deprecated
@@ -1622,7 +1622,7 @@ public class SQLContainer implements Container, Container.Filterable,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeRowIdChangeListener(RowIdChangeListener)}
      **/
     @Deprecated

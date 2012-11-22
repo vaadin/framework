@@ -757,7 +757,7 @@ public class TreeTable extends Table implements Hierarchical {
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addExpandListener(ExpandListener)}
      **/
     @Deprecated
@@ -777,7 +777,7 @@ public class TreeTable extends Table implements Hierarchical {
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeExpandListener(ExpandListener)}
      **/
     @Deprecated
@@ -807,7 +807,7 @@ public class TreeTable extends Table implements Hierarchical {
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addCollapseListener(CollapseListener)}
      **/
     @Deprecated
@@ -827,7 +827,7 @@ public class TreeTable extends Table implements Hierarchical {
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeCollapseListener(CollapseListener)}
      **/
     @Deprecated

@@ -360,7 +360,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
 
     // ItemSetChangeNotifier
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addItemSetChangeListener(com.vaadin.data.Container.ItemSetChangeListener)}
      **/
     @Deprecated
@@ -382,7 +382,7 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeItemSetChangeListener(com.vaadin.data.Container.ItemSetChangeListener)}
      **/
     @Deprecated

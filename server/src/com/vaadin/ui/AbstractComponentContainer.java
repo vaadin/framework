@@ -103,7 +103,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addComponentAttachListener(com.vaadin.ui.ComponentContainer.ComponentAttachListener)}
      **/
     @Override
@@ -120,7 +120,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addComponentDetachListener(com.vaadin.ui.ComponentContainer.ComponentDetachListener)}
      **/
     @Override
@@ -137,7 +137,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeComponentAttachListener(com.vaadin.ui.ComponentContainer.ComponentAttachListener)}
      **/
     @Override
@@ -154,7 +154,7 @@ public abstract class AbstractComponentContainer extends AbstractComponent
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeComponentDetachListener(com.vaadin.ui.ComponentContainer.ComponentDetachListener)}
      **/
     @Override

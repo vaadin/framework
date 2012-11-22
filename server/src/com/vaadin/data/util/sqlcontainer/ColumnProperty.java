@@ -70,7 +70,7 @@ final public class ColumnProperty implements Property {
      * @param value
      * @param type
      * 
-     * @deprecated as of 7.0. Use
+     * @deprecated As of 7.0. Use
      *             {@link #ColumnProperty(String, boolean, boolean, boolean, boolean, Object, Class)
      *             instead
      */
@@ -257,7 +257,8 @@ final public class ColumnProperty implements Property {
      * Returns the value of the Property in human readable textual format.
      * 
      * @see java.lang.Object#toString()
-     * @deprecated get the string representation from the value
+     * @deprecated As of 7.0, use {@link #getValue()} instead and possibly
+     *             toString on that
      */
     @Deprecated
     @Override

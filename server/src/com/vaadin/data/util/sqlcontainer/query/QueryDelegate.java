@@ -214,7 +214,7 @@ public interface QueryDelegate extends Serializable {
                 QueryDelegate.RowIdChangeListener listener);
 
         /**
-         * @deprecated Since 7.0, replaced by
+         * @deprecated As of 7.0, replaced by
          *             {@link #addRowIdChangeListener(RowIdChangeListener)}
          **/
         @Deprecated
@@ -230,7 +230,7 @@ public interface QueryDelegate extends Serializable {
                 QueryDelegate.RowIdChangeListener listener);
 
         /**
-         * @deprecated Since 7.0, replaced by
+         * @deprecated As of 7.0, replaced by
          *             {@link #removeRowIdChangeListener(RowIdChangeListener)}
          **/
         @Deprecated

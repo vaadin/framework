@@ -29,8 +29,8 @@ import com.vaadin.ui.UI;
  * @author Vaadin Ltd
  * @since 7.0.0
  * 
- * @deprecated Used only to support LegacyApplication - will be removed when
- *             LegacyApplication support is removed.
+ * @deprecated As of 7.0. Used only to support LegacyApplication - will be
+ *             removed when LegacyApplication support is removed.
  */
 @Deprecated
 public abstract class LegacyApplicationUIProvider extends UIProvider {

@@ -109,44 +109,44 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     }
 
     /**
-     * @deprecated from 7.0, use {@link ItemCaptionMode#ID} instead
+     * @deprecated As of 7.0, use {@link ItemCaptionMode#ID} instead
      */
     @Deprecated
     public static final ItemCaptionMode ITEM_CAPTION_MODE_ID = ItemCaptionMode.ID;
 
     /**
-     * @deprecated from 7.0, use {@link ItemCaptionMode#ITEM} instead
+     * @deprecated As of 7.0, use {@link ItemCaptionMode#ITEM} instead
      */
     @Deprecated
     public static final ItemCaptionMode ITEM_CAPTION_MODE_ITEM = ItemCaptionMode.ITEM;
 
     /**
-     * @deprecated from 7.0, use {@link ItemCaptionMode#INDEX} instead
+     * @deprecated As of 7.0, use {@link ItemCaptionMode#INDEX} instead
      */
     @Deprecated
     public static final ItemCaptionMode ITEM_CAPTION_MODE_INDEX = ItemCaptionMode.INDEX;
 
     /**
-     * @deprecated from 7.0, use {@link ItemCaptionMode#EXPLICIT_DEFAULTS_ID}
+     * @deprecated As of 7.0, use {@link ItemCaptionMode#EXPLICIT_DEFAULTS_ID}
      *             instead
      */
     @Deprecated
     public static final ItemCaptionMode ITEM_CAPTION_MODE_EXPLICIT_DEFAULTS_ID = ItemCaptionMode.EXPLICIT_DEFAULTS_ID;
 
     /**
-     * @deprecated from 7.0, use {@link ItemCaptionMode#EXPLICIT} instead
+     * @deprecated As of 7.0, use {@link ItemCaptionMode#EXPLICIT} instead
      */
     @Deprecated
     public static final ItemCaptionMode ITEM_CAPTION_MODE_EXPLICIT = ItemCaptionMode.EXPLICIT;
 
     /**
-     * @deprecated from 7.0, use {@link ItemCaptionMode#ICON_ONLY} instead
+     * @deprecated As of 7.0, use {@link ItemCaptionMode#ICON_ONLY} instead
      */
     @Deprecated
     public static final ItemCaptionMode ITEM_CAPTION_MODE_ICON_ONLY = ItemCaptionMode.ICON_ONLY;
 
     /**
-     * @deprecated from 7.0, use {@link ItemCaptionMode#PROPERTY} instead
+     * @deprecated As of 7.0, use {@link ItemCaptionMode#PROPERTY} instead
      */
     @Deprecated
     public static final ItemCaptionMode ITEM_CAPTION_MODE_PROPERTY = ItemCaptionMode.PROPERTY;
@@ -162,17 +162,17 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     public interface Filtering extends Serializable {
 
         /**
-         * @deprecated from 7.0, use {@link FilteringMode#OFF} instead
+         * @deprecated As of 7.0, use {@link FilteringMode#OFF} instead
          */
         @Deprecated
         public static final FilteringMode FILTERINGMODE_OFF = FilteringMode.OFF;
         /**
-         * @deprecated from 7.0, use {@link FilteringMode#STARTSWITH} instead
+         * @deprecated As of 7.0, use {@link FilteringMode#STARTSWITH} instead
          */
         @Deprecated
         public static final FilteringMode FILTERINGMODE_STARTSWITH = FilteringMode.STARTSWITH;
         /**
-         * @deprecated from 7.0, use {@link FilteringMode#CONTAINS} instead
+         * @deprecated As of 7.0, use {@link FilteringMode#CONTAINS} instead
          */
         @Deprecated
         public static final FilteringMode FILTERINGMODE_CONTAINS = FilteringMode.CONTAINS;
@@ -1487,7 +1487,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addPropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)}
      **/
     @Override
@@ -1513,7 +1513,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removePropertySetChangeListener(com.vaadin.data.Container.PropertySetChangeListener)}
      **/
     @Override
@@ -1537,7 +1537,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addItemSetChangeListener(com.vaadin.data.Container.ItemSetChangeListener)}
      **/
     @Override
@@ -1563,7 +1563,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeItemSetChangeListener(com.vaadin.data.Container.ItemSetChangeListener)}
      **/
     @Override

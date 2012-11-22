@@ -27,8 +27,8 @@ import com.vaadin.server.VariableOwner;
  * {@link #paintContent(PaintTarget)} and
  * {@link #changeVariables(Object, java.util.Map)} just like in Vaadin 6.
  * 
- * @deprecated This class is only intended to ease migration and should not be
- *             used for new projects.
+ * @deprecated As of 7.0. This class is only intended to ease migration and
+ *             should not be used for new projects.
  * 
  * @author Vaadin Ltd
  * @since 7.0.0
