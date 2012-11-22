@@ -22,6 +22,7 @@ import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.RichTextArea;
+import com.vaadin.ui.Slider;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
@@ -121,7 +122,7 @@ public class TabIndexes extends AbstractTestUI {
         fields.add(new TextArea());
         fields.add(new RichTextArea());
         fields.add(new CheckBox());
-        // fields.add(new Slider());
+        fields.add(new Slider());
 
         clearTabIndexes.click();
 
