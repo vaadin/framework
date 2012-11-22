@@ -174,6 +174,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      */
     private long lastHeartbeatTimestamp = System.currentTimeMillis();
 
+    private boolean closing = false;
+
     /**
      * Creates a new empty UI without a caption. The content of the UI must be
      * set by calling {@link #setContent(Component)} before using the UI.
@@ -347,18 +349,17 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     }
 
     /**
-     * Sets the application to which this UI is assigned. It is not legal to
-     * change the application once it has been set nor to set a
-     * <code>null</code> application.
+     * Sets the session to which this UI is assigned.
      * <p>
-     * This method is mainly intended for internal use by the framework.
+     * This method is for internal use by the framework. To explicitly close a
+     * UI, see {@link #close()}.
      * </p>
      * 
      * @param session
-     *            the application to set
+     *            the session to set
      * 
      * @throws IllegalStateException
-     *             if the application has already been set
+     *             if the session has already been set
      * 
      * @see #getSession()
      */
@@ -972,5 +973,62 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      */
     public String getTheme() {
         return theme;
+    }
+
+    /**
+     * Marks this UI to be {@link #detach() detached} from the session at the
+     * end of the current request, or the next request if there is no current
+     * request (if called from a background thread, for instance.)
+     * <p>
+     * The UI is detached after the response is sent, so in the current request
+     * it can still update the client side normally. However, after the response
+     * any new requests from the client side to this UI will cause an error, so
+     * usually the client should be asked, for instance, to reload the page
+     * (serving a fresh UI instance), to close the page, or to navigate
+     * somewhere else.
+     */
+    public void close() {
+        closing = true;
+    }
+
+    /**
+     * Returns whether this UI is marked as closed and is to be detached.
+     * 
+     * @see #close()
+     * 
+     * @return whether this UI is closing.
+     */
+    public boolean isClosing() {
+        return closing;
+    }
+
+    /**
+     * Called after the UI is added to the session. A UI instance is attached
+     * exactly once, before its {@link #init(VaadinRequest) init} method is
+     * called.
+     * 
+     * @see Component#attach
+     */
+    @Override
+    public void attach() {
+        super.attach();
+    }
+
+    /**
+     * Called before the UI is removed from the session. A UI instance is
+     * detached exactly once, either:
+     * <ul>
+     * <li>after it is explicitly {@link #close() closed}.
+     * <li>when its session is closed or expires
+     * <li>after three missed heartbeat requests.
+     * </ul>
+     * <p>
+     * Note that when a UI is detached, any changes made in the {@code detach}
+     * methods of any children or {@link DetachListener}s that would be
+     * communicated to the client are silently ignored.
+     */
+    @Override
+    public void detach() {
+        super.detach();
     }
 }
