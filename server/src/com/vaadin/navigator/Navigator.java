@@ -635,6 +635,9 @@ public class Navigator implements Serializable {
      * <p>
      * Registering another view with a name that is already registered
      * overwrites the old registration of the same type.
+     * <p>
+     * Note that a view should not be shared between UIs (for instance, it
+     * should not be a static field in a UI subclass).
      * 
      * @param viewName
      *            String that identifies a view (not null nor empty string)
@@ -734,6 +737,9 @@ public class Navigator implements Serializable {
      * the navigation state. This implicitly sets an appropriate error view
      * provider and overrides any previous
      * {@link #setErrorProvider(ViewProvider)} call.
+     * <p>
+     * Note that an error view should not be shared between UIs (for instance,
+     * it should not be a static field in a UI subclass).
      * 
      * @param viewClass
      *            The View class whose instance should be used as the error
