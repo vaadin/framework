@@ -75,6 +75,8 @@ public abstract class VaadinService implements Serializable {
     private SystemMessagesProvider systemMessagesProvider = DefaultSystemMessagesProvider
             .get();
 
+    private ClassLoader classLoader;
+
     /**
      * Creates a new vaadin service based on a deployment configuration
      * 
@@ -83,6 +85,23 @@ public abstract class VaadinService implements Serializable {
      */
     public VaadinService(DeploymentConfiguration deploymentConfiguration) {
         this.deploymentConfiguration = deploymentConfiguration;
+
+        final String classLoaderName = getDeploymentConfiguration()
+                .getApplicationOrSystemProperty("ClassLoader", null);
+        if (classLoaderName != null) {
+            try {
+                final Class<?> classLoaderClass = getClass().getClassLoader()
+                        .loadClass(classLoaderName);
+                final Constructor<?> c = classLoaderClass
+                        .getConstructor(new Class[] { ClassLoader.class });
+                setClassLoader((ClassLoader) c
+                        .newInstance(new Object[] { getClass().getClassLoader() }));
+            } catch (final Exception e) {
+                throw new RuntimeException(
+                        "Could not find specified class loader: "
+                                + classLoaderName, e);
+            }
+        }
     }
 
     /**
@@ -134,33 +153,36 @@ public abstract class VaadinService implements Serializable {
     public abstract boolean isStandalone(VaadinRequest request);
 
     /**
-     * Get the class loader to use for loading classes loaded by name, e.g.
-     * custom UI classes. <code>null</code> indicates that the default class
-     * loader should be used.
+     * Gets the class loader to use for loading classes loaded by name, e.g.
+     * custom UI classes. This is by default the class loader that was used to
+     * load the Servlet or Portlet class to which this service belongs.
      * 
      * @return the class loader to use, or <code>null</code>
+     * 
+     * @see #setClassLoader(ClassLoader)
      */
     public ClassLoader getClassLoader() {
-        final String classLoaderName = getDeploymentConfiguration()
-                .getApplicationOrSystemProperty("ClassLoader", null);
-        ClassLoader classLoader;
-        if (classLoaderName == null) {
-            classLoader = getClass().getClassLoader();
-        } else {
-            try {
-                final Class<?> classLoaderClass = getClass().getClassLoader()
-                        .loadClass(classLoaderName);
-                final Constructor<?> c = classLoaderClass
-                        .getConstructor(new Class[] { ClassLoader.class });
-                classLoader = (ClassLoader) c
-                        .newInstance(new Object[] { getClass().getClassLoader() });
-            } catch (final Exception e) {
-                throw new RuntimeException(
-                        "Could not find specified class loader: "
-                                + classLoaderName, e);
-            }
-        }
         return classLoader;
+    }
+
+    /**
+     * Sets the class loader to use for loading classes loaded by name, e.g.
+     * custom UI classes. Invokers of this method should be careful to not break
+     * any existing class loader hierarchy, e.g. by ensuring that a class loader
+     * set for this service delegates to the previously set class loader if the
+     * class is not found.
+     * 
+     * @param classLoader
+     *            the new class loader to set, not <code>null</code>.
+     * 
+     * @see #getClassLoader()
+     */
+    public void setClassLoader(ClassLoader classLoader) {
+        if (classLoader == null) {
+            throw new IllegalArgumentException(
+                    "Can not set class loader to null");
+        }
+        this.classLoader = classLoader;
     }
 
     /**
