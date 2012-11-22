@@ -65,7 +65,7 @@ import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.server.ClientConnector.ConnectorErrorEvent;
 import com.vaadin.server.ComponentSizeValidator.InvalidLayout;
-import com.vaadin.server.RpcManager.RpcInvocationException;
+import com.vaadin.server.ServerRpcManager.RpcInvocationException;
 import com.vaadin.server.StreamVariable.StreamingEndEvent;
 import com.vaadin.server.StreamVariable.StreamingErrorEvent;
 import com.vaadin.shared.ApplicationConstants;
@@ -1861,8 +1861,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
             throws JSONException {
         ClientConnector connector = connectorTracker.getConnector(connectorId);
 
-        RpcManager rpcManager = connector.getRpcManager(interfaceName);
-        if (!(rpcManager instanceof ServerRpcManager)) {
+        ServerRpcManager<?> rpcManager = connector.getRpcManager(interfaceName);
+        if (rpcManager == null) {
             /*
              * Security: Don't even decode the json parameters if no RpcManager
              * corresponding to the received method invocation has been
@@ -1878,8 +1878,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
         // Use interface from RpcManager instead of loading the class based on
         // the string name to avoid problems with OSGi
-        Class<? extends ServerRpc> rpcInterface = ((ServerRpcManager<?>) rpcManager)
-                .getRpcInterface();
+        Class<? extends ServerRpc> rpcInterface = rpcManager.getRpcInterface();
 
         ServerRpcMethodInvocation invocation = new ServerRpcMethodInvocation(
                 connectorId, rpcInterface, methodName, parametersJson.length());

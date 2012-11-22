@@ -35,10 +35,38 @@ import com.vaadin.shared.communication.ServerRpc;
  * 
  * @since 7.0
  */
-public class ServerRpcManager<T extends ServerRpc> implements RpcManager {
+public class ServerRpcManager<T extends ServerRpc> {
 
     private final T implementation;
     private final Class<T> rpcInterface;
+
+    /**
+     * Wrapper exception for exceptions which occur during invocation of an RPC
+     * call
+     * 
+     * @author Vaadin Ltd
+     * @since 7.0
+     * 
+     */
+    public static class RpcInvocationException extends Exception {
+
+        public RpcInvocationException() {
+            super();
+        }
+
+        public RpcInvocationException(String message, Throwable cause) {
+            super(message, cause);
+        }
+
+        public RpcInvocationException(String message) {
+            super(message);
+        }
+
+        public RpcInvocationException(Throwable cause) {
+            super(cause);
+        }
+
+    }
 
     private static final Map<Class<?>, Class<?>> boxedTypes = new HashMap<Class<?>, Class<?>>();
     static {
@@ -83,8 +111,8 @@ public class ServerRpcManager<T extends ServerRpc> implements RpcManager {
      */
     public static void applyInvocation(ClientConnector target,
             ServerRpcMethodInvocation invocation) throws RpcInvocationException {
-        RpcManager manager = target
-                .getRpcManager(invocation.getInterfaceName());
+        ServerRpcManager<?> manager = target.getRpcManager(invocation
+                .getInterfaceName());
         if (manager != null) {
             manager.applyInvocation(invocation);
         } else {
@@ -123,7 +151,6 @@ public class ServerRpcManager<T extends ServerRpc> implements RpcManager {
      * @param invocation
      *            method invocation to perform
      */
-    @Override
     public void applyInvocation(ServerRpcMethodInvocation invocation)
             throws RpcInvocationException {
         Method method = invocation.getMethod();

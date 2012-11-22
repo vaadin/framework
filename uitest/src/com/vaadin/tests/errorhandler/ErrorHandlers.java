@@ -5,7 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import com.vaadin.event.ListenerMethod.MethodException;
 import com.vaadin.server.DefaultErrorHandler;
 import com.vaadin.server.ErrorHandler;
-import com.vaadin.server.RpcManager.RpcInvocationException;
+import com.vaadin.server.ServerRpcManager.RpcInvocationException;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;

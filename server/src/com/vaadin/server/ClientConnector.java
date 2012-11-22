@@ -352,9 +352,9 @@ public interface ClientConnector extends Connector {
      * 
      * @param rpcInterfaceName
      *            name of the interface for which the call was made
-     * @return RpcManager or null if none found for the interface
+     * @return ServerRpcManager or null if none found for the interface
      */
-    public RpcManager getRpcManager(String rpcInterfaceName);
+    public ServerRpcManager<?> getRpcManager(String rpcInterfaceName);
 
     /**
      * Gets the error handler for the connector.
