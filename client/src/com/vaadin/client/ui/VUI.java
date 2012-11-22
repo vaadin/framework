@@ -456,7 +456,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
     }
 
     /**
-     * Ensures the root is scrollable eg. after style name changes.
+     * Ensures the widget is scrollable eg. after style name changes.
      * <p>
      * For internal use only. May be removed or replaced in the future.
      */

@@ -285,11 +285,12 @@ public class ApplicationConfiguration implements EntryPoint {
     }
 
     /**
-     * Gets the root if of this application instance. The root id should be
-     * included in every request originating from this instance in order to
-     * associate it with the right UI instance on the server.
+     * Gets the UI id of the server-side UI associated with this client-side
+     * instance. The UI id should be included in every request originating from
+     * this instance in order to associate the request with the right UI
+     * instance on the server.
      * 
-     * @return the root id
+     * @return the UI id
      */
     public int getUIId() {
         return uiId;
