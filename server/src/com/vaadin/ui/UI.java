@@ -16,11 +16,9 @@
 
 package com.vaadin.ui;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.EventListener;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -45,7 +43,6 @@ import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIServerRpc;
 import com.vaadin.shared.ui.ui.UIState;
 import com.vaadin.util.CurrentInstance;
-import com.vaadin.util.ReflectTools;
 
 /**
  * The topmost component in any component hierarchy. There is one UI for every
@@ -80,42 +77,6 @@ import com.vaadin.util.ReflectTools;
  */
 public abstract class UI extends AbstractSingleComponentContainer implements
         Action.Container, Action.Notifier, LegacyComponent {
-
-    /**
-     * Event fired when a UI is removed from the application.
-     */
-    public static class CleanupEvent extends Event {
-
-        private static final String CLEANUP_EVENT_IDENTIFIER = "uiCleanup";
-
-        public CleanupEvent(UI source) {
-            super(source);
-        }
-
-        public UI getUI() {
-            return (UI) getSource();
-        }
-    }
-
-    /**
-     * Interface for listening {@link UI.CleanupEvent UI cleanup events}.
-     * 
-     */
-    public interface CleanupListener extends EventListener {
-
-        public static final Method cleanupMethod = ReflectTools.findMethod(
-                CleanupListener.class, "cleanup", CleanupEvent.class);
-
-        /**
-         * Called when a CleanupListener is notified of a CleanupEvent.
-         * {@link UI#getCurrent()} returns <code>event.getUI()</code> within
-         * this method.
-         * 
-         * @param event
-         *            The close event that was fired.
-         */
-        public void cleanup(CleanupEvent event);
-    }
 
     /**
      * The application to which this UI belongs
@@ -173,6 +134,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * request from the client for this UI.
      */
     private long lastHeartbeatTimestamp = System.currentTimeMillis();
+
+    private boolean closing = false;
 
     /**
      * Creates a new empty UI without a caption. The content of the UI must be
@@ -286,16 +249,6 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         fireEvent(new ClickEvent(this, mouseDetails));
     }
 
-    /**
-     * For internal use only.
-     */
-    public void fireCleanupEvent() {
-        UI current = UI.getCurrent();
-        UI.setCurrent(this);
-        fireEvent(new CleanupEvent(this));
-        UI.setCurrent(current);
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public void changeVariables(Object source, Map<String, Object> variables) {
@@ -347,18 +300,17 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     }
 
     /**
-     * Sets the application to which this UI is assigned. It is not legal to
-     * change the application once it has been set nor to set a
-     * <code>null</code> application.
+     * Sets the session to which this UI is assigned.
      * <p>
-     * This method is mainly intended for internal use by the framework.
+     * This method is for internal use by the framework. To explicitly close a
+     * UI, see {@link #close()}.
      * </p>
      * 
      * @param session
-     *            the application to set
+     *            the session to set
      * 
      * @throws IllegalStateException
-     *             if the application has already been set
+     *             if the session has already been set
      * 
      * @see #getSession()
      */
@@ -683,18 +635,6 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     }
 
     /**
-     * Adds a cleanup listener to the UI. Cleanup listeners are invoked when the
-     * UI is removed from the session due to UI or session expiration.
-     * 
-     * @param listener
-     *            The CleanupListener that should be added.
-     */
-    public void addCleanupListener(CleanupListener listener) {
-        addListener(CleanupEvent.CLEANUP_EVENT_IDENTIFIER, CleanupEvent.class,
-                listener, CleanupListener.cleanupMethod);
-    }
-
-    /**
      * @deprecated Since 7.0, replaced by
      *             {@link #addClickListener(ClickListener)}
      **/
@@ -713,18 +653,6 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     public void removeClickListener(ClickListener listener) {
         removeListener(EventId.CLICK_EVENT_IDENTIFIER, ClickEvent.class,
                 listener);
-    }
-
-    /**
-     * Removes a cleanup listener from the UI, if previously added with
-     * {@link #addCleanupListener(CleanupListener)}.
-     * 
-     * @param listener
-     *            The CleanupListener that should be removed
-     */
-    public void removeCleanupListener(CleanupListener listener) {
-        removeListener(CleanupEvent.CLEANUP_EVENT_IDENTIFIER,
-                CleanupEvent.class, listener);
     }
 
     /**
@@ -972,5 +900,62 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      */
     public String getTheme() {
         return theme;
+    }
+
+    /**
+     * Marks this UI to be {@link #detach() detached} from the session at the
+     * end of the current request, or the next request if there is no current
+     * request (if called from a background thread, for instance.)
+     * <p>
+     * The UI is detached after the response is sent, so in the current request
+     * it can still update the client side normally. However, after the response
+     * any new requests from the client side to this UI will cause an error, so
+     * usually the client should be asked, for instance, to reload the page
+     * (serving a fresh UI instance), to close the page, or to navigate
+     * somewhere else.
+     */
+    public void close() {
+        closing = true;
+    }
+
+    /**
+     * Returns whether this UI is marked as closed and is to be detached.
+     * 
+     * @see #close()
+     * 
+     * @return whether this UI is closing.
+     */
+    public boolean isClosing() {
+        return closing;
+    }
+
+    /**
+     * Called after the UI is added to the session. A UI instance is attached
+     * exactly once, before its {@link #init(VaadinRequest) init} method is
+     * called.
+     * 
+     * @see Component#attach
+     */
+    @Override
+    public void attach() {
+        super.attach();
+    }
+
+    /**
+     * Called before the UI is removed from the session. A UI instance is
+     * detached exactly once, either:
+     * <ul>
+     * <li>after it is explicitly {@link #close() closed}.
+     * <li>when its session is closed or expires
+     * <li>after three missed heartbeat requests.
+     * </ul>
+     * <p>
+     * Note that when a UI is detached, any changes made in the {@code detach}
+     * methods of any children or {@link DetachListener}s that would be
+     * communicated to the client are silently ignored.
+     */
+    @Override
+    public void detach() {
+        super.detach();
     }
 }
