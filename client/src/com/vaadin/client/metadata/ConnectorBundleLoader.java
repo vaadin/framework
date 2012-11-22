@@ -78,6 +78,8 @@ public abstract class ConnectorBundleLoader {
     }
 
     public void setLoadFailure(String bundleName, Throwable reason) {
+        reason = new RuntimeException("Failed to load bundle " + bundleName
+                + ": " + reason.getMessage(), reason);
         List<BundleLoadCallback> callbacks = asyncBlockLoaders.get(bundleName)
                 .setError(reason);
         for (BundleLoadCallback callback : callbacks) {

@@ -16,6 +16,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
@@ -34,7 +35,6 @@ import com.vaadin.client.metadata.ConnectorBundleLoader;
 import com.vaadin.client.metadata.InvokationHandler;
 import com.vaadin.client.metadata.ProxyHandler;
 import com.vaadin.client.metadata.TypeData;
-import com.vaadin.client.metadata.TypeDataBundle;
 import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.client.ui.UnknownComponentConnector;
 import com.vaadin.server.widgetsetutils.metadata.ClientRpcVisitor;
@@ -131,12 +131,21 @@ public class ConnectorBundleLoaderFactory extends Generator {
                 w.print(".runAsync(");
             }
 
-            w.print("new ");
-            w.print(TypeDataBundle.class.getName());
-            w.println("(getName()) {");
+            w.println("new %s() {", RunAsyncCallback.class.getName());
             w.indent();
 
-            w.println("public void load() {");
+            w.println("public void onSuccess() {");
+            w.indent();
+
+            w.println("load();");
+            w.println("%s.get().setLoaded(getName());",
+                    ConnectorBundleLoader.class.getName());
+
+            // Close onSuccess method
+            w.outdent();
+            w.println("}");
+
+            w.println("private void load() {");
             w.indent();
 
             printBundleData(logger, w, bundle);
@@ -145,7 +154,16 @@ public class ConnectorBundleLoaderFactory extends Generator {
             w.outdent();
             w.println("}");
 
-            // Close new TypeDataBundle() {}
+            w.println("public void onFailure(Throwable reason) {");
+            w.indent();
+
+            w.println("%s.get().setLoadFailure(getName(), reason);",
+                    ConnectorBundleLoader.class.getName());
+
+            w.outdent();
+            w.println("}");
+
+            // Close new RunAsyncCallback() {}
             w.outdent();
             w.print("}");
 
