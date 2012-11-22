@@ -343,14 +343,10 @@ public class VaadinServlet extends HttpServlet implements Constants {
             handleServiceException(request, response, vaadinSession, e);
         } finally {
             if (vaadinSession != null) {
-                vaadinSession.cleanupInactiveUIs();
-            }
-
-            CurrentInstance.clearAll();
-
-            if (vaadinSession != null) {
+                getService().cleanupSession(vaadinSession);
                 requestTimer.stop(vaadinSession);
             }
+            CurrentInstance.clearAll();
         }
     }
 
