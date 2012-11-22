@@ -32,18 +32,16 @@ public class ParentSelectorHandler {
             ArrayList<String> newList = new ArrayList<String>(block
                     .getSelectorList().size());
             BlockNode parentBlock = (BlockNode) parentNode;
-            for (final String s : block.getSelectorList()) {
-
-                if (s.contains("&")) {
-                    for (final String parentSelector : parentBlock
-                            .getSelectorList()) {
+            for (final String parentSelector : parentBlock.getSelectorList()) {
+                for (final String s : block.getSelectorList()) {
+                    if (s.contains("&")) {
                         newList.add(s.replace("&", parentSelector));
                         isParentSelector = true;
+                    } else {
+                        newList.add(parentSelector + " " + s);
                     }
-
                 }
             }
-
             if (isParentSelector) {
                 block.setSelectorList(newList);
                 Node oldparent = block.getParentNode();

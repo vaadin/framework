@@ -27,7 +27,23 @@ a {
 }
 
 .part {
-	&.one, &.two {
+	&.one, &.two, .non-parent {
 		color: blue;
+	}
+}
+
+.root {
+	.part, .part2 {
+		&.one, .non-parent {
+			color: blue;
+		}
+	}
+}
+
+.root2 {
+	.part, .part2 {
+		.one, .non-parent {
+			color: blue;
+		}
 	}
 }
