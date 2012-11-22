@@ -37,8 +37,26 @@ package com.vaadin.ui;
  * @since 6.5
  */
 public class HorizontalSplitPanel extends AbstractSplitPanel {
+    /**
+     * Creates an empty horizontal split panel
+     */
     public HorizontalSplitPanel() {
         super();
         setSizeFull();
+    }
+
+    /**
+     * Creates a horizontal split panel containing the given components
+     * 
+     * @param firstComponent
+     *            The component to be placed to the left of the splitter
+     * @param secondComponent
+     *            The component to be placed to the right of the splitter
+     */
+    public HorizontalSplitPanel(Component firstComponent,
+            Component secondComponent) {
+        this();
+        setFirstComponent(firstComponent);
+        setSecondComponent(secondComponent);
     }
 }
