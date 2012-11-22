@@ -34,6 +34,16 @@ public class VaadinPortletService extends VaadinService {
             DeploymentConfiguration deploymentConfiguration) {
         super(deploymentConfiguration);
         this.portlet = portlet;
+
+        // Set default class loader if not already set
+        if (getClassLoader() == null) {
+            /*
+             * The servlet is most likely to be loaded with a class loader
+             * specific to the application instead of some generic system class
+             * loader that loads the Vaadin classes.
+             */
+            setClassLoader(portlet.getClass().getClassLoader());
+        }
     }
 
     protected VaadinPortlet getPortlet() {
