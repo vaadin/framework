@@ -126,19 +126,6 @@ public class CssLayout extends AbstractLayout implements LayoutClickNotifier {
     }
 
     /**
-     * Adds the given components into this container. Each component is added to
-     * the right or below the previous component.
-     * 
-     * @param components
-     *            The components to add.
-     */
-    public void addComponents(Component... components) {
-        for (Component c : components) {
-            addComponent(c);
-        }
-    }
-
-    /**
      * Adds a component into this container. The component is added to the left
      * or on top of the other components.
      * 

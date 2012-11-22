@@ -21,9 +21,9 @@ import java.util.Iterator;
 import com.vaadin.ui.HasComponents.ComponentAttachDetachNotifier;
 
 /**
- * Extension to the {@link Component} interface which adds to it the capacity to
- * contain other components. All UI elements that can have child elements
- * implement this interface.
+ * A special type of parent which allows the user to add and remove components
+ * to it. Typically does not have any restrictions on the number of children it
+ * can contain.
  * 
  * @author Vaadin Ltd.
  * @since 3.0
@@ -38,6 +38,14 @@ public interface ComponentContainer extends HasComponents,
      *            the component to be added.
      */
     public void addComponent(Component c);
+
+    /**
+     * Adds the components in the given order to this component container.
+     * 
+     * @param components
+     *            The components to add.
+     */
+    public void addComponents(Component... components);
 
     /**
      * Removes the component from this container.

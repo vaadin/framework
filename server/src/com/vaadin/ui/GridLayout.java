@@ -275,19 +275,6 @@ public class GridLayout extends AbstractLayout implements
     }
 
     /**
-     * Adds the given components to the grid starting from the current cursor
-     * position.
-     * 
-     * @param components
-     *            Components to add.
-     */
-    public void addComponents(Component... components) {
-        for (Component c : components) {
-            this.addComponent(c);
-        }
-    }
-
-    /**
      * Tests if the given area overlaps with any of the items already on the
      * grid.
      * 

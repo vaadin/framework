@@ -113,18 +113,6 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     }
 
     /**
-     * Adds the given components in the given order to the container.
-     * 
-     * @param components
-     *            The components to add.
-     */
-    public void addComponents(Component... components) {
-        for (Component c : components) {
-            addComponent(c);
-        }
-    }
-
-    /**
      * Adds a component into indexed position in this container.
      * 
      * @param c
