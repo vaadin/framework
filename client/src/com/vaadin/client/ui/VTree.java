@@ -80,13 +80,13 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
     public static final String CLASSNAME = "v-tree";
 
     /**
-     * @deprecated from 7.0, use {@link MultiSelectMode#DEFAULT} instead.
+     * @deprecated As of 7.0, use {@link MultiSelectMode#DEFAULT} instead.
      */
     @Deprecated
     public static final MultiSelectMode MULTISELECT_MODE_DEFAULT = MultiSelectMode.DEFAULT;
 
     /**
-     * @deprecated from 7.0, use {@link MultiSelectMode#SIMPLE} instead.
+     * @deprecated As of 7.0, use {@link MultiSelectMode#SIMPLE} instead.
      */
     @Deprecated
     public static final MultiSelectMode MULTISELECT_MODE_SIMPLE = MultiSelectMode.SIMPLE;

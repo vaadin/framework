@@ -275,7 +275,7 @@ public class Panel extends AbstractSingleComponentContainer implements
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addClickListener(ClickListener)}
      **/
     @Deprecated
@@ -296,7 +296,7 @@ public class Panel extends AbstractSingleComponentContainer implements
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeClickListener(ClickListener)}
      **/
     @Deprecated

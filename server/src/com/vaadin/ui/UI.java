@@ -695,7 +695,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addClickListener(ClickListener)}
      **/
     @Deprecated
@@ -728,7 +728,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeClickListener(ClickListener)}
      **/
     @Deprecated
@@ -773,7 +773,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * Setting the caption of a UI is not supported. To set the title of the
      * HTML page, use Page.setTitle
      * 
-     * @deprecated as of 7.0.0, use {@link Page#setTitle(String)}
+     * @deprecated As of 7.0, use {@link Page#setTitle(String)}
      */
     @Override
     @Deprecated

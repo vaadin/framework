@@ -126,7 +126,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     }
 
     /**
-     * @deprecated as of 7.0. Use {@link #setId(String)}
+     * @deprecated As of 7.0. Use {@link #setId(String)}
      */
     @Deprecated
     public void setDebugId(String id) {
@@ -134,7 +134,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     }
 
     /**
-     * @deprecated as of 7.0. Use {@link #getId()}
+     * @deprecated As of 7.0. Use {@link #getId()}
      */
     @Deprecated
     public String getDebugId() {

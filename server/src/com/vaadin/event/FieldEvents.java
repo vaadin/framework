@@ -62,7 +62,7 @@ public interface FieldEvents {
         public void addFocusListener(FocusListener listener);
 
         /**
-         * @deprecated Since 7.0, replaced by
+         * @deprecated As of 7.0, replaced by
          *             {@link #addFocusListener(FocusListener)}
          **/
         @Deprecated
@@ -78,7 +78,7 @@ public interface FieldEvents {
         public void removeFocusListener(FocusListener listener);
 
         /**
-         * @deprecated Since 7.0, replaced by
+         * @deprecated As of 7.0, replaced by
          *             {@link #removeFocusListener(FocusListener)}
          **/
         @Deprecated
@@ -114,7 +114,7 @@ public interface FieldEvents {
         public void addBlurListener(BlurListener listener);
 
         /**
-         * @deprecated Since 7.0, replaced by
+         * @deprecated As of 7.0, replaced by
          *             {@link #addBlurListener(BlurListener)}
          **/
         @Deprecated
@@ -130,7 +130,7 @@ public interface FieldEvents {
         public void removeBlurListener(BlurListener listener);
 
         /**
-         * @deprecated Since 7.0, replaced by
+         * @deprecated As of 7.0, replaced by
          *             {@link #removeBlurListener(BlurListener)}
          **/
         @Deprecated
@@ -289,7 +289,7 @@ public interface FieldEvents {
         public void addTextChangeListener(TextChangeListener listener);
 
         /**
-         * @deprecated Since 7.0, replaced by
+         * @deprecated As of 7.0, replaced by
          *             {@link #addTextChangeListener(TextChangeListener)}
          **/
         @Deprecated
@@ -298,7 +298,7 @@ public interface FieldEvents {
         public void removeTextChangeListener(TextChangeListener listener);
 
         /**
-         * @deprecated Since 7.0, replaced by
+         * @deprecated As of 7.0, replaced by
          *             {@link #removeTextChangeListener(TextChangeListener)}
          **/
         @Deprecated

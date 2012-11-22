@@ -318,7 +318,7 @@ public class LegacyWindow extends UI {
      * @param script
      *            JavaScript snippet that will be executed.
      * 
-     * @deprecated as of 7.0, use JavaScript.getCurrent().execute(String)
+     * @deprecated As of 7.0, use JavaScript.getCurrent().execute(String)
      *             instead
      */
     @Deprecated

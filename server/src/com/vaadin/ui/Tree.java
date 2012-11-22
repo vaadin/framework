@@ -910,7 +910,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addExpandListener(ExpandListener)}
      **/
     @Deprecated
@@ -930,7 +930,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeExpandListener(ExpandListener)}
      **/
     @Deprecated
@@ -1014,7 +1014,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addCollapseListener(CollapseListener)}
      **/
     @Deprecated
@@ -1034,7 +1034,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeCollapseListener(CollapseListener)}
      **/
     @Deprecated
@@ -1203,7 +1203,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addItemClickListener(ItemClickListener)}
      **/
     @Override
@@ -1219,7 +1219,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeItemClickListener(ItemClickListener)}
      **/
     @Override

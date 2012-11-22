@@ -704,7 +704,7 @@ public class ComboBox extends AbstractSelect implements
     }
 
     /**
-     * @deprecated Since 7.0, replaced by {@link #addBlurListener(BlurListener)}
+     * @deprecated As of 7.0, replaced by {@link #addBlurListener(BlurListener)}
      **/
     @Override
     @Deprecated
@@ -718,7 +718,7 @@ public class ComboBox extends AbstractSelect implements
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeBlurListener(BlurListener)}
      **/
     @Override
@@ -734,7 +734,7 @@ public class ComboBox extends AbstractSelect implements
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addFocusListener(FocusListener)}
      **/
     @Override
@@ -749,7 +749,7 @@ public class ComboBox extends AbstractSelect implements
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeFocusListener(FocusListener)}
      **/
     @Override

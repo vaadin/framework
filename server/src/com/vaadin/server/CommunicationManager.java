@@ -33,7 +33,7 @@ import com.vaadin.ui.UI;
  * @author Vaadin Ltd.
  * @since 5.0
  * 
- * @deprecated will likely change or be removed in a future version
+ * @deprecated As of 7.0. Will likely change or be removed in a future version
  */
 @Deprecated
 @SuppressWarnings("serial")

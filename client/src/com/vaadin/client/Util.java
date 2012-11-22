@@ -99,7 +99,7 @@ public class Util {
      * @param lazy
      *            run componentSizeUpdated lazyly
      * 
-     * @deprecated since 7.0, use
+     * @deprecated As of 7.0, use
      *             {@link LayoutManager#setNeedsMeasure(ComponentConnector)}
      *             instead
      */

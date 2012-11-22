@@ -370,7 +370,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      * Returns the (field) value converted to a String using toString().
      * 
      * @see java.lang.Object#toString()
-     * @deprecated Instead use {@link #getValue()} to get the value of the
+     * @deprecated As of 7.0, use {@link #getValue()} to get the value of the
      *             field, {@link #getConvertedValue()} to get the field value
      *             converted to the data model type or
      *             {@link #getPropertyDataSource()} .getValue() to get the value
@@ -1011,7 +1011,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
      **/
     @Override
@@ -1032,7 +1032,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeValueChangeListener(com.vaadin.data.Property.ValueChangeListener)}
      **/
     @Override
@@ -1124,7 +1124,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addReadOnlyStatusChangeListener(com.vaadin.data.Property.ReadOnlyStatusChangeListener)}
      **/
     @Override
@@ -1146,7 +1146,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeReadOnlyStatusChangeListener(com.vaadin.data.Property.ReadOnlyStatusChangeListener)}
      **/
     @Override

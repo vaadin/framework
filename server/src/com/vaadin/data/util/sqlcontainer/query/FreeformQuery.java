@@ -61,7 +61,7 @@ public class FreeformQuery implements QueryDelegate {
      * @param connectionPool
      *            the JDBCConnectionPool to use to open connections to the SQL
      *            database.
-     * @deprecated @see
+     * @deprecated As of 6.7, @see
      *             {@link FreeformQuery#FreeformQuery(String, JDBCConnectionPool, String...)}
      */
     @Deprecated

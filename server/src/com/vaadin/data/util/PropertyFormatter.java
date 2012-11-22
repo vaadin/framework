@@ -46,7 +46,7 @@ import com.vaadin.data.util.converter.Converter;
  *            type of the underlying property (a PropertyFormatter is always a
  *            Property&lt;String&gt;)
  * 
- * @deprecated Since 7.0 replaced by {@link Converter}
+ * @deprecated As of 7.0, replaced by {@link Converter}
  * @author Vaadin Ltd.
  * @since 5.3.0
  */

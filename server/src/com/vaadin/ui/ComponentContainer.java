@@ -112,28 +112,28 @@ public interface ComponentContainer extends HasComponents,
     public void moveComponentsFrom(ComponentContainer source);
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addComponentAttachListener(ComponentAttachListener)}
      **/
     @Deprecated
     public void addListener(ComponentAttachListener listener);
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeComponentAttachListener(ComponentAttachListener)}
      **/
     @Deprecated
     public void removeListener(ComponentAttachListener listener);
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addComponentDetachListener(ComponentDetachListener)}
      **/
     @Deprecated
     public void addListener(ComponentDetachListener listener);
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeComponentDetachListener(ComponentDetachListener)}
      **/
     @Deprecated

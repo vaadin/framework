@@ -171,7 +171,7 @@ public interface ClientConnector extends Connector {
     public ClientConnector getParent();
 
     /**
-     * @deprecated As of 7.0.0, use {@link #markAsDirty()} instead
+     * @deprecated As of 7.0, use {@link #markAsDirty()} instead
      */
     @Deprecated
     public void requestRepaint();
@@ -188,7 +188,7 @@ public interface ClientConnector extends Connector {
     public void markAsDirty();
 
     /**
-     * @deprecated As of 7.0.0, use {@link #markAsDirtyRecursive()} instead
+     * @deprecated As of 7.0, use {@link #markAsDirtyRecursive()} instead
      */
     @Deprecated
     public void requestRepaintAll();

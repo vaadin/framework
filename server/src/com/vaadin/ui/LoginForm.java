@@ -47,9 +47,9 @@ import com.vaadin.shared.ApplicationConstants;
  * default component tries to guess the right place for theme css.
  * 
  * @since 5.3
- * @deprecated as of Vaadin 7.0. This component no longer fulfills its duty
- *             reliably in the supported browsers and a {@link VerticalLayout}
- *             with two {@link TextField}s can be used instead.
+ * @deprecated As of 7.0. This component no longer fulfills its duty reliably in
+ *             the supported browsers and a {@link VerticalLayout} with two
+ *             {@link TextField}s can be used instead.
  */
 @Deprecated
 public class LoginForm extends CustomComponent {
@@ -240,7 +240,7 @@ public class LoginForm extends CustomComponent {
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addLoginListener(LoginListener)}
      **/
     @Deprecated
@@ -258,7 +258,7 @@ public class LoginForm extends CustomComponent {
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeLoginListener(LoginListener)}
      **/
     @Deprecated

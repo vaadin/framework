@@ -209,7 +209,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addPropertySetChangeListener(com.vaadin.data.Item.PropertySetChangeListener)}
      **/
     @Override
@@ -233,7 +233,7 @@ public class PropertysetItem implements Item, Item.PropertySetChangeNotifier,
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removePropertySetChangeListener(com.vaadin.data.Item.PropertySetChangeListener)}
      **/
     @Override

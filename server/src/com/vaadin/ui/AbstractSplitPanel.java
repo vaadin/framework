@@ -507,7 +507,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #addSplitterClickListener(SplitterClickListener)}
      **/
     @Deprecated
@@ -521,7 +521,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
     }
 
     /**
-     * @deprecated Since 7.0, replaced by
+     * @deprecated As of 7.0, replaced by
      *             {@link #removeSplitterClickListener(SplitterClickListener)}
      **/
     @Deprecated
