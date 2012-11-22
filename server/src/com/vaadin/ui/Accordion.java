@@ -27,5 +27,23 @@ package com.vaadin.ui;
  * @see TabSheet
  */
 public class Accordion extends TabSheet {
+    /**
+     * Creates an empty accordion.
+     */
+    public Accordion() {
+        super();
+    }
+
+    /**
+     * Constructs a new accordion containing the given components.
+     * 
+     * @param components
+     *            The components to add to the accordion. Each component will be
+     *            added to a separate tab.
+     */
+    public Accordion(Component... components) {
+        this();
+        addComponents(components);
+    }
 
 }

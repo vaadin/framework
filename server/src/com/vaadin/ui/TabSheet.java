@@ -108,7 +108,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
     private int tabIndex;
 
     /**
-     * Constructs a new Tabsheet. Tabsheet is immediate by default, and the
+     * Constructs a new TabSheet. A TabSheet is immediate by default, and the
      * default close handler removes the tab being closed.
      */
     public TabSheet() {
@@ -123,6 +123,18 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
                 tabsheet.removeComponent(c);
             }
         });
+    }
+
+    /**
+     * Constructs a new TabSheet containing the given components.
+     * 
+     * @param components
+     *            The components to add to the tab sheet. Each component will be
+     *            added to a separate tab.
+     */
+    public TabSheet(Component... components) {
+        this();
+        addComponents(components);
     }
 
     /**
