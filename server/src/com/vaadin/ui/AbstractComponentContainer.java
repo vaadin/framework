@@ -43,6 +43,19 @@ public abstract class AbstractComponentContainer extends AbstractComponent
         super();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.ComponentContainer#addComponents(com.vaadin.ui.Component[])
+     */
+    @Override
+    public void addComponents(Component... components) {
+        for (Component c : components) {
+            addComponent(c);
+        }
+    }
+
     /**
      * Removes all components from the container. This should probably be
      * re-implemented in extending classes for a more powerful implementation.
