@@ -34,9 +34,6 @@ public class DefaultUIProvider extends UIProvider {
             String uiClassName = uiClassNameObj.toString();
 
             ClassLoader classLoader = request.getService().getClassLoader();
-            if (classLoader == null) {
-                classLoader = getClass().getClassLoader();
-            }
             try {
                 Class<? extends UI> uiClass = Class.forName(uiClassName, true,
                         classLoader).asSubclass(UI.class);
