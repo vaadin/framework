@@ -32,8 +32,6 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.Icon;
-import com.vaadin.client.ui.ShortcutAction;
-import com.vaadin.client.ui.ShortcutActionTarget;
 import com.vaadin.client.ui.VButton;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.communication.FieldRpc.FocusAndBlurServerRpc;
@@ -45,7 +43,7 @@ import com.vaadin.ui.Button;
 
 @Connect(value = Button.class, loadStyle = LoadStyle.EAGER)
 public class ButtonConnector extends AbstractComponentConnector implements
-        BlurHandler, FocusHandler, ClickHandler, ShortcutActionTarget {
+        BlurHandler, FocusHandler, ClickHandler {
 
     private HandlerRegistration focusHandlerRegistration = null;
     private HandlerRegistration blurHandlerRegistration = null;
@@ -169,21 +167,4 @@ public class ButtonConnector extends AbstractComponentConnector implements
         getRpcProxy(ButtonServerRpc.class).click(details);
 
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.terminal.gwt.client.ui.ShortcutActionTarget#handleAction(com
-     * .vaadin.terminal.gwt.client.ui.ShortcutAction)
-     */
-    @Override
-    public boolean handleAction(ShortcutAction action) {
-        if ("click".equals(action.getTargetAction())) {
-            getWidget().onClick();
-            return true;
-        }
-        return false;
-    }
-
 }
