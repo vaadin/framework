@@ -1,3 +1,4 @@
 @import "liferay.scss";
-
-@include liferay;
+.liferay {
+	@include liferay;
+}

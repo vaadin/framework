@@ -40,7 +40,7 @@
 	background-color: transparent;
 	padding: 2px;
 }
-.v-app .#{$name}-over-top,
+&.v-app .#{$name}-over-top,
 .v-window .#{$name}-over-top,
 .v-popupview-popup .#{$name}-over-top {
 	border: none;
@@ -52,7 +52,7 @@
 	-webkit-border-radius: 0;
 	border-radius: 0;
 }
-.v-app .#{$name}-over-bottom,
+&.v-app .#{$name}-over-bottom,
 .v-window .#{$name}-over-bottom,
 .v-popupview-popup .#{$name}-over-bottom {
 	border: none;
@@ -64,7 +64,7 @@
 	-webkit-border-radius: 0;
 	border-radius: 0;
 }
-.v-app .#{$name}-over-left,
+&.v-app .#{$name}-over-left,
 .v-window .#{$name}-over-left,
 .v-popupview-popup .#{$name}-over-left {
 	border: none;
@@ -76,7 +76,7 @@
 	-webkit-border-radius: 0;
 	border-radius: 0;
 }
-.v-app .#{$name}-over-right,
+&.v-app .#{$name}-over-right,
 .v-window .#{$name}-over-right,
 .v-popupview-popup .#{$name}-over-right {
 	border: none;
@@ -90,16 +90,16 @@
 }
 .#{$name},
 .#{$name}-over,
-.v-app .#{$name}-over-top,
+&.v-app .#{$name}-over-top,
 .v-window .#{$name}-over-top,
 .v-popupview-popup .#{$name}-over-top,
-.v-app .#{$name}-over-bottom,
+&.v-app .#{$name}-over-bottom,
 .v-window .#{$name}-over-bottom,
 .v-popupview-popup .#{$name}-over-bottom,
-.v-app .#{$name}-over-left,
+&.v-app .#{$name}-over-left,
 .v-window .#{$name}-over-left,
 .v-popupview-popup .#{$name}-over-left,
-.v-app .#{$name}-over-right,
+&.v-app .#{$name}-over-right,
 .v-window .#{$name}-over-right,
 .v-popupview-popup .#{$name}-over-right {
 	border-color: rgba(0,109,232,.6);

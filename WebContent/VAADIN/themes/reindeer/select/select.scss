@@ -7,7 +7,7 @@
 	padding-left: 2px;
 	padding-right: 25px; /* Space for the button */
 }
-.v-app .#{$name}-input,
+&.v-app .#{$name}-input,
 .v-window .#{$name}-input,
 .v-popupview-popup .#{$name}-input {
 	background: transparent repeat-x;
@@ -16,7 +16,7 @@
 	height: 24px;
 }
 /* More specific selector to override padding */
-.v-app input.#{$name}-input,
+&.v-app input.#{$name}-input,
 .v-window input.#{$name}-input,
 .v-popupview-popup input.#{$name}-input {
 	padding: 4px 0 4px 2px;
@@ -211,7 +211,7 @@
 .black .#{$name} {
 	background-image: url(img/black/left-black.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
 }
-.v-app .black .#{$name}-input,
+&.v-app .black .#{$name}-input,
 .v-window .black .#{$name}-input,
 .v-window-black .#{$name}-input,
 .v-popupview-popup .black .#{$name}-input {

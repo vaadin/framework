@@ -3,7 +3,7 @@
 .v-generated-body {
 	background: #e9eced;
 }
-.v-app {
+&.v-app {
 	background: #e9eced url(img/main-bg.png) repeat-x;
 	font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	color: #464f52;
@@ -11,14 +11,14 @@
 	line-height: 18px;
 }
 /* Global font styles */
-.v-app,
+&.v-app,
 .v-window,
 .v-popupview-popup,
 .v-tooltip,
-.v-app input,
-.v-app select,
-.v-app button,
-.v-app textarea,
+&.v-app input,
+&.v-app select,
+&.v-app button,
+&.v-app textarea,
 .v-window input,
 .v-window select,
 .v-window button,
@@ -37,7 +37,7 @@
 	color: #464f52;
 	font-size: 13px;
 }
-.v-app select,
+&.v-app select,
 .v-window select {
 	padding: 0;
 }

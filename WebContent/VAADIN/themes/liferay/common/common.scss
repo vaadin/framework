@@ -1,6 +1,6 @@
 @mixin liferay-common {
 
-div.v-app {
+body &.v-app {
 	background-color: transparent;
 }
 

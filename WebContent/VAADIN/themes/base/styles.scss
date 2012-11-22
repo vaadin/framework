@@ -1,2 +1,4 @@
 @import "base.scss";
-@include base;
+.base {
+	@include base;
+}
