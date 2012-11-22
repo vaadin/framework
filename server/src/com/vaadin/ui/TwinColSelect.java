@@ -62,17 +62,21 @@ public class TwinColSelect extends AbstractSelect {
     }
 
     /**
-     * Sets the number of columns in the editor. If the number of columns is set
-     * 0, the actual number of displayed columns is determined implicitly by the
-     * adapter.
+     * Sets the width of the component so that it displays approximately the
+     * given number of letters in each of the two selects.
      * <p>
-     * The number of columns overrides the value set by setWidth. Only if
-     * columns are set to 0 (default) the width set using
-     * {@link #setWidth(float, int)} or {@link #setWidth(String)} is used.
+     * Calling {@code setColumns(10);} is roughly equivalent to calling
+     * {@code setWidth((10*2+4)+"10em");}
+     * </p>
      * 
+     * @deprecated As of 7.0. "Columns" does not reflect the exact number of
+     *             characters that will be displayed. It is better to use
+     *             setWidth together with "em" to control the width of the
+     *             field.
      * @param columns
      *            the number of columns to set.
      */
+    @Deprecated
     public void setColumns(int columns) {
         if (columns < 0) {
             columns = 0;
@@ -83,6 +87,16 @@ public class TwinColSelect extends AbstractSelect {
         }
     }
 
+    /**
+     * Gets the number of columns for the component.
+     * 
+     * @see #setColumns(int)
+     * @deprecated As of 7.0. "Columns" does not reflect the exact number of
+     *             characters that will be displayed. It is better to use
+     *             setWidth together with "em" to control the width of the
+     *             field.
+     */
+    @Deprecated
     public int getColumns() {
         return columns;
     }
