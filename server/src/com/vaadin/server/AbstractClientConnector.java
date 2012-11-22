@@ -58,7 +58,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * A map from client to server RPC interface class name to the RPC call
      * manager that handles incoming RPC calls for that interface.
      */
-    private Map<String, RpcManager> rpcManagerMap = new HashMap<String, RpcManager>();
+    private Map<String, ServerRpcManager<?>> rpcManagerMap = new HashMap<String, ServerRpcManager<?>>();
 
     /**
      * A map from server to client RPC interface class to the RPC proxy that
@@ -388,7 +388,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
     }
 
     @Override
-    public RpcManager getRpcManager(String rpcInterfaceName) {
+    public ServerRpcManager<?> getRpcManager(String rpcInterfaceName) {
         return rpcManagerMap.get(rpcInterfaceName);
     }
 
@@ -984,6 +984,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * 
      * @see com.vaadin.server.ClientConnector#getErrorHandler()
      */
+    @Override
     public ErrorHandler getErrorHandler() {
         return errorHandler;
     }
@@ -994,6 +995,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * @see com.vaadin.server.ClientConnector#setErrorHandler(com.vaadin.server.
      * ErrorHandler)
      */
+    @Override
     public void setErrorHandler(ErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
     }

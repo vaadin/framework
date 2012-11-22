@@ -254,7 +254,7 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     }
 
     @Override
-    public RpcManager getRpcManager(String interfaceName) {
+    public ServerRpcManager<?> getRpcManager(String interfaceName) {
         // TODO Use rpc for drag'n'drop
         return null;
     }
