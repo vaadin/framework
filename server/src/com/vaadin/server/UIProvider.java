@@ -32,9 +32,9 @@ public abstract class UIProvider implements Serializable {
         try {
             return event.getUIClass().newInstance();
         } catch (InstantiationException e) {
-            throw new RuntimeException("Could not instantiate root class", e);
+            throw new RuntimeException("Could not instantiate UI class", e);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException("Could not access root class", e);
+            throw new RuntimeException("Could not access UI class", e);
         }
     }
 
