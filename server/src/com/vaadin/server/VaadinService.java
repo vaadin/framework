@@ -25,6 +25,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.logging.Logger;
 
 import javax.portlet.PortletContext;
 import javax.servlet.ServletContext;
@@ -312,7 +313,13 @@ public abstract class VaadinService implements Serializable {
         }
 
         for (UI ui : new ArrayList<UI>(vaadinSession.getUIs())) {
-            vaadinSession.cleanupUI(ui);
+            // close() called here for consistency so that it is always called
+            // before a UI is removed. UI.isClosing() is thus always true in
+            // UI.detach() and associated detach listeners.
+            if (!ui.isClosing()) {
+                ui.close();
+            }
+            vaadinSession.removeUI(ui);
         }
 
         eventRouter.fireEvent(new SessionDestroyEvent(this, vaadinSession));
@@ -741,5 +748,148 @@ public abstract class VaadinService implements Serializable {
      */
     public void closeSession(VaadinSession session) {
         session.removeFromSession(this);
+    }
+
+    /**
+     * Called at the end of a request, after sending the response. Closes
+     * inactive UIs in the given session, removes closed UIs from the session,
+     * and closes the session if it is itself inactive.
+     * 
+     * @param session
+     */
+    void cleanupSession(VaadinSession session) {
+        if (isSessionActive(session)) {
+            closeInactiveUIs(session);
+            removeClosedUIs(session);
+        } else {
+            getLogger().fine(
+                    "Closed inactive session " + session.getSession().getId());
+            closeSession(session);
+        }
+    }
+
+    /**
+     * Removes those UIs from the given session for which {@link UI#isClosing()
+     * isClosing} yields true.
+     * 
+     * @param session
+     */
+    private void removeClosedUIs(VaadinSession session) {
+        for (UI ui : new ArrayList<UI>(session.getUIs())) {
+            if (ui.isClosing()) {
+                getLogger().finer("Removing closed UI " + ui.getUIId());
+                session.removeUI(ui);
+            }
+        }
+    }
+
+    /**
+     * Closes those UIs in the given session for which {@link #isUIActive}
+     * yields false.
+     * 
+     * @since 7.0.0
+     */
+    private void closeInactiveUIs(VaadinSession session) {
+        String sessionId = session.getSession().getId();
+        for (UI ui : session.getUIs()) {
+            if (!isUIActive(ui) && !ui.isClosing()) {
+                getLogger().fine(
+                        "Closing inactive UI #" + ui.getUIId() + " in session "
+                                + sessionId);
+                ui.close();
+            }
+        }
+    }
+
+    /**
+     * Returns the number of seconds that must pass without a valid heartbeat or
+     * UIDL request being received from a UI before that UI is removed from its
+     * session. This is a lower bound; it might take longer to close an inactive
+     * UI. Returns a negative number if heartbeat is disabled and timeout never
+     * occurs.
+     * 
+     * @see DeploymentConfiguration#getHeartbeatInterval()
+     * 
+     * @since 7.0.0
+     * 
+     * @return The heartbeat timeout in seconds or a negative number if timeout
+     *         never occurs.
+     */
+    private int getHeartbeatTimeout() {
+        // Permit three missed heartbeats before closing the UI
+        return (int) (getDeploymentConfiguration().getHeartbeatInterval() * (3.1));
+    }
+
+    /**
+     * Returns the number of seconds that must pass without a valid UIDL request
+     * being received for the given session before the session is closed, even
+     * though heartbeat requests are received. This is a lower bound; it might
+     * take longer to close an inactive session.
+     * <p>
+     * Returns a negative number if there is no timeout. In this case heartbeat
+     * requests suffice to keep the session alive, but it will still eventually
+     * expire in the regular manner if there are no requests at all (see
+     * {@link WrappedSession#getMaxInactiveInterval()}).
+     * 
+     * @see DeploymentConfiguration#isCloseIdleSessions()
+     * @see #getHeartbeatTimeout()
+     * 
+     * @since 7.0.0
+     * 
+     * @return The UIDL request timeout in seconds, or a negative number if
+     *         timeout never occurs.
+     */
+    private int getUidlRequestTimeout(VaadinSession session) {
+        return getDeploymentConfiguration().isCloseIdleSessions() ? session
+                .getSession().getMaxInactiveInterval() : -1;
+    }
+
+    /**
+     * Returns whether the given UI is active (the client-side actively
+     * communicates with the server) or whether it can be removed from the
+     * session and eventually collected.
+     * <p>
+     * A UI is active if and only if its {@link UI#isClosing() isClosing}
+     * returns false and {@link #getHeartbeatTimeout() getHeartbeatTimeout} is
+     * negative or has not yet expired.
+     * 
+     * @since 7.0.0
+     * 
+     * @param ui
+     *            The UI whose status to check
+     * 
+     * @return true if the UI is active, false if it could be removed.
+     */
+    private boolean isUIActive(UI ui) {
+        if (ui.isClosing()) {
+            return false;
+        } else {
+            long now = System.currentTimeMillis();
+            int timeout = 1000 * getHeartbeatTimeout();
+            return timeout < 0
+                    || now - ui.getLastHeartbeatTimestamp() < timeout;
+        }
+    }
+
+    /**
+     * Returns whether the given session is active or whether it can be closed.
+     * <p>
+     * A session is always active if
+     * {@link #getUidlRequestTimeout(VaadinSession) getUidlRequestTimeout} is
+     * negative. Otherwise, it is active if and only if the timeout has not
+     * expired.
+     * 
+     * @param session
+     *            The session whose status to check
+     * @return true if the session is active, false if it could be closed.
+     */
+    private boolean isSessionActive(VaadinSession session) {
+        long now = System.currentTimeMillis();
+        int timeout = 1000 * getUidlRequestTimeout(session);
+        return timeout < 0 || now - session.getLastRequestTimestamp() < timeout;
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(VaadinService.class.getName());
     }
 }

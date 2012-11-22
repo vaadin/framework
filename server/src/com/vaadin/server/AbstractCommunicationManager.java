@@ -82,7 +82,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.LegacyComponent;
-import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.SelectiveRenderer;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
@@ -641,16 +640,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * 
      */
     protected void postPaint(UI uI) {
-        if (uI instanceof LegacyWindow) {
-            LegacyWindow legacyWindow = (LegacyWindow) uI;
-            if (!legacyWindow.getApplication().isRunning()) {
-                // Detach LegacyWindow if it belongs to a closed
-                // LegacyApplication
-                legacyWindow.setApplication(null);
-                legacyWindow.setSession(null);
-            }
-        }
-
         // Remove connectors that have been detached from the session during
         // handling of the request
         uI.getConnectorTracker().cleanConnectorMap();

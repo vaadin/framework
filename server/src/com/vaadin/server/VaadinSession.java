@@ -18,7 +18,6 @@ package com.vaadin.server;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,7 +27,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Logger;
 
 import javax.portlet.PortletSession;
 import javax.servlet.http.HttpSession;
@@ -206,6 +204,16 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      */
     public void setLastRequestTimestamp(long timestamp) {
         lastRequestTimestamp = timestamp;
+    }
+
+    /**
+     * Returns the time when the last request was serviced in this session.
+     * 
+     * @return The time when the last request was handled, in milliseconds since
+     *         the epoch.
+     */
+    public long getLastRequestTimestamp() {
+        return lastRequestTimestamp;
     }
 
     /**
@@ -507,10 +515,6 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         return String.valueOf(connectorIdSequence++);
     }
 
-    private static final Logger getLogger() {
-        return Logger.getLogger(VaadinSession.class.getName());
-    }
-
     /**
      * Returns a UI with the given id.
      * <p>
@@ -576,123 +580,17 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     /**
-     * Removes all those UIs from the session for which {@link #isUIAlive}
-     * returns false. Cleanup events are fired for the removed UIs.
-     * <p>
-     * Called by the framework at the end of every request.
-     * 
-     * @see UI.CleanupEvent
-     * @see UI.CleanupListener
-     * @see #isUIAlive(UI)
-     * 
-     * @since 7.0.0
-     * 
-     * @deprecated will likely change or be removed in a future version
-     */
-    @Deprecated
-    public void cleanupInactiveUIs() {
-        if (getUidlRequestTimeout() >= 0
-                && System.currentTimeMillis() - lastRequestTimestamp > 1000 * getUidlRequestTimeout()) {
-            close();
-        } else {
-            for (UI ui : new ArrayList<UI>(uIs.values())) {
-                if (!isUIAlive(ui)) {
-                    cleanupUI(ui);
-                    getLogger()
-                            .fine("Closed UI #" + ui.getUIId()
-                                    + " due to inactivity");
-                }
-            }
-        }
-    }
-
-    /**
-     * Called by the framework to remove an UI instance because it has been
-     * inactive.
+     * Called by the framework to remove an UI instance from the session because
+     * it has been closed.
      * 
      * @param ui
      *            the UI to remove
-     * 
-     * @deprecated Method is declared as public only to support
-     *             {@link LegacyApplication#close()} and will be removed when
-     *             LegacyApplciation support is removed.
      */
-    @Deprecated
-    public void cleanupUI(UI ui) {
-        Integer id = Integer.valueOf(ui.getUIId());
+    public void removeUI(UI ui) {
+        int id = ui.getUIId();
+        ui.setSession(null);
         uIs.remove(id);
         retainOnRefreshUIs.values().remove(id);
-        ui.fireCleanupEvent();
-    }
-
-    /**
-     * Returns the number of seconds that must pass without a valid heartbeat or
-     * UIDL request being received from a UI before that UI is removed from the
-     * application. This is a lower bound; it might take longer to close an
-     * inactive UI. Returns a negative number if heartbeat is disabled and
-     * timeout never occurs.
-     * 
-     * @see #getUidlRequestTimeout()
-     * @see #cleanupInactiveUIs()
-     * @see DeploymentConfiguration#getHeartbeatInterval()
-     * 
-     * @since 7.0.0
-     * 
-     * @return The heartbeat timeout in seconds or a negative number if timeout
-     *         never occurs.
-     */
-    protected int getHeartbeatTimeout() {
-        // Permit three missed heartbeats before closing the UI
-        return (int) (configuration.getHeartbeatInterval() * (3.1));
-    }
-
-    /**
-     * Returns the number of seconds that must pass without a valid UIDL request
-     * being received from a UI before the UI is removed from the session, even
-     * though heartbeat requests are received. This is a lower bound; it might
-     * take longer to close an inactive UI. Returns a negative number if
-     * <p>
-     * This timeout only has effect if cleanup of inactive UIs is enabled;
-     * otherwise heartbeat requests are enough to extend UI lifetime
-     * indefinitely.
-     * 
-     * @see DeploymentConfiguration#isCloseIdleSessions()
-     * @see #getHeartbeatTimeout()
-     * @see #cleanupInactiveUIs()
-     * 
-     * @since 7.0.0
-     * 
-     * @return The UIDL request timeout in seconds, or a negative number if
-     *         timeout never occurs.
-     */
-    protected int getUidlRequestTimeout() {
-        return configuration.isCloseIdleSessions() ? getSession()
-                .getMaxInactiveInterval() : -1;
-    }
-
-    /**
-     * Returns whether the given UI is alive (the client-side actively
-     * communicates with the server) or whether it can be removed from the
-     * session and eventually collected.
-     * 
-     * @since 7.0.0
-     * 
-     * @deprecated will likely change or be removed in a future version
-     * 
-     * @param ui
-     *            The UI whose status to check
-     * @return true if the UI is alive, false if it could be removed.
-     * 
-     * @deprecated will likely change or be removed in a future version
-     */
-    @Deprecated
-    protected boolean isUIAlive(UI ui) {
-        long now = System.currentTimeMillis();
-        if (getHeartbeatTimeout() >= 0
-                && now - ui.getLastHeartbeatTimestamp() > 1000 * getHeartbeatTimeout()) {
-            return false;
-        }
-        return true;
     }
 
     /**

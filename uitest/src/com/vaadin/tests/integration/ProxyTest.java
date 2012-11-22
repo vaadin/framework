@@ -64,9 +64,9 @@ public class ProxyTest extends AbstractTestUI {
         stopButton.setEnabled(false);
         startButton.setDisableOnClick(true);
 
-        addCleanupListener(new CleanupListener() {
+        addDetachListener(new DetachListener() {
             @Override
-            public void cleanup(CleanupEvent event) {
+            public void detach(DetachEvent event) {
                 if (server != null && server.isRunning()) {
                     try {
                         server.stop();
