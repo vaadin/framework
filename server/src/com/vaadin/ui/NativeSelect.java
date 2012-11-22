@@ -51,13 +51,20 @@ public class NativeSelect extends AbstractSelect {
     }
 
     /**
-     * Sets the number of columns in the editor. If the number of columns is set
-     * 0, the actual number of displayed columns is determined implicitly by the
-     * adapter.
+     * Sets the width of the component so that it can display approximately the
+     * given number of letters.
+     * <p>
+     * Calling {@code setColumns(10);} is equivalent to calling
+     * {@code setWidth("10em");}
+     * </p>
      * 
+     * @deprecated "Columns" does not reflect the exact number of characters
+     *             that will be displayed. It is better to use setWidth together
+     *             with "em" to control the width of the field.
      * @param columns
      *            the number of columns to set.
      */
+    @Deprecated
     public void setColumns(int columns) {
         if (columns < 0) {
             columns = 0;
@@ -68,6 +75,15 @@ public class NativeSelect extends AbstractSelect {
         }
     }
 
+    /**
+     * Gets the number of columns for the component.
+     * 
+     * @see #setColumns(int)
+     * @deprecated "Columns" does not reflect the exact number of characters
+     *             that will be displayed. It is better to use setWidth together
+     *             with "em" to control the width of the field.
+     */
+    @Deprecated
     public int getColumns() {
         return columns;
     }
