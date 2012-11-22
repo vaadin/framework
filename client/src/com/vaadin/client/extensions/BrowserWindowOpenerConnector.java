@@ -22,18 +22,18 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
-import com.vaadin.server.BrowserPopupOpener;
-import com.vaadin.shared.ui.BrowserPopupExtensionState;
+import com.vaadin.server.BrowserWindowOpener;
+import com.vaadin.shared.ui.BrowserWindowExtensionState;
 import com.vaadin.shared.ui.Connect;
 
 /**
- * Client-side code for {@link BrowserPopupOpener}
+ * Client-side code for {@link BrowserWindowOpener}
  * 
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-@Connect(BrowserPopupOpener.class)
-public class BrowserPopupOpenerConnector extends AbstractExtensionConnector
+@Connect(BrowserWindowOpener.class)
+public class BrowserWindowOpenerConnector extends AbstractExtensionConnector
         implements ClickHandler {
 
     @Override
@@ -44,13 +44,13 @@ public class BrowserPopupOpenerConnector extends AbstractExtensionConnector
     }
 
     @Override
-    public BrowserPopupExtensionState getState() {
-        return (BrowserPopupExtensionState) super.getState();
+    public BrowserWindowExtensionState getState() {
+        return (BrowserWindowExtensionState) super.getState();
     }
 
     @Override
     public void onClick(ClickEvent event) {
-        String url = getResourceUrl("popup");
+        String url = getResourceUrl(BrowserWindowExtensionState.locationResource);
         if (url != null) {
             Window.open(url, getState().target, getState().features);
         }

@@ -19,7 +19,7 @@ package com.vaadin.tests.extensions;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.server.BrowserPopupOpener;
+import com.vaadin.server.BrowserWindowOpener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.components.popupview.ReopenPopupView;
@@ -47,16 +47,16 @@ public class BrowserPopupExtensionTest extends AbstractTestUI {
         addComponents(components, "http://vaadin.com/download/nightly/");
 
         Button uiClassButton = new Button("Open UI class");
-        new BrowserPopupOpener(ReopenPopupView.class).extend(uiClassButton);
+        new BrowserWindowOpener(ReopenPopupView.class).extend(uiClassButton);
         addComponent(uiClassButton);
 
         Button uiWithPath = new Button("Open UI class with path");
-        new BrowserPopupOpener(ReopenPopupView.class, "foobar")
+        new BrowserWindowOpener(ReopenPopupView.class, "foobar")
                 .extend(uiWithPath);
         addComponent(uiWithPath);
 
         Button withPopupFeaturesButton = new Button("Open with features");
-        BrowserPopupOpener featuresPopup = new BrowserPopupOpener(
+        BrowserWindowOpener featuresPopup = new BrowserWindowOpener(
                 "http://vaadin.com/download/nightly/");
         featuresPopup.setFeatures("width=400,height=400");
         featuresPopup.extend(withPopupFeaturesButton);
@@ -76,7 +76,7 @@ public class BrowserPopupExtensionTest extends AbstractTestUI {
                 c.setHeight("100px");
                 hl.addComponent(c);
 
-                new BrowserPopupOpener(URL).extend(c);
+                new BrowserWindowOpener(URL).extend(c);
 
                 if (c instanceof Button) {
                     ((Button) c).addClickListener(new ClickListener() {
@@ -95,7 +95,7 @@ public class BrowserPopupExtensionTest extends AbstractTestUI {
 
     @Override
     protected String getTestDescription() {
-        return "Test for " + BrowserPopupOpener.class.getSimpleName()
+        return "Test for " + BrowserWindowOpener.class.getSimpleName()
                 + " features";
     }
 

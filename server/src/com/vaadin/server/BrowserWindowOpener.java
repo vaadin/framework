@@ -17,7 +17,7 @@
 package com.vaadin.server;
 
 import com.vaadin.shared.ApplicationConstants;
-import com.vaadin.shared.ui.BrowserPopupExtensionState;
+import com.vaadin.shared.ui.BrowserWindowExtensionState;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.UI;
 
@@ -28,24 +28,55 @@ import com.vaadin.ui.UI;
  * @author Vaadin Ltd
  * @since 7.0.0
  */
-public class BrowserPopupOpener extends AbstractExtension {
+public class BrowserWindowOpener extends AbstractExtension {
 
-    private final BrowserPopupUIProvider uiProvider;
+    private static class BrowserWindowUIProvider extends UIProvider {
+
+        private final String path;
+        private final Class<? extends UI> uiClass;
+
+        public BrowserWindowUIProvider(Class<? extends UI> uiClass, String path) {
+            this.path = ensureInitialSlash(path);
+            this.uiClass = uiClass;
+        }
+
+        private static String ensureInitialSlash(String path) {
+            if (path == null) {
+                return null;
+            } else if (!path.startsWith("/")) {
+                return '/' + path;
+            } else {
+                return path;
+            }
+        }
+
+        @Override
+        public Class<? extends UI> getUIClass(UIClassSelectionEvent event) {
+            String requestPathInfo = event.getRequest().getPathInfo();
+            if (path.equals(requestPathInfo)) {
+                return uiClass;
+            } else {
+                return null;
+            }
+        }
+    }
+
+    private final BrowserWindowUIProvider uiProvider;
 
     /**
-     * Creates a popup opener that will open popups containing the provided UI
+     * Creates a window opener that will open windows containing the provided UI
      * class
      * 
      * @param uiClass
      *            the UI class that should be opened when the extended component
      *            is clicked
      */
-    public BrowserPopupOpener(Class<? extends UI> uiClass) {
+    public BrowserWindowOpener(Class<? extends UI> uiClass) {
         this(uiClass, generateUIClassUrl(uiClass));
     }
 
     /**
-     * Creates a popup opener that will open popups containing the provided UI
+     * Creates a window opener that will open windows containing the provided UI
      * using the provided path
      * 
      * @param uiClass
@@ -54,36 +85,36 @@ public class BrowserPopupOpener extends AbstractExtension {
      * @param path
      *            the path that the UI should be bound to
      */
-    public BrowserPopupOpener(Class<? extends UI> uiClass, String path) {
+    public BrowserWindowOpener(Class<? extends UI> uiClass, String path) {
         // Create a Resource with a translated URL going to the VaadinService
         this(new ExternalResource(ApplicationConstants.APP_PROTOCOL_PREFIX
-                + path), new BrowserPopupUIProvider(uiClass, path));
+                + path), new BrowserWindowUIProvider(uiClass, path));
     }
 
     /**
-     * Creates a popup opener that will open popups to the provided URL
+     * Creates a window opener that will open windows to the provided URL
      * 
      * @param url
-     *            the URL to open in the popup
+     *            the URL to open in the window
      */
-    public BrowserPopupOpener(String url) {
+    public BrowserWindowOpener(String url) {
         this(new ExternalResource(url));
     }
 
     /**
-     * Creates a popup opener that will open popups to the provided resource
+     * Creates a window opener that will open window to the provided resource
      * 
      * @param resource
-     *            the resource to open in the popup
+     *            the resource to open in the window
      */
-    public BrowserPopupOpener(Resource resource) {
+    public BrowserWindowOpener(Resource resource) {
         this(resource, null);
     }
 
-    private BrowserPopupOpener(Resource resource,
-            BrowserPopupUIProvider uiProvider) {
+    private BrowserWindowOpener(Resource resource,
+            BrowserWindowUIProvider uiProvider) {
         this.uiProvider = uiProvider;
-        setResource("popup", resource);
+        setResource(BrowserWindowExtensionState.locationResource, resource);
     }
 
     public void extend(AbstractComponent target) {
@@ -91,38 +122,38 @@ public class BrowserPopupOpener extends AbstractExtension {
     }
 
     /**
-     * Sets the target window name that will be used when opening the popup. If
-     * a popup has already been opened with the same name, the contents of that
-     * window will be replaced instead of opening a new window. If the name is
-     * <code>null</code> or <code>"blank"</code>, the popup will always be
-     * opened in a new window.
+     * Sets the target window name that will be used. If a window has already
+     * been opened with the same name, the contents of that window will be
+     * replaced instead of opening a new window. If the name is
+     * <code>null</code> or <code>"_blank"</code>, a new window will always be
+     * opened.
      * 
-     * @param popupName
-     *            the target name for the popups
+     * @param windowName
+     *            the target name for the window
      */
-    public void setPopupName(String popupName) {
-        getState().target = popupName;
+    public void setWindowName(String windowName) {
+        getState().target = windowName;
     }
 
     /**
-     * Gets the popup target name.
+     * Gets the target window name.
      * 
-     * @see #setPopupName(String)
+     * @see #setWindowName(String)
      * 
-     * @return the popup target string
+     * @return the window target string
      */
-    public String getPopupName() {
+    public String getWindowName() {
         return getState().target;
     }
 
     // Avoid breaking url to multiple lines
     // @formatter:off 
     /**
-     * Sets the features for opening the popup. See e.g.
+     * Sets the features for opening the window. See e.g.
      * {@link https://developer.mozilla.org/en-US/docs/DOM/window.open#Position_and_size_features}
      * for a description of the commonly supported features.
      * 
-     * @param features a string with popup features, or <code>null</code> to use the default features.
+     * @param features a string with window features, or <code>null</code> to use the default features.
      */
     // @formatter:on
     public void setFeatures(String features) {
@@ -130,7 +161,7 @@ public class BrowserPopupOpener extends AbstractExtension {
     }
 
     /**
-     * Gets the popup features.
+     * Gets the window features.
      * 
      * @see #setFeatures(String)
      * @return
@@ -140,8 +171,8 @@ public class BrowserPopupOpener extends AbstractExtension {
     }
 
     @Override
-    protected BrowserPopupExtensionState getState() {
-        return (BrowserPopupExtensionState) super.getState();
+    protected BrowserWindowExtensionState getState() {
+        return (BrowserWindowExtensionState) super.getState();
     }
 
     @Override

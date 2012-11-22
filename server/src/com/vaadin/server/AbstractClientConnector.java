@@ -984,6 +984,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * 
      * @see com.vaadin.server.ClientConnector#getErrorHandler()
      */
+    @Override
     public ErrorHandler getErrorHandler() {
         return errorHandler;
     }
@@ -994,6 +995,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * @see com.vaadin.server.ClientConnector#setErrorHandler(com.vaadin.server.
      * ErrorHandler)
      */
+    @Override
     public void setErrorHandler(ErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
     }
