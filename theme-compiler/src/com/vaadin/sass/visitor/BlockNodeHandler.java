@@ -23,6 +23,25 @@ import com.vaadin.sass.ScssStylesheet;
 import com.vaadin.sass.tree.BlockNode;
 import com.vaadin.sass.tree.Node;
 
+/**
+ * Handle nesting of blocks by moving child blocks to their parent, updating
+ * their selector lists while doing so. Nodes already handled by
+ * {@link ParentSelectorHandler} are not handled here.
+ * 
+ * Sample SASS code (from www.sass-lang.com):
+ * 
+ * <pre>
+ * table.hl {
+ *   margin: 2em 0;
+ *   td.ln {
+ *     text-align: right;
+ *   }
+ * }
+ * </pre>
+ * 
+ * Note that nested properties are handled by {@link NestedNodeHandler}, not
+ * here.
+ */
 public class BlockNodeHandler {
 
     public static void traverse(BlockNode node) {
