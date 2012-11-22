@@ -41,9 +41,9 @@
 /**********************
  * Blue styles
  **********************/
-.v-app .white,
+&.v-app .white,
 .v-window .white,
-.v-app .blue,
+&.v-app .blue,
 .v-window .blue {
 	color: #222;
 	text-shadow: none;

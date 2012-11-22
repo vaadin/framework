@@ -8,18 +8,18 @@
 	margin: 0;
 	overflow: hidden;
 }
-.v-app {
+&.v-app {
 	height: 100%;
 }
 /* Force arrow cursor for all elements inside the app */
-.v-app,
+&.v-app,
 .v-window,
 .v-popupview-popup,
 .v-label,
 .v-caption {
 	cursor: default;
 }
-div.v-app-loading {
+body &.v-app-loading {
 	/* You can use this to provide indication for the user that the application is loading. */
 	/* It is applied to the same element as .v-app */
 	background-image: url(img/loading-indicator.gif);
@@ -65,7 +65,7 @@ div.v-app-loading {
 .v-ui:focus {
 	outline: none;
 }
-.v-app select,
+&.v-app select,
 .v-window select {
 	margin: 0;
 }
@@ -77,10 +77,10 @@ div.v-app-loading {
 .v-disabled * {
 	cursor: default;
 }
-* html .v-disabled {
+* html & .v-disabled {
 	zoom: 1;
 }
-*+html .v-disabled {
+*+html & .v-disabled {
 	zoom: 1;
 }
 .v-disabled .v-disabled {
@@ -217,16 +217,16 @@ div.v-app-loading {
 	font-size: xx-small;
 }
 /* Debug style */
-.v-app .invalidlayout,
-.v-app .invalidlayout * {
+&.v-app .invalidlayout,
+&.v-app .invalidlayout * {
 	background: #f99 !important;
 }
 /* Fix for Liferay, issue #2384 */
-.v-app input[type="text"],
-.v-app input[type="password"],
-.v-app input[type="reset"],
-.v-app select,
-.v-app textarea ,
+&.v-app input[type="text"],
+&.v-app input[type="password"],
+&.v-app input[type="reset"],
+&.v-app select,
+&.v-app textarea ,
 .v-window input[type="text"],
 .v-window input[type="password"],
 .v-window input[type="reset"],

@@ -1,0 +1,6 @@
+@import "reindeer.scss";
+// For legacy themes; does not wrap styles in .themename
+// Creates legacy-styles.css that can be imported into non-sass themes.
+// NOTE: can not be used in scenarios where multiple themes are used on the
+// same page (e.g portals).
+@include reindeer;

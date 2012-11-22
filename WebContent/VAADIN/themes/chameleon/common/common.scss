@@ -10,7 +10,7 @@ $chameleon-line-height: 1.4;
 // rules on the application level, above theme selection
 @mixin chameleon-app {
 	// App background & tooltip
-	.v-app {
+	&.v-app {
 		background: transparent;
 		overflow: hidden;
 		}
@@ -48,14 +48,14 @@ $chameleon-line-height: 1.4;
 	// Then come all other overlay elements, that do not have other arbitrary 
 	// components inside them (from v-filterselect-suggestpopup onwards)
 	
-	.v-app,
+	&.v-app,
 	.v-window,
 	.v-popupview-popup,
 	.v-tooltip,
-	.v-app input,
-	.v-app select,
-	.v-app button,
-	.v-app textarea,
+	&.v-app input,
+	&.v-app select,
+	&.v-app button,
+	&.v-app textarea,
 	.v-window input,
 	.v-window select,
 	.v-window button,

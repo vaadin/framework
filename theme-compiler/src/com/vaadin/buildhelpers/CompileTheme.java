@@ -45,17 +45,31 @@ public class CompileTheme {
         String themeFolder = params.getOptionValue("theme-folder");
         String themeVersion = params.getOptionValue("theme-version");
 
+        // Regular theme
         try {
-            processSassTheme(themeFolder, themeName, themeVersion);
-            System.out.println("Compiling theme " + themeName + " successful");
+            processSassTheme(themeFolder, themeName, "styles", themeVersion);
+            System.out.println("Compiling theme " + themeName
+                    + " styles successful");
         } catch (Exception e) {
-            System.err.println("Compiling theme " + themeName + " failed");
+            System.err.println("Compiling theme " + themeName
+                    + " styles failed");
+            e.printStackTrace();
+        }
+        // Legacy theme w/o .themename{} wrapping
+        try {
+            processSassTheme(themeFolder, themeName, "legacy-styles",
+                    themeVersion);
+            System.out.println("Compiling theme " + themeName
+                    + " legacy-styles successful");
+        } catch (Exception e) {
+            System.err.println("Compiling theme " + themeName
+                    + " legacy-styles failed");
             e.printStackTrace();
         }
     }
 
     private static void processSassTheme(String themeFolder, String themeName,
-            String version) throws Exception {
+            String variant, String version) throws Exception {
 
         StringBuffer cssHeader = new StringBuffer();
 
@@ -66,10 +80,12 @@ public class CompileTheme {
 
         String stylesCssDir = themeFolder + File.separator + themeName
                 + File.separator;
-        String stylesCssName = stylesCssDir + "styles.css";
+
+        String stylesCssName = stylesCssDir + variant + ".css";
 
         // Process as SASS file
-        String sassFile = stylesCssDir + "styles.scss";
+        String sassFile = stylesCssDir + variant + ".scss";
+
         ScssStylesheet scss = ScssStylesheet.get(sassFile);
         if (scss == null) {
             throw new IllegalArgumentException("SASS file: " + sassFile
@@ -87,7 +103,7 @@ public class CompileTheme {
 
         createSprites(themeFolder, themeName);
         File oldCss = new File(stylesCssName);
-        File newCss = new File(stylesCssDir + "styles-sprite.css");
+        File newCss = new File(stylesCssDir + variant + "-sprite.css");
 
         if (newCss.exists()) {
             // Theme contained sprites. Renamed "styles-sprite.css" ->
@@ -100,6 +116,7 @@ public class CompileTheme {
                         + " failed");
             }
         }
+
     }
 
     private static void createSprites(String themeFolder, String themeName)

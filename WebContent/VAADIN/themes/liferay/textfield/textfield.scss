@@ -1,9 +1,9 @@
 @mixin liferay-textfield {
 
-.v-app input[type="text"],
-.v-app input[type="password"],
-.v-app input[type="reset"],
-.v-app textarea ,
+&.v-app input[type="text"],
+&.v-app input[type="password"],
+&.v-app input[type="reset"],
+&.v-app textarea ,
 .v-window input[type="text"],
 .v-window input[type="password"],
 .v-window input[type="reset"],

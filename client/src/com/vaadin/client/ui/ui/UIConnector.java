@@ -303,7 +303,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 .getThemeName();
         // Remove chars that are not suitable for style names
         themeName = themeName.replaceAll("[^a-zA-Z0-9]", "");
-        root.addStyleName("v-theme-" + themeName);
+        root.addStyleName(themeName);
 
         root.add(getWidget());
 

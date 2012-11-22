@@ -314,7 +314,7 @@ public abstract class BootstrapHandler implements RequestHandler {
          *      .v-app-loading
          *      .v-app-<simpleName for app class>
          *- Additionally added from javascript:
-         *      .v-theme-<themeName, remove non-alphanum>
+         *      <themeName, remove non-alphanum>
          */
 
         List<Node> fragmentNodes = context.getBootstrapResponse()
