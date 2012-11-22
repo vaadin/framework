@@ -23,37 +23,6 @@ import com.vaadin.shared.ui.slider.SliderState;
 /**
  * A component for selecting a numerical value within a range.
  * 
- * Example code: <code>
- * 	class MyPlayer extends CustomComponent implements ValueChangeListener {
- * 
- * 		Label volumeIndicator = new Label();
- * 		Slider slider;
- * 
- * 		public MyPlayer() {
- * 			VerticalLayout vl = new VerticalLayout();
- * 			setCompositionRoot(vl);
- * 			slider = new Slider("Volume", 0, 100);
- * 			slider.setImmediate(true);
- *                      slider.setValue(new Double(50));
- * 			vl.addComponent(slider);
- * 			vl.addComponent(volumeIndicator);
- * 			volumeIndicator.setValue("Current volume:" + 50.0);
- * 			slider.addListener(this);
- * 
- * 		}
- * 
- * 		public void setVolume(double d) {
- * 			volumeIndicator.setValue("Current volume: " + d);
- * 		}
- * 
- * 		public void valueChange(ValueChangeEvent event) {
- * 			Double d = (Double) event.getProperty().getValue();
- * 			setVolume(d.doubleValue());
- * 		}
- * 	}
- * 
- * </code>
- * 
  * @author Vaadin Ltd.
  */
 public class Slider extends AbstractField<Double> {
