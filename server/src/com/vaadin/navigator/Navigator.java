@@ -360,20 +360,18 @@ public class Navigator implements Serializable {
 
     /**
      * Creates a navigator that is tracking the active view using URI fragments
-     * of the current {@link Page} and replacing the contents of a
-     * {@link ComponentContainer} with the active view.
-     * <p>
-     * In case the container is not on the current page, use another
-     * {@link Navigator#Navigator(Page, ViewDisplay)} with an explicitly created
-     * {@link ComponentContainerViewDisplay}.
+     * of the {@link Page} containing the given UI and replacing the contents of
+     * a {@link ComponentContainer} with the active view.
      * <p>
      * All components of the container are removed each time before adding the
      * active {@link View}. Views must implement {@link Component} when using
      * this constructor.
      * <p>
-     * After all {@link View}s and {@link ViewProvider}s have been registered,
-     * the application should trigger navigation to the current fragment using
-     * {@link #navigate()}.
+     * Navigation is automatically initiated after {@code UI.init()} if a
+     * navigator was created. If at a later point changes are made to the
+     * navigator, {@code navigator.navigateTo(navigator.getState())} may need to
+     * be explicitly called to ensure the current view matches the navigation
+     * state.
      * 
      * @param ui
      *            The UI to which this Navigator is attached.
@@ -387,18 +385,16 @@ public class Navigator implements Serializable {
 
     /**
      * Creates a navigator that is tracking the active view using URI fragments
-     * of the current {@link Page} and replacing the contents of a
-     * {@link SingleComponentContainer} with the active view.
-     * <p>
-     * In case the container is not on the current page, use another
-     * {@link Navigator#Navigator(Page, ViewDisplay)} with an explicitly created
-     * {@link SingleComponentContainerViewDisplay}.
+     * of the {@link Page} containing the given UI and replacing the contents of
+     * a {@link SingleComponentContainer} with the active view.
      * <p>
      * Views must implement {@link Component} when using this constructor.
      * <p>
-     * After all {@link View}s and {@link ViewProvider}s have been registered,
-     * the application should trigger navigation to the current fragment using
-     * {@link #navigate()}.
+     * Navigation is automatically initiated after {@code UI.init()} if a
+     * navigator was created. If at a later point changes are made to the
+     * navigator, {@code navigator.navigateTo(navigator.getState())} may need to
+     * be explicitly called to ensure the current view matches the navigation
+     * state.
      * 
      * @param ui
      *            The UI to which this Navigator is attached.
@@ -412,11 +408,13 @@ public class Navigator implements Serializable {
 
     /**
      * Creates a navigator that is tracking the active view using URI fragments
-     * of the Page containing the given UI.
+     * of the {@link Page} containing the given UI.
      * <p>
-     * After all {@link View}s and {@link ViewProvider}s have been registered,
-     * the application should trigger navigation to the current fragment using
-     * {@link #navigate()}.
+     * Navigation is automatically initiated after {@code UI.init()} if a
+     * navigator was created. If at a later point changes are made to the
+     * navigator, {@code navigator.navigateTo(navigator.getState())} may need to
+     * be explicitly called to ensure the current view matches the navigation
+     * state.
      * 
      * @param ui
      *            The UI to which this Navigator is attached.
@@ -430,13 +428,14 @@ public class Navigator implements Serializable {
     /**
      * Creates a navigator.
      * <p>
-     * When a custom navigation state manager is not needed, use the constructor
-     * {@link #Navigator(Page, ViewDisplay)} which uses a URI fragment based
-     * state manager.
+     * When a custom navigation state manager is not needed, use one of the
+     * other constructors which use a URI fragment based state manager.
      * <p>
-     * After all {@link View}s and {@link ViewProvider}s have been registered,
-     * the application should trigger navigation to the current fragment using
-     * {@link #navigate()}.
+     * Navigation is automatically initiated after {@code UI.init()} if a
+     * navigator was created. If at a later point changes are made to the
+     * navigator, {@code navigator.navigateTo(navigator.getState())} may need to
+     * be explicitly called to ensure the current view matches the navigation
+     * state.
      * 
      * @param ui
      *            The UI to which this Navigator is attached.
@@ -454,15 +453,6 @@ public class Navigator implements Serializable {
         this.stateManager = stateManager;
         this.stateManager.setNavigator(this);
         this.display = display;
-    }
-
-    /**
-     * Navigates to the current navigation state. This method should be called
-     * when all required {@link View}s, {@link ViewProvider}s, and
-     * {@link ViewChangeListener}s have been added to the navigator.
-     */
-    public void navigate() {
-        navigateTo(getStateManager().getState());
     }
 
     /**

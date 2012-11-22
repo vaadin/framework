@@ -129,8 +129,6 @@ public class NavigatorTest extends UI {
 
             navi.setErrorView(new ErrorView());
 
-            navi.navigate();
-
             layout.addComponent(new NaviButton("list"));
             layout.addComponent(new NaviButton("edit"));
             layout.addComponent(new NaviButton("forbidden"));

@@ -552,6 +552,12 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
         // Call the init overridden by the application developer
         init(request);
+
+        Navigator navigator = getNavigator();
+        if (navigator != null) {
+            // Kickstart navigation if a navigator was attached in init()
+            navigator.navigateTo(navigator.getState());
+        }
     }
 
     /**
