@@ -16,32 +16,34 @@
 
 package com.vaadin.tests.minitutorials.v7b2;
 
+import com.vaadin.server.ClientConnector.DetachListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.UI;
 
-public class CleanupUI extends UI implements UI.CleanupListener {
+public class CleanupUI extends UI implements DetachListener {
     @Override
     protected void init(VaadinRequest request) {
-        addCleanupListener(new UI.CleanupListener() {
+        addDetachListener(new DetachListener() {
             @Override
-            public void cleanup(UI.CleanupEvent event) {
+            public void detach(DetachEvent event) {
                 releaseSomeResources();
             }
         });
 
         // ...
-        addCleanupListener(this);
+        addDetachListener(this);
+    }
+
+    @Override
+    public void detach(DetachEvent event) {
+        releaseMoreResources();
     }
 
     private void releaseSomeResources() {
         // ...
     }
 
-    @Override
-    public void cleanup(UI.CleanupEvent event) {
-        // do cleanup
-        event.getUI();
-        // or equivalent:
-        UI.getCurrent();
+    private void releaseMoreResources() {
+        // ...
     }
 }
