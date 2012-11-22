@@ -463,6 +463,7 @@ public class Button extends AbstractComponent implements
      * 
      */
     public static class ClickShortcut extends ShortcutListener {
+        protected Button button;
 
         /**
          * Creates a keyboard shortcut for clicking the given button using the
@@ -475,8 +476,7 @@ public class Button extends AbstractComponent implements
          */
         public ClickShortcut(Button button, String shorthandCaption) {
             super(shorthandCaption);
-            setTarget(button);
-            setTargetAction("click");
+            this.button = button;
         }
 
         /**
@@ -492,8 +492,7 @@ public class Button extends AbstractComponent implements
          */
         public ClickShortcut(Button button, int keyCode, int... modifiers) {
             super(null, keyCode, modifiers);
-            setTarget(button);
-            setTargetAction("click");
+            this.button = button;
         }
 
         /**
@@ -511,7 +510,7 @@ public class Button extends AbstractComponent implements
 
         @Override
         public void handleAction(Object sender, Object target) {
-            // Action handled on the client side
+            button.click();
         }
     }
 

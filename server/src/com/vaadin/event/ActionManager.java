@@ -18,7 +18,6 @@ package com.vaadin.event;
 import java.util.HashSet;
 import java.util.Map;
 
-import com.vaadin.client.ui.ShortcutActionHandler;
 import com.vaadin.event.Action.Container;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.server.KeyMapper;
@@ -188,29 +187,14 @@ public class ActionManager implements Action.Container, Action.Handler,
                 }
                 if (a instanceof ShortcutAction) {
                     final ShortcutAction sa = (ShortcutAction) a;
-                    paintTarget
-                            .addAttribute(
-                                    ShortcutActionHandler.ACTION_SHORTCUT_KEY_ATTRIBUTE,
-                                    sa.getKeyCode());
+                    paintTarget.addAttribute("kc", sa.getKeyCode());
                     final int[] modifiers = sa.getModifiers();
                     if (modifiers != null) {
                         final String[] smodifiers = new String[modifiers.length];
                         for (int i = 0; i < modifiers.length; i++) {
                             smodifiers[i] = String.valueOf(modifiers[i]);
                         }
-                        paintTarget
-                                .addAttribute(
-                                        ShortcutActionHandler.ACTION_MODIFIER_KEYS_ATTRIBUTE,
-                                        smodifiers);
-                    }
-                    if (sa.getTarget() != null) {
-                        paintTarget.addAttribute(
-                                ShortcutActionHandler.ACTION_TARGET_ATTRIBUTE,
-                                sa.getTarget());
-                        paintTarget
-                                .addAttribute(
-                                        ShortcutActionHandler.ACTION_TARGET_ACTION_ATTRIBUTE,
-                                        sa.getTargetAction());
+                        paintTarget.addAttribute("mk", smodifiers);
                     }
                 }
                 paintTarget.endTag("action");
@@ -228,14 +212,10 @@ public class ActionManager implements Action.Container, Action.Handler,
     }
 
     public void handleActions(Map<String, Object> variables, Container sender) {
-        if (variables
-                .containsKey(ShortcutActionHandler.ACTION_TARGET_ACTION_VARIABLE)
-                && actionMapper != null) {
-            final String key = (String) variables
-                    .get(ShortcutActionHandler.ACTION_TARGET_ACTION_VARIABLE);
+        if (variables.containsKey("action") && actionMapper != null) {
+            final String key = (String) variables.get("action");
             final Action action = actionMapper.get(key);
-            final Object target = variables
-                    .get(ShortcutActionHandler.ACTION_TARGET_VARIABLE);
+            final Object target = variables.get("actiontarget");
             if (action != null) {
                 handleAction(action, sender, target);
             }

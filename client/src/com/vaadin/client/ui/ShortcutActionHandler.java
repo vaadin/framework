@@ -30,11 +30,9 @@ import com.google.gwt.user.client.ui.KeyboardListenerCollection;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.richtextarea.VRichTextArea;
-import com.vaadin.shared.Connector;
 
 /**
  * A helper class to implement keyboard shorcut handling. Keeps a list of owners
@@ -44,15 +42,6 @@ import com.vaadin.shared.Connector;
  * @author Vaadin Ltd
  */
 public class ShortcutActionHandler {
-
-    public static final String ACTION_TARGET_ATTRIBUTE = "sat";
-    public static final String ACTION_TARGET_ACTION_ATTRIBUTE = "sata";
-    public static final String ACTION_CAPTION_ATTRIBUTE = "caption";
-    public static final String ACTION_KEY_ATTRIBUTE = "key";
-    public static final String ACTION_SHORTCUT_KEY_ATTRIBUTE = "kc";
-    public static final String ACTION_MODIFIER_KEYS_ATTRIBUTE = "mk";
-    public static final String ACTION_TARGET_VARIABLE = "actiontarget";
-    public static final String ACTION_TARGET_ACTION_VARIABLE = "action";
 
     /**
      * An interface implemented by those users of this helper class that want to
@@ -119,23 +108,15 @@ public class ShortcutActionHandler {
             final UIDL action = (UIDL) it.next();
 
             int[] modifiers = null;
-            if (action.hasAttribute(ACTION_MODIFIER_KEYS_ATTRIBUTE)) {
-                modifiers = action
-                        .getIntArrayAttribute(ACTION_MODIFIER_KEYS_ATTRIBUTE);
+            if (action.hasAttribute("mk")) {
+                modifiers = action.getIntArrayAttribute("mk");
             }
 
             final ShortcutKeyCombination kc = new ShortcutKeyCombination(
-                    action.getIntAttribute(ACTION_SHORTCUT_KEY_ATTRIBUTE),
-                    modifiers);
-            final String key = action.getStringAttribute(ACTION_KEY_ATTRIBUTE);
-            final String caption = action
-                    .getStringAttribute(ACTION_CAPTION_ATTRIBUTE);
-            final String targetPID = action
-                    .getStringAttribute(ACTION_TARGET_ATTRIBUTE);
-            final String targetAction = action
-                    .getStringAttribute(ACTION_TARGET_ACTION_ATTRIBUTE);
-            actions.add(new ShortcutAction(key, kc, caption, targetPID,
-                    targetAction));
+                    action.getIntAttribute("kc"), modifiers);
+            final String key = action.getStringAttribute("key");
+            final String caption = action.getStringAttribute("caption");
+            actions.add(new ShortcutAction(key, kc, caption));
         }
     }
 
@@ -190,22 +171,11 @@ public class ShortcutActionHandler {
         Scheduler.get().scheduleDeferred(new Command() {
             @Override
             public void execute() {
-                Connector shortcutTarget = ConnectorMap.get(client)
-                        .getConnector(a.getTargetCID());
-
-                boolean handledClientSide = false;
-                if (shortcutTarget instanceof ShortcutActionTarget) {
-                    handledClientSide = ((ShortcutActionTarget) shortcutTarget)
-                            .handleAction(a);
+                if (finalTarget != null) {
+                    client.updateVariable(paintableId, "actiontarget",
+                            finalTarget, false);
                 }
-                if (!handledClientSide) {
-                    if (finalTarget != null) {
-                        client.updateVariable(paintableId,
-                                ACTION_TARGET_VARIABLE, finalTarget, false);
-                    }
-                    client.updateVariable(paintableId,
-                            ACTION_TARGET_ACTION_VARIABLE, a.getKey(), true);
-                }
+                client.updateVariable(paintableId, "action", a.getKey(), true);
             }
         });
     }
@@ -311,4 +281,30 @@ class ShortcutKeyCombination {
         }
         return false;
     }
+}
+
+class ShortcutAction {
+
+    private final ShortcutKeyCombination sc;
+    private final String caption;
+    private final String key;
+
+    public ShortcutAction(String key, ShortcutKeyCombination sc, String caption) {
+        this.sc = sc;
+        this.key = key;
+        this.caption = caption;
+    }
+
+    public ShortcutKeyCombination getShortcutCombination() {
+        return sc;
+    }
+
+    public String getCaption() {
+        return caption;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
 }
