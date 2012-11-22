@@ -499,7 +499,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                             vaadinSession, e);
                 } finally {
                     if (vaadinSession != null) {
-                        vaadinSession.cleanupInactiveUIs();
+                        getService().cleanupSession(vaadinSession);
                         requestTimer.stop(vaadinSession);
                     }
                 }

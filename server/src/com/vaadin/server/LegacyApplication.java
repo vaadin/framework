@@ -230,7 +230,7 @@ public abstract class LegacyApplication implements ErrorHandler {
             if (logoutUrl != null) {
                 legacyWindow.getPage().setLocation(logoutUrl);
             }
-            legacyWindow.getSession().cleanupUI(legacyWindow);
+            legacyWindow.close();
         }
     }
 
