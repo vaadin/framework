@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.InputSource;
@@ -250,4 +251,7 @@ public class ScssStylesheet extends Node {
         return lastNodeAdded;
     }
 
+    public static final void warning(String msg) {
+        Logger.getLogger(ScssStylesheet.class.getName()).warning(msg);
+    }
 }

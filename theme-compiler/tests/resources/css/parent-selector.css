@@ -42,3 +42,7 @@ body.firefox a {
 .root2 .part .one, .root2 .part .non-parent, .root2 .part2 .one, .root2 .part2 .non-parent {
 	color: blue;
 }
+
+.drop-parent-reference {
+	color: green;
+}
