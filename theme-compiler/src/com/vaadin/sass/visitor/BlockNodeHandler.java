@@ -61,7 +61,32 @@ public class BlockNodeHandler {
 
         if (parent instanceof BlockNode) {
             combineParentSelectorListToChild(node);
+
+        } else if (node.getSelectors().contains("&")) {
+            ScssStylesheet.warning("Base-level rule contains"
+                    + " the parent-selector-referencing character '&';"
+                    + " the character will be removed:\n" + node);
+            removeParentReference(node);
         }
+    }
+
+    /**
+     * Goes trough the selector list of the given BlockNode and removed the '&'
+     * character from the selectors.
+     * 
+     * @param node
+     */
+    private static void removeParentReference(BlockNode node) {
+        ArrayList<String> newList = new ArrayList<String>();
+        for (String childSelector : node.getSelectorList()) {
+            // remove parent selector
+            if (childSelector.contains("&")) {
+                newList.add(childSelector.replace("&", ""));
+            } else {
+                newList.add(childSelector);
+            }
+        }
+        node.setSelectorList(newList);
     }
 
     private static void combineParentSelectorListToChild(BlockNode node) {
