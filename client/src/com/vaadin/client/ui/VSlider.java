@@ -195,6 +195,10 @@ public class VSlider extends SimpleFocusablePanel implements Field,
         // clear unnecessary opposite style attribute
         base.getStyle().clearProperty(oppositeStyleAttribute);
 
+        if (!getElement().hasParentElement()) {
+            return;
+        }
+
         final Element p = getElement().getParentElement().cast();
         if (p.getPropertyInt(domProperty) > 50) {
             if (isVertical()) {
