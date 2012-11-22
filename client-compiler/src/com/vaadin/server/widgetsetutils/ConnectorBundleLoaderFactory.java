@@ -54,6 +54,122 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 
 public class ConnectorBundleLoaderFactory extends Generator {
+    /**
+     * Special SourceWriter that approximates the number of written bytes to
+     * support splitting long methods into shorter chunks to avoid hitting the
+     * 65535 byte limit.
+     */
+    private class SplittingSourceWriter implements SourceWriter {
+        private final SourceWriter target;
+        private final String baseName;
+        private final int splitSize;
+
+        // Seems to be undercounted by about 15%
+        private int approximateChars = 0;
+        private int wrapCount = 0;
+
+        public SplittingSourceWriter(SourceWriter target, String baseName,
+                int splitSize) {
+            this.target = target;
+            this.baseName = baseName;
+            this.splitSize = splitSize;
+        }
+
+        @Override
+        public void beginJavaDocComment() {
+            target.beginJavaDocComment();
+            addChars(10);
+        }
+
+        private void addChars(int i) {
+            approximateChars += i;
+        }
+
+        private void addChars(String s) {
+            addChars(s.length());
+        }
+
+        private void addChars(String s, Object[] args) {
+            addChars(String.format(s, args));
+        }
+
+        @Override
+        public void commit(TreeLogger logger) {
+            target.commit(logger);
+        }
+
+        @Override
+        public void endJavaDocComment() {
+            target.endJavaDocComment();
+            addChars(10);
+        }
+
+        @Override
+        public void indent() {
+            target.indent();
+            addChars(10);
+        }
+
+        @Override
+        public void indentln(String s) {
+            target.indentln(s);
+            addChars(s);
+        }
+
+        @Override
+        public void indentln(String s, Object... args) {
+            target.indentln(s, args);
+            addChars(s, args);
+        }
+
+        @Override
+        public void outdent() {
+            target.outdent();
+        }
+
+        @Override
+        public void print(String s) {
+            target.print(s);
+            addChars(s);
+        }
+
+        @Override
+        public void print(String s, Object... args) {
+            target.print(s, args);
+            addChars(s, args);
+        }
+
+        @Override
+        public void println() {
+            target.println();
+            addChars(5);
+        }
+
+        @Override
+        public void println(String s) {
+            target.println(s);
+            addChars(s);
+        }
+
+        @Override
+        public void println(String s, Object... args) {
+            target.println(s, args);
+            addChars(s, args);
+        }
+
+        public void splitIfNeeded() {
+            if (approximateChars > splitSize) {
+                String newMethod = baseName + wrapCount++;
+                println("%s();", newMethod);
+                outdent();
+                println("}");
+                println("private void %s() {", newMethod);
+                indent();
+
+                approximateChars = 0;
+            }
+        }
+    }
 
     @Override
     public String generate(TreeLogger logger, GeneratorContext context,
@@ -188,8 +304,12 @@ public class ConnectorBundleLoaderFactory extends Generator {
         w.commit(logger);
     }
 
-    private void printBundleData(TreeLogger logger, SourceWriter w,
+    private void printBundleData(TreeLogger logger, SourceWriter sourceWriter,
             ConnectorBundle bundle) throws UnableToCompleteException {
+        // Split into new load method when reaching approximately 30000 bytes
+        SplittingSourceWriter w = new SplittingSourceWriter(sourceWriter,
+                "load", 30000);
+
         writeIdentifiers(w, bundle);
         writeGwtConstructors(w, bundle);
         writeReturnTypes(w, bundle);
@@ -205,18 +325,20 @@ public class ConnectorBundleLoaderFactory extends Generator {
         writeDelegateToWidget(logger, w, bundle);
     }
 
-    private void writeDelegateToWidget(TreeLogger logger, SourceWriter w,
-            ConnectorBundle bundle) {
+    private void writeDelegateToWidget(TreeLogger logger,
+            SplittingSourceWriter w, ConnectorBundle bundle) {
         Set<Property> needsDelegateToWidget = bundle.getNeedsDelegateToWidget();
         for (Property property : needsDelegateToWidget) {
             w.println("store.setDelegateToWidget(%s, \"%s\", \"%s\");",
                     getClassLiteralString(property.getBeanType()),
                     property.getName(),
                     property.getAnnotation(DelegateToWidget.class).value());
+
+            w.splitIfNeeded();
         }
     }
 
-    private void writeSerializers(TreeLogger logger, SourceWriter w,
+    private void writeSerializers(TreeLogger logger, SplittingSourceWriter w,
             ConnectorBundle bundle) throws UnableToCompleteException {
         Map<JType, GeneratedSerializer> serializers = bundle.getSerializers();
         for (Entry<JType, GeneratedSerializer> entry : serializers.entrySet()) {
@@ -240,10 +362,12 @@ public class ConnectorBundleLoaderFactory extends Generator {
             w.outdent();
             w.print("}");
             w.println(");");
+
+            w.splitIfNeeded();
         }
     }
 
-    private void writeGetters(TreeLogger logger, SourceWriter w,
+    private void writeGetters(TreeLogger logger, SplittingSourceWriter w,
             ConnectorBundle bundle) {
         Set<Property> properties = bundle.getNeedsSetter();
         for (Property property : properties) {
@@ -265,10 +389,12 @@ public class ConnectorBundleLoaderFactory extends Generator {
 
             w.outdent();
             w.println("});");
+
+            w.splitIfNeeded();
         }
     }
 
-    private void writeSetters(TreeLogger logger, SourceWriter w,
+    private void writeSetters(TreeLogger logger, SplittingSourceWriter w,
             ConnectorBundle bundle) {
         Set<Property> properties = bundle.getNeedsSetter();
         for (Property property : properties) {
@@ -291,10 +417,13 @@ public class ConnectorBundleLoaderFactory extends Generator {
 
             w.outdent();
             w.println("});");
+
+            w.splitIfNeeded();
         }
     }
 
-    private void writePropertyTypes(SourceWriter w, ConnectorBundle bundle) {
+    private void writePropertyTypes(SplittingSourceWriter w,
+            ConnectorBundle bundle) {
         Set<Property> properties = bundle.getNeedsType();
         for (Property property : properties) {
             w.print("store.setPropertyType(");
@@ -304,10 +433,12 @@ public class ConnectorBundleLoaderFactory extends Generator {
             w.print("\", ");
             writeTypeCreator(w, property.getPropertyType());
             w.println(");");
+
+            w.splitIfNeeded();
         }
     }
 
-    private void writeProperites(TreeLogger logger, SourceWriter w,
+    private void writeProperites(TreeLogger logger, SplittingSourceWriter w,
             ConnectorBundle bundle) throws UnableToCompleteException {
         Set<JClassType> needsPropertyListing = bundle.getNeedsPropertyListing();
         for (JClassType type : needsPropertyListing) {
@@ -335,10 +466,13 @@ public class ConnectorBundleLoaderFactory extends Generator {
             }
 
             w.println("});");
+
+            w.splitIfNeeded();
         }
     }
 
-    private void wirteDelayedInfo(SourceWriter w, ConnectorBundle bundle) {
+    private void wirteDelayedInfo(SplittingSourceWriter w,
+            ConnectorBundle bundle) {
         Map<JClassType, Set<JMethod>> needsDelayedInfo = bundle
                 .getNeedsDelayedInfo();
         Set<Entry<JClassType, Set<JMethod>>> entrySet = needsDelayedInfo
@@ -362,12 +496,14 @@ public class ConnectorBundleLoaderFactory extends Generator {
                         w.print(escape(method.getName()));
                         w.println("\");");
                     }
+
+                    w.splitIfNeeded();
                 }
             }
         }
     }
 
-    private void writeProxys(SourceWriter w, ConnectorBundle bundle) {
+    private void writeProxys(SplittingSourceWriter w, ConnectorBundle bundle) {
         Set<JClassType> needsProxySupport = bundle.getNeedsProxySupport();
         for (JClassType type : needsProxySupport) {
             w.print("store.setProxyHandler(");
@@ -439,10 +575,11 @@ public class ConnectorBundleLoaderFactory extends Generator {
             w.outdent();
             w.println("});");
 
+            w.splitIfNeeded();
         }
     }
 
-    private void writeParamTypes(SourceWriter w, ConnectorBundle bundle) {
+    private void writeParamTypes(SplittingSourceWriter w, ConnectorBundle bundle) {
         Map<JClassType, Set<JMethod>> needsParamTypes = bundle
                 .getNeedsParamTypes();
         for (Entry<JClassType, Set<JMethod>> entry : needsParamTypes.entrySet()) {
@@ -463,11 +600,12 @@ public class ConnectorBundleLoaderFactory extends Generator {
 
                 w.println("});");
 
+                w.splitIfNeeded();
             }
         }
     }
 
-    private void writeInvokers(SourceWriter w, ConnectorBundle bundle) {
+    private void writeInvokers(SplittingSourceWriter w, ConnectorBundle bundle) {
         Map<JClassType, Set<JMethod>> needsInvoker = bundle.getNeedsInvoker();
         for (Entry<JClassType, Set<JMethod>> entry : needsInvoker.entrySet()) {
             JClassType type = entry.getKey();
@@ -515,11 +653,13 @@ public class ConnectorBundleLoaderFactory extends Generator {
                 w.outdent();
                 w.println("});");
 
+                w.splitIfNeeded();
             }
         }
     }
 
-    private void writeReturnTypes(SourceWriter w, ConnectorBundle bundle) {
+    private void writeReturnTypes(SplittingSourceWriter w,
+            ConnectorBundle bundle) {
         Map<JClassType, Set<JMethod>> methodReturnTypes = bundle
                 .getMethodReturnTypes();
         for (Entry<JClassType, Set<JMethod>> entry : methodReturnTypes
@@ -537,11 +677,14 @@ public class ConnectorBundleLoaderFactory extends Generator {
                 w.print("\", ");
                 writeTypeCreator(w, method.getReturnType());
                 w.println(");");
+
+                w.splitIfNeeded();
             }
         }
     }
 
-    private void writeGwtConstructors(SourceWriter w, ConnectorBundle bundle) {
+    private void writeGwtConstructors(SplittingSourceWriter w,
+            ConnectorBundle bundle) {
         Set<JClassType> constructors = bundle.getGwtConstructors();
         for (JClassType type : constructors) {
             w.print("store.setConstructor(");
@@ -563,6 +706,8 @@ public class ConnectorBundleLoaderFactory extends Generator {
 
             w.outdent();
             w.println("});");
+
+            w.splitIfNeeded();
         }
     }
 
@@ -574,7 +719,8 @@ public class ConnectorBundleLoaderFactory extends Generator {
         return type.getQualifiedSourceName() + ".class";
     }
 
-    private void writeIdentifiers(SourceWriter w, ConnectorBundle bundle) {
+    private void writeIdentifiers(SplittingSourceWriter w,
+            ConnectorBundle bundle) {
         Map<JClassType, Set<String>> identifiers = bundle.getIdentifiers();
         for (Entry<JClassType, Set<String>> entry : identifiers.entrySet()) {
             Set<String> ids = entry.getValue();
@@ -585,6 +731,8 @@ public class ConnectorBundleLoaderFactory extends Generator {
                 w.print("\", ");
                 writeClassLiteral(w, type);
                 w.println(");");
+
+                w.splitIfNeeded();
             }
         }
     }
