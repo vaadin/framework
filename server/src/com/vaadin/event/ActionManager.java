@@ -24,7 +24,6 @@ import com.vaadin.server.KeyMapper;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.VariableOwner;
-import com.vaadin.shared.ui.ShortCutConstants;
 import com.vaadin.ui.Component;
 
 /**
@@ -188,28 +187,15 @@ public class ActionManager implements Action.Container, Action.Handler,
                 }
                 if (a instanceof ShortcutAction) {
                     final ShortcutAction sa = (ShortcutAction) a;
-                    paintTarget.addAttribute(
-                            ShortCutConstants.ACTION_SHORTCUT_KEY_ATTRIBUTE,
-                            sa.getKeyCode());
+                    paintTarget.addAttribute("kc", sa.getKeyCode());
+
                     final int[] modifiers = sa.getModifiers();
                     if (modifiers != null) {
                         final String[] smodifiers = new String[modifiers.length];
                         for (int i = 0; i < modifiers.length; i++) {
                             smodifiers[i] = String.valueOf(modifiers[i]);
                         }
-                        paintTarget
-                                .addAttribute(
-                                        ShortCutConstants.ACTION_MODIFIER_KEYS_ATTRIBUTE,
-                                        smodifiers);
-                    }
-                    if (sa.getTarget() != null) {
-                        paintTarget.addAttribute(
-                                ShortCutConstants.ACTION_TARGET_ATTRIBUTE,
-                                sa.getTarget());
-                        paintTarget
-                                .addAttribute(
-                                        ShortCutConstants.ACTION_TARGET_ACTION_ATTRIBUTE,
-                                        sa.getTargetAction());
+                        paintTarget.addAttribute("mk", smodifiers);
                     }
                 }
                 paintTarget.endTag("action");
@@ -227,14 +213,10 @@ public class ActionManager implements Action.Container, Action.Handler,
     }
 
     public void handleActions(Map<String, Object> variables, Container sender) {
-        if (variables
-                .containsKey(ShortCutConstants.ACTION_TARGET_ACTION_VARIABLE)
-                && actionMapper != null) {
-            final String key = (String) variables
-                    .get(ShortCutConstants.ACTION_TARGET_ACTION_VARIABLE);
+        if (variables.containsKey("action") && actionMapper != null) {
+            final String key = (String) variables.get("action");
             final Action action = actionMapper.get(key);
-            final Object target = variables
-                    .get(ShortCutConstants.ACTION_TARGET_VARIABLE);
+            final Object target = variables.get("actiontarget");
             if (action != null) {
                 handleAction(action, sender, target);
             }
