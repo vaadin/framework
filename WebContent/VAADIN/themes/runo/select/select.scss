@@ -40,7 +40,7 @@
 	outline: 1px solid #5daee8;
 	outline-offset: -1px;
 }
-.v-sa .v-filterselect-focus {
+.v-sa & .v-filterselect-focus {
 	/* place safari focus outline around the whole thing */
 	outline: 5px auto -webkit-focus-ring-color;
 	outline-offset: -4px;
@@ -74,7 +74,7 @@
 	cursor: pointer;
 	height: 18px;
 }
-.v-ff .v-filterselect-suggestmenu .gwt-MenuItem {
+.v-ff & .v-filterselect-suggestmenu .gwt-MenuItem {
 	height: 20px;
 }
 .v-filterselect-suggestmenu .gwt-MenuItem .v-icon {

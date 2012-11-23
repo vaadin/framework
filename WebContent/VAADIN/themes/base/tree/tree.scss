@@ -71,8 +71,8 @@ div.#{$primaryStyleName}-node-leaf {
 .#{$primaryStyleName} .#{$primaryStyleName}-node-caption-drag-center:after {
 	margin-left: 14px;
 }
-.v-ff .#{$primaryStyleName} .#{$primaryStyleName}-node-caption-drag-center:after,
-.v-ie .#{$primaryStyleName} .#{$primaryStyleName}-node-caption-drag-center:after {
+.v-ff & .#{$primaryStyleName} .#{$primaryStyleName}-node-caption-drag-center:after,
+.v-ie & .#{$primaryStyleName} .#{$primaryStyleName}-node-caption-drag-center:after {
 	margin-top: -2px;
 }
 .#{$primaryStyleName} .#{$primaryStyleName}-node-drag-top {

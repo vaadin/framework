@@ -25,12 +25,12 @@
 	height: 1.2em;
 	}
 
-.v-ie8 .#{$primaryStyleName}-button {
+.v-ie8 & .#{$primaryStyleName}-button {
 	height: 1.6em;
 	padding: 0;
 	}
 
-.v-ie8 .#{$primaryStyleName}-big .#{$primaryStyleName}-button {
+.v-ie8 & .#{$primaryStyleName}-big .#{$primaryStyleName}-button {
 	height: 1.8em;
 	}
 

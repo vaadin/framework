@@ -60,13 +60,13 @@
 	float: none;
 }
 /* Fixes stretched buttons in IE7*/
-.v-ie .#{$primaryStyleName} {
+.v-ie & .#{$primaryStyleName} {
 	overflow: visible;
 	padding-left: 1em;
 	padding-right: 1em;
 }
 
-.v-ie .#{$primaryStyleName}-link {
+.v-ie & .#{$primaryStyleName}-link {
 	padding: 0;
 }
 

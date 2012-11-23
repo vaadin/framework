@@ -12,12 +12,12 @@
 	border-bottom: 1px solid #e5e5e5;
 	line-height: 16px; /* accommodate minimum icon size */
 }
-.v-webkit .#{$primaryStyleName}-caption,
-.v-webkit .#{$primaryStyleName}-nocaption,
-.v-gecko .#{$primaryStyleName}-caption,
-.v-gecko .#{$primaryStyleName}-nocaption,
-.v-ie9 .#{$primaryStyleName}-caption,
-.v-ie9 .#{$primaryStyleName}-nocaption {
+.v-webkit & .#{$primaryStyleName}-caption,
+.v-webkit & .#{$primaryStyleName}-nocaption,
+.v-gecko & .#{$primaryStyleName}-caption,
+.v-gecko & .#{$primaryStyleName}-nocaption,
+.v-ie9 & .#{$primaryStyleName}-caption,
+.v-ie9 & .#{$primaryStyleName}-nocaption {
 	border-bottom-color: rgba(0,0,0,.08);
 }
 .#{$primaryStyleName}-caption {
@@ -30,9 +30,9 @@
 	border-bottom: none;
 	border-top: none;
 }
-.v-webkit .#{$primaryStyleName}-content,
-.v-gecko .#{$primaryStyleName}-content,
-.v-ie9 .#{$primaryStyleName}-content {
+.v-webkit & .#{$primaryStyleName}-content,
+.v-gecko & .#{$primaryStyleName}-content,
+.v-ie9 & .#{$primaryStyleName}-content {
 	border-top-color: rgba(0,0,0,.07);
 }
 .blue .#{$primaryStyleName}-deco {
@@ -46,9 +46,9 @@
 	background: #e2e2e2;
 	overflow: hidden;
 }
-.v-webkit .#{$primaryStyleName}-deco,
-.v-gecko .#{$primaryStyleName}-deco,
-.v-ie9 .#{$primaryStyleName}-deco {
+.v-webkit & .#{$primaryStyleName}-deco,
+.v-gecko & .#{$primaryStyleName}-deco,
+.v-ie9 & .#{$primaryStyleName}-deco {
 	border-top-color: rgba(0,0,0,.1);
 	background: rgba(0,0,0,.08);
 }

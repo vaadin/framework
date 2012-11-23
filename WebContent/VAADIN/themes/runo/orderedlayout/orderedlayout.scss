@@ -90,29 +90,29 @@ div.v-csslayout-box-shadow {
 	margin-left: -6px;
 }
 /* Fancier shadows for capable browsers */
-.v-webkit .v-csslayout-box-shadow,
-.v-webkit .v-csslayout-box-shadow > .v-csslayout-margin,
-.v-webkit .v-csslayout-box-shadow > .v-csslayout-margin > .v-csslayout-container,
-.v-gecko .v-csslayout-box-shadow,
-.v-gecko .v-csslayout-box-shadow > .v-csslayout-margin,
-.v-gecko .v-csslayout-box-shadow > .v-csslayout-margin > .v-csslayout-container,
-.v-gecko .v-csslayout-box-shadow > .v-csslayout-margin > .v-csslayout-container > * {
+.v-webkit & .v-csslayout-box-shadow,
+.v-webkit & .v-csslayout-box-shadow > .v-csslayout-margin,
+.v-webkit & .v-csslayout-box-shadow > .v-csslayout-margin > .v-csslayout-container,
+.v-gecko & .v-csslayout-box-shadow,
+.v-gecko & .v-csslayout-box-shadow > .v-csslayout-margin,
+.v-gecko & .v-csslayout-box-shadow > .v-csslayout-margin > .v-csslayout-container,
+.v-gecko & .v-csslayout-box-shadow > .v-csslayout-margin > .v-csslayout-container > * {
 	background: transparent;
 	padding: 0;
 	margin: 0;
 	height: auto;
 	position: static;
 }
-.v-webkit .v-csslayout-box-shadow > .v-csslayout-margin > .v-csslayout-container > *,
-.v-gecko .v-csslayout-box-shadow > .v-csslayout-margin > .v-csslayout-container > * {
+.v-webkit & .v-csslayout-box-shadow > .v-csslayout-margin > .v-csslayout-container > *,
+.v-gecko & .v-csslayout-box-shadow > .v-csslayout-margin > .v-csslayout-container > * {
 	margin-left: 0;
 }
-.v-webkit .v-csslayout-box-shadow,
-.v-gecko .v-csslayout-box-shadow {
+.v-webkit & .v-csslayout-box-shadow,
+.v-gecko & .v-csslayout-box-shadow {
 	padding: 4px 8px 10px;
 }
-.v-webkit .v-csslayout-box-shadow > .v-csslayout-margin,
-.v-gecko .v-csslayout-box-shadow > .v-csslayout-margin {
+.v-webkit & .v-csslayout-box-shadow > .v-csslayout-margin,
+.v-gecko & .v-csslayout-box-shadow > .v-csslayout-margin {
 	-webkit-box-shadow: 0 2px 8px rgba(0,0,0,.4);
 	-moz-box-shadow: 0 2px 8px rgba(0,0,0,.4);
 }
