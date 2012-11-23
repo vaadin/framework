@@ -27,6 +27,10 @@
 @import "tree/tree.scss";
 @import "window/window.scss";
 
+.v-generated-body {
+	background: #e9eced;
+}
+
 @mixin runo {
 	// TODO move?
 	@include base;
