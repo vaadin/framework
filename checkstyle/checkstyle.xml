@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+
+<project name="vaadin" basedir="." default="checkstyle-all-separate-reports">
+
+	<!-- Checking code style -->
+	<property name="root" location=".." />
+	<property name="checkstyle-xml" location="${basedir}/vaadin-checkstyle.xml" />
+	<property name="checkstyle-jar" location="${basedir}/checkstyle-5.6-all.jar" />
+	<property name="dest-dir" value="${root}/build/checkstyle" />
+	<taskdef resource="checkstyletask.properties" classpath="${checkstyle-jar}" />
+
+	<!-- Location of the header file, contains the license that must be in the beginning of all files -->
+	<property name="checkstyle-header-file" location="${basedir}/header" />
+		
+	<target name="clean">
+		<delete dir="${root}/build/checkstyle" />
+	</target>
+		
+	<target name="checkstyle-all">
+		<mkdir dir="${root}/build/checkstyle" />
+		<checkstyle config="${checkstyle-xml}">
+			<fileset dir="${root}/client/src" includes="**/*.java" />
+			<fileset dir="${root}/server/src" includes="**/*.java" />
+			<fileset dir="${root}/shared/src" includes="**/*.java" />
+			<property key="checkstyle.header.file" file="${checkstyle-header-file}" />
+			<formatter type="xml" toFile="${dest-dir}/checkstyle_errors.xml" />
+		</checkstyle>
+	</target>
+
+	<target name="checkstyle-all-separate-reports" depends="checkstyle-client,checkstyle-server,checkstyle-shared" />
+
+	<target name="checkstyle-client">
+		<mkdir dir="${root}/build/checkstyle" />
+		<checkstyle config="${checkstyle-xml}">
+			<fileset dir="${root}/client/src" includes="**/*.java" />
+			<formatter type="xml" toFile="${dest-dir}/client-checkstyle_errors.xml" />
+			<property key="checkstyle.header.file" file="${checkstyle-header-file}" />
+		</checkstyle>
+	</target>
+
+	<target name="checkstyle-server">
+		<mkdir dir="${root}/build/checkstyle" />
+		<checkstyle config="${checkstyle-xml}">
+			<fileset dir="${root}/server/src" includes="**/*.java" />
+			<formatter type="xml" toFile="${dest-dir}/server-checkstyle_errors.xml" />
+			<property key="checkstyle.header.file" file="${checkstyle-header-file}" />
+		</checkstyle>
+	</target>
+
+	<target name="checkstyle-shared">
+		<mkdir dir="${root}/build/checkstyle" />
+		<checkstyle config="${checkstyle-xml}">
+			<fileset dir="${root}/shared/src" includes="**/*.java" />
+			<formatter type="xml" toFile="${dest-dir}/shared-checkstyle_errors.xml" />
+			<property key="checkstyle.header.file" file="${checkstyle-header-file}" />
+		</checkstyle>
+	</target>
+
+</project>
+
