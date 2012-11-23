@@ -54,4 +54,10 @@ public final class JavaScriptComponentConnector extends
     public JavaScriptComponentState getState() {
         return (JavaScriptComponentState) super.getState();
     }
+
+    @Override
+    public void onUnregister() {
+        super.onUnregister();
+        helper.onUnregister();
+    }
 }

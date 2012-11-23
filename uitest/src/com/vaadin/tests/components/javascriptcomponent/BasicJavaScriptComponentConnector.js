@@ -35,6 +35,10 @@ window.com_vaadin_tests_components_javascriptcomponent_BasicJavaScriptComponent_
 		}
 	});
 	
+	this.onUnregister = function() {
+		document.getElementById('RemoveButton').appendChild(document.createTextNode("Don't mess with me"));
+	};
+	
 	this.messageToClient = function(message) {
 		this.messageToServer(message + " processed");
 	}

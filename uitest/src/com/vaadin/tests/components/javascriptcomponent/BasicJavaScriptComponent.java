@@ -35,6 +35,8 @@ import com.vaadin.shared.ui.JavaScriptComponentState;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.AbstractJavaScriptComponent;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.JavaScriptFunction;
 
@@ -142,9 +144,19 @@ public class BasicJavaScriptComponent extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         addComponent(log);
 
-        ExampleWidget c = new ExampleWidget();
+        final ExampleWidget c = new ExampleWidget();
         c.setCaption("Component caption");
         addComponent(c);
+
+        Button removeButton = new Button("Remove component",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        removeComponent(c);
+                    }
+                });
+        removeButton.setId("RemoveButton");
+        addComponent(removeButton);
     }
 
     @Override
