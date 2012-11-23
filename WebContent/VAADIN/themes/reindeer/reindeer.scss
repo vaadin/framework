@@ -28,6 +28,10 @@
 @import "tree/tree.scss";
 @import "window/window.scss";
 
+.v-generated-body {
+	background: #f5f5f5;
+}
+
 @mixin reindeer {
 	// should this be here?
 	@include base;
