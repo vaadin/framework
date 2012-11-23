@@ -38,9 +38,9 @@ public class DifferentFeaturesForDifferentClients extends UIProvider {
     public Class<? extends UI> getUIClass(UIClassSelectionEvent event) {
         // could also use browser version etc.
         if (event.getRequest().getHeader("user-agent").contains("mobile")) {
-            return TouchRoot.class;
+            return TouchUI.class;
         } else {
-            return DefaultRoot.class;
+            return DefaultUI.class;
         }
     }
 
@@ -56,17 +56,17 @@ public class DifferentFeaturesForDifferentClients extends UIProvider {
     }
 }
 
-class DefaultRoot extends UI {
+class DefaultUI extends UI {
     @Override
     protected void init(VaadinRequest request) {
         setContent(new Label("This browser does not support touch events"));
     }
 }
 
-class TouchRoot extends UI {
+class TouchUI extends UI {
     @Override
     protected void init(VaadinRequest request) {
-        WebBrowser webBrowser = getSession().getBrowser();
+        WebBrowser webBrowser = getPage().getWebBrowser();
         String screenSize = "" + webBrowser.getScreenWidth() + "x"
                 + webBrowser.getScreenHeight();
         setContent(new Label("Using a touch enabled device with screen size"
