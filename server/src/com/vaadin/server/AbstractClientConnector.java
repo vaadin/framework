@@ -35,7 +35,6 @@ import java.util.logging.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.vaadin.client.ui.LegacyConnector;
 import com.vaadin.event.EventRouter;
 import com.vaadin.event.MethodEventSource;
 import com.vaadin.shared.communication.ClientRpc;
@@ -44,6 +43,7 @@ import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.ui.Component.Event;
 import com.vaadin.ui.HasComponents;
+import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.UI;
 
 /**
@@ -122,7 +122,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
      *             typically do not need to call {@link #markAsDirty()} as
      *             {@link #getState()} will mark the connector dirty and the
      *             framework will then check what, if anything, needs to be sent
-     *             to the client. {@link LegacyConnector}s which rely on paint
+     *             to the client. {@link LegacyComponent}s which rely on paint
      *             might still need to call this or {@link #markAsDirty()} .
      */
     @Deprecated
