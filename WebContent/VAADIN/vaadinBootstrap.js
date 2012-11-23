@@ -105,9 +105,10 @@
 				r.open('POST', url, true);
 				r.onreadystatechange = function (aEvt) {  
 					if (r.readyState == 4) {
+						var text = r.responseText;
 						if (r.status == 200){
-							log("Got root config response", r.responseText);
-							var updatedConfig = JSON.parse(r.responseText);
+							log("Got root config response", text);
+							var updatedConfig = JSON.parse(text);
 							
 							// Copy new properties to the config object
 							for (var property in updatedConfig) {
@@ -118,10 +119,16 @@
 							
 							// Try bootstrapping again, this time without fetching missing info
 							bootstrapApp(false);
-						} else if (r.status == 500) {
-							document.write(r.responseText);
 						} else {
-							log('Error', r.statusText);  
+							log('Error', r.statusText, text);
+							
+							//Let TB waitForVaadin work again
+							delete window.vaadin.clients[testbenchId];
+							
+							// Show the error in the app's div
+							var appDiv = document.getElementById(appId);
+							appDiv.innerHTML = text;
+							appDiv.style['overflow'] = 'auto';
 						}
 					}  
 				};
