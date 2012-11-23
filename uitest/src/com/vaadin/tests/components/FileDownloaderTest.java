@@ -130,7 +130,7 @@ public class FileDownloaderTest extends AbstractTestUI {
                     public void buttonClick(ClickEvent event) {
                         FileDownloader e = (FileDownloader) firstDownloadComponent
                                 .getExtensions().iterator().next();
-                        e.removeFromTarget();
+                        e.remove();
                         log.log("FileDownload detached");
                     }
                 }));
