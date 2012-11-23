@@ -91,12 +91,12 @@ button.v-nativebutton-link-pressed,
 }
 
 .v-button-link:focus,
-.v-sa & .v-button-link:focus {
+.v-webkit & .v-button-link:focus {
 	outline: 1px dotted #1b699f;
 	outline-offset: -1px;
 }
 
-.v-sa & .v-button-link:focus {
+.v-webkit & .v-button-link:focus {
 	outline-offset: -1px;
 }
 

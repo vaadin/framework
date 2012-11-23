@@ -104,7 +104,7 @@
 .#{$primaryStyleName}-tabsheetpanel {
 	background: #fff;
 }
-.v-sa & .#{$primaryStyleName}-content {
+.v-webkit & .#{$primaryStyleName}-content {
 	border-color: rgba(0,0,0,.1);
 }
 .blue .#{$primaryStyleName}-deco {
@@ -118,7 +118,7 @@
 	background: #e2e2e2;
 	overflow: hidden;
 }
-.v-sa & .#{$primaryStyleName}-deco {
+.v-webkit & .#{$primaryStyleName}-deco {
 	border-top-color: rgba(0,0,0,.1);
 	background: rgba(0,0,0,.08);
 }
@@ -132,7 +132,7 @@
 	display: inline;
 	float: none;
 }
-.v-sa & .#{$primaryStyleName}-tabs .v-captiontext {
+.v-webkit & .#{$primaryStyleName}-tabs .v-captiontext {
 	display: inline-block;
 }
 .#{$primaryStyleName}-tabs .v-icon {

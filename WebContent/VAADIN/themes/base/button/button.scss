@@ -66,7 +66,7 @@
 }
 
 /* Inset Safari focus outline a bit */
-.v-sa & .#{$primaryStyleName}-link:focus{
+.v-webkit & .#{$primaryStyleName}-link:focus{
 	outline-offset: -3px;
 	}
 

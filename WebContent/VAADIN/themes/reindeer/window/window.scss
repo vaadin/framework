@@ -9,7 +9,7 @@
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
-.v-sa & .#{$primaryStyleName}-wrap,
+.v-webkit & .#{$primaryStyleName}-wrap,
 .v-op & .#{$primaryStyleName}-wrap {
 	border-color: rgba(0,0,0,.2);
 }
@@ -130,7 +130,7 @@
 	-moz-border-radius: 8px;
 	overflow: hidden;
 }
-.v-sa & .#{$primaryStyleName}-black .#{$primaryStyleName}-wrap,
+.v-webkit & .#{$primaryStyleName}-black .#{$primaryStyleName}-wrap,
 .v-op & .#{$primaryStyleName}-black .#{$primaryStyleName}-wrap {
 	border-color: rgba(0,0,0,.8);
 }
@@ -139,7 +139,7 @@
 	-moz-border-radius: 7px;
 	-webkit-border-radius: 7px;
 }
-.v-sa & .#{$primaryStyleName}-black .#{$primaryStyleName}-wrap2,
+.v-webkit & .#{$primaryStyleName}-black .#{$primaryStyleName}-wrap2,
 .v-op & .#{$primaryStyleName}-black .#{$primaryStyleName}-wrap2 {
 	background-color: rgba(29,32,33,.9);
 }
