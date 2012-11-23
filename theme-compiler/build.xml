@@ -12,15 +12,24 @@
 	<property name="module.name" value="vaadin-theme-compiler" />
 	<property name="module.symbolic" value="com.vaadin.theme-compiler" />
 	<property name="result.dir" value="result" />
+	<property name="sass.parser.jj" location="src/com/vaadin/sass/internal/parser/Parser.jj" />
 	<path id="classpath.compile.custom">
 	</path>
 	<path id="classpath.tests.custom" />
 
 	<!--<property name="classes.exclude" value="com/vaadin/buildhelpers/**" />-->
 
-	<target name="jar">
+	<target name="parser">
+		<!-- Copy javacc-5.0.jar to ${result.path}/javacc/javacc.jar as the javacc task requires the jar to be named javacc.jar -->
+		<property name="javacc.home" location="${result.path}/javacc" />
+		<ivy:retrieve organisation="net.java.dev.javacc" module="javacc" revision="5.0" inline="true" type="jar" pattern="${javacc.home}/[artifact].[ext]" />
+		<javacc target="${sass.parser.jj}" javacchome="${javacc.home}">
+		</javacc>
+	</target>
+
+	<target name="jar" depends="parser">
 		<antcall target="common.jar">
-			<reference torefid="extra.jar.includes"	refid="empty.reference" />
+			<reference torefid="extra.jar.includes" refid="empty.reference" />
 		</antcall>
 	</target>
 	<target name="publish-local" depends="jar">
