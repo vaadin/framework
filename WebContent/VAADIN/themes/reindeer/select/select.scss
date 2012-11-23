@@ -84,7 +84,7 @@
 	-webkit-user-select: none;
 	cursor: default;
 }
-.v-ff .#{$primaryStyleName}-suggestmenu .gwt-MenuItem {
+.v-ff & .#{$primaryStyleName}-suggestmenu .gwt-MenuItem {
 	height: 18px;
 }
 .#{$primaryStyleName}-suggestmenu .gwt-MenuItem .v-icon {
@@ -170,28 +170,28 @@
 	-webkit-user-select: none;
 }
 /* IE fails to position background images properly inside table elements */
-.v-ie .#{$primaryStyleName}-suggestmenu .gwt-MenuItem-selected {
+.v-ie & .#{$primaryStyleName}-suggestmenu .gwt-MenuItem-selected {
 	background: transparent url(../common/img/sel-bg.png) repeat-x;
 }
-.v-ie .#{$primaryStyleName}-nextpage:hover {
+.v-ie & .#{$primaryStyleName}-nextpage:hover {
 	background: transparent url(img/page-down-hover.png) repeat-x;
 }
-.v-ie .#{$primaryStyleName}-prevpage:hover {
+.v-ie & .#{$primaryStyleName}-prevpage:hover {
 	background: transparent url(img/page-up-hover.png) repeat-x;
 }
-.v-ie .#{$primaryStyleName}-prevpage span {
+.v-ie & .#{$primaryStyleName}-prevpage span {
 	background: transparent url(img/arrow-up.png) no-repeat center 3px;
 }
-.v-ie .#{$primaryStyleName}-nextpage span {
+.v-ie & .#{$primaryStyleName}-nextpage span {
 	background: transparent url(img/arrow-down.png) no-repeat center 3px;
 }
-.v-ie .#{$primaryStyleName}-prevpage:hover span {
+.v-ie & .#{$primaryStyleName}-prevpage:hover span {
 	background: transparent url(img/arrow-up-hover.png) no-repeat center 3px;
 }
-.v-ie .#{$primaryStyleName}-nextpage:hover span {
+.v-ie & .#{$primaryStyleName}-nextpage:hover span {
 	background: transparent url(img/arrow-down-hover.png) no-repeat center 3px;
 }
-.v-ie .#{$primaryStyleName}-status {
+.v-ie & .#{$primaryStyleName}-status {
 	background: transparent url(img/status-bg.png) repeat-x;
 }
 /* Filterselect with icon needs a similar fix than in buttons */

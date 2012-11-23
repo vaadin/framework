@@ -134,17 +134,17 @@
 	padding-top: 12px;
 }*/
 /* IE specific styles */
-.v-ie .v-tabsheet-content {
+.v-ie & .v-tabsheet-content {
 	border-bottom: none;
 }
-.v-ie .v-tabsheet-deco {
+.v-ie & .v-tabsheet-deco {
 	height: 1px;
 	background: #babfc0;
 	overflow: hidden;
 	margin: 0;
 }
-.v-ie8 .v-tabsheet-deco,
-.v-ie9 .v-tabsheet-deco {
+.v-ie8 & .v-tabsheet-deco,
+.v-ie9 & .v-tabsheet-deco {
 	width: 100%;
 }
 /* Light-style */
@@ -250,7 +250,7 @@
 	margin-left: -3px;
 	padding-left: 3px;
 }*/
-.v-ie .v-tabsheet-deco-light {
+.v-ie & .v-tabsheet-deco-light {
 	height: 0;
 }
 

@@ -61,8 +61,8 @@
 	margin: -4px 3px 0 0;
 	vertical-align: middle;
 }
-.v-ie .#{$primaryStyleName}-caption-container .v-icon,
-.v-ie .#{$primaryStyleName}-header-drag .v-icon {
+.v-ie & .#{$primaryStyleName}-caption-container .v-icon,
+.v-ie & .#{$primaryStyleName}-header-drag .v-icon {
 	margin-top: -3px;
 }
 .#{$primaryStyleName}-resizer {

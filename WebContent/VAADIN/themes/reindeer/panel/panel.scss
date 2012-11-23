@@ -16,8 +16,8 @@
 .v-webkit .#{$primaryStyleName}-nocaption,
 .v-gecko .#{$primaryStyleName}-caption,
 .v-gecko .#{$primaryStyleName}-nocaption,
-.v-ie9 .#{$primaryStyleName}-caption,
-.v-ie9 .#{$primaryStyleName}-nocaption {
+.v-ie9 & .#{$primaryStyleName}-caption,
+.v-ie9 & .#{$primaryStyleName}-nocaption {
 	border-bottom-color: rgba(0,0,0,.08);
 }
 .#{$primaryStyleName}-caption {
@@ -32,7 +32,7 @@
 }
 .v-webkit .#{$primaryStyleName}-content,
 .v-gecko .#{$primaryStyleName}-content,
-.v-ie9 .#{$primaryStyleName}-content {
+.v-ie9 & .#{$primaryStyleName}-content {
 	border-top-color: rgba(0,0,0,.07);
 }
 .blue .#{$primaryStyleName}-deco {
@@ -48,7 +48,7 @@
 }
 .v-webkit .#{$primaryStyleName}-deco,
 .v-gecko .#{$primaryStyleName}-deco,
-.v-ie9 .#{$primaryStyleName}-deco {
+.v-ie9 & .#{$primaryStyleName}-deco {
 	border-top-color: rgba(0,0,0,.1);
 	background: rgba(0,0,0,.08);
 }

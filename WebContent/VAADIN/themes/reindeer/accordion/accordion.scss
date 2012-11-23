@@ -30,7 +30,7 @@
 .#{$primaryStyleName}-item-caption .v-caption {
 	padding: 3px 0 5px 10px;
 }
-.v-ie .#{$primaryStyleName}-item-caption .v-caption {
+.v-ie & .#{$primaryStyleName}-item-caption .v-caption {
 	padding: 2px 0 6px 10px;
 }
 .#{$primaryStyleName}-item-open .#{$primaryStyleName}-item-caption {
@@ -40,7 +40,7 @@
 .#{$primaryStyleName}-item-caption .v-icon {
 	margin-top: -1px;
 }
-.v-ie .#{$primaryStyleName}-item-caption .v-icon {
+.v-ie & .#{$primaryStyleName}-item-caption .v-icon {
 	vertical-align: top;
 }
 /* Borderless style */

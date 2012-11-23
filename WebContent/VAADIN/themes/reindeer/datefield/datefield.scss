@@ -79,10 +79,10 @@ td.#{$primaryStyleName}-calendarpanel-nextyear {
 	-moz-border-radius: 0;
 	border-radius: 0;
 }
-.v-ie .#{$primaryStyleName}-calendarpanel-prevyear button,
-.v-ie .#{$primaryStyleName}-calendarpanel-nextyear button,
-.v-ie .#{$primaryStyleName}-calendarpanel-prevmonth button,
-.v-ie .#{$primaryStyleName}-calendarpanel-nextmonth button {
+.v-ie & .#{$primaryStyleName}-calendarpanel-prevyear button,
+.v-ie & .#{$primaryStyleName}-calendarpanel-nextyear button,
+.v-ie & .#{$primaryStyleName}-calendarpanel-prevmonth button,
+.v-ie & .#{$primaryStyleName}-calendarpanel-nextmonth button {
 	text-indent: 0;
 	font-size: 1px;
 }
@@ -91,11 +91,11 @@ td.#{$primaryStyleName}-calendarpanel-nextyear {
 	background-image: url(img/year-next.png); /** sprite-ref: verticals */
 }
 .#{$primaryStyleName}-calendarpanel-prevyear button:active,
-.v-ie .#{$primaryStyleName}-calendarpanel-prevyear button.v-pressed {
+.v-ie & .#{$primaryStyleName}-calendarpanel-prevyear button.v-pressed {
 	background-image: url(img/year-prev-pressed.png); /** sprite-ref: verticals */
 }
 .#{$primaryStyleName}-calendarpanel-nextyear button:active,
-.v-ie .#{$primaryStyleName}-calendarpanel-nextyear button.v-pressed  {
+.v-ie & .#{$primaryStyleName}-calendarpanel-nextyear button.v-pressed  {
 	background-image: url(img/year-next-pressed.png); /** sprite-ref: verticals */
 }
 .#{$primaryStyleName}-calendarpanel-prevmonth,
@@ -116,20 +116,20 @@ td.#{$primaryStyleName}-calendarpanel-nextyear {
 	min-width: 24px;
 	margin-top: 1px;
 }
-.v-ie .#{$primaryStyleName}-calendarpanel-prevmonth button,
-.v-ie .#{$primaryStyleName}-calendarpanel-nextmonth button {
+.v-ie & .#{$primaryStyleName}-calendarpanel-prevmonth button,
+.v-ie & .#{$primaryStyleName}-calendarpanel-nextmonth button {
 	border: none;
 }
 .#{$primaryStyleName}-calendarpanel-nextmonth button {
 	background-image: url(img/month-next.png); /** sprite-ref: verticals; sprite-alignment: center */
 }
 .#{$primaryStyleName}-calendarpanel-prevmonth button:active,
-.v-ie .#{$primaryStyleName}-calendarpanel-prevmonth button.v-pressed {
+.v-ie & .#{$primaryStyleName}-calendarpanel-prevmonth button.v-pressed {
 	background-position: center top;
 	background-image: url(img/month-prev-pressed.png); /** sprite-ref: verticals; sprite-alignment: center */
 }
 .#{$primaryStyleName}-calendarpanel-nextmonth button:active,
-.v-ie .#{$primaryStyleName}-calendarpanel-nextmonth button.v-pressed {
+.v-ie & .#{$primaryStyleName}-calendarpanel-nextmonth button.v-pressed {
 	background-position: center top;
 	background-image: url(img/month-next-pressed.png); /** sprite-ref: verticals; sprite-alignment: center */
 }
@@ -178,14 +178,14 @@ td.#{$primaryStyleName}-calendarpanel-nextyear {
 	background-image: url(img/weekday-last.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-bottom: 3px */
 }
 /* IE fails to position backgrounds inside table element */
-.v-ie .#{$primaryStyleName}-calendarpanel-weekdays td {
+.v-ie & .#{$primaryStyleName}-calendarpanel-weekdays td {
 	background: url(img/weekday-bg.png) repeat-x;
 	background-position: left top;
 }
-.v-ie .#{$primaryStyleName}-calendarpanel .v-first {
+.v-ie & .#{$primaryStyleName}-calendarpanel .v-first {
 	background: url(img/weekday-first.png) no-repeat;
 }
-.v-ie .#{$primaryStyleName}-calendarpanel .v-last {
+.v-ie & .#{$primaryStyleName}-calendarpanel .v-last {
 	background: url(img/weekday-last.png) no-repeat right top;
 }
 .#{$primaryStyleName}-calendarpanel-body td {
@@ -228,8 +228,8 @@ td.#{$primaryStyleName}-calendarpanel-nextyear {
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 }
-.v-sa .#{$primaryStyleName}-popup,
-.v-op .#{$primaryStyleName}-popup {
+.v-sa & .#{$primaryStyleName}-popup,
+.v-op & .#{$primaryStyleName}-popup {
 	background: rgba(255,255,255,.95);
 }
 .v-has-width > input.#{$primaryStyleName}-textfield {
@@ -321,11 +321,11 @@ td.#{$primaryStyleName}-calendarpanel-nextyear {
 	background-image: url(img/year-next-black.png); /** sprite-ref: black-verticals */
 }
 .black .#{$primaryStyleName}-calendarpanel-prevyear button:active,
-.v-ie .black .#{$primaryStyleName}-calendarpanel-prevyear button.v-pressed {
+.v-ie & .black .#{$primaryStyleName}-calendarpanel-prevyear button.v-pressed {
 	background-image: url(img/year-prev-black-pressed.png); /** sprite-ref: black-verticals */
 }
 .black .#{$primaryStyleName}-calendarpanel-nextyear button:active,
-.v-ie .black .#{$primaryStyleName}-calendarpanel-nextyear button.v-pressed  {
+.v-ie & .black .#{$primaryStyleName}-calendarpanel-nextyear button.v-pressed  {
 	background-image: url(img/year-next-black-pressed.png); /** sprite-ref: black-verticals */
 }
 .black .#{$primaryStyleName}-calendarpanel-prevmonth,
@@ -343,15 +343,15 @@ td.#{$primaryStyleName}-calendarpanel-nextyear {
 	background-image: url(img/month-next-black.png); /** sprite-ref: black-verticals; sprite-alignment: center */
 }
 .black .#{$primaryStyleName}-calendarpanel-prevmonth button:active,
-.v-ie .black .#{$primaryStyleName}-calendarpanel-prevmonth button.v-pressed {
+.v-ie & .black .#{$primaryStyleName}-calendarpanel-prevmonth button.v-pressed {
 	background-image: url(img/month-prev-black-pressed.png); /** sprite-ref: black-verticals; sprite-alignment: center */
 }
 .black .#{$primaryStyleName}-calendarpanel-nextmonth button:active,
-.v-ie .black .#{$primaryStyleName}-calendarpanel-nextmonth button.v-pressed {
+.v-ie & .black .#{$primaryStyleName}-calendarpanel-nextmonth button.v-pressed {
 	background-image: url(img/month-next-black-pressed.png); /** sprite-ref: black-verticals; sprite-alignment: center */
 }
-.v-ie .black .#{$primaryStyleName}-calendarpanel-prevmonth button,
-.v-ie .black .#{$primaryStyleName}-calendarpanel-nextmonth button {
+.v-ie & .black .#{$primaryStyleName}-calendarpanel-prevmonth button,
+.v-ie & .black .#{$primaryStyleName}-calendarpanel-nextmonth button {
 	border: none;
 }
 .black .#{$primaryStyleName}-calendarpanel-weekdays td {

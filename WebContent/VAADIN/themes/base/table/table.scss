@@ -275,8 +275,8 @@
 	margin-left: -6px;
 	background: transparent url(../common/img/drag-slot-dot.png);
 }
-.v-ff .#{$primaryStyleName}-row-drag-bottom .#{$primaryStyleName}-cell-content:first-child:after,
-.v-ie .#{$primaryStyleName}-row-drag-bottom .#{$primaryStyleName}-cell-content:first-child:after {
+.v-ff & .#{$primaryStyleName}-row-drag-bottom .#{$primaryStyleName}-cell-content:first-child:after,
+.v-ie & .#{$primaryStyleName}-row-drag-bottom .#{$primaryStyleName}-cell-content:first-child:after {
 	margin-top: -2px;
 }
 

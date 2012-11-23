@@ -13,7 +13,7 @@
 	-khtml-user-select: none;
 	-webkit-user-select: none;
 }
-.v-ie .#{$primaryStyleName} a.drag-start {
+.v-ie & .#{$primaryStyleName} a.drag-start {
 	display: block;
 	position: absolute;
 	top: 0;

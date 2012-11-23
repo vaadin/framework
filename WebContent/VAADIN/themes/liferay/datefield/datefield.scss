@@ -83,10 +83,10 @@ span.#{$primaryStyleName}-calendarpanel-month {
 	border-radius: 0;
 }
 
-.v-ie .#{$primaryStyleName}-calendarpanel-prevyear button,
-.v-ie .#{$primaryStyleName}-calendarpanel-nextyear button,
-.v-ie .#{$primaryStyleName}-calendarpanel-prevmonth button,
-.v-ie .#{$primaryStyleName}-calendarpanel-nextmonth button {
+.v-ie & .#{$primaryStyleName}-calendarpanel-prevyear button,
+.v-ie & .#{$primaryStyleName}-calendarpanel-nextyear button,
+.v-ie & .#{$primaryStyleName}-calendarpanel-prevmonth button,
+.v-ie & .#{$primaryStyleName}-calendarpanel-nextmonth button {
 	text-indent: 0;
 	font-size: 1px;
 }
