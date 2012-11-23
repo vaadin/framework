@@ -17,9 +17,10 @@
 package com.vaadin.ui;
 
 import java.io.Serializable;
-import java.util.EventListener;
 import java.util.Locale;
 
+import com.vaadin.event.ConnectorEvent;
+import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ErrorMessage;
@@ -817,7 +818,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
      * 
      * @see Component#addListener(Listener)
      */
-    public interface Listener extends EventListener, Serializable {
+    public interface Listener extends ConnectorEventListener {
 
         /**
          * Notifies the listener of a component event.

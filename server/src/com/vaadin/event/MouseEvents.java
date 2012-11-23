@@ -191,7 +191,7 @@ public interface MouseEvents {
      * @author Vaadin Ltd.
      * @since 6.2
      */
-    public interface ClickListener extends ComponentEventListener {
+    public interface ClickListener extends ConnectorEventListener {
 
         public static final Method clickMethod = ReflectTools.findMethod(
                 ClickListener.class, "click", ClickEvent.class);
@@ -229,7 +229,7 @@ public interface MouseEvents {
      * @author Vaadin Ltd.
      * @since 6.2
      */
-    public interface DoubleClickListener extends ComponentEventListener {
+    public interface DoubleClickListener extends ConnectorEventListener {
 
         public static final Method doubleClickMethod = ReflectTools.findMethod(
                 DoubleClickListener.class, "doubleClick",

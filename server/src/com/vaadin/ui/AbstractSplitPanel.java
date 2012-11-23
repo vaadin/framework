@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
-import com.vaadin.event.ComponentEventListener;
+import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.EventId;
@@ -477,7 +477,7 @@ public abstract class AbstractSplitPanel extends AbstractComponentContainer {
      * @see SplitterClickEvent
      * @since 6.2
      */
-    public interface SplitterClickListener extends ComponentEventListener {
+    public interface SplitterClickListener extends ConnectorEventListener {
 
         public static final Method clickMethod = ReflectTools.findMethod(
                 SplitterClickListener.class, "splitterClick",

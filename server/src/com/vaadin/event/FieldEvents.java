@@ -163,7 +163,7 @@ public interface FieldEvents {
      * @see FocusEvent
      * @since 6.2
      */
-    public interface FocusListener extends ComponentEventListener {
+    public interface FocusListener extends ConnectorEventListener {
 
         public static final Method focusMethod = ReflectTools.findMethod(
                 FocusListener.class, "focus", FocusEvent.class);
@@ -203,7 +203,7 @@ public interface FieldEvents {
      * @see BlurEvent
      * @since 6.2
      */
-    public interface BlurListener extends ComponentEventListener {
+    public interface BlurListener extends ConnectorEventListener {
 
         public static final Method blurMethod = ReflectTools.findMethod(
                 BlurListener.class, "blur", BlurEvent.class);
@@ -265,7 +265,7 @@ public interface FieldEvents {
      * 
      * @since 6.5
      */
-    public interface TextChangeListener extends ComponentEventListener {
+    public interface TextChangeListener extends ConnectorEventListener {
 
         public static String EVENT_ID = "ie";
         public static Method EVENT_METHOD = ReflectTools.findMethod(
