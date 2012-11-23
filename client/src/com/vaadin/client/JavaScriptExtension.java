@@ -43,4 +43,10 @@ public final class JavaScriptExtension extends AbstractExtensionConnector
     public JavaScriptExtensionState getState() {
         return (JavaScriptExtensionState) super.getState();
     }
+
+    @Override
+    public void onUnregister() {
+        super.onUnregister();
+        helper.onUnregister();
+    }
 }

@@ -96,7 +96,7 @@ public class JavaScriptConnectorHelper {
                     inited = true;
                 }
 
-                fireNativeStateChange(wrapper);
+                invokeIfPresent(wrapper, "onStateChange");
             }
         });
     }
@@ -164,14 +164,6 @@ public class JavaScriptConnectorHelper {
 
         return connectorWrapper;
     }
-
-    private static native void fireNativeStateChange(
-            JavaScriptObject connectorWrapper)
-    /*-{
-        if (typeof connectorWrapper.onStateChange == 'function') {
-            connectorWrapper.onStateChange();
-        }
-    }-*/;
 
     private static native JavaScriptObject createConnectorWrapper(
             JavaScriptConnectorHelper h, ApplicationConnection c,
@@ -381,5 +373,17 @@ public class JavaScriptConnectorHelper {
     private JavaScriptConnectorState getConnectorState() {
         return (JavaScriptConnectorState) connector.getState();
     }
+
+    public void onUnregister() {
+        invokeIfPresent(connectorWrapper, "onUnregister");
+    }
+
+    private static native void invokeIfPresent(
+            JavaScriptObject connectorWrapper, String functionName)
+    /*-{
+        if (typeof connectorWrapper[functionName] == 'function') {
+            connectorWrapper[functionName].apply(connectorWrapper, arguments);
+        }
+    }-*/;
 
 }
