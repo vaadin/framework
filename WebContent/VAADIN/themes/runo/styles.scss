@@ -1,2 +1,4 @@
 @import "runo.scss";
-@include runo;
+.runo {
+	@include runo;
+}

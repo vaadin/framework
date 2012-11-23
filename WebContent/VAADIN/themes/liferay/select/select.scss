@@ -1,6 +1,6 @@
 @mixin liferay-select {
 
-.v-app select,
+&.v-app select,
 .v-window select {
 	padding: 1px;	
 }

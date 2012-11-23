@@ -31,20 +31,20 @@
 	height: auto;
 }
 /* Need more specific selector because of #2384 fixes in base/common/common.css */
-.v-app input.#{$name},
+&.v-app input.#{$name},
 .v-window input.#{$name},
-.v-app textarea.v-textarea,
+&.v-app textarea.v-textarea,
 .v-window textarea.v-textarea  {
 	padding: 3px 3px 4px;
 }
-.v-app input.#{$name}.v-widget,
+&.v-app input.#{$name}.v-widget,
 .v-window input.#{$name}.v-widget {
 	height: 24px;
 }
-.v-app .#{$name}-focus,
+&.v-app .#{$name}-focus,
 .v-window .#{$name}-focus,
 .v-popupview-popup .#{$name}-focus,
-.v-app .v-textarea-focus,
+&.v-app .v-textarea-focus,
 .v-window .v-textarea-focus,
 .v-popupview-popup .v-textarea-focus {
 	border-color: #5b97d0;
@@ -59,16 +59,16 @@ textarea.v-textarea-prompt {
 	color: #999;
 }
 /* Small style textfield */
-.v-app input.#{$name}-small {
+&.v-app input.#{$name}-small {
 	font-size: 11px;
 	line-height: normal;
 	height: auto;
 	padding: 2px;
 }
-.v-app textarea.v-textarea-small {
+&.v-app textarea.v-textarea-small {
 	font-size: 11px;
 }
-.v-app .v-table  input.#{$name}.v-widget,
+&.v-app .v-table  input.#{$name}.v-widget,
 .v-window .v-table input.#{$name}.v-widget {
 	padding: 1px 2px;
 	height: auto;
@@ -92,11 +92,11 @@ textarea.v-textarea-prompt {
 .black .v-textarea {
 	background-image: none;
 }
-.v-app .black .#{$name}-focus,
+&.v-app .black .#{$name}-focus,
 .v-window-black .#{$name}-focus,
 .v-window .black .#{$name}-focus,
 .v-popupview-popup .black .#{$name}-focus,
-.v-app .black .v-textarea-focus,
+&.v-app .black .v-textarea-focus,
 .v-window-black .v-textarea-focus,
 .v-window .black .v-textarea-focus,
 .v-popupview-popup .black .v-textarea-focus {

@@ -99,43 +99,44 @@ div.#{$name}-node-leaf {
 }
 
 // tree-connectors.css
+// This could be (and was) wrapped in a nested block instead of prefixing each 
+// row, but #10309 prevents us from doing that right now.
 
-.#{$name}-connectors {
 	// Make item caption height an even number (so that the connector dots overlap nicely)
-	.#{$name}-node-caption {
+	.#{$name}-connectors .#{$name}-node-caption {
 		padding-top: 1px;
 	}
-	.#{$name}-node {
+	.#{$name}-connectors .#{$name}-node {
 		background: transparent url(img/connector-expand.png) no-repeat 2px -52px;
 	}
-	.#{$name}-node-expanded {
+	.#{$name}-connectors .#{$name}-node-expanded {
 		background: transparent url(img/connector-collapse.png) no-repeat 2px -52px;
 	}
-	.#{$name}-node-last {
+	.#{$name}-connectors .#{$name}-node-last {
 		background: transparent url(img/connector-expand-last.png) no-repeat 2px -52px;
 	}
-	.#{$name}-node-expanded.#{$name}-node-last {
+	.#{$name}-connectors .#{$name}-node-expanded.#{$name}-node-last {
 		background: transparent url(img/connector-collapse-last.png) no-repeat 2px -52px;
 	}
-	.#{$name}-node-leaf {
+	.#{$name}-connectors .#{$name}-node-leaf {
 		background: transparent url(img/connector-leaf.png) repeat-y 2px 50%;
 	}
-	.#{$name}-node-leaf-last {
+	.#{$name}-connectors .#{$name}-node-leaf-last {
 		background: transparent url(img/connector-leaf-last.png) repeat-y 2px 50%;
 	}
-	.#{$name}-node-children {
+	.#{$name}-connectors .#{$name}-node-children {
 		background: transparent url(img/connector.png) repeat-y 2px 0;
 	}
-	.#{$name}-node-children-last {
+	.#{$name}-connectors .#{$name}-node-children-last {
 		background: transparent;
 	}
-	.#{$name}-node-drag-top,
-	.#{$name}-node-expanded.#{$name}-node-drag-top {
+	.#{$name}-connectors .#{$name}-node-drag-top,
+	.#{$name}-connectors .#{$name}-node-expanded.#{$name}-node-drag-top {
 		background-position: 2px -53px;
 	}
-	.#{$name}-node-drag-top.#{$name}-node-leaf {
+	.#{$name}-connectors .#{$name}-node-drag-top.#{$name}-node-leaf {
 		background-position: 2px 50%;
 	}
-}
+
 
 }

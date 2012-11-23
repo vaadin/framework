@@ -1,18 +1,18 @@
 @mixin reindeer-common {
 
 .v-generated-body,
-.v-app {
+&.v-app {
 	background: #f5f5f5;
 }
 /* Global font styles */
-.v-app,
+&.v-app,
 .v-window,
 .v-popupview-popup,
 .v-tooltip,
-.v-app input,
-.v-app select,
-.v-app button,
-.v-app textarea,
+&.v-app input,
+&.v-app select,
+&.v-app button,
+&.v-app textarea,
 .v-window input,
 .v-window select,
 .v-window button,
@@ -34,7 +34,7 @@
 	color: #222;
 }
 /* Fonts on black background */
-.v-app .black,
+&.v-app .black,
 .v-window-black,
 .v-window .black,
 .v-popupview-popup .black {
@@ -110,13 +110,13 @@
 }
 
 /* Fixes for Liferay 6.0 */
-.portlet .v-app {
+.portlet &.v-app {
 	background: transparent;
 }
-.portlet .v-app .v-radiobutton input,
+.portlet &.v-app .v-radiobutton input,
 .portlet .v-window .v-radiobutton input,
 .portlet .v-popupview-popup .v-radiobutton input,
-.portlet .v-app .v-checkbox input,
+.portlet &.v-app .v-checkbox input,
 .portlet .v-window .v-checkbox input,
 .portlet .v-popupview-popup .v-checkbox input {
 	margin-right: 3px;

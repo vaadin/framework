@@ -1,3 +1,4 @@
 @import "chameleon.scss";
-
-@include chameleon;
+.chameleon {
+	@include chameleon;
+}
