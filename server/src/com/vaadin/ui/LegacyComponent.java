@@ -15,8 +15,7 @@
  */
 package com.vaadin.ui;
 
-import java.util.EventListener;
-
+import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.VariableOwner;
@@ -35,7 +34,7 @@ import com.vaadin.server.VariableOwner;
  */
 @Deprecated
 public interface LegacyComponent extends VariableOwner, Component,
-        EventListener {
+        ConnectorEventListener {
 
     /**
      * <p>

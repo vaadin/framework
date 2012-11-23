@@ -20,7 +20,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.EventListener;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -28,6 +27,7 @@ import java.util.Map;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
+import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.navigator.Navigator;
@@ -101,7 +101,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * Interface for listening {@link UI.CleanupEvent UI cleanup events}.
      * 
      */
-    public interface CleanupListener extends EventListener {
+    public interface CleanupListener extends ConnectorEventListener {
 
         public static final Method cleanupMethod = ReflectTools.findMethod(
                 CleanupListener.class, "cleanup", CleanupEvent.class);

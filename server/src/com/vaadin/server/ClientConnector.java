@@ -16,16 +16,15 @@
 package com.vaadin.server;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.EventListener;
-import java.util.EventObject;
 import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.vaadin.event.ConnectorEvent;
+import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.ui.Component;
@@ -43,16 +42,6 @@ import com.vaadin.util.ReflectTools;
  */
 public interface ClientConnector extends Connector {
 
-    public static abstract class ConnectorEvent extends EventObject {
-        public ConnectorEvent(ClientConnector source) {
-            super(source);
-        }
-
-        public ClientConnector getConnector() {
-            return (ClientConnector) getSource();
-        }
-    }
-
     /**
      * Event fired after a connector is attached to the application.
      */
@@ -68,7 +57,7 @@ public interface ClientConnector extends Connector {
      * Interface for listening {@link DetachEvent connector detach events}.
      * 
      */
-    public static interface AttachListener extends EventListener, Serializable {
+    public static interface AttachListener extends ConnectorEventListener {
         public static final Method attachMethod = ReflectTools.findMethod(
                 AttachListener.class, "attach", AttachEvent.class);
 
@@ -96,7 +85,7 @@ public interface ClientConnector extends Connector {
      * Interface for listening {@link DetachEvent connector detach events}.
      * 
      */
-    public static interface DetachListener extends EventListener, Serializable {
+    public static interface DetachListener extends ConnectorEventListener {
         public static final Method detachMethod = ReflectTools.findMethod(
                 DetachListener.class, "detach", DetachEvent.class);
 

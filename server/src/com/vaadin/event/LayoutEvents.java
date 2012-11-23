@@ -27,7 +27,7 @@ import com.vaadin.util.ReflectTools;
 
 public interface LayoutEvents {
 
-    public interface LayoutClickListener extends ComponentEventListener {
+    public interface LayoutClickListener extends ConnectorEventListener {
 
         public static final Method clickMethod = ReflectTools.findMethod(
                 LayoutClickListener.class, "layoutClick",
