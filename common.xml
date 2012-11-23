@@ -350,4 +350,60 @@
 		<ivy:publish conf="${conf}" resolver="local-maven" overwrite="true">
 		</ivy:publish>
 	</target>
+	
+	<!-- Checkstyle conf -->
+	<property name="cs-dir" location="${vaadin.basedir}/checkstyle" />
+	<property name="cs-xml" location="${cs-dir}/vaadin-checkstyle.xml" />
+	<property name="cs-jar" location="${cs-dir}/checkstyle-5.6-all.jar" />
+	<property name="cs-custom-jar" location="${cs-dir}/vaadin-checks.jar" />
+	<property name="cs-custom-checks" location="${vaadin.basedir}/build/classes"/>
+	<taskdef resource="checkstyletask.properties">
+		<classpath>
+<!-- Custom checks:
+			<pathelement location="${cs-custom-jar}"/>
+-->
+			<pathelement location="${cs-jar}"/> 
+		</classpath>
+	</taskdef>
+	<!-- Location of the header file, contains the license that must be in the beginning of all files -->
+	<property name="cs-header-file" location="${cs-dir}/header" />
+	
+	<target name="jar-custom-checks">
+		<jar destfile="${cs-custom-jar}"
+			  basedir="${cs-custom-checks}"
+			  includes="com/vaadin/checks/**"
+		/>
+	</target>
+	
+	<!-- Checkstyle targets -->
+	<target name="checkstyle-client">
+		<fail unless="result.dir" message="No result.dir parameter given" />
+		<mkdir dir="${result.dir}"/>
+		<checkstyle config="${cs-xml}">
+			<fileset dir="${vaadin.basedir}/client/src" includes="**/*.java" />
+			<formatter type="xml" toFile="${result.dir}/client-checkstyle_errors.xml" />
+			<property key="checkstyle.header.file" file="${cs-header-file}" />
+		</checkstyle>
+	</target>
+	
+	<target name="checkstyle-server">
+		<fail unless="result.dir" message="No result.dir parameter given" />
+		<mkdir dir="${result.dir}"/>
+		<checkstyle config="${cs-xml}">
+			<fileset dir="${vaadin.basedir}/server/src" includes="**/*.java" />
+			<formatter type="xml" toFile="${result.dir}/server-checkstyle_errors.xml" />
+			<property key="checkstyle.header.file" file="${cs-header-file}" />
+		</checkstyle>
+	</target>
+
+	<target name="checkstyle-shared">
+		<fail unless="result.dir" message="No result.dir parameter given" />
+		<mkdir dir="${result.dir}"/>
+		<checkstyle config="${cs-xml}">
+			<fileset dir="${vaadin.basedir}/shared/src" includes="**/*.java" />
+			<formatter type="xml" toFile="${result.dir}/shared-checkstyle_errors.xml" />
+			<property key="checkstyle.header.file" file="${cs-header-file}" />
+		</checkstyle>
+	</target>
+	
 </project>

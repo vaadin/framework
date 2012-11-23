@@ -60,6 +60,10 @@
 	<target name="clean">
 		<antcall target="common.clean" />
 	</target>
+	
+	<target name="checkstyle">
+		<antcall target="common.checkstyle-client"/>
+	</target>
 
 	<target name="tests">
 		<antcall target="common.tests.run" />
