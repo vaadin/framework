@@ -25,14 +25,14 @@ import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.LexicalUnit;
 
 import com.vaadin.sass.AbstractTestBase;
-import com.vaadin.sass.ScssStylesheet;
-import com.vaadin.sass.handler.SCSSDocumentHandler;
-import com.vaadin.sass.handler.SCSSDocumentHandlerImpl;
-import com.vaadin.sass.parser.LexicalUnitImpl;
-import com.vaadin.sass.parser.Parser;
-import com.vaadin.sass.tree.BlockNode;
-import com.vaadin.sass.tree.MixinDefNode;
-import com.vaadin.sass.tree.MixinNode;
+import com.vaadin.sass.internal.ScssStylesheet;
+import com.vaadin.sass.internal.handler.SCSSDocumentHandler;
+import com.vaadin.sass.internal.handler.SCSSDocumentHandlerImpl;
+import com.vaadin.sass.internal.parser.LexicalUnitImpl;
+import com.vaadin.sass.internal.parser.Parser;
+import com.vaadin.sass.internal.tree.BlockNode;
+import com.vaadin.sass.internal.tree.MixinDefNode;
+import com.vaadin.sass.internal.tree.MixinNode;
 
 public class Mixins extends AbstractTestBase {
 

@@ -25,8 +25,10 @@ import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.InputSource;
 import org.w3c.css.sac.LexicalUnit;
 
-import com.vaadin.sass.handler.SCSSDocumentHandler;
-import com.vaadin.sass.handler.SCSSDocumentHandlerImpl;
+import com.vaadin.sass.internal.handler.SCSSDocumentHandler;
+import com.vaadin.sass.internal.handler.SCSSDocumentHandlerImpl;
+import com.vaadin.sass.internal.parser.Parser;
+import com.vaadin.sass.internal.parser.SCSSLexicalUnit;
 
 public class ParserTest {
 

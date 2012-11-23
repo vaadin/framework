@@ -26,6 +26,8 @@ import junit.framework.Assert;
 import org.apache.commons.io.IOUtils;
 import org.w3c.css.sac.CSSException;
 
+import com.vaadin.sass.internal.ScssStylesheet;
+
 public abstract class AbstractTestBase {
 
     protected ScssStylesheet stylesheet;
