@@ -10,7 +10,7 @@
 	font-weight: bold;
 }
 
-.v-ie9 .#{$primaryStyleName} H1 {
+.v-ie9 & .#{$primaryStyleName} H1 {
 	/* Fix for #6793 */
 	font-weight: bold;
 }

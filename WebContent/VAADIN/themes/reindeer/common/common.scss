@@ -99,7 +99,7 @@
 	color: #fff;
 	text-shadow: #3b5a7a 0 1px 0;
 }
-.v-ie .v-contextmenu .gwt-MenuItem-selected {
+.v-ie & .v-contextmenu .gwt-MenuItem-selected {
 	background-image: url(img/sel-bg.png);
 	background-position: left top;
 }

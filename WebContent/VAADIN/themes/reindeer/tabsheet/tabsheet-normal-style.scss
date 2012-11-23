@@ -104,7 +104,7 @@
 .#{$primaryStyleName}-tabsheetpanel {
 	background: #fff;
 }
-.v-sa .#{$primaryStyleName}-content {
+.v-sa & .#{$primaryStyleName}-content {
 	border-color: rgba(0,0,0,.1);
 }
 .blue .#{$primaryStyleName}-deco {
@@ -118,7 +118,7 @@
 	background: #e2e2e2;
 	overflow: hidden;
 }
-.v-sa .#{$primaryStyleName}-deco {
+.v-sa & .#{$primaryStyleName}-deco {
 	border-top-color: rgba(0,0,0,.1);
 	background: rgba(0,0,0,.08);
 }
@@ -132,7 +132,7 @@
 	display: inline;
 	float: none;
 }
-.v-sa .#{$primaryStyleName}-tabs .v-captiontext {
+.v-sa & .#{$primaryStyleName}-tabs .v-captiontext {
 	display: inline-block;
 }
 .#{$primaryStyleName}-tabs .v-icon {
@@ -145,12 +145,12 @@
 	height: 16px;
 	background: transparent url(../common/icons/error.png) no-repeat 50%;
 }
-.v-ie .#{$primaryStyleName}-tabs .v-errorindicator {
+.v-ie & .#{$primaryStyleName}-tabs .v-errorindicator {
 	zoom: 1;
 	display: inline;
 }
-.v-ie8 .#{$primaryStyleName}-tabs .v-errorindicator,
-.v-ie9 .#{$primaryStyleName}-tabs .v-errorindicator {
+.v-ie8 & .#{$primaryStyleName}-tabs .v-errorindicator,
+.v-ie9 & .#{$primaryStyleName}-tabs .v-errorindicator {
 	display: inline-block;
 }
 

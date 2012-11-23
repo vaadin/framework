@@ -9,8 +9,8 @@
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
-.v-sa .#{$primaryStyleName}-wrap,
-.v-op .#{$primaryStyleName}-wrap {
+.v-sa & .#{$primaryStyleName}-wrap,
+.v-op & .#{$primaryStyleName}-wrap {
 	border-color: rgba(0,0,0,.2);
 }
 .#{$primaryStyleName}-outerheader {
@@ -130,8 +130,8 @@
 	-moz-border-radius: 8px;
 	overflow: hidden;
 }
-.v-sa .#{$primaryStyleName}-black .#{$primaryStyleName}-wrap,
-.v-op .#{$primaryStyleName}-black .#{$primaryStyleName}-wrap {
+.v-sa & .#{$primaryStyleName}-black .#{$primaryStyleName}-wrap,
+.v-op & .#{$primaryStyleName}-black .#{$primaryStyleName}-wrap {
 	border-color: rgba(0,0,0,.8);
 }
 .#{$primaryStyleName}-black .#{$primaryStyleName}-wrap2 {
@@ -139,8 +139,8 @@
 	-moz-border-radius: 7px;
 	-webkit-border-radius: 7px;
 }
-.v-sa .#{$primaryStyleName}-black .#{$primaryStyleName}-wrap2,
-.v-op .#{$primaryStyleName}-black .#{$primaryStyleName}-wrap2 {
+.v-sa & .#{$primaryStyleName}-black .#{$primaryStyleName}-wrap2,
+.v-op & .#{$primaryStyleName}-black .#{$primaryStyleName}-wrap2 {
 	background-color: rgba(29,32,33,.9);
 }
 .#{$primaryStyleName}-black .#{$primaryStyleName}-outerheader {

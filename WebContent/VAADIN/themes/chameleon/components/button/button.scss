@@ -1,14 +1,14 @@
 @mixin chameleon-button {
 
 .v-button:active,
-.v-ie8 .v-pressed.v-button,
+.v-ie8 & .v-pressed.v-button,
 div.v-button-down {
 	background-image: url(../../img/grad-dark-bottom2.png);
 	background-color: #afafaf;
 	}
 
 .v-button:active .v-button-wrap,
-.v-ie8 .v-pressed.v-button .v-button-wrap,
+.v-ie8 & .v-pressed.v-button .v-button-wrap,
 .v-button-down .v-button-wrap {
 	background-image: url(../../img/grad-dark-top2.png);
 	border: 1px solid #888;
@@ -55,10 +55,10 @@ div.v-button-down .v-button-wrap {
 	-ms-text-overflow: ellipsis;
 	}
 
-.v-sa .v-button,
-.v-sa .v-button-wrap,
-.v-ff .v-button,
-.v-ff .v-button-wrap {
+.v-sa & .v-button,
+.v-sa & .v-button-wrap,
+.v-ff & .v-button,
+.v-ff & .v-button-wrap {
 	overflow: hidden;
 	}
 	
@@ -96,7 +96,7 @@ div.v-button-down .v-button-wrap {
 	}
 
 .v-button-small:active .v-button-wrap,
-.v-ie8 .v-button-small.v-pressed .v-button-wrap,
+.v-ie8 & .v-button-small.v-pressed .v-button-wrap,
 .v-button-down.small .v-button-wrap {
 	padding: 2px 10px;
 	}
@@ -116,7 +116,7 @@ div.v-button-down .v-button-wrap {
 	}
 
 .v-button-wide:active .v-button-wrap,
-.v-ie8 .v-button-wide.v-pressed .v-button-wrap {
+.v-ie8 & .v-button-wide.v-pressed .v-button-wrap {
 	padding-left: 25px;
 	padding-right: 25px;
 	}
@@ -131,7 +131,7 @@ div.v-button-down .v-button-wrap {
 	}
 
 .v-button-tall:active .v-button-wrap,
-.v-ie8 .v-button-tall.v-pressed .v-button-wrap {
+.v-ie8 & .v-button-tall.v-pressed .v-button-wrap {
 	padding-top: 12px;
 	padding-bottom: 12px;
 	}
@@ -154,13 +154,13 @@ div.v-button-link:focus,
 .v-button-link:active,
 div.v-disabled.v-button-link,
 div.v-disabled.v-button-link:focus,
-body.v-ie .v-pressed.v-button-link,
+body.v-ie & .v-pressed.v-button-link,
 div.v-button-borderless,
 div.v-button-borderless:focus,
 .v-button-borderless:active,
 div.v-disabled.v-button-borderless,
 div.v-disabled.v-button-borderless:focus,
-body.v-ie .v-pressed.v-button-borderless {
+body.v-ie & .v-pressed.v-button-borderless {
 	background: transparent;
 	font-weight: normal;
 	text-shadow: none;
@@ -180,13 +180,13 @@ div.v-button-link:focus .v-button-wrap,
 .v-button-link:active .v-button-wrap,
 div.v-disabled.v-button-link .v-button-wrap,
 div.v-disabled.v-button-link:focus .v-button-wrap,
-body.v-ie .v-pressed.v-button-link .v-button-wrap,
+body.v-ie & .v-pressed.v-button-link .v-button-wrap,
 div.v-button-borderless .v-button-wrap,
 div.v-button-borderless:focus .v-button-wrap,
 .v-button-borderless:active .v-button-wrap,
 div.v-disabled.v-button-borderless .v-button-wrap,
 div.v-disabled.v-button-borderless:focus .v-button-wrap,
-body.v-ie .v-pressed.v-button-borderless .v-button-wrap {
+body.v-ie & .v-pressed.v-button-borderless .v-button-wrap {
 	background: transparent;
 	font-weight: normal;
 	text-shadow: none;

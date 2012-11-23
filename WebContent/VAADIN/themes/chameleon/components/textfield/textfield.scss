@@ -38,9 +38,9 @@ body input.v-filterselect-input {
 	color: #222;
 	}
 
-.v-ie input.v-textfield,
-.v-ie textarea.v-textarea,
-.v-ie .v-filterselect {
+.v-ie & input.v-textfield,
+.v-ie & textarea.v-textarea,
+.v-ie & .v-filterselect {
 	border-top-color: #808080;
 	}
 

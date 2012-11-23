@@ -11,8 +11,8 @@
 	overflow: hidden;
 }
 
-.v-ff .#{$primaryStyleName}-immediate,
-.v-op .#{$primaryStyleName}-immediate {
+.v-ff & .#{$primaryStyleName}-immediate,
+.v-op & .#{$primaryStyleName}-immediate {
 	display: inline-block;
 }
 

@@ -12,7 +12,7 @@
 	white-space: nowrap;
 	margin: 0 2px;	
 }
-.v-ie .#{$primaryStyleName}-optiongroup .#{$primaryStyleName}-option {
+.v-ie & .#{$primaryStyleName}-optiongroup .#{$primaryStyleName}-option {
 	zoom: 1;
 }
 .#{$primaryStyleName}-select {
