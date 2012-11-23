@@ -198,32 +198,6 @@ body &.v-app-loading {
 .v-loading-indicator-wait {
 	background-image: url(img/loading-indicator-wait.gif);
 }
-/* Debug dialog */
-.v-debug-console {
-	background: #fff;
-	opacity: .9;
-	border: 1px solid #000;
-	font-family: sans-serif;
-}
-.v-debug-console-caption {
-	background: #000;
-	border-bottom: 1px solid grey;
-	color: white;
-	font-weight: bold;
-}
-.v-debug-console-content {
-	font-size: x-small;
-	overflow: auto;
-	white-space: pre;
-}
-.v-debug-console-content input {
-	font-size: xx-small;
-}
-/* Debug style */
-&.v-app .invalidlayout,
-&.v-app .invalidlayout * {
-	background: #f99 !important;
-}
 /* Fix for Liferay, issue #2384 */
 &.v-app input[type="text"],
 &.v-app input[type="password"],

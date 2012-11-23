@@ -36,7 +36,7 @@
 @import "upload/upload.scss";
 @import "widget/widget.scss";
 @import "window/window.scss";
-
+@import "debug/debug.scss";
 
 @mixin base {
 	// @include base-app;
@@ -89,3 +89,5 @@
 	@include base-window;
 }
 
+// always include, don't wrap in .themename{}
+@include debug-globals;

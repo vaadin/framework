@@ -1,0 +1,32 @@
+/*
+* Debug console related styles. NOTE that these are global, and not really part
+* of a theme (the console is a sigleton). You can customize, but it will apply
+* globally, e.g in a portal environment.
+*/
+@mixin debug-globals {
+	.v-debug-console {
+		background: #fff;
+		opacity: .9;
+		border: 1px solid #000;
+		font-family: sans-serif;
+	}
+	.v-debug-console-caption {
+		background: #000;
+		border-bottom: 1px solid grey;
+		color: white;
+		font-weight: bold;
+	}
+	.v-debug-console-content {
+		font-size: x-small;
+		overflow: auto;
+		white-space: pre;
+	}
+	.v-debug-console-content input {
+		font-size: xx-small;
+	}
+	/* Debug style */
+	.v-app .invalidlayout,
+	.v-app .invalidlayout * {
+		background: #f99 !important;
+	}
+}
