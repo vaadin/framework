@@ -1,42 +1,42 @@
-@mixin reindeer-slider($name : v-slider) {
+@mixin reindeer-slider($primaryStyleName : v-slider) {
 
-.#{$name} {
+.#{$primaryStyleName} {
 	border-top: 1px solid #9a9c9e;
 	border-bottom: 1px solid #bdbfc1;
 	margin: 4px 0;
 }
-.#{$name}-base {
+.#{$primaryStyleName}-base {
 	height: 1px;
 	background: #e0e2e2;
 	border-top: 1px solid #adb0b1;
 	border-left: 1px solid #a0a3a6;
 	border-right: 1px solid #a0a3a6;
 }
-.#{$name}-handle {
+.#{$primaryStyleName}-handle {
 	background: transparent;
 	background-image: url(img/knob.png); /** sprite-ref: verticals */
 	width: 10px;
 	height: 10px;
 	margin-top: -5px;
 }
-.#{$name}-handle-active {
+.#{$primaryStyleName}-handle-active {
 	background-image: url(img/knob-pressed.png); /** sprite-ref: verticals */
 }
-.#{$name}-vertical {
+.#{$primaryStyleName}-vertical {
 	width: 2px;
 	margin: 0 5px;
 	border: none;
 	border-left: 1px solid #9a9c9e;
 	border-right: 1px solid #bdbfc1;
 }
-.#{$name}-vertical .#{$name}-base {
+.#{$primaryStyleName}-vertical .#{$primaryStyleName}-base {
 	width: 2px;
 	border-left: 1px solid #adb0b1;
 	border-right: none;
 	border-top: 1px solid #adb0b1;
 	border-bottom: 1px solid #adb0b1;	
 }
-.#{$name}-vertical .#{$name}-handle {
+.#{$primaryStyleName}-vertical .#{$primaryStyleName}-handle {
 	width: 10px;
 	height: 10px;
 	margin-left: -5px;

@@ -1,58 +1,58 @@
-@mixin reindeer-panel($name : v-panel) {
+@mixin reindeer-panel($primaryStyleName : v-panel) {
 
-.blue .#{$name}-caption,
-.blue .#{$name}-nocaption,
-.blue .#{$name}-content {
+.blue .#{$primaryStyleName}-caption,
+.blue .#{$primaryStyleName}-nocaption,
+.blue .#{$primaryStyleName}-content {
 	border-color: #a8bcc5;
 }
-.#{$name}-caption,
-.#{$name}-nocaption,
-.white .#{$name}-caption,
-.white .#{$name}-nocaption {
+.#{$primaryStyleName}-caption,
+.#{$primaryStyleName}-nocaption,
+.white .#{$primaryStyleName}-caption,
+.white .#{$primaryStyleName}-nocaption {
 	border-bottom: 1px solid #e5e5e5;
 	line-height: 16px; /* accommodate minimum icon size */
 }
-.v-webkit .#{$name}-caption,
-.v-webkit .#{$name}-nocaption,
-.v-gecko .#{$name}-caption,
-.v-gecko .#{$name}-nocaption,
-.v-ie9 .#{$name}-caption,
-.v-ie9 .#{$name}-nocaption {
+.v-webkit .#{$primaryStyleName}-caption,
+.v-webkit .#{$primaryStyleName}-nocaption,
+.v-gecko .#{$primaryStyleName}-caption,
+.v-gecko .#{$primaryStyleName}-nocaption,
+.v-ie9 .#{$primaryStyleName}-caption,
+.v-ie9 .#{$primaryStyleName}-nocaption {
 	border-bottom-color: rgba(0,0,0,.08);
 }
-.#{$name}-caption {
+.#{$primaryStyleName}-caption {
 	padding-bottom: 2px;
 }
-.#{$name}-content,
-.white .#{$name}-content {
+.#{$primaryStyleName}-content,
+.white .#{$primaryStyleName}-content {
 	background: #fff;
 	border: 1px solid #dcdcdc;
 	border-bottom: none;
 	border-top: none;
 }
-.v-webkit .#{$name}-content,
-.v-gecko .#{$name}-content,
-.v-ie9 .#{$name}-content {
+.v-webkit .#{$primaryStyleName}-content,
+.v-gecko .#{$primaryStyleName}-content,
+.v-ie9 .#{$primaryStyleName}-content {
 	border-top-color: rgba(0,0,0,.07);
 }
-.blue .#{$name}-deco {
+.blue .#{$primaryStyleName}-deco {
 	border-color: #92a3ac;
 	background: #adc2cd;
 }
-.#{$name}-deco,
-.white .#{$name}-deco {
+.#{$primaryStyleName}-deco,
+.white .#{$primaryStyleName}-deco {
 	height: 1px;
 	border-top: 1px solid #bebebe;
 	background: #e2e2e2;
 	overflow: hidden;
 }
-.v-webkit .#{$name}-deco,
-.v-gecko .#{$name}-deco,
-.v-ie9 .#{$name}-deco {
+.v-webkit .#{$primaryStyleName}-deco,
+.v-gecko .#{$primaryStyleName}-deco,
+.v-ie9 .#{$primaryStyleName}-deco {
 	border-top-color: rgba(0,0,0,.1);
 	background: rgba(0,0,0,.08);
 }
-.#{$name}-caption .v-errorindicator {
+.#{$primaryStyleName}-caption .v-errorindicator {
 	height: 16px;
 	width: 13px;
 	background: url(../common/icons/error.png) no-repeat 50%;
@@ -62,15 +62,15 @@
 }
 
 /* Light style */
-.#{$name}-light .#{$name}-caption-light,
-.#{$name}-light .#{$name}-nocaption-light {
+.#{$primaryStyleName}-light .#{$primaryStyleName}-caption-light,
+.#{$primaryStyleName}-light .#{$primaryStyleName}-nocaption-light {
 	border: none;
 }
-.#{$name}-light .#{$name}-content-light {
+.#{$primaryStyleName}-light .#{$primaryStyleName}-content-light {
 	border: none;
 	background: transparent;
 }
-.#{$name}-light .#{$name}-deco-light {
+.#{$primaryStyleName}-light .#{$primaryStyleName}-deco-light {
 	height: 0;
 	border: none;
 }

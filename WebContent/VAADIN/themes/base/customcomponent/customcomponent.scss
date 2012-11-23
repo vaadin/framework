@@ -1,6 +1,6 @@
-@mixin base-customcomponent($name : v-customcomponent) {
+@mixin base-customcomponent($primaryStyleName : v-customcomponent) {
 
-.#{$name} {
+.#{$primaryStyleName} {
 	overflow: hidden;
 }
 

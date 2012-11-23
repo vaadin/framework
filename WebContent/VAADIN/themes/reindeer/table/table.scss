@@ -1,20 +1,20 @@
-@mixin reindeer-table($name : v-table) {
+@mixin reindeer-table($primaryStyleName : v-table) {
 
 /* Table on blue background */
-.blue .#{$name}-header-wrap {
+.blue .#{$primaryStyleName}-header-wrap {
 	border-color: #92a2aa;
 }
-.blue .#{$name}-body {
+.blue .#{$primaryStyleName}-body {
 	border-color: #92a2aa;
 	border-top-color: #c2c3c4;
 }
 
 /* Default & white style */
-.#{$name}-header-wrap,
-.white .#{$name}-header-wrap,
-.#{$name}-footer-wrap,
-.white .#{$name}-footer-wrap,
-.#{$name}-header-drag {
+.#{$primaryStyleName}-header-wrap,
+.white .#{$primaryStyleName}-header-wrap,
+.#{$primaryStyleName}-footer-wrap,
+.white .#{$primaryStyleName}-footer-wrap,
+.#{$primaryStyleName}-header-drag {
 	border-color: #c2c3c4;
 	background: transparent repeat-x;
 	background-image: url(img/header-bg-light.png); /** sprite-ref: verticals; sprite-alignment: repeat */
@@ -27,85 +27,85 @@
 	line-height: normal;
 }
 
-.#{$name}-footer-wrap,
-.white .#{$name}-footer-wrap {
+.#{$primaryStyleName}-footer-wrap,
+.white .#{$primaryStyleName}-footer-wrap {
 	text-transform: none;
 	font-size: 12px;
 	font-weight: normal;
 }
 
-.#{$name}-footer td,
-.white .#{$name}-footer td {
+.#{$primaryStyleName}-footer td,
+.white .#{$primaryStyleName}-footer td {
 	border-color: #c2c3c4;
 }
 
-.#{$name}-footer-container {
+.#{$primaryStyleName}-footer-container {
 	padding-right: 7px;
 }
 
 
-.#{$name}-header,
-.#{$name}-footer,
-.#{$name}-footer table {
+.#{$primaryStyleName}-header,
+.#{$primaryStyleName}-footer,
+.#{$primaryStyleName}-footer table {
 	height: 20px;
 }
 
-.#{$name}-caption-container,
-.#{$name}-header-drag {
+.#{$primaryStyleName}-caption-container,
+.#{$primaryStyleName}-header-drag {
 	padding-top: 4px;
 	padding-right: 4px;
 }
-.#{$name}-caption-container .v-icon,
-.#{$name}-header-drag .v-icon {
+.#{$primaryStyleName}-caption-container .v-icon,
+.#{$primaryStyleName}-header-drag .v-icon {
 	height: 16px;
 	margin: -4px 3px 0 0;
 	vertical-align: middle;
 }
-.v-ie .#{$name}-caption-container .v-icon,
-.v-ie .#{$name}-header-drag .v-icon {
+.v-ie .#{$primaryStyleName}-caption-container .v-icon,
+.v-ie .#{$primaryStyleName}-header-drag .v-icon {
 	margin-top: -3px;
 }
-.#{$name}-resizer {
+.#{$primaryStyleName}-resizer {
 	height: 20px;
 	width: 2px;
 	background: transparent;
 	border-right: 1px solid #c2c3c4;
 }
 
-.#{$name}-sort-indicator {
+.#{$primaryStyleName}-sort-indicator {
 	background: transparent;
 	width: 0px;
 	height: 20px;
 }
 
-.#{$name}-header-cell-asc .#{$name}-sort-indicator {
+.#{$primaryStyleName}-header-cell-asc .#{$primaryStyleName}-sort-indicator {
 	background: transparent no-repeat right 7px;
 	background-image: url(img/asc-light.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
 	width: 16px;
 }
-.#{$name}-header-cell-desc .#{$name}-sort-indicator {
+.#{$primaryStyleName}-header-cell-desc .#{$primaryStyleName}-sort-indicator {
 	background: transparent no-repeat right 7px;
 	background-image: url(img/desc-light.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
 	width: 16px;
 }
-.#{$name}-body,
-.white .#{$name}-body {
+.#{$primaryStyleName}-body,
+.white .#{$primaryStyleName}-body {
 	border-color: #c2c3c4;
 	background: #fff;
 }
-.#{$name}-cell-content {
+.#{$primaryStyleName}-cell-content {
 	padding-top: 0;
 	border-right-color: #d3d4d5;
 	vertical-align: top;
 }
-.#{$name}-cell-wrapper {
+.#{$primaryStyleName}-cell-wrapper {
 	padding-top: 3px;
 	padding-bottom: 3px;
 }
-.#{$name}-row-odd {
+.#{$primaryStyleName}-row-odd {
 	background: #eff0f1;
 }
-.#{$name}-generated-row {
+.#{$primaryStyleName}-generated-row {
     background: #dcdee0;
     text-transform: uppercase;
     font-size: 10px;
@@ -114,55 +114,55 @@
     text-shadow: #f3f5f8 0 1px 0;
     line-height: normal;
 }
-.#{$name}-generated-row .#{$name}-cell-wrapper {
+.#{$primaryStyleName}-generated-row .#{$primaryStyleName}-cell-wrapper {
     padding-top: 4px;
     padding-bottom: 5px;
 }
-.#{$name}-cell-content:last-child {
+.#{$primaryStyleName}-cell-content:last-child {
 	border-right-color: transparent;
 }
-.#{$name} .v-selected,
-.black .#{$name} .v-selected {
+.#{$primaryStyleName} .v-selected,
+.black .#{$primaryStyleName} .v-selected {
 	background: #4d749f url(../common/img/sel-bg.png) repeat-x; /* We can't include this in the sprite, since we don't know the row height */
 	color: #fff;
 	text-shadow: #3b5a7a 0 1px 0;
 }
-.#{$name} .v-selected .#{$name}-cell-content {
+.#{$primaryStyleName} .v-selected .#{$primaryStyleName}-cell-content {
 	border-right-color: #466c90;
 }
-.#{$name}-column-selector {
+.#{$primaryStyleName}-column-selector {
 	width: 16px;
 	height: 20px;
 	margin-top: -20px;
 	background: transparent no-repeat;
 	background-image: url(img/col-sel-light.png); /** sprite-ref: verticals */
 }
-.#{$name}-column-selector:active {
+.#{$primaryStyleName}-column-selector:active {
 	background-image: url(img/col-sel-light-pressed.png); /** sprite-ref: verticals */
 }
-.#{$name}-focus-slot-left {
+.#{$primaryStyleName}-focus-slot-left {
 	border-left: 1px solid #222;
 	margin-bottom: -20px;
 	width: auto;
 }
-.#{$name}-focus-slot-right {
+.#{$primaryStyleName}-focus-slot-right {
 	border-right-color: #222;
 	margin-right: 0;
 }
-.#{$name}-header-drag {
+.#{$primaryStyleName}-header-drag {
 	padding-left: 6px;
 	height: 16px;
 }
-.#{$name}-header-drag img {
+.#{$primaryStyleName}-header-drag img {
 	height: 16px;
 	margin: -3px 3px 0 0;
 }
-.#{$name}-scrollposition {
+.#{$primaryStyleName}-scrollposition {
 	width: auto;
 	background: transparent;
 	border: none;
 }
-.#{$name}-scrollposition span {
+.#{$primaryStyleName}-scrollposition span {
 	background: transparent repeat-x;
 	background-image: url(img/scroll-indic-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	border: 1px solid #939494;
@@ -183,7 +183,7 @@
 	-webkit-box-shadow: rgba(0,0,0,.5) 0 1px 2px;
 	-moz-box-shadow: rgba(0,0,0,.5) 0 1px 2px;
 }
-.#{$name}-borderless .#{$name}-scrollposition span {
+.#{$primaryStyleName}-borderless .#{$primaryStyleName}-scrollposition span {
 	top: 0;
 }
 /* row in column selector */
@@ -206,87 +206,87 @@
 
 
 /* Strong style */
-.#{$name}-strong .#{$name}-header-wrap,
-.#{$name}-strong .#{$name}-header-drag {
+.#{$primaryStyleName}-strong .#{$primaryStyleName}-header-wrap,
+.#{$primaryStyleName}-strong .#{$primaryStyleName}-header-drag {
 	border-color: #2b3033;
 	border-top-color: #2b3033;
 	background-image: url(img/header-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	color: #e7e9ea;
 	text-shadow: #000 0 -1px 0;
 }
-.#{$name}-strong .#{$name}-body {
+.#{$primaryStyleName}-strong .#{$primaryStyleName}-body {
 	border-top-color: #2b3033;
 }
-.#{$name}-strong .#{$name}-resizer {
+.#{$primaryStyleName}-strong .#{$primaryStyleName}-resizer {
 	border-right-color: #1c1f21;
 }
-.#{$name}-strong .#{$name}-header-cell-asc .#{$name}-sort-indicator {
+.#{$primaryStyleName}-strong .#{$primaryStyleName}-header-cell-asc .#{$primaryStyleName}-sort-indicator {
 	background-image: url(img/asc.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
 }
-.#{$name}-strong .#{$name}-header-cell-desc .#{$name}-sort-indicator {
+.#{$primaryStyleName}-strong .#{$primaryStyleName}-header-cell-desc .#{$primaryStyleName}-sort-indicator {
 	background-image: url(img/desc.png); /** sprite-ref: verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
 }
-.#{$name}-strong .#{$name}-column-selector {
+.#{$primaryStyleName}-strong .#{$primaryStyleName}-column-selector {
 	background-image: url(img/col-sel.png); /** sprite-ref: verticals */
 }
-.#{$name}-strong .#{$name}-column-selector:active {
+.#{$primaryStyleName}-strong .#{$primaryStyleName}-column-selector:active {
 	background-image: url(img/col-sel-pressed.png); /** sprite-ref: verticals */
 }
-.#{$name}-strong .#{$name}-focus-slot-left,
-.#{$name}-strong .#{$name}-focus-slot-right {
+.#{$primaryStyleName}-strong .#{$primaryStyleName}-focus-slot-left,
+.#{$primaryStyleName}-strong .#{$primaryStyleName}-focus-slot-right {
 	border-color: #9ca1a5;
 }
 
 
 /* Table on black background (normal style) */
-.black .#{$name}-header-wrap,
-.black .#{$name}-header-drag {
+.black .#{$primaryStyleName}-header-wrap,
+.black .#{$primaryStyleName}-header-drag {
 	border-color: #252729;
 	background-image: url(img/header-bg-black.png); /** sprite-ref: black-verticals; sprite-alignment: repeat */
 	color: #e7eaee;
 	text-shadow: #000 0 -1px 0;
 }
-.black .#{$name}-resizer {
+.black .#{$primaryStyleName}-resizer {
 	border-right-color: #252729;
 }
-.black .#{$name}-header-cell-asc .#{$name}-sort-indicator {
+.black .#{$primaryStyleName}-header-cell-asc .#{$primaryStyleName}-sort-indicator {
 	background-image: url(img/asc.png); /** sprite-ref: black-verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
 }
-.black .#{$name}-header-cell-desc .#{$name}-sort-indicator {
+.black .#{$primaryStyleName}-header-cell-desc .#{$primaryStyleName}-sort-indicator {
 	background-image: url(img/desc.png); /** sprite-ref: black-verticals; sprite-alignment: right; sprite-margin-top: 7px; sprite-margin-bottom: 6px; sprite-margin-right: 6px; */
 }
-.black .#{$name}-column-selector {
+.black .#{$primaryStyleName}-column-selector {
 	background-image: url(img/col-sel-black.png); /** sprite-ref: black-verticals */
 }
-.black .#{$name}-column-selector:active {
+.black .#{$primaryStyleName}-column-selector:active {
 	background-image: url(img/col-sel-black-pressed.png); /** sprite-ref: black-verticals */
 }
-.black .#{$name}-focus-slot-left,
-.black .#{$name}-focus-slot-right {
+.black .#{$primaryStyleName}-focus-slot-left,
+.black .#{$primaryStyleName}-focus-slot-right {
 	border-color: #9ca1a5;
 }
-.black .#{$name}-body {
+.black .#{$primaryStyleName}-body {
 	border-color: #252729;
 	background: transparent;
 }
-.black .#{$name}-cell-content {
+.black .#{$primaryStyleName}-cell-content {
 	border-right-color: #252729;
 	border-bottom: 1px solid #252729;
 }
-.black .#{$name}-cell-wrapper {
+.black .#{$primaryStyleName}-cell-wrapper {
 	padding-bottom: 2px;
 }
-.black .#{$name}-row-odd {
+.black .#{$primaryStyleName}-row-odd {
 	background: transparent;
 }
 /* Selection background-color combined with the default (white) style selector, so we don't have to duplicate the sprite image in the final sprite collection */
-.black .#{$name} .v-selected .#{$name}-cell-content {
+.black .#{$primaryStyleName} .v-selected .#{$primaryStyleName}-cell-content {
 	border-bottom: 1px solid #4d749f;
 }
 
 /* Borderless style */
-.#{$name}-borderless .#{$name}-header-wrap,
-.#{$name}-borderless .#{$name}-body {
+.#{$primaryStyleName}-borderless .#{$primaryStyleName}-header-wrap,
+.#{$primaryStyleName}-borderless .#{$primaryStyleName}-body {
 	border: none;
 }
 

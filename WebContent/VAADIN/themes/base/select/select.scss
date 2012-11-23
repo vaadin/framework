@@ -1,58 +1,58 @@
-@mixin base-select($name : v-select) {
+@mixin base-select($primaryStyleName : v-select) {
 
-.#{$name} {
+.#{$primaryStyleName} {
 	text-align: left;
 }
-.#{$name}-optiongroup .#{$name}-option {
+.#{$primaryStyleName}-optiongroup .#{$primaryStyleName}-option {
 	display: block;
 	white-space: nowrap;
 }
-.#{$name}-optiongroup .v-icon {
+.#{$primaryStyleName}-optiongroup .v-icon {
 	vertical-align: middle;
 	white-space: nowrap;
 	margin: 0 2px;	
 }
-.v-ie .#{$name}-optiongroup .#{$name}-option {
+.v-ie .#{$primaryStyleName}-optiongroup .#{$primaryStyleName}-option {
 	zoom: 1;
 }
-.#{$name}-select {
+.#{$primaryStyleName}-select {
 	display: block;
 }
-.#{$name}-twincol {
+.#{$primaryStyleName}-twincol {
 	white-space: nowrap;
 }
-.#{$name}-twincol-options {
+.#{$primaryStyleName}-twincol-options {
 	float: left;
 }
-.#{$name}-twincol-caption-left {
+.#{$primaryStyleName}-twincol-caption-left {
 	float: left;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-.#{$name}-twincol-selections {
+.#{$primaryStyleName}-twincol-selections {
 	font-weight: bold;
 }
-.#{$name}-twincol-caption-right {
+.#{$primaryStyleName}-twincol-caption-right {
 	float: right;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-.#{$name}-twincol-buttons {
+.#{$primaryStyleName}-twincol-buttons {
 	float: left;
 	text-align: center;
 }
-.#{$name}-twincol-buttons .#{$name}-twincol-deco {
+.#{$primaryStyleName}-twincol-buttons .#{$primaryStyleName}-twincol-deco {
 	clear: both;
 }
-.#{$name}-twincol .v-textfield {
+.#{$primaryStyleName}-twincol .v-textfield {
 	display: block;
 	float: left;
 	clear: left;
 }
-.#{$name}-twincol .v-button {
+.#{$primaryStyleName}-twincol .v-button {
 	float: left;
 }
-.#{$name}-twincol-buttons .v-button {
+.#{$primaryStyleName}-twincol-buttons .v-button {
 	float: none;
 }
 .v-filterselect {
@@ -150,10 +150,10 @@
 /* Error styles (disabled by default)
 
 .v-filterselect-error .v-filterselect-input,
-.#{$name}-error .#{$name}-option,
-.#{$name}-error .#{$name}-select,
-.#{$name}-error .#{$name}-twincol-selections,
-.#{$name}-error .#{$name}-twincol-options {
+.#{$primaryStyleName}-error .#{$primaryStyleName}-option,
+.#{$primaryStyleName}-error .#{$primaryStyleName}-select,
+.#{$primaryStyleName}-error .#{$primaryStyleName}-twincol-selections,
+.#{$primaryStyleName}-error .#{$primaryStyleName}-twincol-options {
 	background: #ffaaaa;
 }
 */
@@ -161,10 +161,10 @@
 /*  Required field styles (disabled by default)
    
 .v-filterselect-error .v-filterselect-input,
-.#{$name}-required .#{$name}-option,
-.#{$name}-required .#{$name}-select,
-.#{$name}-required .#{$name}-twincol-selections,
-.#{$name}-required .#{$name}-twincol-options {
+.#{$primaryStyleName}-required .#{$primaryStyleName}-option,
+.#{$primaryStyleName}-required .#{$primaryStyleName}-select,
+.#{$primaryStyleName}-required .#{$primaryStyleName}-twincol-selections,
+.#{$primaryStyleName}-required .#{$primaryStyleName}-twincol-options {
 	background: #ffaaaa;
 }
 */

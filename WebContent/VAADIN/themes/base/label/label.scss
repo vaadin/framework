@@ -1,10 +1,10 @@
-@mixin base-label($name : v-label) {
+@mixin base-label($primaryStyleName : v-label) {
 
-.#{$name} {
+.#{$primaryStyleName} {
 	overflow: hidden;
 }
 
-.#{$name}.v-has-width {
+.#{$primaryStyleName}.v-has-width {
 	white-space: normal;
 }
 

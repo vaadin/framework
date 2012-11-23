@@ -1,11 +1,11 @@
-@mixin base-menubar($name : v-menubar) {
+@mixin base-menubar($primaryStyleName : v-menubar) {
 
-.#{$name} {
+.#{$primaryStyleName} {
 	display: inline-block;
 	white-space: nowrap;
 	overflow: hidden;
 }
-.#{$name} .#{$name}-menuitem {
+.#{$primaryStyleName} .#{$primaryStyleName}-menuitem {
 	cursor: default;
 	vertical-align: middle;
 	white-space: nowrap;
@@ -13,36 +13,36 @@
 	display: inline-block;
 	zoom: 1;
 }
-.#{$name} .#{$name}-menuitem-caption .v-icon {
+.#{$primaryStyleName} .#{$primaryStyleName}-menuitem-caption .v-icon {
 	vertical-align: middle;
 	white-space: nowrap;
 }
-.#{$name}-submenu {
+.#{$primaryStyleName}-submenu {
 	background: #fff;
 }
-.#{$name}-menuitem-selected {
+.#{$primaryStyleName}-menuitem-selected {
 	background: #333;
 	color: #fff;
 }
-.#{$name}-submenu .#{$name}-menuitem { 
+.#{$primaryStyleName}-submenu .#{$primaryStyleName}-menuitem { 
 	cursor: default;
 	display: block;
 	position: relative;
 	padding-right: 1.5em;
 }
-.#{$name}-submenu .#{$name}-menuitem-caption {
+.#{$primaryStyleName}-submenu .#{$primaryStyleName}-menuitem-caption {
 	display: block;
 }
-.#{$name}-submenu .#{$name}-menuitem *,
-.#{$name}-submenu .#{$name}-menuitem-caption * {
+.#{$primaryStyleName}-submenu .#{$primaryStyleName}-menuitem *,
+.#{$primaryStyleName}-submenu .#{$primaryStyleName}-menuitem-caption * {
 	white-space: nowrap;
 }
-.#{$name}-submenu-indicator {
+.#{$primaryStyleName}-submenu-indicator {
 	display: none;
 	/* Arial has the most coverage for geometric entity characters */
 	font-family: arial, helvetica, sans-serif;
 }
-.#{$name}-submenu .#{$name}-submenu-indicator {
+.#{$primaryStyleName}-submenu .#{$primaryStyleName}-submenu-indicator {
 	display: block;
 	position: absolute;
 	right: 0;
@@ -50,20 +50,20 @@
 	height: 1em;
 	font-size: 0.9em;
 }
-.#{$name}-menuitem-disabled,
-.#{$name} span.#{$name}-menuitem-disabled:hover,
-.#{$name} span.#{$name}-menuitem-disabled:focus,
-.#{$name} span.#{$name}-menuitem-disabled:active {
+.#{$primaryStyleName}-menuitem-disabled,
+.#{$primaryStyleName} span.#{$primaryStyleName}-menuitem-disabled:hover,
+.#{$primaryStyleName} span.#{$primaryStyleName}-menuitem-disabled:focus,
+.#{$primaryStyleName} span.#{$primaryStyleName}-menuitem-disabled:active {
 	color: #999;
 }
-.#{$name}-more-menuitem {
+.#{$primaryStyleName}-more-menuitem {
 	/* Arial has the most coverage for geometric entity characters */
 	font-family: arial, helvetica, sans-serif;
 }
-.#{$name}-separator {
+.#{$primaryStyleName}-separator {
 	overflow: hidden;
 }
-.#{$name}-separator span {
+.#{$primaryStyleName}-separator span {
 	display: block;
 	text-indent: -9999px;
 	font-size: 1px;
@@ -72,26 +72,26 @@
 	margin: 3px 0 2px;
 	overflow: hidden;
 }
-.#{$name} .v-icon,
-.#{$name}-submenu .v-icon {
+.#{$primaryStyleName} .v-icon,
+.#{$primaryStyleName}-submenu .v-icon {
 	margin-right: 3px;
 }
 
-.#{$name}:focus,
-.#{$name}-popup:focus,
-.#{$name}-popup .popupContent:focus,
-.#{$name}-popup .popupContent .#{$name}-submenu:focus{
+.#{$primaryStyleName}:focus,
+.#{$primaryStyleName}-popup:focus,
+.#{$primaryStyleName}-popup .popupContent:focus,
+.#{$primaryStyleName}-popup .popupContent .#{$primaryStyleName}-submenu:focus{
 	outline: none;	
 }
 /* Checkboxes for checkable/checked menu items */
 /* Checked/unchecked requires combined style selected-(un)checked for IE6 */
-.#{$name}-submenu-check-column .#{$name}-menuitem {
+.#{$primaryStyleName}-submenu-check-column .#{$primaryStyleName}-menuitem {
 	padding-left: 6px;
 }
-.#{$name}-submenu-check-column .#{$name}-menuitem-caption {
+.#{$primaryStyleName}-submenu-check-column .#{$primaryStyleName}-menuitem-caption {
 	padding-left: 18px;
 }
-.#{$name}-submenu .#{$name}-menuitem-checked .#{$name}-menuitem-caption { 
+.#{$primaryStyleName}-submenu .#{$primaryStyleName}-menuitem-checked .#{$primaryStyleName}-menuitem-caption { 
 	background: transparent url(img/check.gif) no-repeat left;
 }
 

@@ -1,14 +1,14 @@
-@mixin base-popupview($name : v-popupview) {
+@mixin base-popupview($primaryStyleName : v-popupview) {
 
-.#{$name} {
+.#{$primaryStyleName} {
 	cursor: pointer;
 	text-decoration: underline;
 	white-space: nowrap;
 }
-.#{$name}-popup {
+.#{$primaryStyleName}-popup {
 	overflow: auto;
 }
-.#{$name}-loading {
+.#{$primaryStyleName}-loading {
 	width: 30px;
 	height: 30px;
 	background: transparent url(../common/img/ajax-loader-medium.gif) no-repeat 50%;

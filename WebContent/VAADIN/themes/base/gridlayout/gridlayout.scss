@@ -1,34 +1,34 @@
-@mixin base-gridlayout($name : v-gridlayout) {
+@mixin base-gridlayout($primaryStyleName : v-gridlayout) {
 
-.#{$name} {
+.#{$primaryStyleName} {
 	position: relative;
 }
-.#{$name}-slot {
+.#{$primaryStyleName}-slot {
 	position: absolute;
 }
-.#{$name}-margin-top {
+.#{$primaryStyleName}-margin-top {
 	padding-top: 12px;
 }
-.#{$name}-margin-bottom {
+.#{$primaryStyleName}-margin-bottom {
 	padding-bottom: 12px;
 }
-.#{$name}-margin-left {
+.#{$primaryStyleName}-margin-left {
 	padding-left: 12px;
 } 
-.#{$name}-margin-right {
+.#{$primaryStyleName}-margin-right {
 	padding-right: 12px;
 }
-.#{$name}-spacing-on {
+.#{$primaryStyleName}-spacing-on {
 	padding-left: 6px;
 	padding-top: 6px;
 	overflow: hidden;
 }
-.#{$name}-spacing,
-.#{$name}-spacing-off {
+.#{$primaryStyleName}-spacing,
+.#{$primaryStyleName}-spacing-off {
 	padding-left: 0;
 	padding-top: 0;
 }
-.#{$name}-spacing-off {
+.#{$primaryStyleName}-spacing-off {
 	overflow: hidden;
 }
 
