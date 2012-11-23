@@ -34,9 +34,9 @@ public class DoubleValidator extends AbstractStringValidator {
      * 
      * @param errorMessage
      *            the message to display in case the value does not validate.
-     * @deprecated As of 7.0. Use a Double converter on the field instead
-     *             and/or use a {@link DoubleRangeValidator} for validating that
-     *             the value is inside a given range.
+     * @deprecated As of 7.0. Use a Double converter on the field instead and/or
+     *             use a {@link DoubleRangeValidator} for validating that the
+     *             value is inside a given range.
      */
     @Deprecated
     public DoubleValidator(String errorMessage) {

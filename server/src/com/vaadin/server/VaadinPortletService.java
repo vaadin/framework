@@ -167,7 +167,8 @@ public class VaadinPortletService extends VaadinService {
      *            the request to get a request type for
      * @return the request type
      * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future version
+     * @deprecated As of 7.0. Will likely change or be removed in a future
+     *             version
      */
     @Deprecated
     protected RequestType getRequestType(VaadinRequest request) {

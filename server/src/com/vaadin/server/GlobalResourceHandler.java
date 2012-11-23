@@ -61,9 +61,8 @@ public class GlobalResourceHandler implements RequestHandler {
 
     // APP/global/[uiid]/[type]/[id]
     private static final Matcher matcher = Pattern.compile(
-            "^/?" + ApplicationConstants.APP_PATH + '/'
-                    + RESOURCE_REQUEST_PATH + "(\\d+)/(([^/]+)(/.*))").matcher(
-            "");
+            "^/?" + ApplicationConstants.APP_PATH + '/' + RESOURCE_REQUEST_PATH
+                    + "(\\d+)/(([^/]+)(/.*))").matcher("");
 
     @Override
     public boolean handleRequest(VaadinSession session, VaadinRequest request,

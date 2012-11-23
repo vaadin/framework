@@ -64,7 +64,8 @@ import com.vaadin.util.CurrentInstance;
 public class VaadinPortlet extends GenericPortlet implements Constants {
 
     /**
-     * @deprecated As of 7.0. Will likely change or be removed in a future version
+     * @deprecated As of 7.0. Will likely change or be removed in a future
+     *             version
      */
     @Deprecated
     public static final String RESOURCE_URL_ID = "APP";
@@ -220,7 +221,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
      * This portlet parameter is used to add styles to the main element. E.g
      * "height:500px" generates a style="height:500px" to the main element.
      * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future version
+     * @deprecated As of 7.0. Will likely change or be removed in a future
+     *             version
      */
     @Deprecated
     public static final String PORTLET_PARAMETER_STYLE = "style";
@@ -229,13 +231,15 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
      * This portal parameter is used to define the name of the Vaadin theme that
      * is used for all Vaadin applications in the portal.
      * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future version
+     * @deprecated As of 7.0. Will likely change or be removed in a future
+     *             version
      */
     @Deprecated
     public static final String PORTAL_PARAMETER_VAADIN_THEME = "vaadin.theme";
 
     /**
-     * @deprecated As of 7.0. Will likely change or be removed in a future version
+     * @deprecated As of 7.0. Will likely change or be removed in a future
+     *             version
      */
     @Deprecated
     public static final String WRITE_AJAX_PAGE_SCRIPT_WIDGETSET_SHOULD_WRITE = "writeAjaxPageScriptWidgetsetShouldWrite";
@@ -295,7 +299,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
     /**
      * @author Vaadin Ltd
      * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future version
+     * @deprecated As of 7.0. Will likely change or be removed in a future
+     *             version
      */
     @Deprecated
     protected enum RequestType {
@@ -306,7 +311,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
      * @param vaadinRequest
      * @return
      * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future version
+     * @deprecated As of 7.0. Will likely change or be removed in a future
+     *             version
      */
     @Deprecated
     protected RequestType getRequestType(VaadinPortletRequest vaadinRequest) {
@@ -357,7 +363,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
      * @throws PortletException
      * @throws IOException
      * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future version
+     * @deprecated As of 7.0. Will likely change or be removed in a future
+     *             version
      */
     @Deprecated
     protected void handleRequest(PortletRequest request,
@@ -684,7 +691,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
      * @throws IOException
      *             if the writing failed due to input/output error.
      * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future version
+     * @deprecated As of 7.0. Will likely change or be removed in a future
+     *             version
      */
     @Deprecated
     void criticalNotification(VaadinPortletRequest request,

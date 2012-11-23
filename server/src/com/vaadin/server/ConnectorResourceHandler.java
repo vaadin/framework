@@ -62,8 +62,8 @@ public class ConnectorResourceHandler implements RequestHandler {
             }
 
             return true;
-        } else if (requestPath.matches('/'
-                + ApplicationConstants.APP_PATH + "(/.*)?")) {
+        } else if (requestPath.matches('/' + ApplicationConstants.APP_PATH
+                + "(/.*)?")) {
             /*
              * This should be the last request handler before we get to
              * bootstrap logic. Prevent /APP requests from reaching bootstrap

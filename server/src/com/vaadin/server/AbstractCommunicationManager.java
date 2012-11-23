@@ -112,7 +112,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * 
      * @author peholmst
      * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future version
+     * @deprecated As of 7.0. Will likely change or be removed in a future
+     *             version
      */
     @Deprecated
     public interface Callback extends Serializable {
@@ -2334,7 +2335,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
     /**
      * @return
      * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future version
+     * @deprecated As of 7.0. Will likely change or be removed in a future
+     *             version
      */
     @Deprecated
     protected abstract BootstrapHandler createBootstrapHandler();
