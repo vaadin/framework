@@ -117,6 +117,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     private long lastRequestTimestamp = System.currentTimeMillis();
 
+    private boolean closing = false;
+
     private transient WrappedSession session;
 
     private final Map<String, Object> attributes = new HashMap<String, Object>();
@@ -271,7 +273,6 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     @Deprecated
     public void removeFromSession(VaadinService service) {
         assert (getForSession(service, session) == this);
-
         session.setAttribute(
                 VaadinSession.class.getName() + "." + service.getServiceName(),
                 null);
@@ -866,23 +867,45 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     /**
-     * Closes this session and discards all associated UI state. After the
-     * session has been discarded, any UIs that have been left open will give an
-     * Out of sync error ({@link SystemMessages#getOutOfSyncCaption()}) error
-     * and a new session will be created for serving new UIs.
+     * Sets this session to be closed and all UI state to be discarded at the
+     * end of the current request, or at the end of the next request if there is
+     * no ongoing one.
+     * <p>
+     * After the session has been discarded, any UIs that have been left open
+     * will give a Session Expired error and a new session will be created for
+     * serving new UIs.
      * <p>
      * To avoid causing out of sync errors, you should typically redirect to
      * some other page using {@link Page#setLocation(String)} to make the
      * browser unload the invalidated UI.
      * <p>
      * This method is just a shorthand to
-     * {@link VaadinService#closeSession(VaadinSession)}
+     * {@link VaadinService#closeSession(VaadinSession)}.
      * 
-     * @see VaadinService#closeSession(VaadinSession)
+     * @see SystemMessages#getSessionExpiredCaption()
      * 
      */
     public void close() {
         getService().closeSession(this);
     }
 
+    /**
+     * Returns whether this session is marked to be closed.
+     * 
+     * @see #close()
+     * 
+     * @return
+     */
+    public boolean isClosing() {
+        return closing;
+    }
+
+    /**
+     * Sets whether this session is marked to be closed. For internal use only.
+     * 
+     * @param closing
+     */
+    public void setClosing(boolean closing) {
+        this.closing = closing;
+    }
 }
