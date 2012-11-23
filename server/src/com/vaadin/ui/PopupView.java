@@ -212,7 +212,7 @@ public class PopupView extends AbstractComponent implements HasComponents {
      */
     @Override
     public Iterator<Component> iterator() {
-        if (content != null) {
+        if (visibleComponent != null) {
             return Collections.singletonList(visibleComponent).iterator();
         } else {
             return Collections.<Component> emptyList().iterator();
