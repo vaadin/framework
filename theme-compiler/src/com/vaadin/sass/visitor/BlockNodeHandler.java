@@ -46,18 +46,12 @@ public class BlockNodeHandler {
 
     public static void traverse(BlockNode node) {
 
-        Node parent = node.getParentNode();
         if (node.getChildren().size() == 0) {
-            parent.removeChild(node);
-            while (parent != null && parent instanceof BlockNode
-                    && parent.getChildren().size() == 0) {
-                Node temp = parent;
-                parent = parent.getParentNode();
-                parent.removeChild(temp);
-            }
-
+            // empty blocks are removed later
             return;
         }
+
+        Node parent = node.getParentNode();
 
         if (parent instanceof BlockNode) {
             combineParentSelectorListToChild(node);

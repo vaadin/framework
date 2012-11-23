@@ -34,6 +34,7 @@ import com.vaadin.sass.handler.SCSSErrorHandler;
 import com.vaadin.sass.parser.Parser;
 import com.vaadin.sass.resolver.ScssStylesheetResolver;
 import com.vaadin.sass.resolver.VaadinResolver;
+import com.vaadin.sass.tree.BlockNode;
 import com.vaadin.sass.tree.MixinDefNode;
 import com.vaadin.sass.tree.Node;
 import com.vaadin.sass.tree.VariableNode;
@@ -136,6 +137,7 @@ public class ScssStylesheet extends Node {
         importOtherFiles(this);
         populateDefinitions(this);
         traverse(this);
+        removeEmptyBlocks(this);
     }
 
     private void importOtherFiles(ScssStylesheet node) {
@@ -197,30 +199,61 @@ public class ScssStylesheet extends Node {
         // Not used for ScssStylesheet
     }
 
-    public void traverse(Node node) {
+    /**
+     * Traverses a node and its children recursively, calling all the
+     * appropriate handlers via {@link Node#traverse()}.
+     * 
+     * The node itself may be removed during the traversal and replaced with
+     * other nodes at the same position or later on the child list of its
+     * parent.
+     * 
+     * @param node
+     *            node to traverse
+     * @return true if the node was removed (and possibly replaced by others),
+     *         false if not
+     */
+    public boolean traverse(Node node) {
+        Node originalParent = node.getParentNode();
+
         node.traverse();
 
         @SuppressWarnings("unchecked")
         HashMap<String, VariableNode> variableScope = (HashMap<String, VariableNode>) variables
                 .clone();
 
-        int maxSize = node.getChildren().size();
-        ArrayList<Node> oldChildren = new ArrayList<Node>(node.getChildren());
-        for (int i = 0; i < maxSize; i++) {
-
+        // the size of the child list may change on each iteration: current node
+        // may get deleted and possibly other nodes have been inserted where it
+        // was or after that position
+        for (int i = 0; i < node.getChildren().size(); i++) {
             Node current = node.getChildren().get(i);
-            traverse(current);
-
-            if (!node.getChildren().equals(oldChildren)) {
-                oldChildren = new ArrayList<Node>(node.getChildren());
-                maxSize = node.getChildren().size();
-                i = i - 1;
+            if (traverse(current)) {
+                // current has been removed
+                --i;
             }
-
         }
 
         variables.clear();
         variables.putAll(variableScope);
+
+        // has the node been removed from its parent?
+        if (originalParent != null) {
+            return !originalParent.getChildren().contains(node);
+        } else {
+            return false;
+        }
+    }
+
+    public void removeEmptyBlocks(Node node) {
+        // depth first for avoiding re-checking parents of removed nodes
+        for (Node child : new ArrayList<Node>(node.getChildren())) {
+            removeEmptyBlocks(child);
+        }
+        Node parent = node.getParentNode();
+        if (node instanceof BlockNode && node.getChildren().isEmpty()
+                && parent != null) {
+            // remove empty block
+            parent.removeChild(node);
+        }
     }
 
     public static void addVariable(VariableNode node) {

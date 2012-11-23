@@ -98,6 +98,11 @@ public abstract class Node implements Serializable {
 
     /**
      * Method for manipulating the data contained within the {@link Node}.
+     * 
+     * Traversing a node is allowed to modify the node, replace it with one or
+     * more nodes at the same or later position in its parent and modify the
+     * children of the node, but not modify or remove preceding nodes in its
+     * parent.
      */
     public abstract void traverse();
 
