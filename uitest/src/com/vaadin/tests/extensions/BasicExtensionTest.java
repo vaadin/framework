@@ -38,7 +38,7 @@ public class BasicExtensionTest extends AbstractTestUI {
         addComponent(new Button("Remove root extension", new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                rootExtension.removeFromTarget();
+                rootExtension.remove();
             }
         }));
     }

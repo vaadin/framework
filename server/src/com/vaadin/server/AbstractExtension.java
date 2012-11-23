@@ -55,11 +55,8 @@ public abstract class AbstractExtension extends AbstractClientConnector
         target.addExtension(this);
     }
 
-    /**
-     * Remove this extension from its target. After an extension has been
-     * removed, it can not be attached again.
-     */
-    public void removeFromTarget() {
+    @Override
+    public void remove() {
         getParent().removeExtension(this);
     }
 

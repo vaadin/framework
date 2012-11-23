@@ -29,8 +29,10 @@ package com.vaadin.server;
  * @since 7.0.0
  */
 public interface Extension extends ClientConnector {
-    /*
-     * Currently just an empty marker interface to distinguish between
-     * extensions and other connectors, e.g. components
+
+    /**
+     * Remove this extension from its target. After an extension has been
+     * removed, it cannot be attached again.
      */
+    void remove();
 }
