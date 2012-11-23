@@ -20,6 +20,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.steadystate.css.parser.SACMediaListImpl;
+import com.vaadin.sass.internal.tree.ImportNode;
 
 public class ImportNodeTest {
     @Test

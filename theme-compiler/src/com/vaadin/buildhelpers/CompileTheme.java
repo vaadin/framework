@@ -13,7 +13,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 
-import com.vaadin.sass.ScssStylesheet;
+import com.vaadin.sass.internal.ScssStylesheet;
 
 /**
  * Helper to combine css divided into separate per component dirs into one to

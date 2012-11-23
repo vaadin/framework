@@ -25,16 +25,16 @@ import org.junit.Test;
 import org.w3c.css.sac.CSSException;
 
 import com.vaadin.sass.AbstractTestBase;
-import com.vaadin.sass.ScssStylesheet;
-import com.vaadin.sass.handler.SCSSDocumentHandler;
-import com.vaadin.sass.handler.SCSSDocumentHandlerImpl;
-import com.vaadin.sass.parser.Parser;
-import com.vaadin.sass.tree.BlockNode;
-import com.vaadin.sass.tree.MixinDefNode;
-import com.vaadin.sass.tree.MixinNode;
-import com.vaadin.sass.tree.Node;
-import com.vaadin.sass.tree.controldirective.EachDefNode;
-import com.vaadin.sass.tree.controldirective.IfElseDefNode;
+import com.vaadin.sass.internal.ScssStylesheet;
+import com.vaadin.sass.internal.handler.SCSSDocumentHandler;
+import com.vaadin.sass.internal.handler.SCSSDocumentHandlerImpl;
+import com.vaadin.sass.internal.parser.Parser;
+import com.vaadin.sass.internal.tree.BlockNode;
+import com.vaadin.sass.internal.tree.MixinDefNode;
+import com.vaadin.sass.internal.tree.MixinNode;
+import com.vaadin.sass.internal.tree.Node;
+import com.vaadin.sass.internal.tree.controldirective.EachDefNode;
+import com.vaadin.sass.internal.tree.controldirective.IfElseDefNode;
 
 public class ControlDirectives extends AbstractTestBase {
 

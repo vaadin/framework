@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import com.vaadin.sass.internal.ScssStylesheet;
+
 public class SassCompiler {
 
     public static void main(String[] args) throws Exception {

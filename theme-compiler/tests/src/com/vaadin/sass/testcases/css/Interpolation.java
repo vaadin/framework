@@ -24,11 +24,11 @@ import org.junit.Test;
 import org.w3c.css.sac.CSSException;
 
 import com.vaadin.sass.AbstractTestBase;
-import com.vaadin.sass.ScssStylesheet;
-import com.vaadin.sass.handler.SCSSDocumentHandler;
-import com.vaadin.sass.handler.SCSSDocumentHandlerImpl;
-import com.vaadin.sass.parser.Parser;
-import com.vaadin.sass.tree.BlockNode;
+import com.vaadin.sass.internal.ScssStylesheet;
+import com.vaadin.sass.internal.handler.SCSSDocumentHandler;
+import com.vaadin.sass.internal.handler.SCSSDocumentHandlerImpl;
+import com.vaadin.sass.internal.parser.Parser;
+import com.vaadin.sass.internal.tree.BlockNode;
 
 public class Interpolation extends AbstractTestBase {
     String scss = "/scss/interpolation.scss";
