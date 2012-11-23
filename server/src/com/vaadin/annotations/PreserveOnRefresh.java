@@ -21,8 +21,25 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.vaadin.server.UIProvider;
+
+/**
+ * Marks a UI that should be retained when the user refreshed the browser
+ * window. By default, a new UI instance is created when refreshing, causing any
+ * UI state not captured in the URL or the URI fragment to get discarded. By
+ * adding this annotation to a UI class, the framework will instead reuse the
+ * current UI instance when a reload is detected.
+ * <p>
+ * By using
+ * {@link UIProvider#isPreservedOnRefresh(com.vaadin.server.UICreateEvent)}, the
+ * decision can also be made dynamically based on other parameters than only
+ * whether this annotation is present on the UI class.
+ * 
+ * @author Vaadin Ltd
+ * @since 7.0.0
+ */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PreserveOnRefresh {
-
+    // Empty marker annotation
 }
