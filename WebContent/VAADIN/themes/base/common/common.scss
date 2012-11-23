@@ -44,6 +44,7 @@ body &.v-app-loading {
  * Try to handle printing somehow. Reasonable printing support 
  * needs application specific planning and CSS tuning.
  */
+ /* Disabled for now, see #10336
 @media print {
 	.v-generated-body {
 		height: auto;
@@ -61,6 +62,8 @@ body &.v-app-loading {
 		overflow: visible !important;
 	}
 }
+*/
+
 .v-ui:active,
 .v-ui:focus {
 	outline: none;
