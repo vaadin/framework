@@ -1,6 +1,6 @@
-@mixin base-notification($name : v-Notification) {
+@mixin base-notification($primaryStyleName : v-Notification) {
 
-.#{$name} {
+.#{$primaryStyleName} {
 	background: #999;
 	color: #fff;
 	cursor: pointer;
@@ -9,33 +9,33 @@
 	max-width:85%;
 	
 }
-.#{$name} h1,
-.#{$name} p,
-.#{$name}-error h1,
-.#{$name}-error p,
-.#{$name}-warning h1,
-.#{$name}-warning p {
+.#{$primaryStyleName} h1,
+.#{$primaryStyleName} p,
+.#{$primaryStyleName}-error h1,
+.#{$primaryStyleName}-error p,
+.#{$primaryStyleName}-warning h1,
+.#{$primaryStyleName}-warning p {
 	display: inline;
 	margin: 0 0.5em 0 0;
 }
-.#{$name}-warning {
+.#{$primaryStyleName}-warning {
 	background: orange;
 }
-.#{$name}-error {
+.#{$primaryStyleName}-error {
 	background: red;
 }
-.#{$name}-tray h1 {
+.#{$primaryStyleName}-tray h1 {
 	display: block;
 }
-.#{$name}-tray p {
+.#{$primaryStyleName}-tray p {
 	display: block;
 }
-.#{$name}-system {
+.#{$primaryStyleName}-system {
 	background-color: red;
 	opacity: .7;
 	filter: alpha(opacity=70);
 }
-.#{$name}-system h1 {
+.#{$primaryStyleName}-system h1 {
 	display: block;
 	margin: 0;
 }

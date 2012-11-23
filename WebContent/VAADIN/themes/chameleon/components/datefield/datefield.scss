@@ -1,6 +1,6 @@
-@mixin chameleon-datefield($name : v-datefield) {
+@mixin chameleon-datefield($primaryStyleName : v-datefield) {
 
-.#{$name}-button {
+.#{$primaryStyleName}-button {
 	background: #dadada url(../../img/date-btn.png) repeat-x 50% 0;
 	border: 1px solid gray;
 	-webkit-border-top-right-radius: 3px;
@@ -16,25 +16,25 @@
 	box-sizing: content-box;
 	}
 
-.#{$name}-small .#{$name}-button {
+.#{$primaryStyleName}-small .#{$primaryStyleName}-button {
 	height: 1.2em;
 	}
 
-.#{$name}-big .#{$name}-button {
+.#{$primaryStyleName}-big .#{$primaryStyleName}-button {
 	padding: .3em 0;
 	height: 1.2em;
 	}
 
-.v-ie8 .#{$name}-button {
+.v-ie8 .#{$primaryStyleName}-button {
 	height: 1.6em;
 	padding: 0;
 	}
 
-.v-ie8 .#{$name}-big .#{$name}-button {
+.v-ie8 .#{$primaryStyleName}-big .#{$primaryStyleName}-button {
 	height: 1.8em;
 	}
 
-input.#{$name}-textfield {
+input.#{$primaryStyleName}-textfield {
 	border-right: none;
 	-webkit-border-top-right-radius: 0;
 	-webkit-border-bottom-right-radius: 0;
@@ -46,7 +46,7 @@ input.#{$name}-textfield {
 /*******************************************************************************
  * Big
  ******************************************************************************/
-.#{$name}-big .#{$name}-button {
+.#{$primaryStyleName}-big .#{$primaryStyleName}-button {
 	width: 32px;
 	background-image: url(../../img/date-btn-big.png);
 	}
@@ -55,7 +55,7 @@ input.#{$name}-textfield {
 /*******************************************************************************
  * Small
  ******************************************************************************/
-.#{$name}-small .#{$name}-button {
+.#{$primaryStyleName}-small .#{$primaryStyleName}-button {
 	width: 19px;
 	background-position: 50% -2px;
 	}
@@ -64,7 +64,7 @@ input.#{$name}-textfield {
 /*******************************************************************************
  * Calendar panel
  ******************************************************************************/
-.#{$name}-calendarpanel {
+.#{$primaryStyleName}-calendarpanel {
 	border-collapse: collapse;
 	margin: 0;
 	padding: 0;
@@ -72,34 +72,34 @@ input.#{$name}-textfield {
 	font-size: 0.9em;
 	}
 
-.#{$name}-month .#{$name}-textfield {
+.#{$primaryStyleName}-month .#{$primaryStyleName}-textfield {
 	width: 6em;
 	}
 
-.#{$name}-year .#{$name}-textfield {
+.#{$primaryStyleName}-year .#{$primaryStyleName}-textfield {
 	width: 4em;
 	}
 
-.#{$name}-year .#{$name}-calendarpanel-prevmonth,
-.#{$name}-year .#{$name}-calendarpanel-nextmonth {
+.#{$primaryStyleName}-year .#{$primaryStyleName}-calendarpanel-prevmonth,
+.#{$primaryStyleName}-year .#{$primaryStyleName}-calendarpanel-nextmonth {
 	display: none;
 	}
 
-.#{$name}-calendarpanel-header td {
+.#{$primaryStyleName}-calendarpanel-header td {
 	border-bottom: 1px solid #666;
 	}
 
-.#{$name}-year .#{$name}-calendarpanel-header td,
-.#{$name}-month .#{$name}-calendarpanel-header td {
+.#{$primaryStyleName}-year .#{$primaryStyleName}-calendarpanel-header td,
+.#{$primaryStyleName}-month .#{$primaryStyleName}-calendarpanel-header td {
 	border-bottom: none;
 	}
 
-td.#{$name}-calendarpanel-month {
+td.#{$primaryStyleName}-calendarpanel-month {
 	background: #c9c9c9 url(../../img/grad-light-top.png) repeat-x 0 -1px;
 	text-shadow: 0 1px 0 rgba(255,255,255,.7);
 	}
 
-span.#{$name}-calendarpanel-month {
+span.#{$primaryStyleName}-calendarpanel-month {
 	display: block;
 	text-align: center;
 	overflow: hidden;
@@ -107,33 +107,33 @@ span.#{$name}-calendarpanel-month {
 	height: 1.8em;
 	}
 
-.#{$name}-year .#{$name}-calendarpanel-month {
+.#{$primaryStyleName}-year .#{$primaryStyleName}-calendarpanel-month {
 	width: 5em;
 	}
 
-.#{$name}-month .#{$name}-calendarpanel-month,
-.#{$name}-day .#{$name}-calendarpanel-month,
-.#{$name}-full .#{$name}-calendarpanel-month {
+.#{$primaryStyleName}-month .#{$primaryStyleName}-calendarpanel-month,
+.#{$primaryStyleName}-day .#{$primaryStyleName}-calendarpanel-month,
+.#{$primaryStyleName}-full .#{$primaryStyleName}-calendarpanel-month {
 	width: 9em;
 	}
 
-.#{$name}-popupcalendar {
+.#{$primaryStyleName}-popupcalendar {
 	min-width: 0;
 	}
 
-.#{$name}-year .#{$name}-calendarpanel {
+.#{$primaryStyleName}-year .#{$primaryStyleName}-calendarpanel {
 	width: 8em;
 	}
 
-td.#{$name}-calendarpanel-prevyear {
+td.#{$primaryStyleName}-calendarpanel-prevyear {
 	text-align: right;
 	}
 
-td.#{$name}-calendarpanel-nextyear {
+td.#{$primaryStyleName}-calendarpanel-nextyear {
 	text-align: left;
 	}
 
-.#{$name}-calendarpanel-header button {
+.#{$primaryStyleName}-calendarpanel-header button {
 	font-size: 1em;
 	line-height: normal;
 	width: 100%;
@@ -146,51 +146,51 @@ td.#{$name}-calendarpanel-nextyear {
 	cursor: pointer;
 	}
 
-.#{$name}-popup .#{$name}-calendarpanel-month,
-.#{$name}-popup .#{$name}-calendarpanel-header button {
+.#{$primaryStyleName}-popup .#{$primaryStyleName}-calendarpanel-month,
+.#{$primaryStyleName}-popup .#{$primaryStyleName}-calendarpanel-header button {
 	background-position: 0 0;
 	}
 
-.#{$name}-calendarpanel-header button:active {
+.#{$primaryStyleName}-calendarpanel-header button:active {
 	background-image: url(../../img/grad-dark-top2.png);
 	}
 
-.#{$name}-calendarpanel-prevyear button {
+.#{$primaryStyleName}-calendarpanel-prevyear button {
 	-webkit-border-top-left-radius: 4px;
 	-moz-border-radius-topleft: 4px;
 	}
 
-.#{$name}-calendarpanel-nextyear button {
+.#{$primaryStyleName}-calendarpanel-nextyear button {
 	-webkit-border-top-right-radius: 4px;
 	-moz-border-radius-topright: 4px;
 	}
 
-.#{$name}-year .#{$name}-calendarpanel-prevyear button,
-.#{$name}-month .#{$name}-calendarpanel-prevyear button {
+.#{$primaryStyleName}-year .#{$primaryStyleName}-calendarpanel-prevyear button,
+.#{$primaryStyleName}-month .#{$primaryStyleName}-calendarpanel-prevyear button {
 	-webkit-border-bottom-left-radius: 3px;
 	-moz-border-radius-bottomleft: 3px;
 	}
 
-.#{$name}-year .#{$name}-calendarpanel-nextyear button,
-.#{$name}-month .#{$name}-calendarpanel-nextyear button {
+.#{$primaryStyleName}-year .#{$primaryStyleName}-calendarpanel-nextyear button,
+.#{$primaryStyleName}-month .#{$primaryStyleName}-calendarpanel-nextyear button {
 	-webkit-border-bottom-right-radius: 3px;
 	-moz-border-radius-bottomright: 3px;
 	}
 
-.#{$name}-calendarpanel-body,
-.#{$name}-calendarpanel-time {
+.#{$primaryStyleName}-calendarpanel-body,
+.#{$primaryStyleName}-calendarpanel-time {
 	text-align: center;
 	vertical-align: top;
 	}
 
-.#{$name}-calendarpanel-body table {
+.#{$primaryStyleName}-calendarpanel-body table {
 	border-collapse: collapse;
 	margin: 0;
 	padding: 0;
 	margin: 0 auto;
 	}
 
-.#{$name}-calendarpanel-weekdays td {
+.#{$primaryStyleName}-calendarpanel-weekdays td {
 	width: 14.2%;
 	overflow: hidden;
 	line-height: normal;
@@ -198,11 +198,11 @@ td.#{$name}-calendarpanel-nextyear {
 	vertical-align: top;
 	}
 	
-.#{$name}-calendarpanel-weeknumbers td {
+.#{$primaryStyleName}-calendarpanel-weeknumbers td {
 	width: 12.5%;
 	}
 
-.#{$name}-calendarpanel-weekdays strong {
+.#{$primaryStyleName}-calendarpanel-weekdays strong {
 	display: block;
 	text-align: right;
 	font-size: 0.8em;
@@ -214,33 +214,33 @@ td.#{$name}-calendarpanel-nextyear {
 	margin-bottom: 2px;
 	}
 
-.#{$name}-calendarpanel .v-first strong {
+.#{$primaryStyleName}-calendarpanel .v-first strong {
 	-webkit-border-bottom-left-radius: 3px;
 	-moz-border-radius-bottomleft: 3px;
 	}
 
-.#{$name}-calendarpanel .v-last strong {
+.#{$primaryStyleName}-calendarpanel .v-last strong {
 	-webkit-border-bottom-right-radius: 3px;
 	-moz-border-radius-bottomright: 3px;
 	}
 
-.#{$name}-popup .#{$name}-calendarpanel .v-first strong,
-.#{$name}-popup .#{$name}-calendarpanel .v-last strong {
+.#{$primaryStyleName}-popup .#{$primaryStyleName}-calendarpanel .v-first strong,
+.#{$primaryStyleName}-popup .#{$primaryStyleName}-calendarpanel .v-last strong {
 	-webkit-border-radius: 0;
 	-moz-border-radius: 0;
 	}
 
-.#{$name}-calendarpanel-body td {
+.#{$primaryStyleName}-calendarpanel-body td {
 	text-align: right;
 	height: 1.6em;
 	}
 
-.#{$name}-calendarpanel-weeknumber {
+.#{$primaryStyleName}-calendarpanel-weeknumber {
 	padding: .5em .5em .35em 0;
 	}
 
-.#{$name}-calendarpanel-day,
-.#{$name}-calendarpanel-day-today {
+.#{$primaryStyleName}-calendarpanel-day,
+.#{$primaryStyleName}-calendarpanel-day-today {
 	padding: .15em .5em .15em 0;
 	display: block;
 	margin: 1px 1px 1px .3em;
@@ -249,14 +249,14 @@ td.#{$name}-calendarpanel-nextyear {
 	-moz-border-radius: 2px;
 	}
 
-.#{$name}-calendarpanel-day-focused,
-.#{$name}-calendarpanel-day:hover {
+.#{$primaryStyleName}-calendarpanel-day-focused,
+.#{$primaryStyleName}-calendarpanel-day:hover {
 	margin: 0 0 0 .2em;
 	border: 1px solid #b3b3b3;
 	outline: none;
 	}
 
-.#{$name}-calendarpanel-day-today {
+.#{$primaryStyleName}-calendarpanel-day-today {
 	border: none;
 	background: transparent url(../../img/grad-dark-top2.png) repeat-x;
 	margin: 0 0 0 .2em;
@@ -264,13 +264,13 @@ td.#{$name}-calendarpanel-nextyear {
 	border: 1px solid #c9c9c9;
 	}
 
-.#{$name}-calendarpanel-day-selected,
-.#{$name}-calendarpanel-day-selected:hover {
+.#{$primaryStyleName}-calendarpanel-day-selected,
+.#{$primaryStyleName}-calendarpanel-day-selected:hover {
 	margin: 0 0 0 .3em;
 	border: none;
 	}
 
-.#{$name}-calendarpanel-time select {
+.#{$primaryStyleName}-calendarpanel-time select {
 	padding: 0;
 	font-size: 0.9em;
 	margin: 0;

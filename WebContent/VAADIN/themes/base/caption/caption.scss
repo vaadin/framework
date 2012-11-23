@@ -1,26 +1,26 @@
-@mixin base-caption($name : v-caption) {
+@mixin base-caption($primaryStyleName : v-caption) {
 
-.#{$name}wrapper {
+.#{$primaryStyleName}wrapper {
 	text-align: left; /* Force default alignment */
 }
-.#{$name} {
+.#{$primaryStyleName} {
 	overflow: hidden;
 	white-space: nowrap;
 }
 .v-errorindicator {
 	display: inline-block;
 }
-.#{$name} .v-icon {
+.#{$primaryStyleName} .v-icon {
 	display: inline-block;
 	padding-right: 2px;
 	vertical-align: middle;
 }
-.#{$name} .#{$name}text {
+.#{$primaryStyleName} .#{$primaryStyleName}text {
 	display: inline-block;
 	overflow: hidden;
 	vertical-align: middle;
 }
-.#{$name} .v-required-field-indicator {
+.#{$primaryStyleName} .v-required-field-indicator {
 	display: inline-block;
 }
 

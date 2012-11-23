@@ -1,42 +1,42 @@
-@mixin reindeer-select($name : v-filterselect) {
+@mixin reindeer-select($primaryStyleName : v-filterselect) {
 
-.#{$name} {
+.#{$primaryStyleName} {
 	height: 24px;
 	background-repeat: no-repeat;
 	background-image: url(img/left.png); /** sprite-ref: verticals; sprite-margin-bottom: 1px */
 	padding-left: 2px;
 	padding-right: 25px; /* Space for the button */
 }
-&.v-app .#{$name}-input,
-.v-window .#{$name}-input,
-.v-popupview-popup .#{$name}-input {
+&.v-app .#{$primaryStyleName}-input,
+.v-window .#{$primaryStyleName}-input,
+.v-popupview-popup .#{$primaryStyleName}-input {
 	background: transparent repeat-x;
 	background-image: url(img/center.png); /** sprite-ref: verticals; sprite-alignment: repeat; sprite-margin-bottom: 1px */
 	border: none;
 	height: 24px;
 }
 /* More specific selector to override padding */
-&.v-app input.#{$name}-input,
-.v-window input.#{$name}-input,
-.v-popupview-popup input.#{$name}-input {
+&.v-app input.#{$primaryStyleName}-input,
+.v-window input.#{$primaryStyleName}-input,
+.v-popupview-popup input.#{$primaryStyleName}-input {
 	padding: 4px 0 4px 2px;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
-.#{$name}-prompt .#{$name}-input {
+.#{$primaryStyleName}-prompt .#{$primaryStyleName}-input {
 	font-style: normal;
 }
-.#{$name}-input:focus {
+.#{$primaryStyleName}-input:focus {
 	outline: none;
 }
-.#{$name}-focus {
+.#{$primaryStyleName}-focus {
 	background-image: url(img/left-focus.png); /** sprite-ref: verticals; sprite-margin-bottom: 1px */
 }
-.#{$name}-focus .#{$name}-input {
+.#{$primaryStyleName}-focus .#{$primaryStyleName}-input {
 	background-image: url(img/center-focus.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 }
-.#{$name}-button {
+.#{$primaryStyleName}-button {
 	overflow: hidden;
 	width: 25px;
 	height: 24px;
@@ -45,26 +45,26 @@
 	cursor: default;
 	margin-right: -25px;
 }
-.#{$name}-button:hover {
+.#{$primaryStyleName}-button:hover {
 	background-image: url(img/right-hover.png); /** sprite-ref: verticals */
 }
-.#{$name}-button:active {
+.#{$primaryStyleName}-button:active {
 	background-image: url(img/right-pressed.png); /** sprite-ref: verticals */
 }
-.#{$name}-focus .#{$name}-button {
+.#{$primaryStyleName}-focus .#{$primaryStyleName}-button {
 	background-image: url(img/right-focus.png); /** sprite-ref: verticals */
 }
-.#{$name}-focus .#{$name}-button:hover {
+.#{$primaryStyleName}-focus .#{$primaryStyleName}-button:hover {
 	background-image: url(img/right-focus-hover.png); /** sprite-ref: verticals */
 }
-.#{$name}-focus .#{$name}-button:active {
+.#{$primaryStyleName}-focus .#{$primaryStyleName}-button:active {
 	background-image: url(img/right-focus-pressed.png); /** sprite-ref: verticals */
 }
-.v-disabled .#{$name}-button:hover,
-.v-readonly .#{$name}-button:hover {
+.v-disabled .#{$primaryStyleName}-button:hover,
+.v-readonly .#{$primaryStyleName}-button:hover {
 	background-image: url(img/right.png); /** sprite-ref: verticals */
 }
-.#{$name}-suggestpopup {
+.#{$primaryStyleName}-suggestpopup {
 	background: #f8f8f9;
 	border: none;
 	border-radius: 3px;
@@ -73,10 +73,10 @@
 	-o-border-radius: 3px;
 	overflow: hidden;
 }
-.#{$name}-suggestmenu {
+.#{$primaryStyleName}-suggestmenu {
 	margin: 4px 0;
 }
-.#{$name}-suggestmenu .gwt-MenuItem {
+.#{$primaryStyleName}-suggestmenu .gwt-MenuItem {
 	padding: 1px 8px;
 	height: 16px;
 	user-select: none;
@@ -84,53 +84,53 @@
 	-webkit-user-select: none;
 	cursor: default;
 }
-.v-ff .#{$name}-suggestmenu .gwt-MenuItem {
+.v-ff .#{$primaryStyleName}-suggestmenu .gwt-MenuItem {
 	height: 18px;
 }
-.#{$name}-suggestmenu .gwt-MenuItem .v-icon {
+.#{$primaryStyleName}-suggestmenu .gwt-MenuItem .v-icon {
 	margin-right: 3px;
 }
-.#{$name}-suggestmenu .gwt-MenuItem-selected {
+.#{$primaryStyleName}-suggestmenu .gwt-MenuItem-selected {
 	background: transparent repeat-x;
 	background-image: url(../common/img/sel-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	color: #fff;
 	text-shadow: #3b5a7a 0 1px 0;
 }
-.#{$name}-nextpage,
-.#{$name}-nextpage-off,
-.#{$name}-prevpage-off,
-.#{$name}-prevpage {
+.#{$primaryStyleName}-nextpage,
+.#{$primaryStyleName}-nextpage-off,
+.#{$primaryStyleName}-prevpage-off,
+.#{$primaryStyleName}-prevpage {
 	height: 11px;
 	width: 100%;
 	background: transparent;
 	margin-bottom: -4px;
 }
-.#{$name}-nextpage,
-.#{$name}-nextpage-off {
+.#{$primaryStyleName}-nextpage,
+.#{$primaryStyleName}-nextpage-off {
 	margin: -4px 0 0;
 }
-.#{$name}-nextpage:hover {
+.#{$primaryStyleName}-nextpage:hover {
 	background-repeat: repeat-x;
 	background-image: url(img/page-down-hover.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 }
-.#{$name}-prevpage:hover {
+.#{$primaryStyleName}-prevpage:hover {
 	background-repeat: repeat-x;
 	background-image: url(img/page-up-hover.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 }
-.#{$name}-nextpage:active {
+.#{$primaryStyleName}-nextpage:active {
 	background-repeat: repeat-x;
 	background-image: url(img/page-down-pressed.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 }
-.#{$name}-prevpage:active {
+.#{$primaryStyleName}-prevpage:active {
 	background-repeat: repeat-x;
 	background-image: url(img/page-up-pressed.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 }
-.#{$name}-nextpage-off span,
-.#{$name}-prevpage-off span {
+.#{$primaryStyleName}-nextpage-off span,
+.#{$primaryStyleName}-prevpage-off span {
 	display: none;
 }
-.#{$name}-nextpage span,
-.#{$name}-prevpage span {
+.#{$primaryStyleName}-nextpage span,
+.#{$primaryStyleName}-prevpage span {
 	display: block;
 	height: 11px;
 	width: 100%;
@@ -142,16 +142,16 @@
 	-moz-user-select: none;
 	-webkit-user-select: none;
 }
-.#{$name}-prevpage span {
+.#{$primaryStyleName}-prevpage span {
 	background-image: url(img/arrow-up.png); /** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
 }
-.#{$name}-nextpage:hover span {
+.#{$primaryStyleName}-nextpage:hover span {
 	background-image: url(img/arrow-down-hover.png); /** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
 }
-.#{$name}-prevpage:hover span {
+.#{$primaryStyleName}-prevpage:hover span {
 	background-image: url(img/arrow-up-hover.png); /** sprite-ref: verticals; sprite-margin-top: 3px; sprite-margin-bottom: 3px; sprite-alignment: center */
 }
-.#{$name}-status {
+.#{$primaryStyleName}-status {
 	text-shadow: #e9eaeb 0 1px 0;
 	font-size: 11px;
 	line-height: normal;
@@ -170,36 +170,36 @@
 	-webkit-user-select: none;
 }
 /* IE fails to position background images properly inside table elements */
-.v-ie .#{$name}-suggestmenu .gwt-MenuItem-selected {
+.v-ie .#{$primaryStyleName}-suggestmenu .gwt-MenuItem-selected {
 	background: transparent url(../common/img/sel-bg.png) repeat-x;
 }
-.v-ie .#{$name}-nextpage:hover {
+.v-ie .#{$primaryStyleName}-nextpage:hover {
 	background: transparent url(img/page-down-hover.png) repeat-x;
 }
-.v-ie .#{$name}-prevpage:hover {
+.v-ie .#{$primaryStyleName}-prevpage:hover {
 	background: transparent url(img/page-up-hover.png) repeat-x;
 }
-.v-ie .#{$name}-prevpage span {
+.v-ie .#{$primaryStyleName}-prevpage span {
 	background: transparent url(img/arrow-up.png) no-repeat center 3px;
 }
-.v-ie .#{$name}-nextpage span {
+.v-ie .#{$primaryStyleName}-nextpage span {
 	background: transparent url(img/arrow-down.png) no-repeat center 3px;
 }
-.v-ie .#{$name}-prevpage:hover span {
+.v-ie .#{$primaryStyleName}-prevpage:hover span {
 	background: transparent url(img/arrow-up-hover.png) no-repeat center 3px;
 }
-.v-ie .#{$name}-nextpage:hover span {
+.v-ie .#{$primaryStyleName}-nextpage:hover span {
 	background: transparent url(img/arrow-down-hover.png) no-repeat center 3px;
 }
-.v-ie .#{$name}-status {
+.v-ie .#{$primaryStyleName}-status {
 	background: transparent url(img/status-bg.png) repeat-x;
 }
 /* Filterselect with icon needs a similar fix than in buttons */
-.#{$name} .v-icon {
+.#{$primaryStyleName} .v-icon {
 	width: 16px;
 	position: relative;
 }
-.#{$name} .v-icon + .#{$name}-input {
+.#{$primaryStyleName} .v-icon + .#{$primaryStyleName}-input {
 	margin-left: -16px;
 	padding-left: 18px;
 }
@@ -208,45 +208,45 @@
 
 
 /* Combobox on black background */
-.black .#{$name} {
+.black .#{$primaryStyleName} {
 	background-image: url(img/black/left-black.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
 }
-&.v-app .black .#{$name}-input,
-.v-window .black .#{$name}-input,
-.v-window-black .#{$name}-input,
-.v-popupview-popup .black .#{$name}-input {
+&.v-app .black .#{$primaryStyleName}-input,
+.v-window .black .#{$primaryStyleName}-input,
+.v-window-black .#{$primaryStyleName}-input,
+.v-popupview-popup .black .#{$primaryStyleName}-input {
 	color: #c9ccce;
 	background-image: url(img/black/center-black.png); /** sprite-ref: black-verticals; sprite-alignment: repeat; sprite-margin-bottom: 1px */
 }
-.black .#{$name}-focus {
+.black .#{$primaryStyleName}-focus {
 	background-image: url(img/black/left-black-focus.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
 }
-.black .#{$name}-focus .#{$name}-input {
+.black .#{$primaryStyleName}-focus .#{$primaryStyleName}-input {
 	background-image: url(img/black/center-black-focus.png); /** sprite-ref: black-verticals; sprite-alignment: repeat; sprite-margin-bottom: 1px */
 }
-.black .#{$name}-button {
+.black .#{$primaryStyleName}-button {
 	background-image: url(img/black/right-black.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
 }
-.black .#{$name}-button:hover {
+.black .#{$primaryStyleName}-button:hover {
 	background-image: url(img/black/right-black-hover.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
 }
-.black .#{$name}-button:active {
+.black .#{$primaryStyleName}-button:active {
 	background-image: url(img/black/right-black-pressed.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
 }
-.black .#{$name}-focus .#{$name}-button {
+.black .#{$primaryStyleName}-focus .#{$primaryStyleName}-button {
 	background-image: url(img/black/right-black-focus.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
 }
-.black .#{$name}-focus .#{$name}-button:hover {
+.black .#{$primaryStyleName}-focus .#{$primaryStyleName}-button:hover {
 	background-image: url(img/black/right-black-focus-hover.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
 }
-.black .#{$name}-focus .#{$name}-button:active {
+.black .#{$primaryStyleName}-focus .#{$primaryStyleName}-button:active {
 	background-image: url(img/black/right-black-focus-pressed.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
 }
-.black .v-disabled .#{$name}-button:hover,
-.black .v-readonly .#{$name}-button:hover {
+.black .v-disabled .#{$primaryStyleName}-button:hover,
+.black .v-readonly .#{$primaryStyleName}-button:hover {
 	background-image: url(img/black/right-black.png); /** sprite-ref: black-verticals; sprite-margin-bottom: 1px */
 }
-.black .#{$name}-prompt .#{$name}-input {
+.black .#{$primaryStyleName}-prompt .#{$primaryStyleName}-input {
 	color: #5f6366;
 }
 

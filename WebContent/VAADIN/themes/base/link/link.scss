@@ -1,20 +1,20 @@
-@mixin base-link($name : v-link) {
+@mixin base-link($primaryStyleName : v-link) {
 
-.#{$name} {
+.#{$primaryStyleName} {
 	white-space: nowrap;	
 }
-.#{$name} a {
+.#{$primaryStyleName} a {
 	vertical-align: middle;
 	text-decoration: none;
 }
-.#{$name} span {
+.#{$primaryStyleName} span {
 	text-decoration: underline;
 	vertical-align: middle;
 }
 .v-disabled a {
 	cursor: default;
 }
-.#{$name} img {
+.#{$primaryStyleName} img {
 	vertical-align: middle;
 	border:none;
 }

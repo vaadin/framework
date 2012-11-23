@@ -1,8 +1,8 @@
-@mixin reindeer-tabsheet-scroller($name : v-tabsheet) {
+@mixin reindeer-tabsheet-scroller($primaryStyleName : v-tabsheet) {
 
 /* Tabsheet scroller styles */
 
-.#{$name}-scroller {
+.#{$primaryStyleName}-scroller {
 	height: 31px;
 	margin-top: -31px;
 	padding: 0 3px 0 4px;
@@ -13,13 +13,13 @@
 	background: transparent url(img/framed/tab-bg.png) repeat-x left -1px;
 	width: 36px;
 }
-.#{$name}-scroller button {
+.#{$primaryStyleName}-scroller button {
 	margin-top: 7px;
 }
-.#{$name}-scrollerPrev,
-.#{$name}-scrollerNext,
-.#{$name}-scrollerPrev-disabled,
-.#{$name}-scrollerNext-disabled {
+.#{$primaryStyleName}-scrollerPrev,
+.#{$primaryStyleName}-scrollerNext,
+.#{$primaryStyleName}-scrollerPrev-disabled,
+.#{$primaryStyleName}-scrollerNext-disabled {
 	border: none;
 	background: transparent;
 	background-image: url(img/tab-prev.png); /** sprite-ref: verticals */
@@ -27,26 +27,26 @@
 	height: 17px;
 	overflow: hidden;
 }
-.#{$name}-scroller button::-moz-focus-inner {
+.#{$primaryStyleName}-scroller button::-moz-focus-inner {
 	border: none;
 }
-.#{$name}-scrollerNext {
+.#{$primaryStyleName}-scrollerNext {
 	background-image: url(img/tab-next.png); /** sprite-ref: verticals */
 }
-.#{$name}-scrollerPrev:active {
+.#{$primaryStyleName}-scrollerPrev:active {
 	background-image: url(img/tab-prev-pressed.png); /** sprite-ref: verticals */
 }
-.#{$name}-scrollerNext:active {
+.#{$primaryStyleName}-scrollerNext:active {
 	background-image: url(img/tab-next-pressed.png); /** sprite-ref: verticals */
 }
-.#{$name}-scrollerPrev-disabled,
-.#{$name}-scrollerPrev-disabled:active {
+.#{$primaryStyleName}-scrollerPrev-disabled,
+.#{$primaryStyleName}-scrollerPrev-disabled:active {
 	background-image: url(img/tab-prev-disabled.png); /** sprite-ref: verticals */
 	opacity: 1;
 	filter: none;
 }
-.#{$name}-scrollerNext-disabled,
-.#{$name}-scrollerNext-disabled:active {
+.#{$primaryStyleName}-scrollerNext-disabled,
+.#{$primaryStyleName}-scrollerNext-disabled:active {
 	background-image: url(img/tab-next-disabled.png); /** sprite-ref: verticals; sprite-margin-bottom: 1px */
 	opacity: 1;
 	filter: none;

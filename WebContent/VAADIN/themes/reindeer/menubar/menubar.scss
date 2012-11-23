@@ -1,6 +1,6 @@
-@mixin reindeer-menubar($name : v-menubar) {
+@mixin reindeer-menubar($primaryStyleName : v-menubar) {
 
-.#{$name} {
+.#{$primaryStyleName} {
 	height: 23px;
 	background: #323336 repeat-x;
 	background-image: url(img/bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
@@ -8,15 +8,15 @@
 	text-shadow: rgba(0,0,0,.9) 0 1px 0;
 	padding: 0 8px;
 }
-.#{$name} .#{$name}-menuitem {
+.#{$primaryStyleName} .#{$primaryStyleName}-menuitem {
 	padding: 3px 8px;
 	height: 17px;
 	line-height: 16px;
 }
-.#{$name} .#{$name}-menuitem:hover {
+.#{$primaryStyleName} .#{$primaryStyleName}-menuitem:hover {
 	color: #fff;
 }
-.#{$name}-submenu {
+.#{$primaryStyleName}-submenu {
 	background: #f8f8f9;
 	border: none;
 	border-radius: 3px;
@@ -26,50 +26,50 @@
 	overflow: hidden;
 	padding: 4px 0;
 }
-.#{$name}-submenu .#{$name}-menuitem {
+.#{$primaryStyleName}-submenu .#{$primaryStyleName}-menuitem {
 	padding: 1px 26px 1px 10px;
 	line-height: 16px;
 }
-.#{$name}-submenu .#{$name}-menuitem-caption .v-icon { 
+.#{$primaryStyleName}-submenu .#{$primaryStyleName}-menuitem-caption .v-icon { 
 	vertical-align: middle;
 }
-.#{$name} .#{$name}-menuitem-selected,
-.#{$name}-submenu .#{$name}-menuitem-selected {
+.#{$primaryStyleName} .#{$primaryStyleName}-menuitem-selected,
+.#{$primaryStyleName}-submenu .#{$primaryStyleName}-menuitem-selected {
 	background: #4d749f repeat-x;
 	background-image: url(../common/img/sel-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	color: #fff;
 	text-shadow: 0 1px 0 #3b5a7a;
 }
-.#{$name} .#{$name}-menuitem-selected {
+.#{$primaryStyleName} .#{$primaryStyleName}-menuitem-selected {
 	background-image: url(img/menu-sel-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat; sprite-margin-bottom: 1px  */
 }
-.#{$name}-submenu .#{$name}-submenu-indicator {
+.#{$primaryStyleName}-submenu .#{$primaryStyleName}-submenu-indicator {
 	background: transparent url(img/submenu-icon.png) no-repeat right 70%;
 	width: 26px;
 	height: 16px;
 	text-indent: -9999px;
 }
-.#{$name}-submenu .#{$name}-menuitem-selected .#{$name}-submenu-indicator {
+.#{$primaryStyleName}-submenu .#{$primaryStyleName}-menuitem-selected .#{$primaryStyleName}-submenu-indicator {
 	background-image: url(img/submenu-icon-hover.png);
 }
 
 /* Checkboxes for checkable/checked menu items */
-.#{$name}-submenu-check-column .#{$name}-menuitem {
+.#{$primaryStyleName}-submenu-check-column .#{$primaryStyleName}-menuitem {
 	padding-left: 6px;
 }
-.#{$name}-submenu-check-column .#{$name}-menuitem-caption {
+.#{$primaryStyleName}-submenu-check-column .#{$primaryStyleName}-menuitem-caption {
 	padding-left: 18px;
 }
-.#{$name}-submenu .#{$name}-menuitem-checked .#{$name}-menuitem-caption { 
+.#{$primaryStyleName}-submenu .#{$primaryStyleName}-menuitem-checked .#{$primaryStyleName}-menuitem-caption { 
 	background: transparent url(img/checked.png) no-repeat left;
 }
-.#{$name}-submenu .#{$name}-menuitem-unchecked .#{$name}-menuitem-caption {
+.#{$primaryStyleName}-submenu .#{$primaryStyleName}-menuitem-unchecked .#{$primaryStyleName}-menuitem-caption {
 	background: transparent url(img/unchecked.png) no-repeat left;
 }
-.#{$name}-submenu .#{$name}-menuitem-selected-checked .#{$name}-menuitem-caption { 
+.#{$primaryStyleName}-submenu .#{$primaryStyleName}-menuitem-selected-checked .#{$primaryStyleName}-menuitem-caption { 
 	background: transparent url(img/checked-selected.png) no-repeat left;
 }
-.#{$name}-submenu .#{$name}-menuitem-selected-unchecked .#{$name}-menuitem-caption {
+.#{$primaryStyleName}-submenu .#{$primaryStyleName}-menuitem-selected-unchecked .#{$primaryStyleName}-menuitem-caption {
 	background: transparent url(img/unchecked-selected.png) no-repeat left;
 }
 

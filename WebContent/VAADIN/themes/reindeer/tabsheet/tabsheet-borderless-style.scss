@@ -1,22 +1,22 @@
-@mixin reindeer-tabsheet-borderless-style($name : v-tabsheet-borderless) {
+@mixin reindeer-tabsheet-borderless-style($primaryStyleName : v-tabsheet-borderless) {
 
-.#{$name} .v-tabsheet-tabitemcell-first {
+.#{$primaryStyleName} .v-tabsheet-tabitemcell-first {
 	padding-left: 7px;
 	background: url(img/framed/tab-first-left.png) no-repeat -3px 0;
 }
-.#{$name} .v-tabsheet-tabitemcell-selected-first {
+.#{$primaryStyleName} .v-tabsheet-tabitemcell-selected-first {
 	background: url(img/framed/tab-first-left-sel.png) no-repeat -3px 0;
 }
-.#{$name} .v-tabsheet-spacertd div {
+.#{$primaryStyleName} .v-tabsheet-spacertd div {
 	margin-right: 0;
 }
-.#{$name} .v-tabsheet-spacertd {
+.#{$primaryStyleName} .v-tabsheet-spacertd {
 	background: transparent;
 }
-.#{$name} .v-tabsheet-content {
+.#{$primaryStyleName} .v-tabsheet-content {
 	border: none;
 }
-.#{$name} .v-tabsheet-deco {
+.#{$primaryStyleName} .v-tabsheet-deco {
 	height: 0;
 	border-top: none;
 }

@@ -1,37 +1,37 @@
-@mixin reindeer-button-small-style($name : v-button) {
+@mixin reindeer-button-small-style($primaryStyleName : v-button) {
 
-.#{$name}-small:focus {
+.#{$primaryStyleName}-small:focus {
 	background-image: url(img/small-left-focus.png); /** sprite-ref: buttons */
 	}
 	
-.#{$name}-small:focus .#{$name}-wrap {
+.#{$primaryStyleName}-small:focus .#{$primaryStyleName}-wrap {
 	background-image: url(img/small-right-focus.png); /** sprite-ref: buttons; sprite-alignment: right */
 	}
 	
-.#{$name}-small:active,
-.#{$name}-small.v-pressed {
+.#{$primaryStyleName}-small:active,
+.#{$primaryStyleName}-small.v-pressed {
 	background-image: url(img/small-left-pressed.png); /** sprite-ref: buttons */
 	}
 
-.#{$name}-small:active .#{$name}-wrap,
-.#{$name}-small.v-pressed .#{$name}-wrap {
+.#{$primaryStyleName}-small:active .#{$primaryStyleName}-wrap,
+.#{$primaryStyleName}-small.v-pressed .#{$primaryStyleName}-wrap {
 	background-image: url(img/small-right-pressed.png); /** sprite-ref: buttons; sprite-alignment: right */
 	}
 
-.#{$name}-small,
-.v-disabled.#{$name}-small {
+.#{$primaryStyleName}-small,
+.v-disabled.#{$primaryStyleName}-small {
 	background-image: url(img/small-left.png); /** sprite-ref: buttons */
 	height: 20px;
 	}
 	
-.#{$name}-small .#{$name}-wrap,
-.v-disabled.#{$name}-small .#{$name}-wrap {
+.#{$primaryStyleName}-small .#{$primaryStyleName}-wrap,
+.v-disabled.#{$primaryStyleName}-small .#{$primaryStyleName}-wrap {
 	background-image: url(img/small-right.png); /** sprite-ref: buttons; sprite-alignment: right */
 	height: 19px;
 	padding: 1px 14px 0 8px;
 	}
 
-.#{$name}-small .#{$name}-caption {
+.#{$primaryStyleName}-small .#{$primaryStyleName}-caption {
 	font-weight: normal;
 	}
 	
@@ -40,31 +40,31 @@
 
 /* Black style */
 
-.black .#{$name}-small:focus {
+.black .#{$primaryStyleName}-small:focus {
 	background-image: url(img/black/small-left-focus.png); /** sprite-ref: black-buttons */
 	}
 	
-.black .#{$name}-small:focus .#{$name}-wrap {
+.black .#{$primaryStyleName}-small:focus .#{$primaryStyleName}-wrap {
 	background-image: url(img/black/small-right-focus.png); /** sprite-ref: black-buttons; sprite-alignment: right */
 	}
 	
-.black .#{$name}-small:active,
-.black .#{$name}-small.v-pressed {
+.black .#{$primaryStyleName}-small:active,
+.black .#{$primaryStyleName}-small.v-pressed {
 	background-image: url(img/black/small-left-pressed.png); /** sprite-ref: black-buttons */
 	}
 	
-.black .#{$name}-small:active .#{$name}-wrap,
-.black .#{$name}-small.v-pressed .#{$name}-wrap {
+.black .#{$primaryStyleName}-small:active .#{$primaryStyleName}-wrap,
+.black .#{$primaryStyleName}-small.v-pressed .#{$primaryStyleName}-wrap {
 	background-image: url(img/black/small-right-pressed.png); /** sprite-ref: black-buttons; sprite-alignment: right */
 	}
 
-.black .#{$name}-small,
-.black .v-disabled.#{$name}-small {
+.black .#{$primaryStyleName}-small,
+.black .v-disabled.#{$primaryStyleName}-small {
 	background-image: url(img/black/small-left.png); /** sprite-ref: black-buttons */
 	}
 	
-.black .#{$name}-small .#{$name}-wrap,
-.black .v-disabled.#{$name}-small .#{$name}-wrap {
+.black .#{$primaryStyleName}-small .#{$primaryStyleName}-wrap,
+.black .v-disabled.#{$primaryStyleName}-small .#{$primaryStyleName}-wrap {
 	background-image: url(img/black/small-right.png); /** sprite-ref: black-buttons; sprite-alignment: right */
 	}
 

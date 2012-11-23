@@ -1,6 +1,6 @@
-@mixin base-customlayout($name : v-customlayout) {
+@mixin base-customlayout($primaryStyleName : v-customlayout) {
 
-.#{$name} {
+.#{$primaryStyleName} {
 	overflow: hidden;
 }
 
