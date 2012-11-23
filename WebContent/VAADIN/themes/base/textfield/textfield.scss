@@ -46,8 +46,8 @@ textarea.v-textarea-readonly:focus {
 }
 */
 /* Safari focus glow fix */
-.v-sa & input:focus, 
-.v-sa & textarea:focus {
+.v-webkit & input:focus, 
+.v-webkit & textarea:focus {
 	outline-width: medium;
 }
 
