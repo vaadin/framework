@@ -18,7 +18,8 @@ package com.vaadin.shared.ui;
 
 import com.vaadin.shared.AbstractComponentState;
 
-public class BrowserPopupExtensionState extends AbstractComponentState {
+public class BrowserWindowOpenerState extends AbstractComponentState {
+    public static final String locationResource = "url";
 
     public String target = "_blank";
 
