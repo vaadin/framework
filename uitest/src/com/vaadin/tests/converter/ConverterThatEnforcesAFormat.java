@@ -1,5 +1,7 @@
 package com.vaadin.tests.converter;
 
+import java.util.Locale;
+
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.TestBase;
@@ -14,8 +16,9 @@ public class ConverterThatEnforcesAFormat extends TestBase {
     protected void setup() {
         final TextField tf = new TextField(
                 "This field should always be formatted with 3 digits");
+        tf.setLocale(Locale.ENGLISH);
         tf.setConverter(new StringToDoubleConverterWithThreeFractionDigits());
-        tf.addListener(new ValueChangeListener() {
+        tf.addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
                 log.log("Value changed to "
