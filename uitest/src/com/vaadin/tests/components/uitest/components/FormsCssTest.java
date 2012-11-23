@@ -23,7 +23,9 @@ public class FormsCssTest extends HorizontalLayout {
         FieldGroup fg = new BeanFieldGroup<Person>(Person.class);
         fg.setItemDataSource(new BeanItem<Person>(new Person()));
         for (Object propId : fg.getUnboundPropertyIds()) {
-            vl.addComponent(fg.buildAndBind(propId));
+            if (!"address".equals(propId)) {
+                vl.addComponent(fg.buildAndBind(propId));
+            }
         }
 
         addComponent(vl);
