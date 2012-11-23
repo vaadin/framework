@@ -615,6 +615,13 @@ public class VaadinServlet extends HttpServlet implements Constants {
                     ';' }));
 
     /**
+     * Mutex for preventing to scss compilations to take place simultaneously.
+     * This is a workaround needed as the scss compiler currently is not thread
+     * safe (#10292).
+     */
+    private static final Object SCSS_MUTEX = new Object();
+
+    /**
      * Returns the default theme. Must never return null.
      * 
      * @return
@@ -928,44 +935,47 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // Handled, return true so no further processing is done
             return true;
         }
-        String realFilename = sc.getRealPath(scssFilename);
-        ScssStylesheet scss = ScssStylesheet.get(realFilename);
-        if (scss == null) {
-            // Not a file in the file system (WebContent directory). Use the
-            // identifier directly (VAADIN/themes/.../styles.css) so
-            // ScssStylesheet will try using the class loader.
-            if (scssFilename.startsWith("/")) {
-                scssFilename = scssFilename.substring(1);
+        synchronized (SCSS_MUTEX) {
+            String realFilename = sc.getRealPath(scssFilename);
+            ScssStylesheet scss = ScssStylesheet.get(realFilename);
+            if (scss == null) {
+                // Not a file in the file system (WebContent directory). Use the
+                // identifier directly (VAADIN/themes/.../styles.css) so
+                // ScssStylesheet will try using the class loader.
+                if (scssFilename.startsWith("/")) {
+                    scssFilename = scssFilename.substring(1);
+                }
+
+                scss = ScssStylesheet.get(scssFilename);
             }
 
-            scss = ScssStylesheet.get(scssFilename);
-        }
+            if (scss == null) {
+                getLogger()
+                        .warning(
+                                "Scss file "
+                                        + scssFilename
+                                        + " exists but ScssStylesheet was not able to find it");
+                return false;
+            }
+            try {
+                getLogger().fine(
+                        "Compiling " + realFilename + " for request to "
+                                + filename);
+                scss.compile();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
 
-        if (scss == null) {
-            getLogger()
-                    .warning(
-                            "Scss file "
-                                    + scssFilename
-                                    + " exists but ScssStylesheet was not able to find it");
-            return false;
-        }
-        try {
-            getLogger()
-                    .fine("Compiling " + realFilename + " for request to "
-                            + filename);
-            scss.compile();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+            // This is for development mode only so instruct the browser to
+            // never
+            // cache it
+            response.setHeader("Cache-Control", "no-cache");
+            final String mimetype = getService().getMimeType(filename);
+            writeResponse(response, mimetype, scss.toString());
 
-        // This is for development mode only so instruct the browser to never
-        // cache it
-        response.setHeader("Cache-Control", "no-cache");
-        final String mimetype = getService().getMimeType(filename);
-        writeResponse(response, mimetype, scss.toString());
-
-        return true;
+            return true;
+        }
     }
 
     /**
