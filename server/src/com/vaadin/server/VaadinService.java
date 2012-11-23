@@ -733,21 +733,25 @@ public abstract class VaadinService implements Serializable {
             VaadinRequest request, Class<? extends UI> uiClass);
 
     /**
-     * Closes the VaadinServiceSession and discards all associated UI state.
+     * Sets the given session to be closed and all its UI state to be discarded
+     * at the end of the current request, or at the end of the next request if
+     * there is no ongoing one.
+     * <p>
      * After the session has been discarded, any UIs that have been left open
-     * will give an Out of sync error (
-     * {@link SystemMessages#getOutOfSyncCaption()}) error and a new session
-     * will be created for serving new UIs.
+     * will give a Session Expired error and a new session will be created for
+     * serving new UIs.
      * <p>
      * To avoid causing out of sync errors, you should typically redirect to
      * some other page using {@link Page#setLocation(String)} to make the
      * browser unload the invalidated UI.
      * 
+     * @see SystemMessages#getSessionExpiredCaption()
+     * 
      * @param session
      *            the session to close
      */
     public void closeSession(VaadinSession session) {
-        session.removeFromSession(this);
+        session.setClosing(true);
     }
 
     /**
@@ -763,8 +767,11 @@ public abstract class VaadinService implements Serializable {
             removeClosedUIs(session);
         } else {
             getLogger().fine(
-                    "Closed inactive session " + session.getSession().getId());
-            closeSession(session);
+                    "Closing inactive session " + session.getSession().getId());
+            if (!session.isClosing()) {
+                closeSession(session);
+            }
+            session.removeFromSession(this);
         }
     }
 
@@ -874,19 +881,24 @@ public abstract class VaadinService implements Serializable {
     /**
      * Returns whether the given session is active or whether it can be closed.
      * <p>
-     * A session is always active if
-     * {@link #getUidlRequestTimeout(VaadinSession) getUidlRequestTimeout} is
-     * negative. Otherwise, it is active if and only if the timeout has not
-     * expired.
+     * A session is active if and only if its {@link #isClosing} returns false
+     * and {@link #getUidlRequestTimeout(VaadinSession) getUidlRequestTimeout}
+     * is negative or has not yet expired.
      * 
      * @param session
      *            The session whose status to check
+     * 
      * @return true if the session is active, false if it could be closed.
      */
     private boolean isSessionActive(VaadinSession session) {
-        long now = System.currentTimeMillis();
-        int timeout = 1000 * getUidlRequestTimeout(session);
-        return timeout < 0 || now - session.getLastRequestTimestamp() < timeout;
+        if (session.isClosing()) {
+            return false;
+        } else {
+            long now = System.currentTimeMillis();
+            int timeout = 1000 * getUidlRequestTimeout(session);
+            return timeout < 0
+                    || now - session.getLastRequestTimestamp() < timeout;
+        }
     }
 
     private static final Logger getLogger() {

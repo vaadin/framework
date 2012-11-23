@@ -58,7 +58,7 @@ public class CloseSession extends AbstractTestUI {
 
         addComponent(log);
         addComponent(new Button(
-                "Close VaadinServiceSession and redirect to Google",
+                "Close VaadinServiceSession and redirect elsewhere",
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
