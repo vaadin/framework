@@ -1,6 +1,6 @@
-@mixin base-treetable($name : v-treetable) {
+@mixin base-treetable($primaryStyleName : v-treetable) {
 
-.#{$name}-treespacer {
+.#{$primaryStyleName}-treespacer {
     display: inline-block;
     background: transparent;
     height: 10px;
@@ -11,58 +11,58 @@
     top: 5px;
 }
 
-.#{$name}-node-closed {
+.#{$primaryStyleName}-node-closed {
     background: url(../treetable/img/arrow-right.png) right top no-repeat;
 }
 
-.#{$name}-node-open {
+.#{$primaryStyleName}-node-open {
     background: url(../treetable/img/arrow-down.png) right top no-repeat;
 }
 
-.#{$name} .v-checkbox {
+.#{$primaryStyleName} .v-checkbox {
 	display: inline-block;
 	padding-bottom: 4px;
 }
 
-.#{$name} .v-table-row .v-table-cell-content,
-.#{$name} .v-table-row-odd .v-table-cell-content {
+.#{$primaryStyleName} .v-table-row .v-table-cell-content,
+.#{$primaryStyleName} .v-table-row-odd .v-table-cell-content {
     position: relative;
     z-index: 10;
 }
 
-.#{$name} .v-table-cell-wrapper {
+.#{$primaryStyleName} .v-table-cell-wrapper {
 	position: relative;
 }
 
-.#{$name} .v-table-body .v-table-table .v-table-row-animating {
+.#{$primaryStyleName} .v-table-body .v-table-table .v-table-row-animating {
 	zoom:1;
 	z-index:1;
 }
 
-.#{$name} .v-table-body .v-table-table .v-table-row-animating,
-.#{$name} .v-table-body .v-table-table .v-table-row-animating .v-table-cell-content {
+.#{$primaryStyleName} .v-table-body .v-table-table .v-table-row-animating,
+.#{$primaryStyleName} .v-table-body .v-table-table .v-table-row-animating .v-table-cell-content {
     background:transparent;
 }
 
-.#{$name}-animation-clone {
+.#{$primaryStyleName}-animation-clone {
 	border-spacing: 0;
 	zoom:1;
 }
 
-div.#{$name}-animation-clone-wrapper {
+div.#{$primaryStyleName}-animation-clone-wrapper {
 	position: absolute;
     z-index: 2;
     background-color:#fff;
 }
 
-div.#{$name}-animation-clone-wrapper table.#{$name}-animation-clone {
+div.#{$primaryStyleName}-animation-clone-wrapper table.#{$primaryStyleName}-animation-clone {
     background-color:#fff;
 }
 
-div table.#{$name}-animation-clone tr.v-table-row,
-div table.#{$name}-animation-clone tr.v-table-row-odd,
-div table.#{$name}-animation-clone tr.v-table-row td.v-table-cell-content,
-div table.#{$name}-animation-clone tr.v-table-row-odd td.v-table-cell-content {
+div table.#{$primaryStyleName}-animation-clone tr.v-table-row,
+div table.#{$primaryStyleName}-animation-clone tr.v-table-row-odd,
+div table.#{$primaryStyleName}-animation-clone tr.v-table-row td.v-table-cell-content,
+div table.#{$primaryStyleName}-animation-clone tr.v-table-row-odd td.v-table-cell-content {
 	visibility: visible;
 }
 

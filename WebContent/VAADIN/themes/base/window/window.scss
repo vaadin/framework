@@ -1,29 +1,29 @@
-@mixin base-window($name : v-window) {
+@mixin base-window($primaryStyleName : v-window) {
 
-.#{$name} {
+.#{$primaryStyleName} {
 	background: #fff;
 }
-.#{$name}-contents {
+.#{$primaryStyleName}-contents {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
-.#{$name}.v-has-width > div.popupContent,
-.#{$name}.v-has-width .#{$name}-wrap,
-.#{$name}.v-has-width .#{$name}-contents,
-.#{$name}.v-has-width .#{$name}-contents > div {
+.#{$primaryStyleName}.v-has-width > div.popupContent,
+.#{$primaryStyleName}.v-has-width .#{$primaryStyleName}-wrap,
+.#{$primaryStyleName}.v-has-width .#{$primaryStyleName}-contents,
+.#{$primaryStyleName}.v-has-width .#{$primaryStyleName}-contents > div {
 	width: 100%;
 }
 
-.#{$name}.v-has-height > div.popupContent,
-.#{$name}.v-has-height .#{$name}-wrap,
-.#{$name}.v-has-height .#{$name}-contents,
-.#{$name}.v-has-height .#{$name}-contents > div {
+.#{$primaryStyleName}.v-has-height > div.popupContent,
+.#{$primaryStyleName}.v-has-height .#{$primaryStyleName}-wrap,
+.#{$primaryStyleName}.v-has-height .#{$primaryStyleName}-contents,
+.#{$primaryStyleName}.v-has-height .#{$primaryStyleName}-contents > div {
 	height: 100%;
 }
 
-.#{$name}-outerheader {
+.#{$primaryStyleName}-outerheader {
 	padding: 0.3em 1em;
 	height: 1.6em;
 	position: relative;
@@ -32,35 +32,35 @@
 	box-sizing: border-box;
 }
 
-.#{$name}-outerheader,
-.#{$name}-draggingCurtain {
+.#{$primaryStyleName}-outerheader,
+.#{$primaryStyleName}-draggingCurtain {
  	cursor: move;	
 }
-.#{$name}-header {
+.#{$primaryStyleName}-header {
 	font-weight: bold;
 }
 /* A more specific selector to make sure padding isn't so easily overridden */
-div.#{$name}-header {
+div.#{$primaryStyleName}-header {
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	-ms-text-overflow: ellipsis;
 	overflow: hidden;
 	padding: 0;
 }
-.#{$name}-header .v-icon {
+.#{$primaryStyleName}-header .v-icon {
 	vertical-align: middle; /* This has to be 'middle', not 'bottom', to allow larger icons than 16px */
 }
-.#{$name}-contents > div {
+.#{$primaryStyleName}-contents > div {
 	outline: none;
 }
-.#{$name}-footer {
+.#{$primaryStyleName}-footer {
 	overflow: hidden;
 	zoom: 1;
 	height: 10px;
 	position: relative;
 	cursor: move;
 }
-.#{$name}-resizebox {
+.#{$primaryStyleName}-resizebox {
 	width: 10px;
 	height: 10px;
 	background: #ddd;
@@ -69,19 +69,19 @@ div.#{$name}-header {
 	right: 0;
 }
 
-.#{$name}-resizebox,
-.#{$name}-resizingCurtain {
+.#{$primaryStyleName}-resizebox,
+.#{$primaryStyleName}-resizingCurtain {
 	cursor: se-resize;
 }
 
-.#{$name} div.#{$name}-footer-noresize {
+.#{$primaryStyleName} div.#{$primaryStyleName}-footer-noresize {
 	height: 0;
 }
-.#{$name}-resizebox-disabled {
+.#{$primaryStyleName}-resizebox-disabled {
 	cursor: default;
 	display: none;
 }
-.#{$name}-closebox {
+.#{$primaryStyleName}-closebox {
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -91,7 +91,7 @@ div.#{$name}-header {
 	cursor: pointer;
 	overflow: hidden;
 }
-.#{$name}-modalitycurtain {
+.#{$primaryStyleName}-modalitycurtain {
 	top: 0;
 	left: 0;
 	background: #999;

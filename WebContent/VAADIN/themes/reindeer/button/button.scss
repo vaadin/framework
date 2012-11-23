@@ -6,7 +6,7 @@
 @import "button-small-style.scss";
 @import "button-link-style.scss";
 
-@mixin reindeer-button($name : v-button) {
+@mixin reindeer-button($primaryStyleName : v-button) {
 	// TODO use $exclude 
 	@include reindeer-button-standard;
 	@include reindeer-button-primary-style;

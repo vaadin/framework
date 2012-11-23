@@ -1,9 +1,9 @@
-@mixin base-button($name : v-button) {
+@mixin base-button($primaryStyleName : v-button) {
 
 /*
  * Default button (more customizable)
  * -------------------------------------- */
-.#{$name} {
+.#{$primaryStyleName} {
 	display: inline-block;
 	zoom: 1;
 	text-align: center !important;
@@ -26,12 +26,12 @@
 	box-sizing: border-box;
 }
 
-.#{$name}.v-disabled {
+.#{$primaryStyleName}.v-disabled {
 	cursor: default;
 }
 
-.#{$name}-wrap,
-.#{$name}-caption {
+.#{$primaryStyleName}-wrap,
+.#{$primaryStyleName}-caption {
 	vertical-align: baseline;
 	white-space: nowrap;
 	font: inherit;
@@ -39,13 +39,13 @@
 	line-height: normal;
 	}
 
-.#{$name} .v-icon {
+.#{$primaryStyleName} .v-icon {
 	vertical-align: middle;
 	margin-right: 3px;
 	border: none;
 	}
 
-.#{$name} .v-errorindicator {
+.#{$primaryStyleName} .v-errorindicator {
 	display: inline-block;
 	zoom: 1;
 	vertical-align: middle;
@@ -53,7 +53,7 @@
 }
 
 /* Link style (we really should deprecate this) */
-.#{$name}-link {
+.#{$primaryStyleName}-link {
 	border: none;
 	text-align: left !important;
 	background: transparent;
@@ -66,11 +66,11 @@
 }
 
 /* Inset Safari focus outline a bit */
-.v-sa .#{$name}-link:focus{
+.v-sa .#{$primaryStyleName}-link:focus{
 	outline-offset: -3px;
 	}
 
-.#{$name}-link .#{$name}-caption {
+.#{$primaryStyleName}-link .#{$primaryStyleName}-caption {
 	text-decoration: underline;
 	color: inherit;
 	text-align: left;

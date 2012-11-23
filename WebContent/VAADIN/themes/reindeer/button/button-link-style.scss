@@ -1,15 +1,15 @@
-@mixin reindeer-button-link-style($name : v-button) {
+@mixin reindeer-button-link-style($primaryStyleName : v-button) {
 
-.#{$name}.#{$name}-link,
-.#{$name}.#{$name}-link:focus,
-.#{$name}.#{$name}-link:active,
-.#{$name}-link.v-pressed,
-.v-disabled.#{$name}.#{$name}-link,
-.#{$name}.#{$name}-link .#{$name}-wrap,
-.#{$name}.#{$name}-link:focus .#{$name}-wrap,
-.#{$name}.#{$name}-link:active .#{$name}-wrap,
-.#{$name}-link.v-pressed .#{$name}-wrap,
-.v-disabled.#{$name}.#{$name}-link .#{$name}-wrap {
+.#{$primaryStyleName}.#{$primaryStyleName}-link,
+.#{$primaryStyleName}.#{$primaryStyleName}-link:focus,
+.#{$primaryStyleName}.#{$primaryStyleName}-link:active,
+.#{$primaryStyleName}-link.v-pressed,
+.v-disabled.#{$primaryStyleName}.#{$primaryStyleName}-link,
+.#{$primaryStyleName}.#{$primaryStyleName}-link .#{$primaryStyleName}-wrap,
+.#{$primaryStyleName}.#{$primaryStyleName}-link:focus .#{$primaryStyleName}-wrap,
+.#{$primaryStyleName}.#{$primaryStyleName}-link:active .#{$primaryStyleName}-wrap,
+.#{$primaryStyleName}-link.v-pressed .#{$primaryStyleName}-wrap,
+.v-disabled.#{$primaryStyleName}.#{$primaryStyleName}-link .#{$primaryStyleName}-wrap {
 	background: transparent;
 	height: auto;
 	padding: 0;
@@ -17,12 +17,12 @@
 	line-height: inherit;
 	}
 
-.#{$name}.#{$name}-link.v-disabled,
-.#{$name}.#{$name}-link.v-disabled .#{$name}-wrap {
+.#{$primaryStyleName}.#{$primaryStyleName}-link.v-disabled,
+.#{$primaryStyleName}.#{$primaryStyleName}-link.v-disabled .#{$primaryStyleName}-wrap {
 	cursor: default;
 	}
 	
-.#{$name}-link .#{$name}-caption {
+.#{$primaryStyleName}-link .#{$primaryStyleName}-caption {
 	line-height: inherit;
 	font-weight: normal;
 	color: #1b699f;
@@ -30,7 +30,7 @@
 	text-shadow: none;
 	}
 	
-.#{$name}-link:focus .#{$name}-caption {
+.#{$primaryStyleName}-link:focus .#{$primaryStyleName}-caption {
 	outline: 1px dotted #1b699f;
 	}
 

@@ -1,21 +1,21 @@
-@mixin base-checkbox($name : v-checkbox) {
+@mixin base-checkbox($primaryStyleName : v-checkbox) {
 
- .#{$name} {
+ .#{$primaryStyleName} {
  	display: block;
  }
 
-.#{$name},
-.#{$name} label,
-.#{$name} input,
-.#{$name} .v-icon {
+.#{$primaryStyleName},
+.#{$primaryStyleName} label,
+.#{$primaryStyleName} input,
+.#{$primaryStyleName} .v-icon {
 	vertical-align: middle;
 	white-space: nowrap;
 }
 
-.#{$name} .v-icon {
+.#{$primaryStyleName} .v-icon {
 	margin: 0 2px;
 }
-.#{$name} .v-errorindicator {
+.#{$primaryStyleName} .v-errorindicator {
 	float: none;
 	display: inline;
 	display: inline-block;
@@ -24,12 +24,12 @@
 
 
 /* Disabled by default
-.#{$name}-error {
+.#{$primaryStyleName}-error {
 	background: #ffe0e0;
 }
 */
 /* Disabled by default
-.#{$name}-required {
+.#{$primaryStyleName}-required {
 	background: #ffe0e0;
 }
 */

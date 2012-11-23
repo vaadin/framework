@@ -1,6 +1,6 @@
-@mixin base-embedded($name : v-embedded) {
+@mixin base-embedded($primaryStyleName : v-embedded) {
 
-.v-table .#{$name}-image {
+.v-table .#{$primaryStyleName}-image {
     /* make embeddeds be centered in centered table cells. */
 	display: inline-block;
 }

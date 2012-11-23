@@ -1,41 +1,41 @@
-@mixin reindeer-tabsheet-minimal-style($name : v-tabsheet) {
+@mixin reindeer-tabsheet-minimal-style($primaryStyleName : v-tabsheet) {
 
 /**
  * Tabsheet "minimal" style --------------
  */
 
 /* Minimal tabsheet on blue background */
-.blue .#{$name}-tabs-minimal .#{$name}-spacertd div,
-.blue .#{$name}-tabs-minimal .#{$name}-tabitem,
-.blue .#{$name}-tabs-minimal .#{$name}-tabitem-selected  {
+.blue .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-spacertd div,
+.blue .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-tabitem,
+.blue .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-tabitem-selected  {
 	border-color: #7c8a91;
 }
-.blue .#{$name}-tabs-minimal .#{$name}-caption-close {
+.blue .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close {
 	color: #7c8a91;
 }
-.blue .#{$name}-tabs-minimal .#{$name}-caption-close:hover {
+.blue .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close:hover {
 	color: #BCD3DE;
 	background: #778d98;
 }
-.blue .#{$name}-tabs-minimal .#{$name}-caption-close:active {
+.blue .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close:active {
 	background: #4f6874;
 }
 
 /* Default & white styles */
-.#{$name}-tabs-minimal .#{$name}-spacertd div,
-.white .#{$name}-tabs-minimal .#{$name}-spacertd div {
+.#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-spacertd div,
+.white .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-spacertd div {
 	border-bottom: 1px solid #bfbfbf;
 	height: auto;
 	background: transparent;
 }
-.#{$name}-tabs-minimal .#{$name}-tabitemcell,
-.#{$name}-tabs-minimal .#{$name}-spacertd {
+.#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-tabitemcell,
+.#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-spacertd {
 	height: auto;
 	background: transparent;
 	padding-left: 0;
 }
-.#{$name}-tabs-minimal .#{$name}-tabitem,
-.white .#{$name}-tabs-minimal .#{$name}-tabitem {
+.#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-tabitem,
+.white .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-tabitem {
 	border: none;
 	border-bottom: 1px solid #bfbfbf;
 	color: #4d748f;
@@ -44,54 +44,54 @@
 	background: transparent;
 	text-shadow: none;
 }
-.#{$name}-tabs-minimal .#{$name}-tabitem .v-caption {
+.#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-tabitem .v-caption {
 	padding: 5px 16px;
 	height: auto;
 	background: transparent;
 }
-.#{$name}-tabs-minimal .#{$name}-tabitemcell-selected {
+.#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-tabitemcell-selected {
 	background: transparent;
 }
-.#{$name}-tabs-minimal .#{$name}-tabitem-selected,
-.white .#{$name}-tabs-minimal .#{$name}-tabitem-selected {
+.#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-tabitem-selected,
+.white .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-tabitem-selected {
 	background: transparent;
 	border: 1px solid #bfbfbf;
 	border-bottom: none;
 	color: #222;
 }
-.#{$name}-tabs-minimal .#{$name}-tabitem-selected .v-caption {
+.#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-tabitem-selected .v-caption {
 	background: transparent;
 	padding: 4px 15px 6px 15px;
 }
-.#{$name}-tabs-minimal .#{$name}-tabitem .v-caption-closable,
-.#{$name}-tabs-minimal .#{$name}-tabitem-selected .v-caption-closable {
+.#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-tabitem .v-caption-closable,
+.#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-tabitem-selected .v-caption-closable {
 	padding-right: 6px;
 }
-.#{$name}-content-minimal,
-.white .#{$name}-content-minimal {
+.#{$primaryStyleName}-content-minimal,
+.white .#{$primaryStyleName}-content-minimal {
 	border: none;
 }
-.#{$name}-content-minimal .#{$name}-tabsheetpanel {
+.#{$primaryStyleName}-content-minimal .#{$primaryStyleName}-tabsheetpanel {
 	background: transparent;
 }
-.#{$name}-deco-minimal,
-.white .#{$name}-deco-minimal {
+.#{$primaryStyleName}-deco-minimal,
+.white .#{$primaryStyleName}-deco-minimal {
 	height: 0;
 	border: none;
 }
-.#{$name}-tabcontainer-minimal .#{$name}-scroller {
+.#{$primaryStyleName}-tabcontainer-minimal .#{$primaryStyleName}-scroller {
 	margin-top: -20px;
 	height: 17px;
 	padding: 0;
 	border: none;
 	background: transparent;
 }
-.#{$name}-tabcontainer-minimal .#{$name}-scroller button {
+.#{$primaryStyleName}-tabcontainer-minimal .#{$primaryStyleName}-scroller button {
 	margin-top: 0;
 }
-.#{$name}-tabs-minimal .#{$name}-caption-close,
-.#{$name}-tabs-minimal .#{$name}-caption-close:hover,
-.#{$name}-tabs-minimal .#{$name}-caption-close:active {
+.#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close,
+.#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close:hover,
+.#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close:active {
 	text-indent: 0;
 	background: transparent;
 	margin-left: 3px;
@@ -104,45 +104,45 @@
 	-webkit-border-radius: 7px;
 	-moz-border-radius: 7px;
 }
-.#{$name}-tabs-minimal .#{$name}-caption-close {
+.#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close {
 	margin-top: 1px;
 }
-.v-ff .#{$name}-tabs-minimal .#{$name}-caption-close {
+.v-ff .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close {
 	margin-top: -15px;
 }
-.#{$name}-tabs-minimal .#{$name}-caption-close:hover,
-.white .#{$name}-tabs-minimal .#{$name}-caption-close:hover {
+.#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close:hover,
+.white .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close:hover {
 	color: #fff;
 	background: #aaa;
 }
-.#{$name}-tabs-minimal .#{$name}-caption-close:active,
-.white .#{$name}-tabs-minimal .#{$name}-caption-close:active {
+.#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close:active,
+.white .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close:active {
 	background: #777;
 }
 
 /* Minimal tabsheet on black background */
-.black .#{$name}-tabs-minimal .#{$name}-spacertd div,
-.black .#{$name}-tabs-minimal .#{$name}-tabitem,
-.black .#{$name}-tabs-minimal .#{$name}-tabitem-selected  {
+.black .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-spacertd div,
+.black .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-tabitem,
+.black .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-tabitem-selected  {
 	border-color: #3e4044;
 	color: #6a7f89;
 }
-.black .#{$name}-tabs-minimal .#{$name}-tabitem-selected {
+.black .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-tabitem-selected {
 	color: #c9ccce;
 }
-.black .#{$name}-content-minimal,
-.black .#{$name}-content-bar {
+.black .#{$primaryStyleName}-content-minimal,
+.black .#{$primaryStyleName}-content-bar {
 	color: #c9ccce;
 	text-shadow: #000 0 0 1px;
 }
-.black .#{$name}-tabs-minimal .#{$name}-caption-close {
+.black .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close {
 	color: #72787c;
 }
-.black .#{$name}-tabs-minimal .#{$name}-caption-close:hover {
+.black .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close:hover {
 	color: #1d2021;
 	background: #4d5154;
 }
-.black .#{$name}-tabs-minimal .#{$name}-caption-close:active {
+.black .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close:active {
 	background: #626669;
 }
 

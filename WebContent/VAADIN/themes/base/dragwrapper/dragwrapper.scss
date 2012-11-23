@@ -1,6 +1,6 @@
-@mixin base-dragwrapper($name : v-ddwrapper) {
+@mixin base-dragwrapper($primaryStyleName : v-ddwrapper) {
 
-.#{$name} {
+.#{$primaryStyleName} {
 	padding: 2px;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
@@ -13,7 +13,7 @@
 	-khtml-user-select: none;
 	-webkit-user-select: none;
 }
-.v-ie .#{$name} a.drag-start {
+.v-ie .#{$primaryStyleName} a.drag-start {
 	display: block;
 	position: absolute;
 	top: 0;
@@ -27,22 +27,22 @@
 	background-color:cyan;
 	filter: alpha(opacity=0);
 }
-.#{$name}-over {
+.#{$primaryStyleName}-over {
 	border: 2px solid #1d9dff;
 	background-color: #bcdcff;
 	padding: 0;
 }
-.#{$name}-over {
+.#{$primaryStyleName}-over {
 	background-color: rgba(169,209,255,.6);
 }
-.no-box-drag-hints .#{$name}-over {
+.no-box-drag-hints .#{$primaryStyleName}-over {
 	border: none;
 	background-color: transparent;
 	padding: 2px;
 }
-&.v-app .#{$name}-over-top,
-.v-window .#{$name}-over-top,
-.v-popupview-popup .#{$name}-over-top {
+&.v-app .#{$primaryStyleName}-over-top,
+.v-window .#{$primaryStyleName}-over-top,
+.v-popupview-popup .#{$primaryStyleName}-over-top {
 	border: none;
 	border-top: 2px solid #1d9dff;
 	background-color: transparent;
@@ -52,9 +52,9 @@
 	-webkit-border-radius: 0;
 	border-radius: 0;
 }
-&.v-app .#{$name}-over-bottom,
-.v-window .#{$name}-over-bottom,
-.v-popupview-popup .#{$name}-over-bottom {
+&.v-app .#{$primaryStyleName}-over-bottom,
+.v-window .#{$primaryStyleName}-over-bottom,
+.v-popupview-popup .#{$primaryStyleName}-over-bottom {
 	border: none;
 	border-bottom: 2px solid #1d9dff;
 	background-color: transparent;
@@ -64,9 +64,9 @@
 	-webkit-border-radius: 0;
 	border-radius: 0;
 }
-&.v-app .#{$name}-over-left,
-.v-window .#{$name}-over-left,
-.v-popupview-popup .#{$name}-over-left {
+&.v-app .#{$primaryStyleName}-over-left,
+.v-window .#{$primaryStyleName}-over-left,
+.v-popupview-popup .#{$primaryStyleName}-over-left {
 	border: none;
 	border-left: 2px solid #1d9dff;
 	background-color: transparent;
@@ -76,9 +76,9 @@
 	-webkit-border-radius: 0;
 	border-radius: 0;
 }
-&.v-app .#{$name}-over-right,
-.v-window .#{$name}-over-right,
-.v-popupview-popup .#{$name}-over-right {
+&.v-app .#{$primaryStyleName}-over-right,
+.v-window .#{$primaryStyleName}-over-right,
+.v-popupview-popup .#{$primaryStyleName}-over-right {
 	border: none;
 	border-right: 2px solid #1d9dff;
 	background-color: transparent;
@@ -88,27 +88,27 @@
 	-webkit-border-radius: 0;
 	border-radius: 0;
 }
-.#{$name},
-.#{$name}-over,
-&.v-app .#{$name}-over-top,
-.v-window .#{$name}-over-top,
-.v-popupview-popup .#{$name}-over-top,
-&.v-app .#{$name}-over-bottom,
-.v-window .#{$name}-over-bottom,
-.v-popupview-popup .#{$name}-over-bottom,
-&.v-app .#{$name}-over-left,
-.v-window .#{$name}-over-left,
-.v-popupview-popup .#{$name}-over-left,
-&.v-app .#{$name}-over-right,
-.v-window .#{$name}-over-right,
-.v-popupview-popup .#{$name}-over-right {
+.#{$primaryStyleName},
+.#{$primaryStyleName}-over,
+&.v-app .#{$primaryStyleName}-over-top,
+.v-window .#{$primaryStyleName}-over-top,
+.v-popupview-popup .#{$primaryStyleName}-over-top,
+&.v-app .#{$primaryStyleName}-over-bottom,
+.v-window .#{$primaryStyleName}-over-bottom,
+.v-popupview-popup .#{$primaryStyleName}-over-bottom,
+&.v-app .#{$primaryStyleName}-over-left,
+.v-window .#{$primaryStyleName}-over-left,
+.v-popupview-popup .#{$primaryStyleName}-over-left,
+&.v-app .#{$primaryStyleName}-over-right,
+.v-window .#{$primaryStyleName}-over-right,
+.v-popupview-popup .#{$primaryStyleName}-over-right {
 	border-color: rgba(0,109,232,.6);
 }
 
-.#{$name}-over-top:before,
-.#{$name}-over-bottom:after,
-.#{$name}-over-left:before,
-.#{$name}-over-right:before {
+.#{$primaryStyleName}-over-top:before,
+.#{$primaryStyleName}-over-bottom:after,
+.#{$primaryStyleName}-over-left:before,
+.#{$primaryStyleName}-over-right:before {
 	display: block;
 	
 	position: absolute;
@@ -118,16 +118,16 @@
 	margin-left: -2px;
 	background: transparent url(../common/img/drag-slot-dot.png) no-repeat;
 }
-.#{$name}-over-bottom:after {
+.#{$primaryStyleName}-over-bottom:after {
 	margin-top: -2px;
 }
-.#{$name}-over-left:before,
-.#{$name}-over-right:before {
+.#{$primaryStyleName}-over-left:before,
+.#{$primaryStyleName}-over-right:before {
 	background-position: 0 -6px;
 	margin-top: -2px;
 	margin-left: -4px;
 }
-.#{$name}-over-right:before {
+.#{$primaryStyleName}-over-right:before {
 	position: relative;
 	margin-bottom: -4px;
 	margin-right: -4px;
@@ -136,26 +136,26 @@
 	background-position: 100% -6px;
 }
 
-.no-horizontal-drag-hints .#{$name}-over-left {
+.no-horizontal-drag-hints .#{$primaryStyleName}-over-left {
 	padding-left: 2px;
 	border-left: none;
 }
-.no-horizontal-drag-hints .#{$name}-over-right {
+.no-horizontal-drag-hints .#{$primaryStyleName}-over-right {
 	padding-right: 2px;
 	border-right: none;
 }
-.no-vertical-drag-hints .#{$name}-over-top {
+.no-vertical-drag-hints .#{$primaryStyleName}-over-top {
 	padding-top: 2px;
 	border-top: none;
 }
-.no-vertical-drag-hints .#{$name}-over-bottom {
+.no-vertical-drag-hints .#{$primaryStyleName}-over-bottom {
 	padding-bottom: 2px;
 	border-bottom: none;
 }
-.no-horizontal-drag-hints .#{$name}-over-left:before,
-.no-horizontal-drag-hints .#{$name}-over-right:before,
-.no-vertical-drag-hints .#{$name}-over-top:before,
-.no-vertical-drag-hints .#{$name}-over-bottom:after {
+.no-horizontal-drag-hints .#{$primaryStyleName}-over-left:before,
+.no-horizontal-drag-hints .#{$primaryStyleName}-over-right:before,
+.no-vertical-drag-hints .#{$primaryStyleName}-over-top:before,
+.no-vertical-drag-hints .#{$primaryStyleName}-over-bottom:after {
 	display: none;
 }
 

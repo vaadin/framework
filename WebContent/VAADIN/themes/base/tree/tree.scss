@@ -1,62 +1,62 @@
-@mixin base-tree($name : v-tree) {
+@mixin base-tree($primaryStyleName : v-tree) {
 
 // tree-default.css
 
-.#{$name} {
+.#{$primaryStyleName} {
 	text-align: left; /* Force default alignment */
 	overflow: hidden;
 	padding: 1px 0;
 	outline: none;
 }
-.#{$name}-node {
+.#{$primaryStyleName}-node {
 	background: transparent url(../common/img/sprites.png) no-repeat 5px -37px;
 	padding: 1px 0;
 }
-.#{$name}-node-caption:focus {
+.#{$primaryStyleName}-node-caption:focus {
 	outline: none;
 }
-div.#{$name}-node-leaf {
+div.#{$primaryStyleName}-node-leaf {
 	background: transparent;
 }
-.#{$name}-node-expanded {
+.#{$primaryStyleName}-node-expanded {
 	background: transparent url(../common/img/sprites.png) no-repeat -5px -10px;
 }
-.#{$name}-node-caption {
+.#{$primaryStyleName}-node-caption {
 	margin-left: 1em;
 }
-.#{$name}-node span {
+.#{$primaryStyleName}-node span {
 	cursor: pointer;
 }
-.#{$name}-node-caption div {
+.#{$primaryStyleName}-node-caption div {
 	white-space: nowrap;
 }
-.#{$name}-node-caption span,
-.#{$name}-node-caption .v-icon {
+.#{$primaryStyleName}-node-caption span,
+.#{$primaryStyleName}-node-caption .v-icon {
 	vertical-align: middle;
 }
-.#{$name}-node-selected span {
+.#{$primaryStyleName}-node-selected span {
 	background: #999;
 	color: #fff;
 }
-.#{$name}-node-children {
+.#{$primaryStyleName}-node-children {
 	padding-left: 1em;
 }
 
 // Drag'n'drop styles
 
-.#{$name} .#{$name}-node-drag-top {
+.#{$primaryStyleName} .#{$primaryStyleName}-node-drag-top {
 	border-top: 2px solid #1d9dff;
 	margin-top: -1px;
 	padding-top: 0;
 }
-.#{$name} .#{$name}-node-drag-bottom {
+.#{$primaryStyleName} .#{$primaryStyleName}-node-drag-bottom {
 	border-bottom: 2px solid #1d9dff;
 	margin-bottom: -1px;
 	padding-bottom: 0;
 }
-.#{$name} .#{$name}-node-drag-top:before,
-.#{$name} .#{$name}-node-drag-bottom:after,
-.#{$name} .#{$name}-node-caption-drag-center:after {
+.#{$primaryStyleName} .#{$primaryStyleName}-node-drag-top:before,
+.#{$primaryStyleName} .#{$primaryStyleName}-node-drag-bottom:after,
+.#{$primaryStyleName} .#{$primaryStyleName}-node-caption-drag-center:after {
 	display: block;
 	
 	position: absolute;
@@ -65,23 +65,23 @@ div.#{$name}-node-leaf {
 	margin-top: -4px;
 	background: transparent url(../common/img/drag-slot-dot.png);
 }
-.#{$name} .#{$name}-node-drag-bottom:after {
+.#{$primaryStyleName} .#{$primaryStyleName}-node-drag-bottom:after {
 	margin-top: -2px;
 }
-.#{$name} .#{$name}-node-caption-drag-center:after {
+.#{$primaryStyleName} .#{$primaryStyleName}-node-caption-drag-center:after {
 	margin-left: 14px;
 }
-.v-ff .#{$name} .#{$name}-node-caption-drag-center:after,
-.v-ie .#{$name} .#{$name}-node-caption-drag-center:after {
+.v-ff .#{$primaryStyleName} .#{$primaryStyleName}-node-caption-drag-center:after,
+.v-ie .#{$primaryStyleName} .#{$primaryStyleName}-node-caption-drag-center:after {
 	margin-top: -2px;
 }
-.#{$name} .#{$name}-node-drag-top {
+.#{$primaryStyleName} .#{$primaryStyleName}-node-drag-top {
 	background-position: 5px -38px;
 }
-.#{$name} .#{$name}-node-drag-top.#{$name}-node-expanded {
+.#{$primaryStyleName} .#{$primaryStyleName}-node-drag-top.#{$primaryStyleName}-node-expanded {
 	background-position: -5px -11px;
 }
-.#{$name} .#{$name}-node-caption-drag-center div {
+.#{$primaryStyleName} .#{$primaryStyleName}-node-caption-drag-center div {
 	border: 2px solid #1d9dff;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
@@ -89,12 +89,12 @@ div.#{$name}-node-leaf {
 	margin: -2px 2px -2px -2px;
 	background-color: #bcdcff;
 }
-.#{$name} .#{$name}-node-caption-drag-center div {
+.#{$primaryStyleName} .#{$primaryStyleName}-node-caption-drag-center div {
 	background-color: rgba(169,209,255,.6);
 }
-.#{$name} .#{$name}-node-caption-drag-center div,
-.#{$name} .#{$name}-node-drag-top,
-.#{$name} .#{$name}-node-drag-bottom {
+.#{$primaryStyleName} .#{$primaryStyleName}-node-caption-drag-center div,
+.#{$primaryStyleName} .#{$primaryStyleName}-node-drag-top,
+.#{$primaryStyleName} .#{$primaryStyleName}-node-drag-bottom {
 	border-color: rgba(0,109,232,.6);
 }
 
@@ -103,38 +103,38 @@ div.#{$name}-node-leaf {
 // row, but #10309 prevents us from doing that right now.
 
 	// Make item caption height an even number (so that the connector dots overlap nicely)
-	.#{$name}-connectors .#{$name}-node-caption {
+	.#{$primaryStyleName}-connectors .#{$primaryStyleName}-node-caption {
 		padding-top: 1px;
 	}
-	.#{$name}-connectors .#{$name}-node {
+	.#{$primaryStyleName}-connectors .#{$primaryStyleName}-node {
 		background: transparent url(img/connector-expand.png) no-repeat 2px -52px;
 	}
-	.#{$name}-connectors .#{$name}-node-expanded {
+	.#{$primaryStyleName}-connectors .#{$primaryStyleName}-node-expanded {
 		background: transparent url(img/connector-collapse.png) no-repeat 2px -52px;
 	}
-	.#{$name}-connectors .#{$name}-node-last {
+	.#{$primaryStyleName}-connectors .#{$primaryStyleName}-node-last {
 		background: transparent url(img/connector-expand-last.png) no-repeat 2px -52px;
 	}
-	.#{$name}-connectors .#{$name}-node-expanded.#{$name}-node-last {
+	.#{$primaryStyleName}-connectors .#{$primaryStyleName}-node-expanded.#{$primaryStyleName}-node-last {
 		background: transparent url(img/connector-collapse-last.png) no-repeat 2px -52px;
 	}
-	.#{$name}-connectors .#{$name}-node-leaf {
+	.#{$primaryStyleName}-connectors .#{$primaryStyleName}-node-leaf {
 		background: transparent url(img/connector-leaf.png) repeat-y 2px 50%;
 	}
-	.#{$name}-connectors .#{$name}-node-leaf-last {
+	.#{$primaryStyleName}-connectors .#{$primaryStyleName}-node-leaf-last {
 		background: transparent url(img/connector-leaf-last.png) repeat-y 2px 50%;
 	}
-	.#{$name}-connectors .#{$name}-node-children {
+	.#{$primaryStyleName}-connectors .#{$primaryStyleName}-node-children {
 		background: transparent url(img/connector.png) repeat-y 2px 0;
 	}
-	.#{$name}-connectors .#{$name}-node-children-last {
+	.#{$primaryStyleName}-connectors .#{$primaryStyleName}-node-children-last {
 		background: transparent;
 	}
-	.#{$name}-connectors .#{$name}-node-drag-top,
-	.#{$name}-connectors .#{$name}-node-expanded.#{$name}-node-drag-top {
+	.#{$primaryStyleName}-connectors .#{$primaryStyleName}-node-drag-top,
+	.#{$primaryStyleName}-connectors .#{$primaryStyleName}-node-expanded.#{$primaryStyleName}-node-drag-top {
 		background-position: 2px -53px;
 	}
-	.#{$name}-connectors .#{$name}-node-drag-top.#{$name}-node-leaf {
+	.#{$primaryStyleName}-connectors .#{$primaryStyleName}-node-drag-top.#{$primaryStyleName}-node-leaf {
 		background-position: 2px 50%;
 	}
 

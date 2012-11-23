@@ -1,42 +1,42 @@
-@mixin reindeer-tabsheet-small-style($name : v-tabsheet) {
+@mixin reindeer-tabsheet-small-style($primaryStyleName : v-tabsheet) {
 
 /**
  * Tabsheet bar style ---------------
  */
-.#{$name}-tabs-bar .#{$name}-tabitemcell,
-.#{$name}-tabs-bar .#{$name}-spacertd {
+.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-tabitemcell,
+.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-spacertd {
 	height: 20px;
 }
-.#{$name}-tabs-bar .#{$name}-spacertd {
+.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-spacertd {
 	background: transparent;
 }
-.#{$name}-tabs-bar .#{$name}-tabitemcell {
+.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-tabitemcell {
 	background-image: url(img/bar/tab-left.png); /** sprite-ref: verticals */
 }
-.#{$name}-tabs-bar .#{$name}-tabitemcell-first {
+.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-tabitemcell-first {
 	padding-left: 6px;
 	background-image: url(img/bar/tab-first-left.png); /** sprite-ref: verticals */
 }
-.#{$name}-tabs-bar .#{$name}-tabitem,
-.#{$name}-tabs-bar .#{$name}-spacertd div {
+.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-tabitem,
+.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-spacertd div {
 	height: 20px;
 	background-image: url(img/bar/tab-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	font-size: 11px;
 	margin: 0;
 }
-.#{$name}-tabs-bar .#{$name}-tabitem .v-caption {
+.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-tabitem .v-caption {
 	height: 18px;
 	background-image: url(img/bar/tab-right.png); /** sprite-ref: verticals; sprite-alignment: right */
 	padding: 2px 12px 0 10px;
 }
-.#{$name}-tabs-bar .#{$name}-tabitem .v-caption-closable,
-.#{$name}-tabs-bar .#{$name}-tabitem-selected .v-caption-closable {
+.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-tabitem .v-caption-closable,
+.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-tabitem-selected .v-caption-closable {
 	padding-right: 8px;
 	padding-left: 14px;
 }
-.#{$name}-tabs-bar .#{$name}-caption-close,
-.#{$name}-tabs-bar .#{$name}-caption-close:hover,
-.#{$name}-tabs-bar .#{$name}-caption-close:active {
+.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-caption-close,
+.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-caption-close:hover,
+.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-caption-close:active {
 	text-indent: 0;
 	background: transparent;
 	margin-left: 3px;
@@ -49,62 +49,62 @@
 	-webkit-border-radius: 7px;
 	-moz-border-radius: 7px;
 }
-.#{$name}-tabs-bar .#{$name}-caption-close {
+.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-caption-close {
 	margin-top: 1px;
 }
-.v-ff .#{$name}-tabs-bar .#{$name}-caption-close {
+.v-ff .#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-caption-close {
 	margin-top: -14px;
 }
-.#{$name}-tabs-bar .#{$name}-caption-close:hover {
+.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-caption-close:hover {
 	background: #bfbfbf;
 	-webkit-box-shadow: 0 1px 0 #fff;
 }
-.#{$name}-tabs-bar .#{$name}-caption-close:active {
+.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-caption-close:active {
 	background: #a9a9a9;
 }
-.#{$name}-tabs-bar .#{$name}-tabitem-selected .#{$name}-caption-close {
+.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-tabitem-selected .#{$primaryStyleName}-caption-close {
 	color: #404142;
 }
-.#{$name}-tabs-bar .#{$name}-tabitem-selected .#{$name}-caption-close:hover {
+.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-tabitem-selected .#{$primaryStyleName}-caption-close:hover {
 	background: #5e666e;
 	color: #fff;
 	text-shadow: 0 -1px 0 #222;
 }
-.#{$name}-tabs-bar .#{$name}-tabitem-selected .#{$name}-caption-close:active {
+.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-tabitem-selected .#{$primaryStyleName}-caption-close:active {
 	background: #404142;
 }
 
-.#{$name}-tabs-bar .#{$name}-tabitemcell-selected {
+.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-tabitemcell-selected {
 	background-image: url(img/bar/tab-left-sel.png); /** sprite-ref: verticals */
 }
-.#{$name}-tabs-bar .#{$name}-tabitemcell-selected-first {
+.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-tabitemcell-selected-first {
 	background-image: url(img/bar/tab-first-left-sel.png); /** sprite-ref: verticals */
 }
-.#{$name}-tabs-bar .#{$name}-tabitem-selected {
+.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-tabitem-selected {
 	background-image: url(img/bar/tab-bg-sel.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	color: #232930;
 }
-.#{$name}-tabs-bar .#{$name}-tabitem-selected .v-caption {
+.#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-tabitem-selected .v-caption {
 	background-image: url(img/bar/tab-right-sel.png); /** sprite-ref: verticals; sprite-alignment: right */
 }
-.#{$name}-tabcontainer-bar .#{$name}-scroller {
+.#{$primaryStyleName}-tabcontainer-bar .#{$primaryStyleName}-scroller {
 	margin-top: -20px;
 	height: 19px;
 	border-right: none;
 	background-image: url(img/bar/tab-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 }
-.#{$name}-tabcontainer-bar .#{$name}-scroller button {
+.#{$primaryStyleName}-tabcontainer-bar .#{$primaryStyleName}-scroller button {
 	margin-top: 1px;
 }
-.#{$name}-content-bar,
-.white .#{$name}-content-bar {
+.#{$primaryStyleName}-content-bar,
+.white .#{$primaryStyleName}-content-bar {
 	border: none;
 }
-.#{$name}-content-bar .#{$name}-tabsheetpanel {
+.#{$primaryStyleName}-content-bar .#{$primaryStyleName}-tabsheetpanel {
 	background: transparent;
 }
-.#{$name}-deco-bar,
-.white .#{$name}-deco-bar {
+.#{$primaryStyleName}-deco-bar,
+.white .#{$primaryStyleName}-deco-bar {
 	height: 0;
 	border: none;
 }

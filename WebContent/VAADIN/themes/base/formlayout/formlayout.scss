@@ -1,55 +1,55 @@
-@mixin base-formlayout($name : v-formlayout) {
+@mixin base-formlayout($primaryStyleName : v-formlayout) {
 
-.#{$name}.v-has-width > table {
+.#{$primaryStyleName}.v-has-width > table {
 	width: 100%;
 }
-.#{$name}.v-has-height > table {
+.#{$primaryStyleName}.v-has-height > table {
 	height: 100%;
 }
-.#{$name}-cell .v-errorindicator {
+.#{$primaryStyleName}-cell .v-errorindicator {
 	display: block;
 }
-.#{$name}-error-indicator {
+.#{$primaryStyleName}-error-indicator {
 	/* fix width so layout is not jumpy when error disappears */
 	width: 12px;
 }
-.#{$name}-captioncell {
+.#{$primaryStyleName}-captioncell {
 	text-align:right;
 	white-space: nowrap;
 }
-.#{$name}-errorcell, .#{$name}-captioncell {
+.#{$primaryStyleName}-errorcell, .#{$primaryStyleName}-captioncell {
 	width: 1px; /* Don't use any extra space */
 }
-.#{$name}-captioncell .v-caption {
+.#{$primaryStyleName}-captioncell .v-caption {
 	overflow: visible;
 }
-.#{$name}-spacing > tbody > .#{$name}-row > .#{$name}-captioncell, 
-.#{$name}-spacing > tbody > .#{$name}-row > .#{$name}-contentcell,
-.#{$name}-spacing > tbody > .#{$name}-row > .#{$name}-errorcell {
+.#{$primaryStyleName}-spacing > tbody > .#{$primaryStyleName}-row > .#{$primaryStyleName}-captioncell, 
+.#{$primaryStyleName}-spacing > tbody > .#{$primaryStyleName}-row > .#{$primaryStyleName}-contentcell,
+.#{$primaryStyleName}-spacing > tbody > .#{$primaryStyleName}-row > .#{$primaryStyleName}-errorcell {
 	padding-top: 6px;
 }
-.#{$name}-spacing > tbody > .#{$name}-firstrow > .#{$name}-captioncell, 
-.#{$name}-spacing > tbody > .#{$name}-firstrow > .#{$name}-contentcell,
-.#{$name}-spacing > tbody > .#{$name}-firstrow > .#{$name}-errorcell {
+.#{$primaryStyleName}-spacing > tbody > .#{$primaryStyleName}-firstrow > .#{$primaryStyleName}-captioncell, 
+.#{$primaryStyleName}-spacing > tbody > .#{$primaryStyleName}-firstrow > .#{$primaryStyleName}-contentcell,
+.#{$primaryStyleName}-spacing > tbody > .#{$primaryStyleName}-firstrow > .#{$primaryStyleName}-errorcell {
 	padding-top: 0;
 }
-.#{$name}-margin-top > tbody > .#{$name}-firstrow > .#{$name}-captioncell, 
-.#{$name}-margin-top > tbody > .#{$name}-firstrow > .#{$name}-contentcell,
-.#{$name}-margin-top > tbody > .#{$name}-firstrow > .#{$name}-errorcell {
+.#{$primaryStyleName}-margin-top > tbody > .#{$primaryStyleName}-firstrow > .#{$primaryStyleName}-captioncell, 
+.#{$primaryStyleName}-margin-top > tbody > .#{$primaryStyleName}-firstrow > .#{$primaryStyleName}-contentcell,
+.#{$primaryStyleName}-margin-top > tbody > .#{$primaryStyleName}-firstrow > .#{$primaryStyleName}-errorcell {
 	padding-top: 12px;
 }
-.#{$name}-margin-bottom > tbody > .#{$name}-lastrow > .#{$name}-captioncell,
-.#{$name}-margin-bottom > tbody > .#{$name}-lastrow > .#{$name}-contentcell,
-.#{$name}-margin-bottom > tbody > .#{$name}-lastrow > .#{$name}-errorcell {
+.#{$primaryStyleName}-margin-bottom > tbody > .#{$primaryStyleName}-lastrow > .#{$primaryStyleName}-captioncell,
+.#{$primaryStyleName}-margin-bottom > tbody > .#{$primaryStyleName}-lastrow > .#{$primaryStyleName}-contentcell,
+.#{$primaryStyleName}-margin-bottom > tbody > .#{$primaryStyleName}-lastrow > .#{$primaryStyleName}-errorcell {
 	padding-bottom: 12px;
 }
-.#{$name}-margin-left > tbody > .#{$name}-row > .#{$name}-captioncell {
+.#{$primaryStyleName}-margin-left > tbody > .#{$primaryStyleName}-row > .#{$primaryStyleName}-captioncell {
 	padding-left: 12px;
 } 
-.#{$name}-margin-right > tbody > .#{$name}-row > .#{$name}-contentcell {
+.#{$primaryStyleName}-margin-right > tbody > .#{$primaryStyleName}-row > .#{$primaryStyleName}-contentcell {
 	padding-right: 12px;
 }
-.#{$name}-captioncell .v-caption .v-required-field-indicator {
+.#{$primaryStyleName}-captioncell .v-caption .v-required-field-indicator {
 	float: none;
 }
 

@@ -1,48 +1,48 @@
-@mixin base-panel($name : v-panel) {
+@mixin base-panel($primaryStyleName : v-panel) {
 
-.#{$name},
-.#{$name}-caption,
-.#{$name}-content,
-.#{$name}-deco,
-.#{$name}-light,
-.#{$name}-caption-light,
-.#{$name}-content-light,
-.#{$name}-deco-light {
+.#{$primaryStyleName},
+.#{$primaryStyleName}-caption,
+.#{$primaryStyleName}-content,
+.#{$primaryStyleName}-deco,
+.#{$primaryStyleName}-light,
+.#{$primaryStyleName}-caption-light,
+.#{$primaryStyleName}-content-light,
+.#{$primaryStyleName}-deco-light {
 	outline: none; /* Prevent selection outline which might break layouts or cause scrollbars */
 	text-align: left; /* Force default alignment */
 }
-.#{$name}-caption .v-errorindicator {
+.#{$primaryStyleName}-caption .v-errorindicator {
 	float: none;
 	display: inline;
 }
-.#{$name}-caption .v-icon {
+.#{$primaryStyleName}-caption .v-icon {
 	display: inline;
 	vertical-align: middle;
 }
-.#{$name}-caption span {
+.#{$primaryStyleName}-caption span {
 	vertical-align: middle;
 	display: table-row;
 }
-.#{$name}-caption {
+.#{$primaryStyleName}-caption {
 	white-space: nowrap;
 	overflow:hidden;
 	font-weight: bold;
 }
-.#{$name}-nocaption {
+.#{$primaryStyleName}-nocaption {
 	overflow: hidden;
 }
-.#{$name}-content {
+.#{$primaryStyleName}-content {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
-.#{$name}.v-has-width > .#{$name}-content {
+.#{$primaryStyleName}.v-has-width > .#{$primaryStyleName}-content {
 	width: 100%;
 }
-.#{$name}.v-has-height > .#{$name}-content {
+.#{$primaryStyleName}.v-has-height > .#{$primaryStyleName}-content {
 	height: 100%;
 }
-.#{$name}-deco {
+.#{$primaryStyleName}-deco {
 }
 
 }

@@ -1,6 +1,6 @@
-@mixin base-loginform($name : v-loginform) {
+@mixin base-loginform($primaryStyleName : v-loginform) {
 
-.#{$name} {
+.#{$primaryStyleName} {
 	height: 140px;
 	width: 200px;
 }

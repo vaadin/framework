@@ -1,18 +1,18 @@
-@mixin base-absolutelayout($name : v-absolutelayout) {
+@mixin base-absolutelayout($primaryStyleName : v-absolutelayout) {
 
-.#{$name}-wrapper {
+.#{$primaryStyleName}-wrapper {
 	position: absolute;
 	overflow: hidden;
 }
-.#{$name}-margin, .#{$name}-canvas {
+.#{$primaryStyleName}-margin, .#{$primaryStyleName}-canvas {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
-.#{$name}.v-has-height > div, .#{$name}.v-has-height > div > div {
+.#{$primaryStyleName}.v-has-height > div, .#{$primaryStyleName}.v-has-height > div > div {
 	height: 100%;
 }
-.#{$name}.v-has-width > div, .#{$name}.v-has-width > div > div {
+.#{$primaryStyleName}.v-has-width > div, .#{$primaryStyleName}.v-has-width > div > div {
 	width: 100%;
 }
 

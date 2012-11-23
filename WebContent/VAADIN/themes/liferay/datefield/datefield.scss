@@ -1,56 +1,56 @@
-@mixin liferay-datefield($name : v-datefield) {
+@mixin liferay-datefield($primaryStyleName : v-datefield) {
 
-.#{$name}-popup {
+.#{$primaryStyleName}-popup {
 	padding: 3px;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
 }
 
-.#{$name}-calendarpanel-header {
+.#{$primaryStyleName}-calendarpanel-header {
 	height: 28px;	
 }
 
-.#{$name}-calendarpanel:focus {
+.#{$primaryStyleName}-calendarpanel:focus {
 	outline: none;	
 }
 
-.#{$name}-calendarpanel-body {
+.#{$primaryStyleName}-calendarpanel-body {
 	text-align: right;
 	vertical-align: top;
 }
 
-.#{$name}-popupcalendar .#{$name}-button {
+.#{$primaryStyleName}-popupcalendar .#{$primaryStyleName}-button {
 	background: transparent url(../common/buttons_sprites.png) no-repeat 0 -48px;
 	width: 24px;
 	height: 24px;
 	border: none;
 }
 
-.#{$name}-popupcalendar .#{$name}-button:hover {
+.#{$primaryStyleName}-popupcalendar .#{$primaryStyleName}-button:hover {
 	background-position: 0px -72px;
 }
 
-.#{$name}-popupcalendar .#{$name}-button:focus {
+.#{$primaryStyleName}-popupcalendar .#{$primaryStyleName}-button:focus {
 	background-position: 0px -96px;
 }
 
-.#{$name}-month .#{$name}-calendarpanel-month,
-.#{$name}-day .#{$name}-calendarpanel-month,
-.#{$name}-full .#{$name}-calendarpanel-month {
+.#{$primaryStyleName}-month .#{$primaryStyleName}-calendarpanel-month,
+.#{$primaryStyleName}-day .#{$primaryStyleName}-calendarpanel-month,
+.#{$primaryStyleName}-full .#{$primaryStyleName}-calendarpanel-month {
 	width: 124px;
 }
 
-.#{$name}-year .#{$name}-calendarpanel-month {
+.#{$primaryStyleName}-year .#{$primaryStyleName}-calendarpanel-month {
 	width: 35px;
 }
 
-.#{$name}-calendarpanel-month {
+.#{$primaryStyleName}-calendarpanel-month {
 	background: transparent url(datefield_sprites.png) repeat-x 0 -112px;
 	font-weight: bold;
 }
 
-span.#{$name}-calendarpanel-month {
+span.#{$primaryStyleName}-calendarpanel-month {
 	display: block;
 	text-align: center;
 	background: transparent;
@@ -58,15 +58,15 @@ span.#{$name}-calendarpanel-month {
 	padding: 1px 3px 0;
 }
 
-.#{$name}-calendarpanel-prevyear,
-.#{$name}-calendarpanel-nextyear {
+.#{$primaryStyleName}-calendarpanel-prevyear,
+.#{$primaryStyleName}-calendarpanel-nextyear {
 	width: 22px;	
 }
 	
-.#{$name}-calendarpanel-prevyear button,
-.#{$name}-calendarpanel-prevmonth button,
-.#{$name}-calendarpanel-nextmonth button,
-.#{$name}-calendarpanel-nextyear button {
+.#{$primaryStyleName}-calendarpanel-prevyear button,
+.#{$primaryStyleName}-calendarpanel-prevmonth button,
+.#{$primaryStyleName}-calendarpanel-nextmonth button,
+.#{$primaryStyleName}-calendarpanel-nextyear button {
 	width: 22px;
 	height: 28px;
 	border: none;
@@ -83,42 +83,42 @@ span.#{$name}-calendarpanel-month {
 	border-radius: 0;
 }
 
-.v-ie .#{$name}-calendarpanel-prevyear button,
-.v-ie .#{$name}-calendarpanel-nextyear button,
-.v-ie .#{$name}-calendarpanel-prevmonth button,
-.v-ie .#{$name}-calendarpanel-nextmonth button {
+.v-ie .#{$primaryStyleName}-calendarpanel-prevyear button,
+.v-ie .#{$primaryStyleName}-calendarpanel-nextyear button,
+.v-ie .#{$primaryStyleName}-calendarpanel-prevmonth button,
+.v-ie .#{$primaryStyleName}-calendarpanel-nextmonth button {
 	text-indent: 0;
 	font-size: 1px;
 }
 
-.#{$name}-calendarpanel-prevmonth button {
+.#{$primaryStyleName}-calendarpanel-prevmonth button {
 	background-position: 0 -56px;
 }
 
-.#{$name}-calendarpanel-prevmonth {
+.#{$primaryStyleName}-calendarpanel-prevmonth {
 	background: transparent url(datefield_sprites.png) repeat-x 0 -112px;
 }
 
-.#{$name}-calendarpanel-nextyear button {
+.#{$primaryStyleName}-calendarpanel-nextyear button {
 	background-position: 0 -28px;
 	width: 100%;
 	min-width: 22px;
 }
 
-.#{$name}-calendarpanel-nextmonth button {
+.#{$primaryStyleName}-calendarpanel-nextmonth button {
 	background-position: 0 -84px;
 }
 
-.#{$name}-calendarpanel-nextmonth {
+.#{$primaryStyleName}-calendarpanel-nextmonth {
 	background: transparent url(datefield_sprites.png) repeat-x 0 -112px;
 }
 
-.#{$name}-calendarpanel-prevyear button {
+.#{$primaryStyleName}-calendarpanel-prevyear button {
 	width: 100%;
 	min-width: 22px;
 }
 
-.#{$name}-calendarpanel-day {
+.#{$primaryStyleName}-calendarpanel-day {
 	display: block;
 	width: 22px;
 	margin: 0 0 3px 3px;
@@ -132,37 +132,37 @@ span.#{$name}-calendarpanel-month {
 	border-radius: 4px;
 }
 
-.#{$name}-calendarpanel-day-today {
+.#{$primaryStyleName}-calendarpanel-day-today {
 	font-weight: bold;
 }
 
-.#{$name}-calendarpanel-day-selected {
+.#{$primaryStyleName}-calendarpanel-day-selected {
 	background: #b5b5b5 url(/html/themes/classic/images/application/state_active_bg.png) repeat-x 0 0;
 	color: #000;
 	border-color: #555;
 }
 
-.#{$name}-calendarpanel-day-focused {
+.#{$primaryStyleName}-calendarpanel-day-focused {
 	outline: 1px dotted #555;
 }
 
 
-.#{$name}-calendarpanel-weekdays {
+.#{$primaryStyleName}-calendarpanel-weekdays {
 	text-align: center;
 }
 
-.#{$name}-calendarpanel-weekdays strong {
+.#{$primaryStyleName}-calendarpanel-weekdays strong {
 	font-weight: normal;
 }
 
-.#{$name}-calendarpanel-weeknumber {
+.#{$primaryStyleName}-calendarpanel-weeknumber {
 	display: block;
 	border: none;
 	padding: 2px 0 2px 0;
 	margin: 0;
 }
 
-.#{$name}-calendarpanel-body table {
+.#{$primaryStyleName}-calendarpanel-body table {
 	margin: 0 auto;
 	width: 200px;	
 }

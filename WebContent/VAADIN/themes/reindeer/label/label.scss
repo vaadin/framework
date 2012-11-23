@@ -1,6 +1,6 @@
-@mixin reindeer-label($name : v-label) {
+@mixin reindeer-label($primaryStyleName : v-label) {
 
-.#{$name} {
+.#{$primaryStyleName} {
 	line-height: 18px;
 }
 
@@ -12,27 +12,27 @@
 	color: #C9CCCE;
 	text-shadow: 0 0 1px #000;
 }
-.black .#{$name}-h1,
-.black .#{$name}-h2,
+.black .#{$primaryStyleName}-h1,
+.black .#{$primaryStyleName}-h2,
 .black .v-caption-h1,
 .black .v-caption-h2,
-.white .black .#{$name}-h1,
-.white .black .#{$name}-h2,
+.white .black .#{$primaryStyleName}-h1,
+.white .black .#{$primaryStyleName}-h2,
 .white .black .v-caption-h1,
 .white .black .v-caption-h2,
-.blue .black .#{$name}-h1,
-.blue .black .#{$name}-h2,
+.blue .black .#{$primaryStyleName}-h1,
+.blue .black .#{$primaryStyleName}-h2,
 .blue .black .v-caption-h1,
 .blue .black .v-caption-h2 {
 	color: #fff;
 	text-shadow: rgba(0,0,0,.8) 0 2px 2px;
 }
-.black .#{$name}-light,
-.white .black .#{$name}-light {
+.black .#{$primaryStyleName}-light,
+.white .black .#{$primaryStyleName}-light {
 	color: #72787c;
 }
-.black .#{$name} hr,
-.white .black .#{$name} hr {
+.black .#{$primaryStyleName} hr,
+.white .black .#{$primaryStyleName} hr {
 	background: #0c0d0e;
 	color: #0c0d0e;
 	border-bottom-color: #292b2e;
@@ -48,23 +48,23 @@
 	color: #222;
 	text-shadow: none;
 }
-.blue .#{$name}-h1,
-.blue .#{$name}-h2,
+.blue .#{$primaryStyleName}-h1,
+.blue .#{$primaryStyleName}-h2,
 .blue .v-caption-h1,
 .blue .v-caption-h2,
-.white .blue .#{$name}-h1,
-.white .blue .#{$name}-h2,
+.white .blue .#{$primaryStyleName}-h1,
+.white .blue .#{$primaryStyleName}-h2,
 .white .blue .v-caption-h1,
 .white .blue .v-caption-h2 {
 	color: #fff;
 	text-shadow: rgba(0,0,0,.3) 0 1px 1px;
 }
-.blue .#{$name}-light,
-.white .blue .#{$name}-light {
+.blue .#{$primaryStyleName}-light,
+.white .blue .#{$primaryStyleName}-light {
 	color: #6e7c83;
 }
-.blue .#{$name} hr,
-.white .blue .#{$name} hr {
+.blue .#{$primaryStyleName} hr,
+.white .blue .#{$primaryStyleName} hr {
 	background: #a3bcc9;
 	color: #a3bcc9;
 	border-bottom-color: #cfe2eb;
@@ -73,12 +73,12 @@
 /**********************
  * Default & white styles
  **********************/
-.#{$name}-h1,
-.#{$name}-h2,
+.#{$primaryStyleName}-h1,
+.#{$primaryStyleName}-h2,
 .v-caption-h1,
 .v-caption-h2,
-.white .#{$name}-h1,
-.white .#{$name}-h2,
+.white .#{$primaryStyleName}-h1,
+.white .#{$primaryStyleName}-h2,
 .white .v-caption-h1,
 .white .v-caption-h2 {
 	font-family: Helvetica, Arial, "Lucida Grande", Geneva, Tahoma, Verdana, sans-serif;
@@ -89,22 +89,22 @@
 	letter-spacing: -0.02em;
 	text-shadow: #fff 0 -1px 1px;
 }
-.#{$name}-h2,
+.#{$primaryStyleName}-h2,
 .v-caption-h2,
-.white .#{$name}-h2,
+.white .#{$primaryStyleName}-h2,
 .white .v-caption-h2 {
 	font-size: 16px;
 	line-height: 22px;
 }
-.#{$name}-light,
-.white .#{$name}-light {
+.#{$primaryStyleName}-light,
+.white .#{$primaryStyleName}-light {
 	font-size: 11px;
 	line-height: 13px;
 	color: #707070;
 }
 
-.#{$name} hr,
-.white .#{$name} hr {
+.#{$primaryStyleName} hr,
+.white .#{$primaryStyleName} hr {
 	height: 2px;
 	overflow: hidden;
 	background: #dcdcdc;
@@ -113,13 +113,13 @@
 	border-bottom: 1px solid #fff;
 }
 
-.v-sa .#{$name} hr,
-.v-ie8 .#{$name} hr {
+.v-sa .#{$primaryStyleName} hr,
+.v-ie8 .#{$primaryStyleName} hr {
 	height: 1px;
 }
 
 /* Labels inside Table don't need a line-height */
-.v-table .#{$name} {
+.v-table .#{$primaryStyleName} {
 	line-height: normal;
 }
 

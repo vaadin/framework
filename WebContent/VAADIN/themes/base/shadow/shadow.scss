@@ -1,31 +1,31 @@
-@mixin base-shadow($name : v-shadow) {
+@mixin base-shadow($primaryStyleName : v-shadow) {
 
-.#{$name} {
+.#{$primaryStyleName} {
 	position: absolute;
 }
 
-.#{$name} .top-left {
+.#{$primaryStyleName} .top-left {
     position: absolute; overflow: hidden;
     top: -3px;             left: -5px;
     width: 10px;         height: 10px;
     background: transparent url(img/top-left.png);
 }
 
-.#{$name} .top {
+.#{$primaryStyleName} .top {
     position: absolute; overflow: hidden;
     top: -3px;             left: 5px;
     height: 10px;           right: 5px;
     background: transparent url(img/top.png);
 }
 
-.#{$name} .top-right {
+.#{$primaryStyleName} .top-right {
     position: absolute; overflow: hidden;
     top: -3px;             right: -5px;
     width: 10px;         height: 10px;
     background: transparent url(img/top-right.png);
 }
 
-.#{$name} .left {
+.#{$primaryStyleName} .left {
     position: absolute; overflow: hidden;
     top: 7px;           left: -5px;
     width: 10px;
@@ -33,14 +33,14 @@
     background: transparent url(img/left.png);
 }
 
-.#{$name} .center {
+.#{$primaryStyleName} .center {
     position: absolute; overflow: hidden;
     top: 7px;           left: 5px;
     bottom: 3px;        right: 5px;
     background: transparent url(img/center.png);
 }
 
-.#{$name} .right {
+.#{$primaryStyleName} .right {
     position: absolute; overflow: hidden;
     top: 7px;           right: -5px;
     width: 10px;
@@ -48,21 +48,21 @@
     background: transparent url(img/right.png);
 }
 
-.#{$name} .bottom-left {
+.#{$primaryStyleName} .bottom-left {
     position: absolute; overflow: hidden;
     bottom: -7px;           left: -5px;
     width: 10px;          height: 10px;
     background: transparent url(img/bottom-left.png);
 }
 
-.#{$name} .bottom {
+.#{$primaryStyleName} .bottom {
     position: absolute; overflow: hidden;
     bottom: -7px;           left: 5px;
     right: 5px;          height: 10px;
     background: transparent url(img/bottom.png);
 }
 
-.#{$name} .bottom-right {
+.#{$primaryStyleName} .bottom-right {
     position: absolute; overflow: hidden;
     bottom: -7px;           right: -5px;
     width: 10px;          height: 10px;

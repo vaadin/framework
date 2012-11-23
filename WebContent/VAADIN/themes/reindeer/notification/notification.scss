@@ -1,6 +1,6 @@
-@mixin reindeer-notification($name : v-Notification) {
+@mixin reindeer-notification($primaryStyleName : v-Notification) {
 
-.#{$name} {
+.#{$primaryStyleName} {
 	color: #fff;
 	border-radius: 4px;
 	-moz-border-radius: 4px;
@@ -10,38 +10,38 @@
 	font-weight: bold;
 }
 
-.v-ie9 .#{$name} H1 {
+.v-ie9 .#{$primaryStyleName} H1 {
 	/* Fix for #6793 */
 	font-weight: bold;
 }
 	
-.#{$name} p {
+.#{$primaryStyleName} p {
 	line-height: 1.3;
 }
-.#{$name}-warning {
+.#{$primaryStyleName}-warning {
 	background: #fdf3b5;
 	color: #ca9a61;
 	border: 3px solid #fee3af;
 }
-.#{$name}-error {
+.#{$primaryStyleName}-error {
 	background: #b40000 url(img/error-close.png) no-repeat right top;
 	border: 3px solid #ca3030;
 }
-.#{$name}-tray {
+.#{$primaryStyleName}-tray {
 	margin: 0 5px 5px 0;
 	background: #3b3c3e;
 	border: 2px solid #585b5c;
 	padding: 0.8em 0.9em;
 }
-.#{$name}-tray h1 {
+.#{$primaryStyleName}-tray h1 {
 	font-size: 14px;
 	line-height: 18px;
 }
-.#{$name}-tray p {
+.#{$primaryStyleName}-tray p {
 	font-size: 12px;
 	font-weight: normal;
 }
-.#{$name}-system {
+.#{$primaryStyleName}-system {
 	background-color: #b40000;
 }
 
