@@ -16,6 +16,7 @@
 
 package com.vaadin.server;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -35,7 +36,7 @@ import com.vaadin.shared.communication.ServerRpc;
  * 
  * @since 7.0
  */
-public class ServerRpcManager<T extends ServerRpc> {
+public class ServerRpcManager<T extends ServerRpc> implements Serializable {
 
     private final T implementation;
     private final Class<T> rpcInterface;
