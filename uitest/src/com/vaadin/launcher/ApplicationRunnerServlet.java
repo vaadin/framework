@@ -139,13 +139,8 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
         try {
             final Class<?> classToRun = getClassToRun();
             if (UI.class.isAssignableFrom(classToRun)) {
-                session.addUIProvider(new UIProvider() {
-                    @Override
-                    public Class<? extends UI> getUIClass(
-                            UIClassSelectionEvent event) {
-                        return (Class<? extends UI>) classToRun;
-                    }
-                });
+                session.addUIProvider(new ApplicationRunnerUIProvider(
+                        classToRun));
             } else if (LegacyApplication.class.isAssignableFrom(classToRun)) {
                 // Avoid using own UIProvider for legacy Application
             } else if (UIProvider.class.isAssignableFrom(classToRun)) {
@@ -169,6 +164,19 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
     private String getApplicationRunnerApplicationClassName(
             HttpServletRequest request) {
         return getApplicationRunnerURIs(request).applicationClassname;
+    }
+
+    private static final class ApplicationRunnerUIProvider extends UIProvider {
+        private final Class<?> classToRun;
+
+        private ApplicationRunnerUIProvider(Class<?> classToRun) {
+            this.classToRun = classToRun;
+        }
+
+        @Override
+        public Class<? extends UI> getUIClass(UIClassSelectionEvent event) {
+            return (Class<? extends UI>) classToRun;
+        }
     }
 
     // TODO Don't need to use a data object now that there's only one field

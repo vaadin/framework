@@ -125,7 +125,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     private LinkedList<UIProvider> uiProviders = new LinkedList<UIProvider>();
 
-    private VaadinService service;
+    private transient VaadinService service;
 
     /**
      * Create a new service session tied to a Vaadin service
@@ -257,6 +257,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         if (attribute instanceof VaadinSession) {
             VaadinSession vaadinSession = (VaadinSession) attribute;
             vaadinSession.session = underlyingSession;
+            vaadinSession.service = service;
             return vaadinSession;
         }
 
