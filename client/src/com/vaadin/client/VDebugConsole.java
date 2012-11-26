@@ -694,7 +694,18 @@ public class VDebugConsole extends VOverlay implements Console {
             e.printStackTrace();
         }
         try {
-            VNotification.createNotification(VNotification.DELAY_FOREVER, null)
+            Widget owner = null;
+
+            if (!ApplicationConfiguration.getRunningApplications().isEmpty()) {
+                // Make a wild guess and use the first available
+                // ApplicationConnection. This is better than than leaving the
+                // exception completely unstyled...
+                ApplicationConnection connection = ApplicationConfiguration
+                        .getRunningApplications().get(0);
+                owner = connection.getUIConnector().getWidget();
+            }
+            VNotification
+                    .createNotification(VNotification.DELAY_FOREVER, owner)
                     .show("<h1>Uncaught client side exception</h1><br />"
                             + exceptionText, VNotification.CENTERED, "error");
         } catch (Exception e2) {
