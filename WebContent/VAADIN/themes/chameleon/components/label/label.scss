@@ -73,8 +73,8 @@
 /*******************************************************************************
  * Warning & error
  ******************************************************************************/
-body .v-label-warning,
-body .v-label-error {
+&.v-app .v-label-warning,
+&.v-app .v-label-error {
 	color: #574734;
 	background: #fffec8 url(../../img/label-warning-icon.png) no-repeat .2em 50%;
 	white-space: nowrap;
@@ -87,7 +87,7 @@ body .v-label-error {
 	text-shadow: none;
 	}
 
-body .v-label-error {
+&.v-app .v-label-error {
 	color: #fff;
 	font-weight: bold;
 	background: #c22f24 url(../../img/label-error-icon.png) no-repeat .2em 50%;
@@ -113,7 +113,7 @@ body .v-label-error {
 /*******************************************************************************
  * Loading
  ******************************************************************************/
-body .v-label-loading {
+&.v-app .v-label-loading {
 	height: 32px;
 	line-height: 32px;
 	background-image: url(../../../base/common/img/loading-indicator.gif);
