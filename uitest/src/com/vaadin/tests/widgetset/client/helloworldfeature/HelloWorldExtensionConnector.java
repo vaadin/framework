@@ -42,8 +42,7 @@ public class HelloWorldExtensionConnector extends AbstractExtensionConnector {
     }
 
     @Override
-    public void setParent(ServerConnector parent) {
-        super.setParent(parent);
+    protected void extend(ServerConnector target) {
         greet();
     }
 

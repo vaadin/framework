@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.vaadin.client.ServerConnector;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.shared.Connector;
@@ -261,6 +262,12 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         // TODO do something clever
+    }
+
+    @Override
+    protected void extend(ServerConnector target) {
+        // TODO Auto-generated method stub
+
     }
 
 }

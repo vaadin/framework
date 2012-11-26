@@ -42,7 +42,5 @@ public abstract class AbstractExtensionConnector extends AbstractConnector {
         }
     }
 
-    protected void extend(ServerConnector target) {
-        // Default does nothing
-    }
+    protected abstract void extend(ServerConnector target);
 }
