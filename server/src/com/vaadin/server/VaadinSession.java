@@ -27,6 +27,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Logger;
 
 import javax.portlet.PortletSession;
 import javax.servlet.http.HttpSession;
@@ -125,7 +126,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     private LinkedList<UIProvider> uiProviders = new LinkedList<UIProvider>();
 
-    private VaadinService service;
+    private transient VaadinService service;
 
     /**
      * Create a new service session tied to a Vaadin service
@@ -153,7 +154,15 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         // If we are going to be unbound from the session, the session must be
         // closing
         // Notify the service
-        service.fireSessionDestroy(this);
+        if (service == null) {
+            getLogger()
+                    .warning(
+                            "A VaadinSession instance not associated to any service is getting unbound. "
+                                    + "Session destroy events will not be fired and UIs in the session will not get detached. "
+                                    + "This might happen if a session is deserialized but never used before it expires.");
+        } else {
+            service.fireSessionDestroy(this);
+        }
         session = null;
     }
 
@@ -257,6 +266,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         if (attribute instanceof VaadinSession) {
             VaadinSession vaadinSession = (VaadinSession) attribute;
             vaadinSession.session = underlyingSession;
+            vaadinSession.service = service;
             return vaadinSession;
         }
 
@@ -895,5 +905,9 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      */
     public boolean isClosing() {
         return closing;
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(VaadinSession.class.getName());
     }
 }
