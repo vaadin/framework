@@ -35,15 +35,15 @@
 /*******************************************************************************
  * Small
  ******************************************************************************/
-body .v-splitpanel-hsplitter-small,
-body .v-splitpanel-hsplitter-small-locked {
+&.v-app .v-splitpanel-hsplitter-small,
+&.v-app .v-splitpanel-hsplitter-small-locked {
 	width: 1px;
 	border: none;
 	background-image: none;
 	}
 
-body .v-splitpanel-vsplitter-small,
-body .v-splitpanel-vsplitter-small-locked {
+&.v-app .v-splitpanel-vsplitter-small,
+&.v-app .v-splitpanel-vsplitter-small-locked {
 	height: 1px;
 	border: none;
 	background-image: none;

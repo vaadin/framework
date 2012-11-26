@@ -32,9 +32,9 @@ input.v-widget.v-textfield[type="text"],
 	height: 1.6em;
 	}
 
-body input.v-textfield,
-body textarea.v-textarea,
-body input.v-filterselect-input {
+&.v-app input.v-textfield,
+&.v-app textarea.v-textarea,
+&.v-app input.v-filterselect-input {
 	color: #222;
 	}
 
@@ -44,8 +44,8 @@ body input.v-filterselect-input {
 	border-top-color: #808080;
 	}
 
-body input.v-textfield-prompt,
-body textarea.v-textarea-prompt {
+&.v-app input.v-textfield-prompt,
+&.v-app textarea.v-textarea-prompt {
 	font-style: normal;
 	color: #999;
 	}
@@ -69,8 +69,8 @@ textarea.v-textarea-readonly {
 /*******************************************************************************
  * Small
  ******************************************************************************/
-body input.v-textfield-small,
-body textarea.v-textarea-small,
+&.v-app input.v-textfield-small,
+&.v-app textarea.v-textarea-small,
 .v-datefield-small .v-datefield-textfield,
 .v-datefield-small .v-datefield-button,
 .v-filterselect-small .v-filterselect-input {
@@ -81,8 +81,8 @@ body textarea.v-textarea-small,
 /*******************************************************************************
  * Big (and big search)
  ******************************************************************************/
-body input.v-textfield-big,
-body textarea.v-textarea-big,
+&.v-app input.v-textfield-big,
+&.v-app textarea.v-textarea-big,
 .v-datefield-big .v-datefield-textfield,
 .v-datefield-big .v-datefield-button,
 .v-filterselect-big .v-filterselect-input {
