@@ -31,6 +31,7 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.server.ClientConnector;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.MouseEventDetails;
@@ -121,6 +122,23 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
         // Contents of the window panel is painted
         super.paintContent(target);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.AbstractComponent#setParent(com.vaadin.server.ClientConnector
+     * )
+     */
+    @Override
+    public void setParent(ClientConnector parent) {
+        if (parent == null || parent instanceof UI) {
+            super.setParent(parent);
+        } else {
+            throw new IllegalArgumentException(
+                    "A Window can only be added to a UI using UI.addWindow(Window window)");
+        }
     }
 
     /*

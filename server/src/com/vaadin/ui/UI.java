@@ -969,4 +969,20 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     public void detach() {
         super.detach();
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.AbstractSingleComponentContainer#setContent(com.vaadin.
+     * ui.Component)
+     */
+    @Override
+    public void setContent(Component content) {
+        if (content instanceof Window) {
+            throw new IllegalArgumentException(
+                    "A Window cannot be added using setContent. Use addWindow(Window window) instead");
+        }
+        super.setContent(content);
+    }
 }
