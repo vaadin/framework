@@ -2733,6 +2733,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
         if (ui != null) {
             ui.setLastHeartbeatTimestamp(System.currentTimeMillis());
+            // Ensure that the browser does not cache heartbeat responses.
+            // iOS 6 Safari requires this (#10370)
+            response.setHeader("Cache-Control", "no-cache");
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "UI not found");
         }
