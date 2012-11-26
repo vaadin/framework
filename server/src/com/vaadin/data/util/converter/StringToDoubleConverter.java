@@ -75,6 +75,11 @@ public class StringToDoubleConverter implements Converter<String, Double> {
             throw new ConversionException("Could not convert '" + value
                     + "' to " + getModelType().getName());
         }
+        if (parsedValue == null) {
+            // Convert "" to null
+            return null;
+        }
+
         return parsedValue.doubleValue();
     }
 
