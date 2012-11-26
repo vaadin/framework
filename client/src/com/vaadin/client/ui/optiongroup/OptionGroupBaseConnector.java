@@ -41,7 +41,6 @@ public abstract class OptionGroupBaseConnector extends AbstractFieldConnector
         getWidget().selectedKeys = uidl.getStringArrayVariableAsSet("selected");
 
         getWidget().readonly = isReadOnly();
-        getWidget().disabled = !isEnabled();
         getWidget().multiselect = "multi".equals(uidl
                 .getStringAttribute("selectmode"));
         getWidget().immediate = getState().immediate;
@@ -76,9 +75,9 @@ public abstract class OptionGroupBaseConnector extends AbstractFieldConnector
                 getWidget().newItemField = new VTextField();
                 getWidget().newItemField.addKeyPressHandler(getWidget());
             }
-            getWidget().newItemField.setEnabled(!getWidget().disabled
+            getWidget().newItemField.setEnabled(getWidget().isEnabled()
                     && !getWidget().readonly);
-            getWidget().newItemButton.setEnabled(!getWidget().disabled
+            getWidget().newItemButton.setEnabled(getWidget().isEnabled()
                     && !getWidget().readonly);
 
             if (getWidget().newItemField == null

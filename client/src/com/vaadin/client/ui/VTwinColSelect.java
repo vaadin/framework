@@ -220,13 +220,13 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
     @Override
     public void buildOptions(UIDL uidl) {
-        final boolean enabled = !isDisabled() && !isReadonly();
+        final boolean enabled = isEnabled() && !isReadonly();
         options.setMultipleSelect(isMultiselect());
         selections.setMultipleSelect(isMultiselect());
         options.setEnabled(enabled);
         selections.setEnabled(enabled);
-        add.setEnabled(enabled && !readonly);
-        remove.setEnabled(enabled && !readonly);
+        add.setEnabled(enabled);
+        remove.setEnabled(enabled);
         options.clear();
         selections.clear();
         for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
@@ -426,6 +426,14 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         selections.setTabIndex(tabIndex);
         add.setTabIndex(tabIndex);
         remove.setTabIndex(tabIndex);
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        options.setEnabled(isEnabled() && !isReadonly());
+        selections.setEnabled(isEnabled() && !isReadonly());
+        add.setEnabled(isEnabled() && !isReadonly());
+        remove.setEnabled(isEnabled() && !isReadonly());
     }
 
     @Override
