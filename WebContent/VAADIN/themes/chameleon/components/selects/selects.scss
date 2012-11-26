@@ -4,7 +4,7 @@
 	overflow: hidden;
 	}
 
-body input.v-filterselect-input {
+&.v-app input.v-filterselect-input {
 	margin: 0;
 	padding: 0;
 	border: none;
@@ -12,7 +12,7 @@ body input.v-filterselect-input {
 	line-height: normal;
 	}
 
-body input.v-filterselect-input[type=text] {
+&.v-app input.v-filterselect-input[type=text] {
 	padding: 0;
 	}
 
@@ -52,11 +52,11 @@ body input.v-filterselect-input[type=text] {
     line-height:1.4em;
 }	
 
-body .v-filterselect-suggestpopup-small td {
+&.v-app .v-filterselect-suggestpopup-small td {
 	font-size: .85em;
 	}
 
-body .v-filterselect-suggestpopup-big td {
+&.v-app .v-filterselect-suggestpopup-big td {
 	font-size: 1.1em;
 	}
 
