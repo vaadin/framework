@@ -1,0 +1,2 @@
+.foo:not(.bar) {a: b}
+.baz {@extend .foo}

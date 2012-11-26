@@ -1,0 +1,8 @@
+@-moz-document url(http://sass-lang.com/),
+               url-prefix(http://sass-lang.com/docs),
+               domain(sass-lang.com),
+               domain("sass-lang.com") {
+  .foo {
+    a: b;
+  }
+}

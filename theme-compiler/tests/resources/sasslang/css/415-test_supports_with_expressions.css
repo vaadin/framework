@@ -1,0 +1,5 @@
+@supports (feature1: val) and (feature2: val) or (not (feature23: val4)) {
+  foo {
+    a: b;
+  }
+}

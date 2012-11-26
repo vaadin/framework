@@ -1,0 +1,2 @@
+%-a ns|a.foo {a: b}
+a {@extend .foo} -a {@extend %-a}

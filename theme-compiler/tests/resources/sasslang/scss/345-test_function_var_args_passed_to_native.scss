@@ -1,0 +1,5 @@
+@function foo($args...) {
+  @return adjust-color($args...);
+}
+
+.foo {val: foo(#102030, $blue: 5)}

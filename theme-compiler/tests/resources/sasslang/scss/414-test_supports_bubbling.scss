@@ -1,0 +1,8 @@
+a {
+  @supports (foo: bar) {
+    b: c;
+    @supports (baz: bang) {
+      d: e;
+    }
+  }
+}

@@ -1,0 +1,9 @@
+.foo {
+  a: b;
+}
+
+@media screen {
+  .foo, .bar {
+    c: d;
+  }
+}

@@ -1,0 +1,6 @@
+@mixin foo($a, $b...) {
+  a: length($b);
+  b: nth($b, 2);
+}
+
+.foo {@include foo(1, 2, 3, 4)}

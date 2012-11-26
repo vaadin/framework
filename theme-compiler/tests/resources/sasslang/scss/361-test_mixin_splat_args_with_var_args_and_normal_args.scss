@@ -1,0 +1,8 @@
+@mixin foo($a, $b, $c...) {
+  a: $a;
+  b: $b;
+  c: $c;
+}
+
+$list: 2, 3, 4;
+.foo {@include foo(1, $list...)}

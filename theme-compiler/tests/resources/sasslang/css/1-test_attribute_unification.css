@@ -1,0 +1,3 @@
+-a [foo=bar].baz, -a [foo=bar][foo=baz] {
+  a: b;
+}

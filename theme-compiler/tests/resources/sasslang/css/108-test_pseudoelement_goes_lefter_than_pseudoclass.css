@@ -1,0 +1,3 @@
+.foo::bar, .baz:bang::bar {
+  a: b;
+}
