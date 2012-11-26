@@ -65,7 +65,7 @@ public class SubWindows extends TestBase {
 
         {
             VerticalLayout vl = new VerticalLayout();
-            hl.setMargin(true);
+            vl.setMargin(true);
             Window dialog = new Window("Dialog - undefined width", vl);
             vl.addComponent(new TextField("Field 1"));
 
