@@ -212,7 +212,6 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
         // We always have 1 child, unless the child is hidden
-        getWidget().layout = getContent();
         getWidget().contentPanel.setWidget(getContentWidget());
     }
 
@@ -220,12 +219,13 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
     public void layout() {
         LayoutManager lm = getLayoutManager();
         VWindow window = getWidget();
-        ComponentConnector layout = window.layout;
+        ComponentConnector content = getContent();
+        boolean hasContent = (content != null);
         Element contentElement = window.contentPanel.getElement();
 
         if (!minWidthChecked) {
-            boolean needsMinWidth = !isUndefinedWidth()
-                    || layout.isRelativeWidth();
+            boolean needsMinWidth = !isUndefinedWidth() || !hasContent
+                    || content.isRelativeWidth();
             int minWidth = window.getMinWidth();
             if (needsMinWidth && lm.getInnerWidth(contentElement) < minWidth) {
                 minWidthChecked = true;
@@ -235,8 +235,8 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
             minWidthChecked = true;
         }
 
-        boolean needsMinHeight = !isUndefinedHeight()
-                || layout.isRelativeHeight();
+        boolean needsMinHeight = !isUndefinedHeight() || !hasContent
+                || content.isRelativeHeight();
         int minHeight = window.getMinHeight();
         if (needsMinHeight && lm.getInnerHeight(contentElement) < minHeight) {
             // Use minimum height if less than a certain size
@@ -259,26 +259,29 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
          * otherwise not take the scrollbar into account when calculating the
          * height.
          */
-        Element layoutElement = layout.getWidget().getElement();
-        Style childStyle = layoutElement.getStyle();
-        if (layout.isRelativeHeight() && !BrowserInfo.get().isIE9()) {
-            childStyle.setPosition(Position.ABSOLUTE);
+        if (hasContent) {
+            Element layoutElement = content.getWidget().getElement();
+            Style childStyle = layoutElement.getStyle();
+            if (content.isRelativeHeight() && !BrowserInfo.get().isIE9()) {
+                childStyle.setPosition(Position.ABSOLUTE);
 
-            Style wrapperStyle = contentElement.getStyle();
-            if (window.getElement().getStyle().getWidth().length() == 0
-                    && !layout.isRelativeWidth()) {
-                /*
-                 * Need to lock width to make undefined width work even with
-                 * absolute positioning
-                 */
-                int contentWidth = lm.getOuterWidth(layoutElement);
-                wrapperStyle.setWidth(contentWidth, Unit.PX);
+                Style wrapperStyle = contentElement.getStyle();
+                if (window.getElement().getStyle().getWidth().length() == 0
+                        && !content.isRelativeWidth()) {
+                    /*
+                     * Need to lock width to make undefined width work even with
+                     * absolute positioning
+                     */
+                    int contentWidth = lm.getOuterWidth(layoutElement);
+                    wrapperStyle.setWidth(contentWidth, Unit.PX);
+                } else {
+                    wrapperStyle.clearWidth();
+                }
             } else {
-                wrapperStyle.clearWidth();
+                childStyle.clearPosition();
             }
-        } else {
-            childStyle.clearPosition();
         }
+
     }
 
     @Override
