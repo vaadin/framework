@@ -157,7 +157,9 @@ public class LoginForm extends CustomComponent {
                 + "</head><body onload='setTarget();' style='margin:0;padding:0; background:transparent;' class=\""
                 + ApplicationConstants.GENERATED_BODY_CLASSNAME
                 + "\">"
-                + "<div class='v-app v-app-loginpage' style=\"background:transparent;\">"
+                + "<div class='v-app v-app-loginpage "
+                + getUIThemeClassName()
+                + "' style=\"background:transparent;\">"
                 + "<iframe name='logintarget' style='width:0;height:0;"
                 + "border:0;margin:0;padding:0;display:block'></iframe>"
                 + "<form id='loginf' target='logintarget' onkeypress=\"submitOnEnter(event)\" method=\"post\">"
@@ -172,6 +174,13 @@ public class LoginForm extends CustomComponent {
                 + "<div><div onclick=\"document.forms[0].submit();\" tabindex=\"0\" class=\"v-button\" role=\"button\" ><span class=\"v-button-wrap\"><span class=\"v-button-caption\">"
                 + loginButtonCaption
                 + "</span></span></div></div></form></div>" + "</body></html>";
+    }
+
+    private String getUIThemeClassName() {
+        if (getUI() != null) {
+            return getUI().getTheme();
+        }
+        return "";
     }
 
     /**
