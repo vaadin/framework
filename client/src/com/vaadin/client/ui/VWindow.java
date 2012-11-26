@@ -39,7 +39,6 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
-import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Console;
 import com.vaadin.client.Focusable;
@@ -77,9 +76,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     private static final int STACKING_OFFSET_PIXELS = 15;
 
     public static final int Z_INDEX = 10000;
-
-    /** For internal use only. May be removed or replaced in the future. */
-    public ComponentConnector layout;
 
     /** For internal use only. May be removed or replaced in the future. */
     public Element contents;
@@ -742,16 +738,17 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     private void updateContentsSize() {
+        Widget childWidget = getWidget();
+
         // Update child widget dimensions
-        if (client != null) {
-            Widget childWidget = layout.getWidget();
+        if (client != null && childWidget != null) {
             client.handleComponentRelativeSize(childWidget);
             if (childWidget instanceof HasWidgets) {
                 client.runDescendentsLayout((HasWidgets) childWidget);
             }
         }
 
-        LayoutManager layoutManager = LayoutManager.get(client);
+        LayoutManager layoutManager = getLayoutManager();
         layoutManager.setNeedsMeasure(ConnectorMap.get(client).getConnector(
                 this));
         layoutManager.layoutNow();
@@ -939,10 +936,14 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     private int getDecorationHeight() {
-        LayoutManager lm = layout.getLayoutManager();
+        LayoutManager lm = getLayoutManager();
         int headerHeight = lm.getOuterHeight(header);
         int footerHeight = lm.getOuterHeight(footer);
         return headerHeight + footerHeight;
+    }
+
+    private LayoutManager getLayoutManager() {
+        return LayoutManager.get(client);
     }
 
     public int getMinWidth() {
@@ -950,7 +951,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     private int getDecorationWidth() {
-        LayoutManager layoutManager = layout.getLayoutManager();
+        LayoutManager layoutManager = getLayoutManager();
         return layoutManager.getOuterWidth(getElement())
                 - contentPanel.getElement().getOffsetWidth();
     }
