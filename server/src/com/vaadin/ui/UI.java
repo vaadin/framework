@@ -39,6 +39,7 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.ui.ScrollClientRpc;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIServerRpc;
 import com.vaadin.shared.ui.ui.UIState;
@@ -114,6 +115,17 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
     private Page page = new Page(this);
 
+    /**
+     * Scroll Y position.
+     */
+    private int scrollOffsetY = 0;
+
+    /**
+     * Scroll X position
+     */
+    private int scrollOffsetX = 0;
+
+
     private UIServerRpc rpc = new UIServerRpc() {
         @Override
         public void click(MouseEventDetails mouseDetails) {
@@ -125,6 +137,12 @@ public abstract class UI extends AbstractSingleComponentContainer implements
                 int windowHeight) {
             // TODO We're not doing anything with the view dimensions
             getPage().updateBrowserWindowSize(windowWidth, windowHeight);
+        }
+
+        @Override
+        public void scroll(int scrollTop, int scrollLeft) {
+            scrollOffsetY = scrollTop;
+            scrollOffsetX = scrollLeft;
         }
     };
 
@@ -560,8 +578,44 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         return CurrentInstance.get(UI.class);
     }
 
+    /**
+     * Set top offset to which the UI should scroll to.
+     * 
+     * @param scrollTop
+     */
     public void setScrollTop(int scrollTop) {
-        throw new RuntimeException("Not yet implemented");
+        if (scrollTop < 0) {
+            throw new IllegalArgumentException(
+                    "Scroll offset must be at least 0");
+        }
+        if (scrollOffsetY != scrollTop) {
+            scrollOffsetY = scrollTop;
+            getRpcProxy(ScrollClientRpc.class).setScrollTop(scrollTop);
+        }
+    }
+
+    public int getScrollTop() {
+        return scrollOffsetY;
+    }
+
+    /**
+     * Set left offset to which the UI should scroll to.
+     * 
+     * @param scrollLeft
+     */
+    public void setScrollLeft(int scrollLeft) {
+        if (scrollLeft < 0) {
+            throw new IllegalArgumentException(
+                    "Scroll offset must be at least 0");
+        }
+        if (scrollOffsetX != scrollLeft) {
+            scrollOffsetX = scrollLeft;
+            getRpcProxy(ScrollClientRpc.class).setScrollLeft(scrollLeft);
+        }
+    }
+
+    public int getScrollLeft() {
+        return scrollOffsetX;
     }
 
     @Override

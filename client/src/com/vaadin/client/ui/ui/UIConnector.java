@@ -23,6 +23,8 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.event.dom.client.ScrollEvent;
+import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Command;
@@ -56,6 +58,7 @@ import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.ui.PageClientRpc;
+import com.vaadin.shared.ui.ui.ScrollClientRpc;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIServerRpc;
 import com.vaadin.shared.ui.ui.UIState;
@@ -85,6 +88,21 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 com.google.gwt.user.client.Window.setTitle(title);
             }
         });
+        registerRpc(ScrollClientRpc.class, new ScrollClientRpc() {
+            @Override
+            public void setScrollTop(int scrollTop) {
+                getWidget().scrollTop = scrollTop;
+                DOM.setElementPropertyInt(getWidget().getElement(),
+                        "scrollTop", getWidget().scrollTop);
+            }
+
+            @Override
+            public void setScrollLeft(int scrollLeft) {
+                getWidget().scrollLeft = scrollLeft;
+                DOM.setElementPropertyInt(getWidget().getElement(),
+                        "scrollLeft", getWidget().scrollLeft);
+            }
+        });
         getWidget().addResizeHandler(new ResizeHandler() {
             @Override
             public void onResize(ResizeEvent event) {
@@ -94,6 +112,14 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 if (getState().immediate) {
                     getConnection().sendPendingVariableChanges();
                 }
+            }
+        });
+        getWidget().addScrollHandler(new ScrollHandler() {
+
+            @Override
+            public void onScroll(ScrollEvent event) {
+                getRpcProxy(UIServerRpc.class).scroll(getWidget().scrollTop,
+                        getWidget().scrollLeft);
             }
         });
     }
@@ -242,19 +268,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         if (firstPaint) {
             Window.addWindowClosingHandler(getWidget());
             Window.addResizeHandler(getWidget());
-        }
-
-        // finally set scroll position from UIDL
-        if (uidl.hasVariable("scrollTop")) {
-            getWidget().scrollable = true;
-            getWidget().scrollTop = uidl.getIntVariable("scrollTop");
-            DOM.setElementPropertyInt(getWidget().getElement(), "scrollTop",
-                    getWidget().scrollTop);
-            getWidget().scrollLeft = uidl.getIntVariable("scrollLeft");
-            DOM.setElementPropertyInt(getWidget().getElement(), "scrollLeft",
-                    getWidget().scrollLeft);
-        } else {
-            getWidget().scrollable = false;
         }
 
         if (uidl.hasAttribute("scrollTo")) {
