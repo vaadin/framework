@@ -1,0 +1,6 @@
+@media screen {
+  @flooblehoof {
+    .foo {a: b}
+    .bar {@extend .foo}
+  }
+}

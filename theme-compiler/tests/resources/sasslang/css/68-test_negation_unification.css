@@ -1,0 +1,3 @@
+-a :not(.foo).baz, -a :not(.foo):not(.bar) {
+  a: b;
+}

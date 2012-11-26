@@ -1,0 +1,4 @@
+.foo {a: b}
+.bar {@extend .foo}
+.baz {@extend .bar}
+.bip {@extend .bar}

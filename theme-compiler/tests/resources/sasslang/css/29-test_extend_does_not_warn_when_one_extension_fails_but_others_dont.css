@@ -1,0 +1,7 @@
+a.bar {
+  a: b;
+}
+
+.bar, b.foo {
+  c: d;
+}

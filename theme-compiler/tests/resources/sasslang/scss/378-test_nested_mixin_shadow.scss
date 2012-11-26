@@ -1,0 +1,8 @@
+@mixin bar {a: b}
+
+foo {
+  @mixin bar {c: d}
+  @include bar;
+}
+
+baz {@include bar}

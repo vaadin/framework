@@ -1,0 +1,2 @@
+.foo {a: b; @extend .bar}
+.bar {c: d; @extend .foo}

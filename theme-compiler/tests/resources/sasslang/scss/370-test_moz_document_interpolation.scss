@@ -1,0 +1,7 @@
+$domain: "sass-lang.com";
+@-moz-document url(http://#{$domain}/),
+               url-prefix(http://#{$domain}/docs),
+               domain(#{$domain}),
+               #{domain($domain)} {
+  .foo {a: b}
+}

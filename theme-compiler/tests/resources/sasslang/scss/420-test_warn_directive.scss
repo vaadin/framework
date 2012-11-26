@@ -1,0 +1,3 @@
+@mixin foo { @warn "this is a mixin";}
+@warn "this is a warning";
+bar {c: d; @include foo;}
