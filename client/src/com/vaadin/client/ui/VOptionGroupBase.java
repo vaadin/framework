@@ -27,6 +27,7 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
@@ -34,7 +35,7 @@ import com.vaadin.client.Focusable;
 import com.vaadin.client.UIDL;
 
 public abstract class VOptionGroupBase extends Composite implements Field,
-        ClickHandler, ChangeHandler, KeyPressHandler, Focusable {
+        ClickHandler, ChangeHandler, KeyPressHandler, Focusable, HasEnabled {
 
     public static final String CLASSNAME_OPTION = "v-select-option";
 
@@ -54,7 +55,7 @@ public abstract class VOptionGroupBase extends Composite implements Field,
     public boolean multiselect;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public boolean disabled;
+    public boolean enabled;
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean readonly;
@@ -119,8 +120,8 @@ public abstract class VOptionGroupBase extends Composite implements Field,
         return multiselect;
     }
 
-    protected boolean isDisabled() {
-        return disabled;
+    public boolean isEnabled() {
+        return enabled;
     }
 
     protected boolean isReadonly() {

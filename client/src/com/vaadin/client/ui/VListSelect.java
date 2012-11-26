@@ -66,7 +66,7 @@ public class VListSelect extends VOptionGroupBase {
     @Override
     public void buildOptions(UIDL uidl) {
         select.setMultipleSelect(isMultiselect());
-        select.setEnabled(!isDisabled() && !isReadonly());
+        select.setEnabled(isEnabled() && !isReadonly());
         select.clear();
         if (!isMultiselect() && isNullSelectionAllowed()
                 && !isNullSelectionItemAvailable()) {
@@ -131,6 +131,11 @@ public class VListSelect extends VOptionGroupBase {
     @Override
     public void setTabIndex(int tabIndex) {
         getOptionsContainer().setTabIndex(tabIndex);
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        select.setEnabled(isEnabled() && !isReadonly());
     }
 
     @Override

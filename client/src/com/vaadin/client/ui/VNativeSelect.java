@@ -46,7 +46,7 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
 
     @Override
     public void buildOptions(UIDL uidl) {
-        select.setEnabled(!isDisabled() && !isReadonly());
+        select.setEnabled(isEnabled() && !isReadonly());
         select.clear();
         firstValueIsTemporaryNullItem = false;
 
@@ -116,6 +116,11 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
     @Override
     public void setTabIndex(int tabIndex) {
         getOptionsContainer().setTabIndex(tabIndex);
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        select.setEnabled(isEnabled() && !isReadonly());
     }
 
     @Override
