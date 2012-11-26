@@ -23,4 +23,7 @@ public interface UIServerRpc extends ClickRpc, ServerRpc {
     @Delayed(lastOnly = true)
     public void resize(int viewWidth, int viewHeight, int windowWidth,
             int windowHeight);
+
+    @Delayed(lastOnly = true)
+    public void scroll(int scrollTop, int scrollLeft);
 }

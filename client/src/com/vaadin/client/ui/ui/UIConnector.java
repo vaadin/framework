@@ -23,6 +23,8 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.event.dom.client.ScrollEvent;
+import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Command;
@@ -94,6 +96,14 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 if (getState().immediate) {
                     getConnection().sendPendingVariableChanges();
                 }
+            }
+        });
+        getWidget().addScrollHandler(new ScrollHandler() {
+
+            @Override
+            public void onScroll(ScrollEvent event) {
+                getRpcProxy(UIServerRpc.class).scroll(getWidget().scrollTop,
+                        getWidget().scrollLeft);
             }
         });
     }

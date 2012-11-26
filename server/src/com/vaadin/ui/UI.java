@@ -114,6 +114,21 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
     private Page page = new Page(this);
 
+    /**
+     * Scroll Y position.
+     */
+    private int scrollOffsetY = 0;
+
+    /**
+     * Scroll X position
+     */
+    private int scrollOffsetX = 0;
+
+    /**
+     * Scrolling mode.
+     */
+    private boolean scrollable = false;
+
     private UIServerRpc rpc = new UIServerRpc() {
         @Override
         public void click(MouseEventDetails mouseDetails) {
@@ -125,6 +140,12 @@ public abstract class UI extends AbstractSingleComponentContainer implements
                 int windowHeight) {
             // TODO We're not doing anything with the view dimensions
             getPage().updateBrowserWindowSize(windowWidth, windowHeight);
+        }
+
+        @Override
+        public void scroll(int scrollTop, int scrollLeft) {
+            scrollOffsetY = scrollTop;
+            scrollOffsetX = scrollLeft;
         }
     };
 
@@ -234,6 +255,11 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
         if (isResizeLazy()) {
             target.addAttribute(UIConstants.RESIZE_LAZY, true);
+        }
+        // Send scroll position if scrollable
+        if (scrollable) {
+            target.addVariable(this, "scrollTop", scrollOffsetY);
+            target.addVariable(this, "scrollLeft", scrollOffsetX);
         }
     }
 
@@ -560,8 +586,58 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         return CurrentInstance.get(UI.class);
     }
 
+    /**
+     * Set UI scrollable mode to know if scrollTop and scrollLeft should be sent
+     * to server.
+     * 
+     * @param scrollable
+     */
+    public void setScrollable(boolean scrollable) {
+        this.scrollable = scrollable;
+    }
+
+    public boolean isScrollable() {
+        return scrollable;
+    }
+
+    /**
+     * Set top offset to which the UI should scroll to.
+     * 
+     * @param scrollTop
+     */
     public void setScrollTop(int scrollTop) {
-        throw new RuntimeException("Not yet implemented");
+        if (scrollTop < 0) {
+            throw new IllegalArgumentException(
+                    "Scroll offset must be at least 0");
+        }
+        if (scrollOffsetY != scrollTop) {
+            scrollOffsetY = scrollTop;
+            markAsDirty();
+        }
+    }
+
+    public int getScrollTop() {
+        return scrollOffsetY;
+    }
+
+    /**
+     * Set left offset to which the UI should scroll to.
+     * 
+     * @param scrollLeft
+     */
+    public void setScrollLeft(int scrollLeft) {
+        if (scrollLeft < 0) {
+            throw new IllegalArgumentException(
+                    "Scroll offset must be at least 0");
+        }
+        if (scrollOffsetX != scrollLeft) {
+            scrollOffsetX = scrollLeft;
+            markAsDirty();
+        }
+    }
+
+    public int getScrollLeft() {
+        return scrollOffsetX;
     }
 
     @Override
