@@ -31,6 +31,13 @@
 	background: #e9eced;
 }
 
+/* Temporarily moved here to make drag'n'drop work before #10384 is fixed */
+.v-drag-element {
+        font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
+        color: #464f52;
+        font-size: 13px;
+}
+
 @mixin runo {
 	// TODO move?
 	@include base;
