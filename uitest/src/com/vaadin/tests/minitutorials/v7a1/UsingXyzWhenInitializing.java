@@ -17,6 +17,7 @@
 package com.vaadin.tests.minitutorials.v7a1;
 
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.WebBrowser;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -51,18 +52,18 @@ public class UsingXyzWhenInitializing extends UI {
             layout.addComponent(new Label("Welcome to my application"));
         }
 
-        // WebBrowser browser = request.getBrowserDetails().getWebBrowser();
-        // String resolution = "Your browser window on startup was "
-        // + browser.getClientWidth() + "x" + browser.getClientHeight();
-        // if (browser.getClientWidth() > 1024) {
-        // getContent().addComponent(
-        // new Label("The is the large version of the application. "
-        // + resolution));
-        // } else {
-        // getContent().addComponent(
-        // new Label("This is the small version of the application. "
-        // + resolution));
-        // }
+        WebBrowser browser = getPage().getWebBrowser();
+        String resolution = "Your browser window on startup was "
+                + browser.getScreenWidth() + "x" + browser.getScreenHeight();
+        if (browser.getScreenWidth() > 1024) {
+            layout.addComponent(new Label(
+                    "The is the large version of the application. "
+                            + resolution));
+        } else {
+            layout.addComponent(new Label(
+                    "This is the small version of the application. "
+                            + resolution));
+        }
     }
 
 }

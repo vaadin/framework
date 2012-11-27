@@ -46,7 +46,7 @@ public class AutoGeneratingForm extends UI {
         fieldGroup.setItemDataSource(new BeanItem<Person>(new Person("John",
                 "Doe", 34)));
 
-        // Loop through the properties, build fields for them and add the fields
+        // Loop through the properties, build fields for them and add the fields 
         // to this root
         for (Object propertyId : fieldGroup.getUnboundPropertyIds()) {
             layout.addComponent(fieldGroup.buildAndBind(propertyId));
