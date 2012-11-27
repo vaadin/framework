@@ -15,9 +15,17 @@
  */
 package com.vaadin.shared.ui.gridlayout;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.AbstractLayoutState;
+import com.vaadin.shared.ui.AlignmentInfo;
 
 public class GridLayoutState extends AbstractLayoutState {
+    public static AlignmentInfo ALIGNMENT_DEFAULT = AlignmentInfo.TOP_LEFT;
+
     {
         primaryStyleName = "v-gridlayout";
     }
@@ -25,4 +33,13 @@ public class GridLayoutState extends AbstractLayoutState {
     public int rows = 0;
     public int columns = 0;
     public int marginsBitmask = 0;
+    public Map<Connector, ChildComponentData> childData = new HashMap<Connector, GridLayoutState.ChildComponentData>();
+
+    public static class ChildComponentData implements Serializable {
+        public int column1;
+        public int row1;
+        public int column2;
+        public int row2;
+        public int alignment = ALIGNMENT_DEFAULT.getBitMask();
+    }
 }
