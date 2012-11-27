@@ -69,6 +69,7 @@ public class SystemMessagesTest extends AbstractTestUI {
             @Override
             public void buttonClick(ClickEvent event) {
                 failButton.fail = true;
+                failButton.markAsDirty();
             }
         });
         addComponent(failButton);
