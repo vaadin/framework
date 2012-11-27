@@ -40,6 +40,8 @@ public class VListSelect extends VOptionGroupBase {
         select.addClickHandler(this);
         select.setVisibleItemCount(VISIBLE_COUNT);
         setStyleName(CLASSNAME);
+
+        updateEnabledState();
     }
 
     @Override
@@ -66,7 +68,6 @@ public class VListSelect extends VOptionGroupBase {
     @Override
     public void buildOptions(UIDL uidl) {
         select.setMultipleSelect(isMultiselect());
-        select.setEnabled(!isDisabled() && !isReadonly());
         select.clear();
         if (!isMultiselect() && isNullSelectionAllowed()
                 && !isNullSelectionItemAvailable()) {
@@ -131,6 +132,11 @@ public class VListSelect extends VOptionGroupBase {
     @Override
     public void setTabIndex(int tabIndex) {
         getOptionsContainer().setTabIndex(tabIndex);
+    }
+
+    @Override
+    protected void updateEnabledState() {
+        select.setEnabled(isEnabled() && !isReadonly());
     }
 
     @Override

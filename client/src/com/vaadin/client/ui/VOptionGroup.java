@@ -16,6 +16,7 @@
 
 package com.vaadin.client.ui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -34,6 +35,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Focusable;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
@@ -52,6 +54,8 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
     public final Panel panel;
 
     private final Map<CheckBox, String> optionsToKeys;
+
+    private final List<Boolean> optionsEnabled;
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean sendFocusEvents = false;
@@ -85,6 +89,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
         super(CLASSNAME);
         panel = (Panel) optionsContainer;
         optionsToKeys = new HashMap<CheckBox, String>();
+        optionsEnabled = new ArrayList<Boolean>();
     }
 
     /*
@@ -93,6 +98,7 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
     @Override
     public void buildOptions(UIDL uidl) {
         panel.clear();
+        optionsEnabled.clear();
         for (final Iterator<?> it = uidl.getChildIterator(); it.hasNext();) {
             final UIDL opUidl = (UIDL) it.next();
             CheckBox op;
@@ -124,12 +130,14 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
 
             op.addStyleName(CLASSNAME_OPTION);
             op.setValue(opUidl.getBooleanAttribute("selected"));
-            boolean enabled = !opUidl
-                    .getBooleanAttribute(OptionGroupConstants.ATTRIBUTE_OPTION_DISABLED)
-                    && !isReadonly() && !isDisabled();
+            boolean optionEnabled = !opUidl
+                    .getBooleanAttribute(OptionGroupConstants.ATTRIBUTE_OPTION_DISABLED);
+            boolean enabled = optionEnabled && !isReadonly() && isEnabled();
             op.setEnabled(enabled);
+            optionsEnabled.add(optionEnabled);
             setStyleName(op.getElement(),
-                    ApplicationConnection.DISABLED_CLASSNAME, !enabled);
+                    ApplicationConnection.DISABLED_CLASSNAME,
+                    !(optionEnabled && isEnabled()));
             op.addClickHandler(this);
             optionsToKeys.put(op, opUidl.getStringAttribute("key"));
             panel.add(op);
@@ -165,6 +173,24 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
         for (Iterator<Widget> iterator = panel.iterator(); iterator.hasNext();) {
             FocusWidget widget = (FocusWidget) iterator.next();
             widget.setTabIndex(tabIndex);
+        }
+    }
+
+    @Override
+    protected void updateEnabledState() {
+        int i = 0;
+        boolean optionGroupEnabled = isEnabled() && !isReadonly();
+        // sets options enabled according to the widget's enabled,
+        // readonly and each options own enabled
+        for (Widget w : panel) {
+            if (w instanceof HasEnabled) {
+                ((HasEnabled) w).setEnabled(optionsEnabled.get(i)
+                        && optionGroupEnabled);
+                setStyleName(w.getElement(),
+                        ApplicationConnection.DISABLED_CLASSNAME,
+                        !(optionsEnabled.get(i) && isEnabled()));
+            }
+            i++;
         }
     }
 

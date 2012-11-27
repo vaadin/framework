@@ -27,6 +27,7 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
@@ -34,7 +35,7 @@ import com.vaadin.client.Focusable;
 import com.vaadin.client.UIDL;
 
 public abstract class VOptionGroupBase extends Composite implements Field,
-        ClickHandler, ChangeHandler, KeyPressHandler, Focusable {
+        ClickHandler, ChangeHandler, KeyPressHandler, Focusable, HasEnabled {
 
     public static final String CLASSNAME_OPTION = "v-select-option";
 
@@ -53,11 +54,9 @@ public abstract class VOptionGroupBase extends Composite implements Field,
     /** For internal use only. May be removed or replaced in the future. */
     public boolean multiselect;
 
-    /** For internal use only. May be removed or replaced in the future. */
-    public boolean disabled;
+    private boolean enabled;
 
-    /** For internal use only. May be removed or replaced in the future. */
-    public boolean readonly;
+    private boolean readonly;
 
     /** For internal use only. May be removed or replaced in the future. */
     public int cols = 0;
@@ -119,11 +118,11 @@ public abstract class VOptionGroupBase extends Composite implements Field,
         return multiselect;
     }
 
-    protected boolean isDisabled() {
-        return disabled;
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    protected boolean isReadonly() {
+    public boolean isReadonly() {
         return readonly;
     }
 
@@ -184,10 +183,26 @@ public abstract class VOptionGroupBase extends Composite implements Field,
         }
     }
 
+    public void setReadonly(boolean readonly) {
+        if (this.readonly != readonly) {
+            this.readonly = readonly;
+            updateEnabledState();
+        }
+    }
+
+    public void setEnabled(boolean enabled) {
+        if (this.enabled != enabled) {
+            this.enabled = enabled;
+            updateEnabledState();
+        }
+    }
+
     /** For internal use only. May be removed or replaced in the future. */
     public abstract void buildOptions(UIDL uidl);
 
     protected abstract String[] getSelectedItems();
+
+    protected abstract void updateEnabledState();
 
     protected String getSelectedItem() {
         final String[] sel = getSelectedItems();

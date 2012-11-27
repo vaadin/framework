@@ -38,6 +38,7 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
         select.addChangeHandler(this);
         select.setStyleName(CLASSNAME + "-select");
 
+        updateEnabledState();
     }
 
     protected ListBox getOptionsContainer() {
@@ -46,7 +47,6 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
 
     @Override
     public void buildOptions(UIDL uidl) {
-        select.setEnabled(!isDisabled() && !isReadonly());
         select.clear();
         firstValueIsTemporaryNullItem = false;
 
@@ -116,6 +116,11 @@ public class VNativeSelect extends VOptionGroupBase implements Field {
     @Override
     public void setTabIndex(int tabIndex) {
         getOptionsContainer().setTabIndex(tabIndex);
+    }
+
+    @Override
+    protected void updateEnabledState() {
+        select.setEnabled(isEnabled() && !isReadonly());
     }
 
     @Override

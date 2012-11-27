@@ -38,6 +38,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
+import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.shared.ui.twincolselect.TwinColSelectConstants;
@@ -139,6 +140,8 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
         selections.addMouseDownHandler(this);
         selections.addKeyDownHandler(this);
+
+        updateEnabledState();
     }
 
     public HTML getOptionsCaption() {
@@ -220,13 +223,8 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
 
     @Override
     public void buildOptions(UIDL uidl) {
-        final boolean enabled = !isDisabled() && !isReadonly();
         options.setMultipleSelect(isMultiselect());
         selections.setMultipleSelect(isMultiselect());
-        options.setEnabled(enabled);
-        selections.setEnabled(enabled);
-        add.setEnabled(enabled && !readonly);
-        remove.setEnabled(enabled && !readonly);
         options.clear();
         selections.clear();
         for (final Iterator<?> i = uidl.getChildIterator(); i.hasNext();) {
@@ -245,9 +243,6 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
             selections.setVisibleItemCount(getRows());
 
         }
-
-        add.setStyleName("v-disabled", readonly);
-        remove.setStyleName("v-disabled", readonly);
     }
 
     @Override
@@ -426,6 +421,17 @@ public class VTwinColSelect extends VOptionGroupBase implements KeyDownHandler,
         selections.setTabIndex(tabIndex);
         add.setTabIndex(tabIndex);
         remove.setTabIndex(tabIndex);
+    }
+
+    @Override
+    public void updateEnabledState() {
+        boolean enabled = isEnabled() && !isReadonly();
+        options.setEnabled(enabled);
+        selections.setEnabled(enabled);
+        add.setEnabled(enabled);
+        remove.setEnabled(enabled);
+        add.setStyleName(ApplicationConnection.DISABLED_CLASSNAME, !enabled);
+        remove.setStyleName(ApplicationConnection.DISABLED_CLASSNAME, !enabled);
     }
 
     @Override
