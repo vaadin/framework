@@ -29,7 +29,7 @@
 			themesLoaded[url] = true;
 		}		
 	};
-	
+		
 	var isWidgetsetLoaded = function(widgetset) {
 		var className = widgetset.replace(/\./g, "_");
 		return (typeof window[className]) != "undefined";
@@ -45,8 +45,13 @@
 				alert("Failed to load the widgetset: " + url);
 			}
 		}, 15000);
-		
-		var url = basePath + widgetset + "/" + widgetset + ".nocache.js?" + new Date().getTime();
+	
+		var url;
+		if (window.getVaadinWidgetsetUrl) {
+			url = window.getVaadinWidgetsetUrl(basePath, widgetset);
+		} else {
+			url = basePath + widgetset + "/" + widgetset + ".nocache.js?" + new Date().getTime();
+		}
 		
 		var scriptTag = document.createElement('script');
 		scriptTag.setAttribute('type', 'text/javascript');
@@ -57,7 +62,7 @@
 			pendingApps: []
 		};
 	};
-	
+		
 	window.vaadin = window.vaadin || {
 		initApplication: function(appId, config) {
 			if (apps[appId]) {
