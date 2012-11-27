@@ -422,11 +422,7 @@ public class VAccordion extends VTabsheetBase {
         public void replaceWidget(Widget newWidget) {
             if (getWidgetCount() > 1) {
                 Widget oldWidget = getWidget(1);
-                ComponentConnector oldPaintable = ConnectorMap.get(client)
-                        .getConnector(oldWidget);
-                ConnectorMap.get(client).unregisterConnector(oldPaintable);
                 widgets.remove(oldWidget);
-                remove(1);
             }
             add(newWidget, content);
             widgets.add(newWidget);
