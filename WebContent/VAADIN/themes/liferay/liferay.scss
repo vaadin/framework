@@ -2,6 +2,7 @@
 
 @import "accordion/accordion.scss";
 @import "button/button.scss";
+@import "colorpicker/colorpicker.scss";
 
 @import "common/common.scss";
 
@@ -29,6 +30,7 @@
 	// TODO @each
 	@include liferay-accordion;
 	@include liferay-button;
+	@include liferay-colorpicker;
 	
 	@include liferay-common;
 	@include liferay-contextmenu;

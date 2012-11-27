@@ -4,6 +4,7 @@
 @import "accordion/accordion.scss";
 @import "button/button.scss";
 @import "caption/caption.scss";
+@import "colorpicker/colorpicker.scss";
 @import "common/common.scss";
 @import "datefield/datefield.scss";
 @import "inlinedatefield/inlinedatefield.scss";
@@ -35,6 +36,7 @@
 	@include runo-accordion;
 	@include runo-button;
 	@include runo-caption;
+	@include runo-colorpicker;
 	
 	@include runo-common;
 	

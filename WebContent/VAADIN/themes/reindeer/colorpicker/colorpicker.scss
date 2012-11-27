@@ -1,0 +1,15 @@
+@mixin reindeer-colorpicker($name : v-colorpicker) {
+
+.#{$name}-popup {
+	width: 246px;
+}
+
+.#{$name}-popup .v-tabsheet .#{$name}-grid {
+	height: 284px;
+}
+
+.#{$name}-popup .v-filterselect {
+	padding-right: 25px;
+}
+
+}

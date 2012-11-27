@@ -5,6 +5,7 @@
 @import "a-sprite-definitions/a-sprite-definitions.scss";
 @import "button/button.scss";
 @import "button/nativebutton.scss";
+@import "colorpicker/colorpicker.scss";
 
 @import "common/common.scss";
 
@@ -38,6 +39,7 @@
 	// TODO @include a-sprite-definitions;
 	@include reindeer-button;
 	@include reindeer-nativebutton;
+	@include reindeer-colorpicker;
 	@include reindeer-common;
 	@include reindeer-datefield;
 	@include reindeer-inlinedatefield;

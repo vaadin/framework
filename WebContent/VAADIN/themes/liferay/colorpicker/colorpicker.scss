@@ -1,0 +1,19 @@
+@mixin liferay-colorpicker($name : v-colorpicker) {
+
+.#{$name}-button-color {
+	border: 1px solid #999999;
+}
+
+.#{$name}-popup {
+	width: 252px;
+}
+
+.#{$name}-popup .v-tabsheet .#{$name}-grid {
+	height: 312px;
+}
+
+.#{$name}-popup .v-filterselect {
+	padding-right: 24px;
+}
+
+}
