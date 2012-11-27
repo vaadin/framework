@@ -1,0 +1,20 @@
+@mixin runo-colorpicker($name : v-colorpicker) {
+
+.#{$name}-popup {
+	width: 248px;
+}
+
+.#{$name}-popup .v-tabsheet .#{$name}-grid {
+	height: 305px;
+}
+
+.#{$name}-popup .v-tabsheet-deco {
+	background: none;
+	height: 0;
+}
+
+.#{$name}-popup .v-filterselect {
+	padding-right: 25px;
+}
+
+}

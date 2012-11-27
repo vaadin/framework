@@ -1,0 +1,15 @@
+@mixin chameleon-colorpicker($name : v-colorpicker) {
+
+.#{$name}-button-color {
+	border: 1px solid #8B8B8B;
+}
+
+.#{$name}-popup {
+	width: 248px;
+}
+
+.#{$name}-popup .v-tabsheet .#{$name}-grid {
+	height: 308px;
+}
+
+}

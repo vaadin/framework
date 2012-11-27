@@ -5,6 +5,7 @@
 @import "button/checkbox.scss";
 @import "layout/layout.scss";
 @import "caption/caption.scss";
+@import "colorpicker/colorpicker.scss";
 @import "common/common.scss";
 @import "csslayout/csslayout.scss";
 @import "customcomponent/customcomponent.scss";
@@ -61,6 +62,7 @@
 	@include base-nativebutton;
 	@include base-checkbox;
 	@include base-caption;
+	@include base-colorpicker;
 	
 	// here for now to preserve old semantics
 	@include base-common;
