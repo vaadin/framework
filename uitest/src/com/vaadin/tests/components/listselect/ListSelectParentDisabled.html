@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>ListSelectParentDisabled</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">ListSelectParentDisabled</td></tr>
+</thead><tbody>
+<!--Tests that the ListSelect is disabled / enabled correctly when the parent is disabled / enabled. Test the updating of the css class name v-disabled too.-->
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.components.select.OptionGroupBaseSelects?restartApplication</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertEditable</td>
+	<td>vaadin=runcomvaadintestscomponentsselectOptionGroupBaseSelects::/VVerticalLayout[0]/VVerticalLayout[0]/VHorizontalLayout[2]/VListSelect[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertNotEditable</td>
+	<td>vaadin=runcomvaadintestscomponentsselectOptionGroupBaseSelects::/VVerticalLayout[0]/VVerticalLayout[0]/VHorizontalLayout[2]/VListSelect[1]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertNotCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsselectOptionGroupBaseSelects::/VVerticalLayout[0]/VVerticalLayout[0]/VHorizontalLayout[2]/VListSelect[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsselectOptionGroupBaseSelects::/VVerticalLayout[0]/VVerticalLayout[0]/VHorizontalLayout[2]/VListSelect[1]</td>
+	<td>v-disabled</td>
+</tr>
+<!--disable parent-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsselectOptionGroupBaseSelects::/VVerticalLayout[0]/VVerticalLayout[0]/VHorizontalLayout[0]/VCheckBox[0]/domChild[0]</td>
+	<td>7,6</td>
+</tr>
+<tr>
+	<td>assertNotEditable</td>
+	<td>vaadin=runcomvaadintestscomponentsselectOptionGroupBaseSelects::/VVerticalLayout[0]/VVerticalLayout[0]/VHorizontalLayout[2]/VListSelect[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertNotEditable</td>
+	<td>vaadin=runcomvaadintestscomponentsselectOptionGroupBaseSelects::/VVerticalLayout[0]/VVerticalLayout[0]/VHorizontalLayout[2]/VListSelect[1]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsselectOptionGroupBaseSelects::/VVerticalLayout[0]/VVerticalLayout[0]/VHorizontalLayout[2]/VListSelect[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsselectOptionGroupBaseSelects::/VVerticalLayout[0]/VVerticalLayout[0]/VHorizontalLayout[2]/VListSelect[1]</td>
+	<td>v-disabled</td>
+</tr>
+<!--enable parent-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsselectOptionGroupBaseSelects::/VVerticalLayout[0]/VVerticalLayout[0]/VHorizontalLayout[0]/VCheckBox[0]/domChild[0]</td>
+	<td>7,6</td>
+</tr>
+<tr>
+	<td>assertEditable</td>
+	<td>vaadin=runcomvaadintestscomponentsselectOptionGroupBaseSelects::/VVerticalLayout[0]/VVerticalLayout[0]/VHorizontalLayout[2]/VListSelect[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertNotEditable</td>
+	<td>vaadin=runcomvaadintestscomponentsselectOptionGroupBaseSelects::/VVerticalLayout[0]/VVerticalLayout[0]/VHorizontalLayout[2]/VListSelect[1]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertNotCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsselectOptionGroupBaseSelects::/VVerticalLayout[0]/VVerticalLayout[0]/VHorizontalLayout[2]/VListSelect[0]</td>
+	<td>v-disabled</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentsselectOptionGroupBaseSelects::/VVerticalLayout[0]/VVerticalLayout[0]/VHorizontalLayout[2]/VListSelect[1]</td>
+	<td>v-disabled</td>
+</tr>
+</tbody></table>
+</body>
+</html>
