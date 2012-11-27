@@ -50,7 +50,7 @@ public class ConnectorMap {
     }
 
     /**
-     * Returns a {@link ComponentConnector} element by its root element
+     * Returns a {@link ComponentConnector} element by its root element.
      * 
      * @param element
      *            Root element of the {@link ComponentConnector}
@@ -58,7 +58,23 @@ public class ConnectorMap {
      *         registered
      */
     public ComponentConnector getConnector(Element element) {
-        return (ComponentConnector) getConnector(getConnectorId(element));
+        ServerConnector connector = getConnector(getConnectorId(element));
+        if (!(connector instanceof ComponentConnector)) {
+            // This can happen at least if element is not part of this
+            // application but is part of another application and the connector
+            // id happens to map to e.g. an extension in this application
+            return null;
+        }
+
+        // Ensure this connector is really connected to the element. We cannot
+        // be sure of this otherwise as the id comes from the DOM and could be
+        // part of another application.
+        ComponentConnector cc = (ComponentConnector) connector;
+        if (cc.getWidget() == null || cc.getWidget().getElement() != element) {
+            return null;
+        }
+
+        return cc;
     }
 
     /**
