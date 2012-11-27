@@ -501,6 +501,7 @@ TOKEN :
   | < COMMA     : "," >
   | < SEMICOLON : ";" >
   | < PRECEDES  : ">" >
+  | < SIBLING   : "~" >
   | < SUCCEEDS : "<" >
   | < DIV       : "/" >
   | < LBRACKET  : "[" >
@@ -964,6 +965,7 @@ void skipUnknownRule() :
 | n=";"
 | n="+"
 | n=">"
+| n="~"
 | n="-"
 | n=<UNKNOWN>
    ) {
@@ -987,8 +989,10 @@ char connector = ' ';
 {
     "+" ( <S> )* { return '+'; }
     | ">" ( <S> )* { return '>'; }
+    | "~" ( <S> )* { return '~'; }
 | <S>  ( ( "+" { connector = '+'; } 
-           | ">" { connector = '>'; } )
+           | ">" { connector = '>'; }
+           | "~" { connector = '~'; } )
  ( <S> )* )? { return connector; }
 }
 
@@ -1167,10 +1171,9 @@ String simple_selector(String selector, char comb) :
 		    selector = selector + comb + simple_current;
 		    break;
 		case '+':
-			selector = selector + " " + comb + " " + simple_current;
-		    break;
 		case '>':
-		    selector = selector + " " + comb + " " + simple_current;
+		case '~':
+			selector = selector + " " + comb + " " + simple_current;
 		    break;
 		default:
 		    throw new ParseException("invalid state. send a bug report");
@@ -1286,7 +1289,8 @@ String attrib(String pred) :
  */
 String pseudo(String pred) :
 {Token n;
-Token language;
+Token param;
+String d;
 boolean isPseudoElement = false;
 }
 {
@@ -1310,21 +1314,21 @@ boolean isPseudoElement = false;
 		}
 	    }
 	}
-	  | ( n=<FUNCTION> ( <S> )* language=<IDENT> ( <S> )* ")" 
-	      {
-		  String f = convertIdent(n.image);
-		  if (f.equals("lang(")) {
-		      String d = convertIdent(language.image);
+	  | ( n=<FUNCTION> ( <S> )* (
+	      param=<IDENT> { d = convertIdent(param.image); }
+	      | param=<NUMBER> { d = param.image; }
+	      | d=simple_selector(null, ' ')
+	      ) ( <S> )* ")" 
+	          {
+	          String f = convertIdent(n.image);
+	          String colons = isPseudoElement ? "::" : ":";
+	          String pseudofn = colons + f + d + ")";
 		      if (pred == null) {
-			  return d;
+			  return pseudofn;
 		      } else {
-			  return pred + d;
-		      }
-		  } else {
-		      throw new CSSParseException("invalid pseudo function name " 
-						  + f, getLocator());
-		  }
-	      }
+			  return pred + pseudofn;
+	          }
+	          }
 	      )
 	  )
 }
