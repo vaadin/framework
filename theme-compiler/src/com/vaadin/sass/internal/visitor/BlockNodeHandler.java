@@ -98,14 +98,15 @@ public class BlockNodeHandler {
         }
         node.setSelectorList(newList);
         Node oldParent = node.getParentNode();
+
         HashMap<Node, Node> lastNodeAdded = ScssStylesheet.getLastNodeAdded();
-        if (lastNodeAdded.get(oldParent) != null) {
-            oldParent.getParentNode().appendChild(node,
-                    lastNodeAdded.get(oldParent));
-        } else {
-            oldParent.getParentNode().appendChild(node, oldParent);
+        Node lastAdded = lastNodeAdded.get(oldParent.getParentNode());
+        if (lastAdded == null) {
+            lastAdded = oldParent;
         }
 
-        lastNodeAdded.put(oldParent, node);
+        oldParent.getParentNode().appendChild(node, lastAdded);
+
+        lastNodeAdded.put(oldParent.getParentNode(), node);
     }
 }

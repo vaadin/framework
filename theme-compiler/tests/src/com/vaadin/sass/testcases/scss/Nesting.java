@@ -42,7 +42,7 @@ public class Nesting extends AbstractTestBase {
         parser.setDocumentHandler(handler);
         parser.parseStyleSheet(getClass().getResource(scss).getPath());
         ScssStylesheet root = handler.getStyleSheet();
-        Assert.assertEquals(5, root.getChildren().size());
+        Assert.assertEquals(6, root.getChildren().size());
 
         BlockNode blockNode0 = (BlockNode) root.getChildren().get(0);
         Assert.assertEquals(2, blockNode0.getChildren().size());
@@ -78,6 +78,8 @@ public class Nesting extends AbstractTestBase {
         BlockNode nestednestedBlockInBlock4 = (BlockNode) nestedBlockInBlock3
                 .getChildren().get(1);
         Assert.assertEquals(1, nestednestedBlockInBlock4.getChildren().size());
+
+        // the parsing of the last block is not checked in detail
     }
 
     @Test

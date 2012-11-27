@@ -38,3 +38,15 @@
     }
   }
 }
+
+.root {
+	.first-block {
+		.nested {
+			order: first;
+		}
+	}
+	
+	.last-block {
+		order: last;
+	}
+}

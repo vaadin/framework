@@ -235,9 +235,14 @@ public class ScssStylesheet extends Node {
         variables.clear();
         variables.putAll(variableScope);
 
+        // clean up insert point so that processing of the next block will
+        // insert after that block
+        lastNodeAdded.remove(originalParent);
+
         // has the node been removed from its parent?
         if (originalParent != null) {
-            return !originalParent.getChildren().contains(node);
+            boolean removed = !originalParent.getChildren().contains(node);
+            return removed;
         } else {
             return false;
         }
