@@ -238,6 +238,12 @@ public class VUI extends SimplePanel implements ResizeHandler,
     @Deprecated
     protected void windowSizeMaybeChanged(int newWindowWidth,
             int newWindowHeight) {
+        if (connection == null) {
+            // Connection is null if the timer fires before the first UIDL
+            // update
+            return;
+        }
+
         boolean changed = false;
         ComponentConnector connector = ConnectorMap.get(connection)
                 .getConnector(this);
