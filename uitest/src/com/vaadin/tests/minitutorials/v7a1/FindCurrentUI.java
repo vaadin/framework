@@ -37,7 +37,7 @@ public class FindCurrentUI extends UI {
     @Override
     protected void init(VaadinRequest request) {
         Button helloButton = new Button("Say Hello");
-        helloButton.addListener(new ClickListener() {
+        helloButton.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 String msg = "Running in ";
@@ -47,7 +47,7 @@ public class FindCurrentUI extends UI {
             }
         });
 
-        helloButton.addListener(new ClickListener() {
+        helloButton.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 Notification.show("This UI is "
