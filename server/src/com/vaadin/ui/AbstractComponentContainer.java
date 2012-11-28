@@ -232,19 +232,6 @@ public abstract class AbstractComponentContainer extends AbstractComponent
     }
 
     @Override
-    public void setVisible(boolean visible) {
-        if (isVisible() == visible) {
-            return;
-        }
-
-        super.setVisible(visible);
-        // If the visibility state is toggled it might affect all children
-        // as well, e.g. make container visible should make children visible if
-        // they were only hidden because the container was hidden.
-        markAsDirtyRecursive();
-    }
-
-    @Override
     public void setWidth(float width, Unit unit) {
         /*
          * child tree repaints may be needed, due to our fall back support for
