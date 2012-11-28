@@ -401,7 +401,14 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
 
         this.visible = visible;
-        markAsDirty();
+        if (visible) {
+            /*
+             * If the visibility state is toggled from invisible to visible it
+             * affects all children (the whole hierarchy) in addition to this
+             * component.
+             */
+            markAsDirtyRecursive();
+        }
         if (getParent() != null) {
             // Must always repaint the parent (at least the hierarchy) when
             // visibility of a child component changes.
