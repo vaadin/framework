@@ -4722,7 +4722,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                                 .getPaintable((UIDL) cell);
 
                         addCell(uidl, cellContent.getWidget(), aligns[col++],
-                                style, sorted);
+                                style, sorted, description);
                     }
                 }
             }
@@ -4859,13 +4859,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         break;
                     }
                 }
-
-                if (description != null && !description.equals("")) {
-                    TooltipInfo info = new TooltipInfo(description);
-                    cellToolTips.put(td, info);
-                } else {
-                    cellToolTips.remove(td);
-                }
+                setTooltip(td, description);
 
                 td.appendChild(container);
                 getElement().appendChild(td);
@@ -4886,9 +4880,20 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             }
 
             public void addCell(UIDL rowUidl, Widget w, char align,
-                    String style, boolean sorted) {
+                    String style, boolean sorted, String description) {
                 final TableCellElement td = DOM.createTD().cast();
                 initCellWithWidget(w, align, style, sorted, td);
+                setTooltip(td, description);
+            }
+
+            private void setTooltip(TableCellElement td, String description) {
+                if (description != null && !description.equals("")) {
+                    TooltipInfo info = new TooltipInfo(description);
+                    cellToolTips.put(td, info);
+                } else {
+                    cellToolTips.remove(td);
+                }
+
             }
 
             protected void initCellWithWidget(Widget w, char align,
@@ -4995,10 +5000,10 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     com.google.gwt.dom.client.Element target) {
 
                 TooltipInfo info = null;
-
-                if (target.hasTagName("TD")) {
-
-                    TableCellElement td = (TableCellElement) target.cast();
+                final Element targetTdOrTr = getTdOrTr((Element) target.cast());
+                if ("td".equals(targetTdOrTr.getTagName().toLowerCase())) {
+                    TableCellElement td = (TableCellElement) targetTdOrTr
+                            .cast();
                     info = cellToolTips.get(td);
                 }
 
@@ -5007,6 +5012,22 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 }
 
                 return info;
+            }
+
+            private Element getTdOrTr(Element target) {
+                Element thisTrElement = getElement();
+                if (target == thisTrElement) {
+                    // This was a on the TR element
+                    return target;
+                }
+
+                // Iterate upwards until we find the TR element
+                Element element = target;
+                while (element != null
+                        && element.getParentElement().cast() != thisTrElement) {
+                    element = element.getParentElement().cast();
+                }
+                return element;
             }
 
             /**
@@ -5533,18 +5554,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         return null;
                     }
                 }
-                if (eventTarget == thisTrElement) {
-                    // This was a click on the TR element
-                    return thisTrElement;
-                }
-
-                // Iterate upwards until we find the TR element
-                Element element = eventTarget;
-                while (element != null
-                        && element.getParentElement().cast() != thisTrElement) {
-                    element = element.getParentElement().cast();
-                }
-                return element;
+                return getTdOrTr(eventTarget);
             }
 
             public void showContextMenu(Event event) {
