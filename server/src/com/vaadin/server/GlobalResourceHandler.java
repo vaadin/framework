@@ -60,9 +60,9 @@ public class GlobalResourceHandler implements RequestHandler {
     private int nextLegacyId = 0;
 
     // APP/global/[uiid]/[type]/[id]
-    private static final Matcher matcher = Pattern.compile(
-            "^/?" + ApplicationConstants.APP_PATH + '/' + RESOURCE_REQUEST_PATH
-                    + "(\\d+)/(([^/]+)(/.*))").matcher("");
+    private static final Pattern pattern = Pattern.compile("^/?"
+            + ApplicationConstants.APP_PATH + '/' + RESOURCE_REQUEST_PATH
+            + "(\\d+)/(([^/]+)(/.*))");
 
     @Override
     public boolean handleRequest(VaadinSession session, VaadinRequest request,
@@ -72,7 +72,7 @@ public class GlobalResourceHandler implements RequestHandler {
             return false;
         }
 
-        matcher.reset(pathInfo);
+        Matcher matcher = pattern.matcher(pathInfo);
         if (!matcher.matches()) {
             return false;
         }
@@ -80,9 +80,6 @@ public class GlobalResourceHandler implements RequestHandler {
         String uiid = matcher.group(1);
         String type = matcher.group(3);
         String key = matcher.group(2);
-
-        // Allow GCing pathInfo string
-        matcher.reset();
 
         if (key == null) {
             return error(request, response, pathInfo
