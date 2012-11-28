@@ -15,12 +15,16 @@
  */
 package com.vaadin.client.ui.treetable;
 
+import com.google.gwt.dom.client.Element;
 import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.Util;
 import com.vaadin.client.ui.FocusableScrollPanel;
 import com.vaadin.client.ui.VScrollTable.VScrollTableBody.VScrollTableRow;
 import com.vaadin.client.ui.VTreeTable;
 import com.vaadin.client.ui.VTreeTable.PendingNavigationEvent;
+import com.vaadin.client.ui.VTreeTable.VTreeTableScrollBody.VTreeTableRow;
 import com.vaadin.client.ui.table.TableConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.treetable.TreeTableConstants;
@@ -111,5 +115,28 @@ public class TreeTableConnector extends TableConnector {
     @Override
     public TreeTableState getState() {
         return (TreeTableState) super.getState();
+    }
+
+    @Override
+    public TooltipInfo getTooltipInfo(Element element) {
+
+        TooltipInfo info = null;
+
+        if (element != getWidget().getElement()) {
+            Object node = Util.findWidget(
+                    (com.google.gwt.user.client.Element) element,
+                    VTreeTableRow.class);
+
+            if (node != null) {
+                VTreeTableRow row = (VTreeTableRow) node;
+                info = row.getTooltip(element);
+            }
+        }
+
+        if (info == null) {
+            info = super.getTooltipInfo(element);
+        }
+
+        return info;
     }
 }

@@ -122,7 +122,7 @@ public class VTreeTable extends VScrollTable {
         }
     }
 
-    class VTreeTableScrollBody extends VScrollTable.VScrollTableBody {
+    public class VTreeTableScrollBody extends VScrollTable.VScrollTableBody {
         private int indentWidth = -1;
 
         VTreeTableScrollBody() {
@@ -138,7 +138,7 @@ public class VTreeTable extends VScrollTable {
             return new VTreeTableRow(uidl, aligns2);
         }
 
-        class VTreeTableRow extends
+        public class VTreeTableRow extends
                 VScrollTable.VScrollTableBody.VScrollTableRow {
 
             private boolean isTreeCellAdded = false;
