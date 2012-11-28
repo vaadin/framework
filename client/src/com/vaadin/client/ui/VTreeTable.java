@@ -219,8 +219,8 @@ public class VTreeTable extends VScrollTable {
 
             @Override
             public void addCell(UIDL rowUidl, Widget w, char align,
-                    String style, boolean isSorted) {
-                super.addCell(rowUidl, w, align, style, isSorted);
+                    String style, boolean isSorted, String description) {
+                super.addCell(rowUidl, w, align, style, isSorted, description);
                 if (addTreeSpacer(rowUidl)) {
                     widgetInHierarchyColumn = w;
                 }

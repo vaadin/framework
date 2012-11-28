@@ -3503,14 +3503,13 @@ public class Table extends AbstractSelect implements Action.Container,
                         + currentColumn][indexInRowbuffer];
                 if (c == null) {
                     target.addText("");
-                    paintCellTooltips(target, itemId, columnId);
                 } else {
                     LegacyPaint.paint(c, target);
                 }
             } else {
                 target.addText((String) cells[CELL_FIRSTCOL + currentColumn][indexInRowbuffer]);
-                paintCellTooltips(target, itemId, columnId);
             }
+            paintCellTooltips(target, itemId, columnId);
         }
 
         target.endTag("tr");
