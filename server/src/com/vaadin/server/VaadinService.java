@@ -789,12 +789,27 @@ public abstract class VaadinService implements Serializable {
             removeClosedUIs(session);
         } else {
             if (!session.isClosing()) {
-                getLogger().fine(
-                        "Closing inactive session "
-                                + session.getSession().getId());
                 closeSession(session);
+                if (session.getSession() != null) {
+                    getLogger().fine(
+                            "Closing inactive session "
+                                    + session.getSession().getId());
+                }
             }
-            session.removeFromSession(this);
+            if (session.getSession() != null) {
+                /*
+                 * If the VaadinSession has no WrappedSession then it has
+                 * already been removed from the HttpSession and we do not have
+                 * to do it again
+                 */
+                session.removeFromSession(this);
+            }
+
+            /*
+             * The session was destroyed during this request and therefore no
+             * destroy event has yet been sent
+             */
+            fireSessionDestroy(session);
         }
     }
 
@@ -914,7 +929,7 @@ public abstract class VaadinService implements Serializable {
      * @return true if the session is active, false if it could be closed.
      */
     private boolean isSessionActive(VaadinSession session) {
-        if (session.isClosing()) {
+        if (session.isClosing() || session.getSession() == null) {
             return false;
         } else {
             long now = System.currentTimeMillis();

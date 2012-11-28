@@ -40,7 +40,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>vaadin=runcomvaadintestsapplicationcontextCloseSession::/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VVerticalLayout[0]/VOrderedLayout$Slot[4]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td>vaadin=runcomvaadintestsapplicationcontextCloseSession::/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VVerticalLayout[0]/VOrderedLayout$Slot[5]/VButton[0]/domChild[0]/domChild[0]</td>
 	<td></td>
 </tr>
 <tr>
@@ -53,7 +53,7 @@
 	<td>vaadin=runcomvaadintestsapplicationcontextCloseSession::PID_SLog_row_0</td>
 	<td>exact:6. Same WrappedSession id? false</td>
 </tr>
-<!--Test closing session and redirecting to google-->
+<!--Test closing session and redirecting to another page-->
 <tr>
 	<td>clickAndWait</td>
 	<td>vaadin=runcomvaadintestsapplicationcontextCloseSession::/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VButton[0]/domChild[0]/domChild[0]</td>
@@ -64,7 +64,7 @@
 	<td>//h1</td>
 	<td>This is a static file</td>
 </tr>
-<!--Open again and verify we get a Session Expired error if doing something after closing the session-->
+<!--Open again and verify we get a Session Expired error if doing something after closing the VaadinSession-->
 <tr>
 	<td>open</td>
 	<td>/run/com.vaadin.tests.applicationcontext.CloseSession?restartApplication</td>
@@ -84,6 +84,69 @@
 	<td>assertText</td>
 	<td>vaadin=runcomvaadintestsapplicationcontextCloseSession::Root/VNotification[0]/HTML[0]/domChild[0]</td>
 	<td>Session Expired</td>
+</tr>
+<!--Open again and verify we get a Session Expired error if doing something after closing the HttpSession-->
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.applicationcontext.CloseSession?restartApplication</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestsapplicationcontextCloseSession::/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VVerticalLayout[0]/VOrderedLayout$Slot[4]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestsapplicationcontextCloseSession::/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VVerticalLayout[0]/VOrderedLayout$Slot[4]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestsapplicationcontextCloseSession::Root/VNotification[0]/HTML[0]/domChild[0]</td>
+	<td>Session Expired</td>
+</tr>
+<!--Open again and verify we get a Session Expired error if closing HttpSession in a background thread-->
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.applicationcontext.CloseSession?restartApplication</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestsapplicationcontextCloseSession::/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VVerticalLayout[0]/VOrderedLayout$Slot[7]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>2000</td>
+	<td>2000</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestsapplicationcontextCloseSession::/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VVerticalLayout[0]/VOrderedLayout$Slot[7]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestsapplicationcontextCloseSession::Root/VNotification[0]/HTML[0]/domChild[0]</td>
+	<td>Session Expired</td>
+</tr>
+<!--Open again and test closing session and redirecting to another page-->
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.applicationcontext.CloseSession?restartApplication</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>vaadin=runcomvaadintestsapplicationcontextCloseSession::/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VVerticalLayout[0]/VOrderedLayout$Slot[1]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//h1</td>
+	<td>This is a static file</td>
 </tr>
 </tbody></table>
 </body>

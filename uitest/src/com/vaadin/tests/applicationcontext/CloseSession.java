@@ -16,8 +16,11 @@
 
 package com.vaadin.tests.applicationcontext;
 
+import javax.servlet.http.HttpSession;
+
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
+import com.vaadin.server.WrappedHttpSession;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
@@ -31,6 +34,8 @@ public class CloseSession extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
+        System.out.println("UI " + getUIId() + " inited");
+
         final int sessionHash = getSession().hashCode();
         final String sessionId = request.getWrappedSession().getId();
 
@@ -75,20 +80,67 @@ public class CloseSession extends AbstractTestUI {
                         getSession().close();
                     }
                 }));
-        addComponent(new Button("Just close session",
+        addComponent(new Button("Just close VaadinSession",
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
                         getSession().close();
                     }
                 }));
+        addComponent(new Button("Just close HttpSession",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        getSession().getSession().invalidate();
+                    }
+                }));
         addComponent(new Button("Invalidate HttpSession and reopen page",
                 new Button.ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        getPage().setLocation(reopenUrl);
                         VaadinService.getCurrentRequest().getWrappedSession()
                                 .invalidate();
+                        getPage().setLocation(reopenUrl);
+                    }
+                }));
+        addComponent(new Button(
+                "Invalidate HttpSession and redirect elsewhere",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        VaadinService.getCurrentRequest().getWrappedSession()
+                                .invalidate();
+                        getPage().setLocation("/statictestfiles/static.html");
+                    }
+                }));
+        addComponent(new Button(
+                "Invalidate HttpSession in a background thread",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        final HttpSession session = ((WrappedHttpSession) VaadinService
+                                .getCurrentRequest().getWrappedSession())
+                                .getHttpSession();
+                        Thread t = new Thread(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                System.out
+                                        .println("Invalidating session from thread "
+                                                + session.getId());
+                                session.invalidate();
+                                System.out
+                                        .println("Invalidated session from thread "
+                                                + session.getId());
+
+                            }
+                        });
+                        t.start();
                     }
                 }));
     }
@@ -103,4 +155,9 @@ public class CloseSession extends AbstractTestUI {
         return Integer.valueOf(9859);
     }
 
+    @Override
+    public void detach() {
+        super.detach();
+        System.out.println("UI " + getUIId() + " detached");
+    }
 }

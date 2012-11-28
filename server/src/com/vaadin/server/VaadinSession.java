@@ -160,7 +160,18 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
                             "A VaadinSession instance not associated to any service is getting unbound. "
                                     + "Session destroy events will not be fired and UIs in the session will not get detached. "
                                     + "This might happen if a session is deserialized but never used before it expires.");
+        } else if (VaadinService.getCurrentRequest() != null
+                && getCurrent() == this) {
+            // There is still a request in progress for this session. The
+            // session will be destroyed after the response has been written.
+            if (!isClosing()) {
+                close();
+            }
         } else {
+            /*
+             * We are not in a request related to this session so we can
+             * immediately destroy it
+             */
             service.fireSessionDestroy(this);
         }
         session = null;
