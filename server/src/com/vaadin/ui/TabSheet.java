@@ -547,16 +547,9 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         // component is communicated to the client. Otherwise this will be a
         // "cached" update even though the client knows nothing about the
         // connector
-        if (selected instanceof ComponentContainer) {
-            ((ComponentContainer) selected).markAsDirtyRecursive();
-        } else if (selected instanceof Table) {
-            // Workaround until there's a generic way of telling a component
-            // that there is no client side state to rely on. See #8642
-            ((Table) selected).refreshRowCache();
-        } else if (selected != null) {
-            selected.markAsDirty();
+        if (selected != null) {
+            selected.markAsDirtyRecursive();
         }
-
     }
 
     /**
