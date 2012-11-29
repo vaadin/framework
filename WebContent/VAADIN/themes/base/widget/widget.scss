@@ -9,10 +9,5 @@
 	white-space: normal;
 	vertical-align: top;
 }
-/* Fake element containing a text node needed as the last element in inline-block elements to avoid extra space after the last child in the inline-block. Only in IE of course */
-.v-ie & .#{$primaryStyleName}:after {
-	content: "A";
-	font-size: 0;
-}
 
 }

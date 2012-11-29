@@ -5,12 +5,10 @@
 	border-radius: 2px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
-	overflow: visible;
+	overflow: hidden;
 }
 .#{$primaryStyleName}-item {
 	background-color: #fff;
-	display: inline-block;
-	width: 100%;
 }
 .#{$primaryStyleName}-item-caption {
 	height: 19px;
@@ -30,7 +28,10 @@
 	border-top: none;
 }
 .#{$primaryStyleName}-item-caption .v-caption {
-	padding: 3px 0 0px 10px;
+	padding: 3px 0 5px 10px;
+}
+.v-ie & .#{$primaryStyleName}-item-caption .v-caption {
+	padding: 2px 0 6px 10px;
 }
 .#{$primaryStyleName}-item-open .#{$primaryStyleName}-item-caption {
 	background-image: url(../tabsheet/img/tabbar-bg-sel.png); /** sprite-ref: verticals; sprite-alignment: repeat */
