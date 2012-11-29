@@ -44,8 +44,7 @@ public class VAccordion extends VTabsheetBase {
     /** For internal use only. May be removed or replaced in the future. */
     public HashMap<StackItem, UIDL> lazyUpdateMap = new HashMap<StackItem, UIDL>();
 
-    /** For internal use only. May be removed or replaced in the future. */
-    public StackItem openTab = null;
+    private StackItem openTab = null;
 
     /** For internal use only. May be removed or replaced in the future. */
     public int selectedUIDLItemIndex = -1;
@@ -191,8 +190,6 @@ public class VAccordion extends VTabsheetBase {
             openTab = item;
         }
 
-        // Update the size for the open tab
-        updateOpenTabSize();
     }
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -213,75 +210,6 @@ public class VAccordion extends VTabsheetBase {
                 && !disabledTabKeys.contains(tabKeys.get(index))) {
             addStyleDependentName("loading");
             client.updateVariable(id, "selected", "" + tabKeys.get(index), true);
-        }
-    }
-
-    /**
-     * Sets the size of the open tab.
-     * <p>
-     * For internal use only. May be removed or replaced in the future.
-     */
-    public void updateOpenTabSize() {
-        if (openTab == null) {
-            return;
-        }
-
-        // WIDTH
-        if (!isDynamicWidth()) {
-            openTab.setWidth("100%");
-        } else {
-            openTab.setWidth(null);
-        }
-
-        // HEIGHT
-        if (!isDynamicHeight()) {
-            int usedPixels = 0;
-            for (Widget w : getChildren()) {
-                StackItem item = (StackItem) w;
-                if (item == openTab) {
-                    usedPixels += item.getCaptionHeight();
-                } else {
-                    // This includes the captionNode borders
-                    usedPixels += item.getHeight();
-                }
-            }
-
-            int offsetHeight = getOffsetHeight();
-
-            int spaceForOpenItem = offsetHeight - usedPixels;
-
-            if (spaceForOpenItem < 0) {
-                spaceForOpenItem = 0;
-            }
-
-            openTab.setHeight(spaceForOpenItem);
-        } else {
-            openTab.setHeightFromWidget();
-
-        }
-
-    }
-
-    public void iLayout() {
-        if (openTab == null) {
-            return;
-        }
-
-        if (isDynamicWidth()) {
-            int maxWidth = 40;
-            for (Widget w : getChildren()) {
-                StackItem si = (StackItem) w;
-                int captionWidth = si.getCaptionWidth();
-                if (captionWidth > maxWidth) {
-                    maxWidth = captionWidth;
-                }
-            }
-            int widgetWidth = openTab.getWidgetWidth();
-            if (widgetWidth > maxWidth) {
-                maxWidth = widgetWidth;
-            }
-            super.setWidth(maxWidth + "px");
-            openTab.setWidth(maxWidth);
         }
     }
 
@@ -546,6 +474,14 @@ public class VAccordion extends VTabsheetBase {
     /** For internal use only. May be removed or replaced in the future. */
     public StackItem getStackItem(int index) {
         return (StackItem) getWidget(index);
+    }
+
+    public Iterable<StackItem> getStackItems() {
+        return (Iterable) getChildren();
+    }
+
+    public StackItem getOpenStackItem() {
+        return openTab;
     }
 
 }

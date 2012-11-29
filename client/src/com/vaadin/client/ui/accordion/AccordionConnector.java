@@ -49,11 +49,10 @@ public class AccordionConnector extends TabsheetBaseConnector implements
             getWidget().open(getWidget().selectedUIDLItemIndex);
 
             selectedItem.setContent(selectedTabUIDL);
-        } else if (isRealUpdate(uidl) && getWidget().openTab != null) {
-            getWidget().close(getWidget().openTab);
+        } else if (isRealUpdate(uidl) && getWidget().getOpenStackItem() != null) {
+            getWidget().close(getWidget().getOpenStackItem());
         }
 
-        getWidget().iLayout();
         // finally render possible hidden tabs
         if (getWidget().lazyUpdateMap.size() > 0) {
             for (Iterator iterator = getWidget().lazyUpdateMap.keySet()
@@ -78,14 +77,53 @@ public class AccordionConnector extends TabsheetBaseConnector implements
 
     @Override
     public void layout() {
-        VAccordion accordion = getWidget();
-
-        accordion.updateOpenTabSize();
-
-        if (isUndefinedHeight()) {
-            accordion.openTab.setHeightFromWidget();
+        StackItem openTab = getWidget().getOpenStackItem();
+        if (openTab == null) {
+            return;
         }
-        accordion.iLayout();
+
+        // WIDTH
+        if (!isUndefinedWidth()) {
+            openTab.setWidth("100%");
+        } else {
+            int maxWidth = 40;
+            for (StackItem si : getWidget().getStackItems()) {
+                int captionWidth = si.getCaptionWidth();
+                if (captionWidth > maxWidth) {
+                    maxWidth = captionWidth;
+                }
+            }
+            int widgetWidth = openTab.getWidgetWidth();
+            if (widgetWidth > maxWidth) {
+                maxWidth = widgetWidth;
+            }
+            openTab.setWidth(maxWidth);
+        }
+
+        // HEIGHT
+        if (!isUndefinedHeight()) {
+            int usedPixels = 0;
+            for (StackItem item : getWidget().getStackItems()) {
+                if (item == openTab) {
+                    usedPixels += item.getCaptionHeight();
+                } else {
+                    // This includes the captionNode borders
+                    usedPixels += item.getHeight();
+                }
+            }
+            int rootElementInnerHeight = getLayoutManager().getInnerHeight(
+                    getWidget().getElement());
+            int spaceForOpenItem = rootElementInnerHeight - usedPixels;
+
+            if (spaceForOpenItem < 0) {
+                spaceForOpenItem = 0;
+            }
+
+            openTab.setHeight(spaceForOpenItem);
+        } else {
+            openTab.setHeightFromWidget();
+
+        }
 
     }
 
