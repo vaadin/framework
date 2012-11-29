@@ -33,7 +33,6 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.StyleConstants;
-import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.ui.gridlayout.GridLayoutConnector;
@@ -41,6 +40,7 @@ import com.vaadin.client.ui.layout.ComponentConnectorLayoutSlot;
 import com.vaadin.client.ui.layout.VLayoutSlot;
 import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.shared.ui.gridlayout.GridLayoutState.ChildComponentData;
 
 public class VGridLayout extends ComplexPanel {
 
@@ -499,10 +499,6 @@ public class VGridLayout extends ComplexPanel {
             this.col = col;
         }
 
-        public boolean hasContent() {
-            return hasContent;
-        }
-
         public boolean hasRelativeHeight() {
             if (slot != null) {
                 return slot.getChild().isRelativeHeight();
@@ -569,66 +565,67 @@ public class VGridLayout extends ComplexPanel {
             }
         }
 
-        final int row;
-        final int col;
+        private int row;
+        private int col;
         int colspan = 1;
         int rowspan = 1;
-
-        private boolean hasContent;
 
         private AlignmentInfo alignment;
 
         /** For internal use only. May be removed or replaced in the future. */
         public ComponentConnectorLayoutSlot slot;
 
-        public void updateFromUidl(UIDL cellUidl) {
-            // Set cell width
-            colspan = cellUidl.hasAttribute("w") ? cellUidl
-                    .getIntAttribute("w") : 1;
-            // Set cell height
-            rowspan = cellUidl.hasAttribute("h") ? cellUidl
-                    .getIntAttribute("h") : 1;
-            // ensure we will lose reference to old cells, now overlapped by
-            // this cell
-            for (int i = 0; i < colspan; i++) {
-                for (int j = 0; j < rowspan; j++) {
-                    if (i > 0 || j > 0) {
-                        cells[col + i][row + j] = null;
-                    }
+        public void updateCell(ChildComponentData childComponentData) {
+            if (row != childComponentData.row1
+                    || col != childComponentData.column1) {
+                // cell has been moved, update matrix
+                if (col < cells.length && cells.length != 0
+                        && row < cells[0].length && cells[col][row] == this) {
+                    // Remove old reference if still relevant
+                    cells[col][row] = null;
                 }
+
+                row = childComponentData.row1;
+                col = childComponentData.column1;
+
+                cells[col][row] = this;
             }
 
-            UIDL childUidl = cellUidl.getChildUIDL(0); // we are interested
-                                                       // about childUidl
-            hasContent = childUidl != null;
-            if (hasContent) {
-                ComponentConnector childConnector = client
-                        .getPaintable(childUidl);
+            // Set cell width
+            colspan = 1 + childComponentData.column2
+                    - childComponentData.column1;
+            // Set cell height
+            rowspan = 1 + childComponentData.row2 - childComponentData.row1;
 
-                if (slot == null || slot.getChild() != childConnector) {
-                    slot = new ComponentConnectorLayoutSlot(CLASSNAME,
-                            childConnector, getConnector());
-                    if (childConnector.isRelativeWidth()) {
-                        slot.getWrapperElement().getStyle()
-                                .setWidth(100, Unit.PCT);
-                    }
-                    Element slotWrapper = slot.getWrapperElement();
-                    getElement().appendChild(slotWrapper);
+            setAlignment(new AlignmentInfo(childComponentData.alignment));
+        }
 
-                    Widget widget = childConnector.getWidget();
-                    insert(widget, slotWrapper, getWidgetCount(), false);
-                    Cell oldCell = widgetToCell.put(widget, this);
-                    if (oldCell != null) {
-                        oldCell.slot.getWrapperElement().removeFromParent();
-                        oldCell.slot = null;
-                    }
+        public void setComponent(ComponentConnector component) {
+            if (slot == null || slot.getChild() != component) {
+                slot = new ComponentConnectorLayoutSlot(CLASSNAME, component,
+                        getConnector());
+                slot.setAlignment(alignment);
+                if (component.isRelativeWidth()) {
+                    slot.getWrapperElement().getStyle().setWidth(100, Unit.PCT);
                 }
+                Element slotWrapper = slot.getWrapperElement();
+                getElement().appendChild(slotWrapper);
 
+                Widget widget = component.getWidget();
+                insert(widget, slotWrapper, getWidgetCount(), false);
+                Cell oldCell = widgetToCell.put(widget, this);
+                if (oldCell != null) {
+                    oldCell.slot.getWrapperElement().removeFromParent();
+                    oldCell.slot = null;
+                }
             }
         }
 
         public void setAlignment(AlignmentInfo alignmentInfo) {
-            slot.setAlignment(alignmentInfo);
+            alignment = alignmentInfo;
+            if (slot != null) {
+                slot.setAlignment(alignmentInfo);
+            }
         }
     }
 
@@ -638,8 +635,7 @@ public class VGridLayout extends ComplexPanel {
     }
 
     /**
-     * Creates a new Cell with the given coordinates. If an existing cell was
-     * found, returns that one.
+     * Creates a new Cell with the given coordinates.
      * <p>
      * For internal use only. May be removed or replaced in the future.
      * 
@@ -647,12 +643,9 @@ public class VGridLayout extends ComplexPanel {
      * @param col
      * @return
      */
-    public Cell createCell(int row, int col) {
-        Cell cell = getCell(row, col);
-        if (cell == null) {
-            cell = new Cell(row, col);
-            cells[col][row] = cell;
-        }
+    public Cell createNewCell(int row, int col) {
+        Cell cell = new Cell(row, col);
+        cells[col][row] = cell;
         return cell;
     }
 
@@ -732,6 +725,26 @@ public class VGridLayout extends ComplexPanel {
             }
             cells = newCells;
         }
+    }
+
+    @Override
+    public boolean remove(Widget w) {
+        boolean removed = super.remove(w);
+        if (removed) {
+            Cell cell = widgetToCell.remove(w);
+            if (cell != null) {
+                cell.slot.setCaption(null);
+                cell.slot.getWrapperElement().removeFromParent();
+                cell.slot = null;
+
+                if (cells.length < cell.col && cells.length != 0
+                        && cells[0].length < cell.row
+                        && cells[cell.col][cell.row] == cell) {
+                    cells[cell.col][cell.row] = null;
+                }
+            }
+        }
+        return removed;
     }
 
 }
