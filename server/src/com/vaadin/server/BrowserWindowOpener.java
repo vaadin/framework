@@ -16,6 +16,9 @@
 
 package com.vaadin.server;
 
+import java.util.Collections;
+import java.util.Set;
+
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.ui.BrowserWindowOpenerState;
 import com.vaadin.ui.AbstractComponent;
@@ -194,6 +197,110 @@ public class BrowserWindowOpener extends AbstractExtension {
 
     private static String generateUIClassUrl(Class<? extends UI> uiClass) {
         return "popup/" + uiClass.getSimpleName();
+    }
+
+    /**
+     * Sets a URI fragment that will be added to the URI opened in the window.
+     * If the window is opened to contain a Vaadin UI, the fragment will be
+     * available using {@link Page#getUriFragment()} on the Page instance of the
+     * new UI.
+     * <p>
+     * The default value is <code>null</code>.
+     * 
+     * @param uriFragment
+     *            the URI fragment string that should be included in the opened
+     *            URI, or <code>null</code> to preserve the original fragment of
+     *            the URI.
+     */
+    public void setUriFragment(String uriFragment) {
+        getState().uriFragment = uriFragment;
+    }
+
+    /**
+     * Gets that URI fragment configured for opened windows.
+     * 
+     * @return the URI fragment string, or <code>null</code> if no fragment is
+     *         configured.
+     * 
+     * @see #setUriFragment(String)
+     */
+    public String getUriFragment() {
+        return getState().uriFragment;
+    }
+
+    /**
+     * Adds a parameter that will be added to the query string of the opened
+     * URI. If the window is opened to contain a Vaadin UI, the parameter will
+     * be available using {@link VaadinRequest#getParameter(String)} e.g. using
+     * the request instance passed to {@link UI#init(VaadinRequest)}.
+     * <p>
+     * Adding a parameter with the same name as a previously added parameter
+     * will replace the previous value.
+     * 
+     * @param name
+     *            the name of the parameter to add, not <code>null</code>
+     * @param value
+     *            the value of the parameter to add, not <code>null</code>
+     * 
+     * @see #removeParameter(String)
+     * @see #getParameterNames()
+     * @see #getParameter(String)
+     */
+    public void addParameter(String name, String value) {
+        if (name == null || value == null) {
+            throw new IllegalArgumentException("Null not allowed");
+        }
+        getState().parameters.put(name, value);
+    }
+
+    /**
+     * Removes a parameter that has been added using
+     * {@link #addParameter(String, String)}. Removing a parameter that has not
+     * been added has no effect.
+     * 
+     * @param name
+     *            the name of the parameter to remove, not <code>null</code>
+     * 
+     * @see #addParameter(String, String)
+     */
+    public void removeParameter(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("Null not allowed");
+        }
+        getState().parameters.remove(name);
+    }
+
+    /**
+     * Gets the names of all parameters added using
+     * {@link #addParameter(String, String)}.
+     * 
+     * @return an unmodifiable set of parameter names
+     * 
+     * @see #addParameter(String, String)
+     * @see #getParameter(String)
+     */
+    public Set<String> getParameterNames() {
+        return Collections.unmodifiableSet(getState().parameters.keySet());
+    }
+
+    /**
+     * Gets the value of a parameter added using
+     * {@link #addParameter(String, String)}. If there is no parameter with the
+     * given name, <code>null</code> is returned.
+     * 
+     * @param name
+     *            the name of the parameter to get, not <code>null</code>
+     * @return the value of the parameter, or <code>null</code> there is no
+     *         parameter
+     * 
+     * @see #addParameter(String, String)
+     * @see #getParameter(String)
+     */
+    public String getParameter(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("Null not allowed");
+        }
+        return getState().parameters.get(name);
     }
 
 }
