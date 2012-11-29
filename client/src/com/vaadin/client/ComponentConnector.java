@@ -94,8 +94,6 @@ public interface ComponentConnector extends ServerConnector {
     @Deprecated
     public boolean isReadOnly();
 
-    public boolean hasEventListener(String eventIdentifier);
-
     /**
      * Return true if parent handles caption, false if the paintable handles the
      * caption itself.
