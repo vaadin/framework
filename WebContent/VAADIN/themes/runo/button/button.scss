@@ -1,16 +1,16 @@
-@mixin runo-button {
+@mixin runo-button($primaryStyleName : v-button) {
 
-.v-button {
+.#{$primaryStyleName} {
 	padding: 1px;
 	border: none;
 	background: transparent;
 	}
 
-.v-button:focus {
+.#{$primaryStyleName}:focus {
 	outline: none;
 	}
 
-.v-button:focus .v-button-wrap {
+.#{$primaryStyleName}:focus .#{$primaryStyleName}-wrap {
 	border-color: #57a7ed;
 	border-top-color: #60aef1;
 	border-bottom-color: #4c9adf;
@@ -18,8 +18,8 @@
 	-moz-box-shadow:  0 0 2px #57a7ed;
 	}
 	
-.v-button:active .v-button-wrap,
-.v-button.v-pressed .v-button-wrap {
+.#{$primaryStyleName}:active .#{$primaryStyleName}-wrap,
+.#{$primaryStyleName}.v-pressed .#{$primaryStyleName}-wrap {
 	background-position: 0 -79px;
 	background-color: #e7e9e9;
 	border-color: #b8bdbe;
@@ -32,8 +32,8 @@
 	text-shadow: none;
 	}
 
-.v-button .v-button-wrap,
-.v-disabled.v-button .v-button-wrap {
+.#{$primaryStyleName} .#{$primaryStyleName}-wrap,
+.v-disabled.#{$primaryStyleName} .#{$primaryStyleName}-wrap {
 	display: block;
 	font-size: 12px;
 	border: 1px solid #bdc1c2;
@@ -59,8 +59,8 @@
 	}
 
 /* Small style */
-.v-button-small .v-button-wrap,
-.v-disabled.v-button-small .v-button-wrap {
+.#{$primaryStyleName}-small .#{$primaryStyleName}-wrap,
+.v-disabled.#{$primaryStyleName}-small .#{$primaryStyleName}-wrap {
 	font-size: 11px;
 	line-height: 13px;
 	padding: 1px 12px;
@@ -69,8 +69,8 @@
 
 
 /* Big style */
-.v-button-big .v-button-wrap,
-.v-disabled.v-button-big .v-button-wrap {
+.#{$primaryStyleName}-big .#{$primaryStyleName}-wrap,
+.v-disabled.#{$primaryStyleName}-big .#{$primaryStyleName}-wrap {
 	font-size: 15px;
 	line-height: 18px;
 	padding: 4px 18px;
@@ -83,14 +83,14 @@
 
 
 /* Default style */
-.v-button-default:focus .v-button-wrap {
+.#{$primaryStyleName}-default:focus .#{$primaryStyleName}-wrap {
 	background-color: #60839a;
 	background-position: 0 -158px;
 	text-shadow: 0 -1px 0 #657883;
 	}
 
-.v-button-default:active .v-button-wrap,
-.v-button-default.v-pressed .v-button-wrap {
+.#{$primaryStyleName}-default:active .#{$primaryStyleName}-wrap,
+.#{$primaryStyleName}-default.v-pressed .#{$primaryStyleName}-wrap {
 	background-position: 0 -79px;
 	background-color: #8f9898;
 	border-color: #737e81;
@@ -102,8 +102,8 @@
 	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.4) inset;
 	}
 
-.v-button-default .v-button-wrap,
-.v-disabled.v-button-default .v-button-wrap {
+.#{$primaryStyleName}-default .#{$primaryStyleName}-wrap,
+.v-disabled.#{$primaryStyleName}-default .#{$primaryStyleName}-wrap {
 	border-color: #899395;
 	border-top-color: #a4abae;
 	border-bottom-color: #727b7d;
@@ -119,15 +119,15 @@
 
 
 /* Link style */
-.v-button-link,
-.v-disabled.v-button-link {
+.#{$primaryStyleName}-link,
+.v-disabled.#{$primaryStyleName}-link {
 	padding: 0;
 	}
 
-.v-button-link .v-button-wrap,
-.v-disabled.v-button-link .v-button-wrap,
-.v-button-link:active .v-button-wrap,
-.v-disabled.v-button-pressedv-button-link .v-button-wrap {
+.#{$primaryStyleName}-link .#{$primaryStyleName}-wrap,
+.v-disabled.#{$primaryStyleName}-link .#{$primaryStyleName}-wrap,
+.#{$primaryStyleName}-link:active .#{$primaryStyleName}-wrap,
+.v-disabled.#{$primaryStyleName}-pressedv-button-link .#{$primaryStyleName}-wrap {
 	border: none;
 	background: transparent;
 	padding: 0;
@@ -140,11 +140,11 @@
 	text-shadow: none;
 	}
 
-.v-button-link:focus {
+.#{$primaryStyleName}-link:focus {
 	outline: 1px dotted #4897dc;
 	}
 
-.v-button-link:focus .v-button-wrap {
+.#{$primaryStyleName}-link:focus .#{$primaryStyleName}-wrap {
 	-webkit-box-shadow: none;
 	-moz-box-shadow: none;
 	}

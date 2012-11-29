@@ -1,6 +1,6 @@
-@mixin runo-notification {
+@mixin runo-notification($primaryStyleName : v-Notification) {
 
-.v-Notification {
+.#{$primaryStyleName} {
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	background-color: #94a0a3;
 	color: #ffffff;
@@ -15,35 +15,35 @@
 	-moz-box-shadow: 0 3px 10px rgba(0,0,0,.3);
 	margin: 10px;
 }
-.v-Notification h1,
-.v-Notification p,
-.v-Notification-error h1,
-.v-Notification-error p,
-.v-Notification-warning h1,
-.v-Notification-warning p {
+.#{$primaryStyleName} h1,
+.#{$primaryStyleName} p,
+.#{$primaryStyleName}-error h1,
+.#{$primaryStyleName}-error p,
+.#{$primaryStyleName}-warning h1,
+.#{$primaryStyleName}-warning p {
 	display: inline;
 	font-weight: normal;
 	line-height: normal;
 	margin: 0 10px 0 0;
 }
-.v-Notification-warning {
+.#{$primaryStyleName}-warning {
 	background: #fff1e4;
 	color: #dd3400;
 	border: 2px solid #ffaa90;
 	opacity: 1;
 }
-.v-Notification-error {
+.#{$primaryStyleName}-error {
 	background: #f13d13 url(img/close-error.png) no-repeat right 5px;
 	padding-right: 50px;
 }
-.v-Notification-tray {
+.#{$primaryStyleName}-tray {
 	background: #575e60;
 	padding: 3px;
 	-webkit-box-shadow: 0 3px 6px rgba(0,0,0,.5);
 	-moz-box-shadow: 0 3px 6px rgba(0,0,0,.5);
 	max-width: 17em;
 }
-.v-Notification-tray h1 {
+.#{$primaryStyleName}-tray h1 {
 	display: block;
 	font-weight: bold;
 	font-size: 0.9em;
@@ -55,14 +55,14 @@
 	-webkit-border-radius: 2px;
 	border-radius: 2px;
 }
-.v-Notification-tray p {
+.#{$primaryStyleName}-tray p {
 	display: block;
 	font-size: 0.8em;
 	line-height: 1.2;
 	margin: 4px 10px 5px 10px;
 	color: #e4e7ea;
 }
-.v-Notification-system {
+.#{$primaryStyleName}-system {
 	background-color: #ff0a0a;
 	font-size: .9em;
 	padding: 14px 32px;

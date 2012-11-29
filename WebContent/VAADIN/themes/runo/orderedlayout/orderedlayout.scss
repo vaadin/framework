@@ -1,34 +1,34 @@
-@mixin runo-orderedlayout {
+@mixin runo-orderedlayout($primaryStyleName : v-orderedlayout) {
 
-.v-orderedlayout-margin-top,
+.#{$primaryStyleName}-margin-top,
 .v-horizontallayout-margin-top,
 .v-verticallayout-margin-top,
 .v-csslayout-margin-top,
 .v-layout.v-margin-top {
 	padding-top: 15px;
 }
-.v-orderedlayout-margin-right,
+.#{$primaryStyleName}-margin-right,
 .v-horizontallayout-margin-right,
 .v-verticallayout-margin-right,
 .v-csslayout-margin-right,
 .v-layout.v-margin-right {
 	padding-right: 18px;
 }
-.v-orderedlayout-margin-bottom,
+.#{$primaryStyleName}-margin-bottom,
 .v-horizontallayout-margin-bottom,
 .v-verticallayout-margin-bottom,
 .v-csslayout-margin-bottom,
 .v-layout.v-margin-bottom {
 	padding-bottom: 15px;
 }
-.v-orderedlayout-margin-left,
+.#{$primaryStyleName}-margin-left,
 .v-horizontallayout-margin-left,
 .v-verticallayout-margin-left,
 .v-csslayout-margin-left,
 .v-layout.v-margin-left {
 	padding-left: 18px;
 }
-.v-orderedlayout-spacing-on,
+.#{$primaryStyleName}-spacing-on,
 .v-horizontallayout-spacing-on,
 .v-verticallayout-spacing-on {
 	padding-top: 8px;

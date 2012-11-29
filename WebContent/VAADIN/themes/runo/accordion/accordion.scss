@@ -1,6 +1,6 @@
-@mixin runo-accordion {
+@mixin runo-accordion($primaryStyleName : v-accordion) {
 
-.v-accordion-item-caption {
+.#{$primaryStyleName}-item-caption {
 	height: 31px;
 	background: #edf0f0 url(img/bg.png);
 	font-size: 15px;
@@ -8,35 +8,35 @@
 	border: none;
 	border-top: 1px solid #c8cccd;
 }
-.v-accordion-item-caption .v-caption {
+.#{$primaryStyleName}-item-caption .v-caption {
 	padding: 7px 0 6px 31px;
 	background: transparent url(img/collapsed-icon.png) no-repeat 18px 50%;
 }
-.v-accordion-item-open .v-accordion-item-caption {
+.#{$primaryStyleName}-item-open .#{$primaryStyleName}-item-caption {
 	color: #3b4b57;
 	background: #d5dee2 url(img/selected-bg.png);
 	border-bottom: 1px solid #b4b9ba;
 	text-shadow: 0 1px 0 #fff;
 }
-.v-accordion-item-open .v-accordion-item-caption .v-caption {
+.#{$primaryStyleName}-item-open .#{$primaryStyleName}-item-caption .v-caption {
 	background-image: url(img/expanded-icon.png);
 	background-position: 17px 50%;
 }
-.v-accordion-item-first .v-accordion-item-caption {
+.#{$primaryStyleName}-item-first .#{$primaryStyleName}-item-caption {
 	border-top: none;
 }
-.v-accordion-item-caption .v-caption:hover {
+.#{$primaryStyleName}-item-caption .v-caption:hover {
 	color: #3b4b57;
 }
 
 /* Light style */
-.v-accordion-light .v-accordion-item-caption {
+.#{$primaryStyleName}-light .#{$primaryStyleName}-item-caption {
 	height: 24px;
 	padding: 3px 2px;
 	background: transparent;
 	border: none;
 }
-.v-accordion-light .v-accordion-item-caption .v-caption {
+.#{$primaryStyleName}-light .#{$primaryStyleName}-item-caption .v-caption {
 	padding: 4px 15px 4px 28px;
 	font-size: 12px;
 	line-height: 16px;
