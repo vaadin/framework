@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
@@ -407,5 +408,15 @@ public abstract class AbstractConnector implements ServerConnector,
         } else {
             return urlReference.getURL();
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.client.ServerConnector#hasEventListener(java.lang.String)
+     */
+    public boolean hasEventListener(String eventIdentifier) {
+        Set<String> reg = getState().registeredEventListeners;
+        return (reg != null && reg.contains(eventIdentifier));
     }
 }

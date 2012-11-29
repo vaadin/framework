@@ -179,4 +179,16 @@ public interface ServerConnector extends Connector {
      *         {@link SharedState}. Never null.
      */
     public SharedState getState();
+
+    /**
+     * Checks if an event listener has been registered on the server side for
+     * the given event identifier.
+     * 
+     * @param eventIdentifier
+     *            The identifier for the event
+     * @return true if a listener has been registered on the server side, false
+     *         otherwise
+     */
+    public boolean hasEventListener(String eventIdentifier);
+
 }
