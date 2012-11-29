@@ -16,6 +16,9 @@
 
 package com.vaadin.shared.ui;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.vaadin.shared.AbstractComponentState;
 
 public class BrowserWindowOpenerState extends AbstractComponentState {
@@ -24,5 +27,9 @@ public class BrowserWindowOpenerState extends AbstractComponentState {
     public String target = "_blank";
 
     public String features;
+
+    public String uriFragment;
+
+    public Map<String, String> parameters = new HashMap<String, String>();
 
 }

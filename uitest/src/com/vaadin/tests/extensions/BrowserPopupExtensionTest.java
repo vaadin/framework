@@ -33,8 +33,18 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.NativeButton;
+import com.vaadin.ui.UI;
 
 public class BrowserPopupExtensionTest extends AbstractTestUI {
+
+    public static class ShowParamsUI extends UI {
+        @Override
+        protected void init(VaadinRequest request) {
+            setContent(new Label("Query: "
+                    + getPage().getLocation().getRawQuery() + ", Fragment: "
+                    + getPage().getLocation().getFragment()));
+        }
+    }
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -44,7 +54,7 @@ public class BrowserPopupExtensionTest extends AbstractTestUI {
         components.add(Link.class);
         components.add(CssLayout.class);
         components.add(Label.class);
-        addComponents(components, "http://vaadin.com/download/nightly/");
+        addComponents(components, "/statictestfiles/static.html");
 
         Button uiClassButton = new Button("Open UI class");
         new BrowserWindowOpener(ReopenPopupView.class).extend(uiClassButton);
@@ -55,12 +65,22 @@ public class BrowserPopupExtensionTest extends AbstractTestUI {
                 .extend(uiWithPath);
         addComponent(uiWithPath);
 
-        Button withPopupFeaturesButton = new Button("Open with features");
+        Button withPopupFeaturesButton = new Button(
+                "Open with features and fragment");
         BrowserWindowOpener featuresPopup = new BrowserWindowOpener(
-                "http://vaadin.com/download/nightly/");
+                "/statictestfiles/static.html#originalfragment");
         featuresPopup.setFeatures("width=400,height=400");
         featuresPopup.extend(withPopupFeaturesButton);
+        featuresPopup.setUriFragment("myFragment");
         addComponent(withPopupFeaturesButton);
+
+        Button withParametersButton = new Button("Open UI with parameters");
+        BrowserWindowOpener parametersOpener = new BrowserWindowOpener(
+                ShowParamsUI.class);
+        parametersOpener.setUriFragment("myfragment");
+        parametersOpener.setParameter("my&param", "my=param#value");
+        parametersOpener.extend(withParametersButton);
+        addComponent(withParametersButton);
     }
 
     public void addComponents(List<Class<? extends Component>> components,
