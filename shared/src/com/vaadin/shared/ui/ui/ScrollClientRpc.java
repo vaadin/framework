@@ -13,17 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.vaadin.shared.ui.ui;
 
-import com.vaadin.shared.annotations.Delayed;
-import com.vaadin.shared.communication.ServerRpc;
-import com.vaadin.shared.ui.ClickRpc;
+import com.vaadin.shared.communication.ClientRpc;
 
-public interface UIServerRpc extends ClickRpc, ServerRpc {
-    @Delayed(lastOnly = true)
-    public void resize(int viewWidth, int viewHeight, int windowWidth,
-            int windowHeight);
+public interface ScrollClientRpc extends ClientRpc {
 
-    @Delayed(lastOnly = true)
-    public void scroll(int scrollTop, int scrollLeft);
+    public void setScrollTop(int scrollTop);
+
+    public void setScrollLeft(int scrollLeft);
 }

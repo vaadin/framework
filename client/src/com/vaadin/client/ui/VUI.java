@@ -20,6 +20,9 @@ import java.util.ArrayList;
 
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.HasScrollHandlers;
+import com.google.gwt.event.dom.client.ScrollEvent;
+import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.logical.shared.HasResizeHandlers;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -49,7 +52,7 @@ import com.vaadin.shared.ui.ui.UIConstants;
  */
 public class VUI extends SimplePanel implements ResizeHandler,
         Window.ClosingHandler, ShortcutActionHandlerOwner, Focusable,
-        HasResizeHandlers {
+        HasResizeHandlers, HasScrollHandlers {
 
     private static int MONITOR_PARENT_TIMER_INTERVAL = 1000;
 
@@ -95,16 +98,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
     private int parentHeight;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public int scrollTop;
-
-    /** For internal use only. May be removed or replaced in the future. */
-    public int scrollLeft;
-
-    /** For internal use only. May be removed or replaced in the future. */
     public boolean rendering;
-
-    /** For internal use only. May be removed or replaced in the future. */
-    public boolean scrollable;
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean immediate;
@@ -350,26 +344,6 @@ public class VUI extends SimplePanel implements ResizeHandler,
         if (type == Event.ONKEYDOWN && actionHandler != null) {
             actionHandler.handleKeyboardEvent(event);
             return;
-        } else if (scrollable && type == Event.ONSCROLL) {
-            updateScrollPosition();
-        }
-    }
-
-    /**
-     * Updates scroll position from DOM and saves variables to server.
-     */
-    private void updateScrollPosition() {
-        int oldTop = scrollTop;
-        int oldLeft = scrollLeft;
-        scrollTop = DOM.getElementPropertyInt(getElement(), "scrollTop");
-        scrollLeft = DOM.getElementPropertyInt(getElement(), "scrollLeft");
-        if (connection != null && !rendering) {
-            if (oldTop != scrollTop) {
-                connection.updateVariable(id, "scrollTop", scrollTop, false);
-            }
-            if (oldLeft != scrollLeft) {
-                connection.updateVariable(id, "scrollLeft", scrollLeft, false);
-            }
         }
     }
 
@@ -476,6 +450,11 @@ public class VUI extends SimplePanel implements ResizeHandler,
     @Override
     public HandlerRegistration addResizeHandler(ResizeHandler resizeHandler) {
         return addHandler(resizeHandler, ResizeEvent.getType());
+    }
+
+    @Override
+    public HandlerRegistration addScrollHandler(ScrollHandler scrollHandler) {
+        return addHandler(scrollHandler, ScrollEvent.getType());
     }
 
 }
