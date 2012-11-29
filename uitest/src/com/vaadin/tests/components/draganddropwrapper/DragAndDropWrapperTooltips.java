@@ -20,10 +20,10 @@ import com.vaadin.ui.VerticalLayout;
 
 public class DragAndDropWrapperTooltips extends TestBase {
 
-    private final String BASE = ".greenblock {vertical-align: middle; float:left; width:60px;height:60px;background: green !important; padding:0; margin:2px;-webkit-transition: width 0.3s ease-in-out;color: white;}";
-    private final String B2 = ".b2 {background-color: red !important;}";
-    private final String B3 = ".b3 {background-color: yellow !important;color: black;}";
-    private final String B4 = ".b4 {background-color: blue !important;}";
+    private final String BASE = ".v-widget.greenblock {vertical-align: middle; float:left; width:60px;height:60px;background: green !important; padding:0; margin:2px;-webkit-transition: width 0.3s ease-in-out;color: white;}";
+    private final String B2 = ".v-widget.b2 {background-color: red !important;}";
+    private final String B3 = ".v-widget.b3 {background-color: yellow !important;color: black;}";
+    private final String B4 = ".v-widget.b4 {background-color: blue !important;}";
     private final String HIDEDRAGSOURCE = ".v-active-drag-source { overflow:hidden; width:0px !important;}";
     private DragAndDropWrapper dragAndDropWrapper;
 
