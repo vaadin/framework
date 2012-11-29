@@ -392,4 +392,26 @@ public class Notification implements Serializable {
     public static void show(String caption, Type type) {
         new Notification(caption, type).show(Page.getCurrent());
     }
+
+    /**
+     * Shows a notification message the current page. The position and behavior
+     * of the message depends on the type, which is one of the basic types
+     * defined in {@link Notification}, for instance
+     * Notification.TYPE_WARNING_MESSAGE.
+     * 
+     * The caption is rendered as plain text with HTML automatically escaped.
+     * 
+     * @see #Notification(String, Type)
+     * @see #show(Page)
+     * 
+     * @param caption
+     *            The message
+     * @param description
+     *            The message description
+     * @param type
+     *            The message type
+     */
+    public static void show(String caption, String description, Type type) {
+        new Notification(caption, description, type).show(Page.getCurrent());
+    }
 }
