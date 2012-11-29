@@ -49,4 +49,10 @@ public final class JavaScriptExtension extends AbstractExtensionConnector
         super.onUnregister();
         helper.onUnregister();
     }
+
+    @Override
+    protected void extend(ServerConnector target) {
+        // Nothing to do for JavaScriptExtension here. Everything is done in
+        // javascript.
+    }
 }

@@ -22,6 +22,7 @@ import java.util.Set;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.json.client.JSONArray;
+import com.vaadin.client.ServerConnector;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.shared.communication.MethodInvocation;
@@ -130,5 +131,12 @@ public class JavaScriptManagerConnector extends AbstractExtensionConnector {
     @Override
     public JavaScriptManagerState getState() {
         return (JavaScriptManagerState) super.getState();
+    }
+
+    @Override
+    protected void extend(ServerConnector target) {
+        // Nothing to do there as we are not interested in the connector we
+        // extend (Page i.e. UI)
+
     }
 }
