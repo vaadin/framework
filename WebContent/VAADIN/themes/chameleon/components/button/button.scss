@@ -1,15 +1,15 @@
-@mixin chameleon-button {
+@mixin chameleon-button($primaryStyleName : v-button) {
 
-.v-button:active,
-.v-ie8 & .v-pressed.v-button,
-div.v-button-down {
+.#{$primaryStyleName}:active,
+.v-ie8 & .v-pressed.#{$primaryStyleName},
+div.#{$primaryStyleName}-down {
 	background-image: url(../../img/grad-dark-bottom2.png);
 	background-color: #afafaf;
 	}
 
-.v-button:active .v-button-wrap,
-.v-ie8 & .v-pressed.v-button .v-button-wrap,
-.v-button-down .v-button-wrap {
+.#{$primaryStyleName}:active .#{$primaryStyleName}-wrap,
+.v-ie8 & .v-pressed.#{$primaryStyleName} .#{$primaryStyleName}-wrap,
+.#{$primaryStyleName}-down .#{$primaryStyleName}-wrap {
 	background-image: url(../../img/grad-dark-top2.png);
 	border: 1px solid #888;
 	padding: 3px 12px;
@@ -18,17 +18,17 @@ div.v-button-down {
 	-moz-border-radius: 2px;
 	}
 
-div.v-button-down .v-button-wrap {
+div.#{$primaryStyleName}-down .#{$primaryStyleName}-wrap {
 	background-image: url(../../img/grad-dark-top2.png);
 	}
 
-.v-button {
+.#{$primaryStyleName} {
 	overflow: hidden;
 	}
 
-.v-button,
-.v-disabled.v-button:focus,
-.v-disabled.v-button:active {
+.#{$primaryStyleName},
+.v-disabled.#{$primaryStyleName}:focus,
+.v-disabled.#{$primaryStyleName}:active {
 	border: 1px solid #8b8b8b;
 	background: #c9c9c9;
 	border-radius: 3px;
@@ -41,8 +41,8 @@ div.v-button-down .v-button-wrap {
 	padding: 0;
 	}
 
-.v-button-wrap,
-.v-disabled:active .v-button-wrap {
+.#{$primaryStyleName}-wrap,
+.v-disabled:active .#{$primaryStyleName}-wrap {
 	display: block;
 	padding: 4px 13px;
 	border: none;
@@ -55,22 +55,22 @@ div.v-button-down .v-button-wrap {
 	-ms-text-overflow: ellipsis;
 	}
 
-.v-sa & .v-button,
-.v-sa & .v-button-wrap,
-.v-ff & .v-button,
-.v-ff & .v-button-wrap {
+.v-sa & .#{$primaryStyleName},
+.v-sa & .#{$primaryStyleName}-wrap,
+.v-ff & .#{$primaryStyleName},
+.v-ff & .#{$primaryStyleName}-wrap {
 	overflow: hidden;
 	}
 	
-.v-button:focus {
+.#{$primaryStyleName}:focus {
 	outline: none;
 	}
 
-.v-button .v-icon {
+.#{$primaryStyleName} .v-icon {
 	margin-left: -0.5em;
 	}
 
-.v-button .v-button-caption {
+.#{$primaryStyleName} .#{$primaryStyleName}-caption {
 	line-height: 1.26;
 	}
 
@@ -78,7 +78,7 @@ div.v-button-down .v-button-wrap {
 /*******************************************************************************
  * Big
  ******************************************************************************/
-.v-button-big {
+.#{$primaryStyleName}-big {
 	font-size: 1.2em;
 	}
 
@@ -86,22 +86,22 @@ div.v-button-down .v-button-wrap {
 /*******************************************************************************
  * Small
  ******************************************************************************/
-.v-button-small {
+.#{$primaryStyleName}-small {
 	font-size: 0.85em;
 	font-weight: normal;
 	}
 
-.v-button-small .v-button-wrap {
+.#{$primaryStyleName}-small .#{$primaryStyleName}-wrap {
 	padding: 3px 11px;
 	}
 
-.v-button-small:active .v-button-wrap,
-.v-ie8 & .v-button-small.v-pressed .v-button-wrap,
-.v-button-down.small .v-button-wrap {
+.#{$primaryStyleName}-small:active .#{$primaryStyleName}-wrap,
+.v-ie8 & .#{$primaryStyleName}-small.v-pressed .#{$primaryStyleName}-wrap,
+.#{$primaryStyleName}-down.small .#{$primaryStyleName}-wrap {
 	padding: 2px 10px;
 	}
 
-.v-button-small .v-icon {
+.#{$primaryStyleName}-small .v-icon {
 	margin-top: -4px;
 	margin-bottom: -4px;
 	}
@@ -110,13 +110,13 @@ div.v-button-down .v-button-wrap {
 /*******************************************************************************
  * Wide
  ******************************************************************************/
-.v-button-wide .v-button-wrap {
+.#{$primaryStyleName}-wide .#{$primaryStyleName}-wrap {
 	padding-left: 26px;
 	padding-right: 26px;
 	}
 
-.v-button-wide:active .v-button-wrap,
-.v-ie8 & .v-button-wide.v-pressed .v-button-wrap {
+.#{$primaryStyleName}-wide:active .#{$primaryStyleName}-wrap,
+.v-ie8 & .#{$primaryStyleName}-wide.v-pressed .#{$primaryStyleName}-wrap {
 	padding-left: 25px;
 	padding-right: 25px;
 	}
@@ -125,13 +125,13 @@ div.v-button-down .v-button-wrap {
 /*******************************************************************************
  * Tall
  ******************************************************************************/
-.v-button-tall .v-button-wrap {
+.#{$primaryStyleName}-tall .#{$primaryStyleName}-wrap {
 	padding-top: 13px;
 	padding-bottom: 13px;
 	}
 
-.v-button-tall:active .v-button-wrap,
-.v-ie8 & .v-button-tall.v-pressed .v-button-wrap {
+.#{$primaryStyleName}-tall:active .#{$primaryStyleName}-wrap,
+.v-ie8 & .#{$primaryStyleName}-tall.v-pressed .#{$primaryStyleName}-wrap {
 	padding-top: 12px;
 	padding-bottom: 12px;
 	}
@@ -140,8 +140,8 @@ div.v-button-down .v-button-wrap {
 /*******************************************************************************
  * Default
  ******************************************************************************/
-.v-button-default,
-.v-disabled.v-button-default:focus {
+.#{$primaryStyleName}-default,
+.v-disabled.#{$primaryStyleName}-default:focus {
 	font-weight: bold;
 	}
 
@@ -149,18 +149,18 @@ div.v-button-down .v-button-wrap {
 /*******************************************************************************
  * Link & borderless
  ******************************************************************************/
-div.v-button-link,
-div.v-button-link:focus,
-.v-button-link:active,
-div.v-disabled.v-button-link,
-div.v-disabled.v-button-link:focus,
-body.v-ie & .v-pressed.v-button-link,
-div.v-button-borderless,
-div.v-button-borderless:focus,
-.v-button-borderless:active,
-div.v-disabled.v-button-borderless,
-div.v-disabled.v-button-borderless:focus,
-body.v-ie & .v-pressed.v-button-borderless {
+div.#{$primaryStyleName}-link,
+div.#{$primaryStyleName}-link:focus,
+.#{$primaryStyleName}-link:active,
+div.v-disabled.#{$primaryStyleName}-link,
+div.v-disabled.#{$primaryStyleName}-link:focus,
+body.v-ie & .v-pressed.#{$primaryStyleName}-link,
+div.#{$primaryStyleName}-borderless,
+div.#{$primaryStyleName}-borderless:focus,
+.#{$primaryStyleName}-borderless:active,
+div.v-disabled.#{$primaryStyleName}-borderless,
+div.v-disabled.#{$primaryStyleName}-borderless:focus,
+body.v-ie & .v-pressed.#{$primaryStyleName}-borderless {
 	background: transparent;
 	font-weight: normal;
 	text-shadow: none;
@@ -170,23 +170,23 @@ body.v-ie & .v-pressed.v-button-borderless {
 	-moz-box-shadow: none;
 	}
 
-.v-button-link .v-button-wrap,
-.v-button-borderless .v-button-wrap {
+.#{$primaryStyleName}-link .#{$primaryStyleName}-wrap,
+.#{$primaryStyleName}-borderless .#{$primaryStyleName}-wrap {
 	display: inline;
 	}
 
-div.v-button-link .v-button-wrap,
-div.v-button-link:focus .v-button-wrap,
-.v-button-link:active .v-button-wrap,
-div.v-disabled.v-button-link .v-button-wrap,
-div.v-disabled.v-button-link:focus .v-button-wrap,
-body.v-ie & .v-pressed.v-button-link .v-button-wrap,
-div.v-button-borderless .v-button-wrap,
-div.v-button-borderless:focus .v-button-wrap,
-.v-button-borderless:active .v-button-wrap,
-div.v-disabled.v-button-borderless .v-button-wrap,
-div.v-disabled.v-button-borderless:focus .v-button-wrap,
-body.v-ie & .v-pressed.v-button-borderless .v-button-wrap {
+div.#{$primaryStyleName}-link .#{$primaryStyleName}-wrap,
+div.#{$primaryStyleName}-link:focus .#{$primaryStyleName}-wrap,
+.#{$primaryStyleName}-link:active .#{$primaryStyleName}-wrap,
+div.v-disabled.#{$primaryStyleName}-link .#{$primaryStyleName}-wrap,
+div.v-disabled.#{$primaryStyleName}-link:focus .#{$primaryStyleName}-wrap,
+body.v-ie & .v-pressed.#{$primaryStyleName}-link .#{$primaryStyleName}-wrap,
+div.#{$primaryStyleName}-borderless .#{$primaryStyleName}-wrap,
+div.#{$primaryStyleName}-borderless:focus .#{$primaryStyleName}-wrap,
+.#{$primaryStyleName}-borderless:active .#{$primaryStyleName}-wrap,
+div.v-disabled.#{$primaryStyleName}-borderless .#{$primaryStyleName}-wrap,
+div.v-disabled.#{$primaryStyleName}-borderless:focus .#{$primaryStyleName}-wrap,
+body.v-ie & .v-pressed.#{$primaryStyleName}-borderless .#{$primaryStyleName}-wrap {
 	background: transparent;
 	font-weight: normal;
 	text-shadow: none;
@@ -196,24 +196,24 @@ body.v-ie & .v-pressed.v-button-borderless .v-button-wrap {
 	-moz-box-shadow: none;
 	}
 
-.v-button-link:focus .v-button-caption,
-.v-button-borderless:focus .v-button-caption {
+.#{$primaryStyleName}-link:focus .#{$primaryStyleName}-caption,
+.#{$primaryStyleName}-borderless:focus .#{$primaryStyleName}-caption {
 	border: 1px dotted gray;
 	margin: -1px;
 	}
 
-.v-button-link:active .v-button-caption,
-.v-button-borderless:active .v-button-caption {
+.#{$primaryStyleName}-link:active .#{$primaryStyleName}-caption,
+.#{$primaryStyleName}-borderless:active .#{$primaryStyleName}-caption {
 	border: none;
 	margin: 0;
 	}
 
-.v-button-borderless:active .v-icon {
+.#{$primaryStyleName}-borderless:active .v-icon {
 	opacity: .6;
 	}
 
-.v-button-link .v-icon,
-.v-button-borderless .v-icon {
+.#{$primaryStyleName}-link .v-icon,
+.#{$primaryStyleName}-borderless .v-icon {
 	margin-left: 0;
 	}
 
@@ -221,18 +221,18 @@ body.v-ie & .v-pressed.v-button-borderless .v-button-wrap {
 /*******************************************************************************
  * Icon-on-top
  ******************************************************************************/
-.v-button-icon-on-top.v-button-borderless:focus .v-button-caption {
+.#{$primaryStyleName}-icon-on-top.#{$primaryStyleName}-borderless:focus .#{$primaryStyleName}-caption {
 	margin-top: 1px;
 	}
 
-.v-button-icon-on-top .v-button-caption,
-.v-button-icon-on-top:focus .v-button-caption,
-.v-button-icon-on-top.v-button-borderless:active .v-button-caption {
+.#{$primaryStyleName}-icon-on-top .#{$primaryStyleName}-caption,
+.#{$primaryStyleName}-icon-on-top:focus .#{$primaryStyleName}-caption,
+.#{$primaryStyleName}-icon-on-top.#{$primaryStyleName}-borderless:active .#{$primaryStyleName}-caption {
 	display: block;
 	margin-top: 2px;
 	}
 
-.v-button-icon-on-top .v-icon {
+.#{$primaryStyleName}-icon-on-top .v-icon {
 	margin: 0;
 	}
 
@@ -240,7 +240,7 @@ body.v-ie & .v-pressed.v-button-borderless .v-button-wrap {
 /*******************************************************************************
  * Icon-on-right
  ******************************************************************************/
-.v-button-icon-on-right .v-icon {
+.#{$primaryStyleName}-icon-on-right .v-icon {
 	float: right;
 	margin-left: 3px;
 	margin-right: -0.5em;
@@ -250,11 +250,11 @@ body.v-ie & .v-pressed.v-button-borderless .v-button-wrap {
 /*******************************************************************************
  * Icon-only
  ******************************************************************************/
-.v-button-icon-only .v-button-caption {
+.#{$primaryStyleName}-icon-only .#{$primaryStyleName}-caption {
 	display: none;
 	}
 
-.v-button-icon-only .v-icon {
+.#{$primaryStyleName}-icon-only .v-icon {
 	margin-right: -.5em;
 	}
 

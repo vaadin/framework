@@ -1,6 +1,6 @@
-@mixin chameleon-progressindicator {
+@mixin chameleon-progressindicator($primaryStyleName : v-progressindicator) {
 
-.v-progressindicator-wrapper {
+.#{$primaryStyleName}-wrapper {
 	border-radius: 2px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
@@ -10,7 +10,7 @@
 	line-height: 1px;
 	}
 
-.v-progressindicator-indicator {
+.#{$primaryStyleName}-indicator {
 	border-radius: 2px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
@@ -24,12 +24,12 @@
 /*******************************************************************************
  * Small
  ******************************************************************************/
-.v-progressindicator-small {
+.#{$primaryStyleName}-small {
 	width: 110px;
 	}
 
-.v-progressindicator-small .v-progressindicator-wrapper,
-.v-progressindicator-small .v-progressindicator-indicator {
+.#{$primaryStyleName}-small .#{$primaryStyleName}-wrapper,
+.#{$primaryStyleName}-small .#{$primaryStyleName}-indicator {
 	height: 2px;
 	border-radius: 1px;
 	-webkit-border-radius: 1px;
@@ -40,12 +40,12 @@
 /*******************************************************************************
  * Big
  ******************************************************************************/
-.v-progressindicator-big {
+.#{$primaryStyleName}-big {
 	width: 250px;
 	}
 
-.v-progressindicator-big .v-progressindicator-wrapper,
-.v-progressindicator-big .v-progressindicator-indicator {
+.#{$primaryStyleName}-big .#{$primaryStyleName}-wrapper,
+.#{$primaryStyleName}-big .#{$primaryStyleName}-indicator {
 	height: 14px;
 	border-radius: 4px;
 	-webkit-border-radius: 4px;
@@ -56,17 +56,17 @@
 /*******************************************************************************
  * Indeterminates
  ******************************************************************************/
-.v-progressindicator-indeterminate.v-progressindicator-big {
+.#{$primaryStyleName}-indeterminate.#{$primaryStyleName}-big {
 	width: 42px;
 	height: 42px;
 	background: #fff url(../../../base/common/img/ajax-loader-big.gif) no-repeat 50%;
 	}
 
-.v-progressindicator-indeterminate.v-disabled {
+.#{$primaryStyleName}-indeterminate.v-disabled {
 	display: none;
 	}
 
-.v-progressindicator-indeterminate.v-progressindicator-bar {
+.#{$primaryStyleName}-indeterminate.#{$primaryStyleName}-bar {
 	display: block;
 	width: 150px;
 	height: 9px;
@@ -75,17 +75,17 @@
 	-moz-border-radius: 2px;
 	}
 
-.v-progressindicator-indeterminate.bar.v-progressindicator-small {
+.#{$primaryStyleName}-indeterminate.bar.#{$primaryStyleName}-small {
 	width: 110px;
 	height: 4px;
 	}
 
-.v-progressindicator-indeterminate.bar.v-progressindicator-big {
+.#{$primaryStyleName}-indeterminate.bar.#{$primaryStyleName}-big {
 	width: 200px;
 	height: 16px;
 	}
 
-.v-progressindicator-indeterminate.bar .v-progressindicator-wrapper {
+.#{$primaryStyleName}-indeterminate.bar .#{$primaryStyleName}-wrapper {
 	display: block;
 	background: #fff url(../../img/indeterminate-progress.gif);
 	border-radius: 3px;
@@ -94,7 +94,7 @@
 	overflow: hidden;
 	}
 
-.v-progressindicator-indeterminate.bar .v-progressindicator-indicator {
+.#{$primaryStyleName}-indeterminate.bar .#{$primaryStyleName}-indicator {
 	display: block;
 	background: transparent url(../../img/grad-light-top.png) repeat-x;
 	border: none;
@@ -105,11 +105,11 @@
 	overflow: hidden;
 	}
 
-.v-progressindicator-indeterminate.bar.v-progressindicator-small .v-progressindicator-indicator {
+.#{$primaryStyleName}-indeterminate.bar.#{$primaryStyleName}-small .#{$primaryStyleName}-indicator {
 	background: transparent;
 	}
 
-.v-progressindicator-indeterminate.bar.v-disabled .v-progressindicator-indicator {
+.#{$primaryStyleName}-indeterminate.bar.v-disabled .#{$primaryStyleName}-indicator {
 	background: #fff;
 	}
 

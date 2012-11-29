@@ -1,25 +1,25 @@
-@mixin chameleon-tree {
+@mixin chameleon-tree($primaryStyleName : v-tree) {
 
-.v-tree-node-caption {
+.#{$primaryStyleName}-node-caption {
 	margin-left: 16px;
 	}
 
-.v-tree-node span {
+.#{$primaryStyleName}-node span {
 	padding: .1em .3em;
 	border-radius: 2px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	}
 
-.v-tree-node-children {
+.#{$primaryStyleName}-node-children {
 	padding-left: 16px;
 	}
 
-.v-tree-node-selected span {
+.#{$primaryStyleName}-node-selected span {
 	background-color: #333;
 	}
 
-.v-tree-connectors .v-tree-node-caption {
+.#{$primaryStyleName}-connectors .#{$primaryStyleName}-node-caption {
 	padding-bottom: 1px;
 	}
 

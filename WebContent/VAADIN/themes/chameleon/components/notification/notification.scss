@@ -1,6 +1,6 @@
-@mixin chameleon-notification {
+@mixin chameleon-notification($primaryStyleName : v-Notification) {
 
-div.v-Notification {
+div.#{$primaryStyleName} {
 	-moz-border-radius: 0;
 	-webkit-border-radius: 0;
 	border-radius: 0;
@@ -10,34 +10,34 @@ div.v-Notification {
 	box-shadow: 0 2px 5px rgba(0,0,0,.7);
 	}
 
-.v-Notification p {
+.#{$primaryStyleName} p {
 	line-height: 1.3;
 	}
 
-div.v-Notification-warning {
+div.#{$primaryStyleName}-warning {
 	background-color: #fffec8;
 	color: #574734;
 	border: 2px solid #fee3af;
 	}
 
-div.v-Notification-warning h1 {
+div.#{$primaryStyleName}-warning h1 {
 	padding-left: 44px;
 	background: transparent url(../../img/label-warning-icon-big.png) no-repeat 0 50%;
 	}
 
-div.v-Notification-error {
+div.#{$primaryStyleName}-error {
 	color: #fff;
 	text-shadow: 0 1px 2px rgba(0,0,0,.3);
 	background: #c22f24 url(../../img/error-close.png) no-repeat right top;
 	border: 2px solid #ca3030;
 	}
 
-div.v-Notification-error h1 {
+div.#{$primaryStyleName}-error h1 {
 	padding-left: 44px;
 	background: transparent url(../../img/label-error-icon-big.png) no-repeat 0 50%;
 	}
 
-div.v-Notification-tray {
+div.#{$primaryStyleName}-tray {
 	color: #fff;
 	margin: 0 5px 5px 0;
 	background: #3b3b3b url(../../img/grad-light-top2.png) repeat-x;
@@ -49,17 +49,17 @@ div.v-Notification-tray {
 	text-shadow: 0 1px 1px rgba(0,0,0,.5);
 	}
 
-.v-Notification-tray h1 {
+.#{$primaryStyleName}-tray h1 {
 	font-size: 14px;
 	line-height: 18px;
 	}
 
-.v-Notification-tray p {
+.#{$primaryStyleName}-tray p {
 	font-size: 12px;
 	font-weight: normal;
 	}
 
-div.v-Notification-system {
+div.#{$primaryStyleName}-system {
 	color: #fff;
 	border: none;
 	background-color: #b40000;

@@ -1,10 +1,10 @@
-@mixin chameleon-selects {
+@mixin chameleon-selects($primaryStyleName : v-filterselect) {
 
-.v-filterselect {
+.#{$primaryStyleName} {
 	overflow: hidden;
 	}
 
-&.v-app input.v-filterselect-input {
+&.v-app input.#{$primaryStyleName}-input {
 	margin: 0;
 	padding: 0;
 	border: none;
@@ -12,72 +12,72 @@
 	line-height: normal;
 	}
 
-&.v-app input.v-filterselect-input[type=text] {
+&.v-app input.#{$primaryStyleName}-input[type=text] {
 	padding: 0;
 	}
 
-.v-filterselect-focus .v-filterselect-input,
-.v-filterselect .v-filterselect-input:focus {
+.#{$primaryStyleName}-focus .#{$primaryStyleName}-input,
+.#{$primaryStyleName} .#{$primaryStyleName}-input:focus {
 	outline: none;
 	}
 
-.v-filterselect-big.v-filterselect-search {
+.#{$primaryStyleName}-big.#{$primaryStyleName}-search {
 	padding-left: 22px;
 	}
 
-.v-filterselect-button {
+.#{$primaryStyleName}-button {
 	width: 16px;
 	height: 1.2em;
 	background-position: -5px -11px;
 	opacity: .4;
 	}
 
-.v-filterselect-button:hover {
+.#{$primaryStyleName}-button:hover {
 	opacity: .7;
 	}
 
-.v-filterselect-button:active {
+.#{$primaryStyleName}-button:active {
 	opacity: 1;
 	}
 
-.v-filterselect-small .v-filterselect-button {
+.#{$primaryStyleName}-small .#{$primaryStyleName}-button {
 	height: 0.95em;
 	background-position: -5px -12px;
 	}
 
-.v-filterselect-suggestpopup {
+.#{$primaryStyleName}-suggestpopup {
 	margin-top: .4em;
 	}
-.v-filterselect-suggestmenu tr {
+.#{$primaryStyleName}-suggestmenu tr {
     line-height:1.4em;
 }	
 
-&.v-app .v-filterselect-suggestpopup-small td {
+&.v-app .#{$primaryStyleName}-suggestpopup-small td {
 	font-size: .85em;
 	}
 
-&.v-app .v-filterselect-suggestpopup-big td {
+&.v-app .#{$primaryStyleName}-suggestpopup-big td {
 	font-size: 1.1em;
 	}
 
-.v-filterselect-big .v-filterselect-button {
+.#{$primaryStyleName}-big .#{$primaryStyleName}-button {
 	height: 1.4em;
 	background-position: -5px -9px;
 	}
 
-.v-filterselect-search .v-filterselect-button {
+.#{$primaryStyleName}-search .#{$primaryStyleName}-button {
 	width: 0;
 	overflow: hidden;
 	}
 
-.v-filterselect-prompt .v-filterselect-input {
+.#{$primaryStyleName}-prompt .#{$primaryStyleName}-input {
 	font-style: normal;
 	}
 
-.v-filterselect-prevpage-off,
-.v-filterselect-nextpage-off,
-.v-filterselect-prevpage,
-.v-filterselect-nextpage {
+.#{$primaryStyleName}-prevpage-off,
+.#{$primaryStyleName}-nextpage-off,
+.#{$primaryStyleName}-prevpage,
+.#{$primaryStyleName}-nextpage {
 	border-style: solid;
 	border-width: 1px 0;
 	border-color: #b3b3b3;
@@ -89,29 +89,29 @@
 	-ms-user-select: none;
 	}
 
-.v-filterselect-prevpage:active,
-.v-filterselect-nextpage:active {
+.#{$primaryStyleName}-prevpage:active,
+.#{$primaryStyleName}-nextpage:active {
 	// TODO check - was missing a part of the rule
 	background-image: #c9c9c9 url(../../img/grad-dark-bottom2.png);
 	background-position: left bottom;
 	}
 
-.v-filterselect-prevpage-off span,
-.v-filterselect-nextpage-off span,
-.v-filterselect-prevpage span,
-.v-filterselect-nextpage span {
+.#{$primaryStyleName}-prevpage-off span,
+.#{$primaryStyleName}-nextpage-off span,
+.#{$primaryStyleName}-prevpage span,
+.#{$primaryStyleName}-nextpage span {
 	display: block;
 	text-indent: -9999px;
 	height: 12px;
 	background: transparent url(../../../base/common/img/sprites.png) no-repeat 50% 3px;
 	}
 
-.v-filterselect-nextpage-off span,
-.v-filterselect-nextpage span {
+.#{$primaryStyleName}-nextpage-off span,
+.#{$primaryStyleName}-nextpage span {
 	background-position: 50% -12px;
 	}
 
-.v-filterselect-status {
+.#{$primaryStyleName}-status {
 	font-size: .85em;
 	margin: 1px 0 -3px;
 	user-select: none;
@@ -120,16 +120,16 @@
 	-ms-user-select: none;
 	}
 
-.v-filterselect-suggestmenu .gwt-menuItem-selected {
+.#{$primaryStyleName}-suggestmenu .gwt-menuItem-selected {
 	background-image: url(../../img/grad-light-top2.png);
 	background-position: 0 -1px;
 	}
 
-.v-filterselect-suggestpopup-small .v-filterselect-status {
+.#{$primaryStyleName}-suggestpopup-small .#{$primaryStyleName}-status {
 	font-size: .8em;
 	}
 
-.v-filterselect-suggestpopup-big .v-filterselect-status {
+.#{$primaryStyleName}-suggestpopup-big .#{$primaryStyleName}-status {
 	font-size: .9em;
 	}
 
@@ -145,13 +145,13 @@
 /*******************************************************************************
  * Non-editable combobox (i.e. themable select)
  ******************************************************************************/
-.v-filterselect-select-button {
+.#{$primaryStyleName}-select-button {
 	background: #c9c9c9 url(../../img/grad-light-top.png) repeat-x;
 	position: relative;
 	padding: .3em .5em;
 	}
 
-.v-filterselect-select-button .v-filterselect-input {
+.#{$primaryStyleName}-select-button .#{$primaryStyleName}-input {
 	display: block;
 	width: 100% !important;
 	user-select: none;
@@ -159,7 +159,7 @@
 	-webkit-user-select: none;
 	}
 
-.v-filterselect-select-button .v-filterselect-button {
+.#{$primaryStyleName}-select-button .#{$primaryStyleName}-button {
 	position: absolute;
 	width: 100%;
 	top: 0;
