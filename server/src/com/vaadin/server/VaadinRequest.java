@@ -56,7 +56,9 @@ public interface VaadinRequest extends Serializable {
     public String getParameter(String parameter);
 
     /**
-     * Gets all the parameters of the request.
+     * Gets all the parameters of the request. Framework's internal init
+     * parameters have prefix "v-" (does not include such parameters as "theme"
+     * and "debug").
      * 
      * @see #getParameter(String)
      * 

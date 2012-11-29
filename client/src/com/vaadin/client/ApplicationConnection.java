@@ -2342,7 +2342,7 @@ public class ApplicationConnection {
                 extraParams += "&";
             }
             String widgetsetVersion = Version.getFullVersion();
-            extraParams += "wsver=" + widgetsetVersion;
+            extraParams += "v-wsver=" + widgetsetVersion;
 
             getConfiguration().setWidgetsetVersionSent();
         }

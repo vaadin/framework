@@ -118,8 +118,8 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
                 MimeResponse portletResponse = (MimeResponse) response
                         .getPortletResponse();
                 ResourceURL resourceURL = portletResponse.createResourceURL();
-                resourceURL.setResourceID("browserDetails");
-                parameters.put("browserDetailsUrl", resourceURL.toString());
+                resourceURL.setResourceID("v-browserDetails");
+                parameters.put("v-browserDetailsUrl", resourceURL.toString());
 
                 // Always send path info as a query parameter
                 parameters.put(

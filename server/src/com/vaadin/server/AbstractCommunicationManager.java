@@ -618,7 +618,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * @param request
      */
     private void checkWidgetsetVersion(VaadinRequest request) {
-        String widgetsetVersion = request.getParameter("wsver");
+        String widgetsetVersion = request.getParameter("v-wsver");
         if (widgetsetVersion == null) {
             // Only check when the widgetset version is reported. It is reported
             // in the first UIDL request (not the initial request as it is a
@@ -2443,7 +2443,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // Check for an existing UI based on window.name
 
         // Special parameter sent by vaadinBootstrap.js
-        String windowName = request.getParameter("wn");
+        String windowName = request.getParameter("v-wn");
 
         Map<String, Integer> retainOnRefreshUIs = session
                 .getPreserveOnRefreshUIs();
@@ -2515,7 +2515,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
         UI.setCurrent(ui);
 
         // Fire fragment change if the fragment has changed
-        String location = request.getParameter("loc");
+        String location = request.getParameter("v-loc");
         if (location != null) {
             ui.getPage().updateLocation(location);
         }

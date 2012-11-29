@@ -25,18 +25,18 @@ public class UIInitBrowserDetails extends AbstractTestUI {
         Page p = getPage();
         WebBrowser wb = p.getWebBrowser();
 
-        addDetail("location", "loc", p.getLocation());
+        addDetail("location", "v-loc", p.getLocation());
 
-        addDetail("browser window width", "cw", p.getBrowserWindowWidth());
-        addDetail("browser window height", "ch", p.getBrowserWindowHeight());
-        addDetail("screen width", "sw", wb.getScreenWidth());
-        addDetail("screen height", "sh", wb.getScreenHeight());
+        addDetail("browser window width", "v-cw", p.getBrowserWindowWidth());
+        addDetail("browser window height", "v-ch", p.getBrowserWindowHeight());
+        addDetail("screen width", "v-sw", wb.getScreenWidth());
+        addDetail("screen height", "v-sh", wb.getScreenHeight());
 
-        addDetail("timezone offset", "tzo", wb.getTimezoneOffset());
-        addDetail("raw timezone offset", "rtzo", wb.getRawTimezoneOffset());
-        addDetail("dst saving", "dstd", wb.getDSTSavings());
-        addDetail("dst in effect", "dston", wb.isDSTInEffect());
-        addDetail("current date", "curdate", wb.getCurrentDate());
+        addDetail("timezone offset", "v-tzo", wb.getTimezoneOffset());
+        addDetail("raw timezone offset", "v-rtzo", wb.getRawTimezoneOffset());
+        addDetail("dst saving", "v-dstd", wb.getDSTSavings());
+        addDetail("dst in effect", "v-dston", wb.isDSTInEffect());
+        addDetail("current date", "v-curdate", wb.getCurrentDate());
     }
 
     @Override
