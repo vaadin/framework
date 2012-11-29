@@ -3,7 +3,7 @@
 .v-accordion {
 	position: relative;
 	outline: none;
-	overflow: hidden;
+	overflow: visible;
 	text-align: left; /* Force default alignment */
 }
 .v-accordion-item {
@@ -11,7 +11,7 @@
 	zoom: 1;
 }
 .v-accordion-item-caption {
-	overflow: hidden;
+	overflow: visible;
 	white-space: nowrap;
 	background: #eee;
 	border-bottom: 1px solid #ddd;
