@@ -1060,7 +1060,7 @@ void styleRule() :
 	 start = true;
 	 documentHandler.startSelector(l);
      }
-     ( ifDirective() | LOOKAHEAD(5)listModifyDirective() | includeDirective() | media() | extendDirective()| eachDirective() | variable() | LOOKAHEAD(3) (microsoftExtension()|declarationOrNestedProperties()) | styleRule())*
+     ( ifDirective() | LOOKAHEAD(5)listModifyDirective() | includeDirective() | media() | extendDirective()| eachDirective() | variable() | LOOKAHEAD(3) microsoftExtension()| styleRuleOrDeclarationOrNestedProperties())*
      <RBRACE> (<S>)*
  } catch (ThrowedParseException e) {
      if (errorHandler != null) {
@@ -1404,7 +1404,7 @@ void ifDirective() :
   { documentHandler.startIfElseDirective();
     documentHandler.ifDirective(evaluator);
    }
-  ( includeDirective() | media() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*	  
+  ( includeDirective() | media() | extendDirective()| variable() | styleRuleOrDeclarationOrNestedProperties())*	  
   < RBRACE >(< S >)*
   (elseDirective())*
   { documentHandler.endIfElseDirective(); }
@@ -1422,7 +1422,7 @@ void elseDirective() :
   { if(!evaluator.trim().equals("")){ documentHandler.ifDirective(evaluator); }
     else{ documentHandler.elseDirective(); }  
   }
-  ( includeDirective() | media() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*  
+  ( includeDirective() | media() | extendDirective()| variable() | styleRuleOrDeclarationOrNestedProperties())*  
   < RBRACE >(< S >)*
 }
 
@@ -1470,7 +1470,7 @@ void eachDirective() :
   {documentHandler.startEachDirective(var.image, listVariable);}
   )
   < LBRACE >(< S >)*
-  ( includeDirective() | LOOKAHEAD(5)listModifyDirective() | media() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*	  
+  ( includeDirective() | LOOKAHEAD(5)listModifyDirective() | media() | extendDirective()| variable() | styleRuleOrDeclarationOrNestedProperties())*	  
   < RBRACE >(< S >)*
   { documentHandler.endEachDirective();}
 }
@@ -1502,7 +1502,7 @@ void mixinDirective() :
     |(name = functionName() 
       args = arglist()) <RPARAN> (<S>)*) <LBRACE> (<S>)*
     {documentHandler.startMixinDirective(name, args);}
-    ( includeDirective() | media() | LOOKAHEAD(5)listModifyDirective()|eachDirective() | extendDirective()| variable() | LOOKAHEAD(3) declarationOrNestedProperties() | styleRule())*
+    ( includeDirective() | media() | LOOKAHEAD(5)listModifyDirective()|eachDirective() | extendDirective()| variable() | styleRuleOrDeclarationOrNestedProperties())*
     <RBRACE>(<S>)*
     {documentHandler.endMixinDirective(name, args);}
 }
@@ -1809,6 +1809,40 @@ LexicalUnit exp;}
       documentHandler.endNestedProperties(name);
     }
     (<S>)*
+}
+/**
+ * @exception ParseException exception during the parse
+ */
+void styleRuleOrDeclarationOrNestedProperties() :
+{
+}
+{
+  try {
+    // differentiate between the colon of a pseudo and the colon of nested properties and the colon of a simple property 
+    (LOOKAHEAD(5) styleRule() | declarationOrNestedProperties())
+  } catch (JumpException e) {
+     skipAfterExpression();
+     // reportWarningSkipText(getLocator(), skipAfterExpression());
+  } catch (ParseException e) {
+     if (errorHandler != null) {
+         if (e.currentToken != null) {
+             LocatorImpl li = new LocatorImpl(this,
+                                              e.currentToken.next.beginLine,
+                                              e.currentToken.next.beginColumn-1);
+             reportError(li, e);
+         } else {
+             reportError(getLocator(), e);
+         }
+         skipAfterExpression();
+         /*
+         LocatorImpl loc = (LocatorImpl) getLocator();
+         loc.column--;
+         reportWarningSkipText(loc, skipAfterExpression());
+         */
+     } else {
+         skipAfterExpression();
+     }
+  }
 }
 /**
  * @exception ParseException exception during the parse
