@@ -2889,7 +2889,7 @@ public class ApplicationConnection {
      *            The identifier for the event
      * @return true if at least one listener has been registered on server side
      *         for the event identified by eventIdentifier.
-     * @deprecated as of Vaadin 7. Use
+     * @deprecated As of 7.0. Use
      *             {@link AbstractComponentState#hasEventListener(String)}
      *             instead
      */
@@ -2945,7 +2945,7 @@ public class ApplicationConnection {
     }
 
     /**
-     * @deprecated No longer needed in Vaadin 7
+     * @deprecated As of 7.0. No longer serves any purpose.
      */
     @Deprecated
     public void unregisterPaintable(ServerConnector p) {
@@ -2971,6 +2971,7 @@ public class ApplicationConnection {
      * @param component
      * @param uidl
      * @param manageCaption
+     * @deprecated As of 7.0, no longer serves any purpose
      * @return
      */
     @Deprecated
@@ -2990,8 +2991,8 @@ public class ApplicationConnection {
     }
 
     /**
-     * @deprecated as of Vaadin 7. Use
-     *             {@link AbstractComponentState#hasEventListener(String)}
+     * @deprecated As of 7.0. Use
+     *             {@link AbstractComponentConnector#hasEventListener(String)}
      *             instead
      */
     @Deprecated
