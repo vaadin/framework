@@ -9,8 +9,8 @@
 	border-top: 1px solid #c8cccd;
 }
 .v-accordion-item-caption .v-caption {
-	padding: 7px 0 6px 31px;
-	background: transparent url(img/collapsed-icon.png) no-repeat 18px 50%;
+	padding: 7px 0 4px 31px;
+	background: transparent url(img/collapsed-icon.png) no-repeat 18px 55%;
 }
 .v-accordion-item-open .v-accordion-item-caption {
 	color: #3b4b57;
@@ -20,7 +20,7 @@
 }
 .v-accordion-item-open .v-accordion-item-caption .v-caption {
 	background-image: url(img/expanded-icon.png);
-	background-position: 17px 50%;
+	background-position: 17px 55%;
 }
 .v-accordion-item-first .v-accordion-item-caption {
 	border-top: none;
