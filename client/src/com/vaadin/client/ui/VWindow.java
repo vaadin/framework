@@ -35,7 +35,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
@@ -738,16 +737,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     private void updateContentsSize() {
-        Widget childWidget = getWidget();
-
-        // Update child widget dimensions
-        if (client != null && childWidget != null) {
-            client.handleComponentRelativeSize(childWidget);
-            if (childWidget instanceof HasWidgets) {
-                client.runDescendentsLayout((HasWidgets) childWidget);
-            }
-        }
-
         LayoutManager layoutManager = getLayoutManager();
         layoutManager.setNeedsMeasure(ConnectorMap.get(client).getConnector(
                 this));

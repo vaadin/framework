@@ -2614,20 +2614,14 @@ public class ApplicationConnection {
         return result.toString();
     }
 
-    private boolean runningLayout = false;
-
     /**
-     * Causes a re-calculation/re-layout of all paintables in a container.
+     * Does absolutely nothing. Replaced by {@link LayoutManager}.
      * 
      * @param container
+     * @deprecated As of 7.0, serves no purpose
      */
+    @Deprecated
     public void runDescendentsLayout(HasWidgets container) {
-        if (runningLayout) {
-            return;
-        }
-        runningLayout = true;
-        internalRunDescendentsLayout(container);
-        runningLayout = false;
     }
 
     /**
@@ -2642,54 +2636,26 @@ public class ApplicationConnection {
         VConsole.log("forceLayout in " + duration.elapsedMillis() + " ms");
     }
 
-    private void internalRunDescendentsLayout(HasWidgets container) {
-        // getConsole().log(
-        // "runDescendentsLayout(" + Util.getSimpleName(container) + ")");
-        final Iterator<Widget> childWidgets = container.iterator();
-        while (childWidgets.hasNext()) {
-            final Widget child = childWidgets.next();
-
-            if (getConnectorMap().isConnector(child)) {
-
-                if (handleComponentRelativeSize(child)) {
-                    /*
-                     * Only need to propagate event if "child" has a relative
-                     * size
-                     */
-
-                    if (child instanceof ContainerResizedListener) {
-                        ((ContainerResizedListener) child).iLayout();
-                    }
-
-                    if (child instanceof HasWidgets) {
-                        final HasWidgets childContainer = (HasWidgets) child;
-                        internalRunDescendentsLayout(childContainer);
-                    }
-                }
-            } else if (child instanceof HasWidgets) {
-                // propagate over non Paintable HasWidgets
-                internalRunDescendentsLayout((HasWidgets) child);
-            }
-
-        }
-    }
-
     /**
-     * Converts relative sizes into pixel sizes.
+     * Returns false
      * 
-     * @param child
-     * @return true if the child has a relative size
+     * @param paintable
+     * @return false, always
+     * @deprecated As of 7.0, serves no purpose
      */
+    @Deprecated
     private boolean handleComponentRelativeSize(ComponentConnector paintable) {
         return false;
     }
 
     /**
-     * Converts relative sizes into pixel sizes.
+     * Returns false
      * 
-     * @param child
-     * @return true if the child has a relative size
+     * @param paintable
+     * @return false, always
+     * @deprecated As of 7.0, serves no purpose
      */
+    @Deprecated
     public boolean handleComponentRelativeSize(Widget widget) {
         return handleComponentRelativeSize(connectorMap.getConnector(widget));
 

@@ -1833,14 +1833,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
 
         // TODO refactor this code to be the same as in resize timer
-        boolean needsReLayout = false;
 
         if (availW > total) {
             // natural size is smaller than available space
             final int extraSpace = availW - total;
             final int totalWidthR = total - totalExplicitColumnsWidths;
             int checksum = 0;
-            needsReLayout = true;
 
             if (extraSpace == 1) {
                 // We cannot divide one single pixel so we give it the first
@@ -1930,10 +1928,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         initializedAndAttached = true;
 
-        if (needsReLayout) {
-            scrollBody.reLayoutComponents();
-        }
-
         updatePageLength();
 
         /*
@@ -2007,7 +2001,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          * Ensures the column alignments are correct at initial loading. <br/>
          * (child components widths are correct)
          */
-        scrollBody.reLayoutComponents();
         Scheduler.get().scheduleDeferred(new Command() {
 
             @Override
@@ -4526,15 +4519,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             }
         }
 
-        private void reLayoutComponents() {
-            for (Widget w : this) {
-                VScrollTableRow r = (VScrollTableRow) w;
-                for (Widget widget : r) {
-                    client.handleComponentRelativeSize(widget);
-                }
-            }
-        }
-
         public int getLastRendered() {
             return lastRendered;
         }
@@ -6096,7 +6080,6 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     Util.notifyParentOfSizeChange(VScrollTable.this, false);
                 }
             }
-            scrollBody.reLayoutComponents();
             Scheduler.get().scheduleDeferred(new Command() {
 
                 @Override
