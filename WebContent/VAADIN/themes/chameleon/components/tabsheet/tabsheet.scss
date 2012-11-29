@@ -1,23 +1,23 @@
-@mixin chameleon-tabsheet {
+@mixin chameleon-tabsheet($primaryStyleName : v-tabsheet) {
 
-.v-tabsheet-spacertd div {
+.#{$primaryStyleName}-spacertd div {
 	border-color: #b3b3b3;
 	border-left: none;
 	}
 
-.v-tabsheet-tabitem {
+.#{$primaryStyleName}-tabitem {
 	border: none;
 	border-bottom: 1px solid #b3b3b3;
 	padding: 0;
 	}
 
-.v-tabsheet-tabitem .v-caption {
+.#{$primaryStyleName}-tabitem .v-caption {
 	padding: .2em .8em;
 	margin: 1px;
 	margin-bottom: 0;
 	}
 
-.v-tabsheet-tabitem-selected {
+.#{$primaryStyleName}-tabitem-selected {
 	background-color: #c9c9c9;
 	border: 1px solid #b3b3b3;
 	border-bottom: none;
@@ -28,7 +28,7 @@
 	overflow: hidden;
 	}
 
-.v-tabsheet-tabitem-selected .v-caption {
+.#{$primaryStyleName}-tabitem-selected .v-caption {
 	background: transparent url(../../img/grad-light-top.png) repeat-x;
 	margin: 0;
 	padding-bottom: .25em;
@@ -38,18 +38,18 @@
 	-moz-border-radius-topright: 2px;
 	}
 
-.v-tabsheet-content {
+.#{$primaryStyleName}-content {
 	background: #fff;
 	border-color: #b3b3b3;
 	}
 
-.v-tabsheet-deco {
+.#{$primaryStyleName}-deco {
 	height: 0;
 	background: transparent;
 	border-top: 1px solid #b3b3b3;
 	}
 
-.v-tabsheet-caption-close {
+.#{$primaryStyleName}-caption-close {
 	width: 14px;
 	height: 15px;
 	overflow: hidden;
@@ -60,18 +60,18 @@
 	margin: .2em 0 0 0;
 	}
 
-.v-tabsheet-caption-close:hover {
+.#{$primaryStyleName}-caption-close:hover {
 	background-position: .5em -25px;
 	}
 
-.v-tabsheet-caption-close:active {
+.#{$primaryStyleName}-caption-close:active {
 	background-position: .5em -50px;
 	}
 
 /*******************************************************************************
  * Scroller
  ******************************************************************************/
-.v-tabsheet-scroller {
+.#{$primaryStyleName}-scroller {
 	height: 14px;
 	margin-top: -1.6em;
 	position: relative;
@@ -83,12 +83,12 @@
 	-moz-border-radius: 6px;
 	}
 
-.v-tabsheet-scrollerPrev,
-.v-tabsheet-scrollerNext,
-.v-tabsheet-scrollerPrev-disabled,
-.v-tabsheet-scrollerNext-disabled,
-.v-tabsheet-scrollerPrev-disabled:active,
-.v-tabsheet-scrollerNext-disabled:active {
+.#{$primaryStyleName}-scrollerPrev,
+.#{$primaryStyleName}-scrollerNext,
+.#{$primaryStyleName}-scrollerPrev-disabled,
+.#{$primaryStyleName}-scrollerNext-disabled,
+.#{$primaryStyleName}-scrollerPrev-disabled:active,
+.#{$primaryStyleName}-scrollerNext-disabled:active {
 	border: 1px solid #b3b3b3;
 	border-width: 0;
 	background: transparent url(../../img/tab-arrows.png) no-repeat 6px 50%;
@@ -99,34 +99,34 @@
 	filter: alpha(opacity=50);
 	}
 
-.v-tabsheet-scroller button::-moz-focus-inner {
+.#{$primaryStyleName}-scroller button::-moz-focus-inner {
 	border: none;
 	padding: 0;
 	}
 
-.v-tabsheet-scrollerNext,
-.v-tabsheet-scrollerNext-disabled,
-.v-tabsheet-scrollerNext-disabled:active {
+.#{$primaryStyleName}-scrollerNext,
+.#{$primaryStyleName}-scrollerNext-disabled,
+.#{$primaryStyleName}-scrollerNext-disabled:active {
 	background-position: -10px 50%;
 	border-left-width: 1px;
 	}
 
-.v-tabsheet-scrollerPrev:hover,
-.v-tabsheet-scrollerNext:hover {
+.#{$primaryStyleName}-scrollerPrev:hover,
+.#{$primaryStyleName}-scrollerNext:hover {
 	opacity: .75;
 	filter: alpha(opacity=75);
 	}
 
-.v-tabsheet-scrollerPrev:active,
-.v-tabsheet-scrollerNext:active {
+.#{$primaryStyleName}-scrollerPrev:active,
+.#{$primaryStyleName}-scrollerNext:active {
 	opacity: 1;
 	filter: none;
 	}
 
-.v-tabsheet-scrollerPrev-disabled,
-.v-tabsheet-scrollerNext-disabled,
-.v-tabsheet-scrollerPrev-disabled:active,
-.v-tabsheet-scrollerNext-disabled:active {
+.#{$primaryStyleName}-scrollerPrev-disabled,
+.#{$primaryStyleName}-scrollerNext-disabled,
+.#{$primaryStyleName}-scrollerPrev-disabled:active,
+.#{$primaryStyleName}-scrollerNext-disabled:active {
 	opacity: .1;
 	filter: alpha(opacity=10);
 	}
@@ -136,11 +136,11 @@
 /*******************************************************************************
  * open-only-closable
  ******************************************************************************/
-.v-tabsheet-open-only-closable .v-tabsheet-caption-close {
+.#{$primaryStyleName}-open-only-closable .#{$primaryStyleName}-caption-close {
 	visibility: hidden;
 	}
 
-.v-tabsheet-open-only-closable .v-tabsheet-tabitem-selected .v-tabsheet-caption-close {
+.#{$primaryStyleName}-open-only-closable .#{$primaryStyleName}-tabitem-selected .#{$primaryStyleName}-caption-close {
 	visibility: visible;
 	}
 
@@ -148,14 +148,14 @@
 /*******************************************************************************
  * Borderless
  ******************************************************************************/
-.v-tabsheet-borderless .v-tabsheet-content-borderless,
-.v-tabsheet-deco-borderless {
+.#{$primaryStyleName}-borderless .#{$primaryStyleName}-content-borderless,
+.#{$primaryStyleName}-deco-borderless {
 	border: none;
 	background: transparent;
 	}
 
-.v-tabsheet-tabs-borderless .v-tabsheet-tabitem-selected,
-.v-tabsheet-tabs-borderless .v-tabsheet-tabitem-selected .v-caption {
+.#{$primaryStyleName}-tabs-borderless .#{$primaryStyleName}-tabitem-selected,
+.#{$primaryStyleName}-tabs-borderless .#{$primaryStyleName}-tabitem-selected .v-caption {
 	background-color: transparent;
 	}
 

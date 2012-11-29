@@ -1,6 +1,6 @@
-@mixin chameleon-panel {
+@mixin chameleon-panel($primaryStyleName : v-panel) {
 
-.v-panel-caption {
+.#{$primaryStyleName}-caption {
 	background: #b9dcff;
 	font-size: 1.2em;
 	border: 1px solid #b3b3b3;
@@ -8,21 +8,21 @@
 	padding: .2em .6em;
 	}
 
-.v-panel-nocaption {
+.#{$primaryStyleName}-nocaption {
 	padding: 0;
 	height: 0;
 	overflow: hidden;
 	border-top: 1px solid #b3b3b3;
 	}
 
-.v-panel-content {
+.#{$primaryStyleName}-content {
 	background: #fff;
 	border: 1px solid #b3b3b3;
 	border-top: none;
 	border-bottom: none;
 	}
 
-.v-panel-deco {
+.#{$primaryStyleName}-deco {
 	height: 0;
 	overflow: hidden;
 	border-top: 1px solid #b3b3b3;
@@ -32,13 +32,13 @@
 /*******************************************************************************
  * Borderless
  ******************************************************************************/
-div.v-panel-caption-borderless {
+div.#{$primaryStyleName}-caption-borderless {
 	border: none;
 	}
 
-div.v-panel-nocaption-borderless,
-div.v-panel-content-borderless,
-div.v-panel-deco-borderless {
+div.#{$primaryStyleName}-nocaption-borderless,
+div.#{$primaryStyleName}-content-borderless,
+div.#{$primaryStyleName}-deco-borderless {
 	border: none;
 	background: transparent;
 	}
@@ -47,13 +47,13 @@ div.v-panel-deco-borderless {
 /*******************************************************************************
  * Light
  ******************************************************************************/
-.v-panel-light .v-panel-caption-light {
+.#{$primaryStyleName}-light .#{$primaryStyleName}-caption-light {
 	background: transparent;
 	font-weight: normal;
 	border-bottom: 1px solid #b3b3b3;
 	}
 
-div.v-panel-content-light {
+div.#{$primaryStyleName}-content-light {
 	background: transparent;
 	}
 
@@ -61,7 +61,7 @@ div.v-panel-content-light {
 /*******************************************************************************
  * Bubble
  ******************************************************************************/
-.v-panel-bubble .v-panel-captionwrap {
+.#{$primaryStyleName}-bubble .#{$primaryStyleName}-captionwrap {
 	border: 1px solid #b3b3b3;
 	border-bottom: none;
 	background: #fff;
@@ -73,7 +73,7 @@ div.v-panel-content-light {
 	overflow: hidden;
 	}
 
-.v-panel-bubble .v-panel-caption-bubble {
+.#{$primaryStyleName}-bubble .#{$primaryStyleName}-caption-bubble {
 	border: none;
 	background-image: url(../../img/grad-light-top.png);
 	background-repeat: repeat-x;
@@ -89,13 +89,13 @@ div.v-panel-content-light {
 	padding: .3em .6em;
 	}
 
-.v-panel-nocaption-bubble {
+.#{$primaryStyleName}-nocaption-bubble {
 	padding: 0;
 	margin: 0;
 	border: none;
 	}
 
-.v-panel-deco-bubble {
+.#{$primaryStyleName}-deco-bubble {
 	height: 2px;
 	border: 1px solid #b3b3b3;
 	border-top: none;
@@ -110,14 +110,14 @@ div.v-panel-content-light {
 /*******************************************************************************
  * Borderless Bubble
  ******************************************************************************/
-div.v-panel-borderless .v-panel-captionwrap,
-div.v-panel-borderless .v-panel-deco-bubble {
+div.#{$primaryStyleName}-borderless .#{$primaryStyleName}-captionwrap,
+div.#{$primaryStyleName}-borderless .#{$primaryStyleName}-deco-bubble {
 	border: none;
 	padding: 0;
 	background: transparent;
 	}
 
-div.v-panel-borderless .v-panel-content-bubble {
+div.#{$primaryStyleName}-borderless .#{$primaryStyleName}-content-bubble {
 	background: transparent;
 	}
 

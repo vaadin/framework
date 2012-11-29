@@ -1,6 +1,6 @@
-@mixin chameleon-popupview {
+@mixin chameleon-popupview($primaryStyleName : v-popupview)  {
 
-.v-popupview-popup {
+.#{$primaryStyleName}-popup {
 	padding: .3em .4em;
 	}
 

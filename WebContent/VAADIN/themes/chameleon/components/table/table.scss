@@ -1,31 +1,31 @@
-@mixin chameleon-table {
+@mixin chameleon-table($primaryStyleName : v-table) {
 
-.v-table-header-wrap,
-.v-table-header-drag {
+.#{$primaryStyleName}-header-wrap,
+.#{$primaryStyleName}-header-drag {
 	background: #c9c9c9 url(../../img/grad-light-top.png) repeat-x;
 	height: 1.4em;
 	line-height: normal;
 	}
 
-.v-table-caption-container,
-.v-table-header-drag {
+.#{$primaryStyleName}-caption-container,
+.#{$primaryStyleName}-header-drag {
 	padding-top: .2em;
 	padding-right: 4px;
 	}
 
-.v-table-header-drag {
+.#{$primaryStyleName}-header-drag {
 	padding-left: .3em;
 	}
 
-.v-table-resizer {
+.#{$primaryStyleName}-resizer {
 	background: transparent;
 	border-right: 1px solid #b3b3b3;
 	padding-left: 1px;
 	height: 1.4em;
 	}
 
-/* Targets the same element as .v-table-resizer */
-div.v-table-focus-slot-left {
+/* Targets the same element as .#{$primaryStyleName}-resizer */
+div.#{$primaryStyleName}-focus-slot-left {
 	background: transparent;
 	border-left: 2px solid #b3b3b3;
 	border-right: none;
@@ -35,42 +35,42 @@ div.v-table-focus-slot-left {
 	margin: 0;
 	}
 
-.v-table-row,
-.v-table-row-odd {
+.#{$primaryStyleName}-row,
+.#{$primaryStyleName}-row-odd {
 	background: transparent;
 	}
 
-.v-table-generated-row {
+.#{$primaryStyleName}-generated-row {
     background: #c9c9c9;
     }
 
-.v-table tr.v-selected {
+.#{$primaryStyleName} tr.v-selected {
 	background-image: url(../../img/grad-light-top2.png);
 	background-position: 0 -1px;
 	}
 
-div.v-table-focus-slot-right {
+div.#{$primaryStyleName}-focus-slot-right {
 	background: transparent;
 	border-right: 2px solid #b3b3b3;
 	padding-left: 0;
 	margin: 0;
 	}
 
-.v-table-column-selector {
+.#{$primaryStyleName}-column-selector {
 	margin-top: -1.35em;
 	}
 
-.v-table-cell-content {
+.#{$primaryStyleName}-cell-content {
 	border-right: none;
 	padding-right: 7px;
 	}
 	
-.v-table-caption-container .v-icon {
+.#{$primaryStyleName}-caption-container .v-icon {
 	vertical-align: middle;
 	margin: -0.37em 2px 0 0;
 	}
 
-.v-table-header-drag .v-icon {
+.#{$primaryStyleName}-header-drag .v-icon {
 	vertical-align: middle;
 	}
 
@@ -91,7 +91,7 @@ div.v-table-focus-slot-right {
 	background-image: url(../../icons/bullet-white.png);
 	}
 
-.v-table-scrollposition {
+.#{$primaryStyleName}-scrollposition {
 	font-size: 0.9em;
 	opacity: .85;
 	filter: alpha(opacity=85);
@@ -100,17 +100,17 @@ div.v-table-focus-slot-right {
 /*******************************************************************************
  * Small
  ******************************************************************************/
-.v-table-small .v-table-caption-container,
-.v-table-small .v-table-body {
+.#{$primaryStyleName}-small .#{$primaryStyleName}-caption-container,
+.#{$primaryStyleName}-small .#{$primaryStyleName}-body {
 	font-size: 0.85em;
 	}
 
-.v-table-small .v-table-resizer, 
-.v-table-small .v-table-header-wrap {
+.#{$primaryStyleName}-small .#{$primaryStyleName}-resizer, 
+.#{$primaryStyleName}-small .#{$primaryStyleName}-header-wrap {
 	height: 1.2em;
 	}
 
-.v-table-small .v-table-column-selector {
+.#{$primaryStyleName}-small .#{$primaryStyleName}-column-selector {
 	margin-top: -1.2em;
 	}
 
@@ -118,28 +118,28 @@ div.v-table-focus-slot-right {
 /*******************************************************************************
  * Big
  ******************************************************************************/
-.v-table-big .v-table-caption-container,
-.v-table-big .v-table-body {
+.#{$primaryStyleName}-big .#{$primaryStyleName}-caption-container,
+.#{$primaryStyleName}-big .#{$primaryStyleName}-body {
 	font-size: 1.2em;
 	}
 
-.v-table-big .v-table-caption-container {
+.#{$primaryStyleName}-big .#{$primaryStyleName}-caption-container {
 	padding-top: .3em;
 	}
 
-.v-table-big .v-table-resizer, 
-.v-table-big .v-table-header-wrap {
+.#{$primaryStyleName}-big .#{$primaryStyleName}-resizer, 
+.#{$primaryStyleName}-big .#{$primaryStyleName}-header-wrap {
 	height: 1.8em;
 	}
 
-.v-table-big .v-table-column-selector {
+.#{$primaryStyleName}-big .#{$primaryStyleName}-column-selector {
 	margin-top: -1.5em;
 	}
 
 /*******************************************************************************
  * Striped
  ******************************************************************************/
-.v-table-striped .v-table-row-odd {
+.#{$primaryStyleName}-striped .#{$primaryStyleName}-row-odd {
 	background-color: #e6e6e6;
 	}
 
@@ -147,7 +147,7 @@ div.v-table-focus-slot-right {
 /*******************************************************************************
  * Strong
  ******************************************************************************/
-.v-table-strong .v-table-caption-container {
+.#{$primaryStyleName}-strong .#{$primaryStyleName}-caption-container {
 	font-weight: bold;
 	}
 
@@ -155,12 +155,12 @@ div.v-table-focus-slot-right {
 /*******************************************************************************
  * Borderless
  ******************************************************************************/
-.v-table-borderless .v-table-header-wrap,
-.v-table-borderless .v-table-body {
+.#{$primaryStyleName}-borderless .#{$primaryStyleName}-header-wrap,
+.#{$primaryStyleName}-borderless .#{$primaryStyleName}-body {
 	border: none;
 	}
 
-div.v-table-borderless .v-table-body {
+div.#{$primaryStyleName}-borderless .#{$primaryStyleName}-body {
 	background: transparent;
 	}
 

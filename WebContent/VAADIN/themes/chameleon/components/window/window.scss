@@ -1,6 +1,6 @@
-@mixin chameleon-window {
+@mixin chameleon-window($primaryStyleName : v-window) {
 
-.v-window-closebox {
+.#{$primaryStyleName}-closebox {
 	width: 14px;
 	height: 15px;
 	overflow: hidden;
@@ -13,41 +13,41 @@
 	z-index: 2;
 	}
 
-.v-window-closebox:hover {
+.#{$primaryStyleName}-closebox:hover {
 	background-position: 0 -25px;
 	}
 
-.v-window-closebox:active {
+.#{$primaryStyleName}-closebox:active {
 	background-position: 0 -50px;
 	}
 
-.v-window {
+.#{$primaryStyleName} {
 	background-image: none;
 	}
 
-.v-window-wrap {
+.#{$primaryStyleName}-wrap {
 	border-radius: 3px;
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	background-image: url(../../img/grad-light-top.png);
 	background-repeat: repeat-x;
 	}
-.v-window-outerheader {
+.#{$primaryStyleName}-outerheader {
 	padding: .2em 1.7em .5em 1.2em;
 	height: auto;
 	text-align: center;
 	}
 
-.v-window-header {
+.#{$primaryStyleName}-header {
 	font-weight: normal;
 	}
 
-.v-window-footer {
+.#{$primaryStyleName}-footer {
 	height: 0;
 	position: static;
 	}
 
-.v-window-resizebox {
+.#{$primaryStyleName}-resizebox {
 	background: transparent url(../../img/resize.png) no-repeat;
 	width: 14px;
 	height: 14px;

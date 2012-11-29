@@ -1,6 +1,6 @@
-@mixin chameleon-slider {
+@mixin chameleon-slider($primaryStyleName : v-slider) {
 
-.v-slider {
+.#{$primaryStyleName} {
 	border-top: 1px solid #9a9c9e;
 	border-bottom: 1px solid #bdbfc1;
 	margin: 3px 0;
@@ -9,7 +9,7 @@
 	-moz-border-radius: 3px;
 	}
 
-.v-slider-base {
+.#{$primaryStyleName}-base {
 	height: 4px;
 	background: #e0e2e2 url(../../img/grad-dark-top2.png) repeat-x;
 	border-top: 1px solid #adb0b1;
@@ -20,7 +20,7 @@
 	-moz-border-radius: 2px;
 	}
 
-.v-slider-handle {
+.#{$primaryStyleName}-handle {
 	background: #c9c9c9 url(../../img/grad-dark-bottom2.png) repeat-x left bottom;
 	border: 1px solid #b3b3b3;
 	width: 10px;
@@ -34,23 +34,23 @@
 	cursor: pointer;
 	}
 
-.v-slider-handle-active {
+.#{$primaryStyleName}-handle-active {
 	background-color: #afafaf;
 	}
 
-.v-slider-vertical {
+.#{$primaryStyleName}-vertical {
 	width: auto;
 	margin: 0 4px;
 	border-width: 0 1px;
 	}
 
-.v-slider-vertical .v-slider-base {
+.#{$primaryStyleName}-vertical .#{$primaryStyleName}-base {
 	background-image: none;
 	width: 4px;
 	border-width: 1px 1px 0;
 	}
 
-.v-slider-vertical .v-slider-handle {
+.#{$primaryStyleName}-vertical .#{$primaryStyleName}-handle {
 	width: 10px;
 	height: 10px;
 	margin: 0;

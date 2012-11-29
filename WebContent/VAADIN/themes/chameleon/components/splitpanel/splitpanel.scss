@@ -1,21 +1,21 @@
-@mixin chameleon-splitpanel {
+@mixin chameleon-splitpanel($primaryStyleName : v-splitpanel) {
 
-.v-splitpanel-hsplitter div,
-.v-splitpanel-vsplitter div {
+.#{$primaryStyleName}-hsplitter div,
+.#{$primaryStyleName}-vsplitter div {
 	background: transparent url(../../img/split-handle.png) no-repeat 2px 50%;
 	margin: 0 -1px;
 	width: 9px;
 	}
 
-.v-splitpanel-vsplitter div {
+.#{$primaryStyleName}-vsplitter div {
 	background-position: 50% 2px;
 	margin: -1px 0;
 	width: auto;
 	height: 9px;
 	}
 
-.v-splitpanel-hsplitter,
-.v-splitpanel-hsplitter-locked {
+.#{$primaryStyleName}-hsplitter,
+.#{$primaryStyleName}-hsplitter-locked {
 	border-style: solid;
 	border-width: 0 1px;
 	border-color: #b0b0b0;
@@ -23,8 +23,8 @@
 	background: #b3b3b3 url(../../img/grad-light-left.png) repeat-y;
 	}
 
-.v-splitpanel-vsplitter,
-.v-splitpanel-vsplitter-locked {
+.#{$primaryStyleName}-vsplitter,
+.#{$primaryStyleName}-vsplitter-locked {
 	border-style: solid;
 	border-width: 1px 0;
 	border-color: #b0b0b0;
@@ -35,15 +35,15 @@
 /*******************************************************************************
  * Small
  ******************************************************************************/
-&.v-app .v-splitpanel-hsplitter-small,
-&.v-app .v-splitpanel-hsplitter-small-locked {
+&.v-app .#{$primaryStyleName}-hsplitter-small,
+&.v-app .#{$primaryStyleName}-hsplitter-small-locked {
 	width: 1px;
 	border: none;
 	background-image: none;
 	}
 
-&.v-app .v-splitpanel-vsplitter-small,
-&.v-app .v-splitpanel-vsplitter-small-locked {
+&.v-app .#{$primaryStyleName}-vsplitter-small,
+&.v-app .#{$primaryStyleName}-vsplitter-small-locked {
 	height: 1px;
 	border: none;
 	background-image: none;
@@ -51,13 +51,13 @@
 	line-height: 1px;
 	}
 
-.v-splitpanel-hsplitter-small div {
+.#{$primaryStyleName}-hsplitter-small div {
 	width: 7px;
 	margin-left: -2px;
 	background: transparent;
 	}
 
-.v-splitpanel-vsplitter-small div {
+.#{$primaryStyleName}-vsplitter-small div {
 	height: 7px;
 	margin-top: -2px;
 	background: transparent;
