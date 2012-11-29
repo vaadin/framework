@@ -1315,7 +1315,7 @@ boolean isPseudoElement = false;
 	    }
 	}
 	  | ( n=<FUNCTION> ( <S> )* (
-	      param=<IDENT> { d = convertIdent(param.image); }
+	      LOOKAHEAD(2) param=<IDENT> { d = convertIdent(param.image); }
 	      | param=<NUMBER> { d = param.image; }
 	      | d=simple_selector(null, ' ')
 	      ) ( <S> )* ")" 
