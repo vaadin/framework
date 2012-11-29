@@ -1,24 +1,24 @@
-@mixin runo-tree {
+@mixin runo-tree($primaryStyleName : v-tree) {
 
-.v-tree-node {
+.#{$primaryStyleName}-node {
 	background: transparent url(img/collapsed.png) no-repeat 2px 1px;
 }
-.v-tree-node-expanded {
+.#{$primaryStyleName}-node-expanded {
 	background: transparent url(img/expanded.png) no-repeat 2px 1px;
 }
-.v-tree-node-caption {
+.#{$primaryStyleName}-node-caption {
 	margin-left: 18px;
 }
-.v-tree-connectors .v-tree-node-caption {
+.#{$primaryStyleName}-connectors .#{$primaryStyleName}-node-caption {
 	padding-bottom: 1px;
 }
-.v-tree-node-caption .v-icon {
+.#{$primaryStyleName}-node-caption .v-icon {
 	margin: 0 2px 0 -2px;
 }
-.v-tree-node-caption span {
+.#{$primaryStyleName}-node-caption span {
 	padding: 0 1px;
 }
-.v-tree-node-selected span {
+.#{$primaryStyleName}-node-selected span {
 	background: #57a7ed;
 	color: #fff;
 	padding: 1px 2px 0;
@@ -29,32 +29,32 @@
 	-moz-border-radius: 2px;
 	border-radius: 2px;	
 }
-.v-tree-node-children {
+.#{$primaryStyleName}-node-children {
 	padding-left: 16px;
 }
-.v-tree{
+.#{$primaryStyleName}{
 	outline:none;	
 }
-.v-tree-node-caption.v-tree-node-focused span{
+.#{$primaryStyleName}-node-caption.#{$primaryStyleName}-node-focused span{
 	padding-left: 1px;
 	padding-top: 0px;
 	padding-bottom: 0px;
 }
-.v-tree-node-focused span{
+.#{$primaryStyleName}-node-focused span{
 	border: 1px dotted black;	
 }
 /***************************************
  * Drag'n'drop styles
  ***************************************/
-.v-tree .v-tree-node-drag-top,
-.v-tree .v-tree-node-drag-top.v-tree-node-expanded {
+.#{$primaryStyleName} .#{$primaryStyleName}-node-drag-top,
+.#{$primaryStyleName} .#{$primaryStyleName}-node-drag-top.#{$primaryStyleName}-node-expanded {
 	background-position: 2px 0;
 }
-.v-tree-connectors .v-tree-node-drag-top,
-.v-tree-connectors .v-tree-node-expanded.v-tree-node-drag-top {
+.#{$primaryStyleName}-connectors .#{$primaryStyleName}-node-drag-top,
+.#{$primaryStyleName}-connectors .#{$primaryStyleName}-node-expanded.#{$primaryStyleName}-node-drag-top {
 	background-position: 2px -53px;
 }
-.v-tree-connectors .v-tree-node-drag-top.v-tree-node-leaf {
+.#{$primaryStyleName}-connectors .#{$primaryStyleName}-node-drag-top.#{$primaryStyleName}-node-leaf {
 	background-position: 2px 50%;
 }
 

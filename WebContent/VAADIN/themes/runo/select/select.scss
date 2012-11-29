@@ -1,14 +1,14 @@
-@mixin runo-select {
+@mixin runo-select($primaryStyleName : v-select) {
 
-.v-select-select {
+.#{$primaryStyleName}-select {
 	font-size: 13px;
 }
 /* Twincol style */
-.v-select-twincol-options,
-.v-select-twincol-selections {
+.#{$primaryStyleName}-twincol-options,
+.#{$primaryStyleName}-twincol-selections {
 	font-size: 13px;
 }
-.v-select-twincol-buttons {
+.#{$primaryStyleName}-twincol-buttons {
 	padding: 2px; /* does not work in first render in FF ? */
 }
 
@@ -142,10 +142,10 @@
 .v-filterselect-error .v-filterselect-button {
 	background-image: url(img/bg-right-filter-error.png);
 }
-.v-select-error .v-select-option,
-.v-select-error .v-select-select,
-.v-select-error .v-select-twincol-selections,
-.v-select-error .v-select-twincol-options {
+.#{$primaryStyleName}-error .#{$primaryStyleName}-option,
+.#{$primaryStyleName}-error .#{$primaryStyleName}-select,
+.#{$primaryStyleName}-error .#{$primaryStyleName}-twincol-selections,
+.#{$primaryStyleName}-error .#{$primaryStyleName}-twincol-options {
 	background: #FFE0E0;
 }
 */
@@ -153,10 +153,10 @@
 /*  Required field styles (disabled by default)
    --------------------------------------------
    
-.v-select-required .v-select-option,
-.v-select-required .v-select-select,
-.v-select-required .v-select-twincol-selections,
-.v-select-required .v-select-twincol-options {
+.#{$primaryStyleName}-required .#{$primaryStyleName}-option,
+.#{$primaryStyleName}-required .#{$primaryStyleName}-select,
+.#{$primaryStyleName}-required .#{$primaryStyleName}-twincol-selections,
+.#{$primaryStyleName}-required .#{$primaryStyleName}-twincol-options {
 	background: #FFE0E0;
 }
 */

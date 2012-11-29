@@ -1,18 +1,18 @@
-@mixin runo-gridlayout {
+@mixin runo-gridlayout($primaryStyleName : v-gridlayout) {
 
-.v-gridlayout-margin-top {
+.#{$primaryStyleName}-margin-top {
 	padding-top: 15px;
 }
-.v-gridlayout-margin-bottom {
+.#{$primaryStyleName}-margin-bottom {
 	padding-bottom: 15px;
 }
-.v-gridlayout-margin-left {
+.#{$primaryStyleName}-margin-left {
 	padding-left: 18px;
 } 
-.v-gridlayout-margin-right {
+.#{$primaryStyleName}-margin-right {
 	padding-right: 18px;
 }
-.v-gridlayout-spacing-on {
+.#{$primaryStyleName}-spacing-on {
 	padding-left: 8px;
 	padding-top: 8px;
 }

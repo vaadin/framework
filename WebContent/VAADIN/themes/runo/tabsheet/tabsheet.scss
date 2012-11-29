@@ -1,23 +1,23 @@
-@mixin runo-tabsheet {
+@mixin runo-tabsheet($primaryStyleName : v-tabsheet) {
 
-.v-tabsheet-tabs {
+.#{$primaryStyleName}-tabs {
 	height: 48px;
 }
 
-.v-tabsheet-spacertd div {
+.#{$primaryStyleName}-spacertd div {
 	height: 37px;
 	border: 1px solid #b6bbbc;
 	background: transparent url(img/tab-bg.png);
 	padding: 0;
 }
-.v-tabsheet-scroller {
+.#{$primaryStyleName}-scroller {
 	margin-top: -37px;
 	float: right;
 }
-.v-tabsheet-scrollerPrev,
-.v-tabsheet-scrollerNext,
-.v-tabsheet-scrollerPrev-disabled,
-.v-tabsheet-scrollerNext-disabled {
+.#{$primaryStyleName}-scrollerPrev,
+.#{$primaryStyleName}-scrollerNext,
+.#{$primaryStyleName}-scrollerPrev-disabled,
+.#{$primaryStyleName}-scrollerNext-disabled {
 	border: none;
 	width: 12px;
 	padding: 0;
@@ -25,27 +25,27 @@
 	opacity: 0.9999;
 	margin-top: -1px;
 }
-.v-tabsheet-scrollerNext,
-.v-tabsheet-scrollerNext-disabled {
+.#{$primaryStyleName}-scrollerNext,
+.#{$primaryStyleName}-scrollerNext-disabled {
 	background: transparent url(img/next.png) no-repeat;
 }
-.v-tabsheet-scrollerPrev,
-.v-tabsheet-scrollerPrev-disabled {
+.#{$primaryStyleName}-scrollerPrev,
+.#{$primaryStyleName}-scrollerPrev-disabled {
 	background: transparent url(img/prev.png) no-repeat;
 }
-.v-tabsheet-scrollerPrev:hover,
-.v-tabsheet-scrollerNext:hover {
+.#{$primaryStyleName}-scrollerPrev:hover,
+.#{$primaryStyleName}-scrollerNext:hover {
 	background-position: -24px 0px;
 }
-.v-tabsheet-scrollerPrev-disabled,
-.v-tabsheet-scrollerNext-disabled {
+.#{$primaryStyleName}-scrollerPrev-disabled,
+.#{$primaryStyleName}-scrollerNext-disabled {
 	background-position: -12px 0px;
 }
-.v-tabsheet-scrollerPrev-disabled:hover,
-.v-tabsheet-scrollerNext-disabled:hover {
+.#{$primaryStyleName}-scrollerPrev-disabled:hover,
+.#{$primaryStyleName}-scrollerNext-disabled:hover {
 	background-position: -12px 0px;
 }
-.v-tabsheet-tabitem {
+.#{$primaryStyleName}-tabitem {
 	border: 1px solid #b6bbbc;
 	border-right: none;
 	height: 37px;
@@ -56,11 +56,11 @@
 	line-height: 18px;
 	background: #f8f9f9 url(img/tab-bg.png);
 }
-.v-tabsheet-tabitem .v-caption {
+.#{$primaryStyleName}-tabitem .v-caption {
 	height: 20px;
 	padding: 9px 15px 8px 15px;
 }
-.v-tabsheet-tabitem-selected {
+.#{$primaryStyleName}-tabitem-selected {
 	border: none;
 	background: transparent url(../panel/img/top-left.png) no-repeat;
 	margin: 0;
@@ -68,20 +68,20 @@
 	height: 48px;
 	color: #ee5311;
 }
-.v-tabsheet-tabitem:hover {
+.#{$primaryStyleName}-tabitem:hover {
 	color: #4b5257;
 }
-.v-tabsheet-tabitem-selected:hover {
+.#{$primaryStyleName}-tabitem-selected:hover {
 	color: #ee5311;
 }
-.v-tabsheet-tabitem-selected .v-caption {
+.#{$primaryStyleName}-tabitem-selected .v-caption {
 	background: transparent url(../panel/img/top-right.png) repeat-x right top;
 	margin: 0 -1px 0 9px;
 	height: 18px;
 	padding: 16px 16px 14px 7px;
 	overflow: visible;
 }
-.v-tabsheet-caption-close {
+.#{$primaryStyleName}-caption-close {
 	margin-left: 3px;
 	margin-right: -3px;
 	margin-top: 2px;
@@ -93,29 +93,29 @@
 	color: #777f85;
 	line-height: 13px;
 }
-.v-tabsheet-caption-close:hover {
+.#{$primaryStyleName}-caption-close:hover {
 	background: #dce0e0;
 }
-.v-tabsheet-caption-close:active {
+.#{$primaryStyleName}-caption-close:active {
 	background: #b6bbbc;
 	color: #fff;
 }
-.v-tabsheet-content {
+.#{$primaryStyleName}-content {
 	border: 1px solid #babfc0;
 	background-color: #fff;
 	border-bottom: 1px solid #dee2e3;
 	border-top: none;
 }
-.v-tabsheet-hidetabs .v-tabsheet-content {
+.#{$primaryStyleName}-hidetabs .#{$primaryStyleName}-content {
 	border-top: 1px solid #b5babb;
 }
-.v-tabsheet-deco {
+.#{$primaryStyleName}-deco {
 	height: 10px;
 	background: transparent url(../panel/img/bottom-right.png) repeat-x right top;
 	margin-left: 9px;
 	overflow: visible;
 }
-.v-tabsheet-deco:before {
+.#{$primaryStyleName}-deco:before {
 	display: block;
 	
 	width: 9px;
@@ -124,7 +124,7 @@
 	background: transparent url(../panel/img/bottom-left.png) no-repeat;
 }
 /* Progress indication *
-.v-tabsheet-loading .v-tabsheet-tabitem-selected .v-captiontext {
+.#{$primaryStyleName}-loading .#{$primaryStyleName}-tabitem-selected .v-captiontext {
 	background: transparent url(../../base/common/img/ajax-loader.gif) no-repeat top right;
 	margin-left: -10px;
 	padding-left: 10px;
@@ -134,36 +134,36 @@
 	padding-top: 12px;
 }*/
 /* IE specific styles */
-.v-ie & .v-tabsheet-content {
+.v-ie & .#{$primaryStyleName}-content {
 	border-bottom: none;
 }
-.v-ie & .v-tabsheet-deco {
+.v-ie & .#{$primaryStyleName}-deco {
 	height: 1px;
 	background: #babfc0;
 	overflow: hidden;
 	margin: 0;
 }
-.v-ie8 & .v-tabsheet-deco,
-.v-ie9 & .v-tabsheet-deco {
+.v-ie8 & .#{$primaryStyleName}-deco,
+.v-ie9 & .#{$primaryStyleName}-deco {
 	width: 100%;
 }
 /* Light-style */
-.v-tabsheet-tabcontainer-light {
+.#{$primaryStyleName}-tabcontainer-light {
 	height: 32px;
 }
-.v-tabsheet-tabs-light {
+.#{$primaryStyleName}-tabs-light {
 	height: 32px;
 	width: 100%;
 	overflow:hidden;
 	background: transparent;
 }
-.v-tabsheet-tabs-light .v-tabsheet-spacertd div {
+.#{$primaryStyleName}-tabs-light .#{$primaryStyleName}-spacertd div {
 	height: 31px;
 	border: none;
 	border-bottom: 1px solid #b6bbbc;
 	background: transparent url(img/inline-tab-bg.png) repeat-x;
 }
-.v-tabsheet-tabs-light .v-tabsheet-tabitem {
+.#{$primaryStyleName}-tabs-light .#{$primaryStyleName}-tabitem {
 	border: none;
 	border-bottom: 1px solid #b6bbbc;
 	height: 30px;
@@ -176,20 +176,20 @@
 	cursor: pointer;
 	text-shadow: #fff 0 1px 0;
 }
-.v-tabsheet-tabs-light .v-tabsheet-tabitem .v-caption {
+.#{$primaryStyleName}-tabs-light .#{$primaryStyleName}-tabitem .v-caption {
 	height: 24px;
 	padding: 8px 10px 0 11px;
 	background: transparent url(img/inline-tab-border.png) no-repeat;
 }
-.v-tabsheet-tabs-light .v-tabsheet-tabitemcell-first .v-caption {
+.#{$primaryStyleName}-tabs-light .#{$primaryStyleName}-tabitemcell-first .v-caption {
 	margin-left: 5px;
 	background: transparent;
 }
-.v-tabsheet-tabs-light .v-tabsheet-tabitemcell-selected + .v-tabsheet-tabitemcell .v-caption,
-.v-tabsheet-tabs-light .v-tabsheet-tabitemcell-selected-first + .v-tabsheet-tabitemcell .v-caption {
+.#{$primaryStyleName}-tabs-light .#{$primaryStyleName}-tabitemcell-selected + .#{$primaryStyleName}-tabitemcell .v-caption,
+.#{$primaryStyleName}-tabs-light .#{$primaryStyleName}-tabitemcell-selected-first + .#{$primaryStyleName}-tabitemcell .v-caption {
 	background: transparent;
 }
-.v-tabsheet-tabs-light .v-tabsheet-tabitem-selected {
+.#{$primaryStyleName}-tabs-light .#{$primaryStyleName}-tabitem-selected {
 	border: none;
 	background: transparent url(img/inline-tab-right.png) no-repeat right top;
 	margin: 0;
@@ -199,58 +199,58 @@
 	color: #ee5311;
 	text-shadow: none;
 }
-.v-tabsheet-tabs-light .v-tabsheet-tabitem:hover {
+.#{$primaryStyleName}-tabs-light .#{$primaryStyleName}-tabitem:hover {
 	color: #4b5257;
 }
-.v-tabsheet-tabs-light .v-tabsheet-tabitem-selected:hover {
+.#{$primaryStyleName}-tabs-light .#{$primaryStyleName}-tabitem-selected:hover {
 	color: #ee5311;
 }
-.v-tabsheet-tabs-light .v-tabsheet-tabitem-selected .v-caption {
+.#{$primaryStyleName}-tabs-light .#{$primaryStyleName}-tabitem-selected .v-caption {
 	background: transparent url(img/inline-tab-left.png) no-repeat -7px 0;
 	margin: 0;
 	height: 23px;
 	padding: 9px 10px 0 11px;
 	overflow: visible;
 }
-.v-tabsheet-tabs-light .v-tabsheet-tabitemcell-first .v-tabsheet-tabitem-selected .v-caption {
+.#{$primaryStyleName}-tabs-light .#{$primaryStyleName}-tabitemcell-first .#{$primaryStyleName}-tabitem-selected .v-caption {
 	background: transparent url(img/inline-tab-left.png) no-repeat -3px 0;
 	padding-left: 16px;
 }
-.v-tabsheet-tabs-light .v-tabsheet-caption-close {
+.#{$primaryStyleName}-tabs-light .#{$primaryStyleName}-caption-close {
 	margin-top: 0;
 	text-shadow: none;
 }
-.v-tabsheet-content-light {
+.#{$primaryStyleName}-content-light {
 	border: none;
 	background: transparent;
 }
-.v-tabsheet-light .v-tabsheet-hidetabs .v-tabsheet-content {
+.#{$primaryStyleName}-light .#{$primaryStyleName}-hidetabs .#{$primaryStyleName}-content {
 	border: none;
 }
-.v-tabsheet-deco-light {
+.#{$primaryStyleName}-deco-light {
 	height: 0;
 	overflow: hidden;
 }
-.v-tabsheet-deco-light:before {
+.#{$primaryStyleName}-deco-light:before {
 	display: none;
 }
 /* Scroller */
-.v-tabsheet-tabcontainer-light .v-tabsheet-scrollerPrev,
-.v-tabsheet-tabcontainer-light .v-tabsheet-scrollerNext {
+.#{$primaryStyleName}-tabcontainer-light .#{$primaryStyleName}-scrollerPrev,
+.#{$primaryStyleName}-tabcontainer-light .#{$primaryStyleName}-scrollerNext {
 	margin-top: 2px;
 	height: 34px;
 }
-.v-tabsheet-tabcontainer-light .v-tabsheet-scrollerPrev-disabled,
-.v-tabsheet-tabcontainer-light .v-tabsheet-scrollerNext-disabled {
+.#{$primaryStyleName}-tabcontainer-light .#{$primaryStyleName}-scrollerPrev-disabled,
+.#{$primaryStyleName}-tabcontainer-light .#{$primaryStyleName}-scrollerNext-disabled {
 	margin-top: 2px;
 	height: 34px;
 }
 /* Progress indication *
-.v-tabsheet-loading .v-tabsheet-tabs-light .v-tabsheet-tabitem-selected .v-captiontext {
+.#{$primaryStyleName}-loading .#{$primaryStyleName}-tabs-light .#{$primaryStyleName}-tabitem-selected .v-captiontext {
 	margin-left: -3px;
 	padding-left: 3px;
 }*/
-.v-ie & .v-tabsheet-deco-light {
+.v-ie & .#{$primaryStyleName}-deco-light {
 	height: 0;
 }
 

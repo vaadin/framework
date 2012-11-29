@@ -1,22 +1,22 @@
-@mixin runo-window {
+@mixin runo-window($primaryStyleName : v-window) {
 
-.v-window {
+.#{$primaryStyleName} {
 	color: #464f52;
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	font-size: 13px;
 	line-height: 18px;
 	background: transparent url(img/bottom-left.png) no-repeat left bottom;
 }
-.v-window-wrap {
+.#{$primaryStyleName}-wrap {
 	background: transparent url(img/top-left.png) no-repeat;
 }
-.v-window-outerheader {
+.#{$primaryStyleName}-outerheader {
 	height: 49px;
 	margin-left: 9px;
 	padding: 15px 40px 11px 12px;
 	background: transparent url(img/top-right.png) no-repeat right top;
 }
-.v-window-header {
+.#{$primaryStyleName}-header {
 	font-size: 18px;
 	line-height: 1.2;
 	font-weight: normal;
@@ -24,7 +24,7 @@
 	color: #f14c1a;
 	text-shadow: 0 1px 0 #fff;
 }
-.v-window-contents > div {
+.#{$primaryStyleName}-contents > div {
 	background: #fff;
 	border: 2px solid #babfc0;
 	border-top: none;
@@ -33,13 +33,13 @@
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
-.v-window div.v-window-footer {
+.#{$primaryStyleName} div.#{$primaryStyleName}-footer {
 	height: 8px;
 	margin-left: 9px;
 	background: transparent url(img/bottom-right.png) no-repeat right bottom;
 	overflow: visible;
 }
-.v-window-resizebox {
+.#{$primaryStyleName}-resizebox {
 	position: absolute; /* Needed to position the element over ScrollPanel, which is relatively positioned */
 	right: 5px;
 	width: 10px;
@@ -47,11 +47,11 @@
 	margin-top: -7px;
 	background: transparent url(img/resize.png);
 }
-.v-window-resizebox-disabled {
+.#{$primaryStyleName}-resizebox-disabled {
 	background: transparent;
 	display: block;
 }
-.v-window-closebox {
+.#{$primaryStyleName}-closebox {
 	position: absolute;
 	top: 21px;
 	right: 24px;
@@ -59,35 +59,35 @@
 	height: 12px;
 	background: transparent url(img/close.png);
 }
-.v-window-closebox:hover {
+.#{$primaryStyleName}-closebox:hover {
 	background-position: 0 -12px;
 }
-.v-window-modalitycurtain {
+.#{$primaryStyleName}-modalitycurtain {
 	background: #fff;
 }
 /* Dialog style */
-.v-window-dialog {
+.#{$primaryStyleName}-dialog {
 	background-image: url(img/dialog/bottom-left.png);
 }
-.v-window-dialog .v-window-outerheader {
+.#{$primaryStyleName}-dialog .#{$primaryStyleName}-outerheader {
 	height: 14px;
 	padding: 13px 30px 5px 8px;
 	background: transparent url(img/top-right.png) no-repeat right top;
 }
-.v-window-dialog .v-window-header {
+.#{$primaryStyleName}-dialog .#{$primaryStyleName}-header {
 	font-size: 12px;
 	line-height: normal;
 	font-weight: bold;
 	letter-spacing: 0;
 	text-shadow: 0 1px 0 #fff;
 }
-.v-window-dialog .v-window-contents {
+.#{$primaryStyleName}-dialog .#{$primaryStyleName}-contents {
 	background: #f1f3f3;
 }
-.v-window-dialog div.v-window-footer {
+.#{$primaryStyleName}-dialog div.#{$primaryStyleName}-footer {
 	background-image: url(img/dialog/bottom-right.png);
 }
-.v-window-dialog .v-window-closebox {
+.#{$primaryStyleName}-dialog .#{$primaryStyleName}-closebox {
 	top: 14px;
 	right: 16px;
 	background-image: url(img/dialog/close.png);

@@ -1,16 +1,16 @@
-@mixin runo-label {
+@mixin runo-label($primaryStyleName : v-label) {
 
-.v-label h1,
-.v-label h2,
-.v-label h3,
-.v-label h4,
-.v-label h5,
-.v-label h6 {
+.#{$primaryStyleName} h1,
+.#{$primaryStyleName} h2,
+.#{$primaryStyleName} h3,
+.#{$primaryStyleName} h4,
+.#{$primaryStyleName} h5,
+.#{$primaryStyleName} h6 {
 	color: #404749;
 }
 
-.v-label-h1,
-.v-label h1 {
+.#{$primaryStyleName}-h1,
+.#{$primaryStyleName} h1 {
 	margin: 0;
 	padding: 8px 0 4px;
 	font-size: 24px;
@@ -20,8 +20,8 @@
 	text-shadow: 0 1px 1px #fff;
 }
 
-.v-label-h2,
-.v-label h2 {
+.#{$primaryStyleName}-h2,
+.#{$primaryStyleName} h2 {
 	color: #f14c1a;
 	font-size: 18px;
 	letter-spacing: -0.03em;
@@ -29,16 +29,16 @@
 	padding: 13px 0 5px;
 }
 
-.v-label-h3,
-.v-label h3 {
+.#{$primaryStyleName}-h3,
+.#{$primaryStyleName} h3 {
 	font-size: 15px;
 	letter-spacing: -0.03em;
 	font-weight: normal;
 	text-shadow: 0 1px 1px #fff;
 }
 
-.v-label-h4,
-.v-label h4 {
+.#{$primaryStyleName}-h4,
+.#{$primaryStyleName} h4 {
 	font-size: 13px;
 	font-weight: normal;
 	text-shadow: 0 1px 1px #fff;
@@ -46,14 +46,14 @@
 	padding: 8px 0 4px;
 }
 
-.v-label-small {
+.#{$primaryStyleName}-small {
 	font-size: .87em;
 	line-height: 1.4;
 	color: #707679;
 }
 
-.v-label hr,
-.v-label-hr {
+.#{$primaryStyleName} hr,
+.#{$primaryStyleName}-hr {
 	height: 2px;
 	overflow: hidden;
 	background: #ccd2d3;
@@ -62,12 +62,12 @@
 	border-bottom: 1px solid #fff;
 	margin: 0;
 }
-.v-label-hr {
+.#{$primaryStyleName}-hr {
 	height: 1px;
 }
 
-.v-sa & .v-label hr,
-.v-ie8 & .v-label hr {
+.v-sa & .#{$primaryStyleName} hr,
+.v-ie8 & .#{$primaryStyleName} hr {
 	height: 1px;
 }
 

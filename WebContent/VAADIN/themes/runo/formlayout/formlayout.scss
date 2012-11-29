@@ -1,33 +1,33 @@
-@mixin runo-formlayout {
+@mixin runo-formlayout($primaryStyleName : v-formlayout) {
 
-.v-formlayout-cell .v-errorindicator {
+.#{$primaryStyleName}-cell .v-errorindicator {
 	width: 10px;
 	height: 16px;
 	background: transparent url(../icons/16/error.png) no-repeat top right;
 }
-.v-formlayout-captioncell {
+.#{$primaryStyleName}-captioncell {
 	text-align:right;
 	white-space: nowrap;
 }
-.v-formlayout-spacing > tbody > .v-formlayout-row > .v-formlayout-captioncell, 
-.v-formlayout-spacing > tbody > .v-formlayout-row > .v-formlayout-contentcell,
-.v-formlayout-spacing > tbody > .v-formlayout-row > .v-formlayout-errorcell {
+.#{$primaryStyleName}-spacing > tbody > .#{$primaryStyleName}-row > .#{$primaryStyleName}-captioncell, 
+.#{$primaryStyleName}-spacing > tbody > .#{$primaryStyleName}-row > .#{$primaryStyleName}-contentcell,
+.#{$primaryStyleName}-spacing > tbody > .#{$primaryStyleName}-row > .#{$primaryStyleName}-errorcell {
 	padding-top: 8px;
 }
-.v-formlayout-margin-top > tbody > .v-formlayout-firstrow > .v-formlayout-captioncell, 
-.v-formlayout-margin-top > tbody > .v-formlayout-firstrow > .v-formlayout-contentcell,
-.v-formlayout-margin-top > tbody > .v-formlayout-firstrow > .v-formlayout-errorcell {
+.#{$primaryStyleName}-margin-top > tbody > .#{$primaryStyleName}-firstrow > .#{$primaryStyleName}-captioncell, 
+.#{$primaryStyleName}-margin-top > tbody > .#{$primaryStyleName}-firstrow > .#{$primaryStyleName}-contentcell,
+.#{$primaryStyleName}-margin-top > tbody > .#{$primaryStyleName}-firstrow > .#{$primaryStyleName}-errorcell {
 	padding-top: 15px;
 }
-.v-formlayout-margin-bottom > tbody > .v-formlayout-lastrow > .v-formlayout-captioncell,
-.v-formlayout-margin-bottom > tbody > .v-formlayout-lastrow > .v-formlayout-contentcell,
-.v-formlayout-margin-bottom > tbody > .v-formlayout-lastrow > .v-formlayout-errorcell {
+.#{$primaryStyleName}-margin-bottom > tbody > .#{$primaryStyleName}-lastrow > .#{$primaryStyleName}-captioncell,
+.#{$primaryStyleName}-margin-bottom > tbody > .#{$primaryStyleName}-lastrow > .#{$primaryStyleName}-contentcell,
+.#{$primaryStyleName}-margin-bottom > tbody > .#{$primaryStyleName}-lastrow > .#{$primaryStyleName}-errorcell {
 	padding-bottom: 15px;
 }
-.v-formlayout-margin-left > tbody > .v-formlayout-row > .v-formlayout-captioncell {
+.#{$primaryStyleName}-margin-left > tbody > .#{$primaryStyleName}-row > .#{$primaryStyleName}-captioncell {
 	padding-left: 18px;
 } 
-.v-formlayout-margin-right > tbody > .v-formlayout-row > .v-formlayout-contentcell {
+.#{$primaryStyleName}-margin-right > tbody > .#{$primaryStyleName}-row > .#{$primaryStyleName}-contentcell {
 	padding-right: 18px;
 }
 /* form */

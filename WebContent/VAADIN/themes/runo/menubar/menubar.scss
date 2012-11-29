@@ -1,21 +1,21 @@
-@mixin runo-menubar {
+@mixin runo-menubar($primaryStyleName : v-menubar) {
 
-.v-menubar {
+.#{$primaryStyleName} {
 	color: #464f52;
 	border-left: 1px solid #c6cbcc;
 }
-.v-menubar .v-menubar-menuitem {
+.#{$primaryStyleName} .#{$primaryStyleName}-menuitem {
 	padding: 1px 10px;
 	border: 1px solid #c6cbcc;
 	border-left: none;
 	height: 18px;
 	line-height: 18x;
 }
-.v-menubar-menuitem-selected {
+.#{$primaryStyleName}-menuitem-selected {
 	color: #fff;
 	background: #5daee8;
 }
-.v-menubar-submenu {
+.#{$primaryStyleName}-submenu {
 	background: #e9eced url(../tabsheet/img/tab-bg.png);
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	color: #464f52;
@@ -26,13 +26,13 @@
 	border-top: 1px solid #d0d4d5;
 	border-left: 1px solid #d0d4d5;
 }
-.v-menubar-submenu .v-menubar-menuitem {
+.#{$primaryStyleName}-submenu .#{$primaryStyleName}-menuitem {
 	padding-top: 1px;
 	padding-bottom: 1px;
 	line-height: 16px;
 	padding-left: 10px;
 }
-.v-menubar-submenu .v-menubar-menuitem-caption .v-icon { 
+.#{$primaryStyleName}-submenu .#{$primaryStyleName}-menuitem-caption .v-icon { 
 	vertical-align: middle;
 }
 

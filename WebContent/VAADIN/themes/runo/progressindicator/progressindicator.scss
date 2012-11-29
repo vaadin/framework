@@ -1,22 +1,22 @@
-@mixin runo-progressindicator {
+@mixin runo-progressindicator($primaryStyleName : v-progressindicator) {
 
-.v-progressindicator-wrapper {
+.#{$primaryStyleName}-wrapper {
 	background: #dfe2e4 url(img/base.gif) repeat-x;
 	border: 1px solid #b6bbbc;
 }
-.v-disabled .v-progressindicator-wrapper {
+.v-disabled .#{$primaryStyleName}-wrapper {
 	background-image: url(img/disabled.gif);
 }
-.v-progressindicator-indicator {
+.#{$primaryStyleName}-indicator {
 	background: #f7f9f9 url(img/progress.png);
 }
-.v-progressindicator-indicator {
+.#{$primaryStyleName}-indicator {
 	background: #f7f9f9 url(img/progress.png);
 }
-.v-progressindicator-indeterminate {
+.#{$primaryStyleName}-indeterminate {
 	background: #fff url(../../base/common/img/ajax-loader-medium.gif) no-repeat 50%;
 }
-.v-progressindicator-indeterminate-disabled {
+.#{$primaryStyleName}-indeterminate-disabled {
 	background: #dfe2e4;
 }
 
