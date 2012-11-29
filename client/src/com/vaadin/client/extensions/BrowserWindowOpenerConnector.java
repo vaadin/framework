@@ -55,13 +55,13 @@ public class BrowserWindowOpenerConnector extends AbstractExtensionConnector
     @Override
     public void onClick(ClickEvent event) {
         String url = getResourceUrl(BrowserWindowOpenerState.locationResource);
-        url = addParmatersAndFragment(url);
+        url = addParametersAndFragment(url);
         if (url != null) {
             Window.open(url, getState().target, getState().features);
         }
     }
 
-    private String addParmatersAndFragment(String url) {
+    private String addParametersAndFragment(String url) {
         if (url == null) {
             return null;
         }
