@@ -101,7 +101,12 @@
 				// Timestamp to avoid caching
 				url += '&' + (new Date()).getTime();
 				
-				var r = new XMLHttpRequest();
+				var r;
+				try {
+					r = new XMLHttpRequest();
+				} catch (e) {
+					r = new ActiveXObject("MSXML2.XMLHTTP.3.0");
+				}
 				r.open('POST', url, true);
 				r.onreadystatechange = function (aEvt) {  
 					if (r.readyState == 4) {
