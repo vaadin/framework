@@ -5319,9 +5319,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                             dragTouchTimeout.cancel();
                         }
                         if (touchStart != null) {
-                            event.preventDefault();
-                            event.stopPropagation();
                             if (!BrowserInfo.get().isAndroid()) {
+                                event.preventDefault();
+                                event.stopPropagation();
                                 Util.simulateClickFromTouchEvent(touchStart,
                                         this);
                             }
