@@ -67,15 +67,6 @@ public class TabsheetConnector extends TabsheetBaseConnector implements
 
         getWidget().iLayout();
 
-        // Re run relative size update to ensure optimal scrollbars
-        // TODO isolate to situation that visible tab has undefined height
-        try {
-            client.handleComponentRelativeSize(getWidget().tp
-                    .getWidget(getWidget().tp.getVisibleWidget()));
-        } catch (Exception e) {
-            // Ignore, most likely empty tabsheet
-        }
-
         getWidget().waitingForResponse = false;
     }
 

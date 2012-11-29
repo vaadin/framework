@@ -939,13 +939,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         tp.showWidget(activeTabIndex);
 
         VTabsheet.this.iLayout();
-        /*
-         * The size of a cached, relative sized component must be updated to
-         * report correct size to updateOpenTabSize().
-         */
-        if (contentUIDL.getBooleanAttribute("cached")) {
-            client.handleComponentRelativeSize(content.getWidget());
-        }
         updateOpenTabSize();
         VTabsheet.this.removeStyleDependentName("loading");
     }
