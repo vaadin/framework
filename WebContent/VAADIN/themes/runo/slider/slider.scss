@@ -1,11 +1,11 @@
-@mixin runo-slider {
+@mixin runo-slider($primaryStyleName : v-slider) {
 
-.v-slider {
+.#{$primaryStyleName} {
 	border-top: 1px solid #cccfd0;
 	border-bottom: 1px solid #cccfd0;
 	margin: 5px 0;
 }
-.v-slider-base {
+.#{$primaryStyleName}-base {
 	/* changing the borders will require adjustments to ISlider.java */
 	height: 2px;
 	background: #f3f3f4;
@@ -13,18 +13,18 @@
 	border-left: 1px solid #cccfd0;
 	border-right: 1px solid #cccfd0;
 }
-.v-slider-handle {
+.#{$primaryStyleName}-handle {
 	background: transparent url(img/handle-horizontal.png);
 	width: 12px;
 	height: 12px;
 	margin-top: -5px;
 	cursor: pointer;
 }
-.v-slider-handle:hover {
+.#{$primaryStyleName}-handle:hover {
 	background-position: left bottom;
 }
-.v-slider-scrollbar .v-slider-handle,
-.v-slider-scrollbar.v-slider-vertical .v-slider-handle {
+.#{$primaryStyleName}-scrollbar .#{$primaryStyleName}-handle,
+.#{$primaryStyleName}-scrollbar.#{$primaryStyleName}-vertical .#{$primaryStyleName}-handle {
 	background: #ffffff;
 	border: 1px solid #cccfd0;
 	border-radius: 6px;
@@ -32,14 +32,14 @@
 	-webkit-border-radius: 6px;
 }
 
-.v-slider-vertical {
+.#{$primaryStyleName}-vertical {
 	width: 3px;
 	margin: 0 5px;
 	border: none;
 	border-left: 1px solid #cccfd0;
 	border-right: 1px solid #cccfd0;
 }
-.v-slider-vertical .v-slider-base {
+.#{$primaryStyleName}-vertical .#{$primaryStyleName}-base {
 	width: 2px;
 	border-left: 1px solid #cbcdce;
 	border-right: none;
@@ -47,25 +47,25 @@
 	border-top: 1px solid #cccfd0;
 	border-bottom: 1px solid #cccfd0;	
 }
-.v-slider-vertical .v-slider-handle {
+.#{$primaryStyleName}-vertical .#{$primaryStyleName}-handle {
 	background: transparent url(img/handle-vertical.png);
 	width: 12px;
 	height: 12px;
 	margin-left: -5px;
 }
-.v-slider-vertical .v-slider-handle-active {
+.#{$primaryStyleName}-vertical .#{$primaryStyleName}-handle-active {
 	background-position: left bottom;
 }
 
 /* Disabled by default
-.v-slider-error .v-slider-base {
+.#{$primaryStyleName}-error .#{$primaryStyleName}-base {
 	background:transparent;
 	background-color: #FFE0E0;
 }
 */
 
 /* Disabled by default
-.v-slider-required .v-slider-base {
+.#{$primaryStyleName}-required .#{$primaryStyleName}-base {
 	background:transparent;
 	background-color: #FFE0E0;
 }
