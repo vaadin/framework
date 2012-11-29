@@ -17,7 +17,6 @@ package com.vaadin.client.ui;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Focusable;
@@ -25,8 +24,8 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.ConnectorMap;
+import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.StyleConstants;
@@ -389,21 +388,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     @Override
     public LayoutManager getLayoutManager() {
         return LayoutManager.get(getConnection());
-    }
-
-    /**
-     * Checks if there is a registered server side listener for the given event
-     * identifier.
-     * 
-     * @param eventIdentifier
-     *            The identifier to check for
-     * @return true if an event listener has been registered with the given
-     *         event identifier on the server side, false otherwise
-     */
-    @Override
-    public boolean hasEventListener(String eventIdentifier) {
-        Set<String> reg = getState().registeredEventListeners;
-        return (reg != null && reg.contains(eventIdentifier));
     }
 
     @Override
