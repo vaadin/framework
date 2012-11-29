@@ -47,7 +47,7 @@ import com.vaadin.util.ReflectTools;
  * @since 7.0
  */
 public abstract class VaadinService implements Serializable {
-    private static final String REINITIALIZING_SESSION_MARKER = VaadinService.class
+    static final String REINITIALIZING_SESSION_MARKER = VaadinService.class
             .getName() + ".reinitializing";
 
     private static final Method SESSION_INIT_METHOD = ReflectTools.findMethod(
@@ -329,11 +329,6 @@ public abstract class VaadinService implements Serializable {
     }
 
     public void fireSessionDestroy(VaadinSession vaadinSession) {
-        // Ignore if the session is being moved to a different backing session
-        if (vaadinSession.getAttribute(REINITIALIZING_SESSION_MARKER) == Boolean.TRUE) {
-            return;
-        }
-
         for (UI ui : new ArrayList<UI>(vaadinSession.getUIs())) {
             // close() called here for consistency so that it is always called
             // before a UI is removed. UI.isClosing() is thus always true in

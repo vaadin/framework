@@ -162,6 +162,12 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
                                     + "This might happen if a session is deserialized but never used before it expires.");
         } else if (VaadinService.getCurrentRequest() != null
                 && getCurrent() == this) {
+            // Ignore if the session is being moved to a different backing
+            // session
+            if (getAttribute(VaadinService.REINITIALIZING_SESSION_MARKER) == Boolean.TRUE) {
+                return;
+            }
+
             // There is still a request in progress for this session. The
             // session will be destroyed after the response has been written.
             if (!isClosing()) {
