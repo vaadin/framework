@@ -207,19 +207,6 @@ public class VAccordion extends VTabsheetBase {
 
     }
 
-    @Override
-    protected void selectTab(final int index, final UIDL contentUidl) {
-        StackItem item = getStackItem(index);
-        if (index != activeTabIndex) {
-            open(index);
-            iLayout();
-            // TODO Check if this is needed
-            client.runDescendentsLayout(this);
-
-        }
-        item.setContent(contentUidl);
-    }
-
     public void onSelectTab(StackItem item) {
         final int index = getWidgetIndex(item);
         if (index != activeTabIndex && !disabled && !readonly

@@ -69,13 +69,6 @@ public abstract class VTabsheetBase extends ComplexPanel {
             boolean selected, boolean hidden);
 
     /**
-     * Implement in extending classes. This method should render any previously
-     * non-cached content and set the activeTabIndex property to the specified
-     * index.
-     */
-    protected abstract void selectTab(int index, final UIDL contentUidl);
-
-    /**
      * Implement in extending classes. This method should return the number of
      * tabs currently rendered.
      */
