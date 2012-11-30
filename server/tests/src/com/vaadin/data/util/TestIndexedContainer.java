@@ -376,4 +376,12 @@ public class TestIndexedContainer extends AbstractInMemoryContainerTest {
         }
     }
 
+    // test getting non-existing property (#10445)
+    public void testNonExistingProperty() {
+        IndexedContainer ic = new IndexedContainer();
+        String object1 = new String("Obj1");
+        ic.addItem(object1);
+        assertNull(ic.getContainerProperty(object1, "xyz"));
+    }
+
 }

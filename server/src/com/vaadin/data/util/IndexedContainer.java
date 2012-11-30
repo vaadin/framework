@@ -164,7 +164,9 @@ public class IndexedContainer extends
      */
     @Override
     public Property getContainerProperty(Object itemId, Object propertyId) {
-        if (!containsId(itemId)) {
+        // map lookup more efficient than propertyIds if there are many
+        // properties
+        if (!containsId(itemId) || !types.containsKey(propertyId)) {
             return null;
         }
 
