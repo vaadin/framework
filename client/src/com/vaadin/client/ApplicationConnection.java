@@ -397,6 +397,7 @@ public class ApplicationConnection {
 
     public void init(WidgetSet widgetSet, ApplicationConfiguration cnf) {
         VConsole.log("Starting application " + cnf.getRootPanelId());
+        VConsole.log("Using theme: " + cnf.getThemeName());
 
         VConsole.log("Vaadin application servlet version: "
                 + cnf.getServletVersion());
