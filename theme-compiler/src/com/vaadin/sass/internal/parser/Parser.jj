@@ -1314,12 +1314,9 @@ boolean isPseudoElement = false;
 		}
 	    }
 	}
-	  | ( n=<FUNCTION> ( <S> )* (
-	      LOOKAHEAD(2) param=<IDENT> { d = convertIdent(param.image); }
-	      | param=<NUMBER> { d = param.image; }
-	      | d=simple_selector(null, ' ')
-	      ) ( <S> )* ")" 
+	  | ( n=<FUNCTION> ( <S> )* d=skipStatementUntilRightParan() <RPARAN>
 	          {
+	          // accept anything between function and a right parenthesis
 	          String f = convertIdent(n.image);
 	          String colons = isPseudoElement ? "::" : ":";
 	          String pseudofn = colons + f + d + ")";
