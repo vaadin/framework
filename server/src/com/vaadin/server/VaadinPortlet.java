@@ -349,7 +349,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
     private boolean isBrowserDetailsRequest(ResourceRequest request) {
         return request.getResourceID() != null
-                && request.getResourceID().equals("browserDetails");
+                && request.getResourceID().equals("v-browserDetails");
     }
 
     private boolean isDummyRequest(ResourceRequest request) {

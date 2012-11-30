@@ -436,9 +436,9 @@ public class Page implements Serializable {
 
     public void init(VaadinRequest request) {
         // Extract special parameter sent by vaadinBootstrap.js
-        String location = request.getParameter("loc");
-        String clientWidth = request.getParameter("cw");
-        String clientHeight = request.getParameter("ch");
+        String location = request.getParameter("v-loc");
+        String clientWidth = request.getParameter("v-cw");
+        String clientHeight = request.getParameter("v-ch");
 
         if (location != null) {
             try {

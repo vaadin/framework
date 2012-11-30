@@ -1124,7 +1124,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     private static boolean isBrowserDetailsRequest(HttpServletRequest request) {
         return "POST".equals(request.getMethod())
-                && request.getParameter("browserDetails") != null;
+                && request.getParameter("v-browserDetails") != null;
     }
 
     private boolean isStaticResourceRequest(HttpServletRequest request) {

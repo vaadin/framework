@@ -424,13 +424,15 @@ public class WebBrowser implements Serializable {
             browserDetails = new VBrowserDetails(agent);
         }
 
-        if (request.getParameter("sw") != null) {
-            updateClientSideDetails(request.getParameter("sw"),
-                    request.getParameter("sh"), request.getParameter("tzo"),
-                    request.getParameter("rtzo"), request.getParameter("dstd"),
-                    request.getParameter("dston"),
-                    request.getParameter("curdate"),
-                    request.getParameter("td") != null);
+        if (request.getParameter("v-sw") != null) {
+            updateClientSideDetails(request.getParameter("v-sw"),
+                    request.getParameter("v-sh"),
+                    request.getParameter("v-tzo"),
+                    request.getParameter("v-rtzo"),
+                    request.getParameter("v-dstd"),
+                    request.getParameter("v-dston"),
+                    request.getParameter("v-curdate"),
+                    request.getParameter("v-td") != null);
         }
     }
 

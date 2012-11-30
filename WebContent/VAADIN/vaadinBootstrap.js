@@ -84,10 +84,10 @@
 					// No special url defined, use the same URL that loaded this page (without the fragment)
 					url = window.location.href.replace(/#.*/,'');
 				}
-				url += ((/\?/).test(url) ? "&" : "?") + "browserDetails=1";
-				var rootId = getConfig("rootId");
+				url += ((/\?/).test(url) ? "&" : "?") + "v-browserDetails=1";
+				var rootId = getConfig("v-rootId");
 				if (rootId !== undefined) {
-					url += "&rootId=" + rootId;
+					url += "&v-rootId=" + rootId;
 				}
 
 				// Tell the UI what theme it is configured to use
@@ -99,7 +99,7 @@
 				url += '&' + vaadin.getBrowserDetailsParameters(appId); 
 				
 				// Timestamp to avoid caching
-				url += '&' + (new Date()).getTime();
+				url += '&v-' + (new Date()).getTime();
 				
 				var r;
 				try {
@@ -155,7 +155,7 @@
 			var bootstrapApp = function(mayDefer) {
 				var vaadinDir = getConfig('vaadinDir');
 				
-				var themeUri = vaadinDir + 'themes/' + getConfig('theme')
+				var themeUri = vaadinDir + 'themes/' + getConfig('theme');
 				loadTheme(themeUri);
 				
 				var widgetset = getConfig('widgetset');
@@ -204,8 +204,8 @@
 		},
 		getBrowserDetailsParameters: function(parentElementId) {
 			// Screen height and width
-			var url = 'sh=' + window.screen.height;
-			url += '&sw=' + window.screen.width;
+			var url = 'v-sh=' + window.screen.height;
+			url += '&v-sw=' + window.screen.width;
 			
 			// Window height and width
 			var cw = 0;
@@ -219,12 +219,12 @@
 				cw = document.documentElement.clientWidth;
 				ch = document.documentElement.clientHeight;
 			}
-			url += '&cw=' + cw + '&ch=' + ch;
+			url += '&v-cw=' + cw + '&v-ch=' + ch;
 			
 
 			var d = new Date();
 			
-			url += '&curdate=' + d.getTime();
+			url += '&v-curdate=' + d.getTime();
 			
 			var tzo1 = d.getTimezoneOffset(); // current offset
 			var dstDiff = 0;
@@ -241,33 +241,33 @@
 			}
 
 			// Time zone offset
-			url += '&tzo=' + tzo1;
+			url += '&v-tzo=' + tzo1;
 			
 			// DST difference
-			url += '&dstd=' + dstDiff;
+			url += '&v-dstd=' + dstDiff;
 			
 			// Raw time zone offset
-			url += '&rtzo=' + rtzo;
+			url += '&v-rtzo=' + rtzo;
 			
 			// DST in effect?
-			url += '&dston=' + (tzo1 != rtzo);
+			url += '&v-dston=' + (tzo1 != rtzo);
 			
 			var pe = document.getElementById(parentElementId);
 			if (pe) {
-				url += '&vw=' + pe.offsetWidth;
-				url += '&vh=' + pe.offsetHeight;
+				url += '&v-vw=' + pe.offsetWidth;
+				url += '&v-vh=' + pe.offsetHeight;
 			}
 			
 			// Location
-			url += '&loc=' + encodeURIComponent(location.href);
+			url += '&v-loc=' + encodeURIComponent(location.href);
 
 			// Window name
 			if (window.name) {
-				url += '&wn=' + encodeURIComponent(window.name);
+				url += '&v-wn=' + encodeURIComponent(window.name);
 			}
 			
 			// Detect touch device support
-	        try { document.createEvent("TouchEvent"); url += "&td=1";} catch(e){};
+	        try { document.createEvent("TouchEvent"); url += "&v-td=1";} catch(e){};
 	        
 	        return url;
 		}

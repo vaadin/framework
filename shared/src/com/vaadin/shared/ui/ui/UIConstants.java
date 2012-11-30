@@ -44,6 +44,6 @@ public class UIConstants {
     /**
      * Name of the parameter used to transmit UI ids back and forth
      */
-    public static final String UI_ID_PARAMETER = "uiId";
+    public static final String UI_ID_PARAMETER = "v-uiId";
 
 }

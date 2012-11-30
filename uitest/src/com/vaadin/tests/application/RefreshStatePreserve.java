@@ -16,7 +16,7 @@ public class RefreshStatePreserve extends AbstractTestUI {
     @Override
     protected void setup(VaadinRequest request) {
         // Internal parameter sent by vaadinBootstrap.js,
-        addComponent(new Label("window.name: " + request.getParameter("wn")));
+        addComponent(new Label("window.name: " + request.getParameter("v-wn")));
         addComponent(new Label("UI id: " + getUIId()));
         addComponent(log);
 
