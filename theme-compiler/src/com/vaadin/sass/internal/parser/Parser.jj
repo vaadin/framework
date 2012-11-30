@@ -1502,7 +1502,7 @@ void mixinDirective() :
     |(name = functionName() 
       args = arglist()) <RPARAN> (<S>)*) <LBRACE> (<S>)*
     {documentHandler.startMixinDirective(name, args);}
-    ( includeDirective() | media() | LOOKAHEAD(5)listModifyDirective()|eachDirective() | extendDirective()| variable() | styleRuleOrDeclarationOrNestedProperties())*
+    ( includeDirective() | media() | LOOKAHEAD(5)listModifyDirective() | ifDirective() | eachDirective() | extendDirective()| variable() | styleRuleOrDeclarationOrNestedProperties() | fontFace() | page())*
     <RBRACE>(<S>)*
     {documentHandler.endMixinDirective(name, args);}
 }
