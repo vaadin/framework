@@ -61,6 +61,8 @@ public class Util {
     public static native Element getElementFromPoint(int clientX, int clientY)
     /*-{
         var el = $wnd.document.elementFromPoint(clientX, clientY);
+        // Call elementFromPoint two times to make sure IE8 also returns something sensible if the application is running in an iframe 
+        el = $wnd.document.elementFromPoint(clientX, clientY);
         if(el != null && el.nodeType == 3) {
             el = el.parentNode;
         }
