@@ -2693,6 +2693,5 @@ public class ApplicationConnection {
      */
     public void resetCachedSize(Paintable p) {
         idToPaintableDetail.get(getPid(p)).setOffsetSize(null);
-        idToPaintableDetail.get(getPid(p)).setRelativeSize(null);
     }
 }
