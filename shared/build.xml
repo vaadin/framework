@@ -11,12 +11,26 @@
 	<!-- global properties -->
 	<property name="module.name" value="vaadin-shared" />
 	<property name="module.symbolic" value="com.vaadin.shared" />
-	<property name="result.dir" value="result" />
+	<property name="result.dir" location="result" />
+	<property name="src.filtered" location="${result.dir}/filtered-src" />
+	<property name="src" location="${src.filtered}" />
 	<path id="classpath.compile.custom" />
 
 
 	<target name="jar">
 		<property name="shared.osgi.import" value="org.json;version=&quot;20080701&quot;, com.google.gwt.thirdparty.guava.common.annotations, com.google.gwt.thirdparty.guava.common.base, com.google.gwt.thirdparty.guava.common.base.internal, com.google.gwt.thirdparty.guava.common.cache, com.google.gwt.thirdparty.guava.common.collect, com.google.gwt.thirdparty.guava.common.eventbus, com.google.gwt.thirdparty.guava.common.io, com.google.gwt.thirdparty.guava.common.net, com.google.gwt.thirdparty.guava.common.primitives, com.google.gwt.thirdparty.guava.common.util.concurrent, com.google.gwt.thirdparty.streamhtmlparser, com.google.gwt.thirdparty.streamhtmlparser.impl, com.google.gwt.thirdparty.streamhtmlparser.util, org.w3c.flute.parser, org.w3c.flute.parser.selectors, org.w3c.flute.util" />
+		<delete dir="${src.filtered}" />
+		<!-- Update version in Version.java -->
+		<copy todir="${src.filtered}">
+			<fileset dir="src">
+			</fileset>
+			<filterchain>
+				<replacetokens begintoken="@" endtoken="@">
+					<token key="VERSION" value="${vaadin.version}" />
+				</replacetokens>
+			</filterchain>
+		</copy>
+
 		<antcall target="common.jar">
 			<param name="import-package" value="${shared.osgi.import}" />
 			<reference refid="shared.gwt.includes" torefid="extra.jar.includes" />
@@ -29,11 +43,11 @@
 
 		<antcall target="common.publish-local" />
 	</target>
-		
+
 	<target name="clean">
-		<antcall target="common.clean"/>
+		<antcall target="common.clean" />
 	</target>
-	
+
 	<target name="tests">
 		<!--<antcall target="common.tests.run" />-->
 		<echo>WHAT? No tests for ${module.name}!</echo>
