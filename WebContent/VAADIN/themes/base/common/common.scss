@@ -204,6 +204,15 @@ body &.v-app-loading {
 	padding: 2px;
 }
 
+.v-drag-element {
+	z-index: 60000;
+	/* override any other position: properties */
+	position: absolute !important;
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+	cursor: default;
+}
+
 .v-clip {
 	overflow: hidden;
 }
