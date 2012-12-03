@@ -5,6 +5,7 @@
 package com.vaadin.ui;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -842,6 +844,41 @@ public abstract class AbstractSelect extends AbstractField implements
             fireItemSetChange();
         }
         return retval;
+    }
+
+    /**
+     * Checks that the current selection is valid, i.e. the selected item ids
+     * exist in the container. Updates the selection if one or several selected
+     * item ids are no longer available in the container.
+     */
+    public void sanitizeSelection() {
+        Object value = getValue();
+        if (value == null) {
+            return;
+        }
+
+        boolean changed = false;
+
+        if (isMultiSelect()) {
+            Collection valueAsCollection = (Collection) value;
+            List<Object> newSelection = new ArrayList<Object>(
+                    valueAsCollection.size());
+            for (Object subValue : valueAsCollection) {
+                if (containsId(subValue)) {
+                    newSelection.add(subValue);
+                } else {
+                    changed = true;
+                }
+            }
+            if (changed) {
+                setValue(newSelection);
+            }
+        } else {
+            if (!containsId(value)) {
+                setValue(null);
+            }
+        }
+
     }
 
     /**

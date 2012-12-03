@@ -1,9 +1,12 @@
 package com.vaadin.tests.components.table;
 
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Table;
 
 public class ValueAfterClearingContainer extends TestBase {
@@ -17,11 +20,25 @@ public class ValueAfterClearingContainer extends TestBase {
     protected void setup() {
         table.setSelectable(true);
         table.addContainerProperty(PROPERTY_ID, Integer.class, null);
+        table.setImmediate(true);
+        table.addListener(new ValueChangeListener() {
 
+            public void valueChange(ValueChangeEvent event) {
+                log.log("Value changed to " + event.getProperty().getValue());
+            }
+        });
         addComponent(log);
 
         addComponent(table);
+        final CheckBox multiselect = new CheckBox("Multiselect");
+        multiselect.setImmediate(true);
+        multiselect.addListener(new ValueChangeListener() {
 
+            public void valueChange(ValueChangeEvent event) {
+                table.setMultiSelect(multiselect.booleanValue());
+            }
+        });
+        addComponent(multiselect);
         addComponent(new Button("Add table items", new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
                 if (!table.getItemIds().isEmpty()) {
@@ -54,6 +71,13 @@ public class ValueAfterClearingContainer extends TestBase {
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         table.getContainerDataSource().removeAllItems();
+                    }
+                }));
+        addComponent(new Button("Remove items from container and sanitize",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        table.getContainerDataSource().removeAllItems();
+                        table.sanitizeSelection();
                     }
                 }));
         addComponent(new Button("Remove selected item from table",
