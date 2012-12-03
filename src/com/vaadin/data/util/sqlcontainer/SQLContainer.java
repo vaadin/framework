@@ -1035,7 +1035,7 @@ public class SQLContainer implements Container, Container.Filterable,
                 delegate.setOrderBy(sorters);
             } catch (UnsupportedOperationException e) {
                 getLogger().log(Level.FINE,
-                        "The query delegate doesn't support filtering", e);
+                        "The query delegate doesn't support sorting", e);
             }
             int newSize = delegate.getCount();
             sizeUpdated = new Date();
