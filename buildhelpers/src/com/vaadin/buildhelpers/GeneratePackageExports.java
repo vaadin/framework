@@ -10,6 +10,7 @@ import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+import java.util.logging.Logger;
 
 /**
  * Generates Export-Packages attribute for OSGi compatible manifest.
@@ -33,7 +34,6 @@ public class GeneratePackageExports {
                             + "Use -Dvaadin.version to specify the version to be used for the packages");
             System.exit(1);
         }
-        String vaadinVersion = System.getProperty("vaadin.version");
 
         // Open the JAR
         String jarFilename = args[0];
@@ -59,7 +59,7 @@ public class GeneratePackageExports {
             return;
         }
 
-        String exportPackage = sortAndJoinPackages(packages, vaadinVersion);
+        String exportPackage = sortAndJoinPackages(packages);
 
         // Read old manifest
         Manifest oldMF = null;
@@ -97,8 +97,7 @@ public class GeneratePackageExports {
         }
     }
 
-    private static String sortAndJoinPackages(HashSet<String> packages,
-            String vaadinVersion) {
+    private static String sortAndJoinPackages(HashSet<String> packages) {
         // Produce an ordered listing of the package names
         String packageArray[] = new String[packages.size()];
         packages.toArray(packageArray);
@@ -108,14 +107,51 @@ public class GeneratePackageExports {
             if (i != 0) {
                 joinedPackages.append(",");
             }
+            String version = getVersion(packageArray[i]);
             String packageAndVersion = packageArray[i];
-            if (vaadinVersion != null) {
-                packageAndVersion += ";version=\"" + vaadinVersion + "\"";
+            if (version != null) {
+                packageAndVersion += ";version=\"" + version + "\"";
+            } else {
+                Logger.getLogger(GeneratePackageExports.class.getName())
+                        .severe("No version defined for " + packageArray[i]);
             }
             joinedPackages.append(packageAndVersion);
         }
 
         return joinedPackages.toString();
+    }
+
+    /**
+     * Tries to find version specified using system properties of type
+     * version.<java package>. Searches for the packge and then its parents
+     * recursively. Falls back to the "vaadin.version" system property if no
+     * other properties are found.
+     * 
+     * @param javaPackage
+     *            The package to determine a version for
+     * @return A version or null if no version has been defined
+     */
+    private static String getVersion(String javaPackage) {
+        String packageVersion = System.getProperty("version." + javaPackage);
+        if (packageVersion != null) {
+            return packageVersion;
+        }
+        String parentPackage = null;
+        if (javaPackage.contains(".")) {
+            parentPackage = javaPackage.substring(0,
+                    javaPackage.lastIndexOf('.'));
+            String parentVersion = getVersion(parentPackage);
+            if (parentVersion != null) {
+                return parentVersion;
+            }
+        }
+
+        String vaadinVersion = System.getProperty("vaadin.version");
+        if (vaadinVersion != null) {
+            return vaadinVersion;
+        }
+
+        return null;
     }
 
     private static HashSet<String> getPackages(JarFile jar,
