@@ -918,15 +918,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
     }
 
-    @Override
-    protected void selectTab(int index, final UIDL contentUidl) {
-        if (index != activeTabIndex) {
-            activeTabIndex = index;
-            tb.selectTab(activeTabIndex);
-        }
-        renderContent(contentUidl);
-    }
-
     private void renderContent(final UIDL contentUIDL) {
         final ComponentConnector content = client.getPaintable(contentUIDL);
         Widget newWidget = content.getWidget();
