@@ -35,24 +35,17 @@
 		return (typeof window[className]) != "undefined";
 	};
 	
-	var loadWidgetset = function(basePath, widgetset) {
+	var loadWidgetset = function(url, widgetset) {
 		if (widgetsets[widgetset]) {
 			return;
 		}
-		log("load widgetset", basePath, widgetset);
+		log("load widgetset", url, widgetset);
 		setTimeout(function() {
 			if (!isWidgetsetLoaded(widgetset)) {
 				alert("Failed to load the widgetset: " + url);
 			}
 		}, 15000);
 	
-		var url;
-		if (window.getVaadinWidgetsetUrl) {
-			url = window.getVaadinWidgetsetUrl(basePath, widgetset);
-		} else {
-			url = basePath + widgetset + "/" + widgetset + ".nocache.js?" + new Date().getTime();
-		}
-		
 		var scriptTag = document.createElement('script');
 		scriptTag.setAttribute('type', 'text/javascript');
 		scriptTag.setAttribute('src', url);
@@ -164,7 +157,11 @@
 				loadTheme(themeUri);
 				
 				var widgetset = getConfig('widgetset');
-				loadWidgetset(vaadinDir + 'widgetsets/', widgetset);
+				var widgetsetUrl = getConfig('widgetsetUrl');
+				if (!widgetsetUrl) {
+					widgetsetUrl = vaadinDir + 'widgetsets/' + widgetset + "/" + widgetset + ".nocache.js?" + new Date().getTime();
+				}
+				loadWidgetset(widgetsetUrl, widgetset);
 				
 				if (getConfig('uidl') === undefined) {
 					if (mayDefer) {
