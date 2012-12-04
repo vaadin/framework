@@ -2035,6 +2035,31 @@ public class ApplicationConnection {
 
             private void recursivelyDetach(ServerConnector connector,
                     List<ConnectorHierarchyChangeEvent> events) {
+
+                /*
+                 * Reset state in an attempt to keep it consistent with the
+                 * hierarchy. No children and no parent is the initial situation
+                 * for the hierarchy, so changing the state to its initial value
+                 * is the closest we can get without data from the server.
+                 * #10151
+                 */
+                try {
+                    Type stateType = AbstractConnector.getStateType(connector);
+
+                    // Empty state instance to get default property values from
+                    Object defaultState = stateType.createInstance();
+
+                    SharedState state = connector.getState();
+
+                    for (Property property : stateType.getProperties()) {
+                        property.setValue(state,
+                                property.getValue(defaultState));
+                    }
+                } catch (NoDataException e) {
+                    throw new RuntimeException("Can't reset state for "
+                            + Util.getConnectorString(connector), e);
+                }
+
                 /*
                  * Recursively detach children to make sure they get
                  * setParent(null) and hierarchy change events as needed.
