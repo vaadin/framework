@@ -14,11 +14,11 @@
 	<ivy:cachepath pathid="ivy.deps" conf="default" />
 
 	<path id="classpath">
+		<path location="bin" />
+		<path location="build/classes" />
 		<pathelement location="${gwt.user.jar}" />
 		<pathelement location="${gwt.dev.jar}" />
 		<path refid="ivy.deps" />
-		<path location="bin" />
-		<path location="build/classes" />
 		<path location="server/src" />
 		<path location="shared/src" />
 		<path location="uitest/src" />
