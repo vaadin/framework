@@ -185,9 +185,9 @@ public class VAbstractSplitPanel extends ComplexPanel {
         DOM.setStyleAttribute(wrapper, "width", "100%");
         DOM.setStyleAttribute(wrapper, "height", "100%");
 
-        DOM.appendChild(wrapper, secondContainer);
         DOM.appendChild(wrapper, firstContainer);
         DOM.appendChild(wrapper, splitter);
+        DOM.appendChild(wrapper, secondContainer);
 
         DOM.setStyleAttribute(splitter, "position", "absolute");
         DOM.setStyleAttribute(secondContainer, "position", "absolute");
@@ -201,6 +201,7 @@ public class VAbstractSplitPanel extends ComplexPanel {
             DOM.setStyleAttribute(splitter, "height", "100%");
             DOM.setStyleAttribute(splitter, "top", "0");
             DOM.setStyleAttribute(firstContainer, "height", "100%");
+            DOM.setStyleAttribute(secondContainer, "top", "0");
             DOM.setStyleAttribute(secondContainer, "height", "100%");
         } else {
             DOM.setStyleAttribute(splitter, "width", "100%");
