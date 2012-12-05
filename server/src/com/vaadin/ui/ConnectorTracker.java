@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,6 +34,7 @@ import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.AbstractCommunicationManager;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.GlobalResourceHandler;
+import com.vaadin.server.StreamVariable;
 
 /**
  * A class which takes care of book keeping of {@link ClientConnector}s for a
@@ -64,6 +66,11 @@ public class ConnectorTracker implements Serializable {
 
     private UI uI;
     private transient Map<ClientConnector, JSONObject> diffStates = new HashMap<ClientConnector, JSONObject>();
+
+    /** Maps connectorIds to a map of named StreamVariables */
+    private Map<String, Map<String, StreamVariable>> pidToNameToStreamVariable;
+
+    private Map<StreamVariable, String> streamVariableToSeckey;
 
     /**
      * Gets a logger for this class
@@ -259,6 +266,7 @@ public class ConnectorTracker implements Serializable {
             }
         }
 
+        cleanStreamVariables();
     }
 
     /**
@@ -496,5 +504,103 @@ public class ConnectorTracker implements Serializable {
             }
         }
 
+    }
+
+    /**
+     * Checks if the indicated connector has a StreamVariable of the given name
+     * and returns the variable if one is found.
+     * 
+     * @param connectorId
+     * @param variableName
+     * @return variable if a matching one exists, otherwise null
+     */
+    public StreamVariable getStreamVariable(String connectorId,
+            String variableName) {
+        Map<String, StreamVariable> map = pidToNameToStreamVariable
+                .get(connectorId);
+        if (map == null) {
+            return null;
+        }
+        StreamVariable streamVariable = map.get(variableName);
+        return streamVariable;
+    }
+
+    /**
+     * Adds a StreamVariable of the given name to the indicated connector.
+     * 
+     * @param connectorId
+     * @param variableName
+     * @param variable
+     */
+    public void addStreamVariable(String connectorId, String variableName,
+            StreamVariable variable) {
+        if (pidToNameToStreamVariable == null) {
+            pidToNameToStreamVariable = new HashMap<String, Map<String, StreamVariable>>();
+        }
+        Map<String, StreamVariable> nameToStreamVariable = pidToNameToStreamVariable
+                .get(connectorId);
+        if (nameToStreamVariable == null) {
+            nameToStreamVariable = new HashMap<String, StreamVariable>();
+            pidToNameToStreamVariable.put(connectorId, nameToStreamVariable);
+        }
+        nameToStreamVariable.put(variableName, variable);
+
+        if (streamVariableToSeckey == null) {
+            streamVariableToSeckey = new HashMap<StreamVariable, String>();
+        }
+        String seckey = streamVariableToSeckey.get(variable);
+        if (seckey == null) {
+            seckey = UUID.randomUUID().toString();
+            streamVariableToSeckey.put(variable, seckey);
+        }
+    }
+
+    /**
+     * Removes StreamVariables that belong to connectors that are no longer
+     * attached to the session.
+     */
+    private void cleanStreamVariables() {
+        if (pidToNameToStreamVariable != null) {
+            Iterator<String> iterator = pidToNameToStreamVariable.keySet()
+                    .iterator();
+            while (iterator.hasNext()) {
+                String connectorId = iterator.next();
+                if (uI.getConnectorTracker().getConnector(connectorId) == null) {
+                    // Owner is no longer attached to the session
+                    Map<String, StreamVariable> removed = pidToNameToStreamVariable
+                            .get(connectorId);
+                    for (String key : removed.keySet()) {
+                        streamVariableToSeckey.remove(removed.get(key));
+                    }
+                    iterator.remove();
+                }
+            }
+        }
+    }
+
+    /**
+     * Removes any StreamVariable of the given name from the indicated
+     * connector.
+     * 
+     * @param connectorId
+     * @param variableName
+     */
+    public void cleanStreamVariable(String connectorId, String variableName) {
+        Map<String, StreamVariable> nameToStreamVar = pidToNameToStreamVariable
+                .get(connectorId);
+        nameToStreamVar.remove(variableName);
+        if (nameToStreamVar.isEmpty()) {
+            pidToNameToStreamVariable.remove(connectorId);
+        }
+    }
+
+    /**
+     * Returns the security key associated with the given StreamVariable.
+     * 
+     * @param variable
+     * @return matching security key if one exists, null otherwise
+     */
+    public String getSeckey(StreamVariable variable) {
+        return streamVariableToSeckey.get(variable);
     }
 }
