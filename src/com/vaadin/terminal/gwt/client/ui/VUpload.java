@@ -144,7 +144,7 @@ public class VUpload extends SimplePanel implements Paintable {
     private static native void setEncoding(Element form, String encoding)
     /*-{
       form.enctype = encoding;
-      // For IE6
+      // For IE6 - IE8
       form.encoding = encoding;
     }-*/;
 
