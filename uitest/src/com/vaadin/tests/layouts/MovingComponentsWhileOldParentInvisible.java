@@ -1,21 +1,35 @@
 package com.vaadin.tests.layouts;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.tests.VaadinClasses;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbsoluteLayout;
+import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.CustomLayout;
+import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HasComponents;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
+import com.vaadin.ui.SingleComponentContainer;
+import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.VerticalSplitPanel;
 
 public class MovingComponentsWhileOldParentInvisible extends TestBase {
 
-    private ComponentContainer cc = new AbsoluteLayout(); // initial dummy
-                                                          // contents
+    private HasComponents cc = new AbsoluteLayout(); // initial dummy
+                                                     // contents
     private Label lab;
 
     @Override
@@ -35,12 +49,7 @@ public class MovingComponentsWhileOldParentInvisible extends TestBase {
         // componentContainer.addContainerProperty(CAPTION, String.class, "");
         // componentContainer.addContainerProperty(CLASS, Class.class, "");
 
-        for (Class<? extends ComponentContainer> cls : VaadinClasses
-                .getComponentContainers()) {
-            if (cls == CustomLayout.class) {
-                // Does not support addComponent
-                continue;
-            }
+        for (Class<? extends HasComponents> cls : getComponentContainers()) {
             componentContainerSelect.addItem(cls);
         }
         componentContainerSelect.addListener(new ValueChangeListener() {
@@ -48,11 +57,10 @@ public class MovingComponentsWhileOldParentInvisible extends TestBase {
             @Override
             @SuppressWarnings("unchecked")
             public void valueChange(ValueChangeEvent event) {
-                ComponentContainer oldCC = cc;
-                cc = createComponentContainer((Class<? extends ComponentContainer>) event
+                HasComponents oldCC = cc;
+                cc = createComponentContainer((Class<? extends HasComponents>) event
                         .getProperty().getValue());
-                cc.addComponent(lab);
-
+                addToCC(lab);
                 replaceComponent(oldCC, cc);
             }
         });
@@ -70,7 +78,7 @@ public class MovingComponentsWhileOldParentInvisible extends TestBase {
                             lab.setValue(lab.getValue().replace("inside",
                                     "outside"));
                         } else {
-                            cc.addComponent(lab);
+                            addToCC(lab);
                             lab.setValue(lab.getValue().replace("outside",
                                     "inside"));
                         }
@@ -82,10 +90,37 @@ public class MovingComponentsWhileOldParentInvisible extends TestBase {
         addComponent(but1);
     }
 
-    protected ComponentContainer createComponentContainer(
-            Class<? extends ComponentContainer> value) {
+    protected void addToCC(Label lab2) {
+        if (cc instanceof ComponentContainer) {
+            ((ComponentContainer) cc).addComponent(lab);
+        } else if (cc instanceof SingleComponentContainer) {
+            ((SingleComponentContainer) cc).setContent(lab);
+        } else {
+            throw new RuntimeException("Don't know how to add to "
+                    + cc.getClass().getName());
+        }
+    }
+
+    private Collection<Class<? extends HasComponents>> getComponentContainers() {
+        List<Class<? extends HasComponents>> list = new ArrayList<Class<? extends HasComponents>>();
+        list.add(AbsoluteLayout.class);
+        list.add(Accordion.class);
+        list.add(CssLayout.class);
+        list.add(FormLayout.class);
+        list.add(GridLayout.class);
+        list.add(HorizontalLayout.class);
+        list.add(HorizontalSplitPanel.class);
+        list.add(Panel.class);
+        list.add(TabSheet.class);
+        list.add(VerticalLayout.class);
+        list.add(VerticalSplitPanel.class);
+        return list;
+    }
+
+    protected HasComponents createComponentContainer(
+            Class<? extends HasComponents> value) {
         try {
-            ComponentContainer cc = value.newInstance();
+            HasComponents cc = value.newInstance();
             cc.setWidth("300px");
             cc.setHeight("300px");
             return cc;
