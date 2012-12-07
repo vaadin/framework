@@ -42,5 +42,12 @@ public abstract class AbstractExtensionConnector extends AbstractConnector {
         }
     }
 
+    /**
+     * Called when the extension is attached to its parent. This method is only
+     * called once as an extension cannot be moved from one parent to another.
+     * 
+     * @param target
+     *            The connector this extension extends
+     */
     protected abstract void extend(ServerConnector target);
 }
