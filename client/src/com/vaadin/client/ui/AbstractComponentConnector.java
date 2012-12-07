@@ -17,6 +17,7 @@ package com.vaadin.client.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Focusable;
@@ -52,6 +53,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     private String lastKnownWidth = "";
     private String lastKnownHeight = "";
+
+    private boolean initialStateEvent = true;
 
     /**
      * The style names from getState().getStyles() which are currently applied
@@ -123,11 +126,13 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         ConnectorMap paintableMap = ConnectorMap.get(getConnection());
 
-        if (getState().id != null) {
-            getWidget().getElement().setId(getState().id);
-        } else {
-            getWidget().getElement().removeAttribute("id");
-
+        Set<String> changedProperties = stateChangeEvent.getChangedProperties();
+        if (changedProperties.contains("id")) {
+            if (getState().id != null) {
+                getWidget().getElement().setId(getState().id);
+            } else if (!initialStateEvent) {
+                getWidget().getElement().removeAttribute("id");
+            }
         }
 
         /*
@@ -164,6 +169,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
          */
 
         updateComponentSize();
+
+        initialStateEvent = false;
     }
 
     @Override
