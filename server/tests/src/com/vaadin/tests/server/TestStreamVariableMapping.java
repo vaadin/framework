@@ -8,6 +8,7 @@ import com.vaadin.server.CommunicationManager;
 import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
 
@@ -51,18 +52,21 @@ public class TestStreamVariableMapping extends TestCase {
                 streamVariable);
         assertTrue(targetUrl.startsWith("app://APP/UPLOAD/-1/1/myName/"));
 
-        StreamVariable streamVariable2 = cm.getStreamVariable(
+        ConnectorTracker tracker = UI.getCurrent().getConnectorTracker();
+        StreamVariable streamVariable2 = tracker.getStreamVariable(
                 owner.getConnectorId(), variableName);
         assertSame(streamVariable, streamVariable2);
     }
 
     public void testRemoverVariable() {
+        ConnectorTracker tracker = UI.getCurrent().getConnectorTracker();
         cm.getStreamVariableTargetUrl(owner, variableName, streamVariable);
-        assertNotNull(cm
-                .getStreamVariable(owner.getConnectorId(), variableName));
+        assertNotNull(tracker.getStreamVariable(owner.getConnectorId(),
+                variableName));
 
         cm.cleanStreamVariable(owner, variableName);
-        assertNull(cm.getStreamVariable(owner.getConnectorId(), variableName));
+        assertNull(tracker.getStreamVariable(owner.getConnectorId(),
+                variableName));
     }
 
     private CommunicationManager createCommunicationManager() {

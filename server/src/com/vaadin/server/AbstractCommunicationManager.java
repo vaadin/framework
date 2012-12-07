@@ -165,10 +165,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     private Map<String, Class<?>> publishedFileContexts = new HashMap<String, Class<?>>();
 
-    private Map<String, Map<String, StreamVariable>> pidToNameToStreamVariable;
-
-    private Map<StreamVariable, String> streamVariableToSeckey;
-
     /**
      * TODO New constructor - document me!
      * 
@@ -644,23 +640,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // Remove connectors that have been detached from the session during
         // handling of the request
         uI.getConnectorTracker().cleanConnectorMap();
-
-        if (pidToNameToStreamVariable != null) {
-            Iterator<String> iterator = pidToNameToStreamVariable.keySet()
-                    .iterator();
-            while (iterator.hasNext()) {
-                String connectorId = iterator.next();
-                if (uI.getConnectorTracker().getConnector(connectorId) == null) {
-                    // Owner is no longer attached to the session
-                    Map<String, StreamVariable> removed = pidToNameToStreamVariable
-                            .get(connectorId);
-                    for (String key : removed.keySet()) {
-                        streamVariableToSeckey.remove(removed.get(key));
-                    }
-                    iterator.remove();
-                }
-            }
-        }
     }
 
     protected void highlightConnector(ClientConnector highlightedConnector) {
@@ -2269,28 +2248,13 @@ public abstract class AbstractCommunicationManager implements Serializable {
          * handling post
          */
         String paintableId = owner.getConnectorId();
-        int uiId = owner.getUI().getUIId();
+        UI ui = owner.getUI();
+        int uiId = ui.getUIId();
         String key = uiId + "/" + paintableId + "/" + name;
 
-        if (pidToNameToStreamVariable == null) {
-            pidToNameToStreamVariable = new HashMap<String, Map<String, StreamVariable>>();
-        }
-        Map<String, StreamVariable> nameToStreamVariable = pidToNameToStreamVariable
-                .get(paintableId);
-        if (nameToStreamVariable == null) {
-            nameToStreamVariable = new HashMap<String, StreamVariable>();
-            pidToNameToStreamVariable.put(paintableId, nameToStreamVariable);
-        }
-        nameToStreamVariable.put(name, value);
-
-        if (streamVariableToSeckey == null) {
-            streamVariableToSeckey = new HashMap<StreamVariable, String>();
-        }
-        String seckey = streamVariableToSeckey.get(value);
-        if (seckey == null) {
-            seckey = UUID.randomUUID().toString();
-            streamVariableToSeckey.put(value, seckey);
-        }
+        ConnectorTracker connectorTracker = ui.getConnectorTracker();
+        connectorTracker.addStreamVariable(paintableId, name, value);
+        String seckey = connectorTracker.getSeckey(value);
 
         return ApplicationConstants.APP_PROTOCOL_PREFIX
                 + ServletPortletHelper.UPLOAD_URL_PREFIX + key + "/" + seckey;
@@ -2298,12 +2262,8 @@ public abstract class AbstractCommunicationManager implements Serializable {
     }
 
     public void cleanStreamVariable(ClientConnector owner, String name) {
-        Map<String, StreamVariable> nameToStreamVar = pidToNameToStreamVariable
-                .get(owner.getConnectorId());
-        nameToStreamVar.remove(name);
-        if (nameToStreamVar.isEmpty()) {
-            pidToNameToStreamVariable.remove(owner.getConnectorId());
-        }
+        owner.getUI().getConnectorTracker()
+                .cleanStreamVariable(owner.getConnectorId(), name);
     }
 
     /**
@@ -2683,9 +2643,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
         UI uI = session.getUIById(Integer.parseInt(uiId));
         UI.setCurrent(uI);
 
-        StreamVariable streamVariable = getStreamVariable(connectorId,
-                variableName);
-        String secKey = streamVariableToSeckey.get(streamVariable);
+        StreamVariable streamVariable = uI.getConnectorTracker()
+                .getStreamVariable(connectorId, variableName);
+        String secKey = uI.getConnectorTracker().getSeckey(streamVariable);
         if (secKey.equals(parts[3])) {
 
             ClientConnector source = getConnector(uI, connectorId);
@@ -2739,17 +2699,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "UI not found");
         }
-    }
-
-    public StreamVariable getStreamVariable(String connectorId,
-            String variableName) {
-        Map<String, StreamVariable> map = pidToNameToStreamVariable
-                .get(connectorId);
-        if (map == null) {
-            return null;
-        }
-        StreamVariable streamVariable = map.get(variableName);
-        return streamVariable;
     }
 
     /**
