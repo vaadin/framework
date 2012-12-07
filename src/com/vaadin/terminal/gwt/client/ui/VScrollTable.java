@@ -1524,10 +1524,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         if (uidl == null || reqRows < 1) {
             // container is empty, remove possibly existing rows
             if (firstRow <= 0) {
+                postponeSanityCheckForLastRendered = true;
                 while (scrollBody.getLastRendered() > scrollBody
                         .getFirstRendered()) {
                     scrollBody.unlinkRow(false);
                 }
+                postponeSanityCheckForLastRendered = false;
                 scrollBody.unlinkRow(false);
             }
             return;
@@ -4167,8 +4169,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         public void setLastRendered(int lastRendered) {
             if (totalRows >= 0 && lastRendered > totalRows) {
-                VConsole.log("setLastRendered: " + this.lastRendered + " -> "
-                        + lastRendered);
                 this.lastRendered = totalRows - 1;
             } else {
                 this.lastRendered = lastRendered;
