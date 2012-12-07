@@ -165,12 +165,10 @@ public abstract class AbstractComponentTest<T extends AbstractComponent>
         // This is only to be screenshot-compatible with Vaadin 6, where
         // invisible components cause spacing
         if (visible) {
-            log.setHeight(null);
-            log.setWidth(null);
+            log.removeStyleName("displaynone");
             log.setCaption((String) log.getData());
         } else {
-            log.setHeight("0px");
-            log.setWidth("0px");
+            log.addStyleName("displaynone");
             log.setCaption(null);
         }
     }
