@@ -39,7 +39,9 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
+import com.vaadin.client.VConsole;
 import com.vaadin.client.ValueMap;
+import com.vaadin.client.ui.VOverlay;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.DragEventType;
@@ -567,7 +569,7 @@ public class VDragAndDropManager {
     private void clearDragElement() {
         if (dragElement != null) {
             if (dragElement.getParentElement() != null) {
-                RootPanel.getBodyElement().removeChild(dragElement);
+                dragElement.removeFromParent();
             }
             dragElement = null;
         }
@@ -708,7 +710,15 @@ public class VDragAndDropManager {
         @Override
         public void run() {
             if (dragElement != null && dragElement.getParentElement() == null) {
-                RootPanel.getBodyElement().appendChild(dragElement);
+                ApplicationConnection connection = getCurrentDragApplicationConnection();
+                Element dragImageParent;
+                if (connection == null) {
+                    VConsole.error("Could not determine ApplicationConnection for current drag operation. The drag image will likely look broken");
+                    dragImageParent = RootPanel.getBodyElement();
+                } else {
+                    dragImageParent = VOverlay.getOverlayContainer(connection);
+                }
+                dragImageParent.appendChild(dragElement);
             }
 
         }
@@ -718,6 +728,19 @@ public class VDragAndDropManager {
 
     private boolean isBusy() {
         return serverCallback != null;
+    }
+
+    protected ApplicationConnection getCurrentDragApplicationConnection() {
+        if (currentDrag == null) {
+            return null;
+        }
+
+        final ComponentConnector dragSource = currentDrag.getTransferable()
+                .getDragSource();
+        if (dragSource == null) {
+            return null;
+        }
+        return dragSource.getConnection();
     }
 
     /**

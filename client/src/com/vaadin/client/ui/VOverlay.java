@@ -34,6 +34,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Util;
+import com.vaadin.client.VConsole;
 
 /**
  * In Vaadin UI this Overlay should always be used for all elements that
@@ -637,32 +638,48 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     }
 
     /**
+     * Gets the 'overlay container' element. Tries to find the current
+     * {@link ApplicationConnection} using {@link #getApplicationConnection()}.
+     * 
+     * @return the overlay container element for the current
+     *         {@link ApplicationConnection} or another element if the current
+     *         {@link ApplicationConnection} cannot be determined.
+     */
+    public Element getOverlayContainer() {
+        ApplicationConnection ac = getApplicationConnection();
+        if (ac == null) {
+            // could not figure out which one we belong to, styling will
+            // probably fail
+            VConsole.error("Could not determin ApplicationConnection for Overlay. Overlay will be attached directly to the root panel");
+            return RootPanel.get().getElement();
+        } else {
+            return getOverlayContainer(ac);
+        }
+    }
+
+    /**
      * Gets the 'overlay container' element pertaining to the given
      * {@link ApplicationConnection}. Each overlay should be created in a
      * overlay container element, so that the correct theme and styles can be
      * applied.
      * 
      * @param ac
-     * @return
+     *            A reference to {@link ApplicationConnection}
+     * @return The overlay container
      */
-    public Element getOverlayContainer() {
-        ApplicationConnection ac = getApplicationConnection();
-        if (ac == null) {
-            // could not figure out which one we belong to, styling might fail
-            return RootPanel.get().getElement();
-        } else {
-            String id = ac.getConfiguration().getRootPanelId();
-            id = id += "-overlays";
-            Element container = DOM.getElementById(id);
-            if (container == null) {
-                container = DOM.createDiv();
-                container.setId(id);
-                String styles = ac.getUIConnector().getWidget().getParent()
-                        .getStyleName();
-                container.setClassName(styles);
-                RootPanel.get().getElement().appendChild(container);
-            }
-            return container;
+    public static Element getOverlayContainer(ApplicationConnection ac) {
+        String id = ac.getConfiguration().getRootPanelId();
+        id = id += "-overlays";
+        Element container = DOM.getElementById(id);
+        if (container == null) {
+            container = DOM.createDiv();
+            container.setId(id);
+            String styles = ac.getUIConnector().getWidget().getParent()
+                    .getStyleName();
+            container.setClassName(styles);
+            RootPanel.get().getElement().appendChild(container);
         }
+        return container;
     }
+
 }
