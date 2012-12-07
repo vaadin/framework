@@ -3,14 +3,6 @@
 @import "components/components.scss";
 @import "compound/compound.scss";
 
-/* Temporarily moved here to make drag'n'drop work before #10384 is fixed */
-.v-drag-element {
-        font-family: $chameleon-font-family;
-        font-size: $chameleon-font-size;
-        line-height: $chameleon-line-height;
-        color: #222;
-}
-
 @mixin chameleon {
 	// TODO move this?
 	@include base;

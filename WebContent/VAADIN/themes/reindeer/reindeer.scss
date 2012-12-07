@@ -32,14 +32,6 @@
 	background: #f5f5f5;
 }
 
-/* Temporarily moved here to make drag'n'drop work before #10384 is fixed */
-.v-drag-element {
-        font-family: Arial, Helvetica, Tahoma, Verdana, sans-serif;
-        font-size: 12px;
-        line-height: normal;
-        color: #222;
-}
-
 @mixin reindeer {
 	// should this be here?
 	@include base;
