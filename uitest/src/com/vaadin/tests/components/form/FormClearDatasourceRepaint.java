@@ -38,6 +38,7 @@ public class FormClearDatasourceRepaint extends TestBase {
     protected void setup() {
 
         final Form form = new Form();
+        form.setFooter(null);
         form.setItemDataSource(new BeanItem<MySecondBean>(new MySecondBean()));
         addComponent(form);
 

@@ -45,6 +45,7 @@ public class BooleanFieldExample extends TestBase {
         layout.setMargin(true);
 
         final Form form = new Form();
+        form.setFooter(null);
         form.setFormFieldFactory(new DefaultFieldFactory() {
             @Override
             public Field createField(Item item, Object propertyId,
