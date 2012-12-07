@@ -88,6 +88,7 @@ public class DateFieldInSubWindow extends AbstractTestCase {
             CustomerFieldFactory fieldFactory = new CustomerFieldFactory();
             final Form generalForm = new Form();
             {
+                generalForm.setFooter(null);
                 generalForm.setCaption("My form");
                 generalForm.setBuffered(false);
                 generalForm.setFormFieldFactory(fieldFactory);

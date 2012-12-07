@@ -55,6 +55,7 @@ public class EmptyFieldErrorIndicators extends TestBase {
         part.setMargin(true);
 
         final Form form = createForm(required, failValidator);
+        form.setFooter(null);
         part.addComponent(form);
 
         Button validate = new Button("Validate fields");

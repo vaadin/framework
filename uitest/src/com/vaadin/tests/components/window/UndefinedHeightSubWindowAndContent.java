@@ -20,6 +20,7 @@ public class UndefinedHeightSubWindowAndContent extends TestBase {
         subWindow.setContent(layout);
 
         final Form form = new Form();
+        form.setFooter(null);
         form.setImmediate(true);
         form.setValidationVisible(true);
         form.setCaption("This is a form");

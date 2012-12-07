@@ -26,6 +26,7 @@ public class FormCommitWithInvalidValues extends TestBase {
     @Override
     protected void setup() {
         form = new Form();
+        form.setFooter(null);
         TextField tf = new TextField("A field, must contain 1-2 chars");
         tf.addValidator(new StringLengthValidator("Invalid length", 1, 2, false));
         tf.setRequired(true);
