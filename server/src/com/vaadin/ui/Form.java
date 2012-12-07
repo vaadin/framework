@@ -187,7 +187,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     public Form(Layout formLayout, FormFieldFactory fieldFactory) {
         super();
         setLayout(formLayout);
-        setFooter(null);
+        setFooter(new HorizontalLayout());
         setFormFieldFactory(fieldFactory);
         setValidationVisible(false);
         setWidth(100, UNITS_PERCENTAGE);
@@ -1228,12 +1228,10 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         if (getFooter() != null) {
             getFooter().setParent(null);
         }
-        if (footer == null) {
-            footer = new HorizontalLayout();
-        }
-
         getState().footer = footer;
-        footer.setParent(this);
+        if (footer != null) {
+            footer.setParent(this);
+        }
     }
 
     @Override
@@ -1332,9 +1330,16 @@ public class Form extends AbstractField<Object> implements Item.Editor,
             }
             i++;
             if (i == 1) {
-                return getLayout() != null ? getLayout() : getFooter();
+                if (getLayout() != null) {
+                    return getLayout();
+                }
+                if (getFooter() != null) {
+                    return getFooter();
+                }
             } else if (i == 2) {
-                return getFooter();
+                if (getFooter() != null) {
+                    return getFooter();
+                }
             }
             return null;
         }
