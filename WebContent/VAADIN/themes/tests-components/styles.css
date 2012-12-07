@@ -54,3 +54,10 @@
 	border-radius: .5em;
 	background: rgba(0,0,0,.02);
 }
+
+.displaynone {
+	height: 0;
+	width: 0;
+	display: none;
+}
+}
