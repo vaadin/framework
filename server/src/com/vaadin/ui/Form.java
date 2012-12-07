@@ -187,7 +187,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
     public Form(Layout formLayout, FormFieldFactory fieldFactory) {
         super();
         setLayout(formLayout);
-        setFooter(null);
+        setFooter(new HorizontalLayout());
         setFormFieldFactory(fieldFactory);
         setValidationVisible(false);
         setWidth(100, UNITS_PERCENTAGE);
@@ -1210,16 +1210,16 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * Returns a layout that is rendered below normal form contents. This area
      * can be used for example to include buttons related to form contents.
      * 
-     * @return layout rendered below normal form contents.
+     * @return layout rendered below normal form contents or null if no footer
+     *         is used
      */
     public Layout getFooter() {
         return (Layout) getState().footer;
     }
 
     /**
-     * Sets the layout that is rendered below normal form contents. Setting this
-     * to null will cause an empty HorizontalLayout to be rendered in the
-     * footer.
+     * Sets the layout that is rendered below normal form contents. No footer is
+     * rendered if this is set to null, .
      * 
      * @param footer
      *            the new footer layout
@@ -1228,12 +1228,10 @@ public class Form extends AbstractField<Object> implements Item.Editor,
         if (getFooter() != null) {
             getFooter().setParent(null);
         }
-        if (footer == null) {
-            footer = new HorizontalLayout();
-        }
-
         getState().footer = footer;
-        footer.setParent(this);
+        if (footer != null) {
+            footer.setParent(this);
+        }
     }
 
     @Override
@@ -1332,9 +1330,16 @@ public class Form extends AbstractField<Object> implements Item.Editor,
             }
             i++;
             if (i == 1) {
-                return getLayout() != null ? getLayout() : getFooter();
+                if (getLayout() != null) {
+                    return getLayout();
+                }
+                if (getFooter() != null) {
+                    return getFooter();
+                }
             } else if (i == 2) {
-                return getFooter();
+                if (getFooter() != null) {
+                    return getFooter();
+                }
             }
             return null;
         }
