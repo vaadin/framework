@@ -60,7 +60,6 @@ public abstract class AbstractNestedFormExample extends TestBase {
                 if (event.getProperty().getValue() != null) {
                     personForm = new NestedPersonForm((Person) event
                             .getProperty().getValue(), embeddedAddress);
-                    personForm.setFooter(null);
                     personForm.setWidth("350px");
                     addComponent(personForm);
                 }
