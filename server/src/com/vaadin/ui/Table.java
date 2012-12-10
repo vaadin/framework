@@ -2070,7 +2070,7 @@ public class Table extends AbstractSelect implements Action.Container,
                     value = generatedRow.getText()[j];
                 }
             } else {
-                // check in current pageBuffer already has row
+                // check if current pageBuffer already has row
                 int index = firstIndex + i;
                 if (p != null || isGenerated) {
                     int indexInOldBuffer = index - pageBufferFirstIndex;
@@ -2395,13 +2395,57 @@ public class Table extends AbstractSelect implements Action.Container,
         refreshRenderedCells();
     }
 
+    /**
+     * Sets the Container that serves as the data source of the viewer. As a
+     * side-effect the table's selection value is set to null as the old
+     * selection might not exist in new Container.<br>
+     * <br>
+     * All rows and columns are generated as visible using this method. If the
+     * new container contains properties that are not meant to be shown you
+     * should use {@link Table#setContainerDataSource(Container, Collection)}
+     * instead, especially if the table is editable.
+     * 
+     * @param newDataSource
+     *            the new data source.
+     */
     @Override
     public void setContainerDataSource(Container newDataSource) {
+        if (newDataSource == null) {
+            newDataSource = new IndexedContainer();
+        }
+        List<Object> visibleIds = new ArrayList<Object>();
+        visibleIds.addAll(newDataSource.getContainerPropertyIds());
+        if (columnGenerators != null) {
+            // these may have same ids and thus create duplicates, but that
+            // problem is dealt with later
+            visibleIds.addAll(columnGenerators.keySet());
+        }
+        setContainerDataSource(newDataSource, visibleIds);
+    }
+
+    /**
+     * Sets the container data source and the columns that will be visible.
+     * Columns are shown in the collection's iteration order.
+     * 
+     * @see Table#setContainerDataSource(Container)
+     * @see Table#setVisibleColumns(Object[])
+     * 
+     * @param newDataSource
+     *            the new data source.
+     * @param visibleIds
+     *            IDs of the visible columns
+     */
+    public void setContainerDataSource(Container newDataSource,
+            Collection<?> visibleIds) {
 
         disableContentRefreshing();
 
         if (newDataSource == null) {
             newDataSource = new IndexedContainer();
+            visibleIds = newDataSource.getContainerPropertyIds();
+        }
+        if (visibleIds == null) {
+            visibleIds = new ArrayList<Object>();
         }
 
         // Assures that the data source is ordered by making unordered
@@ -2424,16 +2468,19 @@ public class Table extends AbstractSelect implements Action.Container,
 
         // columnGenerators 'override' properties, don't add the same id twice
         Collection<Object> col = new LinkedList<Object>();
-        for (Iterator<?> it = getContainerPropertyIds().iterator(); it
-                .hasNext();) {
+        for (Iterator<?> it = visibleIds.iterator(); it.hasNext();) {
             Object id = it.next();
             if (columnGenerators == null || !columnGenerators.containsKey(id)) {
                 col.add(id);
             }
         }
         // generators added last
-        if (columnGenerators != null && columnGenerators.size() > 0) {
-            col.addAll(columnGenerators.keySet());
+        if (columnGenerators != null) {
+            for (Object key : columnGenerators.keySet()) {
+                if (visibleIds.contains(key)) {
+                    col.add(key);
+                }
+            }
         }
 
         setVisibleColumns(col.toArray());
