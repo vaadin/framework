@@ -7163,11 +7163,19 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         navKeyDown = false;
 
         if (BrowserInfo.get().isIE()) {
-            // IE sometimes moves focus to a clicked table cell...
+            /*
+             * IE sometimes moves focus to a clicked table cell... (#7965)
+             * ...and sometimes it sends blur events even though the focus
+             * handler is still active. (#10464)
+             */
             Element focusedElement = Util.getIEFocusedElement();
-            if (Util.getPaintableForElement(client, getParent(), focusedElement) == this) {
-                // ..in that case, steal the focus back to the focus handler
-                // but not if focus is in a child component instead (#7965)
+            if (Util.getPaintableForElement(client, getParent(), focusedElement) == this
+                    && focusedElement != null
+                    && focusedElement != scrollBodyPanel.getFocusElement()) {
+                /*
+                 * Steal focus back to the focus handler if it was moved to some
+                 * other part of the table. Avoid stealing focus in other cases.
+                 */
                 focus();
                 return;
             }

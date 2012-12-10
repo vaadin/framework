@@ -187,4 +187,12 @@ public class FocusableScrollPanel extends SimpleFocusablePanel implements
         });
     }
 
+    public Element getFocusElement() {
+        if (useFakeFocusElement()) {
+            return focusElement.cast();
+        } else {
+            return getElement();
+        }
+    }
+
 }
