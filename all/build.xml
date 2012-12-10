@@ -104,8 +104,10 @@
 	<target name="clean">
 		<antcall target="common.clean" />
 	</target>
-
-	<target name="tests">
+	<target name="checkstyle">
+		<!-- Checkstyle is handled by all separate modules -->
+	</target>
+	<target name="tests" depends="checkstyle">
 		<!-- No tests for this zip.. -->
 	</target>
 

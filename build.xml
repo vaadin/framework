@@ -37,7 +37,9 @@
 		<delete dir="${ivy.cache.dir}/com.carrotsearch" />
 
 	</target>
-
+	<target name="checkstyle" depends="buildorder">
+		<subant buildpathref="build-path" target="checkstyle"/>
+	</target>
 	<target name="tests" depends="buildorder">
 		<property name="war.file" location="result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
 		<parallel>
