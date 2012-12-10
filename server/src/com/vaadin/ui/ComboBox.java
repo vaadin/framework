@@ -792,6 +792,27 @@ public class ComboBox extends AbstractSelect implements
     }
 
     /**
+     * Returns the page length of the suggestion popup.
+     * 
+     * @return the pageLength
+     */
+    public int getPageLength() {
+        return pageLength;
+    }
+
+    /**
+     * Sets the page length for the suggestion popup. Setting the page length to
+     * 0 will disable suggestion popup paging (all items visible).
+     * 
+     * @param pageLength
+     *            the pageLength to set
+     */
+    public void setPageLength(int pageLength) {
+        this.pageLength = pageLength;
+        markAsDirty();
+    }
+
+    /**
      * Sets whether to scroll the selected item visible (directly open the page
      * on which it is) when opening the combo box popup or not. Only applies to
      * single select mode.
