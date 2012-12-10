@@ -43,7 +43,13 @@
 		<antcall target="common.clean" />
 	</target>
 
-	<target name="tests">
+	<target name="checkstyle">
+		<antcall target="common.checkstyle">
+			<param name="cs.src" location="src" />
+		</antcall>
+	</target>
+
+	<target name="tests" depends="checkstyle">
 		<antcall target="common.tests.run" />
 	</target>
 

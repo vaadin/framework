@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="vaadin-client-compiler" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="vaadin-themes" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant">
 	<description>
 		Themes compiled to CSS 
 	</description>
@@ -96,7 +96,10 @@
 		<antcall target="common.clean" />
 	</target>
 
-	<target name="tests">
+	<target name="checkstyle">
+		<echo>No java files in module</echo>
+	</target>
+	<target name="tests" depends="checkstyle">
 		<!--<antcall target="common.tests.run" />-->
 		<echo>WHAT? No tests for ${module.name}!</echo>
 	</target>
