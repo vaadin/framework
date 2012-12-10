@@ -32,7 +32,7 @@
         <dependency org="args4j" name="args4j" rev="2.0.9" force="true" conf="compile->compile(*),master(*);runtime->runtime(*)"/>
         <dependency org="commons-math" name="commons-math" rev="1.1" force="true" conf="compile->compile(*),master(*);runtime->runtime(*)"/>
         <dependency org="commons-io" name="commons-io" rev="1.4" force="true" conf="compile->compile(*),master(*);runtime->runtime(*)"/>
-        <dependency org="commons-lang" name="commons-lang" rev="2.3" force="true" conf="compile->compile(*),master(*);runtime->runtime(*)"/>
+        <dependency org="commons-lang" name="commons-lang" rev="2.6" force="true" conf="compile->compile(*),master(*);runtime->runtime(*)"/>
         <dependency org="junit" name="junit" rev="4.4" force="true" conf="test->runtime(*),master(*)"/>
     </dependencies>
 </ivy-module>
