@@ -138,7 +138,20 @@ public class JsonEncoder {
         Object value = uidlValue.getValue();
 
         JSONArray jsonArray = new JSONArray();
-        jsonArray.set(0, new JSONString(getTransportType(value)));
+        String transportType = getTransportType(value);
+        if (transportType == null) {
+            /*
+             * This should not happen unless you try to send an unsupported type
+             * in a legacy variable change from the client to the server.
+             */
+            String valueType = null;
+            if (value != null) {
+                valueType = value.getClass().getName();
+            }
+            throw new IllegalArgumentException("Cannot encode object of type "
+                    + valueType);
+        }
+        jsonArray.set(0, new JSONString(transportType));
         jsonArray.set(1, encode(value, true, connection));
 
         return jsonArray;
