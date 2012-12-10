@@ -47,8 +47,13 @@
 	<target name="clean">
 		<antcall target="common.clean" />
 	</target>
+	
+	<target name="checkstyle">
+		<property name="cs.src" location="src"/>
+		<antcall target="common.checkstyle"/>
+	</target>
 
-	<target name="tests">
+	<target name="tests" depends="checkstyle">
 		<!--<antcall target="common.tests.run" />-->
 		<echo>WHAT? No tests for ${module.name}!</echo>
 	</target>
