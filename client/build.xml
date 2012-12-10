@@ -60,6 +60,11 @@
 	<target name="clean">
 		<antcall target="common.clean" />
 	</target>
+	
+	<target name="checkstyle">
+		<property name="cs.src" location="src"/>
+		<antcall target="common.checkstyle"/>
+	</target>
 
 	<target name="tests">
 		<antcall target="common.tests.run" />
