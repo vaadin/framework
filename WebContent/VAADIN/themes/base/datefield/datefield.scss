@@ -8,6 +8,10 @@
 .#{$primaryStyleName}-textfield {
 	vertical-align: top;
 }
+.#{$primaryStyleName}-button:after {
+	content: "\200B";
+}
+
 .#{$primaryStyleName}-button {
 	cursor: pointer;
 }
