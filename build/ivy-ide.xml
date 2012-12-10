@@ -3,8 +3,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
 
-    <info organisation="com.vaadin" module="vaadin-client"
-        revision="${vaadin.version}" />
+    <info organisation="com.vaadin" module="vaadin-ide"
+        revision="0.0.1.ide" />
 
     <configurations>
         <conf name="default" />
