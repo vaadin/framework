@@ -260,6 +260,8 @@ public class ApplicationConnection {
     /** Event bus for communication events */
     private EventBus eventBus = GWT.create(SimpleEventBus.class);
 
+    private int lastResponseId = 0;
+
     /**
      * The communication handler methods are called at certain points during
      * communication with the server. This allows for making add-ons that keep
@@ -1270,6 +1272,21 @@ public class ApplicationConnection {
         handleUIDLMessage(start, jsonText, json);
     }
 
+    /**
+     * Gets the id of the last received response. This id can be used by
+     * connectors to determine whether new data has been received from the
+     * server to avoid doing the same calculations multiple times.
+     * <p>
+     * No guarantees are made for the structure of the id other than that there
+     * will be a new unique value every time a new response with data from the
+     * server is received.
+     * 
+     * @return and id identifying the response
+     */
+    public int getLastResponseId() {
+        return lastResponseId;
+    }
+
     protected void handleUIDLMessage(final Date start, final String jsonText,
             final ValueMap json) {
         if (!responseHandlingLocks.isEmpty()) {
@@ -1293,6 +1310,8 @@ public class ApplicationConnection {
             redirect(url);
             return;
         }
+
+        lastResponseId++;
 
         final MultiStepDuration handleUIDLDuration = new MultiStepDuration();
 
