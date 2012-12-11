@@ -38,7 +38,7 @@ public class AddressField extends CustomField<Address> {
 
         // make sure field changes are sent early
         addressForm.setImmediate(true);
-
+        addressForm.setFooter(null);
         return addressForm;
     }
 
