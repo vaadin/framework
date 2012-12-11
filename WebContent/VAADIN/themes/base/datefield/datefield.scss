@@ -8,7 +8,7 @@
 .#{$primaryStyleName}-textfield {
 	vertical-align: top;
 }
-.#{$primaryStyleName}-button:after {
+.v-ie & .#{$primaryStyleName}-button:after {
 	content: "\200B";
 }
 
