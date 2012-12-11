@@ -29,10 +29,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.VCssLayout;
 import com.vaadin.client.ui.VGridLayout;
-import com.vaadin.client.ui.VOrderedLayout;
 import com.vaadin.client.ui.VTabsheetPanel;
 import com.vaadin.client.ui.VUI;
 import com.vaadin.client.ui.VWindow;
+import com.vaadin.client.ui.orderedlayout.VAbstractOrderedLayout;
 import com.vaadin.client.ui.window.WindowConnector;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.Connector;
@@ -315,7 +315,7 @@ public class ComponentLocator {
                 String childIndexString = part.substring("domChild[".length(),
                         part.length() - 1);
 
-                if (Util.findWidget(baseElement, null) instanceof VOrderedLayout) {
+                if (Util.findWidget(baseElement, null) instanceof VAbstractOrderedLayout) {
                     if (element.hasChildNodes()) {
                         Element e = element.getFirstChildElement().cast();
                         String cn = e.getClassName();
@@ -563,10 +563,10 @@ public class ComponentLocator {
                 }
 
                 // ChildComponentContainer has been removed and replaced with
-                // VOrderLayout.Slot's
-                if (w instanceof VOrderedLayout
+                // Slot
+                if (w instanceof VAbstractOrderedLayout
                         && "ChildComponentContainer".equals(widgetClassName)) {
-                    widgetClassName = "VOrderedLayout$Slot";
+                    widgetClassName = "Slot";
                 }
 
                 if (w instanceof VTabsheetPanel && widgetPosition != 0) {
@@ -662,8 +662,8 @@ public class ComponentLocator {
                         }
                         widgetPosition--;
 
-                    } else if (w instanceof VOrderedLayout
-                            && "VOrderedLayout$Slot".equals(simpleName2)) {
+                    } else if (w instanceof VAbstractOrderedLayout
+                            && "Slot".equals(simpleName2)) {
                         child = ((SimplePanel) child).getWidget();
                         simpleName2 = Util.getSimpleName(child);
                         if (widgetClassName.equals(simpleName2)) {

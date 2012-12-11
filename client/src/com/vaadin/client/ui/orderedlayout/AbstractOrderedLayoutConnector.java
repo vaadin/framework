@@ -29,9 +29,6 @@ import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.AbstractLayoutConnector;
 import com.vaadin.client.ui.LayoutClickEventHandler;
-import com.vaadin.client.ui.VOrderedLayout;
-import com.vaadin.client.ui.VOrderedLayout.CaptionPosition;
-import com.vaadin.client.ui.VOrderedLayout.Slot;
 import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.AbstractFieldState;
@@ -199,8 +196,8 @@ public abstract class AbstractOrderedLayoutConnector extends
      * @see com.vaadin.client.ui.AbstractComponentConnector#getWidget()
      */
     @Override
-    public VOrderedLayout getWidget() {
-        return (VOrderedLayout) super.getWidget();
+    public VAbstractOrderedLayout getWidget() {
+        return (VAbstractOrderedLayout) super.getWidget();
     }
 
     /**
@@ -300,7 +297,7 @@ public abstract class AbstractOrderedLayoutConnector extends
 
         List<ComponentConnector> previousChildren = event.getOldChildren();
         int currentIndex = 0;
-        VOrderedLayout layout = getWidget();
+        VAbstractOrderedLayout layout = getWidget();
 
         layout.setSpacing(getState().spacing);
 
