@@ -413,7 +413,12 @@ public class VOrderedLayout extends FlowPanel {
         }
 
         /**
-         * Set how the slot should be expanded relative to the other slots
+         * Set how the slot should be expanded relative to the other slots. 0
+         * means that the slot should not participate in the normal division of
+         * space based on the expand ratios but instead be allocated space based
+         * on its natural size. Other values causes the slot to get a share of
+         * the otherwise unallocated space in proportion to the slot's expand
+         * ratio value.
          * 
          * @param expandRatio
          *            The ratio of the space the slot should occupy
@@ -427,7 +432,9 @@ public class VOrderedLayout extends FlowPanel {
          * Get the expand ratio for the slot. The expand ratio describes how the
          * slot should be resized compared to other slots in the layout
          * 
-         * @return
+         * @return the expand ratio of the slot
+         * 
+         * @see #setExpandRatio(double)
          */
         public double getExpandRatio() {
             return expandRatio;
@@ -980,7 +987,7 @@ public class VOrderedLayout extends FlowPanel {
     private void recalculateExpands() {
         double total = 0;
         for (Slot slot : widgetToSlot.values()) {
-            if (slot.getExpandRatio() > -1) {
+            if (slot.getExpandRatio() != 0) {
                 total += slot.getExpandRatio();
             } else {
                 if (vertical) {
@@ -991,7 +998,7 @@ public class VOrderedLayout extends FlowPanel {
             }
         }
         for (Slot slot : widgetToSlot.values()) {
-            if (slot.getExpandRatio() > -1) {
+            if (slot.getExpandRatio() != 0) {
                 if (vertical) {
                     slot.setHeight((100 * (slot.getExpandRatio() / total))
                             + "%");
@@ -1037,7 +1044,7 @@ public class VOrderedLayout extends FlowPanel {
     public void updateExpand() {
         boolean isExpanding = false;
         for (Widget slot : getChildren()) {
-            if (((Slot) slot).getExpandRatio() > -1) {
+            if (((Slot) slot).getExpandRatio() != 0) {
                 isExpanding = true;
             } else {
                 if (vertical) {
@@ -1064,7 +1071,7 @@ public class VOrderedLayout extends FlowPanel {
             int totalSize = 0;
             for (Widget w : getChildren()) {
                 Slot slot = (Slot) w;
-                if (slot.getExpandRatio() == -1) {
+                if (slot.getExpandRatio() == 0) {
 
                     if (layoutManager != null) {
                         // TODO check caption position

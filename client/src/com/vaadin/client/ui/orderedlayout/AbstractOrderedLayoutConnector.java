@@ -215,11 +215,7 @@ public abstract class AbstractOrderedLayoutConnector extends
      */
     private HashSet<ComponentConnector> hasRelativeHeight = new HashSet<ComponentConnector>();
 
-    /**
-     * For bookkeeping. Used to determine if extra calculations are needed for
-     * horizontal layout.
-     */
-    private HashSet<ComponentConnector> hasExpandRatio = new HashSet<ComponentConnector>();
+    private boolean needsExpand = false;
 
     /**
      * For bookkeeping. Used in extra calculations for horizontal layout.
@@ -234,8 +230,7 @@ public abstract class AbstractOrderedLayoutConnector extends
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.client.HasComponentsConnector#updateCaption(com.vaadin
+     * @see com.vaadin.client.HasComponentsConnector#updateCaption(com.vaadin
      * .client.ComponentConnector)
      */
     @Override
@@ -317,7 +312,6 @@ public abstract class AbstractOrderedLayoutConnector extends
                 Slot slot = layout.getSlot(child.getWidget());
                 hasVerticalAlignment.remove(child);
                 hasRelativeHeight.remove(child);
-                hasExpandRatio.remove(child);
                 needsMeasure.remove(child.getWidget().getElement());
                 childCaptionElementHeight
                         .remove(child.getWidget().getElement());
@@ -333,13 +327,14 @@ public abstract class AbstractOrderedLayoutConnector extends
             }
         }
 
-        // If some component is added/removed, we need to recalculate the expand
-        if (needsExpand()) {
-            getWidget().updateExpand();
-        } else {
-            getWidget().clearExpand();
-        }
-
+        /*
+         * For hierarchy changes that only affect the order of children, no
+         * changes related to expands are needed. For other changes, there will
+         * always be a state change in a moment because the child data map has
+         * changed.
+         * 
+         * This means that nothing need to be updated here.
+         */
     }
 
     /*
@@ -357,18 +352,23 @@ public abstract class AbstractOrderedLayoutConnector extends
         getWidget().setMargin(new MarginInfo(getState().marginsBitmask));
         getWidget().setSpacing(getState().spacing);
 
-        hasExpandRatio.clear();
         hasVerticalAlignment.clear();
         hasRelativeHeight.clear();
         needsMeasure.clear();
 
-        boolean equalExpandRatio = getWidget().vertical ? !isUndefinedHeight()
+        boolean previousNeedExpand = needsExpand;
+        needsExpand = getWidget().vertical ? !isUndefinedHeight()
                 : !isUndefinedWidth();
-        for (ComponentConnector child : getChildComponents()) {
-            double expandRatio = getState().childData.get(child).expandRatio;
-            if (expandRatio > 0) {
-                equalExpandRatio = false;
-                break;
+        boolean expandChanged = previousNeedExpand != needsExpand;
+
+        boolean onlyZeroExpands = true;
+        if (needsExpand) {
+            for (ComponentConnector child : getChildComponents()) {
+                double expandRatio = getState().childData.get(child).expandRatio;
+                if (expandRatio != 0) {
+                    onlyZeroExpands = false;
+                    break;
+                }
             }
         }
 
@@ -379,13 +379,11 @@ public abstract class AbstractOrderedLayoutConnector extends
                     getState().childData.get(child).alignmentBitmask);
             slot.setAlignment(alignment);
 
-            double expandRatio = getState().childData.get(child).expandRatio;
+            double expandRatio = onlyZeroExpands ? 1 : getState().childData
+                    .get(child).expandRatio;
 
-            if (equalExpandRatio) {
-                expandRatio = 1;
-            } else if (expandRatio == 0) {
-                expandRatio = -1;
-            }
+            expandChanged |= slot.getExpandRatio() != expandRatio;
+
             slot.setExpandRatio(expandRatio);
 
             // Bookkeeping to identify special cases that need extra
@@ -393,15 +391,19 @@ public abstract class AbstractOrderedLayoutConnector extends
             if (alignment.isVerticalCenter() || alignment.isBottom()) {
                 hasVerticalAlignment.add(child);
             }
-
-            if (expandRatio > 0) {
-                hasExpandRatio.add(child);
-            }
         }
 
         updateAllSlotListeners();
 
         updateLayoutHeight();
+
+        if (expandChanged) {
+            if (needsExpand()) {
+                getWidget().updateExpand();
+            } else {
+                getWidget().clearExpand();
+            }
+        }
     }
 
     /**
@@ -442,9 +444,7 @@ public abstract class AbstractOrderedLayoutConnector extends
      * Does the layout need to expand?
      */
     private boolean needsExpand() {
-        boolean canApplyExpand = (getWidget().vertical && !isUndefinedHeight())
-                || (!getWidget().vertical && !isUndefinedWidth());
-        return hasExpandRatio.size() > 0 && canApplyExpand;
+        return needsExpand;
     }
 
     /**
@@ -487,6 +487,8 @@ public abstract class AbstractOrderedLayoutConnector extends
         }
 
         if (needsExpand()) {
+            // TODO widget resize should only be needed for children with zero
+            // expand ratio?
             slot.setWidgetResizeListener(childComponentResizeListener);
             if (slot.hasSpacing()) {
                 slot.setSpacingResizeListener(spacingResizeListener);
