@@ -445,10 +445,19 @@ public class ApplicationConfiguration implements EntryPoint {
 
     public void onModuleLoad() {
 
+        BrowserInfo browserInfo = BrowserInfo.get();
+
         // Enable IE6 Background image caching
-        if (BrowserInfo.get().isIE6()) {
+        if (browserInfo.isIE6()) {
             enableIE6BackgroundImageCache();
         }
+
+        // Enable iOS6 cast fix (see #10460)
+        if (browserInfo.isIOS() && browserInfo.isSafari()
+                && browserInfo.getBrowserMajorVersion() == 6) {
+            enableIOS6castFix();
+        }
+
         // Prepare VConsole for debugging
         if (isDebugMode()) {
             Console console = GWT.create(Console.class);
@@ -477,6 +486,18 @@ public class ApplicationConfiguration implements EntryPoint {
         initConfigurations();
         startNextApplication();
     }
+
+    /**
+     * Fix to iOS6 failing when comparing with 0 directly after the kind of
+     * comparison done by GWT when a double or float is cast to an int. Forcing
+     * another trivial operation (other than a compare to 0) after the dangerous
+     * comparison makes the issue go away. See #10460.
+     */
+    private static native void enableIOS6castFix()
+    /*-{
+          Math.max = function(a,b) {return (a > b === 1 < 2)? a : b}
+          Math.min = function(a,b) {return (a < b === 1 < 2)? a : b}
+    }-*/;
 
     // From ImageSrcIE6
     private static native void enableIE6BackgroundImageCache()
