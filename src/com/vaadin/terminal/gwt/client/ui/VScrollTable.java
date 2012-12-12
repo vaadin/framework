@@ -1245,13 +1245,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     }
 
     protected int measureRowHeightOffset(int rowIx) {
-        /*
-         * Do an explicit floor operation here instead of just casting down to
-         * int because of an issue where iOS6 might return an object that
-         * evaluates to a positive number but still gets caught by a "value < 0"
-         * check in e.g. fixSpacers(). See #10317 and #10460.
-         */
-        return (int) Math.floor(rowIx * scrollBody.getRowHeight());
+        return (int) (rowIx * scrollBody.getRowHeight());
     }
 
     private void updatePageLength(UIDL uidl) {
