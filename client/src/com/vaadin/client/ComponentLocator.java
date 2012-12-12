@@ -663,7 +663,9 @@ public class ComponentLocator {
                         widgetPosition--;
 
                     } else if (w instanceof VAbstractOrderedLayout
-                            && "Slot".equals(simpleName2)) {
+                            && "VOrderedLayout$Slot".equals(simpleName2)) {
+                        // Support legacy tests with "VOrderedLayout$Slot" in
+                        // the selector
                         child = ((SimplePanel) child).getWidget();
                         simpleName2 = Util.getSimpleName(child);
                         if (widgetClassName.equals(simpleName2)) {
