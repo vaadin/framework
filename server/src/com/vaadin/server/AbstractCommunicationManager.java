@@ -2418,11 +2418,11 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     reinitUI(retainedUI, request);
                     return retainedUI;
                 } else {
-                    getLogger()
-                            .info("Not using retained UI in " + windowName
+                    getLogger().info(
+                            "Not using retained UI in " + windowName
                                     + " because retained UI was of type "
-                                    + retainedUIId.getClass() + " but "
-                                    + uiClass + " is expected for the request.");
+                                    + retainedUI.getClass() + " but " + uiClass
+                                    + " is expected for the request.");
                 }
             }
         }
