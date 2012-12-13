@@ -94,6 +94,56 @@ public class ReflectTools {
     }
 
     /**
+     * Returns the value of the java field that is assignable to the property
+     * type.
+     * <p>
+     * Uses getter if a getter for the correct return type is present, otherwise
+     * tries to access even private fields directly. If the java field is not
+     * assignable to the property type throws an IllegalArgumentException.
+     * 
+     * @param object
+     *            The object containing the field
+     * @param field
+     *            The field we want to get the value for
+     * @param propertyType
+     *            The type the field must be assignable to
+     * @return The value of the field in the object
+     * @throws InvocationTargetException
+     *             If the value could not be retrieved
+     * @throws IllegalAccessException
+     *             If the value could not be retrieved
+     * @throws IllegalArgumentException
+     *             If the value could not be retrieved
+     */
+    public static Object getJavaFieldValue(Object object,
+            java.lang.reflect.Field field, Class<?> propertyType)
+            throws IllegalArgumentException, IllegalAccessException,
+            InvocationTargetException {
+        PropertyDescriptor pd;
+        try {
+            pd = new PropertyDescriptor(field.getName(), object.getClass());
+            if (propertyType.isAssignableFrom(pd.getPropertyType())) {
+                Method getter = pd.getReadMethod();
+                if (getter != null) {
+                    return getter.invoke(object, (Object[]) null);
+                }
+            }
+        } catch (IntrospectionException e1) {
+            // Ignore this and try to get directly using the field
+        }
+        // If the field's type cannot be casted in to the requested type
+        if (!propertyType.isAssignableFrom(field.getType())) {
+            throw new IllegalArgumentException();
+        }
+        // Try to get the value or throw an exception
+        if (!field.isAccessible()) {
+            // Try to gain access even if field is private
+            field.setAccessible(true);
+        }
+        return field.get(object);
+    }
+
+    /**
      * Sets the value of a java field.
      * <p>
      * Uses setter if present, otherwise tries to access even private fields

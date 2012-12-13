@@ -830,7 +830,7 @@ public class FieldGroup implements Serializable {
             try {
                 // Get the field from the object
                 field = (Field<?>) ReflectTools.getJavaFieldValue(
-                        objectWithMemberFields, memberField);
+                        objectWithMemberFields, memberField, Field.class);
             } catch (Exception e) {
                 // If we cannot determine the value, just skip the field and try
                 // the next one
