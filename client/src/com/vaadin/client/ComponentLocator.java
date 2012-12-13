@@ -31,6 +31,7 @@ import com.vaadin.client.ui.VGridLayout;
 import com.vaadin.client.ui.VTabsheetPanel;
 import com.vaadin.client.ui.VUI;
 import com.vaadin.client.ui.VWindow;
+import com.vaadin.client.ui.orderedlayout.Slot;
 import com.vaadin.client.ui.orderedlayout.VAbstractOrderedLayout;
 import com.vaadin.client.ui.window.WindowConnector;
 import com.vaadin.shared.AbstractComponentState;
@@ -653,6 +654,17 @@ public class ComponentLocator {
 
                     Widget child = iterator.next();
                     String simpleName2 = Util.getSimpleName(child);
+
+                    if (!widgetClassName.equals(simpleName2)
+                            && child instanceof Slot) {
+                        /*
+                         * Support legacy tests without any selector for the
+                         * Slot widget (i.e. /VVerticalLayout[0]/VButton[0]) by
+                         * directly checking the stuff inside the slot
+                         */
+                        child = ((Slot) child).getWidget();
+                        simpleName2 = Util.getSimpleName(child);
+                    }
 
                     if (widgetClassName.equals(simpleName2)) {
                         if (widgetPosition == 0) {
