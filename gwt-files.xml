@@ -105,6 +105,9 @@
 			<exclude name="com/google/gwt/*/shared/**" />
 			<exclude name="com/google/gwt/*/*/shared/**" />
 			<exclude name="com/google/web/bindery/*/shared/**" />
+			
+			<!-- Used by the server, in wrong package in GWT -->
+			<exclude name="com/google/gwt/user/client/rpc/IsSerializable.*" />
 
 			<!-- These are in vaadin-shared-deps -->
 			<exclude name="com/google/gwt/thirdparty/streamhtmlparser/**" />
@@ -126,6 +129,8 @@
 			<include name="com/google/gwt/*/shared/**" />
 			<include name="com/google/gwt/*/*/shared/**" />
 			<include name="com/google/web/bindery/*/shared/**" />
+			<include name="com/google/gwt/user/client/rpc/IsSerializable.*" />
+
 		</fileset>
 	</union>
 
