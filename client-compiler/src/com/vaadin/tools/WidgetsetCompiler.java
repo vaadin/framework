@@ -15,33 +15,31 @@
  */
 package com.vaadin.tools;
 
-import java.lang.reflect.Method;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.server.widgetsetutils.WidgetSetBuilder;
 
 /**
- * A wrapper for the GWT 1.6 compiler that runs the compiler in a new thread.
+ * A wrapper for the GWT compiler that runs the compiler in a new thread after
+ * updating the widgetset file.
  * 
- * This allows circumventing a J2SE 5.0 bug (6316197) that prevents setting the
- * stack size for the main thread. Thus, larger widgetsets can be compiled.
+ * This class originally existed to allow circumventing a J2SE 5.0 bug (6316197)
+ * that prevents setting the stack size for the main thread.
  * 
  * This class takes the same command line arguments as the
- * com.google.gwt.dev.GWTCompiler class. The old and deprecated compiler is used
- * for compatibility with GWT 1.5.
+ * com.google.gwt.dev.Compiler class.
  * 
  * A typical invocation would use e.g. the following arguments
  * 
- * "-out WebContent/VAADIN/widgetsets com.vaadin.DefaultWidgetSet"
+ * "-war WebContent/VAADIN/widgetsets com.vaadin.DefaultWidgetSet"
  * 
  * In addition, larger memory usage settings for the VM should be used, e.g.
  * 
  * "-Xms256M -Xmx512M -Xss8M"
  * 
  * The source directory containing widgetset and related classes must be
- * included in the classpath, as well as the gwt-dev-[platform].jar and other
- * relevant JARs.
+ * included in the classpath, as well as other relevant JARs.
  * 
  * @deprecated with Java 6, can use com.google.gwt.dev.Compiler directly (also
  *             in Eclipse plug-in etc.)
@@ -79,14 +77,7 @@ public class WidgetsetCompiler {
                         System.out.println("Done.");
 
                         System.out.println("Starting GWT compiler");
-                        System.setProperty("gwt.nowarn.legacy.tools", "true");
-                        System.setProperty("gwt.forceVersionCheckURL",
-                                "http://tools.vaadin.com/version/currentversion.xml");
-                        Class<?> compilerClass = Class
-                                .forName("com.google.gwt.dev.GWTCompiler");
-                        Method method = compilerClass.getDeclaredMethod("main",
-                                String[].class);
-                        method.invoke(null, new Object[] { args });
+                        com.google.gwt.dev.Compiler.main(args);
                     } catch (Throwable thr) {
                         getLogger().log(Level.SEVERE,
                                 "Widgetset compilation failed", thr);
