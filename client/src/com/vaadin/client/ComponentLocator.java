@@ -24,7 +24,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.VCssLayout;
@@ -562,10 +561,11 @@ public class ComponentLocator {
                     continue;
                 }
 
-                // ChildComponentContainer has been removed and replaced with
-                // Slot
+                // ChildComponentContainer and VOrderedLayout$Slot have been
+                // replaced with Slot
                 if (w instanceof VAbstractOrderedLayout
-                        && "ChildComponentContainer".equals(widgetClassName)) {
+                        && ("ChildComponentContainer".equals(widgetClassName) || "VOrderedLayout$Slot"
+                                .equals(widgetClassName))) {
                     widgetClassName = "Slot";
                 }
 
@@ -662,18 +662,6 @@ public class ComponentLocator {
                         }
                         widgetPosition--;
 
-                    } else if (w instanceof VAbstractOrderedLayout
-                            && "Slot".equals(simpleName2)) {
-                        child = ((SimplePanel) child).getWidget();
-                        simpleName2 = Util.getSimpleName(child);
-                        if (widgetClassName.equals(simpleName2)) {
-                            if (widgetPosition == 0) {
-                                w = child;
-                                ok = true;
-                                break;
-                            }
-                            widgetPosition--;
-                        }
                     }
                 }
 
