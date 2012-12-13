@@ -794,8 +794,7 @@ public class FieldGroup implements Serializable {
             boolean buildFields) throws BindException {
         Class<?> objectClass = objectWithMemberFields.getClass();
 
-        for (java.lang.reflect.Field memberField : objectClass
-                .getDeclaredFields()) {
+        for (java.lang.reflect.Field memberField : getFieldsInDeclareOrder(objectClass)) {
 
             if (!Field.class.isAssignableFrom(memberField.getType())) {
                 // Process next field
@@ -1000,5 +999,28 @@ public class FieldGroup implements Serializable {
 
         field.setCaption(caption);
         return field;
+    }
+
+    /**
+     * Returns an array containing Field objects reflecting all the fields of
+     * the class or interface represented by this Class object. The elements in
+     * the array returned are sorted in declare order from sub class to super
+     * class.
+     * 
+     * @param searchClass
+     * @return
+     */
+    protected static List<java.lang.reflect.Field> getFieldsInDeclareOrder(
+            Class searchClass) {
+        ArrayList<java.lang.reflect.Field> memberFieldInOrder = new ArrayList<java.lang.reflect.Field>();
+
+        while (searchClass != null) {
+            for (java.lang.reflect.Field memberField : searchClass
+                    .getDeclaredFields()) {
+                memberFieldInOrder.add(memberField);
+            }
+            searchClass = searchClass.getSuperclass();
+        }
+        return memberFieldInOrder;
     }
 }
