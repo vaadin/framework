@@ -176,7 +176,7 @@ public class JsonEncoder {
             throw new IllegalStateException(
                     "Only string keys supported for legacy maps");
         } else if (firstKey instanceof Connector) {
-            return encodeConenctorMap(map, connection);
+            return encodeConnectorMap(map, connection);
         } else {
             return encodeObjectMap(map, connection);
         }
@@ -200,7 +200,7 @@ public class JsonEncoder {
         return keysAndValues;
     }
 
-    private static JSONValue encodeConenctorMap(Map<Object, Object> map,
+    private static JSONValue encodeConnectorMap(Map<Object, Object> map,
             ApplicationConnection connection) {
         JSONObject jsonMap = new JSONObject();
 
