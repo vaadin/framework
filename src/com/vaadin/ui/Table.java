@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -426,6 +427,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * longer present.
      */
     private boolean keyMapperReset;
+
+    private List<Throwable> exceptionsDuringCachePopulation = new ArrayList<Throwable>();
 
     /* Table constructors */
 
@@ -1544,6 +1547,55 @@ public class Table extends AbstractSelect implements Action.Container,
 
         setRowCacheInvalidated(true);
         requestRepaint();
+        maybeThrowCacheUpdateExceptions();
+
+    }
+
+    private void maybeThrowCacheUpdateExceptions() {
+        if (!exceptionsDuringCachePopulation.isEmpty()) {
+            Throwable[] causes = new Throwable[exceptionsDuringCachePopulation
+                    .size()];
+            exceptionsDuringCachePopulation.toArray(causes);
+
+            exceptionsDuringCachePopulation.clear();
+            throw new CacheUpdateException(this,
+                    "Error during Table cache update", causes);
+        }
+
+    }
+
+    /**
+     * Exception thrown when one or more exceptions occurred during updating of
+     * the Table cache.
+     * <p>
+     * Contains all exceptions which occurred during the cache update.
+     * </p>
+     * 
+     */
+    public static class CacheUpdateException extends RuntimeException {
+        private Throwable[] causes;
+        private Table table;
+
+        public CacheUpdateException(Table table, String message,
+                Throwable[] causes) {
+            super(message);
+            this.table = table;
+            this.causes = causes;
+        }
+
+        /**
+         * Returns the cause(s) for this exception
+         * 
+         * @return the exception(s) which caused this exception
+         */
+        public Throwable[] getCauses() {
+            return causes;
+        }
+
+        public Table getTable() {
+            return table;
+        }
+
     }
 
     private void setPageBuffer(Object[][] pageBuffer) {
@@ -1961,9 +2013,20 @@ public class Table extends AbstractSelect implements Action.Container,
                     cells[CELL_HEADER][i] = String.valueOf(i + firstIndex + 1);
                     break;
                 default:
-                    cells[CELL_HEADER][i] = getItemCaption(id);
+                    try {
+                        cells[CELL_HEADER][i] = getItemCaption(id);
+                    } catch (Exception e) {
+                        exceptionsDuringCachePopulation.add(e);
+                        cells[CELL_HEADER][i] = "";
+                    }
+
                 }
-                cells[CELL_ICON][i] = getItemIcon(id);
+                try {
+                    cells[CELL_ICON][i] = getItemIcon(id);
+                } catch (Exception e) {
+                    exceptionsDuringCachePopulation.add(e);
+                    cells[CELL_ICON][i] = null;
+                }
             }
 
             GeneratedRow generatedRow = rowGenerator != null ? rowGenerator
@@ -1982,7 +2045,13 @@ public class Table extends AbstractSelect implements Action.Container,
                 boolean isGenerated = isGeneratedRow || isGeneratedColumn;
 
                 if (!isGenerated) {
-                    p = getContainerProperty(id, colids[j]);
+                    try {
+                        p = getContainerProperty(id, colids[j]);
+                    } catch (Exception e) {
+                        exceptionsDuringCachePopulation.add(e);
+                        value = null;
+                    }
+
                 }
 
                 if (isGeneratedRow) {
@@ -2015,7 +2084,14 @@ public class Table extends AbstractSelect implements Action.Container,
                             if (isGeneratedColumn) {
                                 ColumnGenerator cg = columnGenerators
                                         .get(colids[j]);
-                                value = cg.generateCell(this, id, colids[j]);
+                                try {
+                                    value = cg
+                                            .generateCell(this, id, colids[j]);
+                                } catch (Exception e) {
+                                    exceptionsDuringCachePopulation.add(e);
+                                    value = null;
+                                }
+
                                 if (value != null
                                         && !(value instanceof Component)
                                         && !(value instanceof String)) {
@@ -2025,10 +2101,22 @@ public class Table extends AbstractSelect implements Action.Container,
                                     value = value.toString();
                                 }
                             } else if (iscomponent[j]) {
-                                value = p.getValue();
+                                try {
+                                    value = p.getValue();
+                                } catch (Exception e) {
+                                    exceptionsDuringCachePopulation.add(e);
+                                    value = null;
+                                }
+
                                 listenProperty(p, oldListenedProperties);
                             } else if (p != null) {
-                                value = getPropertyValue(id, colids[j], p);
+                                try {
+                                    value = getPropertyValue(id, colids[j], p);
+                                } catch (Exception e) {
+                                    exceptionsDuringCachePopulation.add(e);
+                                    value = null;
+                                }
+
                                 /*
                                  * If returned value is Component (via
                                  * fieldfactory or overridden getPropertyValue)
@@ -2041,7 +2129,13 @@ public class Table extends AbstractSelect implements Action.Container,
                                     listenProperty(p, oldListenedProperties);
                                 }
                             } else {
-                                value = getPropertyValue(id, colids[j], null);
+                                try {
+                                    value = getPropertyValue(id, colids[j],
+                                            null);
+                                } catch (Exception e) {
+                                    exceptionsDuringCachePopulation.add(e);
+                                    value = null;
+                                }
                             }
                         }
                     }
@@ -2954,6 +3048,8 @@ public class Table extends AbstractSelect implements Action.Container,
                     indexInRowbuffer, itemId);
         }
         target.endTag("urows");
+        maybeThrowCacheUpdateExceptions();
+
     }
 
     private void paintPartialRowAdditions(PaintTarget target,
@@ -3001,6 +3097,7 @@ public class Table extends AbstractSelect implements Action.Container,
         target.addAttribute("firstprowix", firstIx);
         target.addAttribute("numprows", count);
         target.endTag("prows");
+        maybeThrowCacheUpdateExceptions();
     }
 
     /**
