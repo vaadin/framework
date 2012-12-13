@@ -33,8 +33,8 @@
 		</subant>
 		<delete dir="result" />
 		<!-- Clean IVY cache (~/.ivy2) so no old artifacts are fetched from there (leave everything but Vaadin artifacts) -->
-		<delete dir="${ivy.cache.dir}/com.vaadin">
-		</delete>
+		<delete dir="${ivy.cache.dir}/com.vaadin" />
+		<delete dir="${ivy.cache.dir}/com.carrotsearch" />
 
 	</target>
 
