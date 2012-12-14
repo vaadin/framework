@@ -45,6 +45,7 @@
         <li><a href="#upgrading">Upgrading to Vaadin @version-minor@</a></li>
         <li><a href="#supportedversions">Supported technologies</a></li>
         <li><a href="#vaadinontheweb">Vaadin on the Web</a></li>
+        <li><a href="#terms">Vaadin Framework Terms and Conditions</a></li>
       </ul>
 
       <h2 id="overview">Overview</h2>
@@ -52,7 +53,8 @@
       <p>
         <b>Vaadin</b> is a Java framework for building modern web applications that look
         great, perform well and make you and your users happy. <b>Vaadin</b> and is
-        available under the Apache 2 license (see <tt>license.html</tt>).
+        available under the Apache 2 license (see <a href="#terms">Vaadin Framework Terms
+        and Conditions</a>).
       </p>
       
       <p>
@@ -69,8 +71,7 @@
       </ul>
 
       <p>
-        It is also available as a ZIP package downloadable from <a
-        href="http://vaadin.com/download">Vaadin Download page</a>.
+        It is also available as a ZIP package downloadable from <a href="http://vaadin.com/download">Vaadin Download page</a>.
       </p>
 
       <h3 id="package">Package Contents</h3>
@@ -81,7 +82,7 @@
         <li>Separate server-side (<tt>vaadin-server</tt>) and client-side (<tt>vaadin-client</tt>, <tt>vaadin-client-compiler</tt>) development libraries</li>
         <li>Precompiled widget set (<tt>vaadin-client-compiled</tt>) for server-side development</li>
         <li>Shared library (<tt>vaadin-shared</tt>) for both server- and client-side libraries</li>
-        <li>Built-in themes (<tt>vaadin-themes</tt>) and the theme compiler (<tt>vaadin-theme-compiler</tt>)
+        <li>Built-in themes (<tt>vaadin-themes</tt>) and the theme compiler (<tt>vaadin-theme-compiler</tt>)</li>
         <li>Dependency libraries provided under the <tt>lib/</tt> folder</li>
       </ul>
 
@@ -159,7 +160,7 @@
         </li>
         <li><b>Form</b> is deprecated and form hand is replaced with the <b>FieldGroup</b></li>
         <li>Get computed style of a component from the browser</li>
-        <li>Support for border, padding, and margin in core layout components</li>
+        <li>Support for border, padding, and margin in core layout components</li></ul>
               <ul>
         <li>Applications are now written by extending the <b>UI</b> class
           <ul>
@@ -192,22 +193,17 @@
       </p>
 
       <p>
-        Please see the release notes for <a
-        href="http://vaadin.com/download/prerelease/7.0/7.0.0/7.0.0.alpha1/release-notes.html">alpha1</a>,
-        <a
-        href="http://vaadin.com/download/prerelease/7.0/7.0.0/7.0.0.alpha2/release-notes.html">alpha2</a>,
-        <a
-        href="http://vaadin.com/download/prerelease/7.0/7.0.0/7.0.0.alpha3/release-notes.html">alpha3</a>,
-        and <a
-        href="http://vaadin.com/download/prerelease/7.0/7.0.0/7.0.0.beta1/release-notes.html">beta1</a>
+        Please see the release notes for <a href="http://vaadin.com/download/prerelease/7.0/7.0.0/7.0.0.alpha1/release-notes.html">alpha1</a>,
+        <a href="http://vaadin.com/download/prerelease/7.0/7.0.0/7.0.0.alpha2/release-notes.html">alpha2</a>,
+        <a href="http://vaadin.com/download/prerelease/7.0/7.0.0/7.0.0.alpha3/release-notes.html">alpha3</a>,
+        and <a href="http://vaadin.com/download/prerelease/7.0/7.0.0/7.0.0.beta1/release-notes.html">beta1</a>
         for the lists of where the major enhancements were introduced.
       </p>
 
       <h3 id="changelog">ChangeLog</h3>
 
       <p>
-        For a complete list of changes in this release, please see the <a
-        href="http://dev.vaadin.com/query?status=closed&group=resolution&milestone=Vaadin+@version@">list
+        For a complete list of changes in this release, please see the <a href="http://dev.vaadin.com/query?status=closed&group=resolution&milestone=Vaadin+@version@">list
         of closed tickets</a>.
       </p>
 
@@ -217,8 +213,7 @@
         All Vaadin 6 applications need some changes when migrating to Vaadin 7. The most
         obvious changes are in the application/window API and require extending either
         <b>UI</b> or <b>UI.LegacyApplication</b> instead of <b>Application</b>. A detailed
-        list of migration changes are given in the <a
-        href="http://dev.vaadin.com/wiki/Vaadin7/MigrationGuide">Vaadin 7 Migration
+        list of migration changes are given in the <a href="http://dev.vaadin.com/wiki/Vaadin7/MigrationGuide">Vaadin 7 Migration
         Guide</a>.
       </p>
 
@@ -235,35 +230,30 @@
 
       <h2 id="dependencies">Vaadin @version@ Dependencies</h2>
 
-      <h3>Dependencies Included in Installation package</h3>
-      
       <p>
-        The Vaadin ZIP installation package includes the following dependencies in the
-        <tt>lib</tt> subfolder:
+        When using Maven, Ivy, Gradle, or other dependency management system, all Vaadin
+        dependencies are downloaded automatically. This is also the case when using the
+        Vaadin Plugin for Eclipse.
       </p>
 
-      <ul>
-        <li>Apache Ant (<tt>ant-*.jar</tt>)</li>
-        <li>Args4j (<tt>args4j-*.jar</tt>)</li>
-        <li>Apache Commons CLI, Collections, Discovery, IO, Lang, Logging, and Math (<tt>commons-*.jar</tt>)</li>
-        <li>CSS Parser (<tt>cssparser-*.jar</tt>)</li>
-        <li>Flute (<tt>flute-*.jar</tt>)</li>
-        <li>Google Collections Library (<tt>google-collections-*.jar</tt>)</li>
-        <li>JSON (<tt>json-*.jar</tt>)</li>
-        <li>jsoup (<tt>jsoup-*.jar</tt>)</li>
-        <li>JUnit (<tt>junit-*.jar</tt>)</li>
-        <li><tt>portal-service-*.jar</tt></li>
-        <li>SAC (<tt>sac-*.jar</tt>)</li>
-        <li>SmartSprites (<tt>smartsprites-*.jar</tt>)</li>
-        <li>Validation API (<tt>validation-*.jar</tt>)</li>
-      </ul>
+      <p>
+        The Vaadin ZIP installation package includes the dependencies in the <tt>lib</tt>
+        subfolder. These need to be copied to the <tt>WEB-INF/lib</tt> folder of the web
+        application that uses Vaadin.
+      </p>
+
+      <p>
+        The dependencies are listed in the <a href="#terms">Vaadin Framework Terms and
+        Conditions</a>. Some are explicit dependencies packaged and distributed as
+        separate JARs, while some are included inside other libraries.
+      </p>
 
       <h3>Bean Validation</h3>
 
       <p>
-        If you want to use the bean validation feature in Vaadin 7, you need a Bean
-        Validation API implementation. You need to install the JAR in the
-        <tt>WEB-INF/lib</tt> directory.
+        If you use the bean validation feature in Vaadin 7, you need a Bean Validation API
+        implementation. You need to install the implementation JAR in the
+        <tt>WEB-INF/lib</tt> directory of the web application that uses validation.
       </p>
 
       <h2 id="upgrading">Upgrading to Vaadin @version-minor@</h2>
@@ -273,8 +263,7 @@
       <p>	
         This release requires that you use the <i>experimental</i> Vaadin Plugin for
         Eclipse. Its update site is
-        <tt>http://vaadin.com/eclipse/experimental</tt>. Please see the <a
-        href="http://vaadin.com/eclipse">installation instructions</a> for more details.
+        <tt>http://vaadin.com/eclipse/experimental</tt>. Please see the <a href="http://vaadin.com/eclipse">installation instructions</a> for more details.
       </p>
 
       <h3>General Upgrading Instructions</h3>
@@ -324,14 +313,13 @@
         <tt>vaadin.jar</tt>). Additionally, the contents of the
         <tt>vaadin-client-compiled</tt> and <tt>vaadin-themes</tt> must be
         extracted to the <tt>ROOT/html/VAADIN</tt> directory in the Liferay
-        installation. If your portal uses custom widgets, install the latest version of <a
-        href="http://vaadin.com/directory#addon/vaadin-control-panel-for-liferay">Vaadin
+        installation. If your portal uses custom widgets, install the latest version of <a href="http://vaadin.com/directory#addon/vaadin-control-panel-for-liferay">Vaadin
         Control Panel for Liferay</a> for easy widget set compilation - when it is
         available - the add-on is not compatible with Vaadin @version@ at the time of this
-        Vaadin release. <!-- TODO: Remove note when done -->
+        Vaadin release. <!-- TODO: Remove note when done --></t>
       </p>
       
-      <h2 id="gae">Notes and Limitations for Google App Engine</h4>
+      <h2 id="gae">Notes and Limitations for Google App Engine</h4></h2>
 
       <p>The following instructions and limitations apply when you run a Vaadin
       application under the Google App Engine.</p>
@@ -392,8 +380,7 @@
       </ul>
 
       <p>
-        For other known problems, see open tickets at developer site <a
-        href="http://dev.vaadin.com/">dev.vaadin.com</a>.
+        For other known problems, see open tickets at developer site <a href="http://dev.vaadin.com/">dev.vaadin.com</a>.
       </p>
 
       <h2 id="supportedversions">Supported Technologies</h2>
@@ -498,12 +485,235 @@
 
         <li><a href="http://dev.vaadin.com">dev.vaadin.com - Bug tracker</a></li>
 
-        <li><a
-        href="http://dev.vaadin.com/wiki/Vaadin/Development/StartingVaadin7Development">How
+        <li><a href="http://dev.vaadin.com/wiki/Vaadin/Development/StartingVaadin7Development">How
         to get the source code of Vaadin</a>
         </li>
       </ul>
-	</div> <!-- /content-->
+
+      <h2 id="terms">Vaadin Framework Terms and Conditions for Use, Reproduction and Distribution</h2>
+      
+      <p>
+        The Vaadin Framework software developed by Vaadin is licensed under the Apache
+        License version 2.0. The full license text is included in the ZIP installation
+        package, in the Vaadin JARs, and on-line at <a
+        href="https://vaadin.com/license">vaadin.com/license</a> or <a
+        href="http://www.apache.org/licenses/">apache.org/licenses</a>.
+      </p>
+
+      <p>
+        The license of the Vaadin Framework is for this product only and may not apply to
+        all Vaadin add-on components, such as those available from Vaadin Directory, or
+        other Vaadin products, which may have a different license.
+      </p>
+
+      <p>
+        Other software included in this distribution is provided under other licenses, as
+        listed in the following section.
+      </p>
+
+      <h3>Included Third-Party Software and Licenses</h3>
+
+      <table border="1" cellspacing="1">
+        <thead style="background: #ccc;">
+          <tr><th>Package</th><th>License</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Apache Ant<br/>
+                Ant Launcher</td>
+            <td><a href="http://www.apache.org/licenses/">Apache License, Version 2.0</a></td>
+          </tr>
+
+          <tr>
+            <td>Apache Commons<br/>
+                BCEL<br/>
+                Beanutils<br/>
+                CLI<br/>
+                Codec<br/>
+                Collections<br/>
+                Digester 3<br/>
+                Discovery<br/>
+                EL<br/>
+                IO<br/>
+                Jexl<br/>
+                Lang<br/>
+                Logging<br/>
+                Math<br/>
+                Modeler</td>
+            <td><a href="http://www.apache.org/licenses/">Apache License, Version 2.0</a></td>
+          </tr>
+
+          <tr>
+            <td>Apache HttpComponents Core</td>
+            <td><a href="http://www.apache.org/licenses/">Apache License, Version 2.0</a></td>
+          </tr>
+
+          <tr>
+            <td>Apache Jakarta Regexp</td>
+            <td><a href="http://www.apache.org/licenses/">Apache License, Version 2.0</a></td>
+          </tr>
+
+          <tr>
+            <td>Apache James Server<br/>
+                Apache James Mime4j</td>
+            <td><a href="http://www.apache.org/licenses/">Apache License, Version 2.0</a></td>
+          </tr>
+
+          <tr>
+            <td>Apache Tapestry</td>
+            <td><a href="http://www.apache.org/licenses/">Apache License, Version 2.0</a></td>
+          </tr>
+
+          <tr>
+            <td>Apache Tomcat<br/>Catalina<br/>Coyote<br/>Jasper<br/>JK<br/>Naming</td>
+            <td><a href="http://www.apache.org/licenses/">Apache License, Version 2.0</a></td>
+          </tr>
+
+          <tr>
+            <td>Apache Xalan</td>
+            <td><a href="http://www.apache.org/licenses/">Apache License, Version 2.0</a></td>
+          </tr>
+
+          <tr>
+            <td>Apache Xerces</td>
+            <td><a href="http://www.apache.org/licenses/">Apache License, Version 2.0</a></td>
+          </tr>
+
+          <tr>
+            <td>Args4j</td>
+            <td><a href="https://github.com/kohsuke/args4j/blob/master/args4j/LICENSE.txt">The MIT License (MIT)</a></td>
+          </tr>
+
+          <tr>
+            <td>Bean Validation (JSR-303) API</td>
+            <td><a href="http://www.apache.org/licenses/">Apache License, Version 2.0</a></td>
+          </tr>
+
+          <tr>
+            <td>CSS Parser</td>
+            <td><a href="http://www.gnu.org/licenses/old-licenses/lgpl-2.0.html">GNU Lesser General Public License, version 2.0</a></td>
+          </tr>
+
+          <tr>
+            <td>CUP</td>
+            <td><a href="http://www.cs.princeton.edu/~appel/modern/java/CUP/#LICENSE">CUP Open Source License</a></td>
+          </tr>
+
+          <tr>
+            <td>CyberNeko HTML Parser</td>
+            <td><a href="http://www.apache.org/licenses/">Apache License, Version 2.0</a></td>
+          </tr>
+
+          <tr>
+            <td>Eclipse
+      JDT</td>
+            <td><a href="http://eclipse.org/org/documents/epl-v10.php">Eclipse Public License - v 1.0</a></td>
+          </tr>
+
+          <tr>
+            <td>Flute</td>
+            <td><a href="http://www.w3.org/Consortium/Legal/copyright-software-19980720">W3C Software Copyright Notice and License</a></td>
+          </tr>
+
+          <tr>
+            <td>Google AppEngine API</td>
+            <td><a href="https://developers.google.com/appengine/terms">Google App Engine Terms of Service</a></td>
+          </tr>
+
+          <tr>
+            <td>Google Closure Compiler</td>
+            <td><a href="http://www.apache.org/licenses/">Apache License, Version 2.0</a></td>
+          </tr>
+
+          <tr>
+            <td>Google Collections</td>
+            <td><a href="http://www.apache.org/licenses/">Apache License, Version 2.0</a></td>
+          </tr>
+
+          <tr>
+            <td>Google Protocol Buffers</td>
+            <td><a href="http://protobuf.googlecode.com/svn/trunk/COPYING.txt">BSD License</a></td>
+          </tr>
+
+          <tr>
+            <td>Google GWT</td>
+            <td><a href="http://www.apache.org/licenses/">Apache License, Version 2.0</a></td>
+          </tr>
+
+          <tr>
+            <td>Guava</td>
+            <td><a href="http://www.apache.org/licenses/">Apache License, Version 2.0</a></td>
+          </tr>
+
+          <tr>
+            <td>HtmlUnit</td>
+            <td><a href="http://www.apache.org/licenses/">Apache License, Version 2.0</a></td>
+          </tr>
+
+          <tr>
+            <td>ICU</td>
+            <td><a href="http://source.icu-project.org/repos/icu/icu/trunk/license.html">ICU License</a></td>
+          </tr>
+
+          <tr>
+            <td>Jetty</td>
+            <td><a href="http://www.google.com/url?q=http%3A%2F%2Fwww.eclipse.org%2Fjetty%2Flicenses.php&amp;sa=D&amp;sntz=1&amp;usg=AFQjCNEwpnb4RRBBG6c4gF-zsuA9eaNJuA">Apache License, Version 2.0 OR Eclipse 1.0 (see exceptions)</a></td>
+          </tr>
+
+          <tr>
+            <td>Jsilver</td>
+            <td><a href="http://www.apache.org/licenses/">Apache License, Version 2.0</a></td>
+          </tr>
+
+          <tr>
+            <td>JSON</td>
+            <td><a href="http://www.json.org/license.html">The JSON License</a></td>
+          </tr>
+
+          <tr>
+            <td>JSoup</td>
+            <td><a href="http://jsoup.org/license">The MIT License</a></td>
+          </tr>
+
+          <tr>
+            <td>JUnit</td>
+            <td><a href="http://www.junit.org/license">Common Public License (CPL) - v 1.0</a></td>
+          </tr>
+
+          <!-- Includes portal-service -->
+          <tr>
+            <td>Liferay Service Interfaces</td>
+            <td><a href="http://www.gnu.org/licenses/lgpl.html">GNU Lesser General Public License 2.1 or newer</a></td>
+          </tr>
+
+          <tr>
+            <td>Mozilla Rhino</td>
+            <td><a href="http://www.mozilla.org/MPL/1.1/">Mozilla Public License v. 1.1</a></td>
+          </tr>
+
+          <tr>
+            <td>MX4J</td>
+            <td><a href="http://mx4j.sourceforge.net/docs/ch01s06.html">The MX4J License</a></td>
+          </tr>
+
+          <tr>
+            <td>SAC: The Simple API for CSS</td>
+            <td><a href="http://www.w3.org/Consortium/Legal/copyright-software-19980720">W3C Software Copyright Notice and License</a></td>
+          </tr>
+
+          <tr>
+            <td>SmartSprites</td>
+            <td><a href="https://github.com/carrotsearch/smartsprites/blob/master/smartsprites.LICENSE">BSD License</a></td>
+          </tr>
+
+          <tr>
+            <td>Swingworker</td>
+            <td><a href="http://www.gnu.org/licenses/lgpl-2.1.html">GNU Lesser General Public License 2.1</a></td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div> <!-- /content-->
 
 	<div id="footer">
 		<span class="slogan"><strong>vaadin <em>}></em> </strong>
