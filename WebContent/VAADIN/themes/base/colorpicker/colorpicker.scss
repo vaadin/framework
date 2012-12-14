@@ -89,11 +89,11 @@
 .#{$name}-popup #rgb-gradient .#{$name}-gradient-background {
 	width: 220px;
 	height: 220px;
-	background: url(images/gradient2.png);
+	background: url(images/gradient2.png) !important;
 }
 
 .#{$name}-popup #hsv-gradient .#{$name}-gradient-foreground {
-	background: url(images/gradient.png);
+	background: url(images/gradient.png) !important;
 }
 
 .#{$name}-popup .#{$name}-gradient-lowerbox {
