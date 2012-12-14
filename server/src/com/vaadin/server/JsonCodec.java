@@ -185,6 +185,7 @@ public class JsonCodec implements Serializable {
         registerType(HashMap.class, JsonConstants.VTYPE_MAP);
         registerType(List.class, JsonConstants.VTYPE_LIST);
         registerType(Set.class, JsonConstants.VTYPE_SET);
+        registerType(Void.class, JsonConstants.VTYPE_NULL);
     }
 
     private static void registerType(Class<?> type, String transportType) {
@@ -325,6 +326,9 @@ public class JsonCodec implements Serializable {
 
         if (encodedJsonValue == JSONObject.NULL) {
             return null;
+        } else if (targetType == Void.class) {
+            throw new JSONException(
+                    "Something other than null was encoded for a null type");
         }
 
         // UidlValue
