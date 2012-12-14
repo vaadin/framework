@@ -32,6 +32,9 @@
 	background: #e9eced;
 }
 
+$font-size: 13px;
+$line-height: 18px;
+
 @mixin runo {
 	// TODO move?
 	@include base;

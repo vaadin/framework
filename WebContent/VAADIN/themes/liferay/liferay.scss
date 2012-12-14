@@ -26,6 +26,7 @@
 	
 @mixin liferay {
 	// TODO move?
+	$font-size: 11px;
 	@include base;
 	// TODO @each
 	@include liferay-accordion;

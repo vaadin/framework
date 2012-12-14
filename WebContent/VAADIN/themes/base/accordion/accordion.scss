@@ -5,6 +5,7 @@
 	outline: none;
 	overflow: visible;
 	text-align: left; /* Force default alignment */
+	font-size: 0;
 }
 .v-accordion-item {
 	position: relative;
@@ -19,6 +20,7 @@
 }
 .v-accordion-item-caption .v-caption {
 	cursor: pointer;
+	font-size: $font-size;
 }
 .v-accordion-item-open .v-accordion-item-caption .v-caption {
 	cursor: default;

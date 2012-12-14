@@ -35,6 +35,8 @@
 
 @mixin reindeer {
 	// should this be here?
+	$font-size: 12px;
+	$line-height: normal;
 	@include base;
 	
 	// TODO @each
