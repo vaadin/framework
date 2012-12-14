@@ -15,6 +15,19 @@ public abstract class TestBase extends AbstractTestCase {
         window.getContent().setSizeFull();
 
         Label label = new Label(getDescription(), ContentMode.HTML);
+        if (label.getValue() == null || "".equals(label.getValue())) {
+            // This is only an ugly hack to be screenshot compatible to be able
+            // to detect real problems when introducing IE font-size/line-height
+            // fixes
+            label.setValue("&nbsp;");
+            if (getBrowser().isIE()
+                    && getBrowser().getBrowserMajorVersion() == 9) {
+                label.setHeight("13.8px");
+            } else {
+                label.setHeight("15px");
+            }
+        }
+
         label.setWidth("100%");
         window.addComponent(label);
 
