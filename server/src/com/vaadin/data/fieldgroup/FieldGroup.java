@@ -813,7 +813,12 @@ public class FieldGroup implements Serializable {
                 // @PropertyId(propertyId) always overrides property id
                 propertyId = propertyIdAnnotation.value();
             } else {
-                propertyId = memberField.getName();
+                try {
+                    propertyId = findPropertyId(memberField);
+                } catch (SearchException e) {
+                    // Property id was not found, skip this field
+                    continue;
+                }
             }
 
             // Ensure that the property id exists
@@ -874,6 +879,48 @@ public class FieldGroup implements Serializable {
         }
     }
 
+    /**
+     * Searches for a property id from the current itemDataSource that matches
+     * the given memberField.
+     * <p>
+     * If perfect match is not found uses a case insensitive search that also
+     * ignores underscores in the property ids. Throws a SearchException if no
+     * match is found or if no item data source has been set.
+     * </p>
+     * 
+     * @param memberField
+     *            The field an object id is searched for
+     * @return
+     */
+    protected Object findPropertyId(java.lang.reflect.Field memberField) {
+        String fieldName = memberField.getName();
+        if (getItemDataSource() == null) {
+            throw new SearchException(
+                    "Property id type for field '"
+                            + fieldName
+                            + "' could not be determined. No item data source has been set.");
+        }
+        Item dataSource = getItemDataSource();
+        if (dataSource.getItemProperty(fieldName) != null) {
+            return fieldName;
+        } else {
+            String minifiedFieldName = fieldName.toLowerCase();
+            for (Object itemPropertyId : dataSource.getItemPropertyIds()) {
+                if (itemPropertyId instanceof String) {
+                    String itemPropertyName = (String) itemPropertyId;
+                    if (minifiedFieldName.equals(itemPropertyName.toLowerCase()
+                            .replace("_", ""))) {
+                        return itemPropertyName;
+                    }
+                }
+            }
+        }
+        throw new SearchException(
+                "Property id for field '"
+                        + fieldName
+                        + "' could not be determined. No item data source has been set.");
+    }
+
     public static class CommitException extends Exception {
 
         public CommitException() {
@@ -905,6 +952,18 @@ public class FieldGroup implements Serializable {
         }
 
         public BindException(String message, Throwable t) {
+            super(message, t);
+        }
+
+    }
+
+    public static class SearchException extends RuntimeException {
+
+        public SearchException(String message) {
+            super(message);
+        }
+
+        public SearchException(String message, Throwable t) {
             super(message, t);
         }
 
