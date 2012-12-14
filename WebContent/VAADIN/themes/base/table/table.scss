@@ -42,6 +42,10 @@
 	padding: 0;
 	border: 0;
 }
+.#{$primaryStyleName}-table {
+   font-size: $font-size;
+}
+
 .#{$primaryStyleName}-header td {
 	padding: 0;
 }
