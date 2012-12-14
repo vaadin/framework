@@ -86,13 +86,13 @@
 	opacity: 0;
 }
 
-.#{$name}-popup #rgb-gradient .#{$name}-gradient-background {
+.#{$name}-popup .rgb-gradient .#{$name}-gradient-background {
 	width: 220px;
 	height: 220px;
 	background: url(images/gradient2.png);
 }
 
-.#{$name}-popup #hsv-gradient .#{$name}-gradient-foreground {
+.#{$name}-popup .hsv-gradient .#{$name}-gradient-foreground {
 	background: url(images/gradient.png);
 }
 

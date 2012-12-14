@@ -52,9 +52,6 @@ public class ColorPickerGradient extends AbstractComponent implements
     /** The y-coordinate. */
     private int y = 0;
 
-    /** The background color. */
-    private Color backgroundColor;
-
     /**
      * Instantiates a new color picker gradient.
      * 
@@ -65,7 +62,7 @@ public class ColorPickerGradient extends AbstractComponent implements
      */
     public ColorPickerGradient(String id, Coordinates2Color converter) {
         registerRpc(rpc);
-        getState().id = id;
+        addStyleName(id);
         // width and height must be set here instead of in theme, otherwise
         // coordinate calculations fail
         getState().width = "220px";
@@ -103,7 +100,6 @@ public class ColorPickerGradient extends AbstractComponent implements
      *            the new background color
      */
     public void setBackgroundColor(Color color) {
-        backgroundColor = color;
         getState().bgColor = color.getCSS();
     }
 

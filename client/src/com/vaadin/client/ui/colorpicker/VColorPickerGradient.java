@@ -1,15 +1,17 @@
 package com.vaadin.client.ui.colorpicker;
 
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.vaadin.client.ui.SubPartAware;
 
 /**
  * Client side implementation for ColorPickerGradient.
@@ -18,7 +20,7 @@ import com.google.gwt.user.client.ui.HTML;
  * 
  */
 public class VColorPickerGradient extends FocusPanel implements
-        MouseDownHandler, MouseUpHandler, MouseMoveHandler {
+        MouseDownHandler, MouseUpHandler, MouseMoveHandler, SubPartAware {
 
     /** Set the CSS class name to allow styling. */
     public static final String CLASSNAME = "v-colorpicker-gradient";
@@ -28,6 +30,7 @@ public class VColorPickerGradient extends FocusPanel implements
     public static final String CLASSNAME_HIGHERBOX = CLASSNAME + "-higherbox";
     public static final String CLASSNAME_CONTAINER = CLASSNAME + "-container";
     public static final String CLASSNAME_CLICKLAYER = CLASSNAME + "-clicklayer";
+    private static final String CLICKLAYER_ID = "clicklayer";
 
     private final HTML background;
     private final HTML foreground;
@@ -41,6 +44,9 @@ public class VColorPickerGradient extends FocusPanel implements
     private int cursorX;
     private int cursorY;
 
+    private int width = 220;
+    private int height = 220;
+
     /**
      * Instantiates the client side component for a color picker gradient.
      */
@@ -48,9 +54,6 @@ public class VColorPickerGradient extends FocusPanel implements
         super();
 
         setStyleName(CLASSNAME);
-
-        int width = 220;
-        int height = 220;
 
         background = new HTML();
         background.setStyleName(CLASSNAME_BACKGROUND);
@@ -107,7 +110,11 @@ public class VColorPickerGradient extends FocusPanel implements
      * @param bgColor
      */
     protected void setBGColor(String bgColor) {
-        background.getElement().getStyle().setProperty("background", bgColor);
+        if (bgColor == null) {
+            background.getElement().getStyle().clearBackgroundColor();
+        } else {
+            background.getElement().getStyle().setBackgroundColor(bgColor);
+        }
     }
 
     @Override
@@ -148,29 +155,41 @@ public class VColorPickerGradient extends FocusPanel implements
         cursorX = x;
         cursorY = y;
         if (x >= 0) {
-            DOM.setStyleAttribute(lowercross.getElement(), "width",
-                    String.valueOf(x) + "px");
+            lowercross.getElement().getStyle().setWidth(x, Unit.PX);
         }
         if (y >= 0) {
-            DOM.setStyleAttribute(lowercross.getElement(), "top",
-                    String.valueOf(y) + "px");
+            lowercross.getElement().getStyle().setTop(y, Unit.PX);
         }
         if (y >= 0) {
-            DOM.setStyleAttribute(lowercross.getElement(), "height",
-                    String.valueOf((background.getOffsetHeight() - y)) + "px");
+            lowercross.getElement().getStyle().setHeight(height - y, Unit.PX);
         }
 
         if (x >= 0) {
-            DOM.setStyleAttribute(highercross.getElement(), "width",
-                    String.valueOf((background.getOffsetWidth() - x)) + "px");
+            highercross.getElement().getStyle().setWidth(width - x, Unit.PX);
         }
         if (x >= 0) {
-            DOM.setStyleAttribute(highercross.getElement(), "left",
-                    String.valueOf(x) + "px");
+            highercross.getElement().getStyle().setLeft(x, Unit.PX);
         }
         if (y >= 0) {
-            DOM.setStyleAttribute(highercross.getElement(), "height",
-                    String.valueOf((y)) + "px");
+            highercross.getElement().getStyle().setHeight(y, Unit.PX);
         }
+    }
+
+    @Override
+    public Element getSubPartElement(String subPart) {
+        if (subPart.equals(CLICKLAYER_ID)) {
+            return clicklayer.getElement();
+        }
+
+        return null;
+    }
+
+    @Override
+    public String getSubPartName(Element subElement) {
+        if (clicklayer.getElement().isOrHasChild(subElement)) {
+            return CLICKLAYER_ID;
+        }
+
+        return null;
     }
 }
