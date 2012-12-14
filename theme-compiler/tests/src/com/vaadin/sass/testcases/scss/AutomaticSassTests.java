@@ -20,15 +20,11 @@ import java.net.URL;
 import java.util.Collection;
 
 import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 
-@RunWith(Parameterized.class)
+import com.vaadin.sass.testcases.scss.SassTestRunner.TestFactory;
+
+@RunWith(SassTestRunner.class)
 public class AutomaticSassTests extends AbstractDirectoryScanningSassTests {
-
-    public AutomaticSassTests(String scssResourceName) {
-        super(scssResourceName);
-    }
 
     @Override
     protected URL getResourceURL(String path) {
@@ -39,8 +35,8 @@ public class AutomaticSassTests extends AbstractDirectoryScanningSassTests {
         return AutomaticSassTests.class.getResource("/automatic" + path);
     }
 
-    @Parameters
-    public static Collection<Object[]> getScssResourceNames()
+    @TestFactory
+    public static Collection<String> getScssResourceNames()
             throws URISyntaxException {
         return getScssResourceNames(getResourceURLInternal(""));
     }

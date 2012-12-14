@@ -31,25 +31,17 @@ import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
-import org.junit.Test;
 
 import com.vaadin.sass.internal.ScssStylesheet;
+import com.vaadin.sass.testcases.scss.SassTestRunner.FactoryTest;
 
 public abstract class AbstractDirectoryScanningSassTests extends TestCase {
 
-    private String scssResourceName;
-
-    protected AbstractDirectoryScanningSassTests(String scssResourceName) {
-        this.scssResourceName = scssResourceName;
-    }
-
-    public static Collection<Object[]> getScssResourceNames(URL directoryUrl)
+    public static Collection<String> getScssResourceNames(URL directoryUrl)
             throws URISyntaxException {
-        List<Object[]> resources = new ArrayList<Object[]>();
-        // temporary instance to enable subclasses to define where to scan for
-        // files
+        List<String> resources = new ArrayList<String>();
         for (File scssFile : getScssFiles(directoryUrl)) {
-            resources.add(new Object[] { scssFile.getName() });
+            resources.add(scssFile.getName());
         }
         return resources;
     }
@@ -72,8 +64,8 @@ public abstract class AbstractDirectoryScanningSassTests extends TestCase {
 
     protected abstract URL getResourceURL(String path);
 
-    @Test
-    public void compareScssWithCss() throws Exception {
+    @FactoryTest
+    public void compareScssWithCss(String scssResourceName) throws Exception {
         String referenceCss;
         File scssFile = getSassLangResourceFile(scssResourceName);
         File cssFile = getCssFile(scssFile);
