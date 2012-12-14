@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -217,9 +218,7 @@ public class ScssStylesheet extends Node {
 
         node.traverse();
 
-        @SuppressWarnings("unchecked")
-        HashMap<String, VariableNode> variableScope = (HashMap<String, VariableNode>) variables
-                .clone();
+        Map<String, VariableNode> variableScope = openVariableScope();
 
         // the size of the child list may change on each iteration: current node
         // may get deleted and possibly other nodes have been inserted where it
@@ -232,8 +231,7 @@ public class ScssStylesheet extends Node {
             }
         }
 
-        variables.clear();
-        variables.putAll(variableScope);
+        closeVariableScope(variableScope);
 
         // clean up insert point so that processing of the next block will
         // insert after that block
@@ -246,6 +244,34 @@ public class ScssStylesheet extends Node {
         } else {
             return false;
         }
+    }
+
+    /**
+     * Start a new scope for variables. Any variables set or modified after
+     * opening a new scope are only valid until the scope is closed, at which
+     * time they are replaced with their old values.
+     * 
+     * @return old scope to give to a paired {@link #closeVariableScope(Map)}
+     *         call at the end of the scope (unmodifiable map).
+     */
+    public static Map<String, VariableNode> openVariableScope() {
+        @SuppressWarnings("unchecked")
+        HashMap<String, VariableNode> variableScope = (HashMap<String, VariableNode>) variables
+                .clone();
+        return Collections.unmodifiableMap(variableScope);
+    }
+
+    /**
+     * End a scope for variables, replacing all active variables with those from
+     * the original scope (obtained from {@link #openVariableScope()}).
+     * 
+     * @param originalScope
+     *            original scope
+     */
+    public static void closeVariableScope(
+            Map<String, VariableNode> originalScope) {
+        variables.clear();
+        variables.putAll(originalScope);
     }
 
     public void removeEmptyBlocks(Node node) {
