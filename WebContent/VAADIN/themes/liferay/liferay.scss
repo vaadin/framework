@@ -24,8 +24,8 @@
 @import "tree/tree.scss";
 @import "window/window.scss";
 	
+$font-size: 11px;
 @mixin liferay {
-	// TODO move?
 	@include base;
 	// TODO @each
 	@include liferay-accordion;

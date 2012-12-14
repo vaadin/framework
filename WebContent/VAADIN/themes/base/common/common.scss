@@ -219,6 +219,8 @@ body &.v-app-loading {
 
 .v-scrollable {
 	overflow: auto;
+	font-size: 0;
+	line-height: normal;
 }
 
 /* Enable kinetic scrolling on Mobile Safari 6 */ 
