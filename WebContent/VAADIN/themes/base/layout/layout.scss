@@ -33,6 +33,11 @@ TODO
 .v-gridlayout.v-layout-margin-top {
 	padding-top: 24px;
 }
+.v-gridlayout,
+.v-verticallayout {
+	font-size: 0;
+}
+
 .v-gridlayout.v-layout-margin-bottom {
 	padding-bottom: 24px;
 }

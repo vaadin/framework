@@ -6,6 +6,7 @@
 .#{$primaryStyleName} {
 	overflow: hidden;
 	white-space: nowrap;
+	font-size: $font-size;
 }
 .v-errorindicator {
 	display: inline-block;
