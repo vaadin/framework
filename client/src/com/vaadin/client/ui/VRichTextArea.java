@@ -246,7 +246,8 @@ public class VRichTextArea extends Composite implements Field, ChangeHandler,
     @Override
     public void setHeight(String height) {
         if (height.endsWith("px")) {
-            int h = Integer.parseInt(height.substring(0, height.length() - 2));
+            float h = Float
+                    .parseFloat(height.substring(0, height.length() - 2));
             h -= getExtraVerticalPixels();
             if (h < 0) {
                 h = 0;
@@ -282,7 +283,7 @@ public class VRichTextArea extends Composite implements Field, ChangeHandler,
     @Override
     public void setWidth(String width) {
         if (width.endsWith("px")) {
-            int w = Integer.parseInt(width.substring(0, width.length() - 2));
+            float w = Float.parseFloat(width.substring(0, width.length() - 2));
             w -= getExtraHorizontalPixels();
             if (w < 0) {
                 w = 0;

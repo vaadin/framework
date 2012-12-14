@@ -593,11 +593,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * @return CSS height
      */
     private String getCSSHeight() {
-        if (getHeightUnits() == Unit.PIXELS) {
-            return ((int) getHeight()) + getHeightUnits().getSymbol();
-        } else {
-            return getHeight() + getHeightUnits().getSymbol();
-        }
+        return getHeight() + getHeightUnits().getSymbol();
     }
 
     /**
@@ -606,11 +602,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * @return CSS width
      */
     private String getCSSWidth() {
-        if (getWidthUnits() == Unit.PIXELS) {
-            return ((int) getWidth()) + getWidthUnits().getSymbol();
-        } else {
-            return getWidth() + getWidthUnits().getSymbol();
-        }
+        return getWidth() + getWidthUnits().getSymbol();
     }
 
     /**
