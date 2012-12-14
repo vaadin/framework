@@ -62,6 +62,13 @@ public class ConnectorTracker implements Serializable {
     private Set<ClientConnector> dirtyConnectors = new HashSet<ClientConnector>();
     private Set<ClientConnector> uninitializedConnectors = new HashSet<ClientConnector>();
 
+    /**
+     * Connectors that have been unregistered and should be cleaned up the next
+     * time {@link #cleanConnectorMap()} is invoked unless they have been
+     * registered again.
+     */
+    private final Set<ClientConnector> unregisteredConnectors = new HashSet<ClientConnector>();
+
     private boolean writingResponse = false;
 
     private UI uI;
@@ -105,6 +112,7 @@ public class ConnectorTracker implements Serializable {
      *            The connector to register.
      */
     public void registerConnector(ClientConnector connector) {
+        unregisteredConnectors.remove(connector);
         String connectorId = connector.getConnectorId();
         ClientConnector previouslyRegistered = connectorIdToConnector
                 .get(connectorId);
@@ -123,7 +131,7 @@ public class ConnectorTracker implements Serializable {
                             + connector.getClass().getSimpleName() + " ("
                             + connectorId + ")");
         }
-
+        dirtyConnectors.add(connector);
     }
 
     /**
@@ -152,14 +160,17 @@ public class ConnectorTracker implements Serializable {
                     + " is not the one that was registered for that id");
         }
 
-        getLogger().fine(
-                "Unregistered " + connector.getClass().getSimpleName() + " ("
-                        + connectorId + ")");
-
-        removeFromGlobalResourceHandler(connector);
-        connectorIdToConnector.remove(connectorId);
-        uninitializedConnectors.remove(connector);
-        diffStates.remove(connector);
+        dirtyConnectors.remove(connector);
+        if (unregisteredConnectors.add(connector)) {
+            getLogger().fine(
+                    "Unregistered " + connector.getClass().getSimpleName()
+                            + " (" + connectorId + ")");
+        } else {
+            getLogger().warning(
+                    "Unregistered " + connector.getClass().getSimpleName()
+                            + " (" + connectorId
+                            + ") that was already unregistered.");
+        }
     }
 
     private void removeFromGlobalResourceHandler(ClientConnector connector) {
@@ -221,7 +232,12 @@ public class ConnectorTracker implements Serializable {
      *         given id
      */
     public ClientConnector getConnector(String connectorId) {
-        return connectorIdToConnector.get(connectorId);
+        ClientConnector connector = connectorIdToConnector.get(connectorId);
+        // Ignore connectors that have been unregistered but not yet cleaned up
+        if (unregisteredConnectors.contains(connector)) {
+            return null;
+        }
+        return connector;
     }
 
     /**
@@ -229,6 +245,18 @@ public class ConnectorTracker implements Serializable {
      * to the application. This should only be called by the framework.
      */
     public void cleanConnectorMap() {
+        // Remove connectors that have been unregistered
+        for (ClientConnector connector : unregisteredConnectors) {
+            ClientConnector removedConnector = connectorIdToConnector
+                    .remove(connector.getConnectorId());
+            assert removedConnector == connector;
+
+            removeFromGlobalResourceHandler(connector);
+            uninitializedConnectors.remove(connector);
+            diffStates.remove(connector);
+        }
+        unregisteredConnectors.clear();
+
         // remove detached components from paintableIdMap so they
         // can be GC'ed
         Iterator<String> iterator = connectorIdToConnector.keySet().iterator();
@@ -423,10 +451,12 @@ public class ConnectorTracker implements Serializable {
     }
 
     public JSONObject getDiffState(ClientConnector connector) {
+        assert getConnector(connector.getConnectorId()) == connector;
         return diffStates.get(connector);
     }
 
     public void setDiffState(ClientConnector connector, JSONObject diffState) {
+        assert getConnector(connector.getConnectorId()) == connector;
         diffStates.put(connector, diffState);
     }
 
@@ -537,6 +567,7 @@ public class ConnectorTracker implements Serializable {
      */
     public void addStreamVariable(String connectorId, String variableName,
             StreamVariable variable) {
+        assert getConnector(connectorId) != null;
         if (pidToNameToStreamVariable == null) {
             pidToNameToStreamVariable = new HashMap<String, Map<String, StreamVariable>>();
         }
