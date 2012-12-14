@@ -6,7 +6,6 @@ package com.vaadin.terminal.gwt.client.ui;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
@@ -44,7 +43,7 @@ public abstract class ClickEventHandler implements DoubleClickHandler,
     /**
      * The element where the last mouse down event was registered.
      */
-    private JavaScriptObject lastMouseDownTarget;
+    private Element lastMouseDownTarget;
 
     /**
      * Set to true by {@link #mouseUpPreviewHandler} if it gets a mouseup at the
@@ -68,7 +67,7 @@ public abstract class ClickEventHandler implements DoubleClickHandler,
                 Element elementUnderMouse = Util.getElementUnderMouse(event
                         .getNativeEvent());
                 if (lastMouseDownTarget != null
-                        && elementUnderMouse.cast() == lastMouseDownTarget) {
+                        && elementUnderMouse == lastMouseDownTarget) {
                     mouseUpPreviewMatched = true;
                 }
             }
@@ -152,7 +151,7 @@ public abstract class ClickEventHandler implements DoubleClickHandler,
          * When getting a mousedown event, we must detect where the
          * corresponding mouseup event if it's on a different part of the page.
          */
-        lastMouseDownTarget = event.getNativeEvent().getEventTarget();
+        lastMouseDownTarget = Util.getElementUnderMouse(event.getNativeEvent());
         mouseUpPreviewMatched = false;
         mouseUpEventPreviewRegistration = Event
                 .addNativePreviewHandler(mouseUpPreviewHandler);
