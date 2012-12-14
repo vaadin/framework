@@ -18,6 +18,7 @@ package com.vaadin.sass.internal.tree;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.sass.internal.parser.LexicalUnitImpl;
@@ -59,14 +60,23 @@ public class MixinNode extends Node implements IVariableNode {
         this.arglist = arglist;
     }
 
+    /**
+     * Replace variable references with their values in the mixin argument list.
+     */
     @Override
     public void replaceVariables(ArrayList<VariableNode> variables) {
         for (final VariableNode var : variables) {
             for (final LexicalUnitImpl arg : new ArrayList<LexicalUnitImpl>(
                     arglist)) {
-                if (arg.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE
-                        && arg.getStringValue().equals(var.getName())) {
-                    arg.replaceValue(var.getExpr());
+                LexicalUnitImpl unit = arg;
+                // only perform replace in the value if separate argument name
+                // and value
+                if (unit.getNextLexicalUnit() != null) {
+                    unit = unit.getNextLexicalUnit();
+                }
+                if (unit.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE
+                        && unit.getStringValue().equals(var.getName())) {
+                    unit.replaceValue(var.getExpr());
                 }
             }
 
@@ -86,8 +96,15 @@ public class MixinNode extends Node implements IVariableNode {
     @Override
     public void traverse() {
         try {
+            // limit variable scope to the mixin
+            Map<String, VariableNode> variableScope = ScssStylesheet
+                    .openVariableScope();
+
             replaceVariables(ScssStylesheet.getVariables());
             MixinNodeHandler.traverse(this);
+
+            ScssStylesheet.closeVariableScope(variableScope);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
