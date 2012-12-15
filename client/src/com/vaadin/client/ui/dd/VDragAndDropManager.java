@@ -84,7 +84,14 @@ public class VDragAndDropManager {
             currentDrag.setCurrentGwtEvent(nativeEvent);
             updateDragImagePosition();
 
-            Element targetElement = Element.as(nativeEvent.getEventTarget());
+            Node targetNode = Node.as(nativeEvent.getEventTarget());
+            Element targetElement;
+            if (Element.is(targetNode)) {
+                targetElement = Element.as(targetNode);
+            } else {
+                targetElement = targetNode.getParentElement();
+            }
+
             if (Util.isTouchEvent(nativeEvent)
                     || (dragElement != null && dragElement
                             .isOrHasChild(targetElement))) {
