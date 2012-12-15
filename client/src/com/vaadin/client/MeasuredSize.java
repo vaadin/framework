@@ -258,9 +258,8 @@ public class MeasuredSize {
     private void debugSizeChange(Element element, String sizeChangeType,
             String changedFrom, String changedTo) {
         if (debugSizeChanges) {
-            VConsole.log(sizeChangeType + " has changed for "
-                    + element.toString() + " from " + changedFrom + " to "
-                    + changedTo);
+            VConsole.log(sizeChangeType + " has changed from " + changedFrom
+                    + " to " + changedTo + " for " + element.toString());
         }
     }
 
