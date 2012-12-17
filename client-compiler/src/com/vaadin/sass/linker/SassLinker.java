@@ -35,7 +35,7 @@ public class SassLinker extends AbstractLinker {
 
     @Override
     public String getDescription() {
-        return "Compiling SASS files in public folders to standard CSS";
+        return "Compiling SCSS files in public folders to standard CSS";
     }
 
     @Override
@@ -47,8 +47,8 @@ public class SassLinker extends AbstractLinker {
             // The artifact to return
             ArtifactSet toReturn = new ArtifactSet(artifacts);
 
-            // The temporary sass files provided from the artefacts
-            List<FileInfo> sassFiles = new ArrayList<FileInfo>();
+            // The temporary scss files provided from the artefacts
+            List<FileInfo> scssFiles = new ArrayList<FileInfo>();
 
             // The public files are provided as inputstream, but the compiler
             // needs real files, as they can contain references to other
@@ -56,10 +56,13 @@ public class SassLinker extends AbstractLinker {
             String tempFolderName = new Date().getTime() + File.separator;
             File tempFolder = createTempDir(tempFolderName);
 
-            // Create the temporary files
+            // Can't search here specifically for public resources, as the type
+            // is different during compilation. This means we have to loop
+            // through all the artifacts
             for (EmittedArtifact resource : artifacts
                     .find(EmittedArtifact.class)) {
 
+                // Create the temporary files.
                 String partialPath = resource.getPartialPath();
                 if (partialPath.endsWith(".scss")) {
 
@@ -85,46 +88,54 @@ public class SassLinker extends AbstractLinker {
                                     tempfile);
 
                             // Store the file info for the compilation
-                            sassFiles.add(new FileInfo(tempfile, partialPath));
+                            scssFiles.add(new FileInfo(tempfile, partialPath));
 
-                            // In my oppinion, the SASS file does not need to be
-                            // output to the web content, as they can't be used
-                            // there
+                            // In my opinion, the SCSS file does not need to be
+                            // output to the web content folder, as they can't
+                            // be used there
                             toReturn.remove(resource);
+                        } else {
+                            logger.log(TreeLogger.WARN, "Duplicate file "
+                                    + tempfile.getPath());
                         }
                     } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        logger.log(TreeLogger.ERROR,
+                                "Could not write temporary file " + fileName, e);
                     }
                 }
             }
 
             // Compile the files and store them in the artifact
-            logger.log(TreeLogger.INFO, "Processing " + sassFiles.size()
+            logger.log(TreeLogger.INFO, "Processing " + scssFiles.size()
                     + " Sass file(s)");
-            for (FileInfo fileInfo : sassFiles) {
+            for (FileInfo fileInfo : scssFiles) {
                 logger.log(TreeLogger.INFO, "   " + fileInfo.originalScssPath
                         + " -> " + fileInfo.getOriginalCssPath());
 
-                ScssStylesheet scss;
-
                 try {
-                    scss = ScssStylesheet.get(fileInfo.getAbsolutePath());
-                    scss.compile();
-                    InputStream is = new ByteArrayInputStream(scss.toString()
-                            .getBytes());
+                    ScssStylesheet scss = ScssStylesheet.get(fileInfo
+                            .getAbsolutePath());
+                    if (!fileInfo.isMixin()) {
+                        scss.compile();
+                        InputStream is = new ByteArrayInputStream(scss
+                                .toString().getBytes());
 
-                    toReturn.add(this.emitInputStream(logger, is,
-                            fileInfo.getOriginalCssPath()));
+                        toReturn.add(this.emitInputStream(logger, is,
+                                fileInfo.getOriginalCssPath()));
+                    }
+
+                    fileInfo.getFile().delete();
                 } catch (CSSException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    logger.log(TreeLogger.ERROR, "SCSS compilation failed for "
+                            + fileInfo.getOriginalCssPath(), e);
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    logger.log(
+                            TreeLogger.ERROR,
+                            "Could not write CSS file for "
+                                    + fileInfo.getOriginalCssPath(), e);
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    logger.log(TreeLogger.ERROR, "SCSS compilation failed for "
+                            + fileInfo.getOriginalCssPath(), e);
                 }
             }
 
@@ -134,6 +145,13 @@ public class SassLinker extends AbstractLinker {
         return artifacts;
     }
 
+    /**
+     * Writes the contents of an InputStream out to a file.
+     * 
+     * @param contents
+     * @param tempfile
+     * @throws IOException
+     */
     private void writeFromInputStream(InputStream contents, File tempfile)
             throws IOException {
         // write the inputStream to a FileOutputStream
@@ -170,8 +188,7 @@ public class SassLinker extends AbstractLinker {
     }
 
     /**
-     * Temporal storage for file info from Artifact
-     * 
+     * Temporal storage for file info from Artifact.
      */
     private class FileInfo {
         private String originalScssPath;
@@ -182,6 +199,10 @@ public class SassLinker extends AbstractLinker {
             this.originalScssPath = originalScssPath;
         }
 
+        public boolean isMixin() {
+            return file.getName().startsWith("_");
+        }
+
         public String getAbsolutePath() {
             return file.getAbsolutePath();
         }
@@ -190,6 +211,9 @@ public class SassLinker extends AbstractLinker {
             return originalScssPath.substring(0, originalScssPath.length() - 5)
                     + ".css";
         }
-    }
 
+        public File getFile() {
+            return file;
+        }
+    }
 }
