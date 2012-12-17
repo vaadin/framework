@@ -205,7 +205,7 @@ public class VaadinServletService extends VaadinService {
             // Just ignore problem here
         }
 
-        if (appId == null || "".equals(appId)) {
+        if (appId == null || "".equals(appId) || "/".equals(appId)) {
             appId = "ROOT";
         }
         appId = appId.replaceAll("[^a-zA-Z0-9]", "");
