@@ -16,13 +16,20 @@ package com.vaadin.server;
  * the License.
  */
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.vaadin.server.JsonCodec.BeanProperty;
+import com.vaadin.shared.communication.UidlValue;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelState;
 
 /**
@@ -70,6 +77,26 @@ public class JSONSerializerTest extends TestCase {
                 null).getEncodedValue();
 
         ensureDecodedCorrectly(stateToStringMap, encodedMap, mapType);
+    }
+
+    public void testNullLegacyValue() throws JSONException {
+        JSONArray inputArray = new JSONArray(
+                Arrays.asList("n", JSONObject.NULL));
+        UidlValue decodedObject = (UidlValue) JsonCodec.decodeInternalType(
+                UidlValue.class, true, inputArray, null);
+        assertNull(decodedObject.getValue());
+    }
+
+    public void testNullTypeOtherValue() {
+        try {
+            JSONArray inputArray = new JSONArray(Arrays.asList("n", "a"));
+            UidlValue decodedObject = (UidlValue) JsonCodec.decodeInternalType(
+                    UidlValue.class, true, inputArray, null);
+
+            throw new AssertionFailedError("No JSONException thrown");
+        } catch (JSONException e) {
+            // Should throw exception
+        }
     }
 
     private void ensureDecodedCorrectly(Object original, Object encoded,
