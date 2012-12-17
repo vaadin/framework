@@ -3203,4 +3203,30 @@ public class ApplicationConnection {
             GwtEvent.Type<H> type, H handler) {
         return eventBus.addHandler(type, handler);
     }
+
+    /**
+     * Calls {@link ComponentConnector#flush()} on the active connector. Does
+     * nothing if there is no active (focused) connector.
+     */
+    public void flushActiveConnector() {
+        ComponentConnector activeConnector = getActiveConnector();
+        if (activeConnector == null) {
+            return;
+        }
+        activeConnector.flush();
+    }
+
+    /**
+     * Gets the active connector for focused element in browser.
+     * 
+     * @return Connector for focused element or null.
+     */
+    private ComponentConnector getActiveConnector() {
+        Element focusedElement = Util.getFocusedElement();
+        if (focusedElement == null) {
+            return null;
+        }
+        return Util.getConnectorForElement(this, getUIConnector().getWidget(),
+                focusedElement);
+    }
 }

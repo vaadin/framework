@@ -75,12 +75,17 @@ public class RichTextAreaConnector extends AbstractFieldConnector implements
 
     @Override
     public void onBeforeShortcutAction(Event e) {
-        getWidget().synchronizeContentToServer();
+        flush();
     }
 
     @Override
     public VRichTextArea getWidget() {
         return (VRichTextArea) super.getWidget();
+    }
+
+    @Override
+    public void flush() {
+        getWidget().synchronizeContentToServer();
     };
 
 }

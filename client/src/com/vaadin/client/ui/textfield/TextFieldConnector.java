@@ -114,6 +114,11 @@ public class TextFieldConnector extends AbstractFieldConnector implements
 
     @Override
     public void onBeforeShortcutAction(Event e) {
+        flush();
+    }
+
+    @Override
+    public void flush() {
         getWidget().valueChange(false);
     }
 

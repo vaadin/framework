@@ -438,4 +438,13 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     protected String getIcon() {
         return getResourceUrl(ComponentConstants.ICON_RESOURCE);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.client.ComponentConnector#flush()
+     */
+    public void flush() {
+        // No generic implementation. Override if needed
+    }
 }
