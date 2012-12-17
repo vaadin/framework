@@ -6371,6 +6371,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 }
             });
 
+            if (!initializedAndAttached) {
+                sizeInit();
+            }
             forceRealignColumnHeaders();
         }
 
