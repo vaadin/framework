@@ -127,4 +127,16 @@ public interface ComponentConnector extends ServerConnector {
      */
     public TooltipInfo getTooltipInfo(Element element);
 
+    /**
+     * Called for the active (focused) connector when a situation occurs that
+     * the focused connector might have buffered changes which need to be
+     * processed before other activity takes place.
+     * <p>
+     * This is currently called when the user changes the fragment using the
+     * back/forward button in the browser and allows the focused field to submit
+     * its value to the server before the fragment change event takes place.
+     * </p>
+     */
+    public void flush();
+
 }
