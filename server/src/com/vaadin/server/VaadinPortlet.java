@@ -479,6 +479,11 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                         // Handles AJAX UIDL requests
                         communicationManager.handleUidlRequest(vaadinRequest,
                                 vaadinResponse, portletWrapper, uI);
+
+                        // Ensure that the browser does not cache UIDL
+                        // responses.
+                        // iOS 6 Safari requires this (#9732)
+                        response.setProperty("Cache-Control", "no-cache");
                         return;
                     } else {
                         handleOtherRequest(vaadinRequest, vaadinResponse,
