@@ -20,6 +20,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.AbstractFieldConnector;
+import com.vaadin.client.ui.HistoryChangeActionListener;
 import com.vaadin.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 import com.vaadin.client.ui.VRichTextArea;
 import com.vaadin.shared.ui.Connect;
@@ -28,7 +29,7 @@ import com.vaadin.ui.RichTextArea;
 
 @Connect(value = RichTextArea.class, loadStyle = LoadStyle.LAZY)
 public class RichTextAreaConnector extends AbstractFieldConnector implements
-        Paintable, BeforeShortcutActionListener {
+        Paintable, BeforeShortcutActionListener, HistoryChangeActionListener {
 
     @Override
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
@@ -81,6 +82,11 @@ public class RichTextAreaConnector extends AbstractFieldConnector implements
     @Override
     public VRichTextArea getWidget() {
         return (VRichTextArea) super.getWidget();
+    }
+
+    @Override
+    public void onHistoryChangeAction() {
+        getWidget().synchronizeContentToServer();
     };
 
 }

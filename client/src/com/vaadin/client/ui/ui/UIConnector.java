@@ -44,11 +44,13 @@ import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
+import com.vaadin.client.ui.HistoryChangeActionListener;
 import com.vaadin.client.ui.ShortcutActionHandler;
 import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.VUI;
@@ -472,5 +474,34 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 componentConnector.getWidget().getElement().scrollIntoView();
             }
         });
+    }
+
+    /**
+     * Sends change action to active connector if it implements the correct
+     * interfaces.
+     */
+    public void flushActiveConnector() {
+        ComponentConnector activeConnector = getActiveConnector();
+        if (activeConnector == null) {
+            return;
+        }
+        if (activeConnector instanceof HistoryChangeActionListener) {
+            ((HistoryChangeActionListener) activeConnector)
+                    .onHistoryChangeAction();
+        }
+    }
+
+    /**
+     * Gets the active connector for focused element in browser.
+     * 
+     * @return Connector for focused element or null.
+     */
+    private ComponentConnector getActiveConnector() {
+        Element focusedElement = Util.getFocusedElement();
+        if (focusedElement == null) {
+            return null;
+        }
+        return Util.getConnectorForElement(getConnection(), getWidget(),
+                focusedElement);
     }
 }
