@@ -44,6 +44,7 @@ import com.vaadin.client.LayoutManager;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
+import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
 
@@ -129,8 +130,12 @@ public class VUI extends SimplePanel implements ResizeHandler,
             String newFragment = event.getValue();
 
             // Send the location to the server if the fragment has changed
+            // and flush active connectors in UI.
             if (!newFragment.equals(currentFragment) && connection != null) {
                 currentFragment = newFragment;
+                UIConnector connector = (UIConnector) ConnectorMap.get(
+                        connection).getConnector(VUI.this);
+                connector.flushActiveConnector();
                 connection.updateVariable(id, UIConstants.LOCATION_VARIABLE,
                         Window.Location.getHref(), true);
             }

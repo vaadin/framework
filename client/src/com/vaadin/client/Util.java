@@ -1059,11 +1059,11 @@ public class Util {
     }
 
     /**
-     * Gets the currently focused element for Internet Explorer.
+     * Gets the currently focused element.
      * 
-     * @return The currently focused element
+     * @return The active element or null if no active element could be found.
      */
-    public native static Element getIEFocusedElement()
+    public native static Element getFocusedElement()
     /*-{
        if ($wnd.document.activeElement) {
            return $wnd.document.activeElement;
@@ -1072,6 +1072,17 @@ public class Util {
        return null;
      }-*/
     ;
+    
+    /**
+     * Gets the currently focused element for Internet Explorer.
+     * 
+     * @return The currently focused element
+     * @deprecated Use #getFocusedElement instead
+     */
+    @Deprecated
+    public static Element getIEFocusedElement() {
+        return getFocusedElement();
+    }
 
     /**
      * Kind of stronger version of isAttached(). In addition to std isAttached,

@@ -23,6 +23,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.AbstractFieldConnector;
+import com.vaadin.client.ui.HistoryChangeActionListener;
 import com.vaadin.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 import com.vaadin.client.ui.VTextField;
 import com.vaadin.shared.ui.Connect;
@@ -33,7 +34,7 @@ import com.vaadin.ui.TextField;
 
 @Connect(value = TextField.class, loadStyle = LoadStyle.EAGER)
 public class TextFieldConnector extends AbstractFieldConnector implements
-        Paintable, BeforeShortcutActionListener {
+        Paintable, BeforeShortcutActionListener, HistoryChangeActionListener {
 
     @Override
     public AbstractTextFieldState getState() {
@@ -114,6 +115,11 @@ public class TextFieldConnector extends AbstractFieldConnector implements
 
     @Override
     public void onBeforeShortcutAction(Event e) {
+        getWidget().valueChange(false);
+    }
+
+    @Override
+    public void onHistoryChangeAction() {
         getWidget().valueChange(false);
     }
 
