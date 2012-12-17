@@ -127,4 +127,10 @@ public interface ComponentConnector extends ServerConnector {
      */
     public TooltipInfo getTooltipInfo(Element element);
 
+    /**
+     * Called by the framework when the connector should flush any pending user
+     * events it might have buffered.
+     */
+    public void flush();
+
 }
