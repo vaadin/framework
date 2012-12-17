@@ -666,10 +666,13 @@ public class JsonCodec implements Serializable {
             return encodeEnum((Enum<?>) value, connectorTracker);
         } else if (value instanceof JSONArray || value instanceof JSONObject) {
             return new EncodeResult(value);
-        } else {
+        } else if (valueType instanceof Class<?>) {
             // Any object that we do not know how to encode we encode by looping
             // through fields
-            return encodeObject(value, (JSONObject) diffState, connectorTracker);
+            return encodeObject(value, (Class<?>) valueType,
+                    (JSONObject) diffState, connectorTracker);
+        } else {
+            throw new JSONException("Can not encode " + valueType);
         }
     }
 
@@ -687,14 +690,14 @@ public class JsonCodec implements Serializable {
         return properties;
     }
 
-    private static EncodeResult encodeObject(Object value,
+    private static EncodeResult encodeObject(Object value, Class<?> valueType,
             JSONObject referenceValue, ConnectorTracker connectorTracker)
             throws JSONException {
         JSONObject encoded = new JSONObject();
         JSONObject diff = new JSONObject();
 
         try {
-            for (BeanProperty property : getProperties(value.getClass())) {
+            for (BeanProperty property : getProperties(valueType)) {
                 String fieldName = property.getName();
                 // We can't use PropertyDescriptor.getPropertyType() as it does
                 // not support generics
@@ -704,7 +707,7 @@ public class JsonCodec implements Serializable {
                 if (encoded.has(fieldName)) {
                     throw new RuntimeException(
                             "Can't encode "
-                                    + value.getClass().getName()
+                                    + valueType.getName()
                                     + " as it has multiple properties with the name "
                                     + fieldName.toLowerCase()
                                     + ". This can happen if there are getters and setters for a public field (the framework can't know which to ignore) or if there are properties with only casing distinguishing between the names (e.g. getFoo() and getFOO())");

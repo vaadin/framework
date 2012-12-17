@@ -59,8 +59,8 @@ public class JsonEncoder {
      * @param connection
      * @return JSON representation of the value
      */
-    public static JSONValue encode(Object value,
-            boolean restrictToInternalTypes, ApplicationConnection connection) {
+    public static JSONValue encode(Object value, Type type,
+            ApplicationConnection connection) {
         if (null == value) {
             return JSONNull.getInstance();
         } else if (value instanceof JSONValue) {
@@ -80,55 +80,57 @@ public class JsonEncoder {
             return new JSONNumber((Byte) value);
         } else if (value instanceof Character) {
             return new JSONString(String.valueOf(value));
-        } else if (value instanceof Object[]) {
-            return encodeObjectArray((Object[]) value, restrictToInternalTypes,
-                    connection);
+        } else if (value instanceof Object[] && type == null) {
+            // Non-legacy arrays handed by generated serializer
+            return encodeLegacyObjectArray((Object[]) value, connection);
         } else if (value instanceof Enum) {
             return encodeEnum((Enum<?>) value, connection);
         } else if (value instanceof Map) {
-            return encodeMap((Map) value, restrictToInternalTypes, connection);
+            return encodeMap((Map) value, type, connection);
         } else if (value instanceof Connector) {
             Connector connector = (Connector) value;
             return new JSONString(connector.getConnectorId());
         } else if (value instanceof Collection) {
-            return encodeCollection((Collection) value,
-                    restrictToInternalTypes, connection);
+            return encodeCollection((Collection) value, type, connection);
         } else if (value instanceof UidlValue) {
             return encodeVariableChange((UidlValue) value, connection);
         } else {
-            String transportType = getTransportType(value);
-            if (transportType != null) {
-                return new JSONString(String.valueOf(value));
-            } else {
-                // Try to find a generated serializer object, class name is the
-                // type
-                Type type = new Type(value.getClass());
-
-                JSONSerializer<Object> serializer = (JSONSerializer<Object>) type
-                        .findSerializer();
+            // First see if there's a custom serializer
+            JSONSerializer<Object> serializer = null;
+            if (type != null) {
+                serializer = (JSONSerializer<Object>) type.findSerializer();
                 if (serializer != null) {
                     return serializer.serialize(value, connection);
-                } else {
-                    try {
-                        Collection<Property> properties = type.getProperties();
+                }
+            }
 
-                        JSONObject jsonObject = new JSONObject();
-                        for (Property property : properties) {
-                            Object propertyValue = property.getValue(value);
-                            JSONValue encodedPropertyValue = encode(
-                                    propertyValue, restrictToInternalTypes,
-                                    connection);
-                            jsonObject.put(property.getName(),
-                                    encodedPropertyValue);
-                        }
-                        return jsonObject;
+            String transportType = getTransportType(value);
+            if (transportType != null) {
+                // Send the string value for remaining legacy types
+                return new JSONString(String.valueOf(value));
+            } else if (type != null) {
+                // And finally try using bean serialization logic
+                try {
+                    Collection<Property> properties = type.getProperties();
 
-                    } catch (NoDataException e) {
-                        throw new RuntimeException("Can not encode "
-                                + type.getSignature(), e);
+                    JSONObject jsonObject = new JSONObject();
+                    for (Property property : properties) {
+                        Object propertyValue = property.getValue(value);
+                        Type propertyType = property.getType();
+                        JSONValue encodedPropertyValue = encode(propertyValue,
+                                propertyType, connection);
+                        jsonObject
+                                .put(property.getName(), encodedPropertyValue);
                     }
+                    return jsonObject;
+
+                } catch (NoDataException e) {
+                    throw new RuntimeException("Can not encode "
+                            + type.getSignature(), e);
                 }
 
+            } else {
+                throw new RuntimeException("Can't encode " + value.getClass());
             }
         }
     }
@@ -152,13 +154,13 @@ public class JsonEncoder {
                     + valueType);
         }
         jsonArray.set(0, new JSONString(transportType));
-        jsonArray.set(1, encode(value, true, connection));
+        jsonArray.set(1, encode(value, null, connection));
 
         return jsonArray;
     }
 
-    private static JSONValue encodeMap(Map<Object, Object> map,
-            boolean restrictToInternalTypes, ApplicationConnection connection) {
+    private static JSONValue encodeMap(Map<Object, Object> map, Type type,
+            ApplicationConnection connection) {
         /*
          * As we have no info about declared types, we instead select encoding
          * scheme based on actual type of first key. We can't do this if there's
@@ -171,26 +173,30 @@ public class JsonEncoder {
 
         Object firstKey = map.keySet().iterator().next();
         if (firstKey instanceof String) {
-            return encodeStringMap(map, restrictToInternalTypes, connection);
-        } else if (restrictToInternalTypes) {
+            return encodeStringMap(map, type, connection);
+        } else if (type == null) {
             throw new IllegalStateException(
                     "Only string keys supported for legacy maps");
         } else if (firstKey instanceof Connector) {
             return encodeConnectorMap(map, connection);
         } else {
-            return encodeObjectMap(map, connection);
+            return encodeObjectMap(map, type, connection);
         }
     }
 
     private static JSONValue encodeObjectMap(Map<Object, Object> map,
-            ApplicationConnection connection) {
+            Type type, ApplicationConnection connection) {
         JSONArray keys = new JSONArray();
         JSONArray values = new JSONArray();
+
+        assert type != null : "Should only be used for non-legacy types";
+        Type keyType = type.getParameterTypes()[0];
+        Type valueType = type.getParameterTypes()[1];
+
         for (Entry<?, ?> entry : map.entrySet()) {
-            // restrictToInternalTypes always false if we end up here
-            keys.set(keys.size(), encode(entry.getKey(), false, connection));
+            keys.set(keys.size(), encode(entry.getKey(), keyType, connection));
             values.set(values.size(),
-                    encode(entry.getValue(), false, connection));
+                    encode(entry.getValue(), valueType, connection));
         }
 
         JSONArray keysAndValues = new JSONArray();
@@ -207,8 +213,8 @@ public class JsonEncoder {
         for (Entry<?, ?> entry : map.entrySet()) {
             Connector connector = (Connector) entry.getKey();
 
-            // restrictToInternalTypes always false if we end up here
-            JSONValue encodedValue = encode(entry.getValue(), false, connection);
+            // Connectors currently encoded using instanceof -> no type needed
+            JSONValue encodedValue = encode(entry.getValue(), null, connection);
 
             jsonMap.put(connector.getConnectorId(), encodedValue);
         }
@@ -217,19 +223,20 @@ public class JsonEncoder {
     }
 
     private static JSONValue encodeStringMap(Map<Object, Object> map,
-            boolean restrictToInternalTypes, ApplicationConnection connection) {
+            Type type, ApplicationConnection connection) {
         JSONObject jsonMap = new JSONObject();
 
         for (Entry<?, ?> entry : map.entrySet()) {
             String key = (String) entry.getKey();
             Object value = entry.getValue();
 
-            if (restrictToInternalTypes) {
-                value = new UidlValue(value);
+            JSONValue encodedValue;
+            if (type == null) {
+                encodedValue = encode(new UidlValue(value), null, connection);
+            } else {
+                Type childType = type.getParameterTypes()[0];
+                encodedValue = encode(value, childType, connection);
             }
-
-            JSONValue encodedValue = encode(value, restrictToInternalTypes,
-                    connection);
 
             jsonMap.put(key, encodedValue);
         }
@@ -242,28 +249,27 @@ public class JsonEncoder {
         return new JSONString(e.toString());
     }
 
-    private static JSONValue encodeObjectArray(Object[] array,
-            boolean restrictToInternalTypes, ApplicationConnection connection) {
+    private static JSONValue encodeLegacyObjectArray(Object[] array,
+            ApplicationConnection connection) {
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < array.length; ++i) {
             // TODO handle object graph loops?
             Object value = array[i];
-            if (restrictToInternalTypes) {
-                value = new UidlValue(value);
-            }
-            jsonArray
-                    .set(i, encode(value, restrictToInternalTypes, connection));
+            jsonArray.set(i, encode(value, null, connection));
         }
         return jsonArray;
     }
 
-    private static JSONValue encodeCollection(Collection collection,
-            boolean restrictToInternalTypes, ApplicationConnection connection) {
+    private static JSONValue encodeCollection(Collection collection, Type type,
+            ApplicationConnection connection) {
         JSONArray jsonArray = new JSONArray();
         int idx = 0;
         for (Object o : collection) {
-            JSONValue encodedObject = encode(o, restrictToInternalTypes,
-                    connection);
+            Type childType = null;
+            if (type != null) {
+                childType = type.getParameterTypes()[0];
+            }
+            JSONValue encodedObject = encode(o, childType, connection);
             jsonArray.set(idx++, encodedObject);
         }
         if (collection instanceof Set) {

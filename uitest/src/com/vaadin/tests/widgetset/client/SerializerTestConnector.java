@@ -241,6 +241,16 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
                         list.toArray(new ContentMode[list.size()]),
                         Arrays.asList(array));
             }
+
+            @Override
+            public void sendBeanSubclass(final SimpleTestBean bean) {
+                rpc.sendBeanSubclass(new SimpleTestBean() {
+                    @Override
+                    public int getValue() {
+                        return bean.getValue() + 1;
+                    }
+                });
+            }
         });
     }
 

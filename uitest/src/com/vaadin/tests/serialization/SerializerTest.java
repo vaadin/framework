@@ -46,10 +46,20 @@ public class SerializerTest extends AbstractTestUI {
     protected void setup(VaadinRequest request) {
         final SerializerTestExtension testExtension = new SerializerTestExtension();
         addExtension(testExtension);
+
+        // Don't show row numbers to make it easier to add tests without
+        // changing all numbers
+        log.setNumberLogRows(false);
         addComponent(log);
 
         SerializerTestRpc rpc = testExtension
                 .getRpcProxy(SerializerTestRpc.class);
+        rpc.sendBeanSubclass(new SimpleTestBean() {
+            @Override
+            public int getValue() {
+                return 42;
+            }
+        });
         rpc.sendBoolean(true, Boolean.FALSE, new boolean[] { true, true, false,
                 true, false, false });
         rpc.sendByte((byte) 5, Byte.valueOf((byte) -12), new byte[] { 3, 1, 2 });
@@ -298,6 +308,11 @@ public class SerializerTest extends AbstractTestUI {
                     List<ContentMode> list) {
                 log.log("sendEnum: " + contentMode + ", "
                         + Arrays.toString(array) + ", " + list);
+            }
+
+            @Override
+            public void sendBeanSubclass(SimpleTestBean bean) {
+                log.log("sendBeanSubclass: " + bean.getValue());
             }
 
         });

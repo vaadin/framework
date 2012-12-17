@@ -77,4 +77,6 @@ public interface SerializerTestRpc extends ServerRpc, ClientRpc {
     public void sendEnum(ContentMode contentMode, ContentMode[] array,
             List<ContentMode> list);
 
+    public void sendBeanSubclass(SimpleTestBean bean);
+
 }
