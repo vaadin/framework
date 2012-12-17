@@ -48,6 +48,7 @@ public class TestStreamVariableMapping extends TestCase {
     }
 
     public void testAddStreamVariable() {
+        owner.getUI().getConnectorTracker().registerConnector(owner);
         String targetUrl = cm.getStreamVariableTargetUrl(owner, variableName,
                 streamVariable);
         assertTrue(targetUrl.startsWith("app://APP/UPLOAD/-1/"
@@ -61,6 +62,7 @@ public class TestStreamVariableMapping extends TestCase {
 
     public void testRemoveVariable() {
         ConnectorTracker tracker = owner.getUI().getConnectorTracker();
+        tracker.registerConnector(owner);
         cm.getStreamVariableTargetUrl(owner, variableName, streamVariable);
         assertNotNull(tracker.getStreamVariable(owner.getConnectorId(),
                 variableName));
