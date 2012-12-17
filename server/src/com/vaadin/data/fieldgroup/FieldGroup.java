@@ -693,11 +693,10 @@ public class FieldGroup implements Serializable {
      * Binds member fields found in the given object.
      * <p>
      * This method processes all (Java) member fields whose type extends
-     * {@link Field} and that can be mapped to a property id. Property ids are
-     * searched in the following order: @{@link PropertyId} annotations, exact
-     * field name matches and the case-insensitive matching that ignores
-     * underscores. All non-null fields for which a property id can be
-     * determined are bound to the property id.
+     * {@link Field} and that can be mapped to a property id. Property id
+     * mapping is done based on the field name or on a @{@link PropertyId}
+     * annotation on the field. All non-null fields for which a property id can
+     * be determined are bound to the property id.
      * </p>
      * <p>
      * For example:
@@ -734,12 +733,11 @@ public class FieldGroup implements Serializable {
      * that have not been initialized.
      * <p>
      * This method processes all (Java) member fields whose type extends
-     * {@link Field} and that can be mapped to a property id. Property ids are
-     * searched in the following order: @{@link PropertyId} annotations, exact
-     * field name matches and the case-insensitive matching that ignores
-     * underscores. Fields that are not initialized (null) are built using the
-     * field factory. All non-null fields for which a property id can be
-     * determined are bound to the property id.
+     * {@link Field} and that can be mapped to a property id. Property id
+     * mapping is done based on the field name or on a @{@link PropertyId}
+     * annotation on the field. Fields that are not initialized (null) are built
+     * using the field factory. All non-null fields for which a property id can
+     * be determined are bound to the property id.
      * </p>
      * <p>
      * For example:
@@ -779,12 +777,11 @@ public class FieldGroup implements Serializable {
      * member fields that have not been initialized.
      * <p>
      * This method processes all (Java) member fields whose type extends
-     * {@link Field} and that can be mapped to a property id. Property ids are
-     * searched in the following order: @{@link PropertyId} annotations, exact
-     * field name matches and the case-insensitive matching that ignores
-     * underscores. Fields that are not initialized (null) are built using the
-     * field factory is buildFields is true. All non-null fields for which a
-     * property id can be determined are bound to the property id.
+     * {@link Field} and that can be mapped to a property id. Property id
+     * mapping is done based on the field name or on a @{@link PropertyId}
+     * annotation on the field. Fields that are not initialized (null) are built
+     * using the field factory is buildFields is true. All non-null fields for
+     * which a property id can be determined are bound to the property id.
      * </p>
      * 
      * @param objectWithMemberFields
@@ -795,10 +792,6 @@ public class FieldGroup implements Serializable {
      */
     protected void buildAndBindMemberFields(Object objectWithMemberFields,
             boolean buildFields) throws BindException {
-        if (getItemDataSource() == null) {
-            // no data source set, cannot find property ids
-            return;
-        }
         Class<?> objectClass = objectWithMemberFields.getClass();
 
         for (java.lang.reflect.Field memberField : getFieldsInDeclareOrder(objectClass)) {
@@ -819,11 +812,7 @@ public class FieldGroup implements Serializable {
                 // @PropertyId(propertyId) always overrides property id
                 propertyId = propertyIdAnnotation.value();
             } else {
-                propertyId = findPropertyId(memberField);
-                if (propertyId == null) {
-                    // Property id was not found, skip this field
-                    continue;
-                }
+                propertyId = memberField.getName();
             }
 
             // Ensure that the property id exists
@@ -884,51 +873,6 @@ public class FieldGroup implements Serializable {
         }
     }
 
-    /**
-     * Searches for a property id from the current itemDataSource that matches
-     * the given memberField.
-     * <p>
-     * If perfect match is not found, uses a case insensitive search that also
-     * ignores underscores. Returns null if no match is found. Throws a
-     * SearchException if no item data source has been set.
-     * </p>
-     * <p>
-     * The propertyId search logic used by
-     * {@link #buildAndBindMemberFields(Object, boolean)
-     * buildAndBindMemberFields} can easily be customized by overriding this
-     * method. No other changes are needed.
-     * </p>
-     * 
-     * @param memberField
-     *            The field an object id is searched for
-     * @return
-     */
-    protected Object findPropertyId(java.lang.reflect.Field memberField) {
-        String fieldName = memberField.getName();
-        if (getItemDataSource() == null) {
-            throw new SearchException(
-                    "Property id type for field '"
-                            + fieldName
-                            + "' could not be determined. No item data source has been set.");
-        }
-        Item dataSource = getItemDataSource();
-        if (dataSource.getItemProperty(fieldName) != null) {
-            return fieldName;
-        } else {
-            String minifiedFieldName = fieldName.toLowerCase().replace("_", "");
-            for (Object itemPropertyId : dataSource.getItemPropertyIds()) {
-                if (itemPropertyId instanceof String) {
-                    String itemPropertyName = (String) itemPropertyId;
-                    if (minifiedFieldName.equals(itemPropertyName.toLowerCase()
-                            .replace("_", ""))) {
-                        return itemPropertyName;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
     public static class CommitException extends Exception {
 
         public CommitException() {
@@ -960,18 +904,6 @@ public class FieldGroup implements Serializable {
         }
 
         public BindException(String message, Throwable t) {
-            super(message, t);
-        }
-
-    }
-
-    public static class SearchException extends RuntimeException {
-
-        public SearchException(String message) {
-            super(message);
-        }
-
-        public SearchException(String message, Throwable t) {
             super(message, t);
         }
 
