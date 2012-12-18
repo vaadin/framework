@@ -58,6 +58,22 @@ public class BeanFieldGroup<T> extends FieldGroup {
         }
     }
 
+    @Override
+    protected Object findPropertyId(java.lang.reflect.Field memberField) {
+        String fieldName = memberField.getName();
+        Item dataSource = getItemDataSource();
+        if (dataSource != null && dataSource.getItemProperty(fieldName) != null) {
+            return fieldName;
+        } else {
+            String minifiedFieldName = fieldName.toLowerCase().replace("_", "");
+            try {
+                return getFieldName(beanType, minifiedFieldName);
+            } catch (SecurityException | NoSuchFieldException e) {
+            }
+        }
+        return null;
+    }
+
     private static java.lang.reflect.Field getField(Class<?> cls,
             String propertyId) throws SecurityException, NoSuchFieldException {
         if (propertyId.contains(".")) {
@@ -80,6 +96,33 @@ public class BeanFieldGroup<T> extends FieldGroup {
                 } else {
                     throw e;
                 }
+            }
+        }
+    }
+
+    private static String getFieldName(Class<?> cls, String propertyId)
+            throws SecurityException, NoSuchFieldException {
+        if (propertyId.contains(".")) {
+            String[] parts = propertyId.split("\\.", 2);
+            // Get the type of the field in the "cls" class
+            java.lang.reflect.Field field1 = getField(cls, parts[0]);
+            // Find the rest from the sub type
+            return getFieldName(field1.getType(), parts[1]);
+        } else {
+            // Try to find the field directly in the given class
+
+            for (java.lang.reflect.Field field1 : cls.getDeclaredFields()) {
+                if (propertyId.equals(field1.getName().toLowerCase()
+                        .replace("_", ""))) {
+                    return field1.getName();
+                }
+            }
+            // Try super classes until we reach Object
+            Class<?> superClass = cls.getSuperclass();
+            if (superClass != Object.class) {
+                return getFieldName(superClass, propertyId);
+            } else {
+                throw new NoSuchFieldException();
             }
         }
     }

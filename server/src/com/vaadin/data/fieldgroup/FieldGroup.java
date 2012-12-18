@@ -795,10 +795,6 @@ public class FieldGroup implements Serializable {
      */
     protected void buildAndBindMemberFields(Object objectWithMemberFields,
             boolean buildFields) throws BindException {
-        if (getItemDataSource() == null) {
-            // no data source set, cannot find property ids
-            return;
-        }
         Class<?> objectClass = objectWithMemberFields.getClass();
 
         for (java.lang.reflect.Field memberField : getFieldsInDeclareOrder(objectClass)) {
@@ -819,7 +815,12 @@ public class FieldGroup implements Serializable {
                 // @PropertyId(propertyId) always overrides property id
                 propertyId = propertyIdAnnotation.value();
             } else {
-                propertyId = findPropertyId(memberField);
+                try {
+                    propertyId = findPropertyId(memberField);
+                } catch (SearchException e) {
+                    // Property id was not found, skip this field
+                    continue;
+                }
                 if (propertyId == null) {
                     // Property id was not found, skip this field
                     continue;
