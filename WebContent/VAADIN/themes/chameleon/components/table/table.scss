@@ -1,5 +1,9 @@
 @mixin chameleon-table($primaryStyleName : v-table) {
 
+.#{$primaryStyleName}-table {
+	line-height: $line-height;
+}
+
 .#{$primaryStyleName}-header-wrap,
 .#{$primaryStyleName}-header-drag {
 	background: #c9c9c9 url(../../img/grad-light-top.png) repeat-x;

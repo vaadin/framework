@@ -3,6 +3,8 @@
 @import "components/components.scss";
 @import "compound/compound.scss";
 
+$font-size: 13px;
+$line-height: 1.4;
 @mixin chameleon {
 	// TODO move this?
 	@include base;

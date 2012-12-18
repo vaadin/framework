@@ -21,10 +21,10 @@
 .#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-spacertd div {
 	height: 20px;
 	background-image: url(img/bar/tab-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
-	font-size: 11px;
 	margin: 0;
 }
 .#{$primaryStyleName}-tabs-bar .#{$primaryStyleName}-tabitem .v-caption {
+	font-size: 11px;
 	height: 18px;
 	background-image: url(img/bar/tab-right.png); /** sprite-ref: verticals; sprite-alignment: right */
 	padding: 2px 12px 0 10px;
