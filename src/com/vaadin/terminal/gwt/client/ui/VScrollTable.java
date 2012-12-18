@@ -495,7 +495,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     }
 
     ContextMenuDetails contextMenu;
-    private boolean hadScrollBars = false;
 
     public VScrollTable() {
         setMultiSelectMode(MULTISELECT_MODE_DEFAULT);
@@ -932,8 +931,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         setCacheRateFromUIDL(uidl);
 
-        recalcWidths = uidl.hasAttribute("recalcWidths")
-                || (initializedAndAttached && hadScrollBars != willHaveScrollbars());
+        recalcWidths = uidl.hasAttribute("recalcWidths");
         if (recalcWidths) {
             tHead.clear();
             tFoot.clear();
@@ -2169,8 +2167,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
             }
         });
-
-        hadScrollBars = willHaveScrollbarz;
     }
 
     /**
@@ -6371,9 +6367,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 }
             });
 
-            if (!initializedAndAttached) {
-                sizeInit();
-            }
             forceRealignColumnHeaders();
         }
 
