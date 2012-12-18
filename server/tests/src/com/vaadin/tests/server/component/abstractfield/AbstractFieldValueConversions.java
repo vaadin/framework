@@ -26,6 +26,12 @@ public class AbstractFieldValueConversions extends TestCase {
             34, Sex.FEMALE, new Address("Paula street 1", 12345, "P-town",
                     Country.FINLAND));
 
+    /**
+     * Java uses a non-breaking space (ascii 160) instead of space when
+     * formatting
+     */
+    private static final char FORMATTED_SPACE = 160;
+
     public void testWithoutConversion() {
         TextField tf = new TextField();
         tf.setPropertyDataSource(new MethodProperty<String>(paulaBean,
@@ -85,6 +91,22 @@ public class AbstractFieldValueConversions extends TestCase {
         tf.getPropertyDataSource().setValue(42);
         assertEquals(42, tf.getPropertyDataSource().getValue());
         assertEquals("42", tf.getValue());
+    }
+
+    public void testChangeReadOnlyFieldLocale() {
+        VaadinSession.setCurrent(new VaadinSession(null));
+
+        TextField tf = new TextField("salary");
+        tf.setLocale(new Locale("en", "US"));
+        ObjectProperty<Integer> ds = new ObjectProperty<Integer>(123456789);
+        ds.setReadOnly(true);
+        tf.setPropertyDataSource(ds);
+        assertEquals((Integer) 123456789, ds.getValue());
+        assertEquals("123,456,789", tf.getValue());
+        tf.setLocale(new Locale("fi", "FI"));
+        assertEquals((Integer) 123456789, ds.getValue());
+        assertEquals("123" + FORMATTED_SPACE + "456" + FORMATTED_SPACE + "789",
+                tf.getValue());
     }
 
     public void testBooleanNullConversion() {
