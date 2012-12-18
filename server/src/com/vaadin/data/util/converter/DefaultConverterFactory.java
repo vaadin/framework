@@ -95,6 +95,8 @@ public class DefaultConverterFactory implements ConverterFactory {
     protected Converter<String, ?> createStringConverter(Class<?> sourceType) {
         if (Double.class.isAssignableFrom(sourceType)) {
             return new StringToDoubleConverter();
+        } else if (Float.class.isAssignableFrom(sourceType)) {
+            return new StringToFloatConverter();
         } else if (Integer.class.isAssignableFrom(sourceType)) {
             return new StringToIntegerConverter();
         } else if (Boolean.class.isAssignableFrom(sourceType)) {
