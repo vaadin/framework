@@ -44,6 +44,41 @@ public class AbstractFieldValueConversions extends TestCase {
         assertEquals("abc", paulaBean.getFirstName());
     }
 
+    public void testNonmodifiedBufferedFieldConversion() {
+        VaadinSession.setCurrent(new VaadinSession(null));
+        TextField tf = new TextField("salary");
+        tf.setBuffered(true);
+        tf.setLocale(new Locale("en", "US"));
+        ObjectProperty<Integer> ds = new ObjectProperty<Integer>(123456789);
+        tf.setPropertyDataSource(ds);
+        assertEquals((Integer) 123456789, ds.getValue());
+        assertEquals("123,456,789", tf.getValue());
+        tf.setLocale(new Locale("fi", "FI"));
+        assertEquals((Integer) 123456789, ds.getValue());
+        assertEquals("123" + FORMATTED_SPACE + "456" + FORMATTED_SPACE + "789",
+                tf.getValue());
+
+    }
+
+    public void testModifiedBufferedFieldConversion() {
+        VaadinSession.setCurrent(new VaadinSession(null));
+        TextField tf = new TextField("salary");
+        tf.setBuffered(true);
+        tf.setLocale(new Locale("en", "US"));
+        ObjectProperty<Integer> ds = new ObjectProperty<Integer>(123456789);
+        tf.setPropertyDataSource(ds);
+        assertEquals((Integer) 123456789, ds.getValue());
+        assertEquals("123,456,789", tf.getValue());
+        tf.setValue("123,123");
+        assertEquals((Integer) 123456789, ds.getValue());
+        assertEquals("123,123", tf.getValue());
+
+        tf.setLocale(new Locale("fi", "FI"));
+        assertEquals((Integer) 123456789, ds.getValue());
+        // Value should not be updated when field is buffered
+        assertEquals("123,123", tf.getValue());
+    }
+
     public void testStringIdentityConversion() {
         TextField tf = new TextField();
         tf.setConverter(new Converter<String, String>() {
