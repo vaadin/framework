@@ -73,14 +73,17 @@ public class ArraySerializer extends JsonSerializer {
     @Override
     protected void printSerializerBody(TreeLogger logger, SourceWriter w,
             String value, String applicationConnection) {
+        JType componentType = arrayType.getComponentType();
+
         w.println(JSONArray.class.getName() + " values = new "
                 + JSONArray.class.getName() + "();");
         // JPrimitiveType primitive = componentType.isPrimitive();
         w.println("for (int i = 0; i < " + value + ".length; i++) {");
         w.indent();
         w.print("values.set(i, ");
-        w.print(JsonEncoder.class.getName() + ".encode(" + value
-                + "[i], false, " + applicationConnection + ")");
+        w.print(JsonEncoder.class.getName() + ".encode(" + value + "[i],");
+        ConnectorBundleLoaderFactory.writeTypeCreator(w, componentType);
+        w.print(", " + applicationConnection + ")");
         w.println(");");
         w.outdent();
         w.println("}");

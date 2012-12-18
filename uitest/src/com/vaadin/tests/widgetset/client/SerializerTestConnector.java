@@ -93,7 +93,7 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
 
             @Override
             public void sendMap(Map<String, SimpleTestBean> stringMap,
-                    Map<Connector, Boolean> connectorMap,
+                    Map<Connector, SimpleTestBean> connectorMap,
                     Map<Integer, Connector> intMap,
                     Map<SimpleTestBean, SimpleTestBean> beanMap) {
                 Map<SimpleTestBean, SimpleTestBean> updatedBeanMap = new HashMap<SimpleTestBean, SimpleTestBean>();
@@ -102,7 +102,7 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
                     updatedBeanMap.put(entry.getValue(), entry.getKey());
                 }
 
-                rpc.sendMap(Collections.singletonMap("a", stringMap.get("b")),
+                rpc.sendMap(Collections.singletonMap("a", stringMap.get("1")),
                         Collections.singletonMap(getThisConnector(),
                                 connectorMap.get(getUIConnector())),
                         Collections.singletonMap(
@@ -240,6 +240,16 @@ public class SerializerTestConnector extends AbstractExtensionConnector {
                 rpc.sendEnum(nextContentMode,
                         list.toArray(new ContentMode[list.size()]),
                         Arrays.asList(array));
+            }
+
+            @Override
+            public void sendBeanSubclass(final SimpleTestBean bean) {
+                rpc.sendBeanSubclass(new SimpleTestBean() {
+                    @Override
+                    public int getValue() {
+                        return bean.getValue() + 1;
+                    }
+                });
             }
         });
     }
