@@ -634,6 +634,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             setCurrentBufferedSourceException(new Buffered.SourceException(
                     this, e));
             setModified(true);
+            throw getCurrentBufferedSourceException();
         }
 
         // Listen to new data source if possible
