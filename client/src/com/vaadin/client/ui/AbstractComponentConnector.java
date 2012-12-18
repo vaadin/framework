@@ -151,18 +151,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         // Style names
         updateWidgetStyleNames();
 
-        // Set captions
-        if (delegateCaptionHandling()) {
-            ServerConnector parent = getParent();
-            if (parent instanceof HasComponentsConnector) {
-                ((HasComponentsConnector) parent).updateCaption(this);
-            } else if (parent == null && !(this instanceof UIConnector)) {
-                VConsole.error("Parent of connector "
-                        + Util.getConnectorString(this)
-                        + " is null. This is typically an indication of a broken component hierarchy");
-            }
-        }
-
         /*
          * updateComponentSize need to be after caption update so caption can be
          * taken into account
