@@ -1348,8 +1348,12 @@ public abstract class AbstractField<T> extends AbstractComponent implements
                 && !isBuffered() && !isModified()) {
             // When we have a data source and the internal value is directly
             // read from that we want to update the value
-            Object modelValue = convertToModel(getInternalValue(), valueLocale);
-            setValue(convertFromModel(modelValue));
+            T newInternalValue = convertFromModel(getPropertyDataSource()
+                    .getValue());
+            if (!equals(newInternalValue, getInternalValue())) {
+                setInternalValue(newInternalValue);
+                fireValueChange(false);
+            }
         }
     }
 
