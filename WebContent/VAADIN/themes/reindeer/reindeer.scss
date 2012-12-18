@@ -33,12 +33,11 @@
 	background: #f5f5f5;
 }
 
+$font-size: 12px;
+$line-height: normal;
+
 @mixin reindeer {
-	// should this be here?
-	$font-size: 12px;
-	$line-height: normal;
 	@include base;
-	
 	// TODO @each
 
 	@include reindeer-accordion;
