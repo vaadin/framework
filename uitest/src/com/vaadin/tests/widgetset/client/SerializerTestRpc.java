@@ -67,7 +67,7 @@ public interface SerializerTestRpc extends ServerRpc, ClientRpc {
             Set<SimpleTestBean> beanSet);
 
     public void sendMap(Map<String, SimpleTestBean> stringMap,
-            Map<Connector, Boolean> connectorMap,
+            Map<Connector, SimpleTestBean> connectorMap,
             Map<Integer, Connector> intMap,
             Map<SimpleTestBean, SimpleTestBean> beanMap);
 
@@ -76,5 +76,7 @@ public interface SerializerTestRpc extends ServerRpc, ClientRpc {
 
     public void sendEnum(ContentMode contentMode, ContentMode[] array,
             List<ContentMode> list);
+
+    public void sendBeanSubclass(SimpleTestBean bean);
 
 }

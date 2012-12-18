@@ -71,6 +71,7 @@ import com.vaadin.client.communication.RpcManager;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.metadata.ConnectorBundleLoader;
+import com.vaadin.client.metadata.Method;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Property;
 import com.vaadin.client.metadata.Type;
@@ -2393,12 +2394,29 @@ public class ApplicationConnection {
                 invocationJson.set(2,
                         new JSONString(invocation.getMethodName()));
                 JSONArray paramJson = new JSONArray();
-                boolean restrictToInternalTypes = isLegacyVariableChange(invocation);
+
+                Type[] parameterTypes = null;
+                if (!isLegacyVariableChange(invocation)) {
+                    try {
+                        Type type = new Type(invocation.getInterfaceName(),
+                                null);
+                        Method method = type.getMethod(invocation
+                                .getMethodName());
+                        parameterTypes = method.getParameterTypes();
+                    } catch (NoDataException e) {
+                        throw new RuntimeException("No type data for "
+                                + invocation.toString(), e);
+                    }
+                }
+
                 for (int i = 0; i < invocation.getParameters().length; ++i) {
-                    // TODO non-static encoder? type registration?
-                    paramJson.set(i, JsonEncoder.encode(
-                            invocation.getParameters()[i],
-                            restrictToInternalTypes, this));
+                    // TODO non-static encoder?
+                    Type type = null;
+                    if (parameterTypes != null) {
+                        type = parameterTypes[i];
+                    }
+                    Object value = invocation.getParameters()[i];
+                    paramJson.set(i, JsonEncoder.encode(value, type, this));
                 }
                 invocationJson.set(3, paramJson);
                 reqJson.set(reqJson.size(), invocationJson);

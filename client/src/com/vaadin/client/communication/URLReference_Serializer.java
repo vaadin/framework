@@ -46,8 +46,9 @@ public class URLReference_Serializer implements JSONSerializer<URLReference> {
     public JSONValue serialize(URLReference value,
             ApplicationConnection connection) {
         JSONObject json = new JSONObject();
+        // No type info required for encoding a String...
         json.put(URL_FIELD,
-                JsonEncoder.encode(value.getURL(), true, connection));
+                JsonEncoder.encode(value.getURL(), null, connection));
         return json;
     }
 
