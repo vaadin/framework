@@ -107,6 +107,14 @@ import com.vaadin.shared.ui.ui.UIConstants;
  */
 public class ApplicationConnection {
 
+    /**
+     * Helper used to return two values when updating the connector hierarchy.
+     */
+    private static class ConnectorHierarchyUpdateResult {
+        private List<ConnectorHierarchyChangeEvent> events = new LinkedList<ConnectorHierarchyChangeEvent>();
+        private List<ServerConnector> parentChanged = new LinkedList<ServerConnector>();
+    }
+
     public static final String MODIFIED_CLASSNAME = "v-modified";
 
     public static final String DISABLED_CLASSNAME = "v-disabled";
@@ -1441,17 +1449,20 @@ public class ApplicationConnection {
                         " * Update of connector states completed", 10);
 
                 // Update hierarchy, do not fire events
-                Collection<ConnectorHierarchyChangeEvent> pendingHierarchyChangeEvents = updateConnectorHierarchy(json);
+                ConnectorHierarchyUpdateResult connectorHierarchyUpdateResult = updateConnectorHierarchy(json);
 
                 updateDuration.logDuration(
                         " * Update of connector hierarchy completed", 10);
 
                 // Fire hierarchy change events
-                sendHierarchyChangeEvents(pendingHierarchyChangeEvents);
+                sendHierarchyChangeEvents(connectorHierarchyUpdateResult.events);
 
                 updateDuration.logDuration(
                         " * Hierarchy state change event processing completed",
                         10);
+
+                updateCaptions(pendingStateChangeEvents,
+                        connectorHierarchyUpdateResult.parentChanged);
 
                 delegateToWidget(pendingStateChangeEvents);
 
@@ -1552,6 +1563,36 @@ public class ApplicationConnection {
 
                 endRequest();
 
+            }
+
+            private void updateCaptions(
+                    Collection<StateChangeEvent> pendingStateChangeEvents,
+                    Collection<ServerConnector> parentChanged) {
+                /*
+                 * Find all components that might need a caption update based on
+                 * pending state and hierarchy changes
+                 */
+                HashSet<ServerConnector> needsCaptionUpdate = new HashSet<ServerConnector>(
+                        parentChanged);
+
+                // Find components with potentially changed caption state
+                for (StateChangeEvent event : pendingStateChangeEvents) {
+                    ServerConnector connector = event.getConnector();
+                    needsCaptionUpdate.add(connector);
+                }
+
+                // Update captions for all suitable candidates
+                for (ServerConnector child : needsCaptionUpdate) {
+                    if (child instanceof ComponentConnector
+                            && ((ComponentConnector) child)
+                                    .delegateCaptionHandling()) {
+                        ServerConnector parent = child.getParent();
+                        if (parent instanceof HasComponentsConnector) {
+                            ((HasComponentsConnector) parent)
+                                    .updateCaption((ComponentConnector) child);
+                        }
+                    }
+                }
             }
 
             private void delegateToWidget(
@@ -1924,15 +1965,16 @@ public class ApplicationConnection {
              * @param json
              *            The JSON containing the hierarchy information
              * @return A collection of events that should be fired when update
-             *         of hierarchy and state is complete
+             *         of hierarchy and state is complete and a list of all
+             *         connectors for which the parent has changed
              */
-            private Collection<ConnectorHierarchyChangeEvent> updateConnectorHierarchy(
+            private ConnectorHierarchyUpdateResult updateConnectorHierarchy(
                     ValueMap json) {
-                List<ConnectorHierarchyChangeEvent> events = new LinkedList<ConnectorHierarchyChangeEvent>();
+                ConnectorHierarchyUpdateResult result = new ConnectorHierarchyUpdateResult();
 
                 VConsole.log(" * Updating connector hierarchy");
                 if (!json.containsKey("hierarchy")) {
-                    return events;
+                    return result;
                 }
 
                 HashSet<ServerConnector> maybeDetached = new HashSet<ServerConnector>();
@@ -1976,6 +2018,7 @@ public class ApplicationConnection {
                             }
                             if (childConnector.getParent() != parentConnector) {
                                 childConnector.setParent(parentConnector);
+                                result.parentChanged.add(childConnector);
                                 // Not detached even if previously removed from
                                 // parent
                                 maybeDetached.remove(childConnector);
@@ -2007,7 +2050,7 @@ public class ApplicationConnection {
                                 event.setOldChildren(oldComponents);
                                 event.setConnector(parentConnector);
                                 ccc.setChildComponents(newComponents);
-                                events.add(event);
+                                result.events.add(event);
                             }
                         } else if (!newComponents.isEmpty()) {
                             VConsole.error("Hierachy claims "
@@ -2047,10 +2090,10 @@ public class ApplicationConnection {
                  * removed from its parent but not added to any other parent
                  */
                 for (ServerConnector removed : maybeDetached) {
-                    recursivelyDetach(removed, events);
+                    recursivelyDetach(removed, result.events);
                 }
 
-                return events;
+                return result;
 
             }
 
