@@ -608,34 +608,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         getState().propertyReadOnly = dataSource == null ? false : dataSource
                 .isReadOnly();
 
-        // Check if the current converter is compatible.
-        if (newDataSource != null
-                && !ConverterUtil.canConverterHandle(getConverter(), getType(),
-                        newDataSource.getType())) {
-            // Changing from e.g. Number -> Double should set a new converter,
-            // changing from Double -> Number can keep the old one (Property
-            // accepts Number)
-
-            // Set a new converter if there is a new data source and
-            // there is no old converter or the old is incompatible.
-            setConverter(newDataSource.getType());
-        }
-        // Gets the value from source
-        try {
-            if (dataSource != null) {
-                T fieldValue = convertFromModel(getDataSourceValue());
-                setInternalValue(fieldValue);
-            }
-            setModified(false);
-            if (getCurrentBufferedSourceException() != null) {
-                setCurrentBufferedSourceException(null);
-            }
-        } catch (final Throwable e) {
-            setCurrentBufferedSourceException(new Buffered.SourceException(
-                    this, e));
-            setModified(true);
-        }
-
         // Listen to new data source if possible
         addPropertyListeners();
 
@@ -651,10 +623,40 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             }
         }
 
+        // Check if the current converter is compatible.
+        if (newDataSource != null
+                && !ConverterUtil.canConverterHandle(getConverter(), getType(),
+                        newDataSource.getType())) {
+            // Changing from e.g. Number -> Double should set a new converter,
+            // changing from Double -> Number can keep the old one (Property
+            // accepts Number)
+
+            // Set a new converter if there is a new data source and
+            // there is no old converter or the old is incompatible.
+            setConverter(newDataSource.getType());
+        }
+
+        // Gets the value from the data source
+        if (dataSource != null) {
+            /*
+             * Assume the conversion will fail and set modified to true so that
+             * if an exception occurs, the field is in a consistent state
+             * (modified, i.e. internal value and property value not in sync)
+             */
+            setModified(true);
+            // convertFromModel or getDataSourceValue might throw an exception
+            T fieldValue = convertFromModel(getDataSourceValue());
+            setInternalValue(fieldValue);
+        }
+
+        setModified(false);
+        if (getCurrentBufferedSourceException() != null) {
+            setCurrentBufferedSourceException(null);
+        }
+
         // Fires value change if the value has changed
         T value = getInternalValue();
-        if ((value != oldValue)
-                && ((value != null && !value.equals(oldValue)) || value == null)) {
+        if (!equals(oldValue, value)) {
             fireValueChange(false);
         }
     }
