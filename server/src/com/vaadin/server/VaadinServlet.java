@@ -878,6 +878,23 @@ public class VaadinServlet extends HttpServlet implements Constants {
             response.setHeader("Cache-Control", cacheControl);
         }
 
+        writeStaticResourceResponse(request, response, resourceUrl);
+    }
+
+    /**
+     * Writes the contents of the given resourceUrl in the response. Can be
+     * overridden to add/modify response headers and similar.
+     * 
+     * @param request
+     *            The request for the resource
+     * @param response
+     *            The response
+     * @param resourceUrl
+     *            The url to send
+     * @throws IOException
+     */
+    protected void writeStaticResourceResponse(HttpServletRequest request,
+            HttpServletResponse response, URL resourceUrl) throws IOException {
         // Write the resource to the client.
         final OutputStream os = response.getOutputStream();
         final byte buffer[] = new byte[DEFAULT_BUFFER_SIZE];
