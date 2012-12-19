@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.data.Buffered.SourceException;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -70,12 +70,12 @@ public class SetDataSourceWithPropertyIds extends AbstractTestUI {
         try {
             table.setContainerDataSource(jobContainer);
             table.setVisibleColumns(new String[] { "jobId" });
-            label.setValue("no ConversionException");
-        } catch (ConversionException e) {
+            label.setValue("no Exception");
+        } catch (SourceException e) {
             ArrayList<String> propertyIds = new ArrayList<String>();
             propertyIds.add("jobId");
             table.setContainerDataSource(jobContainer, propertyIds);
-            label.setValue("ConversionException caught");
+            label.setValue("Exception caught");
         }
     }
 
