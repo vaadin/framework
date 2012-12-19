@@ -436,10 +436,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     /** flag to indicate that table body has changed */
     private boolean isNewBody = true;
 
-    /*
+    /**
      * Read from the "recalcWidths" -attribute. When it is true, the table will
      * recalculate the widths for columns - desirable in some cases. For #1983,
-     * marked experimental.
+     * marked experimental. See also variable <code>refreshContentWidths</code>
+     * in method {@link TableHead#updateCellsFromUIDL(UIDL)}.
      */
     boolean recalcWidths = false;
 
@@ -495,6 +496,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     }
 
     ContextMenuDetails contextMenu;
+    private boolean hadScrollBars = false;
 
     public VScrollTable() {
         setMultiSelectMode(MULTISELECT_MODE_DEFAULT);
@@ -2167,6 +2169,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
             }
         });
+
+        hadScrollBars = willHaveScrollbarz;
     }
 
     /**
@@ -3097,7 +3101,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         public void updateCellsFromUIDL(UIDL uidl) {
             Iterator<?> it = uidl.getChildIterator();
             HashSet<String> updated = new HashSet<String>();
-            boolean refreshContentWidths = false;
+            boolean refreshContentWidths = initializedAndAttached
+                    && hadScrollBars != willHaveScrollbars();
             while (it.hasNext()) {
                 final UIDL col = (UIDL) it.next();
                 final String cid = col.getStringAttribute("cid");
