@@ -44,6 +44,7 @@ import com.vaadin.sass.internal.tree.MixinNode;
 import com.vaadin.sass.internal.tree.NestPropertiesNode;
 import com.vaadin.sass.internal.tree.Node;
 import com.vaadin.sass.internal.tree.RuleNode;
+import com.vaadin.sass.internal.tree.SimpleNode;
 import com.vaadin.sass.internal.tree.VariableNode;
 import com.vaadin.sass.internal.tree.WhileNode;
 import com.vaadin.sass.internal.tree.controldirective.EachDefNode;
@@ -290,6 +291,13 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
     @Override
     public void microsoftDirective(String name, String value) {
         MicrosoftRuleNode node = new MicrosoftRuleNode(name, value);
+        nodeStack.peek().appendChild(node);
+    }
+
+    // rule that is passed to the output as-is (except variable value
+    // substitution) - no children
+    public void unrecognizedRule(String text) {
+        SimpleNode node = new SimpleNode(text);
         nodeStack.peek().appendChild(node);
     }
 

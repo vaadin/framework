@@ -743,15 +743,16 @@ void afterImportDeclaration() :
 }
 {
   ( 
-     ( (LOOKAHEAD(5)listModifyDirective()|variable()) | ifDirective()|mixinDirective()| eachDirective() | includeDirective() | styleRule() | media()| page() | fontFace() 
+     ( (LOOKAHEAD(5)listModifyDirective()|variable()) | debugDirective() | warnDirective() | ifDirective()|mixinDirective()| eachDirective() | includeDirective() | styleRule() | media()| page() | fontFace() 
       | { l = getLocator(); } ret=skipStatement() 
       {
 	  if ((ret == null) || (ret.length() == 0)) {
 	      return; 
 	  }
-	  reportWarningSkipText(l, ret);
 	  if (ret.charAt(0) == '@') {
-	      documentHandler.ignorableAtRule(ret);
+	      documentHandler.unrecognizedRule(ret);
+	  } else {
+	      reportWarningSkipText(l, ret);
 	  }
       }
       )
@@ -820,7 +821,7 @@ void media() :
   <MEDIA_SYM> ( <S> )*
    mediaStatement(ml)
    { start = true; documentHandler.startMedia(ml); }
-   <LBRACE> ( <S> )* ( styleRule() | skipUnknownRule() )* <RBRACE> ( <S> )*
+   <LBRACE> ( <S> )* ( debugDirective() | warnDirective() | styleRule() | skipUnknownRule() )* <RBRACE> ( <S> )*
  } catch (ParseException e) {
      reportError(getLocator(), e);
      skipStatement();
@@ -933,9 +934,10 @@ void atRuleDeclaration() :
  n=<ATKEYWORD>
     {
 	ret=skipStatement();
-	reportWarningSkipText(getLocator(), ret);
 	if ((ret != null) && (ret.charAt(0) == '@')) {
-	    documentHandler.ignorableAtRule(ret);
+	    documentHandler.unrecognizedRule(ret);
+	} else {
+	    reportWarningSkipText(getLocator(), ret);
 	}
     }
 }
@@ -972,9 +974,10 @@ void skipUnknownRule() :
      String ret;
      Locator loc = getLocator();
      ret=skipStatement();
-     reportWarningSkipText(loc, ret);
      if ((ret != null) && (n.image.charAt(0) == '@')) {
-	 documentHandler.ignorableAtRule(ret);
+	 documentHandler.unrecognizedRule(ret);
+     } else {
+     reportWarningSkipText(loc, ret);
      }
  }
 }
@@ -1717,12 +1720,28 @@ Node returnDirective() :
 	{return null;}
 }
 
-JAVACODE
-void debugDirective(){
+void debugDirective() :
+{}
+{
+    <DEBUG_SYM>
+    { 
+    String content = skipStatementUntilSemiColon();
+    // TODO should evaluate the content expression, call documentHandler.debugDirective() etc.
+    System.out.println(content);
+    }
+    (<S>)*
 }
 
-JAVACODE
-void warnDirective(){
+void warnDirective() :
+{}
+{
+    <WARN_SYM>
+    { 
+    String content = skipStatementUntilSemiColon();
+    // TODO should evaluate the content expression, call documentHandler.warnDirective() etc.
+    System.err.println(content);
+    }
+    (<S>)*
 }
 
 Node forDirective() :
@@ -1816,7 +1835,7 @@ void styleRuleOrDeclarationOrNestedProperties() :
 {
   try {
     // differentiate between the colon of a pseudo and the colon of nested properties and the colon of a simple property 
-    (LOOKAHEAD(5) styleRule() | declarationOrNestedProperties())
+    (LOOKAHEAD(5) styleRule() | debugDirective() | warnDirective() | declarationOrNestedProperties())
   } catch (JumpException e) {
      skipAfterExpression();
      // reportWarningSkipText(getLocator(), skipAfterExpression());
@@ -2686,14 +2705,14 @@ void _parseRule() :
 }
 {
 	( <S> )*
-	   ( importDeclaration() | styleRule() | media() | page() 
+	   ( importDeclaration() | debugDirective() | warnDirective() | styleRule() | media() | page() 
 	     | fontFace() | ret=skipStatement() 
 		{
 		    if ((ret == null) || (ret.length() == 0)) {
 			return; 
 		    }
 		    if (ret.charAt(0) == '@') {
-			documentHandler.ignorableAtRule(ret);
+			documentHandler.unrecognizedRule(ret);
 		    } else {
 			throw new CSSParseException("unrecognize rule: " + ret,
 						    getLocator());
