@@ -2396,7 +2396,8 @@ public class ApplicationConnection {
                 JSONArray paramJson = new JSONArray();
 
                 Type[] parameterTypes = null;
-                if (!isLegacyVariableChange(invocation)) {
+                if (!isLegacyVariableChange(invocation)
+                        && !isJavascriptRpc(invocation)) {
                     try {
                         Type type = new Type(invocation.getInterfaceName(),
                                 null);
@@ -2455,6 +2456,12 @@ public class ApplicationConnection {
             getConfiguration().setWidgetsetVersionSent();
         }
         makeUidlRequest(req.toString(), extraParams, forceSync);
+    }
+
+    private boolean isJavascriptRpc(MethodInvocation invocation) {
+        String connectorId = invocation.getConnectorId();
+        ServerConnector connector = connectorMap.getConnector(connectorId);
+        return connector instanceof HasJavaScriptConnectorHelper;
     }
 
     private boolean isLegacyVariableChange(MethodInvocation invocation) {

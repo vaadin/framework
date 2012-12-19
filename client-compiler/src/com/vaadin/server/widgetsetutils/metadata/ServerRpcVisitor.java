@@ -38,7 +38,7 @@ public class ServerRpcVisitor extends TypeVisitor {
                 for (JMethod method : methods) {
                     ClientRpcVisitor.checkReturnType(logger, method);
                     bundle.setNeedsDelayedInfo(type, method);
-                    bundle.setNeedsParamTypes(subType, method);
+                    bundle.setNeedsParamTypes(type, method);
 
                     JType[] parameterTypes = method.getParameterTypes();
                     for (JType paramType : parameterTypes) {
