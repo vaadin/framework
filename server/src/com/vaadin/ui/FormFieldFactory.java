@@ -18,6 +18,7 @@ package com.vaadin.ui;
 import java.io.Serializable;
 
 import com.vaadin.data.Item;
+import com.vaadin.data.fieldgroup.FieldGroup;
 
 /**
  * Factory interface for creating new Field-instances based on {@link Item},
@@ -30,7 +31,10 @@ import com.vaadin.data.Item;
  * @author Vaadin Ltd.
  * @since 6.0
  * @see TableFieldFactory
+ * @deprecated As of 7.0, use {@link FieldGroup} instead of {@link Form} for
+ *             more flexibility.
  */
+@Deprecated
 public interface FormFieldFactory extends Serializable {
     /**
      * Creates a field based on the item, property id and the component (most
