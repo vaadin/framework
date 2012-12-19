@@ -65,6 +65,7 @@ import com.vaadin.client.ApplicationConfiguration.ErrorMessage;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
+import com.vaadin.client.communication.JavaScriptMethodInvocation;
 import com.vaadin.client.communication.JsonDecoder;
 import com.vaadin.client.communication.JsonEncoder;
 import com.vaadin.client.communication.RpcManager;
@@ -2459,9 +2460,7 @@ public class ApplicationConnection {
     }
 
     private boolean isJavascriptRpc(MethodInvocation invocation) {
-        String connectorId = invocation.getConnectorId();
-        ServerConnector connector = connectorMap.getConnector(connectorId);
-        return connector instanceof HasJavaScriptConnectorHelper;
+        return invocation instanceof JavaScriptMethodInvocation;
     }
 
     private boolean isLegacyVariableChange(MethodInvocation invocation) {

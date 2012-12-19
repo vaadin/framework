@@ -27,6 +27,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.user.client.Element;
+import com.vaadin.client.communication.JavaScriptMethodInvocation;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.shared.JavaScriptConnectorState;
@@ -258,8 +259,8 @@ public class JavaScriptConnectorHelper {
             parameters[i] = argumentsArray.get(i);
         }
         connector.getConnection().addMethodInvocationToQueue(
-                new MethodInvocation(connector.getConnectorId(), iface, method,
-                        parameters), false, false);
+                new JavaScriptMethodInvocation(connector.getConnectorId(),
+                        iface, method, parameters), false, false);
     }
 
     private String findWildcardInterface(String method) {
@@ -286,7 +287,7 @@ public class JavaScriptConnectorHelper {
     }
 
     private void fireCallback(String name, JsArray<JavaScriptObject> arguments) {
-        MethodInvocation invocation = new MethodInvocation(
+        MethodInvocation invocation = new JavaScriptMethodInvocation(
                 connector.getConnectorId(),
                 "com.vaadin.ui.JavaScript$JavaScriptCallbackRpc", "call",
                 new Object[] { name, new JSONArray(arguments) });
