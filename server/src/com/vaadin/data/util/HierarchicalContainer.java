@@ -23,6 +23,8 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -79,7 +81,12 @@ public class HierarchicalContainer extends IndexedContainer implements
      */
     private boolean includeParentsWhenFiltering = true;
 
-    private boolean contentChangedEventsDisabled = false;
+    /**
+     * Counts how many nested contents change disable calls are in progress.
+     * 
+     * Pending events are only fired when the counter reaches zero again.
+     */
+    private int contentChangedEventsDisabledCount = 0;
 
     private boolean contentsChangedEventPending;
 
@@ -401,21 +408,24 @@ public class HierarchicalContainer extends IndexedContainer implements
     @Override
     public Object addItem() {
         disableContentsChangeEvents();
-        final Object itemId = super.addItem();
-        if (itemId == null) {
-            return null;
-        }
+        try {
+            final Object itemId = super.addItem();
+            if (itemId == null) {
+                return null;
+            }
 
-        if (!roots.contains(itemId)) {
-            roots.add(itemId);
-            if (filteredRoots != null) {
-                if (passesFilters(itemId)) {
-                    filteredRoots.add(itemId);
+            if (!roots.contains(itemId)) {
+                roots.add(itemId);
+                if (filteredRoots != null) {
+                    if (passesFilters(itemId)) {
+                        filteredRoots.add(itemId);
+                    }
                 }
             }
+            return itemId;
+        } finally {
+            enableAndFireContentsChangeEvents();
         }
-        enableAndFireContentsChangeEvents();
-        return itemId;
     }
 
     @Override
@@ -429,19 +439,28 @@ public class HierarchicalContainer extends IndexedContainer implements
     }
 
     private boolean contentsChangeEventsOn() {
-        return !contentChangedEventsDisabled;
+        return contentChangedEventsDisabledCount == 0;
     }
 
     private void disableContentsChangeEvents() {
-        contentChangedEventsDisabled = true;
+        contentChangedEventsDisabledCount++;
     }
 
     private void enableAndFireContentsChangeEvents() {
-        contentChangedEventsDisabled = false;
-        if (contentsChangedEventPending) {
-            fireItemSetChange();
+        if (contentChangedEventsDisabledCount <= 0) {
+            getLogger()
+                    .log(Level.WARNING,
+                            "Mismatched calls to disable and enable contents change events in HierarchicalContainer");
+            contentChangedEventsDisabledCount = 0;
+        } else {
+            contentChangedEventsDisabledCount--;
         }
-        contentsChangedEventPending = false;
+        if (contentChangedEventsDisabledCount == 0) {
+            if (contentsChangedEventPending) {
+                fireItemSetChange();
+            }
+            contentsChangedEventPending = false;
+        }
     }
 
     /*
@@ -452,20 +471,23 @@ public class HierarchicalContainer extends IndexedContainer implements
     @Override
     public Item addItem(Object itemId) {
         disableContentsChangeEvents();
-        final Item item = super.addItem(itemId);
-        if (item == null) {
-            return null;
-        }
-
-        roots.add(itemId);
-
-        if (filteredRoots != null) {
-            if (passesFilters(itemId)) {
-                filteredRoots.add(itemId);
+        try {
+            final Item item = super.addItem(itemId);
+            if (item == null) {
+                return null;
             }
+
+            roots.add(itemId);
+
+            if (filteredRoots != null) {
+                if (passesFilters(itemId)) {
+                    filteredRoots.add(itemId);
+                }
+            }
+            return item;
+        } finally {
+            enableAndFireContentsChangeEvents();
         }
-        enableAndFireContentsChangeEvents();
-        return item;
     }
 
     /*
@@ -476,25 +498,28 @@ public class HierarchicalContainer extends IndexedContainer implements
     @Override
     public boolean removeAllItems() {
         disableContentsChangeEvents();
-        final boolean success = super.removeAllItems();
+        try {
+            final boolean success = super.removeAllItems();
 
-        if (success) {
-            roots.clear();
-            parent.clear();
-            children.clear();
-            noChildrenAllowed.clear();
-            if (filteredRoots != null) {
-                filteredRoots = null;
+            if (success) {
+                roots.clear();
+                parent.clear();
+                children.clear();
+                noChildrenAllowed.clear();
+                if (filteredRoots != null) {
+                    filteredRoots = null;
+                }
+                if (filteredChildren != null) {
+                    filteredChildren = null;
+                }
+                if (filteredParent != null) {
+                    filteredParent = null;
+                }
             }
-            if (filteredChildren != null) {
-                filteredChildren = null;
-            }
-            if (filteredParent != null) {
-                filteredParent = null;
-            }
+            return success;
+        } finally {
+            enableAndFireContentsChangeEvents();
         }
-        enableAndFireContentsChangeEvents();
-        return success;
     }
 
     /*
@@ -505,68 +530,71 @@ public class HierarchicalContainer extends IndexedContainer implements
     @Override
     public boolean removeItem(Object itemId) {
         disableContentsChangeEvents();
-        final boolean success = super.removeItem(itemId);
+        try {
+            final boolean success = super.removeItem(itemId);
 
-        if (success) {
-            // Remove from roots if this was a root
-            if (roots.remove(itemId)) {
+            if (success) {
+                // Remove from roots if this was a root
+                if (roots.remove(itemId)) {
 
-                // If filtering is enabled we might need to remove it from the
-                // filtered list also
-                if (filteredRoots != null) {
-                    filteredRoots.remove(itemId);
-                }
-            }
-
-            // Clear the children list. Old children will now become root nodes
-            LinkedList<Object> childNodeIds = children.remove(itemId);
-            if (childNodeIds != null) {
-                if (filteredChildren != null) {
-                    filteredChildren.remove(itemId);
-                }
-                for (Object childId : childNodeIds) {
-                    setParent(childId, null);
-                }
-            }
-
-            // Parent of the item that we are removing will contain the item id
-            // in its children list
-            final Object parentItemId = parent.get(itemId);
-            if (parentItemId != null) {
-                final LinkedList<Object> c = children.get(parentItemId);
-                if (c != null) {
-                    c.remove(itemId);
-
-                    if (c.isEmpty()) {
-                        children.remove(parentItemId);
+                    // If filtering is enabled we might need to remove it from
+                    // the filtered list also
+                    if (filteredRoots != null) {
+                        filteredRoots.remove(itemId);
                     }
+                }
 
-                    // Found in the children list so might also be in the
-                    // filteredChildren list
+                // Clear the children list. Old children will now become root
+                // nodes
+                LinkedList<Object> childNodeIds = children.remove(itemId);
+                if (childNodeIds != null) {
                     if (filteredChildren != null) {
-                        LinkedList<Object> f = filteredChildren
-                                .get(parentItemId);
-                        if (f != null) {
-                            f.remove(itemId);
-                            if (f.isEmpty()) {
-                                filteredChildren.remove(parentItemId);
+                        filteredChildren.remove(itemId);
+                    }
+                    for (Object childId : childNodeIds) {
+                        setParent(childId, null);
+                    }
+                }
+
+                // Parent of the item that we are removing will contain the item
+                // id in its children list
+                final Object parentItemId = parent.get(itemId);
+                if (parentItemId != null) {
+                    final LinkedList<Object> c = children.get(parentItemId);
+                    if (c != null) {
+                        c.remove(itemId);
+
+                        if (c.isEmpty()) {
+                            children.remove(parentItemId);
+                        }
+
+                        // Found in the children list so might also be in the
+                        // filteredChildren list
+                        if (filteredChildren != null) {
+                            LinkedList<Object> f = filteredChildren
+                                    .get(parentItemId);
+                            if (f != null) {
+                                f.remove(itemId);
+                                if (f.isEmpty()) {
+                                    filteredChildren.remove(parentItemId);
+                                }
                             }
                         }
                     }
                 }
+                parent.remove(itemId);
+                if (filteredParent != null) {
+                    // Item id no longer has a parent as the item id is not in
+                    // the container.
+                    filteredParent.remove(itemId);
+                }
+                noChildrenAllowed.remove(itemId);
             }
-            parent.remove(itemId);
-            if (filteredParent != null) {
-                // Item id no longer has a parent as the item id is not in the
-                // container.
-                filteredParent.remove(itemId);
-            }
-            noChildrenAllowed.remove(itemId);
+
+            return success;
+        } finally {
+            enableAndFireContentsChangeEvents();
         }
-
-        enableAndFireContentsChangeEvents();
-
-        return success;
     }
 
     /**
@@ -579,9 +607,12 @@ public class HierarchicalContainer extends IndexedContainer implements
      */
     public boolean removeItemRecursively(Object itemId) {
         disableContentsChangeEvents();
-        boolean removeItemRecursively = removeItemRecursively(this, itemId);
-        enableAndFireContentsChangeEvents();
-        return removeItemRecursively;
+        try {
+            boolean removeItemRecursively = removeItemRecursively(this, itemId);
+            return removeItemRecursively;
+        } finally {
+            enableAndFireContentsChangeEvents();
+        }
     }
 
     /**
@@ -820,5 +851,9 @@ public class HierarchicalContainer extends IndexedContainer implements
         } else {
             return super.passesFilters(itemId);
         }
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(HierarchicalContainer.class.getName());
     }
 }
