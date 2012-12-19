@@ -88,8 +88,7 @@
       <p>
         See the <tt>README.TXT</tt> in the installation package for detailed information
         about the package contents. <a href="http://vaadin.com/book">Book of Vaadin</a>
-        (for Vaadin 7) will give more detailed instructions; it is not yet up-to-date at
-        the time of this release, but will be updated soon after.
+        (for Vaadin 7) gives more detailed instructions.
       </p>
 
       <p>
@@ -114,9 +113,14 @@
       <h2 id="enhancements">Enhancements in Vaadin @version@</h2>
 
       <p>
-        @version@ is a beta release release of the upcoming version 7 of the
-        Vaadin Framework. It introduces some minor changes, minor new features and fixes.
+        In addition to many fixes and smaller features and changes, @version@ introduces
+        the following major changes since the last beta release:
       </p>
+
+      <ul>
+        <li>The <b>ColorPicker</b> component is now included in the Vaadin core framework</li>
+        <li>Sass compiler can now be used in client-side projects.</li>
+      </ul>
 
       <p>
         The following major changes were introduced in the earlier
@@ -159,8 +163,7 @@
         </li>
         <li><b>Form</b> is deprecated and form hand is replaced with the <b>FieldGroup</b></li>
         <li>Get computed style of a component from the browser</li>
-        <li>Support for border, padding, and margin in core layout components</li></ul>
-              <ul>
+        <li>Support for border, padding, and margin in core layout components</li>
         <li>Applications are now written by extending the <b>UI</b> class
           <ul>
             <li>UIs use heartbeat to detect closing</li>
@@ -172,8 +175,10 @@
             <li><b>ApplicationResource</b> is replaced with <b>ConnectorResource</b></li>
           </ul>
         </li>
-        <li>Themeing with <a href="http://sass-lang.com/">SASS</a> in addition to CSS
+        <li>Themeing is now done with <a href="http://sass-lang.com/">Sass</a>
           <ul>
+            <li>Sass themes are compiled on-the-fly when loading the theme (for development), or manually with the theme compiler (for production)</li>
+            <li>Pure CSS themes are supported, but should include <tt>themename-legacy.css</tt>
             <li>SASS themes need to (and CSS themes can) be compiled to a single CSS stylesheet with the <tt>vaadin-theme-compiler</tt></li>
           </ul>
         </li>
@@ -181,6 +186,20 @@
         <li>All <tt>addListener()</tt> methods have changed to listener-specific methods, such as <tt>addClickListener()</tt>, <tt>addValueChangeListener()</tt>, etc.</li>
         <li>Packaging has changed, now in a ZIP package (see <a href="package">Package Contents</a> above)
         </li>
+        <li>The <b>Panel</b> and <b>Window</b> (and in <b>UI</b> in early betas) no longer
+        extend <b>ComponentContainer</b>, but <b>SingleComponentContainer</b>, which has
+        no <tt>addComponent()</tt> method
+          <ul>
+            <li>The <b>UI</b>, <b>Panel</b>, and <b>Window</b> no longer have default
+            content (used to be a <b>VerticalLayout</b>), but you must set the content
+            component explicitly with the <tt>setContent()</tt> method or in the
+            constructor</li>
+
+            <li>If the content is a layout, you need to add other components to the layout
+            component with <tt>addComponent()</tt> instead of the container</li>
+          </ul>
+        </li>
+         
       </ul>
         
       </ul>
@@ -189,14 +208,6 @@
         There are many other enhancements. Most of them are described in more detail in
         the <a href="https://vaadin.com/wiki/-/wiki/Main/Vaadin+7">mini-tutorials</a> in
         the Vaadin Wiki.
-      </p>
-
-      <p>
-        Please see the release notes for <a href="http://vaadin.com/download/prerelease/7.0/7.0.0/7.0.0.alpha1/release-notes.html">alpha1</a>,
-        <a href="http://vaadin.com/download/prerelease/7.0/7.0.0/7.0.0.alpha2/release-notes.html">alpha2</a>,
-        <a href="http://vaadin.com/download/prerelease/7.0/7.0.0/7.0.0.alpha3/release-notes.html">alpha3</a>,
-        and <a href="http://vaadin.com/download/prerelease/7.0/7.0.0/7.0.0.beta1/release-notes.html">beta1</a>
-        for the lists of where the major enhancements were introduced.
       </p>
 
       <h3 id="changelog">ChangeLog</h3>
@@ -432,7 +443,7 @@
       </p>
 
       <ul>
-        <li>Mozilla Firefox 5 or newer</li>
+        <li>Mozilla Firefox 17 or newer</li>
         <li>Internet Explorer 8-10</li>
         <li>Safari 6</li>
         <li>Opera 12</li>
