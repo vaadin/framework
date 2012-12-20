@@ -1432,7 +1432,7 @@ void elseDirective() :
 }
 {
   < ELSE_SYM >(< S >)* 
-  ( < IF > (n = booleanExpressionToken() { if(n != null) evaluator += n.image; })*)?
+  ( < IF > ( n = booleanExpressionToken() { evaluator += n.image; } )+ )?
   < LBRACE >(< S >)*
   { if(!evaluator.trim().equals("")){ documentHandler.ifDirective(evaluator); }
     else{ documentHandler.elseDirective(); }  

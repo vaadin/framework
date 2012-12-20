@@ -2584,6 +2584,8 @@ boolean isPseudoElement = false;
       jj_consume_token(IF);
       label_70:
       while (true) {
+        n = booleanExpressionToken();
+                                            evaluator += n.image;
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case S:
         case EQ:
@@ -2608,8 +2610,6 @@ boolean isPseudoElement = false;
           jj_la1[103] = jj_gen;
           break label_70;
         }
-        n = booleanExpressionToken();
-                                           if(n != null) evaluator += n.image;
       }
       break;
     default:
