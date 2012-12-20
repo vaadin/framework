@@ -743,7 +743,7 @@ void afterImportDeclaration() :
 }
 {
   ( 
-     ( (LOOKAHEAD(5)listModifyDirective()|variable()) | debugDirective() | warnDirective() | ifDirective()|mixinDirective()| eachDirective() | includeDirective() | styleRule() | media()| page() | fontFace() 
+     ( LOOKAHEAD(5)listModifyDirective() | variable() | debuggingDirective() | mixinDirective() | controlDirective() | includeDirective() | styleRule() | media() | page() | fontFace() 
       | { l = getLocator(); } ret=skipStatement() 
       {
 	  if ((ret == null) || (ret.length() == 0)) {
@@ -821,7 +821,7 @@ void media() :
   <MEDIA_SYM> ( <S> )*
    mediaStatement(ml)
    { start = true; documentHandler.startMedia(ml); }
-   <LBRACE> ( <S> )* ( debugDirective() | warnDirective() | styleRule() | skipUnknownRule() )* <RBRACE> ( <S> )*
+   <LBRACE> ( <S> )* ( debuggingDirective() | styleRule() | skipUnknownRule() )* <RBRACE> ( <S> )*
  } catch (ParseException e) {
      reportError(getLocator(), e);
      skipStatement();
@@ -1063,7 +1063,7 @@ void styleRule() :
 	 start = true;
 	 documentHandler.startSelector(l);
      }
-     ( ifDirective() | LOOKAHEAD(5)listModifyDirective() | includeDirective() | media() | extendDirective()| eachDirective() | variable() | LOOKAHEAD(3) microsoftExtension()| styleRuleOrDeclarationOrNestedProperties())*
+     ( LOOKAHEAD(5)ifContentStatement() | controlDirective() | microsoftExtension() )*
      <RBRACE> (<S>)*
  } catch (ThrowedParseException e) {
      if (errorHandler != null) {
@@ -1392,6 +1392,18 @@ void variable() :
 	}
 }
 
+void controlDirective() :
+{}
+{
+  ifDirective() | eachDirective()
+}
+
+void ifContentStatement() :
+{}
+{
+  LOOKAHEAD(5)listModifyDirective() | includeDirective() | media() | extendDirective() | variable() | styleRuleOrDeclarationOrNestedProperties()
+}
+
 void ifDirective() :
 {
   Token n = null;
@@ -1404,7 +1416,7 @@ void ifDirective() :
   { documentHandler.startIfElseDirective();
     documentHandler.ifDirective(evaluator);
    }
-  ( includeDirective() | media() | extendDirective()| variable() | styleRuleOrDeclarationOrNestedProperties())*	  
+  ( ifContentStatement() )*
   < RBRACE >(< S >)*
   (elseDirective())*
   { documentHandler.endIfElseDirective(); }
@@ -1422,7 +1434,7 @@ void elseDirective() :
   { if(!evaluator.trim().equals("")){ documentHandler.ifDirective(evaluator); }
     else{ documentHandler.elseDirective(); }  
   }
-  ( includeDirective() | media() | extendDirective()| variable() | styleRuleOrDeclarationOrNestedProperties())*  
+  ( ifContentStatement() )*
   < RBRACE >(< S >)*
 }
 
@@ -1470,7 +1482,7 @@ void eachDirective() :
   {documentHandler.startEachDirective(var.image, listVariable);}
   )
   < LBRACE >(< S >)*
-  ( includeDirective() | LOOKAHEAD(5)listModifyDirective() | media() | extendDirective()| variable() | styleRuleOrDeclarationOrNestedProperties())*	  
+  ( ifContentStatement() )*	  
   < RBRACE >(< S >)*
   { documentHandler.endEachDirective();}
 }
@@ -1502,7 +1514,7 @@ void mixinDirective() :
     |(name = functionName() 
       args = arglist()) <RPARAN> (<S>)*) <LBRACE> (<S>)*
     {documentHandler.startMixinDirective(name, args);}
-    ( includeDirective() | media() | LOOKAHEAD(5)listModifyDirective() | ifDirective() | eachDirective() | extendDirective()| variable() | styleRuleOrDeclarationOrNestedProperties() | fontFace() | page())*
+    ( LOOKAHEAD(5)ifContentStatement() | controlDirective() | fontFace() | page())*
     <RBRACE>(<S>)*
     {documentHandler.endMixinDirective(name, args);}
 }
@@ -1720,6 +1732,12 @@ Node returnDirective() :
 	{return null;}
 }
 
+void debuggingDirective() :
+{}
+{
+  debugDirective() | warnDirective()
+}
+
 void debugDirective() :
 {}
 {
@@ -1835,7 +1853,7 @@ void styleRuleOrDeclarationOrNestedProperties() :
 {
   try {
     // differentiate between the colon of a pseudo and the colon of nested properties and the colon of a simple property 
-    (LOOKAHEAD(5) styleRule() | debugDirective() | warnDirective() | declarationOrNestedProperties())
+    (LOOKAHEAD(5) styleRule() | debuggingDirective() | declarationOrNestedProperties())
   } catch (JumpException e) {
      skipAfterExpression();
      // reportWarningSkipText(getLocator(), skipAfterExpression());
@@ -2705,8 +2723,7 @@ void _parseRule() :
 }
 {
 	( <S> )*
-	   ( importDeclaration() | debugDirective() | warnDirective() | styleRule() | media() | page() 
-	     | fontFace() | ret=skipStatement() 
+	   ( importDeclaration() | debuggingDirective() | styleRule() | media() | page() | fontFace() | ret=skipStatement() 
 		{
 		    if ((ret == null) || (ret.length() == 0)) {
 			return; 
