@@ -180,7 +180,7 @@ public class SassLinker extends AbstractLinker {
 
         File tempDir = new File(baseTempPath + File.separator + partialPath);
         if (!tempDir.exists()) {
-            tempDir.mkdir();
+            tempDir.mkdirs();
         }
 
         tempDir.deleteOnExit();
