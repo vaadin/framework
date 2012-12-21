@@ -625,8 +625,6 @@ public class Table extends AbstractSelect implements Action.Container,
                     "Can not set visible columns to null value");
         }
 
-        // TODO add error check that no duplicate identifiers exist
-
         // Checks that the new visible columns contains no nulls and properties
         // exist
         final Collection<?> properties = getContainerPropertyIds();
@@ -645,7 +643,9 @@ public class Table extends AbstractSelect implements Action.Container,
         // uninitialized
         final LinkedList<Object> newVC = new LinkedList<Object>();
         for (int i = 0; i < visibleColumns.length; i++) {
-            newVC.add(visibleColumns[i]);
+            if (!newVC.contains(visibleColumns[i])) {
+                newVC.add(visibleColumns[i]);
+            }
         }
 
         // Removes alignments, icons and headers from hidden columns
