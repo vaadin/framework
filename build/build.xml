@@ -285,7 +285,7 @@
     <!-- Copy and preprocess sources for packaging 
     NOTE: Replaces <version></version> tags with build version tag for some "textual" files
     -->
-    <target name="preprocess-src">
+    <target name="preprocess-src" depends="fetch-release-notes-tickets">
         <!--
         Source directories in the project are
          * src (Vaadin core)
@@ -442,6 +442,9 @@
                 </replacetokens>
                 <replacetokens begintoken="@" endtoken="@">
                     <token key="gwt-version" value="${gwt-version}" />
+                </replacetokens>
+                <replacetokens begintoken="@" endtoken="@">
+                    <token key="release-notes-tickets" value="${release-notes-tickets}" />
                 </replacetokens>
             </filterchain>
             <fileset dir="WebContent">
@@ -754,6 +757,19 @@
         </exec>
 
         <echo>##teamcity[publishArtifacts '${result-path}/differences.txt']</echo>
+    </target>
+	
+	 <!-- ================================================================== -->
+     <!-- Retrieves tickets closed for the milestone for the release.        -->
+     <!-- ================================================================== -->
+    <target name="fetch-release-notes-tickets" if="build.release-notes">
+    	<property name="tsv" location="${result-path}/release-notes-tickets.tsv"/>
+    	<property name="url" value="http://dev.vaadin.com/query?status=closed&amp;milestone=Vaadin+${version.full}&amp;resolution=fixed&amp;format=tab"/>
+    	<get dest="${tsv}" src="${url}"/>
+        <exec executable="python" searchpath="true" failonerror="true" outputproperty="release-notes-tickets">
+            <arg value="build/bin/closed-to-rn.py"/>
+            <arg value="${tsv}"/>
+        </exec>
     </target>
     
     <!-- ================================================================== -->
