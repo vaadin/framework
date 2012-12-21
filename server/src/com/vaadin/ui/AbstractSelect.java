@@ -17,6 +17,7 @@
 package com.vaadin.ui;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EventObject;
@@ -25,6 +26,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -896,6 +898,42 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
     }
 
     /**
+     * Checks that the current selection is valid, i.e. the selected item ids
+     * exist in the container. Updates the selection if one or several selected
+     * item ids are no longer available in the container.
+     */
+    @SuppressWarnings("unchecked")
+    public void sanitizeSelection() {
+        Object value = getValue();
+        if (value == null) {
+            return;
+        }
+
+        boolean changed = false;
+
+        if (isMultiSelect()) {
+            Collection<Object> valueAsCollection = (Collection<Object>) value;
+            List<Object> newSelection = new ArrayList<Object>(
+                    valueAsCollection.size());
+            for (Object subValue : valueAsCollection) {
+                if (containsId(subValue)) {
+                    newSelection.add(subValue);
+                } else {
+                    changed = true;
+                }
+            }
+            if (changed) {
+                setValue(newSelection);
+            }
+        } else {
+            if (!containsId(value)) {
+                setValue(null);
+            }
+        }
+
+    }
+
+    /**
      * Removes the property from all items. Removes a property with given id
      * from all the items in the container.
      * 
@@ -943,11 +981,11 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             if (items != null) {
                 if (items instanceof Container.ItemSetChangeNotifier) {
                     ((Container.ItemSetChangeNotifier) items)
-                            .removeListener(this);
+                            .removeItemSetChangeListener(this);
                 }
                 if (items instanceof Container.PropertySetChangeNotifier) {
                     ((Container.PropertySetChangeNotifier) items)
-                            .removeListener(this);
+                            .removePropertySetChangeListener(this);
                 }
             }
 
@@ -960,11 +998,12 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
             // Adds listeners
             if (items != null) {
                 if (items instanceof Container.ItemSetChangeNotifier) {
-                    ((Container.ItemSetChangeNotifier) items).addListener(this);
+                    ((Container.ItemSetChangeNotifier) items)
+                            .addItemSetChangeListener(this);
                 }
                 if (items instanceof Container.PropertySetChangeNotifier) {
                     ((Container.PropertySetChangeNotifier) items)
-                            .addListener(this);
+                            .addPropertySetChangeListener(this);
                 }
             }
 
@@ -1829,7 +1868,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                 }
                 if (i instanceof Item.PropertySetChangeNotifier) {
                     ((Item.PropertySetChangeNotifier) i)
-                            .addListener(getCaptionChangeListener());
+                            .addPropertySetChangeListener(getCaptionChangeListener());
                     captionChangeNotifiers.add(i);
                 }
                 Collection<?> pids = i.getItemPropertyIds();
@@ -1839,7 +1878,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                         if (p != null
                                 && p instanceof Property.ValueChangeNotifier) {
                             ((Property.ValueChangeNotifier) p)
-                                    .addListener(getCaptionChangeListener());
+                                    .addValueChangeListener(getCaptionChangeListener());
                             captionChangeNotifiers.add(p);
                         }
                     }
@@ -1851,7 +1890,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                         getItemCaptionPropertyId());
                 if (p != null && p instanceof Property.ValueChangeNotifier) {
                     ((Property.ValueChangeNotifier) p)
-                            .addListener(getCaptionChangeListener());
+                            .addValueChangeListener(getCaptionChangeListener());
                     captionChangeNotifiers.add(p);
                 }
                 break;
@@ -1862,7 +1901,7 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                         getItemIconPropertyId());
                 if (p != null && p instanceof Property.ValueChangeNotifier) {
                     ((Property.ValueChangeNotifier) p)
-                            .addListener(getCaptionChangeListener());
+                            .addValueChangeListener(getCaptionChangeListener());
                     captionChangeNotifiers.add(p);
                 }
             }
@@ -1874,10 +1913,10 @@ public abstract class AbstractSelect extends AbstractField<Object> implements
                 Object notifier = it.next();
                 if (notifier instanceof Item.PropertySetChangeNotifier) {
                     ((Item.PropertySetChangeNotifier) notifier)
-                            .removeListener(getCaptionChangeListener());
+                            .removePropertySetChangeListener(getCaptionChangeListener());
                 } else {
                     ((Property.ValueChangeNotifier) notifier)
-                            .removeListener(getCaptionChangeListener());
+                            .removeValueChangeListener(getCaptionChangeListener());
                 }
             }
             captionChangeNotifiers.clear();
