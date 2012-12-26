@@ -65,6 +65,10 @@ public class SassLinker extends AbstractLinker {
                 // Create the temporary files.
                 String partialPath = resource.getPartialPath();
                 if (partialPath.endsWith(".scss")) {
+                    // In my opinion, the SCSS file does not need to be
+                    // output to the web content folder, as they can't
+                    // be used there
+                    toReturn.remove(resource);
 
                     String fileName = partialPath;
                     File path = tempFolder;
@@ -89,11 +93,6 @@ public class SassLinker extends AbstractLinker {
 
                             // Store the file info for the compilation
                             scssFiles.add(new FileInfo(tempfile, partialPath));
-
-                            // In my opinion, the SCSS file does not need to be
-                            // output to the web content folder, as they can't
-                            // be used there
-                            toReturn.remove(resource);
                         } else {
                             logger.log(TreeLogger.WARN, "Duplicate file "
                                     + tempfile.getPath());
