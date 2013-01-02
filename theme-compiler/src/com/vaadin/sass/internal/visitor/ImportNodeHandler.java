@@ -100,7 +100,9 @@ public class ImportNodeHandler {
                 LexicalUnit value = ((RuleNode) child).getValue();
                 while (value != null) {
                     if (value.getLexicalUnitType() == LexicalUnit.SAC_URI) {
-                        String path = value.getStringValue();
+                        String path = value.getStringValue()
+                                .replaceAll("^\"|\"$", "")
+                                .replaceAll("^'|'$", "");
                         if (!path.startsWith("/") && !path.contains(":")) {
                             path = prefix + path;
                             path = StringUtil.cleanPath(path);
