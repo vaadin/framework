@@ -20,8 +20,8 @@
 	<!--<property name="classes.exclude" value="com/vaadin/buildhelpers/**" />-->
 
 	<target name="parser">
-		<!-- Copy javacc-5.0.jar to ${result.path}/javacc/javacc.jar as the javacc task requires the jar to be named javacc.jar -->
-		<property name="javacc.home" location="${result.path}/javacc" />
+		<!-- Copy javacc-5.0.jar to ${result.dir}/javacc/javacc.jar as the javacc task requires the jar to be named javacc.jar -->
+		<property name="javacc.home" location="${result.dir}/javacc" />
 		<ivy:retrieve organisation="net.java.dev.javacc" module="javacc" revision="5.0" inline="true" type="jar" pattern="${javacc.home}/[artifact].[ext]" />
 		<javacc target="${sass.parser.jj}" javacchome="${javacc.home}">
 		</javacc>
