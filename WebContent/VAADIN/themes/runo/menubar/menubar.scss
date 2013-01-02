@@ -35,5 +35,7 @@
 .#{$primaryStyleName}-submenu .#{$primaryStyleName}-menuitem-caption .v-icon { 
 	vertical-align: middle;
 }
-
+.#{$primaryStyleName}-submenu .#{$primaryStyleName}-submenu-indicator {
+	font-size: 11.7px;
+}
 }
