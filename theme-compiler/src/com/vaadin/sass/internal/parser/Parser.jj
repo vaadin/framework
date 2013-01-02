@@ -1007,10 +1007,13 @@ void microsoftExtension() :
 }
 
 {
+  // This is not really taking the syntax of filter rules into account
   n = < MICROSOFT_RULE > (< S >)* { name = n.image; }
 	< COLON >
 	((n = < IDENT > { value += n.image; })
 	| (n = < NUMBER > { value += n.image; }) 
+	| (n = < STRING > { value += n.image; })
+	| (n = < COMMA > { value += n.image; })
 	| (n = < INTERPOLATION > { value += n.image; })
 	| (n = < COLON > { value += n.image; })
 	| (n = < FUNCTION > { value += n.image; })
