@@ -4,8 +4,8 @@
 	background: #e9eced url(img/main-bg.png) repeat-x;
 	font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	color: #464f52;
-	font-size: 13px;
-	line-height: 18px;
+	font-size: $font-size;
+	line-height: $line-height;
 }
 /* Global font styles */
 &.v-app,
@@ -32,7 +32,7 @@
 .v-drag-element {
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	color: #464f52;
-	font-size: 13px;
+	font-size: $font-size;
 }
 &.v-app select,
 .v-window select {

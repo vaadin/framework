@@ -53,11 +53,11 @@
 }	
 
 &.v-app .#{$primaryStyleName}-suggestpopup-small td {
-	font-size: .85em;
+	font-size: 11.05px;
 	}
 
 &.v-app .#{$primaryStyleName}-suggestpopup-big td {
-	font-size: 1.1em;
+	font-size: 14.3px;
 	}
 
 .#{$primaryStyleName}-big .#{$primaryStyleName}-button {
@@ -112,7 +112,7 @@
 	}
 
 .#{$primaryStyleName}-status {
-	font-size: .85em;
+	font-size: 11.05px;
 	margin: 1px 0 -3px;
 	user-select: none;
 	-webkit-user-select: none;
@@ -126,19 +126,19 @@
 	}
 
 .#{$primaryStyleName}-suggestpopup-small .#{$primaryStyleName}-status {
-	font-size: .8em;
+	font-size: 10.4px;
 	}
 
 .#{$primaryStyleName}-suggestpopup-big .#{$primaryStyleName}-status {
-	font-size: .9em;
+	font-size: 11.7px;
 	}
 
 .v-select-small .v-select-select {
-	font-size: 0.8em;
+	font-size: 10.4px;
 	}
 
 .v-select-big .v-select-select {
-	font-size: 1.2em;
+	font-size: 15.6px;
 	}
 
 

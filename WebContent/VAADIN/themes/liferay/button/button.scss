@@ -28,7 +28,7 @@
 .v-button .v-button-wrap,
 .v-disabled.v-button .v-button-wrap {
 	display: block;
-	font-size: 11px;
+	font-size: $font-size;
 	font-weight: bold;
 	border: 1px solid #c8c9ca;
 	border-right-color: #9e9e9e;
@@ -75,7 +75,7 @@ button.v-nativebutton-link-pressed,
 	border-style: none;
 	background: transparent;
 	padding: 0;
-	font-size: inherit;
+	font-size: $font-size;
 	-webkit-box-shadow: none;
 	-mox-box-shadow: none;
 	-webkit-border-radius: 0;
