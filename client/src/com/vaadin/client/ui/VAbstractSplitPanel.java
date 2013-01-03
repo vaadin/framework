@@ -341,12 +341,16 @@ public class VAbstractSplitPanel extends ComplexPanel {
     }
 
     public void setSplitPosition(String pos) {
+        setSplitPosition(pos, true);
+    }
+
+    private void setSplitPosition(String pos, boolean rememberPosition) {
         if (pos == null) {
             return;
         }
 
         pos = checkSplitPositionLimits(pos);
-        if (!pos.equals(position)) {
+        if (rememberPosition && !pos.equals(position)) {
             position = convertToPositionUnits(pos);
         }
 
@@ -402,7 +406,8 @@ public class VAbstractSplitPanel extends ComplexPanel {
                 if (pixelPosition < 0) {
                     pixelPosition = 0;
                 }
-                setSplitPosition(pixelPosition + "px");
+                // Move splitter within bounds, but don't remember the new value
+                setSplitPosition(pixelPosition + "px", false);
                 return;
             }
 
@@ -450,7 +455,8 @@ public class VAbstractSplitPanel extends ComplexPanel {
                 if (pixelPosition < 0) {
                     pixelPosition = 0;
                 }
-                setSplitPosition(pixelPosition + "px");
+                // Move splitter within bounds, but don't remember the new value
+                setSplitPosition(pixelPosition + "px", false);
                 return;
             }
 
