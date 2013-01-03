@@ -54,15 +54,10 @@ public class TableVisibleColumns {
         try {
             t.setVisibleColumns(new Object[] { "Property 0", "Property 1",
                     "Property 2", "Property 1" });
-            // FIXME: Multiple properties in the Object array should be detected
-            // (#6476)
-            // junit.framework.Assert.fail("IllegalArgumentException expected");
         } catch (IllegalArgumentException e) {
             // OK, expected
         }
-        // FIXME: Multiple properties in the Object array should be detected
-        // (#6476)
-        // assertArrayEquals(defaultColumns3, t.getVisibleColumns());
+        assertArrayEquals(defaultColumns3, t.getVisibleColumns());
     }
 
     @Test
