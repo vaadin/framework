@@ -276,7 +276,11 @@ public final class Slot extends SimplePanel {
     }
 
     /**
-     * Set how the slot should be expanded relative to the other slots
+     * Set how the slot should be expanded relative to the other slots. 0 means
+     * that the slot should not participate in the division of space based on
+     * the expand ratios but instead be allocated space based on its natural
+     * size. Other values causes the slot to get a share of the otherwise
+     * unallocated space in proportion to the slot's expand ratio value.
      * 
      * @param expandRatio
      *            The ratio of the space the slot should occupy
@@ -290,7 +294,9 @@ public final class Slot extends SimplePanel {
      * Get the expand ratio for the slot. The expand ratio describes how the
      * slot should be resized compared to other slots in the layout
      * 
-     * @return
+     * @return the expand ratio of the slot
+     * 
+     * @see #setExpandRatio(double)
      */
     public double getExpandRatio() {
         return expandRatio;

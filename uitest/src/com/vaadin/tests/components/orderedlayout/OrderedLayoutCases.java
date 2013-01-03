@@ -321,6 +321,18 @@ public class OrderedLayoutCases extends AbstractTestUI {
                         setChildState(0, 2, 1);
                         // Height: 100% to middle child
                         setChildState(1, 1, 4);
+                    }
+                }));
+
+        caseBar.addComponent(new Button("Undefined + alignments",
+                new ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        resetState();
+                        // Height: 350px to left child
+                        setChildState(0, 1, 2);
+                        // Short caption to left child
+                        setChildState(0, 2, 1);
                         // Alignment: bottom left to right child
                         setChildState(2, 4, 7);
                     }

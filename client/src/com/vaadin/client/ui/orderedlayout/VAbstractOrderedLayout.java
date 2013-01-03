@@ -26,10 +26,10 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Util;
-import com.vaadin.shared.ui.AlignmentInfo;
 import com.vaadin.shared.ui.MarginInfo;
 
 /**
@@ -49,6 +49,12 @@ public class VAbstractOrderedLayout extends FlowPanel {
     private Element expandWrapper;
 
     private LayoutManager layoutManager;
+
+    /**
+     * Keep track of the last allocated expand size to help detecting when it
+     * changes.
+     */
+    private int lastExpandSize = -1;
 
     public VAbstractOrderedLayout(boolean vertical) {
         this.vertical = vertical;
@@ -332,12 +338,25 @@ public class VAbstractOrderedLayout extends FlowPanel {
     }
 
     /**
-     * Triggers a recalculation of the expand width and heights
+     * Assigns relative sizes to the children that should expand based on their
+     * expand ratios.
      */
-    private void recalculateExpands() {
+    public void updateExpandedSizes() {
+        // Ensure the expand wrapper is in place
+        if (expandWrapper == null) {
+            expandWrapper = DOM.createDiv();
+            expandWrapper.setClassName("v-expand");
+            while (getElement().getChildCount() > 0) {
+                Node el = getElement().getChild(0);
+                expandWrapper.appendChild(el);
+            }
+            getElement().appendChild(expandWrapper);
+        }
+
+        // Sum up expand ratios to get the denominator
         double total = 0;
         for (Slot slot : widgetToSlot.values()) {
-            if (slot.getExpandRatio() > -1) {
+            if (slot.getExpandRatio() != 0) {
                 total += slot.getExpandRatio();
             } else {
                 if (vertical) {
@@ -346,9 +365,13 @@ public class VAbstractOrderedLayout extends FlowPanel {
                     slot.getElement().getStyle().clearWidth();
                 }
             }
+            slot.getElement().getStyle().clearMarginLeft();
+            slot.getElement().getStyle().clearMarginTop();
         }
+
+        // Give each child its own share
         for (Slot slot : widgetToSlot.values()) {
-            if (slot.getExpandRatio() > -1) {
+            if (slot.getExpandRatio() != 0) {
                 if (vertical) {
                     slot.setHeight((100 * (slot.getExpandRatio() / total))
                             + "%");
@@ -372,7 +395,8 @@ public class VAbstractOrderedLayout extends FlowPanel {
      */
     public void clearExpand() {
         if (expandWrapper != null) {
-            for (; expandWrapper.getChildCount() > 0;) {
+            lastExpandSize = -1;
+            while (expandWrapper.getChildCount() > 0) {
                 Element el = expandWrapper.getChild(0).cast();
                 getElement().appendChild(el);
                 if (vertical) {
@@ -389,39 +413,23 @@ public class VAbstractOrderedLayout extends FlowPanel {
     }
 
     /**
-     * Adds elements used to expand a slot
+     * Updates the expand compensation based on the measured sizes of children
+     * without expand.
      */
-    public void updateExpand() {
+    public void updateExpandCompensation() {
         boolean isExpanding = false;
         for (Widget slot : getChildren()) {
-            if (((Slot) slot).getExpandRatio() > -1) {
+            if (((Slot) slot).getExpandRatio() != 0) {
                 isExpanding = true;
-            } else {
-                if (vertical) {
-                    slot.getElement().getStyle().clearHeight();
-                } else {
-                    slot.getElement().getStyle().clearWidth();
-                }
+                break;
             }
-            slot.getElement().getStyle().clearMarginLeft();
-            slot.getElement().getStyle().clearMarginTop();
         }
 
         if (isExpanding) {
-            if (expandWrapper == null) {
-                expandWrapper = DOM.createDiv();
-                expandWrapper.setClassName("v-expand");
-                for (; getElement().getChildCount() > 0;) {
-                    Node el = getElement().getChild(0);
-                    expandWrapper.appendChild(el);
-                }
-                getElement().appendChild(expandWrapper);
-            }
-
             int totalSize = 0;
             for (Widget w : getChildren()) {
                 Slot slot = (Slot) w;
-                if (slot.getExpandRatio() == -1) {
+                if (slot.getExpandRatio() == 0) {
 
                     if (layoutManager != null) {
                         // TODO check caption position
@@ -483,44 +491,21 @@ public class VAbstractOrderedLayout extends FlowPanel {
                         .setMarginLeft(-totalSize, Unit.PX);
             }
 
-            recalculateExpands();
-        }
-    }
-
-    /**
-     * Perform a recalculation of the layout height
-     */
-    public void recalculateLayoutHeight() {
-        // Only needed if a horizontal layout is undefined high, and contains
-        // relative height children or vertical alignments
-        if (vertical || definedHeight) {
-            return;
-        }
-
-        boolean hasRelativeHeightChildren = false;
-        boolean hasVAlign = false;
-
-        for (Widget slot : getChildren()) {
-            Widget widget = ((Slot) slot).getWidget();
-            String h = widget.getElement().getStyle().getHeight();
-            if (h != null && h.indexOf("%") > -1) {
-                hasRelativeHeightChildren = true;
+            // Measure expanded children again if their size might have changed
+            if (totalSize != lastExpandSize) {
+                lastExpandSize = totalSize;
+                for (Widget w : getChildren()) {
+                    Slot slot = (Slot) w;
+                    if (slot.getExpandRatio() != 0) {
+                        if (layoutManager != null) {
+                            layoutManager.setNeedsMeasure(Util
+                                    .findConnectorFor(slot.getWidget()));
+                        } else if (slot.getWidget() instanceof RequiresResize) {
+                            ((RequiresResize) slot.getWidget()).onResize();
+                        }
+                    }
+                }
             }
-            AlignmentInfo a = ((Slot) slot).getAlignment();
-            if (a != null && (a.isVerticalCenter() || a.isBottom())) {
-                hasVAlign = true;
-            }
-        }
-
-        if (hasRelativeHeightChildren || hasVAlign) {
-            int newHeight;
-            if (layoutManager != null) {
-                newHeight = layoutManager.getOuterHeight(getElement())
-                        - layoutManager.getMarginHeight(getElement());
-            } else {
-                newHeight = getElement().getOffsetHeight();
-            }
-            getElement().getStyle().setHeight(newHeight, Unit.PX);
         }
     }
 

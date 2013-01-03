@@ -15,14 +15,15 @@
  */
 package com.vaadin.client.ui.orderedlayout;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Element;
+import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
+import com.vaadin.client.LayoutManager;
+import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
@@ -62,35 +63,28 @@ public abstract class AbstractOrderedLayoutConnector extends
         @Override
         protected LayoutClickRpc getLayoutClickRPC() {
             return getRpcProxy(AbstractOrderedLayoutServerRpc.class);
-        };
+        }
     };
 
     private StateChangeHandler childStateChangeHandler = new StateChangeHandler() {
         @Override
         public void onStateChanged(StateChangeEvent stateChangeEvent) {
+            // Child state has changed, update stuff it hasn't already been done
+            updateInternalState();
 
-            ComponentConnector child = (ComponentConnector) stateChangeEvent
-                    .getConnector();
+            /*
+             * Some changes must always be done after each child's own state
+             * change handler has been run because it might have changed some
+             * styles that are overridden here.
+             */
+            ServerConnector child = stateChangeEvent.getConnector();
+            if (child instanceof ComponentConnector) {
+                ComponentConnector component = (ComponentConnector) child;
+                Slot slot = getWidget().getSlot(component.getWidget());
 
-            // We need to update the slot size if the component size is changed
-            // to relative
-            Slot slot = getWidget().getSlot(child.getWidget());
-            slot.setRelativeWidth(child.isRelativeWidth());
-            slot.setRelativeHeight(child.isRelativeHeight());
-
-            // Update slot style names
-            List<String> childStyles = child.getState().styles;
-            if (childStyles == null) {
-                getWidget().setSlotStyleNames(child.getWidget(),
-                        (String[]) null);
-            } else {
-                getWidget().setSlotStyleNames(child.getWidget(),
-                        childStyles.toArray(new String[childStyles.size()]));
+                slot.setRelativeWidth(component.isRelativeWidth());
+                slot.setRelativeHeight(component.isRelativeHeight());
             }
-
-            updateSlotListeners(child);
-
-            updateLayoutHeight();
         }
     };
 
@@ -123,7 +117,6 @@ public abstract class AbstractOrderedLayoutConnector extends
                 if (slot != null) {
                     slot.setCaptionResizeListener(null);
                 }
-                childCaptionElementHeight.remove(widgetElement);
                 return;
             }
 
@@ -138,14 +131,10 @@ public abstract class AbstractOrderedLayoutConnector extends
                 getWidget().updateCaptionOffset(captionElement);
             }
 
-            int h = getLayoutManager().getOuterHeight(captionElement)
-                    - getLayoutManager().getMarginHeight(captionElement);
-            childCaptionElementHeight.put(widgetElement, h);
-
             updateLayoutHeight();
 
             if (needsExpand()) {
-                getWidget().updateExpand();
+                getWidget().updateExpandCompensation();
             }
         }
     };
@@ -155,7 +144,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         public void onElementResize(ElementResizeEvent e) {
             updateLayoutHeight();
             if (needsExpand()) {
-                getWidget().updateExpand();
+                getWidget().updateExpandCompensation();
             }
         }
     };
@@ -164,7 +153,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         @Override
         public void onElementResize(ElementResizeEvent e) {
             if (needsExpand()) {
-                getWidget().updateExpand();
+                getWidget().updateExpandCompensation();
             }
         }
     };
@@ -201,42 +190,44 @@ public abstract class AbstractOrderedLayoutConnector extends
     }
 
     /**
-     * For bookkeeping. Used to determine if extra calculations are needed for
-     * horizontal layout.
+     * Keep track of whether any child has relative height. Used to determine
+     * whether measurements are needed to make relative child heights work
+     * together with undefined container height.
      */
-    private HashSet<ComponentConnector> hasVerticalAlignment = new HashSet<ComponentConnector>();
+    private boolean hasChildrenWithRelativeHeight = false;
 
     /**
-     * For bookkeeping. Used to determine if extra calculations are needed for
-     * horizontal layout.
+     * Keeps track of whether slots should be expanded based on available space.
      */
-    private HashSet<ComponentConnector> hasRelativeHeight = new HashSet<ComponentConnector>();
+    private boolean needsExpand = false;
 
     /**
-     * For bookkeeping. Used to determine if extra calculations are needed for
-     * horizontal layout.
+     * The id of the previous response for which state changes have been
+     * processed. If this is the same as the
+     * {@link ApplicationConnection#getLastResponseId()}, it means that we can
+     * skip some quite expensive calculations because we know that the state
+     * hasn't changed since the last time the values were calculated.
      */
-    private HashSet<ComponentConnector> hasExpandRatio = new HashSet<ComponentConnector>();
-
-    /**
-     * For bookkeeping. Used in extra calculations for horizontal layout.
-     */
-    private HashSet<Element> needsMeasure = new HashSet<Element>();
-
-    /**
-     * For bookkeeping. Used in extra calculations for horizontal layout.
-     */
-    private HashMap<Element, Integer> childCaptionElementHeight = new HashMap<Element, Integer>();
+    private int processedResponseId = -1;
 
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.client.HasComponentsConnector#updateCaption(com.vaadin
+     * @see com.vaadin.client.HasComponentsConnector#updateCaption(com.vaadin
      * .client.ComponentConnector)
      */
     @Override
-    public void updateCaption(ComponentConnector child) {
+    public void updateCaption(ComponentConnector connector) {
+        /*
+         * Don't directly update captions here to avoid calling e.g.
+         * updateLayoutHeight() before everything is initialized.
+         * updateInternalState() will ensure all captions are updated when
+         * appropriate.
+         */
+        updateInternalState();
+    }
+
+    private void updateCaptionInternal(ComponentConnector child) {
         Slot slot = getWidget().getSlot(child.getWidget());
 
         String caption = child.getState().caption;
@@ -274,15 +265,8 @@ public abstract class AbstractOrderedLayoutConnector extends
                     && (pos == CaptionPosition.LEFT || pos == CaptionPosition.RIGHT)) {
                 getWidget().updateCaptionOffset(slot.getCaptionElement());
             }
-        } else {
-            childCaptionElementHeight.remove(child.getWidget().getElement());
         }
 
-        updateLayoutHeight();
-
-        if (needsExpand()) {
-            getWidget().updateExpand();
-        }
     }
 
     /*
@@ -312,12 +296,6 @@ public abstract class AbstractOrderedLayoutConnector extends
         for (ComponentConnector child : previousChildren) {
             if (child.getParent() != this) {
                 Slot slot = layout.getSlot(child.getWidget());
-                hasVerticalAlignment.remove(child);
-                hasRelativeHeight.remove(child);
-                hasExpandRatio.remove(child);
-                needsMeasure.remove(child.getWidget().getElement());
-                childCaptionElementHeight
-                        .remove(child.getWidget().getElement());
                 slot.setWidgetResizeListener(null);
                 if (slot.hasCaption()) {
                     slot.setCaptionResizeListener(null);
@@ -330,13 +308,7 @@ public abstract class AbstractOrderedLayoutConnector extends
             }
         }
 
-        // If some component is added/removed, we need to recalculate the expand
-        if (needsExpand()) {
-            getWidget().updateExpand();
-        } else {
-            getWidget().clearExpand();
-        }
-
+        updateInternalState();
     }
 
     /*
@@ -354,51 +326,91 @@ public abstract class AbstractOrderedLayoutConnector extends
         getWidget().setMargin(new MarginInfo(getState().marginsBitmask));
         getWidget().setSpacing(getState().spacing);
 
-        hasExpandRatio.clear();
-        hasVerticalAlignment.clear();
-        hasRelativeHeight.clear();
-        needsMeasure.clear();
+        updateInternalState();
+    }
 
-        boolean equalExpandRatio = getWidget().vertical ? !isUndefinedHeight()
+    /**
+     * Updates DOM properties and listeners based on the current state of this
+     * layout and its children.
+     */
+    private void updateInternalState() {
+        // Avoid updating again for the same data
+        int lastResponseId = getConnection().getLastResponseId();
+        if (processedResponseId == lastResponseId) {
+            return;
+        }
+        // Remember that everything is updated for this response
+        processedResponseId = lastResponseId;
+
+        hasChildrenWithRelativeHeight = false;
+
+        needsExpand = getWidget().vertical ? !isUndefinedHeight()
                 : !isUndefinedWidth();
-        for (ComponentConnector child : getChildComponents()) {
-            double expandRatio = getState().childData.get(child).expandRatio;
-            if (expandRatio > 0) {
-                equalExpandRatio = false;
-                break;
+
+        boolean onlyZeroExpands = true;
+        if (needsExpand) {
+            for (ComponentConnector child : getChildComponents()) {
+                double expandRatio = getState().childData.get(child).expandRatio;
+                if (expandRatio != 0) {
+                    onlyZeroExpands = false;
+                    break;
+                }
             }
         }
 
+        // First update bookkeeping for all children
         for (ComponentConnector child : getChildComponents()) {
+            if (child.delegateCaptionHandling()) {
+                updateCaptionInternal(child);
+            }
+
             Slot slot = getWidget().getSlot(child.getWidget());
+
+            // Update slot style names
+            List<String> childStyles = child.getState().styles;
+            if (childStyles == null) {
+                getWidget().setSlotStyleNames(child.getWidget(),
+                        (String[]) null);
+            } else {
+                getWidget().setSlotStyleNames(child.getWidget(),
+                        childStyles.toArray(new String[childStyles.size()]));
+            }
 
             AlignmentInfo alignment = new AlignmentInfo(
                     getState().childData.get(child).alignmentBitmask);
             slot.setAlignment(alignment);
 
-            double expandRatio = getState().childData.get(child).expandRatio;
+            double expandRatio = onlyZeroExpands ? 1 : getState().childData
+                    .get(child).expandRatio;
 
-            if (equalExpandRatio) {
-                expandRatio = 1;
-            } else if (expandRatio == 0) {
-                expandRatio = -1;
-            }
             slot.setExpandRatio(expandRatio);
 
-            // Bookkeeping to identify special cases that need extra
-            // calculations
-            if (alignment.isVerticalCenter() || alignment.isBottom()) {
-                hasVerticalAlignment.add(child);
-            }
-
-            if (expandRatio > 0) {
-                hasExpandRatio.add(child);
+            if (child.isRelativeHeight()) {
+                hasChildrenWithRelativeHeight = true;
             }
         }
 
+        if (needsFixedHeight()) {
+            // Add resize listener to ensure the widget itself is measured
+            getLayoutManager().addElementResizeListener(
+                    getWidget().getElement(), childComponentResizeListener);
+        } else {
+            getLayoutManager().removeElementResizeListener(
+                    getWidget().getElement(), childComponentResizeListener);
+        }
+
+        // Then update listeners based on bookkeeping
         updateAllSlotListeners();
 
+        // Update the layout at this point to ensure it's OK even if we get no
+        // element resize events
         updateLayoutHeight();
+        if (needsExpand()) {
+            getWidget().updateExpandedSizes();
+            getWidget().updateExpandCompensation();
+        } else {
+            getWidget().clearExpand();
+        }
     }
 
     /**
@@ -406,29 +418,19 @@ public abstract class AbstractOrderedLayoutConnector extends
      */
     private boolean needsFixedHeight() {
         boolean isVertical = getWidget().vertical;
-        boolean hasChildrenWithVerticalAlignmentCenterOrBottom = !hasVerticalAlignment
-                .isEmpty();
-        boolean allChildrenHasVerticalAlignmentCenterOrBottom = hasVerticalAlignment
-                .size() == getChildren().size();
-        boolean hasChildrenWithRelativeHeight = !hasRelativeHeight.isEmpty();
 
         if (isVertical) {
+            // Doesn't need height fix for vertical layouts
             return false;
         }
 
         else if (!isUndefinedHeight()) {
+            // Fix not needed unless the height is undefined
             return false;
         }
 
         else if (!hasChildrenWithRelativeHeight) {
-            return false;
-        }
-
-        else if (!hasChildrenWithVerticalAlignmentCenterOrBottom) {
-            return false;
-        }
-
-        else if (allChildrenHasVerticalAlignmentCenterOrBottom) {
+            // Already works if there are no relative heights
             return false;
         }
 
@@ -439,9 +441,7 @@ public abstract class AbstractOrderedLayoutConnector extends
      * Does the layout need to expand?
      */
     private boolean needsExpand() {
-        boolean canApplyExpand = (getWidget().vertical && !isUndefinedHeight())
-                || (!getWidget().vertical && !isUndefinedWidth());
-        return hasExpandRatio.size() > 0 && canApplyExpand;
+        return needsExpand;
     }
 
     /**
@@ -477,27 +477,24 @@ public abstract class AbstractOrderedLayoutConnector extends
             }
         } else if ((child.isRelativeHeight() || child.isRelativeWidth())
                 && slot.hasCaption()) {
-            // If the slot has caption, we need to listen for it's size changes
-            // in order to update the padding/margin offset for relative sized
-            // components
+            /*
+             * If the slot has caption, we need to listen for its size changes
+             * in order to update the padding/margin offset for relative sized
+             * components.
+             * 
+             * TODO might only be needed if the caption is in the same direction
+             * as the relative size?
+             */
             slot.setCaptionResizeListener(slotCaptionResizeListener);
         }
 
         if (needsExpand()) {
+            // TODO widget resize only be needed for children without expand?
             slot.setWidgetResizeListener(childComponentResizeListener);
             if (slot.hasSpacing()) {
                 slot.setSpacingResizeListener(spacingResizeListener);
             }
         }
-
-        if (child.isRelativeHeight()) {
-            hasRelativeHeight.add(child);
-            needsMeasure.remove(child.getWidget().getElement());
-        } else {
-            hasRelativeHeight.remove(child);
-            needsMeasure.add(child.getWidget().getElement());
-        }
-
     }
 
     /**
@@ -506,7 +503,11 @@ public abstract class AbstractOrderedLayoutConnector extends
     private void updateLayoutHeight() {
         if (needsFixedHeight()) {
             int h = getMaxHeight();
-            assert (h >= 0);
+            if (h < 0) {
+                // Postpone change if there are elements that have not yet been
+                // measured
+                return;
+            }
             h += getLayoutManager().getBorderHeight(getWidget().getElement())
                     + getLayoutManager().getPaddingHeight(
                             getWidget().getElement());
@@ -522,37 +523,49 @@ public abstract class AbstractOrderedLayoutConnector extends
         int highestNonRelative = -1;
         int highestRelative = -1;
 
+        LayoutManager layoutManager = getLayoutManager();
+
         for (ComponentConnector child : getChildComponents()) {
-            // TODO would be more efficient to measure the slot element if both
-            // caption and child widget elements need to be measured. Keeping
-            // track of what to measure is the most difficult part of this
-            // layout.
-            Element el = child.getWidget().getElement();
-            CaptionPosition pos = getWidget().getCaptionPositionFromElement(
-                    (Element) el.getParentElement().cast());
-            int h = getLayoutManager().getOuterHeight(el);
+            Slot slot = getWidget().getSlot(child.getWidget());
+            Element captionElement = slot.getCaptionElement();
+            CaptionPosition pos = slot.getCaptionPosition();
+
+            Element childElement = child.getWidget().getElement();
+            int h = layoutManager.getOuterHeight(childElement);
             if (h == -1) {
-                // Height has not yet been measured so using a more
-                // conventional method instead.
-                h = Util.getRequiredHeight(el);
+                // Height has not yet been measured -> postpone actions that
+                // depend on the max height
+                return -1;
             }
-            if (needsMeasure.contains(el)) {
-                String sHeight = el.getStyle().getHeight();
-                // Only add the caption size to the height of the slot if
-                // coption position is top or bottom
-                if (childCaptionElementHeight.containsKey(el)
-                        && (sHeight == null || !sHeight.endsWith("%"))
-                        && (pos == CaptionPosition.TOP || pos == CaptionPosition.BOTTOM)) {
-                    h += childCaptionElementHeight.get(el);
+
+            boolean hasRelativeHeight = slot.hasRelativeHeight();
+
+            boolean includeCaptionHeight = captionElement != null
+                    && (pos == CaptionPosition.TOP || pos == CaptionPosition.BOTTOM);
+            if (!hasRelativeHeight && !includeCaptionHeight
+                    && captionElement != null) {
+                String sHeight = childElement.getStyle().getHeight();
+                includeCaptionHeight = (sHeight == null || !sHeight
+                        .endsWith("%"));
+            }
+
+            if (includeCaptionHeight) {
+                int captionHeight = layoutManager
+                        .getOuterHeight(captionElement)
+                        - getLayoutManager().getMarginHeight(captionElement);
+                if (captionHeight == -1) {
+                    // Height has not yet been measured -> postpone actions that
+                    // depend on the max height
+                    return -1;
                 }
+                h += captionHeight;
+            }
+
+            if (!hasRelativeHeight) {
                 if (h > highestNonRelative) {
                     highestNonRelative = h;
                 }
             } else {
-                if (childCaptionElementHeight.containsKey(el)
-                        && (pos == CaptionPosition.TOP || pos == CaptionPosition.BOTTOM)) {
-                    h += childCaptionElementHeight.get(el);
-                }
                 if (h > highestRelative) {
                     highestRelative = h;
                 }
