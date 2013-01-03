@@ -1,0 +1,4 @@
+@charset "UTF-8";
+.icon-schedule.v-nativebutton:before,
+.icon-schedule > .v-button-wrap:before,
+.icon-schedule.v-label:before { content: "\1f4c5"; }

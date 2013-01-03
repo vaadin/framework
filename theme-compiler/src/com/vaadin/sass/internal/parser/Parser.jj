@@ -726,6 +726,7 @@ void charset() :
 {  
     try {
 	<CHARSET_SYM> ( <S> )* n=<STRING> ( <S> )* ";"
+	{documentHandler.charsetDirective(n.image);}
     } catch (ParseException e) {
         reportError(getLocator(e.currentToken.next), e);
 	skipStatement();
@@ -2596,26 +2597,10 @@ String convertStringIndex(String s, int start, int len) {
 		case '5': case '6': case '7': case '8': case '9':
 		case 'a': case 'b': case 'c': case 'd': case 'e': case 'f':
 		case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
-		    int numValue = Character.digit(c, 16);
-		    int count = 0;
-		    int p = 16;
-
-		    while (index + 1 < len && count < 6) {
-			c = s.charAt(index+1);
-
-			if (Character.digit(c, 16) != -1) {
-			    numValue = (numValue * 16) + Character.digit(c, 16);
-			    p *= 16;
-			    index++;
-			} else {
-			    if (c == ' ') {
-				// skip the latest white space
-				index++;
-			    }
-			    break;
-			}
+		    buf.append('\\');
+		    while (index < len) {
+			buf.append(s.charAt(index++));
 		    }
-		    buf.append((char) numValue);
 		    break;
 		case '\n':
 		case '\f':

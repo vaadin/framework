@@ -29,6 +29,7 @@ import org.w3c.css.sac.SelectorList;
 import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.sass.internal.parser.LexicalUnitImpl;
 import com.vaadin.sass.internal.tree.BlockNode;
+import com.vaadin.sass.internal.tree.CharsetNode;
 import com.vaadin.sass.internal.tree.CommentNode;
 import com.vaadin.sass.internal.tree.ExtendNode;
 import com.vaadin.sass.internal.tree.FontFaceNode;
@@ -334,6 +335,12 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
             String contains, String separator) {
         ListContainsNode node = new ListContainsNode(variable, list, contains,
                 separator);
+        nodeStack.peek().appendChild(node);
+    }
+
+    @Override
+    public void charsetDirective(String value) {
+        CharsetNode node = new CharsetNode(value);
         nodeStack.peek().appendChild(node);
     }
 }
