@@ -88,4 +88,6 @@ public interface SCSSDocumentHandler extends DocumentHandler {
     void containsDirective(String variable, String list, String contains,
             String separator);
 
+    void charsetDirective(String value);
+
 }

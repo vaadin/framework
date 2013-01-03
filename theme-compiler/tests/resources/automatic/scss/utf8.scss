@@ -1,0 +1,5 @@
+@charset "UTF-8";
+@import "utf8-imported/to-be-imported-scss-file-contains-utf8";
+.foo { content: '\1f4c5'; }
+.bar { content: "\1f4c5"; }
+.us_dollar { cotent: "U+0024"; }

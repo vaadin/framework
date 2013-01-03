@@ -1,0 +1,5 @@
+@charset "UTF-8";
+.imported { content: "\1f4c5"; }
+.foo { content: "\1f4c5"; }
+.bar { content: "\1f4c5"; }
+.us_dollar { cotent: "U+0024"; }

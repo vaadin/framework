@@ -532,6 +532,7 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         jj_consume_token(S);
       }
       jj_consume_token(SEMICOLON);
+         documentHandler.charsetDirective(n.image);
     } catch (ParseException e) {
         reportError(getLocator(e.currentToken.next), e);
         skipStatement();
@@ -5404,26 +5405,10 @@ LexicalUnitImpl result = null;
                 case '5': case '6': case '7': case '8': case '9':
                 case 'a': case 'b': case 'c': case 'd': case 'e': case 'f':
                 case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
-                    int numValue = Character.digit(c, 16);
-                    int count = 0;
-                    int p = 16;
-
-                    while (index + 1 < len && count < 6) {
-                        c = s.charAt(index+1);
-
-                        if (Character.digit(c, 16) != -1) {
-                            numValue = (numValue * 16) + Character.digit(c, 16);
-                            p *= 16;
-                            index++;
-                        } else {
-                            if (c == ' ') {
-                                // skip the latest white space
-                                index++;
-                            }
-                            break;
-                        }
+                    buf.append('\u005c\u005c');
+                    while (index < len) {
+                        buf.append(s.charAt(index++));
                     }
-                    buf.append((char) numValue);
                     break;
                 case '\u005cn':
                 case '\u005cf':
@@ -6515,11 +6500,6 @@ LexicalUnitImpl result = null;
     return false;
   }
 
-  private boolean jj_3R_249() {
-    if (jj_scan_token(URL)) return true;
-    return false;
-  }
-
   private boolean jj_3R_169() {
     Token xsp;
     xsp = jj_scanpos;
@@ -6527,6 +6507,11 @@ LexicalUnitImpl result = null;
     jj_scanpos = xsp;
     if (jj_3R_186()) return true;
     }
+    return false;
+  }
+
+  private boolean jj_3R_249() {
+    if (jj_scan_token(URL)) return true;
     return false;
   }
 
