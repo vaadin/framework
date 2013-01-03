@@ -67,6 +67,8 @@ public class VListSelect extends VOptionGroupBase {
 
     @Override
     public void buildOptions(UIDL uidl) {
+        int scrollTop = select.getElement().getScrollTop();
+        int rowCount = getRows();
         select.setMultipleSelect(isMultiselect());
         select.clear();
         if (!isMultiselect() && isNullSelectionAllowed()
@@ -86,6 +88,12 @@ public class VListSelect extends VOptionGroupBase {
         }
         if (getRows() > 0) {
             select.setVisibleItemCount(getRows());
+        }
+        // FIXME: temporary hack for preserving the scroll state when the
+        // contents haven't been changed obviously. This should be dealt with in
+        // the rewrite.
+        if (rowCount == getRows()) {
+            select.getElement().setScrollTop(scrollTop);
         }
     }
 
