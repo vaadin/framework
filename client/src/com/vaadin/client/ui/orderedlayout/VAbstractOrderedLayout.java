@@ -426,10 +426,25 @@ public class VAbstractOrderedLayout extends FlowPanel {
         }
 
         if (isExpanding) {
+            /*
+             * Expanded slots have relative sizes that together add up to 100%.
+             * To make room for slots without expand, we will add padding that
+             * is not considered for relative sizes and a corresponding negative
+             * margin for the unexpanded slots. We calculate the size by summing
+             * the size of all non-expanded non-relative slots.
+             * 
+             * Relatively sized slots without expansion are considered to get
+             * 0px, but we still keep them visible (causing overflows) to help
+             * the developer see what's happening. Forcing them to only get 0px
+             * would make them disappear which would avoid overflows but would
+             * instead cause confusion as they would then just disappear without
+             * any obvious reason.
+             */
             int totalSize = 0;
             for (Widget w : getChildren()) {
                 Slot slot = (Slot) w;
-                if (slot.getExpandRatio() == 0) {
+                if (slot.getExpandRatio() == 0
+                        && !slot.isRelativeInDirection(vertical)) {
 
                     if (layoutManager != null) {
                         // TODO check caption position

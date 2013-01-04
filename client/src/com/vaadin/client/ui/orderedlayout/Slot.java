@@ -661,4 +661,12 @@ public final class Slot extends SimplePanel {
             getElement().getParentElement().insertBefore(spacer, getElement());
         }
     }
+
+    public boolean isRelativeInDirection(boolean vertical) {
+        if (vertical) {
+            return hasRelativeHeight();
+        } else {
+            return hasRelativeWidth();
+        }
+    }
 }
