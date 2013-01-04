@@ -907,10 +907,10 @@ void fontFace() :
 }
 {
  try {
-  <FONT_FACE_SYM> ( <S> )* 
-     <LBRACE> (<S>)* 
+  <FONT_FACE_SYM> ( <S> )*
+     <LBRACE> (<S>)*
       { start = true; documentHandler.startFontFace(); }
-     ( declaration() )? ( ";" ( <S> )* ( declaration() )? )* 
+     ( declaration() )? ( ";" ( <S> )* ( declaration() )? )*
      <RBRACE> (<S>)*
  } catch (ParseException e) {
      reportError(getLocator(), e);
@@ -928,7 +928,7 @@ void fontFace() :
  */
 void atRuleDeclaration() :
 {Token n;
- String ret; 
+ String ret;
 }
 {
  n=<ATKEYWORD>
@@ -993,7 +993,7 @@ char connector = ' ';
     "+" ( <S> )* { return '+'; }
     | ">" ( <S> )* { return '>'; }
     | "~" ( <S> )* { return '~'; }
-| <S>  ( ( "+" { connector = '+'; } 
+| <S>  ( ( "+" { connector = '+'; }
            | ">" { connector = '>'; }
            | "~" { connector = '~'; } )
  ( <S> )* )? { return connector; }
@@ -1032,10 +1032,13 @@ void microsoftExtension() :
  * @exception ParseException exception during the parse
  */
 String property() :
-{Token n;
+{Token t;String s = "";
 }
 {
-	    n=<IDENT> ( <S> )* { return convertIdent(n.image); }
+    (t = <IDENT>{s += t.image; }|t = < INTERPOLATION >{ s += t.image; })+(< S >)*
+    {
+        return s;
+    }
 }
 
 String variableName() :
@@ -1595,7 +1598,7 @@ void includeDirective() :
 {
     <INCLUDE_SYM>
     (<S>)*
-    (name = property()|name = variableName(){ name = "$"+name;}|name = interpolation()
+    (name = property()|name = variableName(){ name = "$"+name;}
          |(name = functionName() 
            args = argValuelist()) <RPARAN>)(";"(<S>)*)+
            {documentHandler.includeDirective(name, args);}
@@ -1603,7 +1606,9 @@ void includeDirective() :
 
 String interpolation() :
 {
-  Token n;}{
+  Token n;
+}
+{
   n = < INTERPOLATION >
   {
     return n.image;  }}
@@ -2759,12 +2764,12 @@ void _parseDeclarationBlock() :
 {
 }
 {
-    ( <S> )* 
+    ( <S> )*
 	( declaration() )? ( ";" ( <S> )* ( declaration() )? )* 
  }
 
 ArrayList<String> _parseSelectors() :
-{ ArrayList<String> p = null; 
+{ ArrayList<String> p = null;
 }
 {
     try {
