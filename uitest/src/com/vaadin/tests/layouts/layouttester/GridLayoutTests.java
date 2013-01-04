@@ -9,6 +9,7 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.server.UserError;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -402,6 +403,9 @@ public class GridLayoutTests extends AbstractLayoutTests {
         baseLayout.addComponent(button3);
         baseLayout.addComponent(button4);
         baseLayout.addComponent(glo);
+        // Don't expand the buttons
+        ((AbstractOrderedLayout) baseLayout).setExpandRatio(glo, 1);
+
         button1.setEnabled(true);
         button2.setEnabled(false);
         button3.setEnabled(false);
@@ -473,6 +477,9 @@ public class GridLayoutTests extends AbstractLayoutTests {
         button4.setEnabled(false);
 
         baseLayout.addComponent(glo);
+
+        // Don't expand the buttons
+        ((AbstractOrderedLayout) baseLayout).setExpandRatio(glo, 1);
 
         button1.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = 7716267156088629379L;

@@ -110,6 +110,9 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         final VerticalLayout vlo = getTestLaytout();
         final VerticalLayout vlo2 = getTestLaytout();
 
+        // Set undefined height to avoid expanding
+        vlo2.setHeight(null);
+
         final HorizontalLayout source = new HorizontalLayout();
         source.addComponent(new Label("OTHER LABEL 1"));
         source.addComponent(new Label("OTHER LABEL 2"));

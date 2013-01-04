@@ -289,7 +289,9 @@ public class HorizontalLayoutTests extends AbstractLayoutTests {
             @Override
             public void buttonClick(ClickEvent event) {
                 vlo.setSizeUndefined();
-                vlo.addComponent(new Label("--- NEW LABEL ---"));
+                Label label = new Label("--- NEW LABEL ---");
+                label.setWidth(null);
+                vlo.addComponent(label);
                 button2.setEnabled(false);
                 button3.setEnabled(true);
             }
