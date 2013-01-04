@@ -90,6 +90,9 @@ public abstract class VLayoutSlot {
             captionAboveCompnent = !caption.shouldBePlacedAfterComponent();
             if (!captionAboveCompnent) {
                 availableWidth -= captionWidth;
+                if (availableWidth < 0) {
+                    availableWidth = 0;
+                }
                 captionStyle.clearLeft();
                 captionStyle.setRight(0, Unit.PX);
                 style.setPaddingRight(captionWidth, Unit.PX);
