@@ -58,6 +58,8 @@ public class ScssStylesheet extends Node {
 
     private String fileName;
 
+    private String charset;
+
     /**
      * Read in a file SCSS and parse it into a ScssStylesheet
      * 
@@ -69,7 +71,7 @@ public class ScssStylesheet extends Node {
     }
 
     /**
-     * Main entry point for the SASS compiler. Takes in a file and builds upp a
+     * Main entry point for the SASS compiler. Takes in a file and builds up a
      * ScssStylesheet tree out of it. Calling compile() on it will transform
      * SASS into CSS. Calling toString() will print out the SCSS/CSS.
      * 
@@ -80,6 +82,22 @@ public class ScssStylesheet extends Node {
      */
     public static ScssStylesheet get(String identifier) throws CSSException,
             IOException {
+        return get(identifier, null);
+    }
+
+    /**
+     * Main entry point for the SASS compiler. Takes in a file and encoding then
+     * builds up a ScssStylesheet tree out of it. Calling compile() on it will
+     * transform SASS into CSS. Calling toString() will print out the SCSS/CSS.
+     * 
+     * @param file
+     * @param encoding
+     * @return
+     * @throws CSSException
+     * @throws IOException
+     */
+    public static ScssStylesheet get(String identifier, String encoding)
+            throws CSSException, IOException {
         File file = new File(identifier);
         file = file.getCanonicalFile();
 
@@ -90,12 +108,14 @@ public class ScssStylesheet extends Node {
         if (source == null) {
             return null;
         }
+        source.setEncoding(encoding);
 
         Parser parser = new Parser();
         parser.setErrorHandler(new SCSSErrorHandler());
         parser.setDocumentHandler(handler);
         parser.parseStyleSheet(source);
 
+        stylesheet.setCharset(parser.getInputSource().getEncoding());
         return stylesheet;
     }
 
@@ -169,10 +189,15 @@ public class ScssStylesheet extends Node {
     @Override
     public String toString() {
         StringBuilder string = new StringBuilder("");
+        String delimeter = "\n\n";
+        // add charset declaration, if it is not default "ASCII".
+        if (!"ASCII".equals(getCharset())) {
+            string.append("@charset \"").append(getCharset()).append("\";")
+                    .append(delimeter);
+        }
         if (children.size() > 0) {
             string.append(children.get(0).toString());
         }
-        String delimeter = "\n\n";
         if (children.size() > 1) {
             for (int i = 1; i < children.size(); i++) {
                 String childString = children.get(i).toString();
@@ -317,5 +342,13 @@ public class ScssStylesheet extends Node {
 
     public static final void warning(String msg) {
         Logger.getLogger(ScssStylesheet.class.getName()).warning(msg);
+    }
+
+    public String getCharset() {
+        return charset;
+    }
+
+    public void setCharset(String charset) {
+        this.charset = charset;
     }
 }

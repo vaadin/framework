@@ -69,6 +69,10 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         throw new CSSException(CSSException.SAC_NOT_SUPPORTED_ERR);
     }
 
+    public InputSource getInputSource(){
+        return source;
+    }
+
     /**
      * Set the document handler for this parser
      */
@@ -277,65 +281,70 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
                 }
             }
         }
-        String encoding = "ASCII";
+        //use UTF-8 as the default encoding.
+        String encoding = source.getEncoding();
         InputStream input = source.getByteStream();
-        char c = ' ';
-
         if (!input.markSupported()) {
             input = new BufferedInputStream(input);
             source.setByteStream(input);
+            input.mark(100);
         }
-        input.mark(100);
-        c = (char) input.read();
+        if(encoding == null){
+            encoding = "ASCII";
 
-        if (c == '@') {
-            // hum, is it a charset ?
-            int size   = 100;
-            byte[] buf = new byte[size];
-            input.read(buf, 0, 7);
-            String keyword = new String(buf, 0, 7);
-            if (keyword.equals("charset")) {
-                // Yes, this is the charset declaration !
+            char c = ' ';
 
-                // here I don't use the right declaration : white space are ' '.
-                while ((c = (char) input.read()) == ' ') {
-                    // find the first quote
-                }
-                char endChar = c;
-                int i = 0;
+            c = (char) input.read();
 
-                if ((endChar != '"') && (endChar != '\u005c'')) {
-                    // hum this is not a quote.
-                    throw new CSSException("invalid charset declaration");
-                }
+            if (c == '@') {
+                // hum, is it a charset ?
+                int size   = 100;
+                byte[] buf = new byte[size];
+                input.read(buf, 0, 7);
+                String keyword = new String(buf, 0, 7);
+                if (keyword.equals("charset")) {
+                    // Yes, this is the charset declaration !
 
-                while ((c = (char) input.read()) != endChar) {
-                    buf[i++] = (byte) c;
-                    if (i == size) {
-                        byte[] old = buf;
-                        buf = new byte[size + 100];
-                        System.arraycopy(old, 0, buf, 0, size);
-                        size += 100;
+                    // here I don't use the right declaration : white space are ' '.
+                    while ((c = (char) input.read()) == ' ') {
+                        // find the first quote
                     }
-                }
-                while ((c = (char) input.read()) == ' ') {
-                    // find the next relevant character
-                }
-                if (c != ';') {
-                    // no semi colon at the end ?
-                    throw new CSSException("invalid charset declaration: "
+                    char endChar = c;
+                    int i = 0;
+
+                    if ((endChar != '"') && (endChar != '\u005c'')) {
+                        // hum this is not a quote.
+                        throw new CSSException("invalid charset declaration");
+                    }
+
+                    while ((c = (char) input.read()) != endChar) {
+                        buf[i++] = (byte) c;
+                        if (i == size) {
+                            byte[] old = buf;
+                            buf = new byte[size + 100];
+                            System.arraycopy(old, 0, buf, 0, size);
+                            size += 100;
+                        }
+                    }
+                    while ((c = (char) input.read()) == ' ') {
+                        // find the next relevant character
+                    }
+                    if (c != ';') {
+                        // no semi colon at the end ?
+                        throw new CSSException("invalid charset declaration: "
                                            + "missing semi colon");
-                }
-                encoding = new String(buf, 0, i);
-                if (source.getEncoding() != null) {
-                    // compare the two encoding informations.
-                    // For example, I don't accept to have ASCII and after UTF-8.
-                    // Is it really good ? That is the question.
-                    if (!encoding.equals(source.getEncoding())) {
-                        throw new CSSException("invalid encoding information.");
                     }
-                }
-            } // else no charset declaration available
+                    encoding = new String(buf, 0, i);
+                    if (source.getEncoding() != null) {
+                        // compare the two encoding informations.
+                        // For example, I don't accept to have ASCII and after UTF-8.
+                        // Is it really good ? That is the question.
+                        if (!encoding.equals(source.getEncoding())) {
+                            throw new CSSException("invalid encoding information.");
+                        }
+                    }
+                } // else no charset declaration available
+            }
         }
         // ok set the real encoding of this source.
         source.setEncoding(encoding);
@@ -5404,26 +5413,10 @@ LexicalUnitImpl result = null;
                 case '5': case '6': case '7': case '8': case '9':
                 case 'a': case 'b': case 'c': case 'd': case 'e': case 'f':
                 case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
-                    int numValue = Character.digit(c, 16);
-                    int count = 0;
-                    int p = 16;
-
-                    while (index + 1 < len && count < 6) {
-                        c = s.charAt(index+1);
-
-                        if (Character.digit(c, 16) != -1) {
-                            numValue = (numValue * 16) + Character.digit(c, 16);
-                            p *= 16;
-                            index++;
-                        } else {
-                            if (c == ' ') {
-                                // skip the latest white space
-                                index++;
-                            }
-                            break;
-                        }
+                    buf.append('\u005c\u005c');
+                    while (index < len) {
+                        buf.append(s.charAt(index++));
                     }
-                    buf.append((char) numValue);
                     break;
                 case '\u005cn':
                 case '\u005cf':
@@ -5744,11 +5737,6 @@ LexicalUnitImpl result = null;
     try { return !jj_3_12(); }
     catch(LookaheadSuccess ls) { return true; }
     finally { jj_save(11, xla); }
-  }
-
-  private boolean jj_3R_231() {
-    if (jj_3R_253()) return true;
-    return false;
   }
 
   private boolean jj_3_1() {
@@ -6515,11 +6503,6 @@ LexicalUnitImpl result = null;
     return false;
   }
 
-  private boolean jj_3R_249() {
-    if (jj_scan_token(URL)) return true;
-    return false;
-  }
-
   private boolean jj_3R_169() {
     Token xsp;
     xsp = jj_scanpos;
@@ -6527,6 +6510,11 @@ LexicalUnitImpl result = null;
     jj_scanpos = xsp;
     if (jj_3R_186()) return true;
     }
+    return false;
+  }
+
+  private boolean jj_3R_249() {
+    if (jj_scan_token(URL)) return true;
     return false;
   }
 
@@ -7331,6 +7319,11 @@ LexicalUnitImpl result = null;
 
   private boolean jj_3R_272() {
     if (jj_3R_289()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_231() {
+    if (jj_3R_253()) return true;
     return false;
   }
 

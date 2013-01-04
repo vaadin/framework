@@ -48,8 +48,9 @@ public class ImportNodeHandler {
                             filePathBuilder.append(".scss");
                         }
 
-                        ScssStylesheet imported = ScssStylesheet
-                                .get(filePathBuilder.toString());
+                        // set parent's charset to imported node.
+                        ScssStylesheet imported = ScssStylesheet.get(
+                                filePathBuilder.toString(), node.getCharset());
                         if (imported == null) {
                             imported = ScssStylesheet.get(importNode.getUri());
                         }
