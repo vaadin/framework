@@ -10,7 +10,7 @@
 	background-color: #fff;
 }
 .#{$primaryStyleName}-item-caption {
-	height: 19px;
+	height: 20px;
 	background: #e4e4e4 repeat-x;
 	background-image: url(../tabsheet/img/tabbar-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	font-size: 11px;
@@ -28,6 +28,7 @@
 
 .#{$primaryStyleName}-item-first .#{$primaryStyleName}-item-caption {
 	border-top: none;
+	height: 21px;
 }
 .#{$primaryStyleName}-item-caption .v-caption {
 	padding: 3px 0 3px 10px;
