@@ -561,7 +561,58 @@ public class Util {
         notifyParentOfSizeChange(widget, false);
     }
 
-    public static native int getRequiredWidth(
+    /**
+     * Gets the border-box width for the given element, i.e. element width +
+     * border + padding. Always rounds up to nearest integer.
+     * 
+     * @param element
+     *            The element to check
+     * @return The border-box width for the element
+     */
+    public static int getRequiredWidth(com.google.gwt.dom.client.Element element) {
+        int reqWidth = getRequiredWidthBoundingClientRect(element);
+        if (BrowserInfo.get().isIE() && !BrowserInfo.get().isIE8()) {
+            int csSize = getRequiredWidthComputedStyle(element);
+            if (csSize == reqWidth + 1) {
+                // If computed style reports one pixel larger than requiredWidth
+                // we would be rounding in the wrong direction in IE9. Round up
+                // instead.
+                // We do not always use csSize as it e.g. for 100% wide Labels
+                // in GridLayouts produces senseless values (see e.g.
+                // ThemeTestUI with Runo).
+                return csSize;
+            }
+        }
+        return reqWidth;
+    }
+
+    /**
+     * Gets the border-box height for the given element, i.e. element height +
+     * border + padding. Always rounds up to nearest integer.
+     * 
+     * @param element
+     *            The element to check
+     * @return The border-box height for the element
+     */
+    public static int getRequiredHeight(
+            com.google.gwt.dom.client.Element element) {
+        int reqHeight = getRequiredHeightBoundingClientRect(element);
+        if (BrowserInfo.get().isIE() && !BrowserInfo.get().isIE8()) {
+            int csSize = getRequiredHeightComputedStyle(element);
+            if (csSize == reqHeight + 1) {
+                // If computed style reports one pixel larger than
+                // requiredHeight we would be rounding in the wrong direction in
+                // IE9. Round up instead.
+                // We do not always use csSize as it e.g. for 100% wide Labels
+                // in GridLayouts produces senseless values (see e.g.
+                // ThemeTestUI with Runo).
+                return csSize;
+            }
+        }
+        return reqHeight;
+    }
+
+    public static native int getRequiredWidthBoundingClientRect(
             com.google.gwt.dom.client.Element element)
     /*-{
         if (element.getBoundingClientRect) {
@@ -572,7 +623,39 @@ public class Util {
         }
     }-*/;
 
-    public static native int getRequiredHeight(
+    public static native int getRequiredHeightComputedStyle(
+            com.google.gwt.dom.client.Element element)
+    /*-{
+         var cs = element.ownerDocument.defaultView.getComputedStyle(element);
+         var heightPx = cs.height;
+         var borderTopPx = cs.borderTop;
+         var borderBottomPx = cs.borderBottom;
+         var paddingTopPx = cs.paddingTop;
+         var paddingBottomPx = cs.paddingBottom;
+         
+         var height = heightPx.substring(0,heightPx.length-2);
+         var border = borderTopPx.substring(0,borderTopPx.length-2)+borderBottomPx.substring(0,borderBottomPx.length-2);
+         var padding = paddingTopPx.substring(0,paddingTopPx.length-2)+paddingBottomPx.substring(0,paddingBottomPx.length-2);
+         return Math.ceil(height+border+padding);
+     }-*/;
+
+    public static native int getRequiredWidthComputedStyle(
+            com.google.gwt.dom.client.Element element)
+    /*-{
+         var cs = element.ownerDocument.defaultView.getComputedStyle(element);
+         var widthPx = cs.width;
+         var borderLeftPx = cs.borderLeft;
+         var borderRightPx = cs.borderRight;
+         var paddingLeftPx = cs.paddingLeft;
+         var paddingRightPx = cs.paddingRight;
+         
+         var width = widthPx.substring(0,widthPx.length-2);
+         var border = borderLeftPx.substring(0,borderLeftPx.length-2)+borderRightPx.substring(0,borderRightPx.length-2);
+         var padding = paddingLeftPx.substring(0,paddingLeftPx.length-2)+paddingRightPx.substring(0,paddingRightPx.length-2);
+         return Math.ceil(width+border+padding);
+     }-*/;
+
+    public static native int getRequiredHeightBoundingClientRect(
             com.google.gwt.dom.client.Element element)
     /*-{
         var height;
@@ -1070,9 +1153,8 @@ public class Util {
        }
        
        return null;
-     }-*/
-    ;
-    
+     }-*/;
+
     /**
      * Gets the currently focused element for Internet Explorer.
      * 
