@@ -1032,10 +1032,13 @@ void microsoftExtension() :
  * @exception ParseException exception during the parse
  */
 String property() :
-{Token n;
+{Token t;String s = "";
 }
 {
-	    n=<IDENT> ( <S> )* { return convertIdent(n.image); }
+    (t = <IDENT>{s += t.image; }|t = < INTERPOLATION >{ s += t.image; })+(< S >)*
+    { 
+      return s; 
+    }
 }
 
 String variableName() :
@@ -1595,7 +1598,7 @@ void includeDirective() :
 {
     <INCLUDE_SYM>
     (<S>)*
-    (name = property()|name = variableName(){ name = "$"+name;}|name = interpolation()
+    (name = property()|name = variableName(){ name = "$"+name;}
          |(name = functionName() 
            args = argValuelist()) <RPARAN>)(";"(<S>)*)+
            {documentHandler.includeDirective(name, args);}

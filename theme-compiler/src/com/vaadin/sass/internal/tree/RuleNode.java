@@ -87,6 +87,11 @@ public class RuleNode extends Node implements IVariableNode {
 
             String interpolation = "#{$" + node.getName() + "}";
 
+            if (variable != null && variable.contains(interpolation)) {
+                variable = variable.replaceAll(Pattern.quote(interpolation),
+                        node.getExpr().toString());
+            }
+
             if (value.getLexicalUnitType() == LexicalUnitImpl.SAC_FUNCTION) {
 
                 if (value.getParameters() != null) {
