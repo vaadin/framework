@@ -71,22 +71,17 @@ textarea.v-textarea-readonly {
  ******************************************************************************/
 &.v-app input.#{$primaryStyleName}-small,
 &.v-app textarea.v-textarea-small,
-.v-datefield-small .v-datefield-textfield,
-.v-datefield-small .v-datefield-button,
 .v-filterselect-small .v-filterselect-input {
-	font-size: 11.05px;
+	font-size: $chameleon-font-size-small;
 	}
-
 
 /*******************************************************************************
  * Big (and big search)
  ******************************************************************************/
 &.v-app input.#{$primaryStyleName}-big,
 &.v-app textarea.v-textarea-big,
-.v-datefield-big .v-datefield-textfield,
-.v-datefield-big .v-datefield-button,
 .v-filterselect-big .v-filterselect-input {
-	font-size: 15.6px;
+	font-size: $chameleon-font-size-big;
 	}
 
 input.#{$primaryStyleName}-big[type=text],

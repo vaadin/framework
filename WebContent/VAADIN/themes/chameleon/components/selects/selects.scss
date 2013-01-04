@@ -53,7 +53,7 @@
 }	
 
 &.v-app .#{$primaryStyleName}-suggestpopup-small td {
-	font-size: 11.05px;
+	font-size: $chameleon-font-size-small;
 	}
 
 &.v-app .#{$primaryStyleName}-suggestpopup-big td {
@@ -138,7 +138,7 @@
 	}
 
 .v-select-big .v-select-select {
-	font-size: 15.6px;
+	font-size: $chameleon-font-size-big;
 	}
 
 

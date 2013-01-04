@@ -14,7 +14,12 @@
 
 .#{$primaryStyleName}-button {
 	cursor: pointer;
+	vertical-align: top;
 }
+.v-has-width > input.#{$primaryStyleName}-textfield {
+	width: 100%;
+}
+
 .#{$primaryStyleName}-prompt .#{$primaryStyleName}-textfield {
 	color: #999;
 	font-style: italic;
@@ -79,6 +84,11 @@
 }
 .#{$primaryStyleName}-popup {
 	background: #fff;
+}
+.#{$primaryStyleName}-popupcalendar input.#{$primaryStyleName}-textfield {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 }
 /* Disabled by default
 .#{$primaryStyleName}-error .v-textfield,
