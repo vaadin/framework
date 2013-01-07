@@ -124,7 +124,10 @@
 		<antcall target="common.clean" />
 	</target>
 
-	<target name="tests">
+	<target name="checkstyle">
+		<echo>No java files in module</echo>
+	</target>
+	<target name="tests" depends="checkstyle">
 		<!--<antcall target="common.tests.run" />-->
 		<echo>WHAT? No tests for ${module.name}!</echo>
 	</target>

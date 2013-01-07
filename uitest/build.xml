@@ -133,7 +133,10 @@
 	<target name="clean">
 		<antcall target="common.clean" />
 	</target>
-	<target name="tests">
+	<target name="checkstyle">
+		<echo>Checkstyle is disabled for uitest for now</echo>
+	</target>
+	<target name="tests" depends="checkstyle">
 		<!--<antcall target="common.tests.run" />-->
 		<echo>WHAT? No JUnit tests for ${module.name}!</echo>
 	</target>

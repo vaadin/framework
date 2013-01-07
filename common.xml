@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="common" basedir="." default="" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:antcontrib="antlib:net.sf.antcontrib">
+<project name="common" basedir="." default="" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:antcontrib="antlib:net.sf.antcontrib" xmlns:cs="antlib:com.puppycrawl.tools.checkstyle">
 
 	<tstamp>
 		<format property="build.date" pattern="yyyy-MM-dd" />
@@ -349,5 +349,24 @@
 		<ivy:resolve conf="${conf}" />
 		<ivy:publish conf="${conf}" resolver="local-maven" overwrite="true">
 		</ivy:publish>
+	</target>
+
+	<!-- Checkstyle conf -->
+	<property name="cs.dir" location="${vaadin.basedir}/checkstyle" />
+	<property name="cs.xml" location="${cs.dir}/vaadin-checkstyle.xml" />
+	<property name="cs.header-file" location="${cs.dir}/header" />
+	<taskdef resource="checkstyletask.properties" uri="antlib:com.puppycrawl.tools.checkstyle" classpathref="taskdefs.classpath" />
+
+	<target name="checkstyle">
+		<fail unless="result.dir" message="No result.dir parameter given" />
+		<fail unless="cs.src" message="No cs.src parameter given" />
+		<property name="result.dir.full" location="${result.dir}"/>
+		<mkdir dir="${result.dir}" />
+		<echo>##teamcity[importData type='checkstyle' path='${result.dir.full}/checkstyle-errors.xml']</echo>
+		<cs:checkstyle config="${cs.xml}" failOnViolation="true">
+			<fileset dir="${cs.src}" includes="**/*.java" />
+			<formatter type="xml" toFile="${result.dir}/checkstyle-errors.xml"/>
+			<property key="checkstyle.header.file" file="${cs.header-file}" />
+		</cs:checkstyle>
 	</target>
 </project>
