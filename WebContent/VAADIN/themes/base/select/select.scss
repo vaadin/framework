@@ -1,5 +1,8 @@
 @mixin base-select($primaryStyleName : v-select) {
 
+$select-button-width : 1em;
+$select-button-negative-width : -1em;
+
 .#{$primaryStyleName} {
 	text-align: left;
 }
@@ -59,6 +62,7 @@
 	white-space: nowrap;
 	text-align: left;
 	display: inline-block;
+	padding-right: $select-button-width; /* Space for the button */
 }
 .v-filterselect .v-icon {
 	float: left;
@@ -80,7 +84,8 @@
 .v-filterselect-button {
 	display: inline-block;
 	cursor: pointer;
-	width: 1em;
+	width: $select-button-width;
+	margin-right: $select-button-negative-width;
 	height: 1em;
 	background: transparent url(../common/img/sprites.png) no-repeat -5px -8px;
 }

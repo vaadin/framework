@@ -1,11 +1,14 @@
 @mixin reindeer-select($primaryStyleName : v-filterselect) {
 
+$select-button-width : 25px;
+$select-button-negative-width : -25px;
+
 .#{$primaryStyleName} {
 	height: 24px;
 	background-repeat: no-repeat;
 	background-image: url(img/left.png); /** sprite-ref: verticals; sprite-margin-bottom: 1px */
 	padding-left: 2px;
-	padding-right: 25px; /* Space for the button */
+	padding-right: $select-button-width; /* Space for the button */
 }
 &.v-app .#{$primaryStyleName}-input,
 .v-window .#{$primaryStyleName}-input,
@@ -38,12 +41,12 @@
 }
 .#{$primaryStyleName}-button {
 	overflow: hidden;
-	width: 25px;
+	width: $select-button-width;
 	height: 24px;
 	background-position: 0 0;
 	background-image: url(img/right.png); /** sprite-ref: verticals ; sprite-margin-bottom: 1px */
 	cursor: default;
-	margin-right: -25px;
+	margin-right: $select-button-negative-width;
 }
 .#{$primaryStyleName}-button:hover {
 	background-image: url(img/right-hover.png); /** sprite-ref: verticals */
