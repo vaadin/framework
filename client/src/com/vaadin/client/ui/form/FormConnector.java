@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui.form;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.user.client.ui.Widget;
@@ -23,7 +24,9 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Paintable;
+import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.Util;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.ShortcutActionHandler;
@@ -205,5 +208,16 @@ public class FormConnector extends AbstractComponentContainerConnector
             newLayoutWidget = newLayout.getWidget();
         }
         getWidget().setLayoutWidget(newLayoutWidget);
+    }
+
+    @Override
+    public TooltipInfo getTooltipInfo(Element element) {
+        if (Util.getConnectorForElement(getConnection(), getWidget()
+                .getParent(), (com.google.gwt.user.client.Element) element
+                .cast()) != this) {
+            // Do not show tooltips when hovering over child fields
+            return null;
+        }
+        return super.getTooltipInfo(element);
     }
 }
