@@ -228,6 +228,7 @@ public class LayoutManager {
                     "Can't start a new layout phase before the previous layout phase ends.");
         }
         layoutPending = false;
+        layoutTimer.cancel();
         try {
             currentDependencyTree = new LayoutDependencyTree();
             doLayout();
