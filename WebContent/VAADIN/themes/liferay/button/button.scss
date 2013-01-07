@@ -24,7 +24,9 @@
 	overflow: hidden;
 }
 
-
+.v-nativebutton {
+	font-size: $font-size;
+}
 .v-button .v-button-wrap,
 .v-disabled.v-button .v-button-wrap {
 	display: block;
