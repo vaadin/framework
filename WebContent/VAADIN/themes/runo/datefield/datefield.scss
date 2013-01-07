@@ -1,19 +1,28 @@
 @mixin runo-datefield($primaryStyleName : v-datefield) {
 
+$popupdatefield-button-width: 22px;
+$negative-popupdatefield-button-width: -22px;
+
 .#{$primaryStyleName} input.v-textfield,
 .#{$primaryStyleName} input.v-textfield[type=text] {
-	height: 18px;
+	height: 22px; // 18px height + 2*2px padding
+	
 }
 .#{$primaryStyleName}-button {
 	font-size:13px;
-	width: 22px;
+	width: $popupdatefield-button-width;
+	margin-right: $negative-popupdatefield-button-width;
 	height: 24px;
 	padding: 0;
 	overflow: hidden;
 	border: none;
 	background: transparent url(img/open-button.png) no-repeat right 0;
-	vertical-align: top;
 }
+.#{$primaryStyleName}-popupcalendar {
+	min-width: 0;
+	padding-right: $popupdatefield-button-width;
+}
+
 .#{$primaryStyleName}-popup {
 	font-family: "Trebuchet MS", geneva, helvetica, arial, tahoma, verdana, sans-serif;
 	color: #464f52;

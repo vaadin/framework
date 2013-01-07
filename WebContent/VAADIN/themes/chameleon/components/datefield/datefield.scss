@@ -1,5 +1,12 @@
 @mixin chameleon-datefield($primaryStyleName : v-datefield) {
 
+$popupdatefield-button-width: 25px;
+$negative-popupdatefield-button-width: -25px;
+
+$popupdatefield-height: 1.7em; 
+$popupdatefield-small-height: 1.6em; 
+$popupdatefield-big-height: 1.9em; 
+
 .#{$primaryStyleName}-button {
 	background: #dadada url(../../img/date-btn.png) repeat-x 50% 0;
 	border: 1px solid gray;
@@ -7,59 +14,56 @@
 	-webkit-border-bottom-right-radius: 3px;
 	-moz-border-radius-topright: 3px;
 	-moz-border-radius-bottomright: 3px;
-	width: 25px;
-	height: 1.2em;
+	width: $popupdatefield-button-width;
+	margin-right: $negative-popupdatefield-button-width;
+	height: $popupdatefield-height; 
 	padding: .2em 0;
-	-webkit-box-sizing: content-box;
-	-moz-box-sizing: content-box;
-	-ms-box-sizing: content-box;
-	box-sizing: content-box;
 	}
 
-.#{$primaryStyleName}-small .#{$primaryStyleName}-button {
-	height: 1.2em;
-	}
 
-.#{$primaryStyleName}-big .#{$primaryStyleName}-button {
-	padding: .3em 0;
-	height: 1.2em;
-	}
-
-.v-ie8 & .#{$primaryStyleName}-button {
-	height: 1.6em;
-	padding: 0;
-	}
-
-.v-ie8 & .#{$primaryStyleName}-big .#{$primaryStyleName}-button {
-	height: 1.8em;
-	}
-
-input.#{$primaryStyleName}-textfield {
+input.#{$primaryStyleName}-textfield[type="text"] {
 	border-right: none;
 	-webkit-border-top-right-radius: 0;
 	-webkit-border-bottom-right-radius: 0;
 	-moz-border-radius-topright: 0;
 	-moz-border-radius-bottomright: 0;
+	height: $popupdatefield-height;
 	}
-
 
 /*******************************************************************************
  * Big
  ******************************************************************************/
-.#{$primaryStyleName}-big .#{$primaryStyleName}-button {
-	width: 32px;
-	background-image: url(../../img/date-btn-big.png);
+.#{$primaryStyleName}-big {
+	.#{$primaryStyleName}-button {
+		padding: .3em 0;
+		height: $popupdatefield-big-height;
+		width: 32px;
+		background-image: url(../../img/date-btn-big.png);
+		font-size: $chameleon-font-size-big;
 	}
+	input.#{$primaryStyleName}-textfield[type="text"] {
+		height: $popupdatefield-big-height;
+		font-size: $chameleon-font-size-big;
+	}
+}
 
 
 /*******************************************************************************
  * Small
  ******************************************************************************/
-.#{$primaryStyleName}-small .#{$primaryStyleName}-button {
-	width: 19px;
-	background-position: 50% -2px;
+.#{$primaryStyleName}-small {
+	.#{$primaryStyleName}-button {
+		height: $popupdatefield-small-height;
+		width: 19px;
+		background-position: 50% -2px;
+		font-size: $chameleon-font-size-small;
 	}
-
+	input.#{$primaryStyleName}-textfield[type="text"] {
+		height: $popupdatefield-small-height;
+		font-size: $chameleon-font-size-small;
+	}
+	
+}
 
 /*******************************************************************************
  * Calendar panel
@@ -73,11 +77,11 @@ input.#{$primaryStyleName}-textfield {
 	}
 
 .#{$primaryStyleName}-month .#{$primaryStyleName}-textfield {
-	width: 6em;
+	width: 6.4em;
 	}
 
 .#{$primaryStyleName}-year .#{$primaryStyleName}-textfield {
-	width: 4em;
+	width: 4.4em;
 	}
 
 .#{$primaryStyleName}-year .#{$primaryStyleName}-calendarpanel-prevmonth,
@@ -108,21 +112,22 @@ span.#{$primaryStyleName}-calendarpanel-month {
 	}
 
 .#{$primaryStyleName}-year .#{$primaryStyleName}-calendarpanel-month {
-	width: 5em;
+	width: 5.4em;
 	}
 
 .#{$primaryStyleName}-month .#{$primaryStyleName}-calendarpanel-month,
 .#{$primaryStyleName}-day .#{$primaryStyleName}-calendarpanel-month,
 .#{$primaryStyleName}-full .#{$primaryStyleName}-calendarpanel-month {
-	width: 9em;
+	width: 9.4em;
 	}
 
 .#{$primaryStyleName}-popupcalendar {
 	min-width: 0;
-	}
+	padding-right: $popupdatefield-button-width;
+}
 
 .#{$primaryStyleName}-year .#{$primaryStyleName}-calendarpanel {
-	width: 8em;
+	width: 8.4em;
 	}
 
 td.#{$primaryStyleName}-calendarpanel-prevyear {

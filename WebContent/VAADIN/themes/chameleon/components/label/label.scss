@@ -44,7 +44,7 @@
  * Big
  ******************************************************************************/
 .#{$primaryStyleName}-big {
-	font-size: 15.6px;
+	font-size: $chameleon-font-size-big;
 	}
 
 
@@ -63,7 +63,7 @@
  * Tiny
  ******************************************************************************/
 .#{$primaryStyleName}-tiny {
-	font-size: 11.05px;
+	font-size: $chameleon-font-size-small;
 	line-height: 1.2;
 	opacity: .7;
 	filter: alpha(opacity=70);

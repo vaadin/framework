@@ -233,9 +233,6 @@ td.#{$primaryStyleName}-calendarpanel-nextyear {
 .v-op & .#{$primaryStyleName}-popup {
 	background: rgba(255,255,255,.95);
 }
-.v-has-width > input.#{$primaryStyleName}-textfield {
-	width: 100%;
-}
 .#{$primaryStyleName}-year > .#{$primaryStyleName}-textfield {
 	width: 4.5em;
 }
@@ -255,9 +252,6 @@ td.#{$primaryStyleName}-calendarpanel-nextyear {
 	-webkit-border-top-right-radius: 0;
 	-webkit-border-bottom-right-radius: 0;
 	height: 23px;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
 }
 .#{$primaryStyleName}.v-readonly input.#{$primaryStyleName}-textfield {
 	border-right-width: 1px;
