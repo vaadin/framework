@@ -3110,6 +3110,15 @@ public class ApplicationConnection {
      */
     @Deprecated
     public boolean hasEventListeners(Widget widget, String eventIdentifier) {
+        ComponentConnector connector = getConnectorMap().getConnector(widget);
+        if (connector == null) {
+            /*
+             * No connector will exist in cases where Vaadin widgets have been
+             * re-used without implementing server<->client communication.
+             */
+            return false;
+        }
+
         return hasEventListeners(getConnectorMap().getConnector(widget),
                 eventIdentifier);
     }
