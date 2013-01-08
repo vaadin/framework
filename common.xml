@@ -363,7 +363,7 @@
 		<property name="result.dir.full" location="${result.dir}"/>
 		<mkdir dir="${result.dir}" />
 		<echo>##teamcity[importData type='checkstyle' path='${result.dir.full}/checkstyle-errors.xml']</echo>
-		<cs:checkstyle config="${cs.xml}" failOnViolation="true">
+		<cs:checkstyle config="${cs.xml}">
 			<fileset dir="${cs.src}" includes="**/*.java" />
 			<formatter type="xml" toFile="${result.dir}/checkstyle-errors.xml"/>
 			<property key="checkstyle.header.file" file="${cs.header-file}" />
