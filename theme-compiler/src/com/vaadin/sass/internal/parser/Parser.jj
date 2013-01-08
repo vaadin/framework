@@ -556,6 +556,7 @@ TOKEN :
     <TO         : "to">
     |<THROUGH   : "through">
     |<EACH_IN        : "in">
+    |<FROM      : "from">
 }
 
 /* DERECTIVES */
@@ -651,6 +652,7 @@ TOKEN :
   | < CHARSET_SYM  : "@charset" >
   | < PAGE_SYM     : "@page"  >
   | < FONT_FACE_SYM: "@font-face" >
+  | < KEY_FRAME_SYM: "@keyframes" | "@-moz-keyframes" | "@-o-keyframes" | "@-webkit-keyframes" | "@-ms-keyframes">
   | < ATKEYWORD    : "@" <IDENT> >
 }
 
@@ -744,7 +746,7 @@ void afterImportDeclaration() :
 }
 {
   ( 
-     ( LOOKAHEAD(5)listModifyDirective() | variable() | debuggingDirective() | mixinDirective() | controlDirective() | includeDirective() | styleRule() | media() | page() | fontFace() 
+     ( LOOKAHEAD(5)listModifyDirective() | variable() | debuggingDirective() | mixinDirective() | controlDirective() | includeDirective() | styleRule() | media() | page() | fontFace() | keyframes() 
       | { l = getLocator(); } ret=skipStatement() 
       {
 	  if ((ret == null) || (ret.length() == 0)) {
@@ -806,6 +808,67 @@ void importDeclaration() :
      skipStatement();
      // reportWarningSkipText(getLocator(), skipStatement());
  }
+}
+
+/**
+ * @exception ParseException exception during the parse
+ */
+void keyframes() :
+{
+    Token n;
+    boolean start = false;
+    String keyframeName = null;
+    String animationname = "";
+}
+{
+ try {
+  n=<KEY_FRAME_SYM> ( <S> )* {keyframeName = n.image;}
+  (n = <IDENT>{animationname += n.image; }|n = < INTERPOLATION >{ animationname += n.image; })+(<S>)*
+   {start = true; documentHandler.startKeyFrames(keyframeName, animationname); }
+   <LBRACE> ( <S> )* ( keyframeSelector() )* <RBRACE> ( <S> )*
+ } catch (ParseException e) {
+     reportError(getLocator(), e);
+     skipStatement();
+ } finally {
+     if (start) {
+         documentHandler.endKeyFrames();
+     }
+ }
+}
+
+void keyframeSelector():
+{
+    Token n;
+    boolean start = false;
+}
+{
+    try{
+        (n = <FROM> | n = <TO> | n = <PERCENTAGE>) (<S>)* <LBRACE> (<S>)*
+        {
+          start = true;
+          documentHandler.startKeyframeSelector(n.image);
+         }
+        ( LOOKAHEAD(5)ifContentStatement() | controlDirective() | microsoftExtension() )*
+        <RBRACE> (<S>)*
+    }
+    catch (ThrowedParseException e) {
+        if (errorHandler != null) {
+            LocatorImpl li = new LocatorImpl(this,
+                                             e.e.currentToken.next.beginLine,
+                                             e.e.currentToken.next.beginColumn-1);
+            reportError(li, e.e);
+        }
+    } catch (ParseException e) {
+        reportError(getLocator(), e);
+        skipStatement();
+        // reportWarningSkipText(getLocator(), skipStatement());
+    } catch (TokenMgrError e) {
+        reportWarningSkipText(getLocator(), skipStatement());
+    } finally {
+        if (start) {
+            documentHandler.endKeyframeSelector();
+        }
+    }
 }
 
 /**
@@ -1408,7 +1471,7 @@ void controlDirective() :
 void ifContentStatement() :
 {}
 {
-  LOOKAHEAD(5)listModifyDirective() | includeDirective() | media() | extendDirective() | variable() | styleRuleOrDeclarationOrNestedProperties()
+  LOOKAHEAD(5)listModifyDirective() | includeDirective() | media() | extendDirective() | variable() | styleRuleOrDeclarationOrNestedProperties() | keyframes()
 }
 
 void ifDirective() :
@@ -1503,15 +1566,15 @@ void eachDirective() :
 ArrayList<String > stringList():
 {
 	ArrayList<String > strings = new ArrayList<String >();
-	Token input;	
+	Token input;
 }
 {
-	(input = < IDENT > (< S >)*) 
+	(input = < IDENT > (< S >)*)
 	{ strings.add(input.image); }
-	
+
 	(< COMMA >(< S >)* input = < IDENT > { strings.add(input.image); } (< S >)*)*
 	{ return strings; }
-	  
+
 }
 
 void mixinDirective() :
