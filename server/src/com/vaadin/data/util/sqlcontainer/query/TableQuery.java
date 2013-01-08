@@ -241,7 +241,7 @@ public class TableQuery implements QueryDelegate,
         PreparedStatement pstmt = activeConnection.prepareStatement(
                 sh.getQueryString(), primaryKeyColumns.toArray(new String[0]));
         sh.setParameterValuesToStatement(pstmt);
-        getLogger().log(Level.FINE, "DB -> " + sh.getQueryString());
+        getLogger().log(Level.FINE, "DB -> {0}", sh.getQueryString());
         int result = pstmt.executeUpdate();
         if (result > 0) {
             /*
@@ -408,7 +408,7 @@ public class TableQuery implements QueryDelegate,
         }
         PreparedStatement pstmt = c.prepareStatement(sh.getQueryString());
         sh.setParameterValuesToStatement(pstmt);
-        getLogger().log(Level.FINE, "DB -> " + sh.getQueryString());
+        getLogger().log(Level.FINE, "DB -> {0}", sh.getQueryString());
         return pstmt.executeQuery();
     }
 
@@ -434,7 +434,7 @@ public class TableQuery implements QueryDelegate,
             }
             pstmt = c.prepareStatement(sh.getQueryString());
             sh.setParameterValuesToStatement(pstmt);
-            getLogger().log(Level.FINE, "DB -> " + sh.getQueryString());
+            getLogger().log(Level.FINE, "DB -> {0}", sh.getQueryString());
             int retval = pstmt.executeUpdate();
             return retval;
         } finally {
@@ -477,7 +477,7 @@ public class TableQuery implements QueryDelegate,
             pstmt = c.prepareStatement(sh.getQueryString(),
                     primaryKeyColumns.toArray(new String[0]));
             sh.setParameterValuesToStatement(pstmt);
-            getLogger().log(Level.FINE, "DB -> " + sh.getQueryString());
+            getLogger().log(Level.FINE, "DB -> {0}", sh.getQueryString());
             int result = pstmt.executeUpdate();
             genKeys = pstmt.getGeneratedKeys();
             RowId newId = getNewRowId(row, genKeys);
@@ -606,8 +606,8 @@ public class TableQuery implements QueryDelegate,
     @Override
     public boolean removeRow(RowItem row) throws UnsupportedOperationException,
             SQLException {
-        getLogger().log(Level.FINE,
-                "Removing row with id: " + row.getId().getId()[0].toString());
+        getLogger().log(Level.FINE, "Removing row with id: {0}",
+                row.getId().getId()[0]);
         if (executeUpdate(sqlGenerator.generateDeleteQuery(getTableName(),
                 primaryKeyColumns, versionColumn, row)) == 1) {
             return true;

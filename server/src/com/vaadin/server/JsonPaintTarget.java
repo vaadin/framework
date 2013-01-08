@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.ui.Alignment;
@@ -663,9 +664,11 @@ public class JsonPaintTarget implements PaintTarget {
             throws PaintException {
         boolean topLevelPaintable = openPaintables.isEmpty();
 
-        getLogger().fine(
-                "startPaintable for " + connector.getClass().getName() + "@"
-                        + Integer.toHexString(connector.hashCode()));
+        getLogger().log(
+                Level.FINE,
+                "startPaintable for {0}@{1}",
+                new Object[] { connector.getClass().getName(),
+                        Integer.toHexString(connector.hashCode()) });
         startTag(tagName, true);
 
         openPaintables.push(connector);
@@ -687,9 +690,11 @@ public class JsonPaintTarget implements PaintTarget {
 
     @Override
     public void endPaintable(Component paintable) throws PaintException {
-        getLogger().fine(
-                "endPaintable for " + paintable.getClass().getName() + "@"
-                        + Integer.toHexString(paintable.hashCode()));
+        getLogger().log(
+                Level.FINE,
+                "endPaintable for {0}@{1}",
+                new Object[] { paintable.getClass().getName(),
+                        Integer.toHexString(paintable.hashCode()) });
 
         ClientConnector openPaintable = openPaintables.peek();
         if (paintable != openPaintable) {

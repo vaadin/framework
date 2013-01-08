@@ -792,10 +792,10 @@ public class VaadinServlet extends HttpServlet implements Constants {
             } else {
                 // cannot serve requested file
                 getLogger()
-                        .info("Requested resource ["
-                                + filename
-                                + "] not found from filesystem or through class loader."
-                                + " Add widgetset and/or theme JAR to your classpath or add files to WebContent/VAADIN folder.");
+                        .log(Level.INFO,
+                                "Requested resource [{0}] not found from filesystem or through class loader."
+                                        + " Add widgetset and/or theme JAR to your classpath or add files to WebContent/VAADIN folder.",
+                                filename);
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
             return;
@@ -805,9 +805,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
         // directory
         if (!isAllowedVAADINResourceUrl(request, resourceUrl)) {
             getLogger()
-                    .info("Requested resource ["
-                            + filename
-                            + "] not accessible in the VAADIN directory or access to it is forbidden.");
+                    .log(Level.INFO,
+                            "Requested resource [{0}] not accessible in the VAADIN directory or access to it is forbidden.",
+                            filename);
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
@@ -945,9 +945,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
         // directory
         if (!isAllowedVAADINResourceUrl(request, scssUrl)) {
             getLogger()
-                    .info("Requested resource ["
-                            + filename
-                            + "] not accessible in the VAADIN directory or access to it is forbidden.");
+                    .log(Level.INFO,
+                            "Requested resource [{0}] not accessible in the VAADIN directory or access to it is forbidden.",
+                            filename);
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             // Handled, return true so no further processing is done
             return true;
@@ -968,16 +968,14 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
             if (scss == null) {
                 getLogger()
-                        .warning(
-                                "Scss file "
-                                        + scssFilename
-                                        + " exists but ScssStylesheet was not able to find it");
+                        .log(Level.WARNING,
+                                "Scss file {0} exists but ScssStylesheet was not able to find it",
+                                scssFilename);
                 return false;
             }
             try {
-                getLogger().fine(
-                        "Compiling " + realFilename + " for request to "
-                                + filename);
+                getLogger().log(Level.FINE, "Compiling {0} for request to {1}",
+                        new Object[] { realFilename, filename });
                 scss.compile();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1028,14 +1026,15 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // loader sees it.
 
             if (!resourceUrl.getPath().contains("!/VAADIN/")) {
-                getLogger().info(
-                        "Blocked attempt to access a JAR entry not starting with /VAADIN/: "
-                                + resourceUrl);
+                getLogger()
+                        .log(Level.INFO,
+                                "Blocked attempt to access a JAR entry not starting with /VAADIN/: {0}",
+                                resourceUrl);
                 return false;
             }
-            getLogger().fine(
-                    "Accepted access to a JAR entry using a class loader: "
-                            + resourceUrl);
+            getLogger().log(Level.FINE,
+                    "Accepted access to a JAR entry using a class loader: {0}",
+                    resourceUrl);
             return true;
         } else {
             // Some servers such as GlassFish extract files from JARs (file:)
@@ -1045,13 +1044,13 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // "/../"
             if (!resourceUrl.getPath().contains("/VAADIN/")
                     || resourceUrl.getPath().contains("/../")) {
-                getLogger().info(
-                        "Blocked attempt to access file: " + resourceUrl);
+                getLogger().log(Level.INFO,
+                        "Blocked attempt to access file: {0}", resourceUrl);
                 return false;
             }
-            getLogger().fine(
-                    "Accepted access to a file using a class loader: "
-                            + resourceUrl);
+            getLogger().log(Level.FINE,
+                    "Accepted access to a file using a class loader: {0}",
+                    resourceUrl);
             return true;
         }
     }

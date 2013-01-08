@@ -91,10 +91,11 @@ public class ListenerMethod implements EventListener, Serializable {
             out.writeObject(name);
             out.writeObject(paramTypes);
         } catch (NotSerializableException e) {
-            getLogger().warning(
-                    "Error in serialization of the application: Class "
-                            + target.getClass().getName()
-                            + " must implement serialization.");
+            getLogger().log(
+                    Level.WARNING,
+                    "Error in serialization of the application: Class {0}"
+                            + " must implement serialization.",
+                    target.getClass().getName());
             throw e;
         }
 

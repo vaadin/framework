@@ -239,7 +239,7 @@ public class ClassPathExplorer {
             classpath = classpath.substring(0, classpath.length() - 1);
         }
 
-        getLogger().fine("Classpath: " + classpath);
+        getLogger().log(Level.FINE, "Classpath: {0}", classpath);
 
         String[] split = classpath.split(pathSep);
         for (int i = 0; i < split.length; i++) {

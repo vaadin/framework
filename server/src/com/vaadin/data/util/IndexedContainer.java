@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.data.Container;
@@ -965,11 +966,11 @@ public class IndexedContainer extends
         @Override
         public String toString() {
             getLogger()
-                    .warning(
-                            "You are using IndexedContainerProperty.toString() instead of getValue() to get the value for a "
-                                    + getClass().getSimpleName()
-                                    + ". This will not be supported starting from Vaadin 7.1 "
-                                    + "(your debugger might call toString() and cause this message to appear).");
+                    .log(Level.WARNING,
+                            "You are using IndexedContainerProperty.toString() instead of getValue() to get the value for a {0}."
+                                    + " This will not be supported starting from Vaadin 7.1 "
+                                    + "(your debugger might call toString() and cause this message to appear).",
+                            getClass().getSimpleName());
             Object v = getValue();
             if (v == null) {
                 return null;
