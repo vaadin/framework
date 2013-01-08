@@ -398,7 +398,7 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
             setPrompting(false);
         }
         focusedTextField = this;
-        if (client.hasEventListeners(this, EventId.FOCUS)) {
+        if (client != null && client.hasEventListeners(this, EventId.FOCUS)) {
             client.updateVariable(paintableId, EventId.FOCUS, "", true);
         }
     }
