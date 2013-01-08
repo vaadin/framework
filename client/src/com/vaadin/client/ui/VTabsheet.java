@@ -748,7 +748,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         // style inheritance)
         if (ComponentStateUtil.hasStyles(state)) {
             final List<String> styles = state.styles;
-            if (!currentStyle.equals(styles.toString())) {
+            if (currentStyle == null || !currentStyle.equals(styles.toString())) {
                 currentStyle = styles.toString();
                 final String tabsBaseClass = TABS_CLASSNAME;
                 String tabsClass = tabsBaseClass;
