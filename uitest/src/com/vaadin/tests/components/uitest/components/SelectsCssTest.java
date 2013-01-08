@@ -4,7 +4,7 @@ import com.vaadin.tests.components.uitest.TestSampler;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.OptionGroup;
@@ -12,12 +12,13 @@ import com.vaadin.ui.Select;
 import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.themes.ChameleonTheme;
 
-public class SelectsCssTest extends HorizontalLayout {
+public class SelectsCssTest extends GridLayout {
 
     private TestSampler parent;
     private int debugIdCounter = 0;
 
     public SelectsCssTest(TestSampler parent) {
+        super(10, 1);
         this.parent = parent;
         setSpacing(true);
         setWidth(null);
@@ -53,18 +54,35 @@ public class SelectsCssTest extends HorizontalLayout {
         createDummyData(ns);
         addComponent(ns);
 
-        createComboBoxWith(null, null);
-        createComboBoxWith("CB Search", ChameleonTheme.COMBOBOX_SEARCH);
+        createComboBoxWith(null, null, null);
+        createComboBoxWith("CB Search", ChameleonTheme.COMBOBOX_SEARCH, null);
         createComboBoxWith("SelectButton",
-                ChameleonTheme.COMBOBOX_SELECT_BUTTON);
+                ChameleonTheme.COMBOBOX_SELECT_BUTTON, null);
 
         ListSelect ls = new ListSelect();
         ls.setId("select" + debugIdCounter++);
         createDummyData(ls);
         addComponent(ls);
+
+        s = new Select("Basic select");
+        s.setId("select" + debugIdCounter++);
+        s.setWidth("100px");
+        addComponent(s);
+
+        s = new Select("Select with items");
+        s.setWidth("100px");
+        s.setId("select" + debugIdCounter++);
+        createDummyData(s);
+        addComponent(s);
+
+        createComboBoxWith(null, null, "100px");
+        createComboBoxWith("CB Search", ChameleonTheme.COMBOBOX_SEARCH, "100px");
+        createComboBoxWith("SelectButton",
+                ChameleonTheme.COMBOBOX_SELECT_BUTTON, "100px");
     }
 
-    private void createComboBoxWith(String caption, String primaryStyleName) {
+    private void createComboBoxWith(String caption, String primaryStyleName,
+            String width) {
         ComboBox cb = new ComboBox();
         cb.setId("select" + debugIdCounter++);
         if (caption != null) {
@@ -73,6 +91,9 @@ public class SelectsCssTest extends HorizontalLayout {
 
         if (primaryStyleName != null) {
             cb.addStyleName(primaryStyleName);
+        }
+        if (width != null) {
+            cb.setWidth(width);
         }
 
         createDummyData(cb);

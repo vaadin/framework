@@ -1,5 +1,8 @@
 @mixin runo-select($primaryStyleName : v-filterselect) {
 
+$select-button-width: 25px;
+$select-button-negative-width: -25px;
+
 .v-select-select {
 	font-size: 13px;
 }
@@ -18,6 +21,7 @@
 	height: 23px;
 	background: transparent url(img/bg-left-filter.png) no-repeat;
 	padding-left: 4px;
+	padding-right: $select-button-width; /* Space for the button */
 }
 &.v-app .#{$primaryStyleName} .#{$primaryStyleName}-input,
 .v-window .#{$primaryStyleName} .#{$primaryStyleName}-input,
@@ -46,7 +50,8 @@
 	outline-offset: -4px;
 }
 .#{$primaryStyleName}-button {
-	width: 25px;
+	width: $select-button-width;
+	margin-right: $select-button-negative-width;
 	height: 23px;
 	background: transparent url(img/bg-right-filter.png);
 }
