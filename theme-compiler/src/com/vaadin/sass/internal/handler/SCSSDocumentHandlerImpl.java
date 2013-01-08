@@ -34,6 +34,8 @@ import com.vaadin.sass.internal.tree.ExtendNode;
 import com.vaadin.sass.internal.tree.FontFaceNode;
 import com.vaadin.sass.internal.tree.ForNode;
 import com.vaadin.sass.internal.tree.ImportNode;
+import com.vaadin.sass.internal.tree.KeyframeSelectorNode;
+import com.vaadin.sass.internal.tree.KeyframesNode;
 import com.vaadin.sass.internal.tree.ListAppendNode;
 import com.vaadin.sass.internal.tree.ListContainsNode;
 import com.vaadin.sass.internal.tree.ListRemoveNode;
@@ -335,5 +337,32 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
         ListContainsNode node = new ListContainsNode(variable, list, contains,
                 separator);
         nodeStack.peek().appendChild(node);
+    }
+
+    @Override
+    public void startKeyFrames(String keyframeName, String animationName) {
+        KeyframesNode node = new KeyframesNode(keyframeName, animationName);
+        nodeStack.peek().appendChild(node);
+        nodeStack.push(node);
+
+    }
+
+    @Override
+    public void endKeyFrames() {
+        nodeStack.pop();
+
+    }
+
+    @Override
+    public void startKeyframeSelector(String selector) {
+        KeyframeSelectorNode node = new KeyframeSelectorNode(selector);
+        nodeStack.peek().appendChild(node);
+        nodeStack.push(node);
+
+    }
+
+    @Override
+    public void endKeyframeSelector() {
+        nodeStack.pop();
     }
 }

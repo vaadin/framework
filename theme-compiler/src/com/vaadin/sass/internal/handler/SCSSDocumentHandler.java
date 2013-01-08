@@ -88,4 +88,12 @@ public interface SCSSDocumentHandler extends DocumentHandler {
     void containsDirective(String variable, String list, String contains,
             String separator);
 
+    void startKeyFrames(String keyframeName, String animationname);
+
+    void endKeyFrames();
+
+    void startKeyframeSelector(String selector);
+
+    void endKeyframeSelector();
+
 }
