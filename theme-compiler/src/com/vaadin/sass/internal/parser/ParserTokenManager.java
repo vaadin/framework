@@ -5,6 +5,7 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 import org.w3c.css.sac.ConditionFactory;
 import org.w3c.css.sac.Condition;
 import org.w3c.css.sac.SelectorFactory;
