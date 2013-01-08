@@ -24,6 +24,7 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 
 import org.w3c.css.sac.ConditionFactory;
 import org.w3c.css.sac.Condition;
@@ -1413,11 +1414,12 @@ void ifContentStatement() :
 void ifDirective() :
 {
   Token n = null;
+  String s = null;
   String evaluator = "";
 }
 {
   < IF_SYM >
-  ( n = booleanExpressionToken() { evaluator += n.image; } )+
+  ( s = booleanExpressionToken() { if(s!=null){evaluator += s;} } )+
   < LBRACE >(< S >)*    
   { documentHandler.startIfElseDirective();
     documentHandler.ifDirective(evaluator);
@@ -1432,10 +1434,11 @@ void elseDirective() :
 {
   String evaluator = "";
   Token n = null;
+  String s = null;
 }
 {
   < ELSE_SYM >(< S >)* 
-  ( < IF > ( n = booleanExpressionToken() { evaluator += n.image; } )+ )?
+  ( < IF > ( s = booleanExpressionToken() { if(s!=null){evaluator += s; } } )+ )?
   < LBRACE >(< S >)*
   { if(!evaluator.trim().equals("")){ documentHandler.ifDirective(evaluator); }
     else{ documentHandler.elseDirective(); }  
@@ -1444,13 +1447,16 @@ void elseDirective() :
   < RBRACE >(< S >)*
 }
 
-Token booleanExpressionToken() :
+String booleanExpressionToken() :
 {
   Token n = null;
+  String s = null;
 }
 {
  (
-   n = < VARIABLE >
+   LOOKAHEAD(2)      
+   s = containsDirective()
+   |n = < VARIABLE >
    |n = < IDENT >
    |n = < NUMBER >
    |n = < LPARAN >
@@ -1468,7 +1474,9 @@ Token booleanExpressionToken() :
    |n = < S >
    |n = < NOT_EQ > 
 ){
-   return n;
+   if(n!=null){return n.image;}  
+   else if(s!=null){return s;}
+   else {return null;}
  }
 }
   
@@ -1616,7 +1624,7 @@ String interpolation() :
 void listModifyDirective() :{
 }
 {
-LOOKAHEAD(5)removeDirective()|LOOKAHEAD(5)appendDirective()|LOOKAHEAD(5)containsDirective()
+(LOOKAHEAD(5)removeDirective()|LOOKAHEAD(5)appendDirective()|LOOKAHEAD(5)containsDirective())(< S >)*< SEMICOLON >(<S>)*
 }
 
 
@@ -1638,7 +1646,7 @@ void appendDirective() :
   (< RPARAN >)? < COMMA >(< S >)*
   (remove = listModifyDirectiveArgs(1))
   ( < COMMA >(< S >)* n = < IDENT >{ separator = n.image; } (< S >)*)?
-  < RPARAN >(< S >)* < SEMICOLON >(< S >)*
+  < RPARAN >
 
   { documentHandler.appendDirective(variable,list,remove,separator); }
 }
@@ -1659,7 +1667,7 @@ void removeDirective() :{	String list = null;
   (< RPARAN >)? < COMMA >(< S >)*
   (remove = listModifyDirectiveArgs(1))
   ( < COMMA >(< S >)* n = < IDENT >{ separator = n.image; } (< S >)*)?
-  < RPARAN >(< S >)* < SEMICOLON >(< S >)*
+  < RPARAN >
 
   { documentHandler.removeDirective(variable,list,remove,separator); }
 }
@@ -1667,7 +1675,7 @@ void removeDirective() :{	String list = null;
 /**
  * @exception ParseException exception during the parse
  */
-void containsDirective() :
+String containsDirective() :
 {
 	String list = null;
 	String remove = null;
@@ -1676,15 +1684,26 @@ void containsDirective() :
 	Token n = null;
 }
 {
-  n = < VARIABLE >{ variable = n.image; }(< S >)* ":" (< S >)*
+  (n = < VARIABLE >{ variable = n.image; }(< S >)* ":" (< S >)*)?
   < CONTAINS >(< S >)*
   (list = listModifyDirectiveArgs(0))
   (< RPARAN >)? < COMMA >(< S >)*
   (remove = listModifyDirectiveArgs(1))
   ( < COMMA >(< S >)* n = < IDENT >{ separator = n.image; } (< S >)*)?
-  < RPARAN >(< S >)* < SEMICOLON >(< S >)*
+  < RPARAN >
 
-  { documentHandler.containsDirective(variable,list,remove,separator); }
+  {   /*
+       *if it is not in the form like "$contains : contains($items, .v-button);"
+       *for example in @if, like "@if (contains(a b c, b))", then create a temp
+       *variable for contains(a b c, b);
+       */
+      if(variable == null){
+          Random random = new Random();
+          variable = "$var_"+random.nextInt();
+      }
+      documentHandler.containsDirective(variable,list,remove,separator); 
+      return variable;
+  }
 }
 
 JAVACODE

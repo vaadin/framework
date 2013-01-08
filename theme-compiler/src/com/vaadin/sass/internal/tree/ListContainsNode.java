@@ -35,12 +35,10 @@ public class ListContainsNode extends ListModifyNode {
 
     @Override
     public VariableNode getModifiedList() {
-
         String contains = "" + list.containsAll(modify);
         VariableNode node = new VariableNode(variable.substring(1),
                 LexicalUnitImpl.createString(contains), false);
         return node;
 
     }
-
 }
