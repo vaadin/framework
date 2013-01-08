@@ -3,7 +3,6 @@
 .#{$primaryStyleName} {
 	white-space: nowrap;
 	display: inline-block; /* Force minimum width */
-	line-height:0; /* Force minimum height */
 }
 .#{$primaryStyleName}-textfield {
 	vertical-align: top;
