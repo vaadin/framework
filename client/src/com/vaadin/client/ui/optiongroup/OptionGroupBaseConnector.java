@@ -18,6 +18,7 @@ package com.vaadin.client.ui.optiongroup;
 
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.VNativeButton;
@@ -72,8 +73,14 @@ public abstract class OptionGroupBaseConnector extends AbstractFieldConnector
                 getWidget().newItemButton = new VNativeButton();
                 getWidget().newItemButton.setText("+");
                 getWidget().newItemButton.addClickHandler(getWidget());
+                getWidget().newItemButton
+                        .addStyleName(StyleConstants.UI_WIDGET);
                 getWidget().newItemField = new VTextField();
+                getWidget().newItemField.client = getConnection();
+                getWidget().newItemField.paintableId = getConnectorId();
                 getWidget().newItemField.addKeyPressHandler(getWidget());
+                getWidget().newItemField.addStyleName(StyleConstants.UI_WIDGET);
+
             }
             getWidget().newItemField.setEnabled(getWidget().isEnabled()
                     && !getWidget().isReadonly());
