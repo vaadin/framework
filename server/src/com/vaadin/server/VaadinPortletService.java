@@ -139,11 +139,13 @@ public class VaadinPortletService extends VaadinService {
                 return new File(url.getFile());
             } catch (final Exception e) {
                 // FIXME: Handle exception
-                getLogger()
-                        .log(Level.INFO,
-                                "Cannot access base directory, possible security issue "
-                                        + "with Application Server or Servlet Container",
-                                e);
+                if (getLogger().isLoggable(Level.INFO)) {
+                    getLogger()
+                            .log(Level.INFO,
+                                    "Cannot access base directory, possible security issue "
+                                            + "with Application Server or Servlet Container",
+                                    e);
+                }
             }
         }
         return null;

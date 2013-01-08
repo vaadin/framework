@@ -120,17 +120,21 @@ public class ConnectorTracker implements Serializable {
         if (previouslyRegistered == null) {
             connectorIdToConnector.put(connectorId, connector);
             uninitializedConnectors.add(connector);
-            getLogger().fine(
-                    "Registered " + connector.getClass().getSimpleName() + " ("
-                            + connectorId + ")");
+            if (getLogger().isLoggable(Level.FINE)) {
+                getLogger().fine(
+                        "Registered " + connector.getClass().getSimpleName()
+                                + " (" + connectorId + ")");
+            }
         } else if (previouslyRegistered != connector) {
             throw new RuntimeException("A connector with id " + connectorId
                     + " is already registered!");
         } else if (!wasUnregistered) {
-            getLogger().warning(
-                    "An already registered connector was registered again: "
-                            + connector.getClass().getSimpleName() + " ("
-                            + connectorId + ")");
+            if (getLogger().isLoggable(Level.WARNING)) {
+                getLogger().warning(
+                        "An already registered connector was registered again: "
+                                + connector.getClass().getSimpleName() + " ("
+                                + connectorId + ")");
+            }
         }
         dirtyConnectors.add(connector);
     }
@@ -149,10 +153,12 @@ public class ConnectorTracker implements Serializable {
     public void unregisterConnector(ClientConnector connector) {
         String connectorId = connector.getConnectorId();
         if (!connectorIdToConnector.containsKey(connectorId)) {
-            getLogger().warning(
-                    "Tried to unregister "
-                            + connector.getClass().getSimpleName() + " ("
-                            + connectorId + ") which is not registered");
+            if (getLogger().isLoggable(Level.WARNING)) {
+                getLogger().warning(
+                        "Tried to unregister "
+                                + connector.getClass().getSimpleName() + " ("
+                                + connectorId + ") which is not registered");
+            }
             return;
         }
         if (connectorIdToConnector.get(connectorId) != connector) {
@@ -163,14 +169,18 @@ public class ConnectorTracker implements Serializable {
 
         dirtyConnectors.remove(connector);
         if (unregisteredConnectors.add(connector)) {
-            getLogger().fine(
-                    "Unregistered " + connector.getClass().getSimpleName()
-                            + " (" + connectorId + ")");
+            if (getLogger().isLoggable(Level.FINE)) {
+                getLogger().fine(
+                        "Unregistered " + connector.getClass().getSimpleName()
+                                + " (" + connectorId + ")");
+            }
         } else {
-            getLogger().warning(
-                    "Unregistered " + connector.getClass().getSimpleName()
-                            + " (" + connectorId
-                            + ") that was already unregistered.");
+            if (getLogger().isLoggable(Level.WARNING)) {
+                getLogger().warning(
+                        "Unregistered " + connector.getClass().getSimpleName()
+                                + " (" + connectorId
+                                + ") that was already unregistered.");
+            }
         }
     }
 
@@ -273,11 +283,14 @@ public class ConnectorTracker implements Serializable {
 
                 // This code should never be called as cleanup should take place
                 // in detach()
-                getLogger()
-                        .warning(
-                                "cleanConnectorMap unregistered connector "
-                                        + getConnectorAndParentInfo(connector)
-                                        + "). This should have been done when the connector was detached.");
+
+                if (getLogger().isLoggable(Level.WARNING)) {
+                    getLogger()
+                            .warning(
+                                    "cleanConnectorMap unregistered connector "
+                                            + getConnectorAndParentInfo(connector)
+                                            + "). This should have been done when the connector was detached.");
+                }
 
                 removeFromGlobalResourceHandler(connector);
                 uninitializedConnectors.remove(connector);
@@ -288,10 +301,12 @@ public class ConnectorTracker implements Serializable {
                     && !uninitializedConnectors.contains(connector)) {
                 uninitializedConnectors.add(connector);
                 diffStates.remove(connector);
-                getLogger().fine(
-                        "cleanConnectorMap removed state for "
-                                + getConnectorAndParentInfo(connector)
-                                + " as it is not visible");
+                if (getLogger().isLoggable(Level.FINE)) {
+                    getLogger().fine(
+                            "cleanConnectorMap removed state for "
+                                    + getConnectorAndParentInfo(connector)
+                                    + " as it is not visible");
+                }
             }
         }
 
@@ -408,7 +423,9 @@ public class ConnectorTracker implements Serializable {
      */
     public void markAllConnectorsDirty() {
         markConnectorsDirtyRecursively(uI);
-        getLogger().fine("All connectors are now dirty");
+        if (getLogger().isLoggable(Level.FINE)) {
+            getLogger().fine("All connectors are now dirty");
+        }
     }
 
     /**
@@ -416,7 +433,9 @@ public class ConnectorTracker implements Serializable {
      */
     public void markAllConnectorsClean() {
         dirtyConnectors.clear();
-        getLogger().fine("All connectors are now clean");
+        if (getLogger().isLoggable(Level.FINE)) {
+            getLogger().fine("All connectors are now clean");
+        }
     }
 
     /**

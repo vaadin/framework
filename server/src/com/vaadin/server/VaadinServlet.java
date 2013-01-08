@@ -548,8 +548,10 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 resultPath = url.getFile();
             } catch (final Exception e) {
                 // FIXME: Handle exception
-                getLogger().log(Level.INFO,
-                        "Could not find resource path " + path, e);
+                if (getLogger().isLoggable(Level.INFO)) {
+                    getLogger().log(Level.INFO,
+                            "Could not find resource path " + path, e);
+                }
             }
         }
         return resultPath;
@@ -791,11 +793,13 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 return;
             } else {
                 // cannot serve requested file
-                getLogger()
-                        .info("Requested resource ["
-                                + filename
-                                + "] not found from filesystem or through class loader."
-                                + " Add widgetset and/or theme JAR to your classpath or add files to WebContent/VAADIN folder.");
+                if (getLogger().isLoggable(Level.INFO)) {
+                    getLogger()
+                            .info("Requested resource ["
+                                    + filename
+                                    + "] not found from filesystem or through class loader."
+                                    + " Add widgetset and/or theme JAR to your classpath or add files to WebContent/VAADIN folder.");
+                }
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
             return;
@@ -804,10 +808,12 @@ public class VaadinServlet extends HttpServlet implements Constants {
         // security check: do not permit navigation out of the VAADIN
         // directory
         if (!isAllowedVAADINResourceUrl(request, resourceUrl)) {
-            getLogger()
-                    .info("Requested resource ["
-                            + filename
-                            + "] not accessible in the VAADIN directory or access to it is forbidden.");
+            if (getLogger().isLoggable(Level.INFO)) {
+                getLogger()
+                        .info("Requested resource ["
+                                + filename
+                                + "] not accessible in the VAADIN directory or access to it is forbidden.");
+            }
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
@@ -829,10 +835,12 @@ public class VaadinServlet extends HttpServlet implements Constants {
             }
         } catch (Exception e) {
             // Failed to find out last modified timestamp. Continue without it.
-            getLogger()
-                    .log(Level.FINEST,
-                            "Failed to find out last modified timestamp. Continuing without it.",
-                            e);
+            if (getLogger().isLoggable(Level.FINEST)) {
+                getLogger()
+                        .log(Level.FINEST,
+                                "Failed to find out last modified timestamp. Continuing without it.",
+                                e);
+            }
         } finally {
             if (connection instanceof URLConnection) {
                 try {
@@ -844,8 +852,10 @@ public class VaadinServlet extends HttpServlet implements Constants {
                         is.close();
                     }
                 } catch (IOException e) {
-                    getLogger().log(Level.INFO,
-                            "Error closing URLConnection input stream", e);
+                    if (getLogger().isLoggable(Level.INFO)) {
+                        getLogger().log(Level.INFO,
+                                "Error closing URLConnection input stream", e);
+                    }
                 }
             }
         }
@@ -944,10 +954,12 @@ public class VaadinServlet extends HttpServlet implements Constants {
         // security check: do not permit navigation out of the VAADIN
         // directory
         if (!isAllowedVAADINResourceUrl(request, scssUrl)) {
-            getLogger()
-                    .info("Requested resource ["
-                            + filename
-                            + "] not accessible in the VAADIN directory or access to it is forbidden.");
+            if (getLogger().isLoggable(Level.INFO)) {
+                getLogger()
+                        .info("Requested resource ["
+                                + filename
+                                + "] not accessible in the VAADIN directory or access to it is forbidden.");
+            }
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             // Handled, return true so no further processing is done
             return true;
@@ -967,17 +979,21 @@ public class VaadinServlet extends HttpServlet implements Constants {
             }
 
             if (scss == null) {
-                getLogger()
-                        .warning(
-                                "Scss file "
-                                        + scssFilename
-                                        + " exists but ScssStylesheet was not able to find it");
+                if (getLogger().isLoggable(Level.WARNING)) {
+                    getLogger()
+                            .warning(
+                                    "Scss file "
+                                            + scssFilename
+                                            + " exists but ScssStylesheet was not able to find it");
+                }
                 return false;
             }
             try {
-                getLogger().fine(
-                        "Compiling " + realFilename + " for request to "
-                                + filename);
+                if (getLogger().isLoggable(Level.FINE)) {
+                    getLogger().fine(
+                            "Compiling " + realFilename + " for request to "
+                                    + filename);
+                }
                 scss.compile();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1028,14 +1044,18 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // loader sees it.
 
             if (!resourceUrl.getPath().contains("!/VAADIN/")) {
-                getLogger().info(
-                        "Blocked attempt to access a JAR entry not starting with /VAADIN/: "
-                                + resourceUrl);
+                if (getLogger().isLoggable(Level.INFO)) {
+                    getLogger().info(
+                            "Blocked attempt to access a JAR entry not starting with /VAADIN/: "
+                                    + resourceUrl);
+                }
                 return false;
             }
-            getLogger().fine(
-                    "Accepted access to a JAR entry using a class loader: "
-                            + resourceUrl);
+            if (getLogger().isLoggable(Level.FINE)) {
+                getLogger().fine(
+                        "Accepted access to a JAR entry using a class loader: "
+                                + resourceUrl);
+            }
             return true;
         } else {
             // Some servers such as GlassFish extract files from JARs (file:)
@@ -1045,13 +1065,17 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // "/../"
             if (!resourceUrl.getPath().contains("/VAADIN/")
                     || resourceUrl.getPath().contains("/../")) {
-                getLogger().info(
-                        "Blocked attempt to access file: " + resourceUrl);
+                if (getLogger().isLoggable(Level.INFO)) {
+                    getLogger().info(
+                            "Blocked attempt to access file: " + resourceUrl);
+                }
                 return false;
             }
-            getLogger().fine(
-                    "Accepted access to a file using a class loader: "
-                            + resourceUrl);
+            if (getLogger().isLoggable(Level.FINE)) {
+                getLogger().fine(
+                        "Accepted access to a file using a class loader: "
+                                + resourceUrl);
+            }
             return true;
         }
     }

@@ -27,6 +27,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.portlet.PortletSession;
@@ -155,11 +156,13 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         // closing
         // Notify the service
         if (service == null) {
-            getLogger()
-                    .warning(
-                            "A VaadinSession instance not associated to any service is getting unbound. "
-                                    + "Session destroy events will not be fired and UIs in the session will not get detached. "
-                                    + "This might happen if a session is deserialized but never used before it expires.");
+            if (getLogger().isLoggable(Level.WARNING)) {
+                getLogger()
+                        .warning(
+                                "A VaadinSession instance not associated to any service is getting unbound. "
+                                        + "Session destroy events will not be fired and UIs in the session will not get detached. "
+                                        + "This might happen if a session is deserialized but never used before it expires.");
+            }
         } else if (VaadinService.getCurrentRequest() != null
                 && getCurrent() == this) {
             // Ignore if the session is being moved to a different backing

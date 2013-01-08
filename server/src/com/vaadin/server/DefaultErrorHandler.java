@@ -35,9 +35,11 @@ public class DefaultErrorHandler implements ErrorHandler {
         final Throwable t = event.getThrowable();
         if (t instanceof SocketException) {
             // Most likely client browser closed socket
-            getLogger().info(
-                    "SocketException in CommunicationManager."
-                            + " Most likely client (browser) closed socket.");
+            if (getLogger().isLoggable(Level.INFO)) {
+                getLogger()
+                        .info("SocketException in CommunicationManager."
+                                + " Most likely client (browser) closed socket.");
+            }
             return;
         }
 

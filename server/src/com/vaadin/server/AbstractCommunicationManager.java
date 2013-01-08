@@ -572,7 +572,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
             if (uI == null) {
                 // This should not happen, no windows exists but
                 // session is still open.
-                getLogger().warning("Could not get UI for session");
+                if (getLogger().isLoggable(Level.WARNING)) {
+                    getLogger().warning("Could not get UI for session");
+                }
                 return;
             }
 
@@ -623,9 +625,11 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
 
         if (!Version.getFullVersion().equals(widgetsetVersion)) {
-            getLogger().warning(
-                    String.format(Constants.WIDGETSET_MISMATCH_INFO,
-                            Version.getFullVersion(), widgetsetVersion));
+            if (getLogger().isLoggable(Level.WARNING)) {
+                getLogger().warning(
+                        String.format(Constants.WIDGETSET_MISMATCH_INFO,
+                                Version.getFullVersion(), widgetsetVersion));
+            }
         }
     }
 
@@ -657,7 +661,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
             }
         }
         printHighlightedConnectorHierarchy(sb, highlightedConnector);
-        getLogger().info(sb.toString());
+        if (getLogger().isLoggable(Level.INFO)) {
+            getLogger().info(sb.toString());
+        }
     }
 
     protected void printHighlightedConnectorHierarchy(StringBuilder sb,
@@ -777,7 +783,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
         VaadinSession session = ui.getSession();
         // Paints components
         ConnectorTracker uiConnectorTracker = ui.getConnectorTracker();
-        getLogger().log(Level.FINE, "* Creating response to client");
+        if (getLogger().isLoggable(Level.FINE)) {
+            getLogger().log(Level.FINE, "* Creating response to client");
+        }
         if (repaintAll) {
             getClientCache(ui).clear();
             uiConnectorTracker.markAllConnectorsDirty();
@@ -791,10 +799,12 @@ public abstract class AbstractCommunicationManager implements Serializable {
         dirtyVisibleConnectors
                 .addAll(getDirtyVisibleConnectors(uiConnectorTracker));
 
-        getLogger().log(
-                Level.FINE,
-                "Found " + dirtyVisibleConnectors.size()
-                        + " dirty connectors to paint");
+        if (getLogger().isLoggable(Level.FINE)) {
+            getLogger().log(
+                    Level.FINE,
+                    "Found " + dirtyVisibleConnectors.size()
+                            + " dirty connectors to paint");
+        }
         for (ClientConnector connector : dirtyVisibleConnectors) {
             boolean initialized = uiConnectorTracker
                     .isClientSideInitialized(connector);
@@ -1045,8 +1055,10 @@ public abstract class AbstractCommunicationManager implements Serializable {
                     is = getThemeResourceAsStream(ui, getTheme(ui), resource);
                 } catch (final Exception e) {
                     // FIXME: Handle exception
-                    getLogger().log(Level.FINER,
-                            "Failed to get theme resource stream.", e);
+                    if (getLogger().isLoggable(Level.FINER)) {
+                        getLogger().log(Level.FINER,
+                                "Failed to get theme resource stream.", e);
+                    }
                 }
                 if (is != null) {
 
@@ -1065,8 +1077,10 @@ public abstract class AbstractCommunicationManager implements Serializable {
                         r.close();
                     } catch (final java.io.IOException e) {
                         // FIXME: Handle exception
-                        getLogger().log(Level.INFO, "Resource transfer failed",
-                                e);
+                        if (getLogger().isLoggable(Level.INFO)) {
+                            getLogger().log(Level.INFO,
+                                    "Resource transfer failed", e);
+                        }
                     }
                     outWriter.print("\""
                             + JsonPaintTarget.escapeJSON(layout.toString())
@@ -1226,10 +1240,12 @@ public abstract class AbstractCommunicationManager implements Serializable {
                         null, stateType, uI.getConnectorTracker());
                 diffState = encodeResult.getEncodedValue();
             } catch (Exception e) {
-                getLogger().log(
-                        Level.WARNING,
-                        "Error creating reference object for state of type "
-                                + stateType.getName());
+                if (getLogger().isLoggable(Level.WARNING)) {
+                    getLogger().log(
+                            Level.WARNING,
+                            "Error creating reference object for state of type "
+                                    + stateType.getName());
+                }
             }
         }
         EncodeResult encodeResult = JsonCodec.encode(state, diffState,
@@ -1264,8 +1280,10 @@ public abstract class AbstractCommunicationManager implements Serializable {
             // Bare path interpreted as published file
             return registerPublishedFile(resourceUri, context);
         } catch (URISyntaxException e) {
-            getLogger().log(Level.WARNING,
-                    "Could not parse resource url " + resourceUri, e);
+            if (getLogger().isLoggable(Level.WARNING)) {
+                getLogger().log(Level.WARNING,
+                        "Could not parse resource url " + resourceUri, e);
+            }
             return resourceUri;
         }
     }
@@ -1276,10 +1294,12 @@ public abstract class AbstractCommunicationManager implements Serializable {
             if (publishedFileContexts.containsKey(name)) {
                 Class<?> oldContext = publishedFileContexts.get(name);
                 if (oldContext != context) {
-                    getLogger().warning(
-                            name + " published by both " + context + " and "
-                                    + oldContext + ". File from " + oldContext
-                                    + " will be used.");
+                    if (getLogger().isLoggable(Level.WARNING)) {
+                        getLogger().warning(
+                                name + " published by both " + context
+                                        + " and " + oldContext + ". File from "
+                                        + oldContext + " will be used.");
+                    }
                 }
             } else {
                 publishedFileContexts.put(name, context);
@@ -1312,9 +1332,11 @@ public abstract class AbstractCommunicationManager implements Serializable {
         }
         sortByHierarchy((List) legacyComponents);
         for (LegacyComponent c : legacyComponents) {
-            getLogger().fine(
-                    "Painting LegacyComponent " + c.getClass().getName() + "@"
-                            + Integer.toHexString(c.hashCode()));
+            if (getLogger().isLoggable(Level.FINE)) {
+                getLogger().fine(
+                        "Painting LegacyComponent " + c.getClass().getName()
+                                + "@" + Integer.toHexString(c.hashCode()));
+            }
             paintTarget.startTag("change");
             final String pid = c.getConnectorId();
             paintTarget.addAttribute("pid", pid);
@@ -1660,7 +1682,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
                             msg += ", caption=" + caption;
                         }
                     }
-                    getLogger().warning(msg);
+                    if (getLogger().isLoggable(Level.WARNING)) {
+                        getLogger().warning(msg);
+                    }
                     continue;
                 }
 
@@ -1696,9 +1720,11 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 }
             }
         } catch (JSONException e) {
-            getLogger().warning(
-                    "Unable to parse RPC call from the client: "
-                            + e.getMessage());
+            if (getLogger().isLoggable(Level.WARNING)) {
+                getLogger().warning(
+                        "Unable to parse RPC call from the client: "
+                                + e.getMessage());
+            }
             // TODO or return success = false?
             throw new RuntimeException(e);
         }
@@ -1771,11 +1797,13 @@ public abstract class AbstractCommunicationManager implements Serializable {
         if (connectorTracker.getConnector(connectorId) == null
                 && !connectorId
                         .equals(ApplicationConstants.DRAG_AND_DROP_CONNECTOR_ID)) {
-            getLogger().log(
-                    Level.WARNING,
-                    "RPC call to " + interfaceName + "." + methodName
-                            + " received for connector " + connectorId
-                            + " but no such connector could be found");
+            if (getLogger().isLoggable(Level.WARNING)) {
+                getLogger().log(
+                        Level.WARNING,
+                        "RPC call to " + interfaceName + "." + methodName
+                                + " received for connector " + connectorId
+                                + " but no such connector could be found");
+            }
             return null;
         }
 
@@ -1837,11 +1865,14 @@ public abstract class AbstractCommunicationManager implements Serializable {
              * corresponding to the received method invocation has been
              * registered.
              */
-            getLogger().warning(
-                    "Ignoring RPC call to " + interfaceName + "." + methodName
-                            + " in connector " + connector.getClass().getName()
-                            + "(" + connectorId
-                            + ") as no RPC implementation is regsitered");
+            if (getLogger().isLoggable(Level.WARNING)) {
+                getLogger().warning(
+                        "Ignoring RPC call to " + interfaceName + "."
+                                + methodName + " in connector "
+                                + connector.getClass().getName() + "("
+                                + connectorId
+                                + ") as no RPC implementation is regsitered");
+            }
             return null;
         }
 
@@ -2040,9 +2071,11 @@ public abstract class AbstractCommunicationManager implements Serializable {
             DateFormat dateFormat = DateFormat.getDateTimeInstance(
                     DateFormat.SHORT, DateFormat.SHORT, l);
             if (!(dateFormat instanceof SimpleDateFormat)) {
-                getLogger().warning(
-                        "Unable to get default date pattern for locale "
-                                + l.toString());
+                if (getLogger().isLoggable(Level.WARNING)) {
+                    getLogger().warning(
+                            "Unable to get default date pattern for locale "
+                                    + l.toString());
+                }
                 dateFormat = new SimpleDateFormat();
             }
             final String df = ((SimpleDateFormat) dateFormat).toPattern();
@@ -2202,8 +2235,10 @@ public abstract class AbstractCommunicationManager implements Serializable {
         if (id == null) {
             id = nextTypeKey++;
             typeToKey.put(class1, id);
-            getLogger().log(Level.FINE,
-                    "Mapping " + class1.getName() + " to " + id);
+            if (getLogger().isLoggable(Level.FINE)) {
+                getLogger().log(Level.FINE,
+                        "Mapping " + class1.getName() + " to " + id);
+            }
         }
         return id.toString();
     }
@@ -2417,7 +2452,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
                 if (uiClass.isInstance(retainedUI)) {
                     reinitUI(retainedUI, request);
                     return retainedUI;
-                } else {
+                } else if (getLogger().isLoggable(Level.INFO)) {
                     getLogger().info(
                             "Not using retained UI in " + windowName
                                     + " because retained UI was of type "
@@ -2453,9 +2488,11 @@ public abstract class AbstractCommunicationManager implements Serializable {
         if (vaadinService.preserveUIOnRefresh(provider, event)) {
             // Remember this UI
             if (windowName == null) {
-                getLogger().warning(
-                        "There is no window.name available for UI " + uiClass
-                                + " that should be preserved.");
+                if (getLogger().isLoggable(Level.WARNING)) {
+                    getLogger().warning(
+                            "There is no window.name available for UI "
+                                    + uiClass + " that should be preserved.");
+                }
             } else {
                 session.getPreserveOnRefreshUIs().put(windowName, uiId);
             }
@@ -2507,7 +2544,9 @@ public abstract class AbstractCommunicationManager implements Serializable {
         writeUidlResponse(request, true, pWriter, uI, false);
         pWriter.print("}");
         String initialUIDL = sWriter.toString();
-        getLogger().log(Level.FINE, "Initial UIDL:" + initialUIDL);
+        if (getLogger().isLoggable(Level.FINE)) {
+            getLogger().log(Level.FINE, "Initial UIDL:" + initialUIDL);
+        }
         return initialUIDL;
     }
 
@@ -2538,9 +2577,11 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // Security check: avoid accidentally serving from the UI of the
         // classpath instead of relative to the context class
         if (fileName.startsWith("/")) {
-            getLogger().warning(
-                    "Published file request starting with / rejected: "
-                            + fileName);
+            if (getLogger().isLoggable(Level.WARNING)) {
+                getLogger().warning(
+                        "Published file request starting with / rejected: "
+                                + fileName);
+            }
             response.sendError(HttpServletResponse.SC_NOT_FOUND, fileName);
             return;
         }
@@ -2554,9 +2595,11 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // Security check: don't serve resource if the name hasn't been
         // registered in the map
         if (context == null) {
-            getLogger().warning(
-                    "Rejecting published file request for file that has not been published: "
-                            + fileName);
+            if (getLogger().isLoggable(Level.WARNING)) {
+                getLogger().warning(
+                        "Rejecting published file request for file that has not been published: "
+                                + fileName);
+            }
             response.sendError(HttpServletResponse.SC_NOT_FOUND, fileName);
             return;
         }
@@ -2564,12 +2607,16 @@ public abstract class AbstractCommunicationManager implements Serializable {
         // Resolve file relative to the location of the context class
         InputStream in = context.getResourceAsStream(fileName);
         if (in == null) {
-            getLogger().warning(
-                    fileName + " published by " + context.getName()
-                            + " not found. Verify that the file "
-                            + context.getPackage().getName().replace('.', '/')
-                            + '/' + fileName
-                            + " is available on the classpath.");
+            if (getLogger().isLoggable(Level.WARNING)) {
+                getLogger().warning(
+                        fileName
+                                + " published by "
+                                + context.getName()
+                                + " not found. Verify that the file "
+                                + context.getPackage().getName()
+                                        .replace('.', '/') + '/' + fileName
+                                + " is available on the classpath.");
+            }
             response.sendError(HttpServletResponse.SC_NOT_FOUND, fileName);
             return;
         }

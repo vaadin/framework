@@ -211,7 +211,9 @@ public class ClassPathExplorer {
                     }
                 }
             } catch (IOException e) {
-                getLogger().log(Level.WARNING, "Error parsing jar file", e);
+                if (getLogger().isLoggable(Level.WARNING)) {
+                    getLogger().log(Level.WARNING, "Error parsing jar file", e);
+                }
             }
 
         }
@@ -239,7 +241,9 @@ public class ClassPathExplorer {
             classpath = classpath.substring(0, classpath.length() - 1);
         }
 
-        getLogger().fine("Classpath: " + classpath);
+        if (getLogger().isLoggable(Level.FINE)) {
+            getLogger().fine("Classpath: " + classpath);
+        }
 
         String[] split = classpath.split(pathSep);
         for (int i = 0; i < split.length; i++) {
@@ -314,7 +318,9 @@ public class ClassPathExplorer {
                     url = new URL("jar:" + url.toExternalForm() + "!/");
                     JarURLConnection conn = (JarURLConnection) url
                             .openConnection();
-                    getLogger().fine(url.toString());
+                    if (getLogger().isLoggable(Level.FINE)) {
+                        getLogger().fine(url.toString());
+                    }
                     JarFile jarFile = conn.getJarFile();
                     Manifest manifest = jarFile.getManifest();
                     if (manifest != null) {
@@ -325,11 +331,15 @@ public class ClassPathExplorer {
                         }
                     }
                 } catch (MalformedURLException e) {
-                    getLogger().log(Level.FINEST, "Failed to inspect JAR file",
-                            e);
+                    if (getLogger().isLoggable(Level.FINEST)) {
+                        getLogger().log(Level.FINEST,
+                                "Failed to inspect JAR file", e);
+                    }
                 } catch (IOException e) {
-                    getLogger().log(Level.FINEST, "Failed to inspect JAR file",
-                            e);
+                    if (getLogger().isLoggable(Level.FINEST)) {
+                        getLogger().log(Level.FINEST,
+                                "Failed to inspect JAR file", e);
+                    }
                 }
 
                 return false;

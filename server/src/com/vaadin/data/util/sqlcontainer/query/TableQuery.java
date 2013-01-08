@@ -125,7 +125,9 @@ public class TableQuery implements QueryDelegate,
      */
     @Override
     public int getCount() throws SQLException {
-        getLogger().log(Level.FINE, "Fetching count...");
+        if (getLogger().isLoggable(Level.FINE)) {
+            getLogger().log(Level.FINE, "Fetching count...");
+        }
         StatementHelper sh = sqlGenerator.generateSelectQuery(tableName,
                 filters, null, 0, 0, "COUNT(*)");
         boolean shouldCloseTransaction = false;
@@ -241,7 +243,9 @@ public class TableQuery implements QueryDelegate,
         PreparedStatement pstmt = activeConnection.prepareStatement(
                 sh.getQueryString(), primaryKeyColumns.toArray(new String[0]));
         sh.setParameterValuesToStatement(pstmt);
-        getLogger().log(Level.FINE, "DB -> " + sh.getQueryString());
+        if (getLogger().isLoggable(Level.FINE)) {
+            getLogger().log(Level.FINE, "DB -> " + sh.getQueryString());
+        }
         int result = pstmt.executeUpdate();
         if (result > 0) {
             /*
@@ -309,7 +313,9 @@ public class TableQuery implements QueryDelegate,
             throw new IllegalStateException();
         }
 
-        getLogger().log(Level.FINE, "DB -> begin transaction");
+        if (getLogger().isLoggable(Level.FINE)) {
+            getLogger().log(Level.FINE, "DB -> begin transaction");
+        }
         activeConnection = connectionPool.reserveConnection();
         activeConnection.setAutoCommit(false);
         transactionOpen = true;
@@ -323,7 +329,9 @@ public class TableQuery implements QueryDelegate,
     @Override
     public void commit() throws UnsupportedOperationException, SQLException {
         if (transactionOpen && activeConnection != null) {
-            getLogger().log(Level.FINE, "DB -> commit");
+            if (getLogger().isLoggable(Level.FINE)) {
+                getLogger().log(Level.FINE, "DB -> commit");
+            }
             activeConnection.commit();
             connectionPool.releaseConnection(activeConnection);
         } else {
@@ -352,7 +360,9 @@ public class TableQuery implements QueryDelegate,
     @Override
     public void rollback() throws UnsupportedOperationException, SQLException {
         if (transactionOpen && activeConnection != null) {
-            getLogger().log(Level.FINE, "DB -> rollback");
+            if (getLogger().isLoggable(Level.FINE)) {
+                getLogger().log(Level.FINE, "DB -> rollback");
+            }
             activeConnection.rollback();
             connectionPool.releaseConnection(activeConnection);
         } else {
@@ -408,7 +418,9 @@ public class TableQuery implements QueryDelegate,
         }
         PreparedStatement pstmt = c.prepareStatement(sh.getQueryString());
         sh.setParameterValuesToStatement(pstmt);
-        getLogger().log(Level.FINE, "DB -> " + sh.getQueryString());
+        if (getLogger().isLoggable(Level.FINE)) {
+            getLogger().log(Level.FINE, "DB -> " + sh.getQueryString());
+        }
         return pstmt.executeQuery();
     }
 
@@ -434,7 +446,9 @@ public class TableQuery implements QueryDelegate,
             }
             pstmt = c.prepareStatement(sh.getQueryString());
             sh.setParameterValuesToStatement(pstmt);
-            getLogger().log(Level.FINE, "DB -> " + sh.getQueryString());
+            if (getLogger().isLoggable(Level.FINE)) {
+                getLogger().log(Level.FINE, "DB -> " + sh.getQueryString());
+            }
             int retval = pstmt.executeUpdate();
             return retval;
         } finally {
@@ -477,7 +491,9 @@ public class TableQuery implements QueryDelegate,
             pstmt = c.prepareStatement(sh.getQueryString(),
                     primaryKeyColumns.toArray(new String[0]));
             sh.setParameterValuesToStatement(pstmt);
-            getLogger().log(Level.FINE, "DB -> " + sh.getQueryString());
+            if (getLogger().isLoggable(Level.FINE)) {
+                getLogger().log(Level.FINE, "DB -> " + sh.getQueryString());
+            }
             int result = pstmt.executeUpdate();
             genKeys = pstmt.getGeneratedKeys();
             RowId newId = getNewRowId(row, genKeys);
@@ -590,8 +606,12 @@ public class TableQuery implements QueryDelegate,
             }
             return new RowId(newRowId.toArray());
         } catch (Exception e) {
-            getLogger().log(Level.FINE,
-                    "Failed to fetch key values on insert: " + e.getMessage());
+            if (getLogger().isLoggable(Level.FINE)) {
+                getLogger().log(
+                        Level.FINE,
+                        "Failed to fetch key values on insert: "
+                                + e.getMessage());
+            }
             return null;
         }
     }
@@ -606,8 +626,12 @@ public class TableQuery implements QueryDelegate,
     @Override
     public boolean removeRow(RowItem row) throws UnsupportedOperationException,
             SQLException {
-        getLogger().log(Level.FINE,
-                "Removing row with id: " + row.getId().getId()[0].toString());
+        if (getLogger().isLoggable(Level.FINE)) {
+            getLogger().log(
+                    Level.FINE,
+                    "Removing row with id: "
+                            + row.getId().getId()[0].toString());
+        }
         if (executeUpdate(sqlGenerator.generateDeleteQuery(getTableName(),
                 primaryKeyColumns, versionColumn, row)) == 1) {
             return true;

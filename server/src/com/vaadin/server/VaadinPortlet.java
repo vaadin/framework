@@ -27,6 +27,7 @@ import java.security.GeneralSecurityException;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.portlet.ActionRequest;
@@ -493,12 +494,16 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                 } catch (final SessionExpiredException e) {
                     // TODO Figure out a better way to deal with
                     // SessionExpiredExceptions
-                    getLogger().finest("A user session has expired");
+                    if (getLogger().isLoggable(Level.FINEST)) {
+                        getLogger().finest("A user session has expired");
+                    }
                 } catch (final GeneralSecurityException e) {
                     // TODO Figure out a better way to deal with
                     // GeneralSecurityExceptions
-                    getLogger()
-                            .fine("General security exception, the security key was probably incorrect.");
+                    if (getLogger().isLoggable(Level.FINE)) {
+                        getLogger()
+                                .fine("General security exception, the security key was probably incorrect.");
+                    }
                 } catch (final Throwable e) {
                     handleServiceException(vaadinRequest, vaadinResponse,
                             vaadinSession, e);
@@ -540,7 +545,9 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
 
     private void handleUnknownRequest(PortletRequest request,
             PortletResponse response) {
-        getLogger().warning("Unknown request type");
+        if (getLogger().isLoggable(Level.WARNING)) {
+            getLogger().warning("Unknown request type");
+        }
     }
 
     /**
@@ -604,9 +611,11 @@ public class VaadinPortlet extends GenericPortlet implements Constants {
                 os.write(buffer, 0, bytes);
             }
         } else {
-            getLogger().info(
-                    "Requested resource [" + resourceID
-                            + "] could not be found");
+            if (getLogger().isLoggable(Level.INFO)) {
+                getLogger().info(
+                        "Requested resource [" + resourceID
+                                + "] could not be found");
+            }
             response.setProperty(ResourceResponse.HTTP_STATUS_CODE,
                     Integer.toString(HttpServletResponse.SC_NOT_FOUND));
         }

@@ -145,8 +145,10 @@ public class ComponentSizeValidator implements Serializable {
 
             return parentCanDefineHeight(component);
         } catch (Exception e) {
-            getLogger().log(Level.FINER,
-                    "An exception occurred while validating sizes.", e);
+            if (getLogger().isLoggable(Level.FINER)) {
+                getLogger().log(Level.FINER,
+                        "An exception occurred while validating sizes.", e);
+            }
             return true;
         }
     }
@@ -165,8 +167,10 @@ public class ComponentSizeValidator implements Serializable {
 
             return parentCanDefineWidth(component);
         } catch (Exception e) {
-            getLogger().log(Level.FINER,
-                    "An exception occurred while validating sizes.", e);
+            if (getLogger().isLoggable(Level.FINER)) {
+                getLogger().log(Level.FINER,
+                        "An exception occurred while validating sizes.", e);
+            }
             return true;
         }
     }
@@ -664,8 +668,10 @@ public class ComponentSizeValidator implements Serializable {
                 return;
             } catch (Exception e) {
                 // TODO Auto-generated catch block
-                getLogger().log(Level.FINER,
-                        "An exception occurred while validating sizes.", e);
+                if (getLogger().isLoggable(Level.FINER)) {
+                    getLogger().log(Level.FINER,
+                            "An exception occurred while validating sizes.", e);
+                }
             }
 
         }

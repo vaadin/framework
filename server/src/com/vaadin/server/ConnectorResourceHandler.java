@@ -93,7 +93,9 @@ public class ConnectorResourceHandler implements RequestHandler {
 
     private static boolean error(VaadinRequest request,
             VaadinResponse response, String logMessage) throws IOException {
-        getLogger().log(Level.WARNING, logMessage);
+        if (getLogger().isLoggable(Level.WARNING)) {
+            getLogger().log(Level.WARNING, logMessage);
+        }
         response.sendError(HttpServletResponse.SC_NOT_FOUND,
                 request.getPathInfo() + " can not be found");
 

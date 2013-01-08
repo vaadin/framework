@@ -18,6 +18,7 @@ package com.vaadin.data.util.sqlcontainer;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.data.Property;
@@ -263,12 +264,14 @@ final public class ColumnProperty implements Property {
     @Deprecated
     @Override
     public String toString() {
-        getLogger()
-                .warning(
-                        "You are using ColumnProperty.toString() instead of getValue() to get the value for a "
-                                + getClass().getSimpleName()
-                                + ". This will not be supported starting from Vaadin 7.1 "
-                                + "(your debugger might call toString() and cause this message to appear).");
+        if (getLogger().isLoggable(Level.WARNING)) {
+            getLogger()
+                    .warning(
+                            "You are using ColumnProperty.toString() instead of getValue() to get the value for a "
+                                    + getClass().getSimpleName()
+                                    + ". This will not be supported starting from Vaadin 7.1 "
+                                    + "(your debugger might call toString() and cause this message to appear).");
+        }
         Object v = getValue();
         if (v == null) {
             return null;

@@ -17,6 +17,7 @@
 package com.vaadin.server;
 
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -179,7 +180,7 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
         productionMode = getApplicationOrSystemProperty(
                 Constants.SERVLET_PARAMETER_PRODUCTION_MODE, "false").equals(
                 "true");
-        if (!productionMode) {
+        if (!productionMode && getLogger().isLoggable(Level.WARNING)) {
             getLogger().warning(Constants.NOT_PRODUCTION_MODE_INFO);
         }
     }
@@ -191,7 +192,7 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
         xsrfProtectionEnabled = !getApplicationOrSystemProperty(
                 Constants.SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION, "false")
                 .equals("true");
-        if (!xsrfProtectionEnabled) {
+        if (!xsrfProtectionEnabled && getLogger().isLoggable(Level.WARNING)) {
             getLogger().warning(Constants.WARNING_XSRF_PROTECTION_DISABLED);
         }
     }
@@ -206,8 +207,10 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
                             Constants.SERVLET_PARAMETER_RESOURCE_CACHE_TIME,
                             "3600"));
         } catch (NumberFormatException e) {
-            getLogger().warning(
-                    Constants.WARNING_RESOURCE_CACHING_TIME_NOT_NUMERIC);
+            if (getLogger().isLoggable(Level.WARNING)) {
+                getLogger().warning(
+                        Constants.WARNING_RESOURCE_CACHING_TIME_NOT_NUMERIC);
+            }
             resourceCacheTime = 3600;
         }
     }
@@ -219,8 +222,10 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
                             Constants.SERVLET_PARAMETER_HEARTBEAT_INTERVAL,
                             "300"));
         } catch (NumberFormatException e) {
-            getLogger().warning(
-                    Constants.WARNING_HEARTBEAT_INTERVAL_NOT_NUMERIC);
+            if (getLogger().isLoggable(Level.WARNING)) {
+                getLogger().warning(
+                        Constants.WARNING_HEARTBEAT_INTERVAL_NOT_NUMERIC);
+            }
             heartbeatInterval = 300;
         }
     }

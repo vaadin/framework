@@ -179,11 +179,15 @@ public class SQLContainer implements Container, Container.Filterable,
                 if (notificationsEnabled) {
                     CacheFlushNotifier.notifyOfCacheFlush(this);
                 }
-                getLogger().log(Level.FINER, "Row added to DB...");
+                if (getLogger().isLoggable(Level.FINER)) {
+                    getLogger().log(Level.FINER, "Row added to DB...");
+                }
                 return itemId;
             } catch (SQLException e) {
-                getLogger().log(Level.WARNING,
-                        "Failed to add row to DB. Rolling back.", e);
+                if (getLogger().isLoggable(Level.WARNING)) {
+                    getLogger().log(Level.WARNING,
+                            "Failed to add row to DB. Rolling back.", e);
+                }
                 try {
                     delegate.rollback();
                 } catch (SQLException ee) {
@@ -234,7 +238,10 @@ public class SQLContainer implements Container, Container.Filterable,
                 return delegate.containsRowWithKey(((RowId) itemId).getId());
             } catch (Exception e) {
                 /* Query failed, just return false. */
-                getLogger().log(Level.WARNING, "containsId query failed", e);
+                if (getLogger().isLoggable(Level.WARNING)) {
+                    getLogger()
+                            .log(Level.WARNING, "containsId query failed", e);
+                }
             }
         }
         return false;
@@ -352,8 +359,10 @@ public class SQLContainer implements Container, Container.Filterable,
             rs.close();
             delegate.commit();
         } catch (SQLException e) {
-            getLogger().log(Level.WARNING,
-                    "getItemIds() failed, rolling back.", e);
+            if (getLogger().isLoggable(Level.WARNING)) {
+                getLogger().log(Level.WARNING,
+                        "getItemIds() failed, rolling back.", e);
+            }
             try {
                 delegate.rollback();
             } catch (SQLException e1) {
@@ -363,7 +372,10 @@ public class SQLContainer implements Container, Container.Filterable,
                 rs.getStatement().close();
                 rs.close();
             } catch (SQLException e1) {
-                getLogger().log(Level.WARNING, "Closing session failed", e1);
+                if (getLogger().isLoggable(Level.WARNING)) {
+                    getLogger()
+                            .log(Level.WARNING, "Closing session failed", e1);
+                }
             }
             throw new RuntimeException("Failed to fetch item indexes.", e);
         }
@@ -433,13 +445,15 @@ public class SQLContainer implements Container, Container.Filterable,
                 if (notificationsEnabled) {
                     CacheFlushNotifier.notifyOfCacheFlush(this);
                 }
-                if (success) {
+                if (success && getLogger().isLoggable(Level.FINER)) {
                     getLogger().log(Level.FINER, "Row removed from DB...");
                 }
                 return success;
             } catch (SQLException e) {
-                getLogger().log(Level.WARNING,
-                        "Failed to remove row, rolling back", e);
+                if (getLogger().isLoggable(Level.WARNING)) {
+                    getLogger().log(Level.WARNING,
+                            "Failed to remove row, rolling back", e);
+                }
                 try {
                     delegate.rollback();
                 } catch (SQLException ee) {
@@ -449,8 +463,10 @@ public class SQLContainer implements Container, Container.Filterable,
                 }
                 return false;
             } catch (OptimisticLockException e) {
-                getLogger().log(Level.WARNING,
-                        "Failed to remove row, rolling back", e);
+                if (getLogger().isLoggable(Level.WARNING)) {
+                    getLogger().log(Level.WARNING,
+                            "Failed to remove row, rolling back", e);
+                }
                 try {
                     delegate.rollback();
                 } catch (SQLException ee) {
@@ -488,7 +504,10 @@ public class SQLContainer implements Container, Container.Filterable,
                 }
                 if (success) {
                     delegate.commit();
-                    getLogger().log(Level.FINER, "All rows removed from DB...");
+                    if (getLogger().isLoggable(Level.FINER)) {
+                        getLogger().log(Level.FINER,
+                                "All rows removed from DB...");
+                    }
                     refresh();
                     if (notificationsEnabled) {
                         CacheFlushNotifier.notifyOfCacheFlush(this);
@@ -498,8 +517,10 @@ public class SQLContainer implements Container, Container.Filterable,
                 }
                 return success;
             } catch (SQLException e) {
-                getLogger().log(Level.WARNING,
-                        "removeAllItems() failed, rolling back", e);
+                if (getLogger().isLoggable(Level.WARNING)) {
+                    getLogger().log(Level.WARNING,
+                            "removeAllItems() failed, rolling back", e);
+                }
                 try {
                     delegate.rollback();
                 } catch (SQLException ee) {
@@ -508,8 +529,10 @@ public class SQLContainer implements Container, Container.Filterable,
                 }
                 return false;
             } catch (OptimisticLockException e) {
-                getLogger().log(Level.WARNING,
-                        "removeAllItems() failed, rolling back", e);
+                if (getLogger().isLoggable(Level.WARNING)) {
+                    getLogger().log(Level.WARNING,
+                            "removeAllItems() failed, rolling back", e);
+                }
                 try {
                     delegate.rollback();
                 } catch (SQLException ee) {
@@ -826,7 +849,9 @@ public class SQLContainer implements Container, Container.Filterable,
                 try {
                     asc = ascending[i];
                 } catch (Exception e) {
-                    getLogger().log(Level.WARNING, "", e);
+                    if (getLogger().isLoggable(Level.WARNING)) {
+                        getLogger().log(Level.WARNING, "", e);
+                    }
                 }
                 sorters.add(new OrderBy((String) propertyId[i], asc));
             }
@@ -971,8 +996,10 @@ public class SQLContainer implements Container, Container.Filterable,
      */
     public void commit() throws UnsupportedOperationException, SQLException {
         try {
-            getLogger().log(Level.FINER,
-                    "Commiting changes through delegate...");
+            if (getLogger().isLoggable(Level.FINER)) {
+                getLogger().log(Level.FINER,
+                        "Commiting changes through delegate...");
+            }
             delegate.beginTransaction();
             /* Perform buffered deletions */
             for (RowItem item : removedItems.values()) {
@@ -1026,7 +1053,9 @@ public class SQLContainer implements Container, Container.Filterable,
      * @throws SQLException
      */
     public void rollback() throws UnsupportedOperationException, SQLException {
-        getLogger().log(Level.FINE, "Rolling back changes...");
+        if (getLogger().isLoggable(Level.FINE)) {
+            getLogger().log(Level.FINE, "Rolling back changes...");
+        }
         removedItems.clear();
         addedItems.clear();
         modifiedItems.clear();
@@ -1056,10 +1085,16 @@ public class SQLContainer implements Container, Container.Filterable,
                 if (notificationsEnabled) {
                     CacheFlushNotifier.notifyOfCacheFlush(this);
                 }
-                getLogger().log(Level.FINER, "Row updated to DB...");
+                if (getLogger().isLoggable(Level.FINER)) {
+                    getLogger().log(Level.FINER, "Row updated to DB...");
+                }
             } catch (SQLException e) {
-                getLogger().log(Level.WARNING,
-                        "itemChangeNotification failed, rolling back...", e);
+                if (getLogger().isLoggable(Level.WARNING)) {
+                    getLogger()
+                            .log(Level.WARNING,
+                                    "itemChangeNotification failed, rolling back...",
+                                    e);
+                }
                 try {
                     delegate.rollback();
                 } catch (SQLException ee) {
@@ -1109,14 +1144,18 @@ public class SQLContainer implements Container, Container.Filterable,
             try {
                 delegate.setFilters(filters);
             } catch (UnsupportedOperationException e) {
-                getLogger().log(Level.FINE,
-                        "The query delegate doesn't support filtering", e);
+                if (getLogger().isLoggable(Level.FINE)) {
+                    getLogger().log(Level.FINE,
+                            "The query delegate doesn't support filtering", e);
+                }
             }
             try {
                 delegate.setOrderBy(sorters);
             } catch (UnsupportedOperationException e) {
-                getLogger().log(Level.FINE,
-                        "The query delegate doesn't support filtering", e);
+                if (getLogger().isLoggable(Level.FINE)) {
+                    getLogger().log(Level.FINE,
+                            "The query delegate doesn't support filtering", e);
+                }
             }
             int newSize = delegate.getCount();
             sizeUpdated = new Date();
@@ -1126,8 +1165,10 @@ public class SQLContainer implements Container, Container.Filterable,
                 // Size is up to date so don't set it back to dirty in refresh()
                 refresh(false);
             }
-            getLogger().log(Level.FINER,
-                    "Updated row count. New count is: " + size);
+            if (getLogger().isLoggable(Level.FINER)) {
+                getLogger().log(Level.FINER,
+                        "Updated row count. New count is: " + size);
+            }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to update item set size.", e);
         }
@@ -1171,7 +1212,10 @@ public class SQLContainer implements Container, Container.Filterable,
                     try {
                         type = Class.forName(rsmd.getColumnClassName(i));
                     } catch (Exception e) {
-                        getLogger().log(Level.WARNING, "Class not found", e);
+                        if (getLogger().isLoggable(Level.WARNING)) {
+                            getLogger()
+                                    .log(Level.WARNING, "Class not found", e);
+                        }
                         /* On failure revert to Object and hope for the best. */
                         type = Object.class;
                     }
@@ -1205,10 +1249,14 @@ public class SQLContainer implements Container, Container.Filterable,
             rs.getStatement().close();
             rs.close();
             delegate.commit();
-            getLogger().log(Level.FINER, "Property IDs fetched.");
+            if (getLogger().isLoggable(Level.FINER)) {
+                getLogger().log(Level.FINER, "Property IDs fetched.");
+            }
         } catch (SQLException e) {
-            getLogger().log(Level.WARNING,
-                    "Failed to fetch property ids, rolling back", e);
+            if (getLogger().isLoggable(Level.WARNING)) {
+                getLogger().log(Level.WARNING,
+                        "Failed to fetch property ids, rolling back", e);
+            }
             try {
                 delegate.rollback();
             } catch (SQLException e1) {
@@ -1222,7 +1270,10 @@ public class SQLContainer implements Container, Container.Filterable,
                     rs.close();
                 }
             } catch (SQLException e1) {
-                getLogger().log(Level.WARNING, "Failed to close session", e1);
+                if (getLogger().isLoggable(Level.WARNING)) {
+                    getLogger().log(Level.WARNING, "Failed to close session",
+                            e1);
+                }
             }
             throw e;
         }
@@ -1245,8 +1296,10 @@ public class SQLContainer implements Container, Container.Filterable,
             } catch (UnsupportedOperationException e) {
                 /* The query delegate doesn't support sorting. */
                 /* No need to do anything. */
-                getLogger().log(Level.FINE,
-                        "The query delegate doesn't support sorting", e);
+                if (getLogger().isLoggable(Level.FINE)) {
+                    getLogger().log(Level.FINE,
+                            "The query delegate doesn't support sorting", e);
+                }
             }
             delegate.beginTransaction();
             rs = delegate.getResults(currentOffset, pageLength * CACHE_RATIO);
@@ -1330,13 +1383,17 @@ public class SQLContainer implements Container, Container.Filterable,
             rs.getStatement().close();
             rs.close();
             delegate.commit();
-            getLogger().log(
-                    Level.FINER,
-                    "Fetched " + pageLength * CACHE_RATIO
-                            + " rows starting from " + currentOffset);
+            if (getLogger().isLoggable(Level.FINER)) {
+                getLogger().log(
+                        Level.FINER,
+                        "Fetched " + pageLength * CACHE_RATIO
+                                + " rows starting from " + currentOffset);
+            }
         } catch (SQLException e) {
-            getLogger().log(Level.WARNING,
-                    "Failed to fetch rows, rolling back", e);
+            if (getLogger().isLoggable(Level.WARNING)) {
+                getLogger().log(Level.WARNING,
+                        "Failed to fetch rows, rolling back", e);
+            }
             try {
                 delegate.rollback();
             } catch (SQLException e1) {
@@ -1350,7 +1407,10 @@ public class SQLContainer implements Container, Container.Filterable,
                     }
                 }
             } catch (SQLException e1) {
-                getLogger().log(Level.WARNING, "Failed to close session", e1);
+                if (getLogger().isLoggable(Level.WARNING)) {
+                    getLogger().log(Level.WARNING, "Failed to close session",
+                            e1);
+                }
             }
             throw new RuntimeException("Failed to fetch page.", e);
         }
@@ -1752,8 +1812,10 @@ public class SQLContainer implements Container, Container.Filterable,
                             r.getReferencedColumn()));
             return true;
         } catch (Exception e) {
-            getLogger()
-                    .log(Level.WARNING, "Setting referenced item failed.", e);
+            if (getLogger().isLoggable(Level.WARNING)) {
+                getLogger().log(Level.WARNING,
+                        "Setting referenced item failed.", e);
+            }
             return false;
         }
     }

@@ -224,9 +224,11 @@ public class GAEVaadinServlet extends VaadinServlet {
                 try {
                     Thread.sleep(RETRY_AFTER_MILLISECONDS);
                 } catch (InterruptedException e) {
-                    getLogger().finer(
-                            "Thread.sleep() interrupted while waiting for lock. Trying again. "
-                                    + e);
+                    if (getLogger().isLoggable(Level.FINER)) {
+                        getLogger().finer(
+                                "Thread.sleep() interrupted while waiting for lock. Trying again. "
+                                        + e);
+                    }
                 }
             }
 
@@ -268,7 +270,9 @@ public class GAEVaadinServlet extends VaadinServlet {
             ds.put(entity);
 
         } catch (DeadlineExceededException e) {
-            getLogger().warning("DeadlineExceeded for " + session.getId());
+            if (getLogger().isLoggable(Level.WARNING)) {
+                getLogger().warning("DeadlineExceeded for " + session.getId());
+            }
             sendDeadlineExceededNotification(request, response);
         } catch (NotSerializableException e) {
             getLogger().log(Level.SEVERE, "Not serializable!", e);
@@ -277,8 +281,10 @@ public class GAEVaadinServlet extends VaadinServlet {
             // in some other way - can we?
             sendNotSerializableNotification(request, response);
         } catch (Exception e) {
-            getLogger().log(Level.WARNING,
-                    "An exception occurred while servicing request.", e);
+            if (getLogger().isLoggable(Level.WARNING)) {
+                getLogger().log(Level.WARNING,
+                        "An exception occurred while servicing request.", e);
+            }
 
             sendCriticalErrorNotification(request, response);
         } finally {
@@ -324,17 +330,21 @@ public class GAEVaadinServlet extends VaadinServlet {
                 applicationContext.storeInSession(getService(),
                         new WrappedHttpSession(session));
             } catch (IOException e) {
-                getLogger().log(
-                        Level.WARNING,
-                        "Could not de-serialize ApplicationContext for "
-                                + session.getId()
-                                + " A new one will be created. ", e);
+                if (getLogger().isLoggable(Level.WARNING)) {
+                    getLogger().log(
+                            Level.WARNING,
+                            "Could not de-serialize ApplicationContext for "
+                                    + session.getId()
+                                    + " A new one will be created. ", e);
+                }
             } catch (ClassNotFoundException e) {
-                getLogger().log(
-                        Level.WARNING,
-                        "Could not de-serialize ApplicationContext for "
-                                + session.getId()
-                                + " A new one will be created. ", e);
+                if (getLogger().isLoggable(Level.WARNING)) {
+                    getLogger().log(
+                            Level.WARNING,
+                            "Could not de-serialize ApplicationContext for "
+                                    + session.getId()
+                                    + " A new one will be created. ", e);
+                }
             }
         }
 
@@ -397,9 +407,11 @@ public class GAEVaadinServlet extends VaadinServlet {
                 List<Entity> entities = pq.asList(Builder
                         .withLimit(CLEANUP_LIMIT));
                 if (entities != null) {
-                    getLogger().info(
-                            "Vaadin cleanup deleting " + entities.size()
-                                    + " expired Vaadin sessions.");
+                    if (getLogger().isLoggable(Level.INFO)) {
+                        getLogger().info(
+                                "Vaadin cleanup deleting " + entities.size()
+                                        + " expired Vaadin sessions.");
+                    }
                     List<Key> keys = new ArrayList<Key>();
                     for (Entity e : entities) {
                         keys.add(e.getKey());
@@ -417,9 +429,11 @@ public class GAEVaadinServlet extends VaadinServlet {
                 List<Entity> entities = pq.asList(Builder
                         .withLimit(CLEANUP_LIMIT));
                 if (entities != null) {
-                    getLogger().info(
-                            "Vaadin cleanup deleting " + entities.size()
-                                    + " expired appengine sessions.");
+                    if (getLogger().isLoggable(Level.INFO)) {
+                        getLogger().info(
+                                "Vaadin cleanup deleting " + entities.size()
+                                        + " expired appengine sessions.");
+                    }
                     List<Key> keys = new ArrayList<Key>();
                     for (Entity e : entities) {
                         keys.add(e.getKey());
@@ -428,7 +442,9 @@ public class GAEVaadinServlet extends VaadinServlet {
                 }
             }
         } catch (Exception e) {
-            getLogger().log(Level.WARNING, "Exception while cleaning.", e);
+            if (getLogger().isLoggable(Level.WARNING)) {
+                getLogger().log(Level.WARNING, "Exception while cleaning.", e);
+            }
         }
     }
 

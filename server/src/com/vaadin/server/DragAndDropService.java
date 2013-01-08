@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.json.JSONException;
@@ -97,9 +98,11 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
         DropHandler dropHandler = (dropTarget).getDropHandler();
         if (dropHandler == null) {
             // No dropHandler returned so no drop can be performed.
-            getLogger().fine(
-                    "DropTarget.getDropHandler() returned null for owner: "
-                            + dropTarget);
+            if (getLogger().isLoggable(Level.FINE)) {
+                getLogger().fine(
+                        "DropTarget.getDropHandler() returned null for owner: "
+                                + dropTarget);
+            }
             return;
         }
 

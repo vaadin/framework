@@ -116,7 +116,7 @@ public class ServerRpcManager<T extends ServerRpc> implements Serializable {
                 .getInterfaceName());
         if (manager != null) {
             manager.applyInvocation(invocation);
-        } else {
+        } else if (getLogger().isLoggable(Level.WARNING)) {
             getLogger()
                     .log(Level.WARNING,
                             "RPC call received for RpcTarget "

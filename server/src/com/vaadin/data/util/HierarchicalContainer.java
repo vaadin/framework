@@ -448,9 +448,11 @@ public class HierarchicalContainer extends IndexedContainer implements
 
     private void enableAndFireContentsChangeEvents() {
         if (contentChangedEventsDisabledCount <= 0) {
-            getLogger()
-                    .log(Level.WARNING,
-                            "Mismatched calls to disable and enable contents change events in HierarchicalContainer");
+            if (getLogger().isLoggable(Level.WARNING)) {
+                getLogger()
+                        .log(Level.WARNING,
+                                "Mismatched calls to disable and enable contents change events in HierarchicalContainer");
+            }
             contentChangedEventsDisabledCount = 0;
         } else {
             contentChangedEventsDisabledCount--;
