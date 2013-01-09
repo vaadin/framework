@@ -131,6 +131,11 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         });
     }
 
+    private native void open(String url, String name)
+    /*-{
+        $wnd.open(url, name);
+     }-*/;
+
     @Override
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
         ConnectorMap paintableMap = ConnectorMap.get(getConnection());
@@ -194,27 +199,35 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 VUI.goTo(url);
             } else {
                 String options;
-                if (open.hasAttribute("border")) {
-                    if (open.getStringAttribute("border").equals("minimal")) {
-                        options = "menubar=yes,location=no,status=no";
+                boolean alwaysAsPopup = true;
+                if (open.hasAttribute("popup")) {
+                    alwaysAsPopup = open.getBooleanAttribute("popup");
+                }
+                if (alwaysAsPopup) {
+                    if (open.hasAttribute("border")) {
+                        if (open.getStringAttribute("border").equals("minimal")) {
+                            options = "menubar=yes,location=no,status=no";
+                        } else {
+                            options = "menubar=no,location=no,status=no";
+                        }
+
                     } else {
-                        options = "menubar=no,location=no,status=no";
+                        options = "resizable=yes,menubar=yes,toolbar=yes,directories=yes,location=yes,scrollbars=yes,status=yes";
                     }
 
+                    if (open.hasAttribute("width")) {
+                        int w = open.getIntAttribute("width");
+                        options += ",width=" + w;
+                    }
+                    if (open.hasAttribute("height")) {
+                        int h = open.getIntAttribute("height");
+                        options += ",height=" + h;
+                    }
+
+                    Window.open(url, target, options);
                 } else {
-                    options = "resizable=yes,menubar=yes,toolbar=yes,directories=yes,location=yes,scrollbars=yes,status=yes";
+                    open(url, target);
                 }
-
-                if (open.hasAttribute("width")) {
-                    int w = open.getIntAttribute("width");
-                    options += ",width=" + w;
-                }
-                if (open.hasAttribute("height")) {
-                    int h = open.getIntAttribute("height");
-                    options += ",height=" + h;
-                }
-
-                Window.open(url, target, options);
             }
             childIndex++;
         }
