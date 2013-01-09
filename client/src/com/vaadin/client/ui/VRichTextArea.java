@@ -191,12 +191,43 @@ public class VRichTextArea extends Composite implements Field, ChangeHandler,
      */
     public void synchronizeContentToServer() {
         if (client != null && id != null) {
-            final String html = rta.getHTML();
+            final String html = sanitizeRichTextAreaValue(rta.getHTML());
             if (!html.equals(currentValue)) {
                 client.updateVariable(id, "text", html, immediate);
                 currentValue = html;
             }
         }
+    }
+
+    /**
+     * Browsers differ in what they return as the content of a visually empty
+     * rich text area. This method is used to normalize these to an empty
+     * string. See #8004.
+     * 
+     * @param html
+     * @return cleaned html string
+     */
+    private String sanitizeRichTextAreaValue(String html) {
+        BrowserInfo browser = BrowserInfo.get();
+        String result = html;
+        if (browser.isFirefox()) {
+            if ("<br>".equals(html)) {
+                result = "";
+            }
+        } else if (browser.isWebkit()) {
+            if ("<div><br></div>".equals(html)) {
+                result = "";
+            }
+        } else if (browser.isIE()) {
+            if ("<P>&nbsp;</P>".equals(html)) {
+                result = "";
+            }
+        } else if (browser.isOpera()) {
+            if ("<br>".equals(html) || "<p><br></p>".equals(html)) {
+                result = "";
+            }
+        }
+        return result;
     }
 
     @Override
