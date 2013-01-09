@@ -18,6 +18,8 @@ public class ValueAfterClearingContainer extends TestBase {
 
     @Override
     protected void setup() {
+        log.setDebugId("log");
+        table.setDebugId("table");
         table.setSelectable(true);
         table.addContainerProperty(PROPERTY_ID, Integer.class, null);
         table.setImmediate(true);
@@ -32,6 +34,7 @@ public class ValueAfterClearingContainer extends TestBase {
         addComponent(table);
         final CheckBox multiselect = new CheckBox("Multiselect");
         multiselect.setImmediate(true);
+        multiselect.setDebugId("multiselect");
         multiselect.addListener(new ValueChangeListener() {
 
             public void valueChange(ValueChangeEvent event) {
@@ -39,49 +42,65 @@ public class ValueAfterClearingContainer extends TestBase {
             }
         });
         addComponent(multiselect);
-        addComponent(new Button("Add table items", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                if (!table.getItemIds().isEmpty()) {
-                    getMainWindow().showNotification(
-                            "Only possible when the table is empty");
-                    return;
-                } else {
-                    for (int i = 0; i < 5; i++) {
-                        table.addItem(new Object[] { Integer.valueOf(i) },
-                                Integer.valueOf(i));
-                    }
-                }
-            }
-        }));
-
-        addComponent(new Button("Show value", new Button.ClickListener() {
-            public void buttonClick(ClickEvent event) {
-                log.log("Table selection: " + table.getValue());
-            }
-        }));
-
-        addComponent(new Button("Remove items from table",
+        Button addItemsButton = new Button("Add table items",
                 new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        if (!table.getItemIds().isEmpty()) {
+                            getMainWindow().showNotification(
+                                    "Only possible when the table is empty");
+                            return;
+                        } else {
+                            for (int i = 0; i < 5; i++) {
+                                table.addItem(
+                                        new Object[] { Integer.valueOf(i) },
+                                        Integer.valueOf(i));
+                            }
+                        }
+                    }
+                });
+        addItemsButton.setDebugId("addItemsButton");
+        addComponent(addItemsButton);
+
+        Button showValueButton = new Button("Show value",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        log.log("Table selection: " + table.getValue());
+                    }
+                });
+        showValueButton.setDebugId("showValueButton");
+        addComponent(showValueButton);
+
+        Button removeItemsFromTableButton = new Button(
+                "Remove items from table", new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         table.removeAllItems();
                     }
-                }));
+                });
+        removeItemsFromTableButton.setDebugId("removeItemsFromTableButton");
+        addComponent(removeItemsFromTableButton);
 
-        addComponent(new Button("Remove items from container",
-                new Button.ClickListener() {
+        Button removeItemsFromContainerButton = new Button(
+                "Remove items from container", new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         table.getContainerDataSource().removeAllItems();
                     }
-                }));
-        addComponent(new Button("Remove items from container and sanitize",
+                });
+        removeItemsFromContainerButton
+                .setDebugId("removeItemsFromContainerButton");
+        addComponent(removeItemsFromContainerButton);
+        Button removeItemsFromContainerAndSanitizeButton = new Button(
+                "Remove items from container and sanitize",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         table.getContainerDataSource().removeAllItems();
                         table.sanitizeSelection();
                     }
-                }));
-        addComponent(new Button("Remove selected item from table",
-                new Button.ClickListener() {
+                });
+        removeItemsFromContainerAndSanitizeButton
+                .setDebugId("removeItemsFromContainerAndSanitizeButton");
+        addComponent(removeItemsFromContainerAndSanitizeButton);
+        Button removeSelectedFromTableButton = new Button(
+                "Remove selected item from table", new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         Object selection = table.getValue();
                         if (selection == null) {
@@ -92,8 +111,12 @@ public class ValueAfterClearingContainer extends TestBase {
                             table.removeItem(selection);
                         }
                     }
-                }));
-        addComponent(new Button("Remove selected item from container",
+                });
+        removeSelectedFromTableButton
+                .setDebugId("removeSelectedFromTableButton");
+        addComponent(removeSelectedFromTableButton);
+        Button removeSelectedFromContainer = new Button(
+                "Remove selected item from container",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
                         Object selection = table.getValue();
@@ -106,7 +129,9 @@ public class ValueAfterClearingContainer extends TestBase {
                                     .removeItem(selection);
                         }
                     }
-                }));
+                });
+        removeSelectedFromContainer.setDebugId("removeSelectedFromContainer");
+        addComponent(removeSelectedFromContainer);
     }
 
     @Override
