@@ -132,6 +132,8 @@ public class Page implements Serializable {
          */
         private final BorderStyle border;
 
+        private final boolean tryToOpenAsPopup;
+
         /**
          * Creates a new open resource.
          * 
@@ -145,10 +147,13 @@ public class Page implements Serializable {
          *            The height of the target window
          * @param border
          *            The border style of the target window
+         * @param tryToOpenAsPopup
+         *            Should try to open as a pop-up
          */
         private OpenResource(String url, String name, int width, int height,
-                BorderStyle border) {
-            this(new ExternalResource(url), name, width, height, border);
+                BorderStyle border, boolean tryToOpenAsPopup) {
+            this(new ExternalResource(url), name, width, height, border,
+                    tryToOpenAsPopup);
         }
 
         /**
@@ -164,14 +169,17 @@ public class Page implements Serializable {
          *            The height of the target window
          * @param border
          *            The border style of the target window
+         * @param tryToOpenAsPopup
+         *            Should try to open as a pop-up
          */
         private OpenResource(Resource resource, String name, int width,
-                int height, BorderStyle border) {
+                int height, BorderStyle border, boolean tryToOpenAsPopup) {
             this.resource = resource;
             this.name = name;
             this.width = width;
             this.height = height;
             this.border = border;
+            this.tryToOpenAsPopup = tryToOpenAsPopup;
         }
 
         /**
@@ -187,6 +195,9 @@ public class Page implements Serializable {
             target.addAttribute("src", resource);
             if (name != null && name.length() > 0) {
                 target.addAttribute("name", name);
+            }
+            if (!tryToOpenAsPopup) {
+                target.addAttribute("popup", tryToOpenAsPopup);
             }
             if (width >= 0) {
                 target.addAttribute("width", width);
@@ -636,7 +647,7 @@ public class Page implements Serializable {
      *            the URI to show
      */
     public void setLocation(String uri) {
-        openList.add(new OpenResource(uri, null, -1, -1, BORDER_DEFAULT));
+        openList.add(new OpenResource(uri, null, -1, -1, BORDER_DEFAULT, false));
         uI.markAsDirty();
     }
 
@@ -681,7 +692,8 @@ public class Page implements Serializable {
     }
 
     /**
-     * Opens the given URL in a window with the given name.
+     * Opens the given url in a window with the given name. Equivalent to
+     * {@link #open(String, String, boolean) open} (url, windowName, true) .
      * <p>
      * The supplied {@code windowName} is used as the target name in a
      * window.open call in the client. This means that special values such as
@@ -717,7 +729,7 @@ public class Page implements Serializable {
      * browser's popup-blocker because the new browser window is opened when
      * processing a response from the server. To avoid this, you should instead
      * use {@link Link} for opening the window because browsers are more
-     * forgiving then the window is opened directly from a client-side click
+     * forgiving when the window is opened directly from a client-side click
      * event.
      * </p>
      * 
@@ -727,7 +739,62 @@ public class Page implements Serializable {
      *            the name of the window.
      */
     public void open(String url, String windowName) {
-        openList.add(new OpenResource(url, windowName, -1, -1, BORDER_DEFAULT));
+        open(url, windowName, true);
+    }
+
+    /**
+     * Opens the given url in a window with the given name. Equivalent to
+     * {@link #open(String, String, boolean) open} (url, windowName, true) .
+     * <p>
+     * The supplied {@code windowName} is used as the target name in a
+     * window.open call in the client. This means that special values such as
+     * "_blank", "_self", "_top", "_parent" have special meaning. An empty or
+     * <code>null</code> window name is also a special case.
+     * </p>
+     * <p>
+     * "", null and "_self" as {@code windowName} all causes the URL to be
+     * opened in the current window, replacing any old contents. For
+     * downloadable content you should avoid "_self" as "_self" causes the
+     * client to skip rendering of any other changes as it considers them
+     * irrelevant (the page will be replaced by the response from the URL). This
+     * can speed up the opening of a URL, but it might also put the client side
+     * into an inconsistent state if the window content is not completely
+     * replaced e.g., if the URL is downloaded instead of displayed in the
+     * browser.
+     * </p>
+     * <p>
+     * "_blank" as {@code windowName} causes the URL to always be opened in a
+     * new window or tab (depends on the browser and browser settings).
+     * </p>
+     * <p>
+     * "_top" and "_parent" as {@code windowName} works as specified by the HTML
+     * standard.
+     * </p>
+     * <p>
+     * Any other {@code windowName} will open the URL in a window with that
+     * name, either by opening a new window/tab in the browser or by replacing
+     * the contents of an existing window with that name.
+     * </p>
+     * <p>
+     * Please note that opening a popup window in this way may be blocked by the
+     * browser's popup-blocker because the new browser window is opened when
+     * processing a response from the server. To avoid this, you should instead
+     * use {@link Link} for opening the window because browsers are more
+     * forgiving when the window is opened directly from a client-side click
+     * event.
+     * </p>
+     * 
+     * @param url
+     *            the URL to open.
+     * @param windowName
+     *            the name of the window.
+     * @param tryToOpenAsPopup
+     *            Whether to try to force the resource to be opened in a new
+     *            window
+     */
+    public void open(String url, String windowName, boolean tryToOpenAsPopup) {
+        openList.add(new OpenResource(url, windowName, -1, -1, BORDER_DEFAULT,
+                tryToOpenAsPopup));
         uI.markAsDirty();
     }
 
@@ -740,7 +807,7 @@ public class Page implements Serializable {
      * browser's popup-blocker because the new browser window is opened when
      * processing a response from the server. To avoid this, you should instead
      * use {@link Link} for opening the window because browsers are more
-     * forgiving then the window is opened directly from a client-side click
+     * forgiving when the window is opened directly from a client-side click
      * event.
      * </p>
      * 
@@ -757,7 +824,8 @@ public class Page implements Serializable {
      */
     public void open(String url, String windowName, int width, int height,
             BorderStyle border) {
-        openList.add(new OpenResource(url, windowName, width, height, border));
+        openList.add(new OpenResource(url, windowName, width, height, border,
+                true));
         uI.markAsDirty();
     }
 
@@ -771,7 +839,21 @@ public class Page implements Serializable {
     public void open(Resource resource, String windowName, int width,
             int height, BorderStyle border) {
         openList.add(new OpenResource(resource, windowName, width, height,
-                border));
+                border, true));
+        uI.markAsDirty();
+    }
+
+    /**
+     * @deprecated As of 7.0, only retained to maintain compatibility with
+     *             LegacyWindow.open methods. See documentation for
+     *             {@link LegacyWindow#open(Resource, String, boolean)} for
+     *             discussion about replacing API.
+     */
+    @Deprecated
+    public void open(Resource resource, String windowName,
+            boolean tryToOpenAsPopup) {
+        openList.add(new OpenResource(resource, windowName, -1, -1,
+                BORDER_DEFAULT, tryToOpenAsPopup));
         uI.markAsDirty();
     }
 

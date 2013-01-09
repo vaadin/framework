@@ -19,7 +19,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import com.vaadin.server.LegacyApplication;
-import com.vaadin.server.Page;
 import com.vaadin.server.Page.BrowserWindowResizeEvent;
 import com.vaadin.server.Page.BrowserWindowResizeListener;
 import com.vaadin.server.Resource;
@@ -169,7 +168,7 @@ public class LegacyWindow extends UI {
      */
     @Deprecated
     public void open(Resource resource) {
-        open(resource, null);
+        open(resource, null, false);
     }
 
     /* ********************************************************************* */
@@ -221,7 +220,68 @@ public class LegacyWindow extends UI {
      */
     @Deprecated
     public void open(Resource resource, String windowName) {
-        open(resource, windowName, -1, -1, Page.BORDER_DEFAULT);
+        open(resource, windowName, true);
+    }
+
+    /**
+     * Opens the given resource in a window with the given name and optionally
+     * tries to force the resource to open in a new window instead of a new tab.
+     * <p>
+     * The supplied {@code windowName} is used as the target name in a
+     * window.open call in the client. This means that special values such as
+     * "_blank", "_self", "_top", "_parent" have special meaning. An empty or
+     * <code>null</code> window name is also a special case.
+     * </p>
+     * <p>
+     * "", null and "_self" as {@code windowName} all causes the resource to be
+     * opened in the current window, replacing any old contents. For
+     * downloadable content you should avoid "_self" as "_self" causes the
+     * client to skip rendering of any other changes as it considers them
+     * irrelevant (the page will be replaced by the resource). This can speed up
+     * the opening of a resource, but it might also put the client side into an
+     * inconsistent state if the window content is not completely replaced e.g.,
+     * if the resource is downloaded instead of displayed in the browser.
+     * </p>
+     * <p>
+     * "_blank" as {@code windowName} causes the resource to always be opened in
+     * a new window or tab (depends on the browser and browser settings).
+     * </p>
+     * <p>
+     * "_top" and "_parent" as {@code windowName} works as specified by the HTML
+     * standard.
+     * </p>
+     * <p>
+     * Any other {@code windowName} will open the resource in a window with that
+     * name, either by opening a new window/tab in the browser or by replacing
+     * the contents of an existing window with that name.
+     * </p>
+     * <p>
+     * If {@code windowName} is set to open the resource in a new window or tab
+     * and {@code tryToOpenAsPopup} is true, this method attempts to force the
+     * browser to open a new window instead of a tab. NOTE: This is a
+     * best-effort attempt and may not work reliably with all browsers and
+     * different pop-up preferences. With most browsers using default settings,
+     * {@code tryToOpenAsPopup} works properly.
+     * </p>
+     * <p>
+     * As of Vaadin 7.0.0, the functionality for opening a Resource in a Page
+     * has been replaced with similar methods based on a String URL. This is
+     * because the usage of Resource is problematic with memory management and
+     * with security features in some browsers. Is is recommended to instead use
+     * {@link Link} for starting downloads.
+     * </p>
+     * 
+     * @param resource
+     *            the resource.
+     * @param windowName
+     *            the name of the window.
+     * @param tryToOpenAsPopup
+     *            Whether to try to force the resource to be opened in a new
+     *            window
+     * */
+    public void open(Resource resource, String windowName,
+            boolean tryToOpenAsPopup) {
+        getPage().open(resource, windowName, tryToOpenAsPopup);
     }
 
     /**
