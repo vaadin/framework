@@ -10,7 +10,6 @@ import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.ComplexPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.ApplicationConnection;
 import com.vaadin.terminal.gwt.client.Container;
 import com.vaadin.terminal.gwt.client.Paintable;
@@ -95,10 +94,6 @@ abstract class VTabsheetBase extends ComplexPanel implements Container {
                 .hasNext();) {
             Object oldPaintable = iterator.next();
             if (oldPaintable instanceof Paintable) {
-                Widget w = (Widget) oldPaintable;
-                if (w.isAttached()) {
-                    w.removeFromParent();
-                }
                 client.unregisterPaintable((Paintable) oldPaintable);
             }
         }
