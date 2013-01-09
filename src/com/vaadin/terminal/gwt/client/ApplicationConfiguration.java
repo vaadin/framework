@@ -453,7 +453,7 @@ public class ApplicationConfiguration implements EntryPoint {
         }
 
         // Enable iOS6 cast fix (see #10460)
-        if (browserInfo.isIOS() && browserInfo.isSafari()
+        if (browserInfo.isIOS() && browserInfo.isWebkit()
                 && browserInfo.getBrowserMajorVersion() == 6) {
             enableIOS6castFix();
         }
