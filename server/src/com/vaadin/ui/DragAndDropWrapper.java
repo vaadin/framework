@@ -58,7 +58,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
                             (String) rawVariables.get("ft" + i)); // mime
                     String id = (String) rawVariables.get("fi" + i);
                     files[i] = file;
-                    receivers.put(id, file);
+                    receivers.put(id, new ProxyReceiver(id, file));
                     markAsDirty(); // paint Receivers
                 }
             }
@@ -106,7 +106,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
 
     }
 
-    private Map<String, Html5File> receivers = new HashMap<String, Html5File>();
+    private Map<String, ProxyReceiver> receivers = new HashMap<String, ProxyReceiver>();
 
     public class WrapperTargetDetails extends TargetDetailsImpl {
 
@@ -222,11 +222,12 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
             getDropHandler().getAcceptCriterion().paint(target);
         }
         if (receivers != null && receivers.size() > 0) {
-            for (Iterator<Entry<String, Html5File>> it = receivers.entrySet()
-                    .iterator(); it.hasNext();) {
-                Entry<String, com.vaadin.ui.Html5File> entry = it.next();
+            for (Iterator<Entry<String, ProxyReceiver>> it = receivers
+                    .entrySet().iterator(); it.hasNext();) {
+                Entry<String, ProxyReceiver> entry = it.next();
                 String id = entry.getKey();
-                Html5File html5File = entry.getValue();
+                ProxyReceiver proxyReceiver = entry.getValue();
+                Html5File html5File = proxyReceiver.file;
                 if (html5File.getStreamVariable() != null) {
                     target.addVariable(this, "rec-" + id, new ProxyReceiver(id,
                             html5File));
