@@ -21,6 +21,7 @@ import java.util.Set;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.VDragAndDropWrapper;
 import com.vaadin.client.ui.customcomponent.CustomComponentConnector;
 import com.vaadin.shared.ui.Connect;
@@ -61,6 +62,17 @@ public class DragAndDropWrapperConnector extends CustomComponentConnector
                             getWidget().fileIds.remove(indexOf);
                         }
                     } else {
+                        if (getWidget().fileIdToReceiver.containsKey(fileId)
+                                && receiverUrl != null
+                                && !receiverUrl
+                                        .equals(getWidget().fileIdToReceiver
+                                                .get(fileId))) {
+                            VConsole.error("Overwriting file receiver mapping for fileId "
+                                    + fileId
+                                    + " . Old receiver URL: "
+                                    + getWidget().fileIdToReceiver.get(fileId)
+                                    + " New receiver URL: " + receiverUrl);
+                        }
                         getWidget().fileIdToReceiver.put(fileId, receiverUrl);
                     }
                 }
