@@ -533,6 +533,8 @@ public class GridLayoutTests extends AbstractLayoutTests {
 
         glo.replaceComponent(col1, col1 = new TextField("TEXTFIELD"));
         glo.replaceComponent(col2, col2 = new Label("LABEL"));
+        // Make sure it doesn't shrink to 0px
+        col2.setWidth(null);
         glo.replaceComponent(col3, col3 = new Link("LINK", null));
 
         col1.setIcon(icons[0]);
