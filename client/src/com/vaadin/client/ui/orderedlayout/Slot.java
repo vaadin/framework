@@ -18,14 +18,17 @@ package com.vaadin.client.ui.orderedlayout;
 
 import java.util.List;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.StyleConstants;
+import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.ui.AlignmentInfo;
 
@@ -91,6 +94,25 @@ public final class Slot extends SimplePanel {
     private ElementResizeListener widgetResizeListener;
 
     private ElementResizeListener spacingResizeListener;
+
+    /*
+     * IE8 forgets to re-render the slot if the widget inside the slot changes
+     * size. To force IE to re-render we apply the well know zoom property to
+     * the widget which triggers a re-render of the slot element.
+     */
+    private static final ElementResizeListener ie8ElementRefresherListener = new ElementResizeListener() {
+
+        @Override
+        public void onElementResize(final ElementResizeEvent e) {
+            Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+                @Override
+                public void execute() {
+                    int zoom = e.getElement().getPropertyInt("zoom");
+                    e.getElement().setPropertyInt("zoom", zoom);
+                }
+            });
+        }
+    };
 
     // Caption is placed after component unless there is some part which
     // moves it above.
@@ -160,6 +182,11 @@ public final class Slot extends SimplePanel {
                 lm.addElementResizeListener(getSpacingElement(),
                         spacingResizeListener);
             }
+
+            if (BrowserInfo.get().isIE8()) {
+                lm.addElementResizeListener(getWidget().getElement(),
+                        ie8ElementRefresherListener);
+            }
         }
     }
 
@@ -180,6 +207,11 @@ public final class Slot extends SimplePanel {
             if (getSpacingElement() != null && spacingResizeListener != null) {
                 lm.removeElementResizeListener(getSpacingElement(),
                         spacingResizeListener);
+            }
+
+            if (BrowserInfo.get().isIE8()) {
+                lm.removeElementResizeListener(getWidget().getElement(),
+                        ie8ElementRefresherListener);
             }
         }
     }
