@@ -18,7 +18,7 @@ public class SelectsCssTest extends GridLayout {
     private int debugIdCounter = 0;
 
     public SelectsCssTest(TestSampler parent) {
-        super(10, 1);
+        super(8, 1);
         this.parent = parent;
         setSpacing(true);
         setWidth(null);
