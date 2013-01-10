@@ -65,7 +65,9 @@
             rev="1.5" conf="build,ide->default" />
         <dependency org="commons-io" name="commons-io" rev="1.4"
             conf="build,ide->default" />
-
+        <!-- Mainly for SQLContainer tests -->
+        <dependency org="org.hsqldb" name="hsqldb" rev="2.2.6"
+            conf="build,ide -> default" />
     </dependencies>
 
 </ivy-module>
