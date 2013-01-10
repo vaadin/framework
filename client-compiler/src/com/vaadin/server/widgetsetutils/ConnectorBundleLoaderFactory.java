@@ -757,12 +757,9 @@ public class ConnectorBundleLoaderFactory extends Generator {
             connectorsByLoadStyle.put(loadStyle, new ArrayList<JClassType>());
         }
 
-        JClassType connectorType = typeOracle.getType(ServerConnector.class
-                .getName());
-        JClassType[] subtypes = connectorType.getSubtypes();
-
         // Find all types with a valid mapping
-        Collection<JClassType> selectedTypes = getMappedTypes(logger, subtypes);
+        Collection<JClassType> selectedTypes = getConnectorsForWidgetset(
+                logger, typeOracle);
 
         // Group by load style
         for (JClassType connectorSubtype : selectedTypes) {
@@ -816,8 +813,40 @@ public class ConnectorBundleLoaderFactory extends Generator {
         return bundles;
     }
 
-    private Collection<JClassType> getMappedTypes(TreeLogger logger,
-            JClassType[] types) throws UnableToCompleteException {
+    /**
+     * Returns the connector types that should be included in the widgetset.
+     * This method can be overridden to create a widgetset only containing
+     * selected connectors.
+     * <p>
+     * The default implementation finds all type implementing
+     * {@link ServerConnector} that have a @{@link Connect} annotation. It also
+     * checks that multiple connectors aren't connected to the same server-side
+     * class.
+     * 
+     * @param logger
+     *            the logger to which information can be logged
+     * @param typeOracle
+     *            the type oracle that can be used for finding types
+     * @return a collection of all the connector types that should be included
+     *         in the widgetset
+     * @throws UnableToCompleteException
+     *             if the operation fails
+     */
+    protected Collection<JClassType> getConnectorsForWidgetset(
+            TreeLogger logger, TypeOracle typeOracle)
+            throws UnableToCompleteException {
+        JClassType serverConnectorType;
+        try {
+            serverConnectorType = typeOracle.getType(ServerConnector.class
+                    .getName());
+        } catch (NotFoundException e) {
+            logger.log(Type.ERROR,
+                    "Can't find " + ServerConnector.class.getName());
+            throw new UnableToCompleteException();
+        }
+
+        JClassType[] types = serverConnectorType.getSubtypes();
+
         Map<String, JClassType> mappings = new HashMap<String, JClassType>();
 
         // Keep track of what has happened to avoid logging intermediate state
