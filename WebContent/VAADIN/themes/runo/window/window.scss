@@ -70,7 +70,7 @@
 	background-image: url(img/dialog/bottom-left.png);
 }
 .#{$primaryStyleName}-dialog .#{$primaryStyleName}-outerheader {
-	height: 14px;
+	height: 32px;
 	padding: 13px 30px 5px 8px;
 	background: transparent url(img/top-right.png) no-repeat right top;
 }
@@ -81,7 +81,7 @@
 	letter-spacing: 0;
 	text-shadow: 0 1px 0 #fff;
 }
-.#{$primaryStyleName}-dialog .#{$primaryStyleName}-contents {
+.#{$primaryStyleName}-dialog .#{$primaryStyleName}-contents > div {
 	background: #f1f3f3;
 }
 .#{$primaryStyleName}-dialog div.#{$primaryStyleName}-footer {
