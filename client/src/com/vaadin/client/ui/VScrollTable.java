@@ -1565,6 +1565,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     private void setColWidth(int colIndex, int w, boolean isDefinedWidth) {
         final HeaderCell hcell = tHead.getHeaderCell(colIndex);
+        if (hcell == null) {
+            return;
+        }
 
         // Make sure that the column grows to accommodate the sort indicator if
         // necessary.
