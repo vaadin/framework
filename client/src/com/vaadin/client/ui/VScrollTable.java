@@ -5112,9 +5112,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                             dragTouchTimeout.cancel();
                         }
                         if (touchStart != null) {
-                            event.preventDefault();
-                            event.stopPropagation();
                             if (!BrowserInfo.get().isAndroid()) {
+                                event.preventDefault();
+                                event.stopPropagation();
                                 Util.simulateClickFromTouchEvent(touchStart,
                                         this);
                             }
