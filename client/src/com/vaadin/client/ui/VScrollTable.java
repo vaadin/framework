@@ -4728,7 +4728,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
              */
             public boolean isInViewPort() {
                 int absoluteTop = getAbsoluteTop();
-                int scrollPosition = scrollBodyPanel.getScrollPosition();
+                int scrollPosition = scrollBodyPanel.getAbsoluteTop()
+                        + scrollBodyPanel.getScrollPosition();
                 if (absoluteTop < scrollPosition) {
                     return false;
                 }
