@@ -42,4 +42,18 @@ public class EmailValidator extends RegexpValidator {
                 true, errorMessage);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.data.validator.AbstractValidator#isValidValue(java.lang.Object
+     * )
+     */
+    @Override
+    protected boolean isValidValue(String value) {
+        if (value == null || value.isEmpty()) {
+            return true;
+        }
+        return super.isValidValue(value);
+    }
 }
