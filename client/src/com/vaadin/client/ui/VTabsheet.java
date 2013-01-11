@@ -85,7 +85,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
      * Representation of a single "tab" shown in the TabBar
      * 
      */
-    private static class Tab extends SimplePanel implements HasFocusHandlers,
+    public static class Tab extends SimplePanel implements HasFocusHandlers,
             HasBlurHandlers, HasKeyDownHandlers {
         private static final String TD_CLASSNAME = CLASSNAME + "-tabitemcell";
         private static final String TD_FIRST_CLASSNAME = TD_CLASSNAME
