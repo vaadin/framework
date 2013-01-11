@@ -4985,7 +4985,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
                 TooltipInfo info = null;
                 final Element targetTdOrTr = getTdOrTr((Element) target.cast());
-                if ("td".equals(targetTdOrTr.getTagName().toLowerCase())) {
+                if (targetTdOrTr != null
+                        && "td".equals(targetTdOrTr.getTagName().toLowerCase())) {
                     TableCellElement td = (TableCellElement) targetTdOrTr
                             .cast();
                     info = cellToolTips.get(td);
