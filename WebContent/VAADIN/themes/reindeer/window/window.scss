@@ -113,7 +113,7 @@
 	background: transparent;
 }
 /* This must be the last sprite added to the verticals-sprite image */
-.#{$primaryStyleName}-light .#{$primaryStyleName}-wrap2 {
+.#{$primaryStyleName}-light .#{$primaryStyleName}-wrap {
 	background: #f7f7f8 repeat-x;
 	background-image: url(img/content-bg-light.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 }
@@ -134,19 +134,18 @@
 .v-op & .#{$primaryStyleName}-black .#{$primaryStyleName}-wrap {
 	border-color: rgba(0,0,0,.8);
 }
-.#{$primaryStyleName}-black .#{$primaryStyleName}-wrap2 {
+.#{$primaryStyleName}-black .#{$primaryStyleName}-wrap {
 	background-color: #1d2021;
 	-moz-border-radius: 7px;
 	-webkit-border-radius: 7px;
 }
-.v-sa & .#{$primaryStyleName}-black .#{$primaryStyleName}-wrap2,
-.v-op & .#{$primaryStyleName}-black .#{$primaryStyleName}-wrap2 {
+.v-sa & .#{$primaryStyleName}-black .#{$primaryStyleName}-wrap,
+.v-op & .#{$primaryStyleName}-black .#{$primaryStyleName}-wrap {
 	background-color: rgba(29,32,33,.9);
 }
 .#{$primaryStyleName}-black .#{$primaryStyleName}-outerheader {
-	height: auto;
+	height: 29px;
 	padding: 7px 14px;
-	height: 15px;
 	background: transparent repeat-x;
 	background-image: url(img/black/header-bg.png); /** sprite-ref: black-verticals; sprite-alignment: repeat */
 	text-align: center;
