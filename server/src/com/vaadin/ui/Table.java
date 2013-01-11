@@ -4427,9 +4427,12 @@ public class Table extends AbstractSelect implements Action.Container,
         final Container c = getContainerDataSource();
         if (c instanceof Container.Sortable) {
             final int pageIndex = getCurrentPageFirstItemIndex();
+            boolean refreshingPreviouslyEnabled = disableContentRefreshing();
             ((Container.Sortable) c).sort(propertyId, ascending);
             setCurrentPageFirstItemIndex(pageIndex);
-            refreshRowCache();
+            if (refreshingPreviouslyEnabled) {
+                enableContentRefreshing(true);
+            }
 
         } else if (c != null) {
             throw new UnsupportedOperationException(
