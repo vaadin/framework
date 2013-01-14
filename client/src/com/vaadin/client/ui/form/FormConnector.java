@@ -48,24 +48,36 @@ public class FormConnector extends AbstractComponentContainerConnector
         public void onElementResize(ElementResizeEvent e) {
             VForm form = getWidget();
 
-            int footerHeight;
+            LayoutManager lm = getLayoutManager();
+            int footerHeight = 0;
             if (form.footer != null) {
-                LayoutManager lm = getLayoutManager();
-                footerHeight = lm.getOuterHeight(form.footer.getElement());
+                footerHeight += lm.getOuterHeight(form.footer.getElement());
+            }
+
+            if (form.errorMessage.isVisible()) {
+                footerHeight += lm.getOuterHeight(form.errorMessage
+                        .getElement());
+                footerHeight -= lm.getMarginTop(form.errorMessage.getElement());
+                form.errorMessage.getElement().getStyle()
+                        .setMarginTop(-footerHeight, Unit.PX);
+                form.footerContainer.getStyle().clearMarginTop();
             } else {
-                footerHeight = 0;
+                form.footerContainer.getStyle().setMarginTop(-footerHeight,
+                        Unit.PX);
             }
 
             form.fieldContainer.getStyle().setPaddingBottom(footerHeight,
                     Unit.PX);
-            form.footerContainer.getStyle()
-                    .setMarginTop(-footerHeight, Unit.PX);
         }
     };
 
     @Override
     public void onUnregister() {
         VForm form = getWidget();
+        if (form.errorMessage.isVisible()) {
+            getLayoutManager().removeElementResizeListener(
+                    form.errorMessage.getElement(), footerResizeListener);
+        }
         if (form.footer != null) {
             getLayoutManager().removeElementResizeListener(
                     form.footer.getElement(), footerResizeListener);
@@ -113,8 +125,18 @@ public class FormConnector extends AbstractComponentContainerConnector
 
         if (null != getState().errorMessage) {
             getWidget().errorMessage.updateMessage(getState().errorMessage);
+            if (!getWidget().errorMessage.isVisible()) {
+                getLayoutManager().addElementResizeListener(
+                        getWidget().errorMessage.getElement(),
+                        footerResizeListener);
+            }
             getWidget().errorMessage.setVisible(true);
         } else {
+            if (getWidget().errorMessage.isVisible()) {
+                getLayoutManager().removeElementResizeListener(
+                        getWidget().errorMessage.getElement(),
+                        footerResizeListener);
+            }
             getWidget().errorMessage.setVisible(false);
         }
 
