@@ -107,7 +107,7 @@
 .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close {
 	margin-top: 1px;
 }
-.v-ff & .#{$primaryStyleName}-tabs-minimal .v-icon + .#{$primaryStyleName}-caption-close {
+.v-ff & .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close {
 	margin-top: -15px;
 }
 .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close:hover,
