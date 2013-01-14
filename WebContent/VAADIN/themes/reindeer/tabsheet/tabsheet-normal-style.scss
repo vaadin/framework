@@ -55,6 +55,9 @@
 	font-size: 14px;
 	font-weight: normal;
 }
+.v-ff & .#{$primaryStyleName}-caption-close {
+	margin-top: -15px;
+}
 .#{$primaryStyleName}-caption-close:hover {
 	background-image: url(img/close-btn-hover.png); /** sprite-ref: verticals */
 }
