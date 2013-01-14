@@ -10,7 +10,6 @@
 	<context-param>
 		<param-name>productionMode</param-name>
 		<param-value>false</param-value>
-		<description>Vaadin production mode</description>
 	</context-param>
 
 	<context-param>
