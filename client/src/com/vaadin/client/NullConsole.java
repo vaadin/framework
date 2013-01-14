@@ -60,8 +60,7 @@ public class NullConsole implements Console {
 
     @Override
     public void error(Throwable e) {
-        // Borrow exception handling from VDebugConsole
-        VDebugConsole.handleError(e, this);
+        GWT.log(e.getMessage(), e);
     }
 
     @Override
