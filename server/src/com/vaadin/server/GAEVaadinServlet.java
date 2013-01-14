@@ -132,6 +132,10 @@ public class GAEVaadinServlet extends VaadinServlet {
     // appengine session expires-parameter
     private static final String PROPERTY_APPENGINE_EXPIRES = "_expires";
 
+    // sessions with undefined (-1) expiration are limited to this, but explicit
+    // longer timeouts can be used
+    private static final int DEFAULT_MAX_INACTIVE_INTERVAL = 24 * 3600;
+
     protected void sendDeadlineExceededNotification(
             VaadinServletRequest request, VaadinServletResponse response)
             throws IOException {
@@ -256,7 +260,7 @@ public class GAEVaadinServlet extends VaadinServlet {
 
             String id = AC_BASE + session.getId();
             Date expire = new Date(started
-                    + (session.getMaxInactiveInterval() * 1000));
+                    + (getMaxInactiveIntervalSeconds(session) * 1000));
             Expiration expires = Expiration.onDate(expire);
 
             memcache.put(id, bytes, expires);
@@ -290,6 +294,24 @@ public class GAEVaadinServlet extends VaadinServlet {
         }
     }
 
+    /**
+     * Returns the maximum inactive time for a session. This is used for
+     * handling the expiration of session related information in caches etc.
+     * 
+     * @param session
+     * @return inactive timeout in seconds, greater than zero
+     */
+    protected int getMaxInactiveIntervalSeconds(final HttpSession session) {
+        int interval = session.getMaxInactiveInterval();
+        if (interval <= 0) {
+            getLogger()
+                    .log(Level.FINE,
+                            "Undefined session expiration time, using default value instead.");
+            return DEFAULT_MAX_INACTIVE_INTERVAL;
+        }
+        return interval;
+    }
+
     protected VaadinSession getApplicationContext(HttpServletRequest request,
             MemcacheService memcache) throws ServletException {
         HttpSession session = request.getSession();
@@ -308,9 +330,11 @@ public class GAEVaadinServlet extends VaadinServlet {
                 Blob blob = (Blob) entity.getProperty(PROPERTY_DATA);
                 serializedAC = blob.getBytes();
                 // bring it to memcache
-                memcache.put(AC_BASE + session.getId(), serializedAC,
-                        Expiration.byDeltaSeconds(session
-                                .getMaxInactiveInterval()),
+                memcache.put(
+                        AC_BASE + session.getId(),
+                        serializedAC,
+                        Expiration
+                                .byDeltaSeconds(getMaxInactiveIntervalSeconds(session)),
                         MemcacheService.SetPolicy.ADD_ONLY_IF_NOT_PRESENT);
             }
         }
