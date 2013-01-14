@@ -1,5 +1,7 @@
 package com.vaadin.tests.components.customfield;
 
+import java.util.Locale;
+
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.util.Address;
 import com.vaadin.ui.Button;
@@ -14,9 +16,11 @@ public class AddressFormExample extends TestBase {
 
     @Override
     protected void setup() {
+        getMainWindow().setLocale(Locale.ENGLISH);
         Address address = new Address("Ruukinkatu 2-4", 20540, "Turku");
         final AddressField field = new AddressField();
         field.setValue(address);
+        field.setRequired(true);
 
         addComponent(field);
 
