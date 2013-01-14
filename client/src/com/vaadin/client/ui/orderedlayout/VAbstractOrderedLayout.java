@@ -346,11 +346,22 @@ public class VAbstractOrderedLayout extends FlowPanel {
         if (expandWrapper == null) {
             expandWrapper = DOM.createDiv();
             expandWrapper.setClassName("v-expand");
+
+            // Detach all widgets before modifying DOM
+            for (Widget widget : getChildren()) {
+                orphan(widget);
+            }
+
             while (getElement().getChildCount() > 0) {
                 Node el = getElement().getChild(0);
                 expandWrapper.appendChild(el);
             }
             getElement().appendChild(expandWrapper);
+
+            // Attach all widgets again
+            for (Widget widget : getChildren()) {
+                adopt(widget);
+            }
         }
 
         // Sum up expand ratios to get the denominator
@@ -395,6 +406,11 @@ public class VAbstractOrderedLayout extends FlowPanel {
      */
     public void clearExpand() {
         if (expandWrapper != null) {
+            // Detach all widgets before modifying DOM
+            for (Widget widget : getChildren()) {
+                orphan(widget);
+            }
+
             lastExpandSize = -1;
             while (expandWrapper.getChildCount() > 0) {
                 Element el = expandWrapper.getChild(0).cast();
@@ -409,6 +425,11 @@ public class VAbstractOrderedLayout extends FlowPanel {
             }
             expandWrapper.removeFromParent();
             expandWrapper = null;
+
+            // Attach children again
+            for (Widget widget : getChildren()) {
+                adopt(widget);
+            }
         }
     }
 

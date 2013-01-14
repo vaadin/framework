@@ -268,6 +268,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     private double lastKnownRowHeight = Double.NaN;
 
     /**
+     * Remember scroll position when getting detached to properly scroll back to
+     * the location that there is data for if getting attached again.
+     */
+    private int detachedScrollPosition = 0;
+
+    /**
      * Represents a select range of rows
      */
     private class SelectionRange {
@@ -1732,6 +1738,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     @Override
     protected void onDetach() {
+        detachedScrollPosition = scrollBodyPanel.getScrollPosition();
         rowRequestHandler.cancel();
         super.onDetach();
         // ensure that scrollPosElement will be detached
@@ -1741,6 +1748,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 DOM.removeChild(parent, scrollPositionElement);
             }
         }
+    }
+
+    @Override
+    public void onAttach() {
+        super.onAttach();
+        scrollBodyPanel.setScrollPosition(detachedScrollPosition);
     }
 
     /**
@@ -7149,4 +7162,5 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     public Widget getWidgetForPaintable() {
         return this;
     }
+
 }
