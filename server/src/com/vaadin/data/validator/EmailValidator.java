@@ -23,6 +23,12 @@ package com.vaadin.data.validator;
  * See {@link com.vaadin.data.validator.AbstractStringValidator} for more
  * information.
  * 
+ * <p>
+ * An empty string or a null is always accepted - use the required flag on
+ * fields or a separate validator (or override {@link #isValidValue(String)}) to
+ * fail on empty values.
+ * </p>
+ * 
  * @author Vaadin Ltd.
  * @since 5.4
  */
@@ -40,20 +46,5 @@ public class EmailValidator extends RegexpValidator {
         super(
                 "^([a-zA-Z0-9_\\.\\-+])+@(([a-zA-Z0-9-])+\\.)+([a-zA-Z0-9]{2,4})+$",
                 true, errorMessage);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.data.validator.AbstractValidator#isValidValue(java.lang.Object
-     * )
-     */
-    @Override
-    protected boolean isValidValue(String value) {
-        if (value == null || value.isEmpty()) {
-            return true;
-        }
-        return super.isValidValue(value);
     }
 }
