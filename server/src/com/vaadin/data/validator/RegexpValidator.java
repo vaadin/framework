@@ -30,6 +30,11 @@ import java.util.regex.Pattern;
  * See {@link com.vaadin.data.validator.AbstractStringValidator} for more
  * information.
  * </p>
+ * <p>
+ * An empty string or a null is always accepted - use the required flag on
+ * fields or a separate validator (or override {@link #isValidValue(String)}) to
+ * fail on empty values.
+ * </p>
  * 
  * @author Vaadin Ltd.
  * @since 5.4
@@ -81,6 +86,9 @@ public class RegexpValidator extends AbstractStringValidator {
      */
     @Override
     protected boolean isValidValue(String value) {
+        if (value == null || value.isEmpty()) {
+            return true;
+        }
         if (complete) {
             return getMatcher(value).matches();
         } else {

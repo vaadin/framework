@@ -154,7 +154,8 @@ public class RangeValidator<T extends Comparable> extends AbstractValidator<T> {
      */
     @Override
     protected boolean isValidValue(T value) {
-        if (value == null) {
+        if (value == null
+                || (String.class.equals(getType()) && "".equals(value))) {
             return true;
         }
 
