@@ -2,6 +2,7 @@ package com.vaadin.tests.util;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.Window;
 
 public class TestUtils {
@@ -119,6 +120,25 @@ public class TestUtils {
         IndexedContainer c = new IndexedContainer();
         fillIso3166Container(c);
         return c;
+    }
+
+    public static void installPerformanceReporting(Window window,
+            TextArea targetTextArea) {
+        targetTextArea.setDebugId("performanceTestTarget");
+        window.executeJavaScript("window.reportVaadinPerformance = function(topic, serverLimit, clientLimit) {"
+                + "var element = document.getElementById('performanceTestTarget');"
+                + "var text = topic + ': \\n';"
+                + "for(var k in window.vaadin.clients) {"
+                + "var p = window.vaadin.clients[k].getProfilingData();"
+                + "text += ' Server time: ' + (p[3] > serverLimit?'FAIL':'OK') + ' (' + p[3] +')\\n';"
+                + "text += ' Client time: ' + (p[0] > clientLimit?'FAIL':'OK') + ' (' + p[0] +')\\n';"
+                + "}" + "element.value = text;" + "}");
+    }
+
+    public static void reportPerformance(Window window, String topic,
+            int serverLimit, int clientLimit) {
+        window.executeJavaScript("window.reportVaadinPerformance(\"" + topic
+                + "\", " + serverLimit + ", " + clientLimit + ");");
     }
 
     private static void fillIso3166Container(IndexedContainer container) {
