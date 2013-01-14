@@ -318,8 +318,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                 closeButton.setInnerHTML("&times;");
                 closeButton
                         .setClassName(VTabsheet.CLASSNAME + "-caption-close");
-                getElement().insertBefore(closeButton,
-                        getElement().getLastChild());
+                getElement().appendChild(closeButton);
             } else if (!closable && closeButton != null) {
                 getElement().removeChild(closeButton);
                 closeButton = null;
