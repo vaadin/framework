@@ -39,6 +39,7 @@
       <ul>
         <li><a href="#overview">Overview</a></li>
         <li><a href="#enhancements">Enhancements in Vaadin @version-minor@</a></li>
+        <li><a href="#limitations">Limitations in @version@</a></li>
         <li><a href="#changelog">Complete change log for Vaadin @version@</a></li>
         <li><a href="#migrating">Migrating from Vaadin 6 to Vaadin 7</a></li>
         <li><a href="#dependencies">Vaadin @version@ dependencies</a></li>
@@ -113,18 +114,8 @@
       <h2 id="enhancements">Enhancements in Vaadin @version@</h2>
 
       <p>
-        In addition to many fixes and smaller features and changes, @version@ introduces
-        the following major changes since the last beta release:
-      </p>
-
-      <ul>
-        <li>The <b>ColorPicker</b> component is now included in the Vaadin core framework</li>
-        <li>Sass compiler can now be used in client-side projects.</li>
-      </ul>
-
-      <p>
-        The following major changes were introduced in the earlier
-        @version-minor@ releases:
+        The @version@ includes many fixes and smaller features and changes. The following
+        major changes were introduced in the earlier @version-minor@ releases:
       </p>
 
       <ul>
@@ -199,7 +190,8 @@
             component with <tt>addComponent()</tt> instead of the container</li>
           </ul>
         </li>
-         
+        <li>The <b>ColorPicker</b> component is now included in the Vaadin core framework</li>
+        <li>Sass compiler can now be used in client-side projects.</li>
       </ul>
         
       </ul>
@@ -209,6 +201,14 @@
         the <a href="https://vaadin.com/wiki/-/wiki/Main/Vaadin+7">mini-tutorials</a> in
         the Vaadin Wiki.
       </p>
+
+      <h3 id="limitations">Limitations</h3>
+
+      <ul>
+        <li>It is currently not possible to specify <tt>font-size</tt> as <tt>em</tt> or
+        <tt>%</tt>, or layout component sizes with <tt>em</tt> (<a
+        href="http://dev.vaadin.com/ticket/10634">#10634</a>)</li>
+      </ul>
 
       <h3 id="changelog">ChangeLog</h3>
 
