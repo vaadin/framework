@@ -2,7 +2,6 @@ package com.vaadin.tests.server.component.textfield;
 
 import junit.framework.TestCase;
 
-import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.validator.RangeValidator;
 import com.vaadin.tests.data.converter.ConverterFactory.ConvertTo42;
@@ -38,13 +37,10 @@ public class TextFieldWithConverterAndValidator extends TestCase {
 
         // nulls
 
-        // fails
-        try {
-            property.setValue(null);
-            fail();
-        } catch (InvalidValueException e) {
-            // should fail
-        }
+        // succeeds - validate() converts field value back to property type
+        // before validation
+        property.setValue(null);
+        field.validate();
         // succeeds
         field.setValue(null);
     }
