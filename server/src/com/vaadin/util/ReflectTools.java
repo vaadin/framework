@@ -17,6 +17,7 @@ package com.vaadin.util;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -27,7 +28,7 @@ import java.lang.reflect.Method;
  * 
  * @since 6.2
  */
-public class ReflectTools {
+public class ReflectTools implements Serializable {
     /**
      * Locates the method in the given class. Returns null if the method is not
      * found. Throws an ExceptionInInitializerError if there is a problem

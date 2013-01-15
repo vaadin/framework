@@ -15,7 +15,9 @@
  */
 package com.vaadin.shared.ui.table;
 
-public class TableConstants {
+import java.io.Serializable;
+
+public class TableConstants implements Serializable {
     public static final String ITEM_CLICK_EVENT_ID = "itemClick";
     public static final String HEADER_CLICK_EVENT_ID = "handleHeaderClick";
     public static final String FOOTER_CLICK_EVENT_ID = "handleFooterClick";

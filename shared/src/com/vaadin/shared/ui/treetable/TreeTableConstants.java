@@ -15,8 +15,10 @@
  */
 package com.vaadin.shared.ui.treetable;
 
+import java.io.Serializable;
+
 @Deprecated
-public class TreeTableConstants {
+public class TreeTableConstants implements Serializable {
     @Deprecated
     public static final String ATTRIBUTE_HIERARCHY_COLUMN_INDEX = "hci";
 

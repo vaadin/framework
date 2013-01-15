@@ -15,8 +15,10 @@
  */
 package com.vaadin.shared.ui.embedded;
 
+import java.io.Serializable;
+
 @Deprecated
-public class EmbeddedConstants {
+public class EmbeddedConstants implements Serializable {
     @Deprecated
     public static final String ALTERNATE_TEXT = "alt";
 

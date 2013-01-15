@@ -15,7 +15,9 @@
  */
 package com.vaadin.shared.communication;
 
-public class FieldRpc {
+import java.io.Serializable;
+
+public class FieldRpc implements Serializable {
     public interface FocusServerRpc extends ServerRpc {
         public void focus();
     }

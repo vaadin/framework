@@ -15,12 +15,13 @@
  */
 package com.vaadin.shared.ui;
 
+import java.io.Serializable;
 import java.util.HashSet;
 
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.communication.SharedState;
 
-public final class ComponentStateUtil {
+public final class ComponentStateUtil implements Serializable {
 
     private ComponentStateUtil() {
         // Util class is not instantiable

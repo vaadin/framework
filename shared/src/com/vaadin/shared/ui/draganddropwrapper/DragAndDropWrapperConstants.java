@@ -15,8 +15,10 @@
  */
 package com.vaadin.shared.ui.draganddropwrapper;
 
+import java.io.Serializable;
+
 @Deprecated
-public class DragAndDropWrapperConstants {
+public class DragAndDropWrapperConstants implements Serializable {
 
     @Deprecated
     public static final String HTML5_DATA_FLAVORS = "html5-data-flavors";

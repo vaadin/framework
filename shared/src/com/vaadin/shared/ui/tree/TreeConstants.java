@@ -15,8 +15,10 @@
  */
 package com.vaadin.shared.ui.tree;
 
+import java.io.Serializable;
+
 @Deprecated
-public class TreeConstants {
+public class TreeConstants implements Serializable {
 
     @Deprecated
     public static final String ATTRIBUTE_NODE_STYLE = "style";

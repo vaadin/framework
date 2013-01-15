@@ -15,7 +15,9 @@
  */
 package com.vaadin.ui.components.colorpicker;
 
-public interface HasColorChangeListener {
+import java.io.Serializable;
+
+public interface HasColorChangeListener extends Serializable {
 
     /**
      * Adds a {@link ColorChangeListener} to the component.

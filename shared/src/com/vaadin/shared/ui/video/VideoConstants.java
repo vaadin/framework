@@ -16,6 +16,8 @@
 
 package com.vaadin.shared.ui.video;
 
-public class VideoConstants {
+import java.io.Serializable;
+
+public class VideoConstants implements Serializable {
     public static final String POSTER_RESOURCE = "poster";
 }

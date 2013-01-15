@@ -15,8 +15,10 @@
  */
 package com.vaadin.shared.ui.tabsheet;
 
+import java.io.Serializable;
+
 @Deprecated
-public class TabsheetBaseConstants {
+public class TabsheetBaseConstants implements Serializable {
     @Deprecated
     public static final String ATTRIBUTE_TAB_DISABLED = "disabled";
     @Deprecated

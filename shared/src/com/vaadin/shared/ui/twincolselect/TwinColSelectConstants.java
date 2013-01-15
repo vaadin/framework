@@ -15,8 +15,10 @@
  */
 package com.vaadin.shared.ui.twincolselect;
 
+import java.io.Serializable;
+
 @Deprecated
-public class TwinColSelectConstants {
+public class TwinColSelectConstants implements Serializable {
     @Deprecated
     public static final String ATTRIBUTE_LEFT_CAPTION = "lc";
     @Deprecated

@@ -16,6 +16,7 @@
 
 package com.vaadin.util;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -27,7 +28,7 @@ import java.util.Map.Entry;
  * @version @VERSION@
  * @since 7.0.0
  */
-public class CurrentInstance {
+public class CurrentInstance implements Serializable {
     private final Object instance;
     private final boolean inheritable;
 

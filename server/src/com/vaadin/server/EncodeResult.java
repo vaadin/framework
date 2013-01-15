@@ -16,7 +16,9 @@
 
 package com.vaadin.server;
 
-public class EncodeResult {
+import java.io.Serializable;
+
+public class EncodeResult implements Serializable {
     private final Object encodedValue;
     private final Object diff;
 

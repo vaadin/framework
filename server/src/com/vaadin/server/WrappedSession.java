@@ -16,6 +16,7 @@
 
 package com.vaadin.server;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.portlet.PortletSession;
@@ -30,7 +31,7 @@ import javax.servlet.http.HttpSession;
  * @version @VERSION@
  * @since 7.0.0
  */
-public interface WrappedSession {
+public interface WrappedSession extends Serializable {
     /**
      * Returns the maximum time interval, in seconds, that this session will be
      * kept open between client accesses.

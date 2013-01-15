@@ -15,8 +15,10 @@
  */
 package com.vaadin.shared.ui.combobox;
 
+import java.io.Serializable;
+
 @Deprecated
-public class ComboBoxConstants {
+public class ComboBoxConstants implements Serializable {
     @Deprecated
     public static final String ATTR_INPUTPROMPT = "prompt";
     @Deprecated

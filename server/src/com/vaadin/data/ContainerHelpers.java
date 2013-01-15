@@ -15,6 +15,7 @@
  */
 package com.vaadin.data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +28,7 @@ import com.vaadin.data.Container.Indexed;
  * 
  * @since 7.0
  */
-public class ContainerHelpers {
+public class ContainerHelpers implements Serializable {
 
     /**
      * Get a range of item ids from the container using

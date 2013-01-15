@@ -15,7 +15,9 @@
  */
 package com.vaadin.shared.ui.textfield;
 
-public class TextFieldConstants {
+import java.io.Serializable;
+
+public class TextFieldConstants implements Serializable {
     public static final String VAR_CUR_TEXT = "curText";
     public static final String ATTR_NO_VALUE_CHANGE_BETWEEN_PAINTS = "nvc";
     public static final String ATTR_TEXTCHANGE_TIMEOUT = "iet";
