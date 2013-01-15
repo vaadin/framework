@@ -72,12 +72,16 @@ public class FormConnector extends AbstractComponentContainerConnector
     };
 
     @Override
+    protected void init() {
+        getLayoutManager().addElementResizeListener(
+                getWidget().errorMessage.getElement(), footerResizeListener);
+    };
+
+    @Override
     public void onUnregister() {
         VForm form = getWidget();
-        if (form.errorMessage.isVisible()) {
-            getLayoutManager().removeElementResizeListener(
-                    form.errorMessage.getElement(), footerResizeListener);
-        }
+        getLayoutManager().removeElementResizeListener(
+                form.errorMessage.getElement(), footerResizeListener);
         if (form.footer != null) {
             getLayoutManager().removeElementResizeListener(
                     form.footer.getElement(), footerResizeListener);
@@ -125,18 +129,8 @@ public class FormConnector extends AbstractComponentContainerConnector
 
         if (null != getState().errorMessage) {
             getWidget().errorMessage.updateMessage(getState().errorMessage);
-            if (!getWidget().errorMessage.isVisible()) {
-                getLayoutManager().addElementResizeListener(
-                        getWidget().errorMessage.getElement(),
-                        footerResizeListener);
-            }
             getWidget().errorMessage.setVisible(true);
         } else {
-            if (getWidget().errorMessage.isVisible()) {
-                getLayoutManager().removeElementResizeListener(
-                        getWidget().errorMessage.getElement(),
-                        footerResizeListener);
-            }
             getWidget().errorMessage.setVisible(false);
         }
 
