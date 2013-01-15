@@ -1631,6 +1631,13 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
                 final ClientConnector connector = getConnector(uI,
                         invocation.getConnectorId());
+                if (connector == null) {
+                    getLogger()
+                            .log(Level.WARNING,
+                                    "Received RPC call for unknown connector with id {0}",
+                                    invocation.getConnectorId());
+                    continue;
+                }
 
                 if (!enabledConnectors.contains(connector)) {
 
