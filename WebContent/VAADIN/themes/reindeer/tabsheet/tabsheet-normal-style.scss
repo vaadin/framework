@@ -55,9 +55,15 @@
 	font-size: 14px;
 	font-weight: normal;
 }
-.v-ff & .#{$primaryStyleName}-caption-close {
-	margin-top: -15px;
+.v-ff & .#{$primaryStyleName}-caption-close{
+	margin-top: -17px;
 }
+
+.v-ff & .#{$primaryStyleName}-caption-close:only-child {
+    margin-top: -1px;
+}
+
+
 .#{$primaryStyleName}-caption-close:hover {
 	background-image: url(img/close-btn-hover.png); /** sprite-ref: verticals */
 }

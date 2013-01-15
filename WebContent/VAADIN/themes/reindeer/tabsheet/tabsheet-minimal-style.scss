@@ -104,12 +104,12 @@
 	-webkit-border-radius: 7px;
 	-moz-border-radius: 7px;
 }
-.#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close {
-	margin-top: 1px;
+
+.v-ie9 & .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close:only-child,
+.v-ie9 & .#{$primaryStyleName}-tabs-minimal .v-captiontext:first-child + .#{$primaryStyleName}-caption-close {
+    margin-top: -14px;
 }
-.v-ff & .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close {
-	margin-top: -15px;
-}
+
 .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close:hover,
 .white .#{$primaryStyleName}-tabs-minimal .#{$primaryStyleName}-caption-close:hover {
 	color: #fff;
