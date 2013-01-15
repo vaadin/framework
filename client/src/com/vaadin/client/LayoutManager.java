@@ -28,6 +28,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.vaadin.client.MeasuredSize.MeasureResult;
 import com.vaadin.client.ui.ManagedLayout;
 import com.vaadin.client.ui.PostLayoutListener;
@@ -278,6 +279,16 @@ public class LayoutManager {
         while (true) {
             Duration passDuration = new Duration();
             passes++;
+
+            /*
+             * Fixes IE8 issues where IE8 sometimes forgets to update the size
+             * of the containing element. To force a reflow by modifying the
+             * magical zoom property.
+             */
+            if (BrowserInfo.get().isIE8()) {
+                int zoom = RootPanel.get().getElement().getPropertyInt("zoom");
+                RootPanel.get().getElement().setPropertyInt("zoom", zoom);
+            }
 
             int measuredConnectorCount = measureConnectors(
                     currentDependencyTree, everythingNeedsMeasure);
