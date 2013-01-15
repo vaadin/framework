@@ -15,6 +15,7 @@
  */
 package com.vaadin.shared.annotations;
 
+import java.io.Serializable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
@@ -22,7 +23,7 @@ import java.lang.annotation.Target;
 public @interface DelegateToWidget {
     public String value() default "";
 
-    public static class Helper {
+    public static class Helper implements Serializable {
         public static String getDelegateTarget(String propertyName,
                 String annotationValue) {
             String name = annotationValue;

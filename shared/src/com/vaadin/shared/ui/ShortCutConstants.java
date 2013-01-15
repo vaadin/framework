@@ -15,7 +15,9 @@
  */
 package com.vaadin.shared.ui;
 
-public class ShortCutConstants {
+import java.io.Serializable;
+
+public class ShortCutConstants implements Serializable {
     public static final String ACTION_TARGET_ATTRIBUTE = "sat";
     public static final String ACTION_TARGET_ACTION_ATTRIBUTE = "sata";
     public static final String ACTION_CAPTION_ATTRIBUTE = "caption";

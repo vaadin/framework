@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.security.GeneralSecurityException;
@@ -61,7 +62,8 @@ import com.vaadin.util.CurrentInstance;
  * 
  * @author peholmst
  */
-public class VaadinPortlet extends GenericPortlet implements Constants {
+public class VaadinPortlet extends GenericPortlet implements Constants,
+        Serializable {
 
     /**
      * @deprecated As of 7.0. Will likely change or be removed in a future

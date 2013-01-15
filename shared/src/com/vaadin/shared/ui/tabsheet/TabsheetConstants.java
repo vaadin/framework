@@ -15,8 +15,10 @@
  */
 package com.vaadin.shared.ui.tabsheet;
 
+import java.io.Serializable;
+
 @Deprecated
-public class TabsheetConstants {
+public class TabsheetConstants implements Serializable {
     @Deprecated
     public static final String TAB_STYLE_NAME = "tabstyle";
 

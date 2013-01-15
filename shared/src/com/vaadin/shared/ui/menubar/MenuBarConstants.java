@@ -15,8 +15,10 @@
  */
 package com.vaadin.shared.ui.menubar;
 
+import java.io.Serializable;
+
 @Deprecated
-public class MenuBarConstants {
+public class MenuBarConstants implements Serializable {
     @Deprecated
     public static final String ATTRIBUTE_CHECKED = "checked";
     @Deprecated

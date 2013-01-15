@@ -16,9 +16,11 @@
 
 package com.vaadin.shared.ui;
 
-public final class AlignmentInfo {
+import java.io.Serializable;
+
+public final class AlignmentInfo implements Serializable {
     /** Bitmask values for client server communication */
-    public static class Bits {
+    public static class Bits implements Serializable {
         public static final int ALIGNMENT_LEFT = 1;
         public static final int ALIGNMENT_RIGHT = 2;
         public static final int ALIGNMENT_TOP = 4;

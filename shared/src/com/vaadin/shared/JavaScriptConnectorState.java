@@ -16,10 +16,11 @@
 
 package com.vaadin.shared;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
-public interface JavaScriptConnectorState {
+public interface JavaScriptConnectorState extends Serializable {
     public Set<String> getCallbackNames();
 
     public Map<String, Set<String>> getRpcInterfaces();

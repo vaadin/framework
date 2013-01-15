@@ -15,7 +15,9 @@
  */
 package com.vaadin.shared;
 
-public class JsonConstants {
+import java.io.Serializable;
+
+public class JsonConstants implements Serializable {
     public static final String VTYPE_CONNECTOR = "c";
     public static final String VTYPE_BOOLEAN = "b";
     public static final String VTYPE_DOUBLE = "d";

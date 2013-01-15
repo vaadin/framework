@@ -16,6 +16,8 @@
 
 package com.vaadin.shared.ui.link;
 
-public class LinkConstants {
+import java.io.Serializable;
+
+public class LinkConstants implements Serializable {
     public static String HREF_RESOURCE = "href";
 }

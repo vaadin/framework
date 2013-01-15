@@ -15,6 +15,7 @@
  */
 package com.vaadin.ui;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 
 import com.vaadin.shared.ui.colorpicker.Color;
@@ -50,7 +51,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
     /**
      * Interface for converting 2d-coordinates to a Color
      */
-    public interface Coordinates2Color {
+    public interface Coordinates2Color extends Serializable {
 
         /**
          * Calculate color from coordinates

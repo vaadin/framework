@@ -57,7 +57,7 @@ import com.vaadin.ui.ConnectorTracker;
  */
 public class JsonCodec implements Serializable {
 
-    public static interface BeanProperty {
+    public static interface BeanProperty extends Serializable {
         public Object getValue(Object bean) throws Exception;
 
         public void setValue(Object bean, Object value) throws Exception;

@@ -15,8 +15,10 @@
  */
 package com.vaadin.shared.ui.datefield;
 
+import java.io.Serializable;
+
 @Deprecated
-public class DateFieldConstants {
+public class DateFieldConstants implements Serializable {
 
     @Deprecated
     public static final String ATTR_WEEK_NUMBERS = "wn";

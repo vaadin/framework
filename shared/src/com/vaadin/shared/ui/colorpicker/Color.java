@@ -15,12 +15,14 @@
  */
 package com.vaadin.shared.ui.colorpicker;
 
+import java.io.Serializable;
+
 /**
  * Default implementation for color.
  * 
  * @since 7.0.0
  */
-public class Color {
+public class Color implements Serializable {
 
     public static final Color WHITE = new Color(255, 255, 255);
     public static final Color BLACK = new Color(0, 0, 0);

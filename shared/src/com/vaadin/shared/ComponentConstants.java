@@ -16,6 +16,8 @@
 
 package com.vaadin.shared;
 
-public class ComponentConstants {
+import java.io.Serializable;
+
+public class ComponentConstants implements Serializable {
     public static final String ICON_RESOURCE = "icon";
 }

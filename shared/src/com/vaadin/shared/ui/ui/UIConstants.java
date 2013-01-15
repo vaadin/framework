@@ -15,7 +15,9 @@
  */
 package com.vaadin.shared.ui.ui;
 
-public class UIConstants {
+import java.io.Serializable;
+
+public class UIConstants implements Serializable {
     /**
      * Attribute name for the lazy resize setting .
      */
