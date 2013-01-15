@@ -51,6 +51,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
+import com.vaadin.client.LayoutManager;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
@@ -577,7 +578,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     final TabBar tb = new TabBar(this);
     /** For internal use only. May be removed or replaced in the future. */
-    public final VTabsheetPanel tp = new VTabsheetPanel();
+    public final VTabsheetPanel tp = new VTabsheetPanel(this);
     /** For internal use only. May be removed or replaced in the future. */
     public final Element contentNode;
 
@@ -587,6 +588,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     public boolean waitingForResponse;
 
     private String currentStyle;
+
+    private LayoutManager layoutManager;
 
     /**
      * @return Whether the tab could be selected or not.
@@ -1241,5 +1244,23 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                 updateTabScroller();
             }
         }
+    }
+
+    /**
+     * Set the layout manager for the tabsheet
+     * 
+     * @param manager
+     *            The layout manager to use
+     */
+    public void setLayoutManager(LayoutManager manager) {
+        layoutManager = manager;
+    }
+
+    /**
+     * Get the layout manager used by the tabsheet
+     * 
+     */
+    public LayoutManager getLayoutManager() {
+        return layoutManager;
     }
 }

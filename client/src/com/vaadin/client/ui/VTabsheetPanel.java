@@ -16,11 +16,14 @@
 
 package com.vaadin.client.ui;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
+import com.vaadin.client.ui.layout.ElementResizeEvent;
+import com.vaadin.client.ui.layout.ElementResizeListener;
 
 /**
  * A panel that displays all of its child widgets in a 'deck', where only one
@@ -37,10 +40,30 @@ public class VTabsheetPanel extends ComplexPanel {
 
     private final TouchScrollHandler touchScrollHandler;
 
+    private final VTabsheet tabsheet;
+    
+    /*
+     * When the visible widgets size changes AFTER the Tabsheet already has been
+     * rendered IE8 will sometimes forget to trigger a re-render.
+     */
+    private final ElementResizeListener visibleWidgetResizeListener = new ElementResizeListener() {
+
+        @Override
+        public void onElementResize(final ElementResizeEvent e) {
+            Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+                @Override
+                public void execute() {
+                    tabsheet.updateOpenTabSize();
+                }
+            });
+        }
+    };
+
     /**
      * Creates an empty tabsheet panel.
      */
-    public VTabsheetPanel() {
+    public VTabsheetPanel(VTabsheet tabsheet) {
+        this.tabsheet = tabsheet;
         setElement(DOM.createDiv());
         touchScrollHandler = TouchScrollDelegate.enableTouchScrolling(this);
     }
@@ -55,6 +78,8 @@ public class VTabsheetPanel extends ComplexPanel {
     public void add(Widget w) {
         Element el = createContainerElement();
         DOM.appendChild(getElement(), el);
+        tabsheet.getLayoutManager().addElementResizeListener(w.getElement(),
+                visibleWidgetResizeListener);
         super.add(w, el);
     }
 
@@ -88,12 +113,17 @@ public class VTabsheetPanel extends ComplexPanel {
     public void insert(Widget w, int beforeIndex) {
         Element el = createContainerElement();
         DOM.insertChild(getElement(), el, beforeIndex);
+        tabsheet.getLayoutManager().addElementResizeListener(w.getElement(),
+                visibleWidgetResizeListener);
         super.insert(w, el, beforeIndex, false);
     }
 
     @Override
     public boolean remove(Widget w) {
         Element child = w.getElement();
+        tabsheet.getLayoutManager().removeElementResizeListener(child,
+                visibleWidgetResizeListener);
+
         Element parent = null;
         if (child != null) {
             parent = DOM.getParent(child);
