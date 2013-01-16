@@ -30,6 +30,7 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
+import com.vaadin.client.Util;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.PostLayoutListener;
@@ -262,6 +263,10 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         if (hasContent) {
             Element layoutElement = content.getWidget().getElement();
             Style childStyle = layoutElement.getStyle();
+
+            // IE8 needs some hackery to measure its content correctly
+            Util.forceIE8Redraw((com.google.gwt.user.client.Element) layoutElement);
+
             if (content.isRelativeHeight() && !BrowserInfo.get().isIE9()) {
                 childStyle.setPosition(Position.ABSOLUTE);
 
