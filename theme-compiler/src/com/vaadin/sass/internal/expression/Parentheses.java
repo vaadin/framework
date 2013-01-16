@@ -13,23 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.sass.internal.parser;
 
-import org.w3c.css.sac.LexicalUnit;
+package com.vaadin.sass.internal.expression;
 
-public interface SCSSLexicalUnit extends LexicalUnit {
-    static final short SCSS_VARIABLE = 100;
-    static final short SCSS_OPERATOR_LEFT_PAREN = 101;
-    static final short SCSS_OPERATOR_RIGHT_PAREN = 102;
-
-    LexicalUnitImpl divide(LexicalUnitImpl denominator);
-
-    LexicalUnitImpl add(LexicalUnitImpl another);
-
-    LexicalUnitImpl minus(LexicalUnitImpl another);
-
-    LexicalUnitImpl multiply(LexicalUnitImpl another);
-
-    LexicalUnitImpl modular(LexicalUnitImpl another);
-
+public enum Parentheses {
+    LEFT, RIGHT
 }

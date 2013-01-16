@@ -67,12 +67,14 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
     LexicalUnitImpl(int line, int column, LexicalUnitImpl previous, int i) {
         this(SAC_INTEGER, line, column, previous);
         this.i = i;
+        f = i;
     }
 
     LexicalUnitImpl(int line, int column, LexicalUnitImpl previous,
             short dimension, String sdimension, float f) {
         this(dimension, line, column, previous);
         this.f = f;
+        i = (int) f;
         this.dimension = dimension;
         this.sdimension = sdimension;
     }
@@ -136,6 +138,7 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
 
     void setIntegerValue(int i) {
         this.i = i;
+        f = i;
     }
 
     @Override
@@ -145,6 +148,7 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
 
     public void setFloatValue(float f) {
         this.f = f;
+        i = (int) f;
     }
 
     @Override
@@ -358,24 +362,35 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
     @Override
     public LexicalUnitImpl divide(LexicalUnitImpl denominator) {
         setFloatValue(getFloatValue() / denominator.getIntegerValue());
+        setNextLexicalUnit(denominator.getNextLexicalUnit());
         return this;
     }
 
     @Override
     public LexicalUnitImpl add(LexicalUnitImpl another) {
         setFloatValue(getFloatValue() + another.getFloatValue());
+        setNextLexicalUnit(another.getNextLexicalUnit());
         return this;
     }
 
     @Override
     public LexicalUnitImpl minus(LexicalUnitImpl another) {
         setFloatValue(getFloatValue() - another.getFloatValue());
+        setNextLexicalUnit(another.getNextLexicalUnit());
         return this;
     }
 
     @Override
     public LexicalUnitImpl multiply(LexicalUnitImpl another) {
         setFloatValue(getFloatValue() * another.getIntegerValue());
+        setNextLexicalUnit(another.getNextLexicalUnit());
+        return this;
+    }
+
+    @Override
+    public LexicalUnitImpl modular(LexicalUnitImpl another) {
+        setIntegerValue(getIntegerValue() % another.getIntegerValue());
+        setNextLexicalUnit(another.getNextLexicalUnit());
         return this;
     }
 
@@ -615,10 +630,42 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
         return new LexicalUnitImpl(SAC_OPERATOR_SLASH, line, column, previous);
     }
 
+    public static LexicalUnitImpl createAdd(int line, int column,
+            LexicalUnitImpl previous) {
+        return new LexicalUnitImpl(SAC_OPERATOR_PLUS, line, column, previous);
+    }
+
+    public static LexicalUnitImpl createMinus(int line, int column,
+            LexicalUnitImpl previous) {
+        return new LexicalUnitImpl(SAC_OPERATOR_MINUS, line, column, previous);
+    }
+
+    public static LexicalUnitImpl createMultiply(int line, int column,
+            LexicalUnitImpl previous) {
+        return new LexicalUnitImpl(SAC_OPERATOR_MULTIPLY, line, column,
+                previous);
+    }
+
+    public static LexicalUnitImpl createModular(int line, int column,
+            LexicalUnitImpl previous) {
+        return new LexicalUnitImpl(SAC_OPERATOR_MOD, line, column, previous);
+    }
+
+    public static LexicalUnitImpl createLeftParenthesis(int line, int column,
+            LexicalUnitImpl previous) {
+        return new LexicalUnitImpl(SCSS_OPERATOR_LEFT_PAREN, line, column,
+                previous);
+    }
+
+    public static LexicalUnitImpl createRightParenthesis(int line, int column,
+            LexicalUnitImpl previous) {
+        return new LexicalUnitImpl(SCSS_OPERATOR_LEFT_PAREN, line, column,
+                previous);
+    }
+
     @Override
     public LexicalUnitImpl clone() {
-        LexicalUnitImpl cloned = new LexicalUnitImpl(type, line, column,
-                (LexicalUnitImpl) prev);
+        LexicalUnitImpl cloned = new LexicalUnitImpl(type, line, column, prev);
         cloned.replaceValue(this);
         return cloned;
     }
@@ -636,8 +683,9 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
             return i;
         } else if (f != -1) {
             return f;
-        } else
+        } else {
             return null;
+        }
     }
 
     public void setFunctionName(String functionName) {

@@ -532,6 +532,7 @@ TOKEN :
   | < LBRACKET  : "[" >
   | < RBRACKET  : "]" >
   | < ANY       : "*" >
+  | < MOD       : "%" >
   | < PARENT    : "&" >
   | < DOT       : "." >
   | < LPARAN    : "(" >
@@ -2149,6 +2150,24 @@ n="/" ( <S> )* { return LexicalUnitImpl.createSlash(n.beginLine,
 | n="," ( <S> )* { return LexicalUnitImpl.createComma(n.beginLine, 
 							 n.beginColumn,
 							 prev); }
+| n="*" ( <S> )* { return LexicalUnitImpl.createMultiply(n.beginLine,
+        n.beginColumn,
+        prev); }
+| n="%" ( <S> )* { return LexicalUnitImpl.createModular(n.beginLine,
+        n.beginColumn,
+        prev); }
+/*
+ * for '+', since it can be either a binary operator or an unary operator,
+ * which is ambiguous. To avoid this, the binary operator '+' always has
+ * a space before the following term. so '2+3' is not a valid binary expression,
+ * but '2 + 3' is.  The same for '-' operator.
+*/
+| n="+" ( <S> )+{ return LexicalUnitImpl.createAdd(n.beginLine,
+        n.beginColumn,
+        prev); }
+| n="-" ( <S> )+{ return LexicalUnitImpl.createMinus(n.beginLine,
+        n.beginColumn,
+        prev); }
 }
 
 /**
@@ -2161,7 +2180,7 @@ LexicalUnitImpl expr() :
 }
 {
     first=term(null){ res = first; }
-    ( LOOKAHEAD(2) ( res=operator(res) )? res=term(res))*
+    (LOOKAHEAD(2)(LOOKAHEAD(2)res=operator(res))? res=term(res))*
   { return first; }
 }
 
