@@ -143,10 +143,10 @@
 	height: 9px;
 }
 
-.v-ff .v-tabsheet-caption-close{
-    margin-top: -17px;
+.v-ff & .v-tabsheet-caption-close{
+    margin-top: -10px;
 }
-.v-ff .v-tabsheet-caption-close:only-child {
+.v-ff & .v-tabsheet-caption-close:only-child {
     margin-top: -1px;
 }
 
