@@ -21,7 +21,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.ui.VColorPickerArea;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.colorpicker.ColorPickerServerRpc;
+import com.vaadin.ui.ColorPickerArea;
 
 /**
  * A class that defines an implementation for a color picker connector. Connects
@@ -30,7 +32,7 @@ import com.vaadin.shared.ui.colorpicker.ColorPickerServerRpc;
  * 
  * @since 7.0.0
  */
-@Connect(com.vaadin.ui.ColorPickerArea.class)
+@Connect(value = ColorPickerArea.class, loadStyle = LoadStyle.LAZY)
 public class ColorPickerAreaConnector extends AbstractColorPickerConnector {
 
     private ColorPickerServerRpc rpc = RpcProxy.create(

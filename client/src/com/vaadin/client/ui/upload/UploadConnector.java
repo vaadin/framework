@@ -22,10 +22,9 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.VUpload;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.ui.Upload;
 
-@Connect(value = Upload.class, loadStyle = LoadStyle.LAZY)
+@Connect(Upload.class)
 public class UploadConnector extends AbstractComponentConnector implements
         Paintable {
 

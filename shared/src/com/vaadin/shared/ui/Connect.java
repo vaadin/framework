@@ -82,7 +82,7 @@ public @interface Connect {
      * @return the hint for the widget set generator how the client side
      *         implementation should be loaded to the browser
      */
-    LoadStyle loadStyle() default LoadStyle.DEFERRED;
+    LoadStyle loadStyle() default LoadStyle.EAGER;
 
     public enum LoadStyle {
         /**

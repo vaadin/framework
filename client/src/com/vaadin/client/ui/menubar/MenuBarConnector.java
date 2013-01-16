@@ -32,11 +32,10 @@ import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VMenuBar;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.menubar.MenuBarConstants;
 import com.vaadin.shared.ui.menubar.MenuBarState;
 
-@Connect(value = com.vaadin.ui.MenuBar.class, loadStyle = LoadStyle.LAZY)
+@Connect(com.vaadin.ui.MenuBar.class)
 public class MenuBarConnector extends AbstractComponentConnector implements
         Paintable, SimpleManagedLayout {
 

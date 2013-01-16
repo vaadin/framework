@@ -25,8 +25,10 @@ import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.colorpicker.ColorPickerGradientServerRpc;
 import com.vaadin.shared.ui.colorpicker.ColorPickerGradientState;
+import com.vaadin.ui.components.colorpicker.ColorPickerGradient;
 
 /**
  * A class that defines the default implementation for a color picker gradient
@@ -36,7 +38,7 @@ import com.vaadin.shared.ui.colorpicker.ColorPickerGradientState;
  * 
  * @since 7.0.0
  */
-@Connect(com.vaadin.ui.components.colorpicker.ColorPickerGradient.class)
+@Connect(value = ColorPickerGradient.class, loadStyle = LoadStyle.LAZY)
 public class ColorPickerGradientConnector extends AbstractComponentConnector
         implements MouseUpHandler {
 
