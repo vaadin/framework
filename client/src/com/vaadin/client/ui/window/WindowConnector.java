@@ -262,6 +262,13 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         if (hasContent) {
             Element layoutElement = content.getWidget().getElement();
             Style childStyle = layoutElement.getStyle();
+
+            // IE8 needs some hackery to measure its content correctly
+            if (BrowserInfo.get().isIE8()) {
+                int zoom = layoutElement.getPropertyInt("zoom");
+                layoutElement.setPropertyInt("zoom", zoom);
+            }
+
             if (content.isRelativeHeight() && !BrowserInfo.get().isIE9()) {
                 childStyle.setPosition(Position.ABSOLUTE);
 
