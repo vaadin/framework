@@ -40,7 +40,7 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
     @Override
     public Boolean convertToModel(String value, Locale locale)
             throws ConversionException {
-        if (value == null) {
+        if (value == null || value.isEmpty()) {
             return null;
         }
 
