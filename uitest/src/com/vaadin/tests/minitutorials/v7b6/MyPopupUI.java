@@ -24,7 +24,9 @@ public class MyPopupUI extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        setContent(new Label("This is MyPopupUI"));
+        setContent(new Label("This is MyPopupUI where parameter foo="
+                + request.getParameter("foo") + " and fragment is set to "
+                + getPage().getUriFragment()));
     }
 
 }

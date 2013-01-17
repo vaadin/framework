@@ -30,7 +30,13 @@ public class OpeningUIInPopup extends UI {
         BrowserWindowOpener popupOpener = new BrowserWindowOpener(MyPopupUI.class);
         popupOpener.setFeatures("height=300,width=300");
         popupOpener.extend(popupButton);
+        
+        // Add a parameter
+        popupOpener.setParameter("foo", "bar");
 
+        // Set a fragment
+        popupOpener.setUriFragment("myfragment");
+        
         setContent(popupButton);
     }
 
