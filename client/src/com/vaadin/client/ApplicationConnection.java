@@ -220,10 +220,6 @@ public class ApplicationConnection {
 
     private boolean validatingLayouts = false;
 
-    private Set<ComponentConnector> zeroWidthComponents = null;
-
-    private Set<ComponentConnector> zeroHeightComponents = null;
-
     private final LayoutManager layoutManager;
 
     private final RpcManager rpcManager;
@@ -1408,8 +1404,6 @@ public class ApplicationConnection {
                         getConnectorMap().clear();
                         if (meta.containsKey("invalidLayouts")) {
                             validatingLayouts = true;
-                            zeroWidthComponents = new HashSet<ComponentConnector>();
-                            zeroHeightComponents = new HashSet<ComponentConnector>();
                         }
                     }
                     if (meta.containsKey("timedRedirect")) {
@@ -1540,11 +1534,13 @@ public class ApplicationConnection {
                         applicationRunning = false;
                     }
                     if (validatingLayouts) {
+                        Set<ComponentConnector> zeroHeightComponents = new HashSet<ComponentConnector>();
+                        Set<ComponentConnector> zeroWidthComponents = new HashSet<ComponentConnector>();
+                        findZeroSizeComponents(zeroHeightComponents,
+                                zeroWidthComponents, getUIConnector());
                         VConsole.printLayoutProblems(meta,
                                 ApplicationConnection.this,
                                 zeroHeightComponents, zeroWidthComponents);
-                        zeroHeightComponents = null;
-                        zeroWidthComponents = null;
                         validatingLayouts = false;
 
                     }
@@ -2199,6 +2195,28 @@ public class ApplicationConnection {
 
         };
         ApplicationConfiguration.runWhenDependenciesLoaded(c);
+    }
+
+    private void findZeroSizeComponents(
+            Set<ComponentConnector> zeroHeightComponents,
+            Set<ComponentConnector> zeroWidthComponents,
+            ComponentConnector connector) {
+        Widget widget = connector.getWidget();
+        ComputedStyle computedStyle = new ComputedStyle(widget.getElement());
+        if (computedStyle.getIntProperty("height") == 0) {
+            zeroHeightComponents.add(connector);
+        }
+        if (computedStyle.getIntProperty("width") == 0) {
+            zeroWidthComponents.add(connector);
+        }
+        List<ServerConnector> children = connector.getChildren();
+        for (ServerConnector serverConnector : children) {
+            if (serverConnector instanceof ComponentConnector) {
+                findZeroSizeComponents(zeroHeightComponents,
+                        zeroWidthComponents,
+                        (ComponentConnector) serverConnector);
+            }
+        }
     }
 
     private void loadStyleDependencies(JsArrayString dependencies) {
