@@ -51,7 +51,9 @@
 	</target>
 
 	<target name="publish-local" depends="jar">
-		<antcall target="common.sources.jar" />
+		<antcall target="common.sources.jar">
+			<reference torefid="extra.jar.includes" refid="client.gwt.includes" />
+		</antcall>
 		<antcall target="common.javadoc.jar" />
 
 		<antcall target="common.publish-local" />
