@@ -28,8 +28,8 @@ public interface RequestHandler extends Serializable {
 
     /**
      * Handles a non-UIDL request. If a response is written, this method should
-     * return <code>false</code> to indicate that no more request handlers
-     * should be invoked for the request.
+     * return <code>true</code> to indicate that no more request handlers should
+     * be invoked for the request.
      * 
      * @param session
      *            The session for the request
