@@ -38,6 +38,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -157,6 +159,14 @@ public class JsonCodec implements Serializable {
         }
 
     }
+
+    /**
+     * Cache the collection of bean properties for a given type to avoid doing a
+     * quite expensive lookup multiple times. Will be used from any thread that
+     * happens to process Vaadin requests, so it must be protected from
+     * corruption caused by concurrent access.
+     */
+    private static ConcurrentMap<Class<?>, Collection<BeanProperty>> typePropertyCache = new ConcurrentHashMap<Class<?>, Collection<BeanProperty>>();
 
     private static Map<Class<?>, String> typeToTransportType = new HashMap<Class<?>, String>();
 
@@ -682,11 +692,18 @@ public class JsonCodec implements Serializable {
 
     public static Collection<BeanProperty> getProperties(Class<?> type)
             throws IntrospectionException {
+        Collection<BeanProperty> cachedProperties = typePropertyCache.get(type);
+        if (cachedProperties != null) {
+            return cachedProperties;
+        }
         Collection<BeanProperty> properties = new ArrayList<BeanProperty>();
 
         properties.addAll(MethodProperty.find(type));
         properties.addAll(FieldProperty.find(type));
 
+        // Doesn't matter if the same calculation is done multiple times from
+        // different threads, so there's no need to do e.g. putIfAbsent
+        typePropertyCache.put(type, properties);
         return properties;
     }
 
