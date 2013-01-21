@@ -28,7 +28,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.vaadin.client.MeasuredSize.MeasureResult;
 import com.vaadin.client.ui.ManagedLayout;
 import com.vaadin.client.ui.PostLayoutListener;
@@ -250,6 +249,15 @@ public class LayoutManager {
         }
     }
 
+    /**
+     * Called once per iteration in the layout loop before size calculations so
+     * different browsers quirks can be handled. Mainly this is currently for
+     * the IE8 permutation.
+     */
+    protected void performBrowserLayoutHacks() {
+        // Permutations implement this
+    }
+
     private void doLayout() {
         VConsole.log("Starting layout phase");
 
@@ -280,15 +288,7 @@ public class LayoutManager {
             Duration passDuration = new Duration();
             passes++;
 
-            /*
-             * Fixes IE8 issues where IE8 sometimes forgets to update the size
-             * of the containing element. To force a reflow by modifying the
-             * magical zoom property.
-             */
-            if (BrowserInfo.get().isIE8()) {
-                int zoom = RootPanel.get().getElement().getPropertyInt("zoom");
-                RootPanel.get().getElement().setPropertyInt("zoom", zoom);
-            }
+            performBrowserLayoutHacks();
 
             int measuredConnectorCount = measureConnectors(
                     currentDependencyTree, everythingNeedsMeasure);

@@ -882,6 +882,20 @@ public class Util {
     }
 
     /**
+     * Performs a hack to trigger a re-layout in the IE8. This is usually
+     * necessary in cases where IE8 "forgets" to update child elements when they
+     * resize.
+     * 
+     * @param e
+     *            The element to perform the hack on
+     */
+    public static final void forceIE8Redraw(Element e) {
+        if (BrowserInfo.get().isIE8()) {
+            setStyleTemporarily(e, "zoom", "1");
+        }
+    }
+
+    /**
      * Detaches and re-attaches the element from its parent. The element is
      * reattached at the same position in the DOM as it was before.
      * 
@@ -1324,4 +1338,6 @@ public class Util {
             return a.getHref();
         }
     }
+
+
 }
