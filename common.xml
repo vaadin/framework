@@ -122,6 +122,10 @@
 				</patternset>
 			</fileset>
 			<fileset refid="common.files.for.all.jars" />
+			<restrict>
+				<union refid="extra.jar.includes" />
+				<name name="*.java" />
+			</restrict>
 		</jar>
 
 	</target>
