@@ -251,9 +251,6 @@ public abstract class AbstractOrderedLayoutConnector extends
         slot.setCaption(caption, iconUrlString, styles, error, showError,
                 required, enabled);
 
-        slot.setRelativeWidth(child.isRelativeWidth());
-        slot.setRelativeHeight(child.isRelativeHeight());
-
         if (slot.hasCaption()) {
             CaptionPosition pos = slot.getCaptionPosition();
             getLayoutManager().addElementResizeListener(
@@ -360,11 +357,14 @@ public abstract class AbstractOrderedLayoutConnector extends
 
         // First update bookkeeping for all children
         for (ComponentConnector child : getChildComponents()) {
+            Slot slot = getWidget().getSlot(child.getWidget());
+
+            slot.setRelativeWidth(child.isRelativeWidth());
+            slot.setRelativeHeight(child.isRelativeHeight());
+
             if (child.delegateCaptionHandling()) {
                 updateCaptionInternal(child);
             }
-
-            Slot slot = getWidget().getSlot(child.getWidget());
 
             // Update slot style names
             List<String> childStyles = child.getState().styles;

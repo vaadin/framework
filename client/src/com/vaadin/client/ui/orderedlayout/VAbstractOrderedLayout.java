@@ -21,6 +21,7 @@ import java.util.Map;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.DOM;
@@ -367,33 +368,53 @@ public class VAbstractOrderedLayout extends FlowPanel {
         // Sum up expand ratios to get the denominator
         double total = 0;
         for (Slot slot : widgetToSlot.values()) {
-            if (slot.getExpandRatio() != 0) {
-                total += slot.getExpandRatio();
-            } else {
-                if (vertical) {
-                    slot.getElement().getStyle().clearHeight();
-                } else {
-                    slot.getElement().getStyle().clearWidth();
-                }
-            }
-            slot.getElement().getStyle().clearMarginLeft();
-            slot.getElement().getStyle().clearMarginTop();
+            // FIXME expandRatio might be <0
+            total += slot.getExpandRatio();
         }
 
-        // Give each child its own share
+        // Give each expanded child its own share
         for (Slot slot : widgetToSlot.values()) {
+
+            Element slotElement = slot.getElement();
+            slotElement.removeAttribute("aria-hidden");
+
+            Style slotStyle = slotElement.getStyle();
+            slotStyle.clearVisibility();
+            slotStyle.clearMarginLeft();
+            slotStyle.clearMarginTop();
+
             if (slot.getExpandRatio() != 0) {
+                // FIXME expandRatio might be <0
+                double size = 100 * (slot.getExpandRatio() / total);
+
                 if (vertical) {
-                    slot.setHeight((100 * (slot.getExpandRatio() / total))
-                            + "%");
+                    slot.setHeight(size + "%");
                     if (slot.hasRelativeHeight()) {
                         Util.notifyParentOfSizeChange(this, true);
                     }
                 } else {
-                    slot.setWidth((100 * (slot.getExpandRatio() / total)) + "%");
+                    slot.setWidth(size + "%");
                     if (slot.hasRelativeWidth()) {
                         Util.notifyParentOfSizeChange(this, true);
                     }
+                }
+
+            } else if (slot.isRelativeInDirection(vertical)) {
+                // Relative child without expansion gets no space at all
+                if (vertical) {
+                    slot.setHeight("0");
+                } else {
+                    slot.setWidth("0");
+                }
+                slotStyle.setVisibility(Visibility.HIDDEN);
+                slotElement.setAttribute("aria-hidden", "true");
+
+            } else {
+                // Non-relative child without expansion should be unconstrained
+                if (vertical) {
+                    slotStyle.clearHeight();
+                } else {
+                    slotStyle.clearWidth();
                 }
             }
         }
@@ -440,6 +461,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
     public void updateExpandCompensation() {
         boolean isExpanding = false;
         for (Widget slot : getChildren()) {
+            // FIXME expandRatio might be <0
             if (((Slot) slot).getExpandRatio() != 0) {
                 isExpanding = true;
                 break;
@@ -501,6 +523,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
                             }
                         }
                     } else {
+                        // FIXME expandRatio might be <0
                         totalSize += vertical ? slot.getOffsetHeight() : slot
                                 .getOffsetWidth();
                     }
@@ -532,6 +555,7 @@ public class VAbstractOrderedLayout extends FlowPanel {
                 lastExpandSize = totalSize;
                 for (Widget w : getChildren()) {
                     Slot slot = (Slot) w;
+                    // FIXME expandRatio might be <0
                     if (slot.getExpandRatio() != 0) {
                         if (layoutManager != null) {
                             layoutManager.setNeedsMeasure(Util
