@@ -1780,11 +1780,18 @@ public abstract class AbstractCommunicationManager implements Serializable {
         if (connectorTracker.getConnector(connectorId) == null
                 && !connectorId
                         .equals(ApplicationConstants.DRAG_AND_DROP_CONNECTOR_ID)) {
-            getLogger().log(
-                    Level.WARNING,
-                    "RPC call to " + interfaceName + "." + methodName
-                            + " received for connector " + connectorId
-                            + " but no such connector could be found");
+            getLogger()
+                    .log(Level.WARNING,
+                            "RPC call to "
+                                    + interfaceName
+                                    + "."
+                                    + methodName
+                                    + " received for connector "
+                                    + connectorId
+                                    + " but no such connector could be found. Resynchronizing client.");
+            // This is likely an out of sync issue (client tries to update a
+            // connector which is not present). Force resync.
+            connectorTracker.markAllConnectorsDirty();
             return null;
         }
 
