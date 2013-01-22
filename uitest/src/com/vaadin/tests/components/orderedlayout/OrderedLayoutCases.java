@@ -179,8 +179,15 @@ public class OrderedLayoutCases extends AbstractTestUI {
                         }
 
                         while (currentLayout.getComponentCount() > 0) {
-                            newLayout.addComponent(currentLayout
-                                    .getComponent(0));
+                            Component child = currentLayout.getComponent(0);
+                            Alignment alignment = currentLayout
+                                    .getComponentAlignment(child);
+                            float expRatio = currentLayout
+                                    .getExpandRatio(child);
+                            newLayout.addComponent(child);
+                            newLayout.setExpandRatio(child, expRatio);
+                            newLayout.setComponentAlignment(child, alignment);
+
                         }
                         newLayout.setStyleName("theLayout");
 
@@ -337,6 +344,24 @@ public class OrderedLayoutCases extends AbstractTestUI {
                         setChildState(2, 4, 7);
                     }
                 }));
+        caseBar.addComponent(new Button("Relative child without expand",
+                new ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        resetState();
+                        // Width 800px
+                        setState(sizeBar, 0, 3);
+                        // First child 100% wide
+                        setChildState(0, 0, 4);
+                        // Second child expand 1
+                        setChildState(1, 3, 1);
+                    }
+                }));
+        /*
+         * Hidden for not to avoid changing screenshots, functionality is still
+         * available by adding case=9 to the query string...
+         */
+        caseBar.getComponent(9).setVisible(false);
 
         caseBar.setSpacing(true);
 
@@ -348,6 +373,13 @@ public class OrderedLayoutCases extends AbstractTestUI {
         getContent().setSizeFull();
         getLayout().setSizeFull();
         getLayout().setExpandRatio(currentLayout, 1);
+
+        String caseParameter = request.getParameter("case");
+        if (caseParameter != null) {
+            int caseIndex = Integer.parseInt(caseParameter);
+            Button button = (Button) caseBar.getComponent(caseIndex);
+            button.click();
+        }
     }
 
     private void resetState() {
