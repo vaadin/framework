@@ -15,6 +15,9 @@
  */
 package com.vaadin.data.validator;
 
+import com.vaadin.data.Property;
+import com.vaadin.data.util.converter.StringToIntegerConverter;
+
 /**
  * String validator for integers. See
  * {@link com.vaadin.data.validator.AbstractStringValidator} for more
@@ -22,7 +25,9 @@ package com.vaadin.data.validator;
  * 
  * @author Vaadin Ltd.
  * @since 5.4
- * @deprecated As of 7.0. Use an Integer converter on the field instead.
+ * @deprecated As of 7.0. Use a {@link StringToIntegerConverter} converter on
+ *             the field instead or bind the field to a {@link Property} of type
+ *             {@link Integer}.
  */
 @SuppressWarnings("serial")
 @Deprecated
