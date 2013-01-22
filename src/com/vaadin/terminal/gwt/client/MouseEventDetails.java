@@ -75,6 +75,10 @@ public class MouseEventDetails implements Serializable {
         clientX = Util.getTouchOrMouseClientX(evt);
         clientY = Util.getTouchOrMouseClientY(evt);
         button = evt.getButton();
+        // IE7 may not give us a button. Assume left.
+        if (isButtonInvalid(button)) {
+            button = BUTTON_LEFT;
+        }
         altKey = evt.getAltKey();
         ctrlKey = evt.getCtrlKey();
         metaKey = evt.getMetaKey();
@@ -134,6 +138,11 @@ public class MouseEventDetails implements Serializable {
 
     public boolean isDoubleClick() {
         return type == Event.ONDBLCLICK;
+    }
+
+    private static boolean isButtonInvalid(int button) {
+        return button != BUTTON_LEFT && button != BUTTON_MIDDLE
+                && button != BUTTON_RIGHT;
     }
 
     private static int getRelativeX(int clientX, Element target) {
