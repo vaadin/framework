@@ -165,12 +165,19 @@ public class TableConnector extends AbstractHasComponentsConnector implements
         UIDL partialRowAdditions = uidl.getChildByTagName("prows");
         UIDL partialRowUpdates = uidl.getChildByTagName("urows");
         if (partialRowUpdates != null || partialRowAdditions != null) {
+            getWidget().postponeSanityCheckForLastRendered = true;
             // we may have pending cache row fetch, cancel it. See #2136
             getWidget().rowRequestHandler.cancel();
 
             getWidget().updateRowsInBody(partialRowUpdates);
             getWidget().addAndRemoveRows(partialRowAdditions);
+
+            // sanity check (in case the value has slipped beyond the total
+            // amount of rows)
+            getWidget().scrollBody.setLastRendered(getWidget().scrollBody
+                    .getLastRendered());
         } else {
+            getWidget().postponeSanityCheckForLastRendered = false;
             UIDL rowData = uidl.getChildByTagName("rows");
             if (rowData != null) {
                 // we may have pending cache row fetch, cancel it. See #2136
