@@ -358,7 +358,7 @@ public abstract class AbstractCommunicationManager implements
 
     private static final String CRLF = "\r\n";
 
-    private static final String UTF8 = "UTF8";
+    private static final String UTF8 = "UTF-8";
 
     private static final String GET_PARAM_HIGHLIGHT_COMPONENT = "highlightComponent";
 
@@ -410,14 +410,14 @@ public abstract class AbstractCommunicationManager implements
          */
         while (!atStart) {
             String readLine = readLine(inputStream);
-            contentLength -= (readLine.length() + 2);
+            contentLength -= (readLine.getBytes(UTF8).length + CRLF.length());
             if (readLine.startsWith("Content-Disposition:")
                     && readLine.indexOf("filename=") > 0) {
                 rawfilename = readLine.replaceAll(".*filename=", "");
-                String parenthesis = rawfilename.substring(0, 1);
+                char quote = rawfilename.charAt(0);
                 rawfilename = rawfilename.substring(1);
                 rawfilename = rawfilename.substring(0,
-                        rawfilename.indexOf(parenthesis));
+                        rawfilename.indexOf(quote));
                 firstFileFieldFound = true;
             } else if (firstFileFieldFound && readLine.equals("")) {
                 atStart = true;
@@ -427,7 +427,7 @@ public abstract class AbstractCommunicationManager implements
         }
 
         contentLength -= (boundary.length() + CRLF.length() + 2
-                * DASHDASH.length() + 2); // 2 == CRLF
+                * DASHDASH.length() + CRLF.length());
 
         /*
          * Reads bytes from the underlying stream. Compares the read bytes to
