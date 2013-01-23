@@ -428,8 +428,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
             return false;
         }
         window.setParent(null);
-        window.fireClose();
         markAsDirty();
+        window.fireClose();
 
         return true;
     }
