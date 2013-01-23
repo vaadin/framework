@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="http://localhost:8888/" />
-<title>New Test</title>
+<link rel="selenium.base" href="http://localhost:8070" />
+<title>FormTooltips</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">New Test</td></tr>
+<tr><td rowspan="1" colspan="3">FormTooltips</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -68,97 +68,36 @@
 	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::Root/VTooltip[0]/FlowPanel[0]/domChild[1]</td>
 	<td></td>
 </tr>
-<!--Form description tooltip-->
+<!--Form should not have a description tooltip-->
 <tr>
 	<td>showTooltip</td>
 	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VForm[0]/domChild[0]/domChild[1]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::Root/VTooltip[0]/FlowPanel[0]/domChild[1]</td>
+	<td>pause</td>
+	<td>1000</td>
 	<td></td>
 </tr>
 <tr>
-	<td>assertText</td>
-	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::Root/VTooltip[0]/FlowPanel[0]/VErrorMessage[0]/HTML[0]/domChild[0]</td>
-	<td>Form error</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::Root/VTooltip[0]/FlowPanel[0]/domChild[1]</td>
-	<td>Some description</td>
-</tr>
-<tr>
-	<td>mouseMove</td>
-	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::</td>
+	<td>assertElementNotPresent</td>
+	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::Root/VTooltip[0]</td>
 	<td></td>
 </tr>
-<tr>
-	<td>waitForElementNotPresent</td>
-	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::Root/VTooltip[0]/FlowPanel[0]/domChild[1]</td>
-	<td></td>
-</tr>
-<!--Form error message tooltip-->
+<!--Form error message should not have a tooltip-->
 <tr>
 	<td>showTooltip</td>
 	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VForm[0]/domChild[0]/domChild[3]/domChild[0]/domChild[0]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementPresent</td>
-	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::Root/VTooltip[0]/FlowPanel[0]/domChild[1]</td>
+	<td>pause</td>
+	<td>1000</td>
 	<td></td>
 </tr>
 <tr>
-	<td>assertText</td>
-	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::Root/VTooltip[0]/FlowPanel[0]/VErrorMessage[0]/HTML[0]/domChild[0]</td>
-	<td>Form error</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::Root/VTooltip[0]/FlowPanel[0]/domChild[1]</td>
-	<td>Some description</td>
-</tr>
-<tr>
-	<td>mouseMove</td>
-	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementNotPresent</td>
-	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::Root/VTooltip[0]/FlowPanel[0]/domChild[1]</td>
-	<td></td>
-</tr>
-<!--last name parent should have error tooltip-->
-<tr>
-	<td>showTooltip</td>
-	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VForm[0]/domChild[0]/domChild[3]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::Root/VTooltip[0]/FlowPanel[0]/domChild[1]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::Root/VTooltip[0]/FlowPanel[0]/VErrorMessage[0]/HTML[0]/domChild[0]</td>
-	<td>Form error</td>
-</tr>
-<tr>
-	<td>assertText</td>
-	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::Root/VTooltip[0]/FlowPanel[0]/domChild[1]</td>
-	<td>Some description</td>
-</tr>
-<tr>
-	<td>mouseMove</td>
-	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementNotPresent</td>
-	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::Root/VTooltip[0]/FlowPanel[0]/domChild[1]</td>
+	<td>assertElementNotPresent</td>
+	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::Root/VTooltip[0]</td>
 	<td></td>
 </tr>
 <!--last name should have no tooltip-->
@@ -169,7 +108,7 @@
 </tr>
 <tr>
 	<td>pause</td>
-	<td>300</td>
+	<td>1000</td>
 	<td></td>
 </tr>
 <tr>
@@ -185,7 +124,7 @@
 </tr>
 <tr>
 	<td>pause</td>
-	<td>300</td>
+	<td>1000</td>
 	<td></td>
 </tr>
 <tr>

@@ -26,7 +26,6 @@ import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.Util;
 import com.vaadin.client.ui.AbstractComponentContainerConnector;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.ShortcutActionHandler;
@@ -228,12 +227,8 @@ public class FormConnector extends AbstractComponentContainerConnector
 
     @Override
     public TooltipInfo getTooltipInfo(Element element) {
-        if (Util.getConnectorForElement(getConnection(), getWidget()
-                .getParent(), (com.google.gwt.user.client.Element) element
-                .cast()) != this) {
-            // Do not show tooltips when hovering over child fields
-            return null;
-        }
-        return super.getTooltipInfo(element);
+        // Form shows its description and error message
+        // as a part of the actual layout
+        return null;
     }
 }
