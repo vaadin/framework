@@ -797,6 +797,11 @@ public class VWindow extends VOverlay implements Container,
 
     private void hideModalityCurtain() {
         DOM.removeChild(RootPanel.getBodyElement(), modalityCurtain);
+        if (BrowserInfo.get().isIE()) {
+            // IE leaks memory in certain cases unless we release the reference
+            // (#9197)
+            modalityCurtain = null;
+        }
     }
 
     /*
