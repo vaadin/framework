@@ -293,19 +293,19 @@ public class WebBrowser implements Serializable {
     }
 
     /**
-     * Gets the difference in minutes between the browser's GMT TimeZone and
+     * Returns the offset in milliseconds between the browser's GMT TimeZone and
      * DST.
      * 
-     * @return the amount of minutes that the TimeZone shifts when DST is in
-     *         effect
+     * @return the number of milliseconds that the TimeZone shifts when DST is
+     *         in effect
      */
     public int getDSTSavings() {
         return dstSavings;
     }
 
     /**
-     * Determines whether daylight savings time (DST) is currently in effect in
-     * the region of the browser or not.
+     * Returns whether daylight saving time (DST) is currently in effect in the
+     * region of the browser or not.
      * 
      * @return true if the browser resides at a location that currently is in
      *         DST
