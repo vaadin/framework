@@ -21,6 +21,7 @@ import java.util.HashSet;
 
 import com.google.gwt.animation.client.Animation;
 import com.google.gwt.core.client.Duration;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Node;
@@ -111,20 +112,51 @@ public class TouchScrollDelegate implements NativePreviewHandler {
 
         private static final String SCROLLABLE_CLASSNAME = "v-scrollable";
 
-        private final TouchScrollDelegate delegate;
+        private TouchScrollDelegate delegate;
         private final boolean requiresDelegate = BrowserInfo.get()
                 .requiresTouchScrollDelegate();
 
+        private Widget widget;
+
         /**
-         * Constructs a scroll handler for the given widget.
+         * Constructs a scroll handler. You must call
+         * {@link #init(Widget, Element...)} before using the scroll handler.
+         */
+        public TouchScrollHandler() {
+
+        }
+
+        /**
+         * Attaches the scroll handler to the widget. This method must be called
+         * before calling any other methods in this class.
+         * 
+         * @param widget
+         *            The widget that contains scrollable elements
+         * @param scrollables
+         *            The elements of the widget that should be scrollable.
+         * 
+         * @deprecated Use {@link GWT#create(Class)} and
+         *             {@link #init(Widget, Element...)} instead of this
+         *             constructor to enable overriding.
+         */
+        @Deprecated
+        public TouchScrollHandler(Widget widget, Element... scrollables) {
+            this();
+            init(widget, scrollables);
+        }
+
+        /**
+         * Attaches the scroll handler to the widget. This method must be called
+         * once before calling any other method in this class.
          * 
          * @param widget
          *            The widget that contains scrollable elements
          * @param scrollables
          *            The elements of the widget that should be scrollable.
          */
-        public TouchScrollHandler(Widget widget, Element... scrollables) {
-            if (requiresDelegate) {
+        public void init(Widget widget, Element... scrollables) {
+            this.widget = widget;
+            if (requiresDelegate()) {
                 delegate = new TouchScrollDelegate();
                 widget.addDomHandler(this, TouchStartEvent.getType());
             } else {
@@ -150,7 +182,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
          */
         public void addElement(Element scrollable) {
             scrollable.addClassName(SCROLLABLE_CLASSNAME);
-            if (requiresDelegate) {
+            if (requiresDelegate()) {
                 delegate.scrollableElements.add(scrollable);
             }
         }
@@ -162,7 +194,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
          */
         public void removeElement(Element scrollable) {
             scrollable.removeClassName(SCROLLABLE_CLASSNAME);
-            if (requiresDelegate) {
+            if (requiresDelegate()) {
                 delegate.scrollableElements.remove(scrollable);
             }
         }
@@ -175,7 +207,7 @@ public class TouchScrollDelegate implements NativePreviewHandler {
          *            The elements that should be scrollable
          */
         public void setElements(Element... scrollables) {
-            if (requiresDelegate) {
+            if (requiresDelegate()) {
                 for (Element e : delegate.scrollableElements) {
                     e.removeClassName(SCROLLABLE_CLASSNAME);
                 }
@@ -184,6 +216,26 @@ public class TouchScrollDelegate implements NativePreviewHandler {
             for (Element e : scrollables) {
                 addElement(e);
             }
+        }
+
+        /**
+         * Checks if a delegate for scrolling is required or if the native
+         * scrolling of the device should be used. By default, relies on
+         * {@link BrowserInfo#requiresTouchScrollDelegate()}, override to change
+         * the behavior.
+         * 
+         * @return true if a Javascript delegate should be used for scrolling,
+         *         false to use the native scrolling of the device
+         */
+        protected boolean requiresDelegate() {
+            return requiresDelegate;
+        }
+
+        /**
+         * @return The widget this {@link TouchScrollHandler} is connected to.
+         */
+        protected Widget getWidget() {
+            return widget;
         }
     }
 
@@ -199,7 +251,9 @@ public class TouchScrollDelegate implements NativePreviewHandler {
      */
     public static TouchScrollHandler enableTouchScrolling(Widget widget,
             Element... scrollables) {
-        return new TouchScrollHandler(widget, scrollables);
+        TouchScrollHandler handler = GWT.create(TouchScrollHandler.class);
+        handler.init(widget, scrollables);
+        return handler;
     }
 
     public TouchScrollDelegate(Element... elements) {
