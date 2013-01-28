@@ -142,6 +142,9 @@ public class TreeConnector extends AbstractComponentConnector implements
             getWidget().focusedNode.setFocused(false);
         }
 
+        // IE8 needs a hack to measure the tree again after update
+        Util.forceIE8Redraw(getWidget().getElement());
+
         getWidget().rendering = false;
 
     }
