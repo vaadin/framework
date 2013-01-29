@@ -40,7 +40,7 @@
       <!-- ================================================================ -->
       <h2 id="tableofcontents">Release Notes for Vaadin Framework @version@</h2>
       <ul>
-        <!-- <li><a href="#security-fixes">Security fixes in Vaadin @version-minor@</a></li> -->
+        <li><a href="#security-fixes">Security fixes in Vaadin @version-minor@</a></li>
         <li><a href="#overview">Overview of Vaadin @version-minor@ Release</a></li>
         <li><a href="#changes">Changes in Vaadin @version@</a></li>
         <li><a href="#enhancements">Enhancements in Vaadin @version-minor@</a></li>
@@ -62,6 +62,57 @@
         in the JAR).
       </p>
 
+      <!-- ================================================================ -->
+      <h2 id="security-fixes">Security fixes in Vaadin Framework 6.8.8</h2>
+
+      <p>
+        Vaadin 6.8.8 fixes a security issue discovered during an internal
+        review. 
+      </p>
+      <p>
+       Allowing unfiltered user input as the key in a map used for
+       communication in a Vaadin UI component may enable a cross-site
+       scripting (XSS) attack on a Vaadin application. Specifically, in
+       certain cases it is possible to use a specially-crafted debug ID to
+       inject arbitrary Javascript to be executed in an end user's browser.
+       This requires specific actions both from the application developer and
+       from the end user.
+      </p>
+      <p>
+      	The vulnerability has been classified as moderate as it potentially
+      	allows unauthorized access to server or user data but is
+      	significantly limited by factors such as default settings, requires
+      	certain behavior from the application or is very difficult to
+      	exploit.
+      </p>
+      <p>
+        Certain Vaadin layout components store metadata about their child
+        components in maps, keyed by the component ID. The IDs are not
+        escaped when the maps are sent to the client as JSON objects,
+        allowing a specially-crafted debug ID assigned to a child component
+        to inject arbitrary JSON, or, in some cases, arbitrary Javascript to
+        be executed by the user's browser.
+      </p>
+      <p>
+        To be used as an attack, this requires an application to accept
+        malicious user input and assign it, unfiltered, as the debug ID of a
+        component in another user's application instance. The following Core
+        Vaadin layouts are vulnerable when containing a component with a
+        malicious debug ID:
+      </p>
+      <ul>
+        <li>HorizontalLayout, VerticalLayout, OrderedLayout, ExpandLayout, and
+        FormLayout when using the setComponentAlignment() and
+        setExpandRatio() methods;</li>
+        <li>CssLayout subclasses that override the protected getCss() method.</li>
+      </ul>
+      <p>
+        Additionally, any third-party components which invoke the
+        com.vaadin.terminal.PaintTarget#addAttribute(String, Map) method are
+        vulnerable if unfiltered user input is allowed as the keys of the
+        Map argument.
+      </p>
+      
       <!-- ================================================================ -->
       <h2 id="overview">Overview of Vaadin @version@ Release</h2>
 
@@ -390,11 +441,11 @@
       </p>
 
       <ul>
-        <li>Mozilla Firefox 3-18</li>
-        <li>Internet Explorer 6-10</li>
-        <li>Safari 4-6</li>
+        <li>Mozilla Firefox 3-14</li>
+        <li>Internet Explorer 6-9</li>
+        <li>Safari 4-5</li>
         <li>Opera 10-12</li>
-        <li>Google Chrome 13-24</li>
+        <li>Google Chrome 13-21</li>
       </ul>
 
       <p>
@@ -403,8 +454,8 @@
       </p>
 
       <ul>
-        <li>iOS 4-6</li>
-        <li>Android 2-4 (default browser)</li>
+        <li>iOS 4-5</li>
+        <li>Android 2-4</li>
       </ul>
 
 		<p>Vaadin SQL Container supports the following databases:</p>
