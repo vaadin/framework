@@ -7,6 +7,8 @@ package com.vaadin.terminal.gwt.server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -401,7 +403,16 @@ public class CommunicationManager extends AbstractCommunicationManager {
          * handling post
          */
         String paintableId = getPaintableId((Paintable) owner);
-        String key = paintableId + "/" + name;
+        String key;
+        try {
+            key = URLEncoder.encode(paintableId, "UTF-8") + "/"
+                    + URLEncoder.encode(name, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            // UTF-8 unsupported? This should never happen
+            throw new RuntimeException(
+                    "Unable to encode stream variable URL for paintable '"
+                            + paintableId + "'", e);
+        }
 
         if (pidToNameToStreamVariable == null) {
             pidToNameToStreamVariable = new HashMap<String, Map<String, StreamVariable>>();

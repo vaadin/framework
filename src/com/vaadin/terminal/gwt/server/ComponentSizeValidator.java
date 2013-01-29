@@ -185,7 +185,8 @@ public class ComponentSizeValidator implements Serializable {
             Component parent = component.getParent();
             String paintableId = communicationManager.getPaintableId(component);
 
-            clientJSON.print("id:\"" + paintableId + "\"");
+            clientJSON.print("id:\"" + JsonPaintTarget.escapeJSON(paintableId)
+                    + "\"");
 
             if (invalidHeight) {
                 Stack<ComponentInfo> attributes = null;
@@ -219,7 +220,8 @@ public class ComponentSizeValidator implements Serializable {
                     attributes = getHeightAttributes(component);
                 }
                 printServerError(msg, attributes, false, serverErrorStream);
-                clientJSON.print(",\"heightMsg\":\"" + msg + "\"");
+                clientJSON.print(",\"heightMsg\":\""
+                        + JsonPaintTarget.escapeJSON(msg) + "\"");
             }
             if (invalidWidth) {
                 Stack<ComponentInfo> attributes = null;
@@ -251,7 +253,8 @@ public class ComponentSizeValidator implements Serializable {
                     msg = "A component with relative width needs a parent with defined width.";
                     attributes = getWidthAttributes(component);
                 }
-                clientJSON.print(",\"widthMsg\":\"" + msg + "\"");
+                clientJSON.print(",\"widthMsg\":\""
+                        + JsonPaintTarget.escapeJSON(msg) + "\"");
                 printServerError(msg, attributes, true, serverErrorStream);
             }
             if (subErrors.size() > 0) {

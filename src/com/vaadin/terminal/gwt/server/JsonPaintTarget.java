@@ -439,12 +439,13 @@ public class JsonPaintTarget implements PaintTarget {
             Object key = it.next();
             Object mapValue = value.get(key);
             sb.append("\"");
+            String stringKey;
             if (key instanceof Paintable) {
-                Paintable paintable = (Paintable) key;
-                sb.append(getPaintIdentifier(paintable));
+                stringKey = getPaintIdentifier((Paintable) key);
             } else {
-                sb.append(escapeJSON(key.toString()));
+                stringKey = key.toString();
             }
+            sb.append(escapeJSON(stringKey));
             sb.append("\":");
             if (mapValue instanceof Float || mapValue instanceof Integer
                     || mapValue instanceof Double
@@ -487,7 +488,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     public void addVariable(VariableOwner owner, String name, String value)
             throws PaintException {
-        tag.addVariable(new StringVariable(owner, name, escapeJSON(value)));
+        tag.addVariable(new StringVariable(owner, name, value));
     }
 
     public void addVariable(VariableOwner owner, String name, Paintable value)
@@ -893,7 +894,7 @@ public class JsonPaintTarget implements PaintTarget {
 
         @Override
         public String getJsonPresentation() {
-            return "\"" + name + "\":\"" + value + "\"";
+            return "\"" + name + "\":\"" + escapeJSON(value) + "\"";
         }
 
     }
