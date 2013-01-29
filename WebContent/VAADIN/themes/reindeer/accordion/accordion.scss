@@ -23,25 +23,27 @@
 }
 
 .#{$primaryStyleName}-item-caption .v-captiontext{
-	vertical-align:baseline;
+	vertical-align:baseline;	
 }
 
 .#{$primaryStyleName}-item-first .#{$primaryStyleName}-item-caption {
 	border-top: none;
 }
 .#{$primaryStyleName}-item-caption .v-caption {
-	padding: 3px 0 3px 10px;
+	padding: 3px 0 0 10px;
 }
 .#{$primaryStyleName}-item-open .#{$primaryStyleName}-item-caption {
 	background-image: url(../tabsheet/img/tabbar-bg-sel.png); /** sprite-ref: verticals; sprite-alignment: repeat */
 	border-bottom: 1px solid #bbb;
 }
 .#{$primaryStyleName}-item-caption .v-icon {
-	margin-top: -1px;
+	margin-top: -3px;
 }
-.v-ie & .#{$primaryStyleName}-item-caption .v-icon {
-	vertical-align: top;
+.v-ie & .#{$primaryStyleName}-item-caption .v-icon,
+.v-ff & .#{$primaryStyleName}-item-caption .v-icon {
+    margin-top: -6px;
 }
+
 /* Borderless style */
 .#{$primaryStyleName}-borderless {
 	border: none;
