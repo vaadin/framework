@@ -924,11 +924,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             Widget old = tp.getWidget(activeTabIndex);
             if (old != newWidget) {
                 tp.remove(activeTabIndex);
-                ConnectorMap paintableMap = ConnectorMap.get(client);
-                if (paintableMap.isConnector(old)) {
-                    paintableMap.unregisterConnector(paintableMap
-                            .getConnector(old));
-                }
                 tp.insert(content.getWidget(), activeTabIndex);
             }
         } else {
