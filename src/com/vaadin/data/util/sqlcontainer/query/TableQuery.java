@@ -145,7 +145,9 @@ public class TableQuery implements QueryDelegate,
          */
         if (orderBys == null || orderBys.isEmpty()) {
             List<OrderBy> ob = new ArrayList<OrderBy>();
-            ob.add(new OrderBy(primaryKeyColumns.get(0), true));
+            for (int i = 0; i < primaryKeyColumns.size(); i++) {
+                ob.add(new OrderBy(primaryKeyColumns.get(i), true));
+            }
             sh = sqlGenerator.generateSelectQuery(tableName, filters, ob,
                     offset, pagelength, null);
         } else {
