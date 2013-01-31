@@ -112,12 +112,18 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
 
     private static int topFix = -1;
 
-    /*
+    /**
      * Shadow element style. If an extending class wishes to use a different
      * style of shadow, it can use setShadowStyle(String) to give the shadow
      * element a new style name.
      */
     public static final String CLASSNAME_SHADOW = "v-shadow";
+
+    /**
+     * Style name for the overlay container element (see
+     * {@link #getOverlayContainer()}
+     */
+    public static final String CLASSNAME_CONTAINER = "v-overlay-container";
 
     /*
      * The shadow element for this overlay.
@@ -125,8 +131,8 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
     private Element shadow;
 
     /*
-     * Creator of VOverlow (widget that made the instance, not the layout
-     * parent)
+     * The creator of this VOverlay (the widget that made the instance, not the
+     * layout parent)
      */
     private Widget owner;
 
@@ -650,7 +656,7 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         if (ac == null) {
             // could not figure out which one we belong to, styling will
             // probably fail
-            VConsole.error("Could not determin ApplicationConnection for Overlay. Overlay will be attached directly to the root panel");
+            VConsole.error("Could not determine ApplicationConnection for Overlay. Overlay will be attached directly to the root panel");
             return RootPanel.get().getElement();
         } else {
             return getOverlayContainer(ac);
@@ -676,7 +682,8 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             container.setId(id);
             String styles = ac.getUIConnector().getWidget().getParent()
                     .getStyleName();
-            container.setClassName(styles);
+            container.addClassName(styles);
+            container.addClassName(CLASSNAME_CONTAINER);
             RootPanel.get().getElement().appendChild(container);
         }
         return container;
