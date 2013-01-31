@@ -16,7 +16,7 @@ public class WrapTabSheetInTabSheet extends TestBase {
         addComponent(mainLayout);
 
         Button b = new Button("Wrap main layout in a TabSheet");
-        b.addListener(new Button.ClickListener() {
+        b.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 TabSheet tabsheet = new TabSheet();
