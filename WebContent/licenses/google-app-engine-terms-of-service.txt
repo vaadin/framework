@@ -1,0 +1,613 @@
+Google App Engine Terms of Service
+Your Agreement with Google
+
+This License Agreement for Google App Engine (the "Agreement") is made and
+entered into by and between Google Inc., a Delaware corporation, with offices at
+1600 Amphitheatre Parkway, Mountain View 94043 ("Google") and the business
+entity agreeing to these terms ("Customer"). This Agreement is effective as of
+the date Customer clicks the "I Accept" button below (the "Effective Date"). If
+you are accepting on behalf of Customer, you represent and warrant that: (i) if
+you have full legal authority to bind Customer to this Agreement; (ii) you have
+read and understand this Agreement; and (iii) you agree, on behalf of Customer,
+to this Agreement. If you do not have the legal authority to bind Customer,
+please do not click the "I Accept" button below. This Agreement governs
+Customer's access to and use of the Service.
+1. Licenses.
+
+1.1 From Google to Customer. Subject to this Agreement, Google grants to
+Customer a worldwide, non-sublicensable, non-transferable, non-exclusive,
+terminable, limited license to (a) use the Service, (b) integrate the Service
+into any Application and provide the Service, solely as integrated into the
+Application, to users of the Application and (c) use any Software provided by
+Google as part of the Service.
+
+1.2 From Customer to Google. By submitting, posting, generating or displaying
+any Application and/or Customer Data on or through the Service, Customer gives
+Google a worldwide, non-sublicensable, non-transferable, non-exclusive,
+terminable, limited license to reproduce, adapt, modify, translate, publish,
+publicly perform, publicly display and distribute any Application and/or
+including Customer Data for the sole purpose of enabling Google to provide
+Customer with the Service in accordance with the Agreement.
+Provision of the Service.
+
+2.1 Console. Google will provide the Service to Customer. As part of receiving
+the Service, Customer will have access to the Admin Console, through which
+Customer may administer the Service.
+
+2.2 Facilities and Data Transfer. All facilities used to store and process an
+Application and Customer Data will adhere to reasonable security standards no
+less protective than the security standards at facilities where Google processes
+and stores its own information of a similar type. Google has implemented at
+least industry standard systems and procedures to ensure the security and
+confidentiality of an Application and Customer Data, protect against anticipated
+threats or hazards to the security or integrity of an Application and Customer
+Data, and protect against unauthorized access to or use of an Application and
+Customer Content. Google may process and store an Application and Customer Data
+in the United States or any other country in which Google or its agents maintain
+facilities. By using the Service, Customer consents to this processing and
+storage of an Application and Customer Data. The parties agree that Google is
+merely a data processor.
+
+2.3 Data Storage Selection.
+
+    Data Storage. Customer may select via the Service whether the Core App
+Engine End User Data will be stored permanently, at rest, in either the United
+States or the European Union, and Google will store it accordingly ("App Engine
+Data Location Setting"). If no selection is made, Core App Engine End User Data
+will be stored permanently, at rest, in the United States.
+    Transient Storage. Core App Engine End User Data may be stored transiently
+or cached in any country in which Google or its agents maintain facilities
+before reaching permanent storage.
+    Limitations. No App Engine Data Location Setting will apply to Core App
+Engine End User Data copied in another location or used with other Google
+products and services (including any other Google Cloud Platform services). If
+so, the Core App Engine End User Data will be processed and stored pursuant to
+Section 2.2 of this Agreement.
+
+2.4 Accounts. Customer must have an Account to use the Service, and is
+responsible for the information it provides to create the Account, the security
+of its passwords for the Account, and for any use of its Account. If Customer
+becomes aware of any unauthorized use of its password or its Account, Customer
+will notify Google as promptly as possible.
+
+2.5 Privacy Policies. The Service is subject to Google's Privacy Policy. Changes
+to the Privacy Policy will be made as stated in the applicable policy. In
+addition, Google is enrolled in the U.S. Department of Commerce Safe Harbor
+Program and will remain enrolled in this program or another replacement program
+(or will adopt a compliance solution which achieves compliance with the terms of
+Article 25 of Directive 95/46/EC) throughout the Term of the Agreement.
+
+2.6 New Applications. Google may make new applications, tools, features or
+functionality available from time to time through the Service, the use of which
+may be contingent upon Customer's agreement to additional terms.
+
+2.7 Modifications.
+
+    To the Service. Subject to Section 9.4 (Termination for Convenience), Google
+may make commercially reasonable Updates to the Service from time to time. If
+Google makes a material change to the Service, Google will inform Customer,
+provided that Customer has subscribed with Google to be informed about such
+change.
+    To the Agreement. Google may make changes to this Agreement, including
+pricing from time to time. Unless otherwise noted by Google, material changes to
+the Agreement will become effective 90 days after they are posted, except if the
+changes apply to new functionality in which case they will be effective
+immediately. If Customer does not agree to the revised Agreement, please stop
+using the Service. Google will post any modification to this Agreement to the
+Terms URL.
+
+3. Payment Terms.
+
+3.1 Free Quota. The Service is provided to Customer without charge up to the Fee
+Threshold.
+
+3.2 Online Billing. Google will issue an electronic bill to Customer for all
+charges accrued above the Fee Threshold. Fees are solely based on Google's
+measurements of Customer's use of the Service, may include monthly fees, and
+Google's determination is final. For use above the Fee Threshold, Customer shall
+be responsible for all Fees up to the amount set in the Account and shall pay
+all Fees in U.S. Dollars or in such other currency as agreed to in writing by
+the parties. Customer shall pay all Fees in accordance with the payment terms in
+the Service FAQ.
+
+3.3 Delinquent Payments. Late payments may bear interest at the rate of 1.5% per
+month (or the highest rate permitted by law, if less). Google reserves the right
+to suspend your Account for any late payments.
+
+3.4 Taxes. Customer is responsible for any Taxes, and Customer will pay Google
+for the Services without any reduction for Taxes. If Google is obligated to
+collect or pay Taxes, the Taxes will be invoiced to Customer, unless Customer
+provides Google with a timely and valid tax exemption certificate authorized by
+the appropriate taxing authority. In some states the sales tax is due on the
+total purchase price at the time of sale and must be invoiced and collected at
+the time of the sale. If Customer is required by law to withhold any Taxes from
+its payments to Google, Customer must provide Google with an official tax
+receipt or other appropriate documentation to support such withholding payments.
+
+3.5 Invoice Disputes & Refunds. To the fullest extent permitted by law, Customer
+waives all claims relating to Fees unless claimed within sixty days after
+charged (this does not affect any Customer rights with its credit card issuer).
+Refunds (if any) are at the discretion of Google and will only be in the form of
+credit for the Service. Nothing in this Agreement obligates Google to extend
+credit to any party.
+4. Customer Obligations.
+
+4.1 Compliance. Customer is solely responsible for its Applications and Customer
+Data, and for making sure its Applications or Customer Data comply with the
+Acceptable Use Policy. Google reserves the right to review the Application or
+Customer Data to ensure Customer's compliance with the Acceptable Use Policy.
+Customer is responsible for ensuring all End Users comply with Customer's
+obligations under the Agreement.
+
+4.2 Privacy. Customer will protect the privacy and legal rights of its End Users
+under all applicable laws and regulations, which includes a legally adequate
+privacy notice communicated from Customer. Customer may have the ability to
+access, monitor, use, or disclose Customer Data submitted by End Users through
+the Service. Customer will obtain and maintain any required consents from End
+Users to allow Customer's access, monitoring, use and disclosure of Customer
+Data. Further, Customer will notify its End Users that any Customer Data
+provided as part of the Service will be made available to a third party as part
+of Google providing the Service.
+
+4.3 Restrictions. Customer will not, and will not allow third parties under its
+control to: (a) copy, modify, create a derivative work of, reverse engineer,
+decompile, translate, disassemble, or otherwise attempt to extract the source
+code of the Service or any component thereof (subject to Section 4.4 below); (b)
+use the Service for High Risk Activities; (c) sublicense, resell, or distribute
+the Service or any component thereof separate from any integrated Application;
+(d) use the Service to create, train, or improve (directly or indirectly) a
+substantially similar product or service, including any other machine
+translation engine; (e) create multiple Applications or Accounts to simulate or
+act as a single Application or Account (respectively) or otherwise access the
+Service in a manner intended to avoid incurring Fees; (f) use the Service to
+operate or enable any telecommunications service or in connection with any
+Application that allows End Users to place calls to or to receive calls from any
+public 
+switched telephone network; or (g) process or store any Customer Data that is
+subject to the International Traffic in Arms Regulations maintained by the
+Department of State. Customer acknowledges that the Service is not HIPAA
+compliant and Customer is solely responsible for any applicable compliance with
+HIPAA.
+
+4.4 Open Source Components. Open source software licenses for components of the
+Service released under an open source license constitute separate written
+agreements. Open source software is listed in the Documentation. To the limited
+extent the open source software licenses expressly supersede this Agreement, the
+open source license instead governs Customer's agreement with Google for the
+specific included open source components of the Service, or use of the Service
+(as may be applicable).
+
+4.5 Documentation. Google may provide Documentation for Customer's use of the
+Service. The Documentation may specify restrictions (e.g. attribution of HTML
+restrictions) on how the Applications may be built or the Service may be used
+and Customer agrees to comply with any such restrictions specified.
+
+4.6 DMCA Policy. Google provides information to help copyright holders manage
+their intellectual property online, but Google cannot determine whether
+something is being used legally or not without their input. Google responds to
+notices of alleged copyright infringement and terminates accounts of repeat
+infringers according to the process set out in the U.S. Digital Millennium
+Copyright Act. If Customer thinks somebody is violating Customer's or its End
+Users' copyrights and wants to notify Google, Customer can find information
+about submitting notices, and Google's policy about responding to notices at
+http://www.google.com/dmca.html.
+
+4.7 Application and No Multiple Accounts, Bills. Any Application must have
+material value independent from the Services. Google has no obligation to
+provide multiple bills or Accounts to Customer under the Agreement.
+5. Suspension and Removals.
+
+5.1 Suspension/Removals. If Customer becomes aware that any Application or an
+End User's use of an Application, or Customer Data violates the Acceptable Use
+Policy, Customer will immediately suspend the Application, remove the applicable
+Customer Data, or suspend access to an End User (as may be applicable). If
+Customer fails to suspend or remove as noted in the prior sentence, Google may
+specifically request that Customer do so. If Customer fails to comply with
+Google's request to do so within twenty-four hours, then Google may suspend
+Google accounts of the applicable End Users, disable the Application, and/or
+disable the Account (as may be applicable) until such violation is corrected.
+
+5.2 Emergency Security Issues. Despite the foregoing, if there is an Emergency
+Security Issue, then Google may automatically suspend the offending End User
+account, Application or the Account. Suspension will be to the minimum extent
+required, and of the minimum duration, to prevent or terminate the Emergency
+Security Issue. If Google suspends an End User account or the Application or
+Account, for any reason, without prior notice to Customer, at Customer's
+request, Google will provide Customer the reason for the suspension as soon as
+is reasonably possible.
+6. Intellectual Property Rights; Brand Features.
+
+6.1 Intellectual Property Rights. Except as expressly set forth herein, this
+Agreement does not grant either party any rights, implied or otherwise, to the
+other's content or any of the other's intellectual property. As between the
+parties, Customer owns all Intellectual Property Rights in any Application and
+Customer Content, and Google owns all Intellectual Property Rights in the
+Service.
+
+6.2 Brand Features Limitation. If Customer wants to display Google Brand
+Features in connection with its use of the Service, Customer must obtain written
+permission from Google through process specified in the Trademark Guidelines.
+For the sole purpose of providing the Service, Customer permits Google to
+display any Brand Features that may appear in its Application. Any use of a
+party's Brand Features will inure to the benefit of the party holding
+Intellectual Property Rights to those Brand Features. A party may revoke the
+other party's right to use its Brand Features pursuant to this Agreement with
+written notice to the other and a reasonable period to stop the use.
+7. Technical Support Service
+
+7.1 By Customer. Customer is responsible for technical support of its
+Application.
+
+7.2 Deprecation Policy.
+
+Google will announce if we intend to discontinue or make backwards incompatible
+changes to this API or Service. We will use commercially reasonable efforts to
+continue to operate that Service without these changes until the later of: (i)
+one year after the announcement or (ii) April 20, 2015, unless (as Google
+determines in its reasonable good faith judgment):
+
+    required by law or third party relationship (including if there is a change
+in applicable law or relationship), or
+    doing so could create a security risk or substantial economic or material
+technical burden.
+
+This Deprecation Policy doesn't apply to versions, features, and functionality
+labeled as "experimental."
+8. Confidential Information.
+
+8.1 Obligations. The recipient of the other party's Confidential Information
+will not disclose the Confidential Information, except to Affiliates, employees,
+agents, or professional advisors who need to know it and who have agreed in
+writing (or in the case of professional advisors are otherwise bound) to keep it
+confidential. The recipient will ensure that those people and entities use the
+Confidential Information only to exercise rights and fulfill obligations under
+this Agreement, while using reasonable care to keep it confidential. The
+recipient may also disclose Confidential Information when required by law after
+giving reasonable notice to the discloser if allowed by law. The recipient may
+also disclose Confidential Information to the extent required by applicable
+Legal Process; provided that the recipient uses commercially reasonable efforts
+to: (i) promptly notify the other party of such disclosure before disclosing;
+and (ii) comply with the other party's reasonable requests regarding its efforts
+to 
+oppose the disclosure. Notwithstanding the foregoing, subsections (i) and (ii)
+above will not apply if the recipient determines that complying with (i) and
+(ii) could: (a) result in a violation of Legal Process; (b) obstruct a
+governmental investigation; and/or (c) lead to death or serious physical harm to
+an individual. As between the parties, Customer is responsible for responding to
+all third party requests concerning its use and its End Users' use of the
+Services.
+9. Term and Termination.
+
+9.1 Agreement Term. The license granted in this Agreement will remain in effect,
+unless terminated earlier as set forth in this Agreement.
+
+9.2 Termination for Breach. Either party may terminate this Agreement for breach
+if: (i) the other party is in material breach of the Agreement and fails to cure
+that breach within thirty days after receipt of written notice; (ii) the other
+party ceases its business operations or becomes subject to insolvency
+proceedings and the proceedings are not dismissed within ninety days; or (iii)
+the other party is in material breach of this Agreement more than two times
+notwithstanding any cure of such breaches.
+
+9.3 Termination for Inactivity. Google reserves the right to terminate the
+Service for inactivity, if, for a period exceeding ninety days, Customer (a) has
+failed to access the Admin Console, (b) an Application has not served any
+requests, and (c) no electronic bills are being generated.
+
+9.4 Termination for Convenience. Customer may stop using the Service at any
+time. Customer may terminate this Agreement for convenience at any time on prior
+written notice and upon termination, must cease use of the Service. Google may
+terminate this Agreement for its convenience at any time without liability to
+Customer. Subject to Section 7.2, Google may discontinue the Service or any
+portion or feature for any reason at any time without liability to Customer.
+
+9.5 Effects of Termination. If the Agreement expires or is terminated, then: (i)
+the rights granted by one party to the other will immediately cease; (ii) all
+Fees (including Taxes) owed by Customer to Google are immediately due upon
+receipt of the final electronic bill; (iii) Customer will delete the Software,
+any Application and any Customer Data; and (iv) upon request, each party will
+use commercially reasonable efforts to return or destroy all Confidential
+Information of the other party.
+10. Publicity.
+
+Customer is permitted to state publicly that it is a customer of the Service,
+consistent with the Trademark Guidelines. Customer agrees that Google may
+include Customer's name or Brand Features in a list of Google customers, online
+or promotional materials. Customer also agrees that Google may verbally
+reference Customer as a customer of the Google products or services that are the
+subject of this Agreement. This section is subject to the "Brand Features
+Limitation" section of the Agreement. For clarification, neither party needs to
+seek approval from the other if the party is repeating a public statement that
+is substantially similar to a public statement that has been previously
+approved.
+11. Representations.
+
+Each party represents that: (a) it has full power and authority to enter into
+the Agreement; and (b) it will comply with all laws and regulations applicable
+to its provision, or use, of the Service, as applicable. Google warrants it will
+provide the Service in accordance with the applicable SLA.
+12. Disclaimer.
+
+EXCEPT AS EXPRESSLY PROVIDED FOR HEREIN, TO THE MAXIMUM EXTENT PERMITTED BY
+APPLICABLE LAW, GOOGLE DOES NOT MAKE ANY OTHER WARRANTY OF ANY KIND, WHETHER
+EXPRESS, IMPLIED, STATUTORY OR OTHERWISE, INCLUDING WITHOUT LIMITATION
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR USE AND NONINFRINGEMENT.
+GOOGLE IS NOT RESPONSIBLE OR LIABLE FOR THE DELETION OF OR FAILURE TO STORE ANY
+CONTENT AND OTHER COMMUNICATIONS MAINTAINED OR TRANSMITTED THROUGH USE OF THE
+SERVICE. CUSTOMER IS SOLELY RESPONSIBLE FOR SECURING AND BACKING UP ITS
+APPLICATION AND CUSTOMER CONTENT. GOOGLE DOES NOT WARRANT THAT THE OPERATION OF
+THE SOFTWARE OR THE SERVICE WILL BE ERROR-FREE OR UNINTERRUPTED. NEITHER THE
+SOFTWARE NOR THE SERVICE ARE DESIGNED, MANUFACTURED, OR INTENDED FOR HIGH RISK
+ACTIVITIES.
+13. Limitation of Liability.
+
+13.1 Limitation on Indirect Liability. TO THE MAXIMUM EXTEND PERMITTED BY
+APPLICABLE LAW, NEITHER PARTY, NOR GOOGLE'S SUPPLIERS, WILL BE LIABLE UNDER THIS
+AGREEMENT FOR LOST REVENUES OR INDIRECT, SPECIAL, INCIDENTAL, CONSEQUENTIAL,
+EXEMPLARY, OR PUNITIVE DAMAGES, EVEN IF THE PARTY KNEW OR SHOULD HAVE KNOWN THAT
+SUCH DAMAGES WERE POSSIBLE AND EVEN IF DIRECT DAMAGES DO NOT SATISFY A REMEDY.
+
+13.2 Limitation on Amount of Liability. TO THE MAXIMUM EXTENT PERMITTED BY
+APPLICABLE LAW, NEITHER PARTY, NOR GOOGLE'S SUPPLIER'S, MAY BE HELD LIABLE UNDER
+THIS AGREEMENT FOR MORE THAN THE AMOUNT PAID BY CUSTOMER TO GOOGLE DURING THE
+TWELVE MONTHS PRIOR TO THE EVENT GIVING RISE TO LIABILITY.
+
+13.3 Exceptions to Limitations. These limitations of liability do not apply to
+breaches of confidentiality obligations, violations of a party's Intellectual
+Property Rights by the other party, or indemnification obligations.
+14. Indemnification.
+
+14.1 By Customer. Customer will indemnify, defend, and hold harmless Google from
+and against all liabilities, damages, and costs (including settlement costs and
+reasonable attorneys' fees) arising out of a third party claim: (i) regarding
+any Application or Customer Content; (ii) that Customer Brand Features infringe
+or misappropriate any patent, copyright, trade secret or trademark of a third
+party; or (iii) regarding Customer's, or its End Users', use of the Service in
+violation of the Acceptable Use Policy.
+
+14.2 By Google. Google will indemnify, defend, and hold harmless Customer from
+and against all liabilities, damages, and costs (including settlement costs and
+reasonable attorneys' fees) arising out of a third party claim that Google's
+technology used to provide the Service (excluding any open source software) or
+any Google Brand Feature infringes or misappropriates any patent, copyright,
+trade secret or trademark of such third party. Notwithstanding the foregoing, in
+no event shall Google have any obligations or liability under this Section
+arising from: (i) use of any Service or Google Brand Features in a modified form
+or in combination with materials not furnished by Google, and (ii) any Customer
+Content.
+
+14.3 Possible Infringement.
+
+    Repair, Replace, or Modify. If Google reasonably believes the Service
+infringes a third party's Intellectual Property Rights, then Google will: (a)
+obtain the right for Customer, at Google's expense, to continue using the
+Service; (b) provide a non-infringing functionally equivalent replacement; or
+(c) modify the Service so that it no longer infringes.
+    Suspension or Termination. If Google does not believe the foregoing options
+are commercially reasonable, then Google may suspend or terminate Customer's use
+of the impacted Service.
+
+14.4 General. As a condition to indemnification for a claim, the party seeking
+indemnification must promptly notify the other party of the claim in writing and
+cooperate with the other party in defending the claim. The indemnifying party
+has full control and authority over the defense, except that: (a) any settlement
+requiring the party seeking indemnification to admit liability or to pay any
+money will require that party's prior written consent, such consent not to be
+unreasonably withheld or delayed; and (b) the other party may join in the
+defense with its own counsel at its own expense. Notwithstanding the foregoing,
+if the indemnified party settles without the prior written consent of the
+indemnifying party, the indemnifying party has no obligation of contribution.
+THE INDEMNITIES ABOVE ARE THE ONLY REMEDY UNDER THIS AGREEMENT FOR VIOLATION OF
+A THIRD PARTY'S INTELLECTUAL PROPERTY RIGHTS.
+15. Government Purposes (applicable to United States government customers only).
+
+The Service was developed solely at private expense and is commercial computer
+software and related documentation within the meaning of the applicable civilian
+and military Federal acquisition regulations and any supplements thereto. If the
+user of the Service is an agency, department, employee, or other entity of the
+United States Government, under FAR 12.212 and DFARS 227.7202, the use,
+duplication, reproduction, release, modification, disclosure, or transfer of the
+Service, including technical data or manuals, is governed by the terms and
+conditions contained in this Agreement, which is Google's standard commercial
+license agreement.
+16. Miscellaneous.
+
+16.1 Notices. All notices must be in writing and addressed to the other party's
+legal department and primary point of contact. The email address for notices
+being sent to Google's Legal Department is legal-notices@google.com. Notice will
+be treated as given: (a) on receipt as verified by written automated receipt or
+by electronic log (as applicable).
+
+16.2 Assignment. Neither party may assign any part of this Agreement without the
+written consent of the other, except to an Affiliate where: (a) the assignee has
+agreed in writing to be bound by the terms of this Agreement; (b) the assigning
+party remains liable for obligations under the Agreement if the assignee
+defaults on them; and (c) the assigning party has notified the other party of
+the assignment. Any other attempt to assign is void.
+
+16.3 Change of Control. If a party experiences a change of Control (for example,
+through a stock purchase or sale, merger, or other form of corporate
+transaction): (a) that party will give written notice to the other party within
+thirty days after the change of Control; and (b) the other party may immediately
+terminate this Agreement any time between the change of Control and thirty days
+after it receives that written notice.
+
+16.4 Force Majeure. Neither party will be liable for failure or delay in
+performance to the extent caused by circumstances beyond its reasonable control.
+
+16.5 No Agency. This Agreement does not create any agency, partnership or joint
+venture between the parties.
+
+16.6 No Waiver. Neither party will be treated as having waived any rights by not
+exercising (or delaying the exercise of) any rights under this Agreement.
+
+16.7 Severability. If any term (or part of a term) of this Agreement is invalid,
+illegal or unenforceable, the rest of the Agreement will remain in effect.
+
+16.8 No Third-Party Beneficiaries. This Agreement does not confer any benefits
+on any third party unless it expressly states that it does.
+
+16.9 Equitable Relief. Nothing in this Agreement will limit either party's
+ability to seek equitable relief.
+
+16.10 Governing Law.
+
+    For City, County, and State Government Entities. If Customer is a city,
+county or state government entity, then the parties agree to remain silent
+regarding governing law and venue.
+    For Federal Government Entities. If Customer is a federal government entity
+then the following applies: ALL CLAIMS ARISING OUT OF OR RELATING TO THIS
+AGREEMENT OR THE SERVICE WILL BE GOVERNED BY THE LAWS OF THE UNITED STATES OF
+AMERICA, EXCLUDING ITS CONFLICT OF LAWS RULES. SOLELY TO THE EXTENT PERMITTED BY
+FEDERAL LAW: (I) THE LAWS OF THE STATE OF CALIFORNIA (EXCLUDING CALIFORNIA'S
+CONFLICT OF LAWS RULES) WILL APPLY IN THE ABSENCE OF APPLICABLE FEDERAL LAW; AND
+(II) FOR ALL CLAIMS ARISING OUT OF OR RELATING TO THIS AGREEMENT OR THE SERVICE,
+THE PARTIES CONSENT TO PERSONAL JURISDICTION IN, AND THE EXCLUSIVE VENUE OF, THE
+COURTS IN SANTA CLARA COUNTY, CALIFORNIA.
+    For All Other Entities. If Customer is any entity not set forth in Section
+16.10(a) or (b) then the following applies: ALL CLAIMS ARISING OUT OF OR
+RELATING TO THIS AGREEMENT OR THE SERVICE WILL BE GOVERNED BY CALIFORNIA LAW,
+EXCLUDING THAT STATE'S CONFLICT OF LAWS RULES, AND WILL BE LITIGATED EXCLUSIVELY
+IN THE FEDERAL OR STATE COURTS OF SANTA CLARA COUNTY, CALIFORNIA, USA;THE
+PARTIES CONSENT TO PERSONAL JURISDICTION IN THOSE COURTS.
+
+16.11 Amendments. Any amendment must be in writing, signed by both parties, and
+expressly state that it is amending this Agreement.
+
+16.12 Survival. The following Sections will survive expiration or termination of
+this Agreement: 6.1 (Intellectual Property Rights), 8 (Confidential
+Information), 9.5 (Effects of Termination), 13 (Limitation of Liability), 14
+(Indemnification) and 16 (Miscellaneous).
+
+16.13 Entire Agreement. This Agreement supersedes all other agreements between
+the parties relating to its subject matter. In entering into this Agreement,
+neither party has relied on, and neither party will have any right remedy based
+on, any statement, representation or warranty (whether made negligently or
+innocently), except those expressly set out in this Agreement. The terms located
+at a URL referenced in this Agreement and the Documentation are hereby
+incorporated by this reference. After the Effective Date, Google may provide
+Customer with an updated URL in place of any URL in this Agreement.
+
+16.14 Interpretation of Conflicting Terms. If there is a conflict among the
+documents that make up this Agreement, the documents will control in the
+following order: the Agreement, and the terms located at any URL.
+
+16.15 Counterparts. The parties may execute this Agreement in counterparts,
+including facsimile, PDF and other electronic copies, which taken together will
+constitute one instrument.
+
+16.16 Definitions.
+
+    "Acceptable Use Policy" means the acceptable use policy set forth here:
+http://developers.google.com/cloud/terms/aup.
+    "Account" means Customer's Google account (either gmail.com address or an
+Email address provided under the
+    "Google Apps" product line); subject to those terms of service, as may be
+applicable.
+    "Admin Console" means the online tool provided by Google to Customer for
+administering the Service.
+    "Affiliate" means any entity that directly or indirectly controls, is
+controlled by, or is under common control with a party.
+    "Application(s)" means any web application Customer creates using the
+Service, including any source code written by Customer to be used with the
+Service.
+    "Brand Features" means the trade names, trademarks, service marks, logos,
+domain names, and other distinctive brand features of each party, respectively,
+as secured by such party from time to time.
+    "Confidential Information" means information that one party (or an
+Affiliate) discloses to the other party under this Agreement, and which is
+marked as confidential or would normally under the circumstances be considered
+confidential information. It does not include information that the recipient
+already rightfully knew, that becomes public through no fault of the recipient,
+that was independently developed by the recipient, or that was lawfully given to
+the recipient by a third party. Customer Data is considered Customer's
+Confidential Information.
+    "Control" means control of greater than fifty percent of the voting rights
+or equity interests of a party.
+    "Core App Engine End User Data" means content provided through the use of an
+Application running on Google App Engine, by those End Users who are not acting
+as Developer End Users (and information related to those End Users stored by the
+Application), but excluding authentication information for those End Users'
+Google accounts.
+    "Customer Data" means content provided, transmitted or displayed via the
+Service by Customer, or its End Users; but excluding any data provided as part
+of the Account.
+    "Documentation" means the Google documentation in the form generally made
+available by Google to its customers for use with the Service, as may be found
+here: https://developers.google.com/appengine/docs or such other URL as Google
+may provide.
+    "Emergency Security Issue" means either: (a) Customer's or its End User's
+use of the Service in violation of the Acceptable Use Policy, which could
+disrupt: (i) the Service; (ii) other Customers' or its End Users' use of the
+Service; or (iii) the Google network or servers used to provide the Service; or
+(b) unauthorized third party access to the Service.
+    "End Users" means the individuals Customer permits to use the Application.
+    "Export Control Laws" means all applicable export and re-export control laws
+and regulations, including the Export Administration Regulations ("EAR")
+maintained by the U.S. Department of Commerce, trade and economic sanctions
+maintained by the Treasury Department's Office of Foreign Assets Control, and
+the International Traffic in Arms Regulations ("ITAR") maintained by the
+Department of State.
+    "Fee Threshold" means the threshold (as may be updated from time to time),
+which is more fully described here:
+https://developers.google.com/appengine/docs/quotas.
+    "Fees" means the applicable fees for the Service and any applicable Taxes as
+set forth here: https://developers.google.com/appengine/docs/billing.
+    "High Risk Activities" means uses such as the operation of nuclear
+facilities, air traffic control, or life support systems, where the use or
+failure of the Service could lead to death, personal injury, or environmental
+damage.
+    "HIPAA" means the Health Insurance Portability and Accountability Act of
+1996 as it may be amended from time to time, and any regulations issued
+thereunder.
+    "Intellectual Property Rights" means current and future worldwide rights
+under patent law, copyright law, trade secret law, trademark law, moral rights
+law, and other similar rights.
+    "Legal Process" means a request for disclosure of data made pursuant to law,
+governmental regulation, court order, subpoena, warrant, governmental regulatory
+or agency request, or other valid legal authority, legal procedure, or similar
+process.
+    "Privacy Policy" means Google's privacy policy located at:
+https://www.google.com/privacypolicy.html or such other URL as Google may
+provide.
+    "Protected Health Information" means the definition on 45 CFR 160.103,
+limited to the information created or received by a business associate from on
+or behalf of a covered entity.
+    "Service" means the Google App Engine Service as more fully described here:
+https://developers.google.com/appengine/ or such other URL as Google may
+provide. The APIs provided under the Service are listed here:
+https://developers.google.com/appengine/appengine_services or such other URL as
+Google may provide.
+    "Service FAQ" means those FAQs more fully described here:
+https://developers.google.com/appengine/kb or such other URL as Google may
+provide.
+    “Service Level Agreement” or “SLA” means the service level agreement then in
+effect for the Service available at the following URL:
+https://developers.google.com/appengine/sla or such other URL as Google may
+provide.
+    "Software" means any downloadable tools, software development kits or other
+such proprietary computer software provided by Google in connection with the
+Service, which may be downloaded by Customer, and any updates Google may make to
+such Software from time to time.
+    "Taxes" means any duties, customs fees, or taxes (other than Google's income
+tax) associated with the purchase of the Service, including any related
+penalties or interest.
+    "Terms URL" means the following URL:
+https://developers.google.com/appengine/terms or such other URL as Google may
+provide.
+    "Third Party Request" means a request from a third party for records
+relating to an End User's use of the Services. Third Party Requests can be a
+lawful search warrant, court order, subpoena, other valid legal order, or
+written consent from the End User permitting the disclosure.
+    "Trademark Guidelines" means Google's Guidelines for Third Party Use of
+Google Brand Features, located at the following URL:
+http://www.google.com/permissions/guidelines.html or such other URL as Google
+may provide.
+    "Updates" means the periodic software updates provided by Google to Customer
+from time to time. Updates are designed to improve, enhance and further develop
+the Service and may take the form of bug fixes, enhanced functions, new software
+modules and completely new versions.
+    "Updates" means the periodic software updates provided by Google to Customer
+from time to time. Updates are designed to improve, enhance and further develop
+the Service and may take the form of bug fixes, enhanced functions, new software
+modules and completely new versions.
