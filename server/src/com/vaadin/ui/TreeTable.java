@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.data.Collapsible;
@@ -252,9 +253,11 @@ public class TreeTable extends Table implements Hierarchical {
             boolean removed = openItems.remove(itemId);
             if (!removed) {
                 openItems.add(itemId);
-                getLogger().finest("Item " + itemId + " is now expanded");
+                getLogger().log(Level.FINEST, "Item {0} is now expanded",
+                        itemId);
             } else {
-                getLogger().finest("Item " + itemId + " is now collapsed");
+                getLogger().log(Level.FINEST, "Item {0} is now collapsed",
+                        itemId);
             }
             clearPreorderCache();
         }

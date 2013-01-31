@@ -1840,9 +1840,10 @@ public class Table extends AbstractSelect implements Action.Container,
      * @return
      */
     private Object[][] getVisibleCellsInsertIntoCache(int firstIndex, int rows) {
-        getLogger().finest(
-                "Insert " + rows + " rows at index " + firstIndex
-                        + " to existing page buffer requested");
+        getLogger()
+                .log(Level.FINEST,
+                        "Insert {0} rows at index {1} to existing page buffer requested",
+                        new Object[] { rows, firstIndex });
 
         // Page buffer must not become larger than pageLength*cacheRate before
         // or after the current page
@@ -1945,14 +1946,16 @@ public class Table extends AbstractSelect implements Action.Container,
             }
         }
         pageBuffer = newPageBuffer;
-        getLogger().finest(
-                "Page Buffer now contains "
-                        + pageBuffer[CELL_ITEMID].length
-                        + " rows ("
-                        + pageBufferFirstIndex
-                        + "-"
-                        + (pageBufferFirstIndex
-                                + pageBuffer[CELL_ITEMID].length - 1) + ")");
+        if (getLogger().isLoggable(Level.FINEST)) {
+            getLogger().log(
+                    Level.FINEST,
+                    "Page Buffer now contains {0} rows ({1}-{2})",
+                    new Object[] {
+                            pageBuffer[CELL_ITEMID].length,
+                            pageBufferFirstIndex,
+                            (pageBufferFirstIndex
+                                    + pageBuffer[CELL_ITEMID].length - 1) });
+        }
         return cells;
     }
 
@@ -1969,9 +1972,11 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     private Object[][] getVisibleCellsNoCache(int firstIndex, int rows,
             boolean replaceListeners) {
-        getLogger().finest(
-                "Render visible cells for rows " + firstIndex + "-"
-                        + (firstIndex + rows - 1));
+        if (getLogger().isLoggable(Level.FINEST)) {
+            getLogger().log(Level.FINEST,
+                    "Render visible cells for rows {0}-{1}",
+                    new Object[] { firstIndex, (firstIndex + rows - 1) });
+        }
         final Object[] colids = getVisibleColumns();
         final int cols = colids.length;
 
@@ -2214,9 +2219,11 @@ public class Table extends AbstractSelect implements Action.Container,
     }
 
     protected void registerComponent(Component component) {
-        getLogger().finest(
-                "Registered " + component.getClass().getSimpleName() + ": "
-                        + component.getCaption());
+        getLogger().log(
+                Level.FINEST,
+                "Registered {0}: {1}",
+                new Object[] { component.getClass().getSimpleName(),
+                        component.getCaption() });
         if (component.getParent() != this) {
             component.setParent(this);
         }
@@ -2247,9 +2254,11 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param count
      */
     private void unregisterComponentsAndPropertiesInRows(int firstIx, int count) {
-        getLogger().finest(
-                "Unregistering components in rows " + firstIx + "-"
-                        + (firstIx + count - 1));
+        if (getLogger().isLoggable(Level.FINEST)) {
+            getLogger().log(Level.FINEST,
+                    "Unregistering components in rows {0}-{1}",
+                    new Object[] { firstIx, (firstIx + count - 1) });
+        }
         Object[] colids = getVisibleColumns();
         if (pageBuffer != null && pageBuffer[CELL_ITEMID].length > 0) {
             int bufSize = pageBuffer[CELL_ITEMID].length;
@@ -2329,9 +2338,11 @@ public class Table extends AbstractSelect implements Action.Container,
      *            a set of components that should be unregistered.
      */
     protected void unregisterComponent(Component component) {
-        getLogger().finest(
-                "Unregistered " + component.getClass().getSimpleName() + ": "
-                        + component.getCaption());
+        getLogger().log(
+                Level.FINEST,
+                "Unregistered {0}: {1}",
+                new Object[] { component.getClass().getSimpleName(),
+                        component.getCaption() });
         component.setParent(null);
         /*
          * Also remove property data sources to unregister listeners keeping the
@@ -2765,9 +2776,13 @@ public class Table extends AbstractSelect implements Action.Container,
                     }
                 }
             }
-            getLogger().finest(
-                    "Client wants rows " + reqFirstRowToPaint + "-"
-                            + (reqFirstRowToPaint + reqRowsToPaint - 1));
+            if (getLogger().isLoggable(Level.FINEST)) {
+                getLogger().log(
+                        Level.FINEST,
+                        "Client wants rows {0}-{1}",
+                        new Object[] { reqFirstRowToPaint,
+                                (reqFirstRowToPaint + reqRowsToPaint - 1) });
+            }
             clientNeedsContentRefresh = true;
         }
 
@@ -3148,9 +3163,9 @@ public class Table extends AbstractSelect implements Action.Container,
         target.startTag("prows");
 
         if (!shouldHideAddedRows()) {
-            getLogger().finest(
-                    "Paint rows for add. Index: " + firstIx + ", count: "
-                            + count + ".");
+            getLogger().log(Level.FINEST,
+                    "Paint rows for add. Index: {0}, count: {1}.",
+                    new Object[] { firstIx, count });
 
             // Partial row additions bypass the normal caching mechanism.
             Object[][] cells = getVisibleCellsInsertIntoCache(firstIx, count);
@@ -3173,9 +3188,9 @@ public class Table extends AbstractSelect implements Action.Container,
                         indexInRowbuffer, itemId);
             }
         } else {
-            getLogger().finest(
-                    "Paint rows for remove. Index: " + firstIx + ", count: "
-                            + count + ".");
+            getLogger().log(Level.FINEST,
+                    "Paint rows for remove. Index: {0}, count: {1}.",
+                    new Object[] { firstIx, count });
             removeRowsFromCacheAndFillBottom(firstIx, count);
             target.addAttribute("hide", true);
         }

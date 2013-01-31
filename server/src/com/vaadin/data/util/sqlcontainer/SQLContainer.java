@@ -1127,7 +1127,7 @@ public class SQLContainer implements Container, Container.Filterable,
                 refresh(false);
             }
             getLogger().log(Level.FINER,
-                    "Updated row count. New count is: " + size);
+                    "Updated row count. New count is: {0}", size);
         } catch (SQLException e) {
             throw new RuntimeException("Failed to update item set size.", e);
         }
@@ -1249,7 +1249,8 @@ public class SQLContainer implements Container, Container.Filterable,
                         "The query delegate doesn't support sorting", e);
             }
             delegate.beginTransaction();
-            rs = delegate.getResults(currentOffset, pageLength * CACHE_RATIO);
+            int fetchedRows = pageLength * CACHE_RATIO;
+            rs = delegate.getResults(currentOffset, fetchedRows);
             rsmd = rs.getMetaData();
             List<String> pKeys = delegate.getPrimaryKeyColumns();
             // }
@@ -1330,10 +1331,8 @@ public class SQLContainer implements Container, Container.Filterable,
             rs.getStatement().close();
             rs.close();
             delegate.commit();
-            getLogger().log(
-                    Level.FINER,
-                    "Fetched " + pageLength * CACHE_RATIO
-                            + " rows starting from " + currentOffset);
+            getLogger().log(Level.FINER, "Fetched {0} rows starting from {1}",
+                    new Object[] { fetchedRows, currentOffset });
         } catch (SQLException e) {
             getLogger().log(Level.WARNING,
                     "Failed to fetch rows, rolling back", e);
