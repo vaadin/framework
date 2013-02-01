@@ -117,103 +117,257 @@
         The @version@ includes many major and minor enhancements and changes. Below is a
         list of the most notable changes:
       </p>
-
+      
       <ul>
-        <li>GWT is now built into Vaadin Framework
+        <li>UI replaces Application as the main entry point
           <ul>
-            <li>New SuperDevMode allows debugging client-side Java code in the browser without any plugins</li>
+            <li>Heartbeat to reliably detect closed UI</li>
+            <li>Supports multiple browser tabs by default</li>
+            <li>Browser and request details available in UI init</li>
+            <li>Direct access to request and session in UI init</li>
+            <li>Access detected browser details in UI init</li>
+            <li>Default UI class chosen based on a servlet parameter</li>
+            <li>Custom UIProvider allows providing different UIs based on request parameters</li>
+            <li>UI is by default reinitialized when the page is reloaded</li>
           </ul>
         </li>
-        <li>Applications are now written by extending the <b>UI</b> class instead of the <b>Application</b> class
-          <ul>
-            <li>The UI class needs to be specified in the <tt>web.xml</tt> with the <tt>ui</tt> parameter</li>
-            <li>A <b>Page</b> object accessible from UI with <tt>getPage()</tt> contains API related to the browser window</li>
-            <li>The <tt>executeJavaScript()</tt> method is removed and replaced with a <b>JavaScript</b> object accessible from the <b>Page</b> with <tt>getJavaScript()</tt></li>
-            <li>Reloading page spawns a new instance unless <tt>@PreserveOnRefresh</tt> specified for the UI</li>
-            <li>UIs use heartbeat to detect closing</li>
-            <li>Embedding of Vaadin applications (now UIs) in HTML pages has changed
-              <ul>
-                <li>Embedded UIs can have different themes and widget sets</li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-        <li>The <b>Application</b> class is removed altogether
-          <ul>
-            <li><b>ApplicationServlet</b> is replaced with <b>VaadinServlet</b> and <b>VaadinService</b></li>
-            <li>User session is now associated with a <b>VaadinSession</b></li>
-            <li><b>ApplicationResource</b> is replaced with <b>ConnectorResource</b></li>
-          </ul>
-        </li>
-        <li>The current <b>UI</b>, <b>Page</b>, <b>VaadinServlet</b>, <b>VaadinService</b>, and <b>VaadinSession</b> can be accessed globally with a static <tt>getCurrent()</tt> method. The instance is a ThreadLocal object for the currently processed request.</li>
-        <li>The <b>Window</b> now only has the meaning of a floating sub-window inside browser window</li>
-        <li>The <b>Panel</b> and <b>Window</b>no longer extend <b>ComponentContainer</b>,
-        but <b>SingleComponentContainer</b>, which has no <tt>addComponent()</tt> method
-          <ul>
-            <li>The <b>UI</b>, <b>Panel</b>, and <b>Window</b> do not have have default
-            content (used to be a <b>VerticalLayout</b>), but you must set the content
-            component explicitly with the <tt>setContent()</tt> method or in the
-            constructor</li>
+		<li>Redesigned layouts
+		  <ul>
+		    <li>Minimal or no layout calculations to maximize layout speed</li>
+		    <li>Full control of layouts with CSS including borders and margins</li>
+		    <li>Redesigned lighter DOM for vertical, horizontal and css layout</li>
+		    <li>Client-side ComputedStyle API available</li>
+		  </ul>
+		</li>
+		<li>Split to seven jars to allow deploying only what you need</li>
+		<li>Adding multiple components with varargs in addComponents and appropriate constructors</li>
+		<li>Support for mixing multiple themes on the same page</li>
 
-            <li>If the content is a layout, you need to add other components to the layout
-            component with <tt>addComponent()</tt> instead of the container</li>
-          </ul>
-        </li>
-        <li>Popup windows can no longer be opened directly from code, but by using a <b>BrowserWindowOpener</b> extension which can be attached to any component</li>
-        <li>Navigation API for view navigation
-          <ul>
-            <li>View navigation with bookmarking/linking with URI fragments and browser history support</li>
-            <li>Access control for views, view change confirmation</li>
-          </ul>
-        </li>
-        <li>Component and UI extensions are now possible</li>
-        <li>Complete overhaul of the client-server communication architecture
-          <ul>
-            <li>All add-on components that have widgets need to be ported to Vaadin 7</li>
-            <li>Integration of a GWT widget is done in a connector class</li>
-            <li>Component-to-widget mapping now defined on the client-side, in the connector</li>
-            <li>No more Paintable or VariableOwner</li>
-            <li>Server-side components communicate their state to client-side widgets with a shared state object which is automatically synchronized</li>
-            <li>Both client-side and server-side can make RPC calls to the other side
-              <ul>
-                <li>Communicated in the next request/response</li>
-                <li>No return values</li>
-                <li>Typically for communicating events</li>
-              </ul>
-            </li>
-            <li>Support for JavaScript components - no GWT integration code or widgets required</li>
-            <li>Handle JavaScript callbacks on the server-side</li>
-            <li>UIDL is deprecated</li>
-            <li>Compatibility layer for Vaadin 6 included for easy migration</li>
-          </ul>
-        </li>
-        <li><b>Form</b> is deprecated and form data binding is replaced with the new <b>FieldGroup</b>
-           <ul>
-             <li>Conversion between property and field type now handled with <b>Converter</b>s</li>
-           </ul>
-        </li>
-        <li>The <b>LoginForm</b> component is now deprecated because of unreliable support in browsers</li>
-        <li>Themeing is now done with <a href="http://sass-lang.com/">Sass</a>
-          <ul>
-            <li>Sass themes in SCSS notation are compiled on-the-fly when loading the theme (in debug/development mode), or manually with the theme compiler (in production mode)</li>
-            <li>Pure CSS themes are supported and largely compatible with Vaadin 6, but should include <tt>legacy-styles.css</tt>
-            <li>SASS themes need to (and CSS themes can) be compiled to a single CSS stylesheet with the <tt>vaadin-theme-compiler</tt></li>
-            <li>Sass compiler can also be used in client-side projects.</li>
-            <li>Multiple themes can be used in a page</li>
-          </ul>
-        </li>
-        <li>All <tt>addListener()</tt> methods have changed to listener-specific methods, such as <tt>addClickListener()</tt>, <tt>addValueChangeListener()</tt>, etc.</li>
-        <li><b>UriFragmentListener</b> changed to <b>UriFragmentChangedListener</b></li>
-        <li><b>UriHandler</b> and <b>ParameterHandler</b> replaced with <b>RequestHandler</b></li>
-        <li>Resource loading (JS/CSS) by the framework</li>
-        <li>Packaging has changed, now in a ZIP package (see <a href="package">Package Contents</a> above)
-        </li>
-        <li>Add-ons can modify the startup page</li>
-        <li>You can get the computed style of a component from the browser</li>
-        <li>Support for border, padding, and margin in core layout components</li>
-        <li>The <b>ColorPicker</b> component is now included in the Vaadin core framework</li>
-      </ul>
-        
+		<li>RPC for communication between the server and the browser
+		  <ul>
+		    <li>Static typing allows compile time checking</li>
+		    <li>Supports Java's primitive and boxed types, String, enums, arrays, List, Set, Map and Java beans</li>
+		    <li>Supports references to external or self served resources and references to other components</li>
+		    <li>Call from browser to server can be delayed to piggyback on the next XHR, optionally folding similar calls to only send the last value</li>
+		    <li>Calls to disabled or invisible components are ignored for security reasons</li>
+		  </ul>
+		</li>
+		<li>Server-client shared state
+		  <ul>
+		    <li>Java objects can be shared between client and server for easy component development</li>
+		    <li>State is automatically mirrored from server to client</li>
+		    <li>Support both public fields and bean properties</li>
+		    <li>Supports the same types as with RPC</li>
+		    <li>Only parts of the state that are modified are sent over the wire</li>
+		    <li>Allow calculating state on the fly just before state is sent to client</li>
+		    <li>Client-side can listen to shared state changes to simplify connectors</li>
+		    <li>State class can be annotated to automatically delegate state changes to corresponding properties in widgets</li>
+		  </ul>
+		</li>
+		<li>Google Web Toolkit included
+		  <ul>
+		    <li>A full copy of GWT is included in Vaadin Framework</li>
+		    <li>Vaadin team maintains a branch of GWT to include bug fixes and new features independent of official GWT release schedules</li>
+		    <li>All functionality of GWT is included to enable writing of client side UI:s, stateless applications, offline functionality and custom widgets</li>
+		    <li>Included Elemental library gives direct access to all cutting edge browser features</li>
+		    <li>Both browser plug-in based dev mode debugging as well as super dev mode are supported</li>
+		  </ul>
+		</li>
+		<li>No more need to call requestRepaint() in components</li>
+		<li>High level view navigation
+		  <ul>
+		    <li>Support for URI fragment based view management</li>
+		    <li>Support for registering both pre-initialized view instances as well as view classes</li>
+		    <li>Programmatic navigation with navigateTo()</li>
+		    <li>Supports saving bookmarks to views</li>
+		    <li>Supports parameterized views</li>
+		    <li>Views can block navigation</li>
+		  </ul>
+		</li>
+		<li>Connectors
+		  <ul>
+		    <li>Connectors provide a flexible communication channel between client and server</li>
+		    <li>Separating communication code from widgets promotes reusability</li>
+		    <li>An explicit Connector hierarchy is maintained</li>
+		    <li>Mapping between server-side and client-side defined in client-side code to avoid server-side classpath issues</li>
+		  </ul>
+		</li>
+		<li>JavaScript Connectors
+		  <ul>
+		    <li>Implement connector logic using JavaScript instead of Java for easier integration with JavaScript libraries</li>
+		    <li>Wrap around any existing JavaScript based widget to adapt it for use in Vaadin</li>
+		    <li>No widgetset compilation needed</li>
+		    <li>Support for shared state and RPC as well as JSON-based communication based on simple JavaScript functions</li>
+		  </ul>
+		</li>		
+		<li>ColorPicker component
+		  <ul>
+		    <li>Easy to use interface with clickable color gradients</li>
+		    <li>RGB, HSV and swatches color modes</li>
+		    <li>Color history</li>
+		    <li>Color preview</li>
+		    <li>CSS color code representation and handling</li>
+		  </ul>
+		</li>
+		<li>Add listeners without method overloads
+		  <ul>
+		    <li>Write addClickListener() instead of generic addListener()</li>
+		    <li>Supports code completion in IDE:s better</li>
+		    <li>Enables using Java 8 Lambda</li>
+		  </ul>
+		</li>
+		<li>Renewed Vaadin Maven Plugin including features from GWT Maven Plugin
+		  <ul>
+		    <li>New Maven architype eases creation of Vaadin 7 applications</li>
+		  </ul>
+		</li>
+		<li>Renewed Eclipse Plugin adding Apache Ivy based dependency management</li>
+		<li>Page bootstrapping renewed
+		  <ul>
+		    <li>Simpler inclusion of Vaadin UIs to custom web pages</li>
+		    <li>Add-ons and applications can dynamically modify bootstrap page HTML</li>
+		  </ul>
+		</li>
+		<li>VaadinSession
+		  <ul>
+		    <li>Full control over session lifecycle</li>
+		    <li>Abstract away from servlets and portlets</li>
+		  </ul>
+		</li>
+		<li>VaadinService
+		  <ul>
+		    <li>Easily access deployment information and HTTP requests</li>
+		    <li>Abstract away from servlets and portlets</li>
+		  </ul>
+		</li>
+		<li>Component extension API
+		  <ul>
+		    <li>Allow adding functionality and customizations to any component</li>
+		    <li>Modify DOM and hook event listeners</li>
+		  </ul>
+		</li>
+		<li>JavaScript callbacks
+		  <ul>
+		    <li>Declare client-side JavaScript API from server</li>
+		    <li>Eases integration with parts of the page not controlled with Vaadin</li>
+		  </ul>
+		</li>
+		<li>Relative paths used for all requests
+		  <ul>
+		    <li>More flexible deployment</li>
+		    <li>Adds support for Apache ProxyPass and other similar proxies</li>
+		  </ul>
+		</li>
+		<li>HTML5
+		  <ul>
+		    <li>Vaadin 7 uses HTML5 doctype</li>
+		    <li>Use any parts of HTML5 in your application</li>
+		  </ul>
+		</li>
+		<li>Page
+		  <ul>
+		    <li>Abstraction for one browser window</li>
+		    <li>Run JavaScript</li>
+		    <li>Listen to page resizes</li>
+		    <li>Control navigation</li>
+		  </ul>
+		</li>
+		<li>Loading custom JavaScript
+		  <ul>
+		    <li>Annotate server-side classes with @JavaScript to request loading of JavaScript files</li>
+		    <li>Automated control of loading order and ensuring that files are loaded only once</li>
+		  </ul>
+		</li>
+		<li>API cleanup
+		  <ul>
+		    <li>API deprecated in Vaadin 6 or before removed</li>
+		    <li>Use enums instead of integer constants</li>
+		  </ul>
+		</li>
+		<li>Embedded split up to different components for different purposes
+		  <ul>
+		    <li>Image for showing images</li>
+		    <li>BrowserFrame for embedding web pages with iframes</li>
+		    <li>Flash for embedding Flash content</li>
+		    <li>Embedded now only intended for embedding using &lt;object&gt;
+		  </ul>
+		</li>
+		<li>Support for Firefox 17 extended support release in addition to latest stable Firefox release</li>
+		<li>Sass Compiler
+		  <ul>
+		    <li>Allows modularization of themes for better reuse and easier maintenance</li>
+		    <li>Support the most important features of SCSS</li>
+		    <li>Pure Java implementation without Ruby dependency</li>
+		    <li>Supports all of CSS</li>
+		    <li>On the fly conversion of SCSS to CSS during development</li>
+		    <li>Built in themes are now based on Sass</li>
+		    <li>Can be used in client-side projects as well</li>
+		  </ul>
+		</li>
+		<li>@StyleSheet for automatic injection of css files</li>
+		<li>ConnectorResource replaces ApplicationResource to reduce memory consumption</li>
+		<li>Hierarchical error handling</li>
+		<li>Open popups and start downloads in a way not stopped by popup blockers</li>
+		<li>ThreadLocal access to VaadinService, VaadinRequest, VaadinResponse, VaadinSession and the current UI instance</li>
+		<li>Component id replaces debug ids to allow wider use possibilities for identifying corresponding widget elements in DOM</li>
+		<li>Range retrieval for indexed containers to enable optimize performance</li>
+		<li>Native support for percent sizes to let the browser do the percent to pixel calculation speeds up rendering</li>
+		<li>Custom class loader
+		  <ul>
+		    <li>Allow specifying custom class loaders to better support Java EE, CDI and Spring</li>
+		    <li>Supports both servlets and portlets</li>
+		  </ul>
+		</li>
+		<li>Updated data model
+		  <ul>
+		    <li>Property getValue() uses generics to return the expected type</li>
+		    <li>Two phase commit support for commit/rollback</li>
+		    <li>BeanItem supports nested properties to allow flattening complex datatypes</li>
+		  </ul>
+		</li>
+		<li>Bean Validation - Annotate beans with JSR-303 standard annotations to automatically create validators for the fields</li>
+		<li>Field group
+		  <ul>
+		    <li>Allow data binding of multiple fields together to item data source</li>
+		    <li>Supports buffering</li>
+		    <li>Supports two phase commit</li>
+		    <li>Annotation based and field name based property mapping</li>
+		  </ul>
+		</li>
+		<li>Explicit data model converters
+		  <ul>
+		    <li>All fields support explicit conversion from presentation format to data source format</li>
+		    <li>Conversions are bidirectional</li>
+		    <li>Allow defining a default converter for a specific type and override for specific fields</li>
+		    <li>Converters can be set per Table column to customize column formatting</li>
+		  </ul>
+		</li>
+		<li>Built-in default converters
+		  <ul>
+		    <li>automated conversions beween String, Boolean, Long, Date, Double, Float, Integer and Number</li>
+		    <li>Built in converters support internationalization</li>
+		  </ul>
+		</li>
+		<li>Custom field component for building new fields as composition of existing components</li>
+		<li>Simplified validation API
+		  <ul>
+		    <li>No need to implement isValid() in validators any more</li>
+		  </ul>
+		</li>
+		<li>Unsupported browser detection with customizable information page</li>
+		<li>Vaadin 6 compatibility layer to ease migration from Vaadin 6</li>
+		<li>Explicit layouts for Window and Panel</li>
+		  <ul>
+		    <li>Window and Panel components now require setting layout explicitly</li>
+		    <li>Distinction between Window or Panel and it's layout</li>
+		  </ul>
+		</li>
+		<li>Layout manager
+		  <ul>
+		    <li>Allows building custom layout calculations for widgets when browser based layouts are not powerful enough</li>
+		    <li>Optimizes number of reflows by batching layout calculations from multiple widgets together</li>
+		  </ul>
+		</li>
       </ul>
         
       <p>
@@ -1364,7 +1518,8 @@
       </p>
 
       <ul>
-        <li>Mozilla Firefox 17 or newer</li>
+        <li>Mozilla Firefox 18</li>
+        <li>Mozilla Firefox 17 ESR</li>
         <li>Internet Explorer 8-10</li>
         <li>Safari 6</li>
         <li>Opera 12</li>
