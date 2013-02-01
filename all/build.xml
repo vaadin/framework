@@ -39,7 +39,7 @@
 		<antcontrib:foreach list="${modules.to.publish.to.maven}" target="unzip.to.javadoctemp" param="module" />
 
 		<property name="javadoc.dir" location="${result.dir}/javadoc" />
-		<property name="title" value="Vaadin" />
+		<property name="title" value="Vaadin ${vaadin.version} API" />
 		<javadoc maxmemory="1024m" destdir="${javadoc.dir}" author="true" version="true" use="true" windowtitle="${title}" encoding="utf-8">
 			<packageset dir="${javadoc.temp.dir}">
 				<!-- TODO Javadoc throws ClassCastException if this is included (#9660)-->
