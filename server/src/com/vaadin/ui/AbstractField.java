@@ -373,30 +373,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     /* Property interface implementation */
 
     /**
-     * Returns the (field) value converted to a String using toString().
-     * 
-     * @see java.lang.Object#toString()
-     * @deprecated As of 7.0, use {@link #getValue()} to get the value of the
-     *             field, {@link #getConvertedValue()} to get the field value
-     *             converted to the data model type or
-     *             {@link #getPropertyDataSource()} .getValue() to get the value
-     *             of the data source.
-     */
-    @Deprecated
-    @Override
-    public String toString() {
-        logger.warning("You are using AbstractField.toString() to get the value for a "
-                + getClass().getSimpleName()
-                + ". This will not be supported starting from Vaadin 7.1 "
-                + "(your debugger might call toString() and cause this message to appear).");
-        final Object value = getFieldValue();
-        if (value == null) {
-            return null;
-        }
-        return value.toString();
-    }
-
-    /**
      * Gets the current value of the field.
      * 
      * <p>
