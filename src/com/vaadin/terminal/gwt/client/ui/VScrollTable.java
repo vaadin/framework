@@ -2816,7 +2816,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     for (int i = start; i <= visibleCellCount; i++) {
                         if (i > 0) {
                             final String colKey = getColKeyByIndex(i - 1);
-                            slotX += getColWidth(colKey);
+                            // getColWidth only returns the internal width
+                            // without padding, not the offset width of the
+                            // whole td (#10890)
+                            slotX += getColWidth(colKey)
+                                    + scrollBody.getCellExtraWidth();
                         }
                         final int dist = Math.abs(x - slotX);
                         if (closestDistance == -1 || dist < closestDistance) {
