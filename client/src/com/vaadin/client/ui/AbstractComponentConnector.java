@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasEnabled;
@@ -60,7 +61,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * The style names from getState().getStyles() which are currently applied
      * to the widget.
      */
-    protected List<String> styleNames = new ArrayList<String>();
+    private JsArrayString styleNames = JsArrayString.createArray().cast();
 
     /**
      * Default constructor
@@ -286,33 +287,25 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
         // add additional user defined style names as class names, prefixed with
         // component default class name. remove nonexistent style names.
+
+        // Remove all old stylenames
+        for (int i = 0; i < styleNames.length(); i++) {
+            String oldStyle = styleNames.get(i);
+            setWidgetStyleName(oldStyle, false);
+            setWidgetStyleNameWithPrefix(primaryStyleName + "-", oldStyle,
+                    false);
+        }
+        styleNames.setLength(0);
+
         if (ComponentStateUtil.hasStyles(state)) {
-
-            // Remove all old stylenames
-            for (String oldStyle : styleNames) {
-                setWidgetStyleName(oldStyle, false);
-                setWidgetStyleNameWithPrefix(primaryStyleName + "-", oldStyle,
-                        false);
-            }
-
             // add new style names
             for (String newStyle : state.styles) {
                 setWidgetStyleName(newStyle, true);
                 setWidgetStyleNameWithPrefix(primaryStyleName + "-", newStyle,
                         true);
+                styleNames.push(newStyle);
             }
 
-            styleNames.clear();
-            styleNames.addAll(state.styles);
-
-        } else {
-            // remove all old style names
-            for (String oldStyle : styleNames) {
-                setWidgetStyleName(oldStyle, false);
-                setWidgetStyleNameWithPrefix(primaryStyleName + "-", oldStyle,
-                        false);
-            }
-            styleNames.clear();
         }
 
     }
