@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>ValueAfterClearingContainer</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">ValueAfterClearingContainer</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.components.table.ValueAfterClearingContainer?restartApplication</td>
+	<td></td>
+</tr>
+<!-- add items and select one of them -->
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_SaddItemsButton/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_Stable/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]/domChild[0]</td>
+	<td>40,13</td>
+</tr>
+<!-- verify selection -->
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_SLog_row_0</td>
+	<td>1. Value changed to 2</td>
+</tr>
+<!-- remove items from table -->
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_SremoveItemsFromTableButton/domChild[0]</td>
+	<td></td>
+</tr>
+<!-- verify that removal cleared the selection -->
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_SLog_row_0</td>
+	<td>2. Value changed to null</td>
+</tr>
+<!-- replace the items and select one of them -->
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_SaddItemsButton/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_Stable/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]/domChild[0]</td>
+	<td>40,13</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_SLog_row_0</td>
+	<td>3. Value changed to 2</td>
+</tr>
+<!-- remove items from container -->
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_SremoveItemsFromContainerButton/domChild[0]</td>
+	<td></td>
+</tr>
+<!-- verify that removal failed to clear the value -->
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_SshowValueButton/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_SLog_row_0</td>
+	<td>4. Table selection: 2</td>
+</tr>
+<!-- replace the items -->
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_SaddItemsButton/domChild[0]</td>
+	<td></td>
+</tr>
+<!-- verify that selection still exists -->
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_SshowValueButton/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_SLog_row_0</td>
+	<td>5. Table selection: 2</td>
+</tr>
+<!-- remove items from container and sanitize the table -->
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_SremoveItemsFromContainerAndSanitizeButton/domChild[0]</td>
+	<td></td>
+</tr>
+<!-- verify that sanitizing cleared the value -->
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_SLog_row_0</td>
+	<td>6. Value changed to null</td>
+</tr>
+<!-- replace the items and select one of them -->
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_SaddItemsButton/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_Stable/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]/domChild[0]</td>
+	<td>40,13</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_SLog_row_0</td>
+	<td>7. Value changed to 2</td>
+</tr>
+<!-- remove selected item from the table -->
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_SremoveSelectedFromTableButton/domChild[0]</td>
+	<td></td>
+</tr>
+<!-- verify that removal cleared the selection -->
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_SLog_row_0</td>
+	<td>8. Value changed to null</td>
+</tr>
+<!-- select new item and remove it from the container -->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_Stable/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]/domChild[0]</td>
+	<td>40,13</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_SLog_row_0</td>
+	<td>9. Value changed to 3</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_SremoveSelectedFromContainer/domChild[0]</td>
+	<td></td>
+</tr>
+<!-- verify that removal failed to clear the value -->
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_SshowValueButton/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_SLog_row_0</td>
+	<td>10. Table selection: 3</td>
+</tr>
+<!-- verify the item has been removed -->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_Stable/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[2]/domChild[0]/domChild[0]</td>
+	<td>40,13</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentstableValueAfterClearingContainer::PID_SLog_row_0</td>
+	<td>11. Value changed to 4</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
