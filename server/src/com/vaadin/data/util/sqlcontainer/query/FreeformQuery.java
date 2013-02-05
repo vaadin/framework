@@ -117,20 +117,23 @@ public class FreeformQuery implements QueryDelegate {
         int count = countByDelegate();
         if (count < 0) {
             // Couldn't use the delegate, use the bad way.
+            Statement statement = null;
+            ResultSet rs = null;
             Connection conn = getConnection();
-            Statement statement = conn.createStatement(
-                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_READ_ONLY);
+            try {
+                statement = conn.createStatement(
+                        ResultSet.TYPE_SCROLL_INSENSITIVE,
+                        ResultSet.CONCUR_READ_ONLY);
 
-            ResultSet rs = statement.executeQuery(queryString);
-            if (rs.last()) {
-                count = rs.getRow();
-            } else {
-                count = 0;
+                rs = statement.executeQuery(queryString);
+                if (rs.last()) {
+                    count = rs.getRow();
+                } else {
+                    count = 0;
+                }
+            } finally {
+                releaseConnection(conn, statement, rs);
             }
-            rs.close();
-            statement.close();
-            releaseConnection(conn);
         }
         return count;
     }
@@ -146,17 +149,18 @@ public class FreeformQuery implements QueryDelegate {
             try {
                 StatementHelper sh = ((FreeformStatementDelegate) delegate)
                         .getCountStatement();
+                PreparedStatement pstmt = null;
+                ResultSet rs = null;
                 Connection c = getConnection();
-                PreparedStatement pstmt = c.prepareStatement(sh
-                        .getQueryString());
-                sh.setParameterValuesToStatement(pstmt);
-                ResultSet rs = pstmt.executeQuery();
-                rs.next();
-                count = rs.getInt(1);
-                rs.close();
-                pstmt.clearParameters();
-                pstmt.close();
-                releaseConnection(c);
+                try {
+                    pstmt = c.prepareStatement(sh.getQueryString());
+                    sh.setParameterValuesToStatement(pstmt);
+                    rs = pstmt.executeQuery();
+                    rs.next();
+                    count = rs.getInt(1);
+                } finally {
+                    releaseConnection(c, pstmt, rs);
+                }
                 return count;
             } catch (UnsupportedOperationException e) {
                 // Count statement generation not supported
@@ -166,15 +170,18 @@ public class FreeformQuery implements QueryDelegate {
         try {
             String countQuery = delegate.getCountQuery();
             if (countQuery != null) {
+                Statement statement = null;
+                ResultSet rs = null;
                 Connection conn = getConnection();
-                Statement statement = conn.createStatement();
-                ResultSet rs = statement.executeQuery(countQuery);
-                rs.next();
-                count = rs.getInt(1);
-                rs.close();
-                statement.close();
-                releaseConnection(conn);
-                return count;
+                try {
+                    statement = conn.createStatement();
+                    rs = statement.executeQuery(countQuery);
+                    rs.next();
+                    count = rs.getInt(1);
+                    return count;
+                } finally {
+                    releaseConnection(conn, statement, rs);
+                }
             }
         } catch (UnsupportedOperationException e) {
             // Count query generation not supported
@@ -201,7 +208,7 @@ public class FreeformQuery implements QueryDelegate {
      * @see FreeformQueryDelegate#getQueryString(int, int)
      */
     @Override
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({ "deprecation", "finally" })
     public ResultSet getResults(int offset, int pagelength) throws SQLException {
         if (activeConnection == null) {
             throw new SQLException("No active transaction!");
@@ -228,7 +235,18 @@ public class FreeformQuery implements QueryDelegate {
             }
         }
         Statement statement = activeConnection.createStatement();
-        ResultSet rs = statement.executeQuery(query);
+        ResultSet rs;
+        try {
+            rs = statement.executeQuery(query);
+        } catch (SQLException e) {
+            try {
+                statement.close();
+            } finally {
+                // throw the original exception even if closing the statement
+                // fails
+                throw e;
+            }
+        }
         return rs;
     }
 
@@ -436,17 +454,19 @@ public class FreeformQuery implements QueryDelegate {
                 try {
                     StatementHelper sh = ((FreeformStatementDelegate) delegate)
                             .getContainsRowQueryStatement(keys);
+
+                    PreparedStatement pstmt = null;
+                    ResultSet rs = null;
                     Connection c = getConnection();
-                    PreparedStatement pstmt = c.prepareStatement(sh
-                            .getQueryString());
-                    sh.setParameterValuesToStatement(pstmt);
-                    ResultSet rs = pstmt.executeQuery();
-                    contains = rs.next();
-                    rs.close();
-                    pstmt.clearParameters();
-                    pstmt.close();
-                    releaseConnection(c);
-                    return contains;
+                    try {
+                        pstmt = c.prepareStatement(sh.getQueryString());
+                        sh.setParameterValuesToStatement(pstmt);
+                        rs = pstmt.executeQuery();
+                        contains = rs.next();
+                        return contains;
+                    } finally {
+                        releaseConnection(c, pstmt, rs);
+                    }
                 } catch (UnsupportedOperationException e) {
                     // Statement generation not supported, continue...
                 }
@@ -459,15 +479,15 @@ public class FreeformQuery implements QueryDelegate {
         } else {
             query = modifyWhereClause(keys);
         }
+        Statement statement = null;
+        ResultSet rs = null;
         Connection conn = getConnection();
         try {
-            Statement statement = conn.createStatement();
-            ResultSet rs = statement.executeQuery(query);
+            statement = conn.createStatement();
+            rs = statement.executeQuery(query);
             contains = rs.next();
-            rs.close();
-            statement.close();
         } finally {
-            releaseConnection(conn);
+            releaseConnection(conn, statement, rs);
         }
         return contains;
     }
@@ -481,6 +501,54 @@ public class FreeformQuery implements QueryDelegate {
     private void releaseConnection(Connection conn) {
         if (conn != activeConnection) {
             connectionPool.releaseConnection(conn);
+        }
+    }
+
+    /**
+     * Closes a statement and a resultset, then releases the connection if it is
+     * not part of an active transaction. A failure in closing one of the
+     * parameters does not prevent closing the rest.
+     * 
+     * If the statement is a {@link PreparedStatement}, its parameters are
+     * cleared prior to closing the statement.
+     * 
+     * Although JDBC specification does state that closing a statement closes
+     * its result set and closing a connection closes statements and result
+     * sets, this method does try to close the result set and statement
+     * explicitly whenever not null. This can guard against bugs in certain JDBC
+     * drivers and reduce leaks in case e.g. closing the result set succeeds but
+     * closing the statement or connection fails.
+     * 
+     * @param conn
+     *            the connection to release
+     * @param statement
+     *            the statement to close, may be null to skip closing
+     * @param rs
+     *            the result set to close, may be null to skip closing
+     * @throws SQLException
+     *             if closing the result set or the statement fails
+     */
+    private void releaseConnection(Connection conn, Statement statement,
+            ResultSet rs) throws SQLException {
+        try {
+            try {
+                if (null != rs) {
+                    rs.close();
+                }
+            } finally {
+                if (null != statement) {
+                    if (statement instanceof PreparedStatement) {
+                        try {
+                            ((PreparedStatement) statement).clearParameters();
+                        } catch (Exception e) {
+                            // will be closed below anyway
+                        }
+                    }
+                    statement.close();
+                }
+            }
+        } finally {
+            releaseConnection(conn);
         }
     }
 
