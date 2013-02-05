@@ -58,7 +58,7 @@ public abstract class AbstractConnector implements ServerConnector,
 
     private HandlerManager handlerManager;
     private FastStringMap<HandlerManager> statePropertyHandlerManagers;
-    private Map<String, Collection<ClientRpc>> rpcImplementations;
+    private FastStringMap<Collection<ClientRpc>> rpcImplementations;
     private final boolean debugLogging = false;
 
     private SharedState state;
@@ -68,7 +68,7 @@ public abstract class AbstractConnector implements ServerConnector,
      * A map from client-to-server RPC interface class to the RPC proxy that
      * sends outgoing RPC calls for that interface.
      */
-    private Map<Class<?>, ServerRpc> rpcProxyMap = new HashMap<Class<?>, ServerRpc>();
+    private FastStringMap<ServerRpc> rpcProxyMap = FastStringMap.create();
 
     /**
      * Temporary storage for last enabled state to be able to see if it has
@@ -145,7 +145,7 @@ public abstract class AbstractConnector implements ServerConnector,
             T implementation) {
         String rpcInterfaceId = rpcInterface.getName().replaceAll("\\$", ".");
         if (null == rpcImplementations) {
-            rpcImplementations = new HashMap<String, Collection<ClientRpc>>();
+            rpcImplementations = FastStringMap.create();
         }
         if (null == rpcImplementations.get(rpcInterfaceId)) {
             rpcImplementations.put(rpcInterfaceId, new ArrayList<ClientRpc>());
@@ -182,10 +182,11 @@ public abstract class AbstractConnector implements ServerConnector,
      *         server.
      */
     protected <T extends ServerRpc> T getRpcProxy(Class<T> rpcInterface) {
-        if (!rpcProxyMap.containsKey(rpcInterface)) {
-            rpcProxyMap.put(rpcInterface, RpcProxy.create(rpcInterface, this));
+        String name = rpcInterface.getName();
+        if (!rpcProxyMap.containsKey(name)) {
+            rpcProxyMap.put(name, RpcProxy.create(rpcInterface, this));
         }
-        return (T) rpcProxyMap.get(rpcInterface);
+        return (T) rpcProxyMap.get(name);
     }
 
     @Override
