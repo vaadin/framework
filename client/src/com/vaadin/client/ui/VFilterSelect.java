@@ -1663,8 +1663,10 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                 tabPressedWhenPopupOpen = false;
                 suggestionPopup.menu.doSelectedItemAction();
                 suggestionPopup.hide();
-            } else if (!suggestionPopup.isAttached()
+            } else if ((!suggestionPopup.isAttached() && waitingForFilteringResponse)
                     || suggestionPopup.isJustClosed()) {
+                // typing so fast the popup was never opened, or it's just
+                // closed
                 suggestionPopup.menu.doSelectedItemAction();
             }
             if (selectedOptionKey == null) {
