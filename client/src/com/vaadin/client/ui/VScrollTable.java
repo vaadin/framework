@@ -500,7 +500,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     /**
      * Read from the "recalcWidths" -attribute. When it is true, the table will
      * recalculate the widths for columns - desirable in some cases. For #1983,
-     * marked experimental.
+     * marked experimental. See also variable <code>refreshContentWidths</code>
+     * in method {@link TableHead#updateCellsFromUIDL(UIDL)}.
      * <p>
      * For internal use only. May be removed or replaced in the future.
      */
@@ -569,6 +570,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     /** For internal use only. May be removed or replaced in the future. */
     public ContextMenuDetails contextMenu = null;
+
+    private boolean hadScrollBars = false;
 
     public VScrollTable() {
         setMultiSelectMode(MULTISELECT_MODE_DEFAULT);
@@ -2038,6 +2041,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 Util.runWebkitOverflowAutoFix(scrollBodyPanel.getElement());
             }
         });
+
+        hadScrollBars = willHaveScrollbarz;
     }
 
     /**
@@ -2984,7 +2989,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         public void updateCellsFromUIDL(UIDL uidl) {
             Iterator<?> it = uidl.getChildIterator();
             HashSet<String> updated = new HashSet<String>();
-            boolean refreshContentWidths = false;
+            boolean refreshContentWidths = initializedAndAttached
+                    && hadScrollBars != willHaveScrollbars();
             while (it.hasNext()) {
                 final UIDL col = (UIDL) it.next();
                 final String cid = col.getStringAttribute("cid");
