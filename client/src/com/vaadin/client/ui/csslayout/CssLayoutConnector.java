@@ -15,15 +15,13 @@
  */
 package com.vaadin.client.ui.csslayout;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
+import com.vaadin.client.FastStringMap;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -58,7 +56,8 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
         };
     };
 
-    private Map<ComponentConnector, VCaption> childToCaption = new HashMap<ComponentConnector, VCaption>();
+    private final FastStringMap<VCaption> childIdToCaption = FastStringMap
+            .create();
 
     /*
      * (non-Javadoc)
@@ -123,7 +122,8 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
         int index = 0;
         for (ComponentConnector child : getChildComponents()) {
-            VCaption childCaption = childToCaption.get(child);
+            VCaption childCaption = childIdToCaption
+                    .get(child.getConnectorId());
             if (childCaption != null) {
                 getWidget().addOrMove(childCaption, index++);
             }
@@ -137,8 +137,9 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
                 continue;
             }
             getWidget().remove(child.getWidget());
-            VCaption vCaption = childToCaption.remove(child);
+            VCaption vCaption = childIdToCaption.get(child.getConnectorId());
             if (vCaption != null) {
+                childIdToCaption.remove(child.getConnectorId());
                 getWidget().remove(vCaption);
             }
         }
@@ -182,8 +183,7 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.client.HasComponentsConnector#updateCaption(com.vaadin
+     * @see com.vaadin.client.HasComponentsConnector#updateCaption(com.vaadin
      * .client.ComponentConnector)
      */
     @Override
@@ -191,11 +191,12 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
         Widget childWidget = child.getWidget();
         int widgetPosition = getWidget().getWidgetIndex(childWidget);
 
-        VCaption caption = childToCaption.get(child);
+        String childId = child.getConnectorId();
+        VCaption caption = childIdToCaption.get(childId);
         if (VCaption.isNeeded(child.getState())) {
             if (caption == null) {
                 caption = new VCaption(child, getConnection());
-                childToCaption.put(child, caption);
+                childIdToCaption.put(childId, caption);
             }
             if (!caption.isAttached()) {
                 // Insert caption at widget index == before widget
@@ -203,7 +204,7 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
             }
             caption.updateCaption();
         } else if (caption != null) {
-            childToCaption.remove(child);
+            childIdToCaption.remove(childId);
             getWidget().remove(caption);
         }
     }
