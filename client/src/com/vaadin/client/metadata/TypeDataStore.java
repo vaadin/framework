@@ -15,35 +15,39 @@
  */
 package com.vaadin.client.metadata;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
+import com.google.gwt.core.client.JavaScriptObject;
+import com.vaadin.client.FastStringMap;
+import com.vaadin.client.FastStringSet;
+import com.vaadin.client.JsArrayObject;
 import com.vaadin.client.communication.JSONSerializer;
 
 public class TypeDataStore {
     private static final String CONSTRUCTOR_NAME = "!new";
 
-    private final Map<String, Class<?>> identifiers = new HashMap<String, Class<?>>();
+    private final FastStringMap<Class<?>> identifiers = FastStringMap.create();
 
-    private final Map<Type, Invoker> serializerFactories = new HashMap<Type, Invoker>();
-    private final Map<Type, ProxyHandler> proxyHandlers = new HashMap<Type, ProxyHandler>();
-    private final Map<Type, Collection<Property>> properties = new HashMap<Type, Collection<Property>>();
+    private final FastStringMap<Invoker> serializerFactories = FastStringMap
+            .create();
+    private final FastStringMap<ProxyHandler> proxyHandlers = FastStringMap
+            .create();
+    private final FastStringMap<JsArrayObject<Property>> properties = FastStringMap
+            .create();
 
-    private final Set<Method> delayedMethods = new HashSet<Method>();
-    private final Set<Method> lastOnlyMethods = new HashSet<Method>();
+    private final FastStringSet delayedMethods = FastStringSet.create();
+    private final FastStringSet lastOnlyMethods = FastStringSet.create();
 
-    private final Map<Method, Type> returnTypes = new HashMap<Method, Type>();
-    private final Map<Method, Invoker> invokers = new HashMap<Method, Invoker>();
-    private final Map<Method, Type[]> paramTypes = new HashMap<Method, Type[]>();
+    private final FastStringMap<Type> returnTypes = FastStringMap.create();
+    private final FastStringMap<Invoker> invokers = FastStringMap.create();
+    private final FastStringMap<Type[]> paramTypes = FastStringMap.create();
 
-    private final Map<Property, Type> propertyTypes = new HashMap<Property, Type>();
-    private final Map<Property, Invoker> setters = new HashMap<Property, Invoker>();
-    private final Map<Property, Invoker> getters = new HashMap<Property, Invoker>();
-    private final Map<Property, String> delegateToWidget = new HashMap<Property, String>();
+    private final FastStringMap<Type> propertyTypes = FastStringMap.create();
+    private final FastStringMap<Invoker> setters = FastStringMap.create();
+    private final FastStringMap<Invoker> getters = FastStringMap.create();
+    private final FastStringMap<String> delegateToWidget = FastStringMap
+            .create();
 
     public static TypeDataStore get() {
         return ConnectorBundleLoader.get().getTypeDataStore();
@@ -67,7 +71,7 @@ public class TypeDataStore {
     }
 
     public static Type getReturnType(Method method) throws NoDataException {
-        Type type = get().returnTypes.get(method);
+        Type type = get().returnTypes.get(method.getSignature());
         if (type == null) {
             throw new NoDataException("There is no return type for "
                     + method.getSignature());
@@ -76,7 +80,7 @@ public class TypeDataStore {
     }
 
     public static Invoker getInvoker(Method method) throws NoDataException {
-        Invoker invoker = get().invokers.get(method);
+        Invoker invoker = get().invokers.get(method.getSignature());
         if (invoker == null) {
             throw new NoDataException("There is no invoker for "
                     + method.getSignature());
@@ -85,8 +89,8 @@ public class TypeDataStore {
     }
 
     public static Invoker getConstructor(Type type) throws NoDataException {
-        Invoker invoker = get().invokers
-                .get(new Method(type, CONSTRUCTOR_NAME));
+        Invoker invoker = get().invokers.get(new Method(type, CONSTRUCTOR_NAME)
+                .getSignature());
         if (invoker == null) {
             throw new NoDataException("There is no constructor for "
                     + type.getSignature());
@@ -95,7 +99,7 @@ public class TypeDataStore {
     }
 
     public static Invoker getGetter(Property property) throws NoDataException {
-        Invoker getter = get().getters.get(property);
+        Invoker getter = get().getters.get(property.getSignature());
         if (getter == null) {
             throw new NoDataException("There is no getter for "
                     + property.getSignature());
@@ -105,21 +109,24 @@ public class TypeDataStore {
     }
 
     public void setGetter(Class<?> clazz, String propertyName, Invoker invoker) {
-        getters.put(new Property(getType(clazz), propertyName), invoker);
+        getters.put(new Property(getType(clazz), propertyName).getSignature(),
+                invoker);
     }
 
     public static String getDelegateToWidget(Property property) {
-        return get().delegateToWidget.get(property);
+        return get().delegateToWidget.get(property.getSignature());
     }
 
     public void setDelegateToWidget(Class<?> clazz, String propertyName,
             String delegateValue) {
-        delegateToWidget.put(new Property(getType(clazz), propertyName),
+        delegateToWidget.put(
+                new Property(getType(clazz), propertyName).getSignature(),
                 delegateValue);
     }
 
     public void setReturnType(Class<?> type, String methodName, Type returnType) {
-        returnTypes.put(new Method(getType(type), methodName), returnType);
+        returnTypes.put(new Method(getType(type), methodName).getSignature(),
+                returnType);
     }
 
     public void setConstructor(Class<?> type, Invoker constructor) {
@@ -127,11 +134,12 @@ public class TypeDataStore {
     }
 
     public void setInvoker(Class<?> type, String methodName, Invoker invoker) {
-        invokers.put(new Method(getType(type), methodName), invoker);
+        invokers.put(new Method(getType(type), methodName).getSignature(),
+                invoker);
     }
 
     public static Type[] getParamTypes(Method method) throws NoDataException {
-        Type[] types = get().paramTypes.get(method);
+        Type[] types = get().paramTypes.get(method.getSignature());
         if (types == null) {
             throw new NoDataException("There are no parameter type data for "
                     + method.getSignature());
@@ -141,7 +149,9 @@ public class TypeDataStore {
 
     public void setParamTypes(Class<?> type, String methodName,
             Type[] paramTypes) {
-        this.paramTypes.put(new Method(getType(type), methodName), paramTypes);
+        this.paramTypes.put(
+                new Method(getType(type), methodName).getSignature(),
+                paramTypes);
     }
 
     public static boolean hasIdentifier(String identifier) {
@@ -150,7 +160,8 @@ public class TypeDataStore {
 
     public static ProxyHandler getProxyHandler(Type type)
             throws NoDataException {
-        ProxyHandler proxyHandler = get().proxyHandlers.get(type);
+        ProxyHandler proxyHandler = get().proxyHandlers
+                .get(type.getSignature());
         if (proxyHandler == null) {
             throw new NoDataException("No proxy handler for "
                     + type.getSignature());
@@ -159,28 +170,51 @@ public class TypeDataStore {
     }
 
     public void setProxyHandler(Class<?> type, ProxyHandler proxyHandler) {
-        proxyHandlers.put(getType(type), proxyHandler);
+        proxyHandlers.put(getType(type).getSignature(), proxyHandler);
     }
 
     public static boolean isDelayed(Method method) {
-        return get().delayedMethods.contains(method);
+        return get().delayedMethods.contains(method.getSignature());
     }
 
     public void setDelayed(Class<?> type, String methodName) {
-        delayedMethods.add(getType(type).getMethod(methodName));
+        delayedMethods.add(getType(type).getMethod(methodName).getSignature());
     }
 
     public static boolean isLastOnly(Method method) {
-        return get().lastOnlyMethods.contains(method);
+        return get().lastOnlyMethods.contains(method.getSignature());
     }
 
     public void setLastOnly(Class<?> clazz, String methodName) {
-        lastOnlyMethods.add(getType(clazz).getMethod(methodName));
+        lastOnlyMethods
+                .add(getType(clazz).getMethod(methodName).getSignature());
     }
 
+    /**
+     * @param type
+     * @return
+     * @throws NoDataException
+     * 
+     * @deprecated As of 7.0.1, use {@link #getPropertiesAsArray(Type)} instead
+     *             for improved performance
+     */
+    @Deprecated
     public static Collection<Property> getProperties(Type type)
             throws NoDataException {
-        Collection<Property> properties = get().properties.get(type);
+        JsArrayObject<Property> propertiesArray = getPropertiesAsArray(type);
+        int size = propertiesArray.size();
+        ArrayList<Property> properties = new ArrayList<Property>(size);
+        for (int i = 0; i < size; i++) {
+            properties.add(propertiesArray.get(i));
+        }
+
+        return properties;
+    }
+
+    public static JsArrayObject<Property> getPropertiesAsArray(Type type)
+            throws NoDataException {
+        JsArrayObject<Property> properties = get().properties.get(type
+                .getSignature());
         if (properties == null) {
             throw new NoDataException("No property list for "
                     + type.getSignature());
@@ -189,16 +223,17 @@ public class TypeDataStore {
     }
 
     public void setProperties(Class<?> clazz, String[] propertyNames) {
-        Set<Property> properties = new HashSet<Property>();
+        JsArrayObject<Property> properties = JavaScriptObject.createArray()
+                .cast();
         Type type = getType(clazz);
         for (String name : propertyNames) {
             properties.add(new Property(type, name));
         }
-        this.properties.put(type, Collections.unmodifiableSet(properties));
+        this.properties.put(type.getSignature(), properties);
     }
 
     public static Type getType(Property property) throws NoDataException {
-        Type type = get().propertyTypes.get(property);
+        Type type = get().propertyTypes.get(property.getSignature());
         if (type == null) {
             throw new NoDataException("No return type for "
                     + property.getSignature());
@@ -207,11 +242,12 @@ public class TypeDataStore {
     }
 
     public void setPropertyType(Class<?> clazz, String propertName, Type type) {
-        propertyTypes.put(new Property(getType(clazz), propertName), type);
+        propertyTypes.put(
+                new Property(getType(clazz), propertName).getSignature(), type);
     }
 
     public static Invoker getSetter(Property property) throws NoDataException {
-        Invoker setter = get().setters.get(property);
+        Invoker setter = get().setters.get(property.getSignature());
         if (setter == null) {
             throw new NoDataException("No setter for "
                     + property.getSignature());
@@ -220,15 +256,17 @@ public class TypeDataStore {
     }
 
     public void setSetter(Class<?> clazz, String propertyName, Invoker setter) {
-        setters.put(new Property(getType(clazz), propertyName), setter);
+        setters.put(new Property(getType(clazz), propertyName).getSignature(),
+                setter);
     }
 
     public void setSerializerFactory(Class<?> clazz, Invoker factory) {
-        serializerFactories.put(getType(clazz), factory);
+        serializerFactories.put(getType(clazz).getSignature(), factory);
     }
 
     public static JSONSerializer<?> findSerializer(Type type) {
-        Invoker factoryCreator = get().serializerFactories.get(type);
+        Invoker factoryCreator = get().serializerFactories.get(type
+                .getSignature());
         if (factoryCreator == null) {
             return null;
         }
@@ -236,6 +274,6 @@ public class TypeDataStore {
     }
 
     public static boolean hasProperties(Type type) {
-        return get().properties.containsKey(type);
+        return get().properties.containsKey(type.getSignature());
     }
 }

@@ -31,6 +31,7 @@ import com.google.gwt.json.client.JSONValue;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.FastStringSet;
+import com.vaadin.client.JsArrayObject;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Property;
 import com.vaadin.client.metadata.Type;
@@ -141,13 +142,16 @@ public class JsonDecoder {
             }
         } else {
             try {
-                Collection<Property> properties = type.getProperties();
+                JsArrayObject<Property> properties = type
+                        .getPropertiesAsArray();
                 if (target == null) {
                     target = type.createInstance();
                 }
                 JSONObject jsonObject = jsonValue.isObject();
 
-                for (Property property : properties) {
+                int size = properties.size();
+                for (int i = 0; i < size; i++) {
+                    Property property = properties.get(i);
                     JSONValue encodedPropertyValue = jsonObject.get(property
                             .getName());
                     if (encodedPropertyValue == null) {

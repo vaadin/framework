@@ -30,6 +30,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.JsArrayObject;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Property;
 import com.vaadin.client.metadata.Type;
@@ -111,10 +112,14 @@ public class JsonEncoder {
             } else if (type != null) {
                 // And finally try using bean serialization logic
                 try {
-                    Collection<Property> properties = type.getProperties();
+                    JsArrayObject<Property> properties = type
+                            .getPropertiesAsArray();
 
                     JSONObject jsonObject = new JSONObject();
-                    for (Property property : properties) {
+
+                    int size = properties.size();
+                    for (int i = 0; i < size; i++) {
+                        Property property = properties.get(i);
                         Object propertyValue = property.getValue(value);
                         Type propertyType = property.getType();
                         JSONValue encodedPropertyValue = encode(propertyValue,

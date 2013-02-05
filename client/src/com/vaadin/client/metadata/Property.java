@@ -20,10 +20,13 @@ import com.vaadin.shared.annotations.DelegateToWidget;
 public class Property {
     private final Type bean;
     private final String name;
+    private final String signature;
 
     public Property(Type bean, String name) {
         this.bean = bean;
         this.name = name;
+        // Cache derived signature value
+        signature = bean.getSignature() + "." + name;
     }
 
     public Object getValue(Object bean) throws NoDataException {
@@ -47,8 +50,16 @@ public class Property {
         return TypeDataStore.getType(this);
     }
 
+    /**
+     * The unique signature used to identify this property. The structure of the
+     * returned string may change without notice and should not be used for any
+     * other purpose than identification. The signature is currently based on
+     * the declaring type's signature and the property's name.
+     * 
+     * @return the unique signature of this property
+     */
     public String getSignature() {
-        return bean.toString() + "." + name;
+        return signature;
     }
 
     @Override

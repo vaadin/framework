@@ -19,10 +19,13 @@ public class Method {
 
     private final Type type;
     private final String name;
+    private String signature;
 
     public Method(Type type, String name) {
         this.type = type;
         this.name = name;
+        // Cache derived signature value
+        signature = type.getSignature() + "." + name;
     }
 
     public Type getType() {
@@ -41,8 +44,16 @@ public class Method {
         TypeDataStore.getInvoker(this).invoke(target, params);
     }
 
+    /**
+     * The unique signature used to identify this method. The structure of the
+     * returned string may change without notice and should not be used for any
+     * other purpose than identification. The signature is currently based on
+     * the declaring type's signature and the method's name.
+     * 
+     * @return the unique signature of this method
+     */
     public String getSignature() {
-        return type.toString() + "." + name;
+        return signature;
     }
 
     @Override

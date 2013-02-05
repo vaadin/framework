@@ -1911,8 +1911,11 @@ public class ApplicationConnection {
             private void addAllStateFields(Type type,
                     Set<String> foundProperties, String context) {
                 try {
-                    Collection<Property> properties = type.getProperties();
-                    for (Property property : properties) {
+                    JsArrayObject<Property> properties = type
+                            .getPropertiesAsArray();
+                    int size = properties.size();
+                    for (int i = 0; i < size; i++) {
+                        Property property = properties.get(i);
                         String propertyName = context + property.getName();
                         foundProperties.add(propertyName);
 
@@ -2113,7 +2116,11 @@ public class ApplicationConnection {
 
                     SharedState state = connector.getState();
 
-                    for (Property property : stateType.getProperties()) {
+                    JsArrayObject<Property> properties = stateType
+                            .getPropertiesAsArray();
+                    int size = properties.size();
+                    for (int i = 0; i < size; i++) {
+                        Property property = properties.get(i);
                         property.setValue(state,
                                 property.getValue(defaultState));
                     }
