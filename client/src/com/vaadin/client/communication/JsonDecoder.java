@@ -30,6 +30,7 @@ import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ConnectorMap;
+import com.vaadin.client.FastStringSet;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Property;
 import com.vaadin.client.metadata.Type;
@@ -47,6 +48,24 @@ import com.vaadin.shared.Connector;
  * @since 7.0
  */
 public class JsonDecoder {
+
+    private static final FastStringSet decodedWithoutReference = FastStringSet
+            .create();
+    static {
+        decodedWithoutReference.add(String.class.getName());
+        decodedWithoutReference.add(Boolean.class.getName());
+        decodedWithoutReference.add(Byte.class.getName());
+        decodedWithoutReference.add(Character.class.getName());
+        decodedWithoutReference.add(Short.class.getName());
+        decodedWithoutReference.add(Integer.class.getName());
+        decodedWithoutReference.add(Long.class.getName());
+        decodedWithoutReference.add(Float.class.getName());
+        decodedWithoutReference.add(Double.class.getName());
+        decodedWithoutReference.add(Connector.class.getName());
+        decodedWithoutReference.add(Map.class.getName());
+        decodedWithoutReference.add(List.class.getName());
+        decodedWithoutReference.add(Set.class.getName());
+    }
 
     /**
      * Decode a JSON array with two elements (type and value) into a client-side
@@ -134,8 +153,17 @@ public class JsonDecoder {
                     if (encodedPropertyValue == null) {
                         continue;
                     }
-                    Object propertyReference = property.getValue(target);
-                    Object decodedValue = decodeValue(property.getType(),
+
+                    Type propertyType = property.getType();
+
+                    Object propertyReference;
+                    if (needsReferenceValue(propertyType)) {
+                        propertyReference = property.getValue(target);
+                    } else {
+                        propertyReference = null;
+                    }
+
+                    Object decodedValue = decodeValue(propertyType,
                             encodedPropertyValue, propertyReference, connection);
                     property.setValue(target, decodedValue);
                 }
@@ -145,6 +173,10 @@ public class JsonDecoder {
                         + type.getSignature(), e);
             }
         }
+    }
+
+    private static boolean needsReferenceValue(Type type) {
+        return !decodedWithoutReference.contains(type.getBaseTypeName());
     }
 
     private static Map<Object, Object> decodeMap(Type type, JSONValue jsonMap,
