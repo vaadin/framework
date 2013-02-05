@@ -15,8 +15,6 @@
  */
 package com.vaadin.client.ui.colorpicker;
 
-import java.util.Set;
-
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -46,8 +44,7 @@ public abstract class AbstractColorPickerConnector extends
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         // NOTE: this method is called after @DelegateToWidget
         super.onStateChanged(stateChangeEvent);
-        Set<String> changedProperties = stateChangeEvent.getChangedProperties();
-        if (changedProperties.contains("color")) {
+        if (stateChangeEvent.hasPropertyChanged("color")) {
             refreshColor();
 
             if (getState().showDefaultCaption
@@ -57,9 +54,9 @@ public abstract class AbstractColorPickerConnector extends
                 setCaption(getState().color);
             }
         }
-        if (changedProperties.contains("caption")
-                || changedProperties.contains("htmlContentAllowed")
-                || changedProperties.contains("showDefaultCaption")) {
+        if (stateChangeEvent.hasPropertyChanged("caption")
+                || stateChangeEvent.hasPropertyChanged("htmlContentAllowed")
+                || stateChangeEvent.hasPropertyChanged("showDefaultCaption")) {
 
             setCaption(getCaption());
         }

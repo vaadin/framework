@@ -15,8 +15,6 @@
  */
 package com.vaadin.client.ui.colorpicker;
 
-import java.util.Set;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -68,17 +66,16 @@ public class ColorPickerGridConnector extends AbstractComponentConnector
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
-        Set<String> changedProperties = stateChangeEvent.getChangedProperties();
-        if (changedProperties.contains("rowCount")
-                || changedProperties.contains("columnCount")
-                || changedProperties.contains("updateGrid")) {
+        if (stateChangeEvent.hasPropertyChanged("rowCount")
+                || stateChangeEvent.hasPropertyChanged("columnCount")
+                || stateChangeEvent.hasPropertyChanged("updateGrid")) {
 
             getWidget().updateGrid(getState().rowCount, getState().columnCount);
         }
-        if (changedProperties.contains("changedX")
-                || changedProperties.contains("changedY")
-                || changedProperties.contains("changedColor")
-                || changedProperties.contains("updateColor")) {
+        if (stateChangeEvent.hasPropertyChanged("changedX")
+                || stateChangeEvent.hasPropertyChanged("changedY")
+                || stateChangeEvent.hasPropertyChanged("changedColor")
+                || stateChangeEvent.hasPropertyChanged("updateColor")) {
 
             getWidget().updateColor(getState().changedColor,
                     getState().changedX, getState().changedY);

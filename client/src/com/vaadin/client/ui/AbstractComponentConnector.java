@@ -17,7 +17,6 @@ package com.vaadin.client.ui;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
@@ -26,7 +25,6 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.ServerConnector;
@@ -125,10 +123,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        ConnectorMap paintableMap = ConnectorMap.get(getConnection());
-
-        Set<String> changedProperties = stateChangeEvent.getChangedProperties();
-        if (changedProperties.contains("id")) {
+        if (stateChangeEvent.hasPropertyChanged("id")) {
             if (getState().id != null) {
                 getWidget().getElement().setId(getState().id);
             } else if (!initialStateEvent) {
@@ -425,6 +420,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * 
      * @see com.vaadin.client.ComponentConnector#flush()
      */
+    @Override
     public void flush() {
         // No generic implementation. Override if needed
     }

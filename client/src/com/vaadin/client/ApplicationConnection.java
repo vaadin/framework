@@ -153,6 +153,9 @@ public class ApplicationConnection {
     // will hold the UIDL security key (for XSS protection) once received
     private String uidlSecurityKey = "init";
 
+    private static final FastStringMap<FastStringSet> allStateFieldsCache = FastStringMap
+            .create();
+
     private final HashMap<String, String> resourcesMap = new HashMap<String, String>();
 
     /**
@@ -1605,9 +1608,11 @@ public class ApplicationConnection {
                         Type stateType = AbstractConnector
                                 .getStateType(component);
 
-                        Set<String> changedProperties = sce
-                                .getChangedProperties();
-                        for (String propertyName : changedProperties) {
+                        FastStringSet changedProperties = sce
+                                .getChangedPropertiesFastSet();
+                        JsArrayString dump = changedProperties.dump();
+                        for (int i = 0; i < dump.length(); i++) {
+                            String propertyName = dump.get(i);
                             Property property = stateType
                                     .getProperty(propertyName);
                             String method = property
@@ -1670,9 +1675,11 @@ public class ApplicationConnection {
 
             private void unregisterRemovedConnectors() {
                 int unregistered = 0;
-                List<ServerConnector> currentConnectors = new ArrayList<ServerConnector>(
-                        connectorMap.getConnectors());
-                for (ServerConnector c : currentConnectors) {
+                JsArrayObject<ServerConnector> currentConnectors = connectorMap
+                        .getConnectorsAsJsArray();
+                int size = currentConnectors.size();
+                for (int i = 0; i < size; i++) {
+                    ServerConnector c = currentConnectors.get(i);
                     if (c.getParent() != null) {
                         if (!c.getParent().getChildren().contains(c)) {
                             VConsole.error("ERROR: Connector is connected to a parent but the parent does not contain the connector");
@@ -1856,17 +1863,17 @@ public class ApplicationConnection {
                                     .getName(), null), stateJson, state,
                                     ApplicationConnection.this);
 
-                            Set<String> changedProperties = new HashSet<String>();
+                            FastStringSet changedProperties = FastStringSet
+                                    .create();
                             addJsonFields(stateJson, changedProperties, "");
 
                             if (newConnectors.contains(connector)) {
                                 remainingNewConnectors.remove(connector);
                                 // Fire events for properties using the default
                                 // value for newly created connectors
-                                addAllStateFields(
-                                        AbstractConnector
-                                                .getStateType(connector),
-                                        changedProperties, "");
+                                FastStringSet allStateFields = getAllStateFields(AbstractConnector
+                                        .getStateType(connector));
+                                changedProperties.addAll(allStateFields);
                             }
 
                             StateChangeEvent event = new StateChangeEvent(
@@ -1882,10 +1889,8 @@ public class ApplicationConnection {
                 // Fire events for properties using the default value for newly
                 // created connectors even if there were no state changes
                 for (ServerConnector connector : remainingNewConnectors) {
-                    Set<String> changedProperties = new HashSet<String>();
-                    addAllStateFields(
-                            AbstractConnector.getStateType(connector),
-                            changedProperties, "");
+                    FastStringSet changedProperties = getAllStateFields(AbstractConnector
+                            .getStateType(connector));
 
                     StateChangeEvent event = new StateChangeEvent(connector,
                             changedProperties);
@@ -1895,6 +1900,17 @@ public class ApplicationConnection {
                 }
 
                 return events;
+            }
+
+            private FastStringSet getAllStateFields(Type type) {
+                FastStringSet fields;
+                fields = allStateFieldsCache.get(type.getBaseTypeName());
+                if (fields == null) {
+                    fields = FastStringSet.create();
+                    addAllStateFields(type, fields, "");
+                    allStateFieldsCache.put(type.getBaseTypeName(), fields);
+                }
+                return fields;
             }
 
             /**
@@ -1909,7 +1925,7 @@ public class ApplicationConnection {
              *            the base name of the current object
              */
             private void addAllStateFields(Type type,
-                    Set<String> foundProperties, String context) {
+                    FastStringSet foundProperties, String context) {
                 try {
                     JsArrayObject<Property> properties = type
                             .getPropertiesAsArray();
@@ -1945,7 +1961,7 @@ public class ApplicationConnection {
              * @param context
              *            the base name of the current object
              */
-            private void addJsonFields(JSONObject json, Set<String> fields,
+            private void addJsonFields(JSONObject json, FastStringSet fields,
                     String context) {
                 for (String key : json.keySet()) {
                     String fieldName = context + key;
@@ -1978,7 +1994,7 @@ public class ApplicationConnection {
                     return result;
                 }
 
-                HashSet<ServerConnector> maybeDetached = new HashSet<ServerConnector>();
+                FastStringSet maybeDetached = FastStringSet.create();
 
                 ValueMap hierarchies = json.getValueMap("hierarchy");
                 JsArrayString hierarchyKeys = hierarchies.getKeyArray();
@@ -2022,7 +2038,7 @@ public class ApplicationConnection {
                                 result.parentChanged.add(childConnector);
                                 // Not detached even if previously removed from
                                 // parent
-                                maybeDetached.remove(childConnector);
+                                maybeDetached.remove(childConnectorId);
                             }
                         }
 
@@ -2078,7 +2094,7 @@ public class ApplicationConnection {
                                  * cleared if it is later on added to some other
                                  * parent.
                                  */
-                                maybeDetached.add(oldChild);
+                                maybeDetached.add(oldChild.getConnectorId());
                             }
                         }
                     } catch (final Throwable e) {
@@ -2090,7 +2106,10 @@ public class ApplicationConnection {
                  * Connector is in maybeDetached at this point if it has been
                  * removed from its parent but not added to any other parent
                  */
-                for (ServerConnector removed : maybeDetached) {
+                JsArrayString maybeDetachedArray = maybeDetached.dump();
+                for (int i = 0; i < maybeDetachedArray.length(); i++) {
+                    ServerConnector removed = connectorMap
+                            .getConnector(maybeDetachedArray.get(i));
                     recursivelyDetach(removed, result.events);
                 }
 

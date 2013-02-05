@@ -16,8 +16,6 @@
 
 package com.vaadin.client.ui.button;
 
-import java.util.Set;
-
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -109,9 +107,8 @@ public class ButtonConnector extends AbstractComponentConnector implements
         blurHandlerRegistration = EventHelper.updateBlurHandler(this,
                 blurHandlerRegistration);
 
-        Set<String> changedProperties = stateChangeEvent.getChangedProperties();
-        if (changedProperties.contains("caption")
-                || changedProperties.contains("htmlContentAllowed")) {
+        if (stateChangeEvent.hasPropertyChanged("caption")
+                || stateChangeEvent.hasPropertyChanged("htmlContentAllowed")) {
             // Set text
             if (getState().htmlContentAllowed) {
                 getWidget().setHtml(getState().caption);

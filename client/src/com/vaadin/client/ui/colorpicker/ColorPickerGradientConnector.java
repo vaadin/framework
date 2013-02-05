@@ -15,8 +15,6 @@
  */
 package com.vaadin.client.ui.colorpicker;
 
-import java.util.Set;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
@@ -68,13 +66,12 @@ public class ColorPickerGradientConnector extends AbstractComponentConnector
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
-        Set<String> changedProperties = stateChangeEvent.getChangedProperties();
-        if (changedProperties.contains("cursorX")
-                || changedProperties.contains("cursorY")) {
+        if (stateChangeEvent.hasPropertyChanged("cursorX")
+                || stateChangeEvent.hasPropertyChanged("cursorY")) {
 
             getWidget().setCursor(getState().cursorX, getState().cursorY);
         }
-        if (changedProperties.contains("bgColor")) {
+        if (stateChangeEvent.hasPropertyChanged("bgColor")) {
             getWidget().setBGColor(getState().bgColor);
         }
     }

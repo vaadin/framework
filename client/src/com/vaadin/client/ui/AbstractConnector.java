@@ -23,10 +23,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.FastStringMap;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
@@ -55,7 +57,7 @@ public abstract class AbstractConnector implements ServerConnector,
     private String id;
 
     private HandlerManager handlerManager;
-    private Map<String, HandlerManager> statePropertyHandlerManagers;
+    private FastStringMap<HandlerManager> statePropertyHandlerManagers;
     private Map<String, Collection<ClientRpc>> rpcImplementations;
     private final boolean debugLogging = false;
 
@@ -202,12 +204,12 @@ public abstract class AbstractConnector implements ServerConnector,
         }
         if (statePropertyHandlerManagers != null
                 && event instanceof StateChangeEvent) {
-            for (String property : ((StateChangeEvent) event)
-                    .getChangedProperties()) {
-                HandlerManager manager = statePropertyHandlerManagers
-                        .get(property);
-                if (manager != null) {
-                    manager.fireEvent(event);
+            StateChangeEvent stateChangeEvent = (StateChangeEvent) event;
+            JsArrayString keys = statePropertyHandlerManagers.getKeys();
+            for (int i = 0; i < keys.length(); i++) {
+                String property = keys.get(i);
+                if (stateChangeEvent.hasPropertyChanged(property)) {
+                    statePropertyHandlerManagers.get(property).fireEvent(event);
                 }
             }
         }
@@ -248,7 +250,7 @@ public abstract class AbstractConnector implements ServerConnector,
 
     private HandlerManager ensureHandlerManager(String propertyName) {
         if (statePropertyHandlerManagers == null) {
-            statePropertyHandlerManagers = new HashMap<String, HandlerManager>();
+            statePropertyHandlerManagers = FastStringMap.create();
         }
         HandlerManager manager = statePropertyHandlerManagers.get(propertyName);
         if (manager == null) {

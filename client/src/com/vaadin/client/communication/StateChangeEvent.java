@@ -16,10 +16,11 @@
 package com.vaadin.client.communication;
 
 import java.io.Serializable;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.google.gwt.event.shared.EventHandler;
+import com.vaadin.client.FastStringSet;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 
@@ -30,7 +31,13 @@ public class StateChangeEvent extends
      */
     public static final Type<StateChangeHandler> TYPE = new Type<StateChangeHandler>();
 
-    private Set<String> changedProperties;
+    private final FastStringSet changedProperties;
+
+    /**
+     * Used to cache a Set representation of the changedProperties if one is
+     * needed.
+     */
+    private Set<String> changedPropertiesSet;
 
     @Override
     public Type<StateChangeHandler> getAssociatedType() {
@@ -42,11 +49,33 @@ public class StateChangeEvent extends
      * 
      * @param connector
      *            the event whose state has changed
+     * @param changedPropertiesSet
+     *            a set of names of the changed properties
+     * @deprecated As of 7.0.1, use
+     *             {@link #StateChangeEvent(ServerConnector, FastStringSet)}
+     *             instead for improved performance.
+     */
+    @Deprecated
+    public StateChangeEvent(ServerConnector connector,
+            Set<String> changedPropertiesSet) {
+        setConnector(connector);
+        this.changedPropertiesSet = changedPropertiesSet;
+        changedProperties = FastStringSet.create();
+        for (String property : changedPropertiesSet) {
+            changedProperties.add(property);
+        }
+    }
+
+    /**
+     * Creates a new state change event.
+     * 
+     * @param connector
+     *            the event whose state has changed
      * @param changedProperties
      *            a set of names of the changed properties
      */
     public StateChangeEvent(ServerConnector connector,
-            Set<String> changedProperties) {
+            FastStringSet changedProperties) {
         setConnector(connector);
         this.changedProperties = changedProperties;
     }
@@ -78,8 +107,39 @@ public class StateChangeEvent extends
      * Gets the properties that have changed.
      * 
      * @return a set of names of the changed properties
+     * 
+     * @deprecated As of 7.0.1, use {@link #getChangedPropertiesFastSet()} or
+     *             {@link #hasPropertyChanged(String)} instead for improved
+     *             performance.
      */
+    @Deprecated
     public Set<String> getChangedProperties() {
-        return Collections.unmodifiableSet(changedProperties);
+        if (changedPropertiesSet == null) {
+            changedPropertiesSet = new HashSet<String>();
+            changedProperties.addAllTo(changedPropertiesSet);
+        }
+        return changedPropertiesSet;
+    }
+
+    /**
+     * Gets the properties that have changed.
+     * 
+     * @return a set of names of the changed properties
+     * 
+     */
+    public FastStringSet getChangedPropertiesFastSet() {
+        return changedProperties;
+    }
+
+    /**
+     * Checks whether the give property has changed.
+     * 
+     * @param property
+     *            the name of the property to check
+     * @return <code>true</code> if the property has changed, else
+     *         <code>false></code>
+     */
+    public boolean hasPropertyChanged(String property) {
+        return changedProperties.contains(property);
     }
 }
