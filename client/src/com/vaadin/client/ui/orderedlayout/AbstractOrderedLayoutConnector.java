@@ -197,6 +197,12 @@ public abstract class AbstractOrderedLayoutConnector extends
     private boolean hasChildrenWithRelativeHeight = false;
 
     /**
+     * Keep track of whether any child is middle aligned. Used to determine if
+     * measurements are needed to make middle aligned children work.
+     */
+    private boolean hasChildrenWithMiddleAlignment = false;
+
+    /**
      * Keeps track of whether slots should be expanded based on available space.
      */
     private boolean needsExpand = false;
@@ -340,6 +346,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         processedResponseId = lastResponseId;
 
         hasChildrenWithRelativeHeight = false;
+        hasChildrenWithMiddleAlignment = false;
 
         needsExpand = getWidget().vertical ? !isUndefinedHeight()
                 : !isUndefinedWidth();
@@ -379,6 +386,10 @@ public abstract class AbstractOrderedLayoutConnector extends
             AlignmentInfo alignment = new AlignmentInfo(
                     getState().childData.get(child).alignmentBitmask);
             slot.setAlignment(alignment);
+
+            if (alignment.isVerticalCenter()) {
+                hasChildrenWithMiddleAlignment = true;
+            }
 
             double expandRatio = onlyZeroExpands ? 1 : getState().childData
                     .get(child).expandRatio;
@@ -429,8 +440,10 @@ public abstract class AbstractOrderedLayoutConnector extends
             return false;
         }
 
-        else if (!hasChildrenWithRelativeHeight) {
-            // Already works if there are no relative heights
+        else if (!hasChildrenWithRelativeHeight
+                && !hasChildrenWithMiddleAlignment) {
+            // Already works if there are no relative heights or middle aligned
+            // children
             return false;
         }
 
