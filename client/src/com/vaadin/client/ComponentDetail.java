@@ -21,6 +21,8 @@ class ComponentDetail {
 
     private TooltipInfo tooltipInfo = new TooltipInfo();
 
+    private ServerConnector connector;
+
     public ComponentDetail() {
 
     }
@@ -63,6 +65,14 @@ class ComponentDetail {
             }
             additionalTooltips.put(key, tooltip);
         }
+    }
+
+    public ServerConnector getConnector() {
+        return connector;
+    }
+
+    public void setConnector(ServerConnector connector) {
+        this.connector = connector;
     }
 
 }

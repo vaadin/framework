@@ -85,4 +85,15 @@ final class ComponentDetailMap extends JavaScriptObject {
         return list;
     }
 
+    public native JsArrayObject<ComponentDetail> valuesAsJsArray()
+    /*-{
+        var result = [];
+        for(var key in this) {
+            if (this.hasOwnProperty(key)) {
+                result.push(this[key]);
+            }
+        }
+        return result;
+    }-*/;
+
 }
