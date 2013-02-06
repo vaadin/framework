@@ -1660,7 +1660,7 @@ public class Table extends AbstractSelect implements Action.Container,
 
             exceptionsDuringCachePopulation.clear();
             throw new CacheUpdateException(this,
-                    "Error during Table cache update", causes);
+                    "Error during Table cache update.", causes);
         }
 
     }
@@ -1669,7 +1669,9 @@ public class Table extends AbstractSelect implements Action.Container,
      * Exception thrown when one or more exceptions occurred during updating of
      * the Table cache.
      * <p>
-     * Contains all exceptions which occurred during the cache update.
+     * Contains all exceptions which occurred during the cache update. The first
+     * occurred exception is set as the cause of this exception. All occurred
+     * exceptions can be accessed using {@link #getCauses()}.
      * </p>
      * 
      */
@@ -1679,9 +1681,18 @@ public class Table extends AbstractSelect implements Action.Container,
 
         public CacheUpdateException(Table table, String message,
                 Throwable[] causes) {
-            super(message);
+            super(maybeSupplementMessage(message, causes.length), causes[0]);
             this.table = table;
             this.causes = causes;
+        }
+
+        private static String maybeSupplementMessage(String message,
+                int causeCount) {
+            if (causeCount > 1) {
+                return message + " Additional causes not shown.";
+            } else {
+                return message;
+            }
         }
 
         /**
