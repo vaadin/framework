@@ -17,20 +17,23 @@ package com.vaadin.client.metadata;
 
 import java.util.Collection;
 
+import com.vaadin.client.JsArrayObject;
 import com.vaadin.client.communication.JSONSerializer;
 
 public class Type {
     private final String name;
     private final Type[] parameterTypes;
+    private final String signature;
 
     public Type(Class<?> clazz) {
-        name = clazz.getName();
-        parameterTypes = null;
+        this(clazz.getName(), null);
     }
 
     public Type(String baseTypeName, Type[] parameterTypes) {
         name = baseTypeName;
         this.parameterTypes = parameterTypes;
+        // Cache derived signature value
+        signature = calculateSignature(name, parameterTypes);
     }
 
     public String getBaseTypeName() {
@@ -50,15 +53,28 @@ public class Type {
         return new Method(this, name);
     }
 
+    /**
+     * @return
+     * @throws NoDataException
+     * 
+     * @deprecated As of 7.0.1, use {@link #getPropertiesAsArray()} instead for
+     *             improved performance
+     */
+    @Deprecated
     public Collection<Property> getProperties() throws NoDataException {
         return TypeDataStore.getProperties(this);
+    }
+
+    public JsArrayObject<Property> getPropertiesAsArray()
+            throws NoDataException {
+        return TypeDataStore.getPropertiesAsArray(this);
     }
 
     public Property getProperty(String propertyName) {
         return new Property(this, propertyName);
     }
 
-    public String getSignature() {
+    private static String calculateSignature(String name, Type[] parameterTypes) {
         String string = name;
         if (parameterTypes != null && parameterTypes.length != 0) {
             string += '<';
@@ -72,6 +88,18 @@ public class Type {
         }
 
         return string;
+    }
+
+    /**
+     * The unique signature used to identify this type. The structure of the
+     * returned string may change without notice and should not be used for any
+     * other purpose than identification. The signature is currently based on
+     * the fully qualified name of the type.
+     * 
+     * @return the unique signature of this type
+     */
+    public String getSignature() {
+        return signature;
     }
 
     @Override
