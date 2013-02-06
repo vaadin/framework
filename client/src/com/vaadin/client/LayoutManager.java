@@ -15,7 +15,6 @@
  */
 package com.vaadin.client;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -48,12 +47,12 @@ public class LayoutManager {
 
     private LayoutDependencyTree currentDependencyTree;
 
-    private final Collection<ManagedLayout> needsHorizontalLayout = new HashSet<ManagedLayout>();
-    private final Collection<ManagedLayout> needsVerticalLayout = new HashSet<ManagedLayout>();
+    private FastStringSet needsHorizontalLayout = FastStringSet.create();
+    private FastStringSet needsVerticalLayout = FastStringSet.create();
 
-    private final Collection<ComponentConnector> needsMeasure = new HashSet<ComponentConnector>();
+    private FastStringSet needsMeasure = FastStringSet.create();
 
-    private Collection<ComponentConnector> pendingOverflowFixes = new HashSet<ComponentConnector>();
+    private FastStringSet pendingOverflowFixes = FastStringSet.create();
 
     private final Map<Element, Collection<ElementResizeListener>> elementResizeListeners = new HashMap<Element, Collection<ElementResizeListener>>();
     private final Set<Element> listenersToFire = new HashSet<Element>();
@@ -212,15 +211,15 @@ public class LayoutManager {
         return currentDependencyTree != null;
     }
 
-    private void countLayout(Map<ManagedLayout, Integer> layoutCounts,
+    private void countLayout(FastStringMap<Integer> layoutCounts,
             ManagedLayout layout) {
-        Integer count = layoutCounts.get(layout);
+        Integer count = layoutCounts.get(layout.getConnectorId());
         if (count == null) {
             count = Integer.valueOf(0);
         } else {
             count = Integer.valueOf(count.intValue() + 1);
         }
-        layoutCounts.put(layout, count);
+        layoutCounts.put(layout.getConnectorId(), count);
         if (count.intValue() > 2) {
             VConsole.error(Util.getConnectorString(layout)
                     + " has been layouted " + count.intValue() + " times");
@@ -242,7 +241,7 @@ public class LayoutManager {
         layoutPending = false;
         layoutTimer.cancel();
         try {
-            currentDependencyTree = new LayoutDependencyTree();
+            currentDependencyTree = new LayoutDependencyTree(connection);
             doLayout();
         } finally {
             currentDependencyTree = null;
@@ -261,24 +260,36 @@ public class LayoutManager {
     private void doLayout() {
         VConsole.log("Starting layout phase");
 
-        Map<ManagedLayout, Integer> layoutCounts = new HashMap<ManagedLayout, Integer>();
+        FastStringMap<Integer> layoutCounts = FastStringMap.create();
 
         int passes = 0;
         Duration totalDuration = new Duration();
 
-        for (ManagedLayout layout : needsHorizontalLayout) {
-            currentDependencyTree.setNeedsHorizontalLayout(layout, true);
-        }
-        for (ManagedLayout layout : needsVerticalLayout) {
-            currentDependencyTree.setNeedsVerticalLayout(layout, true);
-        }
-        needsHorizontalLayout.clear();
-        needsVerticalLayout.clear();
+        ConnectorMap connectorMap = ConnectorMap.get(connection);
 
-        for (ComponentConnector connector : needsMeasure) {
-            currentDependencyTree.setNeedsMeasure(connector, true);
+        JsArrayString dump = needsHorizontalLayout.dump();
+        int dumpLength = dump.length();
+        for (int i = 0; i < dumpLength; i++) {
+            String layoutId = dump.get(i);
+            currentDependencyTree.setNeedsHorizontalLayout(layoutId, true);
         }
-        needsMeasure.clear();
+
+        dump = needsVerticalLayout.dump();
+        dumpLength = dump.length();
+        for (int i = 0; i < dumpLength; i++) {
+            String layoutId = dump.get(i);
+            currentDependencyTree.setNeedsVerticalLayout(layoutId, true);
+        }
+        needsHorizontalLayout = FastStringSet.create();
+        needsVerticalLayout = FastStringSet.create();
+
+        dump = needsMeasure.dump();
+        dumpLength = dump.length();
+        for (int i = 0; i < dumpLength; i++) {
+            String layoutId = dump.get(i);
+            currentDependencyTree.setNeedsMeasure(layoutId, true);
+        }
+        needsMeasure = FastStringSet.create();
 
         measureNonConnectors();
 
@@ -333,8 +344,13 @@ public class LayoutManager {
 
             while (currentDependencyTree.hasHorizontalConnectorToLayout()
                     || currentDependencyTree.hasVerticaConnectorToLayout()) {
-                for (ManagedLayout layout : currentDependencyTree
-                        .getHorizontalLayoutTargets()) {
+
+                JsArrayString layoutTargets = currentDependencyTree
+                        .getHorizontalLayoutTargetsJsArray();
+                int length = layoutTargets.length();
+                for (int i = 0; i < length; i++) {
+                    ManagedLayout layout = (ManagedLayout) connectorMap
+                            .getConnector(layoutTargets.get(i));
                     if (layout instanceof DirectionalManagedLayout) {
                         currentDependencyTree
                                 .markAsHorizontallyLayouted(layout);
@@ -362,8 +378,12 @@ public class LayoutManager {
                     }
                 }
 
-                for (ManagedLayout layout : currentDependencyTree
-                        .getVerticalLayoutTargets()) {
+                layoutTargets = currentDependencyTree
+                        .getVerticalLayoutTargetsJsArray();
+                length = layoutTargets.length();
+                for (int i = 0; i < length; i++) {
+                    ManagedLayout layout = (ManagedLayout) connectorMap
+                            .getConnector(layoutTargets.get(i));
                     if (layout instanceof DirectionalManagedLayout) {
                         currentDependencyTree.markAsVerticallyLayouted(layout);
                         DirectionalManagedLayout cl = (DirectionalManagedLayout) layout;
@@ -436,19 +456,22 @@ public class LayoutManager {
         }
 
         int postLayoutStart = totalDuration.elapsedMillis();
-        for (ComponentConnector connector : connection.getConnectorMap()
-                .getComponentConnectors()) {
+        JsArrayObject<ComponentConnector> componentConnectors = connectorMap
+                .getComponentConnectorsAsJsArray();
+        int size = componentConnectors.size();
+        for (int i = 0; i < size; i++) {
+            ComponentConnector connector = componentConnectors.get(i);
             if (connector instanceof PostLayoutListener) {
                 ((PostLayoutListener) connector).postLayout();
             }
         }
-        int postLayoutDone = (totalDuration.elapsedMillis() - postLayoutStart);
-        VConsole.log("Invoke post layout listeners in " + postLayoutDone
-                + " ms");
+        int postLayoutDone = totalDuration.elapsedMillis();
+        VConsole.log("Invoke post layout listeners in "
+                + (postLayoutDone - postLayoutStart) + " ms");
 
         cleanMeasuredSizes();
-        int cleaningDone = (totalDuration.elapsedMillis() - postLayoutDone);
-        VConsole.log("Cleaned old measured sizes in " + cleaningDone + "ms");
+        int cleaningTime = (totalDuration.elapsedMillis() - postLayoutDone);
+        VConsole.log("Cleaned old measured sizes in " + cleaningTime + "ms");
 
         VConsole.log("Total layout phase time: "
                 + totalDuration.elapsedMillis() + "ms");
@@ -462,16 +485,24 @@ public class LayoutManager {
 
     private int measureConnectors(LayoutDependencyTree layoutDependencyTree,
             boolean measureAll) {
-        if (!pendingOverflowFixes.isEmpty()) {
+        JsArrayString pendingOverflowConnectorsIds = pendingOverflowFixes
+                .dump();
+        int pendingOverflowCount = pendingOverflowConnectorsIds.length();
+        ConnectorMap connectorMap = ConnectorMap.get(connection);
+        if (pendingOverflowCount > 0) {
             Duration duration = new Duration();
 
             HashMap<Element, String> originalOverflows = new HashMap<Element, String>();
 
-            HashSet<ComponentConnector> delayedOverflowFixes = new HashSet<ComponentConnector>();
+            FastStringSet delayedOverflowFixes = FastStringSet.create();
 
             // First set overflow to hidden (and save previous value so it can
             // be restored later)
-            for (ComponentConnector componentConnector : pendingOverflowFixes) {
+            for (int i = 0; i < pendingOverflowCount; i++) {
+                String connectorId = pendingOverflowConnectorsIds.get(i);
+                ComponentConnector componentConnector = (ComponentConnector) connectorMap
+                        .getConnector(connectorId);
+
                 // Delay the overflow fix if the involved connectors might still
                 // change
                 boolean connectorChangesExpected = !currentDependencyTree
@@ -481,7 +512,7 @@ public class LayoutManager {
                                 .noMoreChangesExpected((ComponentConnector) componentConnector
                                         .getParent());
                 if (connectorChangesExpected || parentChangesExcpected) {
-                    delayedOverflowFixes.add(componentConnector);
+                    delayedOverflowFixes.add(connectorId);
                     continue;
                 }
 
@@ -510,60 +541,76 @@ public class LayoutManager {
 
             pendingOverflowFixes.removeAll(delayedOverflowFixes);
 
+            JsArrayString remainingOverflowFixIds = pendingOverflowFixes.dump();
+            int remainingCount = remainingOverflowFixIds.length();
+
             // Then ensure all scrolling elements are reflowed by measuring
-            for (ComponentConnector componentConnector : pendingOverflowFixes) {
+            for (int i = 0; i < remainingCount; i++) {
+                ComponentConnector componentConnector = (ComponentConnector) connectorMap
+                        .getConnector(remainingOverflowFixIds.get(i));
                 componentConnector.getWidget().getElement().getParentElement()
                         .getOffsetHeight();
             }
 
             // Finally restore old overflow value and update bookkeeping
-            for (ComponentConnector componentConnector : pendingOverflowFixes) {
+            for (int i = 0; i < remainingCount; i++) {
+                String connectorId = remainingOverflowFixIds.get(i);
+                ComponentConnector componentConnector = (ComponentConnector) connectorMap
+                        .getConnector(connectorId);
                 Element parentElement = componentConnector.getWidget()
                         .getElement().getParentElement();
                 parentElement.getStyle().setProperty("overflow",
                         originalOverflows.get(parentElement));
 
-                layoutDependencyTree.setNeedsMeasure(componentConnector, true);
+                layoutDependencyTree.setNeedsMeasure(connectorId, true);
             }
             if (!pendingOverflowFixes.isEmpty()) {
-                VConsole.log("Did overflow fix for "
-                        + pendingOverflowFixes.size() + " elements  in "
-                        + duration.elapsedMillis() + " ms");
+                VConsole.log("Did overflow fix for " + remainingCount
+                        + " elements  in " + duration.elapsedMillis() + " ms");
             }
             pendingOverflowFixes = delayedOverflowFixes;
         }
 
         int measureCount = 0;
         if (measureAll) {
-            ComponentConnector[] allConnectors = ConnectorMap.get(connection)
-                    .getComponentConnectors();
+            JsArrayObject<ComponentConnector> allConnectors = connectorMap
+                    .getComponentConnectorsAsJsArray();
+            int size = allConnectors.size();
 
             // Find connectors that should actually be measured
-            ArrayList<ComponentConnector> connectors = new ArrayList<ComponentConnector>();
-            for (ComponentConnector candidate : allConnectors) {
+            JsArrayObject<ComponentConnector> connectors = JsArrayObject
+                    .createArray().cast();
+            for (int i = 0; i < size; i++) {
+                ComponentConnector candidate = allConnectors.get(i);
                 if (needsMeasure(candidate.getWidget().getElement())) {
                     connectors.add(candidate);
                 }
             }
 
-            for (ComponentConnector connector : connectors) {
-                measureConnector(connector);
+            int connectorCount = connectors.size();
+            for (int i = 0; i < connectorCount; i++) {
+                measureConnector(connectors.get(i));
             }
-            for (ComponentConnector connector : connectors) {
-                layoutDependencyTree.setNeedsMeasure(connector, false);
+            for (int i = 0; i < connectorCount; i++) {
+                layoutDependencyTree.setNeedsMeasure(connectors.get(i)
+                        .getConnectorId(), false);
             }
-            measureCount += connectors.size();
+            measureCount += connectorCount;
         }
 
         while (layoutDependencyTree.hasConnectorsToMeasure()) {
-            Collection<ComponentConnector> measureTargets = layoutDependencyTree
-                    .getMeasureTargets();
-            for (ComponentConnector connector : measureTargets) {
+            JsArrayString measureTargets = layoutDependencyTree
+                    .getMeasureTargetsJsArray();
+            int length = measureTargets.length();
+            for (int i = 0; i < length; i++) {
+                ComponentConnector connector = (ComponentConnector) connectorMap
+                        .getConnector(measureTargets.get(i));
                 measureConnector(connector);
                 measureCount++;
             }
-            for (ComponentConnector connector : measureTargets) {
-                layoutDependencyTree.setNeedsMeasure(connector, false);
+            for (int i = 0; i < length; i++) {
+                String connectorId = measureTargets.get(i);
+                layoutDependencyTree.setNeedsMeasure(connectorId, false);
             }
         }
         return measureCount;
@@ -598,7 +645,7 @@ public class LayoutManager {
             ComponentConnector scrollingBoundary = currentDependencyTree
                     .getScrollingBoundary(connector);
             if (scrollingBoundary != null) {
-                pendingOverflowFixes.add(scrollingBoundary);
+                pendingOverflowFixes.add(scrollingBoundary.getConnectorId());
             }
         }
     }
@@ -630,16 +677,12 @@ public class LayoutManager {
         JsArrayString dependents = measuredSize.getDependents();
         for (int i = 0; i < dependents.length(); i++) {
             String pid = dependents.get(i);
-            ManagedLayout dependent = (ManagedLayout) connection
-                    .getConnectorMap().getConnector(pid);
-            if (dependent != null) {
+            if (pid != null) {
                 if (heightChanged) {
-                    currentDependencyTree.setNeedsVerticalLayout(dependent,
-                            true);
+                    currentDependencyTree.setNeedsVerticalLayout(pid, true);
                 }
                 if (widthChanged) {
-                    currentDependencyTree.setNeedsHorizontalLayout(dependent,
-                            true);
+                    currentDependencyTree.setNeedsHorizontalLayout(pid, true);
                 }
             }
         }
@@ -654,9 +697,11 @@ public class LayoutManager {
 
     public void forceLayout() {
         ConnectorMap connectorMap = connection.getConnectorMap();
-        ComponentConnector[] componentConnectors = connectorMap
-                .getComponentConnectors();
-        for (ComponentConnector connector : componentConnectors) {
+        JsArrayObject<ComponentConnector> componentConnectors = connectorMap
+                .getComponentConnectorsAsJsArray();
+        int size = componentConnectors.size();
+        for (int i = 0; i < size; i++) {
+            ComponentConnector connector = componentConnectors.get(i);
             if (connector instanceof ManagedLayout) {
                 setNeedsLayout((ManagedLayout) connector);
             }
@@ -689,7 +734,7 @@ public class LayoutManager {
      *            the managed layout that should be layouted
      */
     public final void setNeedsHorizontalLayout(ManagedLayout layout) {
-        needsHorizontalLayout.add(layout);
+        needsHorizontalLayout.add(layout.getConnectorId());
     }
 
     /**
@@ -704,7 +749,7 @@ public class LayoutManager {
      *            the managed layout that should be layouted
      */
     public final void setNeedsVerticalLayout(ManagedLayout layout) {
-        needsVerticalLayout.add(layout);
+        needsVerticalLayout.add(layout.getConnectorId());
     }
 
     /**
@@ -1311,7 +1356,7 @@ public class LayoutManager {
         if (isLayoutRunning()) {
             currentDependencyTree.setNeedsMeasure(component, true);
         } else {
-            needsMeasure.add(component);
+            needsMeasure.add(component.getConnectorId());
             layoutLater();
         }
     }
