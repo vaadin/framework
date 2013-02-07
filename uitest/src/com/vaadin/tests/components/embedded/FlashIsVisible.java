@@ -1,9 +1,13 @@
 package com.vaadin.tests.components.embedded;
 
-import com.vaadin.server.ExternalResource;
+import com.vaadin.server.ClassResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Embedded;
 
+/**
+ * Tests the legacy flash support in Embedded
+ */
+@Deprecated
 public class FlashIsVisible extends TestBase {
 
     @Override
@@ -13,8 +17,9 @@ public class FlashIsVisible extends TestBase {
         player.setMimeType("application/x-shockwave-flash");
         player.setWidth("400px");
         player.setHeight("300px");
-        String url = "http://www.youtube.com/v/qQ9N742QB4g&autoplay=0";
-        player.setSource(new ExternalResource(url));
+        player.setSource(new ClassResource(
+                com.vaadin.tests.components.flash.FlashIsVisible.class,
+                "simple.swf"));
         addComponent(player);
     }
 

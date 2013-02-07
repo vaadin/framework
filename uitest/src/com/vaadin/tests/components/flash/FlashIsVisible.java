@@ -1,6 +1,6 @@
 package com.vaadin.tests.components.flash;
 
-import com.vaadin.server.ExternalResource;
+import com.vaadin.server.ClassResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Flash;
 
@@ -11,8 +11,7 @@ public class FlashIsVisible extends TestBase {
         Flash player = new Flash();
         player.setWidth("400px");
         player.setHeight("300px");
-        String url = "http://www.youtube.com/v/qQ9N742QB4g&autoplay=0";
-        player.setSource(new ExternalResource(url));
+        player.setSource(new ClassResource("simple.swf"));
         addComponent(player);
     }
 
