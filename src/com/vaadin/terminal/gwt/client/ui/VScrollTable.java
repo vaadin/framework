@@ -980,6 +980,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             // sanity check (in case the value has slipped beyond the total
             // amount of rows)
             scrollBody.setLastRendered(scrollBody.getLastRendered());
+
+            // recalculate max indent
+            int oldIndent = scrollBody.getMaxIndent();
+            scrollBody.calculateMaxIndent();
+            if (oldIndent != scrollBody.getMaxIndent()) {
+                // indent updated, headers might need adjusting
+                triggerLazyColumnAdjustment(true);
+            }
         } else {
             postponeSanityCheckForLastRendered = false;
             UIDL rowData = uidl.getChildByTagName("rows");
@@ -1322,6 +1330,26 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         return totalRows;
     }
 
+    /**
+     * Returns the extra space that is given to the header column when column
+     * width is determined by header text.
+     * 
+     * @return extra space in pixels
+     */
+    private int getHeaderPadding() {
+        return scrollBody.getCellExtraWidth();
+    }
+
+    /**
+     * This method exists for the needs of {@link VTreeTable} only. Not part of
+     * the official API, <b>extend at your own risk</b>.
+     * 
+     * @return index of TreeTable's hierarchy column, or -1 if not applicable
+     */
+    protected int getHierarchyColumnIndex() {
+        return -1;
+    }
+
     private void focusRowFromBody() {
         if (selectedRowKeys.size() == 1) {
             // try to focus a row currently selected and in viewport
@@ -1517,6 +1545,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      *            amount of rows in data set
      */
     private void updateBody(UIDL uidl, int firstRow, int reqRows) {
+        int oldIndent = scrollBody.getMaxIndent();
         if (uidl == null || reqRows < 1) {
             // container is empty, remove possibly existing rows
             if (firstRow <= 0) {
@@ -1534,6 +1563,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         scrollBody.renderRows(uidl, firstRow, reqRows);
 
         discardRowsOutsideCacheWindow();
+        scrollBody.calculateMaxIndent();
+        if (oldIndent != scrollBody.getMaxIndent()) {
+            // indent updated, headers might need adjusting
+            headerChangedDuringUpdate = true;
+        }
     }
 
     private void updateRowsInBody(UIDL partialRowUpdates) {
@@ -1722,31 +1756,54 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         return tHead.getHeaderCell(index).getColKey();
     }
 
-    private void setColWidth(int colIndex, int w, boolean isDefinedWidth) {
+    /**
+     * Note: not part of the official API, extend at your own risk.
+     * 
+     * Sets the indicated column's width for headers and scrollBody alike.
+     * 
+     * @param colIndex
+     *            index of the modified column
+     * @param w
+     *            new width (may be subject to modifications if doesn't meet
+     *            minimum requirements)
+     * @param isDefinedWidth
+     *            disables expand ratio if set true
+     */
+    protected void setColWidth(int colIndex, int w, boolean isDefinedWidth) {
         final HeaderCell hcell = tHead.getHeaderCell(colIndex);
 
         // Make sure that the column grows to accommodate the sort indicator if
         // necessary.
-        if (w < hcell.getMinWidth()) {
-            w = hcell.getMinWidth();
+        // get min width with no indent or padding
+        int minWidth = hcell.getMinWidth(false, false);
+        if (w < minWidth) {
+            w = minWidth;
         }
 
-        // Set header column width
+        // Set header column width WITHOUT INDENT
         hcell.setWidth(w, isDefinedWidth);
+
+        // Set footer column width likewise
+        FooterCell fcell = tFoot.getFooterCell(colIndex);
+        fcell.setWidth(w, isDefinedWidth);
 
         // Ensure indicators have been taken into account
         tHead.resizeCaptionContainer(hcell);
 
+        // Make sure that the body column grows to accommodate the indent if
+        // necessary.
+        // get min width with indent, no padding
+        minWidth = hcell.getMinWidth(true, false);
+        if (w < minWidth) {
+            w = minWidth;
+        }
+
         // Set body column width
         scrollBody.setColWidth(colIndex, w);
-
-        // Set footer column width
-        FooterCell fcell = tFoot.getFooterCell(colIndex);
-        fcell.setWidth(w, isDefinedWidth);
     }
 
     private int getColWidth(String colKey) {
-        return tHead.getHeaderCell(colKey).getWidth();
+        return tHead.getHeaderCell(colKey).getWidthWithIndent();
     }
 
     /**
@@ -1938,22 +1995,37 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         tHead.enableBrowserIntelligence();
         tFoot.enableBrowserIntelligence();
 
+        int hierarchyColumnIndent = scrollBody != null ? scrollBody
+                .getMaxIndent() : 0;
+        HeaderCell hierarchyHeaderWithExpandRatio = null;
+
         // first loop: collect natural widths
         while (headCells.hasNext()) {
             final HeaderCell hCell = (HeaderCell) headCells.next();
             final FooterCell fCell = (FooterCell) footCells.next();
+            boolean needsIndent = hierarchyColumnIndent > 0
+                    && hCell.isHierarchyColumn();
             int w = hCell.getWidth();
             if (hCell.isDefinedWidth()) {
                 // server has defined column width explicitly
+                if (needsIndent && w < hierarchyColumnIndent) {
+                    // hierarchy indent overrides explicitly set width
+                    w = hierarchyColumnIndent;
+                }
                 totalExplicitColumnsWidths += w;
             } else {
                 if (hCell.getExpandRatio() > 0) {
                     expandRatioDivider += hCell.getExpandRatio();
                     w = 0;
+                    if (needsIndent && w < hierarchyColumnIndent) {
+                        hierarchyHeaderWithExpandRatio = hCell;
+                        // don't add to widths here, because will be included in
+                        // the expand ratio space if there's enough of it
+                    }
                 } else {
                     // get and store greater of header width and column width,
-                    // and
-                    // store it as a minimumn natural col width
+                    // and store it as a minimum natural column width (these
+                    // already contain the indent if any)
                     int headerWidth = hCell.getNaturalColumnWidth(i);
                     int footerWidth = fCell.getNaturalColumnWidth(i);
                     w = headerWidth > footerWidth ? headerWidth : footerWidth;
@@ -1964,6 +2036,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             widths[i] = w;
             total += w;
             i++;
+        }
+        if (hierarchyHeaderWithExpandRatio != null) {
+            total += hierarchyColumnIndent;
         }
 
         tHead.disableBrowserIntelligence();
@@ -1997,7 +2072,17 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         if (availW > total) {
             // natural size is smaller than available space
-            final int extraSpace = availW - total;
+            int extraSpace = availW - total;
+            if (hierarchyHeaderWithExpandRatio != null) {
+                /*
+                 * add the indent's space back to ensure each column gets an
+                 * even share according to the expand ratios (note: if the
+                 * allocated space isn't enough for the hierarchy column it
+                 * shall be treated like a defined width column and the indent
+                 * space gets removed from the extra space again)
+                 */
+                extraSpace += hierarchyColumnIndent;
+            }
             final int totalWidthR = total - totalExplicitColumnsWidths;
             int checksum = 0;
             needsReLayout = true;
@@ -2005,6 +2090,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             if (extraSpace == 1) {
                 // We cannot divide one single pixel so we give it the first
                 // undefined column
+                // no need to worry about indent here
                 headCells = tHead.iterator();
                 i = 0;
                 checksum = availW;
@@ -2018,6 +2104,22 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 }
 
             } else if (expandRatioDivider > 0) {
+                boolean setIndentToHierarchyHeader = false;
+                if (hierarchyHeaderWithExpandRatio != null) {
+                    // ensure first that the hierarchyColumn gets at least the
+                    // space allocated for indent
+                    final int newSpace = Math
+                            .round((extraSpace * (hierarchyHeaderWithExpandRatio
+                                    .getExpandRatio() / expandRatioDivider)));
+                    if (newSpace < hierarchyColumnIndent) {
+                        // not enough space for indent, remove indent from the
+                        // extraSpace again and handle hierarchy column's header
+                        // separately
+                        setIndentToHierarchyHeader = true;
+                        extraSpace -= hierarchyColumnIndent;
+                    }
+                }
+
                 // visible columns have some active expand ratios, excess
                 // space is divided according to them
                 headCells = tHead.iterator();
@@ -2026,9 +2128,17 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     HeaderCell hCell = (HeaderCell) headCells.next();
                     if (hCell.getExpandRatio() > 0) {
                         int w = widths[i];
-                        final int newSpace = Math.round((extraSpace * (hCell
-                                .getExpandRatio() / expandRatioDivider)));
-                        w += newSpace;
+                        if (setIndentToHierarchyHeader
+                                && hierarchyHeaderWithExpandRatio.equals(hCell)) {
+                            // hierarchy column's header is no longer part of
+                            // the expansion divide and only gets indent
+                            w += hierarchyColumnIndent;
+                        } else {
+                            final int newSpace = Math
+                                    .round((extraSpace * (hCell
+                                            .getExpandRatio() / expandRatioDivider)));
+                            w += newSpace;
+                        }
                         widths[i] = w;
                     }
                     checksum += widths[i];
@@ -2038,6 +2148,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 // no expand ratios defined, we will share extra space
                 // relatively to "natural widths" among those without
                 // explicit width
+                // no need to worry about indent here, it's already included
+
                 headCells = tHead.iterator();
                 i = 0;
                 while (headCells.hasNext()) {
@@ -2073,7 +2185,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
 
         } else {
-            // bodys size will be more than available and scrollbar will appear
+            // body's size will be more than available and scrollbar will appear
         }
 
         // last loop: set possibly modified values or reset if new tBody
@@ -2174,8 +2286,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     }
 
     /**
-     * Note, this method is not official api although declared as protected.
-     * Extend at you own risk.
+     * Note: this method is not part of official API although declared as
+     * protected. Extend at your own risk.
      * 
      * @return true if content area will have scrollbars visible.
      */
@@ -2532,6 +2644,16 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             expandRatio = 0;
         }
 
+        /**
+         * Sets width to the header cell. This width should not include any
+         * possible indent modifications that are present in
+         * {@link VScrollTableBody#getMaxIndent()}.
+         * 
+         * @param w
+         *            required width of the cell sans indentations
+         * @param ensureDefinedWidth
+         *            disables expand ratio if required
+         */
         public void setWidth(int w, boolean ensureDefinedWidth) {
             if (ensureDefinedWidth) {
                 definedWidth = true;
@@ -2555,13 +2677,21 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                  * unless TD width is not explicitly set.
                  */
                 if (scrollBody != null) {
-                    int tdWidth = width + scrollBody.getCellExtraWidth();
+                    int maxIndent = scrollBody.getMaxIndent();
+                    if (w < maxIndent && isHierarchyColumn()) {
+                        w = maxIndent;
+                    }
+                    int tdWidth = w + scrollBody.getCellExtraWidth();
                     setWidth(tdWidth + "px");
                 } else {
                     Scheduler.get().scheduleDeferred(new Command() {
                         public void execute() {
-                            int tdWidth = width
-                                    + scrollBody.getCellExtraWidth();
+                            int maxIndent = scrollBody.getMaxIndent();
+                            int tdWidth = width;
+                            if (tdWidth < maxIndent && isHierarchyColumn()) {
+                                tdWidth = maxIndent;
+                            }
+                            tdWidth += scrollBody.getCellExtraWidth();
                             setWidth(tdWidth + "px");
                         }
                     });
@@ -2584,8 +2714,43 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             return definedWidth && width >= 0;
         }
 
+        /**
+         * This method exists for the needs of {@link VTreeTable} only.
+         * 
+         * Returns the pixels width of the header cell. This includes the
+         * indent, if applicable.
+         * 
+         * @return The width in pixels
+         */
+        protected int getWidthWithIndent() {
+            if (scrollBody != null && isHierarchyColumn()) {
+                int maxIndent = scrollBody.getMaxIndent();
+                if (maxIndent > width) {
+                    return maxIndent;
+                }
+            }
+            return width;
+        }
+
+        /**
+         * Returns the pixels width of the header cell.
+         * 
+         * @return The width in pixels
+         */
         public int getWidth() {
             return width;
+        }
+
+        /**
+         * This method exists for the needs of {@link VTreeTable} only.
+         * 
+         * @return <code>true</code> if this is hierarcyColumn's header cell,
+         *         <code>false</code> otherwise
+         */
+        private boolean isHierarchyColumn() {
+            int hierarchyColumnIndex = getHierarchyColumnIndex();
+            return hierarchyColumnIndex >= 0
+                    && tHead.visibleCells.indexOf(this) == hierarchyColumnIndex;
         }
 
         public void setText(String headerText) {
@@ -2848,7 +3013,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 DOM.setCapture(getElement());
                 dragStartX = DOM.eventGetClientX(event);
                 colIndex = getColIndexByKey(cid);
-                originalWidth = getWidth();
+                originalWidth = getWidthWithIndent();
                 DOM.eventPreventDefault(event);
                 break;
             case Event.ONMOUSEUP:
@@ -2880,8 +3045,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     tHead.disableAutoColumnWidthCalculation(this);
 
                     int newWidth = originalWidth + deltaX;
-                    if (newWidth < getMinWidth()) {
-                        newWidth = getMinWidth();
+                    // get min width with indent, no padding
+                    int minWidth = getMinWidth(true, false);
+                    if (newWidth < minWidth) {
+                        newWidth = minWidth;
                     }
                     setColWidth(colIndex, newWidth, true);
                     triggerLazyColumnAdjustment(false);
@@ -2893,12 +3060,37 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             }
         }
 
-        public int getMinWidth() {
-            int cellExtraWidth = 0;
+        /**
+         * Returns the smallest possible cell width in pixels.
+         * 
+         * @param includeIndent
+         *            - width should include hierarchy column indent if
+         *            applicable (VTreeTable only)
+         * @param includeCellExtraWidth
+         *            - width should include paddings etc.
+         * @return
+         */
+        private int getMinWidth(boolean includeIndent,
+                boolean includeCellExtraWidth) {
+            int minWidth = sortIndicator.getOffsetWidth();
             if (scrollBody != null) {
-                cellExtraWidth += scrollBody.getCellExtraWidth();
+                // check the need for indent before adding paddings etc.
+                if (includeIndent && isHierarchyColumn()) {
+                    int maxIndent = scrollBody.getMaxIndent();
+                    if (minWidth < maxIndent) {
+                        minWidth = maxIndent;
+                    }
+                }
+                if (includeCellExtraWidth) {
+                    minWidth += scrollBody.getCellExtraWidth();
+                }
             }
-            return cellExtraWidth + sortIndicator.getOffsetWidth();
+            return minWidth;
+        }
+
+        public int getMinWidth() {
+            // get min width with padding, no indent
+            return getMinWidth(false, true);
         }
 
         public String getCaption() {
@@ -2945,16 +3137,20 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          * @return
          */
         public int getNaturalColumnWidth(int columnIndex) {
+            final int iw = columnIndex == getHierarchyColumnIndex() ? scrollBody
+                    .getMaxIndent() : 0;
             if (isDefinedWidth()) {
+                if (iw > width) {
+                    return iw;
+                }
                 return width;
             } else {
                 if (naturalWidth < 0) {
                     // This is recently revealed column. Try to detect a proper
-                    // value (greater of header and data
-                    // cols)
+                    // value (greater of header and data columns)
 
                     int hw = captionContainer.getOffsetWidth()
-                            + scrollBody.getCellExtraWidth();
+                            + getHeaderPadding();
                     if (BrowserInfo.get().isGecko()
                             || BrowserInfo.get().isIE7()) {
                         hw += sortIndicator.getOffsetWidth();
@@ -2971,7 +3167,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     final int cw = scrollBody.getColWidth(columnIndex);
                     naturalWidth = (hw > cw ? hw : cw);
                 }
-                return naturalWidth;
+                if (iw > naturalWidth) {
+                    // indent is temporary value, naturalWidth shouldn't be
+                    // updated
+                    return iw;
+                } else {
+                    return naturalWidth;
+                }
             }
         }
 
@@ -3061,32 +3263,49 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         public void resizeCaptionContainer(HeaderCell cell) {
             HeaderCell lastcell = getHeaderCell(visibleCells.size() - 1);
+            int columnSelectorOffset = columnSelector.getOffsetWidth();
 
-            // Measure column widths
-            int columnTotalWidth = 0;
-            for (Widget w : visibleCells) {
-                columnTotalWidth += w.getOffsetWidth();
-            }
-
-            if (cell == lastcell
-                    && columnSelector.getOffsetWidth() > 0
-                    && columnTotalWidth >= div.getOffsetWidth()
-                            - columnSelector.getOffsetWidth()
+            if (cell == lastcell && columnSelectorOffset > 0
                     && !hasVerticalScrollbar()) {
-                // Ensure column caption is visible when placed under the column
-                // selector widget by shifting and resizing the caption.
-                int offset = 0;
-                int diff = div.getOffsetWidth() - columnTotalWidth;
-                if (diff < columnSelector.getOffsetWidth() && diff > 0) {
-                    // If the difference is less than the column selectors width
-                    // then just offset by the
-                    // difference
-                    offset = columnSelector.getOffsetWidth() - diff;
-                } else {
-                    // Else offset by the whole column selector
-                    offset = columnSelector.getOffsetWidth();
+
+                // Measure column widths
+                int columnTotalWidth = 0;
+                for (Widget w : visibleCells) {
+                    int cellExtraWidth = w.getOffsetWidth();
+                    if (scrollBody != null
+                            && visibleCells.indexOf(w) == getHierarchyColumnIndex()
+                            && cellExtraWidth < scrollBody.getMaxIndent()) {
+                        // indent must be taken into consideration even if it
+                        // hasn't been applied yet
+                        columnTotalWidth += scrollBody.getMaxIndent();
+                    } else {
+                        columnTotalWidth += cellExtraWidth;
+                    }
                 }
-                lastcell.resizeCaptionContainer(offset);
+
+                int divOffset = div.getOffsetWidth();
+                if (columnTotalWidth >= divOffset - columnSelectorOffset) {
+                    /*
+                     * Ensure column caption is visible when placed under the
+                     * column selector widget by shifting and resizing the
+                     * caption.
+                     */
+                    int offset = 0;
+                    int diff = divOffset - columnTotalWidth;
+                    if (diff < columnSelectorOffset && diff > 0) {
+                        /*
+                         * If the difference is less than the column selectors
+                         * width then just offset by the difference
+                         */
+                        offset = columnSelectorOffset - diff;
+                    } else {
+                        // Else offset by the whole column selector
+                        offset = columnSelectorOffset;
+                    }
+                    lastcell.resizeCaptionContainer(offset);
+                } else {
+                    cell.resizeCaptionContainer(0);
+                }
             } else {
                 cell.resizeCaptionContainer(0);
             }
@@ -3149,10 +3368,15 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     // Make sure to accomodate for the sort indicator if
                     // necessary.
                     int width = Integer.parseInt(widthStr);
-                    if (width < c.getMinWidth()) {
-                        width = c.getMinWidth();
+                    int widthWithoutAddedIndent = width;
+
+                    // get min width with indent, no padding
+                    int minWidth = c.getMinWidth(true, false);
+                    if (width < minWidth) {
+                        width = minWidth;
                     }
-                    if (width != c.getWidth() && scrollBody != null) {
+
+                    if (width != c.getWidthWithIndent() && scrollBody != null) {
                         // Do a more thorough update if a column is resized from
                         // the server *after* the header has been properly
                         // initialized
@@ -3166,7 +3390,13 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 });
                         refreshContentWidths = true;
                     } else {
-                        c.setWidth(width, true);
+                        // get min width with no indent or padding
+                        minWidth = c.getMinWidth(false, false);
+                        if (widthWithoutAddedIndent < minWidth) {
+                            widthWithoutAddedIndent = minWidth;
+                        }
+                        // save min width without indent
+                        c.setWidth(widthWithoutAddedIndent, true);
                     }
                 } else if (recalcWidths) {
                     c.setUndefinedWidth();
@@ -3611,15 +3841,16 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         /**
-         * Sets the width of the cell
+         * Sets the width of the cell. This width should not include any
+         * possible indent modifications that are present in
+         * {@link VScrollTableBody#getMaxIndent()}.
          * 
          * @param w
          *            The width of the cell
          * @param ensureDefinedWidth
-         *            Ensures the the given width is not recalculated
+         *            Ensures that the given width is not recalculated
          */
         public void setWidth(int w, boolean ensureDefinedWidth) {
-
             if (ensureDefinedWidth) {
                 definedWidth = true;
                 // on column resize expand ratio becomes zero
@@ -3653,14 +3884,26 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                  * unless TD width is not explicitly set.
                  */
                 if (scrollBody != null) {
-                    int tdWidth = width + scrollBody.getCellExtraWidth()
+                    int maxIndent = scrollBody.getMaxIndent();
+                    if (w < maxIndent
+                            && tFoot.visibleCells.indexOf(this) == getHierarchyColumnIndex()) {
+                        // ensure there's room for the indent
+                        w = maxIndent;
+                    }
+                    int tdWidth = w + scrollBody.getCellExtraWidth()
                             - borderWidths;
                     setWidth(Math.max(tdWidth, 0) + "px");
                 } else {
                     Scheduler.get().scheduleDeferred(new Command() {
                         public void execute() {
-                            int tdWidth = width
-                                    + scrollBody.getCellExtraWidth()
+                            int tdWidth = width;
+                            int maxIndent = scrollBody.getMaxIndent();
+                            if (tdWidth < maxIndent
+                                    && tFoot.visibleCells.indexOf(this) == getHierarchyColumnIndex()) {
+                                // ensure there's room for the indent
+                                tdWidth = maxIndent;
+                            }
+                            tdWidth += scrollBody.getCellExtraWidth()
                                     - borderWidths;
                             setWidth(Math.max(tdWidth, 0) + "px");
                         }
@@ -3673,6 +3916,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          * Sets the width to undefined
          */
         public void setUndefinedWidth() {
+            definedWidth = false;
             setWidth(-1, false);
         }
 
@@ -3687,7 +3931,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
 
         /**
-         * Returns the pixels width of the footer cell
+         * Returns the pixels width of the footer cell.
          * 
          * @return The width in pixels
          */
@@ -3800,7 +4044,12 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
          * @return
          */
         public int getNaturalColumnWidth(int columnIndex) {
+            final int iw = columnIndex == getHierarchyColumnIndex() ? scrollBody
+                    .getMaxIndent() : 0;
             if (isDefinedWidth()) {
+                if (iw > width) {
+                    return iw;
+                }
                 return width;
             } else {
                 if (naturalWidth < 0) {
@@ -3809,7 +4058,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     // cols)
 
                     final int hw = ((Element) getElement().getLastChild())
-                            .getOffsetWidth() + scrollBody.getCellExtraWidth();
+                            .getOffsetWidth() + getHeaderPadding();
                     if (columnIndex < 0) {
                         columnIndex = 0;
                         for (Iterator<Widget> it = tHead.iterator(); it
@@ -3822,7 +4071,11 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                     final int cw = scrollBody.getColWidth(columnIndex);
                     naturalWidth = (hw > cw ? hw : cw);
                 }
-                return naturalWidth;
+                if (iw > naturalWidth) {
+                    return iw;
+                } else {
+                    return naturalWidth;
+                }
             }
         }
 
@@ -4731,6 +4984,26 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             return cellExtraWidth;
         }
 
+        /**
+         * This method exists for the needs of {@link VTreeTable} only. Returns
+         * the maximum indent of the hierarcyColumn, if applicable.
+         * 
+         * @see {@link VScrollTable#getHierarchyColumnIndex()}
+         * 
+         * @return maximum indent in pixels
+         */
+        protected int getMaxIndent() {
+            return 0;
+        }
+
+        /**
+         * This method exists for the needs of {@link VTreeTable} only.
+         * Calculates the maximum indent of the hierarcyColumn, if applicable.
+         */
+        protected void calculateMaxIndent() {
+            // NOP
+        }
+
         private void detectExtrawidth() {
             NodeList<TableRowElement> rows = tBodyElement.getRows();
             if (rows.getLength() == 0) {
@@ -4900,8 +5173,23 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
             protected void setCellWidth(int cellIx, int width) {
                 final Element cell = DOM.getChild(getElement(), cellIx);
-                cell.getFirstChildElement().getStyle()
-                        .setPropertyPx("width", width);
+                Style wrapperStyle = cell.getFirstChildElement().getStyle();
+                int wrapperWidth = width;
+                if (BrowserInfo.get().isWebkit()
+                        || BrowserInfo.get().isOpera10()) {
+                    /*
+                     * Some versions of Webkit and Opera ignore the width
+                     * definition of zero width table cells. Instead, use 1px
+                     * and compensate with a negative margin.
+                     */
+                    if (width == 0) {
+                        wrapperWidth = 1;
+                        wrapperStyle.setMarginRight(-1, Unit.PX);
+                    } else {
+                        wrapperStyle.clearMarginRight();
+                    }
+                }
+                wrapperStyle.setPropertyPx("width", wrapperWidth);
                 cell.getStyle().setPropertyPx("width", width);
             }
 
@@ -5920,7 +6208,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 HeaderCell headerCell = tHead.getHeaderCell(i);
                 if (headerCell != null) {
                     if (initializedAndAttached) {
-                        w = headerCell.getWidth();
+                        w = headerCell.getWidthWithIndent();
                     } else {
                         // header offset width is not absolutely correct value,
                         // but a best guess (expecting similar content in all
@@ -6014,7 +6302,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
                     public void execute() {
                         if (showRowHeaders) {
-                            setCellWidth(0, tHead.getHeaderCell(0).getWidth());
+                            setCellWidth(0, tHead.getHeaderCell(0)
+                                    .getWidthWithIndent());
                             calcAndSetSpanWidthOnCell(1);
                         } else {
                             calcAndSetSpanWidthOnCell(0);
@@ -6252,14 +6541,35 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             int totalExplicitColumnsWidths = 0;
             float expandRatioDivider = 0;
             int colIndex = 0;
+
+            int hierarchyColumnIndent = scrollBody.getMaxIndent();
+            int hierarchyColumnIndex = getHierarchyColumnIndex();
+            HeaderCell hierarchyHeaderInNeedOfFurtherHandling = null;
+
             while (headCells.hasNext()) {
                 final HeaderCell hCell = (HeaderCell) headCells.next();
+                boolean hasIndent = hierarchyColumnIndent > 0
+                        && hCell.isHierarchyColumn();
                 if (hCell.isDefinedWidth()) {
-                    totalExplicitColumnsWidths += hCell.getWidth();
-                    usedMinimumWidth += hCell.getWidth();
+                    // get width without indent to find out whether adjustments
+                    // are needed (requires special handling further ahead)
+                    int w = hCell.getWidth();
+                    if (hasIndent && w < hierarchyColumnIndent) {
+                        // enforce indent if necessary
+                        w = hierarchyColumnIndent;
+                        hierarchyHeaderInNeedOfFurtherHandling = hCell;
+                    }
+                    totalExplicitColumnsWidths += w;
+                    usedMinimumWidth += w;
                 } else {
-                    usedMinimumWidth += hCell.getNaturalColumnWidth(colIndex);
+                    // natural width already includes indent if any
+                    int naturalColumnWidth = hCell
+                            .getNaturalColumnWidth(colIndex);
+                    usedMinimumWidth += naturalColumnWidth;
                     expandRatioDivider += hCell.getExpandRatio();
+                    if (hasIndent) {
+                        hierarchyHeaderInNeedOfFurtherHandling = hCell;
+                    }
                 }
                 colIndex++;
             }
@@ -6304,6 +6614,28 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             int totalUndefinedNaturalWidths = usedMinimumWidth
                     - totalExplicitColumnsWidths;
 
+            if (hierarchyHeaderInNeedOfFurtherHandling != null
+                    && !hierarchyHeaderInNeedOfFurtherHandling.isDefinedWidth()) {
+                // ensure the cell gets enough space for the indent
+                int w = hierarchyHeaderInNeedOfFurtherHandling
+                        .getNaturalColumnWidth(hierarchyColumnIndex);
+                int newSpace = Math.round(w + (float) extraSpace * (float) w
+                        / totalUndefinedNaturalWidths);
+                if (newSpace >= hierarchyColumnIndent) {
+                    // no special handling required
+                    hierarchyHeaderInNeedOfFurtherHandling = null;
+                } else {
+                    // treat as a defined width column of indent's width
+                    totalExplicitColumnsWidths += hierarchyColumnIndent;
+                    usedMinimumWidth -= w - hierarchyColumnIndent;
+                    totalUndefinedNaturalWidths = usedMinimumWidth
+                            - totalExplicitColumnsWidths;
+                    expandRatioDivider += hierarchyHeaderInNeedOfFurtherHandling
+                            .getExpandRatio();
+                    extraSpace = Math.max(availW - usedMinimumWidth, 0);
+                }
+            }
+
             // we have some space that can be divided optimally
             HeaderCell hCell;
             colIndex = 0;
@@ -6319,7 +6651,10 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         newSpace = Math.round((w + extraSpace
                                 * hCell.getExpandRatio() / expandRatioDivider));
                     } else {
-                        if (totalUndefinedNaturalWidths != 0) {
+                        if (hierarchyHeaderInNeedOfFurtherHandling == hCell) {
+                            // still exists, so needs exactly the indent's width
+                            newSpace = hierarchyColumnIndent;
+                        } else if (totalUndefinedNaturalWidths != 0) {
                             // divide relatively to natural column widths
                             newSpace = Math.round(w + (float) extraSpace
                                     * (float) w / totalUndefinedNaturalWidths);
@@ -6328,9 +6663,22 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                         }
                     }
                     checksum += newSpace;
+
                     setColWidth(colIndex, newSpace, false);
                 } else {
-                    checksum += hCell.getWidth();
+                    if (hierarchyHeaderInNeedOfFurtherHandling == hCell) {
+                        // defined with enforced into indent width
+                        checksum += hierarchyColumnIndent;
+                        setColWidth(colIndex, hierarchyColumnIndent, false);
+                    } else {
+                        int cellWidth = hCell.getWidthWithIndent();
+                        checksum += cellWidth;
+                        if (hCell.isHierarchyColumn()) {
+                            // update in case the indent has changed
+                            // (not detectable earlier)
+                            setColWidth(colIndex, cellWidth, true);
+                        }
+                    }
                 }
                 colIndex++;
             }
@@ -6346,8 +6694,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 while (headCells.hasNext()) {
                     HeaderCell hc = (HeaderCell) headCells.next();
                     if (!hc.isDefinedWidth()) {
-                        setColWidth(colIndex,
-                                hc.getWidth() + availW - checksum, false);
+                        setColWidth(colIndex, hc.getWidthWithIndent() + availW
+                                - checksum, false);
                         break;
                     }
                     colIndex++;
