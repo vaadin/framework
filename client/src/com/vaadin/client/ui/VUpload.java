@@ -18,6 +18,7 @@ package com.vaadin.client.ui;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.FormElement;
@@ -257,6 +258,32 @@ public class VUpload extends SimplePanel {
         });
     }
 
+    ScheduledCommand startUploadCmd = new ScheduledCommand() {
+
+        @Override
+        public void execute() {
+            element.submit();
+            submitted = true;
+
+            disableUpload();
+
+            /*
+             * Visit server a moment after upload has started to see possible
+             * changes from UploadStarted event. Will be cleared on complete.
+             */
+            t = new Timer() {
+                @Override
+                public void run() {
+                    VConsole.log("Visiting server to see if upload started event changed UI.");
+                    client.updateVariable(paintableId, "pollForStart",
+                            nextUploadId, true);
+                }
+            };
+            t.schedule(800);
+        }
+
+    };
+
     /** For internal use only. May be removed or replaced in the future. */
     public void submit() {
         if (fu.getFilename().length() == 0 || submitted || !enabled) {
@@ -267,25 +294,10 @@ public class VUpload extends SimplePanel {
         // before upload
         client.sendPendingVariableChanges();
 
-        element.submit();
-        submitted = true;
-        VConsole.log("Submitted form");
-
-        disableUpload();
-
-        /*
-         * Visit server a moment after upload has started to see possible
-         * changes from UploadStarted event. Will be cleared on complete.
-         */
-        t = new Timer() {
-            @Override
-            public void run() {
-                VConsole.log("Visiting server to see if upload started event changed UI.");
-                client.updateVariable(paintableId, "pollForStart",
-                        nextUploadId, true);
-            }
-        };
-        t.schedule(800);
+        // This is done as deferred because sendPendingVariableChanges is also
+        // deferred and we want to start the upload only after the changes have
+        // been sent to the server
+        Scheduler.get().scheduleDeferred(startUploadCmd);
     }
 
     @Override

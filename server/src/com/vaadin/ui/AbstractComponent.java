@@ -532,7 +532,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public boolean isReadOnly() {
-        return getState().readOnly;
+        return ((AbstractComponentState) getState(false)).readOnly;
     }
 
     /*
