@@ -57,17 +57,62 @@
 			<!-- cssparser -->
 			<exclude name="com/steadystate/css/**" />
 			<!-- Ant & AntLauncher -->
-			<exclude name="org/apache/tools/**"/>
+			<exclude name="org/apache/tools/**" />
 			<!-- Jetty & jetty-util -->
-			<exclude name="org/mortbay/**"/>
+			<exclude name="org/mortbay/**" />
 			<!-- Swing Worker-->
-			<exclude name="org/jdesktop/swingworker/**"/>
-			<!-- Apache commons codec & io & lang -->
-			<exclude name="org/apache/commons/codec/**"/>
-			<exclude name="org/apache/commons/io/**"/>
-			<exclude name="org/apache/commons/lang/**"/>
+			<exclude name="org/jdesktop/swingworker/**" />
+			<!-- Apache commons codec & io & lang & collections & logging -->
+			<exclude name="org/apache/commons/codec/**" />
+			<exclude name="org/apache/commons/io/**" />
+			<exclude name="org/apache/commons/lang/**" />
+			<exclude name="org/apache/commons/collections/**" />
+			<exclude name="org/apache/commons/logging/**" />
 			<!-- apache mime4j -->
-			<exclude name="org/apache/james/mime4j/**"/>
+			<exclude name="org/apache/james/mime4j/**" />
+
+			<!-- client-compiler-deps -->
+			<exclude name="com/gargoylesoftware/" />
+			<exclude name="com/google/common/" />
+			<exclude name="com/google/debugging/" />
+			<exclude name="com/google/gwt/dev/protobuf/" />
+			<exclude name="com/google/gwt/thirdparty/debugging/" />
+			<exclude name="com/google/gwt/thirdparty/javascript/" />
+			<exclude name="com/google/gwt/thirdparty/mozilla/" />
+			<exclude name="com/ibm/" />
+			<exclude name="externs.zip" />
+			<exclude name="java_cup/" />
+			<exclude name="javax/annotation/" />
+			<exclude name="net/sourceforge/htmlunit/" />
+			<exclude name="org/apache/bcel/" />
+			<exclude name="org/apache/html/" />
+			<exclude name="org/apache/http/" />
+			<exclude name="org/apache/NOTICE" />
+			<exclude name="org/apache/regexp/" />
+			<exclude name="org/apache/tapestry/" />
+			<exclude name="org/apache/wml/" />
+			<exclude name="org/apache/xalan/" />
+			<exclude name="org/apache/xerces/" />
+			<exclude name="org/apache/xml/" />
+			<exclude name="org/apache/xmlcommons/" />
+			<exclude name="org/apache/xpath/" />
+			<exclude name="org/cyberneko/" />
+			<exclude name="org/eclipse/" />
+			<exclude name="org/kohsuke/" />
+			<exclude name="org/w3c/" />
+			<exclude name="org/xml/" />
+			<exclude name="rhino_ast/" />
+			<exclude name="rhinoDiff.txt" />
+			<exclude name="trax/" />
+			<exclude name="unicode-license.txt" />
+			<exclude name="org/json" />
+
+			<exclude name="license/NOTICE" />
+			<exclude name="license/LICENSE.dom-documentation.txt" />
+			<exclude name="license/LICENSE.dom-software.txt" />
+			<exclude name="license/LICENSE" />
+			<exclude name="license/README.dom.txt" />
+			<exclude name="license/README.sax.txt" />
 
 			<!-- Overridden in Vaadin -->
 			<exclude name="com/google/gwt/dev/About.properties" />
@@ -105,7 +150,7 @@
 			<exclude name="com/google/gwt/*/shared/**" />
 			<exclude name="com/google/gwt/*/*/shared/**" />
 			<exclude name="com/google/web/bindery/*/shared/**" />
-			
+
 			<!-- Used by the server, in wrong package in GWT -->
 			<exclude name="com/google/gwt/user/client/rpc/IsSerializable.*" />
 
