@@ -122,7 +122,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public String getId() {
-        return getState().id;
+        return getState(false).id;
     }
 
     /**
@@ -233,7 +233,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public String getCaption() {
-        return getState().caption;
+        return getState(false).caption;
     }
 
     /**
@@ -363,7 +363,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * interface.
      */
     public boolean isImmediate() {
-        return getState().immediate;
+        return getState(false).immediate;
     }
 
     /**
@@ -423,7 +423,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public String getDescription() {
-        return getState().description;
+        return getState(false).description;
     }
 
     /**
@@ -532,7 +532,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public boolean isReadOnly() {
-        return ((AbstractComponentState) getState(false)).readOnly;
+        return getState(false).readOnly;
     }
 
     /*
@@ -619,6 +619,11 @@ public abstract class AbstractComponent extends AbstractClientConnector
     @Override
     protected AbstractComponentState getState() {
         return (AbstractComponentState) super.getState();
+    }
+
+    @Override
+    protected AbstractComponentState getState(boolean markAsDirty) {
+        return (AbstractComponentState) super.getState(markAsDirty);
     }
 
     @Override
