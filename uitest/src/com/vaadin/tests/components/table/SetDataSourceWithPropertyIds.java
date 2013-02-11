@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.data.Buffered.SourceException;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
@@ -12,6 +11,7 @@ import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.Table.CacheUpdateException;
 
 public class SetDataSourceWithPropertyIds extends AbstractTestUI {
 
@@ -71,7 +71,7 @@ public class SetDataSourceWithPropertyIds extends AbstractTestUI {
             table.setContainerDataSource(jobContainer);
             table.setVisibleColumns(new String[] { "jobId" });
             label.setValue("no Exception");
-        } catch (SourceException e) {
+        } catch (CacheUpdateException e) {
             ArrayList<String> propertyIds = new ArrayList<String>();
             propertyIds.add("jobId");
             table.setContainerDataSource(jobContainer, propertyIds);
