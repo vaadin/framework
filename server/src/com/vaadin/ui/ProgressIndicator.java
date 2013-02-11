@@ -157,4 +157,19 @@ public class ProgressIndicator extends AbstractField<Float> implements
         return getState().pollingInterval;
     }
 
+    /*
+     * Overridden to keep the shared state in sync with the AbstractField
+     * internal value. Should be removed once AbstractField is refactored to use
+     * shared state.
+     * 
+     * See tickets #10921 and #11064.
+     */
+    @Override
+    protected void setInternalValue(Float newValue) {
+        super.setInternalValue(newValue);
+        if (newValue == null) {
+            newValue = 0.0f;
+        }
+        getState().state = newValue;
+    }
 }
