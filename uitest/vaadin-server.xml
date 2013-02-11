@@ -11,6 +11,10 @@
 		<java classname="org.mortbay.jetty.runner.Runner" fork="yes">
 			<arg value="--port" />
 			<arg value="8888" />
+			<arg value="--out" />
+			<arg value="${vaadin.basedir}/result/jetty.out" />
+			<arg value="--log" />
+			<arg value="${vaadin.basedir}/result/jetty.log" />
 			<arg value="${war.file}" />
 			<classpath refid="classpath.jetty" />
 			<jvmarg value="-ea" />
