@@ -770,7 +770,8 @@ void afterImportDeclaration() :
 }
 {
   ( 
-     ( LOOKAHEAD(5)listModifyDirective() | variable() | debuggingDirective() | mixinDirective() | controlDirective() | includeDirective() | styleRule() | media() | page() | fontFace() | keyframes() 
+     ( debuggingDirective() | mixinDirective() | controlDirective() | includeDirective() | styleRule() | media() 
+             | page() | fontFace() | keyframes() | LOOKAHEAD(variable()) variable() | listModifyDirective()
       | { l = getLocator(); } ret=skipStatement() 
       {
 	  if ((ret == null) || (ret.length() == 0)) {
@@ -872,7 +873,7 @@ void keyframeSelector():
           start = true;
           documentHandler.startKeyframeSelector(n.image);
          }
-        ( LOOKAHEAD(5)ifContentStatement() | controlDirective() | microsoftExtension() )*
+        (ifContentStatement() | controlDirective() | microsoftExtension() )*
         <RBRACE> (<S>)*
     }
     catch (ThrowedParseException e) {
@@ -1157,7 +1158,7 @@ void styleRule() :
 	 start = true;
 	 documentHandler.startSelector(l);
      }
-     ( LOOKAHEAD(5)ifContentStatement() | controlDirective() | microsoftExtension() )*
+     ( ifContentStatement() | controlDirective() | microsoftExtension() )*
      <RBRACE> (<S>)*
  } catch (ThrowedParseException e) {
      if (errorHandler != null) {
@@ -1495,7 +1496,8 @@ void controlDirective() :
 void ifContentStatement() :
 {}
 {
-  LOOKAHEAD(5)listModifyDirective() | includeDirective() | media() | extendDirective() | variable() | styleRuleOrDeclarationOrNestedProperties() | keyframes()
+    includeDirective() | media() | extendDirective() | styleRuleOrDeclarationOrNestedProperties() 
+    | keyframes() | LOOKAHEAD(variable()) variable() | listModifyDirective()
 }
 
 void ifDirective() :
@@ -1541,7 +1543,7 @@ String booleanExpressionToken() :
 }
 {
  (
-   LOOKAHEAD(2)
+   LOOKAHEAD(containsDirective())
    s = containsDirective()
    |n = < VARIABLE >
    |n = < IDENT >
@@ -1614,7 +1616,7 @@ void mixinDirective() :
     |(name = functionName() 
       args = arglist()) <RPARAN> (<S>)*) <LBRACE> (<S>)*
     {documentHandler.startMixinDirective(name, args);}
-    ( LOOKAHEAD(5)ifContentStatement() | controlDirective() | fontFace() | page())*
+    ( ifContentStatement() | controlDirective() | fontFace() | page())*
     <RBRACE>(<S>)*
     {documentHandler.endMixinDirective(name, args);}
 }
@@ -1711,9 +1713,41 @@ String interpolation() :
 
 void listModifyDirective() :
 {
+    String list = null;
+    String remove = null;
+    String separator = null;
+    String variable = null;
+    Token n = null;
+    Token type = null;
 }
 {
-(LOOKAHEAD(5)removeDirective()|LOOKAHEAD(5)appendDirective()|LOOKAHEAD(5)containsDirective())(< S >)*< SEMICOLON >(<S>)*
+  //refactor, remove those 3 LOOKAHEAD(5).
+  n = < VARIABLE >{ variable = n.image; }(< S >)* ":" (< S >)*
+  (type = < APPEND> | type = <REMOVE> | type=<CONTAINS> )(< S >)*
+  (list = listModifyDirectiveArgs(0))
+  (< RPARAN >)? < COMMA >(< S >)*
+  (remove = listModifyDirectiveArgs(1))
+  ( < COMMA >(< S >)* n = < IDENT >{ separator = n.image; } (< S >)*)?
+  < RPARAN >
+  {
+      switch (type.kind) {
+      case APPEND:
+          documentHandler.appendDirective(variable,list,remove,separator);
+          break;
+      case REMOVE:
+          documentHandler.removeDirective(variable,list,remove,separator);
+          break;
+      case CONTAINS:
+          if(variable == null){
+              variable = "$var_"+UUID.randomUUID();
+          }
+          documentHandler.containsDirective(variable,list,remove,separator);
+          break;
+      default:
+          break;
+      }
+      }
+      (< S >)*< SEMICOLON >(<S>)*
 }
 
 
@@ -1972,8 +2006,11 @@ void styleRuleOrDeclarationOrNestedProperties() :
 }
 {
   try {
-    // differentiate between the colon of a pseudo and the colon of nested properties and the colon of a simple property 
-    (LOOKAHEAD(5) styleRule() | debuggingDirective() | declarationOrNestedProperties())
+    // differentiate between the colon of a pseudo and the colon of nested properties and the colon of a simple property
+   // the first LOOKAHEAD(5) styleRule() tries to find the pseudo selector, then the parser tries to find declarationOrNestedProperties,
+   // if failed , came to styleRule() again. It handles in this way, because the pseudo selector, declartion and nested properties
+   // are quite tricky to be distinguished. 
+      ( debuggingDirective() | LOOKAHEAD(5) styleRule() | LOOKAHEAD(declarationOrNestedProperties()) declarationOrNestedProperties() | styleRule())
   } catch (JumpException e) {
      skipAfterExpression();
      // reportWarningSkipText(getLocator(), skipAfterExpression());

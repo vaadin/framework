@@ -1,0 +1,11 @@
+@charset "UTF-8";
+
+@mixin buttons {
+	.v-button:not(.link) {
+		color: #323232;
+	}
+}
+
+.foo {
+	@include buttons;
+}
