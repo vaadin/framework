@@ -225,7 +225,12 @@ body &.v-app-loading {
 
 /* Enable kinetic scrolling on Mobile Safari 6 */ 
 .v-ios.v-sa6 & .v-scrollable { 
-        -webkit-overflow-scrolling: touch; 
+	-webkit-overflow-scrolling: touch; 
+}
+
+&.v-overlay-container {
+	width: 0;
+	height: 0;
 }
 
 }
