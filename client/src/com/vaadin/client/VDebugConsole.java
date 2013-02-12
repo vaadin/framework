@@ -513,6 +513,23 @@ public class VDebugConsole extends VOverlay implements Console {
         // consoleLog(u.getChildrenAsXML());
     }
 
+    /**
+     * Adds a {@link SimpleTree} to the console and prints a string
+     * representation of the tree structure to the text console.
+     * 
+     * @param tree
+     *            the simple tree to display in the console window
+     * @param stringRepresentation
+     *            the string representation of the tree to output to the text
+     *            console
+     */
+    public void showTree(SimpleTree tree, String stringRepresentation) {
+        if (panel.isAttached()) {
+            panel.add(tree);
+        }
+        consoleLog(stringRepresentation);
+    }
+
     private static native void consoleDir(ValueMap u)
     /*-{
          if($wnd.console && $wnd.console.log) {

@@ -47,6 +47,7 @@ public class WidgetSet {
          * some hacks. Extra instantiation code is needed if client side
          * connector has no "native" counterpart on client side.
          */
+        Profiler.enter("WidgetSet.createConnector");
 
         Class<? extends ServerConnector> classType = resolveInheritedConnectorType(
                 conf, tag);
@@ -56,6 +57,7 @@ public class WidgetSet {
             UnknownComponentConnector c = GWT
                     .create(UnknownComponentConnector.class);
             c.setServerSideClassName(serverSideName);
+            Profiler.leave("WidgetSet.createConnector");
             return c;
         } else {
             /*
@@ -68,8 +70,10 @@ public class WidgetSet {
                     ((HasJavaScriptConnectorHelper) connector)
                             .getJavascriptConnectorHelper().setTag(tag);
                 }
+                Profiler.leave("WidgetSet.createConnector");
                 return connector;
             } catch (NoDataException e) {
+                Profiler.leave("WidgetSet.createConnector");
                 throw new IllegalStateException(
                         "There is no information about "
                                 + classType

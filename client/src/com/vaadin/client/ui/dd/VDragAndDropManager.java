@@ -37,6 +37,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
+import com.vaadin.client.Profiler;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
@@ -659,6 +660,8 @@ public class VDragAndDropManager {
         if (serverCallback == null) {
             return;
         }
+        Profiler.enter("VDragAndDropManager.handleServerResponse");
+
         UIDL uidl = (UIDL) valueMap.cast();
         int visitId = uidl.getIntAttribute("visitId");
 
@@ -668,6 +671,8 @@ public class VDragAndDropManager {
             serverCallback = null;
         }
         runDeferredCommands();
+
+        Profiler.leave("VDragAndDropManager.handleServerResponse");
     }
 
     private void runDeferredCommands() {

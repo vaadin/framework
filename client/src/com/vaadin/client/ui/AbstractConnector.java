@@ -29,6 +29,7 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.FastStringMap;
+import com.vaadin.client.Profiler;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
@@ -110,11 +111,19 @@ public abstract class AbstractConnector implements ServerConnector,
     @Override
     public final void doInit(String connectorId,
             ApplicationConnection connection) {
+        Profiler.enter("AbstractConnector.doInit");
         this.connection = connection;
         id = connectorId;
 
         addStateChangeHandler(this);
+        if (Profiler.isEnabled()) {
+            Profiler.enter("AbstractConnector.init " + Util.getSimpleName(this));
+        }
         init();
+        if (Profiler.isEnabled()) {
+            Profiler.leave("AbstractConnector.init " + Util.getSimpleName(this));
+        }
+        Profiler.leave("AbstractConnector.doInit");
     }
 
     /**
@@ -200,6 +209,12 @@ public abstract class AbstractConnector implements ServerConnector,
 
     @Override
     public void fireEvent(GwtEvent<?> event) {
+        String profilerKey = null;
+        if (Profiler.isEnabled()) {
+            profilerKey = "Fire " + Util.getSimpleName(event) + " for "
+                    + Util.getSimpleName(this);
+            Profiler.enter(profilerKey);
+        }
         if (handlerManager != null) {
             handlerManager.fireEvent(event);
         }
@@ -214,6 +229,10 @@ public abstract class AbstractConnector implements ServerConnector,
                 }
             }
         }
+        if (Profiler.isEnabled()) {
+            Profiler.leave(profilerKey);
+        }
+
     }
 
     protected HandlerManager ensureHandlerManager() {
@@ -263,6 +282,7 @@ public abstract class AbstractConnector implements ServerConnector,
 
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        Profiler.enter("AbstractConnector.onStateChanged");
         if (debugLogging) {
             VConsole.log("State change event for "
                     + Util.getConnectorString(stateChangeEvent.getConnector())
@@ -270,6 +290,7 @@ public abstract class AbstractConnector implements ServerConnector,
         }
 
         updateEnabledState(isEnabled());
+        Profiler.leave("AbstractConnector.onStateChanged");
     }
 
     /*
@@ -296,7 +317,9 @@ public abstract class AbstractConnector implements ServerConnector,
     @Override
     public SharedState getState() {
         if (state == null) {
+            Profiler.enter("AbstractConnector.createState()");
             state = createState();
+            Profiler.leave("AbstractConnector.createState()");
         }
 
         return state;

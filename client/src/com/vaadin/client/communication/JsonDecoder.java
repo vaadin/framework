@@ -32,6 +32,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.FastStringSet;
 import com.vaadin.client.JsArrayObject;
+import com.vaadin.client.Profiler;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Property;
 import com.vaadin.client.metadata.Type;
@@ -128,20 +129,24 @@ public class JsonDecoder {
 
     private static Object decodeObject(Type type, JSONValue jsonValue,
             Object target, ApplicationConnection connection) {
+        Profiler.enter("JsonDecoder.decodeObject");
         JSONSerializer<Object> serializer = (JSONSerializer<Object>) type
                 .findSerializer();
         if (serializer != null) {
             if (target != null && serializer instanceof DiffJSONSerializer<?>) {
                 DiffJSONSerializer<Object> diffSerializer = (DiffJSONSerializer<Object>) serializer;
                 diffSerializer.update(target, type, jsonValue, connection);
+                Profiler.leave("JsonDecoder.decodeObject");
                 return target;
             } else {
                 Object object = serializer.deserialize(type, jsonValue,
                         connection);
+                Profiler.leave("JsonDecoder.decodeObject");
                 return object;
             }
         } else {
             try {
+                Profiler.enter("JsonDecoder.decodeObject meta data processing");
                 JsArrayObject<Property> properties = type
                         .getPropertiesAsArray();
                 if (target == null) {
@@ -167,12 +172,18 @@ public class JsonDecoder {
                         propertyReference = null;
                     }
 
+                    Profiler.leave("JsonDecoder.decodeObject meta data processing");
                     Object decodedValue = decodeValue(propertyType,
                             encodedPropertyValue, propertyReference, connection);
+                    Profiler.enter("JsonDecoder.decodeObject meta data processing");
                     property.setValue(target, decodedValue);
                 }
+                Profiler.leave("JsonDecoder.decodeObject meta data processing");
+                Profiler.leave("JsonDecoder.decodeObject");
                 return target;
             } catch (NoDataException e) {
+                Profiler.leave("JsonDecoder.decodeObject meta data processing");
+                Profiler.leave("JsonDecoder.decodeObject");
                 throw new RuntimeException("Can not deserialize "
                         + type.getSignature(), e);
             }

@@ -185,11 +185,18 @@ public class MeasuredSize {
     }
 
     public MeasureResult measure(Element element) {
+        Profiler.enter("MeasuredSize.measure");
         boolean heightChanged = false;
         boolean widthChanged = false;
 
+        Profiler.enter("new ComputedStyle");
         ComputedStyle computedStyle = new ComputedStyle(element);
         int[] paddings = computedStyle.getPadding();
+        // Some browsers do not reflow until accessing data from the computed
+        // style object
+        Profiler.leave("new ComputedStyle");
+
+        Profiler.enter("Measure paddings");
         if (!heightChanged && hasHeightChanged(this.paddings, paddings)) {
             debugSizeChange(element, "Height (padding)", this.paddings,
                     paddings);
@@ -200,7 +207,9 @@ public class MeasuredSize {
             widthChanged = true;
         }
         this.paddings = paddings;
+        Profiler.leave("Measure paddings");
 
+        Profiler.enter("Measure margins");
         int[] margins = computedStyle.getMargin();
         if (!heightChanged && hasHeightChanged(this.margins, margins)) {
             debugSizeChange(element, "Height (margins)", this.margins, margins);
@@ -211,7 +220,9 @@ public class MeasuredSize {
             widthChanged = true;
         }
         this.margins = margins;
+        Profiler.leave("Measure margins");
 
+        Profiler.enter("Measure borders");
         int[] borders = computedStyle.getBorder();
         if (!heightChanged && hasHeightChanged(this.borders, borders)) {
             debugSizeChange(element, "Height (borders)", this.borders, borders);
@@ -222,7 +233,9 @@ public class MeasuredSize {
             widthChanged = true;
         }
         this.borders = borders;
+        Profiler.leave("Measure borders");
 
+        Profiler.enter("Measure height");
         int requiredHeight = Util.getRequiredHeight(element);
         int marginHeight = sumHeights(margins);
         int oldHeight = height;
@@ -231,13 +244,18 @@ public class MeasuredSize {
             debugSizeChange(element, "Height (outer)", oldHeight, height);
             heightChanged = true;
         }
+        Profiler.leave("Measure height");
 
+        Profiler.enter("Measure width");
         int requiredWidth = Util.getRequiredWidth(element);
         int marginWidth = sumWidths(margins);
         if (setOuterWidth(requiredWidth + marginWidth)) {
             debugSizeChange(element, "Width (outer)", oldWidth, width);
             widthChanged = true;
         }
+        Profiler.leave("Measure width");
+
+        Profiler.leave("MeasuredSize.measure");
 
         return new MeasureResult(widthChanged, heightChanged);
     }
