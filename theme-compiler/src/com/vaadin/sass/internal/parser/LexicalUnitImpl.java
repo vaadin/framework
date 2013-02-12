@@ -28,6 +28,7 @@ import java.io.Serializable;
 import org.w3c.css.sac.LexicalUnit;
 
 import com.vaadin.sass.internal.util.ColorUtil;
+import com.vaadin.sass.internal.util.DeepCopy;
 
 /**
  * @version $Revision: 1.3 $
@@ -380,23 +381,26 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
     }
 
     public void replaceValue(LexicalUnitImpl another) {
-        type = another.getLexicalUnitType();
-        i = another.getIntegerValue();
-        f = another.getFloatValue();
-        s = another.getStringValue();
-        fname = another.getFunctionName();
-        prev = another.getPreviousLexicalUnit();
-        dimension = another.getDimension();
-        sdimension = another.getSdimension();
-        params = another.getParameters();
+        // shouldn't modify 'another' directly, should only modify its copy.
+        LexicalUnitImpl deepCopyAnother = (LexicalUnitImpl) DeepCopy
+                .copy(another);
+        type = deepCopyAnother.getLexicalUnitType();
+        i = deepCopyAnother.getIntegerValue();
+        f = deepCopyAnother.getFloatValue();
+        s = deepCopyAnother.getStringValue();
+        fname = deepCopyAnother.getFunctionName();
+        prev = deepCopyAnother.getPreviousLexicalUnit();
+        dimension = deepCopyAnother.getDimension();
+        sdimension = deepCopyAnother.getSdimension();
+        params = deepCopyAnother.getParameters();
 
-        LexicalUnitImpl finalNextInAnother = another;
+        LexicalUnitImpl finalNextInAnother = deepCopyAnother;
         while (finalNextInAnother.getNextLexicalUnit() != null) {
             finalNextInAnother = finalNextInAnother.getNextLexicalUnit();
         }
 
         finalNextInAnother.setNextLexicalUnit(next);
-        next = another.next;
+        next = deepCopyAnother.next;
     }
 
     public void setParameters(LexicalUnitImpl params) {
@@ -617,8 +621,7 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
 
     @Override
     public LexicalUnitImpl clone() {
-        LexicalUnitImpl cloned = new LexicalUnitImpl(type, line, column,
-                (LexicalUnitImpl) prev);
+        LexicalUnitImpl cloned = new LexicalUnitImpl(type, line, column, prev);
         cloned.replaceValue(this);
         return cloned;
     }
@@ -636,8 +639,9 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
             return i;
         } else if (f != -1) {
             return f;
-        } else
+        } else {
             return null;
+        }
     }
 
     public void setFunctionName(String functionName) {
