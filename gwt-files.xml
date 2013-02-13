@@ -3,7 +3,8 @@
 <project name="GWT files for Vaadin" basedir=".">
 	<include file="common.xml" as="common" />
 
-	<property name="gwt.lib.dir" location="${vaadin.basedir}/../gwt-libs" />
+	<property name="gwt.lib.dir" location="${gwt.basedir}/build/lib" />
+	<property name="gwt.eclipse.basedir" location="${gwt.basedir}/eclipse" />
 
 	<property name="gwt.user.jar" location="${gwt.lib.dir}/gwt-user.jar" />
 	<property name="gwt.dev.jar" location="${gwt.lib.dir}/gwt-dev.jar" />
@@ -15,11 +16,6 @@
 	<available file="${gwt.elemental.jar}" property="gwt.elemental.jar.found" />
 	<available file="${gwt.codeserver.jar}" property="gwt.codeserver.jar.found" />
 
-	<fail unless="gwt.dev.jar.found" message="Could not find gwt-dev.jar at ${gwt.dev.jar}" />
-	<fail unless="gwt.user.jar.found" message="Could not find gwt-user.jar at ${gwt.user.jar}" />
-	<fail unless="gwt.elemental.jar.found" message="Could not find gwt-elemental.jar at ${gwt.elemental.jar}" />
-	<fail unless="gwt.codeserver.jar.found" message="Could not find gwt-codeserver.jar at ${gtw.codeserver.jar}" />
-
 	<property name="gwt.unpack.dir" location="${vaadin.basedir}/build/gwt" />
 
 	<property name="gwt.user.jar.files" location="${gwt.unpack.dir}/gwt-user.jar" />
@@ -28,6 +24,11 @@
 	<property name="gwt.codeserver.jar.files" location="${gwt.unpack.dir}/gwt-codeserver.jar" />
 
 	<target name="unpack.gwt">
+		<fail unless="gwt.dev.jar.found" message="Could not find gwt-dev.jar at ${gwt.dev.jar}" />
+		<fail unless="gwt.user.jar.found" message="Could not find gwt-user.jar at ${gwt.user.jar}" />
+		<fail unless="gwt.elemental.jar.found" message="Could not find gwt-elemental.jar at ${gwt.elemental.jar}" />
+		<fail unless="gwt.codeserver.jar.found" message="Could not find gwt-codeserver.jar at ${gwt.codeserver.jar}" />
+
 		<delete dir="${gwt.unpack.dir}" />
 
 		<mkdir dir="${gwt.user.jar.files}" />
