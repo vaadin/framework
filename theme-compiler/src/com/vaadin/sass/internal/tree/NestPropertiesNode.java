@@ -59,10 +59,9 @@ public class NestPropertiesNode extends Node implements IVariableNode {
 
     @Override
     public void replaceVariables(ArrayList<VariableNode> variables) {
-        for (final VariableNode node : variables) {
-            if (name.contains(node.getName())) {
-                name = name.replaceAll(node.getName(), node.getExpr()
-                        .toString());
+        for (Node child : getChildren()) {
+            if (child instanceof RuleNode) {
+                ((RuleNode) child).replaceVariables(variables);
             }
         }
     }

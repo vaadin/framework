@@ -18,6 +18,7 @@ package com.vaadin.sass.internal.tree;
 import java.util.ArrayList;
 
 import com.vaadin.sass.internal.ScssStylesheet;
+import com.vaadin.sass.internal.util.StringUtil;
 
 public class MicrosoftRuleNode extends Node implements IVariableNode {
 
@@ -32,9 +33,9 @@ public class MicrosoftRuleNode extends Node implements IVariableNode {
     @Override
     public void replaceVariables(ArrayList<VariableNode> variables) {
         for (final VariableNode var : variables) {
-            if (value.contains("$" + var.getName())) {
-                value = value.replaceAll("$" + var.getName(), var.getExpr()
-                        .toString());
+            if (StringUtil.containsVariable(value, var.getName())) {
+                value = StringUtil.replaceVariable(value, var.getName(), var
+                        .getExpr().toString());
             }
         }
     }

@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 
 import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.sass.internal.parser.LexicalUnitImpl;
+import com.vaadin.sass.internal.util.StringUtil;
 
 public class RuleNode extends Node implements IVariableNode {
     private static final long serialVersionUID = 6653493127869037022L;
@@ -95,28 +96,14 @@ public class RuleNode extends Node implements IVariableNode {
             if (value.getLexicalUnitType() == LexicalUnitImpl.SAC_FUNCTION) {
 
                 if (value.getParameters() != null) {
-                    if (value.getParameters().toString()
-                            .contains(node.getName())) {
-
+                    if (StringUtil.containsVariable(value.getParameters()
+                            .toString(), node.getName())) {
                         LexicalUnitImpl param = value.getParameters();
                         while (param != null) {
-                            if (param.getValue().toString()
-                                    .contains(node.getName())) {
-
-                                String value = node.getExpr().toString();
-
-                                LexicalUnitImpl prev = param
-                                        .getPreviousLexicalUnit();
-                                LexicalUnitImpl next = param
-                                        .getNextLexicalUnit();
-
-                                if (param.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE) {
-                                    param.setStringValue(value);
-                                    param.setLexicalUnitType(node.getExpr()
-                                            .getLexicalUnitType());
-                                    param.setPrevLexicalUnit(prev);
-                                    param.setNextLexicalUnit(next);
-                                }
+                            if (param.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE
+                                    && param.getValue().toString()
+                                            .equals(node.getName())) {
+                                param.replaceValue(node.getExpr());
                             }
                             param = param.getNextLexicalUnit();
                         }

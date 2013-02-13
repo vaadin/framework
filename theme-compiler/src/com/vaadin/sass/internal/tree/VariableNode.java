@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.sass.internal.parser.LexicalUnitImpl;
+import com.vaadin.sass.internal.util.StringUtil;
 import com.vaadin.sass.internal.visitor.VariableNodeHandler;
 
 public class VariableNode extends Node implements IVariableNode {
@@ -72,10 +73,11 @@ public class VariableNode extends Node implements IVariableNode {
         for (final VariableNode node : variables) {
             if (!equals(node)) {
 
-                if (expr.toString().contains("$" + node.getName())) {
+                if (StringUtil
+                        .containsVariable(expr.toString(), node.getName())) {
                     if (expr.getParameters() != null
-                            && expr.getParameters().toString()
-                                    .contains("$" + node.getName())) {
+                            && StringUtil.containsVariable(expr.getParameters()
+                                    .toString(), node.getName())) {
                         replaceValues(expr.getParameters(), node);
                     } else if (expr.getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE) {
                         replaceValues(expr, node);

@@ -16,12 +16,12 @@
 package com.vaadin.sass.internal.tree.controldirective;
 
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.sass.internal.tree.IVariableNode;
 import com.vaadin.sass.internal.tree.Node;
 import com.vaadin.sass.internal.tree.VariableNode;
+import com.vaadin.sass.internal.util.StringUtil;
 
 public class IfNode extends Node implements IfElseNode, IVariableNode {
     private String expression;
@@ -47,10 +47,9 @@ public class IfNode extends Node implements IfElseNode, IVariableNode {
     @Override
     public void replaceVariables(ArrayList<VariableNode> variables) {
         for (final VariableNode node : variables) {
-            String variable = "$" + node.getName();
-            if (expression.contains(variable)) {
-                expression = expression.replaceAll(Pattern.quote(variable),
-                        node.getExpr().toString());
+            if (StringUtil.containsVariable(expression, node.getName())) {
+                expression = StringUtil.replaceVariable(expression,
+                        node.getName(), node.getExpr().toString());
             }
         }
     }
