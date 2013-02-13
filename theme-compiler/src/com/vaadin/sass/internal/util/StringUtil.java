@@ -21,6 +21,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StringUtil {
     private static final String FOLDER_SEPARATOR = "/"; // folder separator
@@ -132,5 +134,46 @@ public class StringUtil {
     public static String collectionToDelimitedString(Collection coll,
             String delim) {
         return collectionToDelimitedString(coll, delim, "", "");
+    }
+
+    /**
+     * Check if a String contains a SCSS variable, using whole word match.
+     * 
+     * @param text
+     *            text to be checked
+     * @Param varName SCSS variable name to be checked. (Without '$' sign)
+     * @return true if the text contains the SCSS variable, false if not
+     */
+    public static boolean containsVariable(String text, String varName) {
+        StringBuilder builder = new StringBuilder();
+        // (?![\\w-]) means lookahead, the next one shouldn't be a word
+        // character nor a dash.
+        builder.append("\\$").append(Pattern.quote(varName))
+                .append("(?![\\w-])");
+        Pattern pattern = Pattern.compile(builder.toString());
+        Matcher matcher = pattern.matcher(text);
+        return matcher.find();
+    }
+
+    /**
+     * Replace the SCSS variable in a String to its corresponding value, using
+     * whole word match.
+     * 
+     * @param text
+     *            text which contains the SCSS variable
+     * @param varName
+     *            SCSS variable name
+     * @param value
+     *            the value of the SCSS variable
+     * @return the String after replacing
+     */
+    public static String replaceVariable(String text, String varName,
+            String value) {
+        StringBuilder builder = new StringBuilder();
+        // (?![\\w-]) means lookahead, the next one shouldn't be a word
+        // character nor a dash.
+        builder.append("\\$").append(Pattern.quote(varName))
+                .append("(?![\\w-])");
+        return text.replaceAll(builder.toString(), value);
     }
 }

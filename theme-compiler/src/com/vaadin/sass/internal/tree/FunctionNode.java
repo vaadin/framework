@@ -19,6 +19,7 @@ package com.vaadin.sass.internal.tree;
 import java.util.ArrayList;
 
 import com.vaadin.sass.internal.ScssStylesheet;
+import com.vaadin.sass.internal.util.StringUtil;
 
 public class FunctionNode extends Node implements IVariableNode {
     private static final long serialVersionUID = -5383104165955523923L;
@@ -47,8 +48,9 @@ public class FunctionNode extends Node implements IVariableNode {
     @Override
     public void replaceVariables(ArrayList<VariableNode> variables) {
         for (final VariableNode node : variables) {
-            if (args.contains(node.getName())) {
-                args.replaceAll(node.getName(), node.getExpr().toString());
+            if (StringUtil.containsVariable(args, node.getName())) {
+                args = StringUtil.replaceVariable(args, node.getName(), node
+                        .getExpr().toString());
             }
         }
     }
