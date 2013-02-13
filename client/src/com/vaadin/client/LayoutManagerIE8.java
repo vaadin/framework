@@ -61,6 +61,7 @@ public class LayoutManagerIE8 extends LayoutManager {
 
     @Override
     protected void cleanMeasuredSizes() {
+        Profiler.enter("LayoutManager.cleanMeasuredSizes");
         Document document = RootPanel.get().getElement().getOwnerDocument();
 
         Iterator<Element> i = measuredSizes.keySet().iterator();
@@ -70,15 +71,19 @@ public class LayoutManagerIE8 extends LayoutManager {
                 i.remove();
             }
         }
+
+        Profiler.leave("LayoutManager.cleanMeasuredSizes");
     }
 
     @Override
     protected void performBrowserLayoutHacks() {
+        Profiler.enter("LayoutManagerIE8.performBrowserLayoutHacks");
         /*
          * Fixes IE8 issues where IE8 sometimes forgets to update the size of
          * the containing element. To force a reflow by modifying the magical
          * zoom property.
          */
         Util.forceIE8Redraw(RootPanel.get().getElement());
+        Profiler.leave("LayoutManagerIE8.performBrowserLayoutHacks");
     }
 }

@@ -120,13 +120,17 @@ public class ConnectorMap {
     }
 
     public void registerConnector(String id, ServerConnector connector) {
+        Profiler.enter("ConnectorMap.registerConnector");
         ComponentDetail componentDetail = GWT.create(ComponentDetail.class);
         idToComponentDetail.put(id, componentDetail);
         componentDetail.setConnector(connector);
         if (connector instanceof ComponentConnector) {
             ComponentConnector pw = (ComponentConnector) connector;
+            Profiler.enter("ConnectorMap.setConnectorId");
             setConnectorId(pw.getWidget().getElement(), id);
+            Profiler.leave("ConnectorMap.setConnectorId");
         }
+        Profiler.leave("ConnectorMap.registerConnector");
     }
 
     private static native void setConnectorId(Element el, String id)

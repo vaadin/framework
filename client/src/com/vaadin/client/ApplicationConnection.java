@@ -1311,6 +1311,8 @@ public class ApplicationConnection {
             return;
         }
 
+        Profiler.reset();
+
         VConsole.log("Handling message from server");
         eventBus.fireEvent(new ResponseHandlingStartedEvent(this));
 
@@ -1384,8 +1386,7 @@ public class ApplicationConnection {
                 handleUIDLDuration.logDuration(" * Loading widgets completed",
                         10);
 
-                MultiStepDuration updateDuration = new MultiStepDuration();
-
+                Profiler.enter("Handling locales");
                 if (json.containsKey("locales")) {
                     VConsole.log(" * Handling locales");
                     // Store locale data
@@ -1393,9 +1394,9 @@ public class ApplicationConnection {
                             .getJSValueMapArray("locales");
                     LocaleService.addLocales(valueMapArray);
                 }
+                Profiler.leave("Handling locales");
 
-                updateDuration.logDuration(" * Handling locales completed", 10);
-
+                Profiler.enter("Handling meta information");
                 boolean repaintAll = false;
                 ValueMap meta = null;
                 if (json.containsKey("meta")) {
@@ -1422,9 +1423,7 @@ public class ApplicationConnection {
                                 .getInt("interval");
                     }
                 }
-
-                updateDuration.logDuration(
-                        " * Handling meta information completed", 10);
+                Profiler.leave("Handling meta information");
 
                 if (redirectTimer != null) {
                     redirectTimer.schedule(1000 * sessionExpirationInterval);
@@ -1432,33 +1431,20 @@ public class ApplicationConnection {
 
                 componentCaptionSizeChanges.clear();
 
-                int startProcessing = updateDuration.elapsedMillis();
+                double processUidlStart = Duration.currentTimeMillis();
 
                 // Ensure that all connectors that we are about to update exist
                 Set<ServerConnector> createdConnectors = createConnectorsIfNeeded(json);
-
-                updateDuration.logDuration(" * Creating connectors completed",
-                        10);
 
                 // Update states, do not fire events
                 Collection<StateChangeEvent> pendingStateChangeEvents = updateConnectorState(
                         json, createdConnectors);
 
-                updateDuration.logDuration(
-                        " * Update of connector states completed", 10);
-
                 // Update hierarchy, do not fire events
                 ConnectorHierarchyUpdateResult connectorHierarchyUpdateResult = updateConnectorHierarchy(json);
 
-                updateDuration.logDuration(
-                        " * Update of connector hierarchy completed", 10);
-
                 // Fire hierarchy change events
                 sendHierarchyChangeEvents(connectorHierarchyUpdateResult.events);
-
-                updateDuration.logDuration(
-                        " * Hierarchy state change event processing completed",
-                        10);
 
                 updateCaptions(pendingStateChangeEvents,
                         connectorHierarchyUpdateResult.parentChanged);
@@ -1468,22 +1454,11 @@ public class ApplicationConnection {
                 // Fire state change events.
                 sendStateChangeEvents(pendingStateChangeEvents);
 
-                updateDuration.logDuration(
-                        " * State change event processing completed", 10);
-
                 // Update of legacy (UIDL) style connectors
                 updateVaadin6StyleConnectors(json);
 
-                updateDuration
-                        .logDuration(
-                                " * Vaadin 6 style connector updates (updateFromUidl) completed",
-                                10);
-
                 // Handle any RPC invocations done on the server side
                 handleRpcInvocations(json);
-
-                updateDuration.logDuration(
-                        " * Processing of RPC invocations completed", 10);
 
                 if (json.containsKey("dd")) {
                     // response contains data for drag and drop service
@@ -1491,20 +1466,13 @@ public class ApplicationConnection {
                             json.getValueMap("dd"));
                 }
 
-                updateDuration
-                        .logDuration(
-                                " * Processing of drag and drop server response completed",
-                                10);
-
                 unregisterRemovedConnectors();
 
-                updateDuration.logDuration(
-                        " * Unregistering of removed components completed", 10);
-
                 VConsole.log("handleUIDLMessage: "
-                        + (updateDuration.elapsedMillis() - startProcessing)
+                        + (Duration.currentTimeMillis() - processUidlStart)
                         + " ms");
 
+                Profiler.enter("Layout processing");
                 try {
                     LayoutManager layoutManager = getLayoutManager();
                     layoutManager.setEverythingNeedsMeasure();
@@ -1512,21 +1480,17 @@ public class ApplicationConnection {
                 } catch (final Throwable e) {
                     VConsole.error(e);
                 }
-
-                updateDuration
-                        .logDuration(" * Layout processing completed", 10);
+                Profiler.leave("Layout processing");
 
                 if (ApplicationConfiguration.isDebugMode()) {
+                    Profiler.enter("Dumping state changes to the console");
                     VConsole.log(" * Dumping state changes to the console");
                     VConsole.dirUIDL(json, ApplicationConnection.this);
-
-                    updateDuration
-                            .logDuration(
-                                    " * Dumping state changes to the console completed",
-                                    10);
+                    Profiler.leave("Dumping state changes to the console");
                 }
 
                 if (meta != null) {
+                    Profiler.enter("Error handling");
                     if (meta.containsKey("appError")) {
                         ValueMap error = meta.getValueMap("appError");
 
@@ -1547,9 +1511,8 @@ public class ApplicationConnection {
                         validatingLayouts = false;
 
                     }
+                    Profiler.leave("Error handling");
                 }
-
-                updateDuration.logDuration(" * Error handling completed", 10);
 
                 // TODO build profiling for widget impl loading time
 
@@ -1564,11 +1527,18 @@ public class ApplicationConnection {
 
                 endRequest();
 
+                if (Profiler.isEnabled()) {
+                    Profiler.logTimings();
+                    Profiler.reset();
+                }
+
             }
 
             private void updateCaptions(
                     Collection<StateChangeEvent> pendingStateChangeEvents,
                     Collection<ServerConnector> parentChanged) {
+                Profiler.enter("updateCaptions");
+
                 /*
                  * Find all components that might need a caption update based on
                  * pending state and hierarchy changes
@@ -1589,15 +1559,21 @@ public class ApplicationConnection {
                                     .delegateCaptionHandling()) {
                         ServerConnector parent = child.getParent();
                         if (parent instanceof HasComponentsConnector) {
+                            Profiler.enter("HasComponentsConnector.updateCaption");
                             ((HasComponentsConnector) parent)
                                     .updateCaption((ComponentConnector) child);
+                            Profiler.leave("HasComponentsConnector.updateCaption");
                         }
                     }
                 }
+
+                Profiler.leave("updateCaptions");
             }
 
             private void delegateToWidget(
                     Collection<StateChangeEvent> pendingStateChangeEvents) {
+                Profiler.enter("@DelegateToWidget");
+
                 VConsole.log(" * Running @DelegateToWidget");
 
                 for (StateChangeEvent sce : pendingStateChangeEvents) {
@@ -1618,12 +1594,16 @@ public class ApplicationConnection {
                             String method = property
                                     .getDelegateToWidgetMethodName();
                             if (method != null) {
+                                Profiler.enter("doDelegateToWidget");
                                 doDelegateToWidget(component, property, method);
+                                Profiler.leave("doDelegateToWidget");
                             }
                         }
 
                     }
                 }
+
+                Profiler.leave("@DelegateToWidget");
             }
 
             private void doDelegateToWidget(ComponentConnector component,
@@ -1661,6 +1641,7 @@ public class ApplicationConnection {
              */
             private void sendStateChangeEvents(
                     Collection<StateChangeEvent> pendingStateChangeEvents) {
+                Profiler.enter("sendStateChangeEvents");
                 VConsole.log(" * Sending state change events");
 
                 for (StateChangeEvent sce : pendingStateChangeEvents) {
@@ -1671,9 +1652,12 @@ public class ApplicationConnection {
                     }
                 }
 
+                Profiler.leave("sendStateChangeEvents");
             }
 
             private void unregisterRemovedConnectors() {
+                Profiler.enter("unregisterRemovedConnectors");
+
                 int unregistered = 0;
                 JsArrayObject<ServerConnector> currentConnectors = connectorMap
                         .getConnectorsAsJsArray();
@@ -1703,6 +1687,7 @@ public class ApplicationConnection {
                 }
 
                 VConsole.log("* Unregistered " + unregistered + " connectors");
+                Profiler.leave("unregisterRemovedConnectors");
             }
 
             private Set<ServerConnector> createConnectorsIfNeeded(ValueMap json) {
@@ -1711,6 +1696,8 @@ public class ApplicationConnection {
                 if (!json.containsKey("types")) {
                     return Collections.emptySet();
                 }
+
+                Profiler.enter("Creating connectors");
 
                 Set<ServerConnector> createdConnectors = new HashSet<ServerConnector>();
 
@@ -1733,7 +1720,10 @@ public class ApplicationConnection {
                         // Connector does not exist so we must create it
                         if (connectorClass != UIConnector.class) {
                             // create, initialize and register the paintable
+                            Profiler.enter("ApplicationConnection.getConnector");
                             connector = getConnector(connectorId, connectorType);
+                            Profiler.leave("ApplicationConnection.getConnector");
+
                             createdConnectors.add(connector);
                         } else {
                             // First UIConnector update. Before this the
@@ -1750,10 +1740,15 @@ public class ApplicationConnection {
                         VConsole.error(e);
                     }
                 }
+
+                Profiler.leave("Creating connectors");
+
                 return createdConnectors;
             }
 
             private void updateVaadin6StyleConnectors(ValueMap json) {
+                Profiler.enter("updateVaadin6StyleConnectors");
+
                 JsArray<ValueMap> changes = json.getJSValueMapArray("changes");
                 int length = changes.length();
 
@@ -1768,8 +1763,19 @@ public class ApplicationConnection {
                         final ComponentConnector legacyConnector = (ComponentConnector) connectorMap
                                 .getConnector(connectorId);
                         if (legacyConnector instanceof Paintable) {
+                            String key = null;
+                            if (Profiler.isEnabled()) {
+                                key = "updateFromUIDL for "
+                                        + Util.getSimpleName(legacyConnector);
+                                Profiler.enter(key);
+                            }
+
                             ((Paintable) legacyConnector).updateFromUIDL(uidl,
                                     ApplicationConnection.this);
+
+                            if (Profiler.isEnabled()) {
+                                Profiler.leave(key);
+                            }
                         } else if (legacyConnector == null) {
                             VConsole.error("Received update for "
                                     + uidl.getTag()
@@ -1785,6 +1791,8 @@ public class ApplicationConnection {
                         VConsole.error(e);
                     }
                 }
+
+                Profiler.leave("updateVaadin6StyleConnectors");
             }
 
             private void sendHierarchyChangeEvents(
@@ -1792,6 +1800,7 @@ public class ApplicationConnection {
                 if (pendingHierarchyChangeEvents.isEmpty()) {
                     return;
                 }
+                Profiler.enter("sendHierarchyChangeEvents");
 
                 VConsole.log(" * Sending hierarchy change events");
                 for (ConnectorHierarchyChangeEvent event : pendingHierarchyChangeEvents) {
@@ -1803,6 +1812,7 @@ public class ApplicationConnection {
                     }
                 }
 
+                Profiler.leave("sendHierarchyChangeEvents");
             }
 
             private void logHierarchyChange(ConnectorHierarchyChangeEvent event) {
@@ -1835,6 +1845,9 @@ public class ApplicationConnection {
                 if (!json.containsKey("state")) {
                     return events;
                 }
+
+                Profiler.enter("updateConnectorState");
+
                 HashSet<ServerConnector> remainingNewConnectors = new HashSet<ServerConnector>(
                         newConnectors);
 
@@ -1847,6 +1860,11 @@ public class ApplicationConnection {
                         ServerConnector connector = connectorMap
                                 .getConnector(connectorId);
                         if (null != connector) {
+                            Profiler.enter("updateConnectorState inner loop");
+                            if (Profiler.isEnabled()) {
+                                Profiler.enter("Decode connector state "
+                                        + Util.getSimpleName(connector));
+                            }
 
                             JSONObject stateJson = new JSONObject(
                                     states.getJavaScriptObject(connectorId));
@@ -1859,10 +1877,19 @@ public class ApplicationConnection {
                             }
 
                             SharedState state = connector.getState();
+
+                            Profiler.enter("updateConnectorState decodeValue");
                             JsonDecoder.decodeValue(new Type(state.getClass()
                                     .getName(), null), stateJson, state,
                                     ApplicationConnection.this);
+                            Profiler.leave("updateConnectorState decodeValue");
 
+                            if (Profiler.isEnabled()) {
+                                Profiler.leave("Decode connector state "
+                                        + Util.getSimpleName(connector));
+                            }
+
+                            Profiler.enter("updateConnectorState create event");
                             FastStringSet changedProperties = FastStringSet
                                     .create();
                             addJsonFields(stateJson, changedProperties, "");
@@ -1880,6 +1907,9 @@ public class ApplicationConnection {
                                     connector, changedProperties);
 
                             events.add(event);
+                            Profiler.leave("updateConnectorState create event");
+
+                            Profiler.leave("updateConnectorState inner loop");
                         }
                     } catch (final Throwable e) {
                         VConsole.error(e);
@@ -1899,6 +1929,8 @@ public class ApplicationConnection {
 
                 }
 
+                Profiler.leave("updateConnectorState");
+
                 return events;
             }
 
@@ -1906,9 +1938,11 @@ public class ApplicationConnection {
                 FastStringSet fields;
                 fields = allStateFieldsCache.get(type.getBaseTypeName());
                 if (fields == null) {
+                    Profiler.enter("getAllStateFields create");
                     fields = FastStringSet.create();
                     addAllStateFields(type, fields, "");
                     allStateFieldsCache.put(type.getBaseTypeName(), fields);
+                    Profiler.leave("getAllStateFields create");
                 }
                 return fields;
             }
@@ -1993,6 +2027,8 @@ public class ApplicationConnection {
                 if (!json.containsKey("hierarchy")) {
                     return result;
                 }
+
+                Profiler.enter("updateConnectorHierarchy");
 
                 FastStringSet maybeDetached = FastStringSet.create();
 
@@ -2113,6 +2149,8 @@ public class ApplicationConnection {
                     recursivelyDetach(removed, result.events);
                 }
 
+                Profiler.leave("updateConnectorHierarchy");
+
                 return result;
 
             }
@@ -2200,6 +2238,8 @@ public class ApplicationConnection {
 
             private void handleRpcInvocations(ValueMap json) {
                 if (json.containsKey("rpc")) {
+                    Profiler.enter("handleRpcInvocations");
+
                     VConsole.log(" * Performing server to client RPC calls");
 
                     JSONArray rpcCalls = new JSONArray(
@@ -2215,8 +2255,9 @@ public class ApplicationConnection {
                             VConsole.error(e);
                         }
                     }
-                }
 
+                    Profiler.leave("handleRpcInvocations");
+                }
             }
 
         };
@@ -2864,12 +2905,15 @@ public class ApplicationConnection {
      */
     private ServerConnector createAndRegisterConnector(String connectorId,
             int connectorType) {
+        Profiler.enter("ApplicationConnection.createAndRegisterConnector");
+
         // Create and register a new connector with the given type
         ServerConnector p = widgetSet.createConnector(connectorType,
                 configuration);
         connectorMap.registerConnector(connectorId, p);
         p.doInit(connectorId, this);
 
+        Profiler.leave("ApplicationConnection.createAndRegisterConnector");
         return p;
     }
 

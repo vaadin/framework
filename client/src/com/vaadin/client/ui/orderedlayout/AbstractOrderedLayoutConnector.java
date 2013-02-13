@@ -23,6 +23,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.LayoutManager;
+import com.vaadin.client.Profiler;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -281,6 +282,7 @@ public abstract class AbstractOrderedLayoutConnector extends
      */
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+        Profiler.enter("AOLC.onConnectorHierarchyChange");
 
         List<ComponentConnector> previousChildren = event.getOldChildren();
         int currentIndex = 0;
@@ -289,14 +291,22 @@ public abstract class AbstractOrderedLayoutConnector extends
         layout.setSpacing(getState().spacing);
 
         for (ComponentConnector child : getChildComponents()) {
+            Profiler.enter("AOLC.onConnectorHierarchyChange add children");
             Slot slot = layout.getSlot(child.getWidget());
             if (slot.getParent() != layout) {
+                Profiler.enter("AOLC.onConnectorHierarchyChange add state change handler");
                 child.addStateChangeHandler(childStateChangeHandler);
+                Profiler.leave("AOLC.onConnectorHierarchyChange add state change handler");
             }
+            Profiler.enter("AOLC.onConnectorHierarchyChange addOrMoveSlot");
             layout.addOrMoveSlot(slot, currentIndex++);
+            Profiler.leave("AOLC.onConnectorHierarchyChange addOrMoveSlot");
+
+            Profiler.leave("AOLC.onConnectorHierarchyChange add children");
         }
 
         for (ComponentConnector child : previousChildren) {
+            Profiler.enter("AOLC.onConnectorHierarchyChange remove children");
             if (child.getParent() != this) {
                 Slot slot = layout.getSlot(child.getWidget());
                 slot.setWidgetResizeListener(null);
@@ -309,7 +319,9 @@ public abstract class AbstractOrderedLayoutConnector extends
                 child.removeStateChangeHandler(childStateChangeHandler);
                 layout.removeWidget(child.getWidget());
             }
+            Profiler.leave("AOL.onConnectorHierarchyChange remove children");
         }
+        Profiler.leave("AOLC.onConnectorHierarchyChange");
 
         updateInternalState();
     }
@@ -342,6 +354,7 @@ public abstract class AbstractOrderedLayoutConnector extends
         if (processedResponseId == lastResponseId) {
             return;
         }
+        Profiler.enter("AOLC.updateInternalState");
         // Remember that everything is updated for this response
         processedResponseId = lastResponseId;
 
@@ -422,6 +435,8 @@ public abstract class AbstractOrderedLayoutConnector extends
         } else {
             getWidget().clearExpand();
         }
+
+        Profiler.leave("AOLC.updateInternalState");
     }
 
     /**
