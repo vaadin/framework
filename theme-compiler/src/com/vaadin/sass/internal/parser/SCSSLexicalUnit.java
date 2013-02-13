@@ -20,6 +20,9 @@ import org.w3c.css.sac.LexicalUnit;
 public interface SCSSLexicalUnit extends LexicalUnit {
     static final short SCSS_VARIABLE = 100;
 
+    static final short SAC_LEM = 200;
+    static final short SAC_REM = 201;
+
     LexicalUnitImpl divide(LexicalUnitImpl denominator);
 
     LexicalUnitImpl add(LexicalUnitImpl another);

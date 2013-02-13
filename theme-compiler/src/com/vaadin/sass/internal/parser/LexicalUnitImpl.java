@@ -155,6 +155,10 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
             return "%";
         case SAC_EM:
             return "em";
+        case SCSSLexicalUnit.SAC_LEM:
+            return "lem";
+        case SCSSLexicalUnit.SAC_REM:
+            return "rem";
         case SAC_EX:
             return "ex";
         case SAC_PIXEL:
@@ -268,6 +272,8 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
             text = getFloatValue() + "";
             break;
         case LexicalUnit.SAC_EM:
+        case SCSSLexicalUnit.SAC_LEM:
+        case SCSSLexicalUnit.SAC_REM:
         case LexicalUnit.SAC_EX:
         case LexicalUnit.SAC_PIXEL:
         case LexicalUnit.SAC_INCH:
@@ -445,6 +451,18 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
     static LexicalUnitImpl createEMS(int line, int column,
             LexicalUnitImpl previous, float v) {
         return new LexicalUnitImpl(line, column, previous, SAC_EM, null, v);
+    }
+
+    static LexicalUnitImpl createLEM(int line, int column,
+            LexicalUnitImpl previous, float v) {
+        return new LexicalUnitImpl(line, column, previous,
+                SCSSLexicalUnit.SAC_LEM, null, v);
+    }
+
+    static LexicalUnitImpl createREM(int line, int column,
+            LexicalUnitImpl previous, float v) {
+        return new LexicalUnitImpl(line, column, previous,
+                SCSSLexicalUnit.SAC_REM, null, v);
     }
 
     static LexicalUnitImpl createEXS(int line, int column,

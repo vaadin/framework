@@ -181,71 +181,75 @@ public interface ParserConstants {
     /** RegularExpression Id. */
     int EMS = 84;
     /** RegularExpression Id. */
-    int EXS = 85;
+    int LEM = 85;
     /** RegularExpression Id. */
-    int DEG = 86;
+    int REM = 86;
     /** RegularExpression Id. */
-    int RAD = 87;
+    int EXS = 87;
     /** RegularExpression Id. */
-    int GRAD = 88;
+    int DEG = 88;
     /** RegularExpression Id. */
-    int MS = 89;
+    int RAD = 89;
     /** RegularExpression Id. */
-    int SECOND = 90;
+    int GRAD = 90;
     /** RegularExpression Id. */
-    int HZ = 91;
+    int MS = 91;
     /** RegularExpression Id. */
-    int KHZ = 92;
+    int SECOND = 92;
     /** RegularExpression Id. */
-    int DIMEN = 93;
+    int HZ = 93;
     /** RegularExpression Id. */
-    int HASH = 94;
+    int KHZ = 94;
     /** RegularExpression Id. */
-    int IMPORT_SYM = 95;
+    int DIMEN = 95;
     /** RegularExpression Id. */
-    int MEDIA_SYM = 96;
+    int HASH = 96;
     /** RegularExpression Id. */
-    int CHARSET_SYM = 97;
+    int IMPORT_SYM = 97;
     /** RegularExpression Id. */
-    int PAGE_SYM = 98;
+    int MEDIA_SYM = 98;
     /** RegularExpression Id. */
-    int FONT_FACE_SYM = 99;
+    int CHARSET_SYM = 99;
     /** RegularExpression Id. */
-    int KEY_FRAME_SYM = 100;
+    int PAGE_SYM = 100;
     /** RegularExpression Id. */
-    int ATKEYWORD = 101;
+    int FONT_FACE_SYM = 101;
     /** RegularExpression Id. */
-    int IMPORTANT_SYM = 102;
+    int KEY_FRAME_SYM = 102;
     /** RegularExpression Id. */
-    int RANGE0 = 103;
+    int ATKEYWORD = 103;
     /** RegularExpression Id. */
-    int RANGE1 = 104;
+    int IMPORTANT_SYM = 104;
     /** RegularExpression Id. */
-    int RANGE2 = 105;
+    int RANGE0 = 105;
     /** RegularExpression Id. */
-    int RANGE3 = 106;
+    int RANGE1 = 106;
     /** RegularExpression Id. */
-    int RANGE4 = 107;
+    int RANGE2 = 107;
     /** RegularExpression Id. */
-    int RANGE5 = 108;
+    int RANGE3 = 108;
     /** RegularExpression Id. */
-    int RANGE6 = 109;
+    int RANGE4 = 109;
     /** RegularExpression Id. */
-    int RANGE = 110;
+    int RANGE5 = 110;
     /** RegularExpression Id. */
-    int UNI = 111;
+    int RANGE6 = 111;
     /** RegularExpression Id. */
-    int UNICODERANGE = 112;
+    int RANGE = 112;
     /** RegularExpression Id. */
-    int REMOVE = 113;
+    int UNI = 113;
     /** RegularExpression Id. */
-    int APPEND = 114;
+    int UNICODERANGE = 114;
     /** RegularExpression Id. */
-    int CONTAINS = 115;
+    int REMOVE = 115;
     /** RegularExpression Id. */
-    int FUNCTION = 116;
+    int APPEND = 116;
     /** RegularExpression Id. */
-    int UNKNOWN = 117;
+    int CONTAINS = 117;
+    /** RegularExpression Id. */
+    int FUNCTION = 118;
+    /** RegularExpression Id. */
+    int UNKNOWN = 119;
 
     /** Lexical state. */
     int DEFAULT = 0;
@@ -273,12 +277,13 @@ public interface ParserConstants {
             "<MICROSOFT_RULE>", "\"if\"", "<GUARDED_SYM>", "<STRING>",
             "<IDENT>", "<NUMBER>", "<_URL>", "<URL>", "<VARIABLE>",
             "<PERCENTAGE>", "<PT>", "<MM>", "<CM>", "<PC>", "<IN>", "<PX>",
-            "<EMS>", "<EXS>", "<DEG>", "<RAD>", "<GRAD>", "<MS>", "<SECOND>",
-            "<HZ>", "<KHZ>", "<DIMEN>", "<HASH>", "\"@import\"", "\"@media\"",
-            "\"@charset\"", "\"@page\"", "\"@font-face\"", "<KEY_FRAME_SYM>",
-            "<ATKEYWORD>", "<IMPORTANT_SYM>", "<RANGE0>", "<RANGE1>",
-            "<RANGE2>", "<RANGE3>", "<RANGE4>", "<RANGE5>", "<RANGE6>",
-            "<RANGE>", "<UNI>", "<UNICODERANGE>", "<REMOVE>", "<APPEND>",
-            "<CONTAINS>", "<FUNCTION>", "<UNKNOWN>", };
+            "<EMS>", "<LEM>", "<REM>", "<EXS>", "<DEG>", "<RAD>", "<GRAD>",
+            "<MS>", "<SECOND>", "<HZ>", "<KHZ>", "<DIMEN>", "<HASH>",
+            "\"@import\"", "\"@media\"", "\"@charset\"", "\"@page\"",
+            "\"@font-face\"", "<KEY_FRAME_SYM>", "<ATKEYWORD>",
+            "<IMPORTANT_SYM>", "<RANGE0>", "<RANGE1>", "<RANGE2>", "<RANGE3>",
+            "<RANGE4>", "<RANGE5>", "<RANGE6>", "<RANGE>", "<UNI>",
+            "<UNICODERANGE>", "<REMOVE>", "<APPEND>", "<CONTAINS>",
+            "<FUNCTION>", "<UNKNOWN>", };
 
 }

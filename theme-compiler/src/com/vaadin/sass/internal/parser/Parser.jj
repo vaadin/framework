@@ -650,6 +650,8 @@ TOKEN :
  | < IN : <NUMBER> "in" >
  | < PX : <NUMBER> "px" >
  | < EMS : <NUMBER> "em" >
+ | < LEM : <NUMBER> "lem" >
+ | < REM : <NUMBER> "rem" >
  | < EXS : <NUMBER> "ex" >
  | < DEG : <NUMBER> "deg" >
  | < RAD : <NUMBER> "rad" >
@@ -2241,9 +2243,9 @@ LexicalUnitImpl nonVariableTerm(LexicalUnitImpl prev) :{LexicalUnitImpl result
   String s = "";
 }
 {
-( ( ( op=unaryOperator() )?
-    (
-      n=<NUMBER>
+( ( ( 
+    op=unaryOperator() )?
+    (n=<NUMBER>
 	{ result = LexicalUnitImpl.createNumber(n.beginLine, n.beginColumn,
 						prev, number(op, n, 0)); }
     | n=<PERCENTAGE>
@@ -2270,6 +2272,12 @@ LexicalUnitImpl nonVariableTerm(LexicalUnitImpl prev) :{LexicalUnitImpl result
     | n=<EMS>
 	{ result = LexicalUnitImpl.createEMS(n.beginLine, n.beginColumn,
 					     prev, number(op, n, 2)); }
+    | n=<LEM>
+        { result = LexicalUnitImpl.createLEM(n.beginLine, n.beginColumn,
+                                             prev, number(op, n, 3)); }
+    | n=<REM>       
+        { result = LexicalUnitImpl.createREM(n.beginLine, n.beginColumn,
+                                             prev, number(op, n, 3)); }
     | n=<EXS>
 	{ result = LexicalUnitImpl.createEXS(n.beginLine, n.beginColumn,
 					     prev, number(op, n, 2)); }
