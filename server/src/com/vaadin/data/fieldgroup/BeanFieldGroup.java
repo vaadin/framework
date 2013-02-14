@@ -68,7 +68,8 @@ public class BeanFieldGroup<T> extends FieldGroup {
             String minifiedFieldName = minifyFieldName(fieldName);
             try {
                 return getFieldName(beanType, minifiedFieldName);
-            } catch (SecurityException | NoSuchFieldException e) {
+            } catch (SecurityException e) {
+            } catch (NoSuchFieldException e) {
             }
         }
         return null;
