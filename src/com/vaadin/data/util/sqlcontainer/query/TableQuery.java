@@ -35,8 +35,8 @@ import com.vaadin.data.util.sqlcontainer.query.generator.SQLGenerator;
 import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
 
 @SuppressWarnings("serial")
-public class TableQuery implements QueryDelegate,
-        QueryDelegate.RowIdChangeNotifier {
+public class TableQuery extends AbstractTransactionalQuery implements
+        QueryDelegate, QueryDelegate.RowIdChangeNotifier {
 
     /** Table name, primary key column name(s) and version column name */
     private String tableName;
@@ -50,18 +50,13 @@ public class TableQuery implements QueryDelegate,
     /** SQLGenerator instance to use for generating queries */
     private SQLGenerator sqlGenerator;
 
-    /** Fields related to Connection and Transaction handling */
-    private JDBCConnectionPool connectionPool;
-    private transient Connection activeConnection;
-    private boolean transactionOpen;
-
     /** Row ID change listeners */
     private LinkedList<RowIdChangeListener> rowIdChangeListeners;
     /** Row ID change events, stored until commit() is called */
     private final List<RowIdChangeEvent> bufferedEvents = new ArrayList<RowIdChangeEvent>();
 
     /** Set to true to output generated SQL Queries to System.out */
-    private boolean debug = false;
+    private final boolean debug = false;
 
     /** Prevent no-parameters instantiation of TableQuery */
     @SuppressWarnings("unused")
@@ -81,6 +76,7 @@ public class TableQuery implements QueryDelegate,
      */
     public TableQuery(String tableName, JDBCConnectionPool connectionPool,
             SQLGenerator sqlGenerator) {
+        super(connectionPool);
         if (tableName == null || tableName.trim().length() < 1
                 || connectionPool == null || sqlGenerator == null) {
             throw new IllegalArgumentException(
@@ -88,7 +84,6 @@ public class TableQuery implements QueryDelegate,
         }
         this.tableName = tableName;
         this.sqlGenerator = sqlGenerator;
-        this.connectionPool = connectionPool;
         fetchMetaData();
     }
 
@@ -116,17 +111,27 @@ public class TableQuery implements QueryDelegate,
         StatementHelper sh = sqlGenerator.generateSelectQuery(tableName,
                 filters, null, 0, 0, "COUNT(*)");
         boolean shouldCloseTransaction = false;
-        if (!transactionOpen) {
+        if (!isInTransaction()) {
             shouldCloseTransaction = true;
             beginTransaction();
         }
-        ResultSet r = executeQuery(sh);
-        r.next();
-        int count = r.getInt(1);
-        r.getStatement().close();
-        r.close();
-        if (shouldCloseTransaction) {
-            commit();
+        ResultSet r = null;
+        int count = -1;
+        try {
+            r = executeQuery(sh);
+            r.next();
+            count = r.getInt(1);
+        } finally {
+            try {
+                if (r != null) {
+                    releaseConnection(r.getStatement().getConnection(),
+                            r.getStatement(), r);
+                }
+            } finally {
+                if (shouldCloseTransaction) {
+                    commit();
+                }
+            }
         }
         return count;
     }
@@ -224,28 +229,30 @@ public class TableQuery implements QueryDelegate,
         setVersionColumnFlagInProperty(row);
         /* Generate query */
         StatementHelper sh = sqlGenerator.generateInsertQuery(tableName, row);
-        PreparedStatement pstmt = activeConnection.prepareStatement(
-                sh.getQueryString(), primaryKeyColumns.toArray(new String[0]));
-        sh.setParameterValuesToStatement(pstmt);
-        getLogger().log(Level.FINE, "DB -> {0}", sh.getQueryString());
-        int result = pstmt.executeUpdate();
-        if (result > 0) {
-            /*
-             * If affected rows exist, we'll get the new RowId, commit the
-             * transaction and return the new RowId.
-             */
-            ResultSet generatedKeys = pstmt.getGeneratedKeys();
-            RowId newId = getNewRowId(row, generatedKeys);
-            generatedKeys.close();
-            pstmt.clearParameters();
-            pstmt.close();
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet generatedKeys = null;
+        connection = getConnection();
+        try {
+            pstmt = connection.prepareStatement(sh.getQueryString(),
+                    primaryKeyColumns.toArray(new String[0]));
+            sh.setParameterValuesToStatement(pstmt);
+            getLogger().log(Level.FINE, "DB -> {0}", sh.getQueryString());
+            int result = pstmt.executeUpdate();
+            RowId newId = null;
+            if (result > 0) {
+                /*
+                 * If affected rows exist, we'll get the new RowId, commit the
+                 * transaction and return the new RowId.
+                 */
+                generatedKeys = pstmt.getGeneratedKeys();
+                newId = getNewRowId(row, generatedKeys);
+            }
+            // transaction has to be closed in any case
             commit();
             return newId;
-        } else {
-            pstmt.clearParameters();
-            pstmt.close();
-            /* On failure return null */
-            return null;
+        } finally {
+            releaseConnection(connection, pstmt, generatedKeys);
         }
     }
 
@@ -286,16 +293,11 @@ public class TableQuery implements QueryDelegate,
      * 
      * @see com.vaadin.addon.sqlcontainer.query.QueryDelegate#beginTransaction()
      */
+    @Override
     public void beginTransaction() throws UnsupportedOperationException,
             SQLException {
-        if (transactionOpen && activeConnection != null) {
-            throw new IllegalStateException();
-        }
-
         getLogger().log(Level.FINE, "DB -> begin transaction");
-        activeConnection = connectionPool.reserveConnection();
-        activeConnection.setAutoCommit(false);
-        transactionOpen = true;
+        super.beginTransaction();
     }
 
     /*
@@ -303,15 +305,10 @@ public class TableQuery implements QueryDelegate,
      * 
      * @see com.vaadin.addon.sqlcontainer.query.QueryDelegate#commit()
      */
+    @Override
     public void commit() throws UnsupportedOperationException, SQLException {
-        if (transactionOpen && activeConnection != null) {
-            getLogger().log(Level.FINE, "DB -> commit");
-            activeConnection.commit();
-            connectionPool.releaseConnection(activeConnection);
-        } else {
-            throw new SQLException("No active transaction");
-        }
-        transactionOpen = false;
+        getLogger().log(Level.FINE, "DB -> commit");
+        super.commit();
 
         /* Handle firing row ID change events */
         RowIdChangeEvent[] unFiredEvents = bufferedEvents
@@ -331,15 +328,10 @@ public class TableQuery implements QueryDelegate,
      * 
      * @see com.vaadin.addon.sqlcontainer.query.QueryDelegate#rollback()
      */
+    @Override
     public void rollback() throws UnsupportedOperationException, SQLException {
-        if (transactionOpen && activeConnection != null) {
-            getLogger().log(Level.FINE, "DB -> rollback");
-            activeConnection.rollback();
-            connectionPool.releaseConnection(activeConnection);
-        } else {
-            throw new SQLException("No active transaction");
-        }
-        transactionOpen = false;
+        getLogger().log(Level.FINE, "DB -> rollback");
+        super.rollback();
     }
 
     /*
@@ -380,16 +372,18 @@ public class TableQuery implements QueryDelegate,
      * @throws SQLException
      */
     private ResultSet executeQuery(StatementHelper sh) throws SQLException {
-        Connection c = null;
-        if (transactionOpen && activeConnection != null) {
-            c = activeConnection;
-        } else {
-            throw new SQLException("No active transaction!");
+        ensureTransaction();
+        Connection connection = getConnection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = connection.prepareStatement(sh.getQueryString());
+            sh.setParameterValuesToStatement(pstmt);
+            getLogger().log(Level.FINE, "DB -> {0}", sh.getQueryString());
+            return pstmt.executeQuery();
+        } catch (SQLException e) {
+            releaseConnection(null, pstmt, null);
+            throw e;
         }
-        PreparedStatement pstmt = c.prepareStatement(sh.getQueryString());
-        sh.setParameterValuesToStatement(pstmt);
-        getLogger().log(Level.FINE, "DB -> {0}", sh.getQueryString());
-        return pstmt.executeQuery();
     }
 
     /**
@@ -404,27 +398,17 @@ public class TableQuery implements QueryDelegate,
      * @throws SQLException
      */
     private int executeUpdate(StatementHelper sh) throws SQLException {
-        Connection c = null;
         PreparedStatement pstmt = null;
+        Connection connection = null;
         try {
-            if (transactionOpen && activeConnection != null) {
-                c = activeConnection;
-            } else {
-                c = connectionPool.reserveConnection();
-            }
-            pstmt = c.prepareStatement(sh.getQueryString());
+            connection = getConnection();
+            pstmt = connection.prepareStatement(sh.getQueryString());
             sh.setParameterValuesToStatement(pstmt);
             getLogger().log(Level.FINE, "DB -> {0}", sh.getQueryString());
             int retval = pstmt.executeUpdate();
             return retval;
         } finally {
-            if (pstmt != null) {
-                pstmt.clearParameters();
-                pstmt.close();
-            }
-            if (!transactionOpen) {
-                connectionPool.releaseConnection(c);
-            }
+            releaseConnection(connection, pstmt, null);
         }
     }
 
@@ -445,16 +429,12 @@ public class TableQuery implements QueryDelegate,
      */
     private int executeUpdateReturnKeys(StatementHelper sh, RowItem row)
             throws SQLException {
-        Connection c = null;
         PreparedStatement pstmt = null;
         ResultSet genKeys = null;
+        Connection connection = null;
         try {
-            if (transactionOpen && activeConnection != null) {
-                c = activeConnection;
-            } else {
-                c = connectionPool.reserveConnection();
-            }
-            pstmt = c.prepareStatement(sh.getQueryString(),
+            connection = getConnection();
+            pstmt = connection.prepareStatement(sh.getQueryString(),
                     primaryKeyColumns.toArray(new String[0]));
             sh.setParameterValuesToStatement(pstmt);
             getLogger().log(Level.FINE, "DB -> {0}", sh.getQueryString());
@@ -464,16 +444,7 @@ public class TableQuery implements QueryDelegate,
             bufferedEvents.add(new RowIdChangeEvent(row.getId(), newId));
             return result;
         } finally {
-            if (genKeys != null) {
-                genKeys.close();
-            }
-            if (pstmt != null) {
-                pstmt.clearParameters();
-                pstmt.close();
-            }
-            if (!transactionOpen) {
-                connectionPool.releaseConnection(c);
-            }
+            releaseConnection(connection, pstmt, genKeys);
         }
     }
 
@@ -483,13 +454,15 @@ public class TableQuery implements QueryDelegate,
      * Also tries to get the escape string to be used in search strings.
      */
     private void fetchMetaData() {
-        Connection c = null;
+        Connection connection = null;
+        ResultSet rs = null;
+        ResultSet tables = null;
         try {
-            c = connectionPool.reserveConnection();
-            DatabaseMetaData dbmd = c.getMetaData();
+            connection = getConnection();
+            DatabaseMetaData dbmd = connection.getMetaData();
             if (dbmd != null) {
                 tableName = SQLUtil.escapeSQL(tableName);
-                ResultSet tables = dbmd.getTables(null, null, tableName, null);
+                tables = dbmd.getTables(null, null, tableName, null);
                 if (!tables.next()) {
                     tables = dbmd.getTables(null, null,
                             tableName.toUpperCase(), null);
@@ -503,7 +476,7 @@ public class TableQuery implements QueryDelegate,
                     }
                 }
                 tables.close();
-                ResultSet rs = dbmd.getPrimaryKeys(null, null, tableName);
+                rs = dbmd.getPrimaryKeys(null, null, tableName);
                 List<String> names = new ArrayList<String>();
                 while (rs.next()) {
                     names.add(rs.getString("COLUMN_NAME"));
@@ -532,7 +505,15 @@ public class TableQuery implements QueryDelegate,
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            connectionPool.releaseConnection(c);
+            try {
+                releaseConnection(connection, null, rs);
+            } catch (SQLException ignore) {
+            } finally {
+                try {
+                    tables.close();
+                } catch (SQLException ignore) {
+                }
+            }
         }
     }
 
@@ -570,7 +551,8 @@ public class TableQuery implements QueryDelegate,
             }
             return new RowId(newRowId.toArray());
         } catch (Exception e) {
-            getLogger().log(Level.FINE,
+            getLogger()
+                    .log(Level.FINE,
                             "Failed to fetch key values on insert: {0}",
                             e.getMessage());
             return null;
@@ -586,8 +568,7 @@ public class TableQuery implements QueryDelegate,
      */
     public boolean removeRow(RowItem row) throws UnsupportedOperationException,
             SQLException {
-        getLogger().log(Level.FINE,
- "Removing row with id: {0}",
+        getLogger().log(Level.FINE, "Removing row with id: {0}",
                 row.getId().getId()[0].toString());
         if (executeUpdate(sqlGenerator.generateDeleteQuery(getTableName(),
                 primaryKeyColumns, versionColumn, row)) == 1) {
@@ -622,7 +603,7 @@ public class TableQuery implements QueryDelegate,
                 filtersAndKeys, orderBys, 0, 0, "*");
 
         boolean shouldCloseTransaction = false;
-        if (!transactionOpen) {
+        if (!isInTransaction()) {
             shouldCloseTransaction = true;
             beginTransaction();
         }
@@ -632,14 +613,15 @@ public class TableQuery implements QueryDelegate,
             boolean contains = rs.next();
             return contains;
         } finally {
-            if (rs != null) {
-                if (rs.getStatement() != null) {
-                    rs.getStatement().close();
+            try {
+                if (rs != null) {
+                    releaseConnection(rs.getStatement().getConnection(),
+                            rs.getStatement(), rs);
                 }
-                rs.close();
-            }
-            if (shouldCloseTransaction) {
-                commit();
+            } finally {
+                if (shouldCloseTransaction) {
+                    commit();
+                }
             }
         }
     }
