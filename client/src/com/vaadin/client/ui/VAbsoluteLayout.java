@@ -326,6 +326,10 @@ public class VAbsoluteLayout extends ComplexPanel {
 
                 Style wrapperStyle = wrapper.getElement().getStyle();
                 Style widgetStyle = wrapper.getWidget().getElement().getStyle();
+
+                // Ensure previous heights do not affect the measures
+                wrapperStyle.clearHeight();
+
                 if (widgetStyle.getHeight() != null
                         && widgetStyle.getHeight().endsWith("%")) {
                     int h;
@@ -343,8 +347,6 @@ public class VAbsoluteLayout extends ComplexPanel {
                                 - wrapper.getElement().getOffsetTop();
                     }
                     wrapperStyle.setHeight(h, Unit.PX);
-                } else {
-                    wrapperStyle.clearHeight();
                 }
 
                 wrapper.updateCaptionPosition();
@@ -380,6 +382,9 @@ public class VAbsoluteLayout extends ComplexPanel {
                 Style wrapperStyle = wrapper.getElement().getStyle();
                 Style widgetStyle = wrapper.getWidget().getElement().getStyle();
 
+                // Ensure previous heights do not affect the measures
+                wrapperStyle.clearWidth();
+
                 if (widgetStyle.getWidth() != null
                         && widgetStyle.getWidth().endsWith("%")) {
                     int w;
@@ -398,8 +403,6 @@ public class VAbsoluteLayout extends ComplexPanel {
                                 - wrapper.getElement().getOffsetLeft();
                     }
                     wrapperStyle.setWidth(w, Unit.PX);
-                } else {
-                    wrapperStyle.clearWidth();
                 }
 
                 wrapper.updateCaptionPosition();
