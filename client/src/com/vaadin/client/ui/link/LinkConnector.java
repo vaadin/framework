@@ -38,16 +38,13 @@ public class LinkConnector extends AbstractComponentConnector implements
     @Override
     protected void init() {
         super.init();
-        addStateChangeHandler("resources." + LinkConstants.HREF_RESOURCE,
-                new StateChangeHandler() {
-                    @Override
-                    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-                        getWidget().src = getResourceUrl(LinkConstants.HREF_RESOURCE);
-                        getWidget().anchor
-                                .setAttribute("href", getWidget().src);
-
-                    }
-                });
+        addStateChangeHandler("resources", new StateChangeHandler() {
+            @Override
+            public void onStateChanged(StateChangeEvent stateChangeEvent) {
+                getWidget().src = getResourceUrl(LinkConstants.HREF_RESOURCE);
+                getWidget().anchor.setAttribute("href", getWidget().src);
+            }
+        });
     }
 
     @Override
