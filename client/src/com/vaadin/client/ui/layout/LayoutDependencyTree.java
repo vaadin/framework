@@ -410,41 +410,73 @@ public class LayoutDependencyTree {
 
     public void setNeedsMeasure(ComponentConnector connector,
             boolean needsMeasure) {
-        setNeedsMeasure(connector.getConnectorId(), needsMeasure);
+        setNeedsHorizontalMeasure(connector, needsMeasure);
+        setNeedsVerticalMeasure(connector, needsMeasure);
     }
 
     public void setNeedsMeasure(String connectorId, boolean needsMeasure) {
-        setNeedsHorizontalMeasure(connectorId, needsMeasure);
-        setNeedsVerticalMeasure(connectorId, needsMeasure);
+        ComponentConnector connector = (ComponentConnector) ConnectorMap.get(
+                connection).getConnector(connectorId);
+        if (connector == null) {
+            return;
+        }
+
+        setNeedsMeasure(connector, needsMeasure);
     }
 
     public void setNeedsHorizontalMeasure(ComponentConnector connector,
             boolean needsMeasure) {
-        setNeedsHorizontalMeasure(connector.getConnectorId(), needsMeasure);
+        LayoutDependency dependency = getDependency(connector, HORIZONTAL);
+        dependency.setNeedsMeasure(needsMeasure);
     }
 
     public void setNeedsHorizontalMeasure(String connectorId,
             boolean needsMeasure) {
-        LayoutDependency dependency = getDependency(connectorId, HORIZONTAL);
-        dependency.setNeedsMeasure(needsMeasure);
+        // Ensure connector exists
+        ComponentConnector connector = (ComponentConnector) ConnectorMap.get(
+                connection).getConnector(connectorId);
+        if (connector == null) {
+            return;
+        }
+
+        setNeedsHorizontalMeasure(connector, needsMeasure);
     }
 
     public void setNeedsVerticalMeasure(ComponentConnector connector,
             boolean needsMeasure) {
-        setNeedsVerticalMeasure(connector.getConnectorId(), needsMeasure);
-    }
-
-    public void setNeedsVerticalMeasure(String connectorId, boolean needsMeasure) {
-        LayoutDependency dependency = getDependency(connectorId, VERTICAL);
+        LayoutDependency dependency = getDependency(connector, VERTICAL);
         dependency.setNeedsMeasure(needsMeasure);
     }
 
+    public void setNeedsVerticalMeasure(String connectorId, boolean needsMeasure) {
+        // Ensure connector exists
+        ComponentConnector connector = (ComponentConnector) ConnectorMap.get(
+                connection).getConnector(connectorId);
+        if (connector == null) {
+            return;
+        }
+
+        setNeedsVerticalMeasure(connector, needsMeasure);
+    }
+
+    private LayoutDependency getDependency(ComponentConnector connector,
+            int direction) {
+        return getDependency(connector.getConnectorId(), connector, direction);
+    }
+
     private LayoutDependency getDependency(String connectorId, int direction) {
+        return getDependency(connectorId, null, direction);
+    }
+
+    private LayoutDependency getDependency(String connectorId,
+            ComponentConnector connector, int direction) {
         FastStringMap<LayoutDependency> dependencies = dependenciesInDirection[direction];
         LayoutDependency dependency = dependencies.get(connectorId);
         if (dependency == null) {
-            ComponentConnector connector = (ComponentConnector) ConnectorMap
-                    .get(connection).getConnector(connectorId);
+            if (connector == null) {
+                connector = (ComponentConnector) ConnectorMap.get(connection)
+                        .getConnector(connectorId);
+            }
             dependency = new LayoutDependency(connector, direction);
             dependencies.put(connectorId, dependency);
         }
