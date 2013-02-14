@@ -2009,10 +2009,10 @@ void styleRuleOrDeclarationOrNestedProperties() :
 {
   try {
     // differentiate between the colon of a pseudo and the colon of nested properties and the colon of a simple property
-   // the first LOOKAHEAD(5) styleRule() tries to find the pseudo selector, then the parser tries to find declarationOrNestedProperties,
-   // if failed , came to styleRule() again. It handles in this way, because the pseudo selector, declartion and nested properties
-   // are quite tricky to be distinguished. 
-      ( debuggingDirective() | LOOKAHEAD(5) styleRule() | LOOKAHEAD(declarationOrNestedProperties()) declarationOrNestedProperties() | styleRule())
+    // first check if it is a normal styleRule, if not check if it is declarationOrNestedProperties(), if still fails, most likely, it is
+    // is styleRule with pseudo selector with contains functions. have to do it in this way, because both the styleRule and declarationOrNestedProperties()
+    // have 'skipStatementUntilXXX', which cannot be LOOKAHEAD properly.
+      ( debuggingDirective() | LOOKAHEAD(selectorList()<LBRACE>) styleRule() | LOOKAHEAD(3)declarationOrNestedProperties() | styleRule())
   } catch (JumpException e) {
      skipAfterExpression();
      // reportWarningSkipText(getLocator(), skipAfterExpression());
@@ -2376,6 +2376,10 @@ LexicalUnitImpl function(char operator, LexicalUnitImpl prev) :
             String body = skipStatementUntilSemiColon();
             return LexicalUnitImpl.createIdent(n.beginLine, n.beginColumn,
                  null, "alpha("+body);
+        }else if("expression(".equals(fname)){
+            String body = skipStatementUntilSemiColon();
+            return LexicalUnitImpl.createIdent(n.beginLine, n.beginColumn,
+                 null, "expression("+body);
         }
     }
     ( params=expr() )? ")"
