@@ -44,7 +44,12 @@ public class VaadinServletService extends VaadinService {
         }
     }
 
-    protected VaadinServlet getServlet() {
+    /**
+     * Retrieves a reference to the servlet associated with this service.
+     * 
+     * @return A reference to the VaadinServlet this service is using
+     */
+    public VaadinServlet getServlet() {
         return servlet;
     }
 
