@@ -32,7 +32,9 @@ import org.w3c.css.sac.InputSource;
 import com.vaadin.sass.internal.handler.SCSSDocumentHandler;
 import com.vaadin.sass.internal.handler.SCSSDocumentHandlerImpl;
 import com.vaadin.sass.internal.handler.SCSSErrorHandler;
+import com.vaadin.sass.internal.parser.ParseException;
 import com.vaadin.sass.internal.parser.Parser;
+import com.vaadin.sass.internal.parser.SCSSParseException;
 import com.vaadin.sass.internal.resolver.ScssStylesheetResolver;
 import com.vaadin.sass.internal.resolver.VaadinResolver;
 import com.vaadin.sass.internal.tree.BlockNode;
@@ -103,6 +105,7 @@ public class ScssStylesheet extends Node {
          * imported children scss node will have the same encoding as their
          * parent, ultimately the root scss file. The root scss node has this
          * "encoding" parameter to be null. Its encoding is determined by the
+         * 
          * @charset declaration, the default one is ASCII.
          */
         File file = new File(identifier);
@@ -120,7 +123,14 @@ public class ScssStylesheet extends Node {
         Parser parser = new Parser();
         parser.setErrorHandler(new SCSSErrorHandler());
         parser.setDocumentHandler(handler);
-        parser.parseStyleSheet(source);
+
+        try {
+            parser.parseStyleSheet(source);
+        } catch (ParseException e) {
+            // catch ParseException, re-throw a SCSSParseException which has
+            // file name info.
+            throw new SCSSParseException(e, identifier);
+        }
 
         stylesheet.setCharset(parser.getInputSource().getEncoding());
         return stylesheet;
