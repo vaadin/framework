@@ -46,12 +46,7 @@ public class VaadinPortletService extends VaadinService {
         }
     }
 
-    /**
-     * Retrieves a reference to the portlet associated with this service.
-     * 
-     * @return A reference to the VaadinPortlet this service is using
-     */
-    public VaadinPortlet getPortlet() {
+    protected VaadinPortlet getPortlet() {
         return portlet;
     }
 
