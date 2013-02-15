@@ -3,6 +3,7 @@
  */
 package com.vaadin.data.util.sqlcontainer.query;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,7 +19,7 @@ import com.vaadin.data.util.sqlcontainer.connection.JDBCConnectionPool;
  * @author Vaadin Ltd
  * @since 6.8.9
  */
-abstract class AbstractTransactionalQuery {
+abstract class AbstractTransactionalQuery implements Serializable {
 
     private JDBCConnectionPool connectionPool;
     private transient Connection activeConnection;
