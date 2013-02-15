@@ -72,13 +72,11 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
         public Component generateCell(final com.vaadin.ui.Table source,
                 final Object itemId, Object columnId) {
             TestBean tb = (TestBean) itemId;
-            // if (!tb.getCol1().contains("children")) {
-            // return null;
-            // }
             String identifier = "Item " + itemId + "/" + columnId;
-            System.out.println("Generating new Button for " + identifier);
             Button btnCol3 = new NativeButton(identifier);
-            btnCol3.addListener(new Button.ClickListener() {
+            btnCol3.setId("cacheTestButton-" + tb.getCol1() + "-"
+                    + tb.getCol2());
+            btnCol3.addClickListener(new Button.ClickListener() {
                 @Override
                 public void buttonClick(ClickEvent event) {
                     log.log("Button " + event.getButton().getCaption()
@@ -87,6 +85,25 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
                 }
             });
             return btnCol3;
+        }
+
+    }
+
+    public class Col4ColumnGenerator implements ColumnGenerator {
+        public Component generateCell(final com.vaadin.ui.Table source,
+                final Object itemId, Object columnId) {
+            TestBean tb = (TestBean) itemId;
+            String identifier = "Expand/Collapse";
+            Button btnCol4 = new NativeButton(identifier);
+            btnCol4.setId("cacheTestButtonToggle-" + tb.getCol1() + "-"
+                    + tb.getCol2());
+            btnCol4.addClickListener(new Button.ClickListener() {
+                public void buttonClick(ClickEvent event) {
+                    treeTable.setCollapsed(itemId,
+                            !treeTable.isCollapsed(itemId));
+                }
+            });
+            return btnCol4;
         }
 
     }
@@ -105,19 +122,17 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
     private TreeTable treeTable;
     private BeanItemContainer<TestBean> testBeanContainer;
     private static String[] columnHeaders = new String[] { "Col1", "Col2",
-            "Col3" };
+            "Col3", "Col4" };
     private static Object[] visibleColumns = new Object[] { "col1", "col2",
-            "col3" };
+            "col3", "col4" };
 
     @Override
     public void setup() {
-        setTheme("reindeer-tests");
-
         // Force row height to be the same in all browsers so scrolling based on
         // pixels works as expected
         Button b = new Button("Show first");
         addComponent(b);
-        b.addListener(new ClickListener() {
+        b.addClickListener(new ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
@@ -132,7 +147,7 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
         cacheRateSelect.addItem(new Integer(1));
         cacheRateSelect.addItem(new Integer(2));
         cacheRateSelect.setValue(2);
-        cacheRateSelect.addListener(new ValueChangeListener() {
+        cacheRateSelect.addValueChangeListener(new ValueChangeListener() {
 
             @Override
             public void valueChange(ValueChangeEvent event) {
@@ -143,7 +158,6 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
         addComponent(cacheRateSelect);
         treeTable = new TreeTable();
         treeTable.addStyleName("table-equal-rowheight");
-        // treeTable.setPageLength(0);
         testBeanContainer = new BeanItemContainer<TestBean>(TestBean.class);
 
         Map<String, Integer> hasChildren = new HashMap<String, Integer>();
@@ -156,7 +170,8 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
         hasChildren.put("99", 20);
         treeTable.setContainerDataSource(createContainer(100, hasChildren));
         treeTable.addGeneratedColumn("col3", new Col3ColumnGenerator());
-        treeTable.addListener(new ExpandListener() {
+        treeTable.addGeneratedColumn("col4", new Col4ColumnGenerator());
+        treeTable.addExpandListener(new ExpandListener() {
 
             @Override
             public void nodeExpand(ExpandEvent event) {
@@ -164,7 +179,7 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
 
             }
         });
-        treeTable.addListener(new CollapseListener() {
+        treeTable.addCollapseListener(new CollapseListener() {
 
             @Override
             public void nodeCollapse(CollapseEvent event) {
@@ -172,12 +187,11 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
 
             }
         });
-        treeTable.setColumnHeaders(columnHeaders);
         treeTable.setVisibleColumns(visibleColumns);
+        treeTable.setColumnHeaders(columnHeaders);
         treeTable.setColumnWidth("col1", 150);
         treeTable.setColumnWidth("col2", 50);
         treeTable.setHeight("430px");
-        // treeTable.setColumnWidth("col3", 150);
         addComponent(log);
         addComponent(treeTable);
     }

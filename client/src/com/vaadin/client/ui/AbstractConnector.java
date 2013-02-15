@@ -18,9 +18,7 @@ package com.vaadin.client.ui;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.core.client.JsArrayString;
@@ -417,10 +415,6 @@ public abstract class AbstractConnector implements ServerConnector,
      * {@link com.vaadin.terminal.AbstractClientConnector#setResource(String, com.vaadin.terminal.Resource)}
      * with the same key. <code>null</code> is returned if no corresponding
      * resource is found.
-     * <p>
-     * To get an event when a resource changes, you can use
-     * {@link #addStateChangeHandler(String, StateChangeHandler)} with
-     * <code>resources.[key]</code> as the property name.
      * 
      * @param key
      *            a string identifying the resource.

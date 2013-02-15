@@ -2414,6 +2414,7 @@ div.v-window-header {
 
 .v-shadow-window {
 	position: absolute;
+	top: expression(document.documentElement.scrollTop +   "px");
 }
 
 .v-shadow-window .top-left {

@@ -77,7 +77,7 @@ public class ButtonConnector extends AbstractComponentConnector implements
             }
         });
 
-        addStateChangeHandler("resources.icon", new StateChangeHandler() {
+        addStateChangeHandler("resources", new StateChangeHandler() {
             @Override
             public void onStateChanged(StateChangeEvent stateChangeEvent) {
                 if (getIcon() != null) {
