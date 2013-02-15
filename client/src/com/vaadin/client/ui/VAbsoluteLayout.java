@@ -102,7 +102,7 @@ public class VAbsoluteLayout extends ComplexPanel {
     @Override
     public Widget getWidget(int index) {
         for (int i = 0, j = 0; i < super.getWidgetCount(); i++) {
-            Widget w = getWidget(i);
+            Widget w = super.getWidget(i);
             if (w instanceof AbsoluteWrapper) {
                 if (j == index) {
                     return w;
@@ -123,7 +123,7 @@ public class VAbsoluteLayout extends ComplexPanel {
     public int getWidgetCount() {
         int counter = 0;
         for (int i = 0; i < super.getWidgetCount(); i++) {
-            if (getWidget(i) instanceof AbsoluteWrapper) {
+            if (super.getWidget(i) instanceof AbsoluteWrapper) {
                 counter++;
             }
         }
@@ -140,7 +140,7 @@ public class VAbsoluteLayout extends ComplexPanel {
     @Override
     public int getWidgetIndex(Widget child) {
         for (int i = 0, j = 0; i < super.getWidgetCount(); i++) {
-            Widget w = getWidget(i);
+            Widget w = super.getWidget(i);
             if (w instanceof AbsoluteWrapper) {
                 if (child == w) {
                     return j;
