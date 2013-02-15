@@ -203,6 +203,23 @@ public class Label extends AbstractComponent implements Property<String>,
     }
 
     /**
+     * Returns the value displayed by this label.
+     * 
+     * @see java.lang.Object#toString()
+     * @deprecated As of 7.0, use {@link #getValue()} to get the value of the
+     *             label or {@link #getPropertyDataSource()} .getValue() to get
+     *             the value of the data source.
+     */
+    @Deprecated
+    @Override
+    public String toString() {
+        logger.warning("You are using Label.toString() to get the value for a "
+                + getClass().getSimpleName()
+                + ".  This will not be supported starting from Vaadin 7.1 (your debugger might call toString() and cause this message to appear).");
+        return getValue();
+    }
+
+    /**
      * Gets the type of the Property.
      * 
      * @see com.vaadin.data.Property#getType()
