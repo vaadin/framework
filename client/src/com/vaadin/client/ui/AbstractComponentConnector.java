@@ -15,9 +15,6 @@
  */
 package com.vaadin.client.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Focusable;
@@ -38,6 +35,7 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
+import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.client.ui.datefield.PopupDateFieldConnector;
 import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.shared.AbstractComponentState;
@@ -56,6 +54,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     private boolean initialStateEvent = true;
 
+    private boolean tooltipListenersAttached = false;
+
     /**
      * The style names from getState().getStyles() which are currently applied
      * to the widget.
@@ -66,14 +66,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * Default constructor
      */
     public AbstractComponentConnector() {
-    }
-
-    @Override
-    protected void init() {
-        super.init();
-
-        getConnection().getVTooltip().connectHandlersToWidget(getWidget());
-
     }
 
     /**
@@ -163,6 +155,17 @@ public abstract class AbstractComponentConnector extends AbstractConnector
          */
 
         updateComponentSize();
+
+        Profiler.enter("AbstractComponentContainer.onStateChanged check tooltip");
+        if (!tooltipListenersAttached && hasTooltip()) {
+            /*
+             * Add event handlers for tooltips if they are needed but have not
+             * yet been added.
+             */
+            tooltipListenersAttached = true;
+            getConnection().getVTooltip().connectHandlersToWidget(getWidget());
+        }
+        Profiler.leave("AbstractComponentContainer.onStateChanged check tooltip");
 
         initialStateEvent = false;
 
@@ -415,15 +418,49 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@inheritDoc}
      * 
-     * @see com.vaadin.client.ComponentConnector#getTooltipInfo(com.
-     * google.gwt.dom.client.Element)
+     * <p>
+     * When overriding this method, {@link #hasTooltip()} should also be
+     * overridden to return true in all situations where this method might
+     * return a non-empty result.
+     * </p>
+     * 
+     * @see ComponentConnector#getTooltipInfo(Element)
      */
     @Override
     public TooltipInfo getTooltipInfo(Element element) {
         return new TooltipInfo(getState().description, getState().errorMessage);
+    }
+
+    /**
+     * Check whether there might be a tooltip for this component. The framework
+     * will only add event listeners for automatically handling tooltips (using
+     * {@link #getTooltipInfo(Element)}) if this method returns true.
+     * 
+     * @return <code>true</code> if some part of the component might have a
+     *         tooltip, otherwise <code>false</code>
+     */
+    private boolean hasTooltip() {
+        /*
+         * Hack to avoid breaking backwards compatibility - use a generator to
+         * know whether there's a custom implementation of getTooltipInfo, and
+         * in that case always assume that there might be tooltip.
+         */
+        if (TypeDataStore.getHasGetTooltipInfo(getClass())) {
+            return true;
+        }
+
+        // Normally, there is a tooltip if description or errorMessage is set
+        AbstractComponentState state = getState();
+        if (state.description != null && !state.description.equals("")) {
+            return true;
+        } else if (state.errorMessage != null && !state.errorMessage.equals("")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

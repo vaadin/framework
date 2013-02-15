@@ -334,6 +334,22 @@ public class ConnectorBundleLoaderFactory extends Generator {
         writeGetters(logger, w, bundle);
         writeSerializers(logger, w, bundle);
         writeDelegateToWidget(logger, w, bundle);
+        writeHasGetTooltip(logger, w, bundle);
+    }
+
+    /**
+     * @deprecated As of 7.0.1. This is just a hack to avoid breaking backwards
+     *             compatibility and will be removed in Vaadin 7.1
+     */
+    @Deprecated
+    private void writeHasGetTooltip(TreeLogger logger, SplittingSourceWriter w,
+            ConnectorBundle bundle) {
+        Set<JClassType> types = bundle.getHasGetTooltip();
+        for (JClassType type : types) {
+            w.println("store.setHasGetTooltipInfo(%s);",
+                    getClassLiteralString(type));
+            w.splitIfNeeded();
+        }
     }
 
     private void writeDelegateToWidget(TreeLogger logger,

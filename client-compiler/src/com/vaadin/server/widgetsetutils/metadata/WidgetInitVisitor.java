@@ -47,6 +47,25 @@ public class WidgetInitVisitor extends TypeVisitor {
                 bundle.setNeedsReturnType(type, getWidget);
             }
 
+            // Hack to detect when getTooltipInfo has a custom implementation
+            // #11051
+            JClassType getTooltipParamType = type.getOracle().findType(
+                    "com.google.gwt.dom.client.Element");
+            JMethod getTooltipInfoMethod = findInheritedMethod(type,
+                    "getTooltipInfo", getTooltipParamType);
+            if (getTooltipInfoMethod == null) {
+                logger.log(Type.ERROR, "Could not find getTooltipInfo in "
+                        + type.getQualifiedSourceName());
+                throw new UnableToCompleteException();
+            }
+            JClassType enclosingType = getTooltipInfoMethod.getEnclosingType();
+            if (!enclosingType.getQualifiedSourceName().equals(
+                    AbstractComponentConnector.class.getCanonicalName())) {
+                logger.log(Type.WARN, type.getQualifiedSourceName()
+                        + " has overridden getTooltipInfo");
+                bundle.setHasGetTooltip(type);
+            }
+
             // Check state properties for @DelegateToWidget
             JMethod getState = findInheritedMethod(type, "getState");
             JClassType stateType = getState.getReturnType().isClass();

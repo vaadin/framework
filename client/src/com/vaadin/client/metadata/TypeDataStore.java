@@ -38,6 +38,7 @@ public class TypeDataStore {
 
     private final FastStringSet delayedMethods = FastStringSet.create();
     private final FastStringSet lastOnlyMethods = FastStringSet.create();
+    private final FastStringSet hasGetTooltipInfo = FastStringSet.create();
 
     private final FastStringMap<Type> returnTypes = FastStringMap.create();
     private final FastStringMap<Invoker> invokers = FastStringMap.create();
@@ -275,5 +276,23 @@ public class TypeDataStore {
 
     public static boolean hasProperties(Type type) {
         return get().properties.containsKey(type.getSignature());
+    }
+
+    /**
+     * @deprecated As of 7.0.1. This is just a hack to avoid breaking backwards
+     *             compatibility and will be removed in Vaadin 7.1
+     */
+    @Deprecated
+    public void setHasGetTooltipInfo(Class<?> clazz) {
+        hasGetTooltipInfo.add(getType(clazz).getSignature());
+    }
+
+    /**
+     * @deprecated As of 7.0.1. This is just a hack to avoid breaking backwards
+     *             compatibility and will be removed in Vaadin 7.1
+     */
+    @Deprecated
+    public static boolean getHasGetTooltipInfo(Class clazz) {
+        return get().hasGetTooltipInfo.contains(getType(clazz).getSignature());
     }
 }
