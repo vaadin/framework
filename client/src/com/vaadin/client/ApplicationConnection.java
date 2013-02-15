@@ -1311,8 +1311,6 @@ public class ApplicationConnection {
             return;
         }
 
-        Profiler.reset();
-
         VConsole.log("Handling message from server");
         eventBus.fireEvent(new ResponseHandlingStartedEvent(this));
 
@@ -1916,6 +1914,7 @@ public class ApplicationConnection {
                     }
                 }
 
+                Profiler.enter("updateConnectorState newWithoutState");
                 // Fire events for properties using the default value for newly
                 // created connectors even if there were no state changes
                 for (ServerConnector connector : remainingNewConnectors) {
@@ -1928,6 +1927,7 @@ public class ApplicationConnection {
                     events.add(event);
 
                 }
+                Profiler.leave("updateConnectorState newWithoutState");
 
                 Profiler.leave("updateConnectorState");
 

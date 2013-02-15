@@ -18,6 +18,7 @@ package com.vaadin.client.ui;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.Profiler;
 import com.vaadin.client.StyleConstants;
 
 /**
@@ -41,12 +42,15 @@ public class VCssLayout extends FlowPanel {
      * For internal use only. May be removed or replaced in the future.
      */
     public void addOrMove(Widget child, int index) {
+        Profiler.enter("VCssLayout.addOrMove");
         if (child.getParent() == this) {
             int currentIndex = getWidgetIndex(child);
             if (index == currentIndex) {
+                Profiler.leave("VCssLayout.addOrMove");
                 return;
             }
         }
         insert(child, index);
+        Profiler.leave("VCssLayout.addOrMove");
     }
 }

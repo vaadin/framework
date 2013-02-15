@@ -41,6 +41,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.LayoutManager;
+import com.vaadin.client.Profiler;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
@@ -395,11 +396,13 @@ public class VUI extends SimplePanel implements ResizeHandler,
      * For internal use only. May be removed or replaced in the future.
      */
     public void sendClientResized() {
+        Profiler.enter("VUI.sendClientResized");
         Element parentElement = getElement().getParentElement();
         int viewHeight = parentElement.getClientHeight();
         int viewWidth = parentElement.getClientWidth();
 
         ResizeEvent.fire(this, viewWidth, viewHeight);
+        Profiler.leave("VUI.sendClientResized");
     }
 
     public native static void goTo(String url)

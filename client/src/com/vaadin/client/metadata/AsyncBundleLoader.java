@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.vaadin.client.Profiler;
+
 public abstract class AsyncBundleLoader {
     public enum State {
         NOT_STARTED, LOADING, LOADED, ERROR;
@@ -63,9 +65,11 @@ public abstract class AsyncBundleLoader {
 
     public void load(BundleLoadCallback callback, TypeDataStore store) {
         assert state == State.NOT_STARTED;
+        Profiler.enter("AsyncBundleLoader.load");
         state = State.LOADING;
         addCallback(callback);
         load(store);
+        Profiler.leave("AsyncBundleLoader.load");
     }
 
     public void addCallback(BundleLoadCallback callback) {

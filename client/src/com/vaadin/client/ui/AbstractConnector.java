@@ -218,6 +218,7 @@ public abstract class AbstractConnector implements ServerConnector,
         }
         if (statePropertyHandlerManagers != null
                 && event instanceof StateChangeEvent) {
+            Profiler.enter("AbstractConnector.fireEvent statePropertyHandlerManagers");
             StateChangeEvent stateChangeEvent = (StateChangeEvent) event;
             JsArrayString keys = statePropertyHandlerManagers.getKeys();
             for (int i = 0; i < keys.length(); i++) {
@@ -226,6 +227,7 @@ public abstract class AbstractConnector implements ServerConnector,
                     statePropertyHandlerManagers.get(property).fireEvent(event);
                 }
             }
+            Profiler.leave("AbstractConnector.fireEvent statePropertyHandlerManagers");
         }
         if (Profiler.isEnabled()) {
             Profiler.leave(profilerKey);
@@ -400,6 +402,7 @@ public abstract class AbstractConnector implements ServerConnector,
         if (lastEnabledState == enabledState) {
             return;
         }
+        Profiler.enter("AbstractConnector.updateEnabledState");
         lastEnabledState = enabledState;
 
         for (ServerConnector c : getChildren()) {
@@ -407,6 +410,7 @@ public abstract class AbstractConnector implements ServerConnector,
             // their parent
             c.updateEnabledState(c.isEnabled());
         }
+        Profiler.leave("AbstractConnector.updateEnabledState");
     }
 
     /**

@@ -381,11 +381,14 @@ public class ApplicationConfiguration implements EntryPoint {
 
             @Override
             public void execute() {
+                Profiler.enter("ApplicationConfiguration.startApplication");
                 ApplicationConfiguration appConf = getConfigFromDOM(applicationId);
                 ApplicationConnection a = GWT
                         .create(ApplicationConnection.class);
                 a.init(widgetSet, appConf);
                 runningApplications.add(a);
+                Profiler.leave("ApplicationConfiguration.startApplication");
+
                 a.start();
             }
         });
@@ -532,6 +535,8 @@ public class ApplicationConfiguration implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
+        Profiler.reset();
+        Profiler.enter("ApplicationConfiguration.onModuleLoad");
 
         BrowserInfo browserInfo = BrowserInfo.get();
 
@@ -567,6 +572,7 @@ public class ApplicationConfiguration implements EntryPoint {
                 VConsole.getImplementation().error(e);
             }
         });
+        Profiler.leave("ApplicationConfiguration.onModuleLoad");
 
         if (SuperDevMode.enableBasedOnParameter()) {
             // Do not start any application as super dev mode will refresh the

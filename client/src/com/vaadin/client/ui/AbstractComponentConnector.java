@@ -27,6 +27,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.LayoutManager;
+import com.vaadin.client.Profiler;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.TooltipInfo;
@@ -105,7 +106,11 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     @Override
     public Widget getWidget() {
         if (widget == null) {
+            Profiler.enter("AbstractComponentConnector.createWidget for "
+                    + Util.getSimpleName(this));
             widget = createWidget();
+            Profiler.leave("AbstractComponentConnector.createWidget for "
+                    + Util.getSimpleName(this));
         }
 
         return widget;
@@ -123,6 +128,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        Profiler.enter("AbstractComponentConnector.onStateChanged");
+        Profiler.enter("AbstractComponentConnector.onStateChanged update id");
         if (stateChangeEvent.hasPropertyChanged("id")) {
             if (getState().id != null) {
                 getWidget().getElement().setId(getState().id);
@@ -130,17 +137,20 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                 getWidget().getElement().removeAttribute("id");
             }
         }
+        Profiler.leave("AbstractComponentConnector.onStateChanged update id");
 
         /*
          * Disabled state may affect (override) tabindex so the order must be
          * first setting tabindex, then enabled state (through super
          * implementation).
          */
+        Profiler.enter("AbstractComponentConnector.onStateChanged update tab index");
         if (getState() instanceof TabIndexState
                 && getWidget() instanceof Focusable) {
             ((Focusable) getWidget())
                     .setTabIndex(((TabIndexState) getState()).tabIndex);
         }
+        Profiler.leave("AbstractComponentConnector.onStateChanged update tab index");
 
         super.onStateChanged(stateChangeEvent);
 
@@ -155,6 +165,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         updateComponentSize();
 
         initialStateEvent = false;
+
+        Profiler.leave("AbstractComponentConnector.onStateChanged");
     }
 
     @Override
@@ -182,6 +194,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     }
 
     private void updateComponentSize() {
+        Profiler.enter("AbstractComponentConnector.updateComponentSize");
+
         String newWidth = getState().width == null ? "" : getState().width;
         String newHeight = getState().height == null ? "" : getState().height;
 
@@ -209,11 +223,17 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         // Set defined sizes
         Widget widget = getWidget();
 
+        Profiler.enter("AbstractComponentConnector.updateComponentSize update styleNames");
         widget.setStyleName("v-has-width", !isUndefinedWidth());
         widget.setStyleName("v-has-height", !isUndefinedHeight());
+        Profiler.leave("AbstractComponentConnector.updateComponentSize update styleNames");
 
+        Profiler.enter("AbstractComponentConnector.updateComponentSize update DOM");
         widget.setHeight(newHeight);
         widget.setWidth(newWidth);
+        Profiler.leave("AbstractComponentConnector.updateComponentSize update DOM");
+
+        Profiler.leave("AbstractComponentConnector.updateComponentSize");
     }
 
     @Override
@@ -257,6 +277,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
      * </p>
      */
     protected void updateWidgetStyleNames() {
+        Profiler.enter("AbstractComponentConnector.updateWidgetStyleNames");
         AbstractComponentState state = getState();
 
         String primaryStyleName = getWidget().getStylePrimaryName();
@@ -302,7 +323,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             }
 
         }
-
+        Profiler.leave("AbstractComponentConnector.updateWidgetStyleNames");
     }
 
     /**
