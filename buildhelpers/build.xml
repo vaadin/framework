@@ -36,6 +36,13 @@
 		</antcall>
 	</target>
 
+	<target name="fetch-release-notes-tickets">
+		<antcall target="common.exec-buildhelper">
+			<param name="main.class" value="com.vaadin.buildhelpers.FetchReleaseNotesTickets" />
+			<param name="output" value="${output}" />
+		</antcall>
+	</target>
+
 	<target name="tests" depends="checkstyle">
 		<!--<antcall target="common.tests.run" />-->
 		<echo>WHAT? No JUnit tests for ${module.name}!</echo>

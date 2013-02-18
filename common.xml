@@ -27,9 +27,12 @@
 	<union id="empty.reference" />
 
 	<property name="filtered.webcontent.dir" location="${vaadin.basedir}/result/filteredWebContent" />
+	<property name="release-notes-tickets-file" location="${vaadin.basedir}/result/release-notes-tickets.html" />
 
-	<target name="filter.webcontent" unless="webcontent.filtered">
+	<target name="filter.webcontent" unless="webcontent.filtered" depends="fetch-release-notes-tickets">
 		<property name="webcontent.filtered" value="true" />
+		<!-- Running without build.release-notes will cause an error, which is ignored -->
+		<loadfile property="release-notes-tickets" srcFile="${release-notes-tickets-file}" failonerror="false" />
 
 		<delete dir="${filtered.webcontent.dir}" />
 		<copy todir="${filtered.webcontent.dir}">
@@ -57,11 +60,20 @@
 				<replacetokens begintoken="@" endtoken="@">
 					<token key="builddate" value="${build.date}" />
 				</replacetokens>
+				<replacetokens begintoken="@" endtoken="@">
+					<token key="release-notes-tickets" value="${release-notes-tickets}" />
+				</replacetokens>
 			</filterchain>
 		</copy>
-
-
 	</target>
+
+	<target name="fetch-release-notes-tickets" unless="built.release-notes" if="build.release-notes">
+		<subant buildpath="${vaadin.basedir}/buildhelpers" target="fetch-release-notes-tickets" antfile="build.xml" inheritall="true">
+			<property name="output" location="${release-notes-tickets-file}" />
+		</subant>
+		<property name="built.release-notes" value="1" />
+	</target>
+
 	<fileset dir="${filtered.webcontent.dir}" id="common.files.for.all.jars">
 		<patternset>
 			<include name="release-notes.html" />
@@ -110,7 +122,7 @@
 	</target>
 
 
-	<target name="sources.jar" depends="compile">
+	<target name="sources.jar" depends="compile, filter.webcontent">
 		<fail unless="result.dir" message="No result.dir parameter given" />
 		<fail unless="module.name" message="No module.name parameter given" />
 		<fail unless="src" message="No src directory parameter given" />
@@ -132,7 +144,7 @@
 
 	</target>
 
-	<target name="javadoc.jar" depends="dependencies">
+	<target name="javadoc.jar" depends="dependencies, filter.webcontent">
 		<fail unless="result.dir" message="No result.dir parameter given" />
 		<fail unless="module.name" message="No module.name parameter given" />
 		<property name="src" location="{$result.dir}/../src" />
@@ -157,7 +169,7 @@
 
 	</target>
 
-	<target name="jar" depends="compile, pom.xml">
+	<target name="jar" depends="compile, pom.xml, filter.webcontent">
 		<fail unless="result.dir" message="No result.dir parameter given" />
 		<fail unless="module.name" message="No module.name parameter given" />
 
@@ -261,6 +273,16 @@
 		</javac>
 	</target>
 
+	<target name="exec-buildhelper" depends="compile">
+		<fail unless="main.class" message="No main class given in 'main.class'" />
+		<fail unless="output" message="No output file given in 'output'" />
+		<java classname="${main.class}" output="${output}" failonerror="true" fork="yes">
+			<classpath refid="vaadin.buildhelpers.classpath" />
+			<classpath refid="classpath.compile.dependencies" />
+			<jvmarg value="-Dvaadin.version=${vaadin.version}" />
+		</java>
+	</target>
+
 	<target name="directories">
 		<property name="result.dir" location="result" />
 		<property name="src" location="${result.dir}/../src" />
@@ -321,7 +343,7 @@
 		</copy>
 	</target>
 
-	<target name="dependencies" description="Resolves dependencies needed by this module" depends="filter.webcontent">
+	<target name="dependencies" description="Resolves dependencies needed by this module">
 		<property name='conf' value="build, build-provided" />
 		<ivy:resolve resolveid="common" conf="${conf}" />
 		<ivy:cachepath pathid="classpath.compile.dependencies" conf="${conf}" />
