@@ -385,19 +385,16 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
     }
 
     private void setMaxLength(int newMaxLength) {
-        if (newMaxLength >= 0 && newMaxLength != maxLength) {
-            maxLength = newMaxLength;
-            updateMaxLength(maxLength);
-        } else if (maxLength != -1) {
-            maxLength = -1;
-            updateMaxLength(maxLength);
+        if (newMaxLength == maxLength) {
+            return;
         }
-
+        maxLength = newMaxLength;
+        updateMaxLength(maxLength);
     }
 
     /**
-     * This method is reponsible for updating the DOM or otherwise ensuring that
-     * the given max length is enforced. Called when the max length for the
+     * This method is responsible for updating the DOM or otherwise ensuring
+     * that the given max length is enforced. Called when the max length for the
      * field has changed.
      * 
      * @param maxLength
