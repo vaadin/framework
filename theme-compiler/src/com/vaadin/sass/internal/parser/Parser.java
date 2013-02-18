@@ -152,6 +152,7 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
 
     /**
      * This method parses only one rule (style rule or at-rule, except
+     * 
      * @charset).
      * 
      * @param source
@@ -314,10 +315,12 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         String encoding = source.getEncoding();
         InputStream input = source.getByteStream();
         if (!input.markSupported()) {
+            // If mark is not supported, wrap it in a stream which supports mark
             input = new BufferedInputStream(input);
             source.setByteStream(input);
-            input.mark(100);
         }
+        // Mark either the original stream or the wrapped stream
+        input.mark(100);
         if (encoding == null) {
             encoding = "ASCII";
 
@@ -6436,6 +6439,13 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         return false;
     }
 
+    private boolean jj_3R_252() {
+        if (jj_scan_token(HASH)) {
+            return true;
+        }
+        return false;
+    }
+
     private boolean jj_3R_184() {
         if (jj_scan_token(SEMICOLON)) {
             return true;
@@ -6447,13 +6457,6 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
                 jj_scanpos = xsp;
                 break;
             }
-        }
-        return false;
-    }
-
-    private boolean jj_3R_252() {
-        if (jj_scan_token(HASH)) {
-            return true;
         }
         return false;
     }
