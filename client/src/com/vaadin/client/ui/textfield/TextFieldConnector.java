@@ -77,8 +77,10 @@ public class TextFieldConnector extends AbstractFieldConnector implements
         }
         getWidget().setColumns(getState().columns);
 
-        final String text = getState().text;
-
+        String text = getState().text;
+        if (text == null) {
+            text = "";
+        }
         /*
          * We skip the text content update if field has been repainted, but text
          * has not been changed. Additional sanity check verifies there is no
