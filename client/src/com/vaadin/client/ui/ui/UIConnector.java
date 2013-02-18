@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
@@ -312,7 +313,12 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         if (firstPaint) {
             // Queue the initial window size to be sent with the following
             // request.
-            getWidget().sendClientResized();
+            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    getWidget().sendClientResized();
+                }
+            });
         }
         getWidget().rendering = false;
     }
