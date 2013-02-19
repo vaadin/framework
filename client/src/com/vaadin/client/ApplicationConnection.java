@@ -1395,15 +1395,12 @@ public class ApplicationConnection {
                 Profiler.leave("Handling locales");
 
                 Profiler.enter("Handling meta information");
-                boolean repaintAll = false;
                 ValueMap meta = null;
                 if (json.containsKey("meta")) {
                     VConsole.log(" * Handling meta information");
                     meta = json.getValueMap("meta");
                     if (meta.containsKey("repaintAll")) {
-                        repaintAll = true;
-                        uIConnector.getWidget().clear();
-                        getConnectorMap().clear();
+                        prepareRepaintAll();
                         if (meta.containsKey("invalidLayouts")) {
                             validatingLayouts = true;
                         }
@@ -1530,6 +1527,37 @@ public class ApplicationConnection {
                     Profiler.reset();
                 }
 
+            }
+
+            /**
+             * Properly clean up any old stuff to ensure everything is properly
+             * reinitialized.
+             */
+            private void prepareRepaintAll() {
+                String uiConnectorId = uIConnector.getConnectorId();
+                if (uiConnectorId == null) {
+                    // Nothing to clear yet
+                    return;
+                }
+
+                // Create fake server response that says that the uiConnector
+                // has no children
+                JSONObject fakeHierarchy = new JSONObject();
+                fakeHierarchy.put(uiConnectorId, new JSONArray());
+                JSONObject fakeJson = new JSONObject();
+                fakeJson.put("hierarchy", fakeHierarchy);
+                ValueMap fakeValueMap = fakeJson.getJavaScriptObject().cast();
+
+                // Update hierarchy based on the fake response
+                ConnectorHierarchyUpdateResult connectorHierarchyUpdateResult = updateConnectorHierarchy(fakeValueMap);
+
+                // Send hierarchy events based on the fake update
+                sendHierarchyChangeEvents(connectorHierarchyUpdateResult.events);
+
+                // Unregister all the old connectors that have now been removed
+                unregisterRemovedConnectors();
+
+                getLayoutManager().cleanMeasuredSizes();
             }
 
             private void updateCaptions(
