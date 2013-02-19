@@ -37,10 +37,12 @@
 
       <h2 id="tableofcontents">Release Notes for Vaadin Framework @version@</h2>
       <ul>
-        <li><a href="#overview">Overview</a></li>
-        <li><a href="#enhancements">Enhancements in Vaadin @version-minor@</a></li>
-        <li><a href="#limitations">Limitations in @version@</a></li>
+        <li><a href="#overview">Overview of Vaadin @version@ Release</a></li>
         <li><a href="#changelog">Complete change log for Vaadin @version@</a></li>
+        <li><a href="#enhancements">Enhancements in Vaadin @version-minor@</a></li>
+        <li><a href="#limitations">Limitations in @version-minor@</a></li>
+        <li><a href="#vaadin">Vaadin Installation</a></li>
+        <li><a href="#package">Package Contents</a></li>
         <li><a href="#migrating">Migrating from Vaadin 6 to Vaadin 7</a></li>
         <li><a href="#dependencies">Vaadin @version@ dependencies</a></li>
         <li><a href="#upgrading">Upgrading to Vaadin @version-minor@</a></li>
@@ -48,74 +50,44 @@
         <li><a href="#vaadinontheweb">Vaadin on the Web</a></li>
       </ul>
 
-      <h2 id="overview">Overview</h2>
+      <h2 id="overview">Overview of Vaadin @version@ Release</h2>
 
       <p>
-        <b>Vaadin</b> is a Java framework for building modern web applications that look
-        great, perform well and make you and your users happy. <b>Vaadin</b> is
-        available under the Apache License, Version 2.0 (see the <tt>license.html</tt> in
-        the Vaadin ZIP or JAR package).
+        Vaadin @version@ is a maintenance release that includes a number of important bug
+        fixes, as listed in the <a href="#changelog">change log</a> below. You can also
+        view the <a
+        href="http://dev.vaadin.com/query?status=closed&resolution=fixed&milestone=Vaadin+@version@&order=priority">list
+        of the closed issues</a> at the Vaadin developer's site.
       </p>
-      
+
       <p>
-        The easiest ways to install <b>Vaadin</b> are:
+        For a list of enhancements in the last feature release, see <a
+        href="#enhancements">Enhancements in Vaadin @version-minor@</a> and the <a
+        href="http://vaadin.com/download/release/@version-minor@/@version-minor@.0/release-notes.html">Release
+        Notes for Vaadin @version-minor@.0</a>.
+      </p>
+
+      <h3 id="changelog">ChangeLog</h3>
+
+      <p>
+        This release includes the following closed issues:
       </p>
 
       <ul>
-        <li>If using Maven, define it as a dependency or use any of the available
-        archetypes (only <tt>vaadin-application</tt> is available for Vaadin 7 at the time
-        of this release) to create a new project</li>
-
-        <li>If using Eclipse, use the Vaadin Plugin for Eclipse, which automatically
-        downloads the Vaadin libraries</li>
+@release-notes-tickets@
       </ul>
 
       <p>
-        It is also available as a ZIP package downloadable from <a href="http://vaadin.com/download">Vaadin Download page</a>.
+        The <a
+        href="http://dev.vaadin.com/query?status=closed&resolution=fixed&milestone=Vaadin+@version@&order=priority">full
+        list of the closed issues</a> can also be found at <tt>dev.vaadin.com</tt>.
       </p>
 
-      <h3 id="package">Package Contents</h3>
-
-      <p>Inside the ZIP installation package you will find:</p>
-
-      <ul>
-        <li>Separate server-side (<tt>vaadin-server</tt>) and client-side (<tt>vaadin-client</tt>, <tt>vaadin-client-compiler</tt>) development libraries</li>
-        <li>Precompiled widget set (<tt>vaadin-client-compiled</tt>) for server-side development</li>
-        <li>Shared library (<tt>vaadin-shared</tt>) for both server- and client-side libraries</li>
-        <li>Built-in themes (<tt>vaadin-themes</tt>) and the theme compiler (<tt>vaadin-theme-compiler</tt>)</li>
-        <li>Dependency libraries provided under the <tt>lib/</tt> folder</li>
-      </ul>
+      <h2 id="enhancements">Enhancements in Vaadin @version-minor@</h2>
 
       <p>
-        See the <tt>README.TXT</tt> in the installation package for detailed information
-        about the package contents. <a href="http://vaadin.com/book">Book of Vaadin</a>
-        (for Vaadin 7) gives more detailed instructions.
-      </p>
-
-      <p>
-        For server-side development, copy the <tt>vaadin-server</tt>,
-        <tt>vaadin-client-compiled</tt>, <tt>vaadin-shared</tt>,
-        <tt>vaadin-theme-compiler</tt>, and <tt>vaadin-themes</tt> from the main
-        folder and the dependencies from the <tt>lib</tt> folder to the
-        <tt>WEB-INF/lib</tt> folder of your Vaadin project. (The
-        <tt>vaadin-client-compiled</tt> is necessary if you do not wish to compile the
-        widget set by your own, which you need to do if you use almost any add-on
-        components.)
-      </p>
-
-      <p>
-        For pure client-side development, you only need the <tt>vaadin-client</tt> and
-        <tt>vaadin-client-compiler</tt> JARs, which should be put to a non-deployed
-        project library folder, such as <tt>lib</tt>. You also need them if you compile
-        the widget set for any reason, such as using Vaadin add-ons, or create new
-        server-side components integrated with client-side widgets.
-      </p>
-
-      <h2 id="enhancements">Enhancements in Vaadin @version@</h2>
-
-      <p>
-        The @version@ includes many major and minor enhancements and changes. Below is a
-        list of the most notable changes:
+        The @version-minor@ includes many major and minor enhancements and changes first
+        introduced in Vaadin @version-minor@.0. Below is a list of the most notable changes:
       </p>
       
       <ul>
@@ -375,7 +347,9 @@
         the <a href="https://vaadin.com/wiki/-/wiki/Main/Vaadin+7">mini-tutorials</a> in
         the Vaadin Wiki. Also see the <a
         href="https://vaadin.com/wiki/-/wiki/Main/Migrating+from+Vaadin+6+to+Vaadin+7">Vaadin
-        6 to 7 Migration Guide</a>.
+        6 to 7 Migration Guide</a>. See also the <a
+        href="http://vaadin.com/download/release/@version-minor@/@version-minor@.0/release-notes.html">Release
+        Notes for Vaadin @version-minor@.0</a>.
       </p>
 
       <h3 id="limitations">Limitations</h3>
@@ -386,901 +360,68 @@
         href="http://dev.vaadin.com/ticket/10634">#10634</a>)</li>
       </ul>
 
-      <h3 id="changelog">ChangeLog</h3>
+      <h2 id="vaadin">Vaadin Installation</h2>
 
       <p>
-        Below is the complete list of closed tickets in Vaadin 7. You can also query the tickets by <a href="http://dev.vaadin.com/query?status=closed&group=resolution&milestone=Vaadin+7.0.0.alpha1&milestone=Vaadin+7.0.0.alpha2&milestone=Vaadin+7.0.0.alpha3&milestone=Vaadin+7.0.0.beta1&milestone=Vaadin+7.0.0.beta2&milestone=Vaadin+7.0.0.beta3&milestone=Vaadin+7.0.0.beta4&milestone=Vaadin+7.0.0.beta5&milestone=Vaadin+7.0.0.beta6&milestone=Vaadin+7.0.0.beta7&milestone=Vaadin+7.0.0.beta8&milestone=Vaadin+7.0.0.beta9&milestone=Vaadin+7.0.0.beta10&milestone=Vaadin+7.0.0.beta11&milestone=Vaadin+7.0.0.rc1&milestone=Vaadin+7.0.0.rc2&milestone=Vaadin+7.0.0">all the milestones</a> and filter out the defects and tasks from the query to list only actual enhancements.
+        <b>Vaadin</b> is a Java framework for building modern web applications that look
+        great, perform well and make you and your users happy. <b>Vaadin</b> is
+        available under the Apache License, Version 2.0 (see the <tt>license.html</tt> in
+        the Vaadin ZIP or JAR package).
+      </p>
+      
+      <p>
+        The easiest ways to install <b>Vaadin</b> are:
       </p>
 
-      <p>The features voted at the Vaadin <a href="https://vaadin.com/pro">Pro Account</a> are marked in the list.</p>
+      <ul>
+        <li>If using Maven, define it as a dependency or use any of the available
+        archetypes (only <tt>vaadin-application</tt> is available for Vaadin 7 at the time
+        of this release) to create a new project</li>
 
-<!-- Voted features: #6093 #9733 #6790 #8579 #8983 -->
+        <li>If using Eclipse, use the Vaadin Plugin for Eclipse, which automatically
+        downloads the Vaadin libraries</li>
+      </ul>
+
+      <p>
+        It is also available as a ZIP package downloadable from <a href="http://vaadin.com/download">Vaadin Download page</a>.
+      </p>
+
+      <h3 id="package">Package Contents</h3>
+
+      <p>Inside the ZIP installation package you will find:</p>
 
       <ul>
-  <li><a href="http://dev.vaadin.com/ticket/1472">#1472</a>: Window.open() should be re-thought/documented</li>
-  <li><a href="http://dev.vaadin.com/ticket/2490">#2490</a>: Deprecate reflect listeners</li>
-  <li><a href="http://dev.vaadin.com/ticket/2527">#2527</a>: Component.getParent should return ComponentContainer instead of Component</li>
-  <li><a href="http://dev.vaadin.com/ticket/2869">#2869</a>: Deprecate Select class</li>
-  <li><a href="http://dev.vaadin.com/ticket/2924">#2924</a>: Panel/UI/Window child component hierarchy is invalid</li>
-  <li><a href="http://dev.vaadin.com/ticket/3021">#3021</a>: Property.toString should not be used to convert property value</li>
-  <li><a href="http://dev.vaadin.com/ticket/3067">#3067</a>: Split subwindow from Window</li>
-  <li><a href="http://dev.vaadin.com/ticket/3168">#3168</a>: Getting the production mode status</li>
-  <li><a href="http://dev.vaadin.com/ticket/3196">#3196</a>: Improvement ideas for theme development</li>
-  <li><a href="http://dev.vaadin.com/ticket/3214">#3214</a>: Spacing is rendered for invisible components</li>
-  <li><a href="http://dev.vaadin.com/ticket/3255">#3255</a>: Layout margins cascade too easily</li>
-  <li><a href="http://dev.vaadin.com/ticket/3557">#3557</a>: AbstractComponentContainer should implement Iterable</li>
-  <li><a href="http://dev.vaadin.com/ticket/3667">#3667</a>: Remove deprecated API from MenuBar (setSubMenuIcon & setCollapse)</li>
-  <li><a href="http://dev.vaadin.com/ticket/3700">#3700</a>: Rename setDebugId to setId</li>
-  <li><a href="http://dev.vaadin.com/ticket/3718">#3718</a>: CustomField component</li>
-  <li><a href="http://dev.vaadin.com/ticket/3765">#3765</a>: Change client-server communication protocol to be JSON based</li>
-  <li><a href="http://dev.vaadin.com/ticket/3851">#3851</a>: AbstractField should run validators for empty fields</li>
-  <li><a href="http://dev.vaadin.com/ticket/3861">#3861</a>: Application.handleURI should not return null if resource is found but does not produce a stream</li>
-  <li><a href="http://dev.vaadin.com/ticket/3950">#3950</a>: Change default Tree container to HierarchicalContainer</li>
-  <li><a href="http://dev.vaadin.com/ticket/4127">#4127</a>: Allow custom system messages and locale specific messages</li>
-  <li><a href="http://dev.vaadin.com/ticket/4131">#4131</a>: Make Vaadin compatible with Apache ProxyPass</li>
-  <li><a href="http://dev.vaadin.com/ticket/4203">#4203</a>: Exception from one widget should not prevent updating other widgets</li>
-  <li><a href="http://dev.vaadin.com/ticket/4294">#4294</a>: Decide the proper package name for utils/tools and move the utils/tools there</li>
-  <li><a href="http://dev.vaadin.com/ticket/4355">#4355</a>: Consider removing Terminal.getDefaultTheme</li>
-  <li><a href="http://dev.vaadin.com/ticket/4617">#4617</a>: Split Vaadin version handling to a separate class</li>
-  <li><a href="http://dev.vaadin.com/ticket/4991">#4991</a>: com.vaadin.ui.Window javadoc</li>
-  <li><a href="http://dev.vaadin.com/ticket/5381">#5381</a>: Select should have getter and setter methods for pageLength</li>
-  <li><a href="http://dev.vaadin.com/ticket/5391">#5391</a>: CustomComponent JavaDoc should be improved</li>
-  <li><a href="http://dev.vaadin.com/ticket/5422">#5422</a>: Add addComponents(Component..) to common layouts</li>
-  <li><a href="http://dev.vaadin.com/ticket/5483">#5483</a>: Browser tabs recognition for subwindows</li>
-  <li><a href="http://dev.vaadin.com/ticket/5494">#5494</a>: GridLayout/VerticalLayout/HorizontalLayout with undefined width should handle captions in the same way</li>
-  <li><a href="http://dev.vaadin.com/ticket/5541">#5541</a>: Create build configurations for Vaadin 7</li>
-  <li><a href="http://dev.vaadin.com/ticket/5750">#5750</a>: FormLayout should not extend deprecated OrderedLayout</li>
-  <li><a href="http://dev.vaadin.com/ticket/5814">#5814</a>: Deprecate setColumns from NativeSelect/ListSelect/TwincolSelect</li>
-  <li><a href="http://dev.vaadin.com/ticket/5822">#5822</a>: ItemStyleGenerator.getStyle should include Component</li>
-  <li><a href="http://dev.vaadin.com/ticket/5855">#5855</a>: Inner event classes should be converted to static nested classes</li>
-  <li><a href="http://dev.vaadin.com/ticket/5856">#5856</a>: Table formatter</li>
-  <li><a href="http://dev.vaadin.com/ticket/5890">#5890</a>: ComponentContainer interface should have method getComponentCount()</li>
-  <li><a href="http://dev.vaadin.com/ticket/5956">#5956</a>: ClassPathExplorer.tryToAdd should read the ".class" file instead of loading the class</li>
-  <li><a href="http://dev.vaadin.com/ticket/6010">#6010</a>: Remove Table.setLazyLoading and Tree.setLazyLoading</li>
-  <li><a href="http://dev.vaadin.com/ticket/6093">#6093</a>: Add a way to revoke session - <b>VOTED FEATURE</b></li>
-  <li><a href="http://dev.vaadin.com/ticket/6341">#6341</a>: Add methods for getting computed style from the browser</li>
-  <li><a href="http://dev.vaadin.com/ticket/6342">#6342</a>: Support using border/padding/margin in core layouts</li>
-  <li><a href="http://dev.vaadin.com/ticket/6366">#6366</a>: Add possibility to add all children directly in the constructor of most common component containers</li>
-  <li><a href="http://dev.vaadin.com/ticket/6446">#6446</a>: Should we deprecate Label.CONTENT_XML?</li>
-  <li><a href="http://dev.vaadin.com/ticket/6617">#6617</a>: Form.setLayout(Layout newLayout) may set parent with incompatible class</li>
-  <li><a href="http://dev.vaadin.com/ticket/6619">#6619</a>: AbstractApplicationServlet.init: parameters reading order is strange</li>
-  <li><a href="http://dev.vaadin.com/ticket/6690">#6690</a>: Plug-in support for Roots (aka components without a UI)</li>
-  <li><a href="http://dev.vaadin.com/ticket/6696">#6696</a>: Check if VPanel Firefox2 (isGecko) workaround can be removed</li>
-  <li><a href="http://dev.vaadin.com/ticket/6702">#6702</a>: Requesting a removed resource should give an error</li>
-  <li><a href="http://dev.vaadin.com/ticket/6714">#6714</a>: Allow using multiple themes on the same page</li>
-  <li><a href="http://dev.vaadin.com/ticket/6730">#6730</a>: JavaScript callback to server-side</li>
-  <li><a href="http://dev.vaadin.com/ticket/6750">#6750</a>: ClassPathExplorer logs on error when using maven gwt plugin (compile)</li>
-  <li><a href="http://dev.vaadin.com/ticket/6771">#6771</a>: Application url and static file location (VAADIN directory) should be expressed relatively to the host page</li>
-  <li><a href="http://dev.vaadin.com/ticket/6790">#6790</a>: PopupDateField should allow disabling text input - <b>VOTED FEATURE</b></li>
-  <li><a href="http://dev.vaadin.com/ticket/6887">#6887</a>: Conveniency method to add all nested bean properties</li>
-  <li><a href="http://dev.vaadin.com/ticket/6977">#6977</a>: Adding a Vaadin portlet to Liferay causes the whole page to go blank</li>
-  <li><a href="http://dev.vaadin.com/ticket/7045">#7045</a>: It should be simpler to find the window where a Terminal.ErrorEvent has occurred</li>
-  <li><a href="http://dev.vaadin.com/ticket/7260">#7260</a>: VerticalLayout width calculations are not refreshed in Webkit when hiding component inside it</li>
-  <li><a href="http://dev.vaadin.com/ticket/7285">#7285</a>: Simplify DOM structure for VL/HL</li>
-  <li><a href="http://dev.vaadin.com/ticket/7456">#7456</a>: Create a Maven archetype for application projects</li>
-  <li><a href="http://dev.vaadin.com/ticket/7480">#7480</a>: Vaadin ColorPicker is not compatible with GAE</li>
-  <li><a href="http://dev.vaadin.com/ticket/7562">#7562</a>: random path in URL should give 404 or redirect to context root</li>
-  <li><a href="http://dev.vaadin.com/ticket/7847">#7847</a>: Use ClientWidget.loadStyle by default</li>
-  <li><a href="http://dev.vaadin.com/ticket/7880">#7880</a>: Review methods in Root</li>
-  <li><a href="http://dev.vaadin.com/ticket/7882">#7882</a>: Implement dynamic Root creation</li>
-  <li><a href="http://dev.vaadin.com/ticket/7883">#7883</a>: Implement late Root creation</li>
-  <li><a href="http://dev.vaadin.com/ticket/7884">#7884</a>: Implement late Root initialization</li>
-  <li><a href="http://dev.vaadin.com/ticket/7885">#7885</a>: Define theme and widgetset for each Root</li>
-  <li><a href="http://dev.vaadin.com/ticket/7886">#7886</a>: Add generic support for RequestHandlers in Application</li>
-  <li><a href="http://dev.vaadin.com/ticket/7887">#7887</a>: Serve ApplicationResource using a RequestHandler</li>
-  <li><a href="http://dev.vaadin.com/ticket/7888">#7888</a>: Serve the html host page using a RequestHandler</li>
-  <li><a href="http://dev.vaadin.com/ticket/7889">#7889</a>: Refactor LoginForm to use RequestHandler</li>
-  <li><a href="http://dev.vaadin.com/ticket/7894">#7894</a>: Support multiple tabs by default</li>
-  <li><a href="http://dev.vaadin.com/ticket/7895">#7895</a>: Provide ThreadLocal for the current Root</li>
-  <li><a href="http://dev.vaadin.com/ticket/7896">#7896</a>: Provide ThreadLocal for the current Application</li>
-  <li><a href="http://dev.vaadin.com/ticket/7897">#7897</a>: Ensure Portal actions and events doesn't cause the Root to be cleaned up</li>
-  <li><a href="http://dev.vaadin.com/ticket/7898">#7898</a>: Migrate all tests to use Root instead of Window for top level windows</li>
-  <li><a href="http://dev.vaadin.com/ticket/7899">#7899</a>: Multilevel Map</li>
-  <li><a href="http://dev.vaadin.com/ticket/7912">#7912</a>: Remove support for IE6</li>
-  <li><a href="http://dev.vaadin.com/ticket/7913">#7913</a>: Remove support for IE7</li>
-  <li><a href="http://dev.vaadin.com/ticket/7917">#7917</a>: Conveniency method in BeanItem to add all nested properties of a property</li>
-  <li><a href="http://dev.vaadin.com/ticket/7930">#7930</a>: Eliminate Validator.isValid()</li>
-  <li><a href="http://dev.vaadin.com/ticket/7956">#7956</a>: Validators should support locales</li>
-  <li><a href="http://dev.vaadin.com/ticket/7963">#7963</a>: Button should not be a field</li>
-  <li><a href="http://dev.vaadin.com/ticket/7964">#7964</a>: CheckBox should not extend Button</li>
-  <li><a href="http://dev.vaadin.com/ticket/7981">#7981</a>: Drop workarounds for Firefox 2</li>
-  <li><a href="http://dev.vaadin.com/ticket/7984">#7984</a>: Drop workarounds for Firefox 3/4</li>
-  <li><a href="http://dev.vaadin.com/ticket/7985">#7985</a>: Show informative message for users with an old browser version</li>
-  <li><a href="http://dev.vaadin.com/ticket/7998">#7998</a>: Remove dependency jars from the project</li>
-  <li><a href="http://dev.vaadin.com/ticket/8019">#8019</a>: Change existing constants from integers to enums</li>
-  <li><a href="http://dev.vaadin.com/ticket/8024">#8024</a>: Add a notification for not supported browsers</li>
-  <li><a href="http://dev.vaadin.com/ticket/8026">#8026</a>: Remove API deprecated in Vaadin 6 or earlier</li>
-  <li><a href="http://dev.vaadin.com/ticket/8027">#8027</a>: Remove abstractions for non-web terminals</li>
-  <li><a href="http://dev.vaadin.com/ticket/8028">#8028</a>: Extend Container.Indexed to provide a method for retrieving a range of item ids</li>
-  <li><a href="http://dev.vaadin.com/ticket/8030">#8030</a>: Add a (Component... children) constructor to all component containers that accept more than one child</li>
-  <li><a href="http://dev.vaadin.com/ticket/8048">#8048</a>: Include support for URI fragments in Root</li>
-  <li><a href="http://dev.vaadin.com/ticket/8049">#8049</a>: Include initial UIDL in the first response</li>
-  <li><a href="http://dev.vaadin.com/ticket/8052">#8052</a>: Restore Portlet support</li>
-  <li><a href="http://dev.vaadin.com/ticket/8053">#8053</a>: Add new base classes for testing that doesn't use LegacyApplication</li>
-  <li><a href="http://dev.vaadin.com/ticket/8061">#8061</a>: Remove Button(String caption, Object target, String methodName) constructor</li>
-  <li><a href="http://dev.vaadin.com/ticket/8062">#8062</a>: Git repository problem</li>
-  <li><a href="http://dev.vaadin.com/ticket/8068">#8068</a>: Provide an option for preserving Root state on browser refresh</li>
-  <li><a href="http://dev.vaadin.com/ticket/8073">#8073</a>: Slider.setValue(Double value, boolean repaintIsNotNeeded) should be protected, not public</li>
-  <li><a href="http://dev.vaadin.com/ticket/8074">#8074</a>: Slider accepts values out of range</li>
-  <li><a href="http://dev.vaadin.com/ticket/8093">#8093</a>: Include Bean Validation</li>
-  <li><a href="http://dev.vaadin.com/ticket/8094">#8094</a>: Implement two phase commit for FieldBinder</li>
-  <li><a href="http://dev.vaadin.com/ticket/8095">#8095</a>: Implement FieldGroup</li>
-  <li><a href="http://dev.vaadin.com/ticket/8097">#8097</a>: Root does not send resize events</li>
-  <li><a href="http://dev.vaadin.com/ticket/8098">#8098</a>: Make WebBrowser details available in Root init when using delayed initialization</li>
-  <li><a href="http://dev.vaadin.com/ticket/8101">#8101</a>: Implement generic converters that convert from one type to another</li>
-  <li><a href="http://dev.vaadin.com/ticket/8102">#8102</a>: Fields should use a Converter to convert to and from data model type</li>
-  <li><a href="http://dev.vaadin.com/ticket/8103">#8103</a>: Provide a ConverterFactory for default converters</li>
-  <li><a href="http://dev.vaadin.com/ticket/8110">#8110</a>: Validation should be done on the converted value</li>
-  <li><a href="http://dev.vaadin.com/ticket/8111">#8111</a>: Default field caption should not include dotted path of nested properties</li>
-  <li><a href="http://dev.vaadin.com/ticket/8117">#8117</a>: DateField resolution default should be day</li>
-  <li><a href="http://dev.vaadin.com/ticket/8118">#8118</a>: Remove support for millisecond resolution</li>
-  <li><a href="http://dev.vaadin.com/ticket/8125">#8125</a>: Remove MethodProperty.convertValue and similar methods to avoid confusion</li>
-  <li><a href="http://dev.vaadin.com/ticket/8127">#8127</a>: Add setBuffered to ease use of read through and write through modes</li>
-  <li><a href="http://dev.vaadin.com/ticket/8142">#8142</a>: Label overrides setReadOnly and works differently from all other components</li>
-  <li><a href="http://dev.vaadin.com/ticket/8151">#8151</a>: Root does not send click events</li>
-  <li><a href="http://dev.vaadin.com/ticket/8153">#8153</a>: Add BeanItem.addNestedProperty</li>
-  <li><a href="http://dev.vaadin.com/ticket/8154">#8154</a>: public methods in AbstractComponent should be declared in Component interface</li>
-  <li><a href="http://dev.vaadin.com/ticket/8159">#8159</a>: Extract UI class selection logic to UIProviders</li>
-  <li><a href="http://dev.vaadin.com/ticket/8163">#8163</a>: Print an error message if vaadinBootstap.js cannot be loaded</li>
-  <li><a href="http://dev.vaadin.com/ticket/8164">#8164</a>: Make WrappedHttpServletRequest inherit from javax.servlet.http.HttpServletRequestWrapper</li>
-  <li><a href="http://dev.vaadin.com/ticket/8165">#8165</a>: BrowserDetails, VBrowserDetails and WebBrowser 'mess' should be simplified</li>
-  <li><a href="http://dev.vaadin.com/ticket/8167">#8167</a>: Verify contributor agreement for Bean Validation</li>
-  <li><a href="http://dev.vaadin.com/ticket/8169">#8169</a>: Remove API deprecated in Vaadin 6 or earlier</li>
-  <li><a href="http://dev.vaadin.com/ticket/8172">#8172</a>: WrappedResponse is missing javadoc</li>
-  <li><a href="http://dev.vaadin.com/ticket/8173">#8173</a>: Depercate separate read through and write through modes in favor of buffered</li>
-  <li><a href="http://dev.vaadin.com/ticket/8175">#8175</a>: Test using Firefox 9</li>
-  <li><a href="http://dev.vaadin.com/ticket/8178">#8178</a>: Test using Chrome 16</li>
-  <li><a href="http://dev.vaadin.com/ticket/8180">#8180</a>: Remove separate read through and write through modes in favor of buffered</li>
-  <li><a href="http://dev.vaadin.com/ticket/8182">#8182</a>: A helper method for finding the first parent component of a given type</li>
-  <li><a href="http://dev.vaadin.com/ticket/8190">#8190</a>: Recorder no longer waits for Vaadin application to load</li>
-  <li><a href="http://dev.vaadin.com/ticket/8191">#8191</a>: AbstractField does take into account that field value can be modified by the converter</li>
-  <li><a href="http://dev.vaadin.com/ticket/8192">#8192</a>: Wrong locale might be used if value is set before field is attached to the application</li>
-  <li><a href="http://dev.vaadin.com/ticket/8226">#8226</a>: Don't throw exception from bootstrap if defaults have already been defined</li>
-  <li><a href="http://dev.vaadin.com/ticket/8232">#8232</a>: Cached html pages cause problem with browser details request</li>
-  <li><a href="http://dev.vaadin.com/ticket/8243">#8243</a>: Exception thrown in Root.init is swallowed</li>
-  <li><a href="http://dev.vaadin.com/ticket/8274">#8274</a>: Communicating back to the server doesn't work</li>
-  <li><a href="http://dev.vaadin.com/ticket/8277">#8277</a>: Convert low-level communication from client to server to support RPC</li>
-  <li><a href="http://dev.vaadin.com/ticket/8278">#8278</a>: Support RPC for communication from client to server</li>
-  <li><a href="http://dev.vaadin.com/ticket/8279">#8279</a>: Use JSON as the low level format of client to server RPC calls</li>
-  <li><a href="http://dev.vaadin.com/ticket/8292">#8292</a>: Margin API should be cleaned up</li>
-  <li><a href="http://dev.vaadin.com/ticket/8294">#8294</a>: Use HTML5 doctype</li>
-  <li><a href="http://dev.vaadin.com/ticket/8304">#8304</a>: Support simple shared state for server to client communication</li>
-  <li><a href="http://dev.vaadin.com/ticket/8312">#8312</a>: Remove client side conversion from percent size to pixel size</li>
-  <li><a href="http://dev.vaadin.com/ticket/8313">#8313</a>: Provide a way of measuring in batches to reduce reflows</li>
-  <li><a href="http://dev.vaadin.com/ticket/8323">#8323</a>: Create a client side paintable hierarchy</li>
-  <li><a href="http://dev.vaadin.com/ticket/8324">#8324</a>: Split core components into a widget and a paintable class</li>
-  <li><a href="http://dev.vaadin.com/ticket/8325">#8325</a>: Move ApplicationConnection.updateComponent to VAbstractPaintableWidget.updateFromUIDL</li>
-  <li><a href="http://dev.vaadin.com/ticket/8326">#8326</a>: Remove support for changing widget class on the client side depending on variables set on the server side</li>
-  <li><a href="http://dev.vaadin.com/ticket/8405">#8405</a>: Deprecate LoginForm as it does not save password in all browsers</li>
-  <li><a href="http://dev.vaadin.com/ticket/8419">#8419</a>: Initially only send the part of a state which has non-default values</li>
-  <li><a href="http://dev.vaadin.com/ticket/8420">#8420</a>: Support for listening to state changes on client side</li>
-  <li><a href="http://dev.vaadin.com/ticket/8421">#8421</a>: Add support for @Delayed RPC methods</li>
-  <li><a href="http://dev.vaadin.com/ticket/8422">#8422</a>: Debug console should show shared state updates</li>
-  <li><a href="http://dev.vaadin.com/ticket/8425">#8425</a>: Move Tooltip handling from ApplicationConnection to AbstractComponentConnector</li>
-  <li><a href="http://dev.vaadin.com/ticket/8426">#8426</a>: Implement server to client RPC</li>
-  <li><a href="http://dev.vaadin.com/ticket/8429">#8429</a>: button.setClickShortcut(KeyCode.ENTER) does not work on child windows</li>
-  <li><a href="http://dev.vaadin.com/ticket/8434">#8434</a>: Rename Paintable on client side to Connector</li>
-  <li><a href="http://dev.vaadin.com/ticket/8435">#8435</a>: Refactor caption handling so it is not based on UIDL</li>
-  <li><a href="http://dev.vaadin.com/ticket/8436">#8436</a>: Move code from AbstractComponentConnector.updateFromUIDL</li>
-  <li><a href="http://dev.vaadin.com/ticket/8437">#8437</a>: Refactor Error communication and error handling on client side so it is not based on UIDL</li>
-  <li><a href="http://dev.vaadin.com/ticket/8438">#8438</a>: Refactor event handler registration on client side so it is not based on UIDL</li>
-  <li><a href="http://dev.vaadin.com/ticket/8439">#8439</a>: Deprecate ApplicationConnection.getPaintable(UIDL)</li>
-  <li><a href="http://dev.vaadin.com/ticket/8440">#8440</a>: Rename @ClientWidget to @Component and move to client side</li>
-  <li><a href="http://dev.vaadin.com/ticket/8441">#8441</a>: Shared state class can't be a nested static class</li>
-  <li><a href="http://dev.vaadin.com/ticket/8442">#8442</a>: Generate and use JSON serializers for all classes referenced from other serializable classes</li>
-  <li><a href="http://dev.vaadin.com/ticket/8443">#8443</a>: Automatically generate serializers for server to client RPC call parameter classes</li>
-  <li><a href="http://dev.vaadin.com/ticket/8444">#8444</a>: Automatically generate serializers for client to server RPC call parameter classes</li>
-  <li><a href="http://dev.vaadin.com/ticket/8448">#8448</a>: Replace Connector setId and setConnection with init method parameters</li>
-  <li><a href="http://dev.vaadin.com/ticket/8455">#8455</a>: Root.getCurrentRoot returns null in Root.init</li>
-  <li><a href="http://dev.vaadin.com/ticket/8462">#8462</a>: Moving component doesn't update its caption</li>
-  <li><a href="http://dev.vaadin.com/ticket/8469">#8469</a>: Make it possible to create test Connectors/Widgets</li>
-  <li><a href="http://dev.vaadin.com/ticket/8471">#8471</a>: Create test for serialization of bean inside bean</li>
-  <li><a href="http://dev.vaadin.com/ticket/8478">#8478</a>: Don't use overflow: hidden by default</li>
-  <li><a href="http://dev.vaadin.com/ticket/8500">#8500</a>: Component/Connector hierarchy information should be automatically sent to the client side</li>
-  <li><a href="http://dev.vaadin.com/ticket/8501">#8501</a>: Client to server RPC calls for disabled/invisible components should be ignored</li>
-  <li><a href="http://dev.vaadin.com/ticket/8502">#8502</a>: Remove Connector.setState</li>
-  <li><a href="http://dev.vaadin.com/ticket/8504">#8504</a>: Support passing Connector references through the shared state</li>
-  <li><a href="http://dev.vaadin.com/ticket/8507">#8507</a>: Handle cascading disabling of components on the client side</li>
-  <li><a href="http://dev.vaadin.com/ticket/8510">#8510</a>: Support passing Resource references through the shared state</li>
-  <li><a href="http://dev.vaadin.com/ticket/8515">#8515</a>: Component state does not support Collections</li>
-  <li><a href="http://dev.vaadin.com/ticket/8522">#8522</a>: NPE on Root.getCurrentRoot() in LoginListener.onLogin()</li>
-  <li><a href="http://dev.vaadin.com/ticket/8529">#8529</a>: Send an event when the parent is changed</li>
-  <li><a href="http://dev.vaadin.com/ticket/8534">#8534</a>: JsonCodec breaks down when handling nulls</li>
-  <li><a href="http://dev.vaadin.com/ticket/8540">#8540</a>: Infinite layout loop in EmbeddedFormExample</li>
-  <li><a href="http://dev.vaadin.com/ticket/8542">#8542</a>: Not possible to use custom class loader in Application class</li>
-  <li><a href="http://dev.vaadin.com/ticket/8544">#8544</a>: Remove error reporting as error notifications</li>
-  <li><a href="http://dev.vaadin.com/ticket/8555">#8555</a>: Provide a listener method where components can modify their state before it is sent to the client</li>
-  <li><a href="http://dev.vaadin.com/ticket/8574">#8574</a>: Support custom ClassLoader for Portlets</li>
-  <li><a href="http://dev.vaadin.com/ticket/8579">#8579</a>: Components should send events on attach and detach - <b>VOTED FEATURE</b></li>
-  <li><a href="http://dev.vaadin.com/ticket/8581">#8581</a>: Too many layout passes for SubWindowOrder test</li>
-  <li><a href="http://dev.vaadin.com/ticket/8590">#8590</a>: Calls to server side RPC methods should not cause internal error if no receiver has been declared</li>
-  <li><a href="http://dev.vaadin.com/ticket/8591">#8591</a>: Make server side rpc registration easier</li>
-  <li><a href="http://dev.vaadin.com/ticket/8598">#8598</a>: Support for listening to given changes on client side</li>
-  <li><a href="http://dev.vaadin.com/ticket/8599">#8599</a>: InitializableClientToServerRpc should not be an inner class of ServerRpc</li>
-  <li><a href="http://dev.vaadin.com/ticket/8602">#8602</a>: Support arbitrary types for map keys</li>
-  <li><a href="http://dev.vaadin.com/ticket/8615">#8615</a>: Redesign WebkitOverflowAutoFix</li>
-  <li><a href="http://dev.vaadin.com/ticket/8618">#8618</a>: Infinite loop in AbstractErrorMessage.getErrorMessageForException</li>
-  <li><a href="http://dev.vaadin.com/ticket/8636">#8636</a>: Code splitting not working as expected</li>
-  <li><a href="http://dev.vaadin.com/ticket/8641">#8641</a>: Move @AcceptCriteria annotation to client side</li>
-  <li><a href="http://dev.vaadin.com/ticket/8642">#8642</a>: Components have no way of knowing when a "full repaint" is needed.</li>
-  <li><a href="http://dev.vaadin.com/ticket/8644">#8644</a>: Application is not serializable because of Application.classloader</li>
-  <li><a href="http://dev.vaadin.com/ticket/8651">#8651</a>: UnknownComponent is not rendered</li>
-  <li><a href="http://dev.vaadin.com/ticket/8652">#8652</a>: v-paintable should be v-connector</li>
-  <li><a href="http://dev.vaadin.com/ticket/8655">#8655</a>: float[] and other array types do not work</li>
-  <li><a href="http://dev.vaadin.com/ticket/8657">#8657</a>: double is encoded as float</li>
-  <li><a href="http://dev.vaadin.com/ticket/8664">#8664</a>: AbstractComponentConnector removes non-primary css class names</li>
-  <li><a href="http://dev.vaadin.com/ticket/8666">#8666</a>: RPC from server to client doesn't support Resources properly</li>
-  <li><a href="http://dev.vaadin.com/ticket/8667">#8667</a>: Server should use types from RPC interface when deserializing</li>
-  <li><a href="http://dev.vaadin.com/ticket/8668">#8668</a>: Server should not allow custom types to be used with changeVariables</li>
-  <li><a href="http://dev.vaadin.com/ticket/8669">#8669</a>: State cannot include a "value" field</li>
-  <li><a href="http://dev.vaadin.com/ticket/8670">#8670</a>: GateIn/eXo/Liferay 5 portlet support broken</li>
-  <li><a href="http://dev.vaadin.com/ticket/8671">#8671</a>: Height incorrectly measured for Label with &lt;hr&gt;</li>
-  <li><a href="http://dev.vaadin.com/ticket/8672">#8672</a>: Remove API deprecated in Vaadin 6 or earlier</li>
-  <li><a href="http://dev.vaadin.com/ticket/8673">#8673</a>: Field named zIndex does not work in shared state</li>
-  <li><a href="http://dev.vaadin.com/ticket/8674">#8674</a>: Horizontal/vertical layout that does minimal calculations</li>
-  <li><a href="http://dev.vaadin.com/ticket/8675">#8675</a>: Support enums in shared state and as RPC parameters</li>
-  <li><a href="http://dev.vaadin.com/ticket/8677">#8677</a>: Shared state should be encoded as the declared type</li>
-  <li><a href="http://dev.vaadin.com/ticket/8682">#8682</a>: Fix box-sizing styling</li>
-  <li><a href="http://dev.vaadin.com/ticket/8683">#8683</a>: Preserve package name for state serializers</li>
-  <li><a href="http://dev.vaadin.com/ticket/8684">#8684</a>: Missing state serializer not gracefully handled</li>
-  <li><a href="http://dev.vaadin.com/ticket/8685">#8685</a>: References to connectors that are not visible should not be sent to the client</li>
-  <li><a href="http://dev.vaadin.com/ticket/8688">#8688</a>: CustomLayout stopped working</li>
-  <li><a href="http://dev.vaadin.com/ticket/8698">#8698</a>: Component managed captions do not work with Vaadin 6 legacy components</li>
-  <li><a href="http://dev.vaadin.com/ticket/8700">#8700</a>: Panel is empty in Liferay theme test</li>
-  <li><a href="http://dev.vaadin.com/ticket/8708">#8708</a>: TextArea inside a component that becomes disabled looks enabled in IE8</li>
-  <li><a href="http://dev.vaadin.com/ticket/8710">#8710</a>: Ensure that shared state types and RPC parameter types are Serializable</li>
-  <li><a href="http://dev.vaadin.com/ticket/8711">#8711</a>: Ensure Vaadin build fails but not all widgetset compilations if shared classes are not serializable</li>
-  <li><a href="http://dev.vaadin.com/ticket/8714">#8714</a>: Table throws NPE when selecting a tab containing a Table</li>
-  <li><a href="http://dev.vaadin.com/ticket/8717">#8717</a>: Really bad layout performance in IE8</li>
-  <li><a href="http://dev.vaadin.com/ticket/8719">#8719</a>: A component inside a disabled parent has v-disabled class name after parent has been enabled</li>
-  <li><a href="http://dev.vaadin.com/ticket/8729">#8729</a>: Root.getComponentIterator returns an iterator with a null component during init</li>
-  <li><a href="http://dev.vaadin.com/ticket/8735">#8735</a>: Panel setContent doesn't update client after initial rendering</li>
-  <li><a href="http://dev.vaadin.com/ticket/8778">#8778</a>: Notification added from Application.terminalError not displayed</li>
-  <li><a href="http://dev.vaadin.com/ticket/8784">#8784</a>: Class level javadoc of com.vaadin.ui.Window is incorrect for Vaadin 7</li>
-  <li><a href="http://dev.vaadin.com/ticket/8785">#8785</a>: Rendering an Upload component in the initial layout fails in Liferay</li>
-  <li><a href="http://dev.vaadin.com/ticket/8791">#8791</a>: Missing genericization for Property class as method parameter</li>
-  <li><a href="http://dev.vaadin.com/ticket/8794">#8794</a>: FormLayout: Uncaught client side exception</li>
-  <li><a href="http://dev.vaadin.com/ticket/8796">#8796</a>: Hierarchy problem with CustomFieldConnector</li>
-  <li><a href="http://dev.vaadin.com/ticket/8797">#8797</a>: Hierarchy problem with CustomFieldConnector</li>
-  <li><a href="http://dev.vaadin.com/ticket/8804">#8804</a>: Component hierarchy broken in reopened PopupView</li>
-  <li><a href="http://dev.vaadin.com/ticket/8819">#8819</a>: VScrollTable: Uncaught client side exceptions</li>
-  <li><a href="http://dev.vaadin.com/ticket/8829">#8829</a>: AbstractInMemoryContainer should create a UnmodifieableList rather than an unmodifiableCollection</li>
-  <li><a href="http://dev.vaadin.com/ticket/8832">#8832</a>: setContent() does not request paint</li>
-  <li><a href="http://dev.vaadin.com/ticket/8845">#8845</a>: Label implements Comparable but cannot be compared to another Label</li>
-  <li><a href="http://dev.vaadin.com/ticket/8859">#8859</a>: Implement view and navigation framework</li>
-  <li><a href="http://dev.vaadin.com/ticket/8879">#8879</a>: Send type info only for legacy messages</li>
-  <li><a href="http://dev.vaadin.com/ticket/8888">#8888</a>: Support wrapping javascript widgets</li>
-  <li><a href="http://dev.vaadin.com/ticket/8889">#8889</a>: AbstractField.setPropertyDataSource silently ignores throwables</li>
-  <li><a href="http://dev.vaadin.com/ticket/8891">#8891</a>: Transient red "Communication Problem" error appears when clicking on a Link</li>
-  <li><a href="http://dev.vaadin.com/ticket/8907">#8907</a>: Split Root/Region and Page (browser window/tab)</li>
-  <li><a href="http://dev.vaadin.com/ticket/8908">#8908</a>: Rename Root to UI</li>
-  <li><a href="http://dev.vaadin.com/ticket/8934">#8934</a>: There should be a "shared" package for classes common to client and server</li>
-  <li><a href="http://dev.vaadin.com/ticket/8943">#8943</a>: Components that are detached and attached cannot receive RPC calls</li>
-  <li><a href="http://dev.vaadin.com/ticket/8955">#8955</a>: Replace @VaadinApache2LicenseForJavaFiles@ with actual apache 2 license</li>
-  <li><a href="http://dev.vaadin.com/ticket/8967">#8967</a>: Broken reference images: LayoutTesterApplication</li>
-  <li><a href="http://dev.vaadin.com/ticket/8977">#8977</a>: Update mini tutorials to use Notification.show</li>
-  <li><a href="http://dev.vaadin.com/ticket/8980">#8980</a>: Make executeJavascript use new Function(code) instead of eval(code)</li>
-  <li><a href="http://dev.vaadin.com/ticket/8983">#8983</a>: Include SuperDevMode support when GWT 2.5+ is used - <b>VOTED FEATURE</b></li>
-  <li><a href="http://dev.vaadin.com/ticket/8985">#8985</a>: Properly support setWidgetEnabled for ListSelectConnector</li>
-  <li><a href="http://dev.vaadin.com/ticket/8986">#8986</a>: Properly support setWidgetEnabled for NativeSelectConnector</li>
-  <li><a href="http://dev.vaadin.com/ticket/8987">#8987</a>: Properly support setWidgetEnabled for OptionGroupConnector</li>
-  <li><a href="http://dev.vaadin.com/ticket/8988">#8988</a>: Properly support setWidgetEnabled for OptionGroupConnector</li>
-  <li><a href="http://dev.vaadin.com/ticket/8989">#8989</a>: Properly support setWidgetEnabled for TwinColSelectConnector</li>
-  <li><a href="http://dev.vaadin.com/ticket/8990">#8990</a>: Label.setValue should not update the data source</li>
-  <li><a href="http://dev.vaadin.com/ticket/8991">#8991</a>: Label does not support converters</li>
-  <li><a href="http://dev.vaadin.com/ticket/8992">#8992</a>: ConverterFactory is always retrieved from Application.getCurrentApplication</li>
-  <li><a href="http://dev.vaadin.com/ticket/9004">#9004</a>: Extra scrollbar in Liferay theme demo in IE8/IE9</li>
-  <li><a href="http://dev.vaadin.com/ticket/9005">#9005</a>: CustomField calls attach for its content multiple times</li>
-  <li><a href="http://dev.vaadin.com/ticket/9006">#9006</a>: Form calls attach for its content multiple times</li>
-  <li><a href="http://dev.vaadin.com/ticket/9007">#9007</a>: Broken reference images: TabKeyboardNavigation</li>
-  <li><a href="http://dev.vaadin.com/ticket/9011">#9011</a>: Extra attach/detach calls to sub window</li>
-  <li><a href="http://dev.vaadin.com/ticket/9017">#9017</a>: Browser window size is not reported to Page unless browser is resized</li>
-  <li><a href="http://dev.vaadin.com/ticket/9018">#9018</a>: Exceptions in RPC handler causes Internal Error</li>
-  <li><a href="http://dev.vaadin.com/ticket/9021">#9021</a>: Change name & logic of Table.setSortDisabled() to ".setSortEnabled"</li>
-  <li><a href="http://dev.vaadin.com/ticket/9022">#9022</a>: NativeButton/Button setTabIndex does not work</li>
-  <li><a href="http://dev.vaadin.com/ticket/9026">#9026</a>: Only send the part of a connector state that has changed</li>
-  <li><a href="http://dev.vaadin.com/ticket/9029">#9029</a>: Change Foo.getCurrentFoo() to Foo.getCurrent()</li>
-  <li><a href="http://dev.vaadin.com/ticket/9031">#9031</a>: Don't use Root.getCaption() for bootstrap HTML title tag</li>
-  <li><a href="http://dev.vaadin.com/ticket/9032">#9032</a>: ComponentState should be AbstractComponentState</li>
-  <li><a href="http://dev.vaadin.com/ticket/9034">#9034</a>: Upload throws NPE because of missing connector</li>
-  <li><a href="http://dev.vaadin.com/ticket/9044">#9044</a>: Allow defining that a Connector type depends on external javascript or CSS</li>
-  <li><a href="http://dev.vaadin.com/ticket/9048">#9048</a>: @Javascript should work for portlets and independent of deployment configuration</li>
-  <li><a href="http://dev.vaadin.com/ticket/9051">#9051</a>: AbsoluteLayout should add child component style names to wrapper div</li>
-  <li><a href="http://dev.vaadin.com/ticket/9053">#9053</a>: AbstractMedia is not abstract</li>
-  <li><a href="http://dev.vaadin.com/ticket/9054">#9054</a>: AbstractJavascriptComponent is not abstract</li>
-  <li><a href="http://dev.vaadin.com/ticket/9055">#9055</a>: Hard to get Navigator from View</li>
-  <li><a href="http://dev.vaadin.com/ticket/9056">#9056</a>: Meaning of navigateTo() differs in Navigator and View</li>
-  <li><a href="http://dev.vaadin.com/ticket/9059">#9059</a>: Support relative @JavaScript paths in portlets</li>
-  <li><a href="http://dev.vaadin.com/ticket/9060">#9060</a>: Navigator needs a way to handle missing Views</li>
-  <li><a href="http://dev.vaadin.com/ticket/9065">#9065</a>: Integrate checkstyle into framework build</li>
-  <li><a href="http://dev.vaadin.com/ticket/9066">#9066</a>: Change Notifcations to not use HTML by default.</li>
-  <li><a href="http://dev.vaadin.com/ticket/9067">#9067</a>: Table row sizing broken after 6.8 mass merge</li>
-  <li><a href="http://dev.vaadin.com/ticket/9071">#9071</a>: Remove API deprecated in Vaadin 6 or earlier</li>
-  <li><a href="http://dev.vaadin.com/ticket/9072">#9072</a>: Change existing constants from integers to enums</li>
-  <li><a href="http://dev.vaadin.com/ticket/9073">#9073</a>: Browser window size shouls be included in browser details request</li>
-  <li><a href="http://dev.vaadin.com/ticket/9074">#9074</a>: Field value is not sent to server when navigating with browser</li>
-  <li><a href="http://dev.vaadin.com/ticket/9076">#9076</a>: FieldGroup.bindMemberFields(..) ignores configuration on fields</li>
-  <li><a href="http://dev.vaadin.com/ticket/9077">#9077</a>: TabSheet tab scrolls on mousemove</li>
-  <li><a href="http://dev.vaadin.com/ticket/9078">#9078</a>: Provide com.vaadin.Vaadin.gwt.xml for use in client side projects</li>
-  <li><a href="http://dev.vaadin.com/ticket/9081">#9081</a>: VConsole.log() throws NPE when used from a client side module</li>
-  <li><a href="http://dev.vaadin.com/ticket/9083">#9083</a>: Build a minimal vaadin jar</li>
-  <li><a href="http://dev.vaadin.com/ticket/9084">#9084</a>: Merge GWT related changes to Vaadin 7 git repository</li>
-  <li><a href="http://dev.vaadin.com/ticket/9085">#9085</a>: Add @Override for interface implementations</li>
-  <li><a href="http://dev.vaadin.com/ticket/9086">#9086</a>: Update getting started to Java6</li>
-  <li><a href="http://dev.vaadin.com/ticket/9087">#9087</a>: Split Embedded into several components</li>
-  <li><a href="http://dev.vaadin.com/ticket/9088">#9088</a>: Table cell tooltip only shown for cell element</li>
-  <li><a href="http://dev.vaadin.com/ticket/9089">#9089</a>: The v-connector class name should not be used in themes</li>
-  <li><a href="http://dev.vaadin.com/ticket/9096">#9096</a>: Run JavaScript RPC callbacks with this pointing to the connector wrapper object</li>
-  <li><a href="http://dev.vaadin.com/ticket/9102">#9102</a>: Vaadin 7.0.0.alpha3 contains GWT (and libraries) without sources</li>
-  <li><a href="http://dev.vaadin.com/ticket/9106">#9106</a>: SerializerMapGenerator.findTypesWithExistingSerializers checks for wrong method signature</li>
-  <li><a href="http://dev.vaadin.com/ticket/9121">#9121</a>: Vaadin 7 as OSGI in Glassfish 3.1.2 fails after restart</li>
-  <li><a href="http://dev.vaadin.com/ticket/9122">#9122</a>: Decide whether to officially support Firefox ESR in Vaadin 7</li>
-  <li><a href="http://dev.vaadin.com/ticket/9156">#9156</a>: Communication synchronization should be on a dedicated lock object not the Application monitor</li>
-  <li><a href="http://dev.vaadin.com/ticket/9168">#9168</a>: Redesign Portlet url handling</li>
-  <li><a href="http://dev.vaadin.com/ticket/9172">#9172</a>: Tooltip not working in Window</li>
-  <li><a href="http://dev.vaadin.com/ticket/9173">#9173</a>: Form validation error is used as tooltip for all fields in the form</li>
-  <li><a href="http://dev.vaadin.com/ticket/9175">#9175</a>: Label.toString throws UnsupportedOperationException</li>
-  <li><a href="http://dev.vaadin.com/ticket/9179">#9179</a>: Getting file name as Null from Upload component of Vaadin 7.0.0.alpha* version</li>
-  <li><a href="http://dev.vaadin.com/ticket/9182">#9182</a>: Split Panel: Strange order of sub-components in DOM resulting in wrong order for screenreader users</li>
-  <li><a href="http://dev.vaadin.com/ticket/9196">#9196</a>: CustomLayout does not show its content until addComponent</li>
-  <li><a href="http://dev.vaadin.com/ticket/9201">#9201</a>: Vaadin 7 compatible ColorPicker</li>
-  <li><a href="http://dev.vaadin.com/ticket/9205">#9205</a>: Warning for duplicate connector resource if opening multiple tabs</li>
-  <li><a href="http://dev.vaadin.com/ticket/9209">#9209</a>: JavaScript connector can't translate vaadin urls</li>
-  <li><a href="http://dev.vaadin.com/ticket/9211">#9211</a>: Make it easier to use ResourceReference</li>
-  <li><a href="http://dev.vaadin.com/ticket/9212">#9212</a>: Duplicated code for getting URL for Resource</li>
-  <li><a href="http://dev.vaadin.com/ticket/9217">#9217</a>: Add support for detecting IE10</li>
-  <li><a href="http://dev.vaadin.com/ticket/9218">#9218</a>: Install test machines for running tests on IE 10</li>
-  <li><a href="http://dev.vaadin.com/ticket/9220">#9220</a>: Add a container element for all overlays</li>
-  <li><a href="http://dev.vaadin.com/ticket/9222">#9222</a>: Provide a servlet which compiles SCSS -&gt; CSS on the fly</li>
-  <li><a href="http://dev.vaadin.com/ticket/9223">#9223</a>: Integrate SASS compiler into Vaadin</li>
-  <li><a href="http://dev.vaadin.com/ticket/9228">#9228</a>: Replace updateState by beforeSendState(boolean initial)</li>
-  <li><a href="http://dev.vaadin.com/ticket/9249">#9249</a>: Add getLocation to Page</li>
-  <li><a href="http://dev.vaadin.com/ticket/9254">#9254</a>: Exception: Type null is not a supported internal type in JsonCodec</li>
-  <li><a href="http://dev.vaadin.com/ticket/9265">#9265</a>: Implement basic heartbeat</li>
-  <li><a href="http://dev.vaadin.com/ticket/9266">#9266</a>: Add support for heartbeat not extending session</li>
-  <li><a href="http://dev.vaadin.com/ticket/9268">#9268</a>: Decide on default URI format for navigation</li>
-  <li><a href="http://dev.vaadin.com/ticket/9273">#9273</a>: Allow add-ons to integrate with servlet/portlet functions without sublcassing the servlet/portlet</li>
-  <li><a href="http://dev.vaadin.com/ticket/9274">#9274</a>: Let add-ons modify the bootstrap page</li>
-  <li><a href="http://dev.vaadin.com/ticket/9278">#9278</a>: Fix dependencies from shared to server/client code</li>
-  <li><a href="http://dev.vaadin.com/ticket/9279">#9279</a>: Fix dependencies from server to client code</li>
-  <li><a href="http://dev.vaadin.com/ticket/9280">#9280</a>: Preserve this reference when calling RPC methods.</li>
-  <li><a href="http://dev.vaadin.com/ticket/9282">#9282</a>: Removing extension throws client-side exception</li>
-  <li><a href="http://dev.vaadin.com/ticket/9283">#9283</a>: Compile SASS parser using JavaCC during build</li>
-  <li><a href="http://dev.vaadin.com/ticket/9285">#9285</a>: Replace overloaded addListener with more specific addClickListener etc</li>
-  <li><a href="http://dev.vaadin.com/ticket/9292">#9292</a>: Allow JavaScriptConnectors to get unRegister events</li>
-  <li><a href="http://dev.vaadin.com/ticket/9293">#9293</a>: Rename the JavaScript callback concept to function instead</li>
-  <li><a href="http://dev.vaadin.com/ticket/9294">#9294</a>: Nested TabSheets and hideTabs(true)</li>
-  <li><a href="http://dev.vaadin.com/ticket/9295">#9295</a>: Review assorted Vaadin 7 patches not yet committed</li>
-  <li><a href="http://dev.vaadin.com/ticket/9296">#9296</a>: Review Vaadin 7 tickets and wiki plans that require API changes</li>
-  <li><a href="http://dev.vaadin.com/ticket/9297">#9297</a>: Make it possible to delegate state changes to widget automatically</li>
-  <li><a href="http://dev.vaadin.com/ticket/9298">#9298</a>: AbstractComponentContainerConnector should not implement onConnectorHierarchyChange</li>
-  <li><a href="http://dev.vaadin.com/ticket/9299">#9299</a>: Package Vaadin as many jars</li>
-  <li><a href="http://dev.vaadin.com/ticket/9302">#9302</a>: Update Vaadin IPC for Liferay to support Vaadin 7</li>
-  <li><a href="http://dev.vaadin.com/ticket/9304">#9304</a>: Migrate Slider to Vaadin 7</li>
-  <li><a href="http://dev.vaadin.com/ticket/9312">#9312</a>: Make getRpcProxy protected</li>
-  <li><a href="http://dev.vaadin.com/ticket/9315">#9315</a>: Make the getState method protected</li>
-  <li><a href="http://dev.vaadin.com/ticket/9317">#9317</a>: Review SASS compiler API</li>
-  <li><a href="http://dev.vaadin.com/ticket/9318">#9318</a>: Reindeer cannot be compiled on Windows</li>
-  <li><a href="http://dev.vaadin.com/ticket/9322">#9322</a>: ApplicationConnection should have a method to suspend "rendering" for a short period of time</li>
-  <li><a href="http://dev.vaadin.com/ticket/9324">#9324</a>: Support using public fields in state classes</li>
-  <li><a href="http://dev.vaadin.com/ticket/9325">#9325</a>: Handle requestRepaint automatically</li>
-  <li><a href="http://dev.vaadin.com/ticket/9327">#9327</a>: ApplicationConnection needs to have API "communication activity listeners"</li>
-  <li><a href="http://dev.vaadin.com/ticket/9333">#9333</a>: Server-side enum decode throws ClassCastException</li>
-  <li><a href="http://dev.vaadin.com/ticket/9334">#9334</a>: Update wiki tutorials once beta1 is out</li>
-  <li><a href="http://dev.vaadin.com/ticket/9337">#9337</a>: Remove PortalDefaultWidgetSet</li>
-  <li><a href="http://dev.vaadin.com/ticket/9340">#9340</a>: Add accessors for servlet init parameters to DeploymentConfiguration</li>
-  <li><a href="http://dev.vaadin.com/ticket/9341">#9341</a>: Pass DeploymentConfiguration to Application</li>
-  <li><a href="http://dev.vaadin.com/ticket/9342">#9342</a>: Add EventRouter support to AbstractExtension</li>
-  <li><a href="http://dev.vaadin.com/ticket/9343">#9343</a>: Abort widgetset compile for conflicting @Connect mappings</li>
-  <li><a href="http://dev.vaadin.com/ticket/9346">#9346</a>: SASS compiler should look for themes in the vaadin.jar</li>
-  <li><a href="http://dev.vaadin.com/ticket/9347">#9347</a>: SASS compiler fails when mixin w/ args has nested blocks</li>
-  <li><a href="http://dev.vaadin.com/ticket/9357">#9357</a>: Simplify CSSLayout</li>
-  <li><a href="http://dev.vaadin.com/ticket/9367">#9367</a>: Remove all references to fragment from Navigator API</li>
-  <li><a href="http://dev.vaadin.com/ticket/9371">#9371</a>: Unify GWT code generators</li>
-  <li><a href="http://dev.vaadin.com/ticket/9372">#9372</a>: Root.getCurrent() returns null in LoginForm LoginListener</li>
-  <li><a href="http://dev.vaadin.com/ticket/9378">#9378</a>: Rename requestRepaint to markAsDirty</li>
-  <li><a href="http://dev.vaadin.com/ticket/9380">#9380</a>: SASSCompiler should support custom list functions</li>
-  <li><a href="http://dev.vaadin.com/ticket/9382">#9382</a>: DeploymentConfiguration should not be part of Application</li>
-  <li><a href="http://dev.vaadin.com/ticket/9392">#9392</a>: Move widget classes from c.v.c.ui.&lt;component&gt; to c.v.c.ui</li>
-  <li><a href="http://dev.vaadin.com/ticket/9399">#9399</a>: Remove custom source file checkers</li>
-  <li><a href="http://dev.vaadin.com/ticket/9400">#9400</a>: TabSheet broken</li>
-  <li><a href="http://dev.vaadin.com/ticket/9402">#9402</a>: Remove Application</li>
-  <li><a href="http://dev.vaadin.com/ticket/9406">#9406</a>: Client NullPointerException on Image shared state update</li>
-  <li><a href="http://dev.vaadin.com/ticket/9407">#9407</a>: Using a variable color as a parameter for the lighten function alters the parameter as well</li>
-  <li><a href="http://dev.vaadin.com/ticket/9408">#9408</a>: Referencing and setting the same SASS variable on the same line causes a StackOverflowException</li>
-  <li><a href="http://dev.vaadin.com/ticket/9409">#9409</a>: If a temporary variable is used in SASS compile another variable, it needs to be used in the output in order for both to be compiled</li>
-  <li><a href="http://dev.vaadin.com/ticket/9410">#9410</a>: Interpolation doesn't work in property name</li>
-  <li><a href="http://dev.vaadin.com/ticket/9411">#9411</a>: Mixin parameters don't support values with spaces in them</li>
-  <li><a href="http://dev.vaadin.com/ticket/9413">#9413</a>: Version is wrong in latest nightly</li>
-  <li><a href="http://dev.vaadin.com/ticket/9414">#9414</a>: Mixin name can't be followed by a whitespace before the parameter braces</li>
-  <li><a href="http://dev.vaadin.com/ticket/9416">#9416</a>: Rename Navigator.[un]registerProvider()</li>
-  <li><a href="http://dev.vaadin.com/ticket/9419">#9419</a>: Replace ApplicationResource with ConnectorResource</li>
-  <li><a href="http://dev.vaadin.com/ticket/9420">#9420</a>: Container.Indexed.getIdByIndex error behavior</li>
-  <li><a href="http://dev.vaadin.com/ticket/9422">#9422</a>: State change event for fields with default value is never sent</li>
-  <li><a href="http://dev.vaadin.com/ticket/9423">#9423</a>: Don't show unsupported browser message for supported Android versions</li>
-  <li><a href="http://dev.vaadin.com/ticket/9431">#9431</a>: Merge com.vaadin.terminal and com.vaadin.terminal.gwt into com.vaadin.server</li>
-  <li><a href="http://dev.vaadin.com/ticket/9432">#9432</a>: Rename com.vaadin.terminal.gwt.client to com.vaadin.client</li>
-  <li><a href="http://dev.vaadin.com/ticket/9434">#9434</a>: Vaadin6Component should be renamed for consistency</li>
-  <li><a href="http://dev.vaadin.com/ticket/9436">#9436</a>: Merge gwt-maven-plugin and vaadin-maven-plugin</li>
-  <li><a href="http://dev.vaadin.com/ticket/9437">#9437</a>: Vaadin Maven Plug-in should use Vaadin dependencies instead of GWT dependencies</li>
-  <li><a href="http://dev.vaadin.com/ticket/9438">#9438</a>: Package a zip containing all Vaadin jars and dependencies</li>
-  <li><a href="http://dev.vaadin.com/ticket/9441">#9441</a>: Empty string should be used instead of null to denote "no fragment parameters" in Navigator</li>
-  <li><a href="http://dev.vaadin.com/ticket/9442">#9442</a>: Navigator should have a method to navigate to the current location</li>
-  <li><a href="http://dev.vaadin.com/ticket/9443">#9443</a>: Refactor UI bootstrap</li>
-  <li><a href="http://dev.vaadin.com/ticket/9444">#9444</a>: LegacyPaint.paint causes component to be marked dirty again</li>
-  <li><a href="http://dev.vaadin.com/ticket/9445">#9445</a>: Remove @EagerInit</li>
-  <li><a href="http://dev.vaadin.com/ticket/9450">#9450</a>: Run server-side tests with assertions enabled</li>
-  <li><a href="http://dev.vaadin.com/ticket/9452">#9452</a>: AbstractCommunicationManager.getDirtyVisibleConnectors() throws ConcurrentModificationException in some cases</li>
-  <li><a href="http://dev.vaadin.com/ticket/9460">#9460</a>: Rename servlet and portlet to VaadinServlet and VaadinPortlet</li>
-  <li><a href="http://dev.vaadin.com/ticket/9461">#9461</a>: Generated project should be Vaadin 7 beta 1 compatible</li>
-  <li><a href="http://dev.vaadin.com/ticket/9466">#9466</a>: Use jetty-runner instead of DemoLauncher to launch test server</li>
-  <li><a href="http://dev.vaadin.com/ticket/9469">#9469</a>: Unify ThreadLocal handling</li>
-  <li><a href="http://dev.vaadin.com/ticket/9471">#9471</a>: SASS compiler should support the @each directive</li>
-  <li><a href="http://dev.vaadin.com/ticket/9472">#9472</a>: SQLContainer.getIdByIndex broken</li>
-  <li><a href="http://dev.vaadin.com/ticket/9474">#9474</a>: A "ui" init parameter should work aswell as "UI"</li>
-  <li><a href="http://dev.vaadin.com/ticket/9475">#9475</a>: problems with components in accordion</li>
-  <li><a href="http://dev.vaadin.com/ticket/9481">#9481</a>: Calling AbstractField.toString keeps creating warning log messages</li>
-  <li><a href="http://dev.vaadin.com/ticket/9482">#9482</a>: SASS compiler should support the @if directive</li>
-  <li><a href="http://dev.vaadin.com/ticket/9485">#9485</a>: SplitPanel reverse split position is broken</li>
-  <li><a href="http://dev.vaadin.com/ticket/9489">#9489</a>: SassCompiler @each should be able to iterate over $list</li>
-  <li><a href="http://dev.vaadin.com/ticket/9492">#9492</a>: Mixin parameters not available for interpolation</li>
-  <li><a href="http://dev.vaadin.com/ticket/9494">#9494</a>: Write "Creating a custom (application) theme using SASS" tutorial</li>
-  <li><a href="http://dev.vaadin.com/ticket/9495">#9495</a>: Write "Compiling SASS to CSS manually" tutorial</li>
-  <li><a href="http://dev.vaadin.com/ticket/9497">#9497</a>: Write "Automatically compiling SASS during development" tutorial</li>
-  <li><a href="http://dev.vaadin.com/ticket/9498">#9498</a>: Write "Reducing server round trips for components" tutorial</li>
-  <li><a href="http://dev.vaadin.com/ticket/9499">#9499</a>: Write "Dynamically updating state before sending changes to client" tutorial</li>
-  <li><a href="http://dev.vaadin.com/ticket/9500">#9500</a>: Write "Modifying the startup page in an add-on" tutorial</li>
-  <li><a href="http://dev.vaadin.com/ticket/9501">#9501</a>: Write "Modifying the startup page in an application" tutorial</li>
-  <li><a href="http://dev.vaadin.com/ticket/9503">#9503</a>: Write "Cleaning up resources in a UI" tutorial</li>
-  <li><a href="http://dev.vaadin.com/ticket/9505">#9505</a>: Add getCurrent() for servlet, portlet, service, request and response.</li>
-  <li><a href="http://dev.vaadin.com/ticket/9509">#9509</a>: TreeTable renders wrong items</li>
-  <li><a href="http://dev.vaadin.com/ticket/9511">#9511</a>: Rename ViewChangeListener methods</li>
-  <li><a href="http://dev.vaadin.com/ticket/9513">#9513</a>: Create UIProvider for easily opening popups.</li>
-  <li><a href="http://dev.vaadin.com/ticket/9514">#9514</a>: Allow storing values in VaadinSession</li>
-  <li><a href="http://dev.vaadin.com/ticket/9520">#9520</a>: vaadin-application-archetype uses deprecated API</li>
-  <li><a href="http://dev.vaadin.com/ticket/9522">#9522</a>: Don't use Resource with the Page.open API</li>
-  <li><a href="http://dev.vaadin.com/ticket/9524">#9524</a>: FileDownloadExtension which avoids problems with file downloads</li>
-  <li><a href="http://dev.vaadin.com/ticket/9528">#9528</a>: Precompiled theme is version 9.9.9</li>
-  <li><a href="http://dev.vaadin.com/ticket/9536">#9536</a>: Vaadin6Connector should be renamed for consistency</li>
-  <li><a href="http://dev.vaadin.com/ticket/9539">#9539</a>: Use org.json instead of com.vaadin.external.json</li>
-  <li><a href="http://dev.vaadin.com/ticket/9542">#9542</a>: Add removeAllValidators() to Field or Validatable</li>
-  <li><a href="http://dev.vaadin.com/ticket/9543">#9543</a>: Components that wrap a single other component should not implement ComponentContainer</li>
-  <li><a href="http://dev.vaadin.com/ticket/9544">#9544</a>: New theme should create a SASS theme</li>
-  <li><a href="http://dev.vaadin.com/ticket/9545">#9545</a>: SASS mixin nesting bugs with mixin</li>
-  <li><a href="http://dev.vaadin.com/ticket/9546">#9546</a>: SASS should support @include $var</li>
-  <li><a href="http://dev.vaadin.com/ticket/9549">#9549</a>: Investigate whether the initial Navigator.navigate() call could be automated</li>
-  <li><a href="http://dev.vaadin.com/ticket/9550">#9550</a>: Bind a Navigator instance to a UI instance.</li>
-  <li><a href="http://dev.vaadin.com/ticket/9551">#9551</a>: Vaadin-maven-plugin does not add validation API to compile path</li>
-  <li><a href="http://dev.vaadin.com/ticket/9552">#9552</a>: Extra scrollbars for Accordion in SplitPanel in IE8</li>
-  <li><a href="http://dev.vaadin.com/ticket/9553">#9553</a>: /APP should not use UIProviders</li>
-  <li><a href="http://dev.vaadin.com/ticket/9555">#9555</a>: Icons do not work in Vertical/HorizontalLayout</li>
-  <li><a href="http://dev.vaadin.com/ticket/9556">#9556</a>: Portal support broken</li>
-  <li><a href="http://dev.vaadin.com/ticket/9557">#9557</a>: Vaadin jars do not contain Import-Package in MANIFEST.MF</li>
-  <li><a href="http://dev.vaadin.com/ticket/9559">#9559</a>: Spacing broken in GridLayout</li>
-  <li><a href="http://dev.vaadin.com/ticket/9561">#9561</a>: @DelegateToWidget not always working if createWidget is overridden</li>
-  <li><a href="http://dev.vaadin.com/ticket/9565">#9565</a>: Window themes are broken in Vaadin 7</li>
-  <li><a href="http://dev.vaadin.com/ticket/9572">#9572</a>: Extra scrollbars in TabSheet and Accordion in IE8</li>
-  <li><a href="http://dev.vaadin.com/ticket/9576">#9576</a>: Vertical/HorizontalLayout slot should get style name from child</li>
-  <li><a href="http://dev.vaadin.com/ticket/9577">#9577</a>: DateFieldExtendedRange test fails</li>
-  <li><a href="http://dev.vaadin.com/ticket/9578">#9578</a>: Extra scrollbars in PopupViewOffScreen in IE8</li>
-  <li><a href="http://dev.vaadin.com/ticket/9579">#9579</a>: RichTextAreaScrolling throws client side exception in Chrome/Safari/Opera</li>
-  <li><a href="http://dev.vaadin.com/ticket/9580">#9580</a>: VaadinServlet should not send a redirect on failed heartbeat request</li>
-  <li><a href="http://dev.vaadin.com/ticket/9581">#9581</a>: Infinite recursion in LegacyApplication.terminalError</li>
-  <li><a href="http://dev.vaadin.com/ticket/9582">#9582</a>: TabsheetScrolling test broken</li>
-  <li><a href="http://dev.vaadin.com/ticket/9586">#9586</a>: Servlet integration tests broken</li>
-  <li><a href="http://dev.vaadin.com/ticket/9588">#9588</a>: Vaadin-client-compiler jar is missing CodeServer classes</li>
-  <li><a href="http://dev.vaadin.com/ticket/9589">#9589</a>: SassCompiler should support microsoft extensions etc</li>
-  <li><a href="http://dev.vaadin.com/ticket/9591">#9591</a>: Rename onVaadinSessionStarted() in VaadinServlet and VaadinPortlet</li>
-  <li><a href="http://dev.vaadin.com/ticket/9593">#9593</a>: vaadin-maven-plugin can not compile widgetset without vaadin-client-precompiled</li>
-  <li><a href="http://dev.vaadin.com/ticket/9596">#9596</a>: HorizontalLayout fails to calculate relative sized children correctly</li>
-  <li><a href="http://dev.vaadin.com/ticket/9597">#9597</a>: Maven plugin should update .gwt.xml in src folder, not in target</li>
-  <li><a href="http://dev.vaadin.com/ticket/9598">#9598</a>: Rename themes-compiled package to themes</li>
-  <li><a href="http://dev.vaadin.com/ticket/9600">#9600</a>: FieldGroup: missing propagation of read-only state in setReadOnly()</li>
-  <li><a href="http://dev.vaadin.com/ticket/9604">#9604</a>: Unable to compile themes on the fly</li>
-  <li><a href="http://dev.vaadin.com/ticket/9605">#9605</a>: Packages incorrectly require servlet-api 2.5</li>
-  <li><a href="http://dev.vaadin.com/ticket/9606">#9606</a>: VaadinServlet.serveOnTheFlyCompiledScss doesn't find scss files from vaadin-themes JAR in Windows</li>
-  <li><a href="http://dev.vaadin.com/ticket/9608">#9608</a>: Package modified/rebased dependencies as separate packages and remove them from vaadin-* jar files</li>
-  <li><a href="http://dev.vaadin.com/ticket/9609">#9609</a>: Modified Flute jar is declared as an (invalid) dependency</li>
-  <li><a href="http://dev.vaadin.com/ticket/9612">#9612</a>: Create vaadin-shared-deps.jar</li>
-  <li><a href="http://dev.vaadin.com/ticket/9613">#9613</a>: Create an all-javadoc package</li>
-  <li><a href="http://dev.vaadin.com/ticket/9618">#9618</a>: Label: setPropertyDataSource() won't update Label value on client</li>
-  <li><a href="http://dev.vaadin.com/ticket/9619">#9619</a>: Multi-servlet deployment configuration broken</li>
-  <li><a href="http://dev.vaadin.com/ticket/9624">#9624</a>: Vaadin 7 Beta 1 reports the wrong widget build version</li>
-  <li><a href="http://dev.vaadin.com/ticket/9625">#9625</a>: Change "close" to "cleanup" in UI.CloseListener and others</li>
-  <li><a href="http://dev.vaadin.com/ticket/9628">#9628</a>: Allow specifying UIProvider using a servlet parameter</li>
-  <li><a href="http://dev.vaadin.com/ticket/9633">#9633</a>: Rename the WrappedXYZ classes</li>
-  <li><a href="http://dev.vaadin.com/ticket/9635">#9635</a>: Add listeners for initialized and destroyed VaadinSession</li>
-  <li><a href="http://dev.vaadin.com/ticket/9637">#9637</a>: Move UIProvider logic from VaadinSession to VaadinService</li>
-  <li><a href="http://dev.vaadin.com/ticket/9638">#9638</a>: Remove VaadinServletSession</li>
-  <li><a href="http://dev.vaadin.com/ticket/9639">#9639</a>: Support defining UIProviders as servlet/portlet init parameters</li>
-  <li><a href="http://dev.vaadin.com/ticket/9640">#9640</a>: java.io.NotSerializableException: org.json.JSONObject</li>
-  <li><a href="http://dev.vaadin.com/ticket/9642">#9642</a>: Make UIProvider easier to use</li>
-  <li><a href="http://dev.vaadin.com/ticket/9644">#9644</a>: Write tutorial "Setting and reading Cookies"</li>
-  <li><a href="http://dev.vaadin.com/ticket/9645">#9645</a>: Write tutorial "Setting and reading session attributes"</li>
-  <li><a href="http://dev.vaadin.com/ticket/9646">#9646</a>: Write tutorial "Handling logout"</li>
-  <li><a href="http://dev.vaadin.com/ticket/9647">#9647</a>: Delete ScssServlet</li>
-  <li><a href="http://dev.vaadin.com/ticket/9648">#9648</a>: Multiple Vaadin portlets on the same page does not work</li>
-  <li><a href="http://dev.vaadin.com/ticket/9652">#9652</a>: SessionExpired when embedding UIs in a HTML page</li>
-  <li><a href="http://dev.vaadin.com/ticket/9654">#9654</a>: All thread locals should be cleared at the beginning of any request</li>
-  <li><a href="http://dev.vaadin.com/ticket/9655">#9655</a>: Add getWrappedSession method that does not create a new session</li>
-  <li><a href="http://dev.vaadin.com/ticket/9656">#9656</a>: Session is not locked during browser details request</li>
-  <li><a href="http://dev.vaadin.com/ticket/9658">#9658</a>: Change VaadinService to be an abstract class</li>
-  <li><a href="http://dev.vaadin.com/ticket/9684">#9684</a>: requestRepaint deprecation message should tell that requestRepaint is rarely needed anymore</li>
-  <li><a href="http://dev.vaadin.com/ticket/9687">#9687</a>: Reindeer WINDOW_LIGHT style broken</li>
-  <li><a href="http://dev.vaadin.com/ticket/9689">#9689</a>: Update mini tutorial for using Resource in connectors</li>
-  <li><a href="http://dev.vaadin.com/ticket/9690">#9690</a>: Remove ApplicationClassException</li>
-  <li><a href="http://dev.vaadin.com/ticket/9691">#9691</a>: Rename old connector resource concept</li>
-  <li><a href="http://dev.vaadin.com/ticket/9695">#9695</a>: All components are marked dirty at the end of each request</li>
-  <li><a href="http://dev.vaadin.com/ticket/9696">#9696</a>: Diff state fails to compare null values properly</li>
-  <li><a href="http://dev.vaadin.com/ticket/9704">#9704</a>: Make GWT generator require RPC methods to return void</li>
-  <li><a href="http://dev.vaadin.com/ticket/9706">#9706</a>: Add getContextPath to VaadinRequest</li>
-  <li><a href="http://dev.vaadin.com/ticket/9707">#9707</a>: Support both ui and UI as the init parameter for selecting UI class</li>
-  <li><a href="http://dev.vaadin.com/ticket/9711">#9711</a>: Not possible to set custom system messages</li>
-  <li><a href="http://dev.vaadin.com/ticket/9716">#9716</a>: browserWindowHeight and browserWindowWidth are always -1</li>
-  <li><a href="http://dev.vaadin.com/ticket/9717">#9717</a>: ConnectorTracker should serialize diff state</li>
-  <li><a href="http://dev.vaadin.com/ticket/9718">#9718</a>: Rename ServletService and move to its own file</li>
-  <li><a href="http://dev.vaadin.com/ticket/9719">#9719</a>: Remove ApplicationStartedListener</li>
-  <li><a href="http://dev.vaadin.com/ticket/9720">#9720</a>: Remove WidgetMapGenerator and subclasses</li>
-  <li><a href="http://dev.vaadin.com/ticket/9721">#9721</a>: Pass UI id to UIProvider.createInstance</li>
-  <li><a href="http://dev.vaadin.com/ticket/9722">#9722</a>: Make DefaultUIProvider path aware</li>
-  <li><a href="http://dev.vaadin.com/ticket/9723">#9723</a>: Validatable.getValidators() is specified to return null if no validators</li>
-  <li><a href="http://dev.vaadin.com/ticket/9724">#9724</a>: Add Component.setPrimaryStyleName</li>
-  <li><a href="http://dev.vaadin.com/ticket/9725">#9725</a>: CustomLayout without children doesn't display anything</li>
-  <li><a href="http://dev.vaadin.com/ticket/9726">#9726</a>: Review usage of the Vaadin prefix in method names</li>
-  <li><a href="http://dev.vaadin.com/ticket/9727">#9727</a>: It should be easier to write custom NavigationStateManagers</li>
-  <li><a href="http://dev.vaadin.com/ticket/9728">#9728</a>: NPE when initializing LegacyVaadinPortlet</li>
-  <li><a href="http://dev.vaadin.com/ticket/9730">#9730</a>: Two portlets on the same page conflict with each other</li>
-  <li><a href="http://dev.vaadin.com/ticket/9731">#9731</a>: Map PortalDefaultWidgetSet to DefaultWidgetSet</li>
-  <li><a href="http://dev.vaadin.com/ticket/9733">#9733</a>: Make VaadinSession non-global. - <b>VOTED FEATURE</b></li>
-  <li><a href="http://dev.vaadin.com/ticket/9734">#9734</a>: Slider max value is 0 by default, should be 100</li>
-  <li><a href="http://dev.vaadin.com/ticket/9735">#9735</a>: Handle exceptions from UI.init in a better way</li>
-  <li><a href="http://dev.vaadin.com/ticket/9736">#9736</a>: HTML5 doctype changes breaks vertical alignment in HorizontalLayout</li>
-  <li><a href="http://dev.vaadin.com/ticket/9737">#9737</a>: AbstractField.convertToModel error handling throws NPE</li>
-  <li><a href="http://dev.vaadin.com/ticket/9740">#9740</a>: NPE in Slider inside a GridLayout</li>
-  <li><a href="http://dev.vaadin.com/ticket/9745">#9745</a>: Build all javadoc automatically during build</li>
-  <li><a href="http://dev.vaadin.com/ticket/9747">#9747</a>: Invalid request path info in CombinedRequest</li>
-  <li><a href="http://dev.vaadin.com/ticket/9749">#9749</a>: Add common methods from servlet/portlet request, response and session to Vaadin interfaces</li>
-  <li><a href="http://dev.vaadin.com/ticket/9750">#9750</a>: Rename addVaadinSessionInitializationListener to addSessionInitListener</li>
-  <li><a href="http://dev.vaadin.com/ticket/9751">#9751</a>: Import sass tests</li>
-  <li><a href="http://dev.vaadin.com/ticket/9752">#9752</a>: UI serialization fails because of VaadinServiceData</li>
-  <li><a href="http://dev.vaadin.com/ticket/9755">#9755</a>: Roots do not get detach() notifications</li>
-  <li><a href="http://dev.vaadin.com/ticket/9764">#9764</a>: Make DefaultUIProvider serve the default UI for all paths</li>
-  <li><a href="http://dev.vaadin.com/ticket/9767">#9767</a>: ConnectorTracker throws NPE if using deserialized session</li>
-  <li><a href="http://dev.vaadin.com/ticket/9768">#9768</a>: ComboBox drop down list in PopupView Content has wrong offset</li>
-  <li><a href="http://dev.vaadin.com/ticket/9770">#9770</a>: Heartbeat and Connector resource requests do not clean up inactive UIs</li>
-  <li><a href="http://dev.vaadin.com/ticket/9776">#9776</a>: Vaadin 7 beta 1/2 and Websphere 8: Hourglass is running - no GUI components are shown</li>
-  <li><a href="http://dev.vaadin.com/ticket/9777">#9777</a>: Sass mixin does not handle named parameters correctly</li>
-  <li><a href="http://dev.vaadin.com/ticket/9791">#9791</a>: The constructor is ambiguous (Navigator)</li>
-  <li><a href="http://dev.vaadin.com/ticket/9792">#9792</a>: Layout-Bug in AbstractJavaScriptComponent</li>
-  <li><a href="http://dev.vaadin.com/ticket/9793">#9793</a>: Vaadin 7 - OSGi</li>
-  <li><a href="http://dev.vaadin.com/ticket/9794">#9794</a>: VaadinService.addUiProvider -&gt; NPE</li>
-  <li><a href="http://dev.vaadin.com/ticket/9798">#9798</a>: Datefield's container div height is 4 pixels too much</li>
-  <li><a href="http://dev.vaadin.com/ticket/9802">#9802</a>: RpcInvoicationHandler.toString() should not cause an client rpc invocation</li>
-  <li><a href="http://dev.vaadin.com/ticket/9804">#9804</a>: sun.io.serialization.extendedDebugInfo & toString</li>
-  <li><a href="http://dev.vaadin.com/ticket/9805">#9805</a>: Javascript handling regression</li>
-  <li><a href="http://dev.vaadin.com/ticket/9807">#9807</a>: vaadin 7 beta 2 Accordion not working properly</li>
-  <li><a href="http://dev.vaadin.com/ticket/9808">#9808</a>: NPEs when calling removeAllComponents() for VerticalLayout</li>
-  <li><a href="http://dev.vaadin.com/ticket/9815">#9815</a>: Hierarchy change events should be sent to component containers which are about to be removed</li>
-  <li><a href="http://dev.vaadin.com/ticket/9816">#9816</a>: Update Google App Engine test to use UI</li>
-  <li><a href="http://dev.vaadin.com/ticket/9817">#9817</a>: GlobalResourceHandler is not serializable</li>
-  <li><a href="http://dev.vaadin.com/ticket/9819">#9819</a>: Setting custom class loader doesn't work</li>
-  <li><a href="http://dev.vaadin.com/ticket/9821">#9821</a>: Sass mixin can't call other mixin with param</li>
-  <li><a href="http://dev.vaadin.com/ticket/9824">#9824</a>: Remove support for default configuration options during bootstrap</li>
-  <li><a href="http://dev.vaadin.com/ticket/9826">#9826</a>: NoDataException when (lazy) loading CheckBox first time with overrided CheckBoxConnector</li>
-  <li><a href="http://dev.vaadin.com/ticket/9828">#9828</a>: Vaadin 7 ComponentLocator doesn't work with debug IDs</li>
-  <li><a href="http://dev.vaadin.com/ticket/9832">#9832</a>: Root div should have v-ui and v-ui-&lt;uiclass&gt; css class names</li>
-  <li><a href="http://dev.vaadin.com/ticket/9838">#9838</a>: Combobox popup item line heights are wrong in Chameleon theme</li>
-  <li><a href="http://dev.vaadin.com/ticket/9841">#9841</a>: Deploy vaadin-buildhelpers to Maven</li>
-  <li><a href="http://dev.vaadin.com/ticket/9845">#9845</a>: Resizing browser window throws exception in Firefox</li>
-  <li><a href="http://dev.vaadin.com/ticket/9846">#9846</a>: Sass mixin does not support multiple params w/ defaults</li>
-  <li><a href="http://dev.vaadin.com/ticket/9848">#9848</a>: VaadinServlet.servletInitialized() should throw ServletException</li>
-  <li><a href="http://dev.vaadin.com/ticket/9852">#9852</a>: Add dependencies to client-compiler module for jars which are not rebased or modified by GWT</li>
-  <li><a href="http://dev.vaadin.com/ticket/9858">#9858</a>: SassCompiler does not accept CSS3 selectors</li>
-  <li><a href="http://dev.vaadin.com/ticket/9859">#9859</a>: Need replacement for Application.close() and .setLogoutUrl()</li>
-  <li><a href="http://dev.vaadin.com/ticket/9860">#9860</a>: layout.scss contains wrong selectors</li>
-  <li><a href="http://dev.vaadin.com/ticket/9863">#9863</a>: Building with recent Ant versions throws NPE</li>
-  <li><a href="http://dev.vaadin.com/ticket/9867">#9867</a>: Add information about SuperDevMode in the widgetset in the archetype</li>
-  <li><a href="http://dev.vaadin.com/ticket/9871">#9871</a>: SASS parses CSS incorrectly</li>
-  <li><a href="http://dev.vaadin.com/ticket/9880">#9880</a>: Convert Runo to scss</li>
-  <li><a href="http://dev.vaadin.com/ticket/9881">#9881</a>: Convert Chameleon to scss</li>
-  <li><a href="http://dev.vaadin.com/ticket/9883">#9883</a>: Document limitations in setPrimaryStyleName</li>
-  <li><a href="http://dev.vaadin.com/ticket/9884">#9884</a>: Remove VaadinServiceSession.getURL</li>
-  <li><a href="http://dev.vaadin.com/ticket/9887">#9887</a>: Check Trident version before declaring IE incompatible</li>
-  <li><a href="http://dev.vaadin.com/ticket/9888">#9888</a>: NPE in getBrowserDetailsUI()</li>
-  <li><a href="http://dev.vaadin.com/ticket/9891">#9891</a>: Theme resources can not be loaded if theme name contains -</li>
-  <li><a href="http://dev.vaadin.com/ticket/9893">#9893</a>: Reorganize VOrderedLayout package and class structure</li>
-  <li><a href="http://dev.vaadin.com/ticket/9895">#9895</a>: Client-side NPE if hiding CustomComponent child</li>
-  <li><a href="http://dev.vaadin.com/ticket/9896">#9896</a>: TextField.setPrimaryStyleName does not work dynamically</li>
-  <li><a href="http://dev.vaadin.com/ticket/9897">#9897</a>: Document layout changes in migration guide</li>
-  <li><a href="http://dev.vaadin.com/ticket/9898">#9898</a>: Slider does not change primary stylenames of inner elements when calling setPrimaryStylename</li>
-  <li><a href="http://dev.vaadin.com/ticket/9899">#9899</a>: Dynamically setting the primary stylename for the AbsoluteLayout does not work</li>
-  <li><a href="http://dev.vaadin.com/ticket/9900">#9900</a>: Accordion.setPrimaryStylename does not change the stylename for inner elements</li>
-  <li><a href="http://dev.vaadin.com/ticket/9901">#9901</a>: Combobox does not support primary stylenames</li>
-  <li><a href="http://dev.vaadin.com/ticket/9902">#9902</a>: CustomLayout does not work properly with primary stylenames</li>
-  <li><a href="http://dev.vaadin.com/ticket/9903">#9903</a>: DateField does not work properly with primary stylenames</li>
-  <li><a href="http://dev.vaadin.com/ticket/9904">#9904</a>: Form does not work properly with primary stylenames</li>
-  <li><a href="http://dev.vaadin.com/ticket/9907">#9907</a>: ListSelect does not properly support primary stylenames</li>
-  <li><a href="http://dev.vaadin.com/ticket/9908">#9908</a>: MenuBars does not support primary stylenames properly</li>
-  <li><a href="http://dev.vaadin.com/ticket/9917">#9917</a>: LegacyWindow should not be a UI inner class</li>
-  <li><a href="http://dev.vaadin.com/ticket/9921">#9921</a>: Redirect if trailing slash missing after context path</li>
-  <li><a href="http://dev.vaadin.com/ticket/9923">#9923</a>: Move hierarchy related code in Form to onConnectorHierarchyChange</li>
-  <li><a href="http://dev.vaadin.com/ticket/9924">#9924</a>: Move hierarchy related code in PopupView to onConnectorHierarchyChange</li>
-  <li><a href="http://dev.vaadin.com/ticket/9926">#9926</a>: Build script should not automatically deploy to local Maven</li>
-  <li><a href="http://dev.vaadin.com/ticket/9931">#9931</a>: Vaadin-maven-plugin does not include vaadin-client-compiler dependencies when compiling widget set</li>
-  <li><a href="http://dev.vaadin.com/ticket/9936">#9936</a>: Remove Navigator.SimpleViewDisplay</li>
-  <li><a href="http://dev.vaadin.com/ticket/9943">#9943</a>: CompileTheme.createSprites hides classpath problems</li>
-  <li><a href="http://dev.vaadin.com/ticket/9946">#9946</a>: VaadinServiceSession.getCurrent() fails on first request</li>
-  <li><a href="http://dev.vaadin.com/ticket/9947">#9947</a>: UI constructor invariably throws IllegalStateException</li>
-  <li><a href="http://dev.vaadin.com/ticket/9949">#9949</a>: Browser Back Button does not trigger ValueChangeListener/Blur (Vaadin 7)</li>
-  <li><a href="http://dev.vaadin.com/ticket/9952">#9952</a>: UI is not Scrollable</li>
-  <li><a href="http://dev.vaadin.com/ticket/9956">#9956</a>: DoubleClick on table row failed in IE8</li>
-  <li><a href="http://dev.vaadin.com/ticket/9963">#9963</a>: Vaadin All zip size and JavaDoc</li>
-  <li><a href="http://dev.vaadin.com/ticket/9967">#9967</a>: UI.replaceComponent() throws UnsupportedOperationException</li>
-  <li><a href="http://dev.vaadin.com/ticket/9969">#9969</a>: UI iterator() and getComponentCount() are inconsistent with addComponent() and others</li>
-  <li><a href="http://dev.vaadin.com/ticket/9970">#9970</a>: Duplicate jars in Vaadin All zip archive</li>
-  <li><a href="http://dev.vaadin.com/ticket/9972">#9972</a>: Add Navigator.getState()</li>
-  <li><a href="http://dev.vaadin.com/ticket/9974">#9974</a>: Sass remove() does not work properly in @mixin</li>
-  <li><a href="http://dev.vaadin.com/ticket/9975">#9975</a>: Sass contains() does not work directly in if()</li>
-  <li><a href="http://dev.vaadin.com/ticket/9977">#9977</a>: ItemClickListener in Table throws NullPointerException in IE8</li>
-  <li><a href="http://dev.vaadin.com/ticket/9983">#9983</a>: Adding multiple stylenames fails in certain conditions</li>
-  <li><a href="http://dev.vaadin.com/ticket/9987">#9987</a>: Changing heartbeat interval in web.xml does not work</li>
-  <li><a href="http://dev.vaadin.com/ticket/9989">#9989</a>: Improve message when session is already set</li>
-  <li><a href="http://dev.vaadin.com/ticket/9999">#9999</a>: Debug console does not recognize ExtensionConnectors</li>
-  <li><a href="http://dev.vaadin.com/ticket/10000">#10000</a>: @keyframes syntax breaks Sass compiler</li>
-  <li><a href="http://dev.vaadin.com/ticket/10003">#10003</a>: CssLayout click listeners do not work unless there's at least one child component</li>
-  <li><a href="http://dev.vaadin.com/ticket/10006">#10006</a>: ServerRpc causes the target connector and all its parents to be marked dirty</li>
-  <li><a href="http://dev.vaadin.com/ticket/10007">#10007</a>: Property.setValue should be setValue(T) and not setValue(Object)</li>
-  <li><a href="http://dev.vaadin.com/ticket/10008">#10008</a>: Update ProgressIndicator to use state and Rpc</li>
-  <li><a href="http://dev.vaadin.com/ticket/10030">#10030</a>: Button.DisableOnClick</li>
-  <li><a href="http://dev.vaadin.com/ticket/10034">#10034</a>: Moving components from outer AbsoluteLayout to an inner layout fails with client side exception</li>
-  <li><a href="http://dev.vaadin.com/ticket/10036">#10036</a>: Selecting a row in Table leaves focus indicator for previously selected line</li>
-  <li><a href="http://dev.vaadin.com/ticket/10039">#10039</a>: ComponentLocator.getElementByDOMPath throws NPE if the target could not be found</li>
-  <li><a href="http://dev.vaadin.com/ticket/10040">#10040</a>: uitest.war web.xml does not validate</li>
-  <li><a href="http://dev.vaadin.com/ticket/10043">#10043</a>: NullPointerException in AbstractField.convertToModel()</li>
-  <li><a href="http://dev.vaadin.com/ticket/10044">#10044</a>: Reopening UI with @PreserveOnRefresh doesn't fire fragment change</li>
-  <li><a href="http://dev.vaadin.com/ticket/10045">#10045</a>: WebLogic 9 does not support Java 6</li>
-  <li><a href="http://dev.vaadin.com/ticket/10049">#10049</a>: Util.getAbsoluteUrl does nothing in IE 8</li>
-  <li><a href="http://dev.vaadin.com/ticket/10050">#10050</a>: Create tutorials for BrowserPopupOpener and FileDownloader</li>
-  <li><a href="http://dev.vaadin.com/ticket/10053">#10053</a>: A ClassResource which points to a non-existing file should return 404 and not an empty page</li>
-  <li><a href="http://dev.vaadin.com/ticket/10061">#10061</a>: OSGi - can not instantiate vaadin session anymore</li>
-  <li><a href="http://dev.vaadin.com/ticket/10066">#10066</a>: OSGi - wrong dependencies</li>
-  <li><a href="http://dev.vaadin.com/ticket/10068">#10068</a>: Vertical- and Horizontal-layouts should not attach/detach element resize listeners on state change</li>
-  <li><a href="http://dev.vaadin.com/ticket/10069">#10069</a>: Update the "Using Vaadin in an existing GWT project" tutorial</li>
-  <li><a href="http://dev.vaadin.com/ticket/10070">#10070</a>: InlineDateField broken with Chameleon</li>
-  <li><a href="http://dev.vaadin.com/ticket/10071">#10071</a>: Internal Error - Table marked as dirty while connected SQLContainer is rolled back</li>
-  <li><a href="http://dev.vaadin.com/ticket/10075">#10075</a>: InlineDateField has extra horizontal line below day names</li>
-  <li><a href="http://dev.vaadin.com/ticket/10076">#10076</a>: Write tutorial about creating a LoginForm with Vaadin components</li>
-  <li><a href="http://dev.vaadin.com/ticket/10077">#10077</a>: MenuItem stylenames are lost when the menu item is selected</li>
-  <li><a href="http://dev.vaadin.com/ticket/10078">#10078</a>: CustomField should implement HasComponents, not ComponentContainer</li>
-  <li><a href="http://dev.vaadin.com/ticket/10079">#10079</a>: AbstractOrderedLayout does not add v-disabled to caption of child when a parent is disabled</li>
-  <li><a href="http://dev.vaadin.com/ticket/10080">#10080</a>: Undefined wide HorizontalLayout becomes 100% wide</li>
-  <li><a href="http://dev.vaadin.com/ticket/10082">#10082</a>: Icon in Panel caption causes wrapping</li>
-  <li><a href="http://dev.vaadin.com/ticket/10083">#10083</a>: AbsoluteLayout does not render captions</li>
-  <li><a href="http://dev.vaadin.com/ticket/10085">#10085</a>: HasComponents should not declare getComponentIterator()</li>
-  <li><a href="http://dev.vaadin.com/ticket/10088">#10088</a>: Non-transient servlet reference in VaadinServletService</li>
-  <li><a href="http://dev.vaadin.com/ticket/10089">#10089</a>: NPE in Page.setFragment(String newFragment, boolean fireEvents)</li>
-  <li><a href="http://dev.vaadin.com/ticket/10093">#10093</a>: Allow to provide parameters for the UI in a popup window</li>
-  <li><a href="http://dev.vaadin.com/ticket/10097">#10097</a>: GridLayout insertRow() causes client side exception</li>
-  <li><a href="http://dev.vaadin.com/ticket/10098">#10098</a>: Layout bug: nested HorizontalLayout is offset vertically downward</li>
-  <li><a href="http://dev.vaadin.com/ticket/10100">#10100</a>: Sass parent selector fails if rule has more than one selector</li>
-  <li><a href="http://dev.vaadin.com/ticket/10101">#10101</a>: Client side exception with Image()</li>
-  <li><a href="http://dev.vaadin.com/ticket/10104">#10104</a>: LegacyComponent should be in com.vaadin.ui</li>
-  <li><a href="http://dev.vaadin.com/ticket/10107">#10107</a>: SCSS compiler fails when theme is not in same project as UI</li>
-  <li><a href="http://dev.vaadin.com/ticket/10112">#10112</a>: Using Upload with multiple UIs causes NPE</li>
-  <li><a href="http://dev.vaadin.com/ticket/10113">#10113</a>: VerticalLayout is a block element which always makes it 100% wide</li>
-  <li><a href="http://dev.vaadin.com/ticket/10116">#10116</a>: Idle UIs should be closed only when all UIs have been idle long enough</li>
-  <li><a href="http://dev.vaadin.com/ticket/10118">#10118</a>: josn dependency is not OSGi compatible out-of-the-box</li>
-  <li><a href="http://dev.vaadin.com/ticket/10121">#10121</a>: Fields named description don't bind in FieldGroup.bindMemberFields method</li>
-  <li><a href="http://dev.vaadin.com/ticket/10124">#10124</a>: SQLContainer.prevItem() does not return null</li>
-  <li><a href="http://dev.vaadin.com/ticket/10126">#10126</a>: Using GWT PopupPanel.show() fails with NPE due to Vaadin PopupView</li>
-  <li><a href="http://dev.vaadin.com/ticket/10128">#10128</a>: Undefined wide accordion sets width 2px too small, causing scrollbars</li>
-  <li><a href="http://dev.vaadin.com/ticket/10130">#10130</a>: ProgressIndicator keeps polling after it has been removed</li>
-  <li><a href="http://dev.vaadin.com/ticket/10132">#10132</a>: Navigator.navigateTo(…) should call View.enter(…) AFTER it has called ViewDisplay.showView(…)</li>
-  <li><a href="http://dev.vaadin.com/ticket/10134">#10134</a>: Check that connector has a matching RPC handler before deserializing parameters</li>
-  <li><a href="http://dev.vaadin.com/ticket/10136">#10136</a>: Tooltip is too high in Runo</li>
-  <li><a href="http://dev.vaadin.com/ticket/10137">#10137</a>: NativeButton does not set the v-disabled style when using disableOnClick</li>
-  <li><a href="http://dev.vaadin.com/ticket/10140">#10140</a>: Unify slash usage in constants</li>
-  <li><a href="http://dev.vaadin.com/ticket/10141">#10141</a>: Rename Page.getFragment to Page.getUriFragment</li>
-  <li><a href="http://dev.vaadin.com/ticket/10143">#10143</a>: Add AbstractConnector.getRpcProxy to be consistent with server side</li>
-  <li><a href="http://dev.vaadin.com/ticket/10144">#10144</a>: AbstractComponentContainer should implement getComponentIterator and not iterator()</li>
-  <li><a href="http://dev.vaadin.com/ticket/10145">#10145</a>: Move classes from the com.vaadin package</li>
-  <li><a href="http://dev.vaadin.com/ticket/10146">#10146</a>: Move classes from the com.vaadin.service package</li>
-  <li><a href="http://dev.vaadin.com/ticket/10150">#10150</a>: Detached SplitPanel still holds on to its previous children.</li>
-  <li><a href="http://dev.vaadin.com/ticket/10151">#10151</a>: Invalid state in hierarchy change event for detached connector</li>
-  <li><a href="http://dev.vaadin.com/ticket/10153">#10153</a>: Update "Dependencies Included in Installation package"</li>
-  <li><a href="http://dev.vaadin.com/ticket/10154">#10154</a>: HorizontalLayout adds component in wrong order</li>
-  <li><a href="http://dev.vaadin.com/ticket/10155">#10155</a>: Hiding or removing a component from an AbsoluteLayout causes ClassCastException</li>
-  <li><a href="http://dev.vaadin.com/ticket/10156">#10156</a>: Vaadin internal init parameters should be prefixed by "v-"</li>
-  <li><a href="http://dev.vaadin.com/ticket/10157">#10157</a>: Vaadin internal init parameters should be prefixed by "v-"</li>
-  <li><a href="http://dev.vaadin.com/ticket/10158">#10158</a>: API: getRootConnector() should be getUIConnector()</li>
-  <li><a href="http://dev.vaadin.com/ticket/10161">#10161</a>: VerticalLayout expand ratio cannot be changed dynamically</li>
-  <li><a href="http://dev.vaadin.com/ticket/10162">#10162</a>: VLayoutSlot.positionHorizontally does not sanitize availableWidth before setting it to the DOM</li>
-  <li><a href="http://dev.vaadin.com/ticket/10166">#10166</a>: SassCompiler parent reference in middle of selector bugs</li>
-  <li><a href="http://dev.vaadin.com/ticket/10172">#10172</a>: Ue IE9 mode for IE10</li>
-  <li><a href="http://dev.vaadin.com/ticket/10174">#10174</a>: Value of a variable cannot be assigned to another variable</li>
-  <li><a href="http://dev.vaadin.com/ticket/10179">#10179</a>: AbstractComponentConnector removes id attribute set in widget</li>
-  <li><a href="http://dev.vaadin.com/ticket/10180">#10180</a>: AbsoluteLayout will not position components with setVisible(false)</li>
-  <li><a href="http://dev.vaadin.com/ticket/10181">#10181</a>: AbsoluteLayout will not position components with setVisible(false)</li>
-  <li><a href="http://dev.vaadin.com/ticket/10182">#10182</a>: Rule order not preserved when using parent reference in sass</li>
-  <li><a href="http://dev.vaadin.com/ticket/10183">#10183</a>: InlineDateField and ComboBox broken in BaseTheme</li>
-  <li><a href="http://dev.vaadin.com/ticket/10184">#10184</a>: Match not found in GlobalResourceHandler when requesting dynamic resource from a Table</li>
-  <li><a href="http://dev.vaadin.com/ticket/10186">#10186</a>: Using the lighten function breaks up any later references to the parameter value</li>
-  <li><a href="http://dev.vaadin.com/ticket/10187">#10187</a>: VPopupView no longer works with TestBench</li>
-  <li><a href="http://dev.vaadin.com/ticket/10198">#10198</a>: FileDownloaderExtension cannot be removed</li>
-  <li><a href="http://dev.vaadin.com/ticket/10202">#10202</a>: Allow the client side to use an SASS file</li>
-  <li><a href="http://dev.vaadin.com/ticket/10203">#10203</a>: add setFileDownloadResource to FileDownloader</li>
-  <li><a href="http://dev.vaadin.com/ticket/10204">#10204</a>: Update Eclipse project template to be compatible with beta9</li>
-  <li><a href="http://dev.vaadin.com/ticket/10205">#10205</a>: Ensure Maven project template is compatible with beta9</li>
-  <li><a href="http://dev.vaadin.com/ticket/10211">#10211</a>: No longer possible to use Navigator on a Panel/Window/UI</li>
-  <li><a href="http://dev.vaadin.com/ticket/10221">#10221</a>: Generated AsyncBundleLoader.load() too long</li>
-  <li><a href="http://dev.vaadin.com/ticket/10222">#10222</a>: Aborting layout after 100 passes</li>
-  <li><a href="http://dev.vaadin.com/ticket/10223">#10223</a>: Rename VaadinServiceSession to VaadinSession</li>
-  <li><a href="http://dev.vaadin.com/ticket/10224">#10224</a>: Rename DependencyResource to PublishedFile</li>
-  <li><a href="http://dev.vaadin.com/ticket/10225">#10225</a>: Remove verifyLock() from and add getLockInstance() to VaadinSession</li>
-  <li><a href="http://dev.vaadin.com/ticket/10226">#10226</a>: SystemMessagesProvider.getSystemMessages should get an event object</li>
-  <li><a href="http://dev.vaadin.com/ticket/10227">#10227</a>: Remove DynamicConnectorResource</li>
-  <li><a href="http://dev.vaadin.com/ticket/10229">#10229</a>: Update all @deprecated messages in VaadinService related classes</li>
-  <li><a href="http://dev.vaadin.com/ticket/10230">#10230</a>: Remove Terminal</li>
-  <li><a href="http://dev.vaadin.com/ticket/10231">#10231</a>: Replace ComponentErrorHandler with ErrorListener and make error handling use hierarchy</li>
-  <li><a href="http://dev.vaadin.com/ticket/10232">#10232</a>: Remove ApplicationError</li>
-  <li><a href="http://dev.vaadin.com/ticket/10235">#10235</a>: CustomComponent should implement HasComponents</li>
-  <li><a href="http://dev.vaadin.com/ticket/10236">#10236</a>: DragAndDropWrapper should not be a ComponentContainer</li>
-  <li><a href="http://dev.vaadin.com/ticket/10237">#10237</a>: LoginForm should not be a ComponentContainer</li>
-  <li><a href="http://dev.vaadin.com/ticket/10238">#10238</a>: PopupView should implement HasComponents</li>
-  <li><a href="http://dev.vaadin.com/ticket/10239">#10239</a>: Remove Navigator.navigate()</li>
-  <li><a href="http://dev.vaadin.com/ticket/10240">#10240</a>: Update Navigator.addView(String,View) and Navigator.setErrorView(View) javadoc</li>
-  <li><a href="http://dev.vaadin.com/ticket/10241">#10241</a>: Refactor BrowserPopupOpener API</li>
-  <li><a href="http://dev.vaadin.com/ticket/10242">#10242</a>: Rename ApplicationConnection suspend/resumeRendering</li>
-  <li><a href="http://dev.vaadin.com/ticket/10243">#10243</a>: Refactor ApplicationConnection communication related API</li>
-  <li><a href="http://dev.vaadin.com/ticket/10244">#10244</a>: Correct camelCasing in @Delayed</li>
-  <li><a href="http://dev.vaadin.com/ticket/10245">#10245</a>: Add addComponents(Component...) to ComponentContainer</li>
-  <li><a href="http://dev.vaadin.com/ticket/10246">#10246</a>: Add multiple Component constructors to all ComponentContainers</li>
-  <li><a href="http://dev.vaadin.com/ticket/10247">#10247</a>: Remove EventRouter deprecation messages</li>
-  <li><a href="http://dev.vaadin.com/ticket/10248">#10248</a>: Implement abstract client side connector classes for HasComponents and SingleComponentContainer</li>
-  <li><a href="http://dev.vaadin.com/ticket/10249">#10249</a>: Add UI.close(), UI.isClosing()</li>
-  <li><a href="http://dev.vaadin.com/ticket/10251">#10251</a>: Refactor clean up of UIs</li>
-  <li><a href="http://dev.vaadin.com/ticket/10252">#10252</a>: Refactor hearbeat API</li>
-  <li><a href="http://dev.vaadin.com/ticket/10253">#10253</a>: Refactor VaadinSession API request time API</li>
-  <li><a href="http://dev.vaadin.com/ticket/10254">#10254</a>: Remove AddonContext and related methods</li>
-  <li><a href="http://dev.vaadin.com/ticket/10257">#10257</a>: Loading indicator remains visible if there is an exception during layout</li>
-  <li><a href="http://dev.vaadin.com/ticket/10258">#10258</a>: Bottom left corner of the Runo panel is not visible</li>
-  <li><a href="http://dev.vaadin.com/ticket/10284">#10284</a>: Document @PreserveOnRefresh</li>
-  <li><a href="http://dev.vaadin.com/ticket/10289">#10289</a>: Javadoc for com.vaadin.ui.Window contains wrong information</li>
-  <li><a href="http://dev.vaadin.com/ticket/10293">#10293</a>: Resolve sass compiler thread safety problems in servlet</li>
-  <li><a href="http://dev.vaadin.com/ticket/10294">#10294</a>: Change primary style name mixin parameter to $primaryStyleName</li>
-  <li><a href="http://dev.vaadin.com/ticket/10299">#10299</a>: SassCompiler input argument not resolved correctly</li>
-  <li><a href="http://dev.vaadin.com/ticket/10300">#10300</a>: Panel and Window constructors should use Component</li>
-  <li><a href="http://dev.vaadin.com/ticket/10302">#10302</a>: Remove RpcManager interface as ServerRpcManager must be used</li>
-  <li><a href="http://dev.vaadin.com/ticket/10303">#10303</a>: Move HasComponents.isComponentVisible to SelectiveRenderer.isRendered</li>
-  <li><a href="http://dev.vaadin.com/ticket/10304">#10304</a>: Update ServerConnector.getState javadoc</li>
-  <li><a href="http://dev.vaadin.com/ticket/10305">#10305</a>: Rename Page.setBrowserWindowSize to updateBrowserWindowSize</li>
-  <li><a href="http://dev.vaadin.com/ticket/10306">#10306</a>: Change WebBrowser.getTimezoneOffset and getRawTimezoneOffset to return int instead of Integer</li>
-  <li><a href="http://dev.vaadin.com/ticket/10308">#10308</a>: SassCompiler drops selectors when & is used</li>
-  <li><a href="http://dev.vaadin.com/ticket/10309">#10309</a>: SassCompiler wrong order when nesting</li>
-  <li><a href="http://dev.vaadin.com/ticket/10310">#10310</a>: Compare.Equal passesFilter() does not work on some Comparable values</li>
-  <li><a href="http://dev.vaadin.com/ticket/10315">#10315</a>: No propagation tabIndex on PopupFIeld, Table, Selects</li>
-  <li><a href="http://dev.vaadin.com/ticket/10316">#10316</a>: fails to parse selectors with parenthesis "(", ")" in styles.scss</li>
-  <li><a href="http://dev.vaadin.com/ticket/10318">#10318</a>: Compare performance with Vaadin 6</li>
-  <li><a href="http://dev.vaadin.com/ticket/10322">#10322</a>: vaadin-shared-deps osgi manifest should declare versions</li>
-  <li><a href="http://dev.vaadin.com/ticket/10324">#10324</a>: Fix GridLayout to update hierarchy in onConnectorHierarchyChange</li>
-  <li><a href="http://dev.vaadin.com/ticket/10325">#10325</a>: Opening a sub-window without content displays client-side exception</li>
-  <li><a href="http://dev.vaadin.com/ticket/10326">#10326</a>: SassCompiler wrong order when mixing parent selectors and other blocks</li>
-  <li><a href="http://dev.vaadin.com/ticket/10330">#10330</a>: Wrap themes in themename{}</li>
-  <li><a href="http://dev.vaadin.com/ticket/10332">#10332</a>: Nothing happens in browser if UI.init throws exception</li>
-  <li><a href="http://dev.vaadin.com/ticket/10337">#10337</a>: Refactor Extension API</li>
-  <li><a href="http://dev.vaadin.com/ticket/10339">#10339</a>: SassCompiler should be the only public API to sass ATM</li>
-  <li><a href="http://dev.vaadin.com/ticket/10340">#10340</a>: Rename ComponentEventListener to ConnectorEventListener</li>
-  <li><a href="http://dev.vaadin.com/ticket/10355">#10355</a>: Debug window no longer gets any styles</li>
-  <li><a href="http://dev.vaadin.com/ticket/10357">#10357</a>: Debug console can't find its theme</li>
-  <li><a href="http://dev.vaadin.com/ticket/10358">#10358</a>: Specfiy version numbers for vaadin-shared-deps imports</li>
-  <li><a href="http://dev.vaadin.com/ticket/10359">#10359</a>: Test using Firefox 17 ESR</li>
-  <li><a href="http://dev.vaadin.com/ticket/10360">#10360</a>: Overlays cause scrollbars on body</li>
-  <li><a href="http://dev.vaadin.com/ticket/10362">#10362</a>: Browser specific theme selectors broken</li>
-  <li><a href="http://dev.vaadin.com/ticket/10364">#10364</a>: com.vaadin.server.ServerRpcManager not Serializable</li>
-  <li><a href="http://dev.vaadin.com/ticket/10367">#10367</a>: Session scope converters doesn't properly works with Vaadin 7</li>
-  <li><a href="http://dev.vaadin.com/ticket/10369">#10369</a>: Include fixes from Vaadin 6</li>
-  <li><a href="http://dev.vaadin.com/ticket/10370">#10370</a>: Set Cache-Control in heartbeat responses</li>
-  <li><a href="http://dev.vaadin.com/ticket/10372">#10372</a>: Debug window should tell which theme is being used</li>
-  <li><a href="http://dev.vaadin.com/ticket/10373">#10373</a>: Write a tutorial on how to change the "unsupported browser" page</li>
-  <li><a href="http://dev.vaadin.com/ticket/10374">#10374</a>: Throw an exception if a Window is added to the component hierarchy</li>
-  <li><a href="http://dev.vaadin.com/ticket/10375">#10375</a>: ClassCastException when resizing a Window containing a Label</li>
-  <li><a href="http://dev.vaadin.com/ticket/10378">#10378</a>: AbstractExtensionConnector.extend should be abstract</li>
-  <li><a href="http://dev.vaadin.com/ticket/10381">#10381</a>: NPE in StringToDoubleConverter</li>
-  <li><a href="http://dev.vaadin.com/ticket/10382">#10382</a>: Chameleon uses "body" prefix rules which are now broken</li>
-  <li><a href="http://dev.vaadin.com/ticket/10383">#10383</a>: LoginForm generated HTML does not get "themename" style resulting in inconsistent look</li>
-  <li><a href="http://dev.vaadin.com/ticket/10384">#10384</a>: Drag'n'drop drag-image should be attached to the overlay container</li>
-  <li><a href="http://dev.vaadin.com/ticket/10385">#10385</a>: Drag elements are not shown</li>
-  <li><a href="http://dev.vaadin.com/ticket/10386">#10386</a>: Uncaught exceptions are not styled</li>
-  <li><a href="http://dev.vaadin.com/ticket/10388">#10388</a>: First accordion tab cannot be closed when active</li>
-  <li><a href="http://dev.vaadin.com/ticket/10389">#10389</a>: VisualDesigner generates invalid code for Vaadin 7</li>
-  <li><a href="http://dev.vaadin.com/ticket/10395">#10395</a>: Update release notes</li>
-  <li><a href="http://dev.vaadin.com/ticket/10396">#10396</a>: Rewrite migration guide</li>
-  <li><a href="http://dev.vaadin.com/ticket/10397">#10397</a>: Update tutorials for Vaadin 7</li>
-  <li><a href="http://dev.vaadin.com/ticket/10399">#10399</a>: ClassCastException when using extensions with multiple portlets on the same page</li>
-  <li><a href="http://dev.vaadin.com/ticket/10400">#10400</a>: NPE from VUI.windowSizeMaybeChanged</li>
-  <li><a href="http://dev.vaadin.com/ticket/10401">#10401</a>: Add Notification.show(String caption, String message, Type type) helper</li>
-  <li><a href="http://dev.vaadin.com/ticket/10404">#10404</a>: TabSheet containing a HasComponent causes child not to be rendered</li>
-  <li><a href="http://dev.vaadin.com/ticket/10406">#10406</a>: SCSS parser (sometimes) fails after ":" (colon) inside @mixin</li>
-  <li><a href="http://dev.vaadin.com/ticket/10408">#10408</a>: Converter created in a ConverterFactory isn't used in Table</li>
-  <li><a href="http://dev.vaadin.com/ticket/10409">#10409</a>: Table never uses ConverterFactory converters</li>
-  <li><a href="http://dev.vaadin.com/ticket/10411">#10411</a>: VaadinSession throws NPE if Http session is invalidated</li>
-  <li><a href="http://dev.vaadin.com/ticket/10414">#10414</a>: CustomComponent setVisible doesn't show the component</li>
-  <li><a href="http://dev.vaadin.com/ticket/10415">#10415</a>: vaadin-theme-compiler incorrectly depends on old vaadin-shared-deps</li>
-  <li><a href="http://dev.vaadin.com/ticket/10416">#10416</a>: ListSelect jumps to top row after each client -&gt; server contact</li>
-  <li><a href="http://dev.vaadin.com/ticket/10417">#10417</a>: com.google.gwt.user.client.rpc.IsSerializable should be in vaadin-shared</li>
-  <li><a href="http://dev.vaadin.com/ticket/10418">#10418</a>: AbstractSplitPanel.setMinSplitPosition takes incorrect parameter type</li>
-  <li><a href="http://dev.vaadin.com/ticket/10419">#10419</a>: Data type conversion forced for non-used fields of a BeanItem</li>
-  <li><a href="http://dev.vaadin.com/ticket/10421">#10421</a>: Serving *nocache* files using VaadinServlet should not set the cache header to 1h</li>
-  <li><a href="http://dev.vaadin.com/ticket/10422">#10422</a>: It should be possible to remove the ?timestamp from the request for the widgetset</li>
-  <li><a href="http://dev.vaadin.com/ticket/10423">#10423</a>: "Object Expected" in IE8 if Native XMLHttpSupport is disabled</li>
-  <li><a href="http://dev.vaadin.com/ticket/10432">#10432</a>: ApplicationConnection.handleComponentRelativeSize and related methods serve no purpose</li>
-  <li><a href="http://dev.vaadin.com/ticket/10433">#10433</a>: AbstractComponentConnector.hasEventListener should be in AbstractConnector</li>
-  <li><a href="http://dev.vaadin.com/ticket/10434">#10434</a>: Wrong memcache expiration in GAEVaadinServlet</li>
-  <li><a href="http://dev.vaadin.com/ticket/10438">#10438</a>: @if does not work directly in @mixin</li>
-  <li><a href="http://dev.vaadin.com/ticket/10453">#10453</a>: Sass @mixin variables behaves strangely</li>
-  <li><a href="http://dev.vaadin.com/ticket/10458">#10458</a>: Unable to use a SQLContainer with ComboBox</li>
-  <li><a href="http://dev.vaadin.com/ticket/10478">#10478</a>: Form should support empty footer</li>
-  <li><a href="http://dev.vaadin.com/ticket/10479">#10479</a>: TabSheet custom stylename in GWT Mode gives NPE</li>
-  <li><a href="http://dev.vaadin.com/ticket/10480">#10480</a>: AssertionError when using DragAndDropWrapper with DevMode</li>
-  <li><a href="http://dev.vaadin.com/ticket/10481">#10481</a>: Custom VDropHandler causes NPE in JsonEncoder when dropping component</li>
-  <li><a href="http://dev.vaadin.com/ticket/10484">#10484</a>: ComboBox rendering problem in Runo Theme</li>
-  <li><a href="http://dev.vaadin.com/ticket/10485">#10485</a>: PopupDateField rendering problem in Runo and Chameleon theme</li>
-  <li><a href="http://dev.vaadin.com/ticket/10486">#10486</a>: @something should be passed through the sass compiler as-is</li>
-  <li><a href="http://dev.vaadin.com/ticket/10488">#10488</a>: Only measure connectors for which a measurement is actually required</li>
-  <li><a href="http://dev.vaadin.com/ticket/10489">#10489</a>: OrderedLayout should send detach and attach events when updating the DOM for expand</li>
-  <li><a href="http://dev.vaadin.com/ticket/10494">#10494</a>: Space not always properly allocated in ordered layout with fixed size</li>
-  <li><a href="http://dev.vaadin.com/ticket/10496">#10496</a>: Provide a way for connectors to avoid recalculating internal values if it gets multiple events based on the same data</li>
-  <li><a href="http://dev.vaadin.com/ticket/10498">#10498</a>: DateField in a GridLayout causes scrollbars in IE</li>
-  <li><a href="http://dev.vaadin.com/ticket/10503">#10503</a>: Panel content not displaying inside TabSheet</li>
-  <li><a href="http://dev.vaadin.com/ticket/10504">#10504</a>: FieldGroup bound to inherited layout error</li>
-  <li><a href="http://dev.vaadin.com/ticket/10505">#10505</a>: Sass compiler should preserve UTF-8 characters from imported files and output UTF-8 to the browser</li>
-  <li><a href="http://dev.vaadin.com/ticket/10511">#10511</a>: Compiling widgetset using plugin fails</li>
-  <li><a href="http://dev.vaadin.com/ticket/10520">#10520</a>: Write tutorial about using Vaadin 7 with Liferay</li>
-  <li><a href="http://dev.vaadin.com/ticket/10529">#10529</a>: "Not using retained UI" always prints Integer.class instead of the class of the UI</li>
-  <li><a href="http://dev.vaadin.com/ticket/10531">#10531</a>: Pixel values with fractions should not be rounded before sent to client</li>
-  <li><a href="http://dev.vaadin.com/ticket/10532">#10532</a>: Invalid state update for reattached connector</li>
-  <li><a href="http://dev.vaadin.com/ticket/10537">#10537</a>: NewItemsAllowed in Optiongroup and ListSelect give javascriptException</li>
-  <li><a href="http://dev.vaadin.com/ticket/10541">#10541</a>: TestBench 3 doesn't work with Vaadin 7 beta10</li>
-  <li><a href="http://dev.vaadin.com/ticket/10545">#10545</a>: FormFieldFactory should be deprecated in Vaadin 7</li>
-  <li><a href="http://dev.vaadin.com/ticket/10549">#10549</a>: Cannot send subclassed objects over RPC</li>
-  <li><a href="http://dev.vaadin.com/ticket/10553">#10553</a>: Provide a StringToFloat converter</li>
-  <li><a href="http://dev.vaadin.com/ticket/10559">#10559</a>: ComboBox popup higher in Firefox 17 than in other browsers</li>
-  <li><a href="http://dev.vaadin.com/ticket/10560">#10560</a>: EmailValidator on TextField always shows the error mark</li>
-  <li><a href="http://dev.vaadin.com/ticket/10561">#10561</a>: EmailValidator on TextField always shows the error symbol</li>
-  <li><a href="http://dev.vaadin.com/ticket/10562">#10562</a>: ReadOnlyException when TextField with setReadOnly(true) is added</li>
-  <li><a href="http://dev.vaadin.com/ticket/10564">#10564</a>: Ensure updateCaption is invoked for new children</li>
-  <li><a href="http://dev.vaadin.com/ticket/10587">#10587</a>: NativeButton broken in Liferay theme</li>
-  <li><a href="http://dev.vaadin.com/ticket/10588">#10588</a>: IE8 does not always update layout slot sizes</li>
-  <li><a href="http://dev.vaadin.com/ticket/10589">#10589</a>: Form error display does not work</li>
-  <li><a href="http://dev.vaadin.com/ticket/10593">#10593</a>: SassLinker fails for deeper folder hierarchies</li>
-  <li><a href="http://dev.vaadin.com/ticket/10594">#10594</a>: Unnesessary scss files from SassLinker</li>
-  <li><a href="http://dev.vaadin.com/ticket/10596">#10596</a>: SplitPanel splitter left in bad position if temporarily out of bounds</li>
-  <li><a href="http://dev.vaadin.com/ticket/10597">#10597</a>: Compile error for Microsoft css gradient filter</li>
-  <li><a href="http://dev.vaadin.com/ticket/10598">#10598</a>: Extra vertical scrollbars in IE 9</li>
-  <li><a href="http://dev.vaadin.com/ticket/10599">#10599</a>: Window with style Runo.WINDOW_DIALOG has rendering errors</li>
-  <li><a href="http://dev.vaadin.com/ticket/10606">#10606</a>: Chameleon styles ceased working in Vaadin 7</li>
-  <li><a href="http://dev.vaadin.com/ticket/10616">#10616</a>: Legacy style for Reindeer.TABSHEET_MINIMAL is broken in FF</li>
-  <li><a href="http://dev.vaadin.com/ticket/10630">#10630</a>: Uncaught client side exception with to narrow GridLayout in IE8</li>
-  <li><a href="http://dev.vaadin.com/ticket/10631">#10631</a>: MenuBar, css font-size in % / VerticalLayout, width in em / Button, size while dis-/enabled</li>
-  <li><a href="http://dev.vaadin.com/ticket/10636">#10636</a>: Util.getRequiredHeight/getRequiredWidth incorreclty rounds down for IE9</li>
-  <li><a href="http://dev.vaadin.com/ticket/10651">#10651</a>: Update release notes for RC1</li>
-  <li><a href="http://dev.vaadin.com/ticket/10656">#10656</a>: No requiredFieldIndicator for CustomField</li>
-  <li><a href="http://dev.vaadin.com/ticket/10658">#10658</a>: Bottom left corner of the Runo tabsheet is not visible</li>
-  <li><a href="http://dev.vaadin.com/ticket/10659">#10659</a>: "Can't start a new layout phase before the previous layout phase ends." in Opera 12</li>
-  <li><a href="http://dev.vaadin.com/ticket/10682">#10682</a>: Close element should not be placed before the caption text</li>
-  <li><a href="http://dev.vaadin.com/ticket/10705">#10705</a>: Vaadin beta 11 -  Javascript error</li>
-  <li><a href="http://dev.vaadin.com/ticket/10710">#10710</a>: Enable building minimal widgetset</li>
-  <li><a href="http://dev.vaadin.com/ticket/10713">#10713</a>: NullPointerException on TextField validation</li>
-  <li><a href="http://dev.vaadin.com/ticket/10722">#10722</a>: Client ClassCastException Safari/IOS6</li>
-  <li><a href="http://dev.vaadin.com/ticket/10723">#10723</a>: Vaadin test war cannot be deployed to Liferay 6.1.1</li>
-  <li><a href="http://dev.vaadin.com/ticket/10735">#10735</a>: Ensure all server and shared classes are serializable</li>
-  <li><a href="http://dev.vaadin.com/ticket/10743">#10743</a>: NPE when reloading the browser</li>
-  <li><a href="http://dev.vaadin.com/ticket/10744">#10744</a>: Write tutorial about how to include a set of widgets in the eager bundle and defer others</li>
-  <li><a href="http://dev.vaadin.com/ticket/10746">#10746</a>: Correct which connectors are eagerly loaded</li>
-  <li><a href="http://dev.vaadin.com/ticket/10783">#10783</a>: A component which is 100% and expand=0 should not be shown</li>
-  <li><a href="http://dev.vaadin.com/ticket/10792">#10792</a>: Analyze layouts should show an error for a relative sized component which will not be expanded</li>
-
+        <li>Separate server-side (<tt>vaadin-server</tt>) and client-side (<tt>vaadin-client</tt>, <tt>vaadin-client-compiler</tt>) development libraries</li>
+        <li>Precompiled widget set (<tt>vaadin-client-compiled</tt>) for server-side development</li>
+        <li>Shared library (<tt>vaadin-shared</tt>) for both server- and client-side libraries</li>
+        <li>Built-in themes (<tt>vaadin-themes</tt>) and the theme compiler (<tt>vaadin-theme-compiler</tt>)</li>
+        <li>Dependency libraries provided under the <tt>lib/</tt> folder</li>
       </ul>
+
+      <p>
+        See the <tt>README.TXT</tt> in the installation package for detailed information
+        about the package contents. <a href="http://vaadin.com/book">Book of Vaadin</a>
+        (for Vaadin 7) gives more detailed instructions.
+      </p>
+
+      <p>
+        For server-side development, copy the <tt>vaadin-server</tt>,
+        <tt>vaadin-client-compiled</tt>, <tt>vaadin-shared</tt>,
+        <tt>vaadin-theme-compiler</tt>, and <tt>vaadin-themes</tt> from the main
+        folder and the dependencies from the <tt>lib</tt> folder to the
+        <tt>WEB-INF/lib</tt> folder of your Vaadin project. (The
+        <tt>vaadin-client-compiled</tt> is necessary if you do not wish to compile the
+        widget set by your own, which you need to do if you use almost any add-on
+        components.)
+      </p>
+
+      <p>
+        For pure client-side development, you only need the <tt>vaadin-client</tt> and
+        <tt>vaadin-client-compiler</tt> JARs, which should be put to a non-deployed
+        project library folder, such as <tt>lib</tt>. You also need them if you compile
+        the widget set for any reason, such as using Vaadin add-ons, or create new
+        server-side components integrated with client-side widgets.
+      </p>
 
       <h2 id="migrating">Migrating from Vaadin 6</h2>
 
