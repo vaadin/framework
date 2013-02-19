@@ -68,6 +68,7 @@
 	</target>
 
 	<target name="fetch-release-notes-tickets" unless="built.release-notes" if="build.release-notes">
+		<mkdir dir="${vaadin.basedir}/result"/>
 		<subant buildpath="${vaadin.basedir}/buildhelpers" target="fetch-release-notes-tickets" antfile="build.xml" inheritall="true">
 			<property name="output" location="${release-notes-tickets-file}" />
 		</subant>
