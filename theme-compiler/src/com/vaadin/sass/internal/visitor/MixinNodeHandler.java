@@ -108,16 +108,37 @@ public class MixinNodeHandler {
                     }
                 }
             }
-
-            int i = 0;
-            for (final LexicalUnitImpl unit : remainingUnits) {
+            checkExtraParameters(mixinNode, remainingNodes.size(),
+                    remainingUnits.size());
+            for (int i = 0; i < remainingNodes.size()
+                    && i < remainingUnits.size(); i++) {
+                LexicalUnitImpl unit = remainingUnits.get(i);
                 remainingNodes.get(i).setExpr(
                         (LexicalUnitImpl) DeepCopy.copy(unit));
-                i++;
             }
-
         }
 
+    }
+
+    protected static void checkExtraParameters(MixinNode mixinNode,
+            int remainingNodesSize, int remainingUnitsSize) {
+        if (remainingUnitsSize > remainingNodesSize) {
+            String fileName = null;
+            Node root = mixinNode.getParentNode();
+            while (root != null && !(root instanceof ScssStylesheet)) {
+                root = root.getParentNode();
+            }
+            if (root != null) {
+                fileName = ((ScssStylesheet) root).getFileName();
+            }
+            StringBuilder builder = new StringBuilder();
+            builder.append("More parameters than expected, in Mixin ").append(
+                    mixinNode.getName());
+            if (fileName != null) {
+                builder.append(", in file ").append(fileName);
+            }
+            throw new RuntimeException(builder.toString());
+        }
     }
 
     private static void replaceChildVariables(MixinDefNode mixinDef, Node node) {
