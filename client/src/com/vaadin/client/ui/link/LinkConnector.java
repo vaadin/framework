@@ -42,7 +42,11 @@ public class LinkConnector extends AbstractComponentConnector implements
             @Override
             public void onStateChanged(StateChangeEvent stateChangeEvent) {
                 getWidget().src = getResourceUrl(LinkConstants.HREF_RESOURCE);
-                getWidget().anchor.setAttribute("href", getWidget().src);
+                if (getWidget().src == null) {
+                    getWidget().anchor.removeAttribute("href");
+                } else {
+                    getWidget().anchor.setAttribute("href", getWidget().src);
+                }
             }
         });
     }
