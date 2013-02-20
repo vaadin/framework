@@ -153,9 +153,6 @@ public class ApplicationConnection {
     // will hold the UIDL security key (for XSS protection) once received
     private String uidlSecurityKey = "init";
 
-    private static final FastStringMap<FastStringSet> allStateFieldsCache = FastStringMap
-            .create();
-
     private final HashMap<String, String> resourcesMap = new HashMap<String, String>();
 
     /**
@@ -1932,22 +1929,15 @@ public class ApplicationConnection {
                             }
 
                             Profiler.enter("updateConnectorState create event");
-                            FastStringSet changedProperties = FastStringSet
-                                    .create();
-                            addJsonFields(stateJson, changedProperties, "");
 
-                            if (newConnectors.contains(connector)) {
+                            boolean isNewConnector = remainingNewConnectors
+                                    .contains(connector);
+                            if (isNewConnector) {
                                 remainingNewConnectors.remove(connector);
-                                // Fire events for properties using the default
-                                // value for newly created connectors
-                                FastStringSet allStateFields = getAllStateFields(AbstractConnector
-                                        .getStateType(connector));
-                                changedProperties.addAll(allStateFields);
                             }
 
                             StateChangeEvent event = new StateChangeEvent(
-                                    connector, changedProperties);
-
+                                    connector, stateJson, isNewConnector);
                             events.add(event);
                             Profiler.leave("updateConnectorState create event");
 
@@ -1962,11 +1952,9 @@ public class ApplicationConnection {
                 // Fire events for properties using the default value for newly
                 // created connectors even if there were no state changes
                 for (ServerConnector connector : remainingNewConnectors) {
-                    FastStringSet changedProperties = getAllStateFields(AbstractConnector
-                            .getStateType(connector));
 
                     StateChangeEvent event = new StateChangeEvent(connector,
-                            changedProperties);
+                            new JSONObject(), true);
 
                     events.add(event);
 
@@ -1976,80 +1964,6 @@ public class ApplicationConnection {
                 Profiler.leave("updateConnectorState");
 
                 return events;
-            }
-
-            private FastStringSet getAllStateFields(Type type) {
-                FastStringSet fields;
-                fields = allStateFieldsCache.get(type.getBaseTypeName());
-                if (fields == null) {
-                    Profiler.enter("getAllStateFields create");
-                    fields = FastStringSet.create();
-                    addAllStateFields(type, fields, "");
-                    allStateFieldsCache.put(type.getBaseTypeName(), fields);
-                    Profiler.leave("getAllStateFields create");
-                }
-                return fields;
-            }
-
-            /**
-             * Recursively adds the names of all properties in the provided
-             * state type.
-             * 
-             * @param type
-             *            the type to process
-             * @param foundProperties
-             *            a set of all currently added properties
-             * @param context
-             *            the base name of the current object
-             */
-            private void addAllStateFields(Type type,
-                    FastStringSet foundProperties, String context) {
-                try {
-                    JsArrayObject<Property> properties = type
-                            .getPropertiesAsArray();
-                    int size = properties.size();
-                    for (int i = 0; i < size; i++) {
-                        Property property = properties.get(i);
-                        String propertyName = context + property.getName();
-                        foundProperties.add(propertyName);
-
-                        Type propertyType = property.getType();
-                        if (propertyType.hasProperties()) {
-                            addAllStateFields(propertyType, foundProperties,
-                                    propertyName + ".");
-                        }
-                    }
-                } catch (NoDataException e) {
-                    throw new IllegalStateException(
-                            "No property info for "
-                                    + type
-                                    + ". Did you remember to compile the right widgetset?",
-                            e);
-                }
-            }
-
-            /**
-             * Recursively adds the names of all fields in all objects in the
-             * provided json object.
-             * 
-             * @param json
-             *            the json object to process
-             * @param fields
-             *            a set of all currently added fields
-             * @param context
-             *            the base name of the current object
-             */
-            private void addJsonFields(JSONObject json, FastStringSet fields,
-                    String context) {
-                for (String key : json.keySet()) {
-                    String fieldName = context + key;
-                    fields.add(fieldName);
-
-                    JSONObject object = json.get(key).isObject();
-                    if (object != null) {
-                        addJsonFields(object, fields, fieldName + ".");
-                    }
-                }
             }
 
             /**

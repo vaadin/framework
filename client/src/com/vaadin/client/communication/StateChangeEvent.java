@@ -19,10 +19,17 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.json.client.JSONObject;
 import com.vaadin.client.FastStringSet;
+import com.vaadin.client.JsArrayObject;
+import com.vaadin.client.Profiler;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
+import com.vaadin.client.metadata.NoDataException;
+import com.vaadin.client.metadata.Property;
+import com.vaadin.client.ui.AbstractConnector;
 
 public class StateChangeEvent extends
         AbstractServerConnectorEvent<StateChangeHandler> {
@@ -31,13 +38,23 @@ public class StateChangeEvent extends
      */
     public static final Type<StateChangeHandler> TYPE = new Type<StateChangeHandler>();
 
-    private final FastStringSet changedProperties;
+    /**
+     * Used to cache a FastStringSet representation of the properties that have
+     * changed if one is needed.
+     */
+    @Deprecated
+    private FastStringSet changedProperties;
 
     /**
      * Used to cache a Set representation of the changedProperties if one is
      * needed.
      */
+    @Deprecated
     private Set<String> changedPropertiesSet;
+
+    private boolean isNewConnector = false;
+
+    private JSONObject stateJson;
 
     @Override
     public Type<StateChangeHandler> getAssociatedType() {
@@ -52,14 +69,16 @@ public class StateChangeEvent extends
      * @param changedPropertiesSet
      *            a set of names of the changed properties
      * @deprecated As of 7.0.1, use
-     *             {@link #StateChangeEvent(ServerConnector, FastStringSet)}
+     *             {@link #StateChangeEvent(ServerConnector, JSONObject, boolean)}
      *             instead for improved performance.
      */
     @Deprecated
     public StateChangeEvent(ServerConnector connector,
             Set<String> changedPropertiesSet) {
         setConnector(connector);
+        // Keep instance around for caching
         this.changedPropertiesSet = changedPropertiesSet;
+
         changedProperties = FastStringSet.create();
         for (String property : changedPropertiesSet) {
             changedProperties.add(property);
@@ -73,11 +92,33 @@ public class StateChangeEvent extends
      *            the event whose state has changed
      * @param changedProperties
      *            a set of names of the changed properties
+     * @deprecated As of 7.0.2, use
+     *             {@link #StateChangeEvent(ServerConnector, JSONObject, boolean)}
+     *             instead for improved performance.
      */
+    @Deprecated
     public StateChangeEvent(ServerConnector connector,
             FastStringSet changedProperties) {
         setConnector(connector);
         this.changedProperties = changedProperties;
+    }
+
+    /**
+     * /** Creates a new state change event.
+     * 
+     * @param connector
+     *            the event whose state has changed
+     * @param stateJson
+     *            the JSON representation of the state change
+     * @param isNewConnector
+     *            <code>true</code> if the state change is for a new connector,
+     *            otherwise <code>false</code>
+     */
+    public StateChangeEvent(ServerConnector connector, JSONObject stateJson,
+            boolean isNewConnector) {
+        setConnector(connector);
+        this.stateJson = stateJson;
+        this.isNewConnector = isNewConnector;
     }
 
     @Override
@@ -108,15 +149,16 @@ public class StateChangeEvent extends
      * 
      * @return a set of names of the changed properties
      * 
-     * @deprecated As of 7.0.1, use {@link #getChangedPropertiesFastSet()} or
-     *             {@link #hasPropertyChanged(String)} instead for improved
-     *             performance.
+     * @deprecated As of 7.0.1, use {@link #hasPropertyChanged(String)} instead
+     *             for improved performance.
      */
     @Deprecated
     public Set<String> getChangedProperties() {
         if (changedPropertiesSet == null) {
+            Profiler.enter("StateChangeEvent.getChangedProperties populate");
             changedPropertiesSet = new HashSet<String>();
-            changedProperties.addAllTo(changedPropertiesSet);
+            getChangedPropertiesFastSet().addAllTo(changedPropertiesSet);
+            Profiler.leave("StateChangeEvent.getChangedProperties populate");
         }
         return changedPropertiesSet;
     }
@@ -126,8 +168,24 @@ public class StateChangeEvent extends
      * 
      * @return a set of names of the changed properties
      * 
+     * @deprecated As of 7.0.1, use {@link #hasPropertyChanged(String)} instead
+     *             for improved performance.
      */
+    @Deprecated
     public FastStringSet getChangedPropertiesFastSet() {
+        if (changedProperties == null) {
+            Profiler.enter("StateChangeEvent.getChangedPropertiesFastSet populate");
+            changedProperties = FastStringSet.create();
+
+            addJsonFields(stateJson, changedProperties, "");
+            if (isNewConnector) {
+                addAllStateFields(
+                        AbstractConnector.getStateType(getConnector()),
+                        changedProperties, "");
+            }
+
+            Profiler.leave("StateChangeEvent.getChangedPropertiesFastSet populate");
+        }
         return changedProperties;
     }
 
@@ -140,6 +198,115 @@ public class StateChangeEvent extends
      *         <code>false></code>
      */
     public boolean hasPropertyChanged(String property) {
-        return changedProperties.contains(property);
+        if (isNewConnector) {
+            // Everything has changed for a new connector
+            return true;
+        } else if (stateJson != null) {
+            // Check whether it's in the json object
+            return isInJson(property, stateJson.getJavaScriptObject());
+        } else {
+            // Legacy cases
+            if (changedProperties != null) {
+                // Check legacy stuff
+                return changedProperties.contains(property);
+            } else if (changedPropertiesSet != null) {
+                // Check legacy stuff
+                return changedPropertiesSet.contains(property);
+            } else {
+                throw new IllegalStateException(
+                        "StateChangeEvent should have either stateJson, changedProperties or changePropertiesSet");
+            }
+        }
+    }
+
+    /**
+     * Checks whether the given property name (which might contains dots) is
+     * defined in some JavaScript object.
+     * 
+     * @param property
+     *            the name of the property, might include dots to reference
+     *            inner objects
+     * @param target
+     *            the JavaScript object to check
+     * @return true if the property is defined
+     */
+    private static native final boolean isInJson(String property,
+            JavaScriptObject target)
+    /*-{
+        var segments = property.split('.');
+        while (typeof target == 'object') {
+            var currentSegment = segments.shift();
+            if (!(nextSegment in target)) {
+                // Abort if segment is not found
+                return false;
+            } else if (segments.length == 0) {
+                // Done if there are no more segments
+                return true;
+            } else {
+                // Else just go deeper
+                target = target[nextSegment];
+            }
+        }
+        // Not defined if we reach something that isn't an object 
+        return false;
+    }-*/;
+
+    /**
+     * Recursively adds the names of all properties in the provided state type.
+     * 
+     * @param type
+     *            the type to process
+     * @param changedProperties
+     *            a set of all currently added properties
+     * @param context
+     *            the base name of the current object
+     */
+    @Deprecated
+    private static void addAllStateFields(com.vaadin.client.metadata.Type type,
+            FastStringSet changedProperties, String context) {
+        try {
+            JsArrayObject<Property> properties = type.getPropertiesAsArray();
+            int size = properties.size();
+            for (int i = 0; i < size; i++) {
+                Property property = properties.get(i);
+                String propertyName = context + property.getName();
+                changedProperties.add(propertyName);
+
+                com.vaadin.client.metadata.Type propertyType = property
+                        .getType();
+                if (propertyType.hasProperties()) {
+                    addAllStateFields(propertyType, changedProperties,
+                            propertyName + ".");
+                }
+            }
+        } catch (NoDataException e) {
+            throw new IllegalStateException("No property info for " + type
+                    + ". Did you remember to compile the right widgetset?", e);
+        }
+    }
+
+    /**
+     * Recursively adds the names of all fields in all objects in the provided
+     * json object.
+     * 
+     * @param json
+     *            the json object to process
+     * @param changedProperties
+     *            a set of all currently added fields
+     * @param context
+     *            the base name of the current object
+     */
+    @Deprecated
+    private static void addJsonFields(JSONObject json,
+            FastStringSet changedProperties, String context) {
+        for (String key : json.keySet()) {
+            String fieldName = context + key;
+            changedProperties.add(fieldName);
+
+            JSONObject object = json.get(key).isObject();
+            if (object != null) {
+                addJsonFields(object, changedProperties, fieldName + ".");
+            }
+        }
     }
 }
