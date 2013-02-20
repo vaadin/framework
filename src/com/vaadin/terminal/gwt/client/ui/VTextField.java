@@ -651,4 +651,9 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             valueChange(false);
         }
     }
+
+    protected boolean isWordwrap() {
+        String wrap = getElement().getAttribute("wrap");
+        return !"off".equals(wrap);
+    }
 }
