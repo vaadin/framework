@@ -1605,24 +1605,37 @@ public class ApplicationConnection {
 
                 VConsole.log(" * Running @DelegateToWidget");
 
+                // Keep track of types that have no @DelegateToWidget in their
+                // state to optimize performance
+                FastStringSet noOpTypes = FastStringSet.create();
+
                 for (StateChangeEvent sce : pendingStateChangeEvents) {
                     ServerConnector connector = sce.getConnector();
                     if (connector instanceof ComponentConnector) {
+                        String className = connector.getClass().getName();
+                        if (noOpTypes.contains(className)) {
+                            continue;
+                        }
                         ComponentConnector component = (ComponentConnector) connector;
 
                         Type stateType = AbstractConnector
                                 .getStateType(component);
+                        JsArrayString delegateToWidgetProperties = stateType
+                                .getDelegateToWidgetProperties();
+                        if (delegateToWidgetProperties == null) {
+                            noOpTypes.add(className);
+                            continue;
+                        }
 
-                        FastStringSet changedProperties = sce
-                                .getChangedPropertiesFastSet();
-                        JsArrayString dump = changedProperties.dump();
-                        for (int i = 0; i < dump.length(); i++) {
-                            String propertyName = dump.get(i);
-                            Property property = stateType
-                                    .getProperty(propertyName);
-                            String method = property
-                                    .getDelegateToWidgetMethodName();
-                            if (method != null) {
+                        int length = delegateToWidgetProperties.length();
+                        for (int i = 0; i < length; i++) {
+                            String propertyName = delegateToWidgetProperties
+                                    .get(i);
+                            if (sce.hasPropertyChanged(propertyName)) {
+                                Property property = stateType
+                                        .getProperty(propertyName);
+                                String method = property
+                                        .getDelegateToWidgetMethodName();
                                 Profiler.enter("doDelegateToWidget");
                                 doDelegateToWidget(component, property, method);
                                 Profiler.leave("doDelegateToWidget");

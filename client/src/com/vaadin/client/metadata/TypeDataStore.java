@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArrayString;
 import com.vaadin.client.FastStringMap;
 import com.vaadin.client.FastStringSet;
 import com.vaadin.client.JsArrayObject;
@@ -34,6 +35,8 @@ public class TypeDataStore {
     private final FastStringMap<ProxyHandler> proxyHandlers = FastStringMap
             .create();
     private final FastStringMap<JsArrayObject<Property>> properties = FastStringMap
+            .create();
+    private final FastStringMap<JsArrayString> delegateToWidgetProperties = FastStringMap
             .create();
 
     private final FastStringSet delayedMethods = FastStringSet.create();
@@ -118,11 +121,22 @@ public class TypeDataStore {
         return get().delegateToWidget.get(property.getSignature());
     }
 
+    public static JsArrayString getDelegateToWidgetProperites(Type type) {
+        return get().delegateToWidgetProperties.get(type.getSignature());
+    }
+
     public void setDelegateToWidget(Class<?> clazz, String propertyName,
             String delegateValue) {
-        delegateToWidget.put(
-                new Property(getType(clazz), propertyName).getSignature(),
+        Type type = getType(clazz);
+        delegateToWidget.put(new Property(type, propertyName).getSignature(),
                 delegateValue);
+        JsArrayString typeProperties = delegateToWidgetProperties.get(type
+                .getSignature());
+        if (typeProperties == null) {
+            typeProperties = JavaScriptObject.createArray().cast();
+            delegateToWidgetProperties.put(type.getSignature(), typeProperties);
+        }
+        typeProperties.push(propertyName);
     }
 
     public void setReturnType(Class<?> type, String methodName, Type returnType) {
