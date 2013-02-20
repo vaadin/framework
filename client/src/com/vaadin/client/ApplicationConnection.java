@@ -1574,8 +1574,10 @@ public class ApplicationConnection {
 
                 // Find components with potentially changed caption state
                 for (StateChangeEvent event : pendingStateChangeEvents) {
-                    ServerConnector connector = event.getConnector();
-                    needsCaptionUpdate.add(connector);
+                    if (VCaption.mightChange(event)) {
+                        ServerConnector connector = event.getConnector();
+                        needsCaptionUpdate.add(connector.getConnectorId());
+                    }
                 }
 
                 // Update captions for all suitable candidates

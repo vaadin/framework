@@ -20,6 +20,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.shared.AbstractComponentState;
@@ -401,6 +402,29 @@ public class VCaption extends HTML {
             return true;
         }
         if (state.errorMessage != null) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks whether anything in a given state change might cause the caption
+     * to change.
+     * 
+     * @param event
+     *            the state change event to check
+     * @return <code>true</code> if the caption might have changed; otherwise
+     *         <code>false</code>
+     */
+    public static boolean mightChange(StateChangeEvent event) {
+        if (event.hasPropertyChanged("caption")) {
+            return true;
+        }
+        if (event.hasPropertyChanged("resources")) {
+            return true;
+        }
+        if (event.hasPropertyChanged("errorMessage")) {
             return true;
         }
 
