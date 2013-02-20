@@ -284,7 +284,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         AbstractComponentState state = getState();
 
         String primaryStyleName = getWidget().getStylePrimaryName();
-        if (state.primaryStyleName != null) {
+        if (state.primaryStyleName != null
+                && !state.primaryStyleName.equals(primaryStyleName)) {
             /*
              * We overwrite the widgets primary stylename if state defines a
              * primary stylename.
