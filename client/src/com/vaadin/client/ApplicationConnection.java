@@ -1523,8 +1523,13 @@ public class ApplicationConnection {
                 endRequest();
 
                 if (Profiler.isEnabled()) {
-                    Profiler.logTimings();
-                    Profiler.reset();
+                    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                        @Override
+                        public void execute() {
+                            Profiler.logTimings();
+                            Profiler.reset();
+                        }
+                    });
                 }
 
             }
