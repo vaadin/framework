@@ -126,8 +126,9 @@ public class ConnectorMap {
         componentDetail.setConnector(connector);
         if (connector instanceof ComponentConnector) {
             ComponentConnector pw = (ComponentConnector) connector;
+            Widget widget = pw.getWidget();
             Profiler.enter("ConnectorMap.setConnectorId");
-            setConnectorId(pw.getWidget().getElement(), id);
+            setConnectorId(widget.getElement(), id);
             Profiler.leave("ConnectorMap.setConnectorId");
         }
         Profiler.leave("ConnectorMap.registerConnector");
