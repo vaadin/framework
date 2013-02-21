@@ -16,15 +16,13 @@
 
 package com.vaadin.client;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.ArrayList; 
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -113,8 +111,15 @@ public class ApplicationConnection {
      * Helper used to return two values when updating the connector hierarchy.
      */
     private static class ConnectorHierarchyUpdateResult {
-        private List<ConnectorHierarchyChangeEvent> events = new LinkedList<ConnectorHierarchyChangeEvent>();
-        private List<ServerConnector> parentChanged = new LinkedList<ServerConnector>();
+        /**
+         * Needed at a later point when the created events are fired
+         */
+        private JsArrayObject<ConnectorHierarchyChangeEvent> events = JavaScriptObject
+                .createArray().cast();
+        /**
+         * Needed to know where captions might need to get updated
+         */
+        private FastStringSet parentChangedIds = FastStringSet.create();
     }
 
     public static final String MODIFIED_CLASSNAME = "v-modified";
@@ -1422,11 +1427,11 @@ public class ApplicationConnection {
                 double processUidlStart = Duration.currentTimeMillis();
 
                 // Ensure that all connectors that we are about to update exist
-                Set<ServerConnector> createdConnectors = createConnectorsIfNeeded(json);
+                JsArrayString createdConnectorIds = createConnectorsIfNeeded(json);
 
                 // Update states, do not fire events
-                Collection<StateChangeEvent> pendingStateChangeEvents = updateConnectorState(
-                        json, createdConnectors);
+                JsArrayObject<StateChangeEvent> pendingStateChangeEvents = updateConnectorState(
+                        json, createdConnectorIds);
 
                 // Update hierarchy, do not fire events
                 ConnectorHierarchyUpdateResult connectorHierarchyUpdateResult = updateConnectorHierarchy(json);
@@ -1435,7 +1440,7 @@ public class ApplicationConnection {
                 sendHierarchyChangeEvents(connectorHierarchyUpdateResult.events);
 
                 updateCaptions(pendingStateChangeEvents,
-                        connectorHierarchyUpdateResult.parentChanged);
+                        connectorHierarchyUpdateResult.parentChangedIds);
 
                 delegateToWidget(pendingStateChangeEvents);
 
@@ -1559,27 +1564,35 @@ public class ApplicationConnection {
             }
 
             private void updateCaptions(
-                    Collection<StateChangeEvent> pendingStateChangeEvents,
-                    Collection<ServerConnector> parentChanged) {
+                    JsArrayObject<StateChangeEvent> pendingStateChangeEvents,
+                    FastStringSet parentChangedIds) {
                 Profiler.enter("updateCaptions");
 
                 /*
                  * Find all components that might need a caption update based on
                  * pending state and hierarchy changes
                  */
-                HashSet<ServerConnector> needsCaptionUpdate = new HashSet<ServerConnector>(
-                        parentChanged);
+                FastStringSet needsCaptionUpdate = FastStringSet.create();
+                needsCaptionUpdate.addAll(parentChangedIds);
 
                 // Find components with potentially changed caption state
-                for (StateChangeEvent event : pendingStateChangeEvents) {
+                int size = pendingStateChangeEvents.size();
+                for (int i = 0; i < size; i++) {
+                    StateChangeEvent event = pendingStateChangeEvents.get(i);
                     if (VCaption.mightChange(event)) {
                         ServerConnector connector = event.getConnector();
-                        needsCaptionUpdate.add(connector);
+                        needsCaptionUpdate.add(connector.getConnectorId());
                     }
                 }
 
+                ConnectorMap connectorMap = getConnectorMap();
+
                 // Update captions for all suitable candidates
-                for (ServerConnector child : needsCaptionUpdate) {
+                JsArrayString dump = needsCaptionUpdate.dump();
+                int needsUpdateLength = dump.length();
+                for (int i = 0; i < needsUpdateLength; i++) {
+                    String childId = dump.get(i);
+                    ServerConnector child = connectorMap.getConnector(childId);
                     if (child instanceof ComponentConnector
                             && ((ComponentConnector) child)
                                     .delegateCaptionHandling()) {
@@ -1597,7 +1610,7 @@ public class ApplicationConnection {
             }
 
             private void delegateToWidget(
-                    Collection<StateChangeEvent> pendingStateChangeEvents) {
+                    JsArrayObject<StateChangeEvent> pendingStateChangeEvents) {
                 Profiler.enter("@DelegateToWidget");
 
                 VConsole.log(" * Running @DelegateToWidget");
@@ -1606,7 +1619,10 @@ public class ApplicationConnection {
                 // state to optimize performance
                 FastStringSet noOpTypes = FastStringSet.create();
 
-                for (StateChangeEvent sce : pendingStateChangeEvents) {
+                int size = pendingStateChangeEvents.size();
+                for (int eventIndex = 0; eventIndex < size; eventIndex++) {
+                    StateChangeEvent sce = pendingStateChangeEvents
+                            .get(eventIndex);
                     ServerConnector connector = sce.getConnector();
                     if (connector instanceof ComponentConnector) {
                         String className = connector.getClass().getName();
@@ -1679,11 +1695,13 @@ public class ApplicationConnection {
              *            The events to send
              */
             private void sendStateChangeEvents(
-                    Collection<StateChangeEvent> pendingStateChangeEvents) {
+                    JsArrayObject<StateChangeEvent> pendingStateChangeEvents) {
                 Profiler.enter("sendStateChangeEvents");
                 VConsole.log(" * Sending state change events");
 
-                for (StateChangeEvent sce : pendingStateChangeEvents) {
+                int size = pendingStateChangeEvents.size();
+                for (int i = 0; i < size; i++) {
+                    StateChangeEvent sce = pendingStateChangeEvents.get(i);
                     try {
                         sce.getConnector().fireEvent(sce);
                     } catch (final Throwable e) {
@@ -1729,29 +1747,29 @@ public class ApplicationConnection {
                 Profiler.leave("unregisterRemovedConnectors");
             }
 
-            private Set<ServerConnector> createConnectorsIfNeeded(ValueMap json) {
+            private JsArrayString createConnectorsIfNeeded(ValueMap json) {
                 VConsole.log(" * Creating connectors (if needed)");
 
+                JsArrayString createdConnectors = JavaScriptObject
+                        .createArray().cast();
                 if (!json.containsKey("types")) {
-                    return Collections.emptySet();
+                    return createdConnectors;
                 }
 
                 Profiler.enter("Creating connectors");
-
-                Set<ServerConnector> createdConnectors = new HashSet<ServerConnector>();
 
                 ValueMap types = json.getValueMap("types");
                 JsArrayString keyArray = types.getKeyArray();
                 for (int i = 0; i < keyArray.length(); i++) {
                     try {
                         String connectorId = keyArray.get(i);
-                        int connectorType = Integer.parseInt(types
-                                .getString((connectorId)));
                         ServerConnector connector = connectorMap
                                 .getConnector(connectorId);
                         if (connector != null) {
                             continue;
                         }
+                        int connectorType = Integer.parseInt(types
+                                .getString(connectorId));
 
                         Class<? extends ServerConnector> connectorClass = configuration
                                 .getConnectorClassByEncodedTag(connectorType);
@@ -1763,7 +1781,7 @@ public class ApplicationConnection {
                             connector = getConnector(connectorId, connectorType);
                             Profiler.leave("ApplicationConnection.getConnector");
 
-                            createdConnectors.add(connector);
+                            createdConnectors.push(connectorId);
                         } else {
                             // First UIConnector update. Before this the
                             // UIConnector has been created but not
@@ -1773,7 +1791,7 @@ public class ApplicationConnection {
                                     uIConnector);
                             uIConnector.doInit(connectorId,
                                     ApplicationConnection.this);
-                            createdConnectors.add(uIConnector);
+                            createdConnectors.push(connectorId);
                         }
                     } catch (final Throwable e) {
                         VConsole.error(e);
@@ -1835,14 +1853,16 @@ public class ApplicationConnection {
             }
 
             private void sendHierarchyChangeEvents(
-                    Collection<ConnectorHierarchyChangeEvent> pendingHierarchyChangeEvents) {
-                if (pendingHierarchyChangeEvents.isEmpty()) {
+                    JsArrayObject<ConnectorHierarchyChangeEvent> events) {
+                int eventCount = events.size();
+                if (eventCount == 0) {
                     return;
                 }
                 Profiler.enter("sendHierarchyChangeEvents");
 
                 VConsole.log(" * Sending hierarchy change events");
-                for (ConnectorHierarchyChangeEvent event : pendingHierarchyChangeEvents) {
+                for (int i = 0; i < eventCount; i++) {
+                    ConnectorHierarchyChangeEvent event = events.get(i);
                     try {
                         logHierarchyChange(event);
                         event.getConnector().fireEvent(event);
@@ -1877,9 +1897,10 @@ public class ApplicationConnection {
                 VConsole.log(newChildren);
             }
 
-            private Collection<StateChangeEvent> updateConnectorState(
-                    ValueMap json, Set<ServerConnector> newConnectors) {
-                ArrayList<StateChangeEvent> events = new ArrayList<StateChangeEvent>();
+            private JsArrayObject<StateChangeEvent> updateConnectorState(
+                    ValueMap json, JsArrayString createdConnectorIds) {
+                JsArrayObject<StateChangeEvent> events = JavaScriptObject
+                        .createArray().cast();
                 VConsole.log(" * Updating connector states");
                 if (!json.containsKey("state")) {
                     return events;
@@ -1887,8 +1908,8 @@ public class ApplicationConnection {
 
                 Profiler.enter("updateConnectorState");
 
-                HashSet<ServerConnector> remainingNewConnectors = new HashSet<ServerConnector>(
-                        newConnectors);
+                FastStringSet remainingNewConnectors = FastStringSet.create();
+                remainingNewConnectors.addAll(createdConnectorIds);
 
                 // set states for all paintables mentioned in "state"
                 ValueMap states = json.getValueMap("state");
@@ -1931,9 +1952,9 @@ public class ApplicationConnection {
                             Profiler.enter("updateConnectorState create event");
 
                             boolean isNewConnector = remainingNewConnectors
-                                    .contains(connector);
+                                    .contains(connectorId);
                             if (isNewConnector) {
-                                remainingNewConnectors.remove(connector);
+                                remainingNewConnectors.remove(connectorId);
                             }
 
                             StateChangeEvent event = new StateChangeEvent(
@@ -1951,7 +1972,12 @@ public class ApplicationConnection {
                 Profiler.enter("updateConnectorState newWithoutState");
                 // Fire events for properties using the default value for newly
                 // created connectors even if there were no state changes
-                for (ServerConnector connector : remainingNewConnectors) {
+                JsArrayString dump = remainingNewConnectors.dump();
+                int length = dump.length();
+                for (int i = 0; i < length; i++) {
+                    String connectorId = dump.get(i);
+                    ServerConnector connector = connectorMap
+                            .getConnector(connectorId);
 
                     StateChangeEvent event = new StateChangeEvent(connector,
                             new JSONObject(), true);
@@ -2029,7 +2055,7 @@ public class ApplicationConnection {
                             }
                             if (childConnector.getParent() != parentConnector) {
                                 childConnector.setParent(parentConnector);
-                                result.parentChanged.add(childConnector);
+                                result.parentChangedIds.add(childConnectorId);
                                 // Not detached even if previously removed from
                                 // parent
                                 maybeDetached.remove(childConnectorId);
@@ -2114,7 +2140,7 @@ public class ApplicationConnection {
             }
 
             private void recursivelyDetach(ServerConnector connector,
-                    List<ConnectorHierarchyChangeEvent> events) {
+                    JsArrayObject<ConnectorHierarchyChangeEvent> events) {
 
                 /*
                  * Reset state in an attempt to keep it consistent with the
