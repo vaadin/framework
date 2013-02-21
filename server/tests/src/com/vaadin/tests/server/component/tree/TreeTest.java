@@ -112,4 +112,25 @@ public class TreeTest extends TestCase {
         assertEquals(0, expanded.size());
         assertNull(expandedItemId);
     }
+
+    public void testRemoveExpandedItemsOnContainerChange() throws Exception {
+        tree.expandItem("parent");
+        tree.expandItem("child");
+
+        tree.setContainerDataSource(new HierarchicalContainer());
+
+        Field expandedField = tree.getClass().getDeclaredField("expanded");
+        Field expandedItemIdField = tree.getClass().getDeclaredField(
+                "expandedItemId");
+
+        expandedField.setAccessible(true);
+        expandedItemIdField.setAccessible(true);
+
+        HashSet<Object> expanded = (HashSet<Object>) expandedField.get(tree);
+        assertEquals(0, expanded.size());
+
+        Object expandedItemId = expandedItemIdField.get(tree);
+        assertNull(expandedItemId);
+    }
+
 }
