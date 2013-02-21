@@ -217,8 +217,6 @@ public class ApplicationConnection {
     /** redirectTimer scheduling interval in seconds */
     private int sessionExpirationInterval;
 
-    private ArrayList<Widget> componentCaptionSizeChanges = new ArrayList<Widget>();
-
     private Date requestStartTime;
 
     private boolean validatingLayouts = false;
@@ -1423,8 +1421,6 @@ public class ApplicationConnection {
                 if (redirectTimer != null) {
                     redirectTimer.schedule(1000 * sessionExpirationInterval);
                 }
-
-                componentCaptionSizeChanges.clear();
 
                 double processUidlStart = Duration.currentTimeMillis();
 
@@ -3089,9 +3085,11 @@ public class ApplicationConnection {
      * 
      * @param component
      *            the Paintable whose caption has changed
+     * @deprecated As of 7.0.2, has not had any effect for a long time
      */
+    @Deprecated
     public void captionSizeUpdated(Widget widget) {
-        componentCaptionSizeChanges.add(widget);
+        // This doesn't do anything, it's just kept here for compatibility
     }
 
     /**
