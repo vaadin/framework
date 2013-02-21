@@ -1576,7 +1576,7 @@ public class ApplicationConnection {
                 for (StateChangeEvent event : pendingStateChangeEvents) {
                     if (VCaption.mightChange(event)) {
                         ServerConnector connector = event.getConnector();
-                        needsCaptionUpdate.add(connector.getConnectorId());
+                        needsCaptionUpdate.add(connector);
                     }
                 }
 
