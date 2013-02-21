@@ -14,7 +14,7 @@
 	border-color: rgba(0,0,0,.2);
 }
 .#{$primaryStyleName}-outerheader {
-	padding: 12px 32px 0 14px;
+	padding: 12px 52px 0 14px;
 	height: 37px;
 	background: black repeat-x;
 	background-image: url(img/header-bg.png); /** sprite-ref: verticals; sprite-alignment: repeat */
@@ -60,6 +60,24 @@
 }
 .#{$primaryStyleName}-closebox:active {
 	background-image: url(img/close-pressed.png); /** sprite-ref: verticals */
+}
+.#{$primaryStyleName}-maximizebox,
+.#{$primaryStyleName}-restorebox {
+	top: 12px;
+	right: 28px;
+	width: 15px;
+	height: 16px;
+	background: transparent;
+}
+.#{$primaryStyleName}-maximizebox {
+	&, &:hover,&:active {
+		background-image: url(img/maximize.png); /** sprite-ref: verticals */
+	}
+}
+.#{$primaryStyleName}-restorebox {
+	&, &:hover,&:active {
+		background-image: url(img/restore.png); /** sprite-ref: verticals */
+	}
 }
 .#{$primaryStyleName}-contents {
 	background: #fff;

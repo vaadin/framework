@@ -36,6 +36,8 @@ import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.metadata.TypeDataStore;
+import com.vaadin.client.ui.AbstractFieldConnector;
+import com.vaadin.client.ui.ManagedLayout;
 import com.vaadin.client.ui.datefield.PopupDateFieldConnector;
 import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.shared.AbstractComponentState;
@@ -205,12 +207,12 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         }
     }
 
-    private void updateComponentSize() {
-        Profiler.enter("AbstractComponentConnector.updateComponentSize");
+    protected void updateComponentSize() {
+        updateComponentSize(getState().width == null ? "" : getState().width,
+                getState().height == null ? "" : getState().height);
+    }
 
-        String newWidth = getState().width == null ? "" : getState().width;
-        String newHeight = getState().height == null ? "" : getState().height;
-
+    protected void updateComponentSize(String newWidth, String newHeight) {
         // Parent should be updated if either dimension changed between relative
         // and non-relative
         if (newWidth.endsWith("%") != lastKnownWidth.endsWith("%")) {

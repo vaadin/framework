@@ -15,8 +15,14 @@
  */
 package com.vaadin.shared.ui.window;
 
+import com.vaadin.shared.annotations.Delayed;
 import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.ClickRpc;
+import com.vaadin.shared.ui.window.WindowState.DisplayState;
 
 public interface WindowServerRpc extends ClickRpc, ServerRpc {
+
+    @Delayed(lastOnly = true)
+    public void windowDisplayStateChanged(DisplayState newState);
+
 }

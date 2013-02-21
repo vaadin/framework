@@ -51,14 +51,33 @@
 	background: transparent;
 	display: block;
 }
-.#{$primaryStyleName}-closebox {
+.#{$primaryStyleName}-closebox,
+.#{$primaryStyleName}-maximizebox,
+.#{$primaryStyleName}-restorebox {
 	position: absolute;
 	top: 21px;
-	right: 24px;
 	width: 12px;
 	height: 12px;
 	background: transparent url(img/close.png);
 }
+.#{$primaryStyleName}-closebox {
+	right: 24px;
+	background: transparent url(img/close.png);
+}
+
+.#{$primaryStyleName}-maximizebox,
+.#{$primaryStyleName}-restorebox {
+	right: 42px;
+}
+
+.#{$primaryStyleName}-maximizebox {
+	background: transparent url(img/maximize.png);
+}
+
+.#{$primaryStyleName}-restorebox {
+	background: transparent url(img/restore.png);
+}
+
 .#{$primaryStyleName}-closebox:hover {
 	background-position: 0 -12px;
 }
