@@ -3161,16 +3161,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                                 .hasNext(); columnIndex++) {
                             if (it.next() == this) {
                                 break;
-                            }
-                            final int cw = scrollBody.getColWidth(columnIndex);
-                            naturalWidth = (hw > cw ? hw : cw);
-                        }
-                        if (iw > naturalWidth) {
-                            // indent is temporary value, naturalWidth shouldn't be
-                            // updated
-                            return iw;
-                        } else {
-                            return naturalWidth;
+                            }                          
                         }
                     }
                     final int cw = scrollBody.getColWidth(columnIndex);
