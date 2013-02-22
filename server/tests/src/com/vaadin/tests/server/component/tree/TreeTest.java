@@ -1,5 +1,8 @@
 package com.vaadin.tests.server.component.tree;
 
+import java.lang.reflect.Field;
+import java.util.HashSet;
+
 import junit.framework.TestCase;
 
 import com.vaadin.data.Container;
@@ -71,4 +74,63 @@ public class TreeTest extends TestCase {
         assertTrue(Container.Hierarchical.class.isAssignableFrom(tree4
                 .getContainerDataSource().getClass()));
     }
+
+    public void testRemoveExpandedItems() throws Exception {
+        tree.expandItem("parent");
+        tree.expandItem("child");
+
+        Field expandedField = tree.getClass()
+                .getDeclaredField("expanded");
+        Field expandedItemIdField = tree.getClass().getDeclaredField(
+                "expandedItemId");
+
+        expandedField.setAccessible(true);
+        expandedItemIdField.setAccessible(true);
+
+        HashSet<Object> expanded = (HashSet<Object>) expandedField.get(tree);
+        Object expandedItemId = expandedItemIdField.get(tree);
+
+        assertEquals(2, expanded.size());
+        assertTrue("Contains parent", expanded.contains("parent"));
+        assertTrue("Contains child", expanded.contains("child"));
+        assertEquals("child", expandedItemId);
+
+        tree.removeItem("parent");
+
+        expanded = (HashSet<Object>) expandedField.get(tree);
+        expandedItemId = expandedItemIdField.get(tree);
+
+        assertEquals(1, expanded.size());
+        assertTrue("Contains child", expanded.contains("child"));
+        assertEquals("child", expandedItemId);
+
+        tree.removeItem("child");
+
+        expanded = (HashSet<Object>) expandedField.get(tree);
+        expandedItemId = expandedItemIdField.get(tree);
+
+        assertEquals(0, expanded.size());
+        assertNull(expandedItemId);
+    }
+
+    public void testRemoveExpandedItemsOnContainerChange() throws Exception {
+        tree.expandItem("parent");
+        tree.expandItem("child");
+
+        tree.setContainerDataSource(new HierarchicalContainer());
+
+        Field expandedField = tree.getClass().getDeclaredField("expanded");
+        Field expandedItemIdField = tree.getClass().getDeclaredField(
+                "expandedItemId");
+
+        expandedField.setAccessible(true);
+        expandedItemIdField.setAccessible(true);
+
+        HashSet<Object> expanded = (HashSet<Object>) expandedField.get(tree);
+        assertEquals(0, expanded.size());
+
+        Object expandedItemId = expandedItemIdField.get(tree);
+        assertNull(expandedItemId);
+    }
+
 }

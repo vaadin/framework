@@ -106,6 +106,10 @@
 			<path refid="classpath.runtime.dependencies" />
 		</copy>
 
+
+		<!-- Ensure filtered webcontent files are available -->
+		<antcall target="common.filter.webcontent" />
+
 		<war destfile="${result.war}" duplicate="fail" index="true">
 			<fileset refid="common.files.for.all.jars" />
 			<fileset dir="${result.dir}">

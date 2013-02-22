@@ -319,10 +319,12 @@ public class Parser implements org.w3c.css.sac.Parser {
 	String encoding = source.getEncoding();
 	InputStream input = source.getByteStream();
 	if (!input.markSupported()) {
+            // If mark is not supported, wrap it in a stream which supports mark
             input = new BufferedInputStream(input);
             source.setByteStream(input);
-            input.mark(100);
         }
+        // Mark either the original stream or the wrapped stream
+        input.mark(100);
 	if(encoding == null){
 	    encoding = "ASCII";
 	
@@ -1056,9 +1058,6 @@ void skipUnknownRule() :
 | n=<UNICODERANGE>
 | n=<URL>
 | n=";"
-| n="+"
-| n=">"
-| n="~"
 | n="-"
 | n=<UNKNOWN>
    ) {
@@ -1081,13 +1080,18 @@ char combinator() :
 char connector = ' ';
 }
 {
-    "+" ( <S> )* { return '+'; }
-    | ">" ( <S> )* { return '>'; }
-    | "~" ( <S> )* { return '~'; }
-| <S>  ( ( "+" { connector = '+'; }
-           | ">" { connector = '>'; }
-           | "~" { connector = '~'; } )
- ( <S> )* )? { return connector; }
+    (connector = combinatorChar()
+     | <S>  (connector = combinatorChar())?) { return connector; }
+}
+
+/**to refactor combinator and reuse in selector().*/
+char combinatorChar() :
+{Token t;}
+{
+    (t = <PLUS> | t = <PRECEDES> | t = <SIBLING>) (<S>)*
+    {
+        return t.image.charAt(0);
+    }
 }
 
 void microsoftExtension() :
@@ -1200,12 +1204,14 @@ void styleRule() :
  */
 String selector() :
 {   
-    String selector;
+    String selector = null;
     char    comb;
 }
 {
  try {
-   selector=simple_selector(null, ' ') 
+     // the selector can begin either a simple_selector, or a combinatorChar(+, >, ~).
+     // when beginning with combinatorChar, the next one should be a simple_selector().
+   (selector=simple_selector(null, ' ') | (comb=combinatorChar() selector=simple_selector(selector, comb)))
        ( LOOKAHEAD(2) comb=combinator() 
 	 selector=simple_selector(selector, comb) )* (<S>)*
    {
@@ -1265,22 +1271,27 @@ String simple_selector(String selector, char comb) :
 	    if (cond != null) {
 		simple_current = simple_current + cond;
 	    }
-	    if (selector != null) {
-		switch (comb) {
+	    StringBuilder builder = new StringBuilder();
+	    switch (comb) {
 		case ' ':
-		    selector = selector + comb + simple_current;
+		    if(selector!=null){
+		        builder.append(selector).append(" ");
+		    }
 		    break;
 		case '+':
 		case '>':
 		case '~':
-			selector = selector + " " + comb + " " + simple_current;
+		    if(selector!=null){
+		        builder.append(selector).append(" ");
+		    }
+		    builder.append(comb).append(" ");
 		    break;
 		default:
 		    throw new ParseException("invalid state. send a bug report");
-		}
-	    } else {
-		selector= simple_current;
 	    }
+	    builder.append(simple_current);
+	    selector = builder.toString();
+	    
 	    if (pseudoElt != null) {
 		selector = selector + pseudoElt;
 	    }

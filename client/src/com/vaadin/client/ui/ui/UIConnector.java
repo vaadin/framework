@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
@@ -43,6 +44,7 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.Paintable;
+import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -312,7 +314,12 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         if (firstPaint) {
             // Queue the initial window size to be sent with the following
             // request.
-            getWidget().sendClientResized();
+            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    getWidget().sendClientResized();
+                }
+            });
         }
         getWidget().rendering = false;
     }
@@ -465,6 +472,16 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 ((WindowConnector) c).getWidget().hide();
             }
         }
+    }
+
+    @Override
+    public TooltipInfo getTooltipInfo(com.google.gwt.dom.client.Element element) {
+        /*
+         * Override method to make AbstractComponentConnector.hasTooltip()
+         * return true so there's a top level handler that takes care of hiding
+         * tooltips whenever the mouse is moved somewhere else.
+         */
+        return super.getTooltipInfo(element);
     }
 
     /**

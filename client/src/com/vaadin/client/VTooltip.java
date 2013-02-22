@@ -366,8 +366,10 @@ public class VTooltip extends VOverlay {
      *            Widget which DOM handlers are connected
      */
     public void connectHandlersToWidget(Widget widget) {
+        Profiler.enter("VTooltip.connectHandlersToWidget");
         widget.addDomHandler(tooltipEventHandler, MouseMoveEvent.getType());
         widget.addDomHandler(tooltipEventHandler, ClickEvent.getType());
         widget.addDomHandler(tooltipEventHandler, KeyDownEvent.getType());
+        Profiler.leave("VTooltip.connectHandlersToWidget");
     }
 }

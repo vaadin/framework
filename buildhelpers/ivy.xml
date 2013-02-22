@@ -27,6 +27,8 @@
         <artifact type="pom" ext="pom" />
 
     </publications>
-    <dependencies />
+    <dependencies>
+            <dependency org="commons-io" name="commons-io" rev="1.4" />
+    </dependencies>
 
 </ivy-module>

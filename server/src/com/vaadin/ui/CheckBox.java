@@ -110,6 +110,13 @@ public class CheckBox extends AbstractField<Boolean> {
         return (CheckBoxState) super.getState();
     }
 
+    /*
+     * Overridden to keep the shared state in sync with the AbstractField
+     * internal value. Should be removed once AbstractField is refactored to use
+     * shared state.
+     * 
+     * See tickets #10921 and #11064.
+     */
     @Override
     protected void setInternalValue(Boolean newValue) {
         super.setInternalValue(newValue);

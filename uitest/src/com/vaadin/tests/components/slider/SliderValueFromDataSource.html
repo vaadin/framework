@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8070/" />
+<title>SliderValueFromDataSource</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">SliderValueFromDataSource</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/run/SliderValueFromDataSource?restartApplication</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertAttribute</td>
+	<td>vaadin=runSliderValueFromDataSource::/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[1]/VProgressIndicator[0]/domChild[0]/domChild[0]@style</td>
+	<td>regex:.*(width|WIDTH): 50%.*</td>
+</tr>
+<tr>
+	<td>assertAttribute</td>
+	<td>vaadin=runSliderValueFromDataSource::/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VSlider[0]/domChild[2]/domChild[0]@style</td>
+	<td>regex:.*(margin-left|MARGIN-LEFT): 94px.*</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

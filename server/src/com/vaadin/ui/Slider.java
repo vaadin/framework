@@ -263,6 +263,22 @@ public class Slider extends AbstractField<Double> {
         getState().value = newFieldValue;
     }
 
+    /*
+     * Overridden to keep the shared state in sync with the AbstractField
+     * internal value. Should be removed once AbstractField is refactored to use
+     * shared state.
+     * 
+     * See tickets #10921 and #11064.
+     */
+    @Override
+    protected void setInternalValue(Double newValue) {
+        super.setInternalValue(newValue);
+        if (newValue == null) {
+            newValue = 0.0;
+        }
+        getState().value = newValue;
+    }
+
     /**
      * Thrown when the value of the slider is about to be set to a value that is
      * outside the valid range of the slider.

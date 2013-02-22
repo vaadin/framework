@@ -176,6 +176,7 @@ public class TableConnector extends AbstractHasComponentsConnector implements
             // amount of rows)
             getWidget().scrollBody.setLastRendered(getWidget().scrollBody
                     .getLastRendered());
+            getWidget().updateMaxIndent();
         } else {
             getWidget().postponeSanityCheckForLastRendered = false;
             UIDL rowData = uidl.getChildByTagName("rows");

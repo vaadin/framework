@@ -122,8 +122,14 @@ public class VTreeTable extends VScrollTable {
         }
     }
 
+    @Override
+    protected int getHierarchyColumnIndex() {
+        return colIndexOfHierarchy + (showRowHeaders ? 1 : 0);
+    }
+
     public class VTreeTableScrollBody extends VScrollTable.VScrollTableBody {
         private int indentWidth = -1;
+        private int maxIndent = 0;
 
         VTreeTableScrollBody() {
             super();
@@ -232,6 +238,11 @@ public class VTreeTable extends VScrollTable {
                     treeSpacer.getParentElement().getStyle()
                             .setPaddingLeft(getIndent(), Unit.PX);
                     treeSpacer.getStyle().setWidth(getIndent(), Unit.PX);
+                    int colWidth = getColWidth(getHierarchyColumnIndex());
+                    if (colWidth > 0 && getIndent() > colWidth) {
+                        VTreeTable.this.setColWidth(getHierarchyColumnIndex(),
+                                getIndent(), false);
+                    }
                 }
             }
 
@@ -277,14 +288,10 @@ public class VTreeTable extends VScrollTable {
                     // hierarchy column
                     int indent = getIndent();
                     if (indent != -1) {
-                        width = Math.max(width - getIndent(), 0);
+                        width = Math.max(width - indent, 0);
                     }
                 }
                 super.setCellWidth(cellIx, width);
-            }
-
-            private int getHierarchyColumnIndex() {
-                return colIndexOfHierarchy + (showRowHeaders ? 1 : 0);
             }
 
             private int getIndent() {
@@ -323,7 +330,8 @@ public class VTreeTable extends VScrollTable {
                     @Override
                     public void execute() {
                         if (showRowHeaders) {
-                            setCellWidth(0, tHead.getHeaderCell(0).getWidth());
+                            setCellWidth(0, tHead.getHeaderCell(0)
+                                    .getWidthWithIndent());
                             calcAndSetSpanWidthOnCell(1);
                         } else {
                             calcAndSetSpanWidthOnCell(0);
@@ -421,6 +429,22 @@ public class VTreeTable extends VScrollTable {
             return indentWidth;
         }
 
+        @Override
+        protected int getMaxIndent() {
+            return maxIndent;
+        }
+
+        @Override
+        protected void calculateMaxIndent() {
+            int maxIndent = 0;
+            Iterator<Widget> iterator = iterator();
+            while (iterator.hasNext()) {
+                VTreeTableRow next = (VTreeTableRow) iterator.next();
+                maxIndent = Math.max(maxIndent, next.getIndent());
+            }
+            this.maxIndent = maxIndent;
+        }
+
         private void detectIndent(VTreeTableRow vTreeTableRow) {
             indentWidth = vTreeTableRow.treeSpacer.getOffsetWidth();
             if (indentWidth == 0) {
@@ -432,6 +456,7 @@ public class VTreeTable extends VScrollTable {
                 VTreeTableRow next = (VTreeTableRow) iterator.next();
                 next.setIndent();
             }
+            calculateMaxIndent();
         }
 
         protected void unlinkRowsAnimatedAndUpdateCacheWhenFinished(
@@ -471,6 +496,7 @@ public class VTreeTable extends VScrollTable {
                 RowExpandAnimation anim = new RowExpandAnimation(insertedRows);
                 anim.run(150);
             }
+            scrollBody.calculateMaxIndent();
             return insertedRows;
         }
 

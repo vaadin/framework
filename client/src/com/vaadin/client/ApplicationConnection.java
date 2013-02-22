@@ -1311,8 +1311,6 @@ public class ApplicationConnection {
             return;
         }
 
-        Profiler.reset();
-
         VConsole.log("Handling message from server");
         eventBus.fireEvent(new ResponseHandlingStartedEvent(this));
 
@@ -1397,15 +1395,12 @@ public class ApplicationConnection {
                 Profiler.leave("Handling locales");
 
                 Profiler.enter("Handling meta information");
-                boolean repaintAll = false;
                 ValueMap meta = null;
                 if (json.containsKey("meta")) {
                     VConsole.log(" * Handling meta information");
                     meta = json.getValueMap("meta");
                     if (meta.containsKey("repaintAll")) {
-                        repaintAll = true;
-                        uIConnector.getWidget().clear();
-                        getConnectorMap().clear();
+                        prepareRepaintAll();
                         if (meta.containsKey("invalidLayouts")) {
                             validatingLayouts = true;
                         }
@@ -1528,10 +1523,46 @@ public class ApplicationConnection {
                 endRequest();
 
                 if (Profiler.isEnabled()) {
-                    Profiler.logTimings();
-                    Profiler.reset();
+                    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                        @Override
+                        public void execute() {
+                            Profiler.logTimings();
+                            Profiler.reset();
+                        }
+                    });
                 }
 
+            }
+
+            /**
+             * Properly clean up any old stuff to ensure everything is properly
+             * reinitialized.
+             */
+            private void prepareRepaintAll() {
+                String uiConnectorId = uIConnector.getConnectorId();
+                if (uiConnectorId == null) {
+                    // Nothing to clear yet
+                    return;
+                }
+
+                // Create fake server response that says that the uiConnector
+                // has no children
+                JSONObject fakeHierarchy = new JSONObject();
+                fakeHierarchy.put(uiConnectorId, new JSONArray());
+                JSONObject fakeJson = new JSONObject();
+                fakeJson.put("hierarchy", fakeHierarchy);
+                ValueMap fakeValueMap = fakeJson.getJavaScriptObject().cast();
+
+                // Update hierarchy based on the fake response
+                ConnectorHierarchyUpdateResult connectorHierarchyUpdateResult = updateConnectorHierarchy(fakeValueMap);
+
+                // Send hierarchy events based on the fake update
+                sendHierarchyChangeEvents(connectorHierarchyUpdateResult.events);
+
+                // Unregister all the old connectors that have now been removed
+                unregisterRemovedConnectors();
+
+                getLayoutManager().cleanMeasuredSizes();
             }
 
             private void updateCaptions(
@@ -1548,8 +1579,10 @@ public class ApplicationConnection {
 
                 // Find components with potentially changed caption state
                 for (StateChangeEvent event : pendingStateChangeEvents) {
-                    ServerConnector connector = event.getConnector();
-                    needsCaptionUpdate.add(connector);
+                    if (VCaption.mightChange(event)) {
+                        ServerConnector connector = event.getConnector();
+                        needsCaptionUpdate.add(connector);
+                    }
                 }
 
                 // Update captions for all suitable candidates
@@ -1916,6 +1949,7 @@ public class ApplicationConnection {
                     }
                 }
 
+                Profiler.enter("updateConnectorState newWithoutState");
                 // Fire events for properties using the default value for newly
                 // created connectors even if there were no state changes
                 for (ServerConnector connector : remainingNewConnectors) {
@@ -1928,6 +1962,7 @@ public class ApplicationConnection {
                     events.add(event);
 
                 }
+                Profiler.leave("updateConnectorState newWithoutState");
 
                 Profiler.leave("updateConnectorState");
 

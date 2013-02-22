@@ -17,6 +17,7 @@ package com.vaadin.client.ui.label;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.PreElement;
+import com.vaadin.client.Profiler;
 import com.vaadin.client.Util;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
@@ -44,6 +45,7 @@ public class LabelConnector extends AbstractComponentConnector {
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
         boolean sinkOnloads = false;
+        Profiler.enter("LabelConnector.onStateChanged update content");
         switch (getState().contentMode) {
         case PREFORMATTED:
             PreElement preElement = Document.get().createPreElement();
@@ -69,8 +71,12 @@ public class LabelConnector extends AbstractComponentConnector {
             break;
 
         }
+        Profiler.leave("LabelConnector.onStateChanged update content");
+
         if (sinkOnloads) {
+            Profiler.enter("LabelConnector.onStateChanged sinkOnloads");
             Util.sinkOnloadForImages(getWidget().getElement());
+            Profiler.leave("LabelConnector.onStateChanged sinkOnloads");
         }
     }
 

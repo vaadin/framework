@@ -89,6 +89,14 @@ public abstract class TabsheetBaseConnector extends
             }
         }
 
+        // Detach any old tab widget, should be max 1
+        for (Iterator<Widget> iterator = oldWidgets.iterator(); iterator
+                .hasNext();) {
+            Widget oldWidget = iterator.next();
+            if (oldWidget.isAttached()) {
+                oldWidget.removeFromParent();
+            }
+        }
     }
 
     @Override

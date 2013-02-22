@@ -98,6 +98,9 @@
 	</target>
 
 	<target name="client-compiled-cache.jar" depends="default-widgetset-cache">
+		<!-- Ensure filtered webcontent files are available -->
+		<antcall target="common.filter.webcontent" />
+
 		<jar file="${compiled-cache.jar}" compress="true">
 			<fileset dir="${gwtar.dir}">
 				<include name="**/*.gwtar" />

@@ -414,6 +414,9 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 final Object id = itemIdMapper.get(keys[i]);
                 if (id != null && isExpanded(id)) {
                     expanded.remove(id);
+                    if (expandedItemId == id) {
+                        expandedItemId = null;
+                    }
                     fireCollapseEvent(id);
                 }
             }
@@ -841,6 +844,10 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             super.setContainerDataSource(new ContainerHierarchicalWrapper(
                     newDataSource));
         }
+
+        // Ensure previous expanded items are cleaned up if they don't exist in
+        // the new container
+        cleanupExpandedItems();
     }
 
     /* Expand event and listener */
@@ -1670,4 +1677,24 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         return itemDescriptionGenerator;
     }
 
+    @Override
+    public void containerItemSetChange(
+            com.vaadin.data.Container.ItemSetChangeEvent event) {
+
+        // Ensure removed items are cleaned up from expanded list
+        cleanupExpandedItems();
+
+        super.containerItemSetChange(event);
+    }
+
+    private void cleanupExpandedItems() {
+        for (Object expandedItemId : expanded) {
+            if (getItem(expandedItemId) == null) {
+                expanded.remove(expandedItemId);
+                if (this.expandedItemId == expandedItemId) {
+                    this.expandedItemId = null;
+                }
+            }
+        }
+    }
 }

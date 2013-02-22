@@ -35,6 +35,9 @@
 	</target>
 
 	<target name="javadoc" depends="copy-jars">
+		<!-- Ensure filtered webcontent files are available -->
+		<antcall target="common.filter.webcontent" />
+
 		<!-- Unpack all source files to javadoc.temp.dir-->
 		<antcontrib:foreach list="${modules.to.publish.to.maven}" target="unzip.to.javadoctemp" param="module" />
 
@@ -76,6 +79,9 @@
 
 	</target>
 	<target name="zip" depends="copy-jars, javadoc">
+		<!-- Ensure filtered webcontent files are available -->
+		<antcall target="common.filter.webcontent" />
+
 		<zip destfile="${zip.file}">
 			<fileset dir="${temp.dir}">
 				<!-- Avoid conflicts with servlet and portlet API. They are provided by the container -->

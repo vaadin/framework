@@ -14,29 +14,27 @@
  * the License.
  */
 
-package com.vaadin.client;
+package com.vaadin.tests.debug;
 
-import com.google.gwt.core.client.JavaScriptObject;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.ui.Label;
 
-public final class JsArrayObject<T> extends JavaScriptObject {
+public class HierarchyAfterAnalyzeLayouts extends AbstractTestUI {
 
-    protected JsArrayObject() {
-        // JSO constructor
+    @Override
+    protected void setup(VaadinRequest request) {
+        addComponent(new Label("This is a label"));
     }
 
-    public native void add(T value)
-    /*-{
-        this.push(value);
-    }-*/;
+    @Override
+    protected String getTestDescription() {
+        return "The connector hierarchy should be in order after clicking AL in the debug console";
+    }
 
-    public native int size()
-    /*-{
-        return this.length;
-    }-*/;
-
-    public native T get(int i)
-    /*-{
-        return this[i];
-    }-*/;
+    @Override
+    protected Integer getTicketNumber() {
+        return Integer.valueOf(11067);
+    }
 
 }
