@@ -58,9 +58,11 @@ public class DevelopmentServerLauncher {
 
         // Pass-through of arguments for Jetty
         final Map<String, String> serverArgs = parseArguments(args);
+        if (!serverArgs.containsKey("shutdownPort"))
+            serverArgs.put("shutdownPort", "8889");
 
-        if (serverArgs.containsKey("shutdownPort")) {
-            int port = Integer.parseInt(serverArgs.get("shutdownPort"));
+        int port = Integer.parseInt(serverArgs.get("shutdownPort"));
+        if (port > 0) {
             try {
                 // Try to notify another instance that it's time to close
                 Socket socket = new Socket((String) null, port);
@@ -94,7 +96,7 @@ public class DevelopmentServerLauncher {
         try {
             assert false;
 
-            throw new RuntimeException("You should run "
+            System.err.println("You should run "
                     + DevelopmentServerLauncher.class.getSimpleName()
                     + " with assertions enabled. Add -ea as a VM argument.");
         } catch (AssertionError e) {
