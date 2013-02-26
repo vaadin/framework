@@ -26,6 +26,7 @@ import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.sass.internal.tree.BlockNode;
 import com.vaadin.sass.internal.tree.ExtendNode;
 import com.vaadin.sass.internal.tree.Node;
+import com.vaadin.sass.internal.util.StringUtil;
 
 public class ExtendNodeHandler {
     private static Map<String, List<ArrayList<String>>> extendsMap = new HashMap<String, List<ArrayList<String>>>();
@@ -33,6 +34,12 @@ public class ExtendNodeHandler {
     public static void traverse(ExtendNode node) throws Exception {
         buildExtendsMap(node);
         modifyTree(ScssStylesheet.get());
+    }
+
+    public static void clear() {
+        if (extendsMap != null) {
+            extendsMap.clear();
+        }
     }
 
     private static void modifyTree(Node node) throws Exception {
@@ -51,7 +58,8 @@ public class ExtendNodeHandler {
                 } else {
                     for (Entry<String, List<ArrayList<String>>> entry : extendsMap
                             .entrySet()) {
-                        if (selectorString.contains(entry.getKey())) {
+                        if (StringUtil.containsSubString(selectorString,
+                                entry.getKey())) {
                             for (ArrayList<String> sList : entry.getValue()) {
                                 ArrayList<String> clone = (ArrayList<String>) sList
                                         .clone();
@@ -71,27 +79,52 @@ public class ExtendNodeHandler {
         if (extendsMap.get(extendedString) == null) {
             extendsMap.put(extendedString, new ArrayList<ArrayList<String>>());
         }
-        extendsMap.get(extendedString).add(
-                ((BlockNode) node.getParentNode()).getSelectorList());
+        // prevent a selector extends itself, e.g. .test{ @extend .test}
+        String parentSelectorString = ((BlockNode) node.getParentNode())
+                .getSelectors();
+        if (!parentSelectorString.equals(extendedString)) {
+            extendsMap.get(extendedString).add(
+                    ((BlockNode) node.getParentNode()).getSelectorList());
+        }
     }
 
     private static void addAdditionalSelectorListToBlockNode(
-            BlockNode blockNode, ArrayList<String> list, String selectorString) {
-        if (list != null) {
-            for (int i = 0; i < list.size(); i++) {
-                if (selectorString == null) {
-                    blockNode.getSelectorList().add(list.get(i));
+            BlockNode blockNode, ArrayList<String> extendingSelectors,
+            String extendedSelector) {
+        if (extendingSelectors != null) {
+            for (String extendingSelector : extendingSelectors) {
+                if (extendedSelector == null) {
+                    blockNode.getSelectorList().add(extendingSelector);
                 } else {
                     ArrayList<String> newTags = new ArrayList<String>();
-                    for (final String existing : blockNode.getSelectorList()) {
-                        if (existing.contains(selectorString)) {
-                            newTags.add(existing.replace(selectorString,
-                                    list.get(i)));
+                    for (final String selectorString : blockNode
+                            .getSelectorList()) {
+                        if (StringUtil.containsSubString(selectorString,
+                                extendedSelector)) {
+                            String newTag = generateExtendingSelectors(
+                                    selectorString, extendedSelector,
+                                    extendingSelector);
+                            // prevent adding duplicated selector list
+                            if (!blockNode.getSelectorList().contains(newTag)
+                                    && !newTags.contains(newTag)) {
+                                newTags.add(newTag);
+                            }
                         }
                     }
                     blockNode.getSelectorList().addAll(newTags);
                 }
             }
         }
+    }
+
+    private static String generateExtendingSelectors(String selectorString,
+            String extendedSelector, String extendingSelector) {
+        String result = StringUtil.replaceSubString(selectorString,
+                extendedSelector, extendingSelector);
+        // remove duplicated class selectors.
+        if (result.startsWith(".")) {
+            result = StringUtil.removeDuplicatedSubString(result, ".");
+        }
+        return result;
     }
 }

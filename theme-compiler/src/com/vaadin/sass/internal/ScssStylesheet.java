@@ -42,6 +42,7 @@ import com.vaadin.sass.internal.tree.MixinDefNode;
 import com.vaadin.sass.internal.tree.Node;
 import com.vaadin.sass.internal.tree.VariableNode;
 import com.vaadin.sass.internal.tree.controldirective.IfElseDefNode;
+import com.vaadin.sass.internal.visitor.ExtendNodeHandler;
 import com.vaadin.sass.internal.visitor.ImportNodeHandler;
 
 public class ScssStylesheet extends Node {
@@ -172,6 +173,7 @@ public class ScssStylesheet extends Node {
         variables.clear();
         ifElseDefNodes.clear();
         lastNodeAdded.clear();
+        ExtendNodeHandler.clear();
         importOtherFiles(this);
         populateDefinitions(this);
         traverse(this);
