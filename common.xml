@@ -293,25 +293,25 @@
 		<mkdir dir="${classes}" />
 	</target>
 
-	<target name="tests.run" depends="tests.compile">
+	<target name="test.run" depends="test.compile">
 		<fail unless="module.name" message="No module name given" />
 
 		<property name="result.dir" location="result" />
 		<property name="classes" location="${result.dir}/classes" />
-		<property name="tests.src" location="${result.dir}/../tests/src" />
-		<property name="tests.classes" location="${result.dir}/tests/classes" />
+		<property name="test.src" location="${result.dir}/../tests/src" />
+		<property name="test.classes" location="${result.dir}/tests/classes" />
 
 
 		<junit printsummary="withOutAndErr" fork="yes">
 			<formatter usefile="false" type="plain" />
 			<jvmarg value="-ea" />
-			<classpath location="${tests.classes}" />
+			<classpath location="${test.classes}" />
 			<classpath location="${classes}" />
 			<classpath refid="classpath.compile.custom" />
-			<classpath refid="classpath.tests.dependencies" />
+			<classpath refid="classpath.test.dependencies" />
 
 			<batchtest fork="yes">
-				<fileset dir="${tests.src}">
+				<fileset dir="${test.src}">
 					<exclude name="**/Abstract*" />
 					<exclude name="com/vaadin/tests/data/bean/*" />
 					<exclude name="com/vaadin/tests/util/*" />
@@ -323,26 +323,26 @@
 		</junit>
 	</target>
 
-	<target name="tests.compile" description="Compiles tests" depends="compile, dependencies.tests">
+	<target name="test.compile" description="Compiles tests" depends="compile, dependencies.test">
 		<fail unless="module.name" message="No module name given" />
 		<property name="result.dir" location="result" />
 		<property name="base.dir" location="${result.dir}/.." />
-		<property name="tests.src" location="${base.dir}/tests/src" />
-		<property name="tests.resources" location="${base.dir}/tests/resources" />
-		<property name="tests.classes" location="${result.dir}/tests/classes" />
+		<property name="test.src" location="${base.dir}/tests/src" />
+		<property name="test.resources" location="${base.dir}/tests/resources" />
+		<property name="test.classes" location="${result.dir}/tests/classes" />
 		<property name="classes" location="${result.dir}/classes" />
 
-		<mkdir dir="${tests.classes}" />
+		<mkdir dir="${test.classes}" />
 
-		<javac srcdir="${tests.src}" destdir="${tests.classes}" source="${vaadin.java.version}" target="${vaadin.java.version}" debug="true" encoding="UTF-8" includeantruntime="false">
-			<classpath refid="classpath.tests.dependencies" />
+		<javac srcdir="${test.src}" destdir="${test.classes}" source="${vaadin.java.version}" target="${vaadin.java.version}" debug="true" encoding="UTF-8" includeantruntime="false">
+			<classpath refid="classpath.test.dependencies" />
 			<classpath location="${classes}" />
-			<classpath refid="classpath.tests.custom" />
+			<classpath refid="classpath.test.custom" />
 		</javac>
 
 		<!-- Copy resources -->
-		<copy todir="${tests.classes}" failonerror="false">
-			<fileset dir="${tests.resources}" />
+		<copy todir="${test.classes}" failonerror="false">
+			<fileset dir="${test.resources}" />
 		</copy>
 	</target>
 
@@ -352,9 +352,9 @@
 		<ivy:cachepath pathid="classpath.compile.dependencies" conf="${conf}" />
 	</target>
 
-	<target name="dependencies.tests" description="Resolves dependencies needed by tests">
-		<ivy:resolve resolveid="common" conf="tests" />
-		<ivy:cachepath pathid="classpath.tests.dependencies" conf="tests" />
+	<target name="dependencies.test" description="Resolves dependencies needed by test">
+		<ivy:resolve resolveid="common" conf="test" />
+		<ivy:cachepath pathid="classpath.test.dependencies" conf="test" />
 	</target>
 
 	<target name="clean">

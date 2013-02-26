@@ -113,7 +113,7 @@
 	<target name="checkstyle">
 		<!-- Checkstyle is handled by all separate modules -->
 	</target>
-	<target name="tests" depends="checkstyle">
+	<target name="test" depends="checkstyle">
 		<!-- No tests for this zip.. -->
 	</target>
 
