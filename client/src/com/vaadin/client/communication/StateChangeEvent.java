@@ -235,7 +235,7 @@ public class StateChangeEvent extends
     /*-{
         var segments = property.split('.');
         while (typeof target == 'object') {
-            var currentSegment = segments.shift();
+            var nextSegment = segments.shift();
             if (!(nextSegment in target)) {
                 // Abort if segment is not found
                 return false;
