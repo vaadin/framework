@@ -62,14 +62,18 @@ public class UidlWriter implements Serializable {
      *            Whether the client should re-render the whole UI.
      * @param analyzeLayouts
      *            Whether detected layout problems should be logged.
+     * @param async
+     *            True if this message is sent by the server asynchronously,
+     *            false if it is a response to a client message.
+     * 
      * @throws IOException
      *             If the writing fails.
      * @throws JSONException
      *             If the JSON serialization fails.
      */
     public void write(UI ui, Writer writer, boolean repaintAll,
-            boolean analyzeLayouts) throws IOException, JSONException {
-
+            boolean analyzeLayouts, boolean async) throws IOException,
+            JSONException {
         ArrayList<ClientConnector> dirtyVisibleConnectors = ui
                 .getConnectorTracker().getDirtyVisibleConnectors();
         VaadinSession session = ui.getSession();
@@ -153,7 +157,7 @@ public class UidlWriter implements Serializable {
                     .getSystemMessages(ui.getLocale(), null);
             // TODO hilightedConnector
             new MetadataWriter().write(ui, writer, repaintAll, analyzeLayouts,
-                    null, messages);
+                    async, null, messages);
             writer.write(", ");
 
             writer.write("\"resources\" : ");
@@ -289,8 +293,6 @@ public class UidlWriter implements Serializable {
             assert (uiConnectorTracker.getDirtyConnectors().isEmpty()) : "Connectors have been marked as dirty during the end of the paint phase. This is most certainly not intended.";
 
             writePerformanceData(ui, writer);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
         } finally {
             uiConnectorTracker.setWritingResponse(false);
         }

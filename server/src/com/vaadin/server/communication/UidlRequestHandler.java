@@ -169,7 +169,7 @@ public class UidlRequestHandler extends SynchronizedRequestHandler {
                     .getSecurityKeyUIDL(request));
         }
 
-        new UidlWriter().write(ui, writer, repaintAll, analyzeLayouts);
+        new UidlWriter().write(ui, writer, repaintAll, analyzeLayouts, false);
 
         closeJsonMessage(writer);
     }

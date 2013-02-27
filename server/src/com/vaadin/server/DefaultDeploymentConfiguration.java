@@ -19,6 +19,8 @@ package com.vaadin.server;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import com.vaadin.shared.communication.PushMode;
+
 /**
  * The default implementation of {@link DeploymentConfiguration} based on a base
  * class for resolving system properties and a set of init parameters.
@@ -33,6 +35,7 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
     private int resourceCacheTime;
     private int heartbeatInterval;
     private boolean closeIdleSessions;
+    private PushMode pushMode;
     private final Class<?> systemPropertyBaseClass;
 
     /**
@@ -55,6 +58,7 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
         checkResourceCacheTime();
         checkHeartbeatInterval();
         checkCloseIdleSessions();
+        checkPushMode();
     }
 
     @Override
@@ -167,9 +171,29 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
         return heartbeatInterval;
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The default value is false.
+     */
     @Override
     public boolean isCloseIdleSessions() {
         return closeIdleSessions;
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The default mode is {@link PushMode#DISABLED}.
+     */
+    @Override
+    public PushMode getPushMode() {
+        return pushMode;
+    }
+
+    @Override
+    public Properties getInitParameters() {
+        return initParameters;
     }
 
     /**
@@ -231,13 +255,19 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
                 .equals("true");
     }
 
+    private void checkPushMode() {
+        String mode = getApplicationOrSystemProperty(
+                Constants.SERVLET_PARAMETER_PUSH_MODE,
+                PushMode.DISABLED.toString());
+        try {
+            pushMode = Enum.valueOf(PushMode.class, mode.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            getLogger().warning(Constants.WARNING_PUSH_MODE_NOT_RECOGNIZED);
+            pushMode = PushMode.DISABLED;
+        }
+    }
+
     private Logger getLogger() {
         return Logger.getLogger(getClass().getName());
     }
-
-    @Override
-    public Properties getInitParameters() {
-        return initParameters;
-    }
-
 }

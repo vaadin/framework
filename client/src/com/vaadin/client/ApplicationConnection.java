@@ -66,6 +66,7 @@ import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
 import com.vaadin.client.communication.JavaScriptMethodInvocation;
 import com.vaadin.client.communication.JsonDecoder;
 import com.vaadin.client.communication.JsonEncoder;
+import com.vaadin.client.communication.PushConnection;
 import com.vaadin.client.communication.RpcManager;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
@@ -88,6 +89,7 @@ import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.LegacyChangeVariablesInvocation;
 import com.vaadin.shared.communication.MethodInvocation;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.ui.ui.UIConstants;
 
@@ -221,6 +223,8 @@ public class ApplicationConnection {
     private final LayoutManager layoutManager;
 
     private final RpcManager rpcManager;
+
+    private PushConnection push;
 
     /**
      * If responseHandlingLocks contains any objects, response handling is
@@ -438,6 +442,8 @@ public class ApplicationConnection {
         getLoadingIndicator().trigger();
 
         scheduleHeartbeat();
+
+        initializePush();
 
         Window.addWindowClosingHandler(new ClosingHandler() {
             @Override
@@ -831,13 +837,16 @@ public class ApplicationConnection {
                         response.getText().length() - 1);
                 handleJSONText(jsonText, statusCode);
             }
-
         };
-        try {
-            doAjaxRequest(uri, payload, requestCallback);
-        } catch (RequestException e) {
-            VConsole.error(e);
-            endRequest();
+        if (push != null) {
+            push.push(payload);
+        } else {
+            try {
+                doAjaxRequest(uri, payload, requestCallback);
+            } catch (RequestException e) {
+                VConsole.error(e);
+                endRequest();
+            }
         }
     }
 
@@ -848,7 +857,7 @@ public class ApplicationConnection {
      * @param jsonText
      * @param statusCode
      */
-    private void handleJSONText(String jsonText, int statusCode) {
+    public void handleJSONText(String jsonText, int statusCode) {
         final Date start = new Date();
         final ValueMap json;
         try {
@@ -952,7 +961,7 @@ public class ApplicationConnection {
      * servicing the session so far. These values are always one request behind,
      * since they cannot be measured before the request is finished.
      */
-    private ValueMap serverTimingInfo;
+    public ValueMap serverTimingInfo;
 
     static final int MAX_CSS_WAITS = 100;
 
@@ -1462,7 +1471,11 @@ public class ApplicationConnection {
                         + jsonText.length() + " characters of JSON");
                 VConsole.log("Referenced paintables: " + connectorMap.size());
 
-                endRequest();
+                if (meta == null || !meta.containsKey("async")) {
+                    // End the request if the received message was a response,
+                    // not sent asynchronously
+                    endRequest();
+                }
 
                 if (Profiler.isEnabled()) {
                     Scheduler.get().scheduleDeferred(new ScheduledCommand() {
@@ -1473,7 +1486,6 @@ public class ApplicationConnection {
                         }
                     });
                 }
-
             }
 
             /**
@@ -3313,5 +3325,29 @@ public class ApplicationConnection {
         }
         return Util.getConnectorForElement(this, getUIConnector().getWidget(),
                 focusedElement);
+    }
+
+    private void initializePush() {
+        if (getConfiguration().getPushMode() != PushMode.DISABLED) {
+            push = GWT.create(PushConnection.class);
+            push.init(this);
+
+            final String pushUri = addGetParameters(
+                    translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
+                            + ApplicationConstants.PUSH_PATH + '/'),
+                    UIConstants.UI_ID_PARAMETER + "="
+                            + getConfiguration().getUIId());
+
+            Scheduler.get().scheduleDeferred(new Command() {
+                @Override
+                public void execute() {
+                    push.connect(pushUri);
+                }
+            });
+        }
+    }
+
+    public void handlePushMessage(String message) {
+        handleJSONText(message, 200);
     }
 }

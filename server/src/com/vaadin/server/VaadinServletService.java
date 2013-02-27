@@ -28,8 +28,10 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.vaadin.server.communication.PushRequestHandler;
 import com.vaadin.server.communication.ServletBootstrapHandler;
 import com.vaadin.server.communication.ServletUIInitHandler;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
 
 public class VaadinServletService extends VaadinService {
@@ -73,6 +75,9 @@ public class VaadinServletService extends VaadinService {
         List<RequestHandler> handlers = super.createRequestHandlers();
         handlers.add(0, new ServletBootstrapHandler());
         handlers.add(new ServletUIInitHandler());
+        if (getDeploymentConfiguration().getPushMode() != PushMode.DISABLED) {
+            handlers.add(new PushRequestHandler(this));
+        }
         return handlers;
     }
 

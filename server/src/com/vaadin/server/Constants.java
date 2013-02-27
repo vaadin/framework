@@ -47,6 +47,13 @@ public interface Constants {
             + "in web.xml. The default of 5min will be used.\n"
             + "===========================================================";
 
+    static final String WARNING_PUSH_MODE_NOT_RECOGNIZED = "\n"
+            + "===========================================================\n"
+            + "WARNING: pushMode has been set to an unrecognized value\n"
+            + "in web.xml. The permitted values are \"disabled\", \"manual\",\n"
+            + "and \"automatic\". The default of \"disabled\" will be used.\n"
+            + "===========================================================";
+
     static final String WIDGETSET_MISMATCH_INFO = "\n"
             + "=================================================================\n"
             + "The widgetset in use does not seem to be built for the Vaadin\n"
@@ -63,6 +70,7 @@ public interface Constants {
     static final String SERVLET_PARAMETER_RESOURCE_CACHE_TIME = "resourceCacheTime";
     static final String SERVLET_PARAMETER_HEARTBEAT_INTERVAL = "heartbeatInterval";
     static final String SERVLET_PARAMETER_CLOSE_IDLE_SESSIONS = "closeIdleSessions";
+    static final String SERVLET_PARAMETER_PUSH_MODE = "pushMode";
     static final String SERVLET_PARAMETER_UI_PROVIDER = "UIProvider";
 
     // Configurable parameter names

@@ -37,8 +37,10 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.server.communication.PushConnection;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.ScrollClientRpc;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIServerRpc;
@@ -469,6 +471,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     private String theme;
 
     private Navigator navigator;
+
+    private PushConnection pushConnection = new PushConnection(this);
 
     /**
      * This method is used by Component.Focusable objects to request focus to
@@ -1118,4 +1122,48 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         return loadingIndicator;
     }
 
+    /**
+     * Pushes the pending changes and client RPC invocations of this UI to the
+     * client-side.
+     * <p>
+     * As with all UI methods, it is not safe to call push() without holding the
+     * {@link VaadinSession#lock() session lock}.
+     * 
+     * @throws IllegalStateException
+     *             if push is disabled.
+     * @throws UIDetachedException
+     *             if this UI is not attached to a session.
+     * 
+     * @see VaadinSession#getPushMode()
+     * 
+     * @since 7.1
+     */
+    public void push() {
+        VaadinSession session = getSession();
+        if (session != null) {
+            if (session.getPushMode() == PushMode.DISABLED) {
+                throw new IllegalStateException("Push not enabled");
+            }
+            assert pushConnection != null;
+            pushConnection.push();
+        } else {
+            throw new UIDetachedException("Trying to push a detached UI");
+        }
+    }
+
+    /**
+     * Returns the internal push connection object used by this UI. This method
+     * should only be called by the framework.
+     */
+    public PushConnection getPushConnection() {
+        return pushConnection;
+    }
+
+    /**
+     * Sets the internal push connection object used by this UI. This method
+     * should only be called by the framework.
+     */
+    public void setPushConnection(PushConnection connection) {
+        pushConnection = connection;
+    }
 }

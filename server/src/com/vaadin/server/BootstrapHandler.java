@@ -41,6 +41,7 @@ import org.jsoup.parser.Tag;
 
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Version;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
 
 /**
@@ -337,8 +338,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         VaadinRequest request = context.getRequest();
 
         VaadinService vaadinService = request.getService();
-        String staticFileLocation = vaadinService
-                .getStaticFileLocation(request);
+        String vaadinLocation = vaadinService.getStaticFileLocation(request)
+                + "/VAADIN/";
 
         fragmentNodes
                 .add(new Element(Tag.valueOf("iframe"), "")
@@ -348,8 +349,17 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                                 "position:absolute;width:0;height:0;border:0;overflow:hidden")
                         .attr("src", "javascript:false"));
 
-        String bootstrapLocation = staticFileLocation
-                + "/VAADIN/vaadinBootstrap.js";
+        if (context.getSession().getPushMode() != PushMode.DISABLED) {
+            // Load client-side dependencies for push support
+            fragmentNodes.add(new Element(Tag.valueOf("script"), "").attr(
+                    "type", "text/javascript").attr("src",
+                    vaadinLocation + "portal.min.js"));
+            fragmentNodes.add(new Element(Tag.valueOf("script"), "").attr(
+                    "type", "text/javascript").attr("src",
+                    vaadinLocation + "atmosphere.min.js"));
+        }
+
+        String bootstrapLocation = vaadinLocation + "vaadinBootstrap.js";
         fragmentNodes.add(new Element(Tag.valueOf("script"), "").attr("type",
                 "text/javascript").attr("src", bootstrapLocation));
         Element mainScriptTag = new Element(Tag.valueOf("script"), "").attr(
@@ -476,6 +486,8 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
         appConfig.put("heartbeatInterval", vaadinService
                 .getDeploymentConfiguration().getHeartbeatInterval());
+
+        appConfig.put("pushMode", session.getPushMode().toString());
 
         String serviceUrl = getServiceUrl(context);
         if (serviceUrl != null) {

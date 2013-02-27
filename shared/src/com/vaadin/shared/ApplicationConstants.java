@@ -28,6 +28,8 @@ public class ApplicationConstants implements Serializable {
 
     public static final String HEARTBEAT_PATH = "HEARTBEAT";
 
+    public static final String PUSH_PATH = "PUSH";
+
     public static final String PUBLISHED_FILE_PATH = APP_PATH + '/'
             + "PUBLISHED";
 

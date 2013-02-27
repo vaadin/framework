@@ -19,6 +19,8 @@ package com.vaadin.server;
 import java.io.Serializable;
 import java.util.Properties;
 
+import com.vaadin.shared.communication.PushMode;
+
 /**
  * A collection of properties configured at deploy time as well as a way of
  * accessing third party properties not explicitly supported by this class.
@@ -76,6 +78,14 @@ public interface DeploymentConfiguration extends Serializable {
      *         session lifetime indefinitely.
      */
     public boolean isCloseIdleSessions();
+
+    /**
+     * Returns the mode of bidirectional ("push") client-server communication
+     * that should be used.
+     * 
+     * @return The push mode in use.
+     */
+    public PushMode getPushMode();
 
     /**
      * Gets the properties configured for the deployment, e.g. as init

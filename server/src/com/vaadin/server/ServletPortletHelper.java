@@ -123,6 +123,10 @@ public class ServletPortletHelper implements Serializable {
         return hasPathPrefix(request, ApplicationConstants.HEARTBEAT_PATH + '/');
     }
 
+    public static boolean isPushRequest(VaadinRequest request) {
+        return hasPathPrefix(request, ApplicationConstants.PUSH_PATH + '/');
+    }
+
     public static void initDefaultUIProvider(VaadinSession session,
             VaadinService vaadinService) throws ServiceException {
         String uiProperty = vaadinService.getDeploymentConfiguration()
@@ -191,7 +195,7 @@ public class ServletPortletHelper implements Serializable {
      * <li>{@link Locale#getDefault()}</li>
      * </ol>
      */
-    static Locale findLocale(Component component, VaadinSession session,
+    public static Locale findLocale(Component component, VaadinSession session,
             VaadinRequest request) {
         if (component == null) {
             component = UI.getCurrent();
@@ -225,5 +229,4 @@ public class ServletPortletHelper implements Serializable {
 
         return Locale.getDefault();
     }
-
 }

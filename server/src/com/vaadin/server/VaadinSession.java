@@ -39,6 +39,7 @@ import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterFactory;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
 import com.vaadin.event.EventRouter;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
@@ -127,6 +128,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     private transient VaadinService service;
 
     private transient Lock lock;
+
+    private PushMode pushMode;
 
     /**
      * Create a new service session tied to a Vaadin service
@@ -806,11 +809,28 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     /**
      * Unlocks this session. This method should always be used in a finally
      * block after {@link #lock()} to ensure that the lock is always released.
+     * <p>
+     * If {@link #getPushMode() the push mode} is {@link PushMode#AUTOMATIC
+     * automatic}, pushes the changes in all UIs in this session to their
+     * respective clients.
      * 
-     * @see #unlock()
+     * @see #lock()
+     * @see UI#push()
      */
     public void unlock() {
-        getLockInstance().unlock();
+        assert hasLock();
+        try {
+            if (getPushMode() == PushMode.AUTOMATIC
+                    && ((ReentrantLock) getLockInstance()).getHoldCount() == 1) {
+                // Only push if the reentrant lock will actually be released by
+                // this unlock() invocation.
+                for (UI ui : getUIs()) {
+                    ui.push();
+                }
+            }
+        } finally {
+            getLockInstance().unlock();
+        }
     }
 
     /**
@@ -1002,6 +1022,39 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     public VaadinService getService() {
         return service;
+    }
+
+    /**
+     * Returns the mode of bidirectional ("push") communication that is used in
+     * this session.
+     * 
+     * @return The push mode.
+     */
+    public PushMode getPushMode() {
+        return pushMode;
+    }
+
+    /**
+     * Sets the mode of bidirectional ("push") communication that should be used
+     * in this session. Set once on session creation and cannot be changed
+     * afterwards.
+     * 
+     * @param pushMode
+     *            The push mode to use.
+     * 
+     * @throws IllegalArgumentException
+     *             if the argument is null.
+     * @throws IllegalStateException
+     *             if the mode is already set.
+     */
+    public void setPushMode(PushMode pushMode) {
+        if (pushMode == null) {
+            throw new IllegalArgumentException("Push mode cannot be null");
+        }
+        if (this.pushMode != null) {
+            throw new IllegalStateException("Push mode already set");
+        }
+        this.pushMode = pushMode;
     }
 
     /**

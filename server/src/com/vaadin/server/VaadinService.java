@@ -650,6 +650,7 @@ public abstract class VaadinService implements Serializable, Callback {
         session.setLocale(locale);
         session.setConfiguration(getDeploymentConfiguration());
         session.setCommunicationManager(new LegacyCommunicationManager(session));
+        session.setPushMode(getDeploymentConfiguration().getPushMode());
 
         ServletPortletHelper.initDefaultUIProvider(session, this);
         onVaadinSessionStarted(request, session);
