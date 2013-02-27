@@ -534,6 +534,7 @@ TOKEN :
   | < LBRACKET  : "[" >
   | < RBRACKET  : "]" >
   | < ANY       : "*" >
+  | < MOD       : "%" >
   | < PARENT    : "&" >
   | < DOT       : "." >
   | < LPARAN    : "(" >
@@ -2193,12 +2194,40 @@ boolean guarded() :
 LexicalUnitImpl operator(LexicalUnitImpl prev) :
 {Token n;}
 {
-n="/" ( <S> )* { return LexicalUnitImpl.createSlash(n.beginLine, 
-						       n.beginColumn,
-						       prev); }
-| n="," ( <S> )* { return LexicalUnitImpl.createComma(n.beginLine, 
-							 n.beginColumn,
-							 prev); }
+/* (comments copied from basic_arithmetics.scss)
+*supports:
+* 1. standard arithmetic operations (+, -, *, /, %)
+* 2. / is treated as css operator, unless one of its operands is variable or there is another binary arithmetic operator
+*limits:
+* 1. cannot mix arithmetic and css operations, e.g. "margin: 1px + 3px 2px" will fail
+* 2. space between add and minus operator and their following operand is mandatory. e.g. "1 + 2" is valid, "1+2" is not
+* 3. parenthesis is not supported now.  
+*/
+n="," ( <S> )* { return LexicalUnitImpl.createComma(n.beginLine, 
+            n.beginColumn,
+            prev); }
+|n="/" ( <S> )* { return LexicalUnitImpl.createSlash(n.beginLine, 
+            n.beginColumn,
+            prev); }
+| n="*" ( <S> )* { return LexicalUnitImpl.createMultiply(n.beginLine,
+            n.beginColumn,
+            prev); }
+| n="%" ( <S> )* { return LexicalUnitImpl.createModulo(n.beginLine,
+            n.beginColumn,
+            prev); }
+/*
+* for '+', since it can be either a binary operator or an unary operator,
+* which is ambiguous. To avoid this, the binary operator '+' always has
+* a space before the following term. so '2+3' is not a valid binary expression,
+* but '2 + 3' is.  The same for '-' operator.
+*/
+
+| n="+" ( <S> )+{ return LexicalUnitImpl.createAdd(n.beginLine,
+        n.beginColumn,
+        prev); }
+| n="-" ( <S> )+{ return LexicalUnitImpl.createMinus(n.beginLine,
+        n.beginColumn,
+        prev); }
 }
 
 /**
@@ -2211,7 +2240,7 @@ LexicalUnitImpl expr() :
 }
 {
     first=term(null){ res = first; }
-    ( LOOKAHEAD(2) ( res=operator(res) )? res=term(res))*
+    ( LOOKAHEAD(2) ( LOOKAHEAD(2) res=operator(res) )? res=term(res))*
   { return first; }
 }
 
