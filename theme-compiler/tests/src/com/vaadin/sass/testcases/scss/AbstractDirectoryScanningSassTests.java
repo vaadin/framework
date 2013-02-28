@@ -27,15 +27,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 
 import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.sass.testcases.scss.SassTestRunner.FactoryTest;
 
-public abstract class AbstractDirectoryScanningSassTests extends TestCase {
+public abstract class AbstractDirectoryScanningSassTests  {
 
     public static Collection<String> getScssResourceNames(URL directoryUrl)
             throws URISyntaxException {
@@ -51,7 +49,7 @@ public abstract class AbstractDirectoryScanningSassTests extends TestCase {
         URL sasslangUrl = directoryUrl;
         File sasslangDir = new File(sasslangUrl.toURI());
         File scssDir = new File(sasslangDir, "scss");
-        assertTrue(scssDir.exists());
+        Assert.assertTrue(scssDir.exists());
 
         return scssDir.listFiles(new FilenameFilter() {
 
