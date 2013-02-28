@@ -149,109 +149,111 @@ public interface ParserConstants {
     /** RegularExpression Id. */
     int SUPPORTS_SYM = 68;
     /** RegularExpression Id. */
-    int MICROSOFT_RULE = 69;
+    int CONTENT_SYM = 69;
     /** RegularExpression Id. */
-    int IF = 70;
+    int MICROSOFT_RULE = 70;
     /** RegularExpression Id. */
-    int GUARDED_SYM = 71;
+    int IF = 71;
     /** RegularExpression Id. */
-    int STRING = 72;
+    int GUARDED_SYM = 72;
     /** RegularExpression Id. */
-    int IDENT = 73;
+    int STRING = 73;
     /** RegularExpression Id. */
-    int NUMBER = 74;
+    int IDENT = 74;
     /** RegularExpression Id. */
-    int _URL = 75;
+    int NUMBER = 75;
     /** RegularExpression Id. */
-    int URL = 76;
+    int _URL = 76;
     /** RegularExpression Id. */
-    int VARIABLE = 77;
+    int URL = 77;
     /** RegularExpression Id. */
-    int PERCENTAGE = 78;
+    int VARIABLE = 78;
     /** RegularExpression Id. */
-    int PT = 79;
+    int PERCENTAGE = 79;
     /** RegularExpression Id. */
-    int MM = 80;
+    int PT = 80;
     /** RegularExpression Id. */
-    int CM = 81;
+    int MM = 81;
     /** RegularExpression Id. */
-    int PC = 82;
+    int CM = 82;
     /** RegularExpression Id. */
-    int IN = 83;
+    int PC = 83;
     /** RegularExpression Id. */
-    int PX = 84;
+    int IN = 84;
     /** RegularExpression Id. */
-    int EMS = 85;
+    int PX = 85;
     /** RegularExpression Id. */
-    int LEM = 86;
+    int EMS = 86;
     /** RegularExpression Id. */
-    int REM = 87;
+    int LEM = 87;
     /** RegularExpression Id. */
-    int EXS = 88;
+    int REM = 88;
     /** RegularExpression Id. */
-    int DEG = 89;
+    int EXS = 89;
     /** RegularExpression Id. */
-    int RAD = 90;
+    int DEG = 90;
     /** RegularExpression Id. */
-    int GRAD = 91;
+    int RAD = 91;
     /** RegularExpression Id. */
-    int MS = 92;
+    int GRAD = 92;
     /** RegularExpression Id. */
-    int SECOND = 93;
+    int MS = 93;
     /** RegularExpression Id. */
-    int HZ = 94;
+    int SECOND = 94;
     /** RegularExpression Id. */
-    int KHZ = 95;
+    int HZ = 95;
     /** RegularExpression Id. */
-    int DIMEN = 96;
+    int KHZ = 96;
     /** RegularExpression Id. */
-    int HASH = 97;
+    int DIMEN = 97;
     /** RegularExpression Id. */
-    int IMPORT_SYM = 98;
+    int HASH = 98;
     /** RegularExpression Id. */
-    int MEDIA_SYM = 99;
+    int IMPORT_SYM = 99;
     /** RegularExpression Id. */
-    int CHARSET_SYM = 100;
+    int MEDIA_SYM = 100;
     /** RegularExpression Id. */
-    int PAGE_SYM = 101;
+    int CHARSET_SYM = 101;
     /** RegularExpression Id. */
-    int FONT_FACE_SYM = 102;
+    int PAGE_SYM = 102;
     /** RegularExpression Id. */
-    int KEY_FRAME_SYM = 103;
+    int FONT_FACE_SYM = 103;
     /** RegularExpression Id. */
-    int ATKEYWORD = 104;
+    int KEY_FRAME_SYM = 104;
     /** RegularExpression Id. */
-    int IMPORTANT_SYM = 105;
+    int ATKEYWORD = 105;
     /** RegularExpression Id. */
-    int RANGE0 = 106;
+    int IMPORTANT_SYM = 106;
     /** RegularExpression Id. */
-    int RANGE1 = 107;
+    int RANGE0 = 107;
     /** RegularExpression Id. */
-    int RANGE2 = 108;
+    int RANGE1 = 108;
     /** RegularExpression Id. */
-    int RANGE3 = 109;
+    int RANGE2 = 109;
     /** RegularExpression Id. */
-    int RANGE4 = 110;
+    int RANGE3 = 110;
     /** RegularExpression Id. */
-    int RANGE5 = 111;
+    int RANGE4 = 111;
     /** RegularExpression Id. */
-    int RANGE6 = 112;
+    int RANGE5 = 112;
     /** RegularExpression Id. */
-    int RANGE = 113;
+    int RANGE6 = 113;
     /** RegularExpression Id. */
-    int UNI = 114;
+    int RANGE = 114;
     /** RegularExpression Id. */
-    int UNICODERANGE = 115;
+    int UNI = 115;
     /** RegularExpression Id. */
-    int REMOVE = 116;
+    int UNICODERANGE = 116;
     /** RegularExpression Id. */
-    int APPEND = 117;
+    int REMOVE = 117;
     /** RegularExpression Id. */
-    int CONTAINS = 118;
+    int APPEND = 118;
     /** RegularExpression Id. */
-    int FUNCTION = 119;
+    int CONTAINS = 119;
     /** RegularExpression Id. */
-    int UNKNOWN = 120;
+    int FUNCTION = 120;
+    /** RegularExpression Id. */
+    int UNKNOWN = 121;
 
     /** Lexical state. */
     int DEFAULT = 0;
@@ -276,8 +278,8 @@ public interface ParserConstants {
             "\"@function\"", "\"@return\"", "\"@debug\"", "\"@warn\"",
             "\"@for\"", "\"@each\"", "\"@while\"", "\"@if\"", "\"@else\"",
             "\"@extend\"", "\"@-moz-document\"", "\"@supports\"",
-            "<MICROSOFT_RULE>", "\"if\"", "<GUARDED_SYM>", "<STRING>",
-            "<IDENT>", "<NUMBER>", "<_URL>", "<URL>", "<VARIABLE>",
+            "\"@content\"", "<MICROSOFT_RULE>", "\"if\"", "<GUARDED_SYM>",
+            "<STRING>", "<IDENT>", "<NUMBER>", "<_URL>", "<URL>", "<VARIABLE>",
             "<PERCENTAGE>", "<PT>", "<MM>", "<CM>", "<PC>", "<IN>", "<PX>",
             "<EMS>", "<LEM>", "<REM>", "<EXS>", "<DEG>", "<RAD>", "<GRAD>",
             "<MS>", "<SECOND>", "<HZ>", "<KHZ>", "<DIMEN>", "<HASH>",

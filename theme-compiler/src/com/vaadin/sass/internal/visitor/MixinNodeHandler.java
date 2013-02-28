@@ -45,19 +45,19 @@ public class MixinNodeHandler {
 
     private static void replaceMixinNode(MixinNode mixinNode,
             MixinDefNode mixinDef) {
-        Node pre = mixinNode;
-
         MixinDefNode defClone = (MixinDefNode) DeepCopy.copy(mixinDef);
         defClone.traverse();
 
-        if (mixinDef.getArglist().isEmpty()) {
-            for (Node child : new ArrayList<Node>(defClone.getChildren())) {
-                mixinNode.getParentNode().appendChild(child, pre);
-                pre = child;
-            }
-        } else {
+        defClone.replaceContentDirective(mixinNode);
 
-            replacePossibleArguments(mixinNode, defClone);
+        if (mixinDef.getArglist().isEmpty()) {
+            mixinNode.getParentNode().appendChildrenAfter(
+                    new ArrayList<Node>(defClone.getChildren()), mixinNode);
+        } else {
+            if (mixinNode.getArglist() != null
+                    && !mixinNode.getArglist().isEmpty()) {
+                replacePossibleArguments(mixinNode, defClone);
+            }
 
             Node previous = mixinNode;
             for (final Node child : defClone.getChildren()) {
@@ -87,7 +87,6 @@ public class MixinNodeHandler {
      */
     private static void replacePossibleArguments(MixinNode mixinNode,
             MixinDefNode def) {
-
         if (mixinNode.getArglist().size() > 0) {
             ArrayList<VariableNode> remainingNodes = new ArrayList<VariableNode>(
                     def.getArglist());

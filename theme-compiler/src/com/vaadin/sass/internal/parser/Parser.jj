@@ -604,6 +604,7 @@ TOKEN :
   | <EXTEND_SYM         : "@extend">
   | <MOZ_DOCUMENT_SYM   : "@-moz-document">
   | <SUPPORTS_SYM       : "@supports">
+  | <CONTENT_SYM        : "@content">
 }
 
 < DEFAULT >
@@ -1510,7 +1511,7 @@ void controlDirective() :
 void ifContentStatement() :
 {}
 {
-    includeDirective() | media() | extendDirective() | styleRuleOrDeclarationOrNestedProperties() 
+    contentDirective() | includeDirective() | media() | extendDirective() | styleRuleOrDeclarationOrNestedProperties() 
     | keyframes() | LOOKAHEAD(variable()) variable() | listModifyDirective()
 }
 
@@ -1710,8 +1711,13 @@ void includeDirective() :
     (<S>)*
     (name = property()|name = variableName(){ name = "$"+name;}
          |(name = functionName() 
-           args = argValuelist()) <RPARAN>)(";"(<S>)*)+
+           args = argValuelist()) <RPARAN>)
+    ((";"(<S>)*)+
            {documentHandler.includeDirective(name, args);}
+    | <LBRACE> (<S>)* {documentHandler.startIncludeContentBlock(name);}
+      (styleRuleOrDeclarationOrNestedProperties())*
+      <RBRACE> (<S>)* {documentHandler.endIncludeContentBlock();}
+    )
 }
 
 String interpolation() :
@@ -1972,6 +1978,15 @@ void extendDirective() :
     list = selectorList()
     (";"(<S>)*)+
     {documentHandler.extendDirective(list);}
+}
+
+void contentDirective() : 
+{}
+{
+    <CONTENT_SYM>
+    (<S>)*
+    (";"(<S>)*)+
+    {documentHandler.contentDirective();}
 }
 
 JAVACODE

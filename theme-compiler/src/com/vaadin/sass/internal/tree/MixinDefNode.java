@@ -85,4 +85,38 @@ public class MixinDefNode extends Node implements IVariableNode {
         }
     }
 
+    /**
+     * This should only happen on a cloned MixinDefNode, since it changes the
+     * Node itself.
+     * 
+     * @param mixinNode
+     * @return
+     */
+    public MixinDefNode replaceContentDirective(MixinNode mixinNode) {
+        return findAndReplaceContentNodeInChildren(this, mixinNode);
+    }
+
+    private MixinDefNode findAndReplaceContentNodeInChildren(Node node,
+            MixinNode mixinNode) {
+        ContentNode contentNode = null;
+        for (Node child : new ArrayList<Node>(node.getChildren())) {
+            if (child instanceof ContentNode) {
+                contentNode = (ContentNode) child;
+                replaceContentNode(contentNode, mixinNode);
+            } else {
+                findAndReplaceContentNodeInChildren(child, mixinNode);
+            }
+        }
+        return this;
+    }
+
+    public MixinDefNode replaceContentNode(ContentNode contentNode,
+            MixinNode mixinNode) {
+        if (contentNode != null) {
+            contentNode.getParentNode().appendChildrenAfter(
+                    DeepCopy.copy(mixinNode.getChildren()), contentNode);
+            contentNode.getParentNode().removeChild(contentNode);
+        }
+        return this;
+    }
 }

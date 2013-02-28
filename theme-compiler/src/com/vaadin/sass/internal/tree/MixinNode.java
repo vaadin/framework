@@ -30,10 +30,13 @@ public class MixinNode extends Node implements IVariableNode {
     private String name;
     private ArrayList<LexicalUnitImpl> arglist;
 
-    public MixinNode(String name, Collection<LexicalUnitImpl> args) {
-        super();
+    public MixinNode(String name) {
         this.name = name;
         arglist = new ArrayList<LexicalUnitImpl>();
+    }
+
+    public MixinNode(String name, Collection<LexicalUnitImpl> args) {
+        this(name);
         if (args != null && !args.isEmpty()) {
             arglist.addAll(args);
         }
@@ -69,7 +72,8 @@ public class MixinNode extends Node implements IVariableNode {
             for (final LexicalUnitImpl arg : new ArrayList<LexicalUnitImpl>(
                     arglist)) {
                 LexicalUnitImpl unit = arg;
-                // only perform replace in the value if separate argument name
+                // only perform replace in the value if separate argument
+                // name
                 // and value
                 if (unit.getNextLexicalUnit() != null) {
                     unit = unit.getNextLexicalUnit();
@@ -89,7 +93,15 @@ public class MixinNode extends Node implements IVariableNode {
                     name = var.getExpr().toString();
                 }
             }
+        }
+    }
 
+    protected void replaceVariablesForChildren() {
+        for (Node child : getChildren()) {
+            if (child instanceof IVariableNode) {
+                ((IVariableNode) child).replaceVariables(ScssStylesheet
+                        .getVariables());
+            }
         }
     }
 
@@ -101,6 +113,7 @@ public class MixinNode extends Node implements IVariableNode {
                     .openVariableScope();
 
             replaceVariables(ScssStylesheet.getVariables());
+            replaceVariablesForChildren();
             MixinNodeHandler.traverse(this);
 
             ScssStylesheet.closeVariableScope(variableScope);

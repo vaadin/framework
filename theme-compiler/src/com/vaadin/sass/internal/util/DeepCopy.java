@@ -19,6 +19,9 @@ package com.vaadin.sass.internal.util;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Utility for making deep copies (vs. clone()'s shallow copies) of objects.
@@ -70,4 +73,11 @@ public class DeepCopy {
         }
     }
 
+    public static <T> Collection<T> copy(Collection<T> objects) {
+        List<T> copies = new LinkedList<T>();
+        for (T object : objects) {
+            copies.add((T) copy(object));
+        }
+        return copies;
+    }
 }
