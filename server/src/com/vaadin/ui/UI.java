@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
-import com.vaadin.client.Focusable;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
@@ -44,6 +43,7 @@ import com.vaadin.shared.ui.ui.ScrollClientRpc;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIServerRpc;
 import com.vaadin.shared.ui.ui.UIState;
+import com.vaadin.ui.Component.Focusable;
 import com.vaadin.util.CurrentInstance;
 
 /**
