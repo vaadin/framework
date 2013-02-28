@@ -90,6 +90,13 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     private boolean productionMode = false;
 
+    /**
+     * Cache info on whether there's a custom implementation of
+     * writeAjaxPageWidgetset to avoid doing the slow reflection check every
+     * time.
+     */
+    private final boolean hasCustomWritePageWidgetset = checkCustomWritePageWidgetset();
+
     @Override
     public void init(PortletConfig config) throws PortletException {
         super.init(config);
@@ -1079,13 +1086,18 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * @param request
      * @param writer
      * @throws IOException
+     * 
+     * @Deprecated As of 6.8.10, use
+     *             {@link #writeAjaxPageScriptWidgetset(RenderRequest, RenderResponse, BufferedWriter)}
+     *             instead to avoid loading the same widgetset multiple times.
      */
+    @Deprecated
     protected void writeAjaxPageWidgetset(RenderRequest request,
             BufferedWriter writer) throws IOException {
         /*
-         * If the old method that used to add this code using document.write has
-         * been overridden, we shouldn't do anything here because then the
-         * iframe and script tag have already been added.
+         * If the writeAjaxPageWidgetset added the code using document.write, we
+         * shouldn't do anything here because then the iframe and script tag
+         * have already been added.
          */
         if (request.getAttribute(WRITE_AJAX_PAGE_SCRIPT_WIDGETSET_SHOULD_WRITE) != Boolean.TRUE) {
             return;
@@ -1107,26 +1119,61 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * @param writer
      * @throws IOException
      * 
-     * @Deprecated As of 6.8, use
-     *             {@link #writeAjaxPageWidgetset(RenderRequest, BufferedWriter)}
-     *             instead to avoid using document.write
      */
-    @Deprecated
     protected void writeAjaxPageScriptWidgetset(RenderRequest request,
             RenderResponse response, final BufferedWriter writer)
             throws IOException {
-        // No longer used as of #8924, but retained to maintain compatibility
 
-        // But we still need to close this one block, for compatibility
-        writer.append("\n}\n");
+        if (hasCustomWritePageWidgetset) {
+            /*
+             * A custom implementation of writeAjaxPageWidgetset has been
+             * defined, so assume the user wants to use it for writing the
+             * script, even though it might cause loading problems with multiple
+             * portlets.
+             */
 
-        /*
-         * Set a flag so writeAjaxPageScriptWidgetset() knows that this method
-         * has not generated the old document.write code (happens if this method
-         * is overridden).
-         */
-        request.setAttribute(WRITE_AJAX_PAGE_SCRIPT_WIDGETSET_SHOULD_WRITE,
-                Boolean.TRUE);
+            // But we still need to close this one block, for compatibility
+            writer.append("\n}\n");
+
+            /*
+             * Set a flag so writeAjaxPageWidgetset() knows that this method has
+             * not generated the document.write code.
+             */
+            request.setAttribute(WRITE_AJAX_PAGE_SCRIPT_WIDGETSET_SHOULD_WRITE,
+                    Boolean.TRUE);
+        } else {
+            String widgetsetURL = getWidgetsetURL(request);
+            writer.write("document.write('<iframe tabIndex=\"-1\" id=\"__gwt_historyFrame\" "
+                    + "style=\"position:absolute;width:0;height:0;border:0;overflow:"
+                    + "hidden;opacity:0;top:-100px;left:-100px;\" src=\"javascript:false\"></iframe>');\n");
+            writer.write("document.write(\"<script language='javascript' src='"
+                    + widgetsetURL + "'><\\/script>\");\n}\n");
+        }
+    }
+
+    private boolean checkCustomWritePageWidgetset() {
+        try {
+            Class<?> targetClass = getClass();
+            while (targetClass != AbstractApplicationPortlet.class) {
+                try {
+                    targetClass.getDeclaredMethod("writeAjaxPageWidgetset",
+                            RenderRequest.class, BufferedWriter.class);
+                    // Method found -> there's a custom implementation
+                    return true;
+                } catch (NoSuchMethodException e) {
+                    // No method in this class, continue looping
+                }
+                targetClass = targetClass.getSuperclass();
+            }
+            return false;
+        } catch (SecurityException e) {
+            // Nothing we can do, just use a safe default
+            getLogger()
+                    .log(Level.WARNING,
+                            "Could not check for custom writeAjaxPageWidgetset method, assuming it's not defined",
+                            e);
+            return false;
+        }
     }
 
     /**
