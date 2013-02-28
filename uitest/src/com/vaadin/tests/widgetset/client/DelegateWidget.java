@@ -41,6 +41,7 @@ public class DelegateWidget extends HTML {
 
     public void setValue4(double value4) {
         this.value4 = value4;
+        updateText();
     }
 
     private void updateText() {
