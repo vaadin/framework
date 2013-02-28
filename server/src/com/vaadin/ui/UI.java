@@ -78,7 +78,7 @@ import com.vaadin.util.CurrentInstance;
  * @since 7.0
  */
 public abstract class UI extends AbstractSingleComponentContainer implements
-        Action.Container, Action.Notifier, LegacyComponent, Focusable {
+        Action.Container, Action.Notifier, LegacyComponent {
 
     /**
      * The application to which this UI belongs
