@@ -80,7 +80,7 @@ public class SassTestRunner extends BlockJUnit4ClassRunner {
                         getTestClass().getJavaClass());
             } catch (Throwable t) {
                 throw new RuntimeException("Could not run test factory method "
-                        + method.getName());
+                        + method.getName(), t);
             }
 
             // Did the factory return an array? If so, make it a list.

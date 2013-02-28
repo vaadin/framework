@@ -32,7 +32,13 @@ public class SassLangTestsBroken extends AbstractDirectoryScanningSassTests {
     }
 
     private static URL getResourceURLInternal(String path) {
-        return SassLangTestsBroken.class.getResource("/sasslangbroken" + path);
+        URL url = SassLangTestsBroken.class.getResource("/sasslangbroken"
+                + path);
+        if (url == null) {
+            throw new RuntimeException(
+                    "Could not locate /sasslangbroken using classloader");
+        }
+        return url;
     }
 
     @TestFactory
