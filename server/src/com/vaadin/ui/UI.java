@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
+import com.vaadin.client.Focusable;
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
@@ -77,7 +78,7 @@ import com.vaadin.util.CurrentInstance;
  * @since 7.0
  */
 public abstract class UI extends AbstractSingleComponentContainer implements
-        Action.Container, Action.Notifier, LegacyComponent {
+        Action.Container, Action.Notifier, LegacyComponent, Focusable {
 
     /**
      * The application to which this UI belongs
