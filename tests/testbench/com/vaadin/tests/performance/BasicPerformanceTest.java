@@ -22,12 +22,14 @@ public class BasicPerformanceTest extends Application {
 
     private int clientLimit;
     private int serverLimit;
+    private boolean reportBootstap = true;
     private String performanceTopic;
     private final Button reportPerformanceButton = new Button(
             "Report some performance", new Button.ClickListener() {
                 public void buttonClick(ClickEvent event) {
                     TestUtils.reportPerformance(event.getButton().getWindow(),
-                            performanceTopic, serverLimit, clientLimit);
+                            performanceTopic, serverLimit, clientLimit,
+                            reportBootstap);
                     event.getButton().setEnabled(false);
                 }
             });
@@ -39,6 +41,7 @@ public class BasicPerformanceTest extends Application {
 
         mainWindow.setContent(buildMainLayout());
         updatePerformanceReporting("first load", 100, 100);
+        reportBootstap = true;
     }
 
     private void updatePerformanceReporting(String performanceTopic,
@@ -49,6 +52,7 @@ public class BasicPerformanceTest extends Application {
         reportPerformanceButton.setCaption("Report performance for "
                 + performanceTopic);
         reportPerformanceButton.setEnabled(true);
+        reportBootstap = false;
     }
 
     private ComponentContainer buildMainLayout() {

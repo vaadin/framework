@@ -125,20 +125,22 @@ public class TestUtils {
     public static void installPerformanceReporting(Window window,
             TextArea targetTextArea) {
         targetTextArea.setDebugId("performanceTestTarget");
-        window.executeJavaScript("window.reportVaadinPerformance = function(topic, serverLimit, clientLimit) {"
+        window.executeJavaScript("window.reportVaadinPerformance = function(topic, serverLimit, clientLimit, bootstrapTime) {"
                 + "var element = document.getElementById('performanceTestTarget');"
                 + "var text = topic + ': \\n';"
                 + "for(var k in window.vaadin.clients) {"
                 + "var p = window.vaadin.clients[k].getProfilingData();"
                 + "text += ' Server time: ' + (p[3] > serverLimit?'FAIL':'OK') + ' (' + p[3] +')\\n';"
                 + "text += ' Client time: ' + (p[0] > clientLimit?'FAIL':'OK') + ' (' + p[0] +')\\n';"
+                + "if (bootstrapTime) text += ' Bootstrap time: ' + (p[4] > clientLimit?'FAIL':'OK') + ' (' + p[4] +')\\n';"
                 + "}" + "element.value = text;" + "}");
     }
 
     public static void reportPerformance(Window window, String topic,
-            int serverLimit, int clientLimit) {
+            int serverLimit, int clientLimit, boolean bootstrapTime) {
         window.executeJavaScript("window.reportVaadinPerformance(\"" + topic
-                + "\", " + serverLimit + ", " + clientLimit + ");");
+                + "\", " + serverLimit + ", " + clientLimit + ","
+                + bootstrapTime + ");");
     }
 
     private static void fillIso3166Container(IndexedContainer container) {
