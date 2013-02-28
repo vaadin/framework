@@ -1098,6 +1098,14 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
     }
 
+    private ScheduledCommand lazyScroller = new ScheduledCommand() {
+        @Override
+        public void execute() {
+            int offsetTop = measureRowHeightOffset(firstvisible);
+            scrollBodyPanel.setScrollPosition(offsetTop);
+        }
+    };
+
     /** For internal use only. May be removed or replaced in the future. */
     public void updateFirstVisibleAndScrollIfNeeded(UIDL uidl) {
         firstvisible = uidl.hasVariable("firstvisible") ? uidl
@@ -1105,8 +1113,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         if (firstvisible != lastRequestedFirstvisible && scrollBody != null) {
             // received 'surprising' firstvisible from server: scroll there
             firstRowInViewPort = firstvisible;
-            scrollBodyPanel
-                    .setScrollPosition(measureRowHeightOffset(firstvisible));
+          
+            /*
+             * Schedule the scrolling to be executed last so no updates to the rows
+             * affect scrolling measurements.
+             */
+            Scheduler.get().scheduleFinally(lazyScroller);
         }
     }
 
