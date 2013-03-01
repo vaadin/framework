@@ -16,15 +16,13 @@
 
 package com.vaadin.client;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.ArrayList; 
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -113,8 +111,15 @@ public class ApplicationConnection {
      * Helper used to return two values when updating the connector hierarchy.
      */
     private static class ConnectorHierarchyUpdateResult {
-        private List<ConnectorHierarchyChangeEvent> events = new LinkedList<ConnectorHierarchyChangeEvent>();
-        private List<ServerConnector> parentChanged = new LinkedList<ServerConnector>();
+        /**
+         * Needed at a later point when the created events are fired
+         */
+        private JsArrayObject<ConnectorHierarchyChangeEvent> events = JavaScriptObject
+                .createArray().cast();
+        /**
+         * Needed to know where captions might need to get updated
+         */
+        private FastStringSet parentChangedIds = FastStringSet.create();
     }
 
     public static final String MODIFIED_CLASSNAME = "v-modified";
@@ -152,9 +157,6 @@ public class ApplicationConnection {
 
     // will hold the UIDL security key (for XSS protection) once received
     private String uidlSecurityKey = "init";
-
-    private static final FastStringMap<FastStringSet> allStateFieldsCache = FastStringMap
-            .create();
 
     private final HashMap<String, String> resourcesMap = new HashMap<String, String>();
 
@@ -216,8 +218,6 @@ public class ApplicationConnection {
 
     /** redirectTimer scheduling interval in seconds */
     private int sessionExpirationInterval;
-
-    private ArrayList<Widget> componentCaptionSizeChanges = new ArrayList<Widget>();
 
     private Date requestStartTime;
 
@@ -1424,16 +1424,14 @@ public class ApplicationConnection {
                     redirectTimer.schedule(1000 * sessionExpirationInterval);
                 }
 
-                componentCaptionSizeChanges.clear();
-
                 double processUidlStart = Duration.currentTimeMillis();
 
                 // Ensure that all connectors that we are about to update exist
-                Set<ServerConnector> createdConnectors = createConnectorsIfNeeded(json);
+                JsArrayString createdConnectorIds = createConnectorsIfNeeded(json);
 
                 // Update states, do not fire events
-                Collection<StateChangeEvent> pendingStateChangeEvents = updateConnectorState(
-                        json, createdConnectors);
+                JsArrayObject<StateChangeEvent> pendingStateChangeEvents = updateConnectorState(
+                        json, createdConnectorIds);
 
                 // Update hierarchy, do not fire events
                 ConnectorHierarchyUpdateResult connectorHierarchyUpdateResult = updateConnectorHierarchy(json);
@@ -1442,7 +1440,7 @@ public class ApplicationConnection {
                 sendHierarchyChangeEvents(connectorHierarchyUpdateResult.events);
 
                 updateCaptions(pendingStateChangeEvents,
-                        connectorHierarchyUpdateResult.parentChanged);
+                        connectorHierarchyUpdateResult.parentChangedIds);
 
                 delegateToWidget(pendingStateChangeEvents);
 
@@ -1566,27 +1564,35 @@ public class ApplicationConnection {
             }
 
             private void updateCaptions(
-                    Collection<StateChangeEvent> pendingStateChangeEvents,
-                    Collection<ServerConnector> parentChanged) {
+                    JsArrayObject<StateChangeEvent> pendingStateChangeEvents,
+                    FastStringSet parentChangedIds) {
                 Profiler.enter("updateCaptions");
 
                 /*
                  * Find all components that might need a caption update based on
                  * pending state and hierarchy changes
                  */
-                HashSet<ServerConnector> needsCaptionUpdate = new HashSet<ServerConnector>(
-                        parentChanged);
+                FastStringSet needsCaptionUpdate = FastStringSet.create();
+                needsCaptionUpdate.addAll(parentChangedIds);
 
                 // Find components with potentially changed caption state
-                for (StateChangeEvent event : pendingStateChangeEvents) {
+                int size = pendingStateChangeEvents.size();
+                for (int i = 0; i < size; i++) {
+                    StateChangeEvent event = pendingStateChangeEvents.get(i);
                     if (VCaption.mightChange(event)) {
                         ServerConnector connector = event.getConnector();
-                        needsCaptionUpdate.add(connector);
+                        needsCaptionUpdate.add(connector.getConnectorId());
                     }
                 }
 
+                ConnectorMap connectorMap = getConnectorMap();
+
                 // Update captions for all suitable candidates
-                for (ServerConnector child : needsCaptionUpdate) {
+                JsArrayString dump = needsCaptionUpdate.dump();
+                int needsUpdateLength = dump.length();
+                for (int i = 0; i < needsUpdateLength; i++) {
+                    String childId = dump.get(i);
+                    ServerConnector child = connectorMap.getConnector(childId);
                     if (child instanceof ComponentConnector
                             && ((ComponentConnector) child)
                                     .delegateCaptionHandling()) {
@@ -1604,29 +1610,45 @@ public class ApplicationConnection {
             }
 
             private void delegateToWidget(
-                    Collection<StateChangeEvent> pendingStateChangeEvents) {
+                    JsArrayObject<StateChangeEvent> pendingStateChangeEvents) {
                 Profiler.enter("@DelegateToWidget");
 
                 VConsole.log(" * Running @DelegateToWidget");
 
-                for (StateChangeEvent sce : pendingStateChangeEvents) {
+                // Keep track of types that have no @DelegateToWidget in their
+                // state to optimize performance
+                FastStringSet noOpTypes = FastStringSet.create();
+
+                int size = pendingStateChangeEvents.size();
+                for (int eventIndex = 0; eventIndex < size; eventIndex++) {
+                    StateChangeEvent sce = pendingStateChangeEvents
+                            .get(eventIndex);
                     ServerConnector connector = sce.getConnector();
                     if (connector instanceof ComponentConnector) {
+                        String className = connector.getClass().getName();
+                        if (noOpTypes.contains(className)) {
+                            continue;
+                        }
                         ComponentConnector component = (ComponentConnector) connector;
 
                         Type stateType = AbstractConnector
                                 .getStateType(component);
+                        JsArrayString delegateToWidgetProperties = stateType
+                                .getDelegateToWidgetProperties();
+                        if (delegateToWidgetProperties == null) {
+                            noOpTypes.add(className);
+                            continue;
+                        }
 
-                        FastStringSet changedProperties = sce
-                                .getChangedPropertiesFastSet();
-                        JsArrayString dump = changedProperties.dump();
-                        for (int i = 0; i < dump.length(); i++) {
-                            String propertyName = dump.get(i);
-                            Property property = stateType
-                                    .getProperty(propertyName);
-                            String method = property
-                                    .getDelegateToWidgetMethodName();
-                            if (method != null) {
+                        int length = delegateToWidgetProperties.length();
+                        for (int i = 0; i < length; i++) {
+                            String propertyName = delegateToWidgetProperties
+                                    .get(i);
+                            if (sce.hasPropertyChanged(propertyName)) {
+                                Property property = stateType
+                                        .getProperty(propertyName);
+                                String method = property
+                                        .getDelegateToWidgetMethodName();
                                 Profiler.enter("doDelegateToWidget");
                                 doDelegateToWidget(component, property, method);
                                 Profiler.leave("doDelegateToWidget");
@@ -1673,11 +1695,13 @@ public class ApplicationConnection {
              *            The events to send
              */
             private void sendStateChangeEvents(
-                    Collection<StateChangeEvent> pendingStateChangeEvents) {
+                    JsArrayObject<StateChangeEvent> pendingStateChangeEvents) {
                 Profiler.enter("sendStateChangeEvents");
                 VConsole.log(" * Sending state change events");
 
-                for (StateChangeEvent sce : pendingStateChangeEvents) {
+                int size = pendingStateChangeEvents.size();
+                for (int i = 0; i < size; i++) {
+                    StateChangeEvent sce = pendingStateChangeEvents.get(i);
                     try {
                         sce.getConnector().fireEvent(sce);
                     } catch (final Throwable e) {
@@ -1723,29 +1747,29 @@ public class ApplicationConnection {
                 Profiler.leave("unregisterRemovedConnectors");
             }
 
-            private Set<ServerConnector> createConnectorsIfNeeded(ValueMap json) {
+            private JsArrayString createConnectorsIfNeeded(ValueMap json) {
                 VConsole.log(" * Creating connectors (if needed)");
 
+                JsArrayString createdConnectors = JavaScriptObject
+                        .createArray().cast();
                 if (!json.containsKey("types")) {
-                    return Collections.emptySet();
+                    return createdConnectors;
                 }
 
                 Profiler.enter("Creating connectors");
-
-                Set<ServerConnector> createdConnectors = new HashSet<ServerConnector>();
 
                 ValueMap types = json.getValueMap("types");
                 JsArrayString keyArray = types.getKeyArray();
                 for (int i = 0; i < keyArray.length(); i++) {
                     try {
                         String connectorId = keyArray.get(i);
-                        int connectorType = Integer.parseInt(types
-                                .getString((connectorId)));
                         ServerConnector connector = connectorMap
                                 .getConnector(connectorId);
                         if (connector != null) {
                             continue;
                         }
+                        int connectorType = Integer.parseInt(types
+                                .getString(connectorId));
 
                         Class<? extends ServerConnector> connectorClass = configuration
                                 .getConnectorClassByEncodedTag(connectorType);
@@ -1757,7 +1781,7 @@ public class ApplicationConnection {
                             connector = getConnector(connectorId, connectorType);
                             Profiler.leave("ApplicationConnection.getConnector");
 
-                            createdConnectors.add(connector);
+                            createdConnectors.push(connectorId);
                         } else {
                             // First UIConnector update. Before this the
                             // UIConnector has been created but not
@@ -1767,7 +1791,7 @@ public class ApplicationConnection {
                                     uIConnector);
                             uIConnector.doInit(connectorId,
                                     ApplicationConnection.this);
-                            createdConnectors.add(uIConnector);
+                            createdConnectors.push(connectorId);
                         }
                     } catch (final Throwable e) {
                         VConsole.error(e);
@@ -1829,14 +1853,16 @@ public class ApplicationConnection {
             }
 
             private void sendHierarchyChangeEvents(
-                    Collection<ConnectorHierarchyChangeEvent> pendingHierarchyChangeEvents) {
-                if (pendingHierarchyChangeEvents.isEmpty()) {
+                    JsArrayObject<ConnectorHierarchyChangeEvent> events) {
+                int eventCount = events.size();
+                if (eventCount == 0) {
                     return;
                 }
                 Profiler.enter("sendHierarchyChangeEvents");
 
                 VConsole.log(" * Sending hierarchy change events");
-                for (ConnectorHierarchyChangeEvent event : pendingHierarchyChangeEvents) {
+                for (int i = 0; i < eventCount; i++) {
+                    ConnectorHierarchyChangeEvent event = events.get(i);
                     try {
                         logHierarchyChange(event);
                         event.getConnector().fireEvent(event);
@@ -1871,9 +1897,10 @@ public class ApplicationConnection {
                 VConsole.log(newChildren);
             }
 
-            private Collection<StateChangeEvent> updateConnectorState(
-                    ValueMap json, Set<ServerConnector> newConnectors) {
-                ArrayList<StateChangeEvent> events = new ArrayList<StateChangeEvent>();
+            private JsArrayObject<StateChangeEvent> updateConnectorState(
+                    ValueMap json, JsArrayString createdConnectorIds) {
+                JsArrayObject<StateChangeEvent> events = JavaScriptObject
+                        .createArray().cast();
                 VConsole.log(" * Updating connector states");
                 if (!json.containsKey("state")) {
                     return events;
@@ -1881,8 +1908,8 @@ public class ApplicationConnection {
 
                 Profiler.enter("updateConnectorState");
 
-                HashSet<ServerConnector> remainingNewConnectors = new HashSet<ServerConnector>(
-                        newConnectors);
+                FastStringSet remainingNewConnectors = FastStringSet.create();
+                remainingNewConnectors.addAll(createdConnectorIds);
 
                 // set states for all paintables mentioned in "state"
                 ValueMap states = json.getValueMap("state");
@@ -1923,22 +1950,15 @@ public class ApplicationConnection {
                             }
 
                             Profiler.enter("updateConnectorState create event");
-                            FastStringSet changedProperties = FastStringSet
-                                    .create();
-                            addJsonFields(stateJson, changedProperties, "");
 
-                            if (newConnectors.contains(connector)) {
-                                remainingNewConnectors.remove(connector);
-                                // Fire events for properties using the default
-                                // value for newly created connectors
-                                FastStringSet allStateFields = getAllStateFields(AbstractConnector
-                                        .getStateType(connector));
-                                changedProperties.addAll(allStateFields);
+                            boolean isNewConnector = remainingNewConnectors
+                                    .contains(connectorId);
+                            if (isNewConnector) {
+                                remainingNewConnectors.remove(connectorId);
                             }
 
                             StateChangeEvent event = new StateChangeEvent(
-                                    connector, changedProperties);
-
+                                    connector, stateJson, isNewConnector);
                             events.add(event);
                             Profiler.leave("updateConnectorState create event");
 
@@ -1952,12 +1972,15 @@ public class ApplicationConnection {
                 Profiler.enter("updateConnectorState newWithoutState");
                 // Fire events for properties using the default value for newly
                 // created connectors even if there were no state changes
-                for (ServerConnector connector : remainingNewConnectors) {
-                    FastStringSet changedProperties = getAllStateFields(AbstractConnector
-                            .getStateType(connector));
+                JsArrayString dump = remainingNewConnectors.dump();
+                int length = dump.length();
+                for (int i = 0; i < length; i++) {
+                    String connectorId = dump.get(i);
+                    ServerConnector connector = connectorMap
+                            .getConnector(connectorId);
 
                     StateChangeEvent event = new StateChangeEvent(connector,
-                            changedProperties);
+                            new JSONObject(), true);
 
                     events.add(event);
 
@@ -1967,80 +1990,6 @@ public class ApplicationConnection {
                 Profiler.leave("updateConnectorState");
 
                 return events;
-            }
-
-            private FastStringSet getAllStateFields(Type type) {
-                FastStringSet fields;
-                fields = allStateFieldsCache.get(type.getBaseTypeName());
-                if (fields == null) {
-                    Profiler.enter("getAllStateFields create");
-                    fields = FastStringSet.create();
-                    addAllStateFields(type, fields, "");
-                    allStateFieldsCache.put(type.getBaseTypeName(), fields);
-                    Profiler.leave("getAllStateFields create");
-                }
-                return fields;
-            }
-
-            /**
-             * Recursively adds the names of all properties in the provided
-             * state type.
-             * 
-             * @param type
-             *            the type to process
-             * @param foundProperties
-             *            a set of all currently added properties
-             * @param context
-             *            the base name of the current object
-             */
-            private void addAllStateFields(Type type,
-                    FastStringSet foundProperties, String context) {
-                try {
-                    JsArrayObject<Property> properties = type
-                            .getPropertiesAsArray();
-                    int size = properties.size();
-                    for (int i = 0; i < size; i++) {
-                        Property property = properties.get(i);
-                        String propertyName = context + property.getName();
-                        foundProperties.add(propertyName);
-
-                        Type propertyType = property.getType();
-                        if (propertyType.hasProperties()) {
-                            addAllStateFields(propertyType, foundProperties,
-                                    propertyName + ".");
-                        }
-                    }
-                } catch (NoDataException e) {
-                    throw new IllegalStateException(
-                            "No property info for "
-                                    + type
-                                    + ". Did you remember to compile the right widgetset?",
-                            e);
-                }
-            }
-
-            /**
-             * Recursively adds the names of all fields in all objects in the
-             * provided json object.
-             * 
-             * @param json
-             *            the json object to process
-             * @param fields
-             *            a set of all currently added fields
-             * @param context
-             *            the base name of the current object
-             */
-            private void addJsonFields(JSONObject json, FastStringSet fields,
-                    String context) {
-                for (String key : json.keySet()) {
-                    String fieldName = context + key;
-                    fields.add(fieldName);
-
-                    JSONObject object = json.get(key).isObject();
-                    if (object != null) {
-                        addJsonFields(object, fields, fieldName + ".");
-                    }
-                }
             }
 
             /**
@@ -2106,7 +2055,7 @@ public class ApplicationConnection {
                             }
                             if (childConnector.getParent() != parentConnector) {
                                 childConnector.setParent(parentConnector);
-                                result.parentChanged.add(childConnector);
+                                result.parentChangedIds.add(childConnectorId);
                                 // Not detached even if previously removed from
                                 // parent
                                 maybeDetached.remove(childConnectorId);
@@ -2191,7 +2140,7 @@ public class ApplicationConnection {
             }
 
             private void recursivelyDetach(ServerConnector connector,
-                    List<ConnectorHierarchyChangeEvent> events) {
+                    JsArrayObject<ConnectorHierarchyChangeEvent> events) {
 
                 /*
                  * Reset state in an attempt to keep it consistent with the
@@ -3089,9 +3038,11 @@ public class ApplicationConnection {
      * 
      * @param component
      *            the Paintable whose caption has changed
+     * @deprecated As of 7.0.2, has not had any effect for a long time
      */
+    @Deprecated
     public void captionSizeUpdated(Widget widget) {
-        componentCaptionSizeChanges.add(widget);
+        // This doesn't do anything, it's just kept here for compatibility
     }
 
     /**

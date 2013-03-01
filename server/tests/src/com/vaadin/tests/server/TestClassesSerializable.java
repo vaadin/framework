@@ -48,6 +48,11 @@ public class TestClassesSerializable extends TestCase {
             "com\\.vaadin\\.server\\.AbstractCommunicationManager.*", //
             "com\\.vaadin\\.server\\.CommunicationManager.*", //
             "com\\.vaadin\\.server\\.PortletCommunicationManager.*", //
+            "com\\.vaadin\\.buildhelpers.*", //
+            "com\\.vaadin\\.util\\.ReflectTools.*", //
+            "com\\.vaadin\\.data\\.util\\.ReflectTools.*", //
+            "com\\.vaadin\\.sass.*", //
+            "com\\.vaadin\\.util\\.CurrentInstance\\$1", //
     };
 
     /**

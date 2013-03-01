@@ -610,8 +610,10 @@ public class TableQuery implements QueryDelegate,
     @Override
     public boolean removeRow(RowItem row) throws UnsupportedOperationException,
             SQLException {
-        getLogger().log(Level.FINE, "Removing row with id: {0}",
-                row.getId().getId()[0].toString());
+        if (getLogger().isLoggable(Level.FINE)) {
+            getLogger().log(Level.FINE, "Removing row with id: {0}",
+                    row.getId().getId()[0]);
+        }
         if (executeUpdate(sqlGenerator.generateDeleteQuery(getTableName(),
                 primaryKeyColumns, versionColumn, row)) == 1) {
             return true;

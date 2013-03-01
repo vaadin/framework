@@ -25,6 +25,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.portlet.PortletContext;
@@ -786,9 +787,8 @@ public abstract class VaadinService implements Serializable {
             if (!session.isClosing()) {
                 closeSession(session);
                 if (session.getSession() != null) {
-                    getLogger().fine(
-                            "Closing inactive session "
-                                    + session.getSession().getId());
+                    getLogger().log(Level.FINE, "Closing inactive session {0}",
+                            session.getSession().getId());
                 }
             }
             if (session.getSession() != null) {
@@ -817,7 +817,8 @@ public abstract class VaadinService implements Serializable {
     private void removeClosedUIs(VaadinSession session) {
         for (UI ui : new ArrayList<UI>(session.getUIs())) {
             if (ui.isClosing()) {
-                getLogger().finer("Removing closed UI " + ui.getUIId());
+                getLogger().log(Level.FINER, "Removing closed UI {0}",
+                        ui.getUIId());
                 session.removeUI(ui);
             }
         }
@@ -833,9 +834,9 @@ public abstract class VaadinService implements Serializable {
         String sessionId = session.getSession().getId();
         for (UI ui : session.getUIs()) {
             if (!isUIActive(ui) && !ui.isClosing()) {
-                getLogger().fine(
-                        "Closing inactive UI #" + ui.getUIId() + " in session "
-                                + sessionId);
+                getLogger().log(Level.FINE,
+                        "Closing inactive UI #{0} in session {1}",
+                        new Object[] { ui.getUIId(), sessionId });
                 ui.close();
             }
         }

@@ -17,6 +17,7 @@
 package com.vaadin.sass;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -48,6 +49,12 @@ public class SassCompiler {
         // ScssStylesheet.setStylesheetResolvers(new VaadinResolver());
 
         ScssStylesheet scss = ScssStylesheet.get(input);
+        if(scss == null){
+            System.err.println("The scss file " + input
+                    + " could not be found.");
+            return;
+        }
+        
         scss.compile();
         if (output == null) {
             System.out.println(scss.toString());

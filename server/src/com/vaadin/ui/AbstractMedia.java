@@ -19,6 +19,7 @@ package com.vaadin.ui;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -88,9 +89,9 @@ public abstract class AbstractMedia extends AbstractComponent {
             int sourceIndex = Integer.parseInt(matcher.group(1));
 
             if (sourceIndex < 0 || sourceIndex >= sources.size()) {
-                getLogger().warning(
-                        "Requested source index " + sourceIndex
-                                + " is out of bounds");
+                getLogger().log(Level.WARNING,
+                        "Requested source index {0} is out of bounds",
+                        sourceIndex);
                 return false;
             }
 

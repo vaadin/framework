@@ -75,7 +75,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /**
      * Set of expanded nodes.
      */
-    private final HashSet<Object> expanded = new HashSet<Object>();
+    private HashSet<Object> expanded = new HashSet<Object>();
 
     /**
      * List of action handlers.
@@ -845,9 +845,20 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                     newDataSource));
         }
 
-        // Ensure previous expanded items are cleaned up if they don't exist in
-        // the new container
-        cleanupExpandedItems();
+        /*
+         * Ensure previous expanded items are cleaned up if they don't exist in
+         * the new container
+         */
+        if (expanded != null) {
+            /*
+             * We need to check that the expanded-field is not null since
+             * setContainerDataSource() is called from the parent constructor
+             * (AbstractSelect()) and at that time the expanded field is not yet
+             * initialized.
+             */
+            cleanupExpandedItems();
+        }
+
     }
 
     /* Expand event and listener */
@@ -1652,7 +1663,6 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             target.addAttribute("depth", depthToCheck);
             target.addAttribute("key", key(rootId));
         }
-
     }
 
     /**
@@ -1677,24 +1687,16 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         return itemDescriptionGenerator;
     }
 
-    @Override
-    public void containerItemSetChange(
-            com.vaadin.data.Container.ItemSetChangeEvent event) {
-
-        // Ensure removed items are cleaned up from expanded list
-        cleanupExpandedItems();
-
-        super.containerItemSetChange(event);
-    }
-
     private void cleanupExpandedItems() {
+        Set<Object> removedItemIds = new HashSet<Object>();
         for (Object expandedItemId : expanded) {
             if (getItem(expandedItemId) == null) {
-                expanded.remove(expandedItemId);
+                removedItemIds.add(expandedItemId);
                 if (this.expandedItemId == expandedItemId) {
                     this.expandedItemId = null;
                 }
             }
         }
+        expanded.removeAll(removedItemIds);
     }
 }

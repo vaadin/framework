@@ -43,6 +43,7 @@ import com.vaadin.shared.ui.ui.ScrollClientRpc;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIServerRpc;
 import com.vaadin.shared.ui.ui.UIState;
+import com.vaadin.ui.Component.Focusable;
 import com.vaadin.util.CurrentInstance;
 
 /**

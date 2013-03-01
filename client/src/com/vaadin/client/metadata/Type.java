@@ -17,6 +17,7 @@ package com.vaadin.client.metadata;
 
 import java.util.Collection;
 
+import com.google.gwt.core.client.JsArrayString;
 import com.vaadin.client.JsArrayObject;
 import com.vaadin.client.communication.JSONSerializer;
 
@@ -136,6 +137,10 @@ public class Type {
 
     public boolean hasProperties() {
         return TypeDataStore.hasProperties(this);
+    }
+
+    public JsArrayString getDelegateToWidgetProperties() {
+        return TypeDataStore.getDelegateToWidgetProperites(this);
     }
 
 }

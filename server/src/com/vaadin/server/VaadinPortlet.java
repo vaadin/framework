@@ -28,6 +28,7 @@ import java.security.GeneralSecurityException;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.portlet.ActionRequest;
@@ -606,9 +607,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
                 os.write(buffer, 0, bytes);
             }
         } else {
-            getLogger().info(
-                    "Requested resource [" + resourceID
-                            + "] could not be found");
+            getLogger().log(Level.INFO,
+                    "Requested resource [{0}] could not be found", resourceID);
             response.setProperty(ResourceResponse.HTTP_STATUS_CODE,
                     Integer.toString(HttpServletResponse.SC_NOT_FOUND));
         }

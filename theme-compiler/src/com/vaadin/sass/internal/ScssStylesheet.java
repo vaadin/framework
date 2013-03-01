@@ -42,6 +42,7 @@ import com.vaadin.sass.internal.tree.MixinDefNode;
 import com.vaadin.sass.internal.tree.Node;
 import com.vaadin.sass.internal.tree.VariableNode;
 import com.vaadin.sass.internal.tree.controldirective.IfElseDefNode;
+import com.vaadin.sass.internal.visitor.ExtendNodeHandler;
 import com.vaadin.sass.internal.visitor.ImportNodeHandler;
 
 public class ScssStylesheet extends Node {
@@ -77,7 +78,8 @@ public class ScssStylesheet extends Node {
      * ScssStylesheet tree out of it. Calling compile() on it will transform
      * SASS into CSS. Calling toString() will print out the SCSS/CSS.
      * 
-     * @param file
+     * @param identifier
+     *            The file path. If null then null is returned.
      * @return
      * @throws CSSException
      * @throws IOException
@@ -92,7 +94,8 @@ public class ScssStylesheet extends Node {
      * builds up a ScssStylesheet tree out of it. Calling compile() on it will
      * transform SASS into CSS. Calling toString() will print out the SCSS/CSS.
      * 
-     * @param file
+     * @param identifier
+     *            The file path. If null then null is returned.
      * @param encoding
      * @return
      * @throws CSSException
@@ -108,6 +111,12 @@ public class ScssStylesheet extends Node {
          * 
          * @charset declaration, the default one is ASCII.
          */
+
+        if (identifier == null) {
+            return null;
+        }
+
+        // FIXME Is this actually intended? /John 1.3.2013
         File file = new File(identifier);
         file = file.getCanonicalFile();
 
@@ -172,6 +181,7 @@ public class ScssStylesheet extends Node {
         variables.clear();
         ifElseDefNodes.clear();
         lastNodeAdded.clear();
+        ExtendNodeHandler.clear();
         importOtherFiles(this);
         populateDefinitions(this);
         traverse(this);

@@ -143,8 +143,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
         return (BeanItem<T>) super.getItemDataSource();
     }
 
-    @Override
-    public void bind(Field field, Object propertyId) {
+    private void ensureNestedPropertyAdded(Object propertyId) {
         if (getItemDataSource() != null) {
             // The data source is set so the property must be found in the item.
             // If it is not we try to add it.
@@ -156,8 +155,19 @@ public class BeanFieldGroup<T> extends FieldGroup {
                 getItemDataSource().addNestedProperty((String) propertyId);
             }
         }
+    }
 
+    @Override
+    public void bind(Field field, Object propertyId) {
+        ensureNestedPropertyAdded(propertyId);
         super.bind(field, propertyId);
+    }
+
+    @Override
+    public Field<?> buildAndBind(String caption, Object propertyId)
+            throws BindException {
+        ensureNestedPropertyAdded(propertyId);
+        return super.buildAndBind(caption, propertyId);
     }
 
     @Override

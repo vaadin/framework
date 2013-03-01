@@ -272,7 +272,8 @@ public class GAEVaadinServlet extends VaadinServlet {
             ds.put(entity);
 
         } catch (DeadlineExceededException e) {
-            getLogger().warning("DeadlineExceeded for " + session.getId());
+            getLogger().log(Level.WARNING, "DeadlineExceeded for {0}",
+                    session.getId());
             sendDeadlineExceededNotification(request, response);
         } catch (NotSerializableException e) {
             getLogger().log(Level.SEVERE, "Not serializable!", e);
@@ -421,9 +422,10 @@ public class GAEVaadinServlet extends VaadinServlet {
                 List<Entity> entities = pq.asList(Builder
                         .withLimit(CLEANUP_LIMIT));
                 if (entities != null) {
-                    getLogger().info(
-                            "Vaadin cleanup deleting " + entities.size()
-                                    + " expired Vaadin sessions.");
+                    getLogger()
+                            .log(Level.INFO,
+                                    "Vaadin cleanup deleting {0} expired Vaadin sessions.",
+                                    entities.size());
                     List<Key> keys = new ArrayList<Key>();
                     for (Entity e : entities) {
                         keys.add(e.getKey());
@@ -441,9 +443,10 @@ public class GAEVaadinServlet extends VaadinServlet {
                 List<Entity> entities = pq.asList(Builder
                         .withLimit(CLEANUP_LIMIT));
                 if (entities != null) {
-                    getLogger().info(
-                            "Vaadin cleanup deleting " + entities.size()
-                                    + " expired appengine sessions.");
+                    getLogger()
+                            .log(Level.INFO,
+                                    "Vaadin cleanup deleting {0} expired appengine sessions.",
+                                    entities.size());
                     List<Key> keys = new ArrayList<Key>();
                     for (Entity e : entities) {
                         keys.add(e.getKey());

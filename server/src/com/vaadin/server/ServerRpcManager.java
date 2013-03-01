@@ -119,11 +119,9 @@ public class ServerRpcManager<T extends ServerRpc> implements Serializable {
         } else {
             getLogger()
                     .log(Level.WARNING,
-                            "RPC call received for RpcTarget "
-                                    + target.getClass().getName()
-                                    + " ("
-                                    + invocation.getConnectorId()
-                                    + ") but the target has not registered any RPC interfaces");
+                            "RPC call received for RpcTarget {0} ({1}) but the target has not registered any RPC interfaces",
+                            new Object[] { target.getClass().getName(),
+                                    invocation.getConnectorId() });
         }
     }
 
