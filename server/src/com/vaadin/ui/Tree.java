@@ -1687,16 +1687,6 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
         return itemDescriptionGenerator;
     }
 
-    @Override
-    public void containerItemSetChange(
-            com.vaadin.data.Container.ItemSetChangeEvent event) {
-
-        // Ensure removed items are cleaned up from expanded list
-        cleanupExpandedItems();
-
-        super.containerItemSetChange(event);
-    }
-
     private void cleanupExpandedItems() {
         Set<Object> removedItemIds = new HashSet<Object>();
         for (Object expandedItemId : expanded) {
