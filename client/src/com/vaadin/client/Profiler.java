@@ -362,4 +362,61 @@ public class Profiler {
         return false;
     }
 
+    /**
+     * Outputs the time passed since various events recored in
+     * performance.timing if supported by the browser.
+     */
+    public static void logBootstrapTimings() {
+        if (isEnabled()) {
+            double now = Duration.currentTimeMillis();
+
+            StringBuilder stringBuilder = new StringBuilder(
+                    "Time since window.performance.timing events");
+            SimpleTree tree = new SimpleTree(stringBuilder.toString());
+
+            String[] keys = new String[] { "navigationStart",
+                    "unloadEventStart", "unloadEventEnd", "redirectStart",
+                    "redirectEnd", "fetchStart", "domainLookupStart",
+                    "domainLookupEnd", "connectStart", "connectEnd",
+                    "requestStart", "responseStart", "responseEnd",
+                    "domLoading", "domInteractive",
+                    "domContentLoadedEventStart", "domContentLoadedEventEnd",
+                    "domComplete", "loadEventStart", "loadEventEnd" };
+
+            for (String key : keys) {
+                double value = getPerformanceTiming(key);
+                if (value == 0) {
+                    // Ignore missing value
+                    continue;
+                }
+                String text = key + ": " + (now - value);
+                tree.add(new Label(text));
+                stringBuilder.append("\n * ");
+                stringBuilder.append(text);
+            }
+
+            if (tree.getWidgetCount() == 0) {
+                VConsole.log("Bootstrap timings not supported, please ensure your browser supports performance.timing");
+                return;
+            }
+
+            Console implementation = VConsole.getImplementation();
+            if (implementation instanceof VDebugConsole) {
+                VDebugConsole console = (VDebugConsole) implementation;
+                console.showTree(tree, stringBuilder.toString());
+            } else {
+                VConsole.log(stringBuilder.toString());
+            }
+        }
+    }
+
+    private static final native double getPerformanceTiming(String name)
+    /*-{
+        if ($wnd.performance && $wnd.performance.timing && $wnd.performance.timing[name]) {
+            return $wnd.performance.timing[name];
+        } else {
+            return 0;
+        }
+    }-*/;
+
 }

@@ -1534,6 +1534,9 @@ public class ApplicationConnection {
                 totalProcessingTime += lastProcessingTime;
                 if (bootstrapTime == 0) {
                     bootstrapTime = calculateBootstrapTime();
+                    if (Profiler.isEnabled() && bootstrapTime != -1) {
+                        Profiler.logBootstrapTimings();
+                    }
                 }
 
                 VConsole.log(" Processing time was "
