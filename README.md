@@ -47,12 +47,16 @@ Import the Projects into the Workspace
 1. Click “deselect all” and select
   1. gwt-dev
   2. gwt-user
-  3. vaadin
-1. Click “finish” to complete the import
+1. Click “finish” to complete the import of GWT
+1. Then repeat by doing *File* -> *Import* -> *General* -> *Existing Projects into Workspace*
+1. Select the workspace folder as root directory
+1. Click “deselect all” and select
+  1. vaadin
+1. Click “finish” to complete the import of Vaadin Framework
 
 ![FinishImportProject](http://cl.ly/image/2W3S0P2c2p1t/Import2.png "Finishing Project Import")
 
-You should now have three projects in your workspace and they should all compile without errors (there might be warnings).
+You should now have three projects in your workspace. If the vaadin project does not compile without errors, choose *Ivy* -> *Resolve* from the vaadin project popup menu. Now all projects should compile without errors (there might be warnings).
 
 Note that the first compilation takes a while to finish as Ivy downloads dependencies used in the projects.
 
