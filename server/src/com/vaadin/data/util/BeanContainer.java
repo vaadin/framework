@@ -55,8 +55,7 @@ import java.util.Collection;
  * </p>
  * 
  * <p>
- * It is not possible to add additional properties to the container and nested
- * bean properties are not supported.
+ * It is not possible to add additional properties to the container.
  * </p>
  * 
  * @param <IDTYPE>
