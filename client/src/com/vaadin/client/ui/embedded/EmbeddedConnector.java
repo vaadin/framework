@@ -137,7 +137,8 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
                         getWidget().getSrc(uidl, client));
                 clearBrowserElement = false;
             } else {
-                VConsole.log("Unknown Embedded type '" + getWidget().type + "'");
+                VConsole.error("Unknown Embedded type '" + getWidget().type
+                        + "'");
             }
         } else if (uidl.hasAttribute("mimetype")) {
             // remove old style name related to type
@@ -203,10 +204,10 @@ public class EmbeddedConnector extends AbstractComponentConnector implements
                             .getStringAttribute(EmbeddedConstants.ALTERNATE_TEXT));
                 }
             } else {
-                VConsole.log("Unknown Embedded mimetype '" + mime + "'");
+                VConsole.error("Unknown Embedded mimetype '" + mime + "'");
             }
         } else {
-            VConsole.log("Unknown Embedded; no type or mimetype attribute");
+            VConsole.error("Unknown Embedded; no type or mimetype attribute");
         }
 
         if (clearBrowserElement) {
