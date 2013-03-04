@@ -241,11 +241,9 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         /*
          * Enable Chrome Frame in all versions of IE if installed.
-         * 
-         * Claim IE10 support to avoid using compatibility mode.
          */
         head.appendElement("meta").attr("http-equiv", "X-UA-Compatible")
-                .attr("content", "IE=9;chrome=1");
+                .attr("content", "IE=10;chrome=1");
 
         String title = response.getUIProvider().getPageTitle(
                 new UICreateEvent(context.getRequest(), context.getUIClass()));
