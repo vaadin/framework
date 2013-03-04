@@ -72,7 +72,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
                 java.lang.reflect.Field field1 = cls
                         .getDeclaredField(propertyId);
                 return field1;
-            } catch (NoSuchFieldError e) {
+            } catch (NoSuchFieldException e) {
                 // Try super classes until we reach Object
                 Class<?> superClass = cls.getSuperclass();
                 if (superClass != Object.class) {
