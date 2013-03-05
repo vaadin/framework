@@ -85,6 +85,8 @@ public class BrowserInfo {
 
         if (browserDetails.isChrome()) {
             touchDevice = detectChromeTouchDevice();
+        } else if (browserDetails.isIE()) {
+            touchDevice = detectIETouchDevice();
         } else {
             touchDevice = detectTouchDevice();
         }
@@ -98,6 +100,11 @@ public class BrowserInfo {
     private native boolean detectChromeTouchDevice()
     /*-{
         return ("ontouchstart" in window);
+    }-*/;
+
+    private native boolean detectIETouchDevice()
+    /*-{
+        return !!navigator.msMaxTouchPoints;
     }-*/;
 
     private native int getIEDocumentMode()

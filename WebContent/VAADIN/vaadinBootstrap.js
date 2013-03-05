@@ -269,8 +269,20 @@
 			}
 			
 			// Detect touch device support
-	        try { document.createEvent("TouchEvent"); url += "&v-td=1";} catch(e){};
-	        
+			var supportsTouch = false;
+			try {
+				document.createEvent("TouchEvent");
+				supportsTouch = true;
+			} catch (e) {
+				// Chrome and IE10 touch detection
+				supportsTouch = 'ontouchstart' in window
+						|| navigator.msMaxTouchPoints;
+			}
+
+			if (supportsTouch) {
+				url += "&v-td=1";
+			}
+   	        
 	        return url;
 		}
 	};
