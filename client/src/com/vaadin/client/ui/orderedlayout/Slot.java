@@ -18,6 +18,7 @@ package com.vaadin.client.ui.orderedlayout;
 
 import java.util.List;
 
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -91,7 +92,6 @@ public final class Slot extends SimplePanel {
     private ElementResizeListener widgetResizeListener;
 
     private ElementResizeListener spacingResizeListener;
-
 
     // Caption is placed after component unless there is some part which
     // moves it above.
@@ -479,6 +479,11 @@ public final class Slot extends SimplePanel {
                 // character)
                 requiredIcon.setInnerHTML("*");
                 requiredIcon.setClassName("v-required-field-indicator");
+
+                // The star should not be read by the screen reader, as it is
+                // purely visual. Required state is set at the element level for
+                // the screen reader.
+                Roles.getTextboxRole().setAriaHiddenState(requiredIcon, true);
             }
             caption.appendChild(requiredIcon);
         } else if (requiredIcon != null) {
