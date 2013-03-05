@@ -30,9 +30,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:http:http://dev.vaadin.com/git/vaadin.git</connection>
-        <developerConnection>scm:ssh:git@dev.vaadin.com/vaadin</developerConnection>
-        <url>http://dev.vaadin.com/git/?p=vaadin.git</url>
+        <connection>scm:https:https://github.com/vaadin/vaadin.git</connection>
+        <developerConnection>scm:https:https://github.com/vaadin/vaadin.git</developerConnection>
+        <url>https://github.com/vaadin/vaadin</url>
     </scm>
     <developers>
         <developer>
