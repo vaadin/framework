@@ -656,8 +656,7 @@ public class ApplicationConnection {
     }-*/;
 
     protected void repaintAll() {
-        String repainAllParameters = getRepaintAllParameters();
-        makeUidlRequest("", repainAllParameters, false);
+        makeUidlRequest("", getRepaintAllParameters());
     }
 
     /**
@@ -667,7 +666,7 @@ public class ApplicationConnection {
     public void analyzeLayouts() {
         String params = getRepaintAllParameters() + "&"
                 + ApplicationConstants.PARAM_ANALYZE_LAYOUTS + "=1";
-        makeUidlRequest("", params, false);
+        makeUidlRequest("", params);
     }
 
     /**
@@ -681,7 +680,7 @@ public class ApplicationConnection {
         String params = getRepaintAllParameters() + "&"
                 + ApplicationConstants.PARAM_HIGHLIGHT_CONNECTOR + "="
                 + serverConnector.getConnectorId();
-        makeUidlRequest("", params, false);
+        makeUidlRequest("", params);
     }
 
     /**
@@ -694,11 +693,9 @@ public class ApplicationConnection {
      *            Contains key=value pairs joined by & characters or is empty if
      *            no parameters should be added. Should not start with any
      *            special character.
-     * @param forceSync
-     *            true if the request should be synchronous, false otherwise
      */
     protected void makeUidlRequest(final String requestData,
-            final String extraParams, final boolean forceSync) {
+            final String extraParams) {
         startRequest();
         // Security: double cookie submission pattern
         final String payload = uidlSecurityKey + VAR_BURST_SEPARATOR
@@ -713,7 +710,7 @@ public class ApplicationConnection {
         uri = addGetParameters(uri, UIConstants.UI_ID_PARAMETER + "="
                 + configuration.getUIId());
 
-        doUidlRequest(uri, payload, forceSync);
+        doUidlRequest(uri, payload);
 
     }
 
@@ -725,143 +722,124 @@ public class ApplicationConnection {
      *            The URI to use for the request. May includes GET parameters
      * @param payload
      *            The contents of the request to send
-     * @param synchronous
-     *            true if the request should be synchronous, false otherwise
      */
-    protected void doUidlRequest(final String uri, final String payload,
-            final boolean synchronous) {
-        if (!synchronous) {
-            RequestCallback requestCallback = new RequestCallback() {
-                @Override
-                public void onError(Request request, Throwable exception) {
-                    handleCommunicationError(exception.getMessage(), -1);
+    protected void doUidlRequest(final String uri, final String payload) {
+        RequestCallback requestCallback = new RequestCallback() {
+            @Override
+            public void onError(Request request, Throwable exception) {
+                handleCommunicationError(exception.getMessage(), -1);
+            }
+
+            private void handleCommunicationError(String details, int statusCode) {
+                if (!handleErrorInDelegate(details, statusCode)) {
+                    showCommunicationError(details, statusCode);
                 }
-
-                private void handleCommunicationError(String details,
-                        int statusCode) {
-                    if (!handleErrorInDelegate(details, statusCode)) {
-                        showCommunicationError(details, statusCode);
-                    }
-                    endRequest();
-                }
-
-                @Override
-                public void onResponseReceived(Request request,
-                        Response response) {
-                    VConsole.log("Server visit took "
-                            + String.valueOf((new Date()).getTime()
-                                    - requestStartTime.getTime()) + "ms");
-
-                    int statusCode = response.getStatusCode();
-
-                    switch (statusCode) {
-                    case 0:
-                        if (retryCanceledActiveRequest) {
-                            /*
-                             * Request was most likely canceled because the
-                             * browser is maybe navigating away from the page.
-                             * Just send the request again without displaying
-                             * any error in case the navigation isn't carried
-                             * through.
-                             */
-                            retryCanceledActiveRequest = false;
-                            doUidlRequest(uri, payload, synchronous);
-                        } else {
-                            handleCommunicationError(
-                                    "Invalid status code 0 (server down?)",
-                                    statusCode);
-                        }
-                        return;
-
-                    case 401:
-                        /*
-                         * Authorization has failed. Could be that the session
-                         * has timed out and the container is redirecting to a
-                         * login page.
-                         */
-                        showAuthenticationError("");
-                        endRequest();
-                        return;
-
-                    case 503:
-                        /*
-                         * We'll assume msec instead of the usual seconds. If
-                         * there's no Retry-After header, handle the error like
-                         * a 500, as per RFC 2616 section 10.5.4.
-                         */
-                        String delay = response.getHeader("Retry-After");
-                        if (delay != null) {
-                            VConsole.log("503, retrying in " + delay + "msec");
-                            (new Timer() {
-                                @Override
-                                public void run() {
-                                    doUidlRequest(uri, payload, synchronous);
-                                }
-                            }).schedule(Integer.parseInt(delay));
-                            return;
-                        }
-                    }
-
-                    if ((statusCode / 100) == 4) {
-                        // Handle all 4xx errors the same way as (they are
-                        // all permanent errors)
-                        showCommunicationError(
-                                "UIDL could not be read from server. Check servlets mappings. Error code: "
-                                        + statusCode, statusCode);
-                        endRequest();
-                        return;
-                    } else if ((statusCode / 100) == 5) {
-                        // Something's wrong on the server, there's nothing the
-                        // client can do except maybe try again.
-                        handleCommunicationError("Server error. Error code: "
-                                + statusCode, statusCode);
-                        return;
-                    }
-
-                    String contentType = response.getHeader("Content-Type");
-                    if (contentType == null
-                            || !contentType.startsWith("application/json")) {
-                        /*
-                         * A servlet filter or equivalent may have intercepted
-                         * the request and served non-UIDL content (for
-                         * instance, a login page if the session has expired.)
-                         * If the response contains a magic substring, do a
-                         * synchronous refresh. See #8241.
-                         */
-                        MatchResult refreshToken = RegExp.compile(
-                                UIDL_REFRESH_TOKEN + "(:\\s*(.*?))?(\\s|$)")
-                                .exec(response.getText());
-                        if (refreshToken != null) {
-                            redirect(refreshToken.getGroup(2));
-                            return;
-                        }
-                    }
-
-                    // for(;;);[realjson]
-                    final String jsonText = response.getText().substring(9,
-                            response.getText().length() - 1);
-                    handleJSONText(jsonText, statusCode);
-                }
-
-            };
-            try {
-                doAsyncUIDLRequest(uri, payload, requestCallback);
-            } catch (RequestException e) {
-                VConsole.error(e);
                 endRequest();
             }
-        } else {
-            // Synchronized call, discarded response (leaving the page)
-            SynchronousXHR syncXHR = (SynchronousXHR) SynchronousXHR.create();
-            syncXHR.synchronousPost(uri + "&"
-                    + ApplicationConstants.PARAM_UNLOADBURST + "=1", payload);
-            /*
-             * Although we are in theory leaving the page, the page may still
-             * stay open. End request properly here too. See #3289
-             */
+
+            @Override
+            public void onResponseReceived(Request request, Response response) {
+                VConsole.log("Server visit took "
+                        + String.valueOf((new Date()).getTime()
+                                - requestStartTime.getTime()) + "ms");
+
+                int statusCode = response.getStatusCode();
+
+                switch (statusCode) {
+                case 0:
+                    if (retryCanceledActiveRequest) {
+                        /*
+                         * Request was most likely canceled because the browser
+                         * is maybe navigating away from the page. Just send the
+                         * request again without displaying any error in case
+                         * the navigation isn't carried through.
+                         */
+                        retryCanceledActiveRequest = false;
+                        doUidlRequest(uri, payload);
+                    } else {
+                        handleCommunicationError(
+                                "Invalid status code 0 (server down?)",
+                                statusCode);
+                    }
+                    return;
+
+                case 401:
+                    /*
+                     * Authorization has failed. Could be that the session has
+                     * timed out and the container is redirecting to a login
+                     * page.
+                     */
+                    showAuthenticationError("");
+                    endRequest();
+                    return;
+
+                case 503:
+                    /*
+                     * We'll assume msec instead of the usual seconds. If
+                     * there's no Retry-After header, handle the error like a
+                     * 500, as per RFC 2616 section 10.5.4.
+                     */
+                    String delay = response.getHeader("Retry-After");
+                    if (delay != null) {
+                        VConsole.log("503, retrying in " + delay + "msec");
+                        (new Timer() {
+                            @Override
+                            public void run() {
+                                doUidlRequest(uri, payload);
+                            }
+                        }).schedule(Integer.parseInt(delay));
+                        return;
+                    }
+                }
+
+                if ((statusCode / 100) == 4) {
+                    // Handle all 4xx errors the same way as (they are
+                    // all permanent errors)
+                    showCommunicationError(
+                            "UIDL could not be read from server. Check servlets mappings. Error code: "
+                                    + statusCode, statusCode);
+                    endRequest();
+                    return;
+                } else if ((statusCode / 100) == 5) {
+                    // Something's wrong on the server, there's nothing the
+                    // client can do except maybe try again.
+                    handleCommunicationError("Server error. Error code: "
+                            + statusCode, statusCode);
+                    return;
+                }
+
+                String contentType = response.getHeader("Content-Type");
+                if (contentType == null
+                        || !contentType.startsWith("application/json")) {
+                    /*
+                     * A servlet filter or equivalent may have intercepted the
+                     * request and served non-UIDL content (for instance, a
+                     * login page if the session has expired.) If the response
+                     * contains a magic substring, do a synchronous refresh. See
+                     * #8241.
+                     */
+                    MatchResult refreshToken = RegExp.compile(
+                            UIDL_REFRESH_TOKEN + "(:\\s*(.*?))?(\\s|$)").exec(
+                            response.getText());
+                    if (refreshToken != null) {
+                        redirect(refreshToken.getGroup(2));
+                        return;
+                    }
+                }
+
+                // for(;;);[realjson]
+                final String jsonText = response.getText().substring(9,
+                        response.getText().length() - 1);
+                handleJSONText(jsonText, statusCode);
+            }
+
+        };
+        try {
+            doAjaxRequest(uri, payload, requestCallback);
+        } catch (RequestException e) {
+            VConsole.error(e);
             endRequest();
         }
-
     }
 
     /**
@@ -905,11 +883,12 @@ public class ApplicationConnection {
      * @throws RequestException
      *             if the request could not be sent
      */
-    protected void doAsyncUIDLRequest(String uri, String payload,
+    protected void doAjaxRequest(String uri, String payload,
             RequestCallback requestCallback) throws RequestException {
         RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, uri);
         // TODO enable timeout
         // rb.setTimeoutMillis(timeoutMillis);
+        // TODO this should be configurable
         rb.setHeader("Content-Type", "text/plain;charset=utf-8");
         rb.setRequestData(payload);
         rb.setCallback(requestCallback);
@@ -1179,7 +1158,7 @@ public class ApplicationConnection {
             }
             LinkedHashMap<String, MethodInvocation> nextBurst = pendingBursts
                     .remove(0);
-            buildAndSendVariableBurst(nextBurst, false);
+            buildAndSendVariableBurst(nextBurst);
         }
     }
 
@@ -2453,7 +2432,7 @@ public class ApplicationConnection {
                     lastInvocationTag = 0;
                 }
             } else {
-                buildAndSendVariableBurst(pendingInvocations, false);
+                buildAndSendVariableBurst(pendingInvocations);
             }
         }
     }
@@ -2467,12 +2446,9 @@ public class ApplicationConnection {
      * 
      * @param pendingInvocations
      *            List of RPC method invocations to send
-     * @param forceSync
-     *            Should we use synchronous request?
      */
     private void buildAndSendVariableBurst(
-            LinkedHashMap<String, MethodInvocation> pendingInvocations,
-            boolean forceSync) {
+            LinkedHashMap<String, MethodInvocation> pendingInvocations) {
         final StringBuffer req = new StringBuffer();
 
         while (!pendingInvocations.isEmpty()) {
@@ -2526,12 +2502,6 @@ public class ApplicationConnection {
             pendingInvocations.clear();
             // Keep tag string short
             lastInvocationTag = 0;
-            // Append all the bursts to this synchronous request
-            if (forceSync && !pendingBursts.isEmpty()) {
-                pendingInvocations = pendingBursts.get(0);
-                pendingBursts.remove(0);
-                req.append(VAR_BURST_SEPARATOR);
-            }
         }
 
         // Include the browser detail parameters if they aren't already sent
@@ -2552,7 +2522,7 @@ public class ApplicationConnection {
 
             getConfiguration().setWidgetsetVersionSent();
         }
-        makeUidlRequest(req.toString(), extraParams, forceSync);
+        makeUidlRequest(req.toString(), extraParams);
     }
 
     private boolean isJavascriptRpc(MethodInvocation invocation) {

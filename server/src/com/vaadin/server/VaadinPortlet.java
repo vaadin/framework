@@ -417,9 +417,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
                 VaadinPortletSession vaadinSession = null;
 
                 try {
-                    // TODO What about PARAM_UNLOADBURST &
-                    // redirectToApplication??
-
                     vaadinSession = (VaadinPortletSession) getService()
                             .findVaadinSession(vaadinRequest);
                     if (vaadinSession == null) {

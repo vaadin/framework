@@ -45,7 +45,6 @@ import com.vaadin.server.communication.HeartbeatHandler;
 import com.vaadin.server.communication.PublishedFileHandler;
 import com.vaadin.server.communication.UIInitHandler;
 import com.vaadin.server.communication.UidlRequestHandler;
-import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.util.CurrentInstance;
 
 @SuppressWarnings("serial")
@@ -263,24 +262,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
         VaadinSession vaadinSession = null;
 
         try {
-            // If a duplicate "close application" URL is received for an
-            // application that is not open, redirect to the application's main
-            // page.
-            // This is needed as e.g. Spring Security remembers the last
-            // URL from the application, which is the logout URL, and repeats
-            // it.
-            // We can tell apart a real onunload request from a repeated one
-            // based on the real one having content (at least the UIDL security
-            // key).
-            if (requestType == RequestType.UIDL
-                    && request.getParameterMap().containsKey(
-                            ApplicationConstants.PARAM_UNLOADBURST)
-                    && request.getContentLength() < 1
-                    && getService().getExistingSession(request, false) == null) {
-                redirectToApplication(request, response);
-                return;
-            }
-
             // Find out the service session this request is related to
             vaadinSession = getService().findVaadinSession(request);
             if (vaadinSession == null) {
@@ -618,14 +599,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
             VaadinServletResponse response) throws IOException,
             ServletException {
 
-        if (isOnUnloadRequest(request)) {
-            /*
-             * Request was an unload request (e.g. window close event) and the
-             * client expects no response if it fails.
-             */
-            return;
-        }
-
         try {
             SystemMessages ci = getService().getSystemMessages(
                     ServletPortletHelper.findLocale(null, null, request),
@@ -665,13 +638,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
     private void handleServiceSecurityException(VaadinServletRequest request,
             VaadinServletResponse response) throws IOException,
             ServletException {
-        if (isOnUnloadRequest(request)) {
-            /*
-             * Request was an unload request (e.g. window close event) and the
-             * client expects no response if it fails.
-             */
-            return;
-        }
 
         try {
             /*
@@ -1130,10 +1096,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         return false;
-    }
-
-    private boolean isOnUnloadRequest(HttpServletRequest request) {
-        return request.getParameter(ApplicationConstants.PARAM_UNLOADBURST) != null;
     }
 
     /**
