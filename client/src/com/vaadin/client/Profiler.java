@@ -54,25 +54,45 @@ public class Profiler {
         }
     }
 
-    private static JsArray<ProfilerEvent> events;
+    private static final String evtGroup = "VaadinProfiler";
 
-    private static final class ProfilerEvent extends JavaScriptObject {
-        protected ProfilerEvent() {
+    private static final class GwtStatsEvent extends JavaScriptObject {
+        protected GwtStatsEvent() {
             // JSO constructor
         }
 
-        public native String getName()
+        private native String getEvtGroup()
         /*-{
-            return this.name;
+            return this.evtGroup;
         }-*/;
 
-        private native double getRawTime()
+        private native double getMillis()
         /*-{
-            return this.time;
+            return this.millis;
         }-*/;
 
-        private boolean isStart() {
-            return getRawTime() <= 0;
+        private native String getSubSystem()
+        /*-{
+            return this.subSystem;
+        }-*/;
+
+        private native String getType()
+        /*-{
+            return this.type;
+        }-*/;
+
+        private native String getModuleName()
+        /*-{
+            return this.moduleName;
+        }-*/;
+
+        public final String getEventName() {
+            String group = getEvtGroup();
+            if (evtGroup.equals(group)) {
+                return getSubSystem();
+            } else {
+                return group + "." + getSubSystem();
+            }
         }
     }
 
@@ -91,19 +111,15 @@ public class Profiler {
             return name;
         }
 
-        public Node addEvent(ProfilerEvent event) {
-            Node child = children.get(event.getName());
+        private Node accessChild(String name, double time) {
+            Node child = children.get(name);
             if (child == null) {
-                child = new Node(event.getName());
-                children.put(event.getName(), child);
+                child = new Node(name);
+                children.put(name, child);
             }
-            child.time += event.getRawTime();
+            child.time -= time;
             child.count++;
             return child;
-        }
-
-        public void registerEnd(ProfilerEvent event) {
-            time += event.getRawTime();
         }
 
         public double getTimeSpent() {
@@ -146,6 +162,11 @@ public class Profiler {
             for (Node node : children.values()) {
                 node.buildRecursiveString(builder, childPrefix);
             }
+        }
+
+        @Override
+        public String toString() {
+            return getStringRepresentation("");
         }
 
         private String getStringRepresentation(String prefix) {
@@ -229,7 +250,7 @@ public class Profiler {
      */
     public static void enter(String name) {
         if (isEnabled()) {
-            pushEvent(events, name, -Duration.currentTimeMillis());
+            logGwtEvent(name, "begin");
         }
     }
 
@@ -243,14 +264,20 @@ public class Profiler {
      */
     public static void leave(String name) {
         if (isEnabled()) {
-            pushEvent(events, name, Duration.currentTimeMillis());
+            logGwtEvent(name, "end");
         }
     }
 
-    private static native final void pushEvent(JsArray<ProfilerEvent> target,
-            String name, double time)
+    private static native final void logGwtEvent(String name, String type)
     /*-{
-        target[target.length] = {name: name, time: time};
+        $wnd.__gwtStatsEvent({
+            evtGroup: @com.vaadin.client.Profiler::evtGroup,
+            moduleName: @com.google.gwt.core.client.GWT::getModuleName()(),
+            millis: (new Date).getTime(),
+            sessionId: undefined,
+            subSystem: name,
+            type: type
+        });
     }-*/;
 
     /**
@@ -259,7 +286,35 @@ public class Profiler {
      */
     public static void reset() {
         if (isEnabled()) {
-            events = JavaScriptObject.createArray().cast();
+            /*
+             * Old implementations might call reset for initialization, so
+             * ensure it is initialized here as well. Initialization has no side
+             * effects if already done.
+             */
+            initialize();
+
+            clearEventsList();
+        }
+    }
+
+    /**
+     * Initializes the profiler. This should be done before calling any other
+     * function in this class. Failing to do so might cause undesired behavior.
+     * This method has no side effects if the initialization has already been
+     * done.
+     * <p>
+     * Please note that this method should be called even if the profiler is not
+     * enabled because it will then remove a logger function that might have
+     * been included in the HTML page and that would leak memory unless removed.
+     * </p>
+     * 
+     * @since 7.0.2
+     */
+    public static void initialize() {
+        if (isEnabled()) {
+            ensureLogger();
+        } else {
+            ensureNoLogger();
         }
     }
 
@@ -275,25 +330,52 @@ public class Profiler {
         LinkedList<Node> stack = new LinkedList<Node>();
         Node rootNode = new Node(null);
         stack.add(rootNode);
-        for (int i = 0; i < events.length(); i++) {
-            ProfilerEvent event = events.get(i);
-            if (event.isStart()) {
-                Node stackTop = stack.getLast().addEvent(event);
-                stack.add(stackTop);
+        JsArray<GwtStatsEvent> gwtStatsEvents = getGwtStatsEvents();
+        if (gwtStatsEvents.length() == 0) {
+            VConsole.log("No profiling events recorded, this might happen if another __gwtStatsEvent handler is installed.");
+            return;
+        }
+
+        for (int i = 0; i < gwtStatsEvents.length(); i++) {
+            GwtStatsEvent gwtStatsEvent = gwtStatsEvents.get(i);
+            String eventName = gwtStatsEvent.getEventName();
+            String type = gwtStatsEvent.getType();
+            boolean isBeginEvent = "begin".equals(type);
+
+            Node stackTop = stack.getLast();
+            boolean inEvent = eventName.equals(stackTop.getName())
+                    && !isBeginEvent;
+
+            if (!inEvent && stack.size() >= 2
+                    && eventName.equals(stack.get(stack.size() - 2).name)
+                    && !isBeginEvent) {
+                // back out of sub event
+                stackTop.time += gwtStatsEvent.getMillis();
+                stack.removeLast();
+                stackTop = stack.getLast();
+
+                inEvent = true;
+            }
+
+            if (type.equals("end")) {
+                if (!inEvent) {
+                    VConsole.error("Got end event for " + eventName
+                            + " but is currently in " + stackTop.getName());
+                    return;
+                }
+                Node previousStackTop = stack.removeLast();
+                previousStackTop.time += gwtStatsEvent.getMillis();
             } else {
-                Node stackTop = stack.removeLast();
-                if (stackTop == null) {
-                    VConsole.error("Leaving " + event.getName()
-                            + " that was never entered.");
-                    return;
+                if (!inEvent) {
+                    stackTop = stackTop.accessChild(eventName,
+                            gwtStatsEvent.getMillis());
+                    stack.add(stackTop);
                 }
-                if (!stackTop.getName().equals(event.getName())) {
-                    VConsole.error("Invalid profiling event order, leaving "
-                            + event.getName() + " but " + stackTop.getName()
-                            + " was expected");
-                    return;
+                if (!isBeginEvent) {
+                    // Create sub event
+                    stack.add(stackTop.accessChild(eventName + "." + type,
+                            gwtStatsEvent.getMillis()));
                 }
-                stackTop.registerEnd(event);
             }
         }
 
@@ -417,6 +499,47 @@ public class Profiler {
         } else {
             return 0;
         }
+    }-*/;
+
+    private static native JsArray<GwtStatsEvent> getGwtStatsEvents()
+    /*-{
+        return $wnd.vaadin.gwtStatsEvents || [];
+    }-*/;
+
+    /**
+     * Add logger if it's not already there, also initializing the event array
+     * if needed.
+     */
+    private static native void ensureLogger()
+    /*-{
+        if (typeof $wnd.__gwtStatsEvent != 'function') {
+            if (typeof $wnd.vaadin.gwtStatsEvents != 'object') {
+                $wnd.vaadin.gwtStatsEvents = [];
+            }  
+            $wnd.__gwtStatsEvent = function(event) {
+                $wnd.vaadin.gwtStatsEvents.push(event);
+                return true;
+            }
+        }
+    }-*/;
+
+    /**
+     * Remove logger function and event array if it seems like the function has
+     * been added by us.
+     */
+    private static native void ensureNoLogger()
+    /*-{
+        if (typeof $wnd.vaadin.gwtStatsEvents == 'object') {
+            delete $wnd.vaadin.gwtStatsEvents;
+            if (typeof $wnd.__gwtStatsEvent == 'function') {
+                delete $wnd.__gwtStatsEvent;
+            }
+        }  
+    }-*/;
+
+    private static native JsArray<GwtStatsEvent> clearEventsList()
+    /*-{
+        $wnd.vaadin.gwtStatsEvents = [];
     }-*/;
 
 }
