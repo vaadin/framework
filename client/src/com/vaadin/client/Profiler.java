@@ -532,7 +532,9 @@ public class Profiler {
         if (typeof $wnd.vaadin.gwtStatsEvents == 'object') {
             delete $wnd.vaadin.gwtStatsEvents;
             if (typeof $wnd.__gwtStatsEvent == 'function') {
-                delete $wnd.__gwtStatsEvent;
+                // IE8 refuses to delete window properties
+                $wnd.__gwtStatsEvent = undefined;
+                try { delete $wnd.__gwtStatsEvent;} catch (e) {}
             }
         }  
     }-*/;
