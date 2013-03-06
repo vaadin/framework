@@ -24,16 +24,18 @@ public class AriaHelper {
     public static void bindCaption(Widget widget, Element captionElement) {
         assert widget != null : "Valid Widget required";
 
-        ensureUniqueId(captionElement);
+        if (null != captionElement) {
+            ensureUniqueId(captionElement);
 
-        if (widget instanceof HandlesAriaCaption) {
-            ((HandlesAriaCaption) widget).handleAriaCaption(captionElement);
-        } else if (captionElement != null) {
-            String ownerId = ensureUniqueId(widget.getElement());
-            captionElement.setAttribute("for", ownerId);
+            if (widget instanceof HandlesAriaCaption) {
+                ((HandlesAriaCaption) widget).handleAriaCaption(captionElement);
+            } else {
+                String ownerId = ensureUniqueId(widget.getElement());
+                captionElement.setAttribute("for", ownerId);
 
-            Roles.getTextboxRole().setAriaLabelledbyProperty(
-                    widget.getElement(), Id.of(captionElement));
+                Roles.getTextboxRole().setAriaLabelledbyProperty(
+                        widget.getElement(), Id.of(captionElement));
+            }
         } else {
             Roles.getTextboxRole().removeAriaLabelledbyProperty(
                     widget.getElement());
