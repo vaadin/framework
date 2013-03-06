@@ -17,13 +17,19 @@ package com.vaadin.client.ui.ui;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.HeadElement;
+import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -56,6 +62,7 @@ import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.VUI;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.client.ui.window.WindowConnector;
+import com.vaadin.server.Page.StyleSheet;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
@@ -256,6 +263,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                     final UIDL notification = (UIDL) it.next();
                     VNotification.showNotification(client, notification);
                 }
+            } else if (tag == "css-injections") {
+                injectCSS(childUidl);
             }
         }
 
@@ -322,6 +331,89 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             });
         }
         getWidget().rendering = false;
+    }
+
+    /**
+     * Reads CSS strings and resources injected by {@link StyleSheet#inject}
+     * from the UIDL stream.
+     * 
+     * @param uidl
+     *            The uidl which contains "css-resource" and "css-string" tags
+     */
+    private void injectCSS(UIDL uidl) {
+
+        final HeadElement head = HeadElement.as(Document.get()
+                .getElementsByTagName(HeadElement.TAG).getItem(0));
+
+        /*
+         * Search the UIDL stream for CSS resources and strings to be injected.
+         */
+        final List<String> resourcesToInject = new LinkedList<String>();
+        final StringBuilder cssToInject = new StringBuilder();
+        for (Iterator<?> it = uidl.getChildIterator(); it.hasNext();) {
+            UIDL cssInjectionsUidl = (UIDL) it.next();
+
+            // Check if we have resources to inject
+            if (cssInjectionsUidl.getTag().equals("css-resource")) {
+                String url = getWidget().connection
+                        .translateVaadinUri(cssInjectionsUidl
+                                .getStringAttribute("url"));
+
+                // Check if url already has been injected
+                boolean injected = false;
+                NodeList<com.google.gwt.dom.client.Element> links = head
+                        .getElementsByTagName(LinkElement.TAG);
+                for (int i = 0; i < links.getLength(); i++) {
+                    LinkElement link = LinkElement.as(links.getItem(i));
+                    if (link.getHref().equals(url)) {
+                        injected = true;
+                        break;
+                    }
+                }
+
+                if (!injected) {
+                    // Ensure duplicates do not get injected
+                    resourcesToInject.add(url);
+                }
+
+                // Check if we have CSS string to inject
+            } else if (cssInjectionsUidl.getTag().equals("css-string")) {
+                for (Iterator<?> it2 = cssInjectionsUidl.getChildIterator(); it2
+                        .hasNext();) {
+                    cssToInject.append((String) it2.next());
+                }
+            }
+        }
+
+        /*
+         * Inject resources as deferred to ensure other Vaadin resources that
+         * are located before in the DOM get applied first so the injected ones
+         * can override them.
+         */
+        if (!resourcesToInject.isEmpty()) {
+            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+                @Override
+                public void execute() {
+                    for (String url : resourcesToInject) {
+                        LinkElement link = LinkElement.as(DOM
+                                .createElement(LinkElement.TAG));
+                        link.setRel("stylesheet");
+                        link.setHref(url);
+                        link.setType("text/css");
+                        head.appendChild(link);
+                    }
+                }
+            });
+        }
+
+        /*
+         * Inject the string CSS injections as a combined style tag. Not
+         * injected as deferred since StyleInjector will do it for us.
+         */
+        if (cssToInject.length() > 0) {
+            StyleInjector.injectAtEnd(cssToInject.toString());
+        }
     }
 
     public void init(String rootPanelId,

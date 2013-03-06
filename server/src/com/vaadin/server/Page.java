@@ -303,6 +303,115 @@ public class Page implements Serializable {
         }
     }
 
+    /**
+     * Contains dynamically injected styles injected in the HTML document at
+     * runtime.
+     * 
+     * @since 7.1
+     */
+    public static class StyleSheet implements Serializable {
+
+        /*
+         * Points to last injected string injection
+         */
+        private int injectedStringPointer;
+
+        private final List<String> stringInjections = new LinkedList<String>();
+
+        /*
+         * Points to last injected resource injection
+         */
+        private int injectedResourcesPointer;
+
+        private final List<Resource> resourceInjections = new LinkedList<Resource>();
+
+        private final UI ui;
+
+        private StyleSheet(UI ui) {
+            this.ui = ui;
+        }
+
+        /**
+         * Injects a raw CSS string into the page.
+         * 
+         * @param css
+         *            The CSS to inject
+         */
+        public void inject(String css) {
+            if (css == null) {
+                throw new IllegalArgumentException(
+                        "Cannot inject null CSS string");
+            }
+
+            /*
+             * Check if last injection was the same, in that case ignore it.
+             */
+            if (!stringInjections.isEmpty() && injectedStringPointer > 0) {
+                String lastInjection = stringInjections
+                        .get(injectedStringPointer - 1);
+                if (lastInjection.equals(css.trim())) {
+                    return;
+                }
+            }
+
+            stringInjections.add(css.trim());
+            ui.markAsDirty();
+        }
+
+        /**
+         * Injects a CSS resource into the page
+         * 
+         * @param resource
+         *            The resource to inject.
+         */
+        public void inject(Resource resource) {
+            if (resource == null) {
+                throw new IllegalArgumentException(
+                        "Cannot inject null resource");
+            }
+
+            resourceInjections.add(resource);
+            ui.markAsDirty();
+        }
+
+        private void paint(PaintTarget target) throws PaintException {
+
+            // If full repaint repaint all injections
+            if (target.isFullRepaint()) {
+                injectedStringPointer = 0;
+                injectedResourcesPointer = 0;
+            }
+
+            target.startTag("css-injections");
+
+            // Paint pending string injections
+            List<String> injections = stringInjections.subList(
+                    injectedStringPointer, stringInjections.size());
+
+            for (String css : injections) {
+                target.startTag("css-string");
+                target.addText(css);
+                target.endTag("css-string");
+            }
+
+            injectedStringPointer = stringInjections.size();
+
+            // Paint pending resource injections
+            List<Resource> resInjections = resourceInjections.subList(
+                    injectedResourcesPointer, resourceInjections.size());
+
+            for (Resource res : resInjections) {
+                target.startTag("css-resource");
+                target.addAttribute("url", res);
+                target.endTag("css-resource");
+            }
+
+            target.endTag("css-injections");
+
+            injectedResourcesPointer = resourceInjections.size();
+        }
+    }
+
     private EventRouter eventRouter;
 
     private final UI uI;
@@ -311,6 +420,8 @@ public class Page implements Serializable {
     private int browserWindowHeight = -1;
 
     private JavaScript javaScript;
+
+    private StyleSheet styleSheet;
 
     /**
      * The current browser location.
@@ -576,8 +687,20 @@ public class Page implements Serializable {
             javaScript = new JavaScript();
             javaScript.extend(uI);
         }
-
         return javaScript;
+    }
+
+    /**
+     * Returns that stylesheet associated with this Page. The stylesheet
+     * contains additional styles injected at runtime into the HTML document.
+     * 
+     * @since 7.1
+     */
+    public StyleSheet getStyleSheet() {
+        if (styleSheet == null) {
+            styleSheet = new StyleSheet(uI);
+        }
+        return styleSheet;
     }
 
     public void paintContent(PaintTarget target) throws PaintException {
@@ -637,6 +760,9 @@ public class Page implements Serializable {
                     location.toString());
         }
 
+        if (styleSheet != null) {
+            styleSheet.paint(target);
+        }
     }
 
     /**
