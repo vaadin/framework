@@ -53,7 +53,8 @@ import com.vaadin.shared.ui.ui.UIConstants;
  */
 public class VUI extends SimplePanel implements ResizeHandler,
         Window.ClosingHandler, ShortcutActionHandlerOwner, Focusable,
-        HasResizeHandlers, HasScrollHandlers {
+        com.google.gwt.user.client.ui.Focusable, HasResizeHandlers,
+        HasScrollHandlers {
 
     private static int MONITOR_PARENT_TIMER_INTERVAL = 1000;
 
@@ -437,7 +438,7 @@ public class VUI extends SimplePanel implements ResizeHandler,
 
     @Override
     public void focus() {
-        getElement().focus();
+        setFocus(true);
     }
 
     /**
@@ -460,6 +461,26 @@ public class VUI extends SimplePanel implements ResizeHandler,
     @Override
     public HandlerRegistration addScrollHandler(ScrollHandler scrollHandler) {
         return addHandler(scrollHandler, ScrollEvent.getType());
+    }
+
+    @Override
+    public int getTabIndex() {
+        return FocusUtil.getTabIndex(this);
+    }
+
+    @Override
+    public void setAccessKey(char key) {
+        FocusUtil.setAccessKey(this, key);
+    }
+
+    @Override
+    public void setFocus(boolean focused) {
+        FocusUtil.setFocus(this, focused);
+    }
+
+    @Override
+    public void setTabIndex(int index) {
+        FocusUtil.setTabIndex(this, index);
     }
 
 }

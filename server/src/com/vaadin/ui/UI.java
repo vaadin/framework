@@ -78,7 +78,7 @@ import com.vaadin.util.CurrentInstance;
  * @since 7.0
  */
 public abstract class UI extends AbstractSingleComponentContainer implements
-        Action.Container, Action.Notifier, LegacyComponent {
+        Action.Container, Action.Notifier, LegacyComponent, Focusable {
 
     /**
      * The application to which this UI belongs
@@ -181,6 +181,11 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     @Override
     protected UIState getState() {
         return (UIState) super.getState();
+    }
+
+    @Override
+    protected UIState getState(boolean markAsDirty) {
+        return (UIState) super.getState(markAsDirty);
     }
 
     @Override
@@ -1038,5 +1043,15 @@ public abstract class UI extends AbstractSingleComponentContainer implements
                     "A Window cannot be added using setContent. Use addWindow(Window window) instead");
         }
         super.setContent(content);
+    }
+
+    @Override
+    public void setTabIndex(int tabIndex) {
+        getState().tabIndex = tabIndex;
+    }
+
+    @Override
+    public int getTabIndex() {
+        return getState(false).tabIndex;
     }
 }

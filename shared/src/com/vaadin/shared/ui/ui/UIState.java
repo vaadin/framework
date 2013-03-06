@@ -15,10 +15,12 @@
  */
 package com.vaadin.shared.ui.ui;
 
-import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.ui.TabIndexState;
 
-public class UIState extends AbstractComponentState {
+public class UIState extends TabIndexState {
     {
         primaryStyleName = "v-ui";
+        // Default is 1 for legacy reasons
+        tabIndex = 1;
     }
 }

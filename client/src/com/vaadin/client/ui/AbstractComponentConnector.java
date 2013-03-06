@@ -137,10 +137,15 @@ public abstract class AbstractComponentConnector extends AbstractConnector
          * implementation).
          */
         Profiler.enter("AbstractComponentConnector.onStateChanged update tab index");
-        if (getState() instanceof TabIndexState
-                && getWidget() instanceof Focusable) {
-            ((Focusable) getWidget())
-                    .setTabIndex(((TabIndexState) getState()).tabIndex);
+        if (getState() instanceof TabIndexState) {
+            if (getWidget() instanceof Focusable) {
+                ((Focusable) getWidget())
+                        .setTabIndex(((TabIndexState) getState()).tabIndex);
+            } else {
+                VConsole.error("Tab index received for "
+                        + Util.getSimpleName(getWidget())
+                        + " which does not implement Focusable");
+            }
         }
         Profiler.leave("AbstractComponentConnector.onStateChanged update tab index");
 
