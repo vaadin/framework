@@ -3,4 +3,9 @@
 
 	<!-- Inherit the DefaultWidgetSet -->
 	<inherits name="com.vaadin.DefaultWidgetSet" />
+	
+    <replace-with class="com.vaadin.tests.widgetset.client.CustomUIConnector">
+        <when-type-is class="com.vaadin.client.ui.ui.UIConnector" />
+    </replace-with>
+	
 </module>

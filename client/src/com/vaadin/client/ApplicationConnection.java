@@ -1801,7 +1801,7 @@ public class ApplicationConnection {
                                 .getConnectorClassByEncodedTag(connectorType);
 
                         // Connector does not exist so we must create it
-                        if (connectorClass != UIConnector.class) {
+                        if (connectorClass != uIConnector.getClass()) {
                             // create, initialize and register the paintable
                             Profiler.enter("ApplicationConnection.getConnector");
                             connector = getConnector(connectorId, connectorType);
