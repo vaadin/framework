@@ -1,6 +1,7 @@
 package com.vaadin.tests.fieldgroup;
 
 import java.util.Date;
+import java.util.Locale;
 
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
@@ -77,6 +78,7 @@ public class DateForm extends TestBase {
 
     @Override
     protected void setup() {
+        getMainWindow().setLocale(Locale.US);
         addComponent(log);
         final FieldGroup fieldGroup = new BeanFieldGroup<DateObject>(
                 DateObject.class);
