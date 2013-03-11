@@ -204,6 +204,11 @@ body &.v-app-loading {
 	padding: 2px;
 }
 
+/* Removes clear button from input fields introduced by IE10 */
+input::-ms-clear {
+    display: none;
+}
+
 .v-drag-element {
 	z-index: 60000;
 	/* override any other position: properties */
