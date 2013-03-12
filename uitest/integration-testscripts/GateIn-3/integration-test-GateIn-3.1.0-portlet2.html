@@ -32,24 +32,49 @@
 	<td>93,13</td>
 </tr>
 <tr>
-	<td>expectDialog</td>
-	<td>//div[2]/div[2]/div[1]/div[1]/div[2]</td>
-	<td>73,18</td>
-</tr>
-<tr>
-	<td>assertConfirmation</td>
-	<td>This action will automatically create categories and import all the gadgets and portlets on it.</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=demo</td>
-	<td></td>
+	<td>mouseClickAndWait</td>
+	<td>link=Portlet</td>
+	<td>33,11</td>
 </tr>
 <tr>
 	<td>mouseClickAndWait</td>
-	<td>link=Home</td>
-	<td>65,18</td>
+	<td>link=Vaadin Portlet 2.0 Test</td>
+	<td>59,9</td>
+</tr>
+<tr>
+	<td>mouseClickAndWait</td>
+	<td>link=Click here to add into categories</td>
+	<td>48,3</td>
+</tr>
+<tr>
+	<td>mouseClickAndWait</td>
+	<td>name=category_Gadgets</td>
+	<td>10,16</td>
+</tr>
+<tr>
+	<td>mouseClickAndWait</td>
+	<td>link=Save</td>
+	<td>4,6</td>
+</tr>
+<tr>
+	<td>mouseClickAndWait</td>
+	<td>link=Vaadin Liferay Theme</td>
+	<td>64,13</td>
+</tr>
+<tr>
+	<td>mouseClickAndWait</td>
+	<td>link=Click here to add into categories</td>
+	<td>96,9</td>
+</tr>
+<tr>
+	<td>mouseClickAndWait</td>
+	<td>name=category_Gadgets</td>
+	<td>7,12</td>
+</tr>
+<tr>
+	<td>mouseClickAndWait</td>
+	<td>link=Save</td>
+	<td>4,6</td>
 </tr>
 <tr>
 	<td>mouseClick</td>
@@ -86,24 +111,15 @@
 	<td>//div[@id='UIPageCreationWizard']/div/div[3]/div/div/div/div[2]/div/table/tbody/tr/td/div[2]/div/div/div</td>
 	<td>21,13</td>
 </tr>
+<!--Drag JSR286 test portlet to page-->
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='UIPageEditor']/div[1]/div/div/div/div[2]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>mouseClick</td>
-	<td>//div[@onclick=&quot;javascript:ajaxGet('/portal/private/classic/home?portal:componentId=UIApplicationList&amp;portal:action=SelectCategory&amp;objectId=demo&amp;ajaxRequest=true')&quot;]</td>
-	<td>51,11</td>
-</tr>
-<tr>
-	<td>pause</td>
-	<td>300</td>
+	<td>//div[@id='Gadgets/JSR286TestPortlet']/div/div/div/div</td>
 	<td></td>
 </tr>
 <tr>
 	<td>drag</td>
-	<td>//div[@id='demo/JSR286TestPortlet']/div/div/div[1]/div[2]</td>
+	<td>//div[@id='Gadgets/JSR286TestPortlet']/div/div/div/div</td>
 	<td></td>
 </tr>
 <tr>
@@ -111,50 +127,21 @@
 	<td>//div[2]/div/div/div[1]/div/div[2]/div/div/div/div</td>
 	<td>113,9</td>
 </tr>
+<!--Switch to view mode-->
 <tr>
 	<td>mouseClickAndWait</td>
 	<td>//a[@onclick='eXo.core.DOMUtil.disableOnClick(this);']</td>
 	<td>13,5</td>
 </tr>
 <tr>
-	<td>mouseClickAndWait</td>
-	<td>//div[@id='UIPage']/div/div/div[2]/div/div/div/div/div/div/div[2]/div[5]/div/a</td>
-	<td>10,10</td>
-</tr>
-<tr>
-	<td>closeNotification</td>
-	<td>//body/div[2]</td>
-	<td>0,0</td>
-</tr>
-<tr>
-	<td>pause</td>
-	<td>500</td>
+	<td>waitForElementPresent</td>
+	<td>//div[2]/div/div[2]/img</td>
 	<td></td>
 </tr>
 <tr>
 	<td>screenCapture</td>
 	<td></td>
-	<td>Edit_mode</td>
-</tr>
-<tr>
-	<td>mouseClickAndWait</td>
-	<td>//div[@id='UIPage']/div/div/div[2]/div/div/div/div/div/div/div[2]/div[5]/div/a</td>
-	<td>15,8</td>
-</tr>
-<tr>
-	<td>closeNotification</td>
-	<td>//body/div[2]</td>
-	<td>0,0</td>
-</tr>
-<tr>
-	<td>pause</td>
-	<td>500</td>
-	<td></td>
-</tr>
-<tr>
-	<td>screenCapture</td>
-	<td></td>
-	<td>done</td>
+	<td>view</td>
 </tr>
 </tbody></table>
 </body>
