@@ -18,6 +18,7 @@ package com.vaadin.client.ui;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style.Overflow;
+import com.google.gwt.dom.client.Style.WhiteSpace;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -154,9 +155,11 @@ public class VTextArea extends VTextField {
         if (wordwrap) {
             getElement().removeAttribute("wrap");
             getElement().getStyle().clearOverflow();
+            getElement().getStyle().clearWhiteSpace();
         } else {
             getElement().setAttribute("wrap", "off");
             getElement().getStyle().setOverflow(Overflow.AUTO);
+            getElement().getStyle().setWhiteSpace(WhiteSpace.PRE);
         }
         if (BrowserInfo.get().isOpera()) {
             // Opera fails to dynamically update the wrap attribute so we detach
