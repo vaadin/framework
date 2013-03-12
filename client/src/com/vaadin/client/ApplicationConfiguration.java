@@ -535,7 +535,7 @@ public class ApplicationConfiguration implements EntryPoint {
 
     @Override
     public void onModuleLoad() {
-        Profiler.reset();
+        Profiler.initialize();
         Profiler.enter("ApplicationConfiguration.onModuleLoad");
 
         BrowserInfo browserInfo = BrowserInfo.get();

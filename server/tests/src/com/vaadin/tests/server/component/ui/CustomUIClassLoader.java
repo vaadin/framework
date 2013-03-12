@@ -52,13 +52,14 @@ public class CustomUIClassLoader extends TestCase {
      * @throws Exception
      *             if thrown
      */
-    public void testWithNullClassLoader() throws Exception {
+    public void testWithDefaultClassLoader() throws Exception {
         VaadinSession application = createStubApplication();
         application.setConfiguration(createConfigurationMock());
 
         DefaultUIProvider uiProvider = new DefaultUIProvider();
         Class<? extends UI> uiClass = uiProvider
-                .getUIClass(new UIClassSelectionEvent(createRequestMock(null)));
+                .getUIClass(new UIClassSelectionEvent(
+                        createRequestMock(getClass().getClassLoader())));
 
         assertEquals(MyUI.class, uiClass);
     }

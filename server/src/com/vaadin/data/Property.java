@@ -116,9 +116,9 @@ public interface Property<T> extends Serializable {
      * or rollback.
      * 
      * Note that this does not refer to e.g. database transactions but rather
-     * two-phase commit that allows resetting old field values on a form etc. if
-     * the commit of one of the properties fails after others have already been
-     * committed. If
+     * two-phase commit that allows resetting old field values (in e.g. a
+     * FieldGroup) if the commit of one of the properties fails after other
+     * properties have already been committed.
      * 
      * @param <T>
      *            The type of the property

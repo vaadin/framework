@@ -372,6 +372,18 @@ public abstract class BootstrapHandler implements RequestHandler {
         boolean isDebug = !context.getSession().getConfiguration()
                 .isProductionMode();
 
+        if (isDebug) {
+            /*
+             * Add tracking needed for getting bootstrap metrics to the client
+             * side Profiler if another implementation hasn't already been
+             * added.
+             */
+            builder.append("if (typeof window.__gwtStatsEvent != 'function') {\n");
+            builder.append("vaadin.gwtStatsEvents = [];\n");
+            builder.append("window.__gwtStatsEvent = function(event) {vaadin.gwtStatsEvents.push(event); return true;};\n");
+            builder.append("}\n");
+        }
+
         builder.append("vaadin.initApplication(\"");
         builder.append(context.getAppId());
         builder.append("\",");

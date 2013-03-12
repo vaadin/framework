@@ -23,9 +23,7 @@ import com.vaadin.util.FileTypeResolver;
 
 /**
  * <code>StreamResource</code> is a resource provided to the client directly by
- * the application. The strean resource is fetched from URI that is most often
- * in the context of the application or window. The resource is automatically
- * registered to window in creation.
+ * the application.
  * 
  * @author Vaadin Ltd.
  * @since 3.0
@@ -65,8 +63,6 @@ public class StreamResource implements ConnectorResource {
      *            the source Stream.
      * @param filename
      *            the name of the file.
-     * @param application
-     *            the Application object.
      */
     public StreamResource(StreamSource streamSource, String filename) {
         setFilename(filename);

@@ -16,7 +16,7 @@
 
 package com.vaadin.client;
 
-import java.util.ArrayList; 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -500,6 +500,7 @@ public class ApplicationConnection {
                     ap.@com.vaadin.client.ApplicationConnection::totalProcessingTime
     	        ];
     	    pd = pd.concat(ap.@com.vaadin.client.ApplicationConnection::serverTimingInfo);
+    	    pd[pd.length] = ap.@com.vaadin.client.ApplicationConnection::bootstrapTime;
     	    return pd;
     	});
 
@@ -511,6 +512,16 @@ public class ApplicationConnection {
     	});
 
     	$wnd.vaadin.clients[TTAppId] = client;
+    }-*/;
+
+    private static native final int calculateBootstrapTime()
+    /*-{
+        if ($wnd.performance && $wnd.performance.timing) {
+            return (new Date).getTime() - $wnd.performance.timing.responseStart;
+        } else {
+            // performance.timing not supported
+            return -1;
+        }
     }-*/;
 
     /**
@@ -946,6 +957,15 @@ public class ApplicationConnection {
      * session.
      */
     protected int totalProcessingTime;
+
+    /**
+     * Holds the time it took to load the page and render the first view. 0
+     * means that this value has not yet been calculated because the first view
+     * has not yet been rendered (or that your browser is very fast). -1 means
+     * that the browser does not support the performance.timing feature used to
+     * get this measurement.
+     */
+    private int bootstrapTime;
 
     /**
      * Holds the timing information from the server-side. How much time was
@@ -1512,6 +1532,12 @@ public class ApplicationConnection {
                 lastProcessingTime = (int) ((new Date().getTime()) - start
                         .getTime());
                 totalProcessingTime += lastProcessingTime;
+                if (bootstrapTime == 0) {
+                    bootstrapTime = calculateBootstrapTime();
+                    if (Profiler.isEnabled() && bootstrapTime != -1) {
+                        Profiler.logBootstrapTimings();
+                    }
+                }
 
                 VConsole.log(" Processing time was "
                         + String.valueOf(lastProcessingTime) + "ms for "
@@ -1775,7 +1801,7 @@ public class ApplicationConnection {
                                 .getConnectorClassByEncodedTag(connectorType);
 
                         // Connector does not exist so we must create it
-                        if (connectorClass != UIConnector.class) {
+                        if (connectorClass != uIConnector.getClass()) {
                             // create, initialize and register the paintable
                             Profiler.enter("ApplicationConnection.getConnector");
                             connector = getConnector(connectorId, connectorType);

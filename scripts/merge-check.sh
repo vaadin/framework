@@ -24,9 +24,7 @@ else
 	echo $message
 	echo ""
 	$command
-	# Escape []|' and newline with | to make teamcity happy
-	details=`$command|sed "s/[]['\|]/|&/g"|perl -p -e 's/\n/|n/'`
-	echo "##teamcity[testFailed name='$testname' message='$message' details='|n$details']"
+	echo "##teamcity[testFailed name='$testname' message='$message']"
 fi
 
 echo "##teamcity[testFinished name='$testname']"
