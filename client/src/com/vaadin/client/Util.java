@@ -630,6 +630,10 @@ public class Util {
     /*-{
          var cs = element.ownerDocument.defaultView.getComputedStyle(element);
          var heightPx = cs.height;
+         if(heightPx == 'auto'){
+             // Fallback for when IE reports auto
+             heightPx = @com.vaadin.client.Util::getRequiredHeightBoundingClientRect(Lcom/google/gwt/dom/client/Element;)(element) + 'px';
+         }
          var borderTopPx = cs.borderTop;
          var borderBottomPx = cs.borderBottom;
          var paddingTopPx = cs.paddingTop;
@@ -646,6 +650,10 @@ public class Util {
     /*-{
          var cs = element.ownerDocument.defaultView.getComputedStyle(element);
          var widthPx = cs.width;
+         if(widthPx == 'auto'){
+             // Fallback for when IE reports auto
+             widthPx = @com.vaadin.client.Util::getRequiredWidthBoundingClientRect(Lcom/google/gwt/dom/client/Element;)(element) + 'px';
+         }
          var borderLeftPx = cs.borderLeft;
          var borderRightPx = cs.borderRight;
          var paddingLeftPx = cs.paddingLeft;
