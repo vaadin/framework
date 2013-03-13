@@ -16,6 +16,8 @@
 
 package com.vaadin.ui;
 
+import org.json.JSONException;
+
 import com.vaadin.data.Property;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -35,6 +37,21 @@ public class CheckBox extends AbstractField<Boolean> {
                 MouseEventDetails mouseEventDetails) {
             if (isReadOnly()) {
                 return;
+            }
+
+            /*
+             * Client side updates the state before sending the event so we need
+             * to make sure the cached state is updated to match the client. If
+             * we do not do this, a reverting setValue() call in a listener will
+             * not cause the new state to be sent to the client.
+             * 
+             * See #11028, #10030.
+             */
+            try {
+                getUI().getConnectorTracker().getDiffState(CheckBox.this)
+                        .put("checked", checked);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
             }
 
             final Boolean oldValue = getValue();
