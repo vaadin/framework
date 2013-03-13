@@ -219,24 +219,28 @@ public class VGridLayout extends ComplexPanel {
         Element element = getElement();
         int paddingTop = layoutManager.getPaddingTop(element);
         int paddingBottom = layoutManager.getPaddingBottom(element);
-        int y = paddingTop;
 
-        for (int i = 0; i < cells.length; i++) {
-            y = paddingTop;
-            for (int j = 0; j < cells[i].length; j++) {
-                Cell cell = cells[i][j];
+        int y = paddingTop;
+        for (int column = 0; column < cells.length; column++) {
+            y = paddingTop + 1 - 1; // Ensure IE10 does not optimize this out by
+                                    // adding something to evaluate on the RHS
+                                    // #11303
+
+            for (int row = 0; row < cells[column].length; row++) {
+                Cell cell = cells[column][row];
                 if (cell != null) {
                     int reservedMargin;
-                    if (cell.rowspan + j >= cells[i].length) {
+                    if (cell.rowspan + row >= cells[column].length) {
                         // Make room for layout padding for cells reaching the
                         // bottom of the layout
                         reservedMargin = paddingBottom;
                     } else {
                         reservedMargin = 0;
                     }
+
                     cell.layoutVertically(y, reservedMargin);
                 }
-                y += rowHeights[j] + verticalSpacing;
+                y += rowHeights[row] + verticalSpacing;
             }
         }
 
@@ -245,6 +249,7 @@ public class VGridLayout extends ComplexPanel {
                     + layoutManager.getPaddingBottom(element)
                     + layoutManager.getBorderHeight(element);
             element.getStyle().setHeight(outerHeight, Unit.PX);
+
             getConnector().getLayoutManager().reportOuterHeight(getConnector(),
                     outerHeight);
         }
