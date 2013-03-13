@@ -189,7 +189,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
          * handler, other browsers handle it correctly when using a key down
          * handler
          */
-        if (BrowserInfo.get().isGecko() || BrowserInfo.get().isOpera()) {
+        if (BrowserInfo.get().isGecko()) {
             addKeyPressHandler(this);
         } else {
             addKeyDownHandler(this);
