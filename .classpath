@@ -4,6 +4,7 @@
 	<classpathentry kind="src" path="client/tests/src"/>
 	<classpathentry kind="src" path="theme-compiler/tests/src"/>
 	<classpathentry kind="src" path="theme-compiler/src"/>
+	<classpathentry kind="src" path="theme-compiler/tests/resources"/>
 	<classpathentry kind="src" path="client/src"/>
 	<classpathentry kind="src" path="server/src"/>
 	<classpathentry kind="src" path="client-compiler/src"/>
