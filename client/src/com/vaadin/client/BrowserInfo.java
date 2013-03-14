@@ -338,7 +338,8 @@ public class BrowserInfo {
      *         otherwise <code>false</code>
      */
     public boolean requiresOverflowAutoFix() {
-        return (getWebkitVersion() > 0 || getOperaVersion() >= 11 || isFirefox())
+        return (getWebkitVersion() > 0 || getOperaVersion() >= 11
+                || getIEVersion() >= 10 || isFirefox())
                 && Util.getNativeScrollbarSize() > 0;
     }
 
