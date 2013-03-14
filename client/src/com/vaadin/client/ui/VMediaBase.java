@@ -18,12 +18,16 @@ package com.vaadin.client.ui;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.MediaElement;
+import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.SourceElement;
+import com.google.gwt.dom.client.Text;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 
 public abstract class VMediaBase extends Widget {
 
     private MediaElement media;
+    private Text altText;
 
     /**
      * Sets the MediaElement that is to receive all commands and properties.
@@ -44,7 +48,12 @@ public abstract class VMediaBase extends Widget {
     }
 
     public void setAltText(String alt) {
-        media.appendChild(Document.get().createTextNode(alt));
+        if (altText == null) {
+            altText = Document.get().createTextNode(alt);
+            media.appendChild(altText);
+        } else {
+            altText.setNodeValue(alt);
+        }
     }
 
     public void setControls(boolean shouldShowControls) {
@@ -59,8 +68,21 @@ public abstract class VMediaBase extends Widget {
         media.setMuted(mediaMuted);
     }
 
+    public void removeAllSources() {
+        NodeList<com.google.gwt.dom.client.Element> l = media
+                .getElementsByTagName(SourceElement.TAG);
+        for (int i = l.getLength() - 1; i >= 0; i--) {
+            media.removeChild(l.getItem(i));
+        }
+
+    }
+
+    public void load() {
+        media.load();
+    }
+
     public void addSource(String sourceUrl, String sourceType) {
-        Element src = Document.get().createElement("source").cast();
+        Element src = Document.get().createElement(SourceElement.TAG).cast();
         src.setAttribute("src", sourceUrl);
         src.setAttribute("type", sourceType);
         media.appendChild(src);

@@ -46,15 +46,26 @@ public abstract class MediaBaseConnector extends AbstractComponentConnector {
     }
 
     @Override
-    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        super.onStateChanged(stateChangeEvent);
+    public void onStateChanged(StateChangeEvent event) {
+        super.onStateChanged(event);
 
-        for (int i = 0; i < getState().sources.size(); i++) {
-            URLReference source = getState().sources.get(i);
-            String sourceType = getState().sourceTypes.get(i);
-            getWidget().addSource(source.getURL(), sourceType);
+        final VMediaBase widget = getWidget();
+        final AbstractMediaState state = getState();
+
+        setAltText(state.altText); // must do before loading sources
+        widget.setAutoplay(state.autoplay);
+        widget.setMuted(state.muted);
+        widget.setControls(state.showControls);
+
+        if (event.hasPropertyChanged("sources")) {
+            widget.removeAllSources();
+            for (int i = 0; i < state.sources.size(); i++) {
+                URLReference source = state.sources.get(i);
+                String sourceType = state.sourceTypes.get(i);
+                widget.addSource(source.getURL(), sourceType);
+            }
+            widget.load();
         }
-        setAltText(getState().altText);
     }
 
     @Override

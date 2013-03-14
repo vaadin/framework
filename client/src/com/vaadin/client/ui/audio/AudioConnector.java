@@ -30,23 +30,6 @@ import com.vaadin.ui.Audio;
 public class AudioConnector extends MediaBaseConnector {
 
     @Override
-    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        super.onStateChanged(stateChangeEvent);
-
-        Style style = getWidget().getElement().getStyle();
-
-        // Make sure that the controls are not clipped if visible.
-        if (getState().showControls
-                && (style.getHeight() == null || "".equals(style.getHeight()))) {
-            if (BrowserInfo.get().isChrome()) {
-                style.setHeight(32, Unit.PX);
-            } else {
-                style.setHeight(25, Unit.PX);
-            }
-        }
-    }
-
-    @Override
     protected Widget createWidget() {
         return GWT.create(VAudio.class);
     }
@@ -55,4 +38,35 @@ public class AudioConnector extends MediaBaseConnector {
     protected String getDefaultAltHtml() {
         return "Your browser does not support the <code>audio</code> element.";
     }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+
+        // Opera (12.14) has a bug where an audio element w/o controls is shown
+        // as 150x300px, which is not usually desired. However, in order to show
+        // the error/alt message, we only do this in the exact situation.
+        if (BrowserInfo.get().isOpera()
+                && stateChangeEvent.hasPropertyChanged("showControls")) {
+            Style style = getWidget().getElement().getStyle();
+            if (!getState().showControls) {
+                if (isUndefinedHeight() && isUndefinedWidth()
+                        && getWidget().getOffsetHeight() == 150
+                        && getWidget().getOffsetWidth() == 300) {
+                    // only if no size set and 150x300
+                    style.setWidth(0, Unit.PX);
+                    style.setHeight(0, Unit.PX);
+                }
+            } else {
+                // clear sizes if it's supposed to be undefined
+                if (isUndefinedHeight()) {
+                    style.clearHeight();
+                }
+                if (isUndefinedWidth()) {
+                    style.clearWidth();
+                }
+            }
+        }
+    }
+
 }
