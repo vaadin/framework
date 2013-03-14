@@ -709,12 +709,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
                         ci.getCommunicationErrorCaption(),
                         ci.getCommunicationErrorMessage(),
                         INVALID_SECURITY_KEY_MSG, ci.getCommunicationErrorURL());
-                /*
-                 * Invalidate session. Portal integration will fail otherwise
-                 * since the session is not created by the portal.
-                 */
-                request.getSession().invalidate();
-
             } else if (requestType == RequestType.HEARTBEAT) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN,
                         "Forbidden");
