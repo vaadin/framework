@@ -433,8 +433,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
         String themeName = applicationConnection.getConfiguration()
                 .getThemeName();
-        // Remove chars that are not suitable for style names
-        themeName = themeName.replaceAll("[^a-zA-Z0-9]", "");
         root.addStyleName(themeName);
 
         root.add(getWidget());
