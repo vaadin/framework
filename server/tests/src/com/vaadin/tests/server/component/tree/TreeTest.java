@@ -1,24 +1,31 @@
 package com.vaadin.tests.server.component.tree;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.lang.reflect.Field;
 import java.util.HashSet;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Tree;
 
-public class TreeTest extends TestCase {
+public class TreeTest {
 
     private Tree tree;
     private Tree tree2;
     private Tree tree3;
     private Tree tree4;
 
-    @Override
-    protected void setUp() {
+    @Before
+    public void setUp() {
         tree = new Tree();
         tree.addItem("parent");
         tree.addItem("child");
@@ -44,6 +51,7 @@ public class TreeTest extends TestCase {
         tree4.setParent("child", "parent");
     }
 
+    @Test
     public void testRemoveChildren() {
         assertTrue(tree.hasChildren("parent"));
         tree.removeItem("child");
@@ -62,6 +70,7 @@ public class TreeTest extends TestCase {
         assertFalse(tree4.hasChildren("parent"));
     }
 
+    @Test
     public void testContainerTypeIsHierarchical() {
         assertTrue(HierarchicalContainer.class.isAssignableFrom(tree
                 .getContainerDataSource().getClass()));
@@ -75,6 +84,11 @@ public class TreeTest extends TestCase {
                 .getContainerDataSource().getClass()));
     }
 
+    @Ignore("This test tests that item ids which are removed are also "
+            + "removed from the expand list to prevent a memory leak. "
+            + "Fixing the memory leak cannot be done without changing some API (see #11053) "
+            + "so ignoring this test for the 7.0.x series.")
+    @Test
     public void testRemoveExpandedItems() throws Exception {
         tree.expandItem("parent");
         tree.expandItem("child");
@@ -113,6 +127,7 @@ public class TreeTest extends TestCase {
         assertNull(expandedItemId);
     }
 
+    @Test
     public void testRemoveExpandedItemsOnContainerChange() throws Exception {
         tree.expandItem("parent");
         tree.expandItem("child");
