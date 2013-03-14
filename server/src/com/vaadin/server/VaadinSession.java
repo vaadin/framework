@@ -73,8 +73,6 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
             .findMethod(BootstrapListener.class, "modifyBootstrapPage",
                     BootstrapPageResponse.class);
 
-    private final Lock lock = new ReentrantLock();
-
     /**
      * Configuration for the session.
      */
@@ -127,6 +125,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     private LinkedList<UIProvider> uiProviders = new LinkedList<UIProvider>();
 
     private transient VaadinService service;
+
+    private transient Lock lock;
 
     /**
      * Create a new service session tied to a Vaadin service
@@ -278,16 +278,19 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     @Deprecated
     public static VaadinSession getForSession(VaadinService service,
             WrappedSession underlyingSession) {
-        Object attribute = underlyingSession.getAttribute(VaadinSession.class
-                .getName() + "." + service.getServiceName());
-        if (attribute instanceof VaadinSession) {
-            VaadinSession vaadinSession = (VaadinSession) attribute;
-            vaadinSession.session = underlyingSession;
-            vaadinSession.service = service;
-            return vaadinSession;
+        assert ((ReentrantLock) service.getSessionLock(underlyingSession))
+                .isHeldByCurrentThread() : "Cannot retrieve VaadinSession when WrappedSession is not locked for the service";
+        VaadinSession vaadinSession = (VaadinSession) underlyingSession
+                .getAttribute(getSessionAttributeName(service));
+        if (vaadinSession == null) {
+            return null;
         }
 
-        return null;
+        vaadinSession.session = underlyingSession;
+        vaadinSession.service = service;
+        vaadinSession.refreshLock();
+
+        return vaadinSession;
     }
 
     /**
@@ -300,9 +303,11 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     @Deprecated
     public void removeFromSession(VaadinService service) {
         assert (getForSession(service, session) == this);
-        session.setAttribute(
-                VaadinSession.class.getName() + "." + service.getServiceName(),
-                null);
+        session.setAttribute(getSessionAttributeName(service), null);
+    }
+
+    private static String getSessionAttributeName(VaadinService service) {
+        return VaadinSession.class.getName() + "." + service.getServiceName();
     }
 
     /**
@@ -313,10 +318,17 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      */
     @Deprecated
     public void storeInSession(VaadinService service, WrappedSession session) {
-        session.setAttribute(
-                VaadinSession.class.getName() + "." + service.getServiceName(),
-                this);
+        session.setAttribute(getSessionAttributeName(service), this);
         this.session = session;
+        refreshLock();
+    }
+
+    /**
+     * Updates the transient session lock from VaadinService.
+     */
+    private void refreshLock() {
+        assert lock == null || lock == service.getSessionLock(session) : "Cannot change the lock from one instance to another";
+        lock = service.getSessionLock(session);
     }
 
     public void setCommunicationManager(

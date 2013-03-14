@@ -26,12 +26,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.portlet.PortletContext;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.event.EventRouter;
@@ -366,6 +367,10 @@ public abstract class VaadinService implements Serializable {
 
     /**
      * Attempts to find a Vaadin service session associated with this request.
+     * <p>
+     * Handles locking of the session internally to avoid creation of duplicate
+     * sessions by two threads simultaneously.
+     * </p>
      * 
      * @param request
      *            the request to get a vaadin service session for.
@@ -389,9 +394,135 @@ public abstract class VaadinService implements Serializable {
         return vaadinSession;
     }
 
+    /**
+     * Associates the given lock with this service and the given wrapped
+     * session. This method should not be called more than once when the lock is
+     * initialized for the session.
+     * 
+     * @see #getSessionLock(WrappedSession)
+     * @param wrappedSession
+     *            The wrapped session the lock is associated with
+     * @param lock
+     *            The lock object
+     */
+    private void setSessionLock(WrappedSession wrappedSession, Lock lock) {
+        assert wrappedSession != null : "Can't set a lock for a null session";
+        assert wrappedSession.getAttribute(getLockAttributeName()) == null : "Changing the lock for a session is not allowed";
+
+        wrappedSession.setAttribute(getLockAttributeName(), lock);
+    }
+
+    /**
+     * Returns the name used to store the lock in the HTTP session.
+     * 
+     * @return The attribute name for the lock
+     */
+    private String getLockAttributeName() {
+        return getServiceName() + ".lock";
+    }
+
+    /**
+     * Gets the lock instance used to lock the VaadinSession associated with the
+     * given wrapped session.
+     * <p>
+     * This method uses the wrapped session instead of VaadinSession to be able
+     * to lock even before the VaadinSession has been initialized.
+     * </p>
+     * 
+     * @param wrappedSession
+     *            The wrapped session
+     * @return A lock instance used for locking access to the wrapped session
+     */
+    protected Lock getSessionLock(WrappedSession wrappedSession) {
+        Object lock = wrappedSession.getAttribute(getLockAttributeName());
+
+        if (lock instanceof ReentrantLock) {
+            return (ReentrantLock) lock;
+        }
+
+        if (lock == null) {
+            return null;
+        }
+
+        throw new RuntimeException(
+                "Something else than a ReentrantLock was stored in the "
+                        + getLockAttributeName() + " in the session");
+    }
+
+    /**
+     * Locks the given session for this service instance. Typically you want to
+     * call {@link VaadinSession#lock()} instead of this method.
+     * 
+     * @param wrappedSession
+     *            The session to lock
+     */
+    protected void lockSession(WrappedSession wrappedSession) {
+        Lock lock = getSessionLock(wrappedSession);
+        if (lock == null) {
+            /*
+             * No lock found in the session attribute. Ensure only one lock is
+             * created and used by everybody by doing double checked locking.
+             * Assumes there is a memory barrier for the attribute (i.e. that
+             * the CPU flushes its caches and reads the value directly from main
+             * memory).
+             */
+            synchronized (VaadinService.class) {
+                lock = getSessionLock(wrappedSession);
+                if (lock == null) {
+                    lock = new ReentrantLock();
+                    setSessionLock(wrappedSession, lock);
+                }
+            }
+        }
+        lock.lock();
+    }
+
+    /**
+     * Releases the lock for the given session for this service instance.
+     * Typically you want to call {@link VaadinSession#unlock()} instead of this
+     * method.
+     * 
+     * @param wrappedSession
+     *            The session to unlock
+     */
+    protected void unlockSession(WrappedSession wrappedSession) {
+        assert getSessionLock(wrappedSession) != null;
+        assert ((ReentrantLock) getSessionLock(wrappedSession))
+                .isHeldByCurrentThread() : "Trying to unlock the session but it has not been locked by this thread";
+        getSessionLock(wrappedSession).unlock();
+    }
+
     private VaadinSession findOrCreateVaadinSession(VaadinRequest request)
             throws SessionExpiredException, ServiceException {
         boolean requestCanCreateSession = requestCanCreateSession(request);
+        WrappedSession wrappedSession = getWrappedSession(request,
+                requestCanCreateSession);
+
+        lockSession(wrappedSession);
+        try {
+            return doFindOrCreateVaadinSession(request, requestCanCreateSession);
+        } finally {
+            unlockSession(wrappedSession);
+        }
+
+    }
+
+    /**
+     * Finds or creates a Vaadin session. Assumes necessary synchronization has
+     * been done by the caller to ensure this is not called simultaneously by
+     * several threads.
+     * 
+     * @param request
+     * @param requestCanCreateSession
+     * @return
+     * @throws SessionExpiredException
+     * @throws ServiceException
+     */
+    private VaadinSession doFindOrCreateVaadinSession(VaadinRequest request,
+            boolean requestCanCreateSession) throws SessionExpiredException,
+            ServiceException {
+        assert ((ReentrantLock) getSessionLock(request.getWrappedSession()))
+                .isHeldByCurrentThread() : "Session has not been locked by this thread";
 
         /* Find an existing session for this request. */
         VaadinSession session = getExistingSession(request,
@@ -437,8 +568,21 @@ public abstract class VaadinService implements Serializable {
 
     }
 
+    /**
+     * Creates and registers a new VaadinSession for this service. Assumes
+     * proper locking has been taken care of by the caller.
+     * 
+     * 
+     * @param request
+     *            The request which triggered session creation.
+     * @return A new VaadinSession instance
+     * @throws ServiceException
+     */
     private VaadinSession createAndRegisterSession(VaadinRequest request)
             throws ServiceException {
+        assert ((ReentrantLock) getSessionLock(request.getWrappedSession()))
+                .isHeldByCurrentThread() : "Session has not been locked by this thread";
+
         VaadinSession session = createVaadinSession(request);
 
         VaadinSession.setCurrent(session);
@@ -476,12 +620,13 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
-     * Creates a new Vaadin service session.
+     * Creates a new Vaadin session for this service and request
      * 
      * @param request
-     * @return
-     * @throws ServletException
-     * @throws MalformedURLException
+     *            The request for which to create a VaadinSession
+     * @return A new VaadinSession
+     * @throws ServiceException
+     * 
      */
     protected VaadinSession createVaadinSession(VaadinRequest request)
             throws ServiceException {
@@ -509,12 +654,8 @@ public abstract class VaadinService implements Serializable {
     protected VaadinSession getExistingSession(VaadinRequest request,
             boolean allowSessionCreation) throws SessionExpiredException {
 
-        // Ensures that the session is still valid
-        final WrappedSession session = request
-                .getWrappedSession(allowSessionCreation);
-        if (session == null) {
-            throw new SessionExpiredException();
-        }
+        final WrappedSession session = getWrappedSession(request,
+                allowSessionCreation);
 
         VaadinSession vaadinSession = VaadinSession
                 .getForSession(this, session);
@@ -524,6 +665,28 @@ public abstract class VaadinService implements Serializable {
         }
 
         return vaadinSession;
+    }
+
+    /**
+     * Retrieves the wrapped session for the request.
+     * 
+     * @param request
+     *            The request for which to retrieve a session
+     * @param requestCanCreateSession
+     *            true to create a new session if one currently does not exist
+     * @return The retrieved (or created) wrapped session
+     * @throws SessionExpiredException
+     *             If the request is not associated to a session and new session
+     *             creation is not allowed
+     */
+    private WrappedSession getWrappedSession(VaadinRequest request,
+            boolean requestCanCreateSession) throws SessionExpiredException {
+        final WrappedSession session = request
+                .getWrappedSession(requestCanCreateSession);
+        if (session == null) {
+            throw new SessionExpiredException();
+        }
+        return session;
     }
 
     /**
@@ -731,8 +894,12 @@ public abstract class VaadinService implements Serializable {
             // Ensure VaadinServiceSession knows where it's stored
             if (value instanceof VaadinSession) {
                 VaadinSession serviceSession = (VaadinSession) value;
-                serviceSession.storeInSession(serviceSession.getService(),
-                        newSession);
+                VaadinService service = serviceSession.getService();
+                // Use the same lock instance in the new session
+                service.setSessionLock(newSession,
+                        serviceSession.getLockInstance());
+
+                serviceSession.storeInSession(service, newSession);
                 serviceSession
                         .setAttribute(REINITIALIZING_SESSION_MARKER, null);
             }
