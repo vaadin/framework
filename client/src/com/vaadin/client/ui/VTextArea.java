@@ -161,9 +161,12 @@ public class VTextArea extends VTextField {
             getElement().getStyle().setOverflow(Overflow.AUTO);
             getElement().getStyle().setWhiteSpace(WhiteSpace.PRE);
         }
-        if (BrowserInfo.get().isOpera()) {
+        if (BrowserInfo.get().isOpera()
+                || (BrowserInfo.get().isWebkit() && wordwrap)) {
             // Opera fails to dynamically update the wrap attribute so we detach
             // and reattach the whole TextArea.
+            // Webkit fails to properly reflow the text when enabling wrapping,
+            // same workaround
             Util.detachAttach(getElement());
         }
         this.wordwrap = wordwrap;
