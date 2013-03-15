@@ -83,7 +83,8 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
 
         if (InlineDateField.class.isAssignableFrom(fieldType)) {
             field = new InlineDateField();
-        } else if (DateField.class.isAssignableFrom(fieldType)) {
+        } else if (DateField.class.isAssignableFrom(fieldType)
+                || fieldType == Field.class) {
             field = new PopupDateField();
         } else if (AbstractTextField.class.isAssignableFrom(fieldType)) {
             field = createAbstractTextField((Class<? extends AbstractTextField>) fieldType);
