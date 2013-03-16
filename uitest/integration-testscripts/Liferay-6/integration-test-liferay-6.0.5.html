@@ -36,8 +36,6 @@
 	<td>//input[@value='Sign In']</td>
 	<td>43,18</td>
 </tr>
-
-<!--  -->
 <tr>
 	<td>mouseClickAndWait</td>
 	<td>//input[@type='submit']</td>
@@ -144,19 +142,34 @@
 	<td>10,10</td>
 </tr>
 <tr>
-	<td>pause</td>
-	<td>5000</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForVaadin</td>
-	<td></td>
+	<td>waitForTextPresent</td>
+	<td>Normal Label</td>
 	<td></td>
 </tr>
 <tr>
 	<td>screenCapture</td>
 	<td></td>
 	<td>theme</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>//td[3]/div/div/div</td>
+	<td>22,7</td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Normal TextField</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Normal TextArea</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextNotPresent</td>
+	<td>Normal Label</td>
+	<td></td>
 </tr>
 </tbody></table>
 </body>
