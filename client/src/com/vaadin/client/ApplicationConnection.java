@@ -510,6 +510,7 @@ public class ApplicationConnection {
     	client.getPathForElement = $entry(function(element) {
     		return componentLocator.@com.vaadin.client.ComponentLocator::getPathForElement(Lcom/google/gwt/user/client/Element;)(element);
     	});
+    	client.initializing = false;
 
     	$wnd.vaadin.clients[TTAppId] = client;
     }-*/;
