@@ -6,10 +6,10 @@
 	<portlet>
 		<portlet-name>JSR286TestPortlet</portlet-name>
 		<display-name>Vaadin Portlet 2.0 Test</display-name>
-		<portlet-class>com.vaadin.server.LegacyVaadinPortlet</portlet-class>
+		<portlet-class>com.vaadin.server.VaadinPortlet</portlet-class>
 		<init-param>
-			<name>application</name>
-			<value>com.vaadin.tests.integration.JSR286PortletApplication</value>
+			<name>ui</name>
+			<value>com.vaadin.tests.integration.JSR286Portlet</value>
 		</init-param>
 		<init-param>
 			<name>widgetset</name>

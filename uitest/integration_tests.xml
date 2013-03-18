@@ -183,12 +183,24 @@
 		<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-6/integration-test-liferay-6.0.5.html" />
 		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 
+		<antcall target="run-generic-integration-test">
+			<param name="startDelay" value="600" />
+			<param name="test_browsers" value="winxp-firefox17-esr" />
+			<param name="target-server" value="liferay6" />
+		</antcall>
+	</target>
+
+	<target name="integration-test-liferay6-theme">
+		<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-6/Liferay6-and-6EE-theme-deploy.html" />
+		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
+	
 		<fileset dir="integration-testscripts" id="html-theme-files" includes="Liferay-6/Liferay6-theme.html" />
 		<pathconvert pathsep=" " property="testfiles-theme" refid="html-theme-files" />
 
 
 		<antcall target="run-generic-integration-test">
 			<param name="startDelay" value="600" />
+			<param name="test_browsers" value="winxp-firefox17-esr" />
 			<param name="target-server" value="liferay6" />
 		</antcall>
 	</target>
@@ -199,6 +211,7 @@
 
 		<antcall target="run-generic-integration-test">
 			<param name="startDelay" value="600" />
+			<param name="test_browsers" value="winxp-firefox17-esr" />
 			<param name="target-server" value="liferay5" />
 		</antcall>
 	</target>
@@ -207,11 +220,23 @@
 		<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-6EE/integration-test-liferay-6ee.html" />
 		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 
+		<antcall target="run-generic-integration-test">
+			<param name="startDelay" value="600" />
+			<param name="test_browsers" value="winxp-firefox17-esr" />
+			<param name="target-server" value="liferay6ee" />
+		</antcall>
+	</target>
+
+	<target name="integration-test-liferay6ee-theme">
+		<fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-6/Liferay6-and-6EE-theme-deploy.html" />
+		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
+		
 		<fileset dir="integration-testscripts" id="html-theme-files" includes="Liferay-6EE/Liferay6EE-theme.html" />
 		<pathconvert pathsep=" " property="testfiles-theme" refid="html-theme-files" />
 
 		<antcall target="run-generic-integration-test">
 			<param name="startDelay" value="600" />
+			<param name="test_browsers" value="winxp-firefox17-esr" />
 			<param name="target-server" value="liferay6ee" />
 		</antcall>
 	</target>
@@ -231,7 +256,7 @@
 		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 		<antcall target="run-generic-integration-test">
 			<param name="startDelay" value="600" />
-			<param name="test_browsers" value="winxp-googlechrome21" />
+			<param name="test_browsers" value="winxp-firefox17-esr" />
 			<param name="target-server" value="exo3" />
 		</antcall>
 	</target>
@@ -306,6 +331,8 @@
 			</antcontrib:trycatch>
 			<antcall target="integration-test-liferay6" />
 			<antcall target="integration-test-liferay6ee" />
+			<antcall target="integration-test-liferay6-theme" />
+			<antcall target="integration-test-liferay6ee-theme" />
 			<antcall target="integration-test-exo3" />
 			<antcall target="integration-test-weblogicPortal" />
 			<antcall target="integration-test-liferay5" />
