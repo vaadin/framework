@@ -315,7 +315,7 @@
 					<exclude name="com/vaadin/tests/data/bean/*" />
 					<exclude name="com/vaadin/tests/util/*" />
 					<exclude name="**/VaadinClasses.java" />
-					<exclude name="**TestRunner.java" />
+					<exclude name="**/*TestRunner.java" />
 					<exclude name="**/SQLTestsConstants.java" />
 				</fileset>
 			</batchtest>
