@@ -566,7 +566,7 @@ public class VDebugConsole extends VOverlay implements Console {
         JsArray<ValueMap> valueMapArray = meta
                 .getJSValueMapArray("invalidLayouts");
         int size = valueMapArray.length();
-        panel.add(new HTML("<div>************************</di>"
+        panel.add(new HTML("<div>************************</div>"
                 + "<h4>Layouts analyzed on server, total top level problems: "
                 + size + " </h4>"));
         if (size > 0) {
@@ -586,12 +586,12 @@ public class VDebugConsole extends VOverlay implements Console {
                     + "states, but reported here as they might be.</em>"));
             if (zeroHeightComponents.size() > 0) {
                 panel.add(new HTML(
-                        "<p><strong>Vertically zero size:</strong><p>"));
+                        "<p><strong>Vertically zero size:</strong></p>"));
                 printClientSideDetectedIssues(zeroHeightComponents, ac);
             }
             if (zeroWidthComponents.size() > 0) {
                 panel.add(new HTML(
-                        "<p><strong>Horizontally zero size:</strong><p>"));
+                        "<p><strong>Horizontally zero size:</strong></p>"));
                 printClientSideDetectedIssues(zeroWidthComponents, ac);
             }
         }
