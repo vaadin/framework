@@ -142,9 +142,13 @@ public abstract class AbstractComponentConnector extends AbstractConnector
                 ((Focusable) getWidget())
                         .setTabIndex(((TabIndexState) getState()).tabIndex);
             } else {
-                VConsole.error("Tab index received for "
-                        + Util.getSimpleName(getWidget())
-                        + " which does not implement Focusable");
+                /*
+                 * TODO Enable this error when all widgets have been fixed to
+                 * properly support tabIndex, i.e. implement Focusable
+                 */
+                // VConsole.error("Tab index received for "
+                // + Util.getSimpleName(getWidget())
+                // + " which does not implement Focusable");
             }
         }
         Profiler.leave("AbstractComponentConnector.onStateChanged update tab index");
