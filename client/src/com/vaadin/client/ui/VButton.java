@@ -16,6 +16,7 @@
 
 package com.vaadin.client.ui;
 
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -25,7 +26,6 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.Accessibility;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
@@ -103,7 +103,7 @@ public class VButton extends FocusWidget implements ClickHandler {
                 | Event.KEYEVENTS);
 
         // Add a11y role "button"
-        Accessibility.setRole(getElement(), Accessibility.ROLE_BUTTON);
+        Roles.getButtonRole().set(getElement());
 
         getElement().appendChild(wrapper);
         wrapper.appendChild(captionElement);
@@ -357,14 +357,12 @@ public class VButton extends FocusWidget implements ClickHandler {
             this.enabled = enabled;
             if (!enabled) {
                 cleanupCaptureState();
-                Accessibility.removeState(getElement(),
-                        Accessibility.STATE_PRESSED);
                 super.setTabIndex(-1);
             } else {
-                Accessibility.setState(getElement(),
-                        Accessibility.STATE_PRESSED, "false");
                 super.setTabIndex(tabIndex);
             }
+
+            Roles.getButtonRole().setAriaDisabledState(getElement(), !enabled);
         }
     }
 
