@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
@@ -276,6 +277,9 @@ public class VFormLayout extends SimplePanel {
             if (state.caption != null) {
                 if (captionText == null) {
                     captionText = DOM.createSpan();
+
+                    AriaHelper.bindCaption(owner.getWidget(), captionText);
+
                     DOM.insertChild(getElement(), captionText, icon == null ? 0
                             : 1);
                 }
@@ -305,11 +309,22 @@ public class VFormLayout extends SimplePanel {
                     DOM.setElementProperty(requiredFieldIndicator, "className",
                             "v-required-field-indicator");
                     DOM.appendChild(getElement(), requiredFieldIndicator);
+
+                    Roles.getTextboxRole().setAriaRequiredProperty(
+                            owner.getWidget().getElement(), true);
+
+                    // Hide the required indicator from screen reader, as this
+                    // information is set directly at the input field
+                    Roles.getTextboxRole().setAriaHiddenState(
+                            requiredFieldIndicator, true);
                 }
             } else {
                 if (requiredFieldIndicator != null) {
                     DOM.removeChild(getElement(), requiredFieldIndicator);
                     requiredFieldIndicator = null;
+
+                    Roles.getTextboxRole().removeAriaRequiredProperty(
+                            owner.getWidget().getElement());
                 }
             }
 

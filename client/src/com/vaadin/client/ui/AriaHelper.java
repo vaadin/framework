@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.Widget;
  * Helper class that helps to implement the WAI-ARIA functionality.
  */
 public class AriaHelper {
+    public static final String ASSISTIVE_DEVICE_ONLY_STYLE = "v-assistive-device-only";
 
     /**
      * Binds a caption (label in HTML speak) to the form element as required by
@@ -40,22 +41,30 @@ public class AriaHelper {
     public static void bindCaption(Widget widget, Element captionElement) {
         assert widget != null : "Valid Widget required";
 
-        if (null != captionElement) {
-            ensureUniqueId(captionElement);
-
-            if (widget instanceof HandlesAriaCaption) {
-                ((HandlesAriaCaption) widget).handleAriaCaption(captionElement);
+        if (widget instanceof HandlesAriaCaption) {
+            // Let the widget handle special cases itself
+            if (captionElement == null) {
+                ((HandlesAriaCaption) widget).clearAriaCaption();
             } else {
-                String ownerId = ensureUniqueId(widget.getElement());
-                captionElement.setAttribute("for", ownerId);
-
-                Roles.getTextboxRole().setAriaLabelledbyProperty(
-                        widget.getElement(), Id.of(captionElement));
+                ensureUniqueId(captionElement);
+                ((HandlesAriaCaption) widget).bindAriaCaption(captionElement);
             }
+        } else if (captionElement != null) {
+            // Handle the default case
+            ensureUniqueId(captionElement);
+            String ownerId = ensureUniqueId(widget.getElement());
+            captionElement.setAttribute("for", ownerId);
+
+            Roles.getTextboxRole().setAriaLabelledbyProperty(
+                    widget.getElement(), Id.of(captionElement));
         } else {
-            Roles.getTextboxRole().removeAriaLabelledbyProperty(
-                    widget.getElement());
+            clearCaption(widget);
         }
+    }
+
+    public static void clearCaption(Widget widget) {
+        Roles.getTextboxRole()
+                .removeAriaLabelledbyProperty(widget.getElement());
     }
 
     /**
@@ -102,12 +111,35 @@ public class AriaHelper {
      *            Element to check
      * @return String with the id of the element
      */
-    private static String ensureUniqueId(Element element) {
+    public static String ensureUniqueId(Element element) {
         String id = element.getId();
         if (null == id || id.isEmpty()) {
             id = DOM.createUniqueId();
             element.setId(id);
         }
         return id;
+    }
+
+    /**
+     * Moves an element out of sight. That way it is possible to have additional
+     * information for an assistive device, that is not in the way for visual
+     * users.
+     * 
+     * @param element
+     *            Element to move out of sight
+     */
+    public static void visibleForAssistiveDevicesOnly(Element element) {
+        element.addClassName(ASSISTIVE_DEVICE_ONLY_STYLE);
+    }
+
+    /**
+     * Clears the settings that moved the element out of sight, so it is visible
+     * on the page again.
+     * 
+     * @param element
+     *            Element to clear the specific styles from
+     */
+    public static void visibleForAll(Element element) {
+        element.removeClassName(ASSISTIVE_DEVICE_ONLY_STYLE);
     }
 }

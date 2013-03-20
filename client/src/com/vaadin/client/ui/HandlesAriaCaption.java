@@ -32,5 +32,11 @@ public interface HandlesAriaCaption {
      * @param captionElement
      *            Element of the caption
      */
-    void handleAriaCaption(Element captionElement);
+    void bindAriaCaption(Element captionElement);
+
+    /**
+     * Called to clear the binding to a caption from the main input element of
+     * the widget.
+     */
+    void clearAriaCaption();
 }

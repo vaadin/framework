@@ -15,8 +15,16 @@
  */
 package com.vaadin.client;
 
+import com.google.gwt.aria.client.Id;
+import com.google.gwt.aria.client.LiveValue;
+import com.google.gwt.aria.client.Roles;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DomEvent;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
@@ -54,6 +62,9 @@ public class VTooltip extends VOverlay {
     // Open next tooltip faster. Disabled after 2 sec of showTooltip-silence.
     private boolean justClosed = false;
 
+    private String uniqueId = DOM.createUniqueId();
+    private Element layoutElement;
+
     /**
      * Used to show tooltips; usually used via the singleton in
      * {@link ApplicationConnection}. NOTE that #setOwner(Widget)} should be
@@ -68,8 +79,19 @@ public class VTooltip extends VOverlay {
         setWidget(layout);
         layout.add(em);
         DOM.setElementProperty(description, "className", CLASSNAME + "-text");
-        DOM.appendChild(layout.getElement(), description);
+
+        layoutElement = layout.getElement();
+        DOM.appendChild(layoutElement, description);
         setSinkShadowEvents(true);
+
+        // WAI-ARIA additions
+        layoutElement.setId(uniqueId);
+        Roles.getTooltipRole().setAriaLiveProperty(getElement(),
+                LiveValue.POLITE);
+
+        description.setId(DOM.createUniqueId());
+        Roles.getTooltipRole().set(layoutElement);
+        Roles.getTooltipRole().setAriaHiddenState(layoutElement, true);
     }
 
     /**
@@ -204,15 +226,27 @@ public class VTooltip extends VOverlay {
         closing = true;
         justClosed = true;
         justClosedTimer.schedule(QUICK_OPEN_TIMEOUT);
+    }
 
+    @Override
+    public void hide() {
+        super.hide();
+        Roles.getTooltipRole().setAriaHiddenState(layoutElement, true);
+        Roles.getTooltipRole().removeAriaDescribedbyProperty(
+                tooltipEventHandler.currentElement);
     }
 
     private int tooltipEventMouseX;
     private int tooltipEventMouseY;
 
-    public void updatePosition(Event event) {
-        tooltipEventMouseX = DOM.eventGetClientX(event);
-        tooltipEventMouseY = DOM.eventGetClientY(event);
+    public void updatePosition(Event event, boolean isFocused) {
+        if (isFocused) {
+            tooltipEventMouseX = -1000;
+            tooltipEventMouseY = -1000;
+        } else {
+            tooltipEventMouseX = DOM.eventGetClientX(event);
+            tooltipEventMouseY = DOM.eventGetClientY(event);
+        }
     }
 
     @Override
@@ -246,12 +280,17 @@ public class VTooltip extends VOverlay {
     }
 
     private class TooltipEventHandler implements MouseMoveHandler,
-            ClickHandler, KeyDownHandler {
+            ClickHandler, KeyDownHandler, FocusHandler, BlurHandler {
 
         /**
          * Current element hovered
          */
         private com.google.gwt.dom.client.Element currentElement = null;
+
+        /**
+         * Current element focused
+         */
+        private boolean currentIsFocused;
 
         /**
          * Current tooltip active
@@ -319,31 +358,7 @@ public class VTooltip extends VOverlay {
 
         @Override
         public void onMouseMove(MouseMoveEvent mme) {
-            Event event = Event.as(mme.getNativeEvent());
-            com.google.gwt.dom.client.Element element = Element.as(event
-                    .getEventTarget());
-
-            // We can ignore move event if it's handled by move or over already
-            if (currentElement == element) {
-                return;
-            }
-            currentElement = element;
-
-            boolean connectorAndTooltipFound = resolveConnector((com.google.gwt.user.client.Element) element);
-            if (!connectorAndTooltipFound) {
-                if (isShowing()) {
-                    handleHideEvent();
-                } else {
-                    currentTooltipInfo = null;
-                }
-            } else {
-                updatePosition(event);
-                if (isShowing()) {
-                    replaceCurrentTooltip();
-                } else {
-                    showTooltip();
-                }
-            }
+            handleShowHide(mme, false);
         }
 
         @Override
@@ -354,6 +369,66 @@ public class VTooltip extends VOverlay {
         @Override
         public void onKeyDown(KeyDownEvent event) {
             handleHideEvent();
+        }
+
+        /**
+         * Displays Tooltip when page is navigated with the keyboard.
+         * 
+         * Tooltip is not visible. This makes it possible for assistive devices
+         * to recognize the tooltip.
+         */
+        @Override
+        public void onFocus(FocusEvent fe) {
+            handleShowHide(fe, true);
+        }
+
+        /**
+         * Hides Tooltip when the page is navigated with the keyboard.
+         * 
+         * Removes the Tooltip from page to make sure assistive devices don't
+         * recognize it by accident.
+         */
+        @Override
+        public void onBlur(BlurEvent be) {
+            handleHideEvent();
+        }
+
+        private void handleShowHide(DomEvent domEvent, boolean isFocused) {
+            Event event = Event.as(domEvent.getNativeEvent());
+            com.google.gwt.dom.client.Element element = Element.as(event
+                    .getEventTarget());
+
+            // We can ignore move event if it's handled by move or over already
+            if (currentElement == element && currentIsFocused == isFocused) {
+                return;
+            }
+
+            boolean connectorAndTooltipFound = resolveConnector((com.google.gwt.user.client.Element) element);
+            if (!connectorAndTooltipFound) {
+                if (isShowing()) {
+                    handleHideEvent();
+                    Roles.getButtonRole()
+                            .removeAriaDescribedbyProperty(element);
+                } else {
+                    currentTooltipInfo = null;
+                }
+            } else {
+                updatePosition(event, isFocused);
+
+                if (isShowing()) {
+                    replaceCurrentTooltip();
+                    Roles.getTooltipRole().removeAriaDescribedbyProperty(
+                            currentElement);
+                } else {
+                    showTooltip();
+                }
+
+                Roles.getTooltipRole().setAriaDescribedbyProperty(element,
+                        Id.of(uniqueId));
+            }
+
+            currentIsFocused = isFocused;
+            currentElement = element;
         }
     }
 
@@ -370,6 +445,25 @@ public class VTooltip extends VOverlay {
         widget.addDomHandler(tooltipEventHandler, MouseMoveEvent.getType());
         widget.addDomHandler(tooltipEventHandler, ClickEvent.getType());
         widget.addDomHandler(tooltipEventHandler, KeyDownEvent.getType());
+        widget.addDomHandler(tooltipEventHandler, FocusEvent.getType());
+        widget.addDomHandler(tooltipEventHandler, BlurEvent.getType());
         Profiler.leave("VTooltip.connectHandlersToWidget");
+    }
+
+    /**
+     * Returns the unique id of the tooltip element.
+     * 
+     * @return String containing the unique id of the tooltip, which always has
+     *         a value
+     */
+    public String getUniqueId() {
+        return uniqueId;
+    }
+
+    @Override
+    public void setPopupPositionAndShow(PositionCallback callback) {
+        super.setPopupPositionAndShow(callback);
+
+        Roles.getTooltipRole().setAriaHiddenState(layoutElement, false);
     }
 }

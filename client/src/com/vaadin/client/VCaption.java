@@ -16,12 +16,15 @@
 
 package com.vaadin.client;
 
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
+import com.vaadin.client.ui.AriaHelper;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.AbstractFieldState;
@@ -87,6 +90,8 @@ public class VCaption extends HTML {
         super();
         this.client = client;
         owner = component;
+
+        AriaHelper.bindCaption(component.getWidget(), getElement());
 
         if (client != null && owner != null) {
             setOwnerPid(getElement(), owner.getConnectorId());
@@ -209,11 +214,21 @@ public class VCaption extends HTML {
 
                 DOM.insertChild(getElement(), requiredFieldIndicator,
                         getInsertPosition(InsertPosition.REQUIRED));
+
+                Roles.getTextboxRole().setAriaRequiredProperty(
+                        owner.getWidget().getElement(), true);
+
+                // Hide the required indicator from assistive device
+                Roles.getTextboxRole().setAriaHiddenState(
+                        requiredFieldIndicator, true);
             }
         } else if (requiredFieldIndicator != null) {
             // Remove existing
             DOM.removeChild(getElement(), requiredFieldIndicator);
             requiredFieldIndicator = null;
+
+            Roles.getTextboxRole().removeAriaRequiredProperty(
+                    owner.getWidget().getElement());
         }
 
         if (showError) {

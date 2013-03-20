@@ -1,6 +1,5 @@
 package com.vaadin.tests.layouts;
 
-
 import java.util.ArrayList;
 import java.util.List;
 

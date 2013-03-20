@@ -238,4 +238,10 @@ input::-ms-clear {
 	height: 0;
 }
 
+.v-assistive-device-only {
+	position: absolute;
+	left: -2000px;
+	width: 10px;
+	overflow: hidden;
+}
 }

@@ -19,6 +19,8 @@ package com.vaadin.client.ui;
 import java.util.Date;
 import java.util.Iterator;
 
+import com.google.gwt.aria.client.Roles;
+import com.google.gwt.aria.client.SelectedValue;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -40,6 +42,7 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
@@ -175,9 +178,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
     private boolean showISOWeekNumbers;
 
-    private Date displayedMonth;
+    private FocusedDate displayedMonth;
 
-    private Date focusedDate;
+    private FocusedDate focusedDate;
 
     private Day selectedDay;
 
@@ -198,8 +201,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
     private boolean initialRenderDone = false;
 
     public VCalendarPanel() {
-
+        getElement().setId(DOM.createUniqueId());
         setStyleName(VDateField.CLASSNAME + "-calendarpanel");
+        Roles.getGridRole().set(getElement());
 
         /*
          * Firefox auto-repeat works correctly only if we use a key press
@@ -267,6 +271,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
     private void selectDate(Date date) {
         if (selectedDay != null) {
             selectedDay.removeStyleDependentName(CN_SELECTED);
+            Roles.getGridcellRole().removeAriaSelectedState(
+                    selectedDay.getElement());
         }
 
         int rowCount = days.getRowCount();
@@ -279,6 +285,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
                     if (curday.getDate().equals(date)) {
                         curday.addStyleDependentName(CN_SELECTED);
                         selectedDay = curday;
+                        Roles.getGridcellRole().setAriaSelectedState(
+                                selectedDay.getElement(), SelectedValue.TRUE);
                         return;
                     }
                 }
@@ -528,6 +536,10 @@ public class VCalendarPanel extends FocusableFlexTable implements
             } else {
                 days.setHTML(headerRow, firstWeekdayColumn + i, "");
             }
+
+            Roles.getColumnheaderRole().set(
+                    days.getCellFormatter().getElement(headerRow,
+                            firstWeekdayColumn + i));
         }
 
         // Zero out hours, minutes, seconds, and milliseconds to compare dates
@@ -557,6 +569,8 @@ public class VCalendarPanel extends FocusableFlexTable implements
 
                 if (curr.equals(selectedDate)) {
                     day.addStyleDependentName(CN_SELECTED);
+                    Roles.getGridcellRole().setAriaSelectedState(
+                            day.getElement(), SelectedValue.TRUE);
                     selectedDay = day;
                 }
                 if (curr.equals(today)) {
@@ -574,10 +588,14 @@ public class VCalendarPanel extends FocusableFlexTable implements
                 }
 
                 days.setWidget(weekOfMonth, firstWeekdayColumn + dayOfWeek, day);
+                Roles.getGridcellRole().set(
+                        days.getCellFormatter().getElement(weekOfMonth,
+                                firstWeekdayColumn + dayOfWeek));
 
                 // ISO week numbers if requested
                 days.getCellFormatter().setVisible(weekOfMonth, weekColumn,
                         isShowISOWeekNumbers());
+
                 if (isShowISOWeekNumbers()) {
                     final String baseCssClass = parent.getStylePrimaryName()
                             + "-calendarpanel-weeknumber";
@@ -615,8 +633,9 @@ public class VCalendarPanel extends FocusableFlexTable implements
         if (focusedDate == null) {
             Date now = new Date();
             // focusedDate must have zero hours, mins, secs, millisecs
-            focusedDate = new Date(now.getYear(), now.getMonth(), now.getDate());
-            displayedMonth = new Date(now.getYear(), now.getMonth(), 1);
+            focusedDate = new FocusedDate(now.getYear(), now.getMonth(),
+                    now.getDate());
+            displayedMonth = new FocusedDate(now.getYear(), now.getMonth(), 1);
         }
 
         if (getResolution().getCalendarField() <= Resolution.MONTH
@@ -1062,9 +1081,10 @@ public class VCalendarPanel extends FocusableFlexTable implements
              */
         } else if (keycode == getResetKey() && !shift) {
             // Restore showing value the selected value
-            focusedDate = new Date(value.getYear(), value.getMonth(),
+            focusedDate = new FocusedDate(value.getYear(), value.getMonth(),
                     value.getDate());
-            displayedMonth = new Date(value.getYear(), value.getMonth(), 1);
+            displayedMonth = new FocusedDate(value.getYear(), value.getMonth(),
+                    1);
             renderCalendar();
             return true;
         }
@@ -1264,9 +1284,10 @@ public class VCalendarPanel extends FocusableFlexTable implements
         if (value == null) {
             focusedDate = displayedMonth = null;
         } else {
-            focusedDate = new Date(value.getYear(), value.getMonth(),
+            focusedDate = new FocusedDate(value.getYear(), value.getMonth(),
                     value.getDate());
-            displayedMonth = new Date(value.getYear(), value.getMonth(), 1);
+            displayedMonth = new FocusedDate(value.getYear(), value.getMonth(),
+                    1);
         }
 
         // Re-render calendar if the displayed month is changed,
@@ -1819,6 +1840,52 @@ public class VCalendarPanel extends FocusableFlexTable implements
         super.onDetach();
         if (mouseTimer != null) {
             mouseTimer.cancel();
+        }
+    }
+
+    /**
+     * Helper class to inform the screen reader that the user changed the
+     * selected date. It sets the value of a field that is outside the view, and
+     * is defined as a live area. That way the screen reader recognizes the
+     * change and reads it to the user.
+     */
+    public class FocusedDate extends Date {
+
+        public FocusedDate(int year, int month, int date) {
+            super(year, month, date);
+        }
+
+        @Override
+        public void setTime(long time) {
+            super.setTime(time);
+            setLabel();
+        }
+
+        @Override
+        @Deprecated
+        public void setDate(int date) {
+            super.setDate(date);
+            setLabel();
+        }
+
+        @Override
+        @Deprecated
+        public void setMonth(int month) {
+            super.setMonth(month);
+            setLabel();
+        }
+
+        @Override
+        @Deprecated
+        public void setYear(int year) {
+            super.setYear(year);
+            setLabel();
+        }
+
+        private void setLabel() {
+            if (parent instanceof VPopupCalendar) {
+                ((VPopupCalendar) parent).setFocusedDate(this);
+            }
         }
     }
 }

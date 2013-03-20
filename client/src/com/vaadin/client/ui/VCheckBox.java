@@ -16,6 +16,8 @@
 
 package com.vaadin.client.ui;
 
+import com.google.gwt.aria.client.CheckedValue;
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -46,6 +48,11 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
     public VCheckBox() {
         setStyleName(CLASSNAME);
 
+        // Add a11y role "checkbox"
+        Roles.getCheckboxRole().set(getElement());
+        Roles.getCheckboxRole().setAriaCheckedState(getElement(),
+                CheckedValue.FALSE);
+
         Element el = DOM.getFirstChild(getElement());
         while (el != null) {
             DOM.sinkEvents(el,
@@ -69,4 +76,22 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
         }
     }
 
+    @Override
+    public void setValue(Boolean value, boolean fireEvents) {
+        setCheckedValue(value);
+        super.setValue(value, fireEvents);
+    }
+
+    private void setCheckedValue(Boolean value) {
+        CheckedValue checkedValue = value ? CheckedValue.TRUE
+                : CheckedValue.FALSE;
+        Roles.getCheckboxRole().setAriaCheckedState(getElement(), checkedValue);
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+
+        Roles.getCheckboxRole().setAriaDisabledState(getElement(), true);
+    }
 }

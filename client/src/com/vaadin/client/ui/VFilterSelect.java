@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style;
@@ -219,6 +220,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
             DOM.sinkEvents(root, Event.ONMOUSEDOWN | Event.ONMOUSEWHEEL);
             addCloseHandler(this);
+
+            Roles.getListRole().set(getElement());
         }
 
         /**
@@ -684,6 +687,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             while (it.hasNext()) {
                 final FilterSelectSuggestion s = it.next();
                 final MenuItem mi = new MenuItem(s.getDisplayString(), true, s);
+                Roles.getListitemRole().set(mi.getElement());
 
                 Util.sinkOnloadForImages(mi.getElement());
 
@@ -1049,15 +1053,21 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         });
 
         popupOpener.sinkEvents(Event.ONMOUSEDOWN);
+        Roles.getButtonRole().set(popupOpener.getElement());
+
         panel.add(tb);
         panel.add(popupOpener);
         initWidget(panel);
+        Roles.getComboboxRole().set(panel.getElement());
+
         tb.addKeyDownHandler(this);
         tb.addKeyUpHandler(this);
 
         tb.addFocusHandler(this);
         tb.addBlurHandler(this);
         tb.addClickHandler(this);
+
+        Roles.getTextboxRole().set(tb.getElement());
 
         popupOpener.addClickHandler(this);
 
@@ -1163,8 +1173,11 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         // Always update styles as they might have been overwritten
         if (textInputEnabled) {
             removeStyleDependentName(STYLE_NO_INPUT);
+            Roles.getTextboxRole().removeAriaReadonlyProperty(tb.getElement());
         } else {
             addStyleDependentName(STYLE_NO_INPUT);
+            Roles.getTextboxRole().setAriaReadonlyProperty(tb.getElement(),
+                    true);
         }
 
         if (this.textInputEnabled == textInputEnabled) {

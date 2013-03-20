@@ -22,6 +22,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.aria.client.CheckedValue;
+import com.google.gwt.aria.client.Id;
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -32,6 +35,7 @@ import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Focusable;
@@ -46,7 +50,7 @@ import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.optiongroup.OptionGroupConstants;
 
 public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
-        BlurHandler {
+        BlurHandler, HandlesAriaCaption {
 
     public static final String CLASSNAME = "v-select-optiongroup";
 
@@ -85,6 +89,8 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
     /** For internal use only. May be removed or replaced in the future. */
     public boolean htmlContentAllowed = false;
 
+    private String labelId;
+
     public VOptionGroup() {
         super(CLASSNAME);
         panel = (Panel) optionsContainer;
@@ -99,6 +105,13 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
     public void buildOptions(UIDL uidl) {
         panel.clear();
         optionsEnabled.clear();
+
+        if (isMultiselect()) {
+            Roles.getGroupRole().set(getElement());
+        } else {
+            Roles.getRadiogroupRole().set(getElement());
+        }
+
         for (final Iterator<?> it = uidl.getChildIterator(); it.hasNext();) {
             final UIDL opUidl = (UIDL) it.next();
             CheckBox op;
@@ -118,9 +131,30 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
             if (isMultiselect()) {
                 op = new VCheckBox();
                 op.setHTML(itemHtml);
+
+                // Add a11y role "checkbox" - FIXME - did not find a good
+                // solution to prevent getFirstChild()
+                com.google.gwt.dom.client.Element checkBoxElement = op
+                        .getElement().getFirstChildElement();
+                Roles.getCheckboxRole().set(checkBoxElement);
+                Roles.getCheckboxRole().setAriaCheckedState(checkBoxElement,
+                        CheckedValue.FALSE);
             } else {
                 op = new RadioButton(paintableId, itemHtml, true);
                 op.setStyleName("v-radiobutton");
+
+                // Add a11y role "radio" - FIXME - did not find a good solution
+                // to prevent getFirstChild()
+                com.google.gwt.dom.client.Element radioElement = op
+                        .getElement().getFirstChildElement();
+                Roles.getRadioRole().set(radioElement);
+                Roles.getRadioRole().setAriaCheckedState(radioElement,
+                        CheckedValue.FALSE);
+            }
+
+            if (labelId != null && !labelId.isEmpty()) {
+                Roles.getFormRole().setAriaDescribedbyProperty(
+                        op.getElement().getFirstChildElement(), Id.of(labelId));
             }
 
             if (icon != null && icon.length() != 0) {
@@ -165,6 +199,13 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
             }
             client.updateVariable(paintableId, "selected", getSelectedItems(),
                     isImmediate());
+
+            for (CheckBox item : optionsToKeys.keySet()) {
+                CheckedValue value = item.getValue() ? CheckedValue.TRUE
+                        : CheckedValue.FALSE;
+                Roles.getCheckboxRole().setAriaCheckedState(item.getElement(),
+                        value);
+            }
         }
     }
 
@@ -236,6 +277,24 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
                     }
                 }
             });
+        }
+    }
+
+    @Override
+    public void bindAriaCaption(Element captionElement) {
+        labelId = captionElement.getId();
+        for (CheckBox item : optionsToKeys.keySet()) {
+            Roles.getCheckboxRole().setAriaLabelledbyProperty(
+                    item.getElement(), Id.of(labelId));
+        }
+    }
+
+    @Override
+    public void clearAriaCaption() {
+        labelId = null;
+        for (CheckBox item : optionsToKeys.keySet()) {
+            Roles.getCheckboxRole().removeAriaLabelledbyProperty(
+                    item.getElement());
         }
     }
 }
