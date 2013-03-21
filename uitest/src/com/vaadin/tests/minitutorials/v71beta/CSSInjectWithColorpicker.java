@@ -1,4 +1,4 @@
-package com.vaadin.tests.widgetset.client.minitutorials.v71beta;
+package com.vaadin.tests.minitutorials.v71beta;
 
 import java.util.Arrays;
 
