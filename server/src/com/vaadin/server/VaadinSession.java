@@ -162,6 +162,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
                                     + "This might happen if a session is deserialized but never used before it expires.");
         } else if (VaadinService.getCurrentRequest() != null
                 && getCurrent() == this) {
+            assert hasLock();
             // Ignore if the session is being moved to a different backing
             // session
             if (getAttribute(VaadinService.REINITIALIZING_SESSION_MARKER) == Boolean.TRUE) {
@@ -192,6 +193,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      */
     @Deprecated
     public WebBrowser getBrowser() {
+        assert hasLock();
         return browser;
     }
 
@@ -200,6 +202,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *         milliseconds.
      */
     public long getCumulativeRequestDuration() {
+        assert hasLock();
         return cumulativeRequestDuration;
     }
 
@@ -211,6 +214,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *            The time spent in the last request, in milliseconds.
      */
     public void setLastRequestDuration(long time) {
+        assert hasLock();
         lastRequestDuration = time;
         cumulativeRequestDuration += time;
     }
@@ -220,6 +224,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *         milliseconds.
      */
     public long getLastRequestDuration() {
+        assert hasLock();
         return lastRequestDuration;
     }
 
@@ -232,6 +237,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * 
      */
     public void setLastRequestTimestamp(long timestamp) {
+        assert hasLock();
         lastRequestTimestamp = timestamp;
     }
 
@@ -242,6 +248,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *         the epoch.
      */
     public long getLastRequestTimestamp() {
+        assert hasLock();
         return lastRequestTimestamp;
     }
 
@@ -252,6 +259,11 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @return the wrapped session for this context
      */
     public WrappedSession getSession() {
+        /*
+         * This is used to fetch the underlying session and there is no need for
+         * having a lock when doing this. On the contrary this is sometimes done
+         * to be able to lock the session.
+         */
         return session;
     }
 
@@ -263,23 +275,28 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      */
     @Deprecated
     public LegacyCommunicationManager getCommunicationManager() {
+        assert hasLock();
         return communicationManager;
     }
 
     /**
-     * @param service
-     *            TODO
-     * @param underlyingSession
-     * @return
+     * Loads the VaadinSession for the given service and WrappedSession from the
+     * HTTP session.
      * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future
-     *             version
+     * @param service
+     *            The service the VaadinSession is associated with
+     * @param underlyingSession
+     *            The wrapped HTTP session for the user
+     * @return A VaadinSession instance for the service, session combination or
+     *         null if none was found.
+     * @deprecated As of 7.0. Should be moved to a separate session storage
+     *             class some day.
      */
     @Deprecated
     public static VaadinSession getForSession(VaadinService service,
             WrappedSession underlyingSession) {
-        assert ((ReentrantLock) service.getSessionLock(underlyingSession))
-                .isHeldByCurrentThread() : "Cannot retrieve VaadinSession when WrappedSession is not locked for the service";
+        assert hasLock(service, underlyingSession);
+
         VaadinSession vaadinSession = (VaadinSession) underlyingSession
                 .getAttribute(getSessionAttributeName(service));
         if (vaadinSession == null) {
@@ -289,35 +306,48 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         vaadinSession.session = underlyingSession;
         vaadinSession.service = service;
         vaadinSession.refreshLock();
-
         return vaadinSession;
     }
 
     /**
+     * Removes this VaadinSession from the HTTP session.
      * 
      * @param service
-     *            TODO
-     * @deprecated As of 7.0. Will likely change or be removed in a future
-     *             version
+     *            The service this session is associated with
+     * @deprecated As of 7.0. Should be moved to a separate session storage
+     *             class some day.
      */
     @Deprecated
     public void removeFromSession(VaadinService service) {
-        assert (getForSession(service, session) == this);
+        assert hasLock();
         session.setAttribute(getSessionAttributeName(service), null);
     }
 
+    /**
+     * Retrieves the name of the attribute used for storing a VaadinSession for
+     * the given service.
+     * 
+     * @param service
+     *            The service associated with the sessio
+     * @return The attribute name used for storing the session
+     */
     private static String getSessionAttributeName(VaadinService service) {
         return VaadinSession.class.getName() + "." + service.getServiceName();
     }
 
     /**
-     * @param session
+     * Stores this VaadinSession in the HTTP session.
      * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future
-     *             version
+     * @param service
+     *            The service this session is associated with
+     * @param session
+     *            The HTTP session this VaadinSession should be stored in
+     * @deprecated As of 7.0. Should be moved to a separate session storage
+     *             class some day.
      */
     @Deprecated
     public void storeInSession(VaadinService service, WrappedSession session) {
+        assert hasLock(service, session);
         session.setAttribute(getSessionAttributeName(service), this);
         this.session = session;
         refreshLock();
@@ -328,11 +358,13 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      */
     private void refreshLock() {
         assert lock == null || lock == service.getSessionLock(session) : "Cannot change the lock from one instance to another";
+        assert hasLock(service, session);
         lock = service.getSessionLock(session);
     }
 
     public void setCommunicationManager(
             LegacyCommunicationManager communicationManager) {
+        assert hasLock();
         if (communicationManager == null) {
             throw new IllegalArgumentException("Can not set to null");
         }
@@ -341,6 +373,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     public void setConfiguration(DeploymentConfiguration configuration) {
+        assert hasLock();
         if (configuration == null) {
             throw new IllegalArgumentException("Can not set to null");
         }
@@ -354,6 +387,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @return the deployment configuration
      */
     public DeploymentConfiguration getConfiguration() {
+        assert hasLock();
         return configuration;
     }
 
@@ -366,6 +400,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @return the locale of this session.
      */
     public Locale getLocale() {
+        assert hasLock();
         if (locale != null) {
             return locale;
         }
@@ -383,6 +418,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * 
      */
     public void setLocale(Locale locale) {
+        assert hasLock();
         this.locale = locale;
     }
 
@@ -392,6 +428,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @return the current error handler
      */
     public ErrorHandler getErrorHandler() {
+        assert hasLock();
         return errorHandler;
     }
 
@@ -401,6 +438,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @param errorHandler
      */
     public void setErrorHandler(ErrorHandler errorHandler) {
+        assert hasLock();
         this.errorHandler = errorHandler;
     }
 
@@ -413,6 +451,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @return The converter factory used in the session
      */
     public ConverterFactory getConverterFactory() {
+        assert hasLock();
         return converterFactory;
     }
 
@@ -438,6 +477,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *            The converter factory used in the session
      */
     public void setConverterFactory(ConverterFactory converterFactory) {
+        assert hasLock();
         this.converterFactory = converterFactory;
     }
 
@@ -458,6 +498,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @since 7.0
      */
     public void addRequestHandler(RequestHandler handler) {
+        assert hasLock();
         requestHandlers.addFirst(handler);
     }
 
@@ -470,6 +511,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @since 7.0
      */
     public void removeRequestHandler(RequestHandler handler) {
+        assert hasLock();
         requestHandlers.remove(handler);
     }
 
@@ -487,6 +529,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @since 7.0
      */
     public Collection<RequestHandler> getRequestHandlers() {
+        assert hasLock();
         return Collections.unmodifiableCollection(requestHandlers);
     }
 
@@ -540,6 +583,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @since 7.0
      */
     public Collection<UI> getUIs() {
+        assert hasLock();
         return Collections.unmodifiableCollection(uIs.values());
     }
 
@@ -558,6 +602,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      */
     @Deprecated
     public String createConnectorId(ClientConnector connector) {
+        assert hasLock();
         return String.valueOf(connectorIdSequence++);
     }
 
@@ -572,7 +617,29 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @return The UI with the given id or null if not found
      */
     public UI getUIById(int uiId) {
+        assert hasLock();
         return uIs.get(uiId);
+    }
+
+    /**
+     * Checks if the current thread has exclusive access to this VaadinSession
+     * 
+     * @return true if the thread has exclusive access, false otherwise
+     */
+    public boolean hasLock() {
+        ReentrantLock l = ((ReentrantLock) getLockInstance());
+        return l.isHeldByCurrentThread();
+    }
+
+    /**
+     * Checks if the current thread has exclusive access to the given
+     * WrappedSession.
+     * 
+     * @return true if this thread has exclusive access, false otherwise
+     */
+    private static boolean hasLock(VaadinService service, WrappedSession session) {
+        ReentrantLock l = (ReentrantLock) service.getSessionLock(session);
+        return l.isHeldByCurrentThread();
     }
 
     /**
@@ -588,6 +655,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *            the bootstrap listener to add
      */
     public void addBootstrapListener(BootstrapListener listener) {
+        assert hasLock();
         eventRouter.addListener(BootstrapFragmentResponse.class, listener,
                 BOOTSTRAP_FRAGMENT_METHOD);
         eventRouter.addListener(BootstrapPageResponse.class, listener,
@@ -603,6 +671,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *            the bootstrap listener to remove
      */
     public void removeBootstrapListener(BootstrapListener listener) {
+        assert hasLock();
         eventRouter.removeListener(BootstrapFragmentResponse.class, listener,
                 BOOTSTRAP_FRAGMENT_METHOD);
         eventRouter.removeListener(BootstrapPageResponse.class, listener,
@@ -623,6 +692,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      */
     @Deprecated
     public void modifyBootstrapResponse(BootstrapResponse response) {
+        assert hasLock();
         eventRouter.fireEvent(response);
     }
 
@@ -634,6 +704,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *            the UI to remove
      */
     public void removeUI(UI ui) {
+        assert hasLock();
         int id = ui.getUIId();
         ui.setSession(null);
         uIs.remove(id);
@@ -658,6 +729,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @since 7.0.0
      */
     public GlobalResourceHandler getGlobalResourceHandler(boolean createOnDemand) {
+        assert hasLock();
         if (globalResourceHandler == null && createOnDemand) {
             globalResourceHandler = new GlobalResourceHandler();
             addRequestHandler(globalResourceHandler);
@@ -740,6 +812,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *            remove a previous association.
      */
     public void setAttribute(String name, Object value) {
+        assert hasLock();
         if (name == null) {
             throw new IllegalArgumentException("name can not be null");
         }
@@ -771,6 +844,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *            remove a previous association.
      */
     public <T> void setAttribute(Class<T> type, T value) {
+        assert hasLock();
         if (type == null) {
             throw new IllegalArgumentException("type can not be null");
         }
@@ -795,6 +869,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *         it has been set to null.
      */
     public Object getAttribute(String name) {
+        assert hasLock();
         if (name == null) {
             throw new IllegalArgumentException("name can not be null");
         }
@@ -820,6 +895,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *         it has been set to null.
      */
     public <T> T getAttribute(Class<T> type) {
+        assert hasLock();
         if (type == null) {
             throw new IllegalArgumentException("type can not be null");
         }
@@ -837,6 +913,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @return a unique UI id
      */
     public int getNextUIid() {
+        assert hasLock();
         return nextUIId++;
     }
 
@@ -850,6 +927,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @return the mapping between window names and UI ids for this session.
      */
     public Map<String, Integer> getPreserveOnRefreshUIs() {
+        assert hasLock();
         return retainOnRefreshUIs;
     }
 
@@ -860,6 +938,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *            the initialized UI to add.
      */
     public void addUI(UI ui) {
+        assert hasLock();
         if (ui.getUIId() == -1) {
             throw new IllegalArgumentException(
                     "Can not add an UI that has not been initialized.");
@@ -879,6 +958,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *            the UI provider that should be added
      */
     public void addUIProvider(UIProvider uiProvider) {
+        assert hasLock();
         uiProviders.addFirst(uiProvider);
     }
 
@@ -889,6 +969,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *            the UI provider that should be removed
      */
     public void removeUIProvider(UIProvider uiProvider) {
+        assert hasLock();
         uiProviders.remove(uiProvider);
     }
 
@@ -898,6 +979,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @return an unmodifiable list of UI providers
      */
     public List<UIProvider> getUIProviders() {
+        assert hasLock();
         return Collections.unmodifiableList(uiProviders);
     }
 
@@ -922,6 +1004,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * 
      */
     public void close() {
+        assert hasLock();
         closing = true;
     }
 
@@ -930,9 +1013,10 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * 
      * @see #close()
      * 
-     * @return
+     * @return true if this session is marked to be closed, false otherwise
      */
     public boolean isClosing() {
+        assert hasLock();
         return closing;
     }
 

@@ -134,6 +134,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
     /* Documentation copied from interface */
     @Override
     public void markAsDirty() {
+        assert getSession() == null || getSession().hasLock() : "Session must be locked when markAsDirty() is called";
         UI uI = getUI();
         if (uI != null) {
             uI.getConnectorTracker().markDirty(this);
@@ -218,6 +219,8 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * @see #getState()
      */
     protected SharedState getState(boolean markAsDirty) {
+        assert getSession() == null || getSession().hasLock() : "Session must be locked when getState() is called";
+
         if (null == sharedState) {
             sharedState = createState();
         }
