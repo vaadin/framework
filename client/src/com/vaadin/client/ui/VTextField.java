@@ -450,4 +450,8 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         this.inputPrompt = inputPrompt;
     }
 
+    protected boolean isWordwrap() {
+        String wrap = getElement().getAttribute("wrap");
+        return !"off".equals(wrap);
+    }
 }

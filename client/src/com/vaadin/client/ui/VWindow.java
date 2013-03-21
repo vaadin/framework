@@ -22,6 +22,9 @@ import java.util.Comparator;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
@@ -35,6 +38,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
@@ -423,6 +427,36 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         // Remove window from windowOrder to avoid references being left
         // hanging.
         windowOrder.remove(this);
+
+        /*
+         * If the window has a RichTextArea and the RTA is focused at the time
+         * of hiding in IE8 only the window will have some problems returning
+         * the focus to the correct place. Curiously the focus will be returned
+         * correctly if clicking on the "close" button in the window header but
+         * closing the window from a button for example in the window will fail.
+         * Symptom described in #10776
+         * 
+         * The problematic part is that for the focus to be returned correctly
+         * an input element needs to be focused in the root panel. Focusing some
+         * other element apparently won't work.
+         */
+        if (BrowserInfo.get().isIE8()) {
+            fixIE8FocusCaptureIssue();
+        }
+    }
+
+    private void fixIE8FocusCaptureIssue() {
+        Element e = DOM.createInputText();
+        Style elemStyle = e.getStyle();
+        elemStyle.setPosition(Position.ABSOLUTE);
+        elemStyle.setLeft(-10, Unit.PX);
+        elemStyle.setWidth(0, Unit.PX);
+        elemStyle.setHeight(0, Unit.PX);
+
+        Element rootPanel = RootPanel.getBodyElement();
+        rootPanel.appendChild(e);
+        e.focus();
+        rootPanel.removeChild(e);
     }
 
     /** For internal use only. May be removed or replaced in the future. */

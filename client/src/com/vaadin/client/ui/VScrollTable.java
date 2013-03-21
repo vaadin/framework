@@ -3056,7 +3056,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                                 .hasNext(); columnIndex++) {
                             if (it.next() == this) {
                                 break;
-                            }
+                            }                          
                         }
                     }
                     final int cw = scrollBody.getColWidth(columnIndex);
@@ -3266,10 +3266,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
                 }
                 if (col.hasAttribute("width")) {
-                    final String widthStr = col.getStringAttribute("width");
                     // Make sure to accomodate for the sort indicator if
                     // necessary.
-                    int width = Integer.parseInt(widthStr);
+                    int width = col.getIntAttribute("width");
                     int widthWithoutAddedIndent = width;
 
                     // get min width with indent, no padding
@@ -3301,12 +3300,25 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         // save min width without indent
                         c.setWidth(widthWithoutAddedIndent, true);
                     }
+                } else if (col.hasAttribute("er")) {
+                    c.setExpandRatio(col.getFloatAttribute("er"));
+
                 } else if (recalcWidths) {
                     c.setUndefinedWidth();
+
+                } else {
+                    boolean hadExpandRatio = c.getExpandRatio() > 0;
+                    boolean hadDefinedWidth = c.isDefinedWidth();
+                    if (hadExpandRatio || hadDefinedWidth) {
+                        // Someone has removed a expand width or the defined
+                        // width on the server side (setting it to -1), make the
+                        // column undefined again and measure columns again.
+                        c.setUndefinedWidth();
+                        c.setExpandRatio(0);
+                        refreshContentWidths = true;
+                    }
                 }
-                if (col.hasAttribute("er")) {
-                    c.setExpandRatio(col.getFloatAttribute("er"));
-                }
+
                 if (col.hasAttribute("collapsed")) {
                     // ensure header is properly removed from parent (case when
                     // collapsing happens via servers side api)

@@ -143,11 +143,13 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
             return;
         }
 
+        getState().checked = getWidget().getValue();
+
         // Add mouse details
         MouseEventDetails details = MouseEventDetailsBuilder
                 .buildMouseEventDetails(event.getNativeEvent(), getWidget()
                         .getElement());
-        getRpcProxy(CheckBoxServerRpc.class).setChecked(getWidget().getValue(),
+        getRpcProxy(CheckBoxServerRpc.class).setChecked(getState().checked,
                 details);
 
     }

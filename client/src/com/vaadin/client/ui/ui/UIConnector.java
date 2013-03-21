@@ -421,10 +421,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         DOM.sinkEvents(getWidget().getElement(), Event.ONKEYDOWN
                 | Event.ONSCROLL);
 
-        // iview is focused when created so element needs tabIndex
-        // 1 due 0 is at the end of natural tabbing order
-        DOM.setElementProperty(getWidget().getElement(), "tabIndex", "1");
-
         RootPanel root = RootPanel.get(rootPanelId);
 
         // Remove the v-app-loading or any splash screen added inside the div by
@@ -436,6 +432,10 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         root.addStyleName(themeName);
 
         root.add(getWidget());
+
+        // Set default tab index before focus call. State change handler
+        // will update this later if needed.
+        getWidget().setTabIndex(1);
 
         if (applicationConnection.getConfiguration().isStandalone()) {
             // set focus to iview element by default to listen possible keyboard

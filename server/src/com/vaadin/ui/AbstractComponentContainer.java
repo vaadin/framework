@@ -339,6 +339,12 @@ public abstract class AbstractComponentContainer extends AbstractComponent
                 true);
     }
 
+    /**
+     * {@inheritDoc}
+     * 
+     * @deprecated As of 7.0, use {@link #iterator()} instead.
+     */
+    @Deprecated
     @Override
     public Iterator<Component> getComponentIterator() {
         return iterator();

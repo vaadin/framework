@@ -34,13 +34,12 @@ import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
 import com.vaadin.data.util.sqlcontainer.query.generator.filter.QueryBuilder;
 
 @SuppressWarnings("serial")
-public class FreeformQuery implements QueryDelegate {
+public class FreeformQuery extends AbstractTransactionalQuery implements
+        QueryDelegate {
 
     FreeformQueryDelegate delegate = null;
     private String queryString;
     private List<String> primaryKeyColumns;
-    private JDBCConnectionPool connectionPool;
-    private transient Connection activeConnection = null;
 
     /**
      * Prevent no-parameters instantiation of FreeformQuery
@@ -67,6 +66,7 @@ public class FreeformQuery implements QueryDelegate {
     @Deprecated
     public FreeformQuery(String queryString, List<String> primaryKeyColumns,
             JDBCConnectionPool connectionPool) {
+        super(connectionPool);
         if (primaryKeyColumns == null) {
             primaryKeyColumns = new ArrayList<String>();
         }
@@ -83,7 +83,6 @@ public class FreeformQuery implements QueryDelegate {
         this.queryString = queryString;
         this.primaryKeyColumns = Collections
                 .unmodifiableList(primaryKeyColumns);
-        this.connectionPool = connectionPool;
     }
 
     /**
@@ -189,13 +188,6 @@ public class FreeformQuery implements QueryDelegate {
         return count;
     }
 
-    private Connection getConnection() throws SQLException {
-        if (activeConnection != null) {
-            return activeConnection;
-        }
-        return connectionPool.reserveConnection();
-    }
-
     /**
      * Fetches the results for the query. This implementation always fetches the
      * entire record set, ignoring the offset and page length parameters. In
@@ -210,9 +202,7 @@ public class FreeformQuery implements QueryDelegate {
     @Override
     @SuppressWarnings({ "deprecation", "finally" })
     public ResultSet getResults(int offset, int pagelength) throws SQLException {
-        if (activeConnection == null) {
-            throw new SQLException("No active transaction!");
-        }
+        ensureTransaction();
         String query = queryString;
         if (delegate != null) {
             /* First try using prepared statement */
@@ -220,8 +210,8 @@ public class FreeformQuery implements QueryDelegate {
                 try {
                     StatementHelper sh = ((FreeformStatementDelegate) delegate)
                             .getQueryStatement(offset, pagelength);
-                    PreparedStatement pstmt = activeConnection
-                            .prepareStatement(sh.getQueryString());
+                    PreparedStatement pstmt = getConnection().prepareStatement(
+                            sh.getQueryString());
                     sh.setParameterValuesToStatement(pstmt);
                     return pstmt.executeQuery();
                 } catch (UnsupportedOperationException e) {
@@ -234,7 +224,7 @@ public class FreeformQuery implements QueryDelegate {
                 // This is fine, we'll just use the default queryString.
             }
         }
-        Statement statement = activeConnection.createStatement();
+        Statement statement = getConnection().createStatement();
         ResultSet rs;
         try {
             rs = statement.executeQuery(query);
@@ -322,14 +312,14 @@ public class FreeformQuery implements QueryDelegate {
      */
     @Override
     public int storeRow(RowItem row) throws SQLException {
-        if (activeConnection == null) {
+        if (!isInTransaction()) {
             throw new IllegalStateException("No transaction is active!");
         } else if (primaryKeyColumns.isEmpty()) {
             throw new UnsupportedOperationException(
                     "Cannot store items fetched with a read-only freeform query!");
         }
         if (delegate != null) {
-            return delegate.storeRow(activeConnection, row);
+            return delegate.storeRow(getConnection(), row);
         } else {
             throw new UnsupportedOperationException(
                     "FreeFormQueryDelegate not set!");
@@ -345,68 +335,36 @@ public class FreeformQuery implements QueryDelegate {
      */
     @Override
     public boolean removeRow(RowItem row) throws SQLException {
-        if (activeConnection == null) {
+        if (!isInTransaction()) {
             throw new IllegalStateException("No transaction is active!");
         } else if (primaryKeyColumns.isEmpty()) {
             throw new UnsupportedOperationException(
                     "Cannot remove items fetched with a read-only freeform query!");
         }
         if (delegate != null) {
-            return delegate.removeRow(activeConnection, row);
+            return delegate.removeRow(getConnection(), row);
         } else {
             throw new UnsupportedOperationException(
                     "FreeFormQueryDelegate not set!");
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.data.util.sqlcontainer.query.QueryDelegate#beginTransaction()
-     */
     @Override
     public synchronized void beginTransaction()
             throws UnsupportedOperationException, SQLException {
-        if (activeConnection != null) {
-            throw new IllegalStateException("A transaction is already active!");
-        }
-        activeConnection = connectionPool.reserveConnection();
-        activeConnection.setAutoCommit(false);
+        super.beginTransaction();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.util.sqlcontainer.query.QueryDelegate#commit()
-     */
     @Override
     public synchronized void commit() throws UnsupportedOperationException,
             SQLException {
-        if (activeConnection == null) {
-            throw new SQLException("No active transaction");
-        }
-        if (!activeConnection.getAutoCommit()) {
-            activeConnection.commit();
-        }
-        connectionPool.releaseConnection(activeConnection);
-        activeConnection = null;
+        super.commit();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.data.util.sqlcontainer.query.QueryDelegate#rollback()
-     */
     @Override
     public synchronized void rollback() throws UnsupportedOperationException,
             SQLException {
-        if (activeConnection == null) {
-            throw new SQLException("No active transaction");
-        }
-        activeConnection.rollback();
-        connectionPool.releaseConnection(activeConnection);
-        activeConnection = null;
+        super.rollback();
     }
 
     /*
@@ -490,66 +448,6 @@ public class FreeformQuery implements QueryDelegate {
             releaseConnection(conn, statement, rs);
         }
         return contains;
-    }
-
-    /**
-     * Releases the connection if it is not part of an active transaction.
-     * 
-     * @param conn
-     *            the connection to release
-     */
-    private void releaseConnection(Connection conn) {
-        if (conn != activeConnection) {
-            connectionPool.releaseConnection(conn);
-        }
-    }
-
-    /**
-     * Closes a statement and a resultset, then releases the connection if it is
-     * not part of an active transaction. A failure in closing one of the
-     * parameters does not prevent closing the rest.
-     * 
-     * If the statement is a {@link PreparedStatement}, its parameters are
-     * cleared prior to closing the statement.
-     * 
-     * Although JDBC specification does state that closing a statement closes
-     * its result set and closing a connection closes statements and result
-     * sets, this method does try to close the result set and statement
-     * explicitly whenever not null. This can guard against bugs in certain JDBC
-     * drivers and reduce leaks in case e.g. closing the result set succeeds but
-     * closing the statement or connection fails.
-     * 
-     * @param conn
-     *            the connection to release
-     * @param statement
-     *            the statement to close, may be null to skip closing
-     * @param rs
-     *            the result set to close, may be null to skip closing
-     * @throws SQLException
-     *             if closing the result set or the statement fails
-     */
-    private void releaseConnection(Connection conn, Statement statement,
-            ResultSet rs) throws SQLException {
-        try {
-            try {
-                if (null != rs) {
-                    rs.close();
-                }
-            } finally {
-                if (null != statement) {
-                    if (statement instanceof PreparedStatement) {
-                        try {
-                            ((PreparedStatement) statement).clearParameters();
-                        } catch (Exception e) {
-                            // will be closed below anyway
-                        }
-                    }
-                    statement.close();
-                }
-            }
-        } finally {
-            releaseConnection(conn);
-        }
     }
 
     private String modifyWhereClause(Object... keys) {

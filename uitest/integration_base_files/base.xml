@@ -28,6 +28,20 @@
 	</target>
 
 	<target name="deployStatic">
+		<unzip src="${war}" dest="${staticDeployDir}/tmp-unpack-jar/">
+			<patternset>
+				<include name="WEB-INF/lib/*.jar" />
+			</patternset>
+		</unzip>
+		<unzip dest="${staticDeployDir}">
+			<fileset dir="${staticDeployDir}/tmp-unpack-jar/WEB-INF/lib" includes="*.jar" />
+
+			<patternset>
+				<include name="VAADIN/**" />
+			</patternset>
+		</unzip>
+		<delete dir="${staticDeployDir}/tmp-unpack-jar/" />
+
 		<unzip src="${war}" dest="${staticDeployDir}">
 			<patternset>
 				<include name="VAADIN/**" />

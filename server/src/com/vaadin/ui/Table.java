@@ -396,10 +396,14 @@ public class Table extends AbstractSelect implements Action.Container,
     private HashMap<Object, Align> columnAlignments = new HashMap<Object, Align>();
 
     /**
-     * Holds column widths in pixels (Integer) or expand ratios (Float) for
-     * visible columns (by propertyId).
+     * Holds column widths in pixels for visible columns (by propertyId).
      */
-    private final HashMap<Object, Object> columnWidths = new HashMap<Object, Object>();
+    private final HashMap<Object, Integer> columnWidths = new HashMap<Object, Integer>();
+
+    /**
+     * Holds column expand rations for visible columns (by propertyId).
+     */
+    private final HashMap<Object, Float> columnExpandRatios = new HashMap<Object, Float>();
 
     /**
      * Holds column generators
@@ -886,10 +890,14 @@ public class Table extends AbstractSelect implements Action.Container,
             // id to store the width of the row header.
             propertyId = ROW_HEADER_FAKE_PROPERTY_ID;
         }
+
+        // Setting column width should remove any expand ratios as well
+        columnExpandRatios.remove(propertyId);
+
         if (width < 0) {
             columnWidths.remove(propertyId);
         } else {
-            columnWidths.put(propertyId, Integer.valueOf(width));
+            columnWidths.put(propertyId, width);
         }
         markAsDirty();
     }
@@ -930,21 +938,39 @@ public class Table extends AbstractSelect implements Action.Container,
      *            the expandRatio used to divide excess space for this column
      */
     public void setColumnExpandRatio(Object propertyId, float expandRatio) {
-        if (expandRatio < 0) {
-            columnWidths.remove(propertyId);
-        } else {
-            columnWidths.put(propertyId, new Float(expandRatio));
+        if (propertyId == null) {
+            // Since propertyId is null, this is the row header. Use the magic
+            // id to store the width of the row header.
+            propertyId = ROW_HEADER_FAKE_PROPERTY_ID;
         }
+
+        // Setting the column expand ratio should remove and defined column
+        // width
+        columnWidths.remove(propertyId);
+
+        if (expandRatio < 0) {
+            columnExpandRatios.remove(propertyId);
+        } else {
+            columnExpandRatios.put(propertyId, expandRatio);
+        }
+
+        requestRepaint();
     }
 
+    /**
+     * Gets the column expand ratio for a columnd. See
+     * {@link #setColumnExpandRatio(Object, float)}
+     * 
+     * @param propertyId
+     *            columns property id
+     * @return the expandRatio used to divide excess space for this column
+     */
     public float getColumnExpandRatio(Object propertyId) {
-        final Object width = columnWidths.get(propertyId);
-        if (width == null || !(width instanceof Float)) {
+        final Float width = columnExpandRatios.get(propertyId);
+        if (width == null) {
             return -1;
         }
-        final Float value = (Float) width;
-        return value.floatValue();
-
+        return width.floatValue();
     }
 
     /**
@@ -959,12 +985,11 @@ public class Table extends AbstractSelect implements Action.Container,
             // id to retrieve the width of the row header.
             propertyId = ROW_HEADER_FAKE_PROPERTY_ID;
         }
-        final Object width = columnWidths.get(propertyId);
-        if (width == null || !(width instanceof Integer)) {
+        final Integer width = columnWidths.get(propertyId);
+        if (width == null) {
             return -1;
         }
-        final Integer value = (Integer) width;
-        return value.intValue();
+        return width.intValue();
     }
 
     /**
@@ -3434,6 +3459,7 @@ public class Table extends AbstractSelect implements Action.Container,
             target.startTag("column");
             target.addAttribute("cid", ROW_HEADER_COLUMN_KEY);
             paintColumnWidth(target, ROW_HEADER_FAKE_PROPERTY_ID);
+            paintColumnExpandRatio(target, ROW_HEADER_FAKE_PROPERTY_ID);
             target.endTag("column");
         }
         final Collection<?> sortables = getSortableContainerPropertyIds();
@@ -3461,6 +3487,7 @@ public class Table extends AbstractSelect implements Action.Container,
                             .toString());
                 }
                 paintColumnWidth(target, colId);
+                paintColumnExpandRatio(target, colId);
                 target.endTag("column");
             }
         }
@@ -3706,12 +3733,14 @@ public class Table extends AbstractSelect implements Action.Container,
     private void paintColumnWidth(PaintTarget target, final Object columnId)
             throws PaintException {
         if (columnWidths.containsKey(columnId)) {
-            if (getColumnWidth(columnId) > -1) {
-                target.addAttribute("width",
-                        String.valueOf(getColumnWidth(columnId)));
-            } else {
-                target.addAttribute("er", getColumnExpandRatio(columnId));
-            }
+            target.addAttribute("width", getColumnWidth(columnId));
+        }
+    }
+
+    private void paintColumnExpandRatio(PaintTarget target,
+            final Object columnId) throws PaintException {
+        if (columnExpandRatios.containsKey(columnId)) {
+            target.addAttribute("er", getColumnExpandRatio(columnId));
         }
     }
 

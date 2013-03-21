@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8888/" />
+<title>New Test</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">New Test</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.components.checkbox.CheckBoxRevertValueChange?restartApplication</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscheckboxCheckBoxRevertValueChange::/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot[0]/VCheckBox[0]/domChild[0]</td>
+	<td>10,5</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentscheckboxCheckBoxRevertValueChange::PID_SLog_row_0</td>
+	<td>1. I said no checking!</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentscheckboxCheckBoxRevertValueChange::/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot[0]/VCheckBox[0]/domChild[0]</td>
+	<td>off</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscheckboxCheckBoxRevertValueChange::/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot[0]/VCheckBox[0]/domChild[1]</td>
+	<td>93,10</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentscheckboxCheckBoxRevertValueChange::PID_SLog_row_0</td>
+	<td>2. I said no checking!</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentscheckboxCheckBoxRevertValueChange::/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot[0]/VCheckBox[0]/domChild[0]</td>
+	<td>off</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscheckboxCheckBoxRevertValueChange::/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot[1]/VCheckBox[0]/domChild[0]</td>
+	<td>5,8</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentscheckboxCheckBoxRevertValueChange::PID_SLog_row_0</td>
+	<td>3. I said no unchecking!</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentscheckboxCheckBoxRevertValueChange::/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot[1]/VCheckBox[0]/domChild[0]</td>
+	<td>on</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscheckboxCheckBoxRevertValueChange::/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot[1]/VCheckBox[0]/domChild[1]</td>
+	<td>78,12</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentscheckboxCheckBoxRevertValueChange::PID_SLog_row_0</td>
+	<td>4. I said no unchecking!</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentscheckboxCheckBoxRevertValueChange::/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot[1]/VCheckBox[0]/domChild[0]</td>
+	<td>on</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

@@ -55,19 +55,45 @@
 			pendingApps: []
 		};
 	};
-		
+
+	var isInitializedInDom = function(appId) {
+		var appDiv = document.getElementById(appId);
+		if (!appDiv) {
+			return false;
+		}
+		for ( var i = 0; i < appDiv.childElementCount; i++) {
+			var className = appDiv.childNodes[i].className;
+			// If the app div contains a child with the class
+			// "v-app-loading" we have only received the HTML 
+			// but not yet started the widget set
+			// (UIConnector removes the v-app-loading div).
+			if (className && className.contains("v-app-loading")) {
+				return false;
+			}
+		}
+		return true;
+	};
+
 	window.vaadin = window.vaadin || {
 		initApplication: function(appId, config) {
+			var testbenchId = appId.replace(/-\d+$/, '');
+			
 			if (apps[appId]) {
-				throw "Application " + appId + " already initialized";
+				if (window.vaadin && window.vaadin.clients && window.vaadin.clients[testbenchId] && window.vaadin.clients[testbenchId].initializing) {
+					throw "Application " + appId + " is already being initialized";
+				}
+				if (isInitializedInDom(appId)) {
+					throw "Application " + appId + " already initialized";
+				}
 			}
+
 			log("init application", appId, config);
 			
-			var testbenchId = appId.replace(/-\d+$/, '');
 			window.vaadin.clients[testbenchId] = {
 					isActive: function() {
 						return true;
-					}
+					},
+					initializing: true
 			};
 			
 			var getConfig = function(name) {

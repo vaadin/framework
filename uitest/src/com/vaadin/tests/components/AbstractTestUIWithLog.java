@@ -13,14 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.shared.ui.ui;
+package com.vaadin.tests.components;
 
-import com.vaadin.shared.ui.TabIndexState;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.tests.util.Log;
+import com.vaadin.ui.VerticalLayout;
 
-public class UIState extends TabIndexState {
-    {
-        primaryStyleName = "v-ui";
-        // Default is 1 for legacy reasons
-        tabIndex = 1;
+public abstract class AbstractTestUIWithLog extends AbstractTestUI {
+
+    protected Log log = new Log(5);
+
+    @Override
+    public void init(VaadinRequest request) {
+        super.init(request);
+        ((VerticalLayout) getContent()).addComponent(log, 0);
     }
+
+    protected void log(String message) {
+        log.log(message);
+    }
+
 }
