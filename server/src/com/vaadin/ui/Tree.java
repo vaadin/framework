@@ -861,6 +861,37 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
     }
 
+    @Override
+    public void containerItemSetChange(
+            com.vaadin.data.Container.ItemSetChangeEvent event) {
+        super.containerItemSetChange(event);
+        if (getContainerDataSource() instanceof Filterable) {
+            boolean hasFilters = ((Filterable) getContainerDataSource())
+                    .hasContainerFilters();
+            if (!hasFilters) {
+                /*
+                 * If Container is not filtered then the itemsetchange is caused
+                 * by either adding or removing items to the container. To
+                 * prevent a memory leak we should cleanup the expanded list
+                 * from items which was removed.
+                 * 
+                 * However, there will still be a leak if the container is
+                 * filtered to show only a subset of the items in the tree and
+                 * later unfiltered items are removed from the container. In
+                 * that case references to the unfiltered item ids will remain
+                 * in the expanded list until the Tree instance is removed and
+                 * the list is destroyed, or the container data source is
+                 * replaced/updated. To force the removal of the removed items
+                 * the application developer needs to a) remove the container
+                 * filters temporarly or b) re-apply the container datasource
+                 * using setContainerDataSource(getContainerDataSource())
+                 */
+                cleanupExpandedItems();
+            }
+        }
+
+    }
+
     /* Expand event and listener */
 
     /**

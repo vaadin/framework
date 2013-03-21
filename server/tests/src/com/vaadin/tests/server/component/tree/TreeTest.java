@@ -9,7 +9,6 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.vaadin.data.Container;
@@ -84,10 +83,6 @@ public class TreeTest {
                 .getContainerDataSource().getClass()));
     }
 
-    @Ignore("This test tests that item ids which are removed are also "
-            + "removed from the expand list to prevent a memory leak. "
-            + "Fixing the memory leak cannot be done without changing some API (see #11053) "
-            + "so ignoring this test for the 7.0.x series.")
     @Test
     public void testRemoveExpandedItems() throws Exception {
         tree.expandItem("parent");
