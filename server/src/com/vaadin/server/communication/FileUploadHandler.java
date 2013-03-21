@@ -234,32 +234,42 @@ public class FileUploadHandler implements RequestHandler {
         String uiId = parts[0];
         String connectorId = parts[1];
         String variableName = parts[2];
-        UI uI = session.getUIById(Integer.parseInt(uiId));
-        UI.setCurrent(uI);
 
-        StreamVariable streamVariable = uI.getConnectorTracker()
-                .getStreamVariable(connectorId, variableName);
-        String secKey = uI.getConnectorTracker().getSeckey(streamVariable);
-        if (secKey.equals(parts[3])) {
+        // These are retrieved while session is locked
+        ClientConnector source;
+        StreamVariable streamVariable;
 
-            ClientConnector source = session.getCommunicationManager()
-                    .getConnector(uI, connectorId);
-            String contentType = request.getContentType();
-            if (contentType.contains("boundary")) {
-                // Multipart requests contain boundary string
-                doHandleSimpleMultipartFileUpload(session, request, response,
-                        streamVariable, variableName, source,
-                        contentType.split("boundary=")[1]);
-            } else {
-                // if boundary string does not exist, the posted file is from
-                // XHR2.post(File)
-                doHandleXhrFilePost(session, request, response, streamVariable,
-                        variableName, source, request.getContentLength());
+        session.lock();
+        try {
+            UI uI = session.getUIById(Integer.parseInt(uiId));
+            UI.setCurrent(uI);
+
+            streamVariable = uI.getConnectorTracker().getStreamVariable(
+                    connectorId, variableName);
+            String secKey = uI.getConnectorTracker().getSeckey(streamVariable);
+            if (!secKey.equals(parts[3])) {
+                // TODO Should rethink error handling
+                return true;
             }
-        } else {
-            // TODO Should rethink error handling
+
+            source = session.getCommunicationManager().getConnector(uI,
+                    connectorId);
+        } finally {
+            session.unlock();
         }
 
+        String contentType = request.getContentType();
+        if (contentType.contains("boundary")) {
+            // Multipart requests contain boundary string
+            doHandleSimpleMultipartFileUpload(session, request, response,
+                    streamVariable, variableName, source,
+                    contentType.split("boundary=")[1]);
+        } else {
+            // if boundary string does not exist, the posted file is from
+            // XHR2.post(File)
+            doHandleXhrFilePost(session, request, response, streamVariable,
+                    variableName, source, request.getContentLength());
+        }
         return true;
     }
 
@@ -276,15 +286,30 @@ public class FileUploadHandler implements RequestHandler {
 
     /**
      * Method used to stream content from a multipart request (either from
-     * servlet or portlet request) to given StreamVariable
+     * servlet or portlet request) to given StreamVariable.
+     * <p>
+     * This method takes care of locking the session as needed and does not
+     * assume the caller has locked the session. This allows the session to be
+     * locked only when needed and not when handling the upload data.
+     * </p>
      * 
-     * 
+     * @param session
+     *            The session containing the stream variable
      * @param request
+     *            The upload request
      * @param response
+     *            The upload response
      * @param streamVariable
+     *            The destination stream variable
+     * @param variableName
+     *            The name of the destination stream variable
      * @param owner
+     *            The owner of the stream variable
      * @param boundary
+     *            The mime boundary used in the upload request
      * @throws IOException
+     *             If there is a problem reading the request or writing the
+     *             response
      */
     protected void doHandleSimpleMultipartFileUpload(VaadinSession session,
             VaadinRequest request, VaadinResponse response,
@@ -351,45 +376,84 @@ public class FileUploadHandler implements RequestHandler {
         final String mimeType = rawMimeType;
 
         try {
-            // TODO Shouldn't this check connectorEnabled?
-            if (owner == null) {
-                throw new UploadException(
-                        "File upload ignored because the connector for the stream variable was not found");
-            }
-            if (owner instanceof Component) {
-                if (((Component) owner).isReadOnly()) {
-                    throw new UploadException(
-                            "Warning: file upload ignored because the componente was read-only");
-                }
-            }
-            boolean forgetVariable = streamToReceiver(session,
-                    simpleMultiPartReader, streamVariable, filename, mimeType,
-                    contentLength);
-            if (forgetVariable) {
-                cleanStreamVariable(owner, variableName);
-            }
-        } catch (Exception e) {
-            session.lock();
-            try {
-                session.getCommunicationManager()
-                        .handleConnectorRelatedException(owner, e);
-            } finally {
-                session.unlock();
-            }
+            handleFileUploadValidationAndData(session, simpleMultiPartReader,
+                    streamVariable, filename, mimeType, contentLength, owner,
+                    variableName);
+        } catch (UploadException e) {
+            session.getCommunicationManager().handleConnectorRelatedException(
+                    owner, e);
         }
         sendUploadResponse(request, response);
 
     }
 
+    private void handleFileUploadValidationAndData(VaadinSession session,
+            InputStream inputStream, StreamVariable streamVariable,
+            String filename, String mimeType, int contentLength,
+            ClientConnector connector, String variableName)
+            throws UploadException {
+        session.lock();
+        try {
+            if (connector == null) {
+                throw new UploadException(
+                        "File upload ignored because the connector for the stream variable was not found");
+            }
+            if (!connector.isConnectorEnabled()) {
+                throw new UploadException("Warning: file upload ignored for "
+                        + connector.getConnectorId()
+                        + " because the component was disabled");
+            }
+            if ((connector instanceof Component)
+                    && ((Component) connector).isReadOnly()) {
+                // Only checked for legacy reasons
+                throw new UploadException(
+                        "File upload ignored because the component is read-only");
+            }
+        } finally {
+            session.unlock();
+        }
+        try {
+            boolean forgetVariable = streamToReceiver(session, inputStream,
+                    streamVariable, filename, mimeType, contentLength);
+            if (forgetVariable) {
+                cleanStreamVariable(session, connector, variableName);
+            }
+        } catch (Exception e) {
+            session.lock();
+            try {
+                session.getCommunicationManager()
+                        .handleConnectorRelatedException(connector, e);
+            } finally {
+                session.unlock();
+            }
+        }
+    }
+
     /**
      * Used to stream plain file post (aka XHR2.post(File))
+     * <p>
+     * This method takes care of locking the session as needed and does not
+     * assume the caller has locked the session. This allows the session to be
+     * locked only when needed and not when handling the upload data.
+     * </p>
      * 
+     * @param session
+     *            The session containing the stream variable
      * @param request
+     *            The upload request
      * @param response
+     *            The upload response
      * @param streamVariable
+     *            The destination stream variable
+     * @param variableName
+     *            The name of the destination stream variable
      * @param owner
+     *            The owner of the stream variable
      * @param contentLength
+     *            The length of the request content
      * @throws IOException
+     *             If there is a problem reading the request or writing the
+     *             response
      */
     protected void doHandleXhrFilePost(VaadinSession session,
             VaadinRequest request, VaadinResponse response,
@@ -401,29 +465,13 @@ public class FileUploadHandler implements RequestHandler {
         final String filename = "unknown";
         final String mimeType = filename;
         final InputStream stream = request.getInputStream();
+
         try {
-            /*
-             * safe cast as in GWT terminal all variable owners are expected to
-             * be components.
-             */
-            Component component = (Component) owner;
-            if (component.isReadOnly()) {
-                throw new UploadException(
-                        "Warning: file upload ignored because the component was read-only");
-            }
-            boolean forgetVariable = streamToReceiver(session, stream,
-                    streamVariable, filename, mimeType, contentLength);
-            if (forgetVariable) {
-                cleanStreamVariable(owner, variableName);
-            }
-        } catch (Exception e) {
-            session.lock();
-            try {
-                session.getCommunicationManager()
-                        .handleConnectorRelatedException(owner, e);
-            } finally {
-                session.unlock();
-            }
+            handleFileUploadValidationAndData(session, stream, streamVariable,
+                    filename, mimeType, contentLength, owner, variableName);
+        } catch (UploadException e) {
+            session.getCommunicationManager().handleConnectorRelatedException(
+                    owner, e);
         }
         sendUploadResponse(request, response);
     }
@@ -579,8 +627,16 @@ public class FileUploadHandler implements RequestHandler {
         out.close();
     }
 
-    private void cleanStreamVariable(ClientConnector owner, String name) {
-        owner.getUI().getConnectorTracker()
-                .cleanStreamVariable(owner.getConnectorId(), name);
+    private void cleanStreamVariable(VaadinSession session,
+            final ClientConnector owner, final String variableName) {
+        session.runSafely(new Runnable() {
+            @Override
+            public void run() {
+                owner.getUI()
+                        .getConnectorTracker()
+                        .cleanStreamVariable(owner.getConnectorId(),
+                                variableName);
+            }
+        });
     }
 }
