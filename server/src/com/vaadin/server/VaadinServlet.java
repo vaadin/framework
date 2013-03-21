@@ -512,26 +512,37 @@ public class VaadinServlet extends HttpServlet implements Constants {
     private void handleServiceException(VaadinServletRequest request,
             VaadinServletResponse response, VaadinSession vaadinSession,
             Throwable e) throws IOException, ServletException {
-        ErrorHandler errorHandler = ErrorEvent.findErrorHandler(vaadinSession);
+        if (vaadinSession != null) {
+            vaadinSession.lock();
+        }
+        try {
+            ErrorHandler errorHandler = ErrorEvent
+                    .findErrorHandler(vaadinSession);
 
-        // if this was an UIDL request, response UIDL back to client
-        if (getRequestType(request) == RequestType.UIDL) {
-            SystemMessages ci = getService().getSystemMessages(
-                    ServletPortletHelper.findLocale(null, vaadinSession,
-                            request), request);
-            criticalNotification(request, response,
-                    ci.getInternalErrorCaption(), ci.getInternalErrorMessage(),
-                    null, ci.getInternalErrorURL());
-            if (errorHandler != null) {
-                errorHandler.error(new ErrorEvent(e));
-            }
-        } else {
-            if (errorHandler != null) {
-                errorHandler.error(new ErrorEvent(e));
-            }
+            // if this was an UIDL request, response UIDL back to client
+            if (getRequestType(request) == RequestType.UIDL) {
+                SystemMessages ci = getService().getSystemMessages(
+                        ServletPortletHelper.findLocale(null, vaadinSession,
+                                request), request);
+                criticalNotification(request, response,
+                        ci.getInternalErrorCaption(),
+                        ci.getInternalErrorMessage(), null,
+                        ci.getInternalErrorURL());
+                if (errorHandler != null) {
+                    errorHandler.error(new ErrorEvent(e));
+                }
+            } else {
+                if (errorHandler != null) {
+                    errorHandler.error(new ErrorEvent(e));
+                }
 
-            // Re-throw other exceptions
-            throw new ServletException(e);
+                // Re-throw other exceptions
+                throw new ServletException(e);
+            }
+        } finally {
+            if (vaadinSession != null) {
+                vaadinSession.unlock();
+            }
         }
 
     }
