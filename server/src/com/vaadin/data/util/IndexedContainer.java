@@ -1190,4 +1190,9 @@ public class IndexedContainer extends
         removeFilter(filter);
     }
 
+    @Override
+    public boolean hasContainerFilters() {
+        return super.hasContainerFilters();
+    }
+
 }

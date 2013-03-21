@@ -385,6 +385,11 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
         removeFilter(filter);
     }
 
+    @Override
+    public boolean hasContainerFilters() {
+        return super.hasContainerFilters();
+    }
+
     /**
      * Make this container listen to the given property provided it notifies
      * when its value changes.

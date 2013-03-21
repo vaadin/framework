@@ -317,22 +317,29 @@ public abstract class AbstractContainerTest extends TestCase {
         container.addContainerFilter(new SimpleStringFilter(
                 FULLY_QUALIFIED_NAME, "ab", false, false));
 
+        assertTrue(container.hasContainerFilters());
+
         validateContainer(container, "com.vaadin.data.BufferedValidatable",
                 "com.vaadin.ui.TabSheet",
                 "com.vaadin.terminal.gwt.client.Focusable",
                 "com.vaadin.data.Buffered", isFilteredOutItemNull(), 20);
 
+
         // Filter by "contains da" (reversed as ad here)
         container.removeAllContainerFilters();
+
+        assertFalse(container.hasContainerFilters());
+
         container.addContainerFilter(new SimpleStringFilter(
                 REVERSE_FULLY_QUALIFIED_NAME, "ad", false, false));
+
+        assertTrue(container.hasContainerFilters());
 
         validateContainer(container, "com.vaadin.data.Buffered",
                 "com.vaadin.server.ComponentSizeValidator",
                 "com.vaadin.data.util.IndexedContainer",
                 "com.vaadin.terminal.gwt.client.ui.VUriFragmentUtility",
                 isFilteredOutItemNull(), 37);
-
     }
 
     /**

@@ -953,6 +953,12 @@ public interface Container extends Serializable {
          */
         public void removeAllContainerFilters();
 
+        /**
+         * Returns true if any filters have been applied to the container
+         * 
+         * @since 7.1
+         */
+        public boolean hasContainerFilters();
     }
 
     /**

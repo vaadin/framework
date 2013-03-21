@@ -590,11 +590,18 @@ public class SQLContainer implements Container, Container.Filterable,
     /**
      * {@inheritDoc}
      */
-
     @Override
     public void removeAllContainerFilters() {
         filters.clear();
         refresh();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean hasContainerFilters() {
+        return !filters.isEmpty();
     }
 
     /**********************************************/

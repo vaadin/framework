@@ -501,6 +501,15 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     }
 
     /**
+     * Checks if the container has filters
+     * 
+     * @return Returns true if the container has container filters applied
+     */
+    protected boolean hasContainerFilters() {
+        return !getFilters().isEmpty();
+    }
+
+    /**
      * Remove a specific container filter and re-filter the view (if necessary).
      * 
      * This can be used to implement
