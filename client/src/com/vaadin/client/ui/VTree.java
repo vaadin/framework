@@ -24,6 +24,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.google.gwt.aria.client.ExpandedValue;
+import com.google.gwt.aria.client.Id;
+import com.google.gwt.aria.client.Roles;
+import com.google.gwt.aria.client.SelectedValue;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -75,7 +79,8 @@ import com.vaadin.shared.ui.tree.TreeConstants;
  */
 public class VTree extends FocusElementPanel implements VHasDropHandler,
         FocusHandler, BlurHandler, KeyPressHandler, KeyDownHandler,
-        SubPartAware, ActionOwner {
+        SubPartAware, ActionOwner, HandlesAriaCaption {
+    private String lastNodeKey = "";
 
     public static final String CLASSNAME = "v-tree";
 
@@ -168,6 +173,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
     public VTree() {
         super();
         setStyleName(CLASSNAME);
+
+        Roles.getTreeRole().set(body.getElement());
         add(body);
 
         addFocusHandler(this);
@@ -865,12 +872,22 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
         }
 
         protected void constructDom() {
+            String labelId = DOM.createUniqueId();
+
             addStyleName(CLASSNAME);
+            getElement().setId(DOM.createUniqueId());
+            Roles.getTreeitemRole().set(getElement());
+            Roles.getTreeitemRole().setAriaSelectedState(getElement(),
+                    SelectedValue.FALSE);
+            Roles.getTreeitemRole().setAriaLabelledbyProperty(getElement(),
+                    Id.of(labelId));
 
             nodeCaptionDiv = DOM.createDiv();
             DOM.setElementProperty(nodeCaptionDiv, "className", CLASSNAME
                     + "-caption");
             Element wrapper = DOM.createDiv();
+            wrapper.setId(labelId);
+
             nodeCaptionSpan = DOM.createSpan();
             DOM.appendChild(getElement(), nodeCaptionDiv);
             DOM.appendChild(nodeCaptionDiv, wrapper);
@@ -886,6 +903,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
             childNodeContainer = new FlowPanel();
             childNodeContainer.setStyleName(CLASSNAME + "-children");
+            Roles.getGroupRole().set(childNodeContainer.getElement());
             setWidget(childNodeContainer);
         }
 
@@ -914,10 +932,13 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                             new String[] { key }, true);
                 }
                 addStyleName(CLASSNAME + "-expanded");
+                Roles.getTreeitemRole().setAriaExpandedState(getElement(),
+                        ExpandedValue.TRUE);
                 childNodeContainer.setVisible(true);
-
             } else {
                 removeStyleName(CLASSNAME + "-expanded");
+                Roles.getTreeitemRole().setAriaExpandedState(getElement(),
+                        ExpandedValue.FALSE);
                 childNodeContainer.setVisible(false);
                 if (notifyServer) {
                     client.updateVariable(paintableId, "collapse",
@@ -1094,15 +1115,17 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
             Util.scrollIntoViewVertically(nodeCaptionDiv);
         }
 
-        public void setIcon(String iconUrl) {
+        public void setIcon(String iconUrl, String altText) {
             if (iconUrl != null) {
                 // Add icon if not present
                 if (icon == null) {
                     icon = new Icon(client);
+                    Roles.getImgRole().set(icon.getElement());
                     DOM.insertBefore(DOM.getFirstChild(nodeCaptionDiv),
                             icon.getElement(), nodeCaptionSpan);
                 }
                 icon.setUri(iconUrl);
+                icon.getElement().setAttribute("alt", altText);
             } else {
                 // Remove icon if present
                 if (icon != null) {
@@ -1517,10 +1540,34 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
         // Unfocus previously focused node
         if (focusedNode != null) {
             focusedNode.setFocused(false);
+
+            Roles.getTreeRole().removeAriaActivedescendantProperty(
+                    focusedNode.getElement());
         }
 
         if (node != null) {
             node.setFocused(true);
+            Roles.getTreeitemRole().setAriaSelectedState(node.getElement(),
+                    SelectedValue.TRUE);
+
+            /*
+             * FIXME: This code needs to be changed when the keyboard navigation
+             * doesn't immediately trigger a selection change anymore.
+             * 
+             * Right now this function is called before and after the Tree is
+             * rebuilt when up/down arrow keys are pressed. This leads to the
+             * problem, that the newly selected item is announced too often with
+             * a screen reader.
+             * 
+             * Behaviour is different when using the Tree with and without
+             * screen reader.
+             */
+            if (node.key.equals(lastNodeKey)) {
+                Roles.getTreeRole().setAriaActivedescendantProperty(
+                        getFocusElement(), Id.of(node.getElement()));
+            } else {
+                lastNodeKey = node.key;
+            }
         }
 
         focusedNode = node;
@@ -2159,6 +2206,16 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     public void clearNodeToKeyMap() {
         keyToNode.clear();
+    }
+
+    @Override
+    public void bindAriaCaption(Element captionElement) {
+        AriaHelper.bindCaption(body, captionElement);
+    }
+
+    @Override
+    public void clearAriaCaption() {
+        AriaHelper.clearCaption(body);
     }
 
 }

@@ -262,8 +262,11 @@ public class TreeConnector extends AbstractComponentConnector implements
             getWidget().selectedIds.add(nodeKey);
         }
 
-        treeNode.setIcon(uidl
-                .getStringAttribute(TreeConstants.ATTRIBUTE_NODE_ICON));
+        String iconUrl = uidl
+                .getStringAttribute(TreeConstants.ATTRIBUTE_NODE_ICON);
+        String iconAltText = uidl
+                .getStringAttribute(TreeConstants.ATTRIBUTE_NODE_ICON_ALT);
+        treeNode.setIcon(iconUrl, iconAltText);
     }
 
     void renderChildNodes(TreeNode containerNode, Iterator<UIDL> i, int level) {

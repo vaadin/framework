@@ -37,6 +37,7 @@ import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.MenuBar;
@@ -75,6 +76,7 @@ public class VContextMenu extends VOverlay implements SubPartAware {
         super(true, false, true);
         setWidget(menu);
         setStyleName("v-contextmenu");
+        getElement().setId(DOM.createUniqueId());
     }
 
     protected void imagesLoaded() {

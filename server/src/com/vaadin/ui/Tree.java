@@ -73,6 +73,11 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
     /* Private members */
 
     /**
+     * Item icons alt texts.
+     */
+    private final HashMap<Object, String> itemIconAlts = new HashMap<Object, String>();
+
+    /**
      * Set of expanded nodes.
      */
     private HashSet<Object> expanded = new HashSet<Object>();
@@ -161,6 +166,50 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      */
     public Tree(String caption, Container dataSource) {
         super(caption, dataSource);
+    }
+
+    @Override
+    public void setItemIcon(Object itemId, Resource icon) {
+        setItemIcon(itemId, icon, "");
+    }
+
+    /**
+     * Sets the icon for an item.
+     * 
+     * @param itemId
+     *            the id of the item to be assigned an icon.
+     * @param icon
+     *            the icon to use or null.
+     * 
+     * @param altText
+     *            String with the alternative text for the icon
+     */
+    public void setItemIcon(Object itemId, Resource icon, String altText) {
+        if (itemId != null) {
+            super.setItemIcon(itemId, icon);
+
+            if (icon == null) {
+                itemIconAlts.remove(itemId);
+            } else if (altText == null) {
+                throw new IllegalArgumentException(
+                        "Parameter 'altText' needs to be non null");
+            } else {
+                itemIconAlts.put(itemId, altText);
+            }
+            markAsDirty();
+        }
+    }
+
+    /**
+     * Return the alternate text of an icon in a tree item.
+     * 
+     * @param itemId
+     *            Object with the ID of the item
+     * @return String with the alternate text of the icon, or null when no icon
+     *         was set
+     */
+    public String getItemIconAlternateText(Object itemId) {
+        return itemIconAlts.get(itemId);
     }
 
     /* Expanding and collapsing */
@@ -638,6 +687,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 if (icon != null) {
                     target.addAttribute(TreeConstants.ATTRIBUTE_NODE_ICON,
                             getItemIcon(itemId));
+                    target.addAttribute(TreeConstants.ATTRIBUTE_NODE_ICON_ALT,
+                            getItemIconAlternateText(itemId));
                 }
                 final String key = itemIdMapper.key(itemId);
                 target.addAttribute("key", key);
