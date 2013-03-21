@@ -376,24 +376,27 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
     @Deprecated
     protected void handleRequest(PortletRequest request,
             PortletResponse response) throws PortletException, IOException {
-        RequestTimer requestTimer = new RequestTimer();
-        requestTimer.start();
 
         CurrentInstance.clearAll();
         setCurrent(this);
+        handleRequest(createVaadinRequest(request),
+                createVaadinResponse(response));
+    }
+
+    protected void handleRequest(VaadinPortletRequest request,
+            VaadinPortletResponse response) throws PortletException,
+            IOException {
+        RequestTimer requestTimer = new RequestTimer();
+        requestTimer.start();
+
+        getService().setCurrentInstances(request, response);
+
+        AbstractApplicationPortletWrapper portletWrapper = new AbstractApplicationPortletWrapper(
+                this);
 
         try {
-            AbstractApplicationPortletWrapper portletWrapper = new AbstractApplicationPortletWrapper(
-                    this);
 
-            VaadinPortletRequest vaadinRequest = createVaadinRequest(request);
-
-            VaadinPortletResponse vaadinResponse = new VaadinPortletResponse(
-                    response, getService());
-
-            getService().setCurrentInstances(vaadinRequest, vaadinResponse);
-
-            RequestType requestType = getRequestType(vaadinRequest);
+            RequestType requestType = getRequestType(request);
 
             if (requestType == RequestType.UNKNOWN) {
                 handleUnknownRequest(request, response);
@@ -418,43 +421,43 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
 
                 try {
                     vaadinSession = (VaadinPortletSession) getService()
-                            .findVaadinSession(vaadinRequest);
+                            .findVaadinSession(request);
                     if (vaadinSession == null) {
                         return;
                     }
 
                     if (requestType == RequestType.PUBLISHED_FILE) {
                         new PublishedFileHandler().handleRequest(vaadinSession,
-                                vaadinRequest, vaadinResponse);
+                                request, response);
                         return;
                     } else if (requestType == RequestType.HEARTBEAT) {
                         new HeartbeatHandler().handleRequest(vaadinSession,
-                                vaadinRequest, vaadinResponse);
+                                request, response);
                         return;
                     }
 
                     // Notify listeners
                     new PortletListenerNotifier().handleRequest(vaadinSession,
-                            vaadinRequest, vaadinResponse);
+                            request, response);
 
                     /* Handle the request */
                     if (requestType == RequestType.FILE_UPLOAD) {
                         new FileUploadHandler().handleRequest(vaadinSession,
-                                vaadinRequest, vaadinResponse);
+                                request, response);
                         return;
                     } else if (requestType == RequestType.BROWSER_DETAILS) {
                         new UIInitHandler().handleRequest(vaadinSession,
-                                vaadinRequest, vaadinResponse);
+                                request, response);
                         return;
                     } else if (requestType == RequestType.UIDL) {
                         // Handles AJAX UIDL requests
                         new UidlRequestHandler(portletWrapper).handleRequest(
-                                vaadinSession, vaadinRequest, vaadinResponse);
+                                vaadinSession, request, response);
 
                         return;
                     } else {
-                        handleOtherRequest(vaadinRequest, vaadinResponse,
-                                requestType, vaadinSession,
+                        handleOtherRequest(request, response, requestType,
+                                vaadinSession,
                                 vaadinSession.getCommunicationManager());
                     }
                 } catch (final SessionExpiredException e) {
@@ -462,8 +465,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
                     // SessionExpiredExceptions
                     getLogger().finest("A user session has expired");
                 } catch (final Throwable e) {
-                    handleServiceException(vaadinRequest, vaadinResponse,
-                            vaadinSession, e);
+                    handleServiceException(request, response, vaadinSession, e);
                 } finally {
                     if (vaadinSession != null) {
                         getService().cleanupSession(vaadinSession);
@@ -496,12 +498,16 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
 
     }
 
+    private VaadinPortletResponse createVaadinResponse(PortletResponse response) {
+        return new VaadinPortletResponse(response, getService());
+    }
+
     protected VaadinPortletService getService() {
         return vaadinService;
     }
 
-    private void handleUnknownRequest(PortletRequest request,
-            PortletResponse response) {
+    private void handleUnknownRequest(VaadinPortletRequest request,
+            VaadinPortletResponse response) {
         getLogger().warning("Unknown request type");
     }
 
