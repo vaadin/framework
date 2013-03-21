@@ -18,7 +18,6 @@ package com.vaadin.client.ui;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
@@ -304,54 +303,7 @@ public class VAbsoluteLayout extends ComplexPanel {
      * is added or removed
      */
     public void layoutVertically() {
-        for (Widget widget : getChildren()) {
-            if (widget instanceof AbsoluteWrapper) {
-                AbsoluteWrapper wrapper = (AbsoluteWrapper) widget;
-
-                /*
-                 * Cleanup old wrappers which have been left empty by other
-                 * inner layouts moving the widget from the wrapper into their
-                 * own hierarchy. This usually happens when a call to
-                 * setWidget(widget) is done in an inner layout which
-                 * automatically detaches the widget from the parent, in this
-                 * case the wrapper, and re-attaches it somewhere else. This has
-                 * to be done in the layout phase since the order of the
-                 * hierarchy events are not defined.
-                 */
-                if (wrapper.getWidget() == null) {
-                    wrapper.destroy();
-                    super.remove(wrapper);
-                    continue;
-                }
-
-                Style wrapperStyle = wrapper.getElement().getStyle();
-                Style widgetStyle = wrapper.getWidget().getElement().getStyle();
-
-                // Ensure previous heights do not affect the measures
-                wrapperStyle.clearHeight();
-
-                if (widgetStyle.getHeight() != null
-                        && widgetStyle.getHeight().endsWith("%")) {
-                    int h;
-                    if (wrapper.top != null && wrapper.bottom != null) {
-                        h = wrapper.getOffsetHeight();
-                    } else if (wrapper.bottom != null) {
-                        // top not defined, available space 0... bottom of
-                        // wrapper
-                        h = wrapper.getElement().getOffsetTop()
-                                + wrapper.getOffsetHeight();
-                    } else {
-                        // top defined or both undefined, available space ==
-                        // canvas - top
-                        h = canvas.getOffsetHeight()
-                                - wrapper.getElement().getOffsetTop();
-                    }
-                    wrapperStyle.setHeight(h, Unit.PX);
-                }
-
-                wrapper.updateCaptionPosition();
-            }
-        }
+        layout();
     }
 
     /**
@@ -359,55 +311,37 @@ public class VAbsoluteLayout extends ComplexPanel {
      * removed
      */
     public void layoutHorizontally() {
+        layout();
+    }
+
+    private void layout() {
         for (Widget widget : getChildren()) {
             if (widget instanceof AbsoluteWrapper) {
                 AbsoluteWrapper wrapper = (AbsoluteWrapper) widget;
-
-                /*
-                 * Cleanup old wrappers which have been left empty by other
-                 * inner layouts moving the widget from the wrapper into their
-                 * own hierarchy. This usually happens when a call to
-                 * setWidget(widget) is done in an inner layout which
-                 * automatically detaches the widget from the parent, in this
-                 * case the wrapper, and re-attaches it somewhere else. This has
-                 * to be done in the layout phase since the order of the
-                 * hierarchy events are not defined.
-                 */
+                wrapper.updateCaptionPosition();
+            }
+        }
+    }
+    
+    /**
+     * Cleanup old wrappers which have been left empty by other inner layouts
+     * moving the widget from the wrapper into their own hierarchy. This usually
+     * happens when a call to setWidget(widget) is done in an inner layout which
+     * automatically detaches the widget from the parent, in this case the
+     * wrapper, and re-attaches it somewhere else. This has to be done in the
+     * layout phase since the order of the hierarchy events are not defined.
+     */           
+    public void cleanupWrappers() {
+        for (Widget widget : getChildren()) {
+            if (widget instanceof AbsoluteWrapper) {
+                AbsoluteWrapper wrapper = (AbsoluteWrapper) widget;
                 if (wrapper.getWidget() == null) {
                     wrapper.destroy();
                     super.remove(wrapper);
                     continue;
-                }
-
-                Style wrapperStyle = wrapper.getElement().getStyle();
-                Style widgetStyle = wrapper.getWidget().getElement().getStyle();
-
-                // Ensure previous heights do not affect the measures
-                wrapperStyle.clearWidth();
-
-                if (widgetStyle.getWidth() != null
-                        && widgetStyle.getWidth().endsWith("%")) {
-                    int w;
-                    if (wrapper.left != null && wrapper.right != null) {
-                        w = wrapper.getOffsetWidth();
-                    } else if (wrapper.right != null) {
-                        // left == null
-                        // available width == right edge == offsetleft + width
-                        w = wrapper.getOffsetWidth()
-                                + wrapper.getElement().getOffsetLeft();
-                    } else {
-                        // left != null && right == null || left == null &&
-                        // right == null
-                        // available width == canvas width - offset left
-                        w = canvas.getOffsetWidth()
-                                - wrapper.getElement().getOffsetLeft();
-                    }
-                    wrapperStyle.setWidth(w, Unit.PX);
-                }
-
-                wrapper.updateCaptionPosition();
+                }             
             }
-        }
+        }        
     }
 
     /**

@@ -188,6 +188,8 @@ public class AbsoluteLayoutConnector extends
                 oldChild.removeStateChangeHandler(childStateChangeHandler);
             }
         }
+
+        getWidget().cleanupWrappers();
     }
 
     /*
