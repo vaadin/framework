@@ -72,6 +72,32 @@ public class ClassPathExplorer {
     };
 
     /**
+     * Contains information about widgetsets and themes found on the classpath
+     * 
+     * @since 7.1
+     */
+    public static class LocationInfo {
+
+        private final Map<String, URL> widgetsets;
+
+        private final Map<String, URL> addonStyles;
+
+        public LocationInfo(Map<String, URL> widgetsets, Map<String, URL> themes) {
+            this.widgetsets = widgetsets;
+            this.addonStyles = themes;
+        }
+
+        public Map<String, URL> getWidgetsets() {
+            return widgetsets;
+        }
+
+        public Map<String, URL> getAddonStyles() {
+            return addonStyles;
+        }
+
+    }
+
+    /**
      * Raw class path entries as given in the java class path string. Only
      * entries that could include widgets/widgetsets are listed (primarily
      * directories, Vaadin JARs and add-on JARs).
@@ -95,13 +121,26 @@ public class ClassPathExplorer {
      * Finds the names and locations of widgetsets available on the class path.
      * 
      * @return map from widgetset classname to widgetset location URL
+     * @deprecated Use {@link #getAvailableWidgetSetsAndStylesheets()} instead
      */
+    @Deprecated
     public static Map<String, URL> getAvailableWidgetSets() {
+        return getAvailableWidgetSetsAndStylesheets().getWidgetsets();
+    }
+
+    /**
+     * Finds the names and locations of widgetsets and themes available on the
+     * class path.
+     * 
+     * @return
+     */
+    public static LocationInfo getAvailableWidgetSetsAndStylesheets() {
         long start = System.currentTimeMillis();
         Map<String, URL> widgetsets = new HashMap<String, URL>();
+        Map<String, URL> themes = new HashMap<String, URL>();
         Set<String> keySet = classpathLocations.keySet();
         for (String location : keySet) {
-            searchForWidgetSets(location, widgetsets);
+            searchForWidgetSetsAndAddonStyles(location, widgetsets, themes);
         }
         long end = System.currentTimeMillis();
 
@@ -114,14 +153,25 @@ public class ClassPathExplorer {
             sb.append(widgetsets.get(ws));
             sb.append("\n");
         }
+
+        sb.append("Addon styles found from classpath:\n");
+        for (String theme : themes.keySet()) {
+            sb.append("\t");
+            sb.append(theme);
+            sb.append(" in ");
+            sb.append(themes.get(theme));
+            sb.append("\n");
+        }
+
         final Logger logger = getLogger();
         logger.info(sb.toString());
         logger.info("Search took " + (end - start) + "ms");
-        return widgetsets;
+        return new LocationInfo(widgetsets, themes);
     }
 
     /**
-     * Finds all GWT modules / Vaadin widgetsets in a valid location.
+     * Finds all GWT modules / Vaadin widgetsets and Addon styles in a valid
+     * location.
      * 
      * If the location is a directory, all GWT modules (files with the
      * ".gwt.xml" extension) are added to widgetsets.
@@ -136,8 +186,8 @@ public class ClassPathExplorer {
      *            separators) to a URL (see {@link #classpathLocations}) - new
      *            entries are added to this map
      */
-    private static void searchForWidgetSets(String locationString,
-            Map<String, URL> widgetsets) {
+    private static void searchForWidgetSetsAndAddonStyles(String locationString,
+            Map<String, URL> widgetsets, Map<String, URL> addonStyles) {
 
         URL location = classpathLocations.get(locationString);
         File directory = new File(location.getFile());
@@ -197,15 +247,29 @@ public class ClassPathExplorer {
                         // No manifest so this is not a Vaadin Add-on
                         return;
                     }
+
+                    // Check for widgetset attribute
                     String value = manifest.getMainAttributes().getValue(
                             "Vaadin-Widgetsets");
                     if (value != null) {
                         String[] widgetsetNames = value.split(",");
                         for (int i = 0; i < widgetsetNames.length; i++) {
-                            String widgetsetname = widgetsetNames[i].trim()
-                                    .intern();
+                            String widgetsetname = widgetsetNames[i].trim();
                             if (!widgetsetname.equals("")) {
                                 widgetsets.put(widgetsetname, location);
+                            }
+                        }
+                    }
+
+                    // Check for theme attribute
+                    value = manifest.getMainAttributes().getValue(
+                            "Vaadin-Stylesheets");
+                    if (value != null) {
+                        String[] stylesheets = value.split(",");
+                        for (int i = 0; i < stylesheets.length; i++) {
+                            String stylesheet = stylesheets[i].trim();
+                            if (!stylesheet.equals("")) {
+                                addonStyles.put(stylesheet, location);
                             }
                         }
                     }
@@ -457,14 +521,10 @@ public class ClassPathExplorer {
      * Test method for helper tool
      */
     public static void main(String[] args) {
-        getLogger().info("Searching available widgetsets...");
+        getLogger().info(
+                "Searching for available widgetsets and stylesheets...");
 
-        Map<String, URL> availableWidgetSets = ClassPathExplorer
-                .getAvailableWidgetSets();
-        for (String string : availableWidgetSets.keySet()) {
-
-            getLogger().info(string + " in " + availableWidgetSets.get(string));
-        }
+        ClassPathExplorer.getAvailableWidgetSetsAndStylesheets();
     }
 
     private static final Logger getLogger() {
