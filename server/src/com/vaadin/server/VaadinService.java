@@ -1024,13 +1024,19 @@ public abstract class VaadinService implements Serializable {
      * 
      * @param session
      */
-    private void removeClosedUIs(VaadinSession session) {
-        for (UI ui : new ArrayList<UI>(session.getUIs())) {
-            if (ui.isClosing()) {
-                getLogger().log(Level.FINER, "Removing closed UI {0}",
-                        ui.getUIId());
-                session.removeUI(ui);
-            }
+    private void removeClosedUIs(final VaadinSession session) {
+        ArrayList<UI> uis = new ArrayList<UI>(session.getUIs());
+        for (final UI ui : uis) {
+            ui.runSafely(new Runnable() {
+                @Override
+                public void run() {
+                    if (ui.isClosing()) {
+                        getLogger().log(Level.FINER, "Removing closed UI {0}",
+                                ui.getUIId());
+                        session.removeUI(ui);
+                    }
+                }
+            });
         }
     }
 
@@ -1177,10 +1183,23 @@ public abstract class VaadinService implements Serializable {
     public void requestEnd(VaadinRequest request, VaadinResponse response,
             VaadinSession session) {
         if (session != null) {
-            cleanupSession(session);
-            long duration = (System.nanoTime() - (Long) request
+            final VaadinSession finalSession = session;
+
+            session.runSafely(new Runnable() {
+                @Override
+                public void run() {
+                    cleanupSession(finalSession);
+                }
+            });
+
+            final long duration = (System.nanoTime() - (Long) request
                     .getAttribute(REQUEST_START_TIME_ATTRIBUTE)) / 1000000;
-            session.setLastRequestDuration(duration);
+            session.runSafely(new Runnable() {
+                @Override
+                public void run() {
+                    finalSession.setLastRequestDuration(duration);
+                }
+            });
         }
         CurrentInstance.clearAll();
     }

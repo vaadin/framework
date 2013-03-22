@@ -25,30 +25,38 @@ import javax.servlet.http.HttpSessionBindingEvent;
 import junit.framework.Assert;
 
 import org.easymock.EasyMock;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.vaadin.server.ClientConnector.DetachEvent;
 import com.vaadin.server.ClientConnector.DetachListener;
 import com.vaadin.ui.UI;
+import com.vaadin.util.CurrentInstance;
 
 public class VaadinSessionTest {
 
-    @Test
-    public void threadLocalsAfterUnderlyingSessionTimeout() {
+    private VaadinSession session;
+    private VaadinServlet mockServlet;
+    private VaadinServletService mockService;
+    private HttpSession mockHttpSession;
+    private WrappedSession mockWrappedSession;
+    private VaadinServletRequest vaadinRequest;
+    private UI ui;
 
-        final VaadinServlet mockServlet = new VaadinServlet() {
+    @Before
+    public void setup() {
+        mockServlet = new VaadinServlet() {
             @Override
             public String getServletName() {
                 return "mockServlet";
             };
         };
 
-        final VaadinServletService mockService = new VaadinServletService(
-                mockServlet, EasyMock.createMock(DeploymentConfiguration.class));
+        mockService = new VaadinServletService(mockServlet,
+                EasyMock.createMock(DeploymentConfiguration.class));
 
-        HttpSession mockHttpSession = EasyMock.createMock(HttpSession.class);
-        WrappedSession mockWrappedSession = new WrappedHttpSession(
-                mockHttpSession) {
+        mockHttpSession = EasyMock.createMock(HttpSession.class);
+        mockWrappedSession = new WrappedHttpSession(mockHttpSession) {
             final ReentrantLock lock = new ReentrantLock();
 
             @Override
@@ -60,10 +68,10 @@ public class VaadinSessionTest {
             }
         };
 
-        final VaadinSession session = new VaadinSession(mockService);
+        session = new VaadinSession(mockService);
         session.storeInSession(mockService, mockWrappedSession);
 
-        final UI ui = new UI() {
+        ui = new UI() {
             Page page = new Page(this) {
                 @Override
                 public void init(VaadinRequest request) {
@@ -79,7 +87,7 @@ public class VaadinSessionTest {
                 return page;
             }
         };
-        VaadinServletRequest vaadinRequest = new VaadinServletRequest(
+        vaadinRequest = new VaadinServletRequest(
                 EasyMock.createMock(HttpServletRequest.class), mockService) {
             @Override
             public String getParameter(String name) {
@@ -96,6 +104,11 @@ public class VaadinSessionTest {
         ui.setSession(session);
         session.addUI(ui);
 
+    }
+
+    @Test
+    public void threadLocalsAfterUnderlyingSessionTimeout() {
+
         final AtomicBoolean detachCalled = new AtomicBoolean(false);
         ui.addDetachListener(new DetachListener() {
             @Override
@@ -110,6 +123,26 @@ public class VaadinSessionTest {
         });
 
         session.valueUnbound(EasyMock.createMock(HttpSessionBindingEvent.class));
+        Assert.assertTrue(detachCalled.get());
+    }
+
+    @Test
+    public void threadLocalsAfterSessionDestroy() {
+        final AtomicBoolean detachCalled = new AtomicBoolean(false);
+        ui.addDetachListener(new DetachListener() {
+            @Override
+            public void detach(DetachEvent event) {
+                detachCalled.set(true);
+                Assert.assertEquals(ui, UI.getCurrent());
+                Assert.assertEquals(ui.getPage(), Page.getCurrent());
+                Assert.assertEquals(session, VaadinSession.getCurrent());
+                Assert.assertEquals(mockService, VaadinService.getCurrent());
+                Assert.assertEquals(mockServlet, VaadinServlet.getCurrent());
+            }
+        });
+        CurrentInstance.clearAll();
+        session.close();
+        mockService.cleanupSession(session);
         Assert.assertTrue(detachCalled.get());
     }
 }
