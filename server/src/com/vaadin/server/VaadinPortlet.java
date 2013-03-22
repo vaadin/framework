@@ -386,15 +386,12 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
     protected void handleRequest(VaadinPortletRequest request,
             VaadinPortletResponse response) throws PortletException,
             IOException {
-        RequestTimer requestTimer = new RequestTimer();
-        requestTimer.start();
+        getService().requestStart(request, response);
 
-        getService().setCurrentInstances(request, response);
-
-        AbstractApplicationPortletWrapper portletWrapper = new AbstractApplicationPortletWrapper(
-                this);
-
+        VaadinPortletSession vaadinSession = null;
         try {
+            AbstractApplicationPortletWrapper portletWrapper = new AbstractApplicationPortletWrapper(
+                    this);
 
             RequestType requestType = getRequestType(request);
 
@@ -417,8 +414,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
                 serveStaticResources((ResourceRequest) request,
                         (ResourceResponse) response);
             } else {
-                VaadinPortletSession vaadinSession = null;
-
                 try {
                     vaadinSession = (VaadinPortletSession) getService()
                             .findVaadinSession(request);
@@ -466,15 +461,11 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
                     getLogger().finest("A user session has expired");
                 } catch (final Throwable e) {
                     handleServiceException(request, response, vaadinSession, e);
-                } finally {
-                    if (vaadinSession != null) {
-                        getService().cleanupSession(vaadinSession);
-                        requestTimer.stop(vaadinSession);
-                    }
+
                 }
             }
         } finally {
-            CurrentInstance.clearAll();
+            getService().requestEnd(request, response, vaadinSession);
         }
     }
 

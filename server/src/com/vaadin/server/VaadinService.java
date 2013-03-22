@@ -72,6 +72,8 @@ public abstract class VaadinService implements Serializable {
     @Deprecated
     public static final String URL_PARAMETER_CLOSE_APPLICATION = "closeApplication";
 
+    private static final String REQUEST_START_TIME_ATTRIBUTE = "requestStartTime";
+
     private final DeploymentConfiguration deploymentConfiguration;
 
     private final EventRouter eventRouter = new EventRouter();
@@ -1123,5 +1125,41 @@ public abstract class VaadinService implements Serializable {
 
     private static final Logger getLogger() {
         return Logger.getLogger(VaadinService.class.getName());
+    }
+
+    /**
+     * Called before the framework starts handling a request
+     * 
+     * @param request
+     *            The request
+     * @param response
+     *            The response
+     */
+    public void requestStart(VaadinRequest request, VaadinResponse response) {
+        setCurrentInstances(request, response);
+        request.setAttribute(REQUEST_START_TIME_ATTRIBUTE, System.nanoTime());
+    }
+
+    /**
+     * Called after the framework has handled a request and the response has
+     * been written.
+     * 
+     * @param request
+     *            The request object
+     * @param response
+     *            The response object
+     * @param session
+     *            The session which was used during the request or null if the
+     *            request did not use a session
+     */
+    public void requestEnd(VaadinRequest request, VaadinResponse response,
+            VaadinSession session) {
+        if (session != null) {
+            cleanupSession(session);
+            long duration = (System.nanoTime() - (Long) request
+                    .getAttribute(REQUEST_START_TIME_ATTRIBUTE)) / 1000000;
+            session.setLastRequestDuration(duration);
+        }
+        CurrentInstance.clearAll();
     }
 }

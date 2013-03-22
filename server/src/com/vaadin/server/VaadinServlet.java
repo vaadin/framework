@@ -241,73 +241,67 @@ public class VaadinServlet extends HttpServlet implements Constants {
     private void service(VaadinServletRequest request,
             VaadinServletResponse response) throws ServletException,
             IOException {
-        RequestTimer requestTimer = new RequestTimer();
-        requestTimer.start();
-
-        getService().setCurrentInstances(request, response);
-
-        AbstractApplicationServletWrapper servletWrapper = new AbstractApplicationServletWrapper(
-                this);
-
-        RequestType requestType = getRequestType(request);
-        if (!ensureCookiesEnabled(requestType, request, response)) {
-            return;
-        }
-
-        if (requestType == RequestType.STATIC_FILE) {
-            serveStaticResources(request, response);
-            return;
-        }
-
+        getService().requestStart(request, response);
         VaadinSession vaadinSession = null;
 
         try {
-            // Find out the service session this request is related to
-            vaadinSession = getService().findVaadinSession(request);
-            if (vaadinSession == null) {
+            AbstractApplicationServletWrapper servletWrapper = new AbstractApplicationServletWrapper(
+                    this);
+
+            RequestType requestType = getRequestType(request);
+            if (!ensureCookiesEnabled(requestType, request, response)) {
                 return;
             }
 
-            if (requestType == RequestType.PUBLISHED_FILE) {
-                new PublishedFileHandler().handleRequest(vaadinSession,
-                        request, response);
-                return;
-            } else if (requestType == RequestType.HEARTBEAT) {
-                new HeartbeatHandler().handleRequest(vaadinSession, request,
-                        response);
-                return;
-            } else if (requestType == RequestType.FILE_UPLOAD) {
-                new FileUploadHandler().handleRequest(vaadinSession, request,
-                        response);
-                return;
-            } else if (requestType == RequestType.UIDL) {
-                new UidlRequestHandler(servletWrapper).handleRequest(
-                        vaadinSession, request, response);
-                return;
-            } else if (requestType == RequestType.BROWSER_DETAILS) {
-                // Browser details - not related to a specific UI
-                new UIInitHandler().handleRequest(vaadinSession, request,
-                        response);
-                return;
-            } else if (vaadinSession.getCommunicationManager()
-                    .handleOtherRequest(request, response)) {
+            if (requestType == RequestType.STATIC_FILE) {
+                serveStaticResources(request, response);
                 return;
             }
 
-            // Request not handled by any RequestHandler -> 404
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            try {
+                // Find out the service session this request is related to
+                vaadinSession = getService().findVaadinSession(request);
+                if (vaadinSession == null) {
+                    return;
+                }
 
-        } catch (final SessionExpiredException e) {
-            // Session has expired, notify user
-            handleServiceSessionExpired(request, response);
-        } catch (final Throwable e) {
-            handleServiceException(request, response, vaadinSession, e);
+                if (requestType == RequestType.PUBLISHED_FILE) {
+                    new PublishedFileHandler().handleRequest(vaadinSession,
+                            request, response);
+                    return;
+                } else if (requestType == RequestType.HEARTBEAT) {
+                    new HeartbeatHandler().handleRequest(vaadinSession,
+                            request, response);
+                    return;
+                } else if (requestType == RequestType.FILE_UPLOAD) {
+                    new FileUploadHandler().handleRequest(vaadinSession,
+                            request, response);
+                    return;
+                } else if (requestType == RequestType.UIDL) {
+                    new UidlRequestHandler(servletWrapper).handleRequest(
+                            vaadinSession, request, response);
+                    return;
+                } else if (requestType == RequestType.BROWSER_DETAILS) {
+                    // Browser details - not related to a specific UI
+                    new UIInitHandler().handleRequest(vaadinSession, request,
+                            response);
+                    return;
+                } else if (vaadinSession.getCommunicationManager()
+                        .handleOtherRequest(request, response)) {
+                    return;
+                }
+
+                // Request not handled by any RequestHandler -> 404
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+
+            } catch (final SessionExpiredException e) {
+                // Session has expired, notify user
+                handleServiceSessionExpired(request, response);
+            } catch (final Throwable e) {
+                handleServiceException(request, response, vaadinSession, e);
+            }
         } finally {
-            if (vaadinSession != null) {
-                getService().cleanupSession(vaadinSession);
-                requestTimer.stop(vaadinSession);
-            }
-            CurrentInstance.clearAll();
+            getService().requestEnd(request, response, vaadinSession);
         }
     }
 
