@@ -74,11 +74,13 @@ public class PublishedFileHandler implements RequestHandler {
         }
 
         // Check that the resource name has been registered
-        // TODO PUSH refactor - is the synchronization correct at all?
+        session.lock();
         Class<?> context;
-        synchronized (session.getCommunicationManager().getDependencies()) {
+        try {
             context = session.getCommunicationManager().getDependencies()
                     .get(fileName);
+        } finally {
+            session.unlock();
         }
 
         // Security check: don't serve resource if the name hasn't been

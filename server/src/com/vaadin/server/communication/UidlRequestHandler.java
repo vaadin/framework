@@ -32,7 +32,7 @@ import com.vaadin.server.Constants;
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.LegacyCommunicationManager.Callback;
 import com.vaadin.server.LegacyCommunicationManager.InvalidUIDLSecurityKeyException;
-import com.vaadin.server.RequestHandler;
+import com.vaadin.server.SynchronizedRequestHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinSession;
@@ -51,7 +51,7 @@ import com.vaadin.ui.UI;
  * @author Vaadin Ltd
  * @since 7.1
  */
-public class UidlRequestHandler implements RequestHandler {
+public class UidlRequestHandler extends SynchronizedRequestHandler {
 
     private Callback criticalNotifier;
 
@@ -62,8 +62,8 @@ public class UidlRequestHandler implements RequestHandler {
     }
 
     @Override
-    public boolean handleRequest(VaadinSession session, VaadinRequest request,
-            VaadinResponse response) throws IOException {
+    public boolean synchronizedHandleRequest(VaadinSession session,
+            VaadinRequest request, VaadinResponse response) throws IOException {
 
         UI uI = session.getService().findUI(request);
 
@@ -99,10 +99,6 @@ public class UidlRequestHandler implements RequestHandler {
         final Writer outWriter = new BufferedWriter(new OutputStreamWriter(out,
                 "UTF-8"));
 
-        // The rest of the process is synchronized with the session
-        // in order to guarantee that no parallel variable handling is
-        // made
-        session.lock();
         try {
             rpcHandler.handleRpc(uI, request.getReader(), request);
 
@@ -126,7 +122,6 @@ public class UidlRequestHandler implements RequestHandler {
             criticalNotifier.criticalNotification(request, response, null,
                     null, null, null);
         } finally {
-            session.unlock();
             outWriter.close();
             requestThemeName = null;
         }

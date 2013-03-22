@@ -237,19 +237,17 @@ public class LegacyCommunicationManager implements Serializable {
     }
 
     private String registerPublishedFile(String name, Class<?> context) {
-        synchronized (publishedFileContexts) {
-            // Add to map of names accepted by servePublishedFile
-            if (publishedFileContexts.containsKey(name)) {
-                Class<?> oldContext = publishedFileContexts.get(name);
-                if (oldContext != context) {
-                    getLogger()
-                            .log(Level.WARNING,
-                                    "{0} published by both {1} and {2}. File from {2} will be used.",
-                                    new Object[] { name, context, oldContext });
-                }
-            } else {
-                publishedFileContexts.put(name, context);
+        // Add to map of names accepted by servePublishedFile
+        if (publishedFileContexts.containsKey(name)) {
+            Class<?> oldContext = publishedFileContexts.get(name);
+            if (oldContext != context) {
+                getLogger()
+                        .log(Level.WARNING,
+                                "{0} published by both {1} and {2}. File from {2} will be used.",
+                                new Object[] { name, context, oldContext });
             }
+        } else {
+            publishedFileContexts.put(name, context);
         }
 
         return ApplicationConstants.PUBLISHED_PROTOCOL_PREFIX + "/" + name;
@@ -516,50 +514,6 @@ public class LegacyCommunicationManager implements Serializable {
         return ApplicationConstants.APP_PROTOCOL_PREFIX
                 + ServletPortletHelper.UPLOAD_URL_PREFIX + key + "/" + seckey;
 
-    }
-
-    /**
-     * Handles a request by passing it to each registered {@link RequestHandler}
-     * in turn until one produces a response. This method is used for requests
-     * that have not been handled by any specific functionality in the terminal
-     * implementation (e.g. {@link VaadinServlet}).
-     * <p>
-     * The request handlers are invoked in the revere order in which they were
-     * added to the session until a response has been produced. This means that
-     * the most recently added handler is used first and the first request
-     * handler that was added to the session is invoked towards the end unless
-     * any previous handler has already produced a response.
-     * </p>
-     * 
-     * @param request
-     *            the Vaadin request to get information from
-     * @param response
-     *            the response to which data can be written
-     * @return returns <code>true</code> if a {@link RequestHandler} has
-     *         produced a response and <code>false</code> if no response has
-     *         been written.
-     * @throws IOException
-     *             if a handler throws an exception
-     * 
-     * @see VaadinSession#addRequestHandler(RequestHandler)
-     * @see RequestHandler
-     * 
-     * @since 7.0
-     * 
-     * @deprecated As of 7.1. Should be moved to VaadinService.
-     */
-    @Deprecated
-    protected boolean handleOtherRequest(VaadinRequest request,
-            VaadinResponse response) throws IOException {
-        // Use a copy to avoid ConcurrentModificationException
-        for (RequestHandler handler : new ArrayList<RequestHandler>(
-                session.getRequestHandlers())) {
-            if (handler.handleRequest(session, request, response)) {
-                return true;
-            }
-        }
-        // If not handled
-        return false;
     }
 
     /**

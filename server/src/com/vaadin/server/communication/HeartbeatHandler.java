@@ -20,11 +20,10 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.vaadin.server.RequestHandler;
+import com.vaadin.server.SynchronizedRequestHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.UI;
 
 /**
@@ -38,7 +37,7 @@ import com.vaadin.ui.UI;
  * @author Vaadin Ltd
  * @since 7.1
  */
-public class HeartbeatHandler implements RequestHandler {
+public class HeartbeatHandler extends SynchronizedRequestHandler {
 
     /**
      * Handles a heartbeat request for the given session. Reads the GET
@@ -48,17 +47,9 @@ public class HeartbeatHandler implements RequestHandler {
      * time. Otherwise, writes a HTTP Not Found error to the response.
      */
     @Override
-    public boolean handleRequest(VaadinSession session, VaadinRequest request,
-            VaadinResponse response) throws IOException {
-
-        UI ui = null;
-        try {
-            int uiId = Integer.parseInt(request
-                    .getParameter(UIConstants.UI_ID_PARAMETER));
-            ui = session.getUIById(uiId);
-        } catch (NumberFormatException nfe) {
-            // null-check below handles this as well
-        }
+    public boolean synchronizedHandleRequest(VaadinSession session,
+            VaadinRequest request, VaadinResponse response) throws IOException {
+        UI ui = session.getService().findUI(request);
         if (ui != null) {
             ui.setLastHeartbeatTimestamp(System.currentTimeMillis());
             // Ensure that the browser does not cache heartbeat responses.

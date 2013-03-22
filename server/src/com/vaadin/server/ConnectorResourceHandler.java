@@ -16,6 +16,8 @@
 package com.vaadin.server;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -25,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.UI;
+import com.vaadin.util.CurrentInstance;
 
 public class ConnectorResourceHandler implements RequestHandler {
     // APP/connector/[uiid]/[cid]/[filename.xyz]
@@ -50,30 +53,41 @@ public class ConnectorResourceHandler implements RequestHandler {
             String uiId = matcher.group(1);
             String cid = matcher.group(2);
             String key = matcher.group(3);
-            UI ui = session.getUIById(Integer.parseInt(uiId));
-            if (ui == null) {
-                return error(request, response,
-                        "Ignoring connector request for no-existent root "
-                                + uiId);
+
+            session.lock();
+            UI ui;
+            ClientConnector connector;
+            try {
+                ui = session.getUIById(Integer.parseInt(uiId));
+                if (ui == null) {
+                    return error(request, response,
+                            "Ignoring connector request for no-existent root "
+                                    + uiId);
+                }
+
+                connector = ui.getConnectorTracker().getConnector(cid);
+                if (connector == null) {
+                    return error(request, response,
+                            "Ignoring connector request for no-existent connector "
+                                    + cid + " in root " + uiId);
+                }
+
+            } finally {
+                session.unlock();
             }
 
-            UI.setCurrent(ui);
-            VaadinSession.setCurrent(ui.getSession());
-
-            ClientConnector connector = ui.getConnectorTracker().getConnector(
-                    cid);
-            if (connector == null) {
-                return error(request, response,
-                        "Ignoring connector request for no-existent connector "
-                                + cid + " in root " + uiId);
-            }
-
-            if (!connector.handleConnectorRequest(request, response, key)) {
-                return error(request, response, connector.getClass()
-                        .getSimpleName()
-                        + " ("
-                        + connector.getConnectorId()
-                        + ") did not handle connector request for " + key);
+            Map<Class<?>, Object> oldThreadLocals = new HashMap<Class<?>, Object>();
+            CurrentInstance.setThreadLocals(ui, oldThreadLocals);
+            try {
+                if (!connector.handleConnectorRequest(request, response, key)) {
+                    return error(request, response,
+                            connector.getClass().getSimpleName() + " ("
+                                    + connector.getConnectorId()
+                                    + ") did not handle connector request for "
+                                    + key);
+                }
+            } finally {
+                CurrentInstance.setThreadLocals(oldThreadLocals);
             }
 
             return true;

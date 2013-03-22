@@ -43,6 +43,7 @@ import com.vaadin.server.LegacyCommunicationManager.Callback;
 import com.vaadin.server.communication.FileUploadHandler;
 import com.vaadin.server.communication.HeartbeatHandler;
 import com.vaadin.server.communication.PublishedFileHandler;
+import com.vaadin.server.communication.SessionRequestHandler;
 import com.vaadin.server.communication.UIInitHandler;
 import com.vaadin.server.communication.UidlRequestHandler;
 import com.vaadin.util.CurrentInstance;
@@ -286,8 +287,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
                     new UIInitHandler().handleRequest(vaadinSession, request,
                             response);
                     return;
-                } else if (vaadinSession.getCommunicationManager()
-                        .handleOtherRequest(request, response)) {
+                } else if (new SessionRequestHandler().handleRequest(
+                        vaadinSession, request, response)) {
                     return;
                 }
 

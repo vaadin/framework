@@ -51,7 +51,7 @@ import com.vaadin.ui.UI;
  * @deprecated As of 7.0. Will likely change or be removed in a future version
  */
 @Deprecated
-public abstract class BootstrapHandler implements RequestHandler {
+public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
     protected class BootstrapContext implements Serializable {
 
@@ -113,8 +113,8 @@ public abstract class BootstrapHandler implements RequestHandler {
     }
 
     @Override
-    public boolean handleRequest(VaadinSession session, VaadinRequest request,
-            VaadinResponse response) throws IOException {
+    public boolean synchronizedHandleRequest(VaadinSession session,
+            VaadinRequest request, VaadinResponse response) throws IOException {
 
         try {
             List<UIProvider> uiProviders = session.getUIProviders();

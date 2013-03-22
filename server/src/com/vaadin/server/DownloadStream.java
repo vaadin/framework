@@ -28,6 +28,11 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Downloadable stream.
+ * <p>
+ * Note that the methods in a DownloadStream are called without locking the
+ * session to prevent locking the session during long file downloads. If your
+ * DownloadStream uses anything from the session, you must handle the locking.
+ * </p>
  * 
  * @author Vaadin Ltd.
  * @since 3.0

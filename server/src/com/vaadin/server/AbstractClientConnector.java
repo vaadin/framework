@@ -645,17 +645,22 @@ public abstract class AbstractClientConnector implements ClientConnector,
     @Override
     public boolean handleConnectorRequest(VaadinRequest request,
             VaadinResponse response, String path) throws IOException {
+        DownloadStream stream = null;
         String[] parts = path.split("/", 2);
         String key = parts[0];
 
-        ConnectorResource resource = (ConnectorResource) getResource(key);
-        if (resource != null) {
-            DownloadStream stream = resource.getStream();
-            stream.writeResponse(request, response);
-            return true;
-        } else {
-            return false;
+        getSession().lock();
+        try {
+            ConnectorResource resource = (ConnectorResource) getResource(key);
+            if (resource == null) {
+                return false;
+            }
+            stream = resource.getStream();
+        } finally {
+            getSession().unlock();
         }
+        stream.writeResponse(request, response);
+        return true;
     }
 
     /**

@@ -32,7 +32,7 @@ import org.json.JSONObject;
 
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.server.LegacyApplicationUIProvider;
-import com.vaadin.server.RequestHandler;
+import com.vaadin.server.SynchronizedRequestHandler;
 import com.vaadin.server.UIClassSelectionEvent;
 import com.vaadin.server.UICreateEvent;
 import com.vaadin.server.UIProvider;
@@ -49,11 +49,11 @@ import com.vaadin.ui.UI;
  * @author Vaadin Ltd
  * @since 7.1
  */
-public class UIInitHandler implements RequestHandler {
+public class UIInitHandler extends SynchronizedRequestHandler {
 
     @Override
-    public boolean handleRequest(VaadinSession session, VaadinRequest request,
-            VaadinResponse response) throws IOException {
+    public boolean synchronizedHandleRequest(VaadinSession session,
+            VaadinRequest request, VaadinResponse response) throws IOException {
 
         // NOTE! GateIn requires, for some weird reason, getOutputStream
         // to be used instead of getWriter() (it seems to interpret
@@ -62,7 +62,6 @@ public class UIInitHandler implements RequestHandler {
         final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
                 new OutputStreamWriter(out, "UTF-8")));
 
-        session.lock();
         try {
             assert UI.getCurrent() == null;
 
@@ -88,7 +87,6 @@ public class UIInitHandler implements RequestHandler {
             // TODO PUSH handle
             e.printStackTrace();
         } finally {
-            session.unlock();
             outWriter.close();
         }
 

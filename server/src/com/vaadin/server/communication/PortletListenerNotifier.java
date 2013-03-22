@@ -29,7 +29,7 @@ import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
-import com.vaadin.server.RequestHandler;
+import com.vaadin.server.SynchronizedRequestHandler;
 import com.vaadin.server.ServletPortletHelper;
 import com.vaadin.server.VaadinPortletRequest;
 import com.vaadin.server.VaadinPortletResponse;
@@ -46,7 +46,7 @@ import com.vaadin.ui.UI;
  * @author Vaadin Ltd
  * @since 7.1
  */
-public class PortletListenerNotifier implements RequestHandler {
+public class PortletListenerNotifier extends SynchronizedRequestHandler {
 
     /**
      * Fires portlet request events to any {@link PortletListener}s registered
@@ -55,8 +55,8 @@ public class PortletListenerNotifier implements RequestHandler {
      * PortletListener method corresponding to the request type is invoked.
      */
     @Override
-    public boolean handleRequest(VaadinSession session, VaadinRequest request,
-            VaadinResponse response) throws IOException {
+    public boolean synchronizedHandleRequest(VaadinSession session,
+            VaadinRequest request, VaadinResponse response) throws IOException {
 
         VaadinPortletSession sess = (VaadinPortletSession) session;
         PortletRequest req = ((VaadinPortletRequest) request)

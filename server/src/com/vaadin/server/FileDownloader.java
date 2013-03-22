@@ -129,10 +129,15 @@ public class FileDownloader extends AbstractExtension {
             // Ignore if it isn't for us
             return false;
         }
+        getSession().lock();
+        DownloadStream stream;
 
-        Resource resource = getFileDownloadResource();
-        if (resource instanceof ConnectorResource) {
-            DownloadStream stream = ((ConnectorResource) resource).getStream();
+        try {
+            Resource resource = getFileDownloadResource();
+            if (!(resource instanceof ConnectorResource)) {
+                return false;
+            }
+            stream = ((ConnectorResource) resource).getStream();
 
             if (stream.getParameter("Content-Disposition") == null) {
                 // Content-Disposition: attachment generally forces download
@@ -140,15 +145,15 @@ public class FileDownloader extends AbstractExtension {
                         "attachment; filename=\"" + stream.getFileName() + "\"");
             }
 
-            // Content-Type to block eager browser plug-ins from hijacking the
-            // file
+            // Content-Type to block eager browser plug-ins from hijacking
+            // the file
             if (isOverrideContentType()) {
                 stream.setContentType("application/octet-stream;charset=UTF-8");
             }
-            stream.writeResponse(request, response);
-            return true;
-        } else {
-            return false;
+        } finally {
+            getSession().unlock();
         }
+        stream.writeResponse(request, response);
+        return true;
     }
 }

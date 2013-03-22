@@ -55,6 +55,7 @@ import com.vaadin.server.communication.FileUploadHandler;
 import com.vaadin.server.communication.HeartbeatHandler;
 import com.vaadin.server.communication.PortletListenerNotifier;
 import com.vaadin.server.communication.PublishedFileHandler;
+import com.vaadin.server.communication.SessionRequestHandler;
 import com.vaadin.server.communication.UIInitHandler;
 import com.vaadin.server.communication.UidlRequestHandler;
 import com.vaadin.util.CurrentInstance;
@@ -525,7 +526,8 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
             LegacyCommunicationManager communicationManager)
             throws PortletException, IOException, MalformedURLException {
         if (requestType == RequestType.APP || requestType == RequestType.RENDER) {
-            if (!communicationManager.handleOtherRequest(request, response)) {
+            if (!new SessionRequestHandler().handleRequest(vaadinSession,
+                    request, response)) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND,
                         "Not found");
             }

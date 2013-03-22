@@ -318,8 +318,12 @@ public interface ClientConnector extends Connector {
      * routed to this method with the remaining part of the requested path
      * available in the path parameter.
      * <p>
-     * {@link DynamicConnectorResource} can be used to easily make an
-     * appropriate URL available to the client-side code.
+     * NOTE that the session is not locked when this method is called. It is the
+     * responsibility of the connector to ensure that the session is locked
+     * while handling state or other session related data. For best performance
+     * the session should be unlocked before writing a large response to the
+     * client.
+     * </p>
      * 
      * @param request
      *            the request that should be handled

@@ -30,6 +30,15 @@ public interface ConnectorResource extends Resource {
 
     /**
      * Gets resource as stream.
+     * <p>
+     * Note that this method is called while the session is locked to prevent
+     * race conditions but the methods in the returned {@link DownloadStream}
+     * are assumed to be unrelated to the VaadinSession and are called without
+     * holding session locks (to prevent locking the session during long file
+     * downloads).
+     * </p>
+     * 
+     * @return A download stream which produces the resource content
      */
     public DownloadStream getStream();
 
