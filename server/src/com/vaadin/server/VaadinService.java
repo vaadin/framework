@@ -340,18 +340,40 @@ public abstract class VaadinService implements Serializable {
                 SESSION_DESTROY_METHOD);
     }
 
+    /**
+     * Handles destruction of the given session. Internally ensures proper
+     * locking is done.
+     * 
+     * @param vaadinSession
+     *            The session to destroy
+     */
     public void fireSessionDestroy(VaadinSession vaadinSession) {
-        for (UI ui : new ArrayList<UI>(vaadinSession.getUIs())) {
-            // close() called here for consistency so that it is always called
-            // before a UI is removed. UI.isClosing() is thus always true in
-            // UI.detach() and associated detach listeners.
-            if (!ui.isClosing()) {
-                ui.close();
+        final VaadinSession session = vaadinSession;
+        session.runSafely(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<UI> uis = new ArrayList<UI>(session.getUIs());
+                for (final UI ui : uis) {
+                    ui.runSafely(new Runnable() {
+                        @Override
+                        public void run() {
+                            /*
+                             * close() called here for consistency so that it is
+                             * always called before a UI is removed.
+                             * UI.isClosing() is thus always true in UI.detach()
+                             * and associated detach listeners.
+                             */
+                            if (!ui.isClosing()) {
+                                ui.close();
+                            }
+                            session.removeUI(ui);
+                        }
+                    });
+                }
+                eventRouter.fireEvent(new SessionDestroyEvent(
+                        VaadinService.this, session));
             }
-            vaadinSession.removeUI(ui);
-        }
-
-        eventRouter.fireEvent(new SessionDestroyEvent(this, vaadinSession));
+        });
     }
 
     /**
