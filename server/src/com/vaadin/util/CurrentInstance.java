@@ -21,8 +21,28 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.vaadin.server.VaadinPortlet;
+import com.vaadin.server.VaadinPortletService;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinResponse;
+import com.vaadin.server.VaadinService;
+import com.vaadin.server.VaadinServlet;
+import com.vaadin.server.VaadinServletService;
+import com.vaadin.server.VaadinSession;
+import com.vaadin.ui.UI;
+
 /**
  * Keeps track of various thread local instances used by the framework.
+ * <p>
+ * Currently the framework uses the following instances:
+ * </p>
+ * <p>
+ * Inheritable: {@link UI}, {@link VaadinPortlet}, {@link VaadinService},
+ * {@link VaadinServlet}, {@link VaadinSession}.
+ * </p>
+ * <p>
+ * Non-inheritable: {@link VaadinRequest}, {@link VaadinResponse}.
+ * </p>
  * 
  * @author Vaadin Ltd
  * @version @VERSION@
@@ -31,6 +51,18 @@ import java.util.Map.Entry;
 public class CurrentInstance implements Serializable {
     private final Object instance;
     private final boolean inheritable;
+
+    private static boolean portletAvailable = false;
+    {
+        try {
+            /*
+             * VaadinPortlet depends on portlet API which is available only if
+             * running in a portal.
+             */
+            portletAvailable = (VaadinPortlet.class.getName() != null);
+        } catch (Throwable t) {
+        }
+    }
 
     private static InheritableThreadLocal<Map<Class<?>, CurrentInstance>> instances = new InheritableThreadLocal<Map<Class<?>, CurrentInstance>>() {
         @Override
@@ -118,7 +150,11 @@ public class CurrentInstance implements Serializable {
                     new CurrentInstance(instance, inheritable));
             if (previousInstance != null) {
                 assert previousInstance.inheritable == inheritable : "Inheritable status mismatch for "
-                        + type;
+                        + type
+                        + " (previous was "
+                        + previousInstance.inheritable
+                        + ", new is "
+                        + inheritable + ")";
             }
         }
     }
@@ -128,5 +164,73 @@ public class CurrentInstance implements Serializable {
      */
     public static void clearAll() {
         instances.get().clear();
+    }
+
+    /**
+     * Restores the given thread locals to the given values. Note that this
+     * should only be used internally to restore Vaadin classes.
+     * 
+     * @param old
+     *            A Class -> Object map to set as thread locals
+     */
+    public static void restoreThreadLocals(Map<Class<?>, CurrentInstance> old) {
+        for (Class c : old.keySet()) {
+            CurrentInstance ci = old.get(c);
+            set(c, ci.instance, ci.inheritable);
+        }
+    }
+
+    /**
+     * Sets thread locals for the UI and all related classes
+     * 
+     * @param ui
+     *            The UI
+     * @return A map containing the old values of the thread locals this method
+     *         updated.
+     */
+    public static Map<Class<?>, CurrentInstance> setThreadLocals(UI ui) {
+        Map<Class<?>, CurrentInstance> old = new HashMap<Class<?>, CurrentInstance>();
+        old.put(UI.class, new CurrentInstance(UI.getCurrent(), true));
+        UI.setCurrent(ui);
+        old.putAll(setThreadLocals(ui.getSession()));
+        return old;
+    }
+
+    /**
+     * Sets thread locals for the {@link VaadinSession} and all related classes
+     * 
+     * @param session
+     *            The VaadinSession
+     * @return A map containing the old values of the thread locals this method
+     *         updated.
+     */
+    public static Map<Class<?>, CurrentInstance> setThreadLocals(
+            VaadinSession session) {
+        Map<Class<?>, CurrentInstance> old = new HashMap<Class<?>, CurrentInstance>();
+        old.put(VaadinSession.class,
+                new CurrentInstance(VaadinSession.getCurrent(), true));
+        old.put(VaadinService.class,
+                new CurrentInstance(VaadinService.getCurrent(), true));
+        VaadinService service = null;
+        if (session != null) {
+            service = session.getService();
+        }
+
+        VaadinSession.setCurrent(session);
+        VaadinService.setCurrent(service);
+
+        if (service instanceof VaadinServletService) {
+            old.put(VaadinServlet.class,
+                    new CurrentInstance(VaadinServlet.getCurrent(), true));
+            VaadinServlet.setCurrent(((VaadinServletService) service)
+                    .getServlet());
+        } else if (portletAvailable && service instanceof VaadinPortletService) {
+            old.put(VaadinPortlet.class,
+                    new CurrentInstance(VaadinPortlet.getCurrent(), true));
+            VaadinPortlet.setCurrent(((VaadinPortletService) service)
+                    .getPortlet());
+        }
+
+        return old;
     }
 }

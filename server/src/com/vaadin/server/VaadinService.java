@@ -579,9 +579,18 @@ public abstract class VaadinService implements Serializable {
      */
     public void setCurrentInstances(VaadinRequest request,
             VaadinResponse response) {
-        CurrentInstance.setInheritable(VaadinService.class, this);
+        setCurrent(this);
         CurrentInstance.set(VaadinRequest.class, request);
         CurrentInstance.set(VaadinResponse.class, response);
+    }
+
+    /**
+     * Sets the given Vaadin service as the current service.
+     * 
+     * @param service
+     */
+    public static void setCurrent(VaadinService service) {
+        CurrentInstance.setInheritable(VaadinService.class, service);
     }
 
     /**

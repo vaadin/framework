@@ -927,4 +927,37 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     private static final Logger getLogger() {
         return Logger.getLogger(VaadinSession.class.getName());
     }
+
+    /**
+     * Performs a safe update of this VaadinSession.
+     * <p>
+     * This method runs the runnable code so that it is safe to update session
+     * variables. It also ensures that all thread locals are set correctly when
+     * executing the runnable.
+     * </p>
+     * <p>
+     * Note that using this method for a VaadinSession which has been detached
+     * from its underlying HTTP session is not necessarily safe. Exclusive
+     * access is provided through locking which is done using the underlying
+     * session.
+     * </p>
+     * 
+     * @param runnable
+     *            The runnable which updates the session
+     */
+    public void runSafely(Runnable runnable) {
+        Map<Class<?>, CurrentInstance> old = null;
+        lock();
+        try {
+            old = CurrentInstance.setThreadLocals(this);
+            runnable.run();
+        } finally {
+            unlock();
+            if (old != null) {
+                CurrentInstance.restoreThreadLocals(old);
+            }
+        }
+
+    }
+
 }

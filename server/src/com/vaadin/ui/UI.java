@@ -1054,4 +1054,44 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     public int getTabIndex() {
         return getState(false).tabIndex;
     }
+
+    /**
+     * Performs a safe update of this UI.
+     * <p>
+     * This method runs the runnable code so that it is safe to update UI and
+     * session variables. It also ensures that all thread locals are set
+     * correctly when executing the runnable.
+     * </p>
+     * <p>
+     * Note that exclusive access is only guaranteed as long as the UI is
+     * attached to a VaadinSession. If the UI is not attached to a session, this
+     * method makes no guarantees. If the UI is detached then the current
+     * session will also be null.
+     * </p>
+     * 
+     * @param runnable
+     *            The runnable which updates the UI
+     */
+    public void runSafely(Runnable runnable) {
+        Map<Class<?>, CurrentInstance> old = null;
+
+        VaadinSession session = getSession();
+
+        if (session != null) {
+            session.lock();
+        }
+        try {
+            old = CurrentInstance.setThreadLocals(this);
+            runnable.run();
+        } finally {
+            if (session != null) {
+                session.unlock();
+            }
+            if (old != null) {
+                CurrentInstance.restoreThreadLocals(old);
+            }
+        }
+
+    }
+
 }
