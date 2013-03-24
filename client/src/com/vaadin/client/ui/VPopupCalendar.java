@@ -355,10 +355,6 @@ public class VPopupCalendar extends VTextualDate implements Field,
                         }
                     }
 
-                    // fix size
-                    popup.setWidth(w + "px");
-                    popup.setHeight(h + "px");
-
                     popup.setPopupPosition(l,
                             t + calendarToggle.getOffsetHeight() + 2);
 
