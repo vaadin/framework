@@ -97,6 +97,12 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             public void setTitle(String title) {
                 com.google.gwt.user.client.Window.setTitle(title);
             }
+
+            @Override
+            public void reload() {
+                Window.Location.reload();
+
+            }
         });
         registerRpc(ScrollClientRpc.class, new ScrollClientRpc() {
             @Override

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>New Test</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">New Test</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.components.page.PageReload?restartApplication</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentspagePageReload::PID_SLog_row_0</td>
+	<td>1. UI id: 0</td>
+</tr>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.components.page.PageReload</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentspagePageReload::PID_SLog_row_0</td>
+	<td>1. UI id: 1</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>vaadin=runcomvaadintestscomponentspagePageReload::/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot[0]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentspagePageReload::PID_SLog_row_0</td>
+	<td>1. UI id: 2</td>
+</tr>
+</tbody></table>
+</body>
+</html>

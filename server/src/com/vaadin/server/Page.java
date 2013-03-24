@@ -1041,4 +1041,11 @@ public class Page implements Serializable {
         uI.getRpcProxy(PageClientRpc.class).setTitle(title);
     }
 
+    /**
+     * Reloads the page in the browser.
+     */
+    public void reload() {
+        uI.getRpcProxy(PageClientRpc.class).reload();
+    }
+
 }
