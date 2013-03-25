@@ -599,4 +599,21 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             }
         });
     }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+        if (stateChangeEvent.hasPropertyChanged("tooltipConfiguration")) {
+            getConnection().getVTooltip().setCloseTimeout(
+                    getState().tooltipConfiguration.closeTimeout);
+            getConnection().getVTooltip().setOpenDelay(
+                    getState().tooltipConfiguration.openDelay);
+            getConnection().getVTooltip().setQuickOpenDelay(
+                    getState().tooltipConfiguration.quickOpenDelay);
+            getConnection().getVTooltip().setQuickOpenTimeout(
+                    getState().tooltipConfiguration.quickOpenTimeout);
+            getConnection().getVTooltip().setMaxWidth(
+                    getState().tooltipConfiguration.maxWidth);
+        }
+    }
 }

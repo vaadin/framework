@@ -155,6 +155,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
     private boolean closing = false;
 
+    private Tooltip tooltip = new TooltipImpl(this);
+
     /**
      * Creates a new empty UI without a caption. The content of the UI must be
      * set by calling {@link #setContent(Component)} before using the UI.
@@ -1094,5 +1096,14 @@ public abstract class UI extends AbstractSingleComponentContainer implements
             }
         }
 
+    }
+
+    /**
+     * Retrieves the object used for configuring tooltips.
+     * 
+     * @return The instance used for tooltip configuration
+     */
+    public Tooltip getTooltip() {
+        return tooltip;
     }
 }

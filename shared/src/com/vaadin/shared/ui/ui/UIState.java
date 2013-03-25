@@ -15,9 +15,21 @@
  */
 package com.vaadin.shared.ui.ui;
 
+import java.io.Serializable;
+
 import com.vaadin.shared.ui.TabIndexState;
 
 public class UIState extends TabIndexState {
+    public TooltipConfiguration tooltipConfiguration = new TooltipConfiguration();
+
+    public static class TooltipConfiguration implements Serializable {
+        public int openDelay = 750;
+        public int quickOpenDelay = 100;
+        public int quickOpenTimeout = 1000;
+        public int closeTimeout = 300;
+        public int maxWidth = 500;
+    }
+
     {
         primaryStyleName = "v-ui";
         // Default is 1 for legacy reasons

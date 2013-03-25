@@ -48,11 +48,6 @@ public class VTooltip extends VOverlay {
     public static final int TOOLTIP_EVENTS = Event.ONKEYDOWN
             | Event.ONMOUSEOVER | Event.ONMOUSEOUT | Event.ONMOUSEMOVE
             | Event.ONCLICK;
-    protected static final int MAX_WIDTH = 500;
-    private static final int QUICK_OPEN_TIMEOUT = 1000;
-    private static final int CLOSE_TIMEOUT = 300;
-    private static final int OPEN_DELAY = 750;
-    private static final int QUICK_OPEN_DELAY = 100;
     VErrorMessage em = new VErrorMessage();
     Element description = DOM.createDiv();
 
@@ -64,6 +59,13 @@ public class VTooltip extends VOverlay {
 
     private String uniqueId = DOM.createUniqueId();
     private Element layoutElement;
+    private int maxWidth;
+
+    // Delays for the tooltip, configurable on the server side
+    private int openDelay;
+    private int quickOpenDelay;
+    private int quickOpenTimeout;
+    private int closeTimeout;
 
     /**
      * Used to show tooltips; usually used via the singleton in
@@ -126,8 +128,8 @@ public class VTooltip extends VOverlay {
                 @Override
                 public void setPosition(int offsetWidth, int offsetHeight) {
 
-                    if (offsetWidth > MAX_WIDTH) {
-                        setWidth(MAX_WIDTH + "px");
+                    if (offsetWidth > getMaxWidth()) {
+                        setWidth(getMaxWidth() + "px");
 
                         // Check new height and width with reflowed content
                         offsetWidth = getOffsetWidth();
@@ -172,7 +174,7 @@ public class VTooltip extends VOverlay {
 
         // Schedule timer for showing the tooltip according to if it was
         // recently closed or not.
-        int timeout = justClosed ? QUICK_OPEN_DELAY : OPEN_DELAY;
+        int timeout = justClosed ? getQuickOpenDelay() : getOpenDelay();
         showTimer.schedule(timeout);
         opening = true;
     }
@@ -222,10 +224,10 @@ public class VTooltip extends VOverlay {
             // already about to close
             return;
         }
-        closeTimer.schedule(CLOSE_TIMEOUT);
+        closeTimer.schedule(getCloseTimeout());
         closing = true;
         justClosed = true;
-        justClosedTimer.schedule(QUICK_OPEN_TIMEOUT);
+        justClosedTimer.schedule(getQuickOpenTimeout());
     }
 
     @Override
@@ -466,4 +468,120 @@ public class VTooltip extends VOverlay {
 
         Roles.getTooltipRole().setAriaHiddenState(layoutElement, false);
     }
+
+    /**
+     * Returns the time (in ms) the tooltip should be displayed after an event
+     * that will cause it to be closed (e.g. mouse click outside the component,
+     * key down).
+     * 
+     * @return The close timeout (in ms)
+     */
+    public int getCloseTimeout() {
+        return closeTimeout;
+    }
+
+    /**
+     * Sets the time (in ms) the tooltip should be displayed after an event that
+     * will cause it to be closed (e.g. mouse click outside the component, key
+     * down).
+     * 
+     * @param closeTimeout
+     *            The close timeout (in ms)
+     */
+    public void setCloseTimeout(int closeTimeout) {
+        this.closeTimeout = closeTimeout;
+    }
+
+    /**
+     * Returns the time (in ms) during which {@link #getQuickOpenDelay()} should
+     * be used instead of {@link #getOpenDelay()}. The quick open delay is used
+     * when the tooltip has very recently been shown, is currently hidden but
+     * about to be shown again.
+     * 
+     * @return The quick open timeout (in ms)
+     */
+    public int getQuickOpenTimeout() {
+        return quickOpenTimeout;
+    }
+
+    /**
+     * Sets the time (in ms) that determines when {@link #getQuickOpenDelay()}
+     * should be used instead of {@link #getOpenDelay()}. The quick open delay
+     * is used when the tooltip has very recently been shown, is currently
+     * hidden but about to be shown again.
+     * 
+     * @param quickOpenTimeout
+     *            The quick open timeout (in ms)
+     */
+    public void setQuickOpenTimeout(int quickOpenTimeout) {
+        this.quickOpenTimeout = quickOpenTimeout;
+    }
+
+    /**
+     * Returns the time (in ms) that should elapse before a tooltip will be
+     * shown, in the situation when a tooltip has very recently been shown
+     * (within {@link #getQuickOpenDelay()} ms).
+     * 
+     * @return The quick open delay (in ms)
+     */
+    public int getQuickOpenDelay() {
+        return quickOpenDelay;
+    }
+
+    /**
+     * Sets the time (in ms) that should elapse before a tooltip will be shown,
+     * in the situation when a tooltip has very recently been shown (within
+     * {@link #getQuickOpenDelay()} ms).
+     * 
+     * @param quickOpenDelay
+     *            The quick open delay (in ms)
+     */
+    public void setQuickOpenDelay(int quickOpenDelay) {
+        this.quickOpenDelay = quickOpenDelay;
+    }
+
+    /**
+     * Returns the time (in ms) that should elapse after an event triggering
+     * tooltip showing has occurred (e.g. mouse over) before the tooltip is
+     * shown. If a tooltip has recently been shown, then
+     * {@link #getQuickOpenDelay()} is used instead of this.
+     * 
+     * @return The open delay (in ms)
+     */
+    public int getOpenDelay() {
+        return openDelay;
+    }
+
+    /**
+     * Sets the time (in ms) that should elapse after an event triggering
+     * tooltip showing has occurred (e.g. mouse over) before the tooltip is
+     * shown. If a tooltip has recently been shown, then
+     * {@link #getQuickOpenDelay()} is used instead of this.
+     * 
+     * @param openDelay
+     *            The open delay (in ms)
+     */
+    public void setOpenDelay(int openDelay) {
+        this.openDelay = openDelay;
+    }
+
+    /**
+     * Sets the maximum width of the tooltip popup.
+     * 
+     * @param maxWidth
+     *            The maximum width the tooltip popup (in pixels)
+     */
+    public void setMaxWidth(int maxWidth) {
+        this.maxWidth = maxWidth;
+    }
+
+    /**
+     * Returns the maximum width of the tooltip popup.
+     * 
+     * @return The maximum width the tooltip popup (in pixels)
+     */
+    public int getMaxWidth() {
+        return maxWidth;
+    }
+
 }
