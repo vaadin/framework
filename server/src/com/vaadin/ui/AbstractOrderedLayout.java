@@ -53,6 +53,8 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
      */
     protected LinkedList<Component> components = new LinkedList<Component>();
 
+    private Alignment defaultComponentAlignment = Alignment.TOP_LEFT;
+
     /* Child component alignments */
 
     /**
@@ -147,7 +149,9 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     }
 
     private void componentAdded(Component c) {
-        getState().childData.put(c, new ChildComponentData());
+        ChildComponentData ccd = new ChildComponentData();
+        ccd.alignmentBitmask = getDefaultComponentAlignment().getBitMask();
+        getState().childData.put(c, ccd);
     }
 
     /**
@@ -417,4 +421,26 @@ public abstract class AbstractOrderedLayout extends AbstractLayout implements
     public void setMargin(MarginInfo marginInfo) {
         getState().marginsBitmask = marginInfo.getBitMask();
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.Layout.AlignmentHandler#getDefaultComponentAlignment()
+     */
+    @Override
+    public Alignment getDefaultComponentAlignment() {
+        return defaultComponentAlignment;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.Layout.AlignmentHandler#setDefaultComponentAlignment(com
+     * .vaadin.ui.Alignment)
+     */
+    public void setDefaultComponentAlignment(Alignment defaultAlignment) {
+        defaultComponentAlignment = defaultAlignment;
+    }
+
 }
