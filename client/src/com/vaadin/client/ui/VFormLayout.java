@@ -302,6 +302,9 @@ public class VFormLayout extends SimplePanel {
 
             boolean required = owner instanceof AbstractFieldConnector
                     && ((AbstractFieldConnector) owner).isRequired();
+
+            AriaHelper.handleInputRequired(owner.getWidget(), required);
+
             if (required) {
                 if (requiredFieldIndicator == null) {
                     requiredFieldIndicator = DOM.createSpan();
@@ -309,9 +312,6 @@ public class VFormLayout extends SimplePanel {
                     DOM.setElementProperty(requiredFieldIndicator, "className",
                             "v-required-field-indicator");
                     DOM.appendChild(getElement(), requiredFieldIndicator);
-
-                    Roles.getTextboxRole().setAriaRequiredProperty(
-                            owner.getWidget().getElement(), true);
 
                     // Hide the required indicator from screen reader, as this
                     // information is set directly at the input field
@@ -322,9 +322,6 @@ public class VFormLayout extends SimplePanel {
                 if (requiredFieldIndicator != null) {
                     DOM.removeChild(getElement(), requiredFieldIndicator);
                     requiredFieldIndicator = null;
-
-                    Roles.getTextboxRole().removeAriaRequiredProperty(
-                            owner.getWidget().getElement());
                 }
             }
 
@@ -379,6 +376,8 @@ public class VFormLayout extends SimplePanel {
                 showError = false;
             }
 
+            AriaHelper.handleInputInvalid(owner.getWidget(), showError);
+
             if (showError) {
                 if (errorIndicatorElement == null) {
                     errorIndicatorElement = DOM.createDiv();
@@ -386,6 +385,11 @@ public class VFormLayout extends SimplePanel {
                     DOM.setElementProperty(errorIndicatorElement, "className",
                             "v-errorindicator");
                     DOM.appendChild(getElement(), errorIndicatorElement);
+
+                    // Hide the error indicator from screen reader, as this
+                    // information is set directly at the input field
+                    Roles.getFormRole().setAriaHiddenState(
+                            errorIndicatorElement, true);
                 }
 
             } else if (errorIndicatorElement != null) {

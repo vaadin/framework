@@ -34,9 +34,9 @@ public class AriaHelper {
      * WAI-ARIA specification.
      * 
      * @param widget
-     *            Element, that should be bound to the caption
-     * @param captionElement
-     *            Element of the caption
+     *            Widget, that should be bound to the caption
+     * @param captionElements
+     *            Element with of caption to bind
      */
     public static void bindCaption(Widget widget, Element captionElement) {
         assert widget != null : "Valid Widget required";
@@ -62,44 +62,87 @@ public class AriaHelper {
         }
     }
 
-    public static void clearCaption(Widget widget) {
+    /**
+     * Removes a binding to a caption from the provided Widget.
+     * 
+     * @param widget
+     *            Widget, that was bound to a caption before
+     */
+    private static void clearCaption(Widget widget) {
         Roles.getTextboxRole()
                 .removeAriaLabelledbyProperty(widget.getElement());
+    }
+
+    /**
+     * Handles the required actions depending of the input Widget being required
+     * or not.
+     * 
+     * @param widget
+     *            Widget, typically an input Widget like TextField
+     * @param required
+     *            boolean, true when the element is required
+     */
+    public static void handleInputRequired(Widget widget, boolean required) {
+        assert widget != null : "Valid Widget required";
+
+        if (widget instanceof HandlesAriaRequired) {
+            ((HandlesAriaRequired) widget).setRequired(required);
+        } else {
+            handleInputRequired(widget.getElement(), required);
+        }
     }
 
     /**
      * Handles the required actions depending of the input element being
      * required or not.
      * 
-     * @param inputElement
-     *            Element, typically an input element
+     * @param element
+     *            Element, typically from an input Widget like TextField
      * @param required
      *            boolean, true when the element is required
      */
-    public static void handleInputRequired(Element inputElement,
-            boolean required) {
+    public static void handleInputRequired(Element element, boolean required) {
         if (required) {
-            Roles.getTextboxRole().setAriaRequiredProperty(inputElement, true);
+            Roles.getTextboxRole().setAriaRequiredProperty(element, required);
         } else {
-            Roles.getTextboxRole().removeAriaRequiredProperty(inputElement);
+            Roles.getTextboxRole().removeAriaRequiredProperty(element);
+        }
+    }
+
+    /**
+     * Handles the required actions depending of the input Widget contains
+     * unaccepted input.
+     * 
+     * @param widget
+     *            Widget, typically an input Widget like TextField
+     * @param invalid
+     *            boolean, true when the Widget input has an error
+     */
+    public static void handleInputInvalid(Widget widget, boolean invalid) {
+        assert widget != null : "Valid Widget required";
+
+        if (widget instanceof HandlesAriaInvalid) {
+            ((HandlesAriaInvalid) widget).setInvalid(invalid);
+        } else {
+            handleInputInvalid(widget.getElement(), invalid);
         }
     }
 
     /**
      * Handles the required actions depending of the input element contains
-     * unaccepted input
+     * unaccepted input.
      * 
-     * @param inputElement
-     *            Element, typically an input element
-     * @param showError
+     * @param element
+     *            Element, typically an input Widget like TextField
+     * @param invalid
      *            boolean, true when the element input has an error
      */
-    public static void handleInputError(Element inputElement, boolean showError) {
-        if (showError) {
-            Roles.getTextboxRole().setAriaInvalidState(inputElement,
+    public static void handleInputInvalid(Element element, boolean invalid) {
+        if (invalid) {
+            Roles.getTextboxRole().setAriaInvalidState(element,
                     InvalidValue.TRUE);
         } else {
-            Roles.getTextboxRole().removeAriaInvalidState(inputElement);
+            Roles.getTextboxRole().removeAriaInvalidState(element);
         }
     }
 
@@ -112,6 +155,8 @@ public class AriaHelper {
      * @return String with the id of the element
      */
     public static String ensureUniqueId(Element element) {
+        assert element != null : "Valid Element required";
+
         String id = element.getId();
         if (null == id || id.isEmpty()) {
             id = DOM.createUniqueId();

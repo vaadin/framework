@@ -30,8 +30,8 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.AbstractLayoutConnector;
-import com.vaadin.client.ui.LayoutClickEventHandler;
 import com.vaadin.client.ui.AriaHelper;
+import com.vaadin.client.ui.LayoutClickEventHandler;
 import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.AbstractFieldState;
@@ -259,10 +259,8 @@ public abstract class AbstractOrderedLayoutConnector extends
         slot.setCaption(caption, iconUrlString, styles, error, showError,
                 required, enabled);
 
-        AriaHelper.handleInputRequired(child.getWidget().getElement(),
-                required);
-        AriaHelper.handleInputError(child.getWidget().getElement(),
-                showError);
+        AriaHelper.handleInputRequired(child.getWidget(), required);
+        AriaHelper.handleInputInvalid(child.getWidget(), showError);
         AriaHelper.bindCaption(child.getWidget(), slot.getCaptionElement());
 
         if (slot.hasCaption()) {

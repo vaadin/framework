@@ -35,7 +35,8 @@ import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.datefield.Resolution;
 
 public class VTextualDate extends VDateField implements Field, ChangeHandler,
-        Focusable, SubPartAware, HandlesAriaCaption {
+        Focusable, SubPartAware, HandlesAriaCaption, HandlesAriaInvalid,
+        HandlesAriaRequired {
 
     private static final String PARSE_ERROR_CLASSNAME = "-parseerror";
 
@@ -161,7 +162,17 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
 
     @Override
     public void clearAriaCaption() {
-        AriaHelper.clearCaption(text);
+        AriaHelper.bindCaption(text, null);
+    }
+
+    @Override
+    public void setRequired(boolean required) {
+        AriaHelper.handleInputRequired(text, required);
+    }
+
+    @Override
+    public void setInvalid(boolean invalid) {
+        AriaHelper.handleInputInvalid(text, invalid);
     }
 
     /**

@@ -16,8 +16,6 @@
 
 package com.vaadin.client.ui;
 
-import com.google.gwt.aria.client.CheckedValue;
-import com.google.gwt.aria.client.Roles;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -26,7 +24,7 @@ import com.vaadin.client.Util;
 import com.vaadin.client.VTooltip;
 
 public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
-        Field {
+        Field, HandlesAriaInvalid, HandlesAriaRequired {
 
     public static final String CLASSNAME = "v-checkbox";
 
@@ -47,11 +45,6 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
 
     public VCheckBox() {
         setStyleName(CLASSNAME);
-
-        // Add a11y role "checkbox"
-        Roles.getCheckboxRole().set(getElement());
-        Roles.getCheckboxRole().setAriaCheckedState(getElement(),
-                CheckedValue.FALSE);
 
         Element el = DOM.getFirstChild(getElement());
         while (el != null) {
@@ -76,22 +69,23 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
         }
     }
 
-    @Override
-    public void setValue(Boolean value, boolean fireEvents) {
-        setCheckedValue(value);
-        super.setValue(value, fireEvents);
-    }
-
-    private void setCheckedValue(Boolean value) {
-        CheckedValue checkedValue = value ? CheckedValue.TRUE
-                : CheckedValue.FALSE;
-        Roles.getCheckboxRole().setAriaCheckedState(getElement(), checkedValue);
+    /**
+     * Gives access to the input element.
+     * 
+     * @return Element of the CheckBox itself
+     */
+    private Element getCheckBoxElement() {
+        // FIXME: Would love to use a better way to access the checkbox element
+        return (Element) getElement().getFirstChildElement();
     }
 
     @Override
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
+    public void setRequired(boolean required) {
+        AriaHelper.handleInputRequired(getCheckBoxElement(), required);
+    }
 
-        Roles.getCheckboxRole().setAriaDisabledState(getElement(), true);
+    @Override
+    public void setInvalid(boolean invalid) {
+        AriaHelper.handleInputInvalid(getCheckBoxElement(), invalid);
     }
 }

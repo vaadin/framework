@@ -82,7 +82,7 @@ import com.vaadin.shared.ui.combobox.FilteringMode;
 @SuppressWarnings("deprecation")
 public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         KeyUpHandler, ClickHandler, FocusHandler, BlurHandler, Focusable,
-        SubPartAware {
+        SubPartAware, HandlesAriaInvalid, HandlesAriaRequired {
 
     /**
      * Represents a suggestion in the suggestion popup box
@@ -1053,6 +1053,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         });
 
         popupOpener.sinkEvents(Event.ONMOUSEDOWN);
+        Roles.getButtonRole()
+                .setAriaHiddenState(popupOpener.getElement(), true);
         Roles.getButtonRole().set(popupOpener.getElement());
 
         panel.add(tb);
@@ -1830,5 +1832,15 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             return "button";
         }
         return null;
+    }
+
+    @Override
+    public void setRequired(boolean required) {
+        AriaHelper.handleInputRequired(tb, required);
+    }
+
+    @Override
+    public void setInvalid(boolean invalid) {
+        AriaHelper.handleInputInvalid(tb, invalid);
     }
 }

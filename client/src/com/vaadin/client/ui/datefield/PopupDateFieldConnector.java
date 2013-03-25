@@ -119,6 +119,8 @@ public class PopupDateFieldConnector extends TextualDateConnector {
                     + "-button-readonly");
         }
 
+        getWidget().setDescriptionForAssistiveDevices(
+                getState().descriptionForAssistiveDevices);
         getWidget().calendarToggle.setEnabled(true);
     }
 

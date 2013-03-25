@@ -44,6 +44,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.VCalendarPanel.FocusOutListener;
 import com.vaadin.client.ui.VCalendarPanel.SubmitListener;
+import com.vaadin.shared.ui.datefield.PopupDateFieldState;
 import com.vaadin.shared.ui.datefield.Resolution;
 
 /**
@@ -79,6 +80,8 @@ public class VPopupCalendar extends VTextualDate implements Field,
 
     private Label selectedDate;
 
+    private Element descriptionForAssisitveDevicesElement;
+
     public VPopupCalendar() {
         super();
 
@@ -92,6 +95,16 @@ public class VPopupCalendar extends VTextualDate implements Field,
                 true);
 
         add(calendarToggle);
+
+        // Description of the usage of the widget for assisitve device users
+        descriptionForAssisitveDevicesElement = DOM.createDiv();
+        descriptionForAssisitveDevicesElement
+                .setInnerText(PopupDateFieldState.DESCRIPTION_FOR_ASSISTIVE_DEVICES);
+        AriaHelper.ensureUniqueId(descriptionForAssisitveDevicesElement);
+        Id.of(descriptionForAssisitveDevicesElement);
+        AriaHelper
+                .visibleForAssistiveDevicesOnly(descriptionForAssisitveDevicesElement);
+        DOM.appendChild(getElement(), descriptionForAssisitveDevicesElement);
 
         calendar = GWT.create(VCalendarPanel.class);
         calendar.setParentField(this);
@@ -265,7 +278,7 @@ public class VPopupCalendar extends VTextualDate implements Field,
         if (isTextFieldEnabled()) {
             super.clearAriaCaption();
         } else {
-            AriaHelper.clearCaption(calendarToggle);
+            AriaHelper.bindCaption(calendarToggle, null);
         }
 
         handleAriaAttributes();
@@ -546,4 +559,26 @@ public class VPopupCalendar extends VTextualDate implements Field,
         return super.getSubPartName(subElement);
     }
 
+    /**
+     * Set a description that explains the usage of the Widget for users of
+     * assistive devices.
+     * 
+     * @param descriptionForAssistiveDevices
+     *            String with the description
+     */
+    public void setDescriptionForAssistiveDevices(
+            String descriptionForAssistiveDevices) {
+        descriptionForAssisitveDevicesElement
+                .setInnerText(descriptionForAssistiveDevices);
+    }
+
+    /**
+     * Get the description that explains the usage of the Widget for users of
+     * assistive devices.
+     * 
+     * @return String with the description
+     */
+    public String getDescriptionForAssistiveDevices() {
+        return descriptionForAssisitveDevicesElement.getInnerText();
+    }
 }

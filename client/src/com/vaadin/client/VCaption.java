@@ -21,7 +21,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.AriaHelper;
@@ -205,6 +204,8 @@ public class VCaption extends HTML {
             removeStyleDependentName("hasdescription");
         }
 
+        AriaHelper.handleInputRequired(owner.getWidget(), showRequired);
+
         if (showRequired) {
             if (requiredFieldIndicator == null) {
                 requiredFieldIndicator = DOM.createDiv();
@@ -215,9 +216,6 @@ public class VCaption extends HTML {
                 DOM.insertChild(getElement(), requiredFieldIndicator,
                         getInsertPosition(InsertPosition.REQUIRED));
 
-                Roles.getTextboxRole().setAriaRequiredProperty(
-                        owner.getWidget().getElement(), true);
-
                 // Hide the required indicator from assistive device
                 Roles.getTextboxRole().setAriaHiddenState(
                         requiredFieldIndicator, true);
@@ -226,10 +224,9 @@ public class VCaption extends HTML {
             // Remove existing
             DOM.removeChild(getElement(), requiredFieldIndicator);
             requiredFieldIndicator = null;
-
-            Roles.getTextboxRole().removeAriaRequiredProperty(
-                    owner.getWidget().getElement());
         }
+
+        AriaHelper.handleInputInvalid(owner.getWidget(), showError);
 
         if (showError) {
             if (errorIndicatorElement == null) {
@@ -240,6 +237,10 @@ public class VCaption extends HTML {
 
                 DOM.insertChild(getElement(), errorIndicatorElement,
                         getInsertPosition(InsertPosition.ERROR));
+
+                // Hide error indicator from assistive devices
+                Roles.getTextboxRole().setAriaHiddenState(
+                        errorIndicatorElement, true);
             }
         } else if (errorIndicatorElement != null) {
             // Remove existing
