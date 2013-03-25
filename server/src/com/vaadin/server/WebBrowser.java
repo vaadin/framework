@@ -319,6 +319,17 @@ public class WebBrowser implements Serializable {
      * entirely accurate due to varying network latencies, but should provide a
      * close-enough value for most cases. Also note that the returned Date
      * object uses servers default time zone, not the clients.
+     * <p>
+     * To get the actual date and time shown in the end users computer, you can
+     * do something like:
+     * 
+     * <pre>
+     * WebBrowser browser = ...;
+     * SimpleTimeZone timeZone = new SimpleTimeZone(browser.getTimezoneOffset(), "Fake client time zone");
+     * DateFormat format = DateFormat.getDateTimeInstance();
+     * format.setTimeZone(timeZone);
+     * myLabel.setValue(format.format(browser.getCurrentDate()));
+     * </pre>
      * 
      * @return the current date and time of the browser.
      * @see #isDSTInEffect()
