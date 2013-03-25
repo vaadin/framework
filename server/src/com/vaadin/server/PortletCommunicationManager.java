@@ -134,7 +134,7 @@ public class PortletCommunicationManager extends AbstractCommunicationManager {
     }
 
     @Override
-    protected InputStream getThemeResourceAsStream(UI uI, String themeName,
+    public InputStream getThemeResourceAsStream(UI uI, String themeName,
             String resource) {
         VaadinPortletSession session = (VaadinPortletSession) uI.getSession();
         PortletContext portletContext = session.getPortletSession()

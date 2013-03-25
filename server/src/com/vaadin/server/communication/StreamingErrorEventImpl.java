@@ -13,28 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.server;
+package com.vaadin.server.communication;
 
-import com.vaadin.server.StreamVariable.StreamingStartEvent;
+import com.vaadin.server.StreamVariable;
+import com.vaadin.server.StreamVariable.StreamingErrorEvent;
 
 @SuppressWarnings("serial")
-final class StreamingStartEventImpl extends AbstractStreamingEvent implements
-        StreamingStartEvent {
+final class StreamingErrorEventImpl extends AbstractStreamingEvent implements
+        StreamingErrorEvent {
 
-    private boolean disposed;
+    private final Exception exception;
 
-    public StreamingStartEventImpl(final String filename, final String type,
-            long contentLength) {
-        super(filename, type, contentLength, 0);
+    public StreamingErrorEventImpl(final String filename, final String type,
+            long contentLength, long bytesReceived, final Exception exception) {
+        super(filename, type, contentLength, bytesReceived);
+        this.exception = exception;
     }
 
     @Override
-    public void disposeStreamVariable() {
-        disposed = true;
-    }
-
-    boolean isDisposed() {
-        return disposed;
+    public final Exception getException() {
+        return exception;
     }
 
 }

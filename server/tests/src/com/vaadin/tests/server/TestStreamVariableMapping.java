@@ -67,7 +67,7 @@ public class TestStreamVariableMapping extends TestCase {
         assertNotNull(tracker.getStreamVariable(owner.getConnectorId(),
                 variableName));
 
-        cm.cleanStreamVariable(owner, variableName);
+        tracker.cleanStreamVariable(owner.getConnectorId(), variableName);
         assertNull(tracker.getStreamVariable(owner.getConnectorId(),
                 variableName));
     }

@@ -17,6 +17,7 @@ package com.vaadin.ui;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -460,6 +461,22 @@ public class ConnectorTracker implements Serializable {
      *         contain invisible connectors.
      */
     public Collection<ClientConnector> getDirtyConnectors() {
+        return dirtyConnectors;
+    }
+
+    /**
+     * Returns a collection of those {@link #getDirtyConnectors() dirty
+     * connectors} that are actually visible to the client.
+     * 
+     * @return A list of dirty and visible connectors.
+     */
+    public ArrayList<ClientConnector> getDirtyVisibleConnectors() {
+        ArrayList<ClientConnector> dirtyConnectors = new ArrayList<ClientConnector>();
+        for (ClientConnector c : getDirtyConnectors()) {
+            if (AbstractCommunicationManager.isConnectorVisibleToClient(c)) {
+                dirtyConnectors.add(c);
+            }
+        }
         return dirtyConnectors;
     }
 

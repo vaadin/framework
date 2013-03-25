@@ -24,7 +24,6 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
-import java.security.GeneralSecurityException;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
@@ -52,7 +51,12 @@ import javax.servlet.http.HttpServletResponse;
 import com.liferay.portal.kernel.util.PortalClassInvoker;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
-import com.vaadin.ui.UI;
+import com.vaadin.server.communication.FileUploadHandler;
+import com.vaadin.server.communication.HeartbeatHandler;
+import com.vaadin.server.communication.PortletListenerNotifier;
+import com.vaadin.server.communication.PublishedFileHandler;
+import com.vaadin.server.communication.UIInitHandler;
+import com.vaadin.server.communication.UidlRequestHandler;
 import com.vaadin.util.CurrentInstance;
 
 /**
@@ -422,86 +426,44 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
                         return;
                     }
 
-                    PortletCommunicationManager communicationManager = (PortletCommunicationManager) vaadinSession
-                            .getCommunicationManager();
-
                     if (requestType == RequestType.PUBLISHED_FILE) {
-                        communicationManager.servePublishedFile(vaadinRequest,
-                                vaadinResponse);
+                        new PublishedFileHandler().handleRequest(vaadinSession,
+                                vaadinRequest, vaadinResponse);
                         return;
                     } else if (requestType == RequestType.HEARTBEAT) {
-                        communicationManager.handleHeartbeatRequest(
-                                vaadinRequest, vaadinResponse, vaadinSession);
+                        new HeartbeatHandler().handleRequest(vaadinSession,
+                                vaadinRequest, vaadinResponse);
                         return;
                     }
 
-                    /* Update browser information from request */
-                    vaadinSession.getBrowser().updateRequestDetails(
-                            vaadinRequest);
-
-                    /* Notify listeners */
-
-                    // Finds the right UI
-                    UI uI = null;
-                    if (requestType == RequestType.UIDL) {
-                        uI = getService().findUI(vaadinRequest);
-                    }
-
-                    // TODO Should this happen before or after the transaction
-                    // starts?
-                    if (request instanceof RenderRequest) {
-                        vaadinSession.firePortletRenderRequest(uI,
-                                (RenderRequest) request,
-                                (RenderResponse) response);
-                    } else if (request instanceof ActionRequest) {
-                        vaadinSession.firePortletActionRequest(uI,
-                                (ActionRequest) request,
-                                (ActionResponse) response);
-                    } else if (request instanceof EventRequest) {
-                        vaadinSession.firePortletEventRequest(uI,
-                                (EventRequest) request,
-                                (EventResponse) response);
-                    } else if (request instanceof ResourceRequest) {
-                        vaadinSession.firePortletResourceRequest(uI,
-                                (ResourceRequest) request,
-                                (ResourceResponse) response);
-                    }
+                    // Notify listeners
+                    new PortletListenerNotifier().handleRequest(vaadinSession,
+                            vaadinRequest, vaadinResponse);
 
                     /* Handle the request */
                     if (requestType == RequestType.FILE_UPLOAD) {
-                        // UI is resolved in handleFileUpload by
-                        // PortletCommunicationManager
-                        communicationManager.handleFileUpload(vaadinSession,
+                        new FileUploadHandler().handleRequest(vaadinSession,
                                 vaadinRequest, vaadinResponse);
                         return;
                     } else if (requestType == RequestType.BROWSER_DETAILS) {
-                        communicationManager.handleBrowserDetailsRequest(
-                                vaadinRequest, vaadinResponse, vaadinSession);
+                        new UIInitHandler().handleRequest(vaadinSession,
+                                vaadinRequest, vaadinResponse);
                         return;
                     } else if (requestType == RequestType.UIDL) {
                         // Handles AJAX UIDL requests
-                        communicationManager.handleUidlRequest(vaadinRequest,
-                                vaadinResponse, portletWrapper, uI);
+                        new UidlRequestHandler(portletWrapper).handleRequest(
+                                vaadinSession, vaadinRequest, vaadinResponse);
 
-                        // Ensure that the browser does not cache UIDL
-                        // responses.
-                        // iOS 6 Safari requires this (#9732)
-                        response.setProperty("Cache-Control", "no-cache");
                         return;
                     } else {
                         handleOtherRequest(vaadinRequest, vaadinResponse,
                                 requestType, vaadinSession,
-                                communicationManager);
+                                vaadinSession.getCommunicationManager());
                     }
                 } catch (final SessionExpiredException e) {
                     // TODO Figure out a better way to deal with
                     // SessionExpiredExceptions
                     getLogger().finest("A user session has expired");
-                } catch (final GeneralSecurityException e) {
-                    // TODO Figure out a better way to deal with
-                    // GeneralSecurityExceptions
-                    getLogger()
-                            .fine("General security exception, the security key was probably incorrect.");
                 } catch (final Throwable e) {
                     handleServiceException(vaadinRequest, vaadinResponse,
                             vaadinSession, e);
@@ -566,7 +528,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
     private void handleOtherRequest(VaadinPortletRequest request,
             VaadinResponse response, RequestType requestType,
             VaadinSession vaadinSession,
-            PortletCommunicationManager communicationManager)
+            AbstractCommunicationManager communicationManager)
             throws PortletException, IOException, MalformedURLException {
         if (requestType == RequestType.APP || requestType == RequestType.RENDER) {
             if (!communicationManager.handleOtherRequest(request, response)) {

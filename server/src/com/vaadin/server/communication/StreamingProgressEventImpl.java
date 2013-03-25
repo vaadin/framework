@@ -13,8 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.server;
+package com.vaadin.server.communication;
 
+import com.vaadin.server.StreamVariable;
 import com.vaadin.server.StreamVariable.StreamingProgressEvent;
 
 @SuppressWarnings("serial")

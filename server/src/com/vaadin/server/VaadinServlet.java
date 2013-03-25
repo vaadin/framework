@@ -24,7 +24,6 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -35,15 +34,18 @@ import java.util.logging.Logger;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.server.AbstractCommunicationManager.Callback;
+import com.vaadin.server.communication.FileUploadHandler;
+import com.vaadin.server.communication.HeartbeatHandler;
+import com.vaadin.server.communication.PublishedFileHandler;
+import com.vaadin.server.communication.UIInitHandler;
+import com.vaadin.server.communication.UidlRequestHandler;
 import com.vaadin.shared.ApplicationConstants;
-import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
 @SuppressWarnings("serial")
@@ -285,49 +287,29 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 return;
             }
 
-            CommunicationManager communicationManager = (CommunicationManager) vaadinSession
-                    .getCommunicationManager();
-
             if (requestType == RequestType.PUBLISHED_FILE) {
-                communicationManager.servePublishedFile(request, response);
+                new PublishedFileHandler().handleRequest(vaadinSession,
+                        request, response);
                 return;
             } else if (requestType == RequestType.HEARTBEAT) {
-                communicationManager.handleHeartbeatRequest(request, response,
-                        vaadinSession);
+                new HeartbeatHandler().handleRequest(vaadinSession, request,
+                        response);
                 return;
-            }
-
-            /* Update browser information from the request */
-            vaadinSession.getBrowser().updateRequestDetails(request);
-
-            /* Handle the request */
-            if (requestType == RequestType.FILE_UPLOAD) {
-                // UI is resolved in communication manager
-                communicationManager.handleFileUpload(vaadinSession, request,
+            } else if (requestType == RequestType.FILE_UPLOAD) {
+                new FileUploadHandler().handleRequest(vaadinSession, request,
                         response);
                 return;
             } else if (requestType == RequestType.UIDL) {
-                UI uI = getService().findUI(request);
-                if (uI == null) {
-                    throw new ServletException(ERROR_NO_UI_FOUND);
-                }
-                // Handles AJAX UIDL requests
-                communicationManager.handleUidlRequest(request, response,
-                        servletWrapper, uI);
-
-                // Ensure that the browser does not cache UIDL responses.
-                // iOS 6 Safari requires this (#9732)
-                response.setHeader("Cache-Control", "no-cache");
-
+                new UidlRequestHandler(servletWrapper).handleRequest(
+                        vaadinSession, request, response);
                 return;
             } else if (requestType == RequestType.BROWSER_DETAILS) {
                 // Browser details - not related to a specific UI
-                communicationManager.handleBrowserDetailsRequest(request,
-                        response, vaadinSession);
+                new UIInitHandler().handleRequest(vaadinSession, request,
+                        response);
                 return;
-            }
-
-            if (communicationManager.handleOtherRequest(request, response)) {
+            } else if (vaadinSession.getCommunicationManager()
+                    .handleOtherRequest(request, response)) {
                 return;
             }
 
@@ -337,8 +319,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
         } catch (final SessionExpiredException e) {
             // Session has expired, notify user
             handleServiceSessionExpired(request, response);
-        } catch (final GeneralSecurityException e) {
-            handleServiceSecurityException(request, response);
         } catch (final Throwable e) {
             handleServiceException(request, response, vaadinSession, e);
         } finally {
@@ -442,7 +422,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      */
     @Deprecated
     protected void criticalNotification(VaadinServletRequest request,
-            HttpServletResponse response, String caption, String message,
+            VaadinServletResponse response, String caption, String message,
             String details, String url) throws IOException {
 
         if (ServletPortletHelper.isUIDLRequest(request)) {
@@ -493,9 +473,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 output += "</a>";
             }
             writeResponse(response, "text/html; charset=UTF-8", output);
-
         }
-
     }
 
     /**
@@ -511,7 +489,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     private void writeResponse(HttpServletResponse response,
             String contentType, String output) throws IOException {
         response.setContentType(contentType);
-        final ServletOutputStream out = response.getOutputStream();
+        final OutputStream out = response.getOutputStream();
         // Set the response type
         final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
                 new OutputStreamWriter(out, "UTF-8")));

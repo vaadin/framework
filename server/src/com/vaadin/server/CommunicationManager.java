@@ -80,7 +80,7 @@ public class CommunicationManager extends AbstractCommunicationManager {
     }
 
     @Override
-    protected InputStream getThemeResourceAsStream(UI uI, String themeName,
+    public InputStream getThemeResourceAsStream(UI uI, String themeName,
             String resource) {
         VaadinServletService service = (VaadinServletService) uI.getSession()
                 .getService();
