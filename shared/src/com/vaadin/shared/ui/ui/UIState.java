@@ -21,6 +21,13 @@ import com.vaadin.shared.ui.TabIndexState;
 
 public class UIState extends TabIndexState {
     public TooltipConfiguration tooltipConfiguration = new TooltipConfiguration();
+    public LoadingIndicatorConfiguration loadingIndicatorConfiguration = new LoadingIndicatorConfiguration();
+
+    public static class LoadingIndicatorConfiguration implements Serializable {
+        public int initialDelay = 300;
+        public int delayStateDelay = 1500;
+        public int waitStateDelay = 5000;
+    }
 
     public static class TooltipConfiguration implements Serializable {
         public int openDelay = 750;

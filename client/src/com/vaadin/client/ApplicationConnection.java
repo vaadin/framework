@@ -177,11 +177,6 @@ public class ApplicationConnection {
 
     private VContextMenu contextMenu = null;
 
-    private Timer loadTimer;
-    private Timer loadTimer2;
-    private Timer loadTimer3;
-    private Element loadElement;
-
     private final UIConnector uIConnector;
 
     protected boolean applicationRunning = false;
@@ -378,6 +373,8 @@ public class ApplicationConnection {
 
     private CommunicationErrorHandler communicationErrorDelegate = null;
 
+    private VLoadingIndicator loadingIndicator;
+
     public static class MultiStepDuration extends Duration {
         private int previousStep = elapsedMillis();
 
@@ -404,6 +401,8 @@ public class ApplicationConnection {
         layoutManager = GWT.create(LayoutManager.class);
         layoutManager.setConnection(this);
         tooltip = GWT.create(VTooltip.class);
+        loadingIndicator = GWT.create(VLoadingIndicator.class);
+        loadingIndicator.setConnection(this);
     }
 
     public void init(WidgetSet widgetSet, ApplicationConfiguration cnf) {
@@ -436,7 +435,7 @@ public class ApplicationConnection {
 
         tooltip.setOwner(uIConnector.getWidget());
 
-        showLoadingIndicator();
+        getLoadingIndicator().trigger();
 
         scheduleHeartbeat();
 
@@ -987,7 +986,7 @@ public class ApplicationConnection {
      */
     protected boolean isCSSLoaded() {
         return cssLoaded
-                || DOM.getElementPropertyInt(loadElement, "offsetHeight") != 0;
+                || getLoadingIndicator().getElement().getOffsetHeight() != 0;
     }
 
     /**
@@ -1085,25 +1084,7 @@ public class ApplicationConnection {
         }
         hasActiveRequest = true;
         requestStartTime = new Date();
-        // show initial throbber
-        if (loadTimer == null) {
-            loadTimer = new Timer() {
-                @Override
-                public void run() {
-                    /*
-                     * IE7 does not properly cancel the event with
-                     * loadTimer.cancel() so we have to check that we really
-                     * should make it visible
-                     */
-                    if (loadTimer != null) {
-                        showLoadingIndicator();
-                    }
-
-                }
-            };
-            // First one kicks in at 300ms
-        }
-        loadTimer.schedule(300);
+        loadingIndicator.trigger();
         eventBus.fireEvent(new RequestStartingEvent(this));
     }
 
@@ -1129,7 +1110,7 @@ public class ApplicationConnection {
             @Override
             public void execute() {
                 if (!hasActiveRequest()) {
-                    hideLoadingIndicator();
+                    getLoadingIndicator().hide();
 
                     // If on Liferay and session expiration management is in
                     // use, extend session duration on each request.
@@ -1182,54 +1163,6 @@ public class ApplicationConnection {
         }
     }
 
-    private void showLoadingIndicator() {
-        // show initial throbber
-        if (loadElement == null) {
-            loadElement = DOM.createDiv();
-            DOM.setStyleAttribute(loadElement, "position", "absolute");
-            DOM.appendChild(uIConnector.getWidget().getElement(), loadElement);
-            VConsole.log("inserting load indicator");
-        }
-        DOM.setElementProperty(loadElement, "className", "v-loading-indicator");
-        DOM.setStyleAttribute(loadElement, "display", "block");
-        // Initialize other timers
-        loadTimer2 = new Timer() {
-            @Override
-            public void run() {
-                DOM.setElementProperty(loadElement, "className",
-                        "v-loading-indicator-delay");
-            }
-        };
-        // Second one kicks in at 1500ms from request start
-        loadTimer2.schedule(1200);
-
-        loadTimer3 = new Timer() {
-            @Override
-            public void run() {
-                DOM.setElementProperty(loadElement, "className",
-                        "v-loading-indicator-wait");
-            }
-        };
-        // Third one kicks in at 5000ms from request start
-        loadTimer3.schedule(4700);
-    }
-
-    private void hideLoadingIndicator() {
-        if (loadTimer != null) {
-            loadTimer.cancel();
-            loadTimer = null;
-        }
-        if (loadTimer2 != null) {
-            loadTimer2.cancel();
-            loadTimer3.cancel();
-            loadTimer2 = null;
-            loadTimer3 = null;
-        }
-        if (loadElement != null) {
-            DOM.setStyleAttribute(loadElement, "display", "none");
-        }
-    }
-
     /**
      * Checks if deferred commands are (potentially) still being executed as a
      * result of an update from the server. Returns true if a deferred command
@@ -1252,19 +1185,24 @@ public class ApplicationConnection {
     }
 
     /**
+     * Returns the loading indicator used by this ApplicationConnection
+     * 
+     * @return The loading indicator for this ApplicationConnection
+     */
+    public VLoadingIndicator getLoadingIndicator() {
+        return loadingIndicator;
+    }
+
+    /**
      * Determines whether or not the loading indicator is showing.
      * 
      * @return true if the loading indicator is visible
+     * @deprecated As of 7.1. Use {@link #getLoadingIndicator()} and
+     *             {@link VLoadingIndicator#isVisible()}.isVisible() instead.
      */
+    @Deprecated
     public boolean isLoadingIndicatorVisible() {
-        if (loadElement == null) {
-            return false;
-        }
-        if (loadElement.getStyle().getProperty("display").equals("none")) {
-            return false;
-        }
-
-        return true;
+        return getLoadingIndicator().isVisible();
     }
 
     private static native ValueMap parseJSONResponse(String jsonText)

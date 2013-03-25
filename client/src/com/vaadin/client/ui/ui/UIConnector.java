@@ -615,5 +615,15 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             getConnection().getVTooltip().setMaxWidth(
                     getState().tooltipConfiguration.maxWidth);
         }
+
+        if (stateChangeEvent
+                .hasPropertyChanged("loadingIndicatorConfiguration")) {
+            getConnection().getLoadingIndicator().setInitialStateDelay(
+                    getState().loadingIndicatorConfiguration.initialDelay);
+            getConnection().getLoadingIndicator().setWaitStateDelay(
+                    getState().loadingIndicatorConfiguration.waitStateDelay);
+            getConnection().getLoadingIndicator().setDelayStateDelay(
+                    getState().loadingIndicatorConfiguration.delayStateDelay);
+        }
     }
 }

@@ -116,6 +116,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
     private Page page = new Page(this);
 
+    private LoadingIndicator loadingIndicator = new LoadingIndicatorImpl(this);
+
     /**
      * Scroll Y position.
      */
@@ -1106,4 +1108,14 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     public Tooltip getTooltip() {
         return tooltip;
     }
+
+    /**
+     * Retrieves the object used for configuring the loading indicator.
+     * 
+     * @return The instance used for configuring the loading indicator
+     */
+    public LoadingIndicator getLoadingIndicator() {
+        return loadingIndicator;
+    }
+
 }
