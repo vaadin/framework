@@ -1321,15 +1321,33 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     private void localeMightHaveChanged() {
-        if (!equals(valueLocale, getLocale()) && dataSource != null
-                && !isModified()) {
-            // When we have a data source and the internal value is directly
-            // read from that we want to update the value
-            T newInternalValue = convertFromModel(getPropertyDataSource()
-                    .getValue());
-            if (!equals(newInternalValue, getInternalValue())) {
-                setInternalValue(newInternalValue);
-                fireValueChange(false);
+        if (!equals(valueLocale, getLocale())) {
+            // The locale HAS actually changed
+
+            if (dataSource != null && !isModified()) {
+                // When we have a data source and the internal value is directly
+                // read from that we want to update the value
+                T newInternalValue = convertFromModel(getPropertyDataSource()
+                        .getValue());
+                if (!equals(newInternalValue, getInternalValue())) {
+                    setInternalValue(newInternalValue);
+                    fireValueChange(false);
+                }
+            } else if (dataSource == null && converter != null) {
+                /*
+                 * No data source but a converter has been set. The same issues
+                 * as above but we cannot use propertyDataSource. Convert the
+                 * current value back to a model value using the old locale and
+                 * then convert back using the new locale. If this does not
+                 * match the field value we need to set the converted value
+                 * again.
+                 */
+                Object convertedValue = convertToModel(getInternalValue(),
+                        valueLocale);
+                T newinternalValue = convertFromModel(convertedValue);
+                if (!equals(getInternalValue(), newinternalValue)) {
+                    setConvertedValue(convertedValue);
+                }
             }
         }
     }
