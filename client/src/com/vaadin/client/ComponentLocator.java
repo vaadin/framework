@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.VCssLayout;
 import com.vaadin.client.ui.VGridLayout;
+import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.VTabsheetPanel;
 import com.vaadin.client.ui.VUI;
 import com.vaadin.client.ui.VWindow;
@@ -565,7 +566,8 @@ public class ComponentLocator {
                 // ChildComponentContainer and VOrderedLayout$Slot have been
                 // replaced with Slot
                 if (w instanceof VAbstractOrderedLayout
-                        && ("ChildComponentContainer".equals(widgetClassName) || "VOrderedLayout$Slot"
+                        && ("ChildComponentContainer"
+                                .equals(widgetClassName) || "VOrderedLayout$Slot"
                                 .equals(widgetClassName))) {
                     widgetClassName = "Slot";
                 }
@@ -575,7 +577,12 @@ public class ComponentLocator {
                     // is always 0 which indicates the widget in the active tab
                     widgetPosition = 0;
                 }
-
+                if (w instanceof VOverlay
+                        && "VCalendarPanel".equals(widgetClassName)) {
+                    // Vaadin 7.1 adds a wrapper for datefield popups
+                    parent = (Iterable<?>) ((Iterable) parent).iterator()
+                            .next();
+                }
                 /*
                  * The new grid and ordered layotus do not contain
                  * ChildComponentContainer widgets. This is instead simulated by
@@ -585,7 +592,8 @@ public class ComponentLocator {
                  * ChildComponentContainer)
                  */
                 if ((w instanceof VGridLayout)
-                        && "ChildComponentContainer".equals(widgetClassName)
+                        && "ChildComponentContainer"
+                                .equals(widgetClassName)
                         && i + 1 < parts.length) {
 
                     HasWidgets layout = (HasWidgets) w;
