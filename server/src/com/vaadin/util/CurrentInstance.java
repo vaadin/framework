@@ -68,6 +68,10 @@ public class CurrentInstance implements Serializable {
         @Override
         protected Map<Class<?>, CurrentInstance> childValue(
                 Map<Class<?>, CurrentInstance> parentValue) {
+            if (parentValue == null) {
+                return null;
+            }
+
             Map<Class<?>, CurrentInstance> value = new HashMap<Class<?>, CurrentInstance>();
 
             // Copy all inheritable values to child map
@@ -78,11 +82,6 @@ public class CurrentInstance implements Serializable {
             }
 
             return value;
-        }
-
-        @Override
-        protected Map<java.lang.Class<?>, CurrentInstance> initialValue() {
-            return new HashMap<Class<?>, CurrentInstance>();
         }
     };
 
@@ -100,7 +99,11 @@ public class CurrentInstance implements Serializable {
      *         if there is no current instance.
      */
     public static <T> T get(Class<T> type) {
-        CurrentInstance currentInstance = instances.get().get(type);
+        Map<Class<?>, CurrentInstance> map = instances.get();
+        if (map == null) {
+            return null;
+        }
+        CurrentInstance currentInstance = map.get(type);
         if (currentInstance != null) {
             return type.cast(currentInstance.instance);
         } else {
@@ -142,11 +145,25 @@ public class CurrentInstance implements Serializable {
     }
 
     private static <T> void set(Class<T> type, T instance, boolean inheritable) {
+        Map<Class<?>, CurrentInstance> map = instances.get();
         if (instance == null) {
-            instances.get().remove(type);
+            // remove the instance
+            if (map == null) {
+                return;
+            }
+            map.remove(type);
+            if (map.isEmpty()) {
+                instances.remove();
+                map = null;
+            }
         } else {
             assert type.isInstance(instance) : "Invald instance type";
-            CurrentInstance previousInstance = instances.get().put(type,
+            if (map == null) {
+                map = new HashMap<Class<?>, CurrentInstance>();
+                instances.set(map);
+            }
+
+            CurrentInstance previousInstance = map.put(type,
                     new CurrentInstance(instance, inheritable));
             if (previousInstance != null) {
                 assert previousInstance.inheritable == inheritable : "Inheritable status mismatch for "
@@ -163,7 +180,7 @@ public class CurrentInstance implements Serializable {
      * Clears all current instances.
      */
     public static void clearAll() {
-        instances.get().clear();
+        instances.remove();
     }
 
     /**
