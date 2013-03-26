@@ -4,9 +4,12 @@ import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
 
+import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinServlet;
+import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.UI;
@@ -22,7 +25,7 @@ public class TestStreamVariableMapping extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-        final VaadinSession application = new VaadinSession(null);
+        final VaadinSession application = new AlwaysLockedVaadinSession(null);
         final UI uI = new UI() {
             @Override
             protected void init(VaadinRequest request) {
@@ -73,7 +76,11 @@ public class TestStreamVariableMapping extends TestCase {
     }
 
     private LegacyCommunicationManager createCommunicationManager() {
-        return new LegacyCommunicationManager(new VaadinSession(null));
+        VaadinServletService vss = new VaadinServletService(
+                EasyMock.createMock(VaadinServlet.class),
+                EasyMock.createMock(DeploymentConfiguration.class));
+        return new LegacyCommunicationManager(
+                new AlwaysLockedVaadinSession(vss));
     }
 
 }

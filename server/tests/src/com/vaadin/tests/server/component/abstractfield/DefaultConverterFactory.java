@@ -11,6 +11,7 @@ import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
+import com.vaadin.tests.server.AlwaysLockedVaadinSession;
 import com.vaadin.ui.TextField;
 
 public class DefaultConverterFactory extends TestCase {
@@ -53,7 +54,7 @@ public class DefaultConverterFactory extends TestCase {
     }
 
     public void testFloatConversion() {
-        VaadinSession sess = new VaadinSession(null);
+        VaadinSession sess = new AlwaysLockedVaadinSession(null);
         VaadinSession.setCurrent(sess);
 
         TextField tf = new TextField();
@@ -68,7 +69,7 @@ public class DefaultConverterFactory extends TestCase {
     }
 
     public void testDefaultNumberConversion() {
-        VaadinSession app = new VaadinSession(null);
+        VaadinSession app = new AlwaysLockedVaadinSession(null);
         VaadinSession.setCurrent(app);
         TextField tf = new TextField();
         tf.setLocale(new Locale("en", "US"));

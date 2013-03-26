@@ -18,6 +18,7 @@ import com.vaadin.server.ClientConnector.DetachListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.tests.server.AlwaysLockedVaadinSession;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
@@ -40,7 +41,8 @@ public class AttachDetachListeners {
     public void setUp() {
         control = EasyMock.createStrictControl();
 
-        session = new VaadinSession(control.createMock(VaadinService.class));
+        session = new AlwaysLockedVaadinSession(
+                control.createMock(VaadinService.class));
 
         ui = new UI() {
             @Override

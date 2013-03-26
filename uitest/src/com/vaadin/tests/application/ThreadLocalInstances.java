@@ -52,7 +52,12 @@ public class ThreadLocalInstances extends AbstractTestCase {
     private final FlagSeResource resource = new FlagSeResource() {
         @Override
         public DownloadStream getStream() {
-            reportCurrentStatus("resource handler");
+            ThreadLocalInstances.this.getContext().lock();
+            try {
+                reportCurrentStatus("resource handler");
+            } finally {
+                ThreadLocalInstances.this.getContext().unlock();
+            }
             return super.getStream();
         }
     };
