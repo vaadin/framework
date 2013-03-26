@@ -633,7 +633,19 @@ public class VaadinServlet extends HttpServlet implements Constants {
             } else {
                 // 'plain' http req - e.g. browser reload;
                 // just go ahead redirect the browser
-                response.sendRedirect(ci.getSessionExpiredURL());
+                String sessionExpiredURL = ci.getSessionExpiredURL();
+                if (sessionExpiredURL != null) {
+                    response.sendRedirect(sessionExpiredURL);
+                } else {
+                    /*
+                     * Session expired as a result of a standard http request
+                     * and we have nowhere to redirect. Reloading would likely
+                     * cause an endless loop. This can at least happen if
+                     * refreshing a resource when the session has expired.
+                     */
+                    response.sendError(HttpServletResponse.SC_GONE,
+                            "Session expired");
+                }
             }
         } catch (SystemMessageException ee) {
             throw new ServletException(ee);
