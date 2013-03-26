@@ -24,7 +24,7 @@ import java.io.Writer;
  * 
  * <p>
  * This handler is usually added to the application by
- * {@link AbstractCommunicationManager}.
+ * {@link LegacyCommunicationManager}.
  * </p>
  */
 @SuppressWarnings("serial")

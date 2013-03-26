@@ -110,7 +110,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     protected WebBrowser browser = new WebBrowser();
 
-    private AbstractCommunicationManager communicationManager;
+    private LegacyCommunicationManager communicationManager;
 
     private long cumulativeRequestDuration = 0;
 
@@ -262,7 +262,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *             version
      */
     @Deprecated
-    public AbstractCommunicationManager getCommunicationManager() {
+    public LegacyCommunicationManager getCommunicationManager() {
         return communicationManager;
     }
 
@@ -320,7 +320,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     public void setCommunicationManager(
-            AbstractCommunicationManager communicationManager) {
+            LegacyCommunicationManager communicationManager) {
         if (communicationManager == null) {
             throw new IllegalArgumentException("Can not set to null");
         }

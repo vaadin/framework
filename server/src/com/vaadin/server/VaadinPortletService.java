@@ -17,6 +17,7 @@
 package com.vaadin.server;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,7 +25,9 @@ import java.util.logging.Logger;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
 
+
 import com.vaadin.server.VaadinPortlet.RequestType;
+import com.vaadin.server.communication.PortletBootstrapHandler;
 import com.vaadin.ui.UI;
 
 public class VaadinPortletService extends VaadinService {
@@ -196,12 +199,6 @@ public class VaadinPortletService extends VaadinService {
         return type;
     }
 
-    @Override
-    protected AbstractCommunicationManager createCommunicationManager(
-            VaadinSession session) {
-        return new PortletCommunicationManager(session);
-    }
-
     public static PortletRequest getCurrentPortletRequest() {
         VaadinRequest currentRequest = VaadinService.getCurrentRequest();
         if (currentRequest instanceof VaadinPortletRequest) {
@@ -235,6 +232,17 @@ public class VaadinPortletService extends VaadinService {
     }
 
     @Override
+    public InputStream getThemeResourceAsStream(UI uI, String themeName,
+            String resource) {
+        VaadinPortletSession session = (VaadinPortletSession) uI.getSession();
+        PortletContext portletContext = session.getPortletSession()
+                .getPortletContext();
+        return portletContext.getResourceAsStream("/"
+                + VaadinPortlet.THEME_DIR_PATH + '/' + themeName + "/"
+                + resource);
+    }
+
+    @Override
     public String getMainDivId(VaadinSession session, VaadinRequest request,
             Class<? extends UI> uiClass) {
         PortletRequest portletRequest = ((VaadinPortletRequest) request)
@@ -244,5 +252,10 @@ public class VaadinPortletService extends VaadinService {
          * DIV with the portlet's Window ID as the DOM ID.
          */
         return "v-" + portletRequest.getWindowID();
+    }
+
+    @Override
+    protected BootstrapHandler createBootstrapHandler(VaadinSession session) {
+        return new PortletBootstrapHandler();
     }
 }

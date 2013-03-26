@@ -25,8 +25,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.StyleSheet;
-import com.vaadin.server.AbstractCommunicationManager;
 import com.vaadin.server.Constants;
+import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
@@ -36,11 +36,11 @@ import com.vaadin.shared.ApplicationConstants;
 /**
  * Serves a connector resource from the classpath if the resource has previously
  * been registered by calling
- * {@link AbstractCommunicationManager#registerDependency(String, Class)}.
- * Sending arbitrary files from the classpath is prevented by only accepting
- * resource names that have explicitly been registered. Resources can currently
- * only be registered by including a {@link JavaScript} or {@link StyleSheet}
- * annotation on a Connector class.
+ * {@link LegacyCommunicationManager#registerDependency(String, Class)}. Sending
+ * arbitrary files from the classpath is prevented by only accepting resource
+ * names that have explicitly been registered. Resources can currently only be
+ * registered by including a {@link JavaScript} or {@link StyleSheet} annotation
+ * on a Connector class.
  * 
  * @author Vaadin Ltd
  * @since 7.1

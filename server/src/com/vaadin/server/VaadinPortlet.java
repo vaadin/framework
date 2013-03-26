@@ -50,7 +50,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.liferay.portal.kernel.util.PortalClassInvoker;
 import com.liferay.portal.kernel.util.PropsUtil;
-import com.vaadin.server.AbstractCommunicationManager.Callback;
+import com.vaadin.server.LegacyCommunicationManager.Callback;
 import com.vaadin.server.communication.FileUploadHandler;
 import com.vaadin.server.communication.HeartbeatHandler;
 import com.vaadin.server.communication.PortletListenerNotifier;
@@ -525,7 +525,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
     private void handleOtherRequest(VaadinPortletRequest request,
             VaadinResponse response, RequestType requestType,
             VaadinSession vaadinSession,
-            AbstractCommunicationManager communicationManager)
+            LegacyCommunicationManager communicationManager)
             throws PortletException, IOException, MalformedURLException {
         if (requestType == RequestType.APP || requestType == RequestType.RENDER) {
             if (!communicationManager.handleOtherRequest(request, response)) {

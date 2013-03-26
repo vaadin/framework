@@ -33,10 +33,10 @@ import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import com.vaadin.server.AbstractCommunicationManager;
-import com.vaadin.server.AbstractCommunicationManager.InvalidUIDLSecurityKeyException;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.JsonCodec;
+import com.vaadin.server.LegacyCommunicationManager;
+import com.vaadin.server.LegacyCommunicationManager.InvalidUIDLSecurityKeyException;
 import com.vaadin.server.ServerRpcManager;
 import com.vaadin.server.ServerRpcManager.RpcInvocationException;
 import com.vaadin.server.ServerRpcMethodInvocation;
@@ -130,7 +130,7 @@ public class ServerRpcHandler implements Serializable {
                 // response.
                 // TODO This seems to be dead code
                 request.setAttribute(
-                        AbstractCommunicationManager.WRITE_SECURITY_TOKEN_FLAG,
+                        LegacyCommunicationManager.WRITE_SECURITY_TOKEN_FLAG,
                         true);
                 return;
             } else {
@@ -170,7 +170,7 @@ public class ServerRpcHandler implements Serializable {
      */
     private void handleBurst(UI uI, String burst) {
         // TODO PUSH Refactor so that this is not needed
-        AbstractCommunicationManager manager = uI.getSession()
+        LegacyCommunicationManager manager = uI.getSession()
                 .getCommunicationManager();
 
         try {

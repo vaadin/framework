@@ -32,8 +32,8 @@ import org.json.JSONException;
 
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.StyleSheet;
-import com.vaadin.server.AbstractCommunicationManager;
-import com.vaadin.server.AbstractCommunicationManager.ClientCache;
+import com.vaadin.server.LegacyCommunicationManager;
+import com.vaadin.server.LegacyCommunicationManager.ClientCache;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.JsonPaintTarget;
 import com.vaadin.server.SystemMessages;
@@ -73,7 +73,7 @@ public class UidlWriter implements Serializable {
         ArrayList<ClientConnector> dirtyVisibleConnectors = ui
                 .getConnectorTracker().getDirtyVisibleConnectors();
         VaadinSession session = ui.getSession();
-        AbstractCommunicationManager manager = session
+        LegacyCommunicationManager manager = session
                 .getCommunicationManager();
         // Paints components
         ConnectorTracker uiConnectorTracker = ui.getConnectorTracker();

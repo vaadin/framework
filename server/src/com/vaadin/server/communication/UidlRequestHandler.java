@@ -27,11 +27,11 @@ import java.util.logging.Logger;
 
 import org.json.JSONException;
 
-import com.vaadin.server.AbstractCommunicationManager;
-import com.vaadin.server.AbstractCommunicationManager.Callback;
-import com.vaadin.server.AbstractCommunicationManager.InvalidUIDLSecurityKeyException;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.Constants;
+import com.vaadin.server.LegacyCommunicationManager;
+import com.vaadin.server.LegacyCommunicationManager.Callback;
+import com.vaadin.server.LegacyCommunicationManager.InvalidUIDLSecurityKeyException;
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
@@ -167,7 +167,7 @@ public class UidlRequestHandler implements RequestHandler {
 
         // security key
         Object writeSecurityTokenFlag = request
-                .getAttribute(AbstractCommunicationManager.WRITE_SECURITY_TOKEN_FLAG);
+                .getAttribute(LegacyCommunicationManager.WRITE_SECURITY_TOKEN_FLAG);
 
         if (writeSecurityTokenFlag != null) {
             writer.write(ui.getSession().getCommunicationManager()

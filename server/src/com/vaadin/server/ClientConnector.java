@@ -300,7 +300,7 @@ public interface ClientConnector extends Connector {
     /**
      * Called by the framework to encode the state to a JSONObject. This is
      * typically done by calling the static method
-     * {@link AbstractCommunicationManager#encodeState(ClientConnector, SharedState)}
+     * {@link LegacyCommunicationManager#encodeState(ClientConnector, SharedState)}
      * .
      * 
      * @return a JSON object with the encoded connector state

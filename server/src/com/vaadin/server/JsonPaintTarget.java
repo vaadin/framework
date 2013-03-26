@@ -61,7 +61,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     private boolean closed = false;
 
-    private final AbstractCommunicationManager manager;
+    private final LegacyCommunicationManager manager;
 
     private int changes = 0;
 
@@ -87,7 +87,7 @@ public class JsonPaintTarget implements PaintTarget {
      * @throws PaintException
      *             if the paint operation failed.
      */
-    public JsonPaintTarget(AbstractCommunicationManager manager,
+    public JsonPaintTarget(LegacyCommunicationManager manager,
             Writer outWriter, boolean cachingRequired) throws PaintException {
 
         this.manager = manager;

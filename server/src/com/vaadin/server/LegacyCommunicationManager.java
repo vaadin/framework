@@ -17,7 +17,6 @@
 package com.vaadin.server;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.Writer;
@@ -61,7 +60,7 @@ import com.vaadin.ui.UI;
  */
 @Deprecated
 @SuppressWarnings("serial")
-public abstract class AbstractCommunicationManager implements Serializable {
+public class LegacyCommunicationManager implements Serializable {
 
     // TODO PUSH move
     public static final String WRITE_SECURITY_TOKEN_FLAG = "writeSecurityToken";
@@ -111,10 +110,10 @@ public abstract class AbstractCommunicationManager implements Serializable {
      * 
      * @param session
      */
-    public AbstractCommunicationManager(VaadinSession session) {
+    public LegacyCommunicationManager(VaadinSession session) {
         this.session = session;
-        // TODO Common to all sessions - handle at VaadinService level
-        session.addRequestHandler(getBootstrapHandler());
+        session.addRequestHandler(session.getService().createBootstrapHandler(
+                session));
         session.addRequestHandler(UNSUPPORTED_BROWSER_HANDLER);
         session.addRequestHandler(CONNECTOR_RESOURCE_HANDLER);
         requireLocale(session.getLocale().toString());
@@ -199,7 +198,7 @@ public abstract class AbstractCommunicationManager implements Serializable {
 
     /**
      * Resolves a dependency URI, registering the URI with this
-     * {@code AbstractCommunicationManager} if needed and returns a fully
+     * {@code LegacyCommunicationManager} if needed and returns a fully
      * qualified URI.
      * 
      * @deprecated As of 7.1. See #11413.
@@ -332,13 +331,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
             }
         }
     }
-
-    /**
-     * @deprecated As of 7.1. Likely to be removed or replaced in the future.
-     */
-    @Deprecated
-    public abstract InputStream getThemeResourceAsStream(UI uI,
-            String themeName, String resource);
 
     /**
      * @deprecated As of 7.1. See #11412.
@@ -527,29 +519,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
     }
 
     /**
-     * Gets the bootstrap handler that should be used for generating the pages
-     * bootstrapping applications for this communication manager.
-     * 
-     * @return the bootstrap handler to use
-     */
-    private BootstrapHandler getBootstrapHandler() {
-        if (bootstrapHandler == null) {
-            bootstrapHandler = createBootstrapHandler();
-        }
-
-        return bootstrapHandler;
-    }
-
-    /**
-     * @return
-     * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future
-     *             version
-     */
-    @Deprecated
-    protected abstract BootstrapHandler createBootstrapHandler();
-
-    /**
      * Handles a request by passing it to each registered {@link RequestHandler}
      * in turn until one produces a response. This method is used for requests
      * that have not been handled by any specific functionality in the terminal
@@ -634,6 +603,6 @@ public abstract class AbstractCommunicationManager implements Serializable {
     }
 
     private static final Logger getLogger() {
-        return Logger.getLogger(AbstractCommunicationManager.class.getName());
+        return Logger.getLogger(LegacyCommunicationManager.class.getName());
     }
 }

@@ -17,12 +17,15 @@
 package com.vaadin.server;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import com.vaadin.server.VaadinServlet.RequestType;
+import com.vaadin.server.communication.ServletBootstrapHandler;
 import com.vaadin.ui.UI;
 
 public class VaadinServletService extends VaadinService {
@@ -174,12 +177,6 @@ public class VaadinServletService extends VaadinService {
         return getServlet().getApplicationUrl((VaadinServletRequest) request);
     }
 
-    @Override
-    protected AbstractCommunicationManager createCommunicationManager(
-            VaadinSession session) {
-        return new CommunicationManager(session);
-    }
-
     public static HttpServletRequest getCurrentServletRequest() {
         VaadinRequest currentRequest = VaadinService.getCurrentRequest();
         if (currentRequest instanceof VaadinServletRequest) {
@@ -196,6 +193,18 @@ public class VaadinServletService extends VaadinService {
     @Override
     public String getServiceName() {
         return getServlet().getServletName();
+    }
+
+    @Override
+    public InputStream getThemeResourceAsStream(UI uI, String themeName,
+            String resource) {
+        VaadinServletService service = (VaadinServletService) uI.getSession()
+                .getService();
+        ServletContext servletContext = service.getServlet()
+                .getServletContext();
+        return servletContext.getResourceAsStream("/"
+                + VaadinServlet.THEME_DIR_PATH + '/' + themeName + "/"
+                + resource);
     }
 
     @Override
@@ -224,5 +233,10 @@ public class VaadinServletService extends VaadinService {
         }
         appId = appId + "-" + hashCode;
         return appId;
+    }
+
+    @Override
+    protected BootstrapHandler createBootstrapHandler(VaadinSession session) {
+        return new ServletBootstrapHandler();
     }
 }

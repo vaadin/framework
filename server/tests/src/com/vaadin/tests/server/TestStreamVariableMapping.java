@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
 
-import com.vaadin.server.CommunicationManager;
+import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
@@ -18,7 +18,7 @@ public class TestStreamVariableMapping extends TestCase {
     private Upload owner;
     private StreamVariable streamVariable;
 
-    private CommunicationManager cm;
+    private LegacyCommunicationManager cm;
 
     @Override
     protected void setUp() throws Exception {
@@ -72,8 +72,8 @@ public class TestStreamVariableMapping extends TestCase {
                 variableName));
     }
 
-    private CommunicationManager createCommunicationManager() {
-        return new CommunicationManager(new VaadinSession(null));
+    private LegacyCommunicationManager createCommunicationManager() {
+        return new LegacyCommunicationManager(new VaadinSession(null));
     }
 
 }

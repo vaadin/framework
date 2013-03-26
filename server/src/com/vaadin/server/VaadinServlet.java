@@ -39,7 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.sass.internal.ScssStylesheet;
-import com.vaadin.server.AbstractCommunicationManager.Callback;
+import com.vaadin.server.LegacyCommunicationManager.Callback;
 import com.vaadin.server.communication.FileUploadHandler;
 import com.vaadin.server.communication.HeartbeatHandler;
 import com.vaadin.server.communication.PublishedFileHandler;

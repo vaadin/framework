@@ -233,7 +233,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
 
     @Override
     public JSONObject encodeState() throws JSONException {
-        return AbstractCommunicationManager.encodeState(this, getState());
+        return LegacyCommunicationManager.encodeState(this, getState());
     }
 
     /**

@@ -32,7 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.vaadin.server.AbstractClientConnector;
-import com.vaadin.server.AbstractCommunicationManager;
+import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.GlobalResourceHandler;
 import com.vaadin.server.StreamVariable;
@@ -296,7 +296,7 @@ public class ConnectorTracker implements Serializable {
                 uninitializedConnectors.remove(connector);
                 diffStates.remove(connector);
                 iterator.remove();
-            } else if (!AbstractCommunicationManager
+            } else if (!LegacyCommunicationManager
                     .isConnectorVisibleToClient(connector)
                     && !uninitializedConnectors.contains(connector)) {
                 uninitializedConnectors.add(connector);
@@ -473,7 +473,7 @@ public class ConnectorTracker implements Serializable {
     public ArrayList<ClientConnector> getDirtyVisibleConnectors() {
         ArrayList<ClientConnector> dirtyConnectors = new ArrayList<ClientConnector>();
         for (ClientConnector c : getDirtyConnectors()) {
-            if (AbstractCommunicationManager.isConnectorVisibleToClient(c)) {
+            if (LegacyCommunicationManager.isConnectorVisibleToClient(c)) {
                 dirtyConnectors.add(c);
             }
         }

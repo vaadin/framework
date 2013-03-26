@@ -25,7 +25,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.vaadin.server.AbstractCommunicationManager;
+import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.JsonPaintTarget;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.UI;
@@ -54,7 +54,7 @@ public class ResourceWriter implements Serializable {
             throws IOException {
 
         // TODO PUSH Refactor so that this is not needed
-        AbstractCommunicationManager manager = ui.getSession()
+        LegacyCommunicationManager manager = ui.getSession()
                 .getCommunicationManager();
 
         // Precache custom layouts
@@ -69,8 +69,10 @@ public class ResourceWriter implements Serializable {
             final String resource = (String) i.next();
             InputStream is = null;
             try {
-                is = manager.getThemeResourceAsStream(ui, manager.getTheme(ui),
-                        resource);
+                is = ui.getSession()
+                        .getService()
+                        .getThemeResourceAsStream(ui, manager.getTheme(ui),
+                                resource);
             } catch (final Exception e) {
                 // FIXME: Handle exception
                 getLogger().log(Level.FINER,

@@ -17,6 +17,7 @@
 package com.vaadin.server;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -282,6 +283,13 @@ public abstract class VaadinService implements Serializable {
     public abstract File getBaseDirectory();
 
     /**
+     * Creates the bootstrap handler that should be used to generate the initial
+     * HTML bootstrapping a new {@link UI} in the given session.
+     */
+    protected abstract BootstrapHandler createBootstrapHandler(
+            VaadinSession session);
+
+    /**
      * Adds a listener that gets notified when a new Vaadin service session is
      * initialized for this service.
      * <p>
@@ -441,7 +449,7 @@ public abstract class VaadinService implements Serializable {
         Locale locale = request.getLocale();
         session.setLocale(locale);
         session.setConfiguration(getDeploymentConfiguration());
-        session.setCommunicationManager(createCommunicationManager(session));
+        session.setCommunicationManager(new LegacyCommunicationManager(session));
 
         ServletPortletHelper.initDefaultUIProvider(session, this);
         onVaadinSessionStarted(request, session);
@@ -466,17 +474,6 @@ public abstract class VaadinService implements Serializable {
             throws MalformedURLException {
         return null;
     }
-
-    /**
-     * Create a communication manager to use for the given service session.
-     * 
-     * @param session
-     *            the service session for which a new communication manager is
-     *            needed
-     * @return a new communication manager
-     */
-    protected abstract AbstractCommunicationManager createCommunicationManager(
-            VaadinSession session);
 
     /**
      * Creates a new Vaadin service session.
@@ -733,6 +730,19 @@ public abstract class VaadinService implements Serializable {
         }
 
     }
+
+    /**
+     * TODO PUSH Document
+     * 
+     * TODO Pass UI or VaadinSession?
+     * 
+     * @param uI
+     * @param themeName
+     * @param resource
+     * @return
+     */
+    public abstract InputStream getThemeResourceAsStream(UI uI,
+            String themeName, String resource);
 
     /**
      * Creates and returns a unique ID for the DIV where the UI is to be

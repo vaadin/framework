@@ -26,7 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.vaadin.server.AbstractClientConnector;
-import com.vaadin.server.AbstractCommunicationManager;
+import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.PaintException;
 import com.vaadin.ui.UI;
@@ -62,7 +62,7 @@ public class ConnectorHierarchyWriter implements Serializable {
 
             for (ClientConnector child : AbstractClientConnector
                     .getAllChildrenIterable(connector)) {
-                if (AbstractCommunicationManager
+                if (LegacyCommunicationManager
                         .isConnectorVisibleToClient(child)) {
                     children.put(child.getConnectorId());
                 }

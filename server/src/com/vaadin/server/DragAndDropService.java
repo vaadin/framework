@@ -50,13 +50,13 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
 
     private DragAndDropEvent dragEvent;
 
-    private final AbstractCommunicationManager manager;
+    private final LegacyCommunicationManager manager;
 
     private AcceptCriterion acceptCriterion;
 
     private ErrorHandler errorHandler;
 
-    public DragAndDropService(AbstractCommunicationManager manager) {
+    public DragAndDropService(LegacyCommunicationManager manager) {
         this.manager = manager;
     }
 
