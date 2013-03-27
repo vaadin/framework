@@ -17,6 +17,7 @@
 package com.vaadin.server;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
@@ -24,7 +25,9 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -33,9 +36,16 @@ import java.util.logging.Logger;
 
 import javax.portlet.PortletContext;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.event.EventRouter;
+import com.vaadin.server.LegacyCommunicationManager.Callback;
+import com.vaadin.server.communication.FileUploadHandler;
+import com.vaadin.server.communication.HeartbeatHandler;
+import com.vaadin.server.communication.PublishedFileHandler;
+import com.vaadin.server.communication.SessionRequestHandler;
+import com.vaadin.server.communication.UidlRequestHandler;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
@@ -49,7 +59,7 @@ import com.vaadin.util.ReflectTools;
  * 
  * @since 7.0
  */
-public abstract class VaadinService implements Serializable {
+public abstract class VaadinService implements Serializable, Callback {
     static final String REINITIALIZING_SESSION_MARKER = VaadinService.class
             .getName() + ".reinitializing";
 
@@ -83,6 +93,8 @@ public abstract class VaadinService implements Serializable {
 
     private ClassLoader classLoader;
 
+    private final Iterable<RequestHandler> requestHandlers;
+
     /**
      * Creates a new vaadin service based on a deployment configuration
      * 
@@ -108,6 +120,33 @@ public abstract class VaadinService implements Serializable {
                                 + classLoaderName, e);
             }
         }
+
+        List<RequestHandler> handlers = createRequestHandlers();
+        Collections.reverse(handlers);
+        requestHandlers = Collections.unmodifiableCollection(handlers);
+
+    }
+
+    /**
+     * Called during initialization to add the request handlers for the service.
+     * Note that the returned list will be reversed so the last handler will be
+     * called first. This enables overriding this method and using add on the
+     * returned list to add a custom request handler which overrides any
+     * predefined handler.
+     * 
+     * @return The list of request handlers used by this service.
+     */
+    protected List<RequestHandler> createRequestHandlers() {
+        ArrayList<RequestHandler> handlers = new ArrayList<RequestHandler>();
+        handlers.add(new SessionRequestHandler());
+        handlers.add(new PublishedFileHandler());
+        handlers.add(new HeartbeatHandler());
+        handlers.add(new FileUploadHandler());
+        handlers.add(new UidlRequestHandler(this));
+        handlers.add(new UnsupportedBrowserHandler());
+        handlers.add(new ConnectorResourceHandler());
+
+        return handlers;
     }
 
     /**
@@ -284,13 +323,6 @@ public abstract class VaadinService implements Serializable {
      *         base directory.
      */
     public abstract File getBaseDirectory();
-
-    /**
-     * Creates the bootstrap handler that should be used to generate the initial
-     * HTML bootstrapping a new {@link UI} in the given session.
-     */
-    protected abstract BootstrapHandler createBootstrapHandler(
-            VaadinSession session);
 
     /**
      * Adds a listener that gets notified when a new Vaadin service session is
@@ -1203,4 +1235,125 @@ public abstract class VaadinService implements Serializable {
         }
         CurrentInstance.clearAll();
     }
+
+    /**
+     * Returns the request handlers that are registered with this service. The
+     * iteration order of the returned collection is the same as the order in
+     * which the request handlers will be invoked when a request is handled.
+     * 
+     * @return a collection of request handlers in the order they are invoked
+     * 
+     * @see #createRequestHandlers()
+     * 
+     * @since 7.1
+     */
+    public Iterable<RequestHandler> getRequestHandlers() {
+        return requestHandlers;
+    }
+
+    /**
+     * Handles the incoming request and writes the response into the response
+     * object. Uses {@link #getRequestHandlers()} for handling the request.
+     * 
+     * @param request
+     *            The incoming request
+     * @param response
+     *            The outgoing response
+     * @throws ServiceException
+     *             Any exception that occurs during response handling will be
+     *             wrapped in a ServiceException
+     */
+    public void handleRequest(VaadinRequest request, VaadinResponse response)
+            throws ServiceException {
+        requestStart(request, response);
+
+        VaadinSession vaadinSession = null;
+        try {
+            // Find out the service session this request is related to
+            vaadinSession = findVaadinSession(request);
+            if (vaadinSession == null) {
+                return;
+            }
+
+            for (RequestHandler handler : getRequestHandlers()) {
+                if (handler.handleRequest(vaadinSession, request, response)) {
+                    return;
+                }
+            }
+
+            // Request not handled by any RequestHandler
+            response.sendError(HttpServletResponse.SC_NOT_FOUND,
+                    "Request was not handled by any registered handler.");
+
+        } catch (final SessionExpiredException e) {
+            handleSessionExpired(request, response);
+        } catch (final Throwable e) {
+            handleExceptionDuringRequest(request, response, vaadinSession, e);
+        } finally {
+            requestEnd(request, response, vaadinSession);
+        }
+    }
+
+    private void handleExceptionDuringRequest(VaadinRequest request,
+            VaadinResponse response, VaadinSession vaadinSession, Throwable t)
+            throws ServiceException {
+        if (vaadinSession != null) {
+            vaadinSession.lock();
+        }
+        try {
+            ErrorHandler errorHandler = ErrorEvent
+                    .findErrorHandler(vaadinSession);
+
+            // if this was an UIDL request, response UIDL back to client
+            if (ServletPortletHelper.isUIDLRequest(request)) {
+                SystemMessages ci = getSystemMessages(
+                        ServletPortletHelper.findLocale(null, vaadinSession,
+                                request), request);
+                try {
+                    criticalNotification(request, response,
+                            ci.getInternalErrorCaption(),
+                            ci.getInternalErrorMessage(), null,
+                            ci.getInternalErrorURL());
+                } catch (IOException e) {
+                    // An exception occured while writing the response. Log
+                    // it and continue handling only the original error.
+                    getLogger()
+                            .log(Level.WARNING,
+                                    "Failed to write critical notification response to the client",
+                                    e);
+                }
+                if (errorHandler != null) {
+                    errorHandler.error(new ErrorEvent(t));
+                }
+            } else {
+                if (errorHandler != null) {
+                    errorHandler.error(new ErrorEvent(t));
+                }
+
+                // Re-throw other exceptions
+                throw new ServiceException(t);
+            }
+        } finally {
+            if (vaadinSession != null) {
+                vaadinSession.unlock();
+            }
+        }
+
+    }
+
+    /**
+     * Called when the session has expired and the request handling is therefore
+     * aborted.
+     * 
+     * @param request
+     *            The request
+     * @param response
+     *            The response
+     * @throws ServiceException
+     *             Thrown if there was any problem handling the expiration of
+     *             the session
+     */
+    protected abstract void handleSessionExpired(VaadinRequest request,
+            VaadinResponse response) throws ServiceException;
+
 }

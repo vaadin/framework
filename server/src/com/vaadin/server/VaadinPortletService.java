@@ -17,17 +17,23 @@
 package com.vaadin.server;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.portlet.EventRequest;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
-
+import javax.portlet.RenderRequest;
 
 import com.vaadin.server.VaadinPortlet.RequestType;
 import com.vaadin.server.communication.PortletBootstrapHandler;
+import com.vaadin.server.communication.PortletDummyRequestHandler;
+import com.vaadin.server.communication.PortletListenerNotifier;
+import com.vaadin.server.communication.PortletUIInitHandler;
 import com.vaadin.ui.UI;
 
 public class VaadinPortletService extends VaadinService {
@@ -47,6 +53,35 @@ public class VaadinPortletService extends VaadinService {
              */
             setClassLoader(portlet.getClass().getClassLoader());
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.server.LegacyCommunicationManager.Callback#criticalNotification
+     * (com.vaadin.server.VaadinRequest, com.vaadin.server.VaadinResponse,
+     * java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+     */
+    @Deprecated
+    @Override
+    public void criticalNotification(VaadinRequest request,
+            VaadinResponse response, String cap, String msg, String details,
+            String url) throws IOException {
+        getPortlet().criticalNotification((VaadinPortletRequest) request,
+                (VaadinPortletResponse) response, cap, msg, details, url);
+    }
+
+    @Override
+    protected List<RequestHandler> createRequestHandlers() {
+        List<RequestHandler> handlers = super.createRequestHandlers();
+
+        handlers.add(new PortletUIInitHandler());
+        handlers.add(new PortletListenerNotifier());
+        handlers.add(0, new PortletDummyRequestHandler());
+        handlers.add(0, new PortletBootstrapHandler());
+
+        return handlers;
     }
 
     /**
@@ -163,13 +198,19 @@ public class VaadinPortletService extends VaadinService {
 
     @Override
     protected boolean requestCanCreateSession(VaadinRequest request) {
-        RequestType requestType = getRequestType(request);
-        if (requestType == RequestType.RENDER) {
+        if (!(request instanceof VaadinPortletRequest)) {
+            throw new IllegalArgumentException(
+                    "Request is not a VaadinPortletRequest");
+        }
+
+        PortletRequest portletRequest = ((VaadinPortletRequest) request)
+                .getPortletRequest();
+        if (portletRequest instanceof RenderRequest) {
             // In most cases the first request is a render request that
             // renders the HTML fragment. This should create a Vaadin
             // session unless there is already one.
             return true;
-        } else if (requestType == RequestType.EVENT) {
+        } else if (portletRequest instanceof EventRequest) {
             // A portlet can also be sent an event even though it has not
             // been rendered, e.g. portlet on one page sends an event to a
             // portlet on another page and then moves the user to that page.
@@ -254,8 +295,19 @@ public class VaadinPortletService extends VaadinService {
         return "v-" + portletRequest.getWindowID();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.server.VaadinService#handleSessionExpired(com.vaadin.server
+     * .VaadinRequest, com.vaadin.server.VaadinResponse)
+     */
     @Override
-    protected BootstrapHandler createBootstrapHandler(VaadinSession session) {
-        return new PortletBootstrapHandler();
+    protected void handleSessionExpired(VaadinRequest request,
+            VaadinResponse response) {
+        // TODO Figure out a better way to deal with
+        // SessionExpiredExceptions
+        getLogger().finest("A user session has expired");
     }
+
 }

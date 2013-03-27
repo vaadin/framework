@@ -39,40 +39,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.sass.internal.ScssStylesheet;
-import com.vaadin.server.LegacyCommunicationManager.Callback;
-import com.vaadin.server.communication.FileUploadHandler;
-import com.vaadin.server.communication.HeartbeatHandler;
-import com.vaadin.server.communication.PublishedFileHandler;
-import com.vaadin.server.communication.SessionRequestHandler;
-import com.vaadin.server.communication.UIInitHandler;
-import com.vaadin.server.communication.UidlRequestHandler;
+import com.vaadin.server.communication.ServletUIInitHandler;
 import com.vaadin.util.CurrentInstance;
 
 @SuppressWarnings("serial")
 public class VaadinServlet extends HttpServlet implements Constants {
-
-    private static class AbstractApplicationServletWrapper implements Callback {
-
-        private final VaadinServlet servlet;
-
-        public AbstractApplicationServletWrapper(VaadinServlet servlet) {
-            this.servlet = servlet;
-        }
-
-        @Override
-        public void criticalNotification(VaadinRequest request,
-                VaadinResponse response, String cap, String msg,
-                String details, String outOfSyncURL) throws IOException {
-            servlet.criticalNotification((VaadinServletRequest) request,
-                    ((VaadinServletResponse) response), cap, msg, details,
-                    outOfSyncURL);
-        }
-    }
-
-    // TODO Move some (all?) of the constants to a separate interface (shared
-    // with portlet)
-
-    private final String resourcePath = null;
 
     private VaadinServletService servletService;
 
@@ -200,7 +171,23 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
         CurrentInstance.clearAll();
         setCurrent(this);
-        service(createVaadinRequest(request), createVaadinResponse(response));
+
+        VaadinServletRequest vaadinRequest = createVaadinRequest(request);
+        VaadinServletResponse vaadinResponse = createVaadinResponse(response);
+        if (!ensureCookiesEnabled(vaadinRequest, vaadinResponse)) {
+            return;
+        }
+
+        if (isStaticResourceRequest(request)) {
+            serveStaticResources(request, response);
+            return;
+        }
+        try {
+            getService().handleRequest(vaadinRequest, vaadinResponse);
+        } catch (ServiceException e) {
+            throw new ServletException(e);
+        }
+
     }
 
     /**
@@ -236,73 +223,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return true;
         } else {
             return false;
-        }
-    }
-
-    private void service(VaadinServletRequest request,
-            VaadinServletResponse response) throws ServletException,
-            IOException {
-        getService().requestStart(request, response);
-        VaadinSession vaadinSession = null;
-
-        try {
-            AbstractApplicationServletWrapper servletWrapper = new AbstractApplicationServletWrapper(
-                    this);
-
-            RequestType requestType = getRequestType(request);
-            if (!ensureCookiesEnabled(requestType, request, response)) {
-                return;
-            }
-
-            if (requestType == RequestType.STATIC_FILE) {
-                serveStaticResources(request, response);
-                return;
-            }
-
-            try {
-                // Find out the service session this request is related to
-                vaadinSession = getService().findVaadinSession(request);
-                if (vaadinSession == null) {
-                    return;
-                }
-
-                if (requestType == RequestType.PUBLISHED_FILE) {
-                    new PublishedFileHandler().handleRequest(vaadinSession,
-                            request, response);
-                    return;
-                } else if (requestType == RequestType.HEARTBEAT) {
-                    new HeartbeatHandler().handleRequest(vaadinSession,
-                            request, response);
-                    return;
-                } else if (requestType == RequestType.FILE_UPLOAD) {
-                    new FileUploadHandler().handleRequest(vaadinSession,
-                            request, response);
-                    return;
-                } else if (requestType == RequestType.UIDL) {
-                    new UidlRequestHandler(servletWrapper).handleRequest(
-                            vaadinSession, request, response);
-                    return;
-                } else if (requestType == RequestType.BROWSER_DETAILS) {
-                    // Browser details - not related to a specific UI
-                    new UIInitHandler().handleRequest(vaadinSession, request,
-                            response);
-                    return;
-                } else if (new SessionRequestHandler().handleRequest(
-                        vaadinSession, request, response)) {
-                    return;
-                }
-
-                // Request not handled by any RequestHandler -> 404
-                response.sendError(HttpServletResponse.SC_NOT_FOUND);
-
-            } catch (final SessionExpiredException e) {
-                // Session has expired, notify user
-                handleServiceSessionExpired(request, response);
-            } catch (final Throwable e) {
-                handleServiceException(request, response, vaadinSession, e);
-            }
-        } finally {
-            getService().requestEnd(request, response, vaadinSession);
         }
     }
 
@@ -347,10 +267,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @return false if cookies are disabled, true otherwise
      * @throws IOException
      */
-    private boolean ensureCookiesEnabled(RequestType requestType,
-            VaadinServletRequest request, VaadinServletResponse response)
-            throws IOException {
-        if (requestType == RequestType.UIDL) {
+    private boolean ensureCookiesEnabled(VaadinServletRequest request,
+            VaadinServletResponse response) throws IOException {
+        if (ServletPortletHelper.isUIDLRequest(request)) {
             // In all other but the first UIDL request a cookie should be
             // returned by the browser.
             // This can be removed if cookieless mode (#3228) is supported
@@ -509,44 +428,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
         return resultPath;
     }
 
-    private void handleServiceException(VaadinServletRequest request,
-            VaadinServletResponse response, VaadinSession vaadinSession,
-            Throwable e) throws IOException, ServletException {
-        if (vaadinSession != null) {
-            vaadinSession.lock();
-        }
-        try {
-            ErrorHandler errorHandler = ErrorEvent
-                    .findErrorHandler(vaadinSession);
-
-            // if this was an UIDL request, response UIDL back to client
-            if (getRequestType(request) == RequestType.UIDL) {
-                SystemMessages ci = getService().getSystemMessages(
-                        ServletPortletHelper.findLocale(null, vaadinSession,
-                                request), request);
-                criticalNotification(request, response,
-                        ci.getInternalErrorCaption(),
-                        ci.getInternalErrorMessage(), null,
-                        ci.getInternalErrorURL());
-                if (errorHandler != null) {
-                    errorHandler.error(new ErrorEvent(e));
-                }
-            } else {
-                if (errorHandler != null) {
-                    errorHandler.error(new ErrorEvent(e));
-                }
-
-                // Re-throw other exceptions
-                throw new ServletException(e);
-            }
-        } finally {
-            if (vaadinSession != null) {
-                vaadinSession.unlock();
-            }
-        }
-
-    }
-
     /**
      * A helper method to strip away characters that might somehow be used for
      * XSS attacs. Leaves at least alphanumeric characters intact. Also removes
@@ -591,68 +472,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
         return DEFAULT_THEME_NAME;
     }
 
-    /**
-     * @param request
-     * @param response
-     * @throws IOException
-     * @throws ServletException
-     * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future
-     *             version
-     */
-    @Deprecated
-    void handleServiceSessionExpired(VaadinServletRequest request,
-            VaadinServletResponse response) throws IOException,
-            ServletException {
-
-        try {
-            SystemMessages ci = getService().getSystemMessages(
-                    ServletPortletHelper.findLocale(null, null, request),
-                    request);
-            RequestType requestType = getRequestType(request);
-            if (requestType == RequestType.UIDL) {
-                /*
-                 * Invalidate session (weird to have session if we're saying
-                 * that it's expired, and worse: portal integration will fail
-                 * since the session is not created by the portal.
-                 * 
-                 * Session must be invalidated before criticalNotification as it
-                 * commits the response.
-                 */
-                request.getSession().invalidate();
-
-                // send uidl redirect
-                criticalNotification(request, response,
-                        ci.getSessionExpiredCaption(),
-                        ci.getSessionExpiredMessage(), null,
-                        ci.getSessionExpiredURL());
-
-            } else if (requestType == RequestType.HEARTBEAT) {
-                response.sendError(HttpServletResponse.SC_GONE,
-                        "Session expired");
-            } else {
-                // 'plain' http req - e.g. browser reload;
-                // just go ahead redirect the browser
-                String sessionExpiredURL = ci.getSessionExpiredURL();
-                if (sessionExpiredURL != null) {
-                    response.sendRedirect(sessionExpiredURL);
-                } else {
-                    /*
-                     * Session expired as a result of a standard http request
-                     * and we have nowhere to redirect. Reloading would likely
-                     * cause an endless loop. This can at least happen if
-                     * refreshing a resource when the session has expired.
-                     */
-                    response.sendError(HttpServletResponse.SC_GONE,
-                            "Session expired");
-                }
-            }
-        } catch (SystemMessageException ee) {
-            throw new ServletException(ee);
-        }
-
-    }
-
     private void handleServiceSecurityException(VaadinServletRequest request,
             VaadinServletResponse response) throws IOException,
             ServletException {
@@ -664,14 +483,13 @@ public class VaadinServlet extends HttpServlet implements Constants {
              */
             SystemMessages ci = getService().getSystemMessages(
                     request.getLocale(), request);
-            RequestType requestType = getRequestType(request);
-            if (requestType == RequestType.UIDL) {
+            if (ServletPortletHelper.isUIDLRequest(request)) {
                 // send uidl redirect
                 criticalNotification(request, response,
                         ci.getCommunicationErrorCaption(),
                         ci.getCommunicationErrorMessage(),
                         INVALID_SECURITY_KEY_MSG, ci.getCommunicationErrorURL());
-            } else if (requestType == RequestType.HEARTBEAT) {
+            } else if (ServletPortletHelper.isHeartbeatRequest(request)) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN,
                         "Forbidden");
             } else {
@@ -1056,10 +874,12 @@ public class VaadinServlet extends HttpServlet implements Constants {
     /**
      * 
      * @author Vaadin Ltd
-     * @since 7.0.0
+     * @since 7.0
      * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future
-     *             version
+     * @deprecated As of 7.0. This is no longer used and only provided for
+     *             backwards compatibility. Each {@link RequestHandler} can
+     *             individually decide whether it wants to handle a request or
+     *             not.
      */
     @Deprecated
     protected enum RequestType {
@@ -1070,8 +890,10 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @param request
      * @return
      * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future
-     *             version
+     * @deprecated As of 7.0. This is no longer used and only provided for
+     *             backwards compatibility. Each {@link RequestHandler} can
+     *             individually decide whether it wants to handle a request or
+     *             not.
      */
     @Deprecated
     protected RequestType getRequestType(VaadinServletRequest request) {
@@ -1079,7 +901,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return RequestType.FILE_UPLOAD;
         } else if (ServletPortletHelper.isPublishedFileRequest(request)) {
             return RequestType.PUBLISHED_FILE;
-        } else if (isBrowserDetailsRequest(request)) {
+        } else if (ServletUIInitHandler.isUIInitRequest(request)) {
             return RequestType.BROWSER_DETAILS;
         } else if (ServletPortletHelper.isUIDLRequest(request)) {
             return RequestType.UIDL;
@@ -1094,12 +916,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     }
 
-    private static boolean isBrowserDetailsRequest(HttpServletRequest request) {
-        return "POST".equals(request.getMethod())
-                && request.getParameter("v-browserDetails") != null;
-    }
-
-    private boolean isStaticResourceRequest(HttpServletRequest request) {
+    protected boolean isStaticResourceRequest(HttpServletRequest request) {
         String pathInfo = request.getPathInfo();
         if (pathInfo == null || pathInfo.length() <= 10) {
             return false;
@@ -1235,4 +1052,5 @@ public class VaadinServlet extends HttpServlet implements Constants {
     private static final Logger getLogger() {
         return Logger.getLogger(VaadinServlet.class.getName());
     }
+
 }

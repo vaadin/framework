@@ -17,15 +17,19 @@
 package com.vaadin.server;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import com.vaadin.server.VaadinServlet.RequestType;
 import com.vaadin.server.communication.ServletBootstrapHandler;
+import com.vaadin.server.communication.ServletUIInitHandler;
 import com.vaadin.ui.UI;
 
 public class VaadinServletService extends VaadinService {
@@ -45,6 +49,31 @@ public class VaadinServletService extends VaadinService {
              */
             setClassLoader(servlet.getClass().getClassLoader());
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.server.LegacyCommunicationManager.Callback#criticalNotification
+     * (com.vaadin.server.VaadinRequest, com.vaadin.server.VaadinResponse,
+     * java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+     */
+    @Deprecated
+    @Override
+    public void criticalNotification(VaadinRequest request,
+            VaadinResponse response, String cap, String msg, String details,
+            String url) throws IOException {
+        getServlet().criticalNotification((VaadinServletRequest) request,
+                (VaadinServletResponse) response, cap, msg, details, url);
+    }
+
+    @Override
+    protected List<RequestHandler> createRequestHandlers() {
+        List<RequestHandler> handlers = super.createRequestHandlers();
+        handlers.add(0, new ServletBootstrapHandler());
+        handlers.add(new ServletUIInitHandler());
+        return handlers;
     }
 
     /**
@@ -135,12 +164,11 @@ public class VaadinServletService extends VaadinService {
 
     @Override
     protected boolean requestCanCreateSession(VaadinRequest request) {
-        RequestType requestType = getRequestType(request);
-        if (requestType == RequestType.BROWSER_DETAILS) {
+        if (ServletUIInitHandler.isUIInitRequest(request)) {
             // This is the first request if you are embedding by writing the
             // embedding code yourself
             return true;
-        } else if (requestType == RequestType.OTHER) {
+        } else if (isOtherRequest(request)) {
             /*
              * I.e URIs that are not RPC calls or static (theme) files.
              */
@@ -150,25 +178,15 @@ public class VaadinServletService extends VaadinService {
         return false;
     }
 
-    /**
-     * Gets the request type for the request.
-     * 
-     * @param request
-     *            the request to get a request type for
-     * @return the request type
-     * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future
-     *             version
-     */
-    @Deprecated
-    protected RequestType getRequestType(VaadinRequest request) {
-        RequestType type = (RequestType) request.getAttribute(RequestType.class
-                .getName());
-        if (type == null) {
-            type = getServlet().getRequestType((VaadinServletRequest) request);
-            request.setAttribute(RequestType.class.getName(), type);
-        }
-        return type;
+    private boolean isOtherRequest(VaadinRequest request) {
+        // TODO This should be refactored in some way. It should not be
+        // necessary to check all these types.
+        return (!ServletPortletHelper.isAppRequest(request)
+                && !ServletUIInitHandler.isUIInitRequest(request)
+                && !ServletPortletHelper.isFileUploadRequest(request)
+                && !ServletPortletHelper.isHeartbeatRequest(request)
+                && !ServletPortletHelper.isPublishedFileRequest(request) && !ServletPortletHelper
+                    .isUIDLRequest(request));
     }
 
     @Override
@@ -235,8 +253,73 @@ public class VaadinServletService extends VaadinService {
         return appId;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.server.VaadinService#handleSessionExpired(com.vaadin.server
+     * .VaadinRequest, com.vaadin.server.VaadinResponse)
+     */
     @Override
-    protected BootstrapHandler createBootstrapHandler(VaadinSession session) {
-        return new ServletBootstrapHandler();
+    protected void handleSessionExpired(VaadinRequest request,
+            VaadinResponse response) throws ServiceException {
+        if (!(request instanceof VaadinServletRequest)) {
+            throw new ServiceException(new IllegalArgumentException(
+                    "handleSessionExpired called with a non-VaadinServletRequest: "
+                            + request.getClass().getName()));
+        }
+
+        VaadinServletRequest servletRequest = (VaadinServletRequest) request;
+        VaadinServletResponse servletResponse = (VaadinServletResponse) response;
+
+        try {
+            SystemMessages ci = getSystemMessages(
+                    ServletPortletHelper.findLocale(null, null, request),
+                    request);
+            if (ServletPortletHelper.isUIDLRequest(request)) {
+                /*
+                 * Invalidate session (weird to have session if we're saying
+                 * that it's expired)
+                 * 
+                 * Session must be invalidated before criticalNotification as it
+                 * commits the response.
+                 */
+                servletRequest.getSession().invalidate();
+
+                // send uidl redirect
+                criticalNotification(request, response,
+                        ci.getSessionExpiredCaption(),
+                        ci.getSessionExpiredMessage(), null,
+                        ci.getSessionExpiredURL());
+
+            } else if (ServletPortletHelper.isHeartbeatRequest(request)) {
+                response.sendError(HttpServletResponse.SC_GONE,
+                        "Session expired");
+            } else {
+                // 'plain' http req - e.g. browser reload;
+                // just go ahead redirect the browser
+                String sessionExpiredURL = ci.getSessionExpiredURL();
+                if (sessionExpiredURL != null) {
+                    servletResponse.sendRedirect(sessionExpiredURL);
+                } else {
+                    /*
+                     * Session expired as a result of a standard http request
+                     * and we have nowhere to redirect. Reloading would likely
+                     * cause an endless loop. This can at least happen if
+                     * refreshing a resource when the session has expired.
+                     */
+                    response.sendError(HttpServletResponse.SC_GONE,
+                            "Session expired");
+                }
+            }
+        } catch (IOException e) {
+            throw new ServiceException(e);
+        }
+
     }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(VaadinServletService.class.getName());
+    }
+
 }

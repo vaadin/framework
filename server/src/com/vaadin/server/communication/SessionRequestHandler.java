@@ -22,6 +22,7 @@ import com.vaadin.server.RequestHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.shared.ApplicationConstants;
 
 /**
  * Handles a request by passing it to each registered {@link RequestHandler} in
@@ -50,6 +51,13 @@ public class SessionRequestHandler implements RequestHandler {
     @Override
     public boolean handleRequest(VaadinSession session, VaadinRequest request,
             VaadinResponse response) throws IOException {
+        String pathInfo = request.getPathInfo();
+        if (pathInfo.startsWith("/" + ApplicationConstants.APP_PATH + "/")) {
+            // /<APP_PATH>/ is reserved for Vaadin internal use and these
+            // requests should not be passed to session request handlers
+            return false;
+        }
+
         // Use a copy to avoid ConcurrentModificationException
         session.lock();
         ArrayList<RequestHandler> requestHandlers;

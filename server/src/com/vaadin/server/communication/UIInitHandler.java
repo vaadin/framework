@@ -49,11 +49,18 @@ import com.vaadin.ui.UI;
  * @author Vaadin Ltd
  * @since 7.1
  */
-public class UIInitHandler extends SynchronizedRequestHandler {
+public abstract class UIInitHandler extends SynchronizedRequestHandler {
+
+    public static final String BROWSER_DETAILS_PARAMETER = "v-browserDetails";
+
+    protected abstract boolean isInitRequest(VaadinRequest request);
 
     @Override
     public boolean synchronizedHandleRequest(VaadinSession session,
             VaadinRequest request, VaadinResponse response) throws IOException {
+        if (!isInitRequest(request)) {
+            return false;
+        }
 
         // NOTE! GateIn requires, for some weird reason, getOutputStream
         // to be used instead of getWriter() (it seems to interpret

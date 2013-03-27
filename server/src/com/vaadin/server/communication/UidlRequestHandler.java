@@ -32,6 +32,7 @@ import com.vaadin.server.Constants;
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.LegacyCommunicationManager.Callback;
 import com.vaadin.server.LegacyCommunicationManager.InvalidUIDLSecurityKeyException;
+import com.vaadin.server.ServletPortletHelper;
 import com.vaadin.server.SynchronizedRequestHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
@@ -53,6 +54,8 @@ import com.vaadin.ui.UI;
  */
 public class UidlRequestHandler extends SynchronizedRequestHandler {
 
+    public static final String UIDL_PATH = "UIDL/";
+
     private Callback criticalNotifier;
 
     private ServerRpcHandler rpcHandler = new ServerRpcHandler();
@@ -64,7 +67,9 @@ public class UidlRequestHandler extends SynchronizedRequestHandler {
     @Override
     public boolean synchronizedHandleRequest(VaadinSession session,
             VaadinRequest request, VaadinResponse response) throws IOException {
-
+        if (!ServletPortletHelper.isUIDLRequest(request)) {
+            return false;
+        }
         UI uI = session.getService().findUI(request);
 
         checkWidgetsetVersion(request);

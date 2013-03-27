@@ -217,6 +217,9 @@ public class FileUploadHandler implements RequestHandler {
     @Override
     public boolean handleRequest(VaadinSession session, VaadinRequest request,
             VaadinResponse response) throws IOException {
+        if (!ServletPortletHelper.isFileUploadRequest(request)) {
+            return false;
+        }
 
         /*
          * URI pattern: APP/UPLOAD/[UIID]/[PID]/[NAME]/[SECKEY] See

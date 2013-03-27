@@ -28,6 +28,7 @@ import com.vaadin.annotations.StyleSheet;
 import com.vaadin.server.Constants;
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.RequestHandler;
+import com.vaadin.server.ServletPortletHelper;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinSession;
@@ -55,6 +56,9 @@ public class PublishedFileHandler implements RequestHandler {
     @Override
     public boolean handleRequest(VaadinSession session, VaadinRequest request,
             VaadinResponse response) throws IOException {
+        if (!ServletPortletHelper.isPublishedFileRequest(request)) {
+            return false;
+        }
 
         String pathInfo = request.getPathInfo();
         // + 2 to also remove beginning and ending slashes

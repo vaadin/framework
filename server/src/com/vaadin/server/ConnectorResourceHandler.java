@@ -48,60 +48,50 @@ public class ConnectorResourceHandler implements RequestHandler {
             return false;
         }
         Matcher matcher = CONNECTOR_RESOURCE_PATTERN.matcher(requestPath);
-        if (matcher.matches()) {
-            String uiId = matcher.group(1);
-            String cid = matcher.group(2);
-            String key = matcher.group(3);
-
-            session.lock();
-            UI ui;
-            ClientConnector connector;
-            try {
-                ui = session.getUIById(Integer.parseInt(uiId));
-                if (ui == null) {
-                    return error(request, response,
-                            "Ignoring connector request for no-existent root "
-                                    + uiId);
-                }
-
-                connector = ui.getConnectorTracker().getConnector(cid);
-                if (connector == null) {
-                    return error(request, response,
-                            "Ignoring connector request for no-existent connector "
-                                    + cid + " in root " + uiId);
-                }
-
-            } finally {
-                session.unlock();
-            }
-
-            Map<Class<?>, CurrentInstance> oldThreadLocals = CurrentInstance
-                    .setThreadLocals(ui);
-            try {
-                if (!connector.handleConnectorRequest(request, response, key)) {
-                    return error(request, response,
-                            connector.getClass().getSimpleName() + " ("
-                                    + connector.getConnectorId()
-                                    + ") did not handle connector request for "
-                                    + key);
-                }
-            } finally {
-                CurrentInstance.restoreThreadLocals(oldThreadLocals);
-            }
-
-            return true;
-        } else if (requestPath.matches('/' + ApplicationConstants.APP_PATH
-                + "(/.*)?")) {
-            /*
-             * This should be the last request handler before we get to
-             * bootstrap logic. Prevent /APP requests from reaching bootstrap
-             * handlers to help protect the /APP name space for framework usage.
-             */
-            return error(request, response,
-                    "Returning 404 for /APP request not yet handled.");
-        } else {
+        if (!matcher.matches()) {
             return false;
         }
+        String uiId = matcher.group(1);
+        String cid = matcher.group(2);
+        String key = matcher.group(3);
+
+        session.lock();
+        UI ui;
+        ClientConnector connector;
+        try {
+            ui = session.getUIById(Integer.parseInt(uiId));
+            if (ui == null) {
+                return error(request, response,
+                        "Ignoring connector request for no-existent root "
+                                + uiId);
+            }
+
+            connector = ui.getConnectorTracker().getConnector(cid);
+            if (connector == null) {
+                return error(request, response,
+                        "Ignoring connector request for no-existent connector "
+                                + cid + " in root " + uiId);
+            }
+
+        } finally {
+            session.unlock();
+        }
+
+        Map<Class<?>, CurrentInstance> oldThreadLocals = CurrentInstance
+                .setThreadLocals(ui);
+        try {
+            if (!connector.handleConnectorRequest(request, response, key)) {
+                return error(request, response, connector.getClass()
+                        .getSimpleName()
+                        + " ("
+                        + connector.getConnectorId()
+                        + ") did not handle connector request for " + key);
+            }
+        } finally {
+            CurrentInstance.restoreThreadLocals(oldThreadLocals);
+        }
+
+        return true;
     }
 
     private static boolean error(VaadinRequest request,

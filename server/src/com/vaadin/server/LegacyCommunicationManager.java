@@ -65,10 +65,6 @@ public class LegacyCommunicationManager implements Serializable {
     // TODO PUSH move
     public static final String WRITE_SECURITY_TOKEN_FLAG = "writeSecurityToken";
 
-    private static final RequestHandler UNSUPPORTED_BROWSER_HANDLER = new UnsupportedBrowserHandler();
-
-    private static final RequestHandler CONNECTOR_RESOURCE_HANDLER = new ConnectorResourceHandler();
-
     /**
      * TODO Document me!
      * 
@@ -112,10 +108,6 @@ public class LegacyCommunicationManager implements Serializable {
      */
     public LegacyCommunicationManager(VaadinSession session) {
         this.session = session;
-        session.addRequestHandler(session.getService().createBootstrapHandler(
-                session));
-        session.addRequestHandler(UNSUPPORTED_BROWSER_HANDLER);
-        session.addRequestHandler(CONNECTOR_RESOURCE_HANDLER);
         requireLocale(session.getLocale().toString());
     }
 
