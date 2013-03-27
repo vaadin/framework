@@ -4,6 +4,7 @@
 @import "button/nativebutton.scss";
 @import "button/checkbox.scss";
 @import "layout/layout.scss";
+@import "calendar/calendar.scss";
 @import "caption/caption.scss";
 @import "colorpicker/colorpicker.scss";
 @import "common/common.scss";
@@ -64,6 +65,7 @@ $line-height: normal;
 	@include base-checkbox;
 	@include base-caption;
 	@include base-colorpicker;
+	@include base-calendar;
 	
 	// here for now to preserve old semantics
 	@include base-common;
