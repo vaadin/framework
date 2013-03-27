@@ -117,7 +117,7 @@ public class ServerRpcHandler implements Serializable {
         if (bursts.length > 2) {
             throw new RuntimeException(
                     "Multiple variable bursts not supported in Vaadin 7");
-        } else if (bursts.length <= 2) {
+        } else if (bursts.length <= 1) {
             // The client sometimes sends empty messages, this is probably a bug
             return;
         }
