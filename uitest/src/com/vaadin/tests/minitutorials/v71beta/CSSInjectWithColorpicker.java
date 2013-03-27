@@ -5,7 +5,7 @@ import java.util.Arrays;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.Page;
-import com.vaadin.server.Page.StyleSheet;
+import com.vaadin.server.Page.Styles;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.colorpicker.Color;
@@ -125,10 +125,10 @@ public class CSSInjectWithColorpicker extends UI {
                 Color color = event.getColor();
 
                 // Get the stylesheet of the page
-                StyleSheet styles = Page.getCurrent().getStyleSheet();
+                Styles styles = Page.getCurrent().getStyles();
 
                 // inject the new background color
-                styles.inject(".v-app .v-textarea.text-label { background-color:"
+                styles.add(".v-app .v-textarea.text-label { background-color:"
                         + color.getCSS() + "; }");
             }
         });
@@ -153,10 +153,10 @@ public class CSSInjectWithColorpicker extends UI {
                 Color color = event.getColor();
 
                 // Get the stylesheet of the page
-                StyleSheet styles = Page.getCurrent().getStyleSheet();
+                Styles styles = Page.getCurrent().getStyles();
 
                 // inject the new color as a style
-                styles.inject(".v-app .v-textarea.text-label { color:"
+                styles.add(".v-app .v-textarea.text-label { color:"
                         + color.getCSS() + "; }");
             }
         });
@@ -186,11 +186,11 @@ public class CSSInjectWithColorpicker extends UI {
                 String fontFamily = select.getValue().toString();
 
                 // Get the stylesheet of the page
-                StyleSheet styles = Page.getCurrent().getStyleSheet();
+                Styles styles = Page.getCurrent().getStyles();
 
                 // inject the new font size as a style. We need .v-app to
                 // override Vaadin's default styles here
-                styles.inject(".v-app .v-textarea.text-label { font-family:"
+                styles.add(".v-app .v-textarea.text-label { font-family:"
                         + fontFamily + "; }");
             }
         });
@@ -220,11 +220,11 @@ public class CSSInjectWithColorpicker extends UI {
                 Integer fontSize = (Integer) select.getValue();
 
                 // Get the stylesheet of the page
-                StyleSheet styles = Page.getCurrent().getStyleSheet();
+                Styles styles = Page.getCurrent().getStyles();
 
                 // inject the new font size as a style. We need .v-app to
                 // override Vaadin's default styles here
-                styles.inject(".v-app .v-textarea.text-label { font-size:"
+                styles.add(".v-app .v-textarea.text-label { font-size:"
                         + String.valueOf(fontSize) + "px; }");
             }
         });

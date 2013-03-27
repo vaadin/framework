@@ -21,9 +21,11 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.EventObject;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.vaadin.event.EventRouter;
 import com.vaadin.shared.ui.BorderStyle;
@@ -309,25 +311,22 @@ public class Page implements Serializable {
      * 
      * @since 7.1
      */
-    public static class StyleSheet implements Serializable {
+    public static class Styles implements Serializable {
 
-        /*
-         * Points to last injected string injection
-         */
-        private int injectedStringPointer;
+        private final Map<Integer, String> stringInjections = new HashMap<Integer, String>();
 
-        private final List<String> stringInjections = new LinkedList<String>();
+        private final Map<Integer, Resource> resourceInjections = new HashMap<Integer, Resource>();
 
-        /*
-         * Points to last injected resource injection
-         */
-        private int injectedResourcesPointer;
+        // The combined injection counter between both string and resource
+        // injections. Used as the key for the injection maps
+        private int injectionCounter = 0;
 
-        private final List<Resource> resourceInjections = new LinkedList<Resource>();
+        // Points to the next injection that has not yet been made into the Page
+        private int nextInjectionPosition = 0;
 
         private final UI ui;
 
-        private StyleSheet(UI ui) {
+        private Styles(UI ui) {
             this.ui = ui;
         }
 
@@ -337,24 +336,13 @@ public class Page implements Serializable {
          * @param css
          *            The CSS to inject
          */
-        public void inject(String css) {
+        public void add(String css) {
             if (css == null) {
                 throw new IllegalArgumentException(
                         "Cannot inject null CSS string");
             }
 
-            /*
-             * Check if last injection was the same, in that case ignore it.
-             */
-            if (!stringInjections.isEmpty() && injectedStringPointer > 0) {
-                String lastInjection = stringInjections
-                        .get(injectedStringPointer - 1);
-                if (lastInjection.equals(css.trim())) {
-                    return;
-                }
-            }
-
-            stringInjections.add(css.trim());
+            stringInjections.put(injectionCounter++, css);
             ui.markAsDirty();
         }
 
@@ -364,13 +352,13 @@ public class Page implements Serializable {
          * @param resource
          *            The resource to inject.
          */
-        public void inject(Resource resource) {
+        public void add(Resource resource) {
             if (resource == null) {
                 throw new IllegalArgumentException(
                         "Cannot inject null resource");
             }
 
-            resourceInjections.add(resource);
+            resourceInjections.put(injectionCounter++, resource);
             ui.markAsDirty();
         }
 
@@ -378,37 +366,38 @@ public class Page implements Serializable {
 
             // If full repaint repaint all injections
             if (target.isFullRepaint()) {
-                injectedStringPointer = 0;
-                injectedResourcesPointer = 0;
+                nextInjectionPosition = 0;
             }
 
-            target.startTag("css-injections");
+            if (injectionCounter > nextInjectionPosition) {
 
-            // Paint pending string injections
-            List<String> injections = stringInjections.subList(
-                    injectedStringPointer, stringInjections.size());
+                target.startTag("css-injections");
 
-            for (String css : injections) {
-                target.startTag("css-string");
-                target.addText(css);
-                target.endTag("css-string");
+                while (injectionCounter > nextInjectionPosition) {
+
+                    String stringInjection = stringInjections
+                            .get(nextInjectionPosition);
+                    if (stringInjection != null) {
+                        target.startTag("css-string");
+                        target.addAttribute("id", nextInjectionPosition);
+                        target.addText(stringInjection);
+                        target.endTag("css-string");
+                    }
+
+                    Resource resourceInjection = resourceInjections
+                            .get(nextInjectionPosition);
+                    if (resourceInjection != null) {
+                        target.startTag("css-resource");
+                        target.addAttribute("id", nextInjectionPosition);
+                        target.addAttribute("url", resourceInjection);
+                        target.endTag("css-resource");
+                    }
+
+                    nextInjectionPosition++;
+                }
+
+                target.endTag("css-injections");
             }
-
-            injectedStringPointer = stringInjections.size();
-
-            // Paint pending resource injections
-            List<Resource> resInjections = resourceInjections.subList(
-                    injectedResourcesPointer, resourceInjections.size());
-
-            for (Resource res : resInjections) {
-                target.startTag("css-resource");
-                target.addAttribute("url", res);
-                target.endTag("css-resource");
-            }
-
-            target.endTag("css-injections");
-
-            injectedResourcesPointer = resourceInjections.size();
         }
     }
 
@@ -421,7 +410,7 @@ public class Page implements Serializable {
 
     private JavaScript javaScript;
 
-    private StyleSheet styleSheet;
+    private Styles styles;
 
     /**
      * The current browser location.
@@ -696,11 +685,12 @@ public class Page implements Serializable {
      * 
      * @since 7.1
      */
-    public StyleSheet getStyleSheet() {
-        if (styleSheet == null) {
-            styleSheet = new StyleSheet(uI);
+    public Styles getStyles() {
+
+        if (styles == null) {
+            styles = new Styles(uI);
         }
-        return styleSheet;
+        return styles;
     }
 
     public void paintContent(PaintTarget target) throws PaintException {
@@ -760,8 +750,8 @@ public class Page implements Serializable {
                     location.toString());
         }
 
-        if (styleSheet != null) {
-            styleSheet.paint(target);
+        if (styles != null) {
+            styles.paint(target);
         }
     }
 

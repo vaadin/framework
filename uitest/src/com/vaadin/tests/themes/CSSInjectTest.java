@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.UUID;
 
 import com.vaadin.server.Page;
-import com.vaadin.server.Page.StyleSheet;
+import com.vaadin.server.Page.Styles;
 import com.vaadin.server.StreamResource;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.TestBase;
@@ -19,10 +19,10 @@ public class CSSInjectTest extends TestBase {
     @Override
     protected void setup() {
 
-        final StyleSheet stylesheet = Page.getCurrent().getStyleSheet();
+        final Styles stylesheet = Page.getCurrent().getStyles();
 
         // Inject some resources initially
-        stylesheet.inject(new StreamResource(new StreamResource.StreamSource() {
+        stylesheet.add(new StreamResource(new StreamResource.StreamSource() {
 
             @Override
             public InputStream getStream() {
@@ -44,7 +44,7 @@ public class CSSInjectTest extends TestBase {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                stylesheet.inject(cssToInject.getValue());
+                stylesheet.add(cssToInject.getValue());
                 cssToInject.setValue("");
             }
         });
@@ -58,7 +58,7 @@ public class CSSInjectTest extends TestBase {
 
                         final String css = cssToInject.getValue();
 
-                        stylesheet.inject(new StreamResource(
+                        stylesheet.add(new StreamResource(
                                 new StreamResource.StreamSource() {
 
                                     @Override
