@@ -1062,36 +1062,37 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * session variables. It also ensures that all thread locals are set
      * correctly when executing the runnable.
      * </p>
-     * <p>
-     * Note that exclusive access is only guaranteed as long as the UI is
-     * attached to a VaadinSession. If the UI is not attached to a session, this
-     * method makes no guarantees. If the UI is detached then the current
-     * session will also be null.
-     * </p>
      * 
      * @param runnable
      *            The runnable which updates the UI
+     * @throws UIDetachedException
+     *             if the UI is not attached to a session (and locking can
+     *             therefore not be done)
      */
-    public void runSafely(Runnable runnable) {
+    public void runSafely(Runnable runnable) throws UIDetachedException {
         Map<Class<?>, CurrentInstance> old = null;
 
         VaadinSession session = getSession();
 
-        if (session != null) {
-            session.lock();
+        if (session == null) {
+            throw new UIDetachedException();
         }
+
+        session.lock();
         try {
+            if (getSession() == null) {
+                // UI was detached after fetching the session but before we
+                // acquiried the lock.
+                throw new UIDetachedException();
+            }
             old = CurrentInstance.setThreadLocals(this);
             runnable.run();
         } finally {
-            if (session != null) {
-                session.unlock();
-            }
+            session.unlock();
             if (old != null) {
                 CurrentInstance.restoreThreadLocals(old);
             }
         }
 
     }
-
 }
