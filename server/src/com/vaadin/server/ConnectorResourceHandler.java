@@ -16,7 +16,6 @@
 package com.vaadin.server;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -76,8 +75,8 @@ public class ConnectorResourceHandler implements RequestHandler {
                 session.unlock();
             }
 
-            Map<Class<?>, Object> oldThreadLocals = new HashMap<Class<?>, Object>();
-            CurrentInstance.setThreadLocals(ui, oldThreadLocals);
+            Map<Class<?>, CurrentInstance> oldThreadLocals = CurrentInstance
+                    .setThreadLocals(ui);
             try {
                 if (!connector.handleConnectorRequest(request, response, key)) {
                     return error(request, response,
@@ -87,7 +86,7 @@ public class ConnectorResourceHandler implements RequestHandler {
                                     + key);
                 }
             } finally {
-                CurrentInstance.setThreadLocals(oldThreadLocals);
+                CurrentInstance.restoreThreadLocals(oldThreadLocals);
             }
 
             return true;
