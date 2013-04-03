@@ -32,10 +32,10 @@ import org.json.JSONException;
 
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.StyleSheet;
-import com.vaadin.server.LegacyCommunicationManager;
-import com.vaadin.server.LegacyCommunicationManager.ClientCache;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.JsonPaintTarget;
+import com.vaadin.server.LegacyCommunicationManager;
+import com.vaadin.server.LegacyCommunicationManager.ClientCache;
 import com.vaadin.server.SystemMessages;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.ConnectorTracker;
@@ -73,8 +73,7 @@ public class UidlWriter implements Serializable {
         ArrayList<ClientConnector> dirtyVisibleConnectors = ui
                 .getConnectorTracker().getDirtyVisibleConnectors();
         VaadinSession session = ui.getSession();
-        LegacyCommunicationManager manager = session
-                .getCommunicationManager();
+        LegacyCommunicationManager manager = session.getCommunicationManager();
         // Paints components
         ConnectorTracker uiConnectorTracker = ui.getConnectorTracker();
         getLogger().log(Level.FINE, "* Creating response to client");
@@ -136,8 +135,6 @@ public class UidlWriter implements Serializable {
             new ConnectorHierarchyWriter().write(ui, writer);
             writer.write(", "); // close hierarchy
 
-            uiConnectorTracker.markAllConnectorsClean();
-
             // send server to client RPC calls for components in the UI, in call
             // order
 
@@ -147,6 +144,8 @@ public class UidlWriter implements Serializable {
             writer.write("\"rpc\" : ");
             new ClientRpcWriter().write(ui, writer);
             writer.write(", "); // close rpc
+
+            uiConnectorTracker.markAllConnectorsClean();
 
             writer.write("\"meta\" : ");
 
