@@ -16,11 +16,8 @@
 
 package com.vaadin.server.communication;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
@@ -62,20 +59,13 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
             return false;
         }
 
-        // NOTE! GateIn requires, for some weird reason, getOutputStream
-        // to be used instead of getWriter() (it seems to interpret
-        // application/json as a binary content type)
-        final OutputStream out = response.getOutputStream();
-        final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
-                new OutputStreamWriter(out, "UTF-8")));
+        StringWriter stringWriter = new StringWriter();
 
         try {
             assert UI.getCurrent() == null;
 
             // Set browser information from the request
             session.getBrowser().updateRequestDetails(request);
-
-            response.setContentType("application/json; charset=UTF-8");
 
             UI uI = getBrowserDetailsUI(request, session);
 
@@ -86,15 +76,51 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
             String initialUIDL = getInitialUidl(request, uI);
             params.put("uidl", initialUIDL);
 
-            outWriter.write(params.toString());
-            // NOTE GateIn requires the buffers to be flushed to work
-            outWriter.flush();
-            out.flush();
+            stringWriter.write(params.toString());
         } catch (JSONException e) {
-            // TODO PUSH handle
-            e.printStackTrace();
+            throw new IOException("Error producing initial UIDL", e);
         } finally {
-            outWriter.close();
+            stringWriter.close();
+        }
+
+        return commitJsonResponse(request, response, stringWriter.toString());
+    }
+
+    /**
+     * Commit the JSON response. We can't write immediately to the output stream
+     * as we want to write only a critical notification if something goes wrong
+     * during the response handling.
+     * 
+     * @param request
+     *            The request that resulted in this response
+     * @param response
+     *            The response to write to
+     * @param json
+     *            The JSON to write
+     * @return true if the JSON was written successfully, false otherwise
+     * @throws IOException
+     *             If there was an exception while writing to the output
+     */
+    static boolean commitJsonResponse(VaadinRequest request,
+            VaadinResponse response, String json) throws IOException {
+        // The response was produced without errors so write it to the client
+        response.setContentType("application/json; charset=UTF-8");
+
+        // Ensure that the browser does not cache UIDL responses.
+        // iOS 6 Safari requires this (#9732)
+        response.setHeader("Cache-Control", "no-cache");
+
+        // NOTE! GateIn requires, for some weird reason, getOutputStream
+        // to be used instead of getWriter() (it seems to interpret
+        // application/json as a binary content type)
+        OutputStreamWriter outputWriter = new OutputStreamWriter(
+                response.getOutputStream(), "UTF-8");
+        try {
+            outputWriter.write(json);
+            // NOTE GateIn requires the buffers to be flushed to work
+            outputWriter.flush();
+        } finally {
+            outputWriter.close();
         }
 
         return true;

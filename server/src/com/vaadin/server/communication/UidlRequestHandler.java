@@ -16,10 +16,8 @@
 
 package com.vaadin.server.communication;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -77,7 +75,6 @@ public class UidlRequestHandler extends SynchronizedRequestHandler {
         ClientConnector highlightedConnector;
         // repaint requested or session has timed out and new one is created
         boolean repaintAll;
-        final OutputStream out = response.getOutputStream();
 
         // TODO PUSH repaintAll, analyzeLayouts, highlightConnector should be
         // part of the message payload to make the functionality transport
@@ -101,8 +98,7 @@ public class UidlRequestHandler extends SynchronizedRequestHandler {
             }
         }
 
-        final Writer outWriter = new BufferedWriter(new OutputStreamWriter(out,
-                "UTF-8"));
+        StringWriter stringWriter = new StringWriter();
 
         try {
             rpcHandler.handleRpc(uI, request.getReader(), request);
@@ -111,7 +107,7 @@ public class UidlRequestHandler extends SynchronizedRequestHandler {
                 session.getCommunicationManager().repaintAll(uI);
             }
 
-            writeUidl(request, response, uI, outWriter, repaintAll,
+            writeUidl(request, response, uI, stringWriter, repaintAll,
                     analyzeLayouts);
             postHandleRequest(uI);
         } catch (JSONException e) {
@@ -119,6 +115,7 @@ public class UidlRequestHandler extends SynchronizedRequestHandler {
             // Refresh on client side
             criticalNotifier.criticalNotification(request, response, null,
                     null, null, null);
+            return true;
         } catch (InvalidUIDLSecurityKeyException e) {
             getLogger().log(Level.WARNING,
                     "Invalid security key received from {}",
@@ -126,16 +123,14 @@ public class UidlRequestHandler extends SynchronizedRequestHandler {
             // Refresh on client side
             criticalNotifier.criticalNotification(request, response, null,
                     null, null, null);
+            return true;
         } finally {
-            outWriter.close();
+            stringWriter.close();
             requestThemeName = null;
         }
 
-        // Ensure that the browser does not cache UIDL responses.
-        // iOS 6 Safari requires this (#9732)
-        response.setHeader("Cache-Control", "no-cache");
-
-        return true;
+        return UIInitHandler.commitJsonResponse(request, response,
+                stringWriter.toString());
     }
 
     /**
@@ -205,8 +200,6 @@ public class UidlRequestHandler extends SynchronizedRequestHandler {
      */
     protected void openJsonMessage(Writer outWriter, VaadinResponse response)
             throws IOException {
-        // Sets the response type
-        response.setContentType("application/json; charset=UTF-8");
         // some dirt to prevent cross site scripting
         outWriter.write("for(;;);[{");
     }
