@@ -92,7 +92,9 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
         }
 
         getWidget().setRequired(isRequired());
-        getWidget().setEnabled(!isReadOnly());
+        if (isReadOnly()) {
+            getWidget().setEnabled(false);
+        }
 
         if (getIcon() != null) {
             if (getWidget().icon == null) {

@@ -55,6 +55,7 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
         addComponent(toggleIcon());
         addComponent(toggleReadOnly());
         addComponent(toggleInvalid());
+        addComponent(toggleEnabled());
         addComponent(addCaptionText());
         // layoutParent.addComponent(new
         // NativeButton("Button right of layout"));
@@ -125,6 +126,21 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
         return readOnlyToggle;
     }
 
+    private Component toggleEnabled() {
+        CheckBox enabledToggle = new CheckBox();
+        enabledToggle.setImmediate(true);
+        enabledToggle.setValue(true);
+        enabledToggle.setCaption("Enabled");
+        enabledToggle.addValueChangeListener(new ValueChangeListener() {
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                setEnabled((Boolean) event.getProperty().getValue());
+            }
+        });
+
+        return enabledToggle;
+    }
+
     private Component toggleInvalid() {
         CheckBox invalid = new CheckBox("Invalid");
         invalid.setImmediate(true);
@@ -171,6 +187,12 @@ public class CaptionsInLayoutsWaiAria extends TestBase {
     protected void setReadOnly(boolean value) {
         for (AbstractField<?> c : components) {
             c.setReadOnly(value);
+        }
+    }
+
+    protected void setEnabled(boolean value) {
+        for (AbstractField<?> c : components) {
+            c.setEnabled(value);
         }
     }
 
