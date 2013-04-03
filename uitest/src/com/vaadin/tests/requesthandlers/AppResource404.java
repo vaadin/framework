@@ -23,8 +23,8 @@ public class AppResource404 extends TestBase {
         addComponent(new Link("Existing resource", resource));
         addComponent(new Link("Non-existing resource", new ExternalResource(
                 baseUrl + "/APP/connector/0/4/asdfasdf")));
-        addComponent(new Link("/APP url that should give 404",
-                new ExternalResource(baseUrl + "/APP")));
+        addComponent(new Link("/APP/ url that should give 404",
+                new ExternalResource(baseUrl + "/APP/")));
         addComponent(new Link("/APPLE url that should go to UI providers",
                 new ExternalResource(baseUrl + "/APPLE")));
     }
