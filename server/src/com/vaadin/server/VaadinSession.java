@@ -761,9 +761,25 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     /**
      * Locks this session to protect its data from concurrent access. Accessing
      * the UI state from outside the normal request handling should always lock
-     * the session and unlock it when done. To ensure that the lock is always
-     * released, you should typically wrap the code in a <code>try</code> block
-     * and unlock the session in <code>finally</code>:
+     * the session and unlock it when done. The preferred way to ensure locking
+     * is done correctly is to wrap your code using
+     * {@link UI#runSafely(Runnable)} (or
+     * {@link VaadinSession#runSafely(Runnable)} if you are only touching the
+     * session and not any UI), e.g.:
+     * 
+     * <pre>
+     * myUI.runSafely(new Runnable() {
+     *     &#064;Override
+     *     public void run() {
+     *         // Here it is safe to update the UI.
+     *         // UI.getCurrent can also be used
+     *         myUI.getContent().setCaption(&quot;Changed safely&quot;);
+     *     }
+     * });
+     * </pre>
+     * 
+     * If you for whatever reason want to do locking manually, you should do it
+     * like:
      * 
      * <pre>
      * session.lock();
@@ -773,7 +789,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *     session.unlock();
      * }
      * </pre>
-     * <p>
+     * 
      * This method will block until the lock can be retrieved.
      * <p>
      * {@link #getLockInstance()} can be used if more control over the locking
@@ -781,6 +797,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * 
      * @see #unlock()
      * @see #getLockInstance()
+     * @see #hasLock()
      */
     public void lock() {
         getLockInstance().lock();
