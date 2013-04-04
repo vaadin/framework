@@ -26,21 +26,72 @@ public class VLoadingIndicator {
     private int delayStateDelay = 1500;
     private int waitStateDelay = 5000;
 
-    private Timer initialTimer = new Timer() {
+    /**
+     * Timer with method for checking if it has been cancelled. This class is a
+     * workaround for a IE8 problem which causes a timer to be fired even if it
+     * has been cancelled.
+     * 
+     * @author Vaadin Ltd
+     * @since 7.1
+     */
+    private abstract static class LoadingIndicatorTimer extends Timer {
+        private boolean cancelled = false;
+
+        @Override
+        public void cancel() {
+            super.cancel();
+            cancelled = true;
+        }
+
+        @Override
+        public void schedule(int delayMillis) {
+            super.schedule(delayMillis);
+            cancelled = false;
+        }
+
+        @Override
+        public void scheduleRepeating(int periodMillis) {
+            super.scheduleRepeating(periodMillis);
+            cancelled = false;
+        }
+
+        /**
+         * Checks if this timer has been cancelled.
+         * 
+         * @return true if the timer has been cancelled, false otherwise
+         */
+        public boolean isCancelled() {
+            return cancelled;
+        }
+    }
+
+    private Timer initialTimer = new LoadingIndicatorTimer() {
         @Override
         public void run() {
+            if (isCancelled()) {
+                // IE8 does not properly cancel the timer in all cases.
+                return;
+            }
             show();
         }
     };
-    private Timer delayStateTimer = new Timer() {
+    private Timer delayStateTimer = new LoadingIndicatorTimer() {
         @Override
         public void run() {
+            if (isCancelled()) {
+                // IE8 does not properly cancel the timer in all cases.
+                return;
+            }
             getElement().setClassName(PRIMARY_STYLE_NAME + "-delay");
         }
     };
-    private Timer waitStateTimer = new Timer() {
+    private Timer waitStateTimer = new LoadingIndicatorTimer() {
         @Override
         public void run() {
+            if (isCancelled()) {
+                // IE8 does not properly cancel the timer in all cases.
+                return;
+            }
             getElement().setClassName(PRIMARY_STYLE_NAME + "-wait");
         }
     };
