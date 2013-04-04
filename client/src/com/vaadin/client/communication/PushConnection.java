@@ -42,7 +42,7 @@ public class PushConnection {
 
     private boolean connected = false;
 
-    private JavaScriptObject config = createConfig();
+    private AtmosphereConfiguration config = createConfig();
 
     public PushConnection() {
     }
@@ -50,11 +50,11 @@ public class PushConnection {
     /**
      * Two-phase construction to allow using GWT.create()
      * 
-     * @param ac
+     * @param connection
      *            The ApplicationConnection
      */
-    public void init(ApplicationConnection ac) {
-        this.connection = ac;
+    public void init(ApplicationConnection connection) {
+        this.connection = connection;
     }
 
     public void connect(String uri) {
@@ -85,7 +85,8 @@ public class PushConnection {
         messageQueue.clear();
     }
 
-    protected void onMessage(String message) {
+    protected void onMessage(AtmosphereResponse response) {
+        String message = response.getResponseBody();
         if (message.startsWith("for(;;);")) {
             VConsole.log("Received Atmosphere message: " + message);
             // "for(;;);[{json}]" -> "{json}"
@@ -94,11 +95,79 @@ public class PushConnection {
         }
     }
 
-    protected void onError() {
-        VConsole.error("Atmosphere connection failed!");
+    /**
+     * Called if the transport mechanism cannot be used and the fallback will be
+     * tried
+     */
+    protected void onTransportFailure() {
+        VConsole.log("Connection using primary method ("
+                + config.getTransport() + ") failed. Falling back to "
+                + config.getFallbackTransport());
     }
 
-    private static native JavaScriptObject createConfig()
+    /**
+     * Called if the push connection fails. Atmosphere will automatically retry
+     * the connection until successful.
+     * 
+     */
+    protected void onError() {
+        VConsole.error("Atmosphere connection using " + config.getTransport()
+                + " failed!");
+    }
+
+    public static abstract class AbstractJSO extends JavaScriptObject {
+        protected AbstractJSO() {
+
+        }
+
+        protected final native String getStringValue(String key)
+        /*-{
+           return this[key];
+         }-*/;
+
+        protected final native int getIntValue(String key)
+        /*-{
+           return this[key];
+         }-*/;
+
+    }
+
+    public static class AtmosphereConfiguration extends AbstractJSO {
+
+        protected AtmosphereConfiguration() {
+            super();
+        }
+
+        public final String getTransport() {
+            return getStringValue("transport");
+        }
+
+        public final String getFallbackTransport() {
+            return getStringValue("fallbackTransport");
+        }
+    }
+
+    public static class AtmosphereResponse extends AbstractJSO {
+
+        protected AtmosphereResponse() {
+
+        }
+
+        public final String getResponseBody() {
+            return getStringValue("responseBody");
+        }
+
+        public final String getState() {
+            return getStringValue("state");
+        }
+
+        public final String getError() {
+            return getStringValue("error");
+        }
+
+    }
+
+    private static native AtmosphereConfiguration createConfig()
     /*-{
         return {
             transport: 'websocket',
@@ -119,12 +188,14 @@ public class PushConnection {
             self.@com.vaadin.client.communication.PushConnection::onOpen()();
         });
         config.onMessage = $entry(function(response) {
-            self.@com.vaadin.client.communication.PushConnection::onMessage(*)(response.responseBody);
+            self.@com.vaadin.client.communication.PushConnection::onMessage(*)(response);
         });
         config.onError = $entry(function(response) {
-            self.@com.vaadin.client.communication.PushConnection::onError()();
+            self.@com.vaadin.client.communication.PushConnection::onError()(response);
         });
-                                 
+        config.onTransportFailure = $entry(function(reason,request) {
+            self.@com.vaadin.client.communication.PushConnection::onTransportFailure(*)(reason);
+        });
         return $wnd.atmosphere.subscribe(config);
     }-*/;
 
