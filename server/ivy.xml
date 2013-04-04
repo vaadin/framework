@@ -52,7 +52,7 @@
             
         <!-- Atmosphere -->
         <dependency org="org.atmosphere" name="atmosphere-runtime" rev="1.0.12"
-        	conf="build,ide,test -> default" />
+        	conf="build-provided,ide,test -> default" />
 
         <!-- TESTING DEPENDENCIES -->
 
