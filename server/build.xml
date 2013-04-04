@@ -19,6 +19,8 @@
 		<union refid="server.gwt.includes" />
 		<fileset dir="${vaadin.basedir}/WebContent">
 			<include name="VAADIN/vaadinBootstrap.js" />
+			<include name="VAADIN/portal.min.js" />
+			<include name="VAADIN/atmosphere.min.js" />
 		</fileset>
 	</union>
 
