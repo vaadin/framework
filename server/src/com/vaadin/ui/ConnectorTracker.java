@@ -32,9 +32,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.vaadin.server.AbstractClientConnector;
-import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.GlobalResourceHandler;
+import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.StreamVariable;
 
 /**
@@ -462,6 +462,15 @@ public class ConnectorTracker implements Serializable {
      */
     public Collection<ClientConnector> getDirtyConnectors() {
         return dirtyConnectors;
+    }
+
+    /**
+     * Checks if there a dirty connectors.
+     * 
+     * @return true if there are dirty connectors, false otherwise
+     */
+    public boolean hasDirtyConnectors() {
+        return !getDirtyConnectors().isEmpty();
     }
 
     /**
