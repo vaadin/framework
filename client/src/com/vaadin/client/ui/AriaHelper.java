@@ -63,12 +63,13 @@ public class AriaHelper {
     }
 
     /**
-     * Removes a binding to a caption from the provided Widget.
+     * Removes a binding to a caption added with bindCaption() from the provided
+     * Widget.
      * 
      * @param widget
      *            Widget, that was bound to a caption before
      */
-    public static void clearCaption(Widget widget) {
+    private static void clearCaption(Widget widget) {
         Roles.getTextboxRole()
                 .removeAriaLabelledbyProperty(widget.getElement());
     }

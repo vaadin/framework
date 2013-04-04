@@ -2215,7 +2215,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     @Override
     public void clearAriaCaption() {
-        AriaHelper.clearCaption(body);
+        AriaHelper.bindCaption(body, null);
     }
 
 }
