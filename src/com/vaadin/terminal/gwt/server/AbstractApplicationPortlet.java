@@ -90,13 +90,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
 
     private boolean productionMode = false;
 
-    /**
-     * Cache info on whether there's a custom implementation of
-     * writeAjaxPageWidgetset to avoid doing the slow reflection check every
-     * time.
-     */
-    private final boolean hasCustomWritePageWidgetset = checkCustomWritePageWidgetset();
-
     @Override
     public void init(PortletConfig config) throws PortletException {
         super.init(config);
@@ -1081,22 +1074,28 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     /**
      * Writes the script to load the widgetset on the HTML fragment created by
      * the portlet if the request attribute
-     * WRITE_AJAX_PAGE_SCRIPT_WIDGETSET_SHOULD_WRITE is set to Boolean.TRUE.
+     * {@value #WRITE_AJAX_PAGE_SCRIPT_WIDGETSET_SHOULD_WRITE} is set to
+     * Boolean.TRUE.
+     * <p>
+     * <b>Warning!</b> Loading widgetsets in this may cause a race condition in
+     * the browser if there are multiple portlets on the same page (see <a
+     * href="http://dev.vaadin.com/ticket/9774">#9774</a>).
+     * <p>
+     * This method doesn't do anything unless
+     * {@link #usesDirectWidgetsetLoad(RenderRequest)} has been overridden to
+     * return <code>true</code>.
+     * </p>
      * 
      * @param request
      * @param writer
      * @throws IOException
      * 
-     * @Deprecated As of 6.8.10, use
-     *             {@link #writeAjaxPageScriptWidgetset(RenderRequest, RenderResponse, BufferedWriter)}
-     *             instead to avoid loading the same widgetset multiple times.
      */
-    @Deprecated
     protected void writeAjaxPageWidgetset(RenderRequest request,
             BufferedWriter writer) throws IOException {
         /*
          * If the writeAjaxPageWidgetset added the code using document.write, we
-         * shouldn't do anything here because then the iframe and script tag
+         * shouldn't do anything here because then the iframe and script tags
          * have already been added.
          */
         if (request.getAttribute(WRITE_AJAX_PAGE_SCRIPT_WIDGETSET_SHOULD_WRITE) != Boolean.TRUE) {
@@ -1124,12 +1123,11 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             RenderResponse response, final BufferedWriter writer)
             throws IOException {
 
-        if (hasCustomWritePageWidgetset) {
+        if (usesDirectWidgetsetLoad(request)) {
             /*
-             * A custom implementation of writeAjaxPageWidgetset has been
-             * defined, so assume the user wants to use it for writing the
-             * script, even though it might cause loading problems with multiple
-             * portlets.
+             * Direct widgetset loading has been enabled so let
+             * writeAjaxPageWidgetset() write the script even though it might
+             * cause loading problems with multiple portlets.
              */
 
             // But we still need to close this one block, for compatibility
@@ -1151,29 +1149,39 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
         }
     }
 
-    private boolean checkCustomWritePageWidgetset() {
-        try {
-            Class<?> targetClass = getClass();
-            while (targetClass != AbstractApplicationPortlet.class) {
-                try {
-                    targetClass.getDeclaredMethod("writeAjaxPageWidgetset",
-                            RenderRequest.class, BufferedWriter.class);
-                    // Method found -> there's a custom implementation
-                    return true;
-                } catch (NoSuchMethodException e) {
-                    // No method in this class, continue looping
-                }
-                targetClass = targetClass.getSuperclass();
-            }
-            return false;
-        } catch (SecurityException e) {
-            // Nothing we can do, just use a safe default
-            getLogger()
-                    .log(Level.WARNING,
-                            "Could not check for custom writeAjaxPageWidgetset method, assuming it's not defined",
-                            e);
-            return false;
-        }
+    /**
+     * Checks whether the widgetset should be loaded directly in the generated
+     * HTML or indirectly using <code>document.write</code>.
+     * <p>
+     * In the normal case, indirect loading using <code>document.write</code>
+     * should be used as it ensures that the widgetset is only loaded once on
+     * each page. Usage of <code>document.write</code> does however cause
+     * problems with GWT Super Dev Mode and various other techniques that depend
+     * on loading scripts in a special order (see <a href=
+     * "http://dev.vaadin.com/ticket/8924">#8924</a>). These cases can be
+     * supported by using the direct loading technique can be used instead, even
+     * though that way of loading the widgetset can cause race conditions if a
+     * page contains multiple portlets using the same widgetset (see <a
+     * href="http://dev.vaadin.com/ticket/9774">#9774</a>).
+     * <p>
+     * For the default indirect loading,
+     * {@link #writeAjaxPageScriptWidgetset(RenderRequest, RenderResponse, BufferedWriter)}
+     * is adding the <code>document.write</code> code. The direct loading
+     * instead uses
+     * {@link #writeAjaxPageWidgetset(RenderRequest, BufferedWriter)} to create
+     * HTML that loads the widgetset.
+     * <p>
+     * By default, indirect loading is used.
+     * 
+     * @param request
+     *            the render request for which the widgetset loading method
+     *            should be determined
+     * 
+     * @return <code>true</code> to use direct widgetset loading,
+     *         <code>false</code> to use the default indirect widgetset loading.
+     */
+    protected boolean usesDirectWidgetsetLoad(RenderRequest request) {
+        return false;
     }
 
     /**
