@@ -29,9 +29,9 @@ import com.vaadin.server.RequestHandler;
 import com.vaadin.server.ServletPortletHelper;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
-import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.server.VaadinServletResponse;
+import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
 
 /**
@@ -47,7 +47,7 @@ public class PushRequestHandler implements RequestHandler {
     private AtmosphereFramework atmosphere;
     private PushHandler pushHandler;
 
-    public PushRequestHandler(VaadinService service) {
+    public PushRequestHandler(VaadinServletService service) {
 
         atmosphere = new AtmosphereFramework();
 

@@ -30,8 +30,8 @@ import org.json.JSONException;
 import com.vaadin.server.LegacyCommunicationManager.InvalidUIDLSecurityKeyException;
 import com.vaadin.server.ServiceException;
 import com.vaadin.server.SessionExpiredException;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinService;
+import com.vaadin.server.VaadinServletRequest;
+import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
 
@@ -43,9 +43,9 @@ import com.vaadin.ui.UI;
  */
 public class PushHandler implements AtmosphereHandler {
 
-    private VaadinService service;
+    private VaadinServletService service;
 
-    public PushHandler(VaadinService service) {
+    public PushHandler(VaadinServletService service) {
         this.service = service;
     }
 
@@ -53,7 +53,8 @@ public class PushHandler implements AtmosphereHandler {
     public void onRequest(AtmosphereResource resource) {
 
         AtmosphereRequest req = resource.getRequest();
-        VaadinRequest vaadinRequest = getVaadinRequest(req);
+        VaadinServletRequest vaadinRequest = new VaadinServletRequest(req,
+                service);
 
         VaadinSession session;
         try {
@@ -164,18 +165,6 @@ public class PushHandler implements AtmosphereHandler {
 
     @Override
     public void destroy() {
-    }
-
-    private VaadinRequest getVaadinRequest(AtmosphereRequest req) {
-        while (req.getRequest() instanceof AtmosphereRequest) {
-            req = (AtmosphereRequest) req.getRequest();
-        }
-        if (req.getRequest() instanceof VaadinRequest) {
-            return (VaadinRequest) req.getRequest();
-        } else {
-            throw new IllegalArgumentException(
-                    "Request does not wrap VaadinRequest");
-        }
     }
 
     private static final Logger getLogger() {
