@@ -1159,9 +1159,9 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
      * problems with GWT Super Dev Mode and various other techniques that depend
      * on loading scripts in a special order (see <a href=
      * "http://dev.vaadin.com/ticket/8924">#8924</a>). These cases can be
-     * supported by using the direct loading technique can be used instead, even
-     * though that way of loading the widgetset can cause race conditions if a
-     * page contains multiple portlets using the same widgetset (see <a
+     * supported by using the direct loading technique instead, even though that
+     * way of loading the widgetset can cause race conditions if a page contains
+     * multiple portlets using the same widgetset (see <a
      * href="http://dev.vaadin.com/ticket/9774">#9774</a>).
      * <p>
      * For the default indirect loading,
