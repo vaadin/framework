@@ -33,7 +33,7 @@ public class CloseSubWindow extends TestBase {
     private Window createClosableSubWindow(final String title) {
         VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
-        layout.setSizeFull();
+        layout.setSizeUndefined();
         final Window window = new Window(title, layout);
         window.setSizeUndefined();
         window.setClosable(true);

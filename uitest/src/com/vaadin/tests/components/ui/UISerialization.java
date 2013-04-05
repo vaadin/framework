@@ -20,15 +20,19 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.util.Date;
 
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Label;
 
 public class UISerialization extends AbstractTestUI {
 
@@ -42,21 +46,29 @@ public class UISerialization extends AbstractTestUI {
             @Override
             public void buttonClick(ClickEvent event) {
                 Date d = new Date();
-                byte[] result = serialize(UISerialization.this);
-                long elapsed = new Date().getTime() - d.getTime();
-                log.log("Serialized UI in " + elapsed + "ms into "
-                        + result.length + " bytes");
-                Object diffStateBefore = getConnectorTracker().getDiffState(
-                        UISerialization.this);
-                UISerialization app = (UISerialization) deserialize(result);
-                log.log("Deserialized UI in " + elapsed + "ms");
-                Object diffStateAfter = getConnectorTracker().getDiffState(
-                        UISerialization.this);
-                if (diffStateBefore.equals(diffStateAfter)) {
-                    log.log("Diff states match, size: "
-                            + diffStateBefore.toString().length());
-                } else {
-                    log.log("Diff states do not match");
+                try {
+                    byte[] result = serialize(UISerialization.this);
+                    long elapsed = new Date().getTime() - d.getTime();
+                    log.log("Serialized UI in " + elapsed + "ms into "
+                            + result.length + " bytes");
+                    Object diffStateBefore = getConnectorTracker()
+                            .getDiffState(UISerialization.this);
+                    UISerialization app = (UISerialization) deserialize(result);
+                    log.log("Deserialized UI in " + elapsed + "ms");
+                    Object diffStateAfter = getConnectorTracker().getDiffState(
+                            UISerialization.this);
+                    if (diffStateBefore.equals(diffStateAfter)) {
+                        log.log("Diff states match, size: "
+                                + diffStateBefore.toString().length());
+                    } else {
+                        log.log("Diff states do not match");
+                    }
+                } catch (Exception e) {
+                    log.log("Exception caught: " + e.getMessage());
+                    StringWriter sw = new StringWriter();
+                    e.printStackTrace(new PrintWriter(sw));
+                    addComponent(new Label(sw.toString(),
+                            ContentMode.PREFORMATTED));
                 }
 
             }
@@ -64,20 +76,16 @@ public class UISerialization extends AbstractTestUI {
     }
 
     protected void serializeInstance(Class<?> cls)
-            throws InstantiationException, IllegalAccessException {
+            throws InstantiationException, IllegalAccessException, IOException {
         serialize((Serializable) cls.newInstance());
     }
 
-    protected byte[] serialize(Serializable serializable) {
+    protected byte[] serialize(Serializable serializable) throws IOException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         ObjectOutputStream oos;
-        try {
-            oos = new ObjectOutputStream(os);
-            oos.writeObject(serializable);
-            return os.toByteArray();
-        } catch (IOException e) {
-            throw new RuntimeException("Serialization failed", e);
-        }
+        oos = new ObjectOutputStream(os);
+        oos.writeObject(serializable);
+        return os.toByteArray();
     }
 
     protected Object deserialize(byte[] result) {
