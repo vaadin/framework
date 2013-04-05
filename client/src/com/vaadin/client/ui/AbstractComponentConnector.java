@@ -213,6 +213,8 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     }
 
     protected void updateComponentSize(String newWidth, String newHeight) {
+        Profiler.enter("AbstractComponentConnector.updateComponentSize");
+
         // Parent should be updated if either dimension changed between relative
         // and non-relative
         if (newWidth.endsWith("%") != lastKnownWidth.endsWith("%")) {
