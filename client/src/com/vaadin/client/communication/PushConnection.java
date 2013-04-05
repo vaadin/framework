@@ -76,8 +76,9 @@ public class PushConnection {
         return config;
     }
 
-    protected void onOpen() {
-        VConsole.log("Atmosphere connection established");
+    protected void onOpen(AtmosphereResponse response) {
+        VConsole.log("Atmosphere connection established using "
+                + response.getTransport());
         connected = true;
         for (String message : messageQueue) {
             push(message);
@@ -165,6 +166,10 @@ public class PushConnection {
             return getStringValue("error");
         }
 
+        public final String getTransport() {
+            return getStringValue("transport");
+        }
+
     }
 
     private static native AtmosphereConfiguration createConfig()
@@ -185,7 +190,7 @@ public class PushConnection {
 
         config.url = uri;
         config.onOpen = $entry(function(response) {
-            self.@com.vaadin.client.communication.PushConnection::onOpen()();
+            self.@com.vaadin.client.communication.PushConnection::onOpen(*)(response)();
         });
         config.onMessage = $entry(function(response) {
             self.@com.vaadin.client.communication.PushConnection::onMessage(*)(response);
