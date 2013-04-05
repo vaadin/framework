@@ -67,6 +67,15 @@
 		</init-param>
 	</servlet>
 
+	<servlet>
+		<servlet-name>VaadinApplicationRunnerWithPush</servlet-name>
+		<servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
+		<init-param>
+			<param-name>pushmode</param-name>
+			<param-value>automatic</param-value>
+		</init-param>
+	</servlet>
+
 	<!-- For testing GAE - the deployment script changes this to use GAEVaadinServlet -->
 	<servlet>
 		<servlet-name>IntegrationTest</servlet-name>
@@ -94,6 +103,11 @@
 	<servlet-mapping>
 		<servlet-name>VaadinApplicationRunner</servlet-name>
 		<url-pattern>/run/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>VaadinApplicationRunnerWithPush</servlet-name>
+		<url-pattern>/run-push/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
