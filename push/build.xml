@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<project name="vaadin-push" basedir="." default="publish-local">
+	<description>
+		Meta package which defines dependencies needed for push
+	</description>
+	<include file="../build.xml" as="vaadin" />
+	<include file="../common.xml" as="common" />
+
+	<property name="module.name" value="vaadin-push" />
+	<property name="module.symbolic" value="com.vaadin.push" />
+	<property name="result.dir" location="result" />
+	<path id="classpath.compile.custom" />
+
+   	 <target name="jar">
+            <property name="server.osgi.import" value="" />
+            <antcall target="common.jar">
+                    <param name="require-bundle" value="" />
+                    <param name="import-package" value="${server.osgi.import}" />
+           		  <reference torefid="extra.jar.includes"
+           		  refid="empty.reference" />
+	    </antcall>
+	 </target>
+
+         <target name="publish-local" depends="jar">
+             <antcall target="common.publish-local" />
+         </target>
+
+         <target name="clean">
+             <antcall target="common.clean" />
+         </target>
+         <target name="checkstyle">
+	 </target>
+
+	<target name="test" depends="checkstyle">
+	</target>
+</project>

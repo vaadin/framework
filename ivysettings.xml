@@ -51,6 +51,8 @@
             resolver="build-temp" />
         <module organisation="com.vaadin" name="vaadin-themes"
             resolver="build-temp" />
+        <module organisation="com.vaadin" name="vaadin-push"
+            resolver="build-temp" />
     </modules>
 
 
