@@ -72,7 +72,7 @@ class HierarchySection implements Section {
     private final Button analyze = new DebugButton(Icon.ANALYZE,
             "Check layouts for potential problems");
     private final Button generateWS = new DebugButton(Icon.OPTIMIZE,
-            "Show used connectors and how to optimized widgetset");
+            "Show used connectors and how to optimize widgetset");
 
     private HandlerRegistration highlightModeRegistration = null;
 
