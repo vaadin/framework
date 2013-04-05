@@ -54,8 +54,8 @@ import com.vaadin.client.ui.calendar.schedule.CalendarDay;
 import com.vaadin.client.ui.calendar.schedule.CalendarEvent;
 import com.vaadin.client.ui.calendar.schedule.DateCell;
 import com.vaadin.client.ui.calendar.schedule.DateCell.DateCellSlot;
-import com.vaadin.client.ui.calendar.schedule.DateUtil;
 import com.vaadin.client.ui.calendar.schedule.DateCellDayEvent;
+import com.vaadin.client.ui.calendar.schedule.DateUtil;
 import com.vaadin.client.ui.calendar.schedule.HasTooltipKey;
 import com.vaadin.client.ui.calendar.schedule.SimpleDayCell;
 import com.vaadin.client.ui.calendar.schedule.dd.CalendarDropHandler;
@@ -131,6 +131,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
      */
     protected void registerListeners() {
         getWidget().setListener(new DateClickListener() {
+            @Override
             public void dateClick(String date) {
                 if (!getWidget().isDisabledOrReadOnly()
                         && hasEventListener(CalendarEventId.DATECLICK)) {
@@ -139,6 +140,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
             }
         });
         getWidget().setListener(new ForwardListener() {
+            @Override
             public void forward() {
                 if (hasEventListener(CalendarEventId.FORWARD)) {
                     rpc.forward();
@@ -146,6 +148,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
             }
         });
         getWidget().setListener(new BackwardListener() {
+            @Override
             public void backward() {
                 if (hasEventListener(CalendarEventId.BACKWARD)) {
                     rpc.backward();
@@ -153,6 +156,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
             }
         });
         getWidget().setListener(new RangeSelectListener() {
+            @Override
             public void rangeSelected(String value) {
                 if (hasEventListener(CalendarEventId.RANGESELECT)) {
                     rpc.rangeSelect(value);
@@ -160,6 +164,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
             }
         });
         getWidget().setListener(new WeekClickListener() {
+            @Override
             public void weekClick(String event) {
                 if (!getWidget().isDisabledOrReadOnly()
                         && hasEventListener(CalendarEventId.WEEKCLICK)) {
@@ -168,6 +173,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
             }
         });
         getWidget().setListener(new EventMovedListener() {
+            @Override
             public void eventMoved(CalendarEvent event) {
                 if (hasEventListener(CalendarEventId.EVENTMOVE)) {
                     StringBuilder sb = new StringBuilder();
@@ -180,6 +186,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
             }
         });
         getWidget().setListener(new EventResizeListener() {
+            @Override
             public void eventResized(CalendarEvent event) {
                 if (hasEventListener(CalendarEventId.EVENTRESIZE)) {
                     StringBuilder buffer = new StringBuilder();
@@ -205,12 +212,14 @@ public class CalendarConnector extends AbstractComponentConnector implements
             }
         });
         getWidget().setListener(new VCalendar.ScrollListener() {
+            @Override
             public void scroll(int scrollPosition) {
                 // This call is @Delayed (== non-immediate)
                 rpc.scroll(scrollPosition);
             }
         });
         getWidget().setListener(new EventClickListener() {
+            @Override
             public void eventClick(CalendarEvent event) {
                 if (hasEventListener(CalendarEventId.EVENTCLICK)) {
                     rpc.eventClick(event.getIndex());
@@ -218,6 +227,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
             }
         });
         getWidget().setListener(new MouseEventListener() {
+            @Override
             public void contextMenu(ContextMenuEvent event, final Widget widget) {
                 final NativeEvent ne = event.getNativeEvent();
                 int left = ne.getClientX();
@@ -225,14 +235,17 @@ public class CalendarConnector extends AbstractComponentConnector implements
                 top += Window.getScrollTop();
                 left += Window.getScrollLeft();
                 getClient().getContextMenu().showAt(new ActionOwner() {
+                    @Override
                     public String getPaintableId() {
                         return CalendarConnector.this.getPaintableId();
                     }
 
+                    @Override
                     public ApplicationConnection getClient() {
                         return CalendarConnector.this.getClient();
                     }
 
+                    @Override
                     @SuppressWarnings("deprecation")
                     public Action[] getActions() {
                         if (widget instanceof SimpleDayCell) {
@@ -423,6 +436,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
      * @see
      * com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler#getDropHandler()
      */
+    @Override
     public CalendarDropHandler getDropHandler() {
         return dropHandler;
     }
@@ -548,6 +562,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
      * Returns ALL currently registered events. Use {@link #getActions(Date)} to
      * get the actions for a specific date
      */
+    @Override
     public Action[] getActions() {
         List<Action> actions = new ArrayList<Action>();
         for (int i = 0; i < actionKeys.size(); i++) {
@@ -573,6 +588,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
      * 
      * @see com.vaadin.terminal.gwt.client.ui.ActionOwner#getPaintableId()
      */
+    @Override
     public String getPaintableId() {
         return getConnectorId();
     }

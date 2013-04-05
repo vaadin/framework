@@ -246,6 +246,7 @@ class HierarchySection implements Section {
         }
     }
 
+    @Override
     public void meta(ApplicationConnection ac, ValueMap meta) {
         content.clear();
         JsArray<ValueMap> valueMapArray = meta

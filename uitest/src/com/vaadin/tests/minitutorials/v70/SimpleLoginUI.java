@@ -26,16 +26,16 @@ public class SimpleLoginUI extends UI {
          */
         getNavigator().addView(SimpleLoginMainView.NAME,
                 SimpleLoginMainView.class);
-                       
+
         /*
          * We use a view change handler to ensure the user is always redirected
          * to the login view if the user is not logged in.
          */
         getNavigator().addViewChangeListener(new ViewChangeListener() {
-            
+
             @Override
             public boolean beforeViewChange(ViewChangeEvent event) {
-                
+
                 // Check if a user has logged in
                 boolean isLoggedIn = getSession().getAttribute("user") != null;
                 boolean isLoginView = event.getNewView() instanceof SimpleLoginView;
@@ -54,10 +54,10 @@ public class SimpleLoginUI extends UI {
 
                 return true;
             }
-            
+
             @Override
             public void afterViewChange(ViewChangeEvent event) {
-                
+
             }
         });
     }

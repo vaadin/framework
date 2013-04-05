@@ -1245,6 +1245,7 @@ public class GridLayout extends AbstractLayout implements
      * com.vaadin.ui.Layout.AlignmentHandler#setDefaultComponentAlignment(com
      * .vaadin.ui.Alignment)
      */
+    @Override
     public void setDefaultComponentAlignment(Alignment defaultAlignment) {
         defaultComponentAlignment = defaultAlignment;
     }

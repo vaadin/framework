@@ -39,6 +39,7 @@ public class BasicBackwardHandler implements BackwardHandler {
      * backward
      * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.BackwardEvent)
      */
+    @Override
     public void backward(BackwardEvent event) {
         Date start = event.getComponent().getStartDate();
         Date end = event.getComponent().getEndDate();

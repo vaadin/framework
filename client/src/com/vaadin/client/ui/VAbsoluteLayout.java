@@ -322,7 +322,7 @@ public class VAbsoluteLayout extends ComplexPanel {
             }
         }
     }
-    
+
     /**
      * Cleanup old wrappers which have been left empty by other inner layouts
      * moving the widget from the wrapper into their own hierarchy. This usually
@@ -330,7 +330,7 @@ public class VAbsoluteLayout extends ComplexPanel {
      * automatically detaches the widget from the parent, in this case the
      * wrapper, and re-attaches it somewhere else. This has to be done in the
      * layout phase since the order of the hierarchy events are not defined.
-     */           
+     */
     public void cleanupWrappers() {
         for (Widget widget : getChildren()) {
             if (widget instanceof AbsoluteWrapper) {
@@ -339,9 +339,9 @@ public class VAbsoluteLayout extends ComplexPanel {
                     wrapper.destroy();
                     super.remove(wrapper);
                     continue;
-                }             
+                }
             }
-        }        
+        }
     }
 
     /**

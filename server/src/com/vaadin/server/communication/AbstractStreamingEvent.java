@@ -15,7 +15,6 @@
  */
 package com.vaadin.server.communication;
 
-import com.vaadin.server.StreamVariable;
 import com.vaadin.server.StreamVariable.StreamingEvent;
 
 /**

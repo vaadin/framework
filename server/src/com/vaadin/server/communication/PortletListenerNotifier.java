@@ -29,8 +29,8 @@ import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
-import com.vaadin.server.SynchronizedRequestHandler;
 import com.vaadin.server.ServletPortletHelper;
+import com.vaadin.server.SynchronizedRequestHandler;
 import com.vaadin.server.VaadinPortletRequest;
 import com.vaadin.server.VaadinPortletResponse;
 import com.vaadin.server.VaadinPortletSession;

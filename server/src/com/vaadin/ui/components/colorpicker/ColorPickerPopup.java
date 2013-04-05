@@ -283,6 +283,7 @@ public class ColorPickerPopup extends Window implements ClickListener,
         }
 
         redSlider.addValueChangeListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 double red = (Double) event.getProperty().getValue();
                 if (!updatingColors) {
@@ -303,6 +304,7 @@ public class ColorPickerPopup extends Window implements ClickListener,
         }
 
         greenSlider.addValueChangeListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 double green = (Double) event.getProperty().getValue();
                 if (!updatingColors) {
@@ -322,6 +324,7 @@ public class ColorPickerPopup extends Window implements ClickListener,
         }
 
         blueSlider.addValueChangeListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 double blue = (Double) event.getProperty().getValue();
                 if (!updatingColors) {
@@ -380,6 +383,7 @@ public class ColorPickerPopup extends Window implements ClickListener,
         hueSlider.setWidth("220px");
         hueSlider.setImmediate(true);
         hueSlider.addValueChangeListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (!updatingColors) {
                     float hue = (Float.parseFloat(event.getProperty()
@@ -417,6 +421,7 @@ public class ColorPickerPopup extends Window implements ClickListener,
         saturationSlider.setWidth("220px");
         saturationSlider.setImmediate(true);
         saturationSlider.addValueChangeListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (!updatingColors) {
                     float hue = (Float.parseFloat(hueSlider.getValue()
@@ -444,6 +449,7 @@ public class ColorPickerPopup extends Window implements ClickListener,
         valueSlider.setWidth("220px");
         valueSlider.setImmediate(true);
         valueSlider.addValueChangeListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 if (!updatingColors) {
                     float hue = (Float.parseFloat(hueSlider.getValue()
@@ -754,6 +760,7 @@ public class ColorPickerPopup extends Window implements ClickListener,
 
     /** HSV color converter */
     Coordinates2Color HSVConverter = new Coordinates2Color() {
+        @Override
         public int[] calculate(Color color) {
 
             float[] hsv = color.getHSV();
@@ -769,6 +776,7 @@ public class ColorPickerPopup extends Window implements ClickListener,
             return new int[] { x, y };
         }
 
+        @Override
         public Color calculate(int x, int y) {
             float saturation = 1f - (y / 220.0f);
             float value = (x / 220.0f);

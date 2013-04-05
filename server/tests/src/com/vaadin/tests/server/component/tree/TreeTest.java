@@ -88,8 +88,7 @@ public class TreeTest {
         tree.expandItem("parent");
         tree.expandItem("child");
 
-        Field expandedField = tree.getClass()
-                .getDeclaredField("expanded");
+        Field expandedField = tree.getClass().getDeclaredField("expanded");
         Field expandedItemIdField = tree.getClass().getDeclaredField(
                 "expandedItemId");
 

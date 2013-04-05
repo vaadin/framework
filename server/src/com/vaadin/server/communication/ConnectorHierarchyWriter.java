@@ -26,8 +26,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.vaadin.server.AbstractClientConnector;
-import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.ClientConnector;
+import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.PaintException;
 import com.vaadin.ui.UI;
 

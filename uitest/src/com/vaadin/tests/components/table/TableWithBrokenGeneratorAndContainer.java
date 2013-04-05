@@ -78,6 +78,7 @@ public class TableWithBrokenGeneratorAndContainer extends TestBase {
             this.brokenInterval = brokenInterval;
         }
 
+        @Override
         public Object generateCell(Table source, Object itemId, Object columnId) {
             if (counter++ % brokenInterval == 0
                     && Boolean.TRUE.equals(brokenGenerator.getValue())) {
@@ -97,6 +98,7 @@ public class TableWithBrokenGeneratorAndContainer extends TestBase {
         clearTableOnError.setImmediate(true);
         clearTableOnError.addValueChangeListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 Boolean value = clearTableOnError.getValue();
                 setErrorHandler(value != null ? value : false);
@@ -110,6 +112,7 @@ public class TableWithBrokenGeneratorAndContainer extends TestBase {
         Button refreshTableCache = new Button("Refresh table cache",
                 new Button.ClickListener() {
 
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         table.markAsDirty();
                         table.refreshRowCache();

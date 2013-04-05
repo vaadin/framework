@@ -40,6 +40,7 @@ public class BasicWeekClickHandler implements WeekClickHandler {
      * #weekClick
      * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.WeekClick)
      */
+    @Override
     public void weekClick(WeekClick event) {
         int week = event.getWeek();
         int year = event.getYear();

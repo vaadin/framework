@@ -27,6 +27,7 @@ public class ScrollCursor extends TestBase {
         Button button = new Button("Scroll");
         button.addListener(new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 textArea.setCursorPosition(getPosition());
             }
@@ -34,6 +35,7 @@ public class ScrollCursor extends TestBase {
         Button wrap = new Button("Set wrap");
         wrap.addListener(new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 textArea.setWordwrap(false);
             }
@@ -42,6 +44,7 @@ public class ScrollCursor extends TestBase {
         Button toBegin = new Button("To begin");
         toBegin.addListener(new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 position = 3;
             }
@@ -50,6 +53,7 @@ public class ScrollCursor extends TestBase {
         Button toMiddle = new Button("To middle");
         toMiddle.addListener(new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 position = 130;
             }
@@ -58,6 +62,7 @@ public class ScrollCursor extends TestBase {
         Button toEnd = new Button("To end");
         toEnd.addListener(new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 position = textArea.getValue().toString().length();
             }

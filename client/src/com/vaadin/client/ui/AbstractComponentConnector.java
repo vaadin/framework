@@ -36,8 +36,6 @@ import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.metadata.TypeDataStore;
-import com.vaadin.client.ui.AbstractFieldConnector;
-import com.vaadin.client.ui.ManagedLayout;
 import com.vaadin.client.ui.datefield.PopupDateFieldConnector;
 import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.shared.AbstractComponentState;

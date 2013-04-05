@@ -83,6 +83,7 @@ public class WeekGrid extends SimplePanel {
             scrollPanel.setWidget(content);
 
             scrollPanel.addScrollHandler(new ScrollHandler() {
+                @Override
                 public void onScroll(ScrollEvent event) {
                     if (calendar.getScrollListener() != null) {
                         calendar.getScrollListener().scroll(

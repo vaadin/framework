@@ -50,6 +50,7 @@ public class NotificationTestUI extends UI {
             events.add(e);
         }
 
+        @Override
         public List<CalendarEvent> getEvents(Date startDate, Date endDate) {
             return events;
         }
@@ -64,6 +65,7 @@ public class NotificationTestUI extends UI {
         setContent(content);
         final Button btn = new Button("Show working notification",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         Notification
                                 .show("This will disappear when you move your mouse!");
@@ -76,6 +78,7 @@ public class NotificationTestUI extends UI {
         cal.setLocale(Locale.US);
         cal.setSizeFull();
         cal.setHandler(new DateClickHandler() {
+            @Override
             public void dateClick(DateClickEvent event) {
                 provider.addEvent(event.getDate());
                 Notification

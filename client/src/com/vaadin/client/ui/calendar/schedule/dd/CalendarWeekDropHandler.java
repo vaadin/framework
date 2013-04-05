@@ -80,6 +80,7 @@ public class CalendarWeekDropHandler extends CalendarDropHandler {
     public void dragOver(final VDragEvent drag) {
         if (isLocationValid(drag.getElementOver())) {
             validate(new VAcceptCallback() {
+                @Override
                 public void accepted(VDragEvent event) {
                     dragAccepted(drag);
                 }

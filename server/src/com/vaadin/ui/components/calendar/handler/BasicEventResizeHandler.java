@@ -39,6 +39,7 @@ public class BasicEventResizeHandler implements EventResizeHandler {
      * #eventResize
      * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventResize)
      */
+    @Override
     public void eventResize(EventResize event) {
         CalendarEvent calendarEvent = event.getCalendarEvent();
 

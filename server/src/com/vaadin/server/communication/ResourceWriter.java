@@ -25,8 +25,8 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.JsonPaintTarget;
+import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.UI;
 

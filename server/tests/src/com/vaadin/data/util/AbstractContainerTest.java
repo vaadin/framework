@@ -324,7 +324,6 @@ public abstract class AbstractContainerTest extends TestCase {
                 "com.vaadin.terminal.gwt.client.Focusable",
                 "com.vaadin.data.Buffered", isFilteredOutItemNull(), 20);
 
-
         // Filter by "contains da" (reversed as ad here)
         container.removeAllContainerFilters();
 

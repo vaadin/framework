@@ -33,7 +33,8 @@ public class SimpleLoginView extends CustomComponent implements View,
         user.setWidth("300px");
         user.setRequired(true);
         user.setInputPrompt("Your username (eg. joe@email.com)");
-        user.addValidator(new EmailValidator("Username must be an email address"));
+        user.addValidator(new EmailValidator(
+                "Username must be an email address"));
         user.setInvalidAllowed(false);
 
         // Create the password input field
@@ -61,7 +62,7 @@ public class SimpleLoginView extends CustomComponent implements View,
         viewLayout.setStyleName(Reindeer.LAYOUT_BLUE);
         setCompositionRoot(viewLayout);
     }
-    
+
     @Override
     public void enter(ViewChangeEvent event) {
         // focus the username field when user arrives to the login view
@@ -119,7 +120,7 @@ public class SimpleLoginView extends CustomComponent implements View,
         boolean isValid = username.equals("test@test.com")
                 && password.equals("passw0rd");
 
-        if(isValid){
+        if (isValid) {
             // Store the current user in the service session
             getSession().setAttribute("user", username);
 
@@ -134,4 +135,3 @@ public class SimpleLoginView extends CustomComponent implements View,
         }
     }
 }
-

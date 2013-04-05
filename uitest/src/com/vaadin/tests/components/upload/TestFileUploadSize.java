@@ -28,6 +28,7 @@ public class TestFileUploadSize extends TestBase implements Receiver {
 
         Upload u = new Upload("Upload", new Upload.Receiver() {
 
+            @Override
             public OutputStream receiveUpload(String filename, String mimeType) {
                 return baos;
             }
@@ -35,12 +36,14 @@ public class TestFileUploadSize extends TestBase implements Receiver {
         u.setId("UPL");
         u.addStartedListener(new Upload.StartedListener() {
 
+            @Override
             public void uploadStarted(StartedEvent event) {
                 expectedSize.setValue(String.valueOf(event.getContentLength()));
             }
         });
         u.addFinishedListener(new Upload.FinishedListener() {
 
+            @Override
             public void uploadFinished(FinishedEvent event) {
                 label.setValue("Upload finished. Name: " + event.getFilename());
                 receivedSize.setValue(String.valueOf(baos.size()));
@@ -62,6 +65,7 @@ public class TestFileUploadSize extends TestBase implements Receiver {
         addComponent(u);
     }
 
+    @Override
     public OutputStream receiveUpload(String filename, String MIMEType) {
         Notification.show("Receiving upload");
         return new ByteArrayOutputStream();

@@ -77,6 +77,7 @@ public class NetworkSection implements Section {
         // NOP
     }
 
+    @Override
     public void uidl(ApplicationConnection ac, ValueMap uidl) {
         int sinceStart = VDebugWindow.getMillisSinceStart();
         int sinceReset = VDebugWindow.getMillisSinceReset();

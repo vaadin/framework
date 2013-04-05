@@ -91,6 +91,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
      * 
      * @see com.vaadin.addon.calendar.event.CalendarEvent#getCaption()
      */
+    @Override
     public String getCaption() {
         return caption;
     }
@@ -100,6 +101,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
      * 
      * @see com.vaadin.addon.calendar.event.CalendarEvent#getDescription()
      */
+    @Override
     public String getDescription() {
         return description;
     }
@@ -109,6 +111,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
      * 
      * @see com.vaadin.addon.calendar.event.CalendarEvent#getEnd()
      */
+    @Override
     public Date getEnd() {
         return end;
     }
@@ -118,6 +121,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
      * 
      * @see com.vaadin.addon.calendar.event.CalendarEvent#getStart()
      */
+    @Override
     public Date getStart() {
         return start;
     }
@@ -127,6 +131,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
      * 
      * @see com.vaadin.addon.calendar.event.CalendarEvent#getStyleName()
      */
+    @Override
     public String getStyleName() {
         return styleName;
     }
@@ -136,6 +141,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
      * 
      * @see com.vaadin.addon.calendar.event.CalendarEvent#isAllDay()
      */
+    @Override
     public boolean isAllDay() {
         return isAllDay;
     }
@@ -147,6 +153,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
      * com.vaadin.addon.calendar.event.CalendarEventEditor#setCaption(java.lang
      * .String)
      */
+    @Override
     public void setCaption(String caption) {
         this.caption = caption;
         fireEventChange();
@@ -159,6 +166,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
      * com.vaadin.addon.calendar.event.CalendarEventEditor#setDescription(java
      * .lang.String)
      */
+    @Override
     public void setDescription(String description) {
         this.description = description;
         fireEventChange();
@@ -171,6 +179,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
      * com.vaadin.addon.calendar.event.CalendarEventEditor#setEnd(java.util.
      * Date)
      */
+    @Override
     public void setEnd(Date end) {
         this.end = end;
         fireEventChange();
@@ -183,6 +192,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
      * com.vaadin.addon.calendar.event.CalendarEventEditor#setStart(java.util
      * .Date)
      */
+    @Override
     public void setStart(Date start) {
         this.start = start;
         fireEventChange();
@@ -195,6 +205,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
      * com.vaadin.addon.calendar.event.CalendarEventEditor#setStyleName(java
      * .lang.String)
      */
+    @Override
     public void setStyleName(String styleName) {
         this.styleName = styleName;
         fireEventChange();
@@ -206,6 +217,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
      * @see
      * com.vaadin.addon.calendar.event.CalendarEventEditor#setAllDay(boolean)
      */
+    @Override
     public void setAllDay(boolean isAllDay) {
         this.isAllDay = isAllDay;
         fireEventChange();
@@ -220,6 +232,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
      * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventChangeListener
      * )
      */
+    @Override
     public void addEventChangeListener(EventChangeListener listener) {
         listeners.add(listener);
     }
@@ -233,6 +246,7 @@ public class BasicEvent implements EditableCalendarEvent, EventChangeNotifier {
      * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventChangeListener
      * )
      */
+    @Override
     public void removeEventChangeListener(EventChangeListener listener) {
         listeners.remove(listener);
     }

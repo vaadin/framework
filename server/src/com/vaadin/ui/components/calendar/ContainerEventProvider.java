@@ -239,6 +239,7 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
      * com.vaadin.addon.calendar.event.CalendarEventProvider#getEvents(java.
      * util.Date, java.util.Date)
      */
+    @Override
     public List<CalendarEvent> getEvents(Date startDate, Date endDate) {
         eventCache.clear();
 
@@ -315,6 +316,7 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
      * #addListener(com.vaadin.addon.calendar.event.CalendarEventProvider.
      * EventSetChangeListener)
      */
+    @Override
     public void addEventSetChangeListener(EventSetChangeListener listener) {
         if (!eventSetChangeListeners.contains(listener)) {
             eventSetChangeListeners.add(listener);
@@ -329,6 +331,7 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
      * #removeListener(com.vaadin.addon.calendar.event.CalendarEventProvider.
      * EventSetChangeListener)
      */
+    @Override
     public void removeEventSetChangeListener(EventSetChangeListener listener) {
         eventSetChangeListeners.remove(listener);
     }
@@ -340,6 +343,7 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
      * com.vaadin.addon.calendar.event.CalendarEvent.EventChangeNotifier#addListener
      * (com.vaadin.addon.calendar.event.CalendarEvent.EventChangeListener)
      */
+    @Override
     public void addEventChangeListener(EventChangeListener listener) {
         if (eventChangeListeners.contains(listener)) {
             eventChangeListeners.add(listener);
@@ -353,6 +357,7 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
      * removeListener
      * (com.vaadin.addon.calendar.event.CalendarEvent.EventChangeListener)
      */
+    @Override
     public void removeEventChangeListener(EventChangeListener listener) {
         eventChangeListeners.remove(listener);
     }
@@ -434,6 +439,7 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
      * com.vaadin.data.Container.ItemSetChangeListener#containerItemSetChange
      * (com.vaadin.data.Container.ItemSetChangeEvent)
      */
+    @Override
     public void containerItemSetChange(ItemSetChangeEvent event) {
         if (event.getContainer() == container) {
             // Trigger an eventset change event when the itemset changes
@@ -450,6 +456,7 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
      * com.vaadin.data.Property.ValueChangeListener#valueChange(com.vaadin.data
      * .Property.ValueChangeEvent)
      */
+    @Override
     public void valueChange(ValueChangeEvent event) {
         /*
          * TODO Need to figure out how to get the item which triggered the the
@@ -466,6 +473,7 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
      * #eventMove
      * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.MoveEvent)
      */
+    @Override
     public void eventMove(MoveEvent event) {
         CalendarEvent ce = event.getCalendarEvent();
         if (eventCache.contains(ce)) {
@@ -496,6 +504,7 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
      * #eventResize
      * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventResize)
      */
+    @Override
     public void eventResize(EventResize event) {
         CalendarEvent ce = event.getCalendarEvent();
         if (eventCache.contains(ce)) {
@@ -531,6 +540,7 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
      * com.vaadin.addon.calendar.event.CalendarEditableEventProvider#addEvent
      * (com.vaadin.addon.calendar.event.CalendarEvent)
      */
+    @Override
     public void addEvent(CalendarEvent event) {
         Item item;
         try {
@@ -560,6 +570,7 @@ public class ContainerEventProvider implements CalendarEditableEventProvider,
      * com.vaadin.addon.calendar.event.CalendarEditableEventProvider#removeEvent
      * (com.vaadin.addon.calendar.event.CalendarEvent)
      */
+    @Override
     public void removeEvent(CalendarEvent event) {
         container.removeItem(event);
     }

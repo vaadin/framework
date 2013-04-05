@@ -338,8 +338,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     /**
-     * Reads CSS strings and resources injected by {@link Styles#inject}
-     * from the UIDL stream.
+     * Reads CSS strings and resources injected by {@link Styles#inject} from
+     * the UIDL stream.
      * 
      * @param uidl
      *            The uidl which contains "css-resource" and "css-string" tags

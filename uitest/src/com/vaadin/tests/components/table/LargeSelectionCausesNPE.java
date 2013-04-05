@@ -105,6 +105,7 @@ public class LargeSelectionCausesNPE extends TestBase {
         }
 
         Table.ValueChangeListener valueChangeListener = new Table.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 // in multiselect mode, a Set of itemIds is returned,
                 // in singleselect mode the itemId is returned directly
@@ -119,6 +120,7 @@ public class LargeSelectionCausesNPE extends TestBase {
 
         Button.ClickListener clickListener = new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 Property nameProperty = table.getContainerProperty(0, NAME);
                 if (("0").equals(nameLabel.getValue())) {
@@ -148,6 +150,7 @@ public class LargeSelectionCausesNPE extends TestBase {
 
         ColumnGenerator columnGenerator = new ColumnGenerator() {
 
+            @Override
             public Object generateCell(Table source, Object itemId,
                     Object columnId) {
                 Label label = new Label();

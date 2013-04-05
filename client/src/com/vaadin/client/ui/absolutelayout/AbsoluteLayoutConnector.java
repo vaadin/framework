@@ -100,8 +100,7 @@ public class AbsoluteLayoutConnector extends
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * com.vaadin.client.HasComponentsConnector#updateCaption(com.vaadin
+     * @see com.vaadin.client.HasComponentsConnector#updateCaption(com.vaadin
      * .client.ComponentConnector)
      */
     @Override

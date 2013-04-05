@@ -39,6 +39,7 @@ public class BasicEventMoveHandler implements EventMoveHandler {
      * #eventMove
      * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.MoveEvent)
      */
+    @Override
     public void eventMove(MoveEvent event) {
         CalendarEvent calendarEvent = event.getCalendarEvent();
 

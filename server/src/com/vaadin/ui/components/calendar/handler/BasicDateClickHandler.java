@@ -39,6 +39,7 @@ public class BasicDateClickHandler implements DateClickHandler {
      * #dateClick
      * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.DateClickEvent)
      */
+    @Override
     public void dateClick(DateClickEvent event) {
         Date clickedDate = event.getDate();
 

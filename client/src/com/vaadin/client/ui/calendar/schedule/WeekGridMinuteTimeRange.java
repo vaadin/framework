@@ -27,16 +27,16 @@ public class WeekGridMinuteTimeRange {
     private final Date end;
 
     /**
-     * Creates a Date time range between start and end date. Drops seconds
-     * from the range.
+     * Creates a Date time range between start and end date. Drops seconds from
+     * the range.
      * 
      * @param start
      *            Start time of the range
      * @param end
      *            End time of the range
      * @param clearSeconds
-     *            Boolean Indicates, if seconds should be dropped from the
-     *            range start and end
+     *            Boolean Indicates, if seconds should be dropped from the range
+     *            start and end
      */
     public WeekGridMinuteTimeRange(Date start, Date end) {
         this.start = new Date(start.getTime());
@@ -53,7 +53,8 @@ public class WeekGridMinuteTimeRange {
         return end;
     }
 
-    public static boolean doesOverlap(WeekGridMinuteTimeRange a, WeekGridMinuteTimeRange b) {
+    public static boolean doesOverlap(WeekGridMinuteTimeRange a,
+            WeekGridMinuteTimeRange b) {
         boolean overlaps = a.getStart().compareTo(b.getEnd()) < 0
                 && a.getEnd().compareTo(b.getStart()) > 0;
         return overlaps;

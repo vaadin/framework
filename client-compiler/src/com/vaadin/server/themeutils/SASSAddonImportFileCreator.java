@@ -43,7 +43,6 @@ public class SASSAddonImportFileCreator {
 
     private static final String ADDON_IMPORTS_FILE_TEXT = "This file is managed by the Eclipse plug-in and "
             + "will be overwritten from time to time. Do not manually edit this file.";
-    
 
     /**
      * 
@@ -78,7 +77,8 @@ public class SASSAddonImportFileCreator {
             addonImports.createNewFile();
         }
 
-        LocationInfo info = ClassPathExplorer.getAvailableWidgetSetsAndStylesheets();
+        LocationInfo info = ClassPathExplorer
+                .getAvailableWidgetSetsAndStylesheets();
 
         try {
             PrintStream printStream = new PrintStream(new FileOutputStream(
@@ -113,8 +113,7 @@ public class SASSAddonImportFileCreator {
             // Convention is to name the mixing after the stylesheet. Strip
             // .scss from filename
             String mixin = file.substring(file.lastIndexOf("/") + 1,
-                    file.length()
-                    - ".scss".length());
+                    file.length() - ".scss".length());
 
             stream.print("@include " + mixin + ";");
         }

@@ -19,7 +19,8 @@ public class RemoveListenersOnDetach {
     int numReadOnlyChanges = 0;
 
     AbstractField field = new AbstractField() {
-        final private VaadinSession application = new AlwaysLockedVaadinSession(null);
+        final private VaadinSession application = new AlwaysLockedVaadinSession(
+                null);
         private UI uI = new UI() {
 
             @Override

@@ -84,7 +84,7 @@ public class ClassPathExplorer {
 
         public LocationInfo(Map<String, URL> widgetsets, Map<String, URL> themes) {
             this.widgetsets = widgetsets;
-            this.addonStyles = themes;
+            addonStyles = themes;
         }
 
         public Map<String, URL> getWidgetsets() {
@@ -186,8 +186,9 @@ public class ClassPathExplorer {
      *            separators) to a URL (see {@link #classpathLocations}) - new
      *            entries are added to this map
      */
-    private static void searchForWidgetSetsAndAddonStyles(String locationString,
-            Map<String, URL> widgetsets, Map<String, URL> addonStyles) {
+    private static void searchForWidgetSetsAndAddonStyles(
+            String locationString, Map<String, URL> widgetsets,
+            Map<String, URL> addonStyles) {
 
         URL location = classpathLocations.get(locationString);
         File directory = new File(location.getFile());

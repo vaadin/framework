@@ -118,6 +118,7 @@ public abstract class VOptionGroupBase extends Composite implements Field,
         return multiselect;
     }
 
+    @Override
     public boolean isEnabled() {
         return enabled;
     }
@@ -190,6 +191,7 @@ public abstract class VOptionGroupBase extends Composite implements Field,
         }
     }
 
+    @Override
     public void setEnabled(boolean enabled) {
         if (this.enabled != enabled) {
             this.enabled = enabled;

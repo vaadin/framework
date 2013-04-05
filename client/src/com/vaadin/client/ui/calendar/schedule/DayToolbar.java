@@ -109,6 +109,7 @@ public class DayToolbar extends HorizontalPanel implements ClickHandler {
         }
 
         l.addClickHandler(new ClickHandler() {
+            @Override
             public void onClick(ClickEvent event) {
                 if (calendar.getDateClickListener() != null) {
                     calendar.getDateClickListener().dateClick(date);
@@ -133,6 +134,7 @@ public class DayToolbar extends HorizontalPanel implements ClickHandler {
         add(nextLabel);
     }
 
+    @Override
     public void onClick(ClickEvent event) {
         if (!calendar.isDisabledOrReadOnly()) {
             if (event.getSource() == nextLabel) {

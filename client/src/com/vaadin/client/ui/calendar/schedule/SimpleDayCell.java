@@ -361,6 +361,7 @@ public class SimpleDayCell extends FocusableFlowPanel implements
         super.onDetach();
     }
 
+    @Override
     public void onMouseUp(MouseUpEvent event) {
         if (event.getNativeButton() != NativeEvent.BUTTON_LEFT) {
             return;
@@ -415,6 +416,7 @@ public class SimpleDayCell extends FocusableFlowPanel implements
         clickedWidget = null;
     }
 
+    @Override
     public void onMouseDown(MouseDownEvent event) {
         if (calendar.isDisabled()
                 || event.getNativeButton() != NativeEvent.BUTTON_LEFT) {
@@ -456,11 +458,13 @@ public class SimpleDayCell extends FocusableFlowPanel implements
         event.preventDefault();
     }
 
+    @Override
     public void onMouseOver(MouseOverEvent event) {
         event.preventDefault();
         getMonthGrid().setSelectionEnd(this);
     }
 
+    @Override
     public void onMouseMove(MouseMoveEvent event) {
         if (clickedWidget instanceof MonthEventLabel && !monthEventMouseDown
                 || (startY < 0 && startX < 0)) {
@@ -566,6 +570,7 @@ public class SimpleDayCell extends FocusableFlowPanel implements
         Event.setCapture(getElement());
         keyDownHandler = addKeyDownHandler(new KeyDownHandler() {
 
+            @Override
             public void onKeyDown(KeyDownEvent event) {
                 if (event.getNativeKeyCode() == KeyCodes.KEY_ESCAPE) {
                     cancelEventDrag(w);

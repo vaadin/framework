@@ -30,27 +30,26 @@ public class CSSInjectWithColorpicker extends UI {
 
         // Create a text editor
         Component editor = createEditor("Lorem ipsum dolor sit amet, lacus pharetra sed, sit a "
-                        + "tortor. Id aliquam lorem pede, orci ut enim metus, diam nulla mi "
-                        + "suspendisse tempor tortor. Eleifend lorem proin, morbi vel diam ut. "
-                        + "Tempor est tellus vitae, pretium condimentum facilisis sit. Sagittis "
-                        + "quam, ac urna eros est cras id cras, eleifend eu mattis nec."
-                        +"Lorem ipsum dolor sit amet, lacus pharetra sed, sit a "
-                        + "tortor. Id aliquam lorem pede, orci ut enim metus, diam nulla mi "
-                        + "suspendisse tempor tortor. Eleifend lorem proin, morbi vel diam ut. "
-                        + "Tempor est tellus vitae, pretium condimentum facilisis sit. Sagittis "
-                        + "quam, ac urna eros est cras id cras, eleifend eu mattis nec."
-                        + "Lorem ipsum dolor sit amet, lacus pharetra sed, sit a "
-                        + "tortor. Id aliquam lorem pede, orci ut enim metus, diam nulla mi "
-                        + "suspendisse tempor tortor. Eleifend lorem proin, morbi vel diam ut. "
-                        + "Tempor est tellus vitae, pretium condimentum facilisis sit. Sagittis "
-                        + "quam, ac urna eros est cras id cras, eleifend eu mattis nec."
-                        + "Lorem ipsum dolor sit amet, lacus pharetra sed, sit a "
-                        + "tortor. Id aliquam lorem pede, orci ut enim metus, diam nulla mi "
-                        + "suspendisse tempor tortor. Eleifend lorem proin, morbi vel diam ut. "
-                        + "Tempor est tellus vitae, pretium condimentum facilisis sit. Sagittis "
-                        + "quam, ac urna eros est cras id cras, eleifend eu mattis nec.");
+                + "tortor. Id aliquam lorem pede, orci ut enim metus, diam nulla mi "
+                + "suspendisse tempor tortor. Eleifend lorem proin, morbi vel diam ut. "
+                + "Tempor est tellus vitae, pretium condimentum facilisis sit. Sagittis "
+                + "quam, ac urna eros est cras id cras, eleifend eu mattis nec."
+                + "Lorem ipsum dolor sit amet, lacus pharetra sed, sit a "
+                + "tortor. Id aliquam lorem pede, orci ut enim metus, diam nulla mi "
+                + "suspendisse tempor tortor. Eleifend lorem proin, morbi vel diam ut. "
+                + "Tempor est tellus vitae, pretium condimentum facilisis sit. Sagittis "
+                + "quam, ac urna eros est cras id cras, eleifend eu mattis nec."
+                + "Lorem ipsum dolor sit amet, lacus pharetra sed, sit a "
+                + "tortor. Id aliquam lorem pede, orci ut enim metus, diam nulla mi "
+                + "suspendisse tempor tortor. Eleifend lorem proin, morbi vel diam ut. "
+                + "Tempor est tellus vitae, pretium condimentum facilisis sit. Sagittis "
+                + "quam, ac urna eros est cras id cras, eleifend eu mattis nec."
+                + "Lorem ipsum dolor sit amet, lacus pharetra sed, sit a "
+                + "tortor. Id aliquam lorem pede, orci ut enim metus, diam nulla mi "
+                + "suspendisse tempor tortor. Eleifend lorem proin, morbi vel diam ut. "
+                + "Tempor est tellus vitae, pretium condimentum facilisis sit. Sagittis "
+                + "quam, ac urna eros est cras id cras, eleifend eu mattis nec.");
 
-        
         VerticalLayout content = new VerticalLayout(editor);
         content.setMargin(true);
         setContent(content);
@@ -100,10 +99,11 @@ public class CSSInjectWithColorpicker extends UI {
         TextArea textLabel = new TextArea(null, text);
         textLabel.setWidth("100%");
         textLabel.setHeight("200px");
-        
-        // IMPORTANT: We are here setting the style name of the label, we are going to use this in our injected styles to target the label
+
+        // IMPORTANT: We are here setting the style name of the label, we are
+        // going to use this in our injected styles to target the label
         textLabel.setStyleName("text-label");
-        
+
         panelContent.addComponent(textLabel);
 
         return editor;
@@ -203,8 +203,8 @@ public class CSSInjectWithColorpicker extends UI {
      */
     private Component createFontSizeSelect() {
 
-        final ComboBox select = new ComboBox(null, Arrays.asList(8, 9, 10,
-                12, 14, 16, 20, 25, 30, 40, 50));
+        final ComboBox select = new ComboBox(null, Arrays.asList(8, 9, 10, 12,
+                14, 16, 20, 25, 30, 40, 50));
         select.setWidth("100px");
         select.setValue(12);
         select.setInputPrompt("Font size");
@@ -213,7 +213,7 @@ public class CSSInjectWithColorpicker extends UI {
         select.setNullSelectionAllowed(false);
         select.setNewItemsAllowed(false);
         select.addValueChangeListener(new ValueChangeListener() {
-            
+
             @Override
             public void valueChange(ValueChangeEvent event) {
                 // Get the new font size

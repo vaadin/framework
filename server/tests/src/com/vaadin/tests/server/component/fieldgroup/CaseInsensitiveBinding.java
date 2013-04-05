@@ -68,7 +68,8 @@ public class CaseInsensitiveBinding {
             TextField firstName = new TextField("First name");
 
             public MyForm() {
-                // should bind to the firstName property, not first_name property
+                // should bind to the firstName property, not first_name
+                // property
                 addComponent(firstName);
             }
         }

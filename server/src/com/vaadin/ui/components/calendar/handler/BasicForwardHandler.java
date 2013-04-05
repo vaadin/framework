@@ -38,6 +38,7 @@ public class BasicForwardHandler implements ForwardHandler {
      * com.vaadin.addon.calendar.ui.CalendarComponentEvents.ForwardHandler#forward
      * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.ForwardEvent)
      */
+    @Override
     public void forward(ForwardEvent event) {
         Date start = event.getComponent().getStartDate();
         Date end = event.getComponent().getEndDate();

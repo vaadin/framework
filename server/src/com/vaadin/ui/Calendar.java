@@ -1206,14 +1206,16 @@ public class Calendar extends AbstractComponent implements
 
         // remove old listener
         if (getEventProvider() instanceof EventSetChangeNotifier) {
-            ((EventSetChangeNotifier) getEventProvider()).removeEventSetChangeListener(this);
+            ((EventSetChangeNotifier) getEventProvider())
+                    .removeEventSetChangeListener(this);
         }
 
         this.calendarEventProvider = calendarEventProvider;
 
         // add new listener
         if (calendarEventProvider instanceof EventSetChangeNotifier) {
-            ((EventSetChangeNotifier) calendarEventProvider).addEventSetChangeListener(this);
+            ((EventSetChangeNotifier) calendarEventProvider)
+                    .addEventSetChangeListener(this);
         }
     }
 
@@ -1232,6 +1234,7 @@ public class Calendar extends AbstractComponent implements
      * com.vaadin.addon.calendar.ui.CalendarEvents.EventChangeListener#eventChange
      * (com.vaadin.addon.calendar.ui.CalendarEvents.EventChange)
      */
+    @Override
     public void eventSetChange(EventSetChangeEvent changeEvent) {
         // sanity check
         if (calendarEventProvider == changeEvent.getProvider()) {
@@ -1276,6 +1279,7 @@ public class Calendar extends AbstractComponent implements
      * #addListener
      * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.ForwardHandler)
      */
+    @Override
     public void setHandler(ForwardHandler listener) {
         setHandler(ForwardEvent.EVENT_ID, ForwardEvent.class, listener,
                 ForwardHandler.forwardMethod);
@@ -1289,6 +1293,7 @@ public class Calendar extends AbstractComponent implements
      * #addListener
      * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.BackwardHandler)
      */
+    @Override
     public void setHandler(BackwardHandler listener) {
         setHandler(BackwardEvent.EVENT_ID, BackwardEvent.class, listener,
                 BackwardHandler.backwardMethod);
@@ -1302,6 +1307,7 @@ public class Calendar extends AbstractComponent implements
      * #addListener
      * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.DateClickHandler)
      */
+    @Override
     public void setHandler(DateClickHandler listener) {
         setHandler(DateClickEvent.EVENT_ID, DateClickEvent.class, listener,
                 DateClickHandler.dateClickMethod);
@@ -1315,6 +1321,7 @@ public class Calendar extends AbstractComponent implements
      * #addListener
      * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventClickHandler)
      */
+    @Override
     public void setHandler(EventClickHandler listener) {
         setHandler(EventClick.EVENT_ID, EventClick.class, listener,
                 EventClickHandler.eventClickMethod);
@@ -1328,6 +1335,7 @@ public class Calendar extends AbstractComponent implements
      * #addListener
      * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.WeekClickHandler)
      */
+    @Override
     public void setHandler(WeekClickHandler listener) {
         setHandler(WeekClick.EVENT_ID, WeekClick.class, listener,
                 WeekClickHandler.weekClickMethod);
@@ -1342,6 +1350,7 @@ public class Calendar extends AbstractComponent implements
      * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventResizeHandler
      * )
      */
+    @Override
     public void setHandler(EventResizeHandler listener) {
         setHandler(EventResize.EVENT_ID, EventResize.class, listener,
                 EventResizeHandler.eventResizeMethod);
@@ -1356,6 +1365,7 @@ public class Calendar extends AbstractComponent implements
      * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.RangeSelectHandler
      * )
      */
+    @Override
     public void setHandler(RangeSelectHandler listener) {
         setHandler(RangeSelectEvent.EVENT_ID, RangeSelectEvent.class, listener,
                 RangeSelectHandler.rangeSelectMethod);
@@ -1370,6 +1380,7 @@ public class Calendar extends AbstractComponent implements
      * #addListener
      * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventMoveHandler)
      */
+    @Override
     public void setHandler(EventMoveHandler listener) {
         setHandler(MoveEvent.EVENT_ID, MoveEvent.class, listener,
                 EventMoveHandler.eventMoveMethod);
@@ -1382,6 +1393,7 @@ public class Calendar extends AbstractComponent implements
      * com.vaadin.addon.calendar.ui.CalendarComponentEvents.CalendarEventNotifier
      * #getHandler(java.lang.String)
      */
+    @Override
     public EventListener getHandler(String eventId) {
         return handlers.get(eventId);
     }
@@ -1389,6 +1401,7 @@ public class Calendar extends AbstractComponent implements
     /**
      * Get the currently active drop handler
      */
+    @Override
     public DropHandler getDropHandler() {
         return dropHandler;
     }
@@ -1410,6 +1423,7 @@ public class Calendar extends AbstractComponent implements
      * @see
      * com.vaadin.event.dd.DropTarget#translateDropTargetDetails(java.util.Map)
      */
+    @Override
     public TargetDetails translateDropTargetDetails(
             Map<String, Object> clientVariables) {
         Map<String, Object> serverVariables = new HashMap<String, Object>(1);
@@ -1458,12 +1472,14 @@ public class Calendar extends AbstractComponent implements
     public void setContainerDataSource(Container.Indexed container) {
         ContainerEventProvider provider = new ContainerEventProvider(container);
         provider.addEventSetChangeListener(new CalendarEventProvider.EventSetChangeListener() {
+            @Override
             public void eventSetChange(EventSetChangeEvent changeEvent) {
                 // Repaint if events change
                 markAsDirty();
             }
         });
         provider.addEventChangeListener(new EventChangeListener() {
+            @Override
             public void eventChange(EventChangeEvent changeEvent) {
                 // Repaint if event changes
                 markAsDirty();
@@ -1506,12 +1522,14 @@ public class Calendar extends AbstractComponent implements
         provider.setEndDateProperty(endDateProperty);
         provider.setStyleNameProperty(styleNameProperty);
         provider.addEventSetChangeListener(new CalendarEventProvider.EventSetChangeListener() {
+            @Override
             public void eventSetChange(EventSetChangeEvent changeEvent) {
                 // Repaint if events change
                 markAsDirty();
             }
         });
         provider.addEventChangeListener(new EventChangeListener() {
+            @Override
             public void eventChange(EventChangeEvent changeEvent) {
                 // Repaint if event changes
                 markAsDirty();
@@ -1527,6 +1545,7 @@ public class Calendar extends AbstractComponent implements
      * com.vaadin.addon.calendar.event.CalendarEventProvider#getEvents(java.
      * util.Date, java.util.Date)
      */
+    @Override
     public List<CalendarEvent> getEvents(Date startDate, Date endDate) {
         return getEventProvider().getEvents(startDate, endDate);
     }
@@ -1538,6 +1557,7 @@ public class Calendar extends AbstractComponent implements
      * com.vaadin.addon.calendar.event.CalendarEditableEventProvider#addEvent
      * (com.vaadin.addon.calendar.event.CalendarEvent)
      */
+    @Override
     public void addEvent(CalendarEvent event) {
         if (getEventProvider() instanceof CalendarEditableEventProvider) {
             CalendarEditableEventProvider provider = (CalendarEditableEventProvider) getEventProvider();
@@ -1556,6 +1576,7 @@ public class Calendar extends AbstractComponent implements
      * com.vaadin.addon.calendar.event.CalendarEditableEventProvider#removeEvent
      * (com.vaadin.addon.calendar.event.CalendarEvent)
      */
+    @Override
     public void removeEvent(CalendarEvent event) {
         if (getEventProvider() instanceof CalendarEditableEventProvider) {
             CalendarEditableEventProvider provider = (CalendarEditableEventProvider) getEventProvider();
@@ -1599,6 +1620,7 @@ public class Calendar extends AbstractComponent implements
      * </ul>
      * </p>
      */
+    @Override
     public void addActionHandler(Handler actionHandler) {
         if (actionHandler != null) {
             if (actionHandlers == null) {
@@ -1635,6 +1657,7 @@ public class Calendar extends AbstractComponent implements
      * com.vaadin.event.Action.Container#removeActionHandler(com.vaadin.event
      * .Action.Handler)
      */
+    @Override
     public void removeActionHandler(Handler actionHandler) {
         if (actionHandlers != null && actionHandlers.contains(actionHandler)) {
             actionHandlers.remove(actionHandler);

@@ -58,8 +58,9 @@ public class DevelopmentServerLauncher {
 
         // Pass-through of arguments for Jetty
         final Map<String, String> serverArgs = parseArguments(args);
-        if (!serverArgs.containsKey("shutdownPort"))
+        if (!serverArgs.containsKey("shutdownPort")) {
             serverArgs.put("shutdownPort", "8889");
+        }
 
         int port = Integer.parseInt(serverArgs.get("shutdownPort"));
         if (port > 0) {

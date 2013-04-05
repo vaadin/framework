@@ -1113,10 +1113,10 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         if (firstvisible != lastRequestedFirstvisible && scrollBody != null) {
             // received 'surprising' firstvisible from server: scroll there
             firstRowInViewPort = firstvisible;
-          
+
             /*
-             * Schedule the scrolling to be executed last so no updates to the rows
-             * affect scrolling measurements.
+             * Schedule the scrolling to be executed last so no updates to the
+             * rows affect scrolling measurements.
              */
             Scheduler.get().scheduleFinally(lazyScroller);
         }
@@ -3056,7 +3056,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                                 .hasNext(); columnIndex++) {
                             if (it.next() == this) {
                                 break;
-                            }                          
+                            }
                         }
                     }
                     final int cw = scrollBody.getColWidth(columnIndex);

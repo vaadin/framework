@@ -405,6 +405,7 @@ public abstract class AbstractColorPicker extends AbstractComponent implements
                 window.setImmediate(true);
                 window.addCloseListener(this);
                 window.addColorChangeListener(new ColorChangeListener() {
+                    @Override
                     public void colorChanged(ColorChangeEvent event) {
                         AbstractColorPicker.this.colorChanged(event);
                     }

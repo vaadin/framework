@@ -33,7 +33,7 @@ import org.junit.Assert;
 import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.sass.testcases.scss.SassTestRunner.FactoryTest;
 
-public abstract class AbstractDirectoryScanningSassTests  {
+public abstract class AbstractDirectoryScanningSassTests {
 
     public static Collection<String> getScssResourceNames(URL directoryUrl)
             throws URISyntaxException {

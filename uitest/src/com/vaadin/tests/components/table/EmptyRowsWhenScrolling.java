@@ -93,6 +93,7 @@ public class EmptyRowsWhenScrolling extends UI {
             table.setVisibleColumns(new String[] { "image", "id", "col1",
                     "col2", "col3", "col4" });
             table.addGeneratedColumn("image", new ColumnGenerator() {
+                @Override
                 public Object generateCell(Table source, Object itemId,
                         Object columnId) {
                     int imgNum = new Random().nextInt(5) + 1;
@@ -112,6 +113,7 @@ public class EmptyRowsWhenScrolling extends UI {
                     image.setWidth("50px");
                     image.setHeight("50px");
                     image.addClickListener(new com.vaadin.event.MouseEvents.ClickListener() {
+                        @Override
                         public void click(
                                 com.vaadin.event.MouseEvents.ClickEvent event) {
                             Notification.show("Image clicked!");
@@ -123,6 +125,7 @@ public class EmptyRowsWhenScrolling extends UI {
 
             // Refresh table button
             getBtnRefreshTable().addClickListener(new ClickListener() {
+                @Override
                 public void buttonClick(ClickEvent event) {
                     table.refreshRowCache();
                 }

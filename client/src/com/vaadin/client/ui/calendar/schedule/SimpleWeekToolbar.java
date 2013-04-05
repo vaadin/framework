@@ -98,6 +98,7 @@ public class SimpleWeekToolbar extends FlexTable implements ClickHandler {
         }
     }
 
+    @Override
     public void onClick(ClickEvent event) {
         WeekLabel wl = (WeekLabel) event.getSource();
         if (calendar.getWeekClickListener() != null) {

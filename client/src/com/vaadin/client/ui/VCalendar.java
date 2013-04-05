@@ -590,6 +590,7 @@ public class VCalendar extends Composite {
             cell.setMonthGrid(monthGrid);
             cell.setDate(d);
             cell.addDomHandler(new ContextMenuHandler() {
+                @Override
                 public void onContextMenu(ContextMenuEvent event) {
                     if (mouseEventListener != null) {
                         event.preventDefault();
@@ -827,6 +828,7 @@ public class VCalendar extends Composite {
     public static Comparator<CalendarEvent> getEventComparator() {
         return new Comparator<CalendarEvent>() {
 
+            @Override
             public int compare(CalendarEvent o1, CalendarEvent o2) {
                 if (o1.isAllDay() != o2.isAllDay()) {
                     if (o2.isAllDay()) {

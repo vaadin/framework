@@ -489,7 +489,8 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @param listener
      *            the DisplayStateChangeListener to add.
      */
-    public void addDisplayStateChangeListener(DisplayStateChangeListener listener) {
+    public void addDisplayStateChangeListener(
+            DisplayStateChangeListener listener) {
         addListener(DisplayStateChangeEvent.class, listener,
                 DisplayStateChangeListener.displayStateChangeMethod);
     }
@@ -500,7 +501,8 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * @param listener
      *            the DisplayStateChangeListener to remove.
      */
-    public void removeDisplayStateChangeListener(DisplayStateChangeListener listener) {
+    public void removeDisplayStateChangeListener(
+            DisplayStateChangeListener listener) {
         removeListener(DisplayStateChangeEvent.class, listener,
                 DisplayStateChangeListener.displayStateChangeMethod);
     }

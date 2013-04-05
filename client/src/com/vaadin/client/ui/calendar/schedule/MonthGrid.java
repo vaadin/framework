@@ -191,6 +191,7 @@ public class MonthGrid extends FocusableGrid implements KeyDownHandler {
         return enabled;
     }
 
+    @Override
     public void onKeyDown(KeyDownEvent event) {
         int keycode = event.getNativeKeyCode();
         if (KeyCodes.KEY_ESCAPE == keycode && selectionStart != null) {

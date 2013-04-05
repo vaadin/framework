@@ -566,8 +566,7 @@ public class ComponentLocator {
                 // ChildComponentContainer and VOrderedLayout$Slot have been
                 // replaced with Slot
                 if (w instanceof VAbstractOrderedLayout
-                        && ("ChildComponentContainer"
-                                .equals(widgetClassName) || "VOrderedLayout$Slot"
+                        && ("ChildComponentContainer".equals(widgetClassName) || "VOrderedLayout$Slot"
                                 .equals(widgetClassName))) {
                     widgetClassName = "Slot";
                 }
@@ -592,8 +591,7 @@ public class ComponentLocator {
                  * ChildComponentContainer)
                  */
                 if ((w instanceof VGridLayout)
-                        && "ChildComponentContainer"
-                                .equals(widgetClassName)
+                        && "ChildComponentContainer".equals(widgetClassName)
                         && i + 1 < parts.length) {
 
                     HasWidgets layout = (HasWidgets) w;

@@ -26,6 +26,7 @@ public class ValueAfterClearingContainer extends TestBase {
         table.setImmediate(true);
         table.addValueChangeListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 log.log("Value changed to " + event.getProperty().getValue());
             }
@@ -38,6 +39,7 @@ public class ValueAfterClearingContainer extends TestBase {
         multiselect.setId("multiselect");
         multiselect.addValueChangeListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 Boolean value = multiselect.getValue();
                 table.setMultiSelect(value == null ? false : value);
@@ -46,6 +48,7 @@ public class ValueAfterClearingContainer extends TestBase {
         addComponent(multiselect);
         Button addItemsButton = new Button("Add table items",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         if (!table.getItemIds().isEmpty()) {
                             Notification
@@ -65,6 +68,7 @@ public class ValueAfterClearingContainer extends TestBase {
 
         Button showValueButton = new Button("Show value",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         log.log("Table selection: " + table.getValue());
                     }
@@ -74,6 +78,7 @@ public class ValueAfterClearingContainer extends TestBase {
 
         Button removeItemsFromTableButton = new Button(
                 "Remove items from table", new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         table.removeAllItems();
                     }
@@ -83,6 +88,7 @@ public class ValueAfterClearingContainer extends TestBase {
 
         Button removeItemsFromContainerButton = new Button(
                 "Remove items from container", new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         table.getContainerDataSource().removeAllItems();
                     }
@@ -92,6 +98,7 @@ public class ValueAfterClearingContainer extends TestBase {
         Button removeItemsFromContainerAndSanitizeButton = new Button(
                 "Remove items from container and sanitize",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         table.getContainerDataSource().removeAllItems();
                         table.sanitizeSelection();
@@ -102,6 +109,7 @@ public class ValueAfterClearingContainer extends TestBase {
         addComponent(removeItemsFromContainerAndSanitizeButton);
         Button removeSelectedFromTableButton = new Button(
                 "Remove selected item from table", new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         Object selection = table.getValue();
                         if (selection == null) {
@@ -117,6 +125,7 @@ public class ValueAfterClearingContainer extends TestBase {
         Button removeSelectedFromContainer = new Button(
                 "Remove selected item from container",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         Object selection = table.getValue();
                         if (selection == null) {

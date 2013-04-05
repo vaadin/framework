@@ -122,8 +122,8 @@ public class DateCell extends FocusableComplexPanel implements
         long start = getDate().getTime() + firstHour * 3600000;
         long end = start + slotTime;
         for (int i = 0; i < numberOfSlots; i++) {
-            DateCellSlot slot = new DateCellSlot(this, new Date(
-                    start), new Date(end));
+            DateCellSlot slot = new DateCellSlot(this, new Date(start),
+                    new Date(end));
             if (i % 2 == 0) {
                 slot.setStyleName("v-datecellslot-even");
             } else {
@@ -177,8 +177,7 @@ public class DateCell extends FocusableComplexPanel implements
             }
         }
 
-        throw new IllegalArgumentException(
-                "Element not found in this DateCell");
+        throw new IllegalArgumentException("Element not found in this DateCell");
     }
 
     public DateCellSlot getSlot(int index) {
@@ -271,8 +270,7 @@ public class DateCell extends FocusableComplexPanel implements
     private void recalculateEventPositions() {
         for (int i = 0; i < getWidgetCount(); i++) {
             DateCellDayEvent dayEvent = (DateCellDayEvent) getWidget(i);
-            updatePositionFor(dayEvent, getDate(),
-                    dayEvent.getCalendarEvent());
+            updatePositionFor(dayEvent, getDate(), dayEvent.getCalendarEvent());
         }
     }
 
@@ -325,8 +323,8 @@ public class DateCell extends FocusableComplexPanel implements
         startingSlotHeight = height / numberOfSlots;
 
         for (int i = 0; i < slotElements.length; i++) {
-            slotElements[i].getStyle().setHeight(slotElementHeights[i],
-                    Unit.PX);
+            slotElements[i].getStyle()
+                    .setHeight(slotElementHeights[i], Unit.PX);
         }
 
         Iterator<Widget> it = iterator();
@@ -412,8 +410,8 @@ public class DateCell extends FocusableComplexPanel implements
 
             DateCellDayEvent d = (DateCellDayEvent) getWidget(eventIndex);
             WeekGridMinuteTimeRange nextRange = new WeekGridMinuteTimeRange(d
-                    .getCalendarEvent().getStartTime(), d
-                    .getCalendarEvent().getEndTime());
+                    .getCalendarEvent().getStartTime(), d.getCalendarEvent()
+                    .getEndTime());
 
             if (WeekGridMinuteTimeRange.doesOverlap(dateRange, nextRange)) {
                 skipIndex = col;
@@ -459,9 +457,9 @@ public class DateCell extends FocusableComplexPanel implements
 
         int count = getWidgetCount();
         DateCellDayEvent target = (DateCellDayEvent) getWidget(targetIndex);
-        WeekGridMinuteTimeRange targetRange = new WeekGridMinuteTimeRange(target
-                .getCalendarEvent().getStartTime(), target
-                .getCalendarEvent().getEndTime());
+        WeekGridMinuteTimeRange targetRange = new WeekGridMinuteTimeRange(
+                target.getCalendarEvent().getStartTime(), target
+                        .getCalendarEvent().getEndTime());
         Date groupStart = targetRange.getStart();
         Date groupEnd = targetRange.getEnd();
 
@@ -472,8 +470,8 @@ public class DateCell extends FocusableComplexPanel implements
 
             DateCellDayEvent d = (DateCellDayEvent) getWidget(i);
             WeekGridMinuteTimeRange nextRange = new WeekGridMinuteTimeRange(d
-                    .getCalendarEvent().getStartTime(), d
-                    .getCalendarEvent().getEndTime());
+                    .getCalendarEvent().getStartTime(), d.getCalendarEvent()
+                    .getEndTime());
             if (WeekGridMinuteTimeRange.doesOverlap(targetRange, nextRange)) {
                 g.add(i);
 
@@ -497,7 +495,8 @@ public class DateCell extends FocusableComplexPanel implements
 
     public void addEvent(Date targetDay, CalendarEvent calendarEvent) {
         Element main = getElement();
-        DateCellDayEvent dayEvent = new DateCellDayEvent(this, weekgrid, calendarEvent);
+        DateCellDayEvent dayEvent = new DateCellDayEvent(this, weekgrid,
+                calendarEvent);
         dayEvent.setSlotHeightInPX(getSlotHeight());
         dayEvent.setDisabled(isDisabled());
 
@@ -562,8 +561,8 @@ public class DateCell extends FocusableComplexPanel implements
             }
             index++;
         }
-        this.insert(dayEvent, (com.google.gwt.user.client.Element) main,
-                index, true);
+        this.insert(dayEvent, (com.google.gwt.user.client.Element) main, index,
+                true);
     }
 
     public void removeEvent(DateCellDayEvent dayEvent) {
@@ -584,10 +583,10 @@ public class DateCell extends FocusableComplexPanel implements
         int eventStartHours = eventStart.getHours();
         int eventEndHours = eventEnd.getHours();
 
-        return (eventStartHours <= lastHour)
-                && (eventEndHours >= firstHour);
+        return (eventStartHours <= lastHour) && (eventEndHours >= firstHour);
     }
 
+    @Override
     public void onKeyDown(KeyDownEvent event) {
         int keycode = event.getNativeEvent().getKeyCode();
         if (keycode == KeyCodes.KEY_ESCAPE && eventRangeStart > -1) {
@@ -595,6 +594,7 @@ public class DateCell extends FocusableComplexPanel implements
         }
     }
 
+    @Override
     public void onMouseDown(MouseDownEvent event) {
         if (event.getNativeButton() == NativeEvent.BUTTON_LEFT) {
             Element e = Element.as(event.getNativeEvent().getEventTarget());
@@ -610,6 +610,7 @@ public class DateCell extends FocusableComplexPanel implements
         }
     }
 
+    @Override
     @SuppressWarnings("deprecation")
     public void onMouseUp(MouseUpEvent event) {
         if (event.getNativeButton() != NativeEvent.BUTTON_LEFT) {
@@ -676,6 +677,7 @@ public class DateCell extends FocusableComplexPanel implements
         }
     }
 
+    @Override
     public void onMouseMove(MouseMoveEvent event) {
         if (event.getNativeButton() != NativeEvent.BUTTON_LEFT) {
             return;
@@ -782,8 +784,7 @@ public class DateCell extends FocusableComplexPanel implements
         return today != null;
     }
 
-    public void addEmphasisStyle(
-            com.google.gwt.user.client.Element elementOver) {
+    public void addEmphasisStyle(com.google.gwt.user.client.Element elementOver) {
         String originalStylename = getStyleName(elementOver);
         setStyleName(elementOver, originalStylename + DRAGEMPHASISSTYLE);
     }
@@ -797,6 +798,7 @@ public class DateCell extends FocusableComplexPanel implements
                         - DRAGEMPHASISSTYLE.length()));
     }
 
+    @Override
     public void onContextMenu(ContextMenuEvent event) {
         if (weekgrid.getCalendar().getMouseEventListener() != null) {
             event.preventDefault();

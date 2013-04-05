@@ -85,6 +85,7 @@ public class BeanItemContainerTestUI extends UI {
             private final Action EDIT = new Action("Edit event");
             private final Action REMOVE = new Action("Remove event");
 
+            @Override
             public void handleAction(Action action, Object sender, Object target) {
                 if (action == ADD) {
                     BasicEvent event = new BasicEvent();
@@ -98,6 +99,7 @@ public class BeanItemContainerTestUI extends UI {
                 }
             }
 
+            @Override
             public Action[] getActions(Object target, Object sender) {
                 if (target == null) {
                     return new Action[] { ADD };
@@ -153,6 +155,7 @@ public class BeanItemContainerTestUI extends UI {
                         ContainerEventProvider.ENDDATE_PROPERTY)));
         modal.setContent(formLayout);
         modal.addCloseListener(new Window.CloseListener() {
+            @Override
             public void windowClose(CloseEvent e) {
                 // Commit changes to bean
                 try {

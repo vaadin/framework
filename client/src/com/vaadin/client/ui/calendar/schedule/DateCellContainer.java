@@ -31,8 +31,8 @@ import com.vaadin.client.ui.VCalendar;
  * 
  * since 7.1
  */
-public class DateCellContainer extends FlowPanel implements
-        MouseDownHandler, MouseUpHandler {
+public class DateCellContainer extends FlowPanel implements MouseDownHandler,
+        MouseUpHandler {
 
     private Date date;
 
@@ -67,7 +67,8 @@ public class DateCellContainer extends FlowPanel implements
 
     public boolean hasEvent(int slotIndex) {
         return hasDateCell(slotIndex)
-                && ((WeeklyLongEventsDateCell) getChildren().get(slotIndex)).getEvent() != null;
+                && ((WeeklyLongEventsDateCell) getChildren().get(slotIndex))
+                        .getEvent() != null;
     }
 
     public boolean hasDateCell(int slotIndex) {
@@ -94,12 +95,14 @@ public class DateCellContainer extends FlowPanel implements
         add(dateCell);
     }
 
+    @Override
     public void onMouseDown(MouseDownEvent event) {
         clickTargetWidget = (Widget) event.getSource();
 
         event.stopPropagation();
     }
 
+    @Override
     public void onMouseUp(MouseUpEvent event) {
         if (event.getSource() == clickTargetWidget
                 && clickTargetWidget instanceof WeeklyLongEventsDateCell

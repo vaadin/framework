@@ -56,6 +56,7 @@ public class BasicEventProvider implements CalendarEditableEventProvider,
      * com.vaadin.addon.calendar.event.CalendarEventProvider#getEvents(java.
      * util.Date, java.util.Date)
      */
+    @Override
     public List<CalendarEvent> getEvents(Date startDate, Date endDate) {
         ArrayList<CalendarEvent> activeEvents = new ArrayList<CalendarEvent>();
 
@@ -98,6 +99,7 @@ public class BasicEventProvider implements CalendarEditableEventProvider,
      * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventSetChangeListener
      * )
      */
+    @Override
     public void addEventSetChangeListener(EventSetChangeListener listener) {
         listeners.add(listener);
 
@@ -112,6 +114,7 @@ public class BasicEventProvider implements CalendarEditableEventProvider,
      * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventSetChangeListener
      * )
      */
+    @Override
     public void removeEventSetChangeListener(EventSetChangeListener listener) {
         listeners.remove(listener);
     }
@@ -136,6 +139,7 @@ public class BasicEventProvider implements CalendarEditableEventProvider,
      * #eventChange
      * (com.vaadin.addon.calendar.ui.CalendarComponentEvents.EventSetChange)
      */
+    @Override
     public void eventChange(EventChangeEvent changeEvent) {
         // naive implementation
         fireEventSetChange();
@@ -148,6 +152,7 @@ public class BasicEventProvider implements CalendarEditableEventProvider,
      * com.vaadin.addon.calendar.event.CalendarEditableEventProvider#addEvent
      * (com.vaadin.addon.calendar.event.CalendarEvent)
      */
+    @Override
     public void addEvent(CalendarEvent event) {
         eventList.add(event);
         if (event instanceof BasicEvent) {
@@ -163,6 +168,7 @@ public class BasicEventProvider implements CalendarEditableEventProvider,
      * com.vaadin.addon.calendar.event.CalendarEditableEventProvider#removeEvent
      * (com.vaadin.addon.calendar.event.CalendarEvent)
      */
+    @Override
     public void removeEvent(CalendarEvent event) {
         eventList.remove(event);
         if (event instanceof BasicEvent) {

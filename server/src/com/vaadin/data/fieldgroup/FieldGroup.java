@@ -919,7 +919,8 @@ public class FieldGroup implements Serializable {
             for (Object itemPropertyId : dataSource.getItemPropertyIds()) {
                 if (itemPropertyId instanceof String) {
                     String itemPropertyName = (String) itemPropertyId;
-                    if (minifiedFieldName.equals(minifyFieldName(itemPropertyName))) {
+                    if (minifiedFieldName
+                            .equals(minifyFieldName(itemPropertyName))) {
                         return itemPropertyName;
                     }
                 }

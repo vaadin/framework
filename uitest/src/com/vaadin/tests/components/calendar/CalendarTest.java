@@ -260,9 +260,9 @@ public class CalendarTest extends UI {
     private void addInitialEvents() {
         Date originalDate = calendar.getTime();
         Date today = getToday();
-        
+
         // Add a event that last a whole week
-        
+
         Date start = resolveFirstDateOfWeek(today, calendar);
         Date end = resolveLastDateOfWeek(today, calendar);
         CalendarTestEvent event = getNewEvent("Whole week event", start, end);
@@ -388,6 +388,7 @@ public class CalendarTest extends UI {
 
             private static final long serialVersionUID = 1L;
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 switchToMonthView();
             }
@@ -397,6 +398,7 @@ public class CalendarTest extends UI {
 
             private static final long serialVersionUID = 1L;
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 // simulate week click
                 WeekClickHandler handler = (WeekClickHandler) calendarComponent
@@ -410,6 +412,7 @@ public class CalendarTest extends UI {
         nextButton = new Button("Next", new Button.ClickListener() {
             private static final long serialVersionUID = 1L;
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 handleNextButtonClick();
             }
@@ -418,6 +421,7 @@ public class CalendarTest extends UI {
         prevButton = new Button("Prev", new Button.ClickListener() {
             private static final long serialVersionUID = 1L;
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 handlePreviousButtonClick();
             }
@@ -488,6 +492,7 @@ public class CalendarTest extends UI {
 
             private static final long serialVersionUID = -8307244759142541067L;
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 Date start = getToday();
                 start.setHours(0);
@@ -512,6 +517,7 @@ public class CalendarTest extends UI {
 
             private static final long serialVersionUID = -7104996493482558021L;
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 Object value = event.getProperty().getValue();
                 if (value instanceof Boolean && Boolean.TRUE.equals(value)) {
@@ -675,6 +681,7 @@ public class CalendarTest extends UI {
 
         calendarComponent.setHandler(new EventClickHandler() {
 
+            @Override
             public void eventClick(EventClick event) {
                 showEventPopup(event.getCalendarEvent(), false);
             }
@@ -693,6 +700,7 @@ public class CalendarTest extends UI {
 
         calendarComponent.setHandler(new RangeSelectHandler() {
 
+            @Override
             public void rangeSelect(RangeSelectEvent event) {
                 handleRangeSelect(event);
             }
@@ -725,6 +733,7 @@ public class CalendarTest extends UI {
 
             private static final long serialVersionUID = 1L;
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
 
                 updateCalendarTimeZone(event.getProperty().getValue());
@@ -752,6 +761,7 @@ public class CalendarTest extends UI {
 
             private static final long serialVersionUID = 1L;
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 updateCalendarFormat(event.getProperty().getValue());
             }
@@ -779,6 +789,7 @@ public class CalendarTest extends UI {
 
             private static final long serialVersionUID = 1L;
 
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 updateCalendarLocale((Locale) event.getProperty().getValue());
             }
@@ -933,6 +944,7 @@ public class CalendarTest extends UI {
 
             private static final long serialVersionUID = 1L;
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 try {
                     commitCalendarEvent();
@@ -945,6 +957,7 @@ public class CalendarTest extends UI {
 
             private static final long serialVersionUID = 1L;
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 discardCalendarEvent();
             }
@@ -953,6 +966,7 @@ public class CalendarTest extends UI {
 
             private static final long serialVersionUID = 1L;
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 deleteCalendarEvent();
             }
@@ -961,6 +975,7 @@ public class CalendarTest extends UI {
 
             private static final long serialVersionUID = 1L;
 
+            @Override
             public void windowClose(Window.CloseEvent e) {
                 discardCalendarEvent();
             }

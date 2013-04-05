@@ -90,6 +90,7 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
     }
 
     public class Col4ColumnGenerator implements ColumnGenerator {
+        @Override
         public Component generateCell(final com.vaadin.ui.Table source,
                 final Object itemId, Object columnId) {
             TestBean tb = (TestBean) itemId;
@@ -98,6 +99,7 @@ public class TreeTableCacheOnPartialUpdates extends TestBase {
             btnCol4.setId("cacheTestButtonToggle-" + tb.getCol1() + "-"
                     + tb.getCol2());
             btnCol4.addClickListener(new Button.ClickListener() {
+                @Override
                 public void buttonClick(ClickEvent event) {
                     treeTable.setCollapsed(itemId,
                             !treeTable.isCollapsed(itemId));
