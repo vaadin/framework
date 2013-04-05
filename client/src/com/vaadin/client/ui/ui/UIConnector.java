@@ -48,7 +48,6 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.Paintable;
-import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -527,13 +526,13 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     @Override
-    public TooltipInfo getTooltipInfo(com.google.gwt.dom.client.Element element) {
+    public boolean hasTooltip() {
         /*
-         * Override method to make AbstractComponentConnector.hasTooltip()
-         * return true so there's a top level handler that takes care of hiding
-         * tooltips whenever the mouse is moved somewhere else.
+         * Always return true so there's always top level tooltip handler that
+         * takes care of hiding tooltips whenever the mouse is moved somewhere
+         * else.
          */
-        return super.getTooltipInfo(element);
+        return true;
     }
 
     /**

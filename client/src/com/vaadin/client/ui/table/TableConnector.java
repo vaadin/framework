@@ -396,6 +396,16 @@ public class TableConnector extends AbstractHasComponentsConnector implements
     }
 
     @Override
+    public boolean hasTooltip() {
+        /*
+         * Tooltips for individual rows and cells are not processed until
+         * updateFromUIDL, so we can't be sure that there are no tooltips during
+         * onStateChange when this method is used.
+         */
+        return true;
+    }
+
+    @Override
     public void onConnectorHierarchyChange(
             ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
         // TODO Move code from updateFromUIDL to this method

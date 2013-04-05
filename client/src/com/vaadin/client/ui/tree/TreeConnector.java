@@ -332,4 +332,14 @@ public class TreeConnector extends AbstractComponentConnector implements
         return info;
     }
 
+    @Override
+    public boolean hasTooltip() {
+        /*
+         * Item tooltips are not processed until updateFromUIDL, so we can't be
+         * sure that there are no tooltips during onStateChange when this method
+         * is used.
+         */
+        return true;
+    }
+
 }

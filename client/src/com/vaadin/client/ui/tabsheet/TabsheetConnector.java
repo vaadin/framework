@@ -138,6 +138,16 @@ public class TabsheetConnector extends TabsheetBaseConnector implements
     }
 
     @Override
+    public boolean hasTooltip() {
+        /*
+         * Tab tooltips are not processed until updateFromUIDL, so we can't be
+         * sure that there are no tooltips during onStateChange when this method
+         * is used.
+         */
+        return true;
+    }
+
+    @Override
     public void onConnectorHierarchyChange(
             ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
         // TODO Move code from updateFromUIDL to this method

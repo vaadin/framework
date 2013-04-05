@@ -35,7 +35,6 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
-import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.client.ui.datefield.PopupDateFieldConnector;
 import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.shared.AbstractComponentState;
@@ -430,40 +429,13 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         }
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * <p>
-     * When overriding this method, {@link #hasTooltip()} should also be
-     * overridden to return true in all situations where this method might
-     * return a non-empty result.
-     * </p>
-     * 
-     * @see ComponentConnector#getTooltipInfo(Element)
-     */
     @Override
     public TooltipInfo getTooltipInfo(Element element) {
         return new TooltipInfo(getState().description, getState().errorMessage);
     }
 
-    /**
-     * Check whether there might be a tooltip for this component. The framework
-     * will only add event listeners for automatically handling tooltips (using
-     * {@link #getTooltipInfo(Element)}) if this method returns true.
-     * 
-     * @return <code>true</code> if some part of the component might have a
-     *         tooltip, otherwise <code>false</code>
-     */
-    private boolean hasTooltip() {
-        /*
-         * Hack to avoid breaking backwards compatibility - use a generator to
-         * know whether there's a custom implementation of getTooltipInfo, and
-         * in that case always assume that there might be tooltip.
-         */
-        if (TypeDataStore.getHasGetTooltipInfo(getClass())) {
-            return true;
-        }
-
+    @Override
+    public boolean hasTooltip() {
         // Normally, there is a tooltip if description or errorMessage is set
         AbstractComponentState state = getState();
         if (state.description != null && !state.description.equals("")) {

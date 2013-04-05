@@ -411,6 +411,15 @@ public class CalendarConnector extends AbstractComponentConnector implements
         return tooltipInfo;
     }
 
+    @Override
+    public boolean hasTooltip() {
+        /*
+         * Tooltips are not processed until updateFromUIDL, so we can't be sure
+         * that there are no tooltips during onStateChange when this is used.
+         */
+        return true;
+    }
+
     private void updateMonthView(List<CalendarState.Day> days,
             List<CalendarState.Event> events) {
         CalendarState state = getState();

@@ -340,6 +340,9 @@ public class VTooltip extends VOverlay {
             }
 
             if (connector != null && info != null) {
+                assert connector.hasTooltip() : "getTooltipInfo for "
+                        + Util.getConnectorString(connector)
+                        + " returned a tooltip even though hasTooltip claims there are no tooltips for the connector.";
                 currentTooltipInfo = info;
                 return true;
             }
