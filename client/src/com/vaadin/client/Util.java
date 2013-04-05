@@ -48,6 +48,7 @@ import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.ui.ComponentStateUtil;
+import com.vaadin.shared.util.SharedUtil;
 
 public class Util {
 
@@ -550,12 +551,21 @@ public class Util {
         }
     }
 
+    /**
+     * Checks if a and b are equals using {@link #equals(Object)}. Handles null
+     * values as well. Does not ensure that objects are of the same type.
+     * Assumes that the first object's equals method handle equals properly.
+     * 
+     * @param a
+     *            The first value to compare
+     * @param b
+     *            The second value to compare
+     * @return
+     * @deprecated As of 7.1 use {@link SharedUtil#equals(Object)} instead
+     */
+    @Deprecated
     public static boolean equals(Object a, Object b) {
-        if (a == null) {
-            return b == null;
-        }
-
-        return a.equals(b);
+        return SharedUtil.equals(a, b);
     }
 
     public static void updateRelativeChildrenAndSendSizeUpdateEvent(

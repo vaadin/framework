@@ -25,6 +25,7 @@ import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterUtil;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.shared.ui.label.LabelState;
+import com.vaadin.shared.util.SharedUtil;
 
 /**
  * Label component for showing non-editable short texts.
@@ -402,7 +403,7 @@ public class Label extends AbstractComponent implements Property<String>,
     private void updateValueFromDataSource() {
         // Update the internal value from the data source
         String newConvertedValue = getDataSourceValue();
-        if (!AbstractField.equals(newConvertedValue, getState().text)) {
+        if (!SharedUtil.equals(newConvertedValue, getState().text)) {
             getState().text = newConvertedValue;
             fireValueChange();
         }
