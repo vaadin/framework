@@ -37,6 +37,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -61,6 +62,7 @@ import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.client.ui.window.WindowConnector;
 import com.vaadin.server.Page.Styles;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
@@ -417,6 +419,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
     };
 
+    private Timer pollTimer = null;
+
     @Override
     public void updateCaption(ComponentConnector component) {
         // NOP The main view never draws caption for its layout
@@ -579,6 +583,40 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                     getState().loadingIndicatorConfiguration.waitStateDelay);
             getConnection().getLoadingIndicator().setDelayStateDelay(
                     getState().loadingIndicatorConfiguration.delayStateDelay);
+        }
+
+        if (stateChangeEvent.hasPropertyChanged("pollInterval")) {
+            configurePolling();
+        }
+    }
+
+    private void configurePolling() {
+        if (pollTimer != null) {
+            pollTimer.cancel();
+            pollTimer = null;
+        }
+        if (getState().pollInterval >= 0) {
+            pollTimer = new Timer() {
+                @Override
+                public void run() {
+                    /*
+                     * Verify that polling has not recently been canceled. This
+                     * is needed because Timer.cancel() does not always work
+                     * properly in IE 8 until GWT issue 8101 has been fixed.
+                     */
+                    if (pollTimer != null) {
+                        getRpcProxy(UIServerRpc.class).poll();
+                        // Send changes even though poll is @Delayed
+                        getConnection().sendPendingVariableChanges();
+                    }
+                }
+            };
+            pollTimer.scheduleRepeating(getState().pollInterval);
+        } else {
+            // Ensure no more polls are sent as polling has been disabled
+            getConnection().removePendingInvocations(
+                    new MethodInvocation(getConnectorId(), UIServerRpc.class
+                            .getName(), "poll"));
         }
     }
 }

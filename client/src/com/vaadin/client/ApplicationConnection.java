@@ -2388,6 +2388,23 @@ public class ApplicationConnection {
     }
 
     /**
+     * Removes any pending invocation of the given method from the queue
+     * 
+     * @param invocation
+     *            The invocation to remove
+     */
+    public void removePendingInvocations(MethodInvocation invocation) {
+        Iterator<MethodInvocation> iter = pendingInvocations.values()
+                .iterator();
+        while (iter.hasNext()) {
+            MethodInvocation mi = iter.next();
+            if (mi.equals(invocation)) {
+                iter.remove();
+            }
+        }
+    }
+
+    /**
      * This method sends currently queued variable changes to server. It is
      * called when immediate variable update must happen.
      * 

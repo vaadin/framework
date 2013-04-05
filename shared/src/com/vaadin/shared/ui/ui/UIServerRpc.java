@@ -26,4 +26,11 @@ public interface UIServerRpc extends ClickRpc, ServerRpc {
 
     @Delayed(lastOnly = true)
     public void scroll(int scrollTop, int scrollLeft);
+
+    @Delayed(lastOnly = true)
+    /*
+     * @Delayed just to get lastOnly semantics, sendPendingVariableChanges()
+     * should always be called to ensure the message is flushed right away.
+     */
+    public void poll();
 }

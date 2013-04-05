@@ -148,6 +148,14 @@ public abstract class UI extends AbstractSingleComponentContainer implements
             UI.this.scrollTop = scrollTop;
             UI.this.scrollLeft = scrollLeft;
         }
+
+        @Override
+        public void poll() {
+            /*
+             * No-op. This is only called to cause a server visit to check for
+             * changes.
+             */
+        }
     };
 
     /**
@@ -1170,5 +1178,31 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      */
     public void setPushConnection(PushConnection connection) {
         pushConnection = connection;
+    }
+
+    /**
+     * Sets the interval with which the UI should poll the server to see if
+     * there are any changes. Polling is disabled by default.
+     * <p>
+     * Note that it is possible to enable push and polling at the same time but
+     * it should not be done to avoid excessive server traffic.
+     * </p>
+     * 
+     * @param intervalInMillis
+     *            The interval (in ms) with which the UI should poll the server
+     *            or -1 to disable polling
+     */
+    public void setPollInterval(int intervalInMillis) {
+        getState().pollInterval = intervalInMillis;
+    }
+
+    /**
+     * Returns the interval with which the UI polls the server.
+     * 
+     * @return The interval (in ms) with which the UI polls the server or -1 if
+     *         polling is disabled
+     */
+    public int getPollInterval() {
+        return getState(false).pollInterval;
     }
 }
