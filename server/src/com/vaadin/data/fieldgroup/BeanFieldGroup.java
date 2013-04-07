@@ -15,12 +15,17 @@
  */
 package com.vaadin.data.fieldgroup;
 
-import java.lang.reflect.Method;
-
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.validator.BeanValidator;
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.Field;
+import com.vaadin.ui.TextField;
+
+import java.lang.reflect.Method;
+import java.util.Date;
 
 public class BeanFieldGroup<T> extends FieldGroup {
 
@@ -30,6 +35,11 @@ public class BeanFieldGroup<T> extends FieldGroup {
 
     public BeanFieldGroup(Class<T> beanType) {
         this.beanType = beanType;
+    }
+
+    public BeanFieldGroup(Class<T> beanType, FieldGroupFieldFactory fieldGroupFieldFactory) {
+        this.beanType = beanType;
+        setFieldFactory(fieldGroupFieldFactory);
     }
 
     @Override
@@ -121,7 +131,7 @@ public class BeanFieldGroup<T> extends FieldGroup {
      * Helper method for setting the data source directly using a bean. This
      * method wraps the bean in a {@link BeanItem} and calls
      * {@link #setItemDataSource(Item)}.
-     * 
+     *
      * @param bean
      *            The bean to use as data source.
      */
@@ -167,7 +177,38 @@ public class BeanFieldGroup<T> extends FieldGroup {
     public Field<?> buildAndBind(String caption, Object propertyId)
             throws BindException {
         ensureNestedPropertyAdded(propertyId);
-        return super.buildAndBind(caption, propertyId);
+        Class<? extends Field> fieldType = getFieldClass(propertyId, getPropertyType(propertyId));
+        return super.buildAndBind(caption, propertyId, fieldType);
+    }
+
+    /**
+     * Resolves FieldClass by the property type. Default property mapping:
+     * <ul>
+     * <li>Enum -> ComboBox</li>
+     * <li>Date -> DateField</li>
+     * <li>Boolean -> CheckBox</li>
+     * <li>String -> TextField</li>
+     * </ul>
+     *
+     * @param propertyId
+     *         Property ID
+     * @param propertyType
+     *         Property type
+     */
+    protected Class<? extends Field> getFieldClass(Object propertyId, Class<?> propertyType) {
+        final Class<? extends Field> result;
+        if (Enum.class.isAssignableFrom(propertyType)) {
+            result = ComboBox.class;
+        } else if (Date.class.isAssignableFrom(propertyType)) {
+            result = DateField.class;
+        } else if (Boolean.class.isAssignableFrom(propertyType)) {
+            result = CheckBox.class;
+        } else if (String.class.isAssignableFrom(propertyType)) {
+            result = TextField.class;
+        } else {
+            result = TextField.class;
+        }
+        return result;
     }
 
     @Override
@@ -187,9 +228,9 @@ public class BeanFieldGroup<T> extends FieldGroup {
     /**
      * Checks whether a bean validation implementation (e.g. Hibernate Validator
      * or Apache Bean Validation) is available.
-     * 
+     *
      * TODO move this method to some more generic location
-     * 
+     *
      * @return true if a JSR-303 bean validation implementation is available
      */
     protected static boolean isBeanValidationImplementationAvailable() {
