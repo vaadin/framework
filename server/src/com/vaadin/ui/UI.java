@@ -1141,7 +1141,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     public void push() {
         VaadinSession session = getSession();
         if (session != null) {
-            if (getConnectorTracker().hasDirtyConnectors()) {
+            if (!getConnectorTracker().hasDirtyConnectors()) {
                 // Do not push if there is nothing to push
                 return;
             }
