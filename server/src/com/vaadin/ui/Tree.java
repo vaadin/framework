@@ -209,7 +209,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      *         was set
      */
     public String getItemIconAlternateText(Object itemId) {
-        return itemIconAlts.get(itemId);
+        String storedAlt = itemIconAlts.get(itemId);
+        return storedAlt == null ? "" : storedAlt;
     }
 
     /* Expanding and collapsing */
