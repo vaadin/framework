@@ -29,6 +29,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Validator;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.data.validator.DateRangeValidator;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.BlurEvent;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -38,6 +39,7 @@ import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.ui.datefield.DateFieldConstants;
 import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.shared.ui.datefield.TextualDateFieldState;
 
 /**
  * <p>
@@ -146,6 +148,10 @@ public class DateField extends AbstractField<Date> implements
     private TimeZone timeZone = null;
 
     private static Map<Resolution, String> variableNameForResolution = new HashMap<Resolution, String>();
+
+    private String dateOutOfRangeMessage = "Date is out of allowed range";
+
+    private DateRangeValidator currentRangeValidator;
     {
         variableNameForResolution.put(Resolution.SECOND, "sec");
         variableNameForResolution.put(Resolution.MINUTE, "min");
@@ -275,6 +281,174 @@ public class DateField extends AbstractField<Date> implements
     @Override
     protected boolean shouldHideErrors() {
         return super.shouldHideErrors() && uiHasValidDateString;
+    }
+
+    @Override
+    protected TextualDateFieldState getState() {
+        return (TextualDateFieldState) super.getState();
+    }
+
+    @Override
+    protected TextualDateFieldState getState(boolean markAsDirty) {
+        return (TextualDateFieldState) super.getState(markAsDirty);
+    }
+
+    /**
+     * Sets the start range for this component. If the value is set before this
+     * date (taking the resolution into account), the component will not
+     * validate. If <code>startDate</code> is set to <code>null</code>, any
+     * value before <code>endDate</code> will be accepted by the range
+     * 
+     * @param startDate
+     *            - the allowed range's start date
+     */
+    public void setRangeStart(Date startDate) {
+        if (startDate != null && getState().rangeEnd != null
+                && startDate.after(getState().rangeEnd)) {
+            throw new IllegalStateException(
+                    "startDate cannot be later than endDate");
+        }
+        getState().rangeStart = startDate;
+        // rangeStart = startDate;
+        // This has to be done to correct for the resolution
+        // updateRangeState();
+        updateRangeValidator();
+    }
+
+    /**
+     * Sets the current error message if the range validation fails.
+     * 
+     * @param dateOutOfRangeMessage
+     *            - Localizable message which is shown when value (the date) is
+     *            set outside allowed range
+     */
+    public void setDateOutOfRangeMessage(String dateOutOfRangeMessage) {
+        this.dateOutOfRangeMessage = dateOutOfRangeMessage;
+        updateRangeValidator();
+    }
+
+    /**
+     * Gets the end range for a certain resolution. The range is inclusive, so
+     * if rangeEnd is set to zero milliseconds past year n and resolution is set
+     * to YEAR, any date in year n will be accepted. Resolutions lower than DAY
+     * will be interpreted on a DAY level. That is, everything below DATE is
+     * cleared
+     * 
+     * @param forResolution
+     *            - the range conforms to the resolution
+     * @return
+     */
+    private Date getRangeEnd(Resolution forResolution) {
+        // We need to set the correct resolution for the dates,
+        // otherwise the range validator will complain
+
+        Date rangeEnd = getState(false).rangeEnd;
+        if (rangeEnd == null) {
+            return null;
+        }
+
+        Calendar endCal = Calendar.getInstance();
+        endCal.setTime(rangeEnd);
+
+        if (forResolution == Resolution.YEAR) {
+            // Adding one year (minresolution) and clearing the rest.
+            endCal.set(endCal.get(Calendar.YEAR) + 1, 0, 1, 0, 0, 0);
+        } else if (forResolution == Resolution.MONTH) {
+            // Adding one month (minresolution) and clearing the rest.
+            endCal.set(endCal.get(Calendar.YEAR),
+                    endCal.get(Calendar.MONTH) + 1, 1, 0, 0, 0);
+        } else {
+            endCal.set(endCal.get(Calendar.YEAR), endCal.get(Calendar.MONTH),
+                    endCal.get(Calendar.DATE) + 1, 0, 0, 0);
+        }
+        // removing one millisecond will now get the endDate to return to
+        // current resolution's set time span (year or month)
+        endCal.set(Calendar.MILLISECOND, -1);
+        return endCal.getTime();
+    }
+
+    /**
+     * Gets the start range for a certain resolution. The range is inclusive, so
+     * if <code>rangeStart</code> is set to one millisecond before year n and
+     * resolution is set to YEAR, any date in year n - 1 will be accepted.
+     * Lowest supported resolution is DAY.
+     * 
+     * @param forResolution
+     *            - the range conforms to the resolution
+     * @return
+     */
+    private Date getRangeStart(Resolution forResolution) {
+        if (getState(false).rangeStart == null) {
+            return null;
+        }
+        Calendar startCal = Calendar.getInstance();
+        startCal.setTime(getState(false).rangeStart);
+
+        if (forResolution == Resolution.YEAR) {
+            startCal.set(startCal.get(Calendar.YEAR), 0, 1, 0, 0, 0);
+        } else if (forResolution == Resolution.MONTH) {
+            startCal.set(startCal.get(Calendar.YEAR),
+                    startCal.get(Calendar.MONTH), 1, 0, 0, 0);
+        } else {
+            startCal.set(startCal.get(Calendar.YEAR),
+                    startCal.get(Calendar.MONTH), startCal.get(Calendar.DATE),
+                    0, 0, 0);
+        }
+
+        startCal.set(Calendar.MILLISECOND, 0);
+        return startCal.getTime();
+    }
+
+    private void updateRangeValidator() {
+        if (currentRangeValidator != null) {
+            removeValidator(currentRangeValidator);
+        }
+
+        currentRangeValidator = new DateRangeValidator(dateOutOfRangeMessage,
+                getRangeStart(resolution), getRangeEnd(resolution), null);
+
+        addValidator(currentRangeValidator);
+
+    }
+
+    /**
+     * Sets the end range for this component. If the value is set after this
+     * date (taking the resolution into account), the component will not
+     * validate. If <code>endDate</code> is set to <code>null</code>, any value
+     * after <code>startDate</code> will be accepted by the range.
+     * 
+     * @param endDate
+     *            - the allowed range's end date (inclusive, based on the
+     *            current resolution)
+     */
+    public void setRangeEnd(Date endDate) {
+        if (endDate != null && getState().rangeStart != null
+                && getState().rangeStart.after(endDate)) {
+            throw new IllegalStateException(
+                    "endDate cannot be earlier than startDate");
+        }
+        // rangeEnd = endDate;
+        getState().rangeEnd = endDate;
+        updateRangeValidator();
+    }
+
+    /**
+     * Returns the precise rangeStart used.
+     * 
+     * @param startDate
+     * 
+     */
+    public Date getRangeStart() {
+        return getState(false).rangeStart;
+    }
+
+    /**
+     * Returns the precise rangeEnd used.
+     * 
+     * @param startDate
+     */
+    public Date getRangeEnd() {
+        return getState(false).rangeEnd;
     }
 
     /*
@@ -572,6 +746,7 @@ public class DateField extends AbstractField<Date> implements
      */
     public void setResolution(Resolution resolution) {
         this.resolution = resolution;
+        updateRangeValidator();
         markAsDirty();
     }
 

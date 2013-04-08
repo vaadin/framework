@@ -581,4 +581,28 @@ public class VPopupCalendar extends VTextualDate implements Field,
     public String getDescriptionForAssistiveDevices() {
         return descriptionForAssisitveDevicesElement.getInnerText();
     }
+
+    /**
+     * Sets the start range for this component. The start range is inclusive,
+     * and it depends on the current resolution, what is considered inside the
+     * range.
+     * 
+     * @param startDate
+     *            - the allowed range's start date
+     */
+    public void setRangeStart(Date rangeStart) {
+        calendar.setRangeStart(rangeStart);
+    }
+
+    /**
+     * Sets the end range for this component. The end range is inclusive, and it
+     * depends on the current resolution, what is considered inside the range.
+     * 
+     * @param endDate
+     *            - the allowed range's end date
+     */
+    public void setRangeEnd(Date rangeEnd) {
+        calendar.setRangeEnd(rangeEnd);
+    }
+
 }
