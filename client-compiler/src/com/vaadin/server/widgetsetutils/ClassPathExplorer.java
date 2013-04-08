@@ -388,6 +388,9 @@ public class ClassPathExplorer {
                         if (mainAttributes.getValue("Vaadin-Widgetsets") != null) {
                             return true;
                         }
+                        if (mainAttributes.getValue("Vaadin-Stylesheets") != null) {
+                            return true;
+                        }
                     }
                 } catch (MalformedURLException e) {
                     getLogger().log(Level.FINEST, "Failed to inspect JAR file",
