@@ -38,6 +38,7 @@
       <h2 id="tableofcontents">Release Notes for Vaadin Framework @version@</h2>
       <ul>
         <li><a href="#overview">Overview of Vaadin @version@ Release</a></li>
+        <li><a href="#security-fixes">Security fixes in Vaadin @version-minor@</a></li>
         <li><a href="#changelog">Complete change log for Vaadin @version@</a></li>
         <li><a href="#enhancements">Enhancements in Vaadin @version-minor@</a></li>
         <li><a href="#limitations">Limitations in @version-minor@</a></li>
@@ -65,6 +66,35 @@
         href="#enhancements">Enhancements in Vaadin @version-minor@</a> and the <a
         href="http://vaadin.com/download/release/@version-minor@/@version-minor@.0/release-notes.html">Release
         Notes for Vaadin @version-minor@.0</a>.
+      </p>
+
+      <!-- ================================================================ -->
+      <h2 id="security-fixes">Security fixes in Vaadin Framework 7.0.4</h2>
+
+      <p>
+        Vaadin 7.0.4 fixes a critical security issue discovered during an
+        internal review. All users of Vaadin portlets are strongly urged to
+        upgrade to Vaadin 7.0.4 or Vaadin 6.8.10 immediately.
+      </p>
+      <p>
+       Vaadin portlets (Portlet 2.0 - JSR-286) prior to Vaadin versions 6.8.10
+       and 7.0.4 are vulnerable to an attack that allows a remote user who has
+       access to a portlet on the portal to read files in the portlet deployment
+       directory using specially crafted resource requests provided the attacker
+       knows the file name.
+      </p>
+      <p>
+        The vulnerability has been classified as critical as it potentially
+        allows unauthorized access to portlet object code and configuration
+        information. Files outside the portlet deployment directory are not
+        accessible using this vulnerability. Portlets that are not visible
+        to the remote user are not vulnerable to this attack.
+        Servlet deployments are not vulnerable to this attack.
+      </p>
+      <p>
+        All users of Vaadin portlets are strongly urged to upgrade Vaadin
+        in the portlets immediately. Where that is not possible, access to
+        affected portlets should be restricted to trusted users only.
       </p>
 
       <h3 id="changelog">ChangeLog</h3>
