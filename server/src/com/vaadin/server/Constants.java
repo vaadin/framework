@@ -63,6 +63,27 @@ public interface Constants {
             + " Widgetset version: %s\n"
             + "=================================================================";
 
+    static final String REQUIRED_ATMOSPHERE_VERSION = "1.0.12";
+
+    static final String INVALID_ATMOSPHERE_VERSION_WARNING = "\n"
+            + "=================================================================\n"
+            + "With push enabled, Vaadin depends on Atomsphere {0} but\n"
+            + "version {1} was found. This might cause compatibility\n"
+            + "problems.\n"
+            + "=================================================================";
+
+    static final String ATMOSPHERE_MISSING_ERROR = "\n"
+            + "=================================================================\n"
+            + "Atmosphere could not be loaded. When using push with Vaadin, the\n"
+            + "Atmosphere framework must be present on the classpath.\n"
+            + "If using a dependency management system, please add a dependency\n"
+            + "to vaadin-push.\n"
+            + "If managing dependencies manually, please make sure Atmosphere\n"
+            + REQUIRED_ATMOSPHERE_VERSION
+            + " is included on the classpath.\n"
+            + "Push will be disabled.\n"
+            + "=================================================================";
+
     static final String URL_PARAMETER_THEME = "theme";
 
     static final String SERVLET_PARAMETER_PRODUCTION_MODE = "productionMode";
