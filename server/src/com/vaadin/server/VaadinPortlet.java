@@ -17,7 +17,6 @@ package com.vaadin.server;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -28,7 +27,6 @@ import java.security.GeneralSecurityException;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.portlet.ActionRequest;
@@ -340,6 +338,9 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
             } else if (isDummyRequest(resourceRequest)) {
                 return RequestType.DUMMY;
             } else {
+                // these are not served with ResourceRequests, but by a servlet
+                // on the portal at portlet root path (configured by default by
+                // Liferay at deployment time, similar on other portals)
                 return RequestType.STATIC_FILE;
             }
         } else if (request instanceof ActionRequest) {
@@ -406,9 +407,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
                         new BufferedWriter(new OutputStreamWriter(out, "UTF-8")));
                 outWriter.print("<html><body>dummy page</body></html>");
                 outWriter.close();
-            } else if (requestType == RequestType.STATIC_FILE) {
-                serveStaticResources((ResourceRequest) request,
-                        (ResourceResponse) response);
             } else {
                 VaadinPortletSession vaadinSession = null;
 
@@ -587,31 +585,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
     public void processEvent(EventRequest request, EventResponse response)
             throws PortletException, IOException {
         handleRequest(request, response);
-    }
-
-    private void serveStaticResources(ResourceRequest request,
-            ResourceResponse response) throws IOException, PortletException {
-        final String resourceID = request.getResourceID();
-        final PortletContext pc = getPortletContext();
-
-        InputStream is = pc.getResourceAsStream(resourceID);
-        if (is != null) {
-            final String mimetype = pc.getMimeType(resourceID);
-            if (mimetype != null) {
-                response.setContentType(mimetype);
-            }
-            final OutputStream os = response.getPortletOutputStream();
-            final byte buffer[] = new byte[DEFAULT_BUFFER_SIZE];
-            int bytes;
-            while ((bytes = is.read(buffer)) >= 0) {
-                os.write(buffer, 0, bytes);
-            }
-        } else {
-            getLogger().log(Level.INFO,
-                    "Requested resource [{0}] could not be found", resourceID);
-            response.setProperty(ResourceResponse.HTTP_STATUS_CODE,
-                    Integer.toString(HttpServletResponse.SC_NOT_FOUND));
-        }
     }
 
     @Override
