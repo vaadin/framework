@@ -8,7 +8,7 @@ import org.junit.Test;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.tests.server.AlwaysLockedVaadinSession;
+import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;

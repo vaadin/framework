@@ -1,4 +1,4 @@
-package com.vaadin.tests.server;
+package com.vaadin.tests.util;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;

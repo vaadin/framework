@@ -11,7 +11,7 @@ import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
-import com.vaadin.tests.server.AlwaysLockedVaadinSession;
+import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.TextField;
 
 public class DefaultConverterFactory extends TestCase {

@@ -4,13 +4,14 @@ import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
 
-import com.vaadin.server.DeploymentConfiguration;
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.StreamVariable;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.tests.util.AlwaysLockedVaadinSession;
+import com.vaadin.tests.util.MockDeploymentConfiguration;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
@@ -78,7 +79,7 @@ public class TestStreamVariableMapping extends TestCase {
     private LegacyCommunicationManager createCommunicationManager() {
         VaadinServletService vss = new VaadinServletService(
                 EasyMock.createMock(VaadinServlet.class),
-                EasyMock.createMock(DeploymentConfiguration.class));
+                new MockDeploymentConfiguration());
         return new LegacyCommunicationManager(
                 new AlwaysLockedVaadinSession(vss));
     }

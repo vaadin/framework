@@ -15,7 +15,7 @@ import com.vaadin.server.UIClassSelectionEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.tests.server.AlwaysLockedVaadinSession;
+import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.UI;
 
 public class CustomUIClassLoader extends TestCase {

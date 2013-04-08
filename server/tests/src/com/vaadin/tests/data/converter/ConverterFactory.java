@@ -22,7 +22,7 @@ import junit.framework.TestCase;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.tests.server.AlwaysLockedVaadinSession;
+import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.TextField;
 
 public class ConverterFactory extends TestCase {

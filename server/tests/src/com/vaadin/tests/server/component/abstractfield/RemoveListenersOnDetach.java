@@ -9,7 +9,7 @@ import com.vaadin.data.util.AbstractProperty;
 import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.tests.server.AlwaysLockedVaadinSession;
+import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.UI;
 

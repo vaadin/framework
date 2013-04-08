@@ -30,6 +30,7 @@ import org.junit.Test;
 
 import com.vaadin.server.ClientConnector.DetachEvent;
 import com.vaadin.server.ClientConnector.DetachListener;
+import com.vaadin.tests.util.MockDeploymentConfiguration;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
@@ -53,7 +54,7 @@ public class VaadinSessionTest {
         };
 
         mockService = new VaadinServletService(mockServlet,
-                EasyMock.createMock(DeploymentConfiguration.class));
+                new MockDeploymentConfiguration());
 
         mockHttpSession = EasyMock.createMock(HttpSession.class);
         mockWrappedSession = new WrappedHttpSession(mockHttpSession) {

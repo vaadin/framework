@@ -21,7 +21,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.data.bean.Person;
-import com.vaadin.tests.server.AlwaysLockedVaadinSession;
+import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.Label;
 
 public class LabelConverters extends TestCase {
