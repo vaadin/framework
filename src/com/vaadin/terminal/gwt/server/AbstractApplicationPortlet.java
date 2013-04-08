@@ -285,6 +285,9 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             } else if (isDummyRequest((ResourceRequest) request)) {
                 return RequestType.DUMMY;
             } else {
+                // these are not served with ResourceRequests, but by a servlet
+                // on the portal at portlet root path (configured by default by
+                // Liferay at deployment time, similar on other portals)
                 return RequestType.STATIC_FILE;
             }
         } else if (request instanceof ActionRequest) {
@@ -346,9 +349,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                     new OutputStreamWriter(out, "UTF-8")));
             outWriter.print("<html><body>dummy page</body></html>");
             outWriter.close();
-        } else if (requestType == RequestType.STATIC_FILE) {
-            serveStaticResources((ResourceRequest) request,
-                    (ResourceResponse) response);
         } else {
             Application application = null;
             boolean transactionStarted = false;
@@ -685,32 +685,6 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
                 AbstractCommunicationManager.tryToCloseStream(data);
                 AbstractCommunicationManager.tryToCloseStream(out);
             }
-        }
-    }
-
-    private void serveStaticResources(ResourceRequest request,
-            ResourceResponse response) throws IOException, PortletException {
-        final String resourceID = request.getResourceID();
-        final PortletContext pc = getPortletContext();
-
-        InputStream is = pc.getResourceAsStream(resourceID);
-        if (is != null) {
-            final String mimetype = pc.getMimeType(resourceID);
-            if (mimetype != null) {
-                response.setContentType(mimetype);
-            }
-            final OutputStream os = response.getPortletOutputStream();
-            final byte buffer[] = new byte[DEFAULT_BUFFER_SIZE];
-            int bytes;
-            while ((bytes = is.read(buffer)) >= 0) {
-                os.write(buffer, 0, bytes);
-            }
-        } else {
-            getLogger().info(
-                    "Requested resource [" + resourceID
-                            + "] could not be found");
-            response.setProperty(ResourceResponse.HTTP_STATUS_CODE,
-                    Integer.toString(HttpServletResponse.SC_NOT_FOUND));
         }
     }
 
