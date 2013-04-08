@@ -472,7 +472,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
     private Navigator navigator;
 
-    private PushConnection pushConnection = new PushConnection(this);
+    private PushConnection pushConnection = null;
 
     /**
      * This method is used by Component.Focusable objects to request focus to
