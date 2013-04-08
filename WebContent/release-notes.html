@@ -63,6 +63,35 @@
       </p>
 
       <!-- ================================================================ -->
+      <h2 id="security-fixes">Security fixes in Vaadin Framework 6.8.10</h2>
+
+      <p>
+        Vaadin 6.8.10 fixes a critical security issue discovered during an
+        internal review. All users of Vaadin portlets are strongly urged to
+        upgrade immediately.
+      </p>
+      <p>
+       Vaadin portlets (Portlet 2.0 - JSR-286) prior to Vaadin version 6.8.10
+       are vulnerable to an attack that allows a remote user who has access to
+       a portlet on the portal to read files in the portlet deployment directory
+       using specially crafted resource requests provided the attacker knows the
+       file name.
+      </p>
+      <p>
+      	The vulnerability has been classified as critical as it potentially
+      	allows unauthorized access to portlet object code and configuration
+      	information. Files outside the portlet deployment directory are not
+      	accessible using this vulnerability. Portlets that are not visible
+      	to the remote user are not vulnerable to this attack.
+      	Servlet deployments are not vulnerable to this attack.
+      </p>
+      <p>
+      	All users of Vaadin portlets are strongly urged to upgrade Vaadin
+      	in the portlets immediately. Where that is not possible, access to
+      	affected portlets should be restricted to trusted users only.
+      </p>
+
+      <!-- ================================================================ -->
       <h2 id="security-fixes">Security fixes in Vaadin Framework 6.8.8</h2>
 
       <p>
