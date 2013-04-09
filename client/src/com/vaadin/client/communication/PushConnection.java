@@ -190,7 +190,7 @@ public class PushConnection {
 
         config.url = uri;
         config.onOpen = $entry(function(response) {
-            self.@com.vaadin.client.communication.PushConnection::onOpen(*)(response)();
+            self.@com.vaadin.client.communication.PushConnection::onOpen(*)(response);
         });
         config.onMessage = $entry(function(response) {
             self.@com.vaadin.client.communication.PushConnection::onMessage(*)(response);
