@@ -89,6 +89,8 @@ public class PushHandler implements AtmosphereHandler {
                 getLogger().log(Level.FINER,
                         "New push connection with transport {}",
                         resource.transport());
+                resource.getResponse().setContentType(
+                        "application/json; charset=UTF-8");
                 resource.suspend();
 
                 connection.connect(resource);
@@ -142,8 +144,6 @@ public class PushHandler implements AtmosphereHandler {
             // single client.
             getLogger().log(Level.FINER, "Writing message to resource {}", id);
 
-            resource.getResponse().setContentType(
-                    "application/json; charset=UTF-8");
             Writer writer = resource.getResponse().getWriter();
             writer.write("for(;;);[{" + event.getMessage() + "}]");
 
