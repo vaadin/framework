@@ -88,4 +88,29 @@ public class Property {
         return getSignature();
     }
 
+    /**
+     * Gets the property name formatted for displaying in a user interface. This
+     * returns a string where e.g. "camelCase" has been converted to
+     * "Camel case".
+     * 
+     * @return the name of this property, formatted for humans to read
+     */
+    public String getDisplayName() {
+        String camelCase = getName();
+        StringBuilder b = new StringBuilder(camelCase.length());
+        for (int i = 0; i < camelCase.length(); i++) {
+            char charAt = camelCase.charAt(i);
+            if (i == 0) {
+                // First char always upper case
+                b.append(Character.toUpperCase(charAt));
+            } else if (Character.isUpperCase(charAt)) {
+                b.append(' ');
+                b.append(Character.toLowerCase(charAt));
+            } else {
+                b.append(charAt);
+            }
+        }
+        return b.toString();
+    }
+
 }

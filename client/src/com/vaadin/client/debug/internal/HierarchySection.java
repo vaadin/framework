@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.debug.internal;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,11 +46,15 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.ConnectorMap;
+import com.vaadin.client.JsArrayObject;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.SimpleTree;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ValueMap;
+import com.vaadin.client.metadata.NoDataException;
+import com.vaadin.client.metadata.Property;
+import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.UnknownComponentConnector;
 import com.vaadin.shared.AbstractComponentState;
 
@@ -60,6 +65,14 @@ import com.vaadin.shared.AbstractComponentState;
  * @author Vaadin Ltd
  */
 class HierarchySection implements Section {
+
+    /**
+     * Shared state properties that have hardcoded support in
+     * {@link #printState(ComponentConnector)} and should therefore be ignored
+     * when iterating through the properties.
+     */
+    private final HashSet<String> ignoreProperties = new HashSet<String>(
+            Arrays.asList("id", "caption", "description", "width", "height"));
 
     private final DebugButton tabButton = new DebugButton(Icon.HIERARCHY,
             "Examine compoent hierarchy");
@@ -486,13 +499,22 @@ class HierarchySection implements Section {
                 + connector.getWidget().getOffsetWidth() + "px)");
         html += getRowHTML("Height", state.height + " (actual: "
                 + connector.getWidget().getOffsetHeight() + "px)");
-        html += getRowHTML("Enabled", state.enabled);
-        html += getRowHTML("Read only", state.readOnly);
-        html += getRowHTML("Immediate", state.immediate);
-        html += getRowHTML("Error message", state.errorMessage);
-        html += getRowHTML("Primary stylename", state.primaryStyleName);
-        html += getRowHTML("Styles", state.styles);
-        html += getRowHTML("Resources", state.resources);
+
+        try {
+            JsArrayObject<Property> properties = AbstractConnector
+                    .getStateType(connector).getPropertiesAsArray();
+            for (int i = 0; i < properties.size(); i++) {
+                Property property = properties.get(i);
+                String name = property.getName();
+                if (!ignoreProperties.contains(name)) {
+                    html += getRowHTML(property.getDisplayName(),
+                            property.getValue(state));
+                }
+            }
+        } catch (NoDataException e) {
+            html += "<div>Could not read state, error has been logged to the console</div>";
+            VConsole.error(e);
+        }
 
         content.clear();
         content.add(new HTML(html));
@@ -501,7 +523,8 @@ class HierarchySection implements Section {
     private String getRowHTML(String caption, Object value) {
         return "<div class=\"" + VDebugWindow.STYLENAME
                 + "-row\"><span class=\"caption\">" + caption
-                + "</span><span class=\"value\">" + value + "</span></div>";
+                + "</span><span class=\"value\">"
+                + Util.escapeHTML(String.valueOf(value)) + "</span></div>";
     }
 
     private final NativePreviewHandler highlightModeHandler = new NativePreviewHandler() {
