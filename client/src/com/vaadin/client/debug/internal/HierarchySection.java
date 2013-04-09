@@ -75,7 +75,7 @@ class HierarchySection implements Section {
             Arrays.asList("id", "caption", "description", "width", "height"));
 
     private final DebugButton tabButton = new DebugButton(Icon.HIERARCHY,
-            "Examine compoent hierarchy");
+            "Examine component hierarchy");
 
     private final FlowPanel content = new FlowPanel();
     private final FlowPanel controls = new FlowPanel();
@@ -148,7 +148,7 @@ class HierarchySection implements Section {
 
     @Override
     public void log(Level level, String msg) {
-        // TODO
+        // NOP
     }
 
     private void generateWidgetset() {
