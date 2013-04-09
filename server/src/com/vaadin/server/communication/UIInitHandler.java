@@ -207,7 +207,11 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
         UI.setCurrent(ui);
 
         if (session.getPushMode() != PushMode.DISABLED) {
-            ui.setPushConnection(new PushConnection(ui));
+            /*
+             * TODO This currently makes it very difficult to use any other push
+             * implementation than the bundled one.
+             */
+            ui.setPushConnection(new AtmospherePushConnection(ui));
         }
 
         ui.doInit(request, uiId.intValue());

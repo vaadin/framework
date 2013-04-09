@@ -75,7 +75,9 @@ public class PushHandler implements AtmosphereHandler {
             if (ui == null) {
                 throw new RuntimeException("UI not found!");
             }
-            PushConnection connection = ui.getPushConnection();
+            assert ui.getPushConnection() instanceof AtmospherePushConnection;
+            AtmospherePushConnection connection = (AtmospherePushConnection) ui
+                    .getPushConnection();
 
             if (req.getMethod().equalsIgnoreCase("GET")) {
                 /*
