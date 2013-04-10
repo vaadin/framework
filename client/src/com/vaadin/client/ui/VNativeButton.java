@@ -16,9 +16,14 @@
 
 package com.vaadin.client.ui;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseEvent;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
@@ -26,6 +31,7 @@ import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Util;
+import com.vaadin.client.VConsole;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.button.ButtonServerRpc;
 
@@ -60,6 +66,8 @@ public class VNativeButton extends Button implements ClickHandler {
      */
     private boolean clickPending;
 
+    private boolean cancelNextClick = false;
+
     /** For internal use only. May be removed or replaced in the future. */
     public boolean disableOnClick = false;
 
@@ -71,8 +79,8 @@ public class VNativeButton extends Button implements ClickHandler {
 
         addClickHandler(this);
 
-        sinkEvents(Event.ONMOUSEDOWN);
-        sinkEvents(Event.ONMOUSEUP);
+        sinkEvents(Event.ONMOUSEDOWN | Event.ONLOAD | Event.ONMOUSEMOVE
+                | Event.ONFOCUS);
     }
 
     @Override
@@ -95,6 +103,7 @@ public class VNativeButton extends Button implements ClickHandler {
         } else if (DOM.eventGetType(event) == Event.ONMOUSEDOWN
                 && event.getButton() == Event.BUTTON_LEFT) {
             clickPending = true;
+
         } else if (DOM.eventGetType(event) == Event.ONMOUSEMOVE) {
             clickPending = false;
         } else if (DOM.eventGetType(event) == Event.ONMOUSEOUT) {
@@ -102,6 +111,21 @@ public class VNativeButton extends Button implements ClickHandler {
                 click();
             }
             clickPending = false;
+        } else if (event.getTypeInt() == Event.ONFOCUS) {
+            if (BrowserInfo.get().isIE() && clickPending) {
+                /*
+                 * The focus event will mess up IE and IE will not trigger the
+                 * mouse up event (which in turn triggers the click event) until
+                 * the mouse is moved. This will result in it appearing as a
+                 * native button not triggering the event. So we manually
+                 * trigger the click here and cancel the next original event
+                 * which will occur on the next mouse move. See ticket #11094
+                 * for details.
+                 */
+                click();
+                clickPending = false;
+                cancelNextClick = true;
+            }
         }
     }
 
@@ -120,7 +144,8 @@ public class VNativeButton extends Button implements ClickHandler {
      */
     @Override
     public void onClick(ClickEvent event) {
-        if (paintableId == null || client == null) {
+        if (paintableId == null || client == null || cancelNextClick) {
+            cancelNextClick = false;
             return;
         }
 
