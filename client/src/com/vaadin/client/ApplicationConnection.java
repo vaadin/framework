@@ -183,6 +183,19 @@ public class ApplicationConnection {
 
     protected boolean applicationRunning = false;
 
+    /**
+     * Keep track of whether the initialization JSON has been handled. We should
+     * not process any push messages until the initial JSON has been processed.
+     */
+    private boolean initJsonHandled = false;
+
+    /**
+     * Keep track of any push messages that arrive before
+     * {@link #initJsonHandled} is set to true.
+     */
+    private JsArrayString incommingPushMessageQueue = JsArrayString
+            .createArray().cast();
+
     private boolean hasActiveRequest = false;
 
     /**
@@ -1114,6 +1127,26 @@ public class ApplicationConnection {
             checkForPendingVariableBursts();
             runPostRequestHooks(configuration.getRootPanelId());
         }
+
+        if (!initJsonHandled) {
+            /*
+             * Assume that the first request that is fully handled is the one
+             * with the initialization data.
+             */
+            initJsonHandled = true;
+
+            int queueLength = incommingPushMessageQueue.length();
+            if (queueLength > 0) {
+                VConsole.log("Init handled, processing " + queueLength
+                        + " enqueued messages");
+                for (int i = 0; i < queueLength; i++) {
+                    handlePushMessage(incommingPushMessageQueue.get(i));
+                }
+                incommingPushMessageQueue.setLength(0);
+            }
+
+        }
+
         // deferring to avoid flickering
         Scheduler.get().scheduleDeferred(new Command() {
             @Override
@@ -1257,6 +1290,14 @@ public class ApplicationConnection {
             forceHandleMessage.schedule(MAX_SUSPENDED_TIMEOUT);
             return;
         }
+
+        /*
+         * Lock response handling to avoid a situation where something pushed
+         * from the server gets processed while waiting for e.g. lazily loaded
+         * connectors that are needed for processing the current message.
+         */
+        final Object lock = new Object();
+        suspendReponseHandling(lock);
 
         VConsole.log("Handling message from server");
         eventBus.fireEvent(new ResponseHandlingStartedEvent(this));
@@ -1476,6 +1517,7 @@ public class ApplicationConnection {
                     // not sent asynchronously
                     endRequest();
                 }
+                resumeResponseHandling(lock);
 
                 if (Profiler.isEnabled()) {
                     Scheduler.get().scheduleDeferred(new ScheduledCommand() {
@@ -3264,11 +3306,19 @@ public class ApplicationConnection {
      * suspended.
      */
     private void handlePendingMessages() {
-        for (PendingUIDLMessage pending : pendingUIDLMessages) {
-            handleUIDLMessage(pending.getStart(), pending.getJsonText(),
-                    pending.getJson());
+        if (!pendingUIDLMessages.isEmpty()) {
+            /*
+             * Clear the list before processing enqueued messages to support
+             * reentrancy
+             */
+            List<PendingUIDLMessage> pendingMessages = pendingUIDLMessages;
+            pendingUIDLMessages = new ArrayList<PendingUIDLMessage>();
+
+            for (PendingUIDLMessage pending : pendingMessages) {
+                handleReceivedJSONMessage(pending.getStart(),
+                        pending.getJsonText(), pending.getJson());
+            }
         }
-        pendingUIDLMessages.clear();
     }
 
     private boolean handleErrorInDelegate(String details, int statusCode) {
@@ -3348,6 +3398,11 @@ public class ApplicationConnection {
     }
 
     public void handlePushMessage(String message) {
-        handleJSONText(message, 200);
+        if (initJsonHandled) {
+            handleJSONText(message, 200);
+        } else {
+            VConsole.log("Enqueuing push message has init has not yet been handled");
+            incommingPushMessageQueue.push(message);
+        }
     }
 }
