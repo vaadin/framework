@@ -1177,6 +1177,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * should only be called by the framework.
      */
     public void setPushConnection(PushConnection connection) {
+        assert pushConnection == null;
+        assert connection != null;
         pushConnection = connection;
     }
 

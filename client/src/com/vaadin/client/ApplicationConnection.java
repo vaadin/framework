@@ -870,7 +870,7 @@ public class ApplicationConnection {
      * @param jsonText
      * @param statusCode
      */
-    public void handleJSONText(String jsonText, int statusCode) {
+    protected void handleJSONText(String jsonText, int statusCode) {
         final Date start = new Date();
         final ValueMap json;
         try {
@@ -974,7 +974,7 @@ public class ApplicationConnection {
      * servicing the session so far. These values are always one request behind,
      * since they cannot be measured before the request is finished.
      */
-    public ValueMap serverTimingInfo;
+    private ValueMap serverTimingInfo;
 
     static final int MAX_CSS_WAITS = 100;
 
