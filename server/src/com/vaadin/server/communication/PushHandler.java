@@ -18,12 +18,14 @@ package com.vaadin.server.communication;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.atmosphere.cpr.AtmosphereHandler;
 import org.atmosphere.cpr.AtmosphereRequest;
 import org.atmosphere.cpr.AtmosphereResource;
+import org.atmosphere.cpr.AtmosphereResource.TRANSPORT;
 import org.atmosphere.cpr.AtmosphereResourceEvent;
 import org.json.JSONException;
 
@@ -43,6 +45,13 @@ import com.vaadin.ui.UI;
  */
 public class PushHandler implements AtmosphereHandler {
 
+    private static final String LONG_PADDING;
+    static {
+        char[] array = new char[4096];
+        Arrays.fill(array, '-');
+        LONG_PADDING = String.copyValueOf(array);
+
+    }
     private VaadinServletService service;
 
     public PushHandler(VaadinServletService service) {
@@ -91,6 +100,11 @@ public class PushHandler implements AtmosphereHandler {
                         resource.transport());
                 resource.getResponse().setContentType(
                         "application/json; charset=UTF-8");
+                if (resource.transport() == TRANSPORT.STREAMING) {
+                    // IE8 requires a longer padding to work properly if the
+                    // initial message is small (#11573)
+                    resource.padding(LONG_PADDING);
+                }
                 resource.suspend();
 
                 connection.connect(resource);
