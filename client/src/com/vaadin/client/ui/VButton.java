@@ -357,12 +357,14 @@ public class VButton extends FocusWidget implements ClickHandler {
             this.enabled = enabled;
             if (!enabled) {
                 cleanupCaptureState();
+                Roles.getButtonRole().setAriaDisabledState(getElement(),
+                        !enabled);
                 super.setTabIndex(-1);
             } else {
+                Roles.getButtonRole().removeAriaDisabledState(getElement());
                 super.setTabIndex(tabIndex);
             }
 
-            Roles.getButtonRole().setAriaDisabledState(getElement(), !enabled);
         }
     }
 
