@@ -109,6 +109,12 @@ public class PushHandler implements AtmosphereHandler {
 
                 connection.connect(resource);
             } else if (req.getMethod().equalsIgnoreCase("POST")) {
+                assert connection.isConnected() : "Got push from the client "
+                        + "even though the connection does not seem to be "
+                        + "open. This might happen if a HttpSession is "
+                        + "serialized and deserialized while the push "
+                        + "connection is kept open.";
+
                 /*
                  * We received a UIDL request through Atmosphere. If the push
                  * channel is bidirectional (websockets), the request was sent

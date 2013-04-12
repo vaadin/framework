@@ -37,7 +37,7 @@ public class AtmospherePushConnection implements Serializable, PushConnection {
 
     private UI ui;
     private boolean pending = true;
-    private AtmosphereResource resource;
+    private transient AtmosphereResource resource;
 
     public AtmospherePushConnection(UI ui) {
         this.ui = ui;
