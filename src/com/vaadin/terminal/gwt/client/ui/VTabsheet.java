@@ -561,8 +561,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     public static final String TABS_CLASSNAME = "v-tabsheet-tabcontainer";
     public static final String SCROLLER_CLASSNAME = "v-tabsheet-scroller";
 
-    // Can't use "style" as it's already in use
-    public static final String TAB_STYLE_NAME = "tabstyle";
 
     private static final FocusImpl focusImpl = FocusImpl.getFocusImplForPanel();
 

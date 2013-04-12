@@ -17,6 +17,9 @@ import com.vaadin.terminal.gwt.client.UIDL;
 
 abstract class VTabsheetBase extends ComplexPanel implements Container {
 
+    // Can't use "style" as it's already in use
+    public static final String TAB_STYLE_NAME = "tabstyle";
+
     String id;
     ApplicationConnection client;
 
