@@ -77,7 +77,7 @@ public class ServerRpcHandler implements Serializable {
      * variable changes) and executes the calls.
      * 
      * @param ui
-     *            The {@link UI} receiving the calls.
+     *            The {@link UI} receiving the calls. Cannot be null.
      * @param reader
      *            The {@link Reader} used to read the JSON.
      * @param request
@@ -91,15 +91,6 @@ public class ServerRpcHandler implements Serializable {
      */
     public void handleRpc(UI ui, Reader reader, VaadinRequest request)
             throws IOException, InvalidUIDLSecurityKeyException, JSONException {
-
-        // Verify that there's an UI
-        if (ui == null) {
-            // This should not happen, no windows exists but
-            // session is still open.
-            getLogger().warning("Could not get UI for session");
-            return;
-        }
-
         ui.getSession().setLastRequestTimestamp(System.currentTimeMillis());
 
         // Change all variables based on request parameters

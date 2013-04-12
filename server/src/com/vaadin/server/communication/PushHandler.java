@@ -82,7 +82,10 @@ public class PushHandler implements AtmosphereHandler {
         try {
             UI ui = service.findUI(vaadinRequest);
             if (ui == null) {
-                throw new RuntimeException("UI not found!");
+                // This should not happen
+                getLogger().warning(
+                        "Could not find the requested UI in session");
+                return;
             }
             assert ui.getPushConnection() instanceof AtmospherePushConnection;
             AtmospherePushConnection connection = (AtmospherePushConnection) ui

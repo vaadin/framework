@@ -190,8 +190,9 @@ public class VaadinServletService extends VaadinService {
                 && !ServletUIInitHandler.isUIInitRequest(request)
                 && !ServletPortletHelper.isFileUploadRequest(request)
                 && !ServletPortletHelper.isHeartbeatRequest(request)
-                && !ServletPortletHelper.isPublishedFileRequest(request) && !ServletPortletHelper
-                    .isUIDLRequest(request));
+                && !ServletPortletHelper.isPublishedFileRequest(request)
+                && !ServletPortletHelper.isUIDLRequest(request) && !ServletPortletHelper
+                    .isPushRequest(request));
     }
 
     @Override

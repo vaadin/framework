@@ -69,6 +69,11 @@ public class UidlRequestHandler extends SynchronizedRequestHandler {
             return false;
         }
         UI uI = session.getService().findUI(request);
+        if (uI == null) {
+            // This should not happen
+            getLogger().warning("Could not find the requested UI in session");
+            return true;
+        }
 
         checkWidgetsetVersion(request);
         String requestThemeName = request.getParameter("theme");
