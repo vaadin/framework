@@ -85,6 +85,7 @@
 			<arg value="-localWorkers" />
 			<arg value="${localWorkers}" />
 			<arg value="-strict" />
+			<arg value="-XenableClosureCompiler" />
 			<arg line="${extraParams}" />
 			<arg value="${module}" />
 
