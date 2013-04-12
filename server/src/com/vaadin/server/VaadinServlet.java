@@ -207,7 +207,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      */
     protected boolean handleContextRootWithoutSlash(HttpServletRequest request,
             HttpServletResponse response) throws IOException {
-        if ("/".equals(request.getPathInfo())
+        if ((request.getPathInfo() == null || "/".equals(request.getPathInfo()))
                 && "".equals(request.getServletPath())
                 && !request.getRequestURI().endsWith("/")) {
             /*
