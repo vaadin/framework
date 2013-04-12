@@ -364,6 +364,8 @@ ContainerResizedListener {
      */
     protected class StackItem extends ComplexPanel implements ClickHandler {
 
+        private static final String TAB_CLASSNAME = CLASSNAME + "-item";
+
         public void setHeight(int height) {
             if (height == -1) {
                 super.setHeight("");
@@ -450,9 +452,9 @@ ContainerResizedListener {
             DOM.appendChild(getElement(), captionNode);
             DOM.appendChild(getElement(), content);
 
-            getElement().addClassName(CLASSNAME + "-item");
-            captionNode.addClassName(CLASSNAME + "-item-caption");
-            content.addClassName(CLASSNAME + "-item-content");
+            getElement().addClassName(TAB_CLASSNAME);
+            captionNode.addClassName(TAB_CLASSNAME + "-caption");
+            content.addClassName(TAB_CLASSNAME + "-content");
 
             touchScrollHandler.addElement(getContainerElement());
 
@@ -562,16 +564,17 @@ ContainerResizedListener {
                     if (styleName != null && styleName.length() != 0) {
                         // Remove old style name if present
                         getElement().removeClassName(
-                                CLASSNAME + "-" + styleName);
+                                TAB_CLASSNAME + "-" + styleName);
                     }
                     // Set new style name
-                    getElement().addClassName(CLASSNAME + "-" + newStyleName);
+                    getElement().addClassName(
+                            TAB_CLASSNAME + "-" + newStyleName);
                     styleName = newStyleName;
                 }
             } else if (styleName != null) {
                 // Remove the set stylename if no stylename is present in the
                 // uidl
-                getElement().removeClassName(CLASSNAME + "-" + styleName);
+                getElement().removeClassName(TAB_CLASSNAME + "-" + styleName);
                 styleName = null;
             }
         }
