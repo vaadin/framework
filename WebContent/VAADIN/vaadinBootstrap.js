@@ -120,6 +120,11 @@
 					url += '&theme=' + encodeURIComponent(theme);
 				}
 				
+				var extraParams = getConfig('extraParams')
+				if (extraParams !== undefined) {
+					url += extraParams;
+				}
+				
 				url += '&' + vaadin.getBrowserDetailsParameters(appId); 
 				
 				// Timestamp to avoid caching

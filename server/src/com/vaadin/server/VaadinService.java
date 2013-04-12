@@ -590,10 +590,12 @@ public abstract class VaadinService implements Serializable, Callback {
              * not specifically requested to close or restart it.
              */
 
-            final boolean restartApplication = (request
-                    .getParameter(URL_PARAMETER_RESTART_APPLICATION) != null);
-            final boolean closeApplication = (request
-                    .getParameter(URL_PARAMETER_CLOSE_APPLICATION) != null);
+            final boolean restartApplication = hasParameter(request,
+                    URL_PARAMETER_RESTART_APPLICATION)
+                    && !hasParameter(request,
+                            BootstrapHandler.IGNORE_RESTART_PARAM);
+            final boolean closeApplication = hasParameter(request,
+                    URL_PARAMETER_CLOSE_APPLICATION);
 
             if (restartApplication) {
                 closeSession(session, request.getWrappedSession(false));
@@ -622,6 +624,11 @@ public abstract class VaadinService implements Serializable, Callback {
             throw new SessionExpiredException();
         }
 
+    }
+
+    private static boolean hasParameter(VaadinRequest request,
+            String parameterName) {
+        return request.getParameter(parameterName) != null;
     }
 
     /**

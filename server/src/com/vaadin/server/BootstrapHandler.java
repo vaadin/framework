@@ -54,6 +54,13 @@ import com.vaadin.ui.UI;
 @Deprecated
 public abstract class BootstrapHandler extends SynchronizedRequestHandler {
 
+    /**
+     * Parameter that is added to the UI init request if the session has already
+     * been restarted when generating the bootstrap HTML and ?restartApplication
+     * should thus be ignored when handling the UI init request.
+     */
+    public static final String IGNORE_RESTART_PARAM = "ignoreRestart";
+
     protected class BootstrapContext implements Serializable {
 
         private final VaadinResponse response;
@@ -426,6 +433,12 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         String themeName = context.getThemeName();
         if (themeName != null) {
             appConfig.put("theme", themeName);
+        }
+
+        // Ignore restartApplication that might be passed to UI init
+        if (request
+                .getParameter(VaadinService.URL_PARAMETER_RESTART_APPLICATION) != null) {
+            appConfig.put("extraParams", "&" + IGNORE_RESTART_PARAM + "=1");
         }
 
         JSONObject versionInfo = new JSONObject();
