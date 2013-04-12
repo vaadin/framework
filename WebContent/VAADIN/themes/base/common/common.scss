@@ -204,6 +204,12 @@ body &.v-app-loading {
 	padding: 2px;
 }
 
+/* Fix for IE9 caret bug #11152 */
+input, 
+textarea {
+	position: relative;
+}
+
 .v-drag-element {
 	z-index: 60000;
 	/* override any other position: properties */
