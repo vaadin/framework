@@ -482,6 +482,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
     private PushConnection pushConnection = null;
 
+    private boolean hasPendingPush = false;
+
     /**
      * This method is used by Component.Focusable objects to request focus to
      * themselves. Focus renders must be handled at window level (instead of
@@ -1149,6 +1151,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     public void push() {
         VaadinSession session = getSession();
         if (session != null) {
+            assert session.hasLock();
             if (!getConnectorTracker().hasDirtyConnectors()) {
                 // Do not push if there is nothing to push
                 return;
@@ -1157,8 +1160,12 @@ public abstract class UI extends AbstractSingleComponentContainer implements
             if (session.getPushMode() == PushMode.DISABLED) {
                 throw new IllegalStateException("Push not enabled");
             }
-            assert pushConnection != null;
-            pushConnection.push();
+
+            if (pushConnection == null) {
+                hasPendingPush = true;
+            } else {
+                pushConnection.push();
+            }
         } else {
             throw new UIDetachedException("Trying to push a detached UI");
         }
@@ -1180,6 +1187,10 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         assert pushConnection == null;
         assert connection != null;
         pushConnection = connection;
+        if (hasPendingPush) {
+            hasPendingPush = false;
+            pushConnection.push();
+        }
     }
 
     /**

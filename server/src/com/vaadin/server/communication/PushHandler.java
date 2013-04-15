@@ -36,6 +36,7 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
 
 /**
@@ -88,9 +89,7 @@ public class PushHandler implements AtmosphereHandler {
                         "Could not find the requested UI in session");
                 return;
             }
-            assert ui.getPushConnection() instanceof AtmospherePushConnection;
-            AtmospherePushConnection connection = (AtmospherePushConnection) ui
-                    .getPushConnection();
+            assert session.getPushMode() != PushMode.DISABLED;
 
             if (req.getMethod().equalsIgnoreCase("GET")) {
                 /*
@@ -111,13 +110,20 @@ public class PushHandler implements AtmosphereHandler {
                 }
                 resource.suspend();
 
+                AtmospherePushConnection connection = new AtmospherePushConnection(
+                        ui);
                 connection.connect(resource);
+
+                ui.setPushConnection(connection);
             } else if (req.getMethod().equalsIgnoreCase("POST")) {
-                assert connection.isConnected() : "Got push from the client "
+                AtmospherePushConnection connection = getConnectionForUI(ui);
+
+                assert connection != null : "Got push from the client "
                         + "even though the connection does not seem to be "
-                        + "open. This might happen if a HttpSession is "
+                        + "valid. This might happen if a HttpSession is "
                         + "serialized and deserialized while the push "
-                        + "connection is kept open.";
+                        + "connection is kept open or if the UI has a "
+                        + "connection of unexpected type.";
 
                 /*
                  * We received a UIDL request through Atmosphere. If the push
@@ -154,6 +160,18 @@ public class PushHandler implements AtmosphereHandler {
         } finally {
             session.unlock();
         }
+    }
+
+    private static AtmospherePushConnection getConnectionForUI(UI ui) {
+        PushConnection pushConnection = ui.getPushConnection();
+        if (pushConnection instanceof AtmospherePushConnection) {
+            AtmospherePushConnection apc = (AtmospherePushConnection) pushConnection;
+            if (apc.isConnected()) {
+                return apc;
+            }
+        }
+
+        return null;
     }
 
     @Override

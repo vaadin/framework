@@ -37,7 +37,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.UI;
 
@@ -205,14 +204,6 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
 
         // Set thread local here so it is available in init
         UI.setCurrent(ui);
-
-        if (session.getPushMode() != PushMode.DISABLED) {
-            /*
-             * TODO This currently makes it very difficult to use any other push
-             * implementation than the bundled one.
-             */
-            ui.setPushConnection(new AtmospherePushConnection(ui));
-        }
 
         ui.doInit(request, uiId.intValue());
 

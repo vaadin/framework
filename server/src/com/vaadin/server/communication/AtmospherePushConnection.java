@@ -36,7 +36,6 @@ import com.vaadin.ui.UI;
 public class AtmospherePushConnection implements Serializable, PushConnection {
 
     private UI ui;
-    private boolean pending = true;
     private transient AtmosphereResource resource;
 
     public AtmospherePushConnection(UI ui) {
@@ -45,16 +44,12 @@ public class AtmospherePushConnection implements Serializable, PushConnection {
 
     @Override
     public void push() {
-        if (!isConnected()) {
-            // Not currently connected; defer until connection established
-            setPending(true);
-        } else {
-            try {
-                push(true);
-            } catch (IOException e) {
-                // TODO Error handling
-                throw new RuntimeException("Push failed", e);
-            }
+        assert isConnected();
+        try {
+            push(true);
+        } catch (IOException e) {
+            // TODO Error handling
+            throw new RuntimeException("Push failed", e);
         }
     }
 
@@ -97,10 +92,6 @@ public class AtmospherePushConnection implements Serializable, PushConnection {
      */
     protected void connect(AtmosphereResource resource) throws IOException {
         this.resource = resource;
-        if (isPending()) {
-            push(true);
-            setPending(false);
-        }
     }
 
     /**
@@ -110,21 +101,6 @@ public class AtmospherePushConnection implements Serializable, PushConnection {
         return resource != null
                 && resource.getBroadcaster().getAtmosphereResources()
                         .contains(resource);
-    }
-
-    /**
-     * Marks that changes in the UI should be pushed as soon as a connection is
-     * established.
-     */
-    protected void setPending(boolean pending) {
-        this.pending = pending;
-    }
-
-    /**
-     * @return Whether the UI should be pushed as soon as a connection opens.
-     */
-    protected boolean isPending() {
-        return pending;
     }
 
     /**
