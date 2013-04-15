@@ -877,7 +877,8 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
             String labelId = DOM.createUniqueId();
 
             addStyleName(CLASSNAME);
-            getElement().setId(DOM.createUniqueId());
+            String treeItemId = DOM.createUniqueId();
+            getElement().setId(treeItemId);
             Roles.getTreeitemRole().set(getElement());
             Roles.getTreeitemRole().setAriaSelectedState(getElement(),
                     SelectedValue.FALSE);
@@ -889,6 +890,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                     + "-caption");
             Element wrapper = DOM.createDiv();
             wrapper.setId(labelId);
+            wrapper.setAttribute("for", treeItemId);
 
             nodeCaptionSpan = DOM.createSpan();
             DOM.appendChild(getElement(), nodeCaptionDiv);
