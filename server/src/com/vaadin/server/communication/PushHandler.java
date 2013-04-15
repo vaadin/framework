@@ -102,7 +102,7 @@ public class PushHandler implements AtmosphereHandler {
                         "New push connection with transport {}",
                         resource.transport());
                 resource.getResponse().setContentType(
-                        "application/json; charset=UTF-8");
+                        "text/plain; charset=UTF-8");
                 if (resource.transport() == TRANSPORT.STREAMING) {
                     // IE8 requires a longer padding to work properly if the
                     // initial message is small (#11573)
