@@ -114,16 +114,23 @@ public class ConsoleAdapter implements Console {
         window.meta(applicationConnection, meta);
     }
 
+    private boolean quietMode = false;
+
     @Override
-    public void setQuietMode(boolean quietDebugMode) {
-        if (quietDebugMode) {
+    public void setQuietMode(boolean quietMode) {
+        this.quietMode = quietMode;
+        if (quietMode) {
             window.close();
+        } else {
+            // NOP can't switch ATM
         }
     }
 
     @Override
     public void init() {
-        window.init();
+        if (!quietMode) {
+            window.init();
+        }
     }
 
     static void handleError(Throwable e, Console target) {
