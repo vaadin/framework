@@ -100,7 +100,7 @@ public class PushHandler implements AtmosphereHandler {
                  * pending push, send it now.
                  */
                 getLogger().log(Level.FINER,
-                        "New push connection with transport {}",
+                        "New push connection with transport {0}",
                         resource.transport());
                 resource.getResponse().setContentType(
                         "text/plain; charset=UTF-8");
@@ -140,7 +140,7 @@ public class PushHandler implements AtmosphereHandler {
                                     null));
                 } catch (InvalidUIDLSecurityKeyException e) {
                     getLogger().log(Level.WARNING,
-                            "Invalid security key received from {}",
+                            "Invalid security key received from {0}",
                             resource.getRequest().getRemoteHost());
                     // Refresh on client side
                     connection.sendMessage(VaadinService
@@ -164,20 +164,20 @@ public class PushHandler implements AtmosphereHandler {
         if (event.isCancelled()) {
             // The client closed the connection.
             // TODO Do some cleanup
-            getLogger().log(Level.FINER, "Connection closed for resource {}",
+            getLogger().log(Level.FINER, "Connection closed for resource {0}",
                     id);
         } else if (event.isResuming()) {
             // A connection that was suspended earlier was resumed (committed to
             // the client.) Should only happen if the transport is JSONP or
             // long-polling.
-            getLogger()
-                    .log(Level.FINER, "Resuming request for resource {}", id);
+            getLogger().log(Level.FINER, "Resuming request for resource {0}",
+                    id);
         } else {
             // A message was broadcast to this resource and should be sent to
             // the client. We don't do any actual broadcasting, in the sense of
             // sending to multiple recipients; any UIDL message is specific to a
             // single client.
-            getLogger().log(Level.FINER, "Writing message to resource {}", id);
+            getLogger().log(Level.FINER, "Writing message to resource {0}", id);
 
             Writer writer = resource.getResponse().getWriter();
             writer.write("for(;;);[{" + event.getMessage() + "}]");
@@ -194,7 +194,7 @@ public class PushHandler implements AtmosphereHandler {
                 resource.resume();
                 break;
             default:
-                getLogger().log(Level.SEVERE, "Unknown transport {}",
+                getLogger().log(Level.SEVERE, "Unknown transport {0}",
                         resource.transport());
             }
         }

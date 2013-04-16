@@ -121,7 +121,7 @@ public class UidlRequestHandler extends SynchronizedRequestHandler {
             return true;
         } catch (InvalidUIDLSecurityKeyException e) {
             getLogger().log(Level.WARNING,
-                    "Invalid security key received from {}",
+                    "Invalid security key received from {0}",
                     request.getRemoteHost());
             // Refresh on client side
             response.getWriter().write(
