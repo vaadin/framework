@@ -32,6 +32,7 @@ import org.json.JSONException;
 import com.vaadin.server.LegacyCommunicationManager.InvalidUIDLSecurityKeyException;
 import com.vaadin.server.ServiceException;
 import com.vaadin.server.SessionExpiredException;
+import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
@@ -126,16 +127,27 @@ public class PushHandler implements AtmosphereHandler {
                  * via the push channel (we do not respond to the request
                  * directly.)
                  */
-                new ServerRpcHandler().handleRpc(ui, req.getReader(),
-                        vaadinRequest);
-                connection.push(false);
+                try {
+                    new ServerRpcHandler().handleRpc(ui, req.getReader(),
+                            vaadinRequest);
+                    connection.push(false);
+                } catch (JSONException e) {
+                    getLogger().log(Level.SEVERE,
+                            "Error writing JSON to response", e);
+                    // Refresh on client side
+                    connection.sendMessage(VaadinService
+                            .createCriticalNotificationJSON(null, null, null,
+                                    null));
+                } catch (InvalidUIDLSecurityKeyException e) {
+                    getLogger().log(Level.WARNING,
+                            "Invalid security key received from {}",
+                            resource.getRequest().getRemoteHost());
+                    // Refresh on client side
+                    connection.sendMessage(VaadinService
+                            .createCriticalNotificationJSON(null, null, null,
+                                    null));
+                }
             }
-        } catch (InvalidUIDLSecurityKeyException e) {
-            // TODO Error handling
-            e.printStackTrace();
-        } catch (JSONException e) {
-            // TODO Error handling
-            e.printStackTrace();
         } catch (IOException e) {
             // TODO Error handling
             e.printStackTrace();

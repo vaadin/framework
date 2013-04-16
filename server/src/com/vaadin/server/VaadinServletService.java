@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.vaadin.server.communication.PushRequestHandler;
 import com.vaadin.server.communication.ServletBootstrapHandler;
 import com.vaadin.server.communication.ServletUIInitHandler;
+import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
 
@@ -51,23 +52,6 @@ public class VaadinServletService extends VaadinService {
              */
             setClassLoader(servlet.getClass().getClassLoader());
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.server.LegacyCommunicationManager.Callback#criticalNotification
-     * (com.vaadin.server.VaadinRequest, com.vaadin.server.VaadinResponse,
-     * java.lang.String, java.lang.String, java.lang.String, java.lang.String)
-     */
-    @Deprecated
-    @Override
-    public void criticalNotification(VaadinRequest request,
-            VaadinResponse response, String cap, String msg, String details,
-            String url) throws IOException {
-        getServlet().criticalNotification((VaadinServletRequest) request,
-                (VaadinServletResponse) response, cap, msg, details, url);
     }
 
     @Override
@@ -292,12 +276,13 @@ public class VaadinServletService extends VaadinService {
                  */
                 servletRequest.getSession().invalidate();
 
-                // send uidl redirect
-                criticalNotification(request, response,
-                        ci.getSessionExpiredCaption(),
-                        ci.getSessionExpiredMessage(), null,
-                        ci.getSessionExpiredURL());
-
+                writeStringResponse(
+                        response,
+                        JsonConstants.JSON_CONTENT_TYPE,
+                        createCriticalNotificationJSON(
+                                ci.getSessionExpiredCaption(),
+                                ci.getSessionExpiredMessage(), null,
+                                ci.getSessionExpiredURL()));
             } else if (ServletPortletHelper.isHeartbeatRequest(request)) {
                 response.sendError(HttpServletResponse.SC_GONE,
                         "Session expired");

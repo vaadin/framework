@@ -74,8 +74,17 @@ public class AtmospherePushConnection implements Serializable, PushConnection {
             throw new IOException("Error writing UIDL", e);
         }
         // "Broadcast" the changes to the single client only
-        getResource().getBroadcaster().broadcast(writer.toString(),
-                getResource());
+        sendMessage(writer.toString());
+    }
+
+    /**
+     * Sends the given message to the current client
+     * 
+     * @param message
+     *            The message to send
+     */
+    void sendMessage(String message) {
+        getResource().getBroadcaster().broadcast(message, getResource());
     }
 
     /**

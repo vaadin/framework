@@ -65,22 +65,6 @@ public class LegacyCommunicationManager implements Serializable {
     // TODO PUSH move
     public static final String WRITE_SECURITY_TOKEN_FLAG = "writeSecurityToken";
 
-    /**
-     * TODO Document me!
-     * 
-     * @author peholmst
-     * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future
-     *             version
-     */
-    @Deprecated
-    public interface Callback extends Serializable {
-
-        public void criticalNotification(VaadinRequest request,
-                VaadinResponse response, String cap, String msg,
-                String details, String outOfSyncURL) throws IOException;
-    }
-
     // TODO Refactor (#11410)
     private final HashMap<Integer, ClientCache> uiToClientCache = new HashMap<Integer, ClientCache>();
 

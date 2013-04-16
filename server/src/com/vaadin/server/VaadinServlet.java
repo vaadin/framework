@@ -40,6 +40,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.server.communication.ServletUIInitHandler;
+import com.vaadin.shared.JsonConstants;
 import com.vaadin.util.CurrentInstance;
 
 @SuppressWarnings("serial")
@@ -278,10 +279,13 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 SystemMessages systemMessages = getService().getSystemMessages(
                         ServletPortletHelper.findLocale(null, null, request),
                         request);
-                criticalNotification(request, response,
-                        systemMessages.getCookiesDisabledCaption(),
-                        systemMessages.getCookiesDisabledMessage(), null,
-                        systemMessages.getCookiesDisabledURL());
+                getService().writeStringResponse(
+                        response,
+                        JsonConstants.JSON_CONTENT_TYPE,
+                        VaadinService.createCriticalNotificationJSON(
+                                systemMessages.getCookiesDisabledCaption(),
+                                systemMessages.getCookiesDisabledMessage(),
+                                null, systemMessages.getCookiesDisabledURL()));
                 return false;
             }
         }
@@ -312,8 +316,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @throws IOException
      *             if the writing failed due to input/output error.
      * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future
-     *             version
+     * @deprecated As of 7.0. This method is retained only for backwards
+     *             compatibility and for {@link GAEVaadinServlet}.
      */
     @Deprecated
     protected void criticalNotification(VaadinServletRequest request,
@@ -321,30 +325,10 @@ public class VaadinServlet extends HttpServlet implements Constants {
             String details, String url) throws IOException {
 
         if (ServletPortletHelper.isUIDLRequest(request)) {
-
-            if (caption != null) {
-                caption = "\"" + JsonPaintTarget.escapeJSON(caption) + "\"";
-            }
-            if (details != null) {
-                if (message == null) {
-                    message = details;
-                } else {
-                    message += "<br/><br/>" + details;
-                }
-            }
-
-            if (message != null) {
-                message = "\"" + JsonPaintTarget.escapeJSON(message) + "\"";
-            }
-            if (url != null) {
-                url = "\"" + JsonPaintTarget.escapeJSON(url) + "\"";
-            }
-
-            String output = "for(;;);[{\"changes\":[], \"meta\" : {"
-                    + "\"appError\": {" + "\"caption\":" + caption + ","
-                    + "\"message\" : " + message + "," + "\"url\" : " + url
-                    + "}}, \"resources\": {}, \"locales\":[]}]";
-            writeResponse(response, "application/json; charset=UTF-8", output);
+            String output = VaadinService.createCriticalNotificationJSON(
+                    caption, message, details, url);
+            getService().writeStringResponse(response,
+                    JsonConstants.JSON_CONTENT_TYPE, output);
         } else {
             // Create an HTML reponse with the error
             String output = "";
@@ -367,7 +351,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
             if (url != null) {
                 output += "</a>";
             }
-            writeResponse(response, "text/html; charset=UTF-8", output);
+            getService().writeStringResponse(response,
+                    "text/html; charset=UTF-8", output);
         }
     }
 
@@ -485,10 +470,14 @@ public class VaadinServlet extends HttpServlet implements Constants {
                     request.getLocale(), request);
             if (ServletPortletHelper.isUIDLRequest(request)) {
                 // send uidl redirect
-                criticalNotification(request, response,
-                        ci.getCommunicationErrorCaption(),
-                        ci.getCommunicationErrorMessage(),
-                        INVALID_SECURITY_KEY_MSG, ci.getCommunicationErrorURL());
+                getService().writeStringResponse(
+                        response,
+                        JsonConstants.JSON_CONTENT_TYPE,
+                        VaadinService.createCriticalNotificationJSON(
+                                ci.getCommunicationErrorCaption(),
+                                ci.getCommunicationErrorMessage(),
+                                INVALID_SECURITY_KEY_MSG,
+                                ci.getCommunicationErrorURL()));
             } else if (ServletPortletHelper.isHeartbeatRequest(request)) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN,
                         "Forbidden");

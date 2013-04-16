@@ -17,7 +17,6 @@
 package com.vaadin.server;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
@@ -53,23 +52,6 @@ public class VaadinPortletService extends VaadinService {
              */
             setClassLoader(portlet.getClass().getClassLoader());
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.server.LegacyCommunicationManager.Callback#criticalNotification
-     * (com.vaadin.server.VaadinRequest, com.vaadin.server.VaadinResponse,
-     * java.lang.String, java.lang.String, java.lang.String, java.lang.String)
-     */
-    @Deprecated
-    @Override
-    public void criticalNotification(VaadinRequest request,
-            VaadinResponse response, String cap, String msg, String details,
-            String url) throws IOException {
-        getPortlet().criticalNotification((VaadinPortletRequest) request,
-                (VaadinPortletResponse) response, cap, msg, details, url);
     }
 
     @Override

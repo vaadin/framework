@@ -15,11 +15,7 @@
  */
 package com.vaadin.server;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
@@ -421,70 +417,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
     public void serveResource(ResourceRequest request, ResourceResponse response)
             throws PortletException, IOException {
         handleRequest(request, response);
-    }
-
-    /**
-     * Send notification to client's application. Used to notify client of
-     * critical errors and session expiration due to long inactivity. Server has
-     * no knowledge of what application client refers to.
-     * 
-     * @param request
-     *            the Portlet request instance.
-     * @param response
-     *            the Portlet response to write to.
-     * @param caption
-     *            for the notification
-     * @param message
-     *            for the notification
-     * @param details
-     *            a detail message to show in addition to the passed message.
-     *            Currently shown directly but could be hidden behind a details
-     *            drop down.
-     * @param url
-     *            url to load after message, null for current page
-     * @throws IOException
-     *             if the writing failed due to input/output error.
-     * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future
-     *             version
-     */
-    @Deprecated
-    void criticalNotification(VaadinPortletRequest request,
-            VaadinPortletResponse response, String caption, String message,
-            String details, String url) throws IOException {
-
-        // clients JS app is still running, but server application either
-        // no longer exists or it might fail to perform reasonably.
-        // send a notification to client's application and link how
-        // to "restart" application.
-
-        if (caption != null) {
-            caption = "\"" + caption + "\"";
-        }
-        if (details != null) {
-            if (message == null) {
-                message = details;
-            } else {
-                message += "<br/><br/>" + details;
-            }
-        }
-        if (message != null) {
-            message = "\"" + message + "\"";
-        }
-        if (url != null) {
-            url = "\"" + url + "\"";
-        }
-
-        // Set the response type
-        response.setContentType("application/json; charset=UTF-8");
-        final OutputStream out = response.getOutputStream();
-        final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
-                new OutputStreamWriter(out, "UTF-8")));
-        outWriter.print("for(;;);[{\"changes\":[], \"meta\" : {"
-                + "\"appError\": {" + "\"caption\":" + caption + ","
-                + "\"message\" : " + message + "," + "\"url\" : " + url
-                + "}}, \"resources\": {}, \"locales\":[]}]");
-        outWriter.close();
     }
 
     private static final Logger getLogger() {

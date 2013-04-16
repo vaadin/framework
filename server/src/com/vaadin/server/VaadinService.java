@@ -16,9 +16,13 @@
 
 package com.vaadin.server;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -38,14 +42,17 @@ import javax.portlet.PortletContext;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.event.EventRouter;
-import com.vaadin.server.LegacyCommunicationManager.Callback;
 import com.vaadin.server.communication.FileUploadHandler;
 import com.vaadin.server.communication.HeartbeatHandler;
 import com.vaadin.server.communication.PublishedFileHandler;
 import com.vaadin.server.communication.SessionRequestHandler;
 import com.vaadin.server.communication.UidlRequestHandler;
+import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
@@ -59,7 +66,7 @@ import com.vaadin.util.ReflectTools;
  * 
  * @since 7.0
  */
-public abstract class VaadinService implements Serializable, Callback {
+public abstract class VaadinService implements Serializable {
     static final String REINITIALIZING_SESSION_MARKER = VaadinService.class
             .getName() + ".reinitializing";
 
@@ -142,7 +149,7 @@ public abstract class VaadinService implements Serializable, Callback {
         handlers.add(new PublishedFileHandler());
         handlers.add(new HeartbeatHandler());
         handlers.add(new FileUploadHandler());
-        handlers.add(new UidlRequestHandler(this));
+        handlers.add(new UidlRequestHandler());
         handlers.add(new UnsupportedBrowserHandler());
         handlers.add(new ConnectorResourceHandler());
 
@@ -1312,16 +1319,19 @@ public abstract class VaadinService implements Serializable, Callback {
             ErrorHandler errorHandler = ErrorEvent
                     .findErrorHandler(vaadinSession);
 
-            // if this was an UIDL request, response UIDL back to client
+            // if this was an UIDL request, send UIDL back to the client
             if (ServletPortletHelper.isUIDLRequest(request)) {
                 SystemMessages ci = getSystemMessages(
                         ServletPortletHelper.findLocale(null, vaadinSession,
                                 request), request);
                 try {
-                    criticalNotification(request, response,
-                            ci.getInternalErrorCaption(),
-                            ci.getInternalErrorMessage(), null,
-                            ci.getInternalErrorURL());
+                    writeStringResponse(
+                            response,
+                            JsonConstants.JSON_CONTENT_TYPE,
+                            createCriticalNotificationJSON(
+                                    ci.getInternalErrorCaption(),
+                                    ci.getInternalErrorMessage(), null,
+                                    ci.getInternalErrorURL()));
                 } catch (IOException e) {
                     // An exception occured while writing the response. Log
                     // it and continue handling only the original error.
@@ -1350,6 +1360,30 @@ public abstract class VaadinService implements Serializable, Callback {
     }
 
     /**
+     * Writes the given string as a response using the given content type.
+     * 
+     * @param response
+     *            The response reference
+     * @param contentType
+     *            The content type of the response
+     * @param reponseString
+     *            The actual response
+     * @throws IOException
+     *             If an error occured while writing the response
+     */
+    protected void writeStringResponse(VaadinResponse response,
+            String contentType, String reponseString) throws IOException {
+
+        response.setContentType(contentType);
+
+        final OutputStream out = response.getOutputStream();
+        final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
+                new OutputStreamWriter(out, "UTF-8")));
+        outWriter.print(reponseString);
+        outWriter.close();
+    }
+
+    /**
      * Called when the session has expired and the request handling is therefore
      * aborted.
      * 
@@ -1363,5 +1397,67 @@ public abstract class VaadinService implements Serializable, Callback {
      */
     protected abstract void handleSessionExpired(VaadinRequest request,
             VaadinResponse response) throws ServiceException;
+
+    /**
+     * Creates a JSON message which, when sent to client as-is, will cause a
+     * critical error to be shown with the given details.
+     * 
+     * @param caption
+     *            The caption of the error or null to omit
+     * @param message
+     *            The error message or null to omit
+     * @param details
+     *            Additional error details or null to omit
+     * @param url
+     *            A url to redirect to. If no other details are given then the
+     *            user will be immediately redirected to this URL. Otherwise the
+     *            message will be shown and the browser will redirect to the
+     *            given URL only after the user acknowledges the message. If
+     *            null then the browser will refresh the current page.
+     * @return A JSON string to be sent to the client
+     */
+    public static String createCriticalNotificationJSON(String caption,
+            String message, String details, String url) {
+        String returnString = "";
+        try {
+            if (message == null) {
+                message = details;
+            } else if (details != null) {
+                message += "<br/><br/>" + details;
+            }
+
+            JSONObject appError = new JSONObject();
+            appError.put("caption", caption);
+            appError.put("message", message);
+            appError.put("url", url);
+
+            JSONObject meta = new JSONObject();
+            meta.put("appError", appError);
+
+            JSONObject json = new JSONObject();
+            json.put("changes", Collections.EMPTY_LIST);
+            json.put("resources", Collections.EMPTY_MAP);
+            json.put("locales", Collections.EMPTY_LIST);
+            json.put("meta", meta);
+            returnString = json.toString();
+        } catch (JSONException e) {
+            getLogger().log(Level.WARNING,
+                    "Error creating critical notification JSON message", e);
+        }
+
+        return "for(;;);[" + returnString + "]";
+    }
+
+    /**
+     * @deprecated As of 7.0. Will likely change or be removed in a future
+     *             version
+     */
+    @Deprecated
+    public void criticalNotification(VaadinRequest request,
+            VaadinResponse response, String caption, String message,
+            String details, String url) throws IOException {
+        writeStringResponse(response, JsonConstants.JSON_CONTENT_TYPE,
+                createCriticalNotificationJSON(caption, message, details, url));
+    }
 
 }

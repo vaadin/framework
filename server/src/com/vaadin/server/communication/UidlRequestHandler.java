@@ -28,12 +28,12 @@ import org.json.JSONException;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.Constants;
 import com.vaadin.server.LegacyCommunicationManager;
-import com.vaadin.server.LegacyCommunicationManager.Callback;
 import com.vaadin.server.LegacyCommunicationManager.InvalidUIDLSecurityKeyException;
 import com.vaadin.server.ServletPortletHelper;
 import com.vaadin.server.SynchronizedRequestHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
+import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Version;
@@ -54,12 +54,9 @@ public class UidlRequestHandler extends SynchronizedRequestHandler {
 
     public static final String UIDL_PATH = "UIDL/";
 
-    private Callback criticalNotifier;
-
     private ServerRpcHandler rpcHandler = new ServerRpcHandler();
 
-    public UidlRequestHandler(Callback criticalNotifier) {
-        this.criticalNotifier = criticalNotifier;
+    public UidlRequestHandler() {
     }
 
     @Override
@@ -118,16 +115,18 @@ public class UidlRequestHandler extends SynchronizedRequestHandler {
         } catch (JSONException e) {
             getLogger().log(Level.SEVERE, "Error writing JSON to response", e);
             // Refresh on client side
-            criticalNotifier.criticalNotification(request, response, null,
-                    null, null, null);
+            response.getWriter().write(
+                    VaadinService.createCriticalNotificationJSON(null, null,
+                            null, null));
             return true;
         } catch (InvalidUIDLSecurityKeyException e) {
             getLogger().log(Level.WARNING,
                     "Invalid security key received from {}",
                     request.getRemoteHost());
             // Refresh on client side
-            criticalNotifier.criticalNotification(request, response, null,
-                    null, null, null);
+            response.getWriter().write(
+                    VaadinService.createCriticalNotificationJSON(null, null,
+                            null, null));
             return true;
         } finally {
             stringWriter.close();
