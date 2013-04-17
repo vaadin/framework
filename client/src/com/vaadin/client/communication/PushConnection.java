@@ -58,16 +58,16 @@ public class PushConnection {
     }
 
     public void connect(String uri) {
-        VConsole.log("Establishing Atmosphere connection");
+        VConsole.log("Establishing push connection");
         socket = doConnect(uri, getConfig());
     }
 
     public void push(String message) {
         if (!connected) {
-            VConsole.log("Queuing Atmosphere message: " + message);
+            VConsole.log("Queuing push message: " + message);
             messageQueue.add(message);
         } else {
-            VConsole.log("Pushing Atmosphere message: " + message);
+            VConsole.log("Sending push message: " + message);
             doPush(socket, message);
         }
     }
@@ -77,7 +77,7 @@ public class PushConnection {
     }
 
     protected void onOpen(AtmosphereResponse response) {
-        VConsole.log("Atmosphere connection established using "
+        VConsole.log("Push connection established using "
                 + response.getTransport());
         connected = true;
         for (String message : messageQueue) {
@@ -89,7 +89,7 @@ public class PushConnection {
     protected void onMessage(AtmosphereResponse response) {
         String message = response.getResponseBody();
         if (message.startsWith("for(;;);")) {
-            VConsole.log("Received Atmosphere message: " + message);
+            VConsole.log("Received push message: " + message);
             // "for(;;);[{json}]" -> "{json}"
             message = message.substring(9, message.length() - 1);
             connection.handlePushMessage(message);
@@ -101,8 +101,8 @@ public class PushConnection {
      * tried
      */
     protected void onTransportFailure() {
-        VConsole.log("Connection using primary method ("
-                + config.getTransport() + ") failed. Falling back to "
+        VConsole.log("Push connection using primary method ("
+                + config.getTransport() + ") failed. Trying with "
                 + config.getFallbackTransport());
     }
 
@@ -112,7 +112,7 @@ public class PushConnection {
      * 
      */
     protected void onError() {
-        VConsole.error("Atmosphere connection using " + config.getTransport()
+        VConsole.error("Push connection using " + config.getTransport()
                 + " failed!");
     }
 
