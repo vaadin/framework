@@ -89,7 +89,6 @@ import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.LegacyChangeVariablesInvocation;
 import com.vaadin.shared.communication.MethodInvocation;
-import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.ui.ui.UIConstants;
 
@@ -3395,7 +3394,7 @@ public class ApplicationConnection {
     }
 
     private void initializePush() {
-        if (getConfiguration().getPushMode() != PushMode.DISABLED) {
+        if (getConfiguration().getPushMode().isEnabled()) {
             push = GWT.create(PushConnection.class);
             push.init(this);
 

@@ -41,7 +41,6 @@ import org.jsoup.parser.Tag;
 
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Version;
-import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
 
 /**
@@ -356,7 +355,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                                 "position:absolute;width:0;height:0;border:0;overflow:hidden")
                         .attr("src", "javascript:false"));
 
-        if (context.getSession().getPushMode() != PushMode.DISABLED) {
+        if (context.getSession().getPushMode().isEnabled()) {
             // Load client-side dependencies for push support
             fragmentNodes.add(new Element(Tag.valueOf("script"), "").attr(
                     "type", "text/javascript").attr("src",

@@ -269,7 +269,7 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
             pushMode = PushMode.DISABLED;
         }
 
-        if (pushMode != PushMode.DISABLED && !checkAtomsphereVersion()) {
+        if (pushMode.isEnabled() && !checkAtomsphereVersion()) {
             pushMode = PushMode.DISABLED;
         }
     }

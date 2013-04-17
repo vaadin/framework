@@ -40,7 +40,6 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.server.communication.PushConnection;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
-import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.ScrollClientRpc;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIServerRpc;
@@ -1157,7 +1156,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
                 return;
             }
 
-            if (session.getPushMode() == PushMode.DISABLED) {
+            if (!session.getPushMode().isEnabled()) {
                 throw new IllegalStateException("Push not enabled");
             }
 

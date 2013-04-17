@@ -36,7 +36,6 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
 
 /**
@@ -89,7 +88,7 @@ public class PushHandler implements AtmosphereHandler {
                         "Could not find the requested UI in session");
                 return;
             }
-            assert session.getPushMode() != PushMode.DISABLED;
+            assert session.getPushMode().isEnabled();
 
             if (req.getMethod().equalsIgnoreCase("GET")) {
                 /*

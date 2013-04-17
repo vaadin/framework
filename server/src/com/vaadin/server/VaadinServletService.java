@@ -32,7 +32,6 @@ import com.vaadin.server.communication.PushRequestHandler;
 import com.vaadin.server.communication.ServletBootstrapHandler;
 import com.vaadin.server.communication.ServletUIInitHandler;
 import com.vaadin.shared.JsonConstants;
-import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
 
 public class VaadinServletService extends VaadinService {
@@ -59,7 +58,7 @@ public class VaadinServletService extends VaadinService {
         List<RequestHandler> handlers = super.createRequestHandlers();
         handlers.add(0, new ServletBootstrapHandler());
         handlers.add(new ServletUIInitHandler());
-        if (getDeploymentConfiguration().getPushMode() != PushMode.DISABLED) {
+        if (getDeploymentConfiguration().getPushMode().isEnabled()) {
             handlers.add(new PushRequestHandler(this));
         }
         return handlers;

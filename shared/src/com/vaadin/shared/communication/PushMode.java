@@ -52,4 +52,15 @@ public enum PushMode {
      * lock is released.
      */
     AUTOMATIC;
+
+    /**
+     * Checks whether the push mode is using push functionality
+     * 
+     * @return <code>true</code> if this mode requires push functionality;
+     *         <code>false</code> if no push functionality is used for this
+     *         mode.
+     */
+    public boolean isEnabled() {
+        return this != DISABLED;
+    }
 }
