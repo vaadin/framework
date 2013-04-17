@@ -36,6 +36,7 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.server.WebBrowser;
 import com.vaadin.ui.UI;
 
 /**
@@ -104,8 +105,12 @@ public class PushHandler implements AtmosphereHandler {
                         "text/plain; charset=UTF-8");
                 if (resource.transport() == TRANSPORT.STREAMING) {
                     // IE8 requires a longer padding to work properly if the
-                    // initial message is small (#11573)
-                    resource.padding(LONG_PADDING);
+                    // initial message is small (#11573). Chrome does not work
+                    // without the original padding...
+                    WebBrowser browser = session.getBrowser();
+                    if (browser.isIE() && browser.getBrowserMajorVersion() == 8) {
+                        resource.padding(LONG_PADDING);
+                    }
                 }
                 resource.suspend();
 
