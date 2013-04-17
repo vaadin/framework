@@ -359,10 +359,10 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
             // Load client-side dependencies for push support
             fragmentNodes.add(new Element(Tag.valueOf("script"), "").attr(
                     "type", "text/javascript").attr("src",
-                    vaadinLocation + "portal.min.js"));
+                    vaadinLocation + "jquery-1.7.2.rebased.js"));
             fragmentNodes.add(new Element(Tag.valueOf("script"), "").attr(
                     "type", "text/javascript").attr("src",
-                    vaadinLocation + "atmosphere.min.js"));
+                    vaadinLocation + "jquery.atmosphere.rebased.js"));
         }
 
         String bootstrapLocation = vaadinLocation + "vaadinBootstrap.js";

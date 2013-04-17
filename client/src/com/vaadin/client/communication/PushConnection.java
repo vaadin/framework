@@ -223,7 +223,8 @@ public class PushConnection {
         config.onTransportFailure = $entry(function(reason,request) {
             self.@com.vaadin.client.communication.PushConnection::onTransportFailure(*)(reason);
         });
-        return $wnd.atmosphere.subscribe(config);
+
+        return $wnd.jQueryVaadin.atmosphere.subscribe(config);
     }-*/;
 
     private native void doPush(JavaScriptObject socket, String message)
