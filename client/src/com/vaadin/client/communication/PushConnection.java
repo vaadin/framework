@@ -42,7 +42,7 @@ public class PushConnection {
 
     private boolean connected = false;
 
-    private AtmosphereConfiguration config = createConfig();
+    private AtmosphereConfiguration config;
 
     public PushConnection() {
     }
@@ -72,7 +72,10 @@ public class PushConnection {
         }
     }
 
-    protected JavaScriptObject getConfig() {
+    protected AtmosphereConfiguration getConfig() {
+        if (config == null) {
+            config = createConfig();
+        }
         return config;
     }
 
@@ -102,8 +105,8 @@ public class PushConnection {
      */
     protected void onTransportFailure() {
         VConsole.log("Push connection using primary method ("
-                + config.getTransport() + ") failed. Trying with "
-                + config.getFallbackTransport());
+                + getConfig().getTransport() + ") failed. Trying with "
+                + getConfig().getFallbackTransport());
     }
 
     /**
@@ -112,7 +115,8 @@ public class PushConnection {
      * 
      */
     protected void onError() {
-        VConsole.error("Push connection using " + config.getTransport()
+        VConsole.error("Push connection using "
+                + getConfig().getTransport()
                 + " failed!");
     }
 
@@ -126,10 +130,20 @@ public class PushConnection {
            return this[key];
          }-*/;
 
+        protected final native void setStringValue(String key, String value)
+        /*-{
+            this[key] = value;
+        }-*/;
+
         protected final native int getIntValue(String key)
         /*-{
            return this[key];
          }-*/;
+
+        protected final native void setIntValue(String key, int value)
+        /*-{
+            this[key] = value;
+        }-*/;
 
     }
 
@@ -145,6 +159,14 @@ public class PushConnection {
 
         public final String getFallbackTransport() {
             return getStringValue("fallbackTransport");
+        }
+
+        public final void setTransport(String transport) {
+            setStringValue("transport", transport);
+        }
+
+        public final void setFallbackTransport(String fallbackTransport) {
+            setStringValue("fallbackTransport", fallbackTransport);
         }
     }
 
@@ -172,7 +194,7 @@ public class PushConnection {
 
     }
 
-    private static native AtmosphereConfiguration createConfig()
+    protected native AtmosphereConfiguration createConfig()
     /*-{
         return {
             transport: 'websocket',

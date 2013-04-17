@@ -82,8 +82,22 @@
 		</java>
 
 	</target>
+	
+	
 	<target name="default-widgetset">
-		<property name="module" value="com.vaadin.DefaultWidgetSet" />
+		<antcall target="compile-widgetset">
+			<param name="widgetset" value="com.vaadin.DefaultWidgetSet" />
+		</antcall>
+	</target>
+	
+	<target name="testing-widgetset">
+		<antcall target="compile-widgetset">
+			<param name="widgetset" value="com.vaadin.tests.widgetset.TestingWidgetSet" />
+		</antcall>
+	</target>
+	
+	<target name="compile-widgetset">
+		<property name="module" value="${widgetset}" />
 		<property name="module.output.dir" location="WebContent/VAADIN/widgetsets" />
 		<property name="style" value="PRETTY" />
 		<property name="localWorkers" value="2" />
@@ -119,6 +133,5 @@
 			<jvmarg value="-Djava.awt.headless=true" />
 			<jvmarg value="-Dgwt.usearchives=false" />
 		</java>
-
-	</target>
+	</target>		
 </project>

@@ -4,14 +4,17 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 
+@Widgetset(TestingWidgetSet.NAME)
 public class BasicPush extends AbstractTestUI {
 
     private ObjectProperty<Integer> counter = new ObjectProperty<Integer>(0);
