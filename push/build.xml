@@ -11,26 +11,32 @@
 	<property name="module.symbolic" value="com.vaadin.push" />
 	<property name="result.dir" location="result" />
 	<path id="classpath.compile.custom" />
+	
+	<union id="jar.includes">
+		<fileset dir="${vaadin.basedir}/WebContent">
+			<include name="VAADIN/jquery-1.7.2.rebased.js" />
+			<include name="VAADIN/jquery.atmosphere.rebased.js" />
+		</fileset>
+	</union>
+	
+	<target name="jar">
+		<property name="server.osgi.import" value="" />
+		<antcall target="common.jar">
+			<param name="require-bundle" value="" />
+			<param name="import-package" value="${server.osgi.import}" />
+			<reference torefid="extra.jar.includes" refid="jar.includes" />
+		</antcall>
+	</target>
 
-   	 <target name="jar">
-            <property name="server.osgi.import" value="" />
-            <antcall target="common.jar">
-                    <param name="require-bundle" value="" />
-                    <param name="import-package" value="${server.osgi.import}" />
-           		  <reference torefid="extra.jar.includes"
-           		  refid="empty.reference" />
-	    </antcall>
-	 </target>
+	<target name="publish-local" depends="jar">
+		<antcall target="common.publish-local" />
+	</target>
 
-         <target name="publish-local" depends="jar">
-             <antcall target="common.publish-local" />
-         </target>
-
-         <target name="clean">
-             <antcall target="common.clean" />
-         </target>
-         <target name="checkstyle">
-	 </target>
+	<target name="clean">
+		<antcall target="common.clean" />
+	</target>
+	<target name="checkstyle">
+	</target>
 
 	<target name="test" depends="checkstyle">
 	</target>
