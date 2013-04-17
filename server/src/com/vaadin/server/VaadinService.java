@@ -880,6 +880,7 @@ public abstract class VaadinService implements Serializable {
      * 
      */
     public UI findUI(VaadinRequest request) {
+        // getForSession asserts that the lock is held
         VaadinSession session = VaadinSession.getForSession(this,
                 request.getWrappedSession());
 
@@ -887,16 +888,10 @@ public abstract class VaadinService implements Serializable {
         String uiIdString = request.getParameter(UIConstants.UI_ID_PARAMETER);
         int uiId = Integer.parseInt(uiIdString);
 
-        // Get lock before accessing data in session
-        session.lock();
-        try {
-            UI ui = session.getUIById(uiId);
+        UI ui = session.getUIById(uiId);
 
-            UI.setCurrent(ui);
-            return ui;
-        } finally {
-            session.unlock();
-        }
+        UI.setCurrent(ui);
+        return ui;
     }
 
     /**
