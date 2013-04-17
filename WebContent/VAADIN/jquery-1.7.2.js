@@ -9402,5 +9402,3 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 
 
 })( window );
-
-window.jQueryVaadin = window.jQuery.noConflict(true);

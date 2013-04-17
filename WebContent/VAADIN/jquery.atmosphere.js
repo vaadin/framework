@@ -26,15 +26,15 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  * */
 /**
- * Official documentation of this library: https://github.com/Atmosphere/atmosphere/wiki/jQueryVaadin.atmosphere.js-API
+ * Official documentation of this library: https://github.com/Atmosphere/atmosphere/wiki/jQuery.atmosphere.js-API
  */
-jQueryVaadin.atmosphere = function() {
-    jQueryVaadin(window).bind("unload.atmosphere", function() {
-        jQueryVaadin.atmosphere.unsubscribe();
+jQuery.atmosphere = function() {
+    jQuery(window).bind("unload.atmosphere", function() {
+        jQuery.atmosphere.unsubscribe();
     });
 
     // Prevent ESC to kill the connection from Firefox.
-    jQueryVaadin(window).keypress(function(e){
+    jQuery(window).keypress(function(e){
         if(e.keyCode == 27){
             e.preventDefault();
         }
@@ -227,7 +227,7 @@ jQueryVaadin.atmosphere = function() {
              * A Unique ID
              * @private
              */
-            var guid = jQueryVaadin.now();
+            var guid = jQuery.now();
 
             /** Trace time */
             var _traceTimer;
@@ -271,7 +271,7 @@ jQueryVaadin.atmosphere = function() {
             function _subscribe(options) {
                 _reinit();
 
-                _request = jQueryVaadin.extend(_request, options);
+                _request = jQuery.extend(_request, options);
                 // Allow at least 1 request
                 _request.mrequest = _request.reconnect;
                 if (!_request.reconnect) {
@@ -317,7 +317,7 @@ jQueryVaadin.atmosphere = function() {
                     _localStorageService = _local(_request);
                     if (_localStorageService != null) {
                         if (_request.logLevel == 'debug') {
-                            jQueryVaadin.atmosphere.debug("Storage service available. All communication will be local");
+                            jQuery.atmosphere.debug("Storage service available. All communication will be local");
                         }
 
                         if (_localStorageService.open(_request)) {
@@ -327,7 +327,7 @@ jQueryVaadin.atmosphere = function() {
                     }
 
                     if (_request.logLevel == 'debug') {
-                        jQueryVaadin.atmosphere.debug("No Storage service available.");
+                        jQuery.atmosphere.debug("No Storage service available.");
                     }
                     // Wasn't local or an error occurred
                     _localStorageService = null;
@@ -335,7 +335,7 @@ jQueryVaadin.atmosphere = function() {
 
                 // Protocol
                 _request.firstMessage= true;
-                _request.ctime = jQueryVaadin.now();
+                _request.ctime = jQuery.now();
 
                 if (_request.transport != 'websocket' && _request.transport != 'sse') {
                     // Gives a chance to the connection to be established before calling the callback
@@ -362,22 +362,22 @@ jQueryVaadin.atmosphere = function() {
             function _local(request) {
                 var trace, connector, orphan, name = "atmosphere-" + request.url, connectors = {
                     storage: function() {
-                        if (!jQueryVaadin.atmosphere.supportStorage()) {
+                        if (!jQuery.atmosphere.supportStorage()) {
                             return;
                         }
 
                         var storage = window.localStorage,
                             get = function(key) {
-                                return jQueryVaadin.parseJSON(storage.getItem(name + "-" + key));
+                                return jQuery.parseJSON(storage.getItem(name + "-" + key));
                             },
                             set = function(key, value) {
-                                storage.setItem(name + "-" + key, jQueryVaadin.stringifyJSON(value));
+                                storage.setItem(name + "-" + key, jQuery.stringifyJSON(value));
                             };
 
                         return {
                             init: function() {
                                 set("children", get("children").concat([guid]));
-                                jQueryVaadin(window).on("storage.socket", function(event) {
+                                jQuery(window).on("storage.socket", function(event) {
                                     event = event.originalEvent;
                                     if (event.key === name && event.newValue) {
                                         listener(event.newValue);
@@ -386,14 +386,14 @@ jQueryVaadin.atmosphere = function() {
                                 return get("opened");
                             },
                             signal: function(type, data) {
-                                storage.setItem(name, jQueryVaadin.stringifyJSON({target: "p", type: type, data: data}));
+                                storage.setItem(name, jQuery.stringifyJSON({target: "p", type: type, data: data}));
                             },
                             close: function() {
                                 var index, children = get("children");
 
-                                jQueryVaadin(window).off("storage.socket");
+                                jQuery(window).off("storage.socket");
                                 if (children) {
-                                    index = jQueryVaadin.inArray(request.id, children);
+                                    index = jQuery.inArray(request.id, children);
                                     if (index > -1) {
                                         children.splice(index, 1);
                                         set("children", children);
@@ -417,12 +417,12 @@ jQueryVaadin.atmosphere = function() {
                             },
                             signal: function(type, data) {
                                 if (!win.closed && win.fire) {
-                                    win.fire(jQueryVaadin.stringifyJSON({target: "p", type: type, data: data}));
+                                    win.fire(jQuery.stringifyJSON({target: "p", type: type, data: data}));
                                 }
                             },
                             close : function() {
                                 function remove(array, e) {
-                                    var index = jQueryVaadin.inArray(e, array);
+                                    var index = jQuery.inArray(e, array);
                                     if (index > -1) {
                                         array.splice(index, 1);
                                     }
@@ -441,7 +441,7 @@ jQueryVaadin.atmosphere = function() {
 
                 // Receives open, close and message command from the parent
                 function listener(string) {
-                    var command = jQueryVaadin.parseJSON(string), data = command.data;
+                    var command = jQuery.parseJSON(string), data = command.data;
 
                     if (command.target === "c") {
                         switch (command.type) {
@@ -478,13 +478,13 @@ jQueryVaadin.atmosphere = function() {
                 function findTrace() {
                     var matcher = new RegExp("(?:^|; )(" + encodeURIComponent(name) + ")=([^;]*)").exec(document.cookie);
                     if (matcher) {
-                        return jQueryVaadin.parseJSON(decodeURIComponent(matcher[2]));
+                        return jQuery.parseJSON(decodeURIComponent(matcher[2]));
                     }
                 }
 
                 // Finds and validates the parent socket's trace from the cookie
                 trace = findTrace();
-                if (!trace || jQueryVaadin.now() - trace.ts > 1000) {
+                if (!trace || jQuery.now() - trace.ts > 1000) {
                     return;
                 }
 
@@ -504,7 +504,7 @@ jQueryVaadin.atmosphere = function() {
                             trace = findTrace();
                             if (!trace || oldTrace.ts === trace.ts) {
                                 // Simulates a close signal
-                                listener(jQueryVaadin.stringifyJSON({target: "c", type: "close", data: {reason: "error", heir: oldTrace.heir}}));
+                                listener(jQuery.stringifyJSON({target: "c", type: "close", data: {reason: "error", heir: oldTrace.heir}}));
                             }
                         }, 1000);
 
@@ -521,7 +521,7 @@ jQueryVaadin.atmosphere = function() {
                         connector.signal("send", event);
                     },
                     localSend: function(event) {
-                        connector.signal("localSend", jQueryVaadin.stringifyJSON({id: guid , event: event}));
+                        connector.signal("localSend", jQuery.stringifyJSON({id: guid , event: event}));
                     },
                     close: function() {
                         // Do not signal the parent if this method is executed by the unload event handler
@@ -539,7 +539,7 @@ jQueryVaadin.atmosphere = function() {
                     // Powered by the storage event and the localStorage
                     // http://www.w3.org/TR/webstorage/#event-storage
                     storage: function() {
-                        if (!jQueryVaadin.atmosphere.supportStorage()) {
+                        if (!jQuery.atmosphere.supportStorage()) {
                             return;
                         }
 
@@ -548,7 +548,7 @@ jQueryVaadin.atmosphere = function() {
                         return {
                             init: function() {
                                 // Handles the storage event
-                                jQueryVaadin(window).on("storage.socket", function(event) {
+                                jQuery(window).on("storage.socket", function(event) {
                                     event = event.originalEvent;
                                     // When a deletion, newValue initialized to null
                                     if (event.key === name && event.newValue) {
@@ -557,16 +557,16 @@ jQueryVaadin.atmosphere = function() {
                                 });
                             },
                             signal: function(type, data) {
-                                storage.setItem(name, jQueryVaadin.stringifyJSON({target: "c", type: type, data: data}));
+                                storage.setItem(name, jQuery.stringifyJSON({target: "c", type: type, data: data}));
                             },
                             get: function(key) {
-                                return jQueryVaadin.parseJSON(storage.getItem(name + "-" + key));
+                                return jQuery.parseJSON(storage.getItem(name + "-" + key));
                             },
                             set: function(key, value) {
-                                storage.setItem(name + "-" + key, jQueryVaadin.stringifyJSON(value));
+                                storage.setItem(name + "-" + key, jQuery.stringifyJSON(value));
                             },
                             close : function() {
-                                jQueryVaadin(window).off("storage.socket");
+                                jQuery(window).off("storage.socket");
                                 storage.removeItem(name);
                                 storage.removeItem(name + "-opened");
                                 storage.removeItem(name + "-children");
@@ -579,8 +579,8 @@ jQueryVaadin.atmosphere = function() {
                     windowref: function() {
                         // Internet Explorer raises an invalid argument error
                         // when calling the window.open method with the name containing non-word characters
-                        var neim = name.replace(/\W/g, ""), win = (jQueryVaadin('iframe[name="' + neim + '"]')[0]
-                            || jQueryVaadin('<iframe name="' + neim + '" />').hide().appendTo("body")[0]).contentWindow;
+                        var neim = name.replace(/\W/g, ""), win = (jQuery('iframe[name="' + neim + '"]')[0]
+                            || jQuery('<iframe name="' + neim + '" />').hide().appendTo("body")[0]).contentWindow;
 
                         return {
                             init: function() {
@@ -597,7 +597,7 @@ jQueryVaadin.atmosphere = function() {
                             },
                             signal: function(type, data) {
                                 if (!win.closed && win.fire) {
-                                    win.fire(jQueryVaadin.stringifyJSON({target: "c", type: type, data: data}));
+                                    win.fire(jQuery.stringifyJSON({target: "c", type: type, data: data}));
                                 }
                             },
                             get: function(key) {
@@ -616,7 +616,7 @@ jQueryVaadin.atmosphere = function() {
 
                 // Receives send and close command from the children
                 function listener(string) {
-                    var command = jQueryVaadin.parseJSON(string), data = command.data;
+                    var command = jQuery.parseJSON(string), data = command.data;
 
                     if (command.target === "p") {
                         switch (command.type) {
@@ -641,7 +641,7 @@ jQueryVaadin.atmosphere = function() {
                     document.cookie = encodeURIComponent(name) + "=" +
                         // Opera's JSON implementation ignores a number whose a last digit of 0 strangely
                         // but has no problem with a number whose a last digit of 9 + 1
-                        encodeURIComponent(jQueryVaadin.stringifyJSON({ts: jQueryVaadin.now() + 1, heir: (storageService.get("children") || [])[0]}));
+                        encodeURIComponent(jQuery.stringifyJSON({ts: jQuery.now() + 1, heir: (storageService.get("children") || [])[0]}));
                 }
 
                 // Chooses a storageService
@@ -649,7 +649,7 @@ jQueryVaadin.atmosphere = function() {
                 storageService.init();
 
                 if (_request.logLevel == 'debug') {
-                    jQueryVaadin.atmosphere.debug("Installed StorageService " + storageService);
+                    jQuery.atmosphere.debug("Installed StorageService " + storageService);
                 }
 
                 // List of children sockets
@@ -724,7 +724,7 @@ jQueryVaadin.atmosphere = function() {
                     data = '';
                 }
 
-                _jqxhr = jQueryVaadin.ajax({
+                _jqxhr = jQuery.ajax({
                     url : url,
                     type : rq.method,
                     dataType: "jsonp",
@@ -748,7 +748,7 @@ jQueryVaadin.atmosphere = function() {
                             var msg = json.message;
                             if (msg != null && typeof msg != 'string') {
                                 try {
-                                    msg = jQueryVaadin.stringifyJSON(msg);
+                                    msg = jQuery.stringifyJSON(msg);
                                 } catch (err) {
                                     // The message was partial
                                 }
@@ -762,7 +762,7 @@ jQueryVaadin.atmosphere = function() {
                                 _reconnect(_jqxhr, rq);
                             }
                         } else {
-                            jQueryVaadin.atmosphere.log(_request.logLevel, ["JSONP reconnect maximum try reached " + _request.requestCount]);
+                            jQuery.atmosphere.log(_request.logLevel, ["JSONP reconnect maximum try reached " + _request.requestCount]);
                             _onError();
                         }
                     },
@@ -798,7 +798,7 @@ jQueryVaadin.atmosphere = function() {
                 }
 
                 var async = typeof(rq.async) != 'undefined' ? rq.async : true;
-                _jqxhr = jQueryVaadin.ajax({
+                _jqxhr = jQuery.ajax({
                     url : url,
                     type : rq.method,
                     error : function(jqXHR, textStatus, errorThrown) {
@@ -823,7 +823,7 @@ jQueryVaadin.atmosphere = function() {
                                 _reconnect(_jqxhr, rq);
                             }
                         } else {
-                            jQueryVaadin.atmosphere.log(_request.logLevel, ["AJAX reconnect maximum try reached " + _request.requestCount]);
+                            jQuery.atmosphere.log(_request.logLevel, ["AJAX reconnect maximum try reached " + _request.requestCount]);
                             _onError();
                         }
                     },
@@ -865,7 +865,7 @@ jQueryVaadin.atmosphere = function() {
             function _buildWebSocketUrl() {
                 var url = _attachHeaders(_request);
 
-                return decodeURI(jQueryVaadin('<a href="' + url + '"/>')[0].href.replace(/^http/, "ws"));
+                return decodeURI(jQuery('<a href="' + url + '"/>')[0].href.replace(/^http/, "ws"));
             }
 
             /**
@@ -893,8 +893,8 @@ jQueryVaadin.atmosphere = function() {
                 var location = _buildSSEUrl(_request.url);
 
                 if (_request.logLevel == 'debug') {
-                    jQueryVaadin.atmosphere.debug("Invoking executeSSE");
-                    jQueryVaadin.atmosphere.debug("Using URL: " + location);
+                    jQuery.atmosphere.debug("Invoking executeSSE");
+                    jQuery.atmosphere.debug("Using URL: " + location);
                 }
 
                 if (sseOpened) {
@@ -902,7 +902,7 @@ jQueryVaadin.atmosphere = function() {
                 }
 
                 if (_request.enableProtocol && sseOpened) {
-                    var time = jQueryVaadin.now() - _request.ctime;
+                    var time = jQuery.now() - _request.ctime;
                     _request.lastTimestamp = Number(_request.stime) + Number(time);
                 }
 
@@ -924,7 +924,7 @@ jQueryVaadin.atmosphere = function() {
 
                 _sse.onopen = function(event) {
                     if (_request.logLevel == 'debug') {
-                        jQueryVaadin.atmosphere.debug("SSE successfully opened");
+                        jQuery.atmosphere.debug("SSE successfully opened");
                     }
 
                     if (!sseOpened) {
@@ -940,7 +940,7 @@ jQueryVaadin.atmosphere = function() {
 
                 _sse.onmessage = function(message) {
                     if (message.origin != window.location.protocol + "//" + window.location.host) {
-                        jQueryVaadin.atmosphere.log(_request.logLevel, ["Origin was not " + window.location.protocol + "//" + window.location.host]);
+                        jQuery.atmosphere.log(_request.logLevel, ["Origin was not " + window.location.protocol + "//" + window.location.host]);
                         return;
                     }
 
@@ -952,7 +952,7 @@ jQueryVaadin.atmosphere = function() {
                     var message = message.data;
                     var skipCallbackInvocation = _trackMessageSize(message, _request, _response);
 
-                    if (jQueryVaadin.trim(message).length == 0) {
+                    if (jQuery.trim(message).length == 0) {
                         skipCallbackInvocation = true;
                     }
 
@@ -972,7 +972,7 @@ jQueryVaadin.atmosphere = function() {
                     _clearState();
 
                     if (_abordingConnection) {
-                        jQueryVaadin.atmosphere.log(_request.logLevel, ["SSE closed normally"]);
+                        jQuery.atmosphere.log(_request.logLevel, ["SSE closed normally"]);
                     } else if (!sseOpened) {
                         _reconnectWithFallbackTransport("SSE failed. Downgrading to fallback transport and resending");
                     } else if (_request.reconnect && (_response.transport == 'sse')) {
@@ -982,7 +982,7 @@ jQueryVaadin.atmosphere = function() {
                             }, _request.reconnectInterval);
                             _response.responseBody = "";
                         } else {
-                            jQueryVaadin.atmosphere.log(_request.logLevel, ["SSE reconnect maximum try reached " + _requestCount]);
+                            jQuery.atmosphere.log(_request.logLevel, ["SSE reconnect maximum try reached " + _requestCount]);
                             _onError();
                         }
                     }
@@ -1001,7 +1001,7 @@ jQueryVaadin.atmosphere = function() {
                 _response.transport = "websocket";
 
                 if (_request.enableProtocol && webSocketOpened) {
-                    var time = jQueryVaadin.now() - _request.ctime;
+                    var time = jQuery.now() - _request.ctime;
                     _request.lastTimestamp = Number(_request.stime) + Number(time);
                 }
 
@@ -1009,8 +1009,8 @@ jQueryVaadin.atmosphere = function() {
                 var closed = false;
 
                 if (_request.logLevel == 'debug') {
-                    jQueryVaadin.atmosphere.debug("Invoking executeWebSocket");
-                    jQueryVaadin.atmosphere.debug("Using URL: " + location);
+                    jQuery.atmosphere.debug("Invoking executeWebSocket");
+                    jQuery.atmosphere.debug("Using URL: " + location);
                 }
 
                 if (webSocketOpened) {
@@ -1054,7 +1054,7 @@ jQueryVaadin.atmosphere = function() {
 
                 _websocket.onopen = function(message) {
                     if (_request.logLevel == 'debug') {
-                        jQueryVaadin.atmosphere.debug("Websocket successfully opened");
+                        jQuery.atmosphere.debug("Websocket successfully opened");
                     }
 
                     if (!webSocketOpened) {
@@ -1130,8 +1130,8 @@ jQueryVaadin.atmosphere = function() {
                         }
                     }
 
-                    jQueryVaadin.atmosphere.warn("Websocket closed, reason: " + reason);
-                    jQueryVaadin.atmosphere.warn("Websocket closed, wasClean: " + message.wasClean);
+                    jQuery.atmosphere.warn("Websocket closed, reason: " + reason);
+                    jQuery.atmosphere.warn("Websocket closed, wasClean: " + message.wasClean);
 
                     _response.state = 'closed';
                     _response.responseBody = "";
@@ -1142,7 +1142,7 @@ jQueryVaadin.atmosphere = function() {
                     closed = true;
 
                     if (_abordingConnection) {
-                        jQueryVaadin.atmosphere.log(_request.logLevel, ["Websocket closed normally"]);
+                        jQuery.atmosphere.log(_request.logLevel, ["Websocket closed normally"]);
                     } else if (!webSocketOpened) {
                         _reconnectWithFallbackTransport("Websocket failed. Downgrading to Comet and resending");
 
@@ -1154,8 +1154,8 @@ jQueryVaadin.atmosphere = function() {
                                 _executeWebSocket(true);
                             }, _request.reconnectInterval);
                         } else {
-                            jQueryVaadin.atmosphere.log(_request.logLevel, ["Websocket reconnect maximum try reached " + _requestCount]);
-                            jQueryVaadin.atmosphere.warn("Websocket error, reason: " + message.reason);
+                            jQuery.atmosphere.log(_request.logLevel, ["Websocket reconnect maximum try reached " + _requestCount]);
+                            jQuery.atmosphere.warn("Websocket error, reason: " + message.reason);
                             _onError();
                         }
                     }
@@ -1237,12 +1237,12 @@ jQueryVaadin.atmosphere = function() {
              * @private
              */
             function _reconnectWithFallbackTransport(errorMessage) {
-                jQueryVaadin.atmosphere.log(_request.logLevel, [errorMessage]);
+                jQuery.atmosphere.log(_request.logLevel, [errorMessage]);
 
                 if (typeof(_request.onTransportFailure) != 'undefined') {
                     _request.onTransportFailure(errorMessage, _request);
-                } else if (typeof(jQueryVaadin.atmosphere.onTransportFailure) != 'undefined') {
-                    jQueryVaadin.atmosphere.onTransportFailure(errorMessage, _request);
+                } else if (typeof(jQuery.atmosphere.onTransportFailure) != 'undefined') {
+                    jQuery.atmosphere.onTransportFailure(errorMessage, _request);
                 }
 
                 _request.transport = _request.fallbackTransport;
@@ -1287,7 +1287,7 @@ jQueryVaadin.atmosphere = function() {
 
                 url += (url.indexOf('?') != -1) ? '&' : '?';
                 url += "X-Atmosphere-tracking-id=" + rq.uuid;
-                url += "&X-Atmosphere-Framework=" + jQueryVaadin.atmosphere.version;
+                url += "&X-Atmosphere-Framework=" + jQuery.atmosphere.version;
                 url += "&X-Atmosphere-Transport=" + rq.transport;
 
                 if (rq.trackMessageLength) {
@@ -1308,8 +1308,8 @@ jQueryVaadin.atmosphere = function() {
                    url += "&X-atmo-protocol=true";
                 }
 
-                jQueryVaadin.each(rq.headers, function(name, value) {
-                    var h = jQueryVaadin.isFunction(value) ? value.call(this, rq, request, _response) : value;
+                jQuery.each(rq.headers, function(name, value) {
+                    var h = jQuery.isFunction(value) ? value.call(this, rq, request, _response) : value;
                     if (h != null) {
                         url += "&" + encodeURIComponent(name) + "=" + encodeURIComponent(h);
                     }
@@ -1327,7 +1327,7 @@ jQueryVaadin.atmosphere = function() {
              * @private
              */
             function _buildAjaxRequest() {
-                if (jQueryVaadin.browser.msie) {
+                if (jQuery.browser.msie) {
                     if (typeof XMLHttpRequest == "undefined")
                       XMLHttpRequest = function () {
                         try { return new ActiveXObject("Msxml2.XMLHTTP.6.0"); }
@@ -1358,7 +1358,7 @@ jQueryVaadin.atmosphere = function() {
                 }
 
                 // CORS fake using JSONP
-                if ((rq.transport == 'jsonp') || ((rq.enableXDR) && (jQueryVaadin.atmosphere.checkCORSSupport()))) {
+                if ((rq.transport == 'jsonp') || ((rq.enableXDR) && (jQuery.atmosphere.checkCORSSupport()))) {
                     _jsonp(rq);
                     return;
                 }
@@ -1368,7 +1368,7 @@ jQueryVaadin.atmosphere = function() {
                     return;
                 }
 
-                if (jQueryVaadin.browser.msie && jQueryVaadin.browser.version < 10) {
+                if (jQuery.browser.msie && jQuery.browser.version < 10) {
                     if ((rq.transport == 'streaming')) {
                         rq.enableXDR && window.XDomainRequest ? _ieXDR(rq) : _ieStreaming(rq);
                         return;
@@ -1392,7 +1392,7 @@ jQueryVaadin.atmosphere = function() {
                         _response.transport = rq.transport;
                     }
 
-                    if (!jQueryVaadin.browser.msie) {
+                    if (!jQuery.browser.msie) {
                         ajaxRequest.onerror = function() {
                             try {
                                 _response.status = XMLHttpRequest.status;
@@ -1436,7 +1436,7 @@ jQueryVaadin.atmosphere = function() {
                         rq.readyState = ajaxRequest.readyState;
 
                         if (ajaxRequest.readyState == 4) {
-                            if (jQueryVaadin.browser.msie) {
+                            if (jQuery.browser.msie) {
                                 update = true;
                             } else if (rq.transport == 'streaming') {
                                 update = true;
@@ -1444,9 +1444,9 @@ jQueryVaadin.atmosphere = function() {
                                 update = true;
                                 clearTimeout(rq.id);
                             }
-                        } else if (rq.transport == 'streaming' && jQueryVaadin.browser.msie && ajaxRequest.readyState >= 3) {
+                        } else if (rq.transport == 'streaming' && jQuery.browser.msie && ajaxRequest.readyState >= 3) {
                             update = true;
-                        } else if (!jQueryVaadin.browser.msie && ajaxRequest.readyState == 3 && ajaxRequest.status == 200 && rq.transport != 'long-polling') {
+                        } else if (!jQuery.browser.msie && ajaxRequest.readyState == 3 && ajaxRequest.status == 200 && rq.transport != 'long-polling') {
                             update = true;
                         } else {
                             clearTimeout(rq.id);
@@ -1508,8 +1508,8 @@ jQueryVaadin.atmosphere = function() {
                                 }
                                 rq.lastIndex = responseText.length;
 
-                                if (jQueryVaadin.browser.opera) {
-                                    jQueryVaadin.atmosphere.iterate(function() {
+                                if (jQuery.browser.opera) {
+                                    jQuery.atmosphere.iterate(function() {
                                         if (ajaxRequest.responseText.length > rq.lastIndex) {
                                             try {
                                                 _response.status = ajaxRequest.status;
@@ -1572,7 +1572,7 @@ jQueryVaadin.atmosphere = function() {
 
                             // For backward compatibility with Atmosphere < 0.8
                             if (_response.responseBody.indexOf("parent.callback") != -1) {
-                                jQueryVaadin.atmosphere.log(rq.logLevel, ["parent.callback no longer supported with 0.8 version and up. Please upgrade"]);
+                                jQuery.atmosphere.log(rq.logLevel, ["parent.callback no longer supported with 0.8 version and up. Please upgrade"]);
                             }
 
                             _invokeCallback();
@@ -1604,7 +1604,7 @@ jQueryVaadin.atmosphere = function() {
 
                 } else {
                     if (rq.logLevel == 'debug') {
-                        jQueryVaadin.atmosphere.log(rq.logLevel, ["Max re-connection reached."]);
+                        jQuery.atmosphere.log(rq.logLevel, ["Max re-connection reached."]);
                     }
                     _onError();
                 }
@@ -1619,7 +1619,7 @@ jQueryVaadin.atmosphere = function() {
             function _doRequest(ajaxRequest, request, create) {
                 // Prevent Android to cache request
                 var url = _attachHeaders(request);
-                url = jQueryVaadin.atmosphere.prepareURL(url);
+                url = jQuery.atmosphere.prepareURL(url);
 
                 if (create) {
                     ajaxRequest.open(request.method, url, true);
@@ -1640,7 +1640,7 @@ jQueryVaadin.atmosphere = function() {
                 }
 
                 if (!_request.dropAtmosphereHeaders) {
-                    ajaxRequest.setRequestHeader("X-Atmosphere-Framework", jQueryVaadin.atmosphere.version);
+                    ajaxRequest.setRequestHeader("X-Atmosphere-Framework", jQuery.atmosphere.version);
                     ajaxRequest.setRequestHeader("X-Atmosphere-Transport", request.transport);
                     if (request.lastTimestamp != undefined) {
                         ajaxRequest.setRequestHeader("X-Cache-Date", request.lastTimestamp);
@@ -1658,8 +1658,8 @@ jQueryVaadin.atmosphere = function() {
                     ajaxRequest.setRequestHeader("X-Atmosphere-tracking-id", request.uuid);
                 }
 
-                jQueryVaadin.each(request.headers, function(name, value) {
-                    var h = jQueryVaadin.isFunction(value) ? value.call(this, ajaxRequest, request, create, _response) : value;
+                jQuery.each(request.headers, function(name, value) {
+                    var h = jQuery.isFunction(value) ? value.call(this, ajaxRequest, request, create, _response) : value;
                     if (h != null) {
                         ajaxRequest.setRequestHeader(name, h);
                     }
@@ -1839,7 +1839,7 @@ jQueryVaadin.atmosphere = function() {
                         }
 
                         // Finally attach a timestamp to prevent Android and IE caching.
-                        url = jQueryVaadin.atmosphere.prepareURL(url);
+                        url = jQuery.atmosphere.prepareURL(url);
 
                         iframe.src = url;
                         doc.body.appendChild(iframe);
@@ -1847,7 +1847,7 @@ jQueryVaadin.atmosphere = function() {
                         // For the server to respond in a consistent format regardless of user agent, we polls response text
                         var cdoc = iframe.contentDocument || iframe.contentWindow.document;
 
-                        stop = jQueryVaadin.atmosphere.iterate(function() {
+                        stop = jQuery.atmosphere.iterate(function() {
                             try {
                                 if (!cdoc.firstChild) {
                                     return;
@@ -1856,7 +1856,7 @@ jQueryVaadin.atmosphere = function() {
                                 // Detects connection failure
                                 if (cdoc.readyState === "complete") {
                                     try {
-                                        jQueryVaadin.noop(cdoc.fileSize);
+                                        jQuery.noop(cdoc.fileSize);
                                     } catch(e) {
                                         _prepareCallback("Connection Failure", "error", 500, rq.transport);
                                         return false;
@@ -1895,7 +1895,7 @@ jQueryVaadin.atmosphere = function() {
                                 };
 
                                 //To support text/html content type
-                                if (!jQueryVaadin.nodeName(res, "pre")) {
+                                if (!jQuery.nodeName(res, "pre")) {
                                     // Injects a plaintext element which renders text without interpreting the HTML and cannot be stopped
                                     // it is deprecated in HTML5, but still works
                                     var head = cdoc.head || cdoc.getElementsByTagName("head")[0] || cdoc.documentElement || cdoc;
@@ -1914,7 +1914,7 @@ jQueryVaadin.atmosphere = function() {
                                 _prepareCallback(readResponse(), "opening", 200, rq.transport);
 
                                 // Handles message and close event
-                                stop = jQueryVaadin.atmosphere.iterate(function() {
+                                stop = jQuery.atmosphere.iterate(function() {
                                     var text = readResponse();
                                     if (text.length > rq.lastIndex) {
                                         _response.status = 200;
@@ -2008,10 +2008,10 @@ jQueryVaadin.atmosphere = function() {
                     if (_localStorageService) {
                         _localStorageService.localSend(message);
                     } else if (_storageService) {
-                        _storageService.signal("localMessage",  jQueryVaadin.stringifyJSON({id: guid , event: message}));
+                        _storageService.signal("localMessage",  jQuery.stringifyJSON({id: guid , event: message}));
                     }
                 } catch (err) {
-                    jQueryVaadin.atmosphere.error(err);
+                    jQuery.atmosphere.error(err);
                 }
             }
 
@@ -2037,7 +2037,7 @@ jQueryVaadin.atmosphere = function() {
              * @private
              */
             function _pushIE(message) {
-                if (_request.enableXDR && jQueryVaadin.atmosphere.checkCORSSupport()) {
+                if (_request.enableXDR && jQuery.atmosphere.checkCORSSupport()) {
                     var rq = _getPushRequest(message);
                     // Do not reconnect since we are pushing.
                     rq.reconnect = false;
@@ -2100,7 +2100,7 @@ jQueryVaadin.atmosphere = function() {
                 };
 
                 if (typeof(message) == 'object') {
-                    rq = jQueryVaadin.extend(rq, message);
+                    rq = jQuery.extend(rq, message);
                 }
 
                 return rq;
@@ -2136,12 +2136,12 @@ jQueryVaadin.atmosphere = function() {
             }
 
             function _localMessage(message) {
-                var m = jQueryVaadin.parseJSON(message);
+                var m = jQuery.parseJSON(message);
                 if (m.id != guid) {
                     if (typeof(_request.onLocalMessage) != 'undefined') {
                         _request.onLocalMessage(m.event);
-                    } else if (typeof(jQueryVaadin.atmosphere.onLocalMessage) != 'undefined') {
-                        jQueryVaadin.atmosphere.onLocalMessage(m.event);
+                    } else if (typeof(jQuery.atmosphere.onLocalMessage) != 'undefined') {
+                        jQuery.atmosphere.onLocalMessage(m.event);
                     }
                 }
             }
@@ -2162,8 +2162,8 @@ jQueryVaadin.atmosphere = function() {
 
             function _readHeaders(xdr, request) {
                 if (!request.readResponsesHeaders && !request.enableProtocol) {
-                    request.lastTimestamp = jQueryVaadin.now();
-                    request.uuid = jQueryVaadin.atmosphere.guid();
+                    request.lastTimestamp = jQuery.now();
+                    request.uuid = jQuery.atmosphere.guid();
                     return;
                 }
 
@@ -2180,7 +2180,7 @@ jQueryVaadin.atmosphere = function() {
 
                     // HOTFIX for firefox bug: https://bugzilla.mozilla.org/show_bug.cgi?id=608735
                     if (request.headers) {
-                        jQueryVaadin.each(_request.headers, function (name) {
+                        jQuery.each(_request.headers, function (name) {
                             var v = xdr.getResponseHeader(name);
                             if (v) {
                                 _response.headers[name] = v;
@@ -2194,7 +2194,7 @@ jQueryVaadin.atmosphere = function() {
             function _invokeFunction(response) {
                 _f(response, _request);
                 // Global
-                _f(response, jQueryVaadin.atmosphere);
+                _f(response, jQuery.atmosphere);
             }
 
             function _f(response, f) {
@@ -2247,7 +2247,7 @@ jQueryVaadin.atmosphere = function() {
                     if (messages.length > 1 && messages[i].length == 0) {
                         continue;
                     }
-                    _response.responseBody = jQueryVaadin.trim(messages[i]);
+                    _response.responseBody = jQuery.trim(messages[i]);
 
                     // Ugly see issue 400.
                     if (_response.responseBody.length == 0 && _response.transport == 'streaming' && _response.state == "messageReceived") {
@@ -2261,26 +2261,26 @@ jQueryVaadin.atmosphere = function() {
                     _invokeFunction(_response);
 
                     // Invoke global callbacks
-                    if (jQueryVaadin.atmosphere.callbacks.length > 0) {
+                    if (jQuery.atmosphere.callbacks.length > 0) {
                         if (_request.logLevel == 'debug') {
-                            jQueryVaadin.atmosphere.debug("Invoking " + jQueryVaadin.atmosphere.callbacks.length + " global callbacks: " + _response.state);
+                            jQuery.atmosphere.debug("Invoking " + jQuery.atmosphere.callbacks.length + " global callbacks: " + _response.state);
                         }
                         try {
-                            jQueryVaadin.each(jQueryVaadin.atmosphere.callbacks, call);
+                            jQuery.each(jQuery.atmosphere.callbacks, call);
                         } catch (e) {
-                            jQueryVaadin.atmosphere.log(_request.logLevel, ["Callback exception" + e]);
+                            jQuery.atmosphere.log(_request.logLevel, ["Callback exception" + e]);
                         }
                     }
 
                     // Invoke request callback
                     if (typeof(_request.callback) == 'function') {
                         if (_request.logLevel == 'debug') {
-                            jQueryVaadin.atmosphere.debug("Invoking request callbacks");
+                            jQuery.atmosphere.debug("Invoking request callbacks");
                         }
                         try {
                             _request.callback(_response);
                         } catch (e) {
-                            jQueryVaadin.atmosphere.log(_request.logLevel, ["Callback exception" + e]);
+                            jQuery.atmosphere.log(_request.logLevel, ["Callback exception" + e]);
                         }
                     }
                 }
@@ -2386,7 +2386,7 @@ jQueryVaadin.atmosphere = function() {
 
         subscribe: function(url, callback, request) {
             if (typeof(callback) == 'function') {
-                jQueryVaadin.atmosphere.addCallback(callback);
+                jQuery.atmosphere.addCallback(callback);
             }
 
             if (typeof(url) != "string") {
@@ -2395,40 +2395,40 @@ jQueryVaadin.atmosphere = function() {
                 request.url = url;
             }
 
-            var rq = new jQueryVaadin.atmosphere.AtmosphereRequest(request);
+            var rq = new jQuery.atmosphere.AtmosphereRequest(request);
             rq.execute();
 
-            jQueryVaadin.atmosphere.requests[jQueryVaadin.atmosphere.requests.length] = rq;
+            jQuery.atmosphere.requests[jQuery.atmosphere.requests.length] = rq;
             return rq;
         },
 
         addCallback: function(func) {
-            if (jQueryVaadin.inArray(func, jQueryVaadin.atmosphere.callbacks) == -1) {
-                jQueryVaadin.atmosphere.callbacks.push(func);
+            if (jQuery.inArray(func, jQuery.atmosphere.callbacks) == -1) {
+                jQuery.atmosphere.callbacks.push(func);
             }
         },
 
         removeCallback: function(func) {
-            var index = jQueryVaadin.inArray(func, jQueryVaadin.atmosphere.callbacks);
+            var index = jQuery.inArray(func, jQuery.atmosphere.callbacks);
             if (index != -1) {
-                jQueryVaadin.atmosphere.callbacks.splice(index, 1);
+                jQuery.atmosphere.callbacks.splice(index, 1);
             }
         },
 
         unsubscribe : function() {
-            if (jQueryVaadin.atmosphere.requests.length > 0) {
-              var requestsClone = [].concat(jQueryVaadin.atmosphere.requests);
+            if (jQuery.atmosphere.requests.length > 0) {
+              var requestsClone = [].concat(jQuery.atmosphere.requests);
               for (var i = 0; i < requestsClone.length; i++) {
                     var rq = requestsClone[i];
                     rq.close();
                     if (rq.enableProtocol()) {
-                        jQueryVaadin.ajax({url: this._closeUrl(rq), async:false});
+                        jQuery.ajax({url: this._closeUrl(rq), async:false});
                     }
                     clearTimeout(rq.response.request.id);
                 }
             }
-            jQueryVaadin.atmosphere.requests = [];
-            jQueryVaadin.atmosphere.callbacks = [];
+            jQuery.atmosphere.requests = [];
+            jQuery.atmosphere.callbacks = [];
         },
 
         _closeUrl : function(rq) {
@@ -2439,15 +2439,15 @@ jQueryVaadin.atmosphere = function() {
 
         unsubscribeUrl: function(url) {
             var idx = -1;
-            if (jQueryVaadin.atmosphere.requests.length > 0) {
-                for (var i = 0; i < jQueryVaadin.atmosphere.requests.length; i++) {
-                    var rq = jQueryVaadin.atmosphere.requests[i];
+            if (jQuery.atmosphere.requests.length > 0) {
+                for (var i = 0; i < jQuery.atmosphere.requests.length; i++) {
+                    var rq = jQuery.atmosphere.requests[i];
 
                     // Suppose you can subscribe once to an url
                     if (rq.getUrl() == url) {
                         rq.close();
                         if (rq.enableProtocol()) {
-                            jQueryVaadin.ajax({url :this._closeUrl(rq), async:false});
+                            jQuery.ajax({url :this._closeUrl(rq), async:false});
                         }
                         clearTimeout(rq.response.request.id);
                         idx = i;
@@ -2456,25 +2456,25 @@ jQueryVaadin.atmosphere = function() {
                 }
             }
             if (idx >= 0) {
-                jQueryVaadin.atmosphere.requests.splice(idx, 1);
+                jQuery.atmosphere.requests.splice(idx, 1);
             }
         },
 
         publish: function(request) {
             if (typeof(request.callback) == 'function') {
-                jQueryVaadin.atmosphere.addCallback(callback);
+                jQuery.atmosphere.addCallback(callback);
             }
             request.transport = "polling";
 
-            var rq = new jQueryVaadin.atmosphere.AtmosphereRequest(request);
-            jQueryVaadin.atmosphere.requests[jQueryVaadin.atmosphere.requests.length] = rq;
+            var rq = new jQuery.atmosphere.AtmosphereRequest(request);
+            jQuery.atmosphere.requests[jQuery.atmosphere.requests.length] = rq;
             return rq;
         },
 
         checkCORSSupport : function() {
-            if (jQueryVaadin.browser.msie && !window.XDomainRequest) {
+            if (jQuery.browser.msie && !window.XDomainRequest) {
                 return true;
-            } else if (jQueryVaadin.browser.opera && jQueryVaadin.browser.version < 12.0) {
+            } else if (jQuery.browser.opera && jQuery.browser.version < 12.0) {
                 return true;
             }
 
@@ -2492,21 +2492,21 @@ jQueryVaadin.atmosphere = function() {
         },
 
         guid : function() {
-            return (jQueryVaadin.atmosphere.S4() + jQueryVaadin.atmosphere.S4() + "-" + jQueryVaadin.atmosphere.S4() + "-" + jQueryVaadin.atmosphere.S4() + "-" + jQueryVaadin.atmosphere.S4() + "-" + jQueryVaadin.atmosphere.S4() + jQueryVaadin.atmosphere.S4() + jQueryVaadin.atmosphere.S4());
+            return (jQuery.atmosphere.S4() + jQuery.atmosphere.S4() + "-" + jQuery.atmosphere.S4() + "-" + jQuery.atmosphere.S4() + "-" + jQuery.atmosphere.S4() + "-" + jQuery.atmosphere.S4() + jQuery.atmosphere.S4() + jQuery.atmosphere.S4());
         },
 
-        // From jQueryVaadin-Stream
+        // From jQuery-Stream
         prepareURL: function(url) {
             // Attaches a time stamp to prevent caching
-            var ts = jQueryVaadin.now();
+            var ts = jQuery.now();
             var ret = url.replace(/([?&])_=[^&]*/, "$1_=" + ts);
 
             return ret + (ret === url ? (/\?/.test(url) ? "&" : "?") + "_=" + ts : "");
         },
 
-        // From jQueryVaadin-Stream
+        // From jQuery-Stream
         param : function(data) {
-            return jQueryVaadin.param(data, jQueryVaadin.ajaxSettings.traditional);
+            return jQuery.param(data, jQuery.ajaxSettings.traditional);
         },
 
         supportStorage : function() {
@@ -2516,7 +2516,7 @@ jQueryVaadin.atmosphere = function() {
                     storage.setItem("t", "t");
                     storage.removeItem("t");
                     // The storage event of Internet Explorer and Firefox 3 works strangely
-                    return window.StorageEvent && !jQueryVaadin.browser.msie && !(jQueryVaadin.browser.mozilla && jQueryVaadin.browser.version.split(".")[0] === "1");
+                    return window.StorageEvent && !jQuery.browser.msie && !(jQuery.browser.mozilla && jQuery.browser.version.split(".")[0] === "1");
                 } catch (e) {
                 }
             }
@@ -2556,19 +2556,19 @@ jQueryVaadin.atmosphere = function() {
         },
 
         warn: function() {
-            jQueryVaadin.atmosphere.log('warn', arguments);
+            jQuery.atmosphere.log('warn', arguments);
         },
 
         info :function() {
-            jQueryVaadin.atmosphere.log('info', arguments);
+            jQuery.atmosphere.log('info', arguments);
         },
 
         debug: function() {
-            jQueryVaadin.atmosphere.log('debug', arguments);
+            jQuery.atmosphere.log('debug', arguments);
         },
 
         error: function() {
-            jQueryVaadin.atmosphere.log('error', arguments);
+            jQuery.atmosphere.log('error', arguments);
         }
     };
 }();
@@ -2579,10 +2579,10 @@ jQueryVaadin.atmosphere = function() {
 
     var matched, browser;
 
-// Use of jQueryVaadin.browser is frowned upon.
-// More details: http://api.jquery.com/jQueryVaadin.browser
-// jQueryVaadin.uaMatch maintained for back-compat
-    jQueryVaadin.uaMatch = function (ua) {
+// Use of jQuery.browser is frowned upon.
+// More details: http://api.jquery.com/jQuery.browser
+// jQuery.uaMatch maintained for back-compat
+    jQuery.uaMatch = function (ua) {
         ua = ua.toLowerCase();
 
         var match = /(chrome)[ \/]([\w.]+)/.exec(ua) ||
@@ -2598,7 +2598,7 @@ jQueryVaadin.atmosphere = function() {
         };
     };
 
-    matched = jQueryVaadin.uaMatch(navigator.userAgent);
+    matched = jQuery.uaMatch(navigator.userAgent);
     browser = {};
 
     if (matched.browser) {
@@ -2613,34 +2613,34 @@ jQueryVaadin.atmosphere = function() {
         browser.safari = true;
     }
 
-    jQueryVaadin.browser = browser;
+    jQuery.browser = browser;
 
-    jQueryVaadin.sub = function () {
-        function jQueryVaadinSub(selector, context) {
-            return new jQueryVaadinSub.fn.init(selector, context);
+    jQuery.sub = function () {
+        function jQuerySub(selector, context) {
+            return new jQuerySub.fn.init(selector, context);
         }
 
-        jQueryVaadin.extend(true, jQueryVaadinSub, this);
-        jQueryVaadinSub.superclass = this;
-        jQueryVaadinSub.fn = jQueryVaadinSub.prototype = this();
-        jQueryVaadinSub.fn.constructor = jQueryVaadinSub;
-        jQueryVaadinSub.sub = this.sub;
-        jQueryVaadinSub.fn.init = function init(selector, context) {
-            if (context && context instanceof jQueryVaadin && !(context instanceof jQueryVaadinSub)) {
-                context = jQueryVaadinSub(context);
+        jQuery.extend(true, jQuerySub, this);
+        jQuerySub.superclass = this;
+        jQuerySub.fn = jQuerySub.prototype = this();
+        jQuerySub.fn.constructor = jQuerySub;
+        jQuerySub.sub = this.sub;
+        jQuerySub.fn.init = function init(selector, context) {
+            if (context && context instanceof jQuery && !(context instanceof jQuerySub)) {
+                context = jQuerySub(context);
             }
 
-            return jQueryVaadin.fn.init.call(this, selector, context, rootjQueryVaadinSub);
+            return jQuery.fn.init.call(this, selector, context, rootjQuerySub);
         };
-        jQueryVaadinSub.fn.init.prototype = jQueryVaadinSub.fn;
-        var rootjQueryVaadinSub = jQueryVaadinSub(document);
-        return jQueryVaadinSub;
+        jQuerySub.fn.init.prototype = jQuerySub.fn;
+        var rootjQuerySub = jQuerySub(document);
+        return jQuerySub;
     };
 
 })();
 
 /*
- * jQueryVaadin stringifyJSON
+ * jQuery stringifyJSON
  * http://github.com/flowersinthesand/jquery-stringifyJSON
  * 
  * Copyright 2011, Donghwan Kim 
@@ -2648,7 +2648,7 @@ jQueryVaadin.atmosphere = function() {
  * http://www.apache.org/licenses/LICENSE-2.0
  */
 // This plugin is heavily based on Douglas Crockford's reference implementation
-(function(jQueryVaadin) {
+(function(jQuery) {
 
     var escapable = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g, meta = {
         '\b' : '\\b',
@@ -2719,7 +2719,7 @@ jQueryVaadin.atmosphere = function() {
         }
     }
 
-    jQueryVaadin.stringifyJSON = function(value) {
+    jQuery.stringifyJSON = function(value) {
         if (window.JSON && window.JSON.stringify) {
             return window.JSON.stringify(value);
         }
@@ -2727,4 +2727,4 @@ jQueryVaadin.atmosphere = function() {
         return str("", {"": value});
     };
 
-}(jQueryVaadin));
+}(jQuery));

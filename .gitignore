@@ -44,6 +44,8 @@
 /WebContent/VAADIN/widgetsets
 /WebContent/VAADIN/gwt-unitCache*
 
+WebContent/VAADIN/vaadinPush.js
+
 # /WebContent/WEB-INF/
 /WebContent/WEB-INF/classes
 

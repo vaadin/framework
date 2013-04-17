@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="vaadin-push" basedir="." default="publish-local">
+<project name="vaadin-push" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant">
 	<description>
 		Meta package which defines dependencies needed for push
 	</description>
@@ -10,16 +10,43 @@
 	<property name="module.name" value="vaadin-push" />
 	<property name="module.symbolic" value="com.vaadin.push" />
 	<property name="result.dir" location="result" />
+	<property name="vaadinPush.js" location="${result.dir}/js/VAADIN/vaadinPush.js" />
 	<path id="classpath.compile.custom" />
-	
+
 	<union id="jar.includes">
-		<fileset dir="${vaadin.basedir}/WebContent">
-			<include name="VAADIN/jquery-1.7.2.rebased.js" />
-			<include name="VAADIN/jquery.atmosphere.rebased.js" />
+		<fileset dir="${result.dir}/js">
+			<include name="VAADIN/vaadinPush.js" />
 		</fileset>
 	</union>
-	
-	<target name="jar">
+
+	<target name="vaadinPush.js">
+		<mkdir dir="${result.dir}/js/VAADIN" />
+		<property name="vaadinPush.js.output" location="${result.dir}/js/VAADIN/vaadinPush.js" />
+		<property name="vaadinPush.js.combined.output" location="${result.dir}/js/VAADIN/push.combined.js" />
+
+		<loadfile srcfile="${vaadin.basedir}/WebContent/VAADIN/jquery-1.7.2.js" property="jquery.js.contents" />
+		<loadfile srcfile="${vaadin.basedir}/WebContent/VAADIN/jquery.atmosphere.js" property="jquery.atmosphere.js.contents" />
+		<loadfile srcfile="${vaadin.basedir}/WebContent/VAADIN/vaadinPush.js.tpl" property="vaadinPush.js.contents">
+			<filterchain>
+				<replacetokens begintoken="@" endtoken="@">
+					<token key="jquery.js" value="${jquery.js.contents}" />
+					<token key="jquery.atmosphere.js" value="${jquery.atmosphere.js.contents}" />
+				</replacetokens>
+			</filterchain>
+		</loadfile>
+		<echo file="${vaadinPush.js.combined.output}">${vaadinPush.js.contents}</echo>
+
+		<!-- Minify -->
+		<ivy:retrieve organisation="com.yahoo.platform.yui" module="yuicompressor" revision="2.4.7" inline="true" type="jar" pattern="${result.dir}/compressor.jar" />
+		<java jar="${result.dir}/compressor.jar" fork="true">
+			<arg value="-v"/>
+			<arg value="-o"/>
+			<arg file="${vaadinPush.js.output}"/>
+			<arg file="${vaadinPush.js.combined.output}"/>
+		</java>
+	</target>
+		
+	<target name="jar" depends="vaadinPush.js">
 		<property name="server.osgi.import" value="" />
 		<antcall target="common.jar">
 			<param name="require-bundle" value="" />

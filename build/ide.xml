@@ -49,7 +49,7 @@
 		<path location="client/src" />
 	</path>
 
-	<target name="theme-and-default-widgetset" depends="default-widgetset, themes">
+	<target name="theme-and-default-widgetset" depends="default-widgetset, themes, vaadinPush.js">
 	</target>
 	<target name="themes">
 		<antcall target="compile-theme">
@@ -82,20 +82,20 @@
 		</java>
 
 	</target>
-	
-	
+
+
 	<target name="default-widgetset">
 		<antcall target="compile-widgetset">
 			<param name="widgetset" value="com.vaadin.DefaultWidgetSet" />
 		</antcall>
 	</target>
-	
+
 	<target name="testing-widgetset">
 		<antcall target="compile-widgetset">
 			<param name="widgetset" value="com.vaadin.tests.widgetset.TestingWidgetSet" />
 		</antcall>
 	</target>
-	
+
 	<target name="compile-widgetset">
 		<property name="module" value="${widgetset}" />
 		<property name="module.output.dir" location="WebContent/VAADIN/widgetsets" />
@@ -133,5 +133,20 @@
 			<jvmarg value="-Djava.awt.headless=true" />
 			<jvmarg value="-Dgwt.usearchives=false" />
 		</java>
-	</target>		
+	</target>
+	<target name="vaadinPush.js">
+		<property name="vaadinPush.js.output" location="WebContent/VAADIN/vaadinPush.js" />
+
+		<loadfile srcfile="WebContent/VAADIN/jquery-1.7.2.js" property="jquery.js.contents" />
+		<loadfile srcfile="WebContent/VAADIN/jquery.atmosphere.js" property="jquery.atmosphere.js.contents" />
+		<loadfile srcfile="WebContent/VAADIN/vaadinPush.js.tpl" property="vaadinPush.js.contents">
+			<filterchain>
+				<replacetokens begintoken="@" endtoken="@">
+					<token key="jquery.js" value="${jquery.js.contents}" />
+					<token key="jquery.atmosphere.js" value="${jquery.atmosphere.js.contents}" />
+				</replacetokens>
+			</filterchain>
+		</loadfile>
+		<echo file="${vaadinPush.js.output}">${vaadinPush.js.contents}</echo>
+	</target>
 </project>

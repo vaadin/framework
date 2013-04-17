@@ -507,9 +507,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
     private boolean serveStaticResources(HttpServletRequest request,
             HttpServletResponse response) throws IOException, ServletException {
 
-        // FIXME What does 10 refer to?
         String pathInfo = request.getPathInfo();
-        if (pathInfo == null || pathInfo.length() <= 10) {
+        if (pathInfo == null) {
             return false;
         }
 
@@ -907,7 +906,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     protected boolean isStaticResourceRequest(HttpServletRequest request) {
         String pathInfo = request.getPathInfo();
-        if (pathInfo == null || pathInfo.length() <= 10) {
+        if (pathInfo == null) {
             return false;
         }
 
