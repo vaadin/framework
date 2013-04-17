@@ -149,8 +149,8 @@ public class PushHandler implements AtmosphereHandler {
                 }
             }
         } catch (IOException e) {
-            // TODO Error handling
-            e.printStackTrace();
+            getLogger().log(Level.INFO,
+                    "An error occured while writing a push response", e);
         } finally {
             session.unlock();
         }
