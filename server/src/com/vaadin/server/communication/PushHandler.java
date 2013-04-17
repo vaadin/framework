@@ -32,6 +32,7 @@ import org.json.JSONException;
 import com.vaadin.server.LegacyCommunicationManager.InvalidUIDLSecurityKeyException;
 import com.vaadin.server.ServiceException;
 import com.vaadin.server.SessionExpiredException;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.server.VaadinServletService;
@@ -47,7 +48,98 @@ import com.vaadin.ui.UI;
  */
 public class PushHandler implements AtmosphereHandler {
 
+    /**
+     * Callback interface used internally to process an event with the
+     * corresponding UI properly locked.
+     */
+    private interface PushEventCallback {
+        public void run(AtmosphereResource resource, UI ui) throws IOException;
+    }
+
+    /**
+     * Callback used when we receive a request to establish a push channel for a
+     * UI. Associate the AtmosphereResource with the UI and leave the connection
+     * open by calling resource.suspend(). If there is a pending push, send it
+     * now.
+     */
+    private static PushEventCallback establishCallback = new PushEventCallback() {
+        @Override
+        public void run(AtmosphereResource resource, UI ui) throws IOException {
+            getLogger().log(Level.FINER,
+                    "New push connection with transport {0}",
+                    resource.transport());
+            resource.getResponse().setContentType("text/plain; charset=UTF-8");
+            if (resource.transport() == TRANSPORT.STREAMING) {
+                // IE8 requires a longer padding to work properly if the
+                // initial message is small (#11573). Chrome does not work
+                // without the original padding...
+                WebBrowser browser = ui.getSession().getBrowser();
+                if (browser.isIE() && browser.getBrowserMajorVersion() == 8) {
+                    resource.padding(LONG_PADDING);
+                }
+            }
+            resource.suspend();
+
+            AtmospherePushConnection connection = new AtmospherePushConnection(
+                    ui);
+            connection.connect(resource);
+
+            ui.setPushConnection(connection);
+        }
+    };
+
+    /**
+     * Callback used when we receive a UIDL request through Atmosphere. If the
+     * push channel is bidirectional (websockets), the request was sent via the
+     * same channel. Otherwise, the client used a separate AJAX request. Handle
+     * the request and send changed UI state via the push channel (we do not
+     * respond to the request directly.)
+     */
+    private static PushEventCallback receiveCallback = new PushEventCallback() {
+        @Override
+        public void run(AtmosphereResource resource, UI ui) throws IOException {
+            AtmosphereRequest req = resource.getRequest();
+
+            AtmospherePushConnection connection = getConnectionForUI(ui);
+
+            assert connection != null : "Got push from the client "
+                    + "even though the connection does not seem to be "
+                    + "valid. This might happen if a HttpSession is "
+                    + "serialized and deserialized while the push "
+                    + "connection is kept open or if the UI has a "
+                    + "connection of unexpected type.";
+
+            // Should be set up by caller
+            VaadinRequest vaadinRequest = VaadinService.getCurrentRequest();
+            assert vaadinRequest != null;
+
+            try {
+                new ServerRpcHandler().handleRpc(ui, req.getReader(),
+                        vaadinRequest);
+                connection.push(false);
+            } catch (JSONException e) {
+                getLogger().log(Level.SEVERE, "Error writing JSON to response",
+                        e);
+                // Refresh on client side
+                connection
+                        .sendMessage(VaadinService
+                                .createCriticalNotificationJSON(null, null,
+                                        null, null));
+            } catch (InvalidUIDLSecurityKeyException e) {
+                getLogger().log(Level.WARNING,
+                        "Invalid security key received from {0}",
+                        resource.getRequest().getRemoteHost());
+                // Refresh on client side
+                connection
+                        .sendMessage(VaadinService
+                                .createCriticalNotificationJSON(null, null,
+                                        null, null));
+            }
+        }
+    };
+
     private static final String LONG_PADDING;
+
     static {
         char[] array = new char[4096];
         Arrays.fill(array, '-');
@@ -60,109 +152,67 @@ public class PushHandler implements AtmosphereHandler {
         this.service = service;
     }
 
-    @Override
-    public void onRequest(AtmosphereResource resource) {
-
+    /**
+     * Find the UI for the atmosphere resource, lock it and invoke the callback.
+     * 
+     * @param resource
+     *            the atmosphere resource for the current request
+     * @param callback
+     *            the push callback to call when a UI is found and locked
+     */
+    private void callWithUi(final AtmosphereResource resource,
+            final PushEventCallback callback) {
         AtmosphereRequest req = resource.getRequest();
         VaadinServletRequest vaadinRequest = new VaadinServletRequest(req,
                 service);
+        VaadinSession session = null;
 
-        VaadinSession session;
+        service.requestStart(vaadinRequest, null);
         try {
-            session = service.findVaadinSession(vaadinRequest);
-        } catch (ServiceException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return;
-        } catch (SessionExpiredException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return;
-        }
-
-        session.lock();
-        try {
-            UI ui = service.findUI(vaadinRequest);
-            if (ui == null) {
-                // This should not happen
-                getLogger().warning(
-                        "Could not find the requested UI in session");
+            try {
+                session = service.findVaadinSession(vaadinRequest);
+            } catch (ServiceException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                return;
+            } catch (SessionExpiredException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
                 return;
             }
-            assert ui.getPushMode().isEnabled();
 
-            if (req.getMethod().equalsIgnoreCase("GET")) {
-                /*
-                 * We received a request to establish a push channel for a UI.
-                 * Associate the AtmosphereResource with the UI and leave the
-                 * connection open by calling resource.suspend(). If there is a
-                 * pending push, send it now.
-                 */
-                getLogger().log(Level.FINER,
-                        "New push connection with transport {0}",
-                        resource.transport());
-                resource.getResponse().setContentType(
-                        "text/plain; charset=UTF-8");
-                if (resource.transport() == TRANSPORT.STREAMING) {
-                    // IE8 requires a longer padding to work properly if the
-                    // initial message is small (#11573). Chrome does not work
-                    // without the original padding...
-                    WebBrowser browser = session.getBrowser();
-                    if (browser.isIE() && browser.getBrowserMajorVersion() == 8) {
-                        resource.padding(LONG_PADDING);
-                    }
+            session.lock();
+            try {
+                VaadinSession.setCurrent(session);
+                // Sets UI.currentInstance
+                final UI ui = service.findUI(vaadinRequest);
+                if (ui == null) {
+                    // This should not happen
+                    getLogger().warning(
+                            "Could not find the requested UI in session");
+                    return;
                 }
-                resource.suspend();
 
-                AtmospherePushConnection connection = new AtmospherePushConnection(
-                        ui);
-                connection.connect(resource);
-
-                ui.setPushConnection(connection);
-            } else if (req.getMethod().equalsIgnoreCase("POST")) {
-                AtmospherePushConnection connection = getConnectionForUI(ui);
-
-                assert connection != null : "Got push from the client "
-                        + "even though the connection does not seem to be "
-                        + "valid. This might happen if a HttpSession is "
-                        + "serialized and deserialized while the push "
-                        + "connection is kept open or if the UI has a "
-                        + "connection of unexpected type.";
-
-                /*
-                 * We received a UIDL request through Atmosphere. If the push
-                 * channel is bidirectional (websockets), the request was sent
-                 * via the same channel. Otherwise, the client used a separate
-                 * AJAX request. Handle the request and send changed UI state
-                 * via the push channel (we do not respond to the request
-                 * directly.)
-                 */
-                try {
-                    new ServerRpcHandler().handleRpc(ui, req.getReader(),
-                            vaadinRequest);
-                    connection.push(false);
-                } catch (JSONException e) {
-                    getLogger().log(Level.SEVERE,
-                            "Error writing JSON to response", e);
-                    // Refresh on client side
-                    connection.sendMessage(VaadinService
-                            .createCriticalNotificationJSON(null, null, null,
-                                    null));
-                } catch (InvalidUIDLSecurityKeyException e) {
-                    getLogger().log(Level.WARNING,
-                            "Invalid security key received from {0}",
-                            resource.getRequest().getRemoteHost());
-                    // Refresh on client side
-                    connection.sendMessage(VaadinService
-                            .createCriticalNotificationJSON(null, null, null,
-                                    null));
-                }
+                callback.run(resource, ui);
+            } catch (IOException e) {
+                getLogger().log(Level.INFO,
+                        "An error occured while writing a push response", e);
+            } finally {
+                session.unlock();
             }
-        } catch (IOException e) {
-            getLogger().log(Level.INFO,
-                    "An error occured while writing a push response", e);
         } finally {
-            session.unlock();
+            service.requestEnd(vaadinRequest, null, session);
+        }
+    }
+
+    @Override
+    public void onRequest(AtmosphereResource resource) {
+        AtmosphereRequest req = resource.getRequest();
+
+        if (req.getMethod().equalsIgnoreCase("GET")) {
+            callWithUi(resource, establishCallback);
+        } else if (req.getMethod().equalsIgnoreCase("POST")) {
+            callWithUi(resource, receiveCallback);
         }
     }
 
