@@ -2147,15 +2147,16 @@ jQuery.atmosphere = function() {
             }
 
             function _prepareCallback(messageBody, state, errorCode, transport) {
-
+            	_response.responseBody = messageBody;
                 if (state == "messageReceived") {
-                    if (_trackMessageSize(messageBody, _request, _response)) return;
+                    if (_trackMessageSize(messageBody, _request, _response)) {
+                    	return;
+                    }
                 }
 
                 _response.transport = transport;
                 _response.status = errorCode;
                 _response.state = state;
-                _response.responseBody = messageBody;
 
                 _invokeCallback();
             }
