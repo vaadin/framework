@@ -40,6 +40,7 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.server.communication.PushConnection;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.ScrollClientRpc;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIServerRpc;
@@ -128,6 +129,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * Scroll X position
      */
     private int scrollLeft = 0;
+
+    private PushMode pushMode;
 
     private UIServerRpc rpc = new UIServerRpc() {
         @Override
@@ -539,6 +542,10 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
         // Actual theme - used for finding CustomLayout templates
         theme = request.getParameter("theme");
+
+        PushMode pushMode = PushMode.valueOf(request.getParameter("v-pushMode")
+                .toUpperCase());
+        setPushMode(pushMode);
 
         getPage().init(request);
 
@@ -1156,7 +1163,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
                 return;
             }
 
-            if (!session.getPushMode().isEnabled()) {
+            if (!getPushMode().isEnabled()) {
                 throw new IllegalStateException("Push not enabled");
             }
 
@@ -1217,4 +1224,45 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     public int getPollInterval() {
         return getState(false).pollInterval;
     }
+
+    /**
+     * Returns the mode of bidirectional ("push") communication that is used in
+     * this UI.
+     * 
+     * @return The push mode.
+     */
+    public PushMode getPushMode() {
+        return pushMode;
+    }
+
+    /**
+     * Sets the mode of bidirectional ("push") communication that should be used
+     * in this UI. Set once on UI creation and cannot be changed afterwards.
+     * 
+     * @param pushMode
+     *            The push mode to use.
+     * 
+     * @throws IllegalArgumentException
+     *             if the argument is null.
+     * @throws IllegalStateException
+     *             if the mode is already set or if push support is not
+     *             available.
+     */
+    public void setPushMode(PushMode pushMode) {
+        if (pushMode == null) {
+            throw new IllegalArgumentException("Push mode cannot be null");
+        }
+        if (this.pushMode != null) {
+            throw new IllegalStateException("Push mode already set");
+        }
+        if (pushMode.isEnabled()) {
+            VaadinSession session = getSession();
+            if (session != null && !session.getService().ensurePushAvailable()) {
+                throw new IllegalStateException(
+                        "Push is not available. See previous log messages for more information.");
+            }
+        }
+        this.pushMode = pushMode;
+    }
+
 }

@@ -89,7 +89,7 @@ public class PushHandler implements AtmosphereHandler {
                         "Could not find the requested UI in session");
                 return;
             }
-            assert session.getPushMode().isEnabled();
+            assert ui.getPushMode().isEnabled();
 
             if (req.getMethod().equalsIgnoreCase("GET")) {
                 /*

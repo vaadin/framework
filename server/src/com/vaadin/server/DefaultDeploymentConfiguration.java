@@ -17,10 +17,7 @@
 package com.vaadin.server;
 
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.atmosphere.util.Version;
 
 import com.vaadin.shared.communication.PushMode;
 
@@ -267,28 +264,6 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
         } catch (IllegalArgumentException e) {
             getLogger().warning(Constants.WARNING_PUSH_MODE_NOT_RECOGNIZED);
             pushMode = PushMode.DISABLED;
-        }
-
-        if (pushMode.isEnabled() && !checkAtomsphereVersion()) {
-            pushMode = PushMode.DISABLED;
-        }
-    }
-
-    private boolean checkAtomsphereVersion() {
-        try {
-            String rawVersion = Version.getRawVersion();
-            if (!Constants.REQUIRED_ATMOSPHERE_VERSION.equals(rawVersion)) {
-                getLogger().log(
-                        Level.WARNING,
-                        Constants.INVALID_ATMOSPHERE_VERSION_WARNING,
-                        new Object[] { Constants.REQUIRED_ATMOSPHERE_VERSION,
-                                rawVersion });
-            }
-            return true;
-        } catch (NoClassDefFoundError e) {
-            getLogger()
-                    .log(Level.SEVERE, Constants.ATMOSPHERE_MISSING_ERROR, e);
-            return false;
         }
     }
 

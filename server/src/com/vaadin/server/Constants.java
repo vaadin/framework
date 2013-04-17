@@ -15,6 +15,8 @@
  */
 package com.vaadin.server;
 
+import com.vaadin.shared.communication.PushMode;
+
 /**
  * TODO Document me!
  * 
@@ -63,13 +65,12 @@ public interface Constants {
             + " Widgetset version: %s\n"
             + "=================================================================";
 
-    static final String REQUIRED_ATMOSPHERE_VERSION = "1.0.12";
+    static final String REQUIRED_ATMOSPHERE_VERSION = "1.0.13";
 
     static final String INVALID_ATMOSPHERE_VERSION_WARNING = "\n"
             + "=================================================================\n"
-            + "With push enabled, Vaadin depends on Atomsphere {0} but\n"
-            + "version {1} was found. This might cause compatibility\n"
-            + "problems.\n"
+            + "Vaadin depends on Atomsphere {0} but version {1} was found.\n"
+            + "This might cause compatibility problems if push is used.\n"
             + "=================================================================";
 
     static final String ATMOSPHERE_MISSING_ERROR = "\n"
@@ -81,7 +82,21 @@ public interface Constants {
             + "If managing dependencies manually, please make sure Atmosphere\n"
             + REQUIRED_ATMOSPHERE_VERSION
             + " is included on the classpath.\n"
-            + "Push will be disabled.\n"
+            + "Will fall back to using "
+            + PushMode.class.getSimpleName()
+            + "."
+            + PushMode.DISABLED.name()
+            + ".\n"
+            + "=================================================================";
+
+    static final String PUSH_NOT_SUPPORTED_ERROR = "\n"
+            + "=================================================================\n"
+            + "Push is not supported for {0}\n"
+            + "Will fall back to using "
+            + PushMode.class.getSimpleName()
+            + "."
+            + PushMode.DISABLED.name()
+            + ".\n"
             + "=================================================================";
 
     static final String URL_PARAMETER_THEME = "theme";

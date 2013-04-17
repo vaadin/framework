@@ -120,6 +120,12 @@
 					url += '&theme=' + encodeURIComponent(theme);
 				}
 				
+				// Tell the UI what pushMode it is configured to use
+				var pushMode = getConfig('pushMode');
+				if (pushMode !== undefined) {
+					url += '&v-pushMode=' + encodeURIComponent(pushMode);
+				}
+				
 				var extraParams = getConfig('extraParams')
 				if (extraParams !== undefined) {
 					url += extraParams;

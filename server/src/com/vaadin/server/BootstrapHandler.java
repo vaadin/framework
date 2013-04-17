@@ -41,6 +41,7 @@ import org.jsoup.parser.Tag;
 
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Version;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
 
 /**
@@ -68,6 +69,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         private String widgetsetName;
         private String themeName;
         private String appId;
+        private PushMode pushMode;
 
         public BootstrapContext(VaadinResponse response,
                 BootstrapFragmentResponse bootstrapResponse) {
@@ -103,6 +105,30 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                 themeName = findAndEscapeThemeName(this);
             }
             return themeName;
+        }
+
+        public PushMode getPushMode() {
+            if (pushMode == null) {
+                UICreateEvent event = new UICreateEvent(getRequest(),
+                        getUIClass());
+
+                pushMode = getBootstrapResponse().getUIProvider().getPushMode(
+                        event);
+                if (pushMode == null) {
+                    pushMode = getRequest().getService()
+                            .getDeploymentConfiguration().getPushMode();
+                }
+
+                if (pushMode.isEnabled()
+                        && !getRequest().getService().ensurePushAvailable()) {
+                    /*
+                     * Fall back if not supported (ensurePushAvailable will log
+                     * information to the developer the first time this happens)
+                     */
+                    pushMode = PushMode.DISABLED;
+                }
+            }
+            return pushMode;
         }
 
         public String getAppId() {
@@ -355,7 +381,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
                                 "position:absolute;width:0;height:0;border:0;overflow:hidden")
                         .attr("src", "javascript:false"));
 
-        if (context.getSession().getPushMode().isEnabled()) {
+        if (context.getPushMode().isEnabled()) {
             // Load client-side dependencies for push support
             fragmentNodes.add(new Element(Tag.valueOf("script"), "").attr(
                     "type", "text/javascript").attr("src",
@@ -496,7 +522,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         appConfig.put("heartbeatInterval", vaadinService
                 .getDeploymentConfiguration().getHeartbeatInterval());
 
-        appConfig.put("pushMode", session.getPushMode().toString());
+        appConfig.put("pushMode", context.getPushMode().toString());
 
         String serviceUrl = getServiceUrl(context);
         if (serviceUrl != null) {

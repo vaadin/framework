@@ -129,8 +129,6 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     private transient Lock lock;
 
-    private PushMode pushMode;
-
     /**
      * Create a new service session tied to a Vaadin service
      * 
@@ -820,12 +818,13 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     public void unlock() {
         assert hasLock();
         try {
-            if (getPushMode() == PushMode.AUTOMATIC
-                    && ((ReentrantLock) getLockInstance()).getHoldCount() == 1) {
+            if (((ReentrantLock) getLockInstance()).getHoldCount() == 1) {
                 // Only push if the reentrant lock will actually be released by
                 // this unlock() invocation.
                 for (UI ui : getUIs()) {
-                    ui.push();
+                    if (ui.getPushMode() == PushMode.AUTOMATIC) {
+                        ui.push();
+                    }
                 }
             }
         } finally {
@@ -1022,39 +1021,6 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     public VaadinService getService() {
         return service;
-    }
-
-    /**
-     * Returns the mode of bidirectional ("push") communication that is used in
-     * this session.
-     * 
-     * @return The push mode.
-     */
-    public PushMode getPushMode() {
-        return pushMode;
-    }
-
-    /**
-     * Sets the mode of bidirectional ("push") communication that should be used
-     * in this session. Set once on session creation and cannot be changed
-     * afterwards.
-     * 
-     * @param pushMode
-     *            The push mode to use.
-     * 
-     * @throws IllegalArgumentException
-     *             if the argument is null.
-     * @throws IllegalStateException
-     *             if the mode is already set.
-     */
-    public void setPushMode(PushMode pushMode) {
-        if (pushMode == null) {
-            throw new IllegalArgumentException("Push mode cannot be null");
-        }
-        if (this.pushMode != null) {
-            throw new IllegalStateException("Push mode already set");
-        }
-        this.pushMode = pushMode;
     }
 
     /**

@@ -103,6 +103,13 @@ public abstract class VaadinService implements Serializable {
     private final Iterable<RequestHandler> requestHandlers;
 
     /**
+     * Keeps track of whether a warning about missing push support has already
+     * been logged. This is used to avoid spamming the log with the same message
+     * every time a new UI is bootstrapped.
+     */
+    private boolean pushWarningEmitted = false;
+
+    /**
      * Creates a new vaadin service based on a deployment configuration
      * 
      * @param deploymentConfiguration
@@ -664,7 +671,6 @@ public abstract class VaadinService implements Serializable {
         session.setLocale(locale);
         session.setConfiguration(getDeploymentConfiguration());
         session.setCommunicationManager(new LegacyCommunicationManager(session));
-        session.setPushMode(getDeploymentConfiguration().getPushMode());
 
         ServletPortletHelper.initDefaultUIProvider(session, this);
         onVaadinSessionStarted(request, session);
@@ -1453,6 +1459,26 @@ public abstract class VaadinService implements Serializable {
             String details, String url) throws IOException {
         writeStringResponse(response, JsonConstants.JSON_CONTENT_TYPE,
                 createCriticalNotificationJSON(caption, message, details, url));
+    }
+
+    /**
+     * Enables push if push support is available and push has not yet been
+     * enabled.
+     * 
+     * If push support is not available, a warning explaining the situation will
+     * be logged at least the first time this method is invoked.
+     * 
+     * @return <code>true</code> if push can be used; <code>false</code> if push
+     *         is not available.
+     */
+    public boolean ensurePushAvailable() {
+        if (!pushWarningEmitted) {
+            pushWarningEmitted = true;
+            getLogger().log(Level.WARNING, Constants.PUSH_NOT_SUPPORTED_ERROR,
+                    getClass().getSimpleName());
+        }
+        // Not supported by default for now, sublcasses may override
+        return false;
     }
 
 }
