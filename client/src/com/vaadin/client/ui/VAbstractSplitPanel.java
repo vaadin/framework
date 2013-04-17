@@ -499,6 +499,9 @@ public class VAbstractSplitPanel extends ComplexPanel {
 
     /** For internal use only. May be removed or replaced in the future. */
     public void setFirstWidget(Widget w) {
+        if (firstChild == w) {
+            return;
+        }
         if (firstChild != null) {
             firstChild.removeFromParent();
         }
@@ -510,6 +513,9 @@ public class VAbstractSplitPanel extends ComplexPanel {
 
     /** For internal use only. May be removed or replaced in the future. */
     public void setSecondWidget(Widget w) {
+        if (secondChild == w) {
+            return;
+        }
         if (secondChild != null) {
             secondChild.removeFromParent();
         }
