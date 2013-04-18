@@ -19,8 +19,13 @@ package com.vaadin.client.communication;
 import java.util.ArrayList;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.user.client.Command;
 import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.ResourceLoader;
+import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
+import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.VConsole;
+import com.vaadin.shared.ApplicationConstants;
 
 /**
  * Represents the client-side endpoint of a bidirectional ("push") communication
@@ -326,4 +331,43 @@ public class PushConnection {
     /*-{
        $wnd.jQueryVaadin.atmosphere.unsubscribeUrl(url);
     }-*/;
+
+    private static native boolean isAtmosphereLoaded()
+    /*-{
+        return $wnd.jQueryVaadin != undefined;  
+    }-*/;
+
+    /**
+     * Runs the provided command when the Atmosphere javascript has been loaded.
+     * If the script has already been loaded, the command is run immediately.
+     * 
+     * @param command
+     *            the command to run when Atmosphere has been loaded.
+     */
+    public void runWhenAtmosphereLoaded(final Command command) {
+        assert command != null;
+
+        if (isAtmosphereLoaded()) {
+            command.execute();
+        } else {
+            VConsole.log("Loading " + ApplicationConstants.VAADIN_PUSH_JS);
+            ResourceLoader.get().loadScript(
+                    connection.getConfiguration().getVaadinDirUrl()
+                            + ApplicationConstants.VAADIN_PUSH_JS,
+                    new ResourceLoadListener() {
+                        @Override
+                        public void onLoad(ResourceLoadEvent event) {
+                            VConsole.log(ApplicationConstants.VAADIN_PUSH_JS
+                                    + " loaded");
+                            command.execute();
+                        }
+
+                        @Override
+                        public void onError(ResourceLoadEvent event) {
+                            VConsole.log(event.getResourceUrl()
+                                    + " could not be loaded. Push will not work.");
+                        }
+                    });
+        }
+    }
 }

@@ -72,4 +72,10 @@ public class ApplicationConstants implements Serializable {
      * </p>
      */
     public static final String VAADIN_DIR_URL = "vaadinDir";
+
+    /**
+     * The name of the javascript containing push support. The file is located
+     * in the VAADIN directory.
+     */
+    public static final String VAADIN_PUSH_JS = "vaadinPush.js";
 }

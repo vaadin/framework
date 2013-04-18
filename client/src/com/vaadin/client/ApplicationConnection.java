@@ -3402,23 +3402,27 @@ public class ApplicationConnection {
      */
     public void setPushEnabled(boolean enabled) {
         if (enabled && push == null) {
-            /*
-             * TODO support for loading atmosphere.js on demand will be added in
-             * another commit.
-             */
-            push = GWT.create(PushConnection.class);
+
+            final PushConnection push = GWT.create(PushConnection.class);
             push.init(this);
 
-            final String pushUri = addGetParameters(
-                    translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
-                            + ApplicationConstants.PUSH_PATH + '/'),
-                    UIConstants.UI_ID_PARAMETER + "="
-                            + getConfiguration().getUIId());
-
-            Scheduler.get().scheduleDeferred(new Command() {
+            push.runWhenAtmosphereLoaded(new Command() {
                 @Override
                 public void execute() {
-                    push.connect(pushUri);
+                    ApplicationConnection.this.push = push;
+
+                    final String pushUri = addGetParameters(
+                            translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
+                                    + ApplicationConstants.PUSH_PATH + '/'),
+                            UIConstants.UI_ID_PARAMETER + "="
+                                    + getConfiguration().getUIId());
+
+                    Scheduler.get().scheduleDeferred(new Command() {
+                        @Override
+                        public void execute() {
+                            push.connect(pushUri);
+                        }
+                    });
                 }
             });
         } else if (!enabled && push != null) {

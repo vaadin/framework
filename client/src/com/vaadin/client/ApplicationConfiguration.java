@@ -261,7 +261,16 @@ public class ApplicationConfiguration implements EntryPoint {
     }
 
     public String getThemeUri() {
-        return vaadinDirUrl + "themes/" + getThemeName();
+        return getVaadinDirUrl() + "themes/" + getThemeName();
+    }
+
+    /**
+     * Gets the URL of the VAADIN directory on the server.
+     * 
+     * @return the URL of the VAADIN directory
+     */
+    public String getVaadinDirUrl() {
+        return vaadinDirUrl;
     }
 
     public void setAppId(String appId) {
