@@ -35,4 +35,9 @@ public interface PushConnection {
      */
     public void push();
 
+    /**
+     * Disconnects the connection.
+     */
+    public void disconnect();
+
 }

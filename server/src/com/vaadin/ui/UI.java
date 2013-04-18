@@ -130,8 +130,6 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      */
     private int scrollLeft = 0;
 
-    private PushMode pushMode;
-
     private UIServerRpc rpc = new UIServerRpc() {
         @Override
         public void click(MouseEventDetails mouseDetails) {
@@ -1189,11 +1187,19 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * Sets the internal push connection object used by this UI. This method
      * should only be called by the framework.
      */
-    public void setPushConnection(PushConnection connection) {
-        assert pushConnection == null;
-        assert connection != null;
-        pushConnection = connection;
-        if (hasPendingPush) {
+    public void setPushConnection(PushConnection pushConnection) {
+        assert (pushConnection != null) == (getPushMode().isEnabled());
+
+        if (pushConnection == this.pushConnection) {
+            return;
+        }
+
+        if (this.pushConnection != null) {
+            this.pushConnection.disconnect();
+        }
+
+        this.pushConnection = pushConnection;
+        if (pushConnection != null && hasPendingPush) {
             hasPendingPush = false;
             pushConnection.push();
         }
@@ -1232,12 +1238,12 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * @return The push mode.
      */
     public PushMode getPushMode() {
-        return pushMode;
+        return getState(false).pushMode;
     }
 
     /**
      * Sets the mode of bidirectional ("push") communication that should be used
-     * in this UI. Set once on UI creation and cannot be changed afterwards.
+     * in this UI.
      * 
      * @param pushMode
      *            The push mode to use.
@@ -1245,16 +1251,13 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * @throws IllegalArgumentException
      *             if the argument is null.
      * @throws IllegalStateException
-     *             if the mode is already set or if push support is not
-     *             available.
+     *             if push support is not available.
      */
     public void setPushMode(PushMode pushMode) {
         if (pushMode == null) {
             throw new IllegalArgumentException("Push mode cannot be null");
         }
-        if (this.pushMode != null) {
-            throw new IllegalStateException("Push mode already set");
-        }
+
         if (pushMode.isEnabled()) {
             VaadinSession session = getSession();
             if (session != null && !session.getService().ensurePushAvailable()) {
@@ -1262,7 +1265,13 @@ public abstract class UI extends AbstractSingleComponentContainer implements
                         "Push is not available. See previous log messages for more information.");
             }
         }
-        this.pushMode = pushMode;
+
+        /*
+         * Client-side will open a new connection or disconnect the old
+         * connection, so there's nothing more to do on the server at this
+         * point.
+         */
+        getState().pushMode = pushMode;
     }
 
 }

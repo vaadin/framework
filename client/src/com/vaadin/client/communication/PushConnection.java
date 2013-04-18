@@ -34,15 +34,46 @@ import com.vaadin.client.VConsole;
  */
 public class PushConnection {
 
+    protected enum State {
+        /**
+         * Connection is newly created and has not yet been started.
+         */
+        NEW,
+
+        /**
+         * Opening request has been sent, but still waiting for confirmation
+         */
+        CONNECT_PENDING,
+
+        /**
+         * Connection is open and ready to use.
+         */
+        CONNECTED,
+
+        /**
+         * Connection was disconnected while the connection was pending. Wait
+         * for the connection to get established before closing it. No new
+         * messages are accepted, but pending messages will still be delivered.
+         */
+        DISCONNECT_PENDING,
+
+        /**
+         * Connection has been disconnected and should not be used any more.
+         */
+        DISCONNECTED;
+    }
+
     private ApplicationConnection connection;
 
     private JavaScriptObject socket;
 
     private ArrayList<String> messageQueue = new ArrayList<String>();
 
-    private boolean connected = false;
+    private State state = State.NEW;
 
     private AtmosphereConfiguration config;
+
+    private String uri;
 
     public PushConnection() {
     }
@@ -58,17 +89,33 @@ public class PushConnection {
     }
 
     public void connect(String uri) {
+        if (state != State.NEW) {
+            throw new IllegalStateException(
+                    "Connection has already been connected.");
+        }
+
+        state = State.CONNECT_PENDING;
+        // uri is needed to identify the right connection when closing
+        this.uri = uri;
         VConsole.log("Establishing push connection");
         socket = doConnect(uri, getConfig());
     }
 
     public void push(String message) {
-        if (!connected) {
+        switch (state) {
+        case CONNECT_PENDING:
             VConsole.log("Queuing push message: " + message);
             messageQueue.add(message);
-        } else {
+            break;
+        case CONNECTED:
             VConsole.log("Sending push message: " + message);
             doPush(socket, message);
+            break;
+        case NEW:
+            throw new IllegalStateException("Can not push before connecting");
+        case DISCONNECT_PENDING:
+        case DISCONNECTED:
+            throw new IllegalStateException("Can not push after disconnecting");
         }
     }
 
@@ -82,11 +129,54 @@ public class PushConnection {
     protected void onOpen(AtmosphereResponse response) {
         VConsole.log("Push connection established using "
                 + response.getTransport());
-        connected = true;
         for (String message : messageQueue) {
-            push(message);
+            doPush(socket, message);
         }
         messageQueue.clear();
+
+        switch (state) {
+        case CONNECT_PENDING:
+            state = State.CONNECTED;
+            break;
+        case DISCONNECT_PENDING:
+            // Set state to connected to make disconnect close the connection
+            state = State.CONNECTED;
+            disconnect();
+            break;
+        case CONNECTED:
+            // IE likes to open the same connection multiple times, just ignore
+            break;
+        default:
+            throw new IllegalStateException(
+                    "Got onOpen event when conncetion state is " + state
+                            + ". This should never happen.");
+        }
+    }
+
+    /**
+     * Closes the push connection.
+     */
+    public void disconnect() {
+        switch (state) {
+        case NEW:
+            // Nothing to close up, just update state
+            state = State.DISCONNECTED;
+            break;
+        case CONNECT_PENDING:
+            // Wait until connection is established before closing it
+            state = State.DISCONNECT_PENDING;
+            break;
+        case CONNECTED:
+            // Normal disconnect
+            VConsole.log("Closing push connection");
+            doDisconnect(uri);
+            state = State.DISCONNECTED;
+            break;
+        case DISCONNECT_PENDING:
+        case DISCONNECTED:
+            // Nothing more to do
+            break;
+        }
     }
 
     protected void onMessage(AtmosphereResponse response) {
@@ -230,5 +320,10 @@ public class PushConnection {
     private native void doPush(JavaScriptObject socket, String message)
     /*-{
        socket.push(message);
+    }-*/;
+
+    private static native void doDisconnect(String url)
+    /*-{
+       $wnd.jQueryVaadin.atmosphere.unsubscribeUrl(url);
     }-*/;
 }

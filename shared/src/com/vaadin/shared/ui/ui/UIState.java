@@ -17,12 +17,15 @@ package com.vaadin.shared.ui.ui;
 
 import java.io.Serializable;
 
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.TabIndexState;
 
 public class UIState extends TabIndexState {
     public TooltipConfiguration tooltipConfiguration = new TooltipConfiguration();
     public LoadingIndicatorConfiguration loadingIndicatorConfiguration = new LoadingIndicatorConfiguration();
     public int pollInterval = -1;
+
+    public PushMode pushMode = PushMode.DISABLED;
 
     public static class LoadingIndicatorConfiguration implements Serializable {
         public int initialDelay = 300;

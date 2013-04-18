@@ -117,4 +117,12 @@ public class AtmospherePushConnection implements Serializable, PushConnection {
     protected AtmosphereResource getResource() {
         return resource;
     }
+
+    @Override
+    public void disconnect() {
+        resource.resume();
+        assert !resource.getBroadcaster().getAtmosphereResources()
+                .contains(resource);
+        resource = null;
+    }
 }

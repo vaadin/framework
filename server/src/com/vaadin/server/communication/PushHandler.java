@@ -38,6 +38,7 @@ import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WebBrowser;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
 
 /**
@@ -138,6 +139,46 @@ public class PushHandler implements AtmosphereHandler {
         }
     };
 
+    /**
+     * Callback used when a connection is closed by the client.
+     */
+    PushEventCallback disconnectCallback = new PushEventCallback() {
+        @Override
+        public void run(AtmosphereResource resource, UI ui) throws IOException {
+            PushMode pushMode = ui.getPushMode();
+            AtmospherePushConnection pushConnection = getConnectionForUI(ui);
+
+            String id = resource.uuid();
+
+            if (pushConnection == null) {
+                getLogger()
+                        .log(Level.WARNING,
+                                "Could not find push connection to close: {0} with transport {1}",
+                                new Object[] { id, resource.transport() });
+            } else {
+                if (!pushMode.isEnabled()) {
+                    /*
+                     * The client is expected to close the connection after push
+                     * mode has been set to disabled, just clean up some stuff
+                     * and be done with it
+                     */
+                    getLogger().log(Level.FINEST,
+                            "Connection closed for resource {0}", id);
+                } else {
+                    /*
+                     * Unexpected cancel, e.g. if the user closes the browser
+                     * tab.
+                     */
+                    getLogger()
+                            .log(Level.FINE,
+                                    "Connection unexpectedly closed for resource {0} with transport {1}",
+                                    new Object[] { id, resource.transport() });
+                }
+                ui.setPushConnection(null);
+            }
+        }
+    };
+
     private static final String LONG_PADDING;
 
     static {
@@ -234,10 +275,7 @@ public class PushHandler implements AtmosphereHandler {
 
         String id = resource.uuid();
         if (event.isCancelled()) {
-            // The client closed the connection.
-            // TODO Do some cleanup
-            getLogger().log(Level.FINER, "Connection closed for resource {0}",
-                    id);
+            callWithUi(resource, disconnectCallback);
         } else if (event.isResuming()) {
             // A connection that was suspended earlier was resumed (committed to
             // the client.) Should only happen if the transport is JSONP or

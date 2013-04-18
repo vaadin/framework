@@ -588,6 +588,10 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         if (stateChangeEvent.hasPropertyChanged("pollInterval")) {
             configurePolling();
         }
+
+        if (stateChangeEvent.hasPropertyChanged("pushMode")) {
+            getConnection().setPushEnabled(getState().pushMode.isEnabled());
+        }
     }
 
     private void configurePolling() {

@@ -455,7 +455,7 @@ public class ApplicationConnection {
 
         scheduleHeartbeat();
 
-        initializePush();
+        setPushEnabled(getConfiguration().getPushMode().isEnabled());
 
         Window.addWindowClosingHandler(new ClosingHandler() {
             @Override
@@ -3393,8 +3393,19 @@ public class ApplicationConnection {
                 focusedElement);
     }
 
-    private void initializePush() {
-        if (getConfiguration().getPushMode().isEnabled()) {
+    /**
+     * Sets the status for the push connection.
+     * 
+     * @param enabled
+     *            <code>true</code> to enable the push connection;
+     *            <code>false</code> to disable the push connection.
+     */
+    public void setPushEnabled(boolean enabled) {
+        if (enabled && push == null) {
+            /*
+             * TODO support for loading atmosphere.js on demand will be added in
+             * another commit.
+             */
             push = GWT.create(PushConnection.class);
             push.init(this);
 
@@ -3410,6 +3421,9 @@ public class ApplicationConnection {
                     push.connect(pushUri);
                 }
             });
+        } else if (!enabled && push != null) {
+            push.disconnect();
+            push = null;
         }
     }
 
