@@ -133,10 +133,16 @@ public class VUI extends SimplePanel implements ResizeHandler,
             // Send the location to the server if the fragment has changed
             // and flush active connectors in UI.
             if (!newFragment.equals(currentFragment) && connection != null) {
+
+                // Ensure the fragment is properly encoded in all browsers
+                // (#10769)
+                String location = Window.Location.createUrlBuilder()
+                        .buildString();
+
                 currentFragment = newFragment;
                 connection.flushActiveConnector();
                 connection.updateVariable(id, UIConstants.LOCATION_VARIABLE,
-                        Window.Location.getHref(), true);
+                        location, true);
             }
         }
     };

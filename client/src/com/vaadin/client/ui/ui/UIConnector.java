@@ -28,6 +28,7 @@ import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -303,8 +304,9 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                     .getStringAttribute(UIConstants.LOCATION_VARIABLE);
             int fragmentIndex = location.indexOf('#');
             if (fragmentIndex >= 0) {
-                getWidget().currentFragment = location
-                        .substring(fragmentIndex + 1);
+                // Decode fragment to avoid double encoding (#10769)
+                getWidget().currentFragment = URL.decodePathSegment(location
+                        .substring(fragmentIndex + 1));
             }
             if (!getWidget().currentFragment.equals(History.getToken())) {
                 History.newItem(getWidget().currentFragment, true);
