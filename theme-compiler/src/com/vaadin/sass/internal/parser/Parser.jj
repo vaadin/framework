@@ -2331,7 +2331,7 @@ LexicalUnitImpl nonVariableTerm(LexicalUnitImpl prev) :{LexicalUnitImpl result
 	  LexicalUnitImpl.createString(n.beginLine, n.beginColumn, prev,
 				       convertStringIndex(n.image, 1, 
 							  n.image.length() -1));}
-       | (< DOT >{ s+="."; })?n=<IDENT> 
+  | (< DOT >{ s+="."; })?(n=<IDENT> | n=<TO> | n=<THROUGH> | n=<FROM>) 
       { s += convertIdent(n.image);
 	if ("inherit".equals(s)) {
 	    result = LexicalUnitImpl.createInherit(n.beginLine, n.beginColumn,
