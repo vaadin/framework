@@ -21,6 +21,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 import com.vaadin.server.widgetsetutils.ClassPathExplorer;
@@ -89,8 +93,29 @@ public class SASSAddonImportFileCreator {
             printStream.println();
 
             Map<String, URL> addonThemes = info.getAddonStyles();
-            for (String path : addonThemes.keySet()) {
+
+            // Sort addon styles so that CSS imports are first and SCSS import
+            // last
+            List<String> paths = new ArrayList<String>(addonThemes.keySet());
+            Collections.sort(paths, new Comparator<String>() {
+
+                @Override
+                public int compare(String path1, String path2) {
+                    if (path1.toLowerCase().endsWith(".css")
+                            && path2.toLowerCase().endsWith(".scss")) {
+                        return -1;
+                    }
+                    if (path1.toLowerCase().endsWith(".scss")
+                            && path2.toLowerCase().endsWith(".css")) {
+                        return 1;
+                    }
+                    return 0;
+                }
+            });
+
+            for (String path : paths) {
                 addImport(printStream, path, addonThemes.get(path));
+                printStream.println();
             }
 
         } catch (FileNotFoundException e) {
