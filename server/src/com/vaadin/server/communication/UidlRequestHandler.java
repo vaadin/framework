@@ -111,7 +111,6 @@ public class UidlRequestHandler extends SynchronizedRequestHandler {
 
             writeUidl(request, response, uI, stringWriter, repaintAll,
                     analyzeLayouts);
-            postHandleRequest(uI);
         } catch (JSONException e) {
             getLogger().log(Level.SEVERE, "Error writing JSON to response", e);
             // Refresh on client side
@@ -176,19 +175,6 @@ public class UidlRequestHandler extends SynchronizedRequestHandler {
         new UidlWriter().write(ui, writer, repaintAll, analyzeLayouts, false);
 
         closeJsonMessage(writer);
-    }
-
-    /**
-     * Method called after the paint phase while still being synchronized on the
-     * session
-     * 
-     * @param uI
-     * 
-     */
-    protected void postHandleRequest(UI uI) {
-        // Remove connectors that have been detached from the session during
-        // handling of the request
-        uI.getConnectorTracker().cleanConnectorMap();
     }
 
     protected void closeJsonMessage(Writer outWriter) throws IOException {
