@@ -447,7 +447,10 @@ public class ComponentLocator {
             return null;
         }
         String elementId = w.getElement().getId();
-        if (elementId != null && !elementId.isEmpty()) {
+        if (elementId != null && !elementId.isEmpty()
+                && !elementId.startsWith("gwt-uid-")) {
+            // Use PID_S+id if the user has set an id but do not use it for auto
+            // generated id:s as these might not be consistent
             return "PID_S" + elementId;
         } else if (w instanceof VUI) {
             return "";
