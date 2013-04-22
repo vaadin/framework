@@ -263,6 +263,18 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
 
     }
 
+    @Override
+    public void destroy() {
+    	// perform vaadin portlet-specific destroy actions...
+    	
+    	// allow subclass to get into the destroy...
+    	portletDestroyed();
+    }
+    
+    protected void portletDestroyed() {
+    	
+    }
+    
     protected DeploymentConfiguration createDeploymentConfiguration(
             Properties initParameters) {
         return new DefaultDeploymentConfiguration(getClass(), initParameters);

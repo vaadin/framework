@@ -304,7 +304,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         } else {
             components.add(position, c);
 
-            Tab tab = new TabSheetTabImpl(caption, icon);
+            Tab tab = createTab(caption, icon);
 
             tabs.put(c, tab);
             if (selected == null) {
@@ -317,6 +317,20 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         }
     }
 
+    /**
+     * createTab: Override point to allow subclasses to create the tab implementation.
+     * @param caption
+     *            the caption to be set for the component and used rendered in
+     *            tab bar
+     * @param icon
+     *            the icon to be set for the component and used rendered in tab
+     *            bar
+     * @return Tab The new tab instance.
+     */
+    protected Tab createTab(final String caption, final Resource icon) {
+    	return new TabSheetTabImpl(caption, icon);
+    }
+    
     /**
      * Adds a new tab into TabSheet. Component caption and icon are copied to
      * the tab metadata at creation time.
@@ -715,7 +729,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             // Tab associations are not changed, but metadata is swapped between
             // the instances
             // TODO Should reassociate the instances instead?
-            Tab tmp = new TabSheetTabImpl(null, null);
+            Tab tmp = createTab(null, null);
             copyTabMetadata(newTab, tmp);
             copyTabMetadata(oldTab, newTab);
             copyTabMetadata(tmp, oldTab);
@@ -1307,7 +1321,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * @param to
      *            The tab to which copy the data.
      */
-    private static void copyTabMetadata(Tab from, Tab to) {
+    protected void copyTabMetadata(Tab from, Tab to) {
         to.setCaption(from.getCaption());
         to.setIcon(from.getIcon());
         to.setDescription(from.getDescription());
