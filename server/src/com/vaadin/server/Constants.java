@@ -99,6 +99,19 @@ public interface Constants {
             + ".\n"
             + "=================================================================";
 
+    public static final String WARNING_LEGACY_PROPERTY_TOSTRING = "You are using toString() instead of getValue() to get the value for a Property of type {0}"
+            + ". This is strongly discouraged and only provided for backwards compatibility with Vaadin 6. "
+            + "To disable this warning message and retain the behavior, set the init parameter \""
+            + Constants.SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING
+            + "\" to \"true\". To disable the legacy functionality, set \""
+            + Constants.SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING
+            + "\" to false."
+            + " (Note that your debugger might call toString() and trigger this message).";
+
+    static final String WARNING_UNKNOWN_LEGACY_PROPERTY_TOSTRING_VALUE = "Unknown value '{0}' for parameter "
+            + Constants.SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING
+            + ". Supported values are 'false','warning','true'";
+
     static final String URL_PARAMETER_THEME = "theme";
 
     static final String SERVLET_PARAMETER_PRODUCTION_MODE = "productionMode";
@@ -108,6 +121,7 @@ public interface Constants {
     static final String SERVLET_PARAMETER_CLOSE_IDLE_SESSIONS = "closeIdleSessions";
     static final String SERVLET_PARAMETER_PUSH_MODE = "pushMode";
     static final String SERVLET_PARAMETER_UI_PROVIDER = "UIProvider";
+    static final String SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING = "legacyPropertyToString";
 
     // Configurable parameter names
     static final String PARAMETER_VAADIN_RESOURCES = "Resources";

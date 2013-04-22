@@ -50,6 +50,10 @@
 		<servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
 		<!-- Non-default values for testing purposes -->
 		<init-param>
+			<param-name>legacyPropertyToString</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<init-param>
 			<param-name>heartbeatInterval</param-name>
 			<param-value>301</param-value>
 		</init-param>

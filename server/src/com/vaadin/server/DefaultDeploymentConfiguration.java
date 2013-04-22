@@ -17,6 +17,7 @@
 package com.vaadin.server;
 
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.shared.communication.PushMode;
@@ -37,6 +38,7 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
     private boolean closeIdleSessions;
     private PushMode pushMode;
     private final Class<?> systemPropertyBaseClass;
+    private LegacyProperyToStringMode legacyPropertyToStringMode;
 
     /**
      * Create a new deployment configuration instance.
@@ -59,6 +61,26 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
         checkHeartbeatInterval();
         checkCloseIdleSessions();
         checkPushMode();
+        checkLegacyPropertyToString();
+    }
+
+    private void checkLegacyPropertyToString() {
+        String param = getApplicationOrSystemProperty(
+                Constants.SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING, "warning");
+        if ("true".equals(param)) {
+            legacyPropertyToStringMode = LegacyProperyToStringMode.ENABLED;
+        } else if ("false".equals(param)) {
+            legacyPropertyToStringMode = LegacyProperyToStringMode.DISABLED;
+        } else {
+            if (!"warning".equals(param)) {
+                getLogger()
+                        .log(Level.WARNING,
+                                Constants.WARNING_UNKNOWN_LEGACY_PROPERTY_TOSTRING_VALUE,
+                                param);
+            }
+            legacyPropertyToStringMode = LegacyProperyToStringMode.WARNING;
+
+        }
     }
 
     @Override
@@ -270,4 +292,11 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
     private Logger getLogger() {
         return Logger.getLogger(getClass().getName());
     }
+
+    @Override
+    @Deprecated
+    public LegacyProperyToStringMode getLegacyPropertyToStringMode() {
+        return legacyPropertyToStringMode;
+    }
+
 }

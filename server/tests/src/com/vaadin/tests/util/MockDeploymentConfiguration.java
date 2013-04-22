@@ -18,7 +18,9 @@ public class MockDeploymentConfiguration implements DeploymentConfiguration {
     private PushMode pushMode = PushMode.DISABLED;
     private Properties initParameters = new Properties();
     private Map<String, String> applicationOrSystemProperty = new HashMap<String, String>();
+    private LegacyProperyToStringMode legacyPropertyToStringMode = LegacyProperyToStringMode.DISABLED;
 
+    @Override
     public boolean isProductionMode() {
         return productionMode;
     }
@@ -27,6 +29,7 @@ public class MockDeploymentConfiguration implements DeploymentConfiguration {
         this.productionMode = productionMode;
     }
 
+    @Override
     public boolean isXsrfProtectionEnabled() {
         return xsrfProtectionEnabled;
     }
@@ -35,6 +38,7 @@ public class MockDeploymentConfiguration implements DeploymentConfiguration {
         this.xsrfProtectionEnabled = xsrfProtectionEnabled;
     }
 
+    @Override
     public int getResourceCacheTime() {
         return resourceCacheTime;
     }
@@ -43,6 +47,7 @@ public class MockDeploymentConfiguration implements DeploymentConfiguration {
         this.resourceCacheTime = resourceCacheTime;
     }
 
+    @Override
     public int getHeartbeatInterval() {
         return heartbeatInterval;
     }
@@ -51,6 +56,7 @@ public class MockDeploymentConfiguration implements DeploymentConfiguration {
         this.heartbeatInterval = heartbeatInterval;
     }
 
+    @Override
     public boolean isCloseIdleSessions() {
         return closeIdleSessions;
     }
@@ -59,6 +65,7 @@ public class MockDeploymentConfiguration implements DeploymentConfiguration {
         this.closeIdleSessions = closeIdleSessions;
     }
 
+    @Override
     public PushMode getPushMode() {
         return pushMode;
     }
@@ -67,6 +74,7 @@ public class MockDeploymentConfiguration implements DeploymentConfiguration {
         this.pushMode = pushMode;
     }
 
+    @Override
     public Properties getInitParameters() {
         return initParameters;
     }
@@ -87,6 +95,17 @@ public class MockDeploymentConfiguration implements DeploymentConfiguration {
         } else {
             return defaultValue;
         }
+    }
+
+    @Override
+    @Deprecated
+    public LegacyProperyToStringMode getLegacyPropertyToStringMode() {
+        return legacyPropertyToStringMode;
+    }
+
+    public void setLegacyPropertyToStringMode(
+            LegacyProperyToStringMode legacyPropertyToStringMode) {
+        this.legacyPropertyToStringMode = legacyPropertyToStringMode;
     }
 
 }

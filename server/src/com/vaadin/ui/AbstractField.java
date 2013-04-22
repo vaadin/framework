@@ -25,13 +25,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Logger;
 
 import com.vaadin.data.Buffered;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validatable;
 import com.vaadin.data.Validator;
 import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.data.util.LegacyPropertyHelper;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.data.util.converter.ConverterUtil;
@@ -74,9 +74,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         Property.ReadOnlyStatusChangeNotifier, Action.ShortcutNotifier {
 
     /* Private members */
-
-    private static final Logger logger = Logger.getLogger(AbstractField.class
-            .getName());
 
     /**
      * Value of the abstract field.
@@ -369,6 +366,39 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     @Override
     public boolean isBuffered() {
         return buffered;
+    }
+
+    /**
+     * Returns a string representation of this object. The returned string
+     * representation depends on if the legacy Property toString mode is enabled
+     * or disabled.
+     * <p>
+     * If legacy Property toString mode is enabled, returns the value of this
+     * <code>Field</code> converted to a String.
+     * </p>
+     * <p>
+     * If legacy Property toString mode is disabled, the string representation
+     * has no special meaning
+     * </p>
+     * 
+     * @see LegacyPropertyHelper#isLegacyToStringEnabled()
+     * 
+     * @return A string representation of the value value stored in the Property
+     *         or a string representation of the Property object.
+     * @deprecated As of 7.0. Use {@link #getValue()} to get the value of the
+     *             field, {@link #getConvertedValue()} to get the field value
+     *             converted to the data model type or
+     *             {@link #getPropertyDataSource()} .getValue() to get the value
+     *             of the data source.
+     */
+    @Deprecated
+    @Override
+    public String toString() {
+        if (!LegacyPropertyHelper.isLegacyToStringEnabled()) {
+            return super.toString();
+        } else {
+            return LegacyPropertyHelper.legacyPropertyToString(this);
+        }
     }
 
     /* Property interface implementation */
