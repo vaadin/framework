@@ -869,7 +869,7 @@ public class ApplicationConnection {
      * @param jsonText
      * @param statusCode
      */
-    protected void handleJSONText(String jsonText, int statusCode) {
+    private void handleJSONText(String jsonText, int statusCode) {
         final Date start = new Date();
         final ValueMap json;
         try {
