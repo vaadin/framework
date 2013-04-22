@@ -67,7 +67,7 @@
 
         <dependency org="commons-codec" name="commons-codec"
             rev="1.5" conf="build,ide->default" />
-        <dependency org="commons-io" name="commons-io" rev="1.4"
+        <dependency org="commons-io" name="commons-io" rev="2.2"
             conf="build,ide->default" />
         <!-- Mainly for SQLContainer tests -->
         <dependency org="org.hsqldb" name="hsqldb" rev="2.2.6"
