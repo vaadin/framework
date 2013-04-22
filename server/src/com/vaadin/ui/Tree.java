@@ -72,6 +72,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
     /* Private members */
 
+    private static final String NULL_ALT_EXCEPTION_MESSAGE = "Parameter 'altText' needs to be non null";
+
     /**
      * Item icons alt texts.
      */
@@ -182,7 +184,7 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      *            the icon to use or null.
      * 
      * @param altText
-     *            String with the alternative text for the icon
+     *            the alternative text for the icon
      */
     public void setItemIcon(Object itemId, Resource icon, String altText) {
         if (itemId != null) {
@@ -191,12 +193,31 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             if (icon == null) {
                 itemIconAlts.remove(itemId);
             } else if (altText == null) {
-                throw new IllegalArgumentException(
-                        "Parameter 'altText' needs to be non null");
+                throw new IllegalArgumentException(NULL_ALT_EXCEPTION_MESSAGE);
             } else {
                 itemIconAlts.put(itemId, altText);
             }
             markAsDirty();
+        }
+    }
+
+    /**
+     * Set the alternate text for an item.
+     * 
+     * Used when the item has an icon.
+     * 
+     * @param itemId
+     *            the id of the item to be assigned an icon.
+     * @param altText
+     *            the alternative text for the icon
+     */
+    public void setItemIconAlternateText(Object itemId, String altText) {
+        if (itemId != null) {
+            if (altText == null) {
+                throw new IllegalArgumentException(NULL_ALT_EXCEPTION_MESSAGE);
+            } else {
+                itemIconAlts.put(itemId, altText);
+            }
         }
     }
 

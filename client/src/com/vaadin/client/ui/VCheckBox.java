@@ -22,6 +22,9 @@ import com.google.gwt.user.client.Event;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Util;
 import com.vaadin.client.VTooltip;
+import com.vaadin.client.ui.aria.AriaHelper;
+import com.vaadin.client.ui.aria.HandlesAriaInvalid;
+import com.vaadin.client.ui.aria.HandlesAriaRequired;
 
 public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
         Field, HandlesAriaInvalid, HandlesAriaRequired {
@@ -80,12 +83,12 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
     }
 
     @Override
-    public void setRequired(boolean required) {
+    public void setAriaRequired(boolean required) {
         AriaHelper.handleInputRequired(getCheckBoxElement(), required);
     }
 
     @Override
-    public void setInvalid(boolean invalid) {
+    public void setAriaInvalid(boolean invalid) {
         AriaHelper.handleInputInvalid(getCheckBoxElement(), invalid);
     }
 }

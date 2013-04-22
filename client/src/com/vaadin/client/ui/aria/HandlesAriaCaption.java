@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.client.ui;
+package com.vaadin.client.ui.aria;
 
 import com.google.gwt.user.client.Element;
 
@@ -29,14 +29,11 @@ public interface HandlesAriaCaption {
      * Called to bind the provided caption (label in HTML speak) element to the
      * main input element of the Widget.
      * 
+     * Binding should be removed from the main input field when captionElement
+     * is null.
+     * 
      * @param captionElement
      *            Element of the caption
      */
     void bindAriaCaption(Element captionElement);
-
-    /**
-     * Called to clear the binding to a caption from the main input element of
-     * the widget.
-     */
-    void clearAriaCaption();
 }

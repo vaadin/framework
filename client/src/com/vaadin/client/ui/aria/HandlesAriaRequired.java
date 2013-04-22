@@ -14,20 +14,19 @@
  * the License.
  */
 
-package com.vaadin.client.ui;
+package com.vaadin.client.ui.aria;
 
 /**
  * Some Widgets need to handle the required handling for WAI-ARIA themselfs, as
  * this attribute needs to be set to the input element itself. In such a case,
  * the Widget needs to implement this interface.
  */
-public interface HandlesAriaInvalid {
+public interface HandlesAriaRequired {
     /**
-     * Called to set the element, typically an input element, as invalid.
+     * Called to set the element, typically an input element, as required.
      * 
-     * @param invalid
-     *            boolean, true when the element should be marked invalid, false
-     *            otherwise
+     * @param required
+     *            boolean true when the element needs to be set as required
      */
-    void setInvalid(boolean invalid);
+    void setAriaRequired(boolean required);
 }

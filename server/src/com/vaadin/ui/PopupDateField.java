@@ -125,7 +125,7 @@ public class PopupDateField extends DateField {
      * @param descriptionForAssistiveDevices
      *            String with the description
      */
-    public void setDescriptionForAssistiveDevices(String description) {
+    public void setAssisitiveText(String description) {
         getState().descriptionForAssistiveDevices = description;
     }
 
@@ -135,7 +135,7 @@ public class PopupDateField extends DateField {
      * 
      * @return String with the description
      */
-    public String getDescriptionForAssistiveDevices() {
+    public String getAssisitiveText() {
         return getState().descriptionForAssistiveDevices;
     }
 }

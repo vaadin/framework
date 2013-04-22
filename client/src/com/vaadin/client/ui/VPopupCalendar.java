@@ -44,6 +44,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.VCalendarPanel.FocusOutListener;
 import com.vaadin.client.ui.VCalendarPanel.SubmitListener;
+import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.ui.datefield.PopupDateFieldState;
 import com.vaadin.shared.ui.datefield.Resolution;
 
@@ -100,10 +101,10 @@ public class VPopupCalendar extends VTextualDate implements Field,
         descriptionForAssisitveDevicesElement = DOM.createDiv();
         descriptionForAssisitveDevicesElement
                 .setInnerText(PopupDateFieldState.DESCRIPTION_FOR_ASSISTIVE_DEVICES);
-        AriaHelper.ensureUniqueId(descriptionForAssisitveDevicesElement);
+        AriaHelper.ensureHasId(descriptionForAssisitveDevicesElement);
         Id.of(descriptionForAssisitveDevicesElement);
-        AriaHelper
-                .visibleForAssistiveDevicesOnly(descriptionForAssisitveDevicesElement);
+        AriaHelper.setVisibleForAssistiveDevicesOnly(
+                descriptionForAssisitveDevicesElement, true);
         DOM.appendChild(getElement(), descriptionForAssisitveDevicesElement);
 
         calendar = GWT.create(VCalendarPanel.class);
@@ -144,7 +145,8 @@ public class VPopupCalendar extends VTextualDate implements Field,
         FlowPanel wrapper = new FlowPanel();
         selectedDate = new Label();
         selectedDate.setStyleName(getStylePrimaryName() + "-selecteddate");
-        AriaHelper.visibleForAssistiveDevicesOnly(selectedDate.getElement());
+        AriaHelper.setVisibleForAssistiveDevicesOnly(selectedDate.getElement(),
+                true);
 
         Roles.getTextboxRole().setAriaLiveProperty(selectedDate.getElement(),
                 LiveValue.ASSERTIVE);
@@ -238,7 +240,11 @@ public class VPopupCalendar extends VTextualDate implements Field,
 
     @Override
     public void bindAriaCaption(Element captionElement) {
-        captionId = captionElement.getId();
+        if (captionElement == null) {
+            captionId = null;
+        } else {
+            captionId = captionElement.getId();
+        }
 
         if (isTextFieldEnabled()) {
             super.bindAriaCaption(captionElement);
@@ -270,18 +276,6 @@ public class VPopupCalendar extends VTextualDate implements Field,
             Roles.getFormRole().setAriaLabelledbyProperty(
                     setForWidget.getElement(), Id.of(captionId));
         }
-    }
-
-    @Override
-    public void clearAriaCaption() {
-        captionId = null;
-        if (isTextFieldEnabled()) {
-            super.clearAriaCaption();
-        } else {
-            AriaHelper.bindCaption(calendarToggle, null);
-        }
-
-        handleAriaAttributes();
     }
 
     /*

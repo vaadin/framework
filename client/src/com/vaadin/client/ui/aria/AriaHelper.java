@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.client.ui;
+package com.vaadin.client.ui.aria;
 
 import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.InvalidValue;
@@ -44,15 +44,15 @@ public class AriaHelper {
         if (widget instanceof HandlesAriaCaption) {
             // Let the widget handle special cases itself
             if (captionElement == null) {
-                ((HandlesAriaCaption) widget).clearAriaCaption();
+                ((HandlesAriaCaption) widget).bindAriaCaption(null);
             } else {
-                ensureUniqueId(captionElement);
+                ensureHasId(captionElement);
                 ((HandlesAriaCaption) widget).bindAriaCaption(captionElement);
             }
         } else if (captionElement != null) {
             // Handle the default case
-            ensureUniqueId(captionElement);
-            String ownerId = ensureUniqueId(widget.getElement());
+            ensureHasId(captionElement);
+            String ownerId = ensureHasId(widget.getElement());
             captionElement.setAttribute("for", ownerId);
 
             Roles.getTextboxRole().setAriaLabelledbyProperty(
@@ -87,7 +87,7 @@ public class AriaHelper {
         assert widget != null : "Valid Widget required";
 
         if (widget instanceof HandlesAriaRequired) {
-            ((HandlesAriaRequired) widget).setRequired(required);
+            ((HandlesAriaRequired) widget).setAriaRequired(required);
         } else {
             handleInputRequired(widget.getElement(), required);
         }
@@ -123,7 +123,7 @@ public class AriaHelper {
         assert widget != null : "Valid Widget required";
 
         if (widget instanceof HandlesAriaInvalid) {
-            ((HandlesAriaInvalid) widget).setInvalid(invalid);
+            ((HandlesAriaInvalid) widget).setAriaInvalid(invalid);
         } else {
             handleInputInvalid(widget.getElement(), invalid);
         }
@@ -155,7 +155,7 @@ public class AriaHelper {
      *            Element to check
      * @return String with the id of the element
      */
-    public static String ensureUniqueId(Element element) {
+    public static String ensureHasId(Element element) {
         assert element != null : "Valid Element required";
 
         String id = element.getId();
@@ -167,25 +167,22 @@ public class AriaHelper {
     }
 
     /**
-     * Moves an element out of sight. That way it is possible to have additional
-     * information for an assistive device, that is not in the way for visual
-     * users.
+     * Allows to move an element out of the visible area of the browser window.
+     * 
+     * This makes it possible to have additional information for an assistive
+     * device, that is not in the way for visual users.
      * 
      * @param element
      *            Element to move out of sight
+     * @param boolean assistiveOnly true when element should only be visible for
+     *        assistive devices, false to make the element visible for all
      */
-    public static void visibleForAssistiveDevicesOnly(Element element) {
-        element.addClassName(ASSISTIVE_DEVICE_ONLY_STYLE);
-    }
-
-    /**
-     * Clears the settings that moved the element out of sight, so it is visible
-     * on the page again.
-     * 
-     * @param element
-     *            Element to clear the specific styles from
-     */
-    public static void visibleForAll(Element element) {
-        element.removeClassName(ASSISTIVE_DEVICE_ONLY_STYLE);
+    public static void setVisibleForAssistiveDevicesOnly(Element element,
+            boolean assistiveOnly) {
+        if (assistiveOnly) {
+            element.addClassName(ASSISTIVE_DEVICE_ONLY_STYLE);
+        } else {
+            element.removeClassName(ASSISTIVE_DEVICE_ONLY_STYLE);
+        }
     }
 }

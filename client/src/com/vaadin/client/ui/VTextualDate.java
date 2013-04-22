@@ -31,6 +31,10 @@ import com.vaadin.client.Focusable;
 import com.vaadin.client.LocaleNotLoadedException;
 import com.vaadin.client.LocaleService;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.ui.aria.AriaHelper;
+import com.vaadin.client.ui.aria.HandlesAriaCaption;
+import com.vaadin.client.ui.aria.HandlesAriaInvalid;
+import com.vaadin.client.ui.aria.HandlesAriaRequired;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.datefield.Resolution;
 
@@ -161,17 +165,12 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
     }
 
     @Override
-    public void clearAriaCaption() {
-        AriaHelper.bindCaption(text, null);
-    }
-
-    @Override
-    public void setRequired(boolean required) {
+    public void setAriaRequired(boolean required) {
         AriaHelper.handleInputRequired(text, required);
     }
 
     @Override
-    public void setInvalid(boolean invalid) {
+    public void setAriaInvalid(boolean invalid) {
         AriaHelper.handleInputInvalid(text, invalid);
     }
 

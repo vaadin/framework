@@ -67,6 +67,9 @@ import com.vaadin.client.Focusable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.ui.aria.AriaHelper;
+import com.vaadin.client.ui.aria.HandlesAriaInvalid;
+import com.vaadin.client.ui.aria.HandlesAriaRequired;
 import com.vaadin.client.ui.menubar.MenuBar;
 import com.vaadin.client.ui.menubar.MenuItem;
 import com.vaadin.shared.AbstractComponentState;
@@ -1835,12 +1838,12 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     }
 
     @Override
-    public void setRequired(boolean required) {
+    public void setAriaRequired(boolean required) {
         AriaHelper.handleInputRequired(tb, required);
     }
 
     @Override
-    public void setInvalid(boolean invalid) {
+    public void setAriaInvalid(boolean invalid) {
         AriaHelper.handleInputInvalid(tb, invalid);
     }
 }

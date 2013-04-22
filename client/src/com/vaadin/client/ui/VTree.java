@@ -60,6 +60,8 @@ import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
+import com.vaadin.client.ui.aria.AriaHelper;
+import com.vaadin.client.ui.aria.HandlesAriaCaption;
 import com.vaadin.client.ui.dd.DDUtil;
 import com.vaadin.client.ui.dd.VAbstractDropHandler;
 import com.vaadin.client.ui.dd.VAcceptCallback;
@@ -2212,10 +2214,4 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
     public void bindAriaCaption(Element captionElement) {
         AriaHelper.bindCaption(body, captionElement);
     }
-
-    @Override
-    public void clearAriaCaption() {
-        AriaHelper.bindCaption(body, null);
-    }
-
 }
