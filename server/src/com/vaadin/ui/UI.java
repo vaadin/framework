@@ -1212,6 +1212,11 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * Note that it is possible to enable push and polling at the same time but
      * it should not be done to avoid excessive server traffic.
      * </p>
+     * <p>
+     * Add-on developers should note that this method is only meant for the
+     * application developer. An add-on should not set the poll interval
+     * directly, rather instruct the user to set it.
+     * </p>
      * 
      * @param intervalInMillis
      *            The interval (in ms) with which the UI should poll the server
@@ -1244,6 +1249,11 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     /**
      * Sets the mode of bidirectional ("push") communication that should be used
      * in this UI.
+     * <p>
+     * Add-on developers should note that this method is only meant for the
+     * application developer. An add-on should not set the push mode directly,
+     * rather instruct the user to set it.
+     * </p>
      * 
      * @param pushMode
      *            The push mode to use.
