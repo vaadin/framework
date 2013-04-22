@@ -41,7 +41,7 @@ public class LoadingIndicatorConfigurationTest extends AbstractTestUIWithLog {
         initialDelay.addValueChangeListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                getLoadingIndicator().setInitialDelay(
+                getLoadingIndicatorConfiguration().setInitialDelay(
                         (Integer) initialDelay.getConvertedValue());
             }
         });
@@ -51,7 +51,7 @@ public class LoadingIndicatorConfigurationTest extends AbstractTestUIWithLog {
                 .addValueChangeListener(new Property.ValueChangeListener() {
                     @Override
                     public void valueChange(ValueChangeEvent event) {
-                        getLoadingIndicator().setDelayStateDelay(
+                        getLoadingIndicatorConfiguration().setDelayStateDelay(
                                 (Integer) delayStateDelay.getConvertedValue());
                     }
                 });
@@ -61,7 +61,7 @@ public class LoadingIndicatorConfigurationTest extends AbstractTestUIWithLog {
                 .addValueChangeListener(new Property.ValueChangeListener() {
                     @Override
                     public void valueChange(ValueChangeEvent event) {
-                        getLoadingIndicator().setWaitStateDelay(
+                        getLoadingIndicatorConfiguration().setWaitStateDelay(
                                 (Integer) waitStateDelay.getConvertedValue());
                     }
                 });

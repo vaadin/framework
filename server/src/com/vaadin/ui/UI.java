@@ -118,7 +118,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
     private Page page = new Page(this);
 
-    private LoadingIndicator loadingIndicator = new LoadingIndicatorImpl(this);
+    private LoadingIndicatorConfiguration loadingIndicatorConfiguration = new LoadingIndicatorConfigurationImpl(this);
 
     /**
      * Scroll Y position.
@@ -1132,8 +1132,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * 
      * @return The instance used for configuring the loading indicator
      */
-    public LoadingIndicator getLoadingIndicator() {
-        return loadingIndicator;
+    public LoadingIndicatorConfiguration getLoadingIndicatorConfiguration() {
+        return loadingIndicatorConfiguration;
     }
 
     /**

@@ -17,7 +17,7 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 
-import com.vaadin.shared.ui.ui.UIState.LoadingIndicatorConfiguration;
+import com.vaadin.shared.ui.ui.UIState.LoadingIndicatorConfigurationState;
 
 /**
  * Provides method for configuring the loading indicator.
@@ -25,7 +25,7 @@ import com.vaadin.shared.ui.ui.UIState.LoadingIndicatorConfiguration;
  * @author Vaadin Ltd
  * @since 7.1
  */
-public interface LoadingIndicator extends Serializable {
+public interface LoadingIndicatorConfiguration extends Serializable {
     /**
      * Sets the delay before the loading indicator is shown. The default is
      * 300ms.
@@ -81,10 +81,10 @@ public interface LoadingIndicator extends Serializable {
     public int getWaitStateDelay();
 }
 
-class LoadingIndicatorImpl implements LoadingIndicator {
+class LoadingIndicatorConfigurationImpl implements LoadingIndicatorConfiguration {
     private UI ui;
 
-    public LoadingIndicatorImpl(UI ui) {
+    public LoadingIndicatorConfigurationImpl(UI ui) {
         this.ui = ui;
     }
 
@@ -148,11 +148,11 @@ class LoadingIndicatorImpl implements LoadingIndicator {
         return getState(false).waitStateDelay;
     }
 
-    private LoadingIndicatorConfiguration getState() {
+    private LoadingIndicatorConfigurationState getState() {
         return ui.getState().loadingIndicatorConfiguration;
     }
 
-    private LoadingIndicatorConfiguration getState(boolean markAsDirty) {
+    private LoadingIndicatorConfigurationState getState(boolean markAsDirty) {
         return ui.getState(markAsDirty).loadingIndicatorConfiguration;
     }
 
