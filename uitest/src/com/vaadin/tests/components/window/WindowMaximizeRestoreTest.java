@@ -4,7 +4,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.window.WindowState.DisplayState;
+import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -17,8 +17,8 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
-import com.vaadin.ui.Window.DisplayStateChangeEvent;
-import com.vaadin.ui.Window.DisplayStateChangeListener;
+import com.vaadin.ui.Window.WindowModeChangeEvent;
+import com.vaadin.ui.Window.WindowModeChangeListener;
 
 public class WindowMaximizeRestoreTest extends AbstractTestUI {
     Button.ClickListener addListener = new Button.ClickListener() {
@@ -72,11 +72,11 @@ public class WindowMaximizeRestoreTest extends AbstractTestUI {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                if (w.getDisplayState() == DisplayState.MAXIMIZED) {
-                    w.setDisplayState(DisplayState.NORMAL);
+                if (w.getWindowMode() == WindowMode.MAXIMIZED) {
+                    w.setWindowMode(WindowMode.NORMAL);
                     maximize.setCaption("Maximize");
                 } else {
-                    w.setDisplayState(DisplayState.MAXIMIZED);
+                    w.setWindowMode(WindowMode.MAXIMIZED);
                     maximize.setCaption("Restore");
                 }
             }
@@ -85,15 +85,15 @@ public class WindowMaximizeRestoreTest extends AbstractTestUI {
         maximize.addClickListener(listener);
         ((ComponentContainer) w.getContent()).addComponent(maximize);
 
-        w.addDisplayStateChangeListener(new DisplayStateChangeListener() {
+        w.addWindowModeChangeListener(new WindowModeChangeListener() {
 
             @Override
-            public void displayStateChanged(DisplayStateChangeEvent event) {
-                DisplayState state = (event.getWindow().getDisplayState());
-                if (state == DisplayState.NORMAL) {
+            public void windowModeChanged(WindowModeChangeEvent event) {
+                WindowMode state = (event.getWindow().getWindowMode());
+                if (state == WindowMode.NORMAL) {
                     w.setCaption("Window " + w.getData() + " Normal");
                     maximize.setCaption("Maximize");
-                } else if (state == DisplayState.MAXIMIZED) {
+                } else if (state == WindowMode.MAXIMIZED) {
                     w.setCaption("Window " + w.getData() + " Maximized");
                     maximize.setCaption("Restore");
                 }

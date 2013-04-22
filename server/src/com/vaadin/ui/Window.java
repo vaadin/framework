@@ -35,9 +35,9 @@ import com.vaadin.server.ClientConnector;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.shared.ui.window.WindowServerRpc;
 import com.vaadin.shared.ui.window.WindowState;
-import com.vaadin.shared.ui.window.WindowState.DisplayState;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -75,8 +75,8 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         }
 
         @Override
-        public void windowDisplayStateChanged(DisplayState newState) {
-            setDisplayState(newState);
+        public void windowModeChanged(WindowMode newState) {
+            setWindowMode(newState);
         }
     };
 
@@ -241,8 +241,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Gets the distance of Window left border in pixels from left border of the
-     * containing (main window) when the window is in
-     * {@link DisplayState#NORMAL}.
+     * containing (main window) when the window is in {@link WindowMode#NORMAL}.
      * 
      * @return the Distance of Window left border in pixels from left border of
      *         the containing (main window).or -1 if unspecified
@@ -254,8 +253,8 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Sets the distance of Window left border in pixels from left border of the
-     * containing (main window). Has effect only if in
-     * {@link DisplayState#NORMAL} mode.
+     * containing (main window). Has effect only if in {@link WindowMode#NORMAL}
+     * mode.
      * 
      * @param positionX
      *            the Distance of Window left border in pixels from left border
@@ -269,8 +268,8 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Gets the distance of Window top border in pixels from top border of the
-     * containing (main window) when the window is in
-     * {@link DisplayState#NORMAL} state, or when next set to that state.
+     * containing (main window) when the window is in {@link WindowMode#NORMAL}
+     * state, or when next set to that state.
      * 
      * @return Distance of Window top border in pixels from top border of the
      *         containing (main window). or -1 if unspecified
@@ -283,8 +282,8 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Sets the distance of Window top border in pixels from top border of the
-     * containing (main window). Has effect only if in
-     * {@link DisplayState#NORMAL} mode.
+     * containing (main window). Has effect only if in {@link WindowMode#NORMAL}
+     * mode.
      * 
      * @param positionY
      *            the Distance of Window top border in pixels from top border of
@@ -413,24 +412,23 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     /**
-     * Event which is fired when the display state of the Window changes.
+     * Event which is fired when the mode of the Window changes.
      * 
      * @author Vaadin Ltd
      * @since 7.1
      * 
      */
-    public static class DisplayStateChangeEvent extends Component.Event {
+    public static class WindowModeChangeEvent extends Component.Event {
 
-        private final DisplayState displayState;
+        private final WindowMode windowMode;
 
         /**
          * 
          * @param source
          */
-        public DisplayStateChangeEvent(Component source,
-                DisplayState displayState) {
+        public WindowModeChangeEvent(Component source, WindowMode windowMode) {
             super(source);
-            this.displayState = displayState;
+            this.windowMode = windowMode;
         }
 
         /**
@@ -443,73 +441,69 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         }
 
         /**
-         * Gets the new DisplayState.
+         * Gets the new window mode.
          * 
-         * @return the displayState
+         * @return the new mode
          */
-        public DisplayState getDisplayState() {
-            return displayState;
+        public WindowMode getWindowMode() {
+            return windowMode;
         }
     }
 
     /**
      * An interface used for listening to Window maximize / restore events. Add
-     * the DisplayStateChangeListener to a window and
-     * {@link DisplayStateChangeListener#displayStateChanged(DisplayStateChangeEvent)}
+     * the WindowModeChangeListener to a window and
+     * {@link WindowModeChangeListener#windowModeChanged(WindowModeChangeEvent)}
      * will be called whenever the window is maximized (
-     * {@link DisplayState#MAXIMIZED}) or restored ({@link DisplayState#NORMAL}
-     * ).
+     * {@link WindowMode#MAXIMIZED}) or restored ({@link WindowMode#NORMAL} ).
      */
-    public interface DisplayStateChangeListener extends Serializable {
+    public interface WindowModeChangeListener extends Serializable {
 
-        public static final Method displayStateChangeMethod = ReflectTools
-                .findMethod(DisplayStateChangeListener.class,
-                        "displayStateChanged", DisplayStateChangeEvent.class);
+        public static final Method windowModeChangeMethod = ReflectTools
+                .findMethod(WindowModeChangeListener.class,
+                        "windowModeChanged", WindowModeChangeEvent.class);
 
         /**
          * Called when the user maximizes / restores a window. Use
-         * {@link DisplayStateChangeEvent#getWindow()} to get a reference to the
+         * {@link WindowModeChangeEvent#getWindow()} to get a reference to the
          * {@link Window} that was maximized / restored. Use
-         * {@link DisplayStateChangeEvent#getDisplayState()} to get a reference
-         * to the new state.
+         * {@link WindowModeChangeEvent#getWindowMode()} to get a reference to
+         * the new state.
          * 
          * @param event
          */
-        public void displayStateChanged(DisplayStateChangeEvent event);
+        public void windowModeChanged(WindowModeChangeEvent event);
     }
 
     /**
-     * Adds a DisplayStateChangeListener to the window.
+     * Adds a WindowModeChangeListener to the window.
      * 
-     * The DisplayStateChangeEvent is fired when the user changed the display
+     * The WindowModeChangeEvent is fired when the user changed the display
      * state by clicking the maximize/restore button or by double clicking on
      * the window header. The event is also fired if the state is changed using
-     * {@link #setDisplayState(DisplayState)}.
+     * {@link #setWindowMode(WindowMode)}.
      * 
      * @param listener
-     *            the DisplayStateChangeListener to add.
+     *            the WindowModeChangeListener to add.
      */
-    public void addDisplayStateChangeListener(
-            DisplayStateChangeListener listener) {
-        addListener(DisplayStateChangeEvent.class, listener,
-                DisplayStateChangeListener.displayStateChangeMethod);
+    public void addWindowModeChangeListener(WindowModeChangeListener listener) {
+        addListener(WindowModeChangeEvent.class, listener,
+                WindowModeChangeListener.windowModeChangeMethod);
     }
 
     /**
-     * Removes the DisplayStateChangeListener from the window.
+     * Removes the WindowModeChangeListener from the window.
      * 
      * @param listener
-     *            the DisplayStateChangeListener to remove.
+     *            the WindowModeChangeListener to remove.
      */
-    public void removeDisplayStateChangeListener(
-            DisplayStateChangeListener listener) {
-        removeListener(DisplayStateChangeEvent.class, listener,
-                DisplayStateChangeListener.displayStateChangeMethod);
+    public void removeWindowModeChangeListener(WindowModeChangeListener listener) {
+        removeListener(WindowModeChangeEvent.class, listener,
+                WindowModeChangeListener.windowModeChangeMethod);
     }
 
-    protected void fireWindowDisplayStateChange() {
-        fireEvent(new Window.DisplayStateChangeEvent(this,
-                getState().displayState));
+    protected void fireWindowWindowModeChange() {
+        fireEvent(new Window.WindowModeChangeEvent(this, getState().windowMode));
     }
 
     /**
@@ -782,23 +776,26 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     /**
-     * Gets the current DisplayState of the window.
+     * Gets the current mode of the window.
      * 
-     * @return displayState the current DisplayState.
+     * @see WindowMode
+     * @return the mode of the window.
      */
-    public DisplayState getDisplayState() {
-        return getState(false).displayState;
+    public WindowMode getWindowMode() {
+        return getState(false).windowMode;
     }
 
     /**
-     * Sets the DisplayState for the window.
+     * Sets the mode for the window
      * 
-     * @param displayState
+     * @see WindowMode
+     * @param windowMode
+     *            The new mode
      */
-    public void setDisplayState(DisplayState displayState) {
-        if (displayState != getDisplayState()) {
-            getState().displayState = displayState;
-            fireWindowDisplayStateChange();
+    public void setWindowMode(WindowMode windowMode) {
+        if (windowMode != getWindowMode()) {
+            getState().windowMode = windowMode;
+            fireWindowWindowModeChange();
         }
     }
 

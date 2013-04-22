@@ -49,7 +49,7 @@ import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.shared.EventId;
-import com.vaadin.shared.ui.window.WindowState.DisplayState;
+import com.vaadin.shared.ui.window.WindowMode;
 
 /**
  * "Sub window" component.
@@ -571,10 +571,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         }
     }
 
-    public void updateMaximizeRestoreClassName(boolean visible,
-            DisplayState state) {
+    public void updateMaximizeRestoreClassName(boolean visible, WindowMode windowMode) {
         String className;
-        if (state == DisplayState.MAXIMIZED) {
+        if (windowMode == WindowMode.MAXIMIZED) {
             className = CLASSNAME + "-restorebox";
         } else {
             className = CLASSNAME + "-maximizebox";

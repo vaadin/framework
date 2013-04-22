@@ -45,9 +45,9 @@ import com.vaadin.client.ui.VWindow;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.shared.ui.window.WindowServerRpc;
 import com.vaadin.shared.ui.window.WindowState;
-import com.vaadin.shared.ui.window.WindowState.DisplayState;
 
 @Connect(value = com.vaadin.ui.Window.class)
 public class WindowConnector extends AbstractSingleComponentContainerConnector
@@ -245,8 +245,7 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
     @Override
     public void postLayout() {
         VWindow window = getWidget();
-        if (window.centered
-                && getState().displayState != DisplayState.MAXIMIZED) {
+        if (window.centered && getState().windowMode != WindowMode.MAXIMIZED) {
             window.center();
         }
         window.positionOrSizeUpdated();
@@ -272,16 +271,15 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
             window.show();
         }
         boolean resizeable = state.resizable
-                && state.displayState == DisplayState.NORMAL;
+                && state.windowMode == WindowMode.NORMAL;
         window.setResizable(resizeable);
 
         window.resizeLazy = state.resizeLazy;
 
         window.setDraggable(state.draggable
-                && state.displayState == DisplayState.NORMAL);
+                && state.windowMode == WindowMode.NORMAL);
 
-        window.updateMaximizeRestoreClassName(state.resizable,
-                state.displayState);
+        window.updateMaximizeRestoreClassName(state.resizable, state.windowMode);
 
         // Caption must be set before required header size is measured. If
         // the caption attribute is missing the caption should be cleared.
@@ -320,12 +318,12 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         }
     }
 
-    // Need to override default because of DisplayState
+    // Need to override default because of window mode
     @Override
     protected void updateComponentSize() {
-        if (getState().displayState == DisplayState.NORMAL) {
+        if (getState().windowMode == WindowMode.NORMAL) {
             super.updateComponentSize();
-        } else if (getState().displayState == DisplayState.MAXIMIZED) {
+        } else if (getState().windowMode == WindowMode.MAXIMIZED) {
             super.updateComponentSize("100%", "100%");
         }
     }
@@ -333,45 +331,44 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
     protected void updateWindowPosition() {
         VWindow window = getWidget();
         WindowState state = getState();
-        if (state.displayState == DisplayState.NORMAL) {
+        if (state.windowMode == WindowMode.NORMAL) {
             // if centered, position handled in postLayout()
             if (!state.centered) {
                 window.setPopupPosition(state.positionX, state.positionY);
             }
-        } else if (state.displayState == DisplayState.MAXIMIZED) {
+        } else if (state.windowMode == WindowMode.MAXIMIZED) {
             window.setPopupPositionNoUpdate(0, 0);
             window.bringToFront();
         }
     }
 
-    protected void updateDisplayState() {
+    protected void updateWindowMode() {
         VWindow window = getWidget();
         WindowState state = getState();
 
         // update draggable on widget
         window.setDraggable(state.draggable
-                && state.displayState == DisplayState.NORMAL);
+                && state.windowMode == WindowMode.NORMAL);
         // update resizable on widget
         window.setResizable(state.resizable
-                && state.displayState == DisplayState.NORMAL);
+                && state.windowMode == WindowMode.NORMAL);
         updateComponentSize();
         updateWindowPosition();
-        window.updateMaximizeRestoreClassName(state.resizable,
-                state.displayState);
+        window.updateMaximizeRestoreClassName(state.resizable, state.windowMode);
         window.updateContentsSize();
     }
 
     protected void onMaximizeRestore() {
         WindowState state = getState();
         if (state.resizable) {
-            if (state.displayState == DisplayState.MAXIMIZED) {
-                state.displayState = DisplayState.NORMAL;
+            if (state.windowMode == WindowMode.MAXIMIZED) {
+                state.windowMode = WindowMode.NORMAL;
             } else {
-                state.displayState = DisplayState.MAXIMIZED;
+                state.windowMode = WindowMode.MAXIMIZED;
             }
-            updateDisplayState();
-            getRpcProxy(WindowServerRpc.class).windowDisplayStateChanged(
-                    state.displayState);
+            updateWindowMode();
+            getRpcProxy(WindowServerRpc.class).windowModeChanged(
+                    state.windowMode);
         }
     }
 

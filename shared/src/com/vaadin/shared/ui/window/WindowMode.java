@@ -15,19 +15,25 @@
  */
 package com.vaadin.shared.ui.window;
 
-import com.vaadin.shared.ui.panel.PanelState;
-
-public class WindowState extends PanelState {
-    {
-        primaryStyleName = "v-window";
-    }
-
-    public boolean modal = false;
-    public boolean resizable = true;
-    public boolean resizeLazy = false;
-    public boolean draggable = true;
-    public boolean centered = false;;
-    public int positionX = -1;
-    public int positionY = -1;
-    public WindowMode windowMode = WindowMode.NORMAL;
+/**
+ * Determines the mode of the Window.
+ * <p>
+ * A window mode decides the size and position of the Window. It can be set to
+ * {@link #NORMAL} or {@link #MAXIMIZED}.
+ * 
+ * 
+ * @author Vaadin Ltd
+ * @since 7.1
+ */
+public enum WindowMode {
+    /**
+     * Normal mode. The window size and position is determined by the window
+     * state.
+     */
+    NORMAL,
+    /**
+     * Maximized mode. The window is positioned in the top left corner and fills
+     * the whole screen.
+     */
+    MAXIMIZED;
 }
