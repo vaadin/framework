@@ -39,6 +39,10 @@
             class="com.vaadin.client.metadata.ConnectorBundleLoader" />
     </generate-with>
     
+    <replace-with class="com.vaadin.client.communication.AtmospherePushConnection">
+        <when-type-is class="com.vaadin.client.communication.PushConnection" />
+    </replace-with>    
+    
     <!-- Set vaadin.profiler to true to include profiling support in the module -->
     <define-property name="vaadin.profiler" values="true,false" />
     <set-property name="vaadin.profiler" value="false" />    

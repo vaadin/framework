@@ -2,9 +2,9 @@ package com.vaadin.tests.widgetset.client;
 
 import com.google.gwt.user.client.Window;
 import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.communication.PushConnection;
+import com.vaadin.client.communication.AtmospherePushConnection;
 
-public class TestingPushConnection extends PushConnection {
+public class TestingPushConnection extends AtmospherePushConnection {
 
     private String transport;
 

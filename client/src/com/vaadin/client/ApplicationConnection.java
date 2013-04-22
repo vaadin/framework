@@ -2431,7 +2431,7 @@ public class ApplicationConnection {
 
     private void doSendPendingVariableChanges() {
         if (applicationRunning) {
-            if (hasActiveRequest()) {
+            if (hasActiveRequest() || (push != null && !push.isActive())) {
                 // skip empty queues if there are pending bursts to be sent
                 if (pendingInvocations.size() > 0 || pendingBursts.size() == 0) {
                     pendingBursts.add(pendingInvocations);
@@ -3402,32 +3402,31 @@ public class ApplicationConnection {
      */
     public void setPushEnabled(boolean enabled) {
         if (enabled && push == null) {
-
-            final PushConnection push = GWT.create(PushConnection.class);
+            push = GWT.create(PushConnection.class);
             push.init(this);
-
-            push.runWhenAtmosphereLoaded(new Command() {
+        } else if (!enabled && push != null && push.isActive()) {
+            push.disconnect(new Command() {
                 @Override
                 public void execute() {
-                    ApplicationConnection.this.push = push;
+                    push = null;
+                    /*
+                     * If push has been enabled again while we were waiting for
+                     * the old connection to disconnect, now is the right time
+                     * to open a new connection
+                     */
+                    if (uIConnector.getState().pushMode.isEnabled()) {
+                        setPushEnabled(true);
+                    }
 
-                    final String pushUri = addGetParameters(
-                            translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
-                                    + ApplicationConstants.PUSH_PATH + '/'),
-                            UIConstants.UI_ID_PARAMETER + "="
-                                    + getConfiguration().getUIId());
-
-                    Scheduler.get().scheduleDeferred(new Command() {
-                        @Override
-                        public void execute() {
-                            push.connect(pushUri);
-                        }
-                    });
+                    /*
+                     * Send anything that was enqueued while we waited for the
+                     * connection to close
+                     */
+                    if (pendingInvocations.size() > 0) {
+                        sendPendingVariableChanges();
+                    }
                 }
             });
-        } else if (!enabled && push != null) {
-            push.disconnect();
-            push = null;
         }
     }
 
