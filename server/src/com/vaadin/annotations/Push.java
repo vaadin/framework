@@ -25,7 +25,12 @@ import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
 
 /**
- * Defines a specific {@link PushMode} for a {@link UI}.
+ * Configures server push for a {@link UI}. Adding <code>@Push</code> to a UI
+ * class configures the UI for automatic push. If some other push mode is
+ * desired, it can be passed as a parameter, e.g.
+ * <code>@Push(PushMode.MANUAL)</code>.
+ * 
+ * @see PushMode
  * 
  * @author Vaadin Ltd.
  * @since 7.1
@@ -34,10 +39,11 @@ import com.vaadin.ui.UI;
 @Target(ElementType.TYPE)
 public @interface Push {
     /**
-     * Returns the {@link PushMode} to use for the annotated UI.
+     * Returns the {@link PushMode} to use for the annotated UI. The default
+     * push mode when this annotation is present is {@link PushMode#AUTOMATIC}.
      * 
      * @return the push mode to use
      */
-    public PushMode value();
+    public PushMode value() default PushMode.AUTOMATIC;
 
 }
