@@ -16,6 +16,8 @@
 package com.vaadin.client.debug.internal;
 
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.UmbrellaException;
@@ -51,11 +53,7 @@ public class ConsoleAdapter implements Console {
 
     @Override
     public void log(String msg) {
-        window.log(Level.LOG, msg);
-
-        GWT.log(msg);
-        consoleLog(msg);
-        System.out.println(msg);
+        getLogger().log(Level.INFO, msg);
     }
 
     @Override
@@ -81,11 +79,8 @@ public class ConsoleAdapter implements Console {
         if (msg == null) {
             msg = "null";
         }
-        window.log(Level.ERROR, msg);
 
-        GWT.log(msg);
-        consoleErr(msg);
-        System.out.println(msg);
+        getLogger().log(Level.SEVERE, msg);
     }
 
     @Override
@@ -187,4 +182,8 @@ public class ConsoleAdapter implements Console {
                  $wnd.console.log(msg);
          }
      }-*/;
+
+    private static Logger getLogger() {
+        return Logger.getLogger(ConsoleAdapter.class.getName());
+    }
 }

@@ -70,8 +70,6 @@ public interface Section {
      */
     public void hide();
 
-    public void log(Level level, String msg);
-
     public void meta(ApplicationConnection ac, ValueMap meta);
 
     public void uidl(ApplicationConnection ac, ValueMap uidl);

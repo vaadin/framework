@@ -12,7 +12,13 @@
     <inherits name="com.google.gwt.http.HTTP" />
 
     <inherits name="com.google.gwt.json.JSON" />
-
+    
+    <inherits name="com.google.gwt.logging.Logging" />
+    <!-- Firebug handler is deprecated but for some reason still enabled by default -->
+    <set-property name="gwt.logging.firebugHandler" value="DISABLED" />
+    <!-- Disable popup logging as we have our own popup logger -->
+    <set-property name="gwt.logging.popupHandler" value="DISABLED" />
+    
     <inherits name="com.vaadin.VaadinBrowserSpecificOverrides" />
 
     <source path="client" />

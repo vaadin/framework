@@ -684,30 +684,6 @@ public final class VDebugWindow extends VOverlay {
         });
     }
 
-    /*
-     * LOGGING methods follow
-     * 
-     * NOTE that these are subject to change and only implemented in the current
-     * manner for compatibility.
-     * 
-     * TODO Sections should listen to logging events in the future
-     */
-
-    /**
-     * Called when a generic logging message is received
-     * 
-     * @param level
-     * @param msg
-     */
-    void log(Level level, String msg) {
-        if (isClosed()) {
-            return;
-        }
-        for (Section s : sections) {
-            s.log(level, msg);
-        }
-    }
-
     /**
      * Called when the result from analyzeLayouts is received.
      * 

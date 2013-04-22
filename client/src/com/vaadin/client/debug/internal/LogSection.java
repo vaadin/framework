@@ -15,9 +15,16 @@
  */
 package com.vaadin.client.debug.internal;
 
+import java.util.logging.Formatter;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.logging.client.HtmlLogFormatter;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
@@ -38,6 +45,50 @@ import com.vaadin.client.ValueMap;
  * @author Vaadin Ltd
  */
 class LogSection implements Section {
+
+    private final class LogSectionHandler extends Handler {
+        private LogSectionHandler() {
+            setLevel(Level.ALL);
+            setFormatter(new HtmlLogFormatter(true) {
+                @Override
+                protected String getHtmlPrefix(LogRecord event) {
+                    return "";
+                }
+
+                @Override
+                protected String getHtmlSuffix(LogRecord event) {
+                    return "";
+                }
+
+                @Override
+                protected String getRecordInfo(LogRecord event, String newline) {
+                    return "";
+                }
+            });
+        }
+
+        @Override
+        public void publish(LogRecord record) {
+            if (!isLoggable(record)) {
+                return;
+            }
+
+            Formatter formatter = getFormatter();
+            String msg = formatter.format(record);
+
+            addRow(record.getLevel(), msg);
+        }
+
+        @Override
+        public void close() {
+            // Nothing to do
+        }
+
+        @Override
+        public void flush() {
+            // Nothing todo
+        }
+    }
 
     // If scroll is not locked, content will be scrolled after delay
     private static final int SCROLL_DELAY = 100;
@@ -112,6 +163,8 @@ class LogSection implements Section {
             }
         });
 
+        // Add handler to the root logger
+        Logger.getLogger("").addHandler(new LogSectionHandler());
     }
 
     /**
@@ -262,20 +315,19 @@ class LogSection implements Section {
      * needed, and scrolls new row into view if scroll lock is not active.
      * 
      * @param level
-     * @param category
      * @param msg
      * @return
      */
-    private Element addRow(Level level, String category, String msg) {
+    private Element addRow(Level level, String msg) {
         int sinceReset = VDebugWindow.getMillisSinceReset();
         int sinceStart = VDebugWindow.getMillisSinceStart();
 
         Element row = DOM.createDiv();
         row.addClassName(VDebugWindow.STYLENAME + "-row");
-        row.addClassName(level.name());
+        row.addClassName(level.getName());
 
         String inner = "<span class='" + VDebugWindow.STYLENAME + "-"
-                + category + "'></span><span class='" + VDebugWindow.STYLENAME
+                + "'></span><span class='" + VDebugWindow.STYLENAME
                 + "-time' title='"
                 + VDebugWindow.getTimingTooltip(sinceStart, sinceReset) + "'>"
                 + sinceReset + "ms</span><span class='"
@@ -290,29 +342,14 @@ class LogSection implements Section {
         return row;
     }
 
-    /*
-     * LOGGING methods follow.
-     * 
-     * NOTE that these are still subject to change.
-     */
-
-    @Override
-    public void log(Level level, String msg) {
-        addRow(level, "none", msg);
-    }
-
-    public void log(Level level, String category, String msg) {
-        addRow(level, category, msg);
-    }
-
     @Override
     public void meta(ApplicationConnection ac, ValueMap meta) {
-        log(Level.DEBUG, "Meta: " + meta.toSource());
+        addRow(Level.FINE, "Meta: " + meta.toSource());
     }
 
     @Override
     public void uidl(ApplicationConnection ac, ValueMap uidl) {
-        log(Level.DEBUG, "UIDL: " + uidl.toSource());
+        addRow(Level.FINE, "UIDL: " + uidl.toSource());
     }
 
 }

@@ -68,11 +68,6 @@ public class NetworkSection implements Section {
     }
 
     @Override
-    public void log(Level level, String msg) {
-        // NOP
-    }
-
-    @Override
     public void meta(ApplicationConnection ac, ValueMap meta) {
         // NOP
     }

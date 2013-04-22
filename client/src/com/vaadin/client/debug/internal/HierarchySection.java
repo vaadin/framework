@@ -146,11 +146,6 @@ class HierarchySection implements Section {
         stopFind();
     }
 
-    @Override
-    public void log(Level level, String msg) {
-        // NOP
-    }
-
     private void generateWidgetset() {
 
         content.clear();
