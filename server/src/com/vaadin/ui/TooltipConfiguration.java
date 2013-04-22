@@ -17,7 +17,7 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 
-import com.vaadin.shared.ui.ui.UIState.TooltipConfiguration;
+import com.vaadin.shared.ui.ui.UIState.TooltipConfigurationState;
 
 /**
  * Provides method for configuring the tooltip.
@@ -25,7 +25,7 @@ import com.vaadin.shared.ui.ui.UIState.TooltipConfiguration;
  * @author Vaadin Ltd
  * @since 7.1
  */
-public interface Tooltip extends Serializable {
+public interface TooltipConfiguration extends Serializable {
     /**
      * Returns the time (in ms) the tooltip should be displayed after an event
      * that will cause it to be closed (e.g. mouse click outside the component,
@@ -122,10 +122,10 @@ public interface Tooltip extends Serializable {
     public void setMaxWidth(int maxWidth);
 }
 
-class TooltipImpl implements Tooltip {
+class TooltipConfigurationImpl implements TooltipConfiguration {
     private UI ui;
 
-    public TooltipImpl(UI ui) {
+    public TooltipConfigurationImpl(UI ui) {
         this.ui = ui;
     }
 
@@ -229,11 +229,11 @@ class TooltipImpl implements Tooltip {
         getState().maxWidth = maxWidth;
     }
 
-    private TooltipConfiguration getState() {
+    private TooltipConfigurationState getState() {
         return ui.getState().tooltipConfiguration;
     }
 
-    private TooltipConfiguration getState(boolean markAsDirty) {
+    private TooltipConfigurationState getState(boolean markAsDirty) {
         return ui.getState(markAsDirty).tooltipConfiguration;
     }
 

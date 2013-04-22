@@ -32,7 +32,7 @@ public class TooltipConfiguration extends AbstractTestUIWithLog {
         closeTimeout.addValueChangeListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                getTooltip().setCloseTimeout(
+                getTooltipConfiguration().setCloseTimeout(
                         (Integer) closeTimeout.getConvertedValue());
             }
         });
@@ -41,7 +41,7 @@ public class TooltipConfiguration extends AbstractTestUIWithLog {
         maxWidth.addValueChangeListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                getTooltip()
+                getTooltipConfiguration()
                         .setMaxWidth((Integer) maxWidth.getConvertedValue());
             }
         });
@@ -50,7 +50,7 @@ public class TooltipConfiguration extends AbstractTestUIWithLog {
         openDelay.addValueChangeListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                getTooltip().setOpenDelay(
+                getTooltipConfiguration().setOpenDelay(
                         (Integer) openDelay.getConvertedValue());
             }
         });
@@ -61,7 +61,7 @@ public class TooltipConfiguration extends AbstractTestUIWithLog {
                 .addValueChangeListener(new Property.ValueChangeListener() {
                     @Override
                     public void valueChange(ValueChangeEvent event) {
-                        getTooltip().setQuickOpenDelay(
+                        getTooltipConfiguration().setQuickOpenDelay(
                                 (Integer) quickOpenDelay.getConvertedValue());
                     }
                 });
@@ -72,7 +72,7 @@ public class TooltipConfiguration extends AbstractTestUIWithLog {
                 .addValueChangeListener(new Property.ValueChangeListener() {
                     @Override
                     public void valueChange(ValueChangeEvent event) {
-                        getTooltip().setQuickOpenTimeout(
+                        getTooltipConfiguration().setQuickOpenTimeout(
                                 (Integer) quickOpenTimeout.getConvertedValue());
                     }
                 });
