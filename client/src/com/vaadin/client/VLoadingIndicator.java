@@ -24,7 +24,7 @@ import com.google.gwt.user.client.Timer;
 
 /**
  * Class representing the loading indicator for Vaadin applications. The loading
- * indicator has four states: "triggered", "initial", "delay" and "wait". When
+ * indicator has four states: "triggered", "first", "second" and "third". When
  * {@link #trigger()} is called the indicator moves to its "triggered" state and
  * then transitions from one state to the next when the timeouts specified using
  * the set*StateDelay methods occur.
@@ -38,9 +38,9 @@ public class VLoadingIndicator {
 
     private ApplicationConnection connection;
 
-    private int initialStateDelay = 300;
-    private int delayStateDelay = 1500;
-    private int waitStateDelay = 5000;
+    private int firstDelay = 300;
+    private int secondDelay = 1500;
+    private int thirdDelay = 5000;
 
     /**
      * Timer with method for checking if it has been cancelled. This class is a
@@ -81,7 +81,7 @@ public class VLoadingIndicator {
         }
     }
 
-    private Timer initialTimer = new LoadingIndicatorTimer() {
+    private Timer firstTimer = new LoadingIndicatorTimer() {
         @Override
         public void run() {
             if (isCancelled()) {
@@ -91,24 +91,30 @@ public class VLoadingIndicator {
             show();
         }
     };
-    private Timer delayStateTimer = new LoadingIndicatorTimer() {
+    private Timer secondTimer = new LoadingIndicatorTimer() {
         @Override
         public void run() {
             if (isCancelled()) {
                 // IE8 does not properly cancel the timer in all cases.
                 return;
             }
-            getElement().setClassName(PRIMARY_STYLE_NAME + "-delay");
+            getElement().setClassName(PRIMARY_STYLE_NAME);
+            getElement().addClassName("second");
+            // For backwards compatibility only
+            getElement().addClassName(PRIMARY_STYLE_NAME + "-delay");
         }
     };
-    private Timer waitStateTimer = new LoadingIndicatorTimer() {
+    private Timer thirdTimer = new LoadingIndicatorTimer() {
         @Override
         public void run() {
             if (isCancelled()) {
                 // IE8 does not properly cancel the timer in all cases.
                 return;
             }
-            getElement().setClassName(PRIMARY_STYLE_NAME + "-wait");
+            getElement().setClassName(PRIMARY_STYLE_NAME);
+            getElement().addClassName("third");
+            // For backwards compatibility only
+            getElement().addClassName(PRIMARY_STYLE_NAME + "-wait");
         }
     };
 
@@ -116,107 +122,108 @@ public class VLoadingIndicator {
 
     /**
      * Returns the delay (in ms) which must pass before the loading indicator
-     * moves into the "initial" state and is shown to the user
+     * moves into the "first" state and is shown to the user
      * 
-     * @return The delay (in ms) until moving into the "initial" state. Counted
+     * @return The delay (in ms) until moving into the "first" state. Counted
      *         from when {@link #trigger()} is called.
      */
-    public int getInitialStateDelay() {
-        return initialStateDelay;
+    public int getFirstDelay() {
+        return firstDelay;
     }
 
     /**
      * Sets the delay (in ms) which must pass before the loading indicator moves
-     * into the "initial" state and is shown to the user
+     * into the "first" state and is shown to the user
      * 
-     * @param initialStateDelay
-     *            The delay (in ms) until moving into the "initial" state.
-     *            Counted from when {@link #trigger()} is called.
+     * @param firstDelay
+     *            The delay (in ms) until moving into the "first" state. Counted
+     *            from when {@link #trigger()} is called.
      */
-    public void setInitialStateDelay(int initialStateDelay) {
-        this.initialStateDelay = initialStateDelay;
+    public void setFirstDelay(int firstDelay) {
+        this.firstDelay = firstDelay;
     }
 
     /**
      * Returns the delay (in ms) which must pass before the loading indicator
-     * moves to its "delay" state.
+     * moves to its "second" state.
      * 
      * @return The delay (in ms) until the loading indicator moves into its
-     *         "delay" state. Counted from when {@link #trigger()} is called.
+     *         "second" state. Counted from when {@link #trigger()} is called.
      */
-    public int getDelayStateDelay() {
-        return delayStateDelay;
+    public int getSecondDelay() {
+        return secondDelay;
     }
 
     /**
      * Sets the delay (in ms) which must pass before the loading indicator moves
-     * to its "delay" state.
+     * to its "second" state.
      * 
-     * @param delayStateDelay
+     * @param secondDelay
      *            The delay (in ms) until the loading indicator moves into its
-     *            "delay" state. Counted from when {@link #trigger()} is called.
+     *            "second" state. Counted from when {@link #trigger()} is
+     *            called.
      */
-    public void setDelayStateDelay(int delayStateDelay) {
-        this.delayStateDelay = delayStateDelay;
+    public void setSecondDelay(int secondDelay) {
+        this.secondDelay = secondDelay;
     }
 
     /**
      * Returns the delay (in ms) which must pass before the loading indicator
-     * moves to its "wait" state.
+     * moves to its "third" state.
      * 
      * @return The delay (in ms) until the loading indicator moves into its
-     *         "wait" state. Counted from when {@link #trigger()} is called.
+     *         "third" state. Counted from when {@link #trigger()} is called.
      */
-    public int getWaitStateDelay() {
-        return waitStateDelay;
+    public int getThirdDelay() {
+        return thirdDelay;
     }
 
     /**
      * Sets the delay (in ms) which must pass before the loading indicator moves
-     * to its "wait" state.
+     * to its "third" state.
      * 
-     * @param loadingIndicatorThirdDelay
+     * @param thirdDelay
      *            The delay (in ms) from the event until changing the loading
-     *            indicator into its "wait" state. Counted from when
+     *            indicator into its "third" state. Counted from when
      *            {@link #trigger()} is called.
      */
-    public void setWaitStateDelay(int loadingIndicatorThirdDelay) {
-        waitStateDelay = loadingIndicatorThirdDelay;
+    public void setThirdDelay(int thirdDelay) {
+        this.thirdDelay = thirdDelay;
     }
 
     /**
      * Triggers displaying of this loading indicator. The loading indicator will
-     * actually be shown by {@link #show()} when the initial delay (as specified
-     * by {@link #getInitialStateDelay()}) has passed.
+     * actually be shown by {@link #show()} when the "first" delay (as specified
+     * by {@link #getFirstDelay()}) has passed.
      * <p>
      * The loading indicator will be hidden if shown when calling this method.
      * </p>
      */
     public void trigger() {
         hide();
-        initialTimer.schedule(getInitialStateDelay());
+        firstTimer.schedule(getFirstDelay());
     }
 
     /**
      * Shows the loading indicator in its standard state and triggers timers for
-     * transitioning into the "delay" and "wait" states.
+     * transitioning into the "second" and "third" states.
      */
     public void show() {
         // Reset possible style name and display mode
         getElement().setClassName(PRIMARY_STYLE_NAME);
+        getElement().addClassName("first");
         getElement().getStyle().setDisplay(Display.BLOCK);
 
-        // Schedule the "delay" loading indicator
-        int delayStateTimerDelay = getDelayStateDelay()
-                - getInitialStateDelay();
-        if (delayStateTimerDelay >= 0) {
-            delayStateTimer.schedule(delayStateTimerDelay);
+        // Schedule the "second" loading indicator
+        int secondTimerDelay = getSecondDelay() - getFirstDelay();
+        if (secondTimerDelay >= 0) {
+            secondTimer.schedule(secondTimerDelay);
         }
 
-        // Schedule the "wait" loading indicator
-        int waitStateTimerDelay = getWaitStateDelay() - getInitialStateDelay();
-        if (waitStateTimerDelay >= 0) {
-            waitStateTimer.schedule(waitStateTimerDelay);
+        // Schedule the "third" loading indicator
+        int thirdTimerDelay = getThirdDelay() - getFirstDelay();
+        if (thirdTimerDelay >= 0) {
+            thirdTimer.schedule(thirdTimerDelay);
         }
     }
 
@@ -246,9 +253,9 @@ public class VLoadingIndicator {
      * timers.
      */
     public void hide() {
-        initialTimer.cancel();
-        delayStateTimer.cancel();
-        waitStateTimer.cancel();
+        firstTimer.cancel();
+        secondTimer.cancel();
+        thirdTimer.cancel();
 
         getElement().getStyle().setDisplay(Display.NONE);
     }

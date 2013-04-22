@@ -13,9 +13,9 @@ import com.vaadin.ui.TextField;
 
 public class LoadingIndicatorConfigurationTest extends AbstractTestUIWithLog {
 
-    private TextField initialDelay;
-    private TextField delayStateDelay;
-    private TextField waitStateDelay;
+    private TextField firstDelay;
+    private TextField secondDelay;
+    private TextField thirdDelay;
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -36,38 +36,38 @@ public class LoadingIndicatorConfigurationTest extends AbstractTestUIWithLog {
             }
         });
 
-        initialDelay = createIntegerTextField("Initial delay (ms)",
-                getState().loadingIndicatorConfiguration.initialDelay);
-        initialDelay.addValueChangeListener(new Property.ValueChangeListener() {
+        firstDelay = createIntegerTextField("First delay (ms)",
+                getState().loadingIndicatorConfiguration.firstDelay);
+        firstDelay.addValueChangeListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                getLoadingIndicatorConfiguration().setInitialDelay(
-                        (Integer) initialDelay.getConvertedValue());
+                getLoadingIndicatorConfiguration().setFirstDelay(
+                        (Integer) firstDelay.getConvertedValue());
             }
         });
-        delayStateDelay = createIntegerTextField("Delay state delay (ms)",
-                getState().loadingIndicatorConfiguration.delayStateDelay);
-        delayStateDelay
+        secondDelay = createIntegerTextField("Second delay (ms)",
+                getState().loadingIndicatorConfiguration.secondDelay);
+        secondDelay
                 .addValueChangeListener(new Property.ValueChangeListener() {
                     @Override
                     public void valueChange(ValueChangeEvent event) {
-                        getLoadingIndicatorConfiguration().setDelayStateDelay(
-                                (Integer) delayStateDelay.getConvertedValue());
+                        getLoadingIndicatorConfiguration().setSecondDelay(
+                                (Integer) secondDelay.getConvertedValue());
                     }
                 });
-        waitStateDelay = createIntegerTextField("Wait state delay (ms)",
-                getState().loadingIndicatorConfiguration.waitStateDelay);
-        waitStateDelay
+        thirdDelay = createIntegerTextField("Third delay (ms)",
+                getState().loadingIndicatorConfiguration.thirdDelay);
+        thirdDelay
                 .addValueChangeListener(new Property.ValueChangeListener() {
                     @Override
                     public void valueChange(ValueChangeEvent event) {
-                        getLoadingIndicatorConfiguration().setWaitStateDelay(
-                                (Integer) waitStateDelay.getConvertedValue());
+                        getLoadingIndicatorConfiguration().setThirdDelay(
+                                (Integer) thirdDelay.getConvertedValue());
                     }
                 });
 
         getLayout()
-                .addComponents(initialDelay, delayStateDelay, waitStateDelay);
+                .addComponents(firstDelay, secondDelay, thirdDelay);
 
         HorizontalLayout hl = new HorizontalLayout();
         hl.setMargin(true);

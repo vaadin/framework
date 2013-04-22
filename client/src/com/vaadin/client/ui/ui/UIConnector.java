@@ -577,12 +577,12 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
         if (stateChangeEvent
                 .hasPropertyChanged("loadingIndicatorConfiguration")) {
-            getConnection().getLoadingIndicator().setInitialStateDelay(
-                    getState().loadingIndicatorConfiguration.initialDelay);
-            getConnection().getLoadingIndicator().setWaitStateDelay(
-                    getState().loadingIndicatorConfiguration.waitStateDelay);
-            getConnection().getLoadingIndicator().setDelayStateDelay(
-                    getState().loadingIndicatorConfiguration.delayStateDelay);
+            getConnection().getLoadingIndicator().setFirstDelay(
+                    getState().loadingIndicatorConfiguration.firstDelay);
+            getConnection().getLoadingIndicator().setSecondDelay(
+                    getState().loadingIndicatorConfiguration.secondDelay);
+            getConnection().getLoadingIndicator().setThirdDelay(
+                    getState().loadingIndicatorConfiguration.thirdDelay);
         }
 
         if (stateChangeEvent.hasPropertyChanged("pollInterval")) {

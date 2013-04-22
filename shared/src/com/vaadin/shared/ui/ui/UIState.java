@@ -27,10 +27,11 @@ public class UIState extends TabIndexState {
 
     public PushMode pushMode = PushMode.DISABLED;
 
-    public static class LoadingIndicatorConfigurationState implements Serializable {
-        public int initialDelay = 300;
-        public int delayStateDelay = 1500;
-        public int waitStateDelay = 5000;
+    public static class LoadingIndicatorConfigurationState implements
+            Serializable {
+        public int firstDelay = 300;
+        public int secondDelay = 1500;
+        public int thirdDelay = 5000;
     }
 
     public static class TooltipConfigurationState implements Serializable {

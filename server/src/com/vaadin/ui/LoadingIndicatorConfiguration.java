@@ -30,58 +30,59 @@ public interface LoadingIndicatorConfiguration extends Serializable {
      * Sets the delay before the loading indicator is shown. The default is
      * 300ms.
      * 
-     * @param initialDelay
-     *            The initial delay (in ms)
+     * @param firstDelay
+     *            The first delay (in ms)
      */
-    public void setInitialDelay(int initialDelay);
+    public void setFirstDelay(int firstDelay);
 
     /**
      * Returns the delay before the loading indicator is shown.
      * 
-     * @return The initial delay (in ms)
+     * @return The first delay (in ms)
      */
-    public int getInitialDelay();
+    public int getFirstDelay();
 
     /**
-     * Sets the delay before the loading indicator goes into the "delay" state.
+     * Sets the delay before the loading indicator goes into the "second" state.
      * The delay is calculated from the time when the loading indicator was
      * triggered. The default is 1500ms.
      * 
-     * @param delayStateDelay
-     *            The delay before going into the "delay" state (in ms)
+     * @param secondDelay
+     *            The delay before going into the "second" state (in ms)
      */
-    public void setDelayStateDelay(int delayStateDelay);
+    public void setSecondDelay(int secondDelay);
 
     /**
-     * Returns the delay before the loading indicator goes into the "delay"
+     * Returns the delay before the loading indicator goes into the "second"
      * state. The delay is calculated from the time when the loading indicator
      * was triggered.
      * 
-     * @return The delay before going into the "delay" state (in ms)
+     * @return The delay before going into the "second" state (in ms)
      */
-    public int getDelayStateDelay();
+    public int getSecondDelay();
 
     /**
-     * Sets the delay before the loading indicator goes into the "wait" state.
+     * Sets the delay before the loading indicator goes into the "third" state.
      * The delay is calculated from the time when the loading indicator was
      * triggered. The default is 5000ms.
      * 
-     * @param waitStateDelay
-     *            The delay before going into the "wait" state (in ms)
+     * @param thirdDelay
+     *            The delay before going into the "third" state (in ms)
      */
-    public void setWaitStateDelay(int waitStateDelay);
+    public void setThirdDelay(int thirdDelay);
 
     /**
-     * Returns the delay before the loading indicator goes into the "wait"
+     * Returns the delay before the loading indicator goes into the "third"
      * state. The delay is calculated from the time when the loading indicator
      * was triggered.
      * 
-     * @return The delay before going into the "wait" state (in ms)
+     * @return The delay before going into the "third" state (in ms)
      */
-    public int getWaitStateDelay();
+    public int getThirdDelay();
 }
 
-class LoadingIndicatorConfigurationImpl implements LoadingIndicatorConfiguration {
+class LoadingIndicatorConfigurationImpl implements
+        LoadingIndicatorConfiguration {
     private UI ui;
 
     public LoadingIndicatorConfigurationImpl(UI ui) {
@@ -91,61 +92,61 @@ class LoadingIndicatorConfigurationImpl implements LoadingIndicatorConfiguration
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.ui.LoadingIndicator#setInitialDelay(int)
+     * @see com.vaadin.ui.LoadingIndicator#setFirstDelay(int)
      */
     @Override
-    public void setInitialDelay(int initialDelay) {
-        getState().initialDelay = initialDelay;
+    public void setFirstDelay(int firstDelay) {
+        getState().firstDelay = firstDelay;
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.ui.LoadingIndicator#getInitialDelay()
+     * @see com.vaadin.ui.LoadingIndicator#getFirstDelay()
      */
     @Override
-    public int getInitialDelay() {
-        return getState(false).initialDelay;
+    public int getFirstDelay() {
+        return getState(false).firstDelay;
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.ui.LoadingIndicator#setDelayStateDelay(int)
+     * @see com.vaadin.ui.LoadingIndicator#setSecondDelay(int)
      */
     @Override
-    public void setDelayStateDelay(int delayStateDelay) {
-        getState().delayStateDelay = delayStateDelay;
+    public void setSecondDelay(int secondDelay) {
+        getState().secondDelay = secondDelay;
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.ui.LoadingIndicator#getDelayStateDelay()
+     * @see com.vaadin.ui.LoadingIndicator#getSecondDelay()
      */
     @Override
-    public int getDelayStateDelay() {
-        return getState(false).delayStateDelay;
+    public int getSecondDelay() {
+        return getState(false).secondDelay;
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.ui.LoadingIndicator#setWaitStateDelay(int)
+     * @see com.vaadin.ui.LoadingIndicator#setThirdDelay(int)
      */
     @Override
-    public void setWaitStateDelay(int waitStateDelay) {
-        getState().waitStateDelay = waitStateDelay;
+    public void setThirdDelay(int thirdDelay) {
+        getState().thirdDelay = thirdDelay;
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see com.vaadin.ui.LoadingIndicator#getWaitStateDelay()
+     * @see com.vaadin.ui.LoadingIndicator#getThirdDelay()
      */
     @Override
-    public int getWaitStateDelay() {
-        return getState(false).waitStateDelay;
+    public int getThirdDelay() {
+        return getState(false).thirdDelay;
     }
 
     private LoadingIndicatorConfigurationState getState() {
