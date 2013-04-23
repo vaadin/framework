@@ -155,6 +155,10 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         }
 
         try {
+            // Update WebBrowser here only to make WebBrowser information
+            // available in init for LegacyApplications
+            session.getBrowser().updateRequestDetails(request);
+
             List<UIProvider> uiProviders = session.getUIProviders();
 
             UIClassSelectionEvent classSelectionEvent = new UIClassSelectionEvent(
