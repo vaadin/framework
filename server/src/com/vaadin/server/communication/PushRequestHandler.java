@@ -56,6 +56,10 @@ public class PushRequestHandler implements RequestHandler {
         atmosphere
                 .addInitParameter("org.atmosphere.cpr.sessionSupport", "true");
 
+        // Disable Atmosphere's message about commercial support
+        atmosphere.addInitParameter("org.atmosphere.cpr.showSupportMessage",
+                "false");
+
         // Required to ensure the client-side knows at which points to split the
         // message stream into individual messages when using certain transports
         atmosphere.interceptor(new TrackMessageSizeInterceptor());

@@ -49,10 +49,6 @@
         <!-- Jsoup for BootstrapHandler -->
         <dependency org="org.jsoup" name="jsoup" rev="1.6.3"
             conf="build,ide,test -> default" />
-            
-        <!-- Atmosphere -->
-        <dependency org="org.atmosphere" name="atmosphere-runtime" rev="1.0.12"
-        	conf="build-provided,ide,test -> default" />
 
         <!-- TESTING DEPENDENCIES -->
 

@@ -25,7 +25,11 @@
 	
 		
         <!-- API DEPENDENCIES -->
-           
+        
+        <!--Servlet API version 2.4 -->
+        <dependency org="javax.servlet" name="servlet-api"
+            rev="2.4" conf="build-provided,ide,test -> default" />
+                       
         <!-- Atmosphere -->
         <dependency org="org.atmosphere" name="atmosphere-runtime" rev="1.0.12"
         	conf="build,ide,test -> default">
