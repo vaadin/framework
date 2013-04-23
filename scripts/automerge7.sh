@@ -76,9 +76,12 @@ do
                 maybe_commit_and_push $pendingCommit
                 pendingCommit=
                 echo
-                echo "Doing a no-op merge for $commit because of Merge: no"
+                echo "Doing a no-op merge because of Merge: no for $commit"
+                git log -n 1 --format=%B $commit
+                echo
                 # Do a no-op merge
                 git merge $commit -s ours
+                git commit --amend --no-edit
                 pushMerged
         elif [ "$mergeDirective" == "manual" ]
         then
