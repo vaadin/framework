@@ -45,8 +45,8 @@ public class SASSAddonImportFileCreator {
 
     private static final String ADDON_IMPORTS_FILE = "addons.scss";
 
-    private static final String ADDON_IMPORTS_FILE_TEXT = "This file is managed by the Eclipse plug-in and "
-            + "will be overwritten from time to time. Do not manually edit this file.";
+    private static final String ADDON_IMPORTS_FILE_TEXT = "This file is automatically managed and "
+            + "will be overwritten from time to time.";
 
     /**
      * 
@@ -90,6 +90,8 @@ public class SASSAddonImportFileCreator {
 
             printStream.println("/* " + ADDON_IMPORTS_FILE_TEXT + " */");
 
+            printStream.println("/* Do not manually edit this file. */");
+
             printStream.println();
 
             Map<String, URL> addonThemes = info.getAddonStyles();
@@ -113,10 +115,14 @@ public class SASSAddonImportFileCreator {
                 }
             });
 
+            List<String> mixins = new ArrayList<String>();
             for (String path : paths) {
-                addImport(printStream, path, addonThemes.get(path));
+                mixins.addAll(addImport(printStream, path,
+                        addonThemes.get(path)));
                 printStream.println();
             }
+
+            createAddonsMixin(printStream, mixins);
 
         } catch (FileNotFoundException e) {
             // Should not happen since file is checked before this
@@ -124,26 +130,31 @@ public class SASSAddonImportFileCreator {
         }
     }
 
-    private static void addImport(PrintStream stream, String file, URL location) {
+    private static List<String> addImport(PrintStream stream, String file,
+            URL location) {
 
         // Add import comment
         printImportComment(stream, location);
 
+        List<String> foundMixins = new ArrayList<String>();
+
         if (file.endsWith(".css")) {
-            stream.print("@import url(\"../" + file + "\");\n");
+            stream.print("@import url(\"../../../" + file + "\");\n");
         } else {
             // Assume SASS
-            stream.print("@import \"../" + file + "\";\n");
+            stream.print("@import \"../../../" + file + "\";\n");
 
-            // Convention is to name the mixing after the stylesheet. Strip
+            // Convention is to name the mixin after the stylesheet. Strip
             // .scss from filename
             String mixin = file.substring(file.lastIndexOf("/") + 1,
                     file.length() - ".scss".length());
 
-            stream.print("@include " + mixin + ";");
+            foundMixins.add(mixin);
         }
 
         stream.println();
+
+        return foundMixins;
     }
 
     private static void printImportComment(PrintStream stream, URL location) {
@@ -164,8 +175,19 @@ public class SASSAddonImportFileCreator {
             // location.getPath() returns
         }
 
-        stream.println("/* Added by Vaadin Plug-in for Eclipse from " + path
-                + " */");
+        stream.println("/* Provided by " + path + " */");
+    }
+
+    private static void createAddonsMixin(PrintStream stream,
+            List<String> mixins) {
+
+        stream.println("/* Import and include this mixin into your project theme to include the addon themes */");
+        stream.println("@mixin addons {");
+        for (String addon : mixins) {
+            stream.println("\t@include " + addon + ";");
+        }
+        stream.println("}");
+        stream.println();
     }
 
     private static void printUsage() {
