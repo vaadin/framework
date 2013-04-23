@@ -33,6 +33,7 @@ import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Util;
+import com.vaadin.client.VConsole;
 
 public abstract class AbstractClickEventHandler implements MouseDownHandler,
         MouseUpHandler, DoubleClickHandler, ContextMenuHandler {
@@ -77,7 +78,7 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
                         && elementUnderMouse == lastMouseDownTarget) {
                     mouseUpPreviewMatched = true;
                 } else {
-                    System.out.println("Ignoring mouseup from "
+                    VConsole.log("Ignoring mouseup from "
                             + elementUnderMouse + " when mousedown was on "
                             + lastMouseDownTarget);
                 }

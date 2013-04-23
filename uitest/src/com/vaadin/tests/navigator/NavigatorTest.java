@@ -37,7 +37,9 @@ public class NavigatorTest extends UI {
         @Override
         public void enter(ViewChangeEvent event) {
             String params = event.getParameters();
-            log.log("Navigated to ListView with params " + params);
+            log.log("Navigated to ListView "
+                    + (params.isEmpty() ? "without params" : "with params "
+                            + params));
             removeAllItems();
             for (String arg : params.split(",")) {
                 addItem(arg.split("=|$", 2), arg);
@@ -49,19 +51,33 @@ public class NavigatorTest extends UI {
 
         @Override
         public void enter(ViewChangeEvent event) {
-            log.log("Navigated to EditView with params "
-                    + event.getParameters());
-            setValue("Displaying edit view with parameters "
-                    + event.getParameters());
+            String params = event.getParameters();
+            log.log("Navigated to EditView "
+                    + (params.isEmpty() ? "without params" : "with params "
+                            + params));
+            setValue("Displaying edit view with parameters " + params);
         }
+    }
+
+    class SpecialCharsView extends Label implements View {
+
+        @Override
+        public void enter(ViewChangeEvent event) {
+            log.log("Navigated to SpecialCharsView: " + event.getViewName()
+                    + "; fragment: " + getPage().getUriFragment());
+            setValue(event.getViewName());
+        }
+
     }
 
     class DefaultView extends Label implements View {
 
         @Override
         public void enter(ViewChangeEvent event) {
-            log.log("Navigated to DefaultView with params "
-                    + event.getParameters());
+            String params = event.getParameters();
+            log.log("Navigated to DefaultView "
+                    + (params.isEmpty() ? "without params" : "with params "
+                            + params));
             setValue("Default view: " + event.getParameters());
         }
     }
@@ -123,6 +139,7 @@ public class NavigatorTest extends UI {
 
             navi.addView("list", new ListView());
             navi.addView("edit", new EditView());
+            navi.addView("öääö !%&/()=", new SpecialCharsView());
             navi.addView("forbidden", new ForbiddenView());
 
             navi.addViewChangeListener(new NaviListener());
@@ -132,6 +149,7 @@ public class NavigatorTest extends UI {
             layout.addComponent(new NaviButton("list"));
             layout.addComponent(new NaviButton("edit"));
             layout.addComponent(new NaviButton("forbidden"));
+            layout.addComponent(new NaviButton("öääö !%&/()="));
 
             layout.addComponent(params);
             layout.addComponent(log);

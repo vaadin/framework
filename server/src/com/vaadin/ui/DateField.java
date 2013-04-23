@@ -19,8 +19,10 @@ package com.vaadin.ui;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -769,8 +771,11 @@ public class DateField extends AbstractField<Date> implements
             calendar = Calendar.getInstance();
             // Start by a zeroed calendar to avoid having values for lower
             // resolution variables e.g. time when resolution is day
+            int min, field;
             for (Resolution r : Resolution.getResolutionsLowerThan(resolution)) {
-                calendar.set(r.getCalendarField(), 0);
+                field = r.getCalendarField();
+                min = calendar.getActualMinimum(field);
+                calendar.set(field, min);
             }
             calendar.set(Calendar.MILLISECOND, 0);
         }

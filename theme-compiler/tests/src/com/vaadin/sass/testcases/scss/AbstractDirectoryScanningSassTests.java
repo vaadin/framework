@@ -73,14 +73,19 @@ public abstract class AbstractDirectoryScanningSassTests {
         scssStylesheet.compile();
         String parsedCss = scssStylesheet.toString();
 
+        String normalizedReference = normalize(referenceCss);
+        String normalizedParsed = normalize(parsedCss);
         Assert.assertEquals("Original CSS and parsed CSS do not match for "
-                + scssResourceName, normalize(referenceCss),
-                normalize(parsedCss));
+                + scssResourceName, normalizedReference, normalizedParsed);
     }
 
     private String normalize(String css) {
-        // Replace all whitespace characters with a single space
+        // Insert whitespace at each point
         css = css.replaceAll("[\n\r\t ]*", " ");
+        // Replace multiple whitespace characters with a single space to compact
+        css = css.replaceAll("[\n\r\t ]+", " ");
+        // remove initial whitespace
+        css = css.replaceAll("^[\n\r\t ]*", "");
         // remove trailing whitespace
         css = css.replaceAll("[\n\r\t ]*$", "");
         return css;

@@ -34,6 +34,7 @@ import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
 import com.vaadin.shared.ui.tabsheet.TabsheetBaseConstants;
+import com.vaadin.shared.ui.tabsheet.TabsheetConstants;
 
 public class VAccordion extends VTabsheetBase {
 
@@ -75,6 +76,9 @@ public class VAccordion extends VTabsheetBase {
             itemIndex = index;
         }
         item.updateCaption(tabUidl);
+
+        item.updateTabStyleName(tabUidl
+                .getStringAttribute(TabsheetConstants.TAB_STYLE_NAME));
 
         item.setVisible(!hidden);
 
@@ -290,6 +294,7 @@ public class VAccordion extends VTabsheetBase {
         private boolean open = false;
         private Element content = DOM.createDiv();
         private Element captionNode = DOM.createDiv();
+        private String styleName;
 
         public StackItem(UIDL tabUidl) {
             setElement(DOM.createDiv());
@@ -312,6 +317,7 @@ public class VAccordion extends VTabsheetBase {
             captionNode.removeClassName(getStylePrimaryName() + "-caption");
 
             setStylePrimaryName(primaryStyleName + "-item");
+            updateTabStyleName(getStylePrimaryName());
 
             captionNode.addClassName(getStylePrimaryName() + "-caption");
             content.addClassName(getStylePrimaryName() + "-content");
@@ -397,6 +403,32 @@ public class VAccordion extends VTabsheetBase {
                     uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_DESCRIPTION),
                     uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ERROR_MESSAGE),
                     uidl.getStringAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ICON));
+        }
+
+        /**
+         * Updates a tabs stylename from the child UIDL
+         * 
+         * @param uidl
+         *            The child uidl of the tab
+         */
+        private void updateTabStyleName(String newStyleName) {
+            if (newStyleName != null && newStyleName.length() != 0) {
+                if (!newStyleName.equals(styleName)) {
+                    // If we have a new style name
+                    if (styleName != null && styleName.length() != 0) {
+                        // Remove old style name if present
+                        removeStyleDependentName(styleName);
+                    }
+                    // Set new style name
+                    addStyleDependentName(newStyleName);
+                    styleName = newStyleName;
+                }
+            } else if (styleName != null) {
+                // Remove the set stylename if no stylename is present in the
+                // uidl
+                removeStyleDependentName(styleName);
+                styleName = null;
+            }
         }
 
         public int getWidgetWidth() {

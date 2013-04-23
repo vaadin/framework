@@ -18,8 +18,13 @@
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/VOrderedLayout$Slot[4]/VVerticalLayout[0]/VOrderedLayout$Slot[0]/VLabel[0]</td>
-	<td>1. Navigated to DefaultView with params</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::PID_SLog_row_0</td>
+	<td>1. Navigated to DefaultView without params</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/Slot[6]/VVerticalLayout[0]/Slot[0]/VLabel[0]</td>
+	<td>Default view:</td>
 </tr>
 <tr>
 	<td>click</td>
@@ -28,8 +33,13 @@
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/VOrderedLayout$Slot[4]/VVerticalLayout[0]/VOrderedLayout$Slot[0]/VLabel[0]</td>
-	<td>2. Navigated to ListView with params</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::PID_SLog_row_0</td>
+	<td>2. Navigated to ListView without params</td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/Slot[6]/VVerticalLayout[0]/Slot[0]/VScrollTable[0]</td>
+	<td></td>
 </tr>
 <tr>
 	<td>assertLocation</td>
@@ -43,8 +53,13 @@
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/VOrderedLayout$Slot[4]/VVerticalLayout[0]/VOrderedLayout$Slot[0]/VLabel[0]</td>
-	<td>3. Navigated to EditView with params</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::PID_SLog_row_0</td>
+	<td>3. Navigated to EditView without params</td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/Slot[6]/VVerticalLayout[0]/Slot[0]/VRichTextArea[0]</td>
+	<td></td>
 </tr>
 <tr>
 	<td>assertLocation</td>
@@ -53,12 +68,12 @@
 </tr>
 <tr>
 	<td>mouseClick</td>
-	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/VOrderedLayout$Slot[3]/VTextField[0]</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/Slot[4]/VTextField[0]</td>
 	<td>56,6</td>
 </tr>
 <tr>
 	<td>enterCharacter</td>
-	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/VOrderedLayout$Slot[3]/VTextField[0]</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/Slot[4]/VTextField[0]</td>
 	<td>param=value</td>
 </tr>
 <tr>
@@ -68,8 +83,18 @@
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/VOrderedLayout$Slot[4]/VVerticalLayout[0]/VOrderedLayout$Slot[0]/VLabel[0]</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::PID_SLog_row_0</td>
 	<td>4. Navigated to ListView with params param=value</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/Slot[6]/VVerticalLayout[0]/Slot[0]/VScrollTable[0]/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[0]/domChild[0]/domChild[0]</td>
+	<td>param</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/Slot[6]/VVerticalLayout[0]/Slot[0]/VScrollTable[0]/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[0]/domChild[1]/domChild[0]</td>
+	<td>value</td>
 </tr>
 <tr>
 	<td>assertLocation</td>
@@ -83,7 +108,7 @@
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/VOrderedLayout$Slot[4]/VVerticalLayout[0]/VOrderedLayout$Slot[0]/VLabel[0]</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::PID_SLog_row_0</td>
 	<td>5. Navigated to EditView with params param=value</td>
 </tr>
 <tr>
@@ -98,7 +123,7 @@
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/VOrderedLayout$Slot[4]/VVerticalLayout[0]/VOrderedLayout$Slot[0]/VLabel[0]</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::PID_SLog_row_0</td>
 	<td>6. Prevent navigation to ForbiddenView</td>
 </tr>
 <tr>
@@ -107,45 +132,123 @@
 	<td></td>
 </tr>
 <tr>
-	<td>runScript</td>
-	<td>window.location.hash='!foo'</td>
-	<td></td>
-</tr>
-<tr>
-	<td>pause</td>
-	<td>1000</td>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/Slot[3]/VButton[0]/domChild[0]/domChild[0]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/VOrderedLayout$Slot[4]/VVerticalLayout[0]/VOrderedLayout$Slot[0]/VLabel[0]</td>
-	<td>7. View 'foo' not found!</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::PID_SLog_row_0</td>
+	<td>7. Navigated to SpecialCharsView: öääö !%&amp;/()=; fragment: !öääö !%&amp;/()=/param=value</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/Slot[6]/VVerticalLayout[0]/Slot[0]/VLabel[0]</td>
+	<td>öääö !%&amp;/()=</td>
 </tr>
 <tr>
 	<td>assertLocation</td>
-	<td>*#!foo</td>
+	<td>*#!%C3%B6%C3%A4%C3%A4%C3%B6%20!%25&amp;/()=/param=value</td>
 	<td></td>
 </tr>
 <tr>
 	<td>runScript</td>
-	<td>window.location.hash='foo'</td>
+	<td>window.location.hash='!foo bar'</td>
 	<td></td>
 </tr>
 <tr>
 	<td>pause</td>
-	<td>1000</td>
+	<td>3000</td>
 	<td></td>
 </tr>
 <tr>
 	<td>assertText</td>
-	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/VOrderedLayout$Slot[4]/VVerticalLayout[0]/VOrderedLayout$Slot[0]/VLabel[0]</td>
-	<td>8. Navigated to DefaultView with params</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::PID_SLog_row_0</td>
+	<td>8. View 'foo bar' not found!</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/Slot[6]/VVerticalLayout[0]/Slot[0]/VLabel[0]</td>
+	<td>Tried to navigate to foo bar but such a view could not be found :(</td>
 </tr>
 <tr>
 	<td>assertLocation</td>
-	<td>*#foo</td>
+	<td>regex:.*#!foo( |%20)bar</td>
 	<td></td>
 </tr>
+<tr>
+	<td>runScript</td>
+	<td>window.location.hash='!/foo=bar'</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::PID_SLog_row_0</td>
+	<td>9. Navigated to DefaultView with params foo=bar</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/Slot[6]/VVerticalLayout[0]/Slot[0]/VLabel[0]</td>
+	<td>Default view: foo=bar</td>
+</tr>
+<tr>
+	<td>assertLocation</td>
+	<td>*#!/foo=bar</td>
+	<td></td>
+</tr>
+<tr>
+	<td>runScript</td>
+	<td>window.location.hash='foo bar'</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::PID_SLog_row_0</td>
+	<td>10. Navigated to DefaultView without params</td>
+</tr>
+<tr>
+	<td>assertLocation</td>
+	<td>regex:.*#foo( |%20)bar</td>
+	<td></td>
+</tr>
+<!-- 
+This test is broken in Safari 5; doing the same manually works fine
+<tr>
+	<td>runScript</td>
+	<td>window.location.hash='!öääö !%25&amp;/()='</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>3000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::PID_SLog_row_0</td>
+	<td>10. Navigated to SpecialCharsView: öääö !%&amp;/()=; fragment: !öääö !%&amp;/()=</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestsnavigatorNavigatorTest::/VVerticalLayout[0]/Slot[6]/VVerticalLayout[0]/Slot[0]/VLabel[0]</td>
+	<td>öääö !%&amp;/()=</td>
+</tr>
+<tr>
+	<td>assertLocation</td>
+	<td>regex:.*#!(öääö !%|öääö !%25|%C3%B6%C3%A4%C3%A4%C3%B6%20!%25)&amp;/\(\)=</td>
+	<td></td>
+</tr>
+ -->
 
 </tbody></table>
 </body>
