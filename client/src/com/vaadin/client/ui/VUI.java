@@ -29,6 +29,7 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
@@ -133,10 +134,17 @@ public class VUI extends SimplePanel implements ResizeHandler,
             // Send the location to the server if the fragment has changed
             // and flush active connectors in UI.
             if (!newFragment.equals(currentFragment) && connection != null) {
-
-                // Ensure the fragment is properly encoded in all browsers
-                // (#10769)
-                String location = Window.Location.createUrlBuilder()
+                /*
+                 * Ensure the fragment is properly encoded in all browsers
+                 * (#10769)
+                 * 
+                 * createUrlBuilder does not properly pass an empty fragment to
+                 * UrlBuilder on Webkit browsers so do it manually (#11686)
+                 */
+                String location = Window.Location
+                        .createUrlBuilder()
+                        .setHash(
+                                URL.decodeQueryString(Window.Location.getHash()))
                         .buildString();
 
                 currentFragment = newFragment;
