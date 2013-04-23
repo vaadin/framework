@@ -45,6 +45,8 @@
             rev="${vaadin.version}" conf="build,test->build" />
         <dependency org="com.vaadin" name="vaadin-theme-compiler"
             rev="${vaadin.version}" conf="build,test->build" />
+        <dependency org="com.vaadin" name="vaadin-push"
+            rev="${vaadin.version}" conf="build-provided,test->build" />
 
         <!-- Jsoup for BootstrapHandler -->
         <dependency org="org.jsoup" name="jsoup" rev="1.6.3"
