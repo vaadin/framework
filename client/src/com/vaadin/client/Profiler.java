@@ -387,17 +387,12 @@ public class Profiler {
 
         StringBuilder stringBuilder = new StringBuilder();
         rootNode.buildRecursiveString(stringBuilder, "");
-        Console implementation = VConsole.getImplementation();
-        if (implementation instanceof VDebugConsole) {
-            VDebugConsole console = (VDebugConsole) implementation;
 
-            SimpleTree tree = (SimpleTree) stack.getFirst().buildTree();
-            tree.setText("Profiler data");
-
-            console.showTree(tree, stringBuilder.toString());
-        } else {
-            VConsole.log(stringBuilder.toString());
-        }
+        /*
+         * Should really output to a separate section in the debug window, but
+         * just dump it to the log for now.
+         */
+        VConsole.log(stringBuilder.toString());
 
         Map<String, Node> totals = new HashMap<String, Node>();
         rootNode.sumUpTotals(totals);
@@ -482,13 +477,11 @@ public class Profiler {
                 return;
             }
 
-            Console implementation = VConsole.getImplementation();
-            if (implementation instanceof VDebugConsole) {
-                VDebugConsole console = (VDebugConsole) implementation;
-                console.showTree(tree, stringBuilder.toString());
-            } else {
-                VConsole.log(stringBuilder.toString());
-            }
+            /*
+             * Should really output to a separate section in the debug window,
+             * but just dump it to the log for now.
+             */
+            VConsole.log(stringBuilder.toString());
         }
     }
 

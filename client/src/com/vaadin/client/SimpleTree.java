@@ -30,6 +30,13 @@ import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * @author Vaadin Ltd
+ * 
+ * @deprecated as of 7.1. This class was mainly used by the old debug console
+ *             but is retained for now for backwards compatibility.
+ */
+@Deprecated
 public class SimpleTree extends ComplexPanel {
     private Element children = Document.get().createDivElement().cast();
     private SpanElement handle = Document.get().createSpanElement();

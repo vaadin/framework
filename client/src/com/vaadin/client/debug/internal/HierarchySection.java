@@ -64,7 +64,7 @@ import com.vaadin.shared.AbstractComponentState;
  * @since 7.1
  * @author Vaadin Ltd
  */
-class HierarchySection implements Section {
+public class HierarchySection implements Section {
 
     /**
      * Shared state properties that have hardcoded support in

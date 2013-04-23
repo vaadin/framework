@@ -44,7 +44,7 @@ import com.vaadin.client.ValueMap;
  * @since 7.1
  * @author Vaadin Ltd
  */
-class LogSection implements Section {
+public class LogSection implements Section {
 
     private final class LogSectionHandler extends Handler {
         private LogSectionHandler() {

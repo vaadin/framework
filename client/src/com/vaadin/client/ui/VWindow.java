@@ -43,10 +43,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ConnectorMap;
-import com.vaadin.client.Console;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Util;
+import com.vaadin.client.debug.internal.VDebugWindow;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.window.WindowMode;
@@ -931,7 +931,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 // debug window
                 Widget w = Util.findWidget(target, null);
                 while (w != null) {
-                    if (w instanceof Console) {
+                    if (w instanceof VDebugWindow) {
                         return true; // allow debug-window clicks
                     } else if (ConnectorMap.get(client).isConnector(w)) {
                         return false;

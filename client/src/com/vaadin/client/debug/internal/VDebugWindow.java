@@ -245,7 +245,7 @@ public final class VDebugWindow extends VOverlay {
     /**
      * Closes the window and stops visual logging.
      */
-    void close() {
+    public void close() {
         // TODO disable even more
         if (resizeReg != null) {
             resizeReg.removeHandler();
@@ -499,7 +499,7 @@ public final class VDebugWindow extends VOverlay {
      * 
      * @param section
      */
-    void addSection(final Section section) {
+    public void addSection(final Section section) {
         Button b = section.getTabButton();
         b.addClickHandler(new ClickHandler() {
             @Override
@@ -661,7 +661,7 @@ public final class VDebugWindow extends VOverlay {
     /**
      * Called when the window is initialized.
      */
-    void init() {
+    public void init() {
 
         show();
         readStoredState();
@@ -690,7 +690,7 @@ public final class VDebugWindow extends VOverlay {
      * @param ac
      * @param meta
      */
-    void meta(ApplicationConnection ac, ValueMap meta) {
+    public void meta(ApplicationConnection ac, ValueMap meta) {
         if (isClosed()) {
             return;
         }
@@ -705,7 +705,7 @@ public final class VDebugWindow extends VOverlay {
      * @param ac
      * @param uidl
      */
-    void uidl(ApplicationConnection ac, ValueMap uidl) {
+    public void uidl(ApplicationConnection ac, ValueMap uidl) {
         if (isClosed()) {
             return;
         }
