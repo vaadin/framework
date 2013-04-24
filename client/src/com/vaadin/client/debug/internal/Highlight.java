@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.ServerConnector;
 import com.vaadin.client.ui.VWindow;
 
 /**
@@ -65,6 +66,30 @@ public class Highlight {
      */
     static Element show(ComponentConnector connector) {
         return show(connector, DEFAULT_COLOR);
+    }
+
+    /**
+     * Highlight the {@link Widget} for the given connector if it is a
+     * {@link ComponentConnector}. Hide any other highlight.
+     * <p>
+     * Pass the returned {@link Element} to {@link #hide(Element)} to remove
+     * this particular highlight.
+     * </p>
+     * 
+     * @since 7.1
+     * 
+     * @param connector
+     *            the server connector to highlight
+     * @return Highlight element, or <code>null</code> if the connector isn't a
+     *         component
+     */
+    static Element showOnly(ServerConnector connector) {
+        hideAll();
+        if (connector instanceof ComponentConnector) {
+            return show((ComponentConnector) connector);
+        } else {
+            return null;
+        }
     }
 
     /**

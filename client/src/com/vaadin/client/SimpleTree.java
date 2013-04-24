@@ -25,6 +25,11 @@ import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -37,10 +42,12 @@ import com.google.gwt.user.client.ui.Widget;
  *             but is retained for now for backwards compatibility.
  */
 @Deprecated
-public class SimpleTree extends ComplexPanel {
+public class SimpleTree extends ComplexPanel implements HasDoubleClickHandlers {
     private Element children = Document.get().createDivElement().cast();
     private SpanElement handle = Document.get().createSpanElement();
     private SpanElement text = Document.get().createSpanElement();
+
+    private HandlerManager textDoubleClickHandlerManager;
 
     public SimpleTree() {
         setElement(Document.get().createDivElement());
@@ -131,6 +138,26 @@ public class SimpleTree extends ComplexPanel {
         super.add(child, container);
         handle.getStyle().setDisplay(Display.INLINE_BLOCK);
         getElement().getStyle().setPaddingLeft(3, Unit.PX);
+    }
+
+    /**
+     * {@inheritDoc} Events are not fired when double clicking child widgets.
+     */
+    @Override
+    public HandlerRegistration addDoubleClickHandler(DoubleClickHandler handler) {
+        if (textDoubleClickHandlerManager == null) {
+            textDoubleClickHandlerManager = new HandlerManager(this);
+            addDomHandler(new DoubleClickHandler() {
+                @Override
+                public void onDoubleClick(DoubleClickEvent event) {
+                    if (event.getNativeEvent().getEventTarget().cast() == text) {
+                        textDoubleClickHandlerManager.fireEvent(event);
+                    }
+                }
+            }, DoubleClickEvent.getType());
+        }
+        return textDoubleClickHandlerManager.addHandler(
+                DoubleClickEvent.getType(), handler);
     }
 
 }

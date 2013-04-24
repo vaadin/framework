@@ -24,6 +24,9 @@ import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.Style.TextDecoration;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
@@ -39,6 +42,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration;
@@ -57,6 +61,7 @@ import com.vaadin.client.metadata.Property;
 import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.UnknownComponentConnector;
 import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.communication.SharedState;
 
 /**
  * Provides functionality for examining the UI component hierarchy.
@@ -65,15 +70,6 @@ import com.vaadin.shared.AbstractComponentState;
  * @author Vaadin Ltd
  */
 public class HierarchySection implements Section {
-
-    /**
-     * Shared state properties that have hardcoded support in
-     * {@link #printState(ComponentConnector)} and should therefore be ignored
-     * when iterating through the properties.
-     */
-    private final HashSet<String> ignoreProperties = new HashSet<String>(
-            Arrays.asList("id", "caption", "description", "width", "height"));
-
     private final DebugButton tabButton = new DebugButton(Icon.HIERARCHY,
             "Examine component hierarchy");
 
@@ -86,10 +82,21 @@ public class HierarchySection implements Section {
             "Check layouts for potential problems");
     private final Button generateWS = new DebugButton(Icon.OPTIMIZE,
             "Show used connectors and how to optimize widgetset");
+    private final Button showHierarchy = new DebugButton(Icon.HIERARCHY,
+            "Show the connector hierarchy tree");
 
     private HandlerRegistration highlightModeRegistration = null;
 
     public HierarchySection() {
+        controls.add(showHierarchy);
+        showHierarchy.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
+        showHierarchy.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent event) {
+                showHierarchy();
+            }
+        });
+
         controls.add(find);
         find.setStylePrimaryName(VDebugWindow.STYLENAME_BUTTON);
         find.addClickHandler(new ClickHandler() {
@@ -119,6 +126,68 @@ public class HierarchySection implements Section {
         });
 
         content.setStylePrimaryName(VDebugWindow.STYLENAME + "-hierarchy");
+    }
+
+    private void showHierarchy() {
+        Highlight.hideAll();
+        content.clear();
+
+        // TODO Clearing and rebuilding the contents is not optimal for UX as
+        // any previous expansions are lost.
+        SimplePanel trees = new SimplePanel();
+
+        for (ApplicationConnection application : ApplicationConfiguration
+                .getRunningApplications()) {
+            ServerConnector uiConnector = application.getUIConnector();
+            Widget connectorTree = buildConnectorTree(uiConnector);
+
+            trees.add(connectorTree);
+        }
+
+        content.add(trees);
+    }
+
+    private Widget buildConnectorTree(final ServerConnector connector) {
+        String connectorString = Util.getConnectorString(connector);
+
+        List<ServerConnector> children = connector.getChildren();
+
+        Widget widget;
+        if (children == null || children.isEmpty()) {
+            // Leaf node, just add a label
+            Label label = new Label(connectorString);
+            label.addClickHandler(new ClickHandler() {
+                @Override
+                public void onClick(ClickEvent event) {
+                    Highlight.showOnly(connector);
+                }
+            });
+            widget = label;
+        } else {
+            SimpleTree tree = new SimpleTree(connectorString) {
+                @Override
+                protected void select(ClickEvent event) {
+                    super.select(event);
+                    Highlight.showOnly(connector);
+                }
+            };
+            for (ServerConnector child : children) {
+                tree.add(buildConnectorTree(child));
+            }
+            widget = tree;
+        }
+
+        if (widget instanceof HasDoubleClickHandlers) {
+            HasDoubleClickHandlers has = (HasDoubleClickHandlers) widget;
+            has.addDoubleClickHandler(new DoubleClickHandler() {
+                @Override
+                public void onDoubleClick(DoubleClickEvent event) {
+                    printState(connector);
+                }
+            });
+        }
+
+        return widget;
     }
 
     @Override
@@ -372,8 +441,7 @@ public class HierarchySection implements Section {
         errorNode.addDomHandler(new MouseOverHandler() {
             @Override
             public void onMouseOver(MouseOverEvent event) {
-                Highlight.hideAll();
-                Highlight.show(connector);
+                Highlight.showOnly(connector);
                 ((Widget) event.getSource()).getElement().getStyle()
                         .setTextDecoration(TextDecoration.UNDERLINE);
             }
@@ -481,19 +549,34 @@ public class HierarchySection implements Section {
         }
     }
 
-    private void printState(ComponentConnector connector) {
-        Highlight.show(connector);
-        AbstractComponentState state = connector.getState();
+    private void printState(ServerConnector connector) {
+        Highlight.showOnly(connector);
+
+        SharedState state = connector.getState();
+
+        Set<String> ignoreProperties = new HashSet<String>();
+        ignoreProperties.add("id");
 
         String html = getRowHTML("Id", connector.getConnectorId());
         html += getRowHTML("Connector", Util.getSimpleName(connector));
-        html += getRowHTML("Widget", Util.getSimpleName(connector.getWidget()));
-        html += getRowHTML("Caption", state.caption);
-        html += getRowHTML("Description", state.description);
-        html += getRowHTML("Width", state.width + " (actual: "
-                + connector.getWidget().getOffsetWidth() + "px)");
-        html += getRowHTML("Height", state.height + " (actual: "
-                + connector.getWidget().getOffsetHeight() + "px)");
+
+        if (connector instanceof ComponentConnector) {
+            ComponentConnector component = (ComponentConnector) connector;
+
+            ignoreProperties.addAll(Arrays.asList("caption", "description",
+                    "width", "height"));
+
+            AbstractComponentState componentState = component.getState();
+
+            html += getRowHTML("Widget",
+                    Util.getSimpleName(component.getWidget()));
+            html += getRowHTML("Caption", componentState.caption);
+            html += getRowHTML("Description", componentState.description);
+            html += getRowHTML("Width", componentState.width + " (actual: "
+                    + component.getWidget().getOffsetWidth() + "px)");
+            html += getRowHTML("Height", componentState.height + " (actual: "
+                    + component.getWidget().getOffsetHeight() + "px)");
+        }
 
         try {
             JsArrayObject<Property> properties = AbstractConnector
