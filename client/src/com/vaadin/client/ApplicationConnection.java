@@ -2416,7 +2416,7 @@ public class ApplicationConnection {
     public void sendPendingVariableChanges() {
         if (!deferedSendPending) {
             deferedSendPending = true;
-            Scheduler.get().scheduleDeferred(sendPendingCommand);
+            Scheduler.get().scheduleFinally(sendPendingCommand);
         }
     }
 
