@@ -83,4 +83,8 @@ public class ApplicationConstants implements Serializable {
      * Name of the parameter used to transmit the CSRF token.
      */
     public static final String CSRF_TOKEN_PARAMETER = "v-csrfToken";
+
+    public static final int WEBSOCKET_BUFFER_SIZE = 65536;
+
+    public static final char WEBSOCKET_MESSAGE_DELIMITER = '|';
 }

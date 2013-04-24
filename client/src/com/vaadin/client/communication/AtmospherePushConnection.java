@@ -62,6 +62,45 @@ public class AtmospherePushConnection implements PushConnection {
         DISCONNECTED;
     }
 
+    /**
+     * Represents a message that should be sent as multiple fragments.
+     */
+    protected static class FragmentedMessage {
+
+        // Jetty requires length less than buffer size
+        private int FRAGMENT_LENGTH = ApplicationConstants.WEBSOCKET_BUFFER_SIZE - 1;
+
+        private String message;
+        private int index = 0;
+
+        public FragmentedMessage(String message) {
+            this.message = message;
+        }
+
+        public boolean hasNextFragment() {
+            return index < message.length();
+        }
+
+        public String getNextFragment() {
+            String result;
+            if (index == 0) {
+                String header = "" + message.length()
+                        + ApplicationConstants.WEBSOCKET_MESSAGE_DELIMITER;
+                int fragmentLen = FRAGMENT_LENGTH - header.length();
+                result = header + getFragment(0, fragmentLen);
+                index += fragmentLen;
+            } else {
+                result = getFragment(index, index + FRAGMENT_LENGTH);
+                index += FRAGMENT_LENGTH;
+            }
+            return result;
+        }
+
+        private String getFragment(int begin, int end) {
+            return message.substring(begin, Math.min(message.length(), end));
+        }
+    }
+
     private ApplicationConnection connection;
 
     private JavaScriptObject socket;
@@ -73,6 +112,8 @@ public class AtmospherePushConnection implements PushConnection {
     private AtmosphereConfiguration config;
 
     private String uri;
+
+    private String transport;
 
     /**
      * Keeps track of the disconnect confirmation command for cases where
@@ -151,7 +192,15 @@ public class AtmospherePushConnection implements PushConnection {
         case CONNECTED:
             assert isActive();
             VConsole.log("Sending push message: " + message);
-            doPush(socket, message);
+
+            if (transport.equals("websocket")) {
+                FragmentedMessage fragmented = new FragmentedMessage(message);
+                while (fragmented.hasNextFragment()) {
+                    doPush(socket, fragmented.getNextFragment());
+                }
+            } else {
+                doPush(socket, message);
+            }
             break;
         case DISCONNECT_PENDING:
         case DISCONNECTED:
@@ -167,10 +216,12 @@ public class AtmospherePushConnection implements PushConnection {
     }
 
     protected void onOpen(AtmosphereResponse response) {
-        VConsole.log("Push connection established using "
-                + response.getTransport());
+        transport = response.getTransport();
+
+        VConsole.log("Push connection established using " + transport);
+
         for (String message : messageQueue) {
-            doPush(socket, message);
+            push(message);
         }
         messageQueue.clear();
 

@@ -17,6 +17,7 @@
 package com.vaadin.server.communication;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -129,13 +130,18 @@ public class PushHandler implements AtmosphereHandler {
                     + "connection is kept open or if the UI has a "
                     + "connection of unexpected type.";
 
+            Reader reader = connection.receiveMessage(req.getReader());
+            if (reader == null) {
+                // The whole message was not yet received
+                return;
+            }
+
             // Should be set up by caller
             VaadinRequest vaadinRequest = VaadinService.getCurrentRequest();
             assert vaadinRequest != null;
 
             try {
-                new ServerRpcHandler().handleRpc(ui, req.getReader(),
-                        vaadinRequest);
+                new ServerRpcHandler().handleRpc(ui, reader, vaadinRequest);
                 connection.push(false);
             } catch (JSONException e) {
                 getLogger().log(Level.SEVERE, "Error writing JSON to response",

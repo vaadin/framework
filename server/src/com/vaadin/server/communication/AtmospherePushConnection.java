@@ -17,7 +17,9 @@
 package com.vaadin.server.communication;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Serializable;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.concurrent.Future;
@@ -27,8 +29,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.atmosphere.cpr.AtmosphereResource;
+import org.atmosphere.cpr.AtmosphereResource.TRANSPORT;
 import org.json.JSONException;
 
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.UI;
 
 /**
@@ -40,9 +44,57 @@ import com.vaadin.ui.UI;
  */
 public class AtmospherePushConnection implements Serializable, PushConnection {
 
+    /**
+     * Represents a message that can arrive as multiple fragments.
+     */
+    protected static class FragmentedMessage {
+        private final StringBuilder message = new StringBuilder();
+        private final int messageLength;
+
+        public FragmentedMessage(Reader reader) throws IOException {
+            // Messages are prefixed by the total message length plus '|'
+            String length = "";
+            int c;
+            while ((c = reader.read()) != -1
+                    && c != ApplicationConstants.WEBSOCKET_MESSAGE_DELIMITER) {
+                length += (char) c;
+            }
+            try {
+                messageLength = Integer.parseInt(length);
+            } catch (NumberFormatException e) {
+                throw new IOException("Invalid message length " + length, e);
+            }
+        }
+
+        /**
+         * Appends all the data from the given Reader to this message and
+         * returns whether the message was completed.
+         * 
+         * @param reader
+         *            The Reader from which to read.
+         * @return true if this message is complete, false otherwise.
+         * @throws IOException
+         */
+        public boolean append(Reader reader) throws IOException {
+            char[] buffer = new char[ApplicationConstants.WEBSOCKET_BUFFER_SIZE];
+            int read;
+            while ((read = reader.read(buffer)) != -1) {
+                message.append(buffer, 0, read);
+                assert message.length() <= messageLength : "Received message "
+                        + message.length() + "chars, expected " + messageLength;
+            }
+            return message.length() == messageLength;
+        }
+
+        public Reader getReader() {
+            return new StringReader(message.toString());
+        }
+    }
+
     private UI ui;
     private transient AtmosphereResource resource;
-    private Future<String> lastMessage;
+    private transient Future<String> outgoingMessage;
+    private transient FragmentedMessage incomingMessage;
 
     public AtmospherePushConnection(UI ui) {
         this.ui = ui;
@@ -85,8 +137,42 @@ public class AtmospherePushConnection implements Serializable, PushConnection {
      */
     void sendMessage(String message) {
         // "Broadcast" the changes to the single client only
-        lastMessage = getResource().getBroadcaster().broadcast(message,
+        outgoingMessage = getResource().getBroadcaster().broadcast(message,
                 getResource());
+    }
+
+    /**
+     * Reads and buffers a (possibly partial) message. If a complete message was
+     * received, or if the call resulted in the completion of a partially
+     * received message, returns a {@link Reader} yielding the complete message.
+     * Otherwise, returns null.
+     * 
+     * @param reader
+     *            A Reader from which to read the (partial) message
+     * @return A Reader yielding a complete message or null if the message is
+     *         not yet complete.
+     * @throws IOException
+     */
+    protected Reader receiveMessage(Reader reader) throws IOException {
+
+        if (resource.transport() != TRANSPORT.WEBSOCKET) {
+            return reader;
+        }
+
+        if (incomingMessage == null) {
+            // No existing partially received message
+            incomingMessage = new FragmentedMessage(reader);
+        }
+
+        if (incomingMessage.append(reader)) {
+            // Message is complete
+            Reader completeReader = incomingMessage.getReader();
+            incomingMessage = null;
+            return completeReader;
+        } else {
+            // Only received a partial message
+            return null;
+        }
     }
 
     /**
@@ -128,11 +214,11 @@ public class AtmospherePushConnection implements Serializable, PushConnection {
 
     @Override
     public void disconnect() {
-        if (lastMessage != null) {
+        if (outgoingMessage != null) {
             // Wait for the last message to be sent before closing the
             // connection (assumes that futures are completed in order)
             try {
-                lastMessage.get(1000, TimeUnit.MILLISECONDS);
+                outgoingMessage.get(1000, TimeUnit.MILLISECONDS);
             } catch (TimeoutException e) {
                 getLogger()
                         .log(Level.INFO,
@@ -142,7 +228,7 @@ public class AtmospherePushConnection implements Serializable, PushConnection {
                         .log(Level.INFO,
                                 "Error waiting for messages to be sent to client before disconnect");
             }
-            lastMessage = null;
+            outgoingMessage = null;
         }
 
         resource.resume();

@@ -21,6 +21,7 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 
 import org.atmosphere.client.TrackMessageSizeInterceptor;
+import org.atmosphere.cpr.ApplicationConfig;
 import org.atmosphere.cpr.AtmosphereFramework;
 import org.atmosphere.cpr.AtmosphereRequest;
 import org.atmosphere.cpr.AtmosphereResponse;
@@ -35,6 +36,7 @@ import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.server.VaadinServletResponse;
 import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.shared.ApplicationConstants;
 
 /**
  * Handles requests to open a push (bidirectional) communication channel between
@@ -57,8 +59,17 @@ public class PushRequestHandler implements RequestHandler,
 
         pushHandler = new PushHandler(service);
         atmosphere.addAtmosphereHandler("/*", pushHandler);
-        atmosphere
-                .addInitParameter("org.atmosphere.cpr.sessionSupport", "true");
+        atmosphere.addInitParameter(ApplicationConfig.PROPERTY_SESSION_SUPPORT,
+                "true");
+
+        final String bufferSize = String
+                .valueOf(ApplicationConstants.WEBSOCKET_BUFFER_SIZE);
+        atmosphere.addInitParameter(ApplicationConfig.WEBSOCKET_BUFFER_SIZE,
+                bufferSize);
+        atmosphere.addInitParameter(ApplicationConfig.WEBSOCKET_MAXTEXTSIZE,
+                bufferSize);
+        atmosphere.addInitParameter(ApplicationConfig.WEBSOCKET_MAXBINARYSIZE,
+                bufferSize);
 
         // Disable Atmosphere's message about commercial support
         atmosphere.addInitParameter("org.atmosphere.cpr.showSupportMessage",
