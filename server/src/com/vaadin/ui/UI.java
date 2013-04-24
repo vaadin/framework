@@ -1148,7 +1148,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * @throws UIDetachedException
      *             if this UI is not attached to a session.
      * 
-     * @see VaadinSession#getPushMode()
+     * @see #getPushMode()
      * 
      * @since 7.1
      */
