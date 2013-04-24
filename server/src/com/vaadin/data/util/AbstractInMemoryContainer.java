@@ -501,12 +501,22 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     }
 
     /**
-     * Checks if the container has filters
+     * Returns true if any filters have been applied to the container.
      * 
-     * @return Returns true if the container has container filters applied
+     * @return true if the container has filters applied, false otherwise
+     * @since 7.1
      */
     protected boolean hasContainerFilters() {
-        return !getFilters().isEmpty();
+        return !getContainerFilters().isEmpty();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.Container.Filterable#getContainerFilters()
+     */
+    protected Collection<Filter> getContainerFilters() {
+        return Collections.unmodifiableCollection(filters);
     }
 
     /**

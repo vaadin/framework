@@ -314,10 +314,12 @@ public abstract class AbstractContainerTest extends TestCase {
         initializeContainer(container);
 
         // Filter by "contains ab"
-        container.addContainerFilter(new SimpleStringFilter(
-                FULLY_QUALIFIED_NAME, "ab", false, false));
+        SimpleStringFilter filter1 = new SimpleStringFilter(
+                FULLY_QUALIFIED_NAME, "ab", false, false);
+        container.addContainerFilter(filter1);
 
-        assertTrue(container.hasContainerFilters());
+        assertTrue(container.getContainerFilters().size() == 1);
+        assertEquals(filter1, container.getContainerFilters().iterator().next());
 
         validateContainer(container, "com.vaadin.data.BufferedValidatable",
                 "com.vaadin.ui.TabSheet",
@@ -327,12 +329,14 @@ public abstract class AbstractContainerTest extends TestCase {
         // Filter by "contains da" (reversed as ad here)
         container.removeAllContainerFilters();
 
-        assertFalse(container.hasContainerFilters());
+        assertTrue(container.getContainerFilters().isEmpty());
 
-        container.addContainerFilter(new SimpleStringFilter(
-                REVERSE_FULLY_QUALIFIED_NAME, "ad", false, false));
+        SimpleStringFilter filter2 = new SimpleStringFilter(
+                REVERSE_FULLY_QUALIFIED_NAME, "ad", false, false);
+        container.addContainerFilter(filter2);
 
-        assertTrue(container.hasContainerFilters());
+        assertTrue(container.getContainerFilters().size() == 1);
+        assertEquals(filter2, container.getContainerFilters().iterator().next());
 
         validateContainer(container, "com.vaadin.data.Buffered",
                 "com.vaadin.server.ComponentSizeValidator",

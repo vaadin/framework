@@ -954,11 +954,14 @@ public interface Container extends Serializable {
         public void removeAllContainerFilters();
 
         /**
-         * Returns true if any filters have been applied to the container
+         * Returns the filters which have been applied to the container
          * 
+         * @return A collection of filters which have been applied to the
+         *         container. An empty collection if no filters have been
+         *         applied.
          * @since 7.1
          */
-        public boolean hasContainerFilters();
+        public Collection<Filter> getContainerFilters();
     }
 
     /**

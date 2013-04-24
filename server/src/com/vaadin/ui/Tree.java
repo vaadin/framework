@@ -939,8 +939,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
             com.vaadin.data.Container.ItemSetChangeEvent event) {
         super.containerItemSetChange(event);
         if (getContainerDataSource() instanceof Filterable) {
-            boolean hasFilters = ((Filterable) getContainerDataSource())
-                    .hasContainerFilters();
+            boolean hasFilters = !((Filterable) getContainerDataSource())
+                    .getContainerFilters().isEmpty();
             if (!hasFilters) {
                 /*
                  * If Container is not filtered then the itemsetchange is caused
