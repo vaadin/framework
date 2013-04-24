@@ -93,13 +93,6 @@ public class ServerRpcHandler implements Serializable {
             throws IOException, InvalidUIDLSecurityKeyException, JSONException {
         ui.getSession().setLastRequestTimestamp(System.currentTimeMillis());
 
-        // Change all variables based on request parameters
-        handleVariables(ui, reader, request);
-    }
-
-    private void handleVariables(UI uI, Reader reader, VaadinRequest request)
-            throws IOException, InvalidUIDLSecurityKeyException, JSONException {
-
         String changes = getMessage(reader);
 
         final String[] bursts = changes.split(String
@@ -115,7 +108,7 @@ public class ServerRpcHandler implements Serializable {
 
         // Security: double cookie submission pattern unless disabled by
         // property
-        if (uI.getSession().getConfiguration().isXsrfProtectionEnabled()) {
+        if (ui.getSession().getConfiguration().isXsrfProtectionEnabled()) {
             if (bursts.length == 1 && "init".equals(bursts[0])) {
                 // init request; don't handle any variables, key sent in
                 // response.
@@ -127,7 +120,7 @@ public class ServerRpcHandler implements Serializable {
             } else {
                 // ApplicationServlet has stored the security token in the
                 // session; check that it matched the one sent in the UIDL
-                String sessId = (String) uI
+                String sessId = (String) ui
                         .getSession()
                         .getSession()
                         .getAttribute(
@@ -139,7 +132,7 @@ public class ServerRpcHandler implements Serializable {
             }
 
         }
-        handleBurst(uI, unescapeBurst(bursts[1]));
+        handleBurst(ui, unescapeBurst(bursts[1]));
     }
 
     /**
