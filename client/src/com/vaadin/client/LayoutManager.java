@@ -827,6 +827,7 @@ public class LayoutManager {
      *            the managed layout that should be layouted
      */
     public final void setNeedsHorizontalLayout(ManagedLayout layout) {
+        assert isAttached(layout);
         needsHorizontalLayout.add(layout.getConnectorId());
     }
 
@@ -842,7 +843,19 @@ public class LayoutManager {
      *            the managed layout that should be layouted
      */
     public final void setNeedsVerticalLayout(ManagedLayout layout) {
+        assert isAttached(layout);
         needsVerticalLayout.add(layout.getConnectorId());
+    }
+
+    private boolean isAttached(ServerConnector connector) {
+        while (connector != null) {
+            connector = connector.getParent();
+            if (connector == connection.getUIConnector()) {
+                return true;
+            }
+        }
+        // Reaching null parent before reaching UI connector -> not attached
+        return false;
     }
 
     /**
