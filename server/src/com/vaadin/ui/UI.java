@@ -1186,7 +1186,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * should only be called by the framework.
      */
     public void setPushConnection(PushConnection pushConnection) {
-        assert (pushConnection != null) == (getPushMode().isEnabled());
+        // If pushMode is disabled then there should never be a pushConnection
+        assert (getPushMode().isEnabled() || pushConnection == null);
 
         if (pushConnection == this.pushConnection) {
             return;
