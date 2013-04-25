@@ -197,6 +197,20 @@ public class ServerRpcHandler implements Serializable {
                     getLogger().warning(msg);
                     continue;
                 }
+                if (connector.getUI().isClosing()) {
+                    String msg = "Ignoring RPC call for connector "
+                            + connector.getClass().getName();
+                    if (connector instanceof Component) {
+                        String caption = ((Component) connector).getCaption();
+                        if (caption != null) {
+                            msg += ", caption=" + caption;
+                        }
+                    }
+                    msg += " in closed UI";
+                    getLogger().warning(msg);
+                    continue;
+
+                }
 
                 if (invocation instanceof ServerRpcMethodInvocation) {
                     try {
