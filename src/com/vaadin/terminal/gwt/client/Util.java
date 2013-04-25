@@ -1,4 +1,4 @@
-/* 
+/*
 @VaadinApache2LicenseForJavaFiles@
  */
 
@@ -61,7 +61,7 @@ public class Util {
     public static native Element getElementFromPoint(int clientX, int clientY)
     /*-{
         var el = $wnd.document.elementFromPoint(clientX, clientY);
-        // Call elementFromPoint two times to make sure IE8 also returns something sensible if the application is running in an iframe 
+        // Call elementFromPoint two times to make sure IE8 also returns something sensible if the application is running in an iframe
         el = $wnd.document.elementFromPoint(clientX, clientY);
         if(el != null && el.nodeType == 3) {
             el = el.parentNode;
@@ -293,7 +293,7 @@ public class Util {
     /*-{
         var src = el.src;
         if (src.indexOf(".png") < 1) return;
-        var w = el.width || 16; 
+        var w = el.width || 16;
         var h = el.height || 16;
         if(h==30 || w==28) {
             setTimeout(function(){
@@ -307,7 +307,7 @@ public class Util {
             el.style.width = w + "px";
         }
         el.style.padding = "0";
-        el.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+src+"', sizingMethod='crop')";  
+        el.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+src+"', sizingMethod='crop')";
        }-*/;
 
     public static void doIE6PngFix(Element el) {
@@ -353,7 +353,7 @@ public class Util {
         if (BrowserInfo.get().isIE6()) {
             DOM.setStyleAttribute(element, "overflow", originalOverflow);
         }
-        return padding;
+        return padding | 0;
     }
 
     public static int measureVerticalPaddingAndBorder(Element element,
@@ -368,7 +368,7 @@ public class Util {
         int padding = element.getOffsetHeight() - widthGuess;
 
         DOM.setStyleAttribute(element, "height", originalHeight);
-        return padding;
+        return padding | 0;
     }
 
     public static int measureHorizontalBorder(Element element) {
@@ -403,7 +403,7 @@ public class Util {
         }
         assert borders >= 0;
 
-        return borders;
+        return borders | 0;
     }
 
     public static int measureVerticalBorder(Element element) {
@@ -439,19 +439,19 @@ public class Util {
         }
         assert borders >= 0;
 
-        return borders;
+        return borders | 0;
     }
 
     public static int measureMarginLeft(Element element) {
         return element.getAbsoluteLeft()
-                - element.getParentElement().getAbsoluteLeft();
+                - element.getParentElement().getAbsoluteLeft() | 0;
     }
 
     public static int setHeightExcludingPaddingAndBorder(Widget widget,
             String height, int paddingBorderGuess) {
         if (height.equals("")) {
             setHeight(widget, "");
-            return paddingBorderGuess;
+            return paddingBorderGuess | 0;
         } else if (height.endsWith("px")) {
             int pixelHeight = Integer.parseInt(height.substring(0,
                     height.length() - 2));
@@ -478,7 +478,7 @@ public class Util {
             String width, int paddingBorderGuess) {
         if (width.equals("")) {
             setWidth(widget, "");
-            return paddingBorderGuess;
+            return paddingBorderGuess | 0;
         } else if (width.endsWith("px")) {
             int pixelWidth = Integer.parseInt(width.substring(0,
                     width.length() - 2));
@@ -520,7 +520,7 @@ public class Util {
 
         }
 
-        return actualPadding;
+        return actualPadding | 0;
 
     }
 
@@ -553,7 +553,7 @@ public class Util {
 
         }
 
-        return actualPadding;
+        return actualPadding | 0;
 
     }
 
@@ -586,7 +586,7 @@ public class Util {
             scroller.getStyle().setProperty("marginLeft", "-5000px");
             RootPanel.getBodyElement().appendChild(scroller);
             detectedScrollbarSize = scroller.getOffsetWidth()
-                    - scroller.getPropertyInt("clientWidth");
+                    - scroller.getPropertyInt("clientWidth") | 0;
 
             RootPanel.getBodyElement().removeChild(scroller);
         }
@@ -746,7 +746,7 @@ public class Util {
           var rect = element.getBoundingClientRect();
           return Math.ceil(rect.right - rect.left);
         } else {
-          return element.offsetWidth;
+          return element.offsetWidth | 0;
         }
     }-*/;
 
@@ -760,7 +760,7 @@ public class Util {
         } else {
           height = element.offsetHeight;
         }
-        return height;
+        return height | 0;
     }-*/;
 
     public static int getRequiredWidth(Widget widget) {
@@ -806,7 +806,7 @@ public class Util {
             com.google.gwt.dom.client.Element el, String p)
     /*-{
         try {
-        
+
         if (el.currentStyle) {
             // IE
             return el.currentStyle[p];
@@ -1152,9 +1152,9 @@ public class Util {
      */
     public static int getTouchOrMouseClientX(Event event) {
         if (isTouchEvent(event)) {
-            return event.getChangedTouches().get(0).getClientX();
+            return event.getChangedTouches().get(0).getClientX() | 0;
         } else {
-            return event.getClientX();
+            return event.getClientX() | 0;
         }
     }
 
@@ -1184,9 +1184,9 @@ public class Util {
      */
     public static int getTouchOrMouseClientY(Event event) {
         if (isTouchEvent(event)) {
-            return event.getChangedTouches().get(0).getClientY();
+            return event.getChangedTouches().get(0).getClientY() | 0;
         } else {
-            return event.getClientY();
+            return event.getClientY() | 0;
         }
     }
 
@@ -1278,7 +1278,7 @@ public class Util {
        if ($wnd.document.activeElement) {
            return $wnd.document.activeElement;
        }
-       
+
        return null;
      }-*/
     ;
@@ -1299,7 +1299,7 @@ public class Util {
              */
             boolean notZeroSized = widget.getOffsetHeight() > 0
                     || widget.getOffsetWidth() > 0;
-            return notZeroSized || checkVisibilityRecursively(widget);
+                    return notZeroSized || checkVisibilityRecursively(widget);
         } else {
             return false;
         }
@@ -1329,11 +1329,11 @@ public class Util {
     /*-{
         var top = elem.offsetTop;
         var height = elem.offsetHeight;
-    
+
         if (elem.parentNode != elem.offsetParent) {
           top -= elem.parentNode.offsetTop;
         }
-    
+
         var cur = elem.parentNode;
         while (cur && (cur.nodeType == 1)) {
           if (top < cur.scrollTop) {
@@ -1342,12 +1342,12 @@ public class Util {
           if (top + height > cur.scrollTop + cur.clientHeight) {
             cur.scrollTop = (top + height) - cur.clientHeight;
           }
-    
+
           var offsetTop = cur.offsetTop;
           if (cur.parentNode != cur.offsetParent) {
             offsetTop -= cur.parentNode.offsetTop;
           }
-           
+
           top += offsetTop - cur.scrollTop;
           cur = cur.parentNode;
         }

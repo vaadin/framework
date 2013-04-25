@@ -146,13 +146,17 @@ public class MouseEventDetails implements Serializable {
     }
 
     private static int getRelativeX(int clientX, Element target) {
-        return clientX - target.getAbsoluteLeft() + target.getScrollLeft()
+        int relativeX = clientX - target.getAbsoluteLeft()
+                + target.getScrollLeft()
                 + target.getOwnerDocument().getScrollLeft();
+        return relativeX | 0;
     }
 
     private static int getRelativeY(int clientY, Element target) {
-        return clientY - target.getAbsoluteTop() + target.getScrollTop()
+        int relativeY = clientY - target.getAbsoluteTop()
+                + target.getScrollTop()
                 + target.getOwnerDocument().getScrollTop();
+        return relativeY | 0;
     }
 
 }
