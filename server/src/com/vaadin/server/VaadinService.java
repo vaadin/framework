@@ -101,7 +101,7 @@ public abstract class VaadinService implements Serializable {
 
     private ClassLoader classLoader;
 
-    private final Iterable<RequestHandler> requestHandlers;
+    private Iterable<RequestHandler> requestHandlers;
 
     /**
      * Keeps track of whether a warning about missing push support has already
@@ -135,11 +135,20 @@ public abstract class VaadinService implements Serializable {
                                 + classLoaderName, e);
             }
         }
+    }
 
+    /**
+     * Initializes this service. The service should be initialized before it is
+     * used.
+     * 
+     * @since 7.1
+     * @throws ServiceException
+     *             if a problem occurs when creating the service
+     */
+    public void init() throws ServiceException {
         List<RequestHandler> handlers = createRequestHandlers();
         Collections.reverse(handlers);
         requestHandlers = Collections.unmodifiableCollection(handlers);
-
     }
 
     /**
@@ -150,8 +159,11 @@ public abstract class VaadinService implements Serializable {
      * predefined handler.
      * 
      * @return The list of request handlers used by this service.
+     * @throws ServiceException
+     *             if a problem occurs when creating the request handlers
      */
-    protected List<RequestHandler> createRequestHandlers() {
+    protected List<RequestHandler> createRequestHandlers()
+            throws ServiceException {
         ArrayList<RequestHandler> handlers = new ArrayList<RequestHandler>();
         handlers.add(new SessionRequestHandler());
         handlers.add(new PublishedFileHandler());

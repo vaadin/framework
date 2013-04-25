@@ -39,7 +39,8 @@ public class VaadinPortletService extends VaadinService {
     private final VaadinPortlet portlet;
 
     public VaadinPortletService(VaadinPortlet portlet,
-            DeploymentConfiguration deploymentConfiguration) {
+            DeploymentConfiguration deploymentConfiguration)
+            throws ServiceException {
         super(deploymentConfiguration);
         this.portlet = portlet;
 
@@ -55,7 +56,8 @@ public class VaadinPortletService extends VaadinService {
     }
 
     @Override
-    protected List<RequestHandler> createRequestHandlers() {
+    protected List<RequestHandler> createRequestHandlers()
+            throws ServiceException {
         List<RequestHandler> handlers = super.createRequestHandlers();
 
         handlers.add(new PortletUIInitHandler());

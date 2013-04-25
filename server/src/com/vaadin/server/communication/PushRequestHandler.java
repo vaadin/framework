@@ -26,6 +26,7 @@ import org.atmosphere.cpr.AtmosphereRequest;
 import org.atmosphere.cpr.AtmosphereResponse;
 
 import com.vaadin.server.RequestHandler;
+import com.vaadin.server.ServiceException;
 import com.vaadin.server.ServletPortletHelper;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
@@ -47,7 +48,7 @@ public class PushRequestHandler implements RequestHandler {
     private AtmosphereFramework atmosphere;
     private PushHandler pushHandler;
 
-    public PushRequestHandler(VaadinServletService service) {
+    public PushRequestHandler(VaadinServletService service) throws ServiceException {
 
         atmosphere = new AtmosphereFramework();
 
@@ -64,7 +65,11 @@ public class PushRequestHandler implements RequestHandler {
         // message stream into individual messages when using certain transports
         atmosphere.interceptor(new TrackMessageSizeInterceptor());
 
-        atmosphere.init();
+        try {
+            atmosphere.init(service.getServlet().getServletConfig());
+        } catch (ServletException e) {
+            throw new ServiceException("Could not read atmosphere settings", e);
+        }
     }
 
     @Override

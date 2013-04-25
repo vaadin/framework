@@ -76,10 +76,12 @@ public class TestStreamVariableMapping extends TestCase {
                 variableName));
     }
 
-    private LegacyCommunicationManager createCommunicationManager() {
+    private LegacyCommunicationManager createCommunicationManager()
+            throws Exception {
         VaadinServletService vss = new VaadinServletService(
                 EasyMock.createMock(VaadinServlet.class),
                 new MockDeploymentConfiguration());
+        vss.init();
         return new LegacyCommunicationManager(
                 new AlwaysLockedVaadinSession(vss));
     }

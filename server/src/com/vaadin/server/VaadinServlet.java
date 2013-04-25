@@ -84,7 +84,11 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         DeploymentConfiguration deploymentConfiguration = createDeploymentConfiguration(initParameters);
-        servletService = createServletService(deploymentConfiguration);
+        try {
+            servletService = createServletService(deploymentConfiguration);
+        } catch (ServiceException e) {
+            throw new ServletException("Could not initialize VaadinServlet", e);
+        }
         // Sets current service even though there are no request and response
         servletService.setCurrentInstances(null, null);
 
@@ -142,8 +146,12 @@ public class VaadinServlet extends HttpServlet implements Constants {
     }
 
     protected VaadinServletService createServletService(
-            DeploymentConfiguration deploymentConfiguration) {
-        return new VaadinServletService(this, deploymentConfiguration);
+            DeploymentConfiguration deploymentConfiguration)
+            throws ServiceException {
+        VaadinServletService service = new VaadinServletService(this,
+                deploymentConfiguration);
+        service.init();
+        return service;
     }
 
     /**

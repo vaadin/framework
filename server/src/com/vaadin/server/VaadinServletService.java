@@ -50,7 +50,8 @@ public class VaadinServletService extends VaadinService {
     private boolean pushWarningLogged = false;
 
     public VaadinServletService(VaadinServlet servlet,
-            DeploymentConfiguration deploymentConfiguration) {
+            DeploymentConfiguration deploymentConfiguration)
+            throws ServiceException {
         super(deploymentConfiguration);
         this.servlet = servlet;
 
@@ -82,7 +83,8 @@ public class VaadinServletService extends VaadinService {
     }
 
     @Override
-    protected List<RequestHandler> createRequestHandlers() {
+    protected List<RequestHandler> createRequestHandlers()
+            throws ServiceException {
         List<RequestHandler> handlers = super.createRequestHandlers();
         handlers.add(0, new ServletBootstrapHandler());
         handlers.add(new ServletUIInitHandler());

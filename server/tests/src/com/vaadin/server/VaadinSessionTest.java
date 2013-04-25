@@ -45,7 +45,7 @@ public class VaadinSessionTest {
     private UI ui;
 
     @Before
-    public void setup() {
+    public void setup() throws Exception {
         mockServlet = new VaadinServlet() {
             @Override
             public String getServletName() {
@@ -55,6 +55,7 @@ public class VaadinSessionTest {
 
         mockService = new VaadinServletService(mockServlet,
                 new MockDeploymentConfiguration());
+        mockService.init();
 
         mockHttpSession = EasyMock.createMock(HttpSession.class);
         mockWrappedSession = new WrappedHttpSession(mockHttpSession) {
