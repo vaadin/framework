@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.concurrent.Future;
 
 import org.atmosphere.cpr.AtmosphereResource;
 import org.json.JSONException;
@@ -37,6 +38,7 @@ public class AtmospherePushConnection implements Serializable, PushConnection {
 
     private UI ui;
     private transient AtmosphereResource resource;
+    private Future<String> lastMessage;
 
     public AtmospherePushConnection(UI ui) {
         this.ui = ui;
@@ -79,7 +81,8 @@ public class AtmospherePushConnection implements Serializable, PushConnection {
      *            The message to send
      */
     void sendMessage(String message) {
-        getResource().getBroadcaster().broadcast(message, getResource());
+        lastMessage = getResource().getBroadcaster().broadcast(message,
+                getResource());
     }
 
     /**
@@ -97,7 +100,8 @@ public class AtmospherePushConnection implements Serializable, PushConnection {
     /**
      * Returns whether this connection is currently open.
      */
-    protected boolean isConnected() {
+    @Override
+    public boolean isConnected() {
         return resource != null
                 && resource.getBroadcaster().getAtmosphereResources()
                         .contains(resource);
@@ -120,6 +124,17 @@ public class AtmospherePushConnection implements Serializable, PushConnection {
 
     @Override
     public void disconnect() {
+        if (lastMessage != null) {
+            try {
+                // Wait for the last message to be sent before closing the
+                // connection (assumes that futures are completed in order)
+                lastMessage.get();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            lastMessage = null;
+        }
+
         resource.resume();
         assert !resource.getBroadcaster().getAtmosphereResources()
                 .contains(resource);

@@ -40,4 +40,9 @@ public interface PushConnection {
      */
     public void disconnect();
 
+    /**
+     * Returns whether this connection is currently open.
+     */
+    public boolean isConnected();
+
 }

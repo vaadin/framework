@@ -1026,7 +1026,7 @@ public class ApplicationConnection {
      * @param details
      *            Optional details for debugging.
      */
-    protected void showSessionExpiredError(String details) {
+    public void showSessionExpiredError(String details) {
         VConsole.error("Session expired: " + details);
         showError(details, configuration.getSessionExpiredError());
     }

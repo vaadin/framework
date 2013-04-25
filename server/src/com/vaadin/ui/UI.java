@@ -42,6 +42,7 @@ import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.ScrollClientRpc;
+import com.vaadin.shared.ui.ui.UIClientRpc;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIServerRpc;
 import com.vaadin.shared.ui.ui.UIState;
@@ -363,6 +364,12 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         } else {
             if (session == null) {
                 detach();
+                if (pushConnection != null && pushConnection.isConnected()) {
+                    // Close the push connection when UI is detached. Otherwise
+                    // the push connection and possibly VaadinSession will live
+                    // on.
+                    pushConnection.disconnect();
+                }
             }
             this.session = session;
         }
@@ -1006,6 +1013,15 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      */
     public void close() {
         closing = true;
+
+        boolean sessionExpired = (session == null || session.isClosing());
+        getRpcProxy(UIClientRpc.class).uiClosed(sessionExpired);
+        if (getPushConnection() != null && getPushConnection().isConnected()) {
+            // Push the Rpc to the client. The connection will be closed when
+            // the UI is detached and cleaned up.
+            getPushConnection().push();
+        }
+
     }
 
     /**

@@ -321,7 +321,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     @Deprecated
     public void removeFromSession(VaadinService service) {
         assert hasLock();
-        session.setAttribute(getSessionAttributeName(service), null);
+        session.removeAttribute(getSessionAttributeName(service));
     }
 
     /**

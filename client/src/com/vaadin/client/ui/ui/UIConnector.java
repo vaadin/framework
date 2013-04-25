@@ -69,6 +69,7 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.ui.PageClientRpc;
 import com.vaadin.shared.ui.ui.ScrollClientRpc;
+import com.vaadin.shared.ui.ui.UIClientRpc;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIServerRpc;
 import com.vaadin.shared.ui.ui.UIState;
@@ -113,6 +114,22 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             @Override
             public void setScrollLeft(int scrollLeft) {
                 getWidget().getElement().setScrollLeft(scrollLeft);
+            }
+        });
+        registerRpc(UIClientRpc.class, new UIClientRpc() {
+            @Override
+            public void uiClosed(final boolean sessionExpired) {
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        if (sessionExpired) {
+                            getConnection().showSessionExpiredError(null);
+                        } else {
+                            getState().enabled = false;
+                            updateEnabledState(getState().enabled);
+                        }
+                    }
+                });
             }
         });
         getWidget().addResizeHandler(new ResizeHandler() {
