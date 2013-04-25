@@ -118,7 +118,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
     private Page page = new Page(this);
 
-    private LoadingIndicatorConfiguration loadingIndicatorConfiguration = new LoadingIndicatorConfigurationImpl(this);
+    private LoadingIndicatorConfiguration loadingIndicatorConfiguration = new LoadingIndicatorConfigurationImpl(
+            this);
 
     /**
      * Scroll Y position.
@@ -167,7 +168,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
     private boolean closing = false;
 
-    private TooltipConfiguration tooltipConfiguration = new TooltipConfigurationImpl(this);
+    private TooltipConfiguration tooltipConfiguration = new TooltipConfigurationImpl(
+            this);
 
     /**
      * Creates a new empty UI without a caption. The content of the UI must be

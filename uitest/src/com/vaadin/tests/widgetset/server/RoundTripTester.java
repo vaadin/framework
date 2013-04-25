@@ -43,7 +43,8 @@ public class RoundTripTester extends AbstractComponent {
     public void start(long testDuration, int payloadSize) {
         testStart = System.currentTimeMillis();
         testEnd = testStart + testDuration;
-        getRpcProxy(RoundTripTesterRpc.class).ping(1, generatePayload(payloadSize));
+        getRpcProxy(RoundTripTesterRpc.class).ping(1,
+                generatePayload(payloadSize));
     }
 
     private String generatePayload(int payloadSize) {

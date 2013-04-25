@@ -1,4 +1,3 @@
-package com.vaadin.tests.minitutorials.broadcastingmessages;
 /*
  * Copyright 2000-2013 Vaadin Ltd.
  * 
@@ -15,6 +14,7 @@ package com.vaadin.tests.minitutorials.broadcastingmessages;
  * the License.
  */
 
+package com.vaadin.tests.minitutorials.broadcastingmessages;
 
 import java.util.ArrayList;
 import java.util.List;

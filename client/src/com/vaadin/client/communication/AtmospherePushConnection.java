@@ -246,8 +246,7 @@ public class AtmospherePushConnection implements PushConnection {
      * 
      */
     protected void onError() {
-        VConsole.error("Push connection using "
-                + getConfig().getTransport()
+        VConsole.error("Push connection using " + getConfig().getTransport()
                 + " failed!");
     }
 

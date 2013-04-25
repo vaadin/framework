@@ -47,27 +47,24 @@ public class LoadingIndicatorConfigurationTest extends AbstractTestUIWithLog {
         });
         secondDelay = createIntegerTextField("Second delay (ms)",
                 getState().loadingIndicatorConfiguration.secondDelay);
-        secondDelay
-                .addValueChangeListener(new Property.ValueChangeListener() {
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        getLoadingIndicatorConfiguration().setSecondDelay(
-                                (Integer) secondDelay.getConvertedValue());
-                    }
-                });
+        secondDelay.addValueChangeListener(new Property.ValueChangeListener() {
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                getLoadingIndicatorConfiguration().setSecondDelay(
+                        (Integer) secondDelay.getConvertedValue());
+            }
+        });
         thirdDelay = createIntegerTextField("Third delay (ms)",
                 getState().loadingIndicatorConfiguration.thirdDelay);
-        thirdDelay
-                .addValueChangeListener(new Property.ValueChangeListener() {
-                    @Override
-                    public void valueChange(ValueChangeEvent event) {
-                        getLoadingIndicatorConfiguration().setThirdDelay(
-                                (Integer) thirdDelay.getConvertedValue());
-                    }
-                });
+        thirdDelay.addValueChangeListener(new Property.ValueChangeListener() {
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                getLoadingIndicatorConfiguration().setThirdDelay(
+                        (Integer) thirdDelay.getConvertedValue());
+            }
+        });
 
-        getLayout()
-                .addComponents(firstDelay, secondDelay, thirdDelay);
+        getLayout().addComponents(firstDelay, secondDelay, thirdDelay);
 
         HorizontalLayout hl = new HorizontalLayout();
         hl.setMargin(true);

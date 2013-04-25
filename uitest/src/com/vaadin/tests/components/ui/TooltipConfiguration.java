@@ -41,8 +41,8 @@ public class TooltipConfiguration extends AbstractTestUIWithLog {
         maxWidth.addValueChangeListener(new Property.ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
-                getTooltipConfiguration()
-                        .setMaxWidth((Integer) maxWidth.getConvertedValue());
+                getTooltipConfiguration().setMaxWidth(
+                        (Integer) maxWidth.getConvertedValue());
             }
         });
         openDelay = createIntegerTextField("Open delay",

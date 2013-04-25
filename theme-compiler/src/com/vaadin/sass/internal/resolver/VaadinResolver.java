@@ -36,7 +36,7 @@ public class VaadinResolver implements ScssStylesheetResolver {
         }
 
         InputSource source = null;
-        
+
         // Can we find the scss from the file system?
         ScssStylesheetResolver resolver = new FilesystemResolver();
         source = resolver.resolve(identifier);

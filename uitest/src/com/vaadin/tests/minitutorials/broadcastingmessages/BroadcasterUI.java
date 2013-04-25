@@ -1,6 +1,5 @@
 package com.vaadin.tests.minitutorials.broadcastingmessages;
 
-
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.minitutorials.broadcastingmessages.Broadcaster.BroadcastListener;
 import com.vaadin.ui.Button;

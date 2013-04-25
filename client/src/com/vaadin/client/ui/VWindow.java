@@ -571,7 +571,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         }
     }
 
-    public void updateMaximizeRestoreClassName(boolean visible, WindowMode windowMode) {
+    public void updateMaximizeRestoreClassName(boolean visible,
+            WindowMode windowMode) {
         String className;
         if (windowMode == WindowMode.MAXIMIZED) {
             className = CLASSNAME + "-restorebox";

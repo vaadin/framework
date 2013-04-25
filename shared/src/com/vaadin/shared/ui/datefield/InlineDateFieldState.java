@@ -15,7 +15,6 @@
  */
 package com.vaadin.shared.ui.datefield;
 
-
 public class InlineDateFieldState extends TextualDateFieldState {
     {
         primaryStyleName = "v-inline-datefield";

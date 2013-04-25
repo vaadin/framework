@@ -78,9 +78,8 @@ public abstract class AbstractClickEventHandler implements MouseDownHandler,
                         && elementUnderMouse == lastMouseDownTarget) {
                     mouseUpPreviewMatched = true;
                 } else {
-                    VConsole.log("Ignoring mouseup from "
-                            + elementUnderMouse + " when mousedown was on "
-                            + lastMouseDownTarget);
+                    VConsole.log("Ignoring mouseup from " + elementUnderMouse
+                            + " when mousedown was on " + lastMouseDownTarget);
                 }
             }
         }
