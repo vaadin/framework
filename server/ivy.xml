@@ -70,6 +70,12 @@
             conf="test -> default" />
         <dependency org="org.hibernate" name="hibernate-validator"
             rev="4.2.0.Final" conf="test -> default" />
+        
+        <!-- For manual testing with PostgreSQL (see SQLTestConstants) -->
+        <!--
+        <dependency org="postgresql" name="postgresql"
+            rev="9.1-901.jdbc3" conf="test,ide->default" />
+        -->
 
     </dependencies>
 
