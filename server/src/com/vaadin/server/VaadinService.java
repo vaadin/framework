@@ -52,7 +52,6 @@ import com.vaadin.server.communication.HeartbeatHandler;
 import com.vaadin.server.communication.PublishedFileHandler;
 import com.vaadin.server.communication.SessionRequestHandler;
 import com.vaadin.server.communication.UidlRequestHandler;
-import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.UI;
@@ -1569,10 +1568,9 @@ public abstract class VaadinService implements Serializable {
 
         if (session.getService().getDeploymentConfiguration()
                 .isXsrfProtectionEnabled()) {
-            String keyInSession = (String) session.getSession().getAttribute(
-                    ApplicationConstants.UIDL_SECURITY_TOKEN_ID);
+            String sessionToken = session.getCsrfToken();
 
-            if (keyInSession == null || !keyInSession.equals(requestToken)) {
+            if (sessionToken == null || !sessionToken.equals(requestToken)) {
                 return false;
             }
         }

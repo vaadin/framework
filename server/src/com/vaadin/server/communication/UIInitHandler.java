@@ -37,6 +37,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.UI;
@@ -267,9 +268,10 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
         StringWriter writer = new StringWriter();
         try {
             writer.write("{");
-            if (uI.getSession().getConfiguration().isXsrfProtectionEnabled()) {
-                writer.write(uI.getSession().getCommunicationManager()
-                        .getSecurityKeyUIDL(request));
+
+            VaadinSession session = uI.getSession();
+            if (session.getConfiguration().isXsrfProtectionEnabled()) {
+                writer.write(getSecurityKeyUIDL(session));
             }
             new UidlWriter().write(uI, writer, true, false, false);
             writer.write("}");
@@ -280,6 +282,20 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
         } finally {
             writer.close();
         }
+    }
+
+    /**
+     * Gets the security key (and generates one if needed) as UIDL.
+     * 
+     * @param session
+     *            the vaadin session to which the security key belongs
+     * @return the security key UIDL or "" if the feature is turned off
+     */
+    private static String getSecurityKeyUIDL(VaadinSession session) {
+        String seckey = session.getCsrfToken();
+
+        return "\"" + ApplicationConstants.UIDL_SECURITY_TOKEN_ID + "\":\""
+                + seckey + "\",";
     }
 
     private static final Logger getLogger() {

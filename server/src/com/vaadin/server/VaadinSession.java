@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
@@ -590,6 +591,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     private int connectorIdSequence = 0;
 
+    private final String csrfToken = UUID.randomUUID().toString();
+
     /**
      * Generate an id for the given Connector. Connectors must not call this
      * method more than once, the first time they need an id.
@@ -1090,6 +1093,18 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
             }
         }
 
+    }
+
+    /**
+     * Gets the CSRF token (aka double submit cookie) that is used to protect
+     * against Cross Site Request Forgery attacks.
+     * 
+     * @since 7.1
+     * @return the csrf token string
+     */
+    public String getCsrfToken() {
+        assert hasLock();
+        return csrfToken;
     }
 
 }

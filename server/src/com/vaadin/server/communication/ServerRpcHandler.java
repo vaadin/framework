@@ -69,10 +69,6 @@ public class ServerRpcHandler implements Serializable {
 
     private static final int MAX_BUFFER_SIZE = 64 * 1024;
 
-    // flag used in the request to indicate that the security token should be
-    // written to the response
-    private static final String WRITE_SECURITY_TOKEN_FLAG = "writeSecurityToken";
-
     /**
      * Reads JSON containing zero or more serialized RPC calls (including legacy
      * variable changes) and executes the calls.

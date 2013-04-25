@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -61,9 +60,6 @@ import com.vaadin.ui.UI;
 @Deprecated
 @SuppressWarnings("serial")
 public class LegacyCommunicationManager implements Serializable {
-
-    // TODO PUSH move
-    public static final String WRITE_SECURITY_TOKEN_FLAG = "writeSecurityToken";
 
     // TODO Refactor (#11410)
     private final HashMap<Integer, ClientCache> uiToClientCache = new HashMap<Integer, ClientCache>();
@@ -97,42 +93,6 @@ public class LegacyCommunicationManager implements Serializable {
 
     protected VaadinSession getSession() {
         return session;
-    }
-
-    /**
-     * Gets the security key (and generates one if needed) as UIDL.
-     * 
-     * @param request
-     * @return the security key UIDL or "" if the feature is turned off
-     */
-    public String getSecurityKeyUIDL(VaadinRequest request) {
-        final String seckey = getSecurityKey(request);
-        if (seckey != null) {
-            return "\"" + ApplicationConstants.UIDL_SECURITY_TOKEN_ID + "\":\""
-                    + seckey + "\",";
-        } else {
-            return "";
-        }
-    }
-
-    /**
-     * Gets the security key (and generates one if needed).
-     * 
-     * @param request
-     * @return the security key
-     */
-    protected String getSecurityKey(VaadinRequest request) {
-        String seckey = null;
-        WrappedSession session = request.getWrappedSession();
-        seckey = (String) session
-                .getAttribute(ApplicationConstants.UIDL_SECURITY_TOKEN_ID);
-        if (seckey == null) {
-            seckey = UUID.randomUUID().toString();
-            session.setAttribute(ApplicationConstants.UIDL_SECURITY_TOKEN_ID,
-                    seckey);
-        }
-
-        return seckey;
     }
 
     /**

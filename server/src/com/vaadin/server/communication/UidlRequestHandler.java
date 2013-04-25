@@ -27,7 +27,6 @@ import org.json.JSONException;
 
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.Constants;
-import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.LegacyCommunicationManager.InvalidUIDLSecurityKeyException;
 import com.vaadin.server.ServletPortletHelper;
 import com.vaadin.server.SessionExpiredHandler;
@@ -168,15 +167,6 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
             UI ui, Writer writer, boolean repaintAll, boolean analyzeLayouts)
             throws IOException, JSONException {
         openJsonMessage(writer, response);
-
-        // security key
-        Object writeSecurityTokenFlag = request
-                .getAttribute(LegacyCommunicationManager.WRITE_SECURITY_TOKEN_FLAG);
-
-        if (writeSecurityTokenFlag != null) {
-            writer.write(ui.getSession().getCommunicationManager()
-                    .getSecurityKeyUIDL(request));
-        }
 
         new UidlWriter().write(ui, writer, repaintAll, analyzeLayouts, false);
 
