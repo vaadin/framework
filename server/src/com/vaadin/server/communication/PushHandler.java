@@ -38,6 +38,7 @@ import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WebBrowser;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
 
@@ -70,15 +71,34 @@ public class PushHandler implements AtmosphereHandler {
                     "New push connection with transport {0}",
                     resource.transport());
             resource.getResponse().setContentType("text/plain; charset=UTF-8");
+
+            VaadinSession session = ui.getSession();
             if (resource.transport() == TRANSPORT.STREAMING) {
                 // IE8 requires a longer padding to work properly if the
                 // initial message is small (#11573). Chrome does not work
                 // without the original padding...
-                WebBrowser browser = ui.getSession().getBrowser();
+                WebBrowser browser = session.getBrowser();
                 if (browser.isIE() && browser.getBrowserMajorVersion() == 8) {
                     resource.padding(LONG_PADDING);
                 }
             }
+
+            String requestToken = resource.getRequest().getParameter(
+                    ApplicationConstants.CSRF_TOKEN_PARAMETER);
+            if (!VaadinService.isCsrfTokenValid(session, requestToken)) {
+                getLogger()
+                        .log(Level.WARNING,
+                                "Invalid CSRF token in new connection received from {0}",
+                                resource.getRequest().getRemoteHost());
+                // Refresh on client side, create connection just for
+                // sending a message
+                AtmospherePushConnection connection = new AtmospherePushConnection(
+                        ui);
+                connection.connect(resource);
+                sendRefresh(connection);
+                return;
+            }
+
             resource.suspend();
 
             AtmospherePushConnection connection = new AtmospherePushConnection(
@@ -122,19 +142,13 @@ public class PushHandler implements AtmosphereHandler {
                 getLogger().log(Level.SEVERE, "Error writing JSON to response",
                         e);
                 // Refresh on client side
-                connection
-                        .sendMessage(VaadinService
-                                .createCriticalNotificationJSON(null, null,
-                                        null, null));
+                sendRefresh(connection);
             } catch (InvalidUIDLSecurityKeyException e) {
                 getLogger().log(Level.WARNING,
                         "Invalid security key received from {0}",
                         resource.getRequest().getRemoteHost());
                 // Refresh on client side
-                connection
-                        .sendMessage(VaadinService
-                                .createCriticalNotificationJSON(null, null,
-                                        null, null));
+                sendRefresh(connection);
             }
         }
     };
@@ -312,6 +326,11 @@ public class PushHandler implements AtmosphereHandler {
 
     @Override
     public void destroy() {
+    }
+
+    private static void sendRefresh(AtmospherePushConnection connection) {
+        connection.sendMessage(VaadinService.createCriticalNotificationJSON(
+                null, null, null, null));
     }
 
     private static final Logger getLogger() {

@@ -46,7 +46,6 @@ import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.TypeData;
 import com.vaadin.client.ui.UnknownComponentConnector;
 import com.vaadin.shared.ApplicationConstants;
-import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.UIConstants;
 
 public class ApplicationConfiguration implements EntryPoint {
@@ -212,7 +211,6 @@ public class ApplicationConfiguration implements EntryPoint {
     private ErrorMessage authorizationError;
     private ErrorMessage sessionExpiredError;
     private int heartbeatInterval;
-    private PushMode pushMode;
 
     private HashMap<Integer, String> unknownComponents;
 
@@ -325,10 +323,6 @@ public class ApplicationConfiguration implements EntryPoint {
         return heartbeatInterval;
     }
 
-    public PushMode getPushMode() {
-        return pushMode;
-    }
-
     public JavaScriptObject getVersionInfoJSObject() {
         return getJsoConfiguration(id).getVersionInfoJSObject();
     }
@@ -381,14 +375,6 @@ public class ApplicationConfiguration implements EntryPoint {
 
         heartbeatInterval = jsoConfiguration
                 .getConfigInteger("heartbeatInterval");
-
-        String pushMode = jsoConfiguration.getConfigString("pushMode");
-        if (pushMode != null) {
-            this.pushMode = Enum
-                    .valueOf(PushMode.class, pushMode.toUpperCase());
-        } else {
-            this.pushMode = PushMode.DISABLED;
-        }
 
         communicationError = jsoConfiguration.getConfigError("comErrMsg");
         authorizationError = jsoConfiguration.getConfigError("authErrMsg");

@@ -52,6 +52,7 @@ import com.vaadin.server.communication.HeartbeatHandler;
 import com.vaadin.server.communication.PublishedFileHandler;
 import com.vaadin.server.communication.SessionRequestHandler;
 import com.vaadin.server.communication.UidlRequestHandler;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.UI;
@@ -1479,6 +1480,44 @@ public abstract class VaadinService implements Serializable {
         }
         // Not supported by default for now, sublcasses may override
         return false;
+    }
+
+    /**
+     * Verifies that the given CSRF token (aka double submit cookie) is valid
+     * for the given session. This is used to protect against Cross Site Request
+     * Forgery attacks.
+     * <p>
+     * This protection is enabled by default, but it might need to be disabled
+     * to allow a certain type of testing. For these cases, the check can be
+     * disabled by setting the init parameter
+     * {@value Constants#SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION} to
+     * <code>true</code>.
+     * 
+     * @see DeploymentConfiguration#isXsrfProtectionEnabled()
+     * 
+     * @since 7.1
+     * 
+     * @param session
+     *            the vaadin session for which the check should be done
+     * @param requestToken
+     *            the CSRF token provided in the request
+     * @return <code>true</code> if the token is valid or if the protection is
+     *         disabled; <code>false</code> if protection is enabled and the
+     *         token is invalid
+     */
+    public static boolean isCsrfTokenValid(VaadinSession session,
+            String requestToken) {
+
+        if (session.getService().getDeploymentConfiguration()
+                .isXsrfProtectionEnabled()) {
+            String keyInSession = (String) session.getSession().getAttribute(
+                    ApplicationConstants.UIDL_SECURITY_TOKEN_ID);
+
+            if (keyInSession == null || !keyInSession.equals(requestToken)) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

@@ -156,8 +156,8 @@ public class ApplicationConnection {
      */
     public static final String UIDL_REFRESH_TOKEN = "Vaadin-Refresh";
 
-    // will hold the UIDL security key (for XSS protection) once received
-    private String uidlSecurityKey = "init";
+    // will hold the CSRF token once received
+    private String csrfToken = "init";
 
     private final HashMap<String, String> resourcesMap = new HashMap<String, String>();
 
@@ -181,19 +181,6 @@ public class ApplicationConnection {
     private final UIConnector uIConnector;
 
     protected boolean applicationRunning = false;
-
-    /**
-     * Keep track of whether the initialization JSON has been handled. We should
-     * not process any push messages until the initial JSON has been processed.
-     */
-    private boolean initJsonHandled = false;
-
-    /**
-     * Keep track of any push messages that arrive before
-     * {@link #initJsonHandled} is set to true.
-     */
-    private JsArrayString incommingPushMessageQueue = JsArrayString
-            .createArray().cast();
 
     private boolean hasActiveRequest = false;
 
@@ -455,8 +442,6 @@ public class ApplicationConnection {
 
         scheduleHeartbeat();
 
-        setPushEnabled(getConfiguration().getPushMode().isEnabled());
-
         Window.addWindowClosingHandler(new ClosingHandler() {
             @Override
             public void onWindowClosing(ClosingEvent event) {
@@ -715,7 +700,7 @@ public class ApplicationConnection {
             final String extraParams) {
         startRequest();
         // Security: double cookie submission pattern
-        final String payload = uidlSecurityKey + VAR_BURST_SEPARATOR
+        final String payload = getCsrfToken() + VAR_BURST_SEPARATOR
                 + requestData;
         VConsole.log("Making UIDL Request with params: " + payload);
         String uri = translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
@@ -1127,25 +1112,6 @@ public class ApplicationConnection {
             runPostRequestHooks(configuration.getRootPanelId());
         }
 
-        if (!initJsonHandled) {
-            /*
-             * Assume that the first request that is fully handled is the one
-             * with the initialization data.
-             */
-            initJsonHandled = true;
-
-            int queueLength = incommingPushMessageQueue.length();
-            if (queueLength > 0) {
-                VConsole.log("Init handled, processing " + queueLength
-                        + " enqueued messages");
-                for (int i = 0; i < queueLength; i++) {
-                    handlePushMessage(incommingPushMessageQueue.get(i));
-                }
-                incommingPushMessageQueue.setLength(0);
-            }
-
-        }
-
         // deferring to avoid flickering
         Scheduler.get().scheduleDeferred(new Command() {
             @Override
@@ -1315,7 +1281,7 @@ public class ApplicationConnection {
 
         // Get security key
         if (json.containsKey(ApplicationConstants.UIDL_SECURITY_TOKEN_ID)) {
-            uidlSecurityKey = json
+            csrfToken = json
                     .getString(ApplicationConstants.UIDL_SECURITY_TOKEN_ID);
         }
         VConsole.log(" * Handling resources from server");
@@ -3034,7 +3000,17 @@ public class ApplicationConnection {
     private ConnectorMap connectorMap = GWT.create(ConnectorMap.class);
 
     protected String getUidlSecurityKey() {
-        return uidlSecurityKey;
+        return getCsrfToken();
+    }
+
+    /**
+     * Gets the token (aka double submit cookie) that the server uses to protect
+     * against Cross Site Request Forgery attacks.
+     * 
+     * @return the CSRF token string
+     */
+    public String getCsrfToken() {
+        return csrfToken;
     }
 
     /**
@@ -3443,11 +3419,6 @@ public class ApplicationConnection {
     }
 
     public void handlePushMessage(String message) {
-        if (initJsonHandled) {
-            handleJSONText(message, 200);
-        } else {
-            VConsole.log("Enqueuing push message has init has not yet been handled");
-            incommingPushMessageQueue.push(message);
-        }
+        handleJSONText(message, 200);
     }
 }

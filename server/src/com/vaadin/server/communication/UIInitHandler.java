@@ -37,6 +37,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.UI;
 
@@ -206,6 +207,13 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
         UI.setCurrent(ui);
 
         ui.doInit(request, uiId.intValue());
+
+        PushMode pushMode = provider.getPushMode(event);
+        if (pushMode == null) {
+            pushMode = session.getService().getDeploymentConfiguration()
+                    .getPushMode();
+        }
+        ui.setPushMode(pushMode);
 
         session.addUI(ui);
 

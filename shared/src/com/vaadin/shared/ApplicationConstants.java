@@ -78,4 +78,9 @@ public class ApplicationConstants implements Serializable {
      * in the VAADIN directory.
      */
     public static final String VAADIN_PUSH_JS = "vaadinPush.js";
+
+    /**
+     * Name of the parameter used to transmit the CSRF token.
+     */
+    public static final String CSRF_TOKEN_PARAMETER = "v-csrfToken";
 }

@@ -543,10 +543,6 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         // Actual theme - used for finding CustomLayout templates
         theme = request.getParameter("theme");
 
-        PushMode pushMode = PushMode.valueOf(request.getParameter("v-pushMode")
-                .toUpperCase());
-        setPushMode(pushMode);
-
         getPage().init(request);
 
         // Call the init overridden by the application developer

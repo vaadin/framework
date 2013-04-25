@@ -41,6 +41,7 @@ import com.vaadin.server.ServerRpcManager;
 import com.vaadin.server.ServerRpcManager.RpcInvocationException;
 import com.vaadin.server.ServerRpcMethodInvocation;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinService;
 import com.vaadin.server.VariableOwner;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Connector;
@@ -108,29 +109,8 @@ public class ServerRpcHandler implements Serializable {
 
         // Security: double cookie submission pattern unless disabled by
         // property
-        if (ui.getSession().getConfiguration().isXsrfProtectionEnabled()) {
-            if (bursts.length == 1 && "init".equals(bursts[0])) {
-                // init request; don't handle any variables, key sent in
-                // response.
-                // TODO This seems to be dead code
-                request.setAttribute(
-                        LegacyCommunicationManager.WRITE_SECURITY_TOKEN_FLAG,
-                        true);
-                return;
-            } else {
-                // ApplicationServlet has stored the security token in the
-                // session; check that it matched the one sent in the UIDL
-                String sessId = (String) ui
-                        .getSession()
-                        .getSession()
-                        .getAttribute(
-                                ApplicationConstants.UIDL_SECURITY_TOKEN_ID);
-
-                if (sessId == null || !sessId.equals(bursts[0])) {
-                    throw new InvalidUIDLSecurityKeyException("");
-                }
-            }
-
+        if (!VaadinService.isCsrfTokenValid(ui.getSession(), bursts[0])) {
+            throw new InvalidUIDLSecurityKeyException("");
         }
         handleBurst(ui, unescapeBurst(bursts[1]));
     }

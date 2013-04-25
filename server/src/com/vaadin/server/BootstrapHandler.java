@@ -526,8 +526,6 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         appConfig.put("heartbeatInterval", vaadinService
                 .getDeploymentConfiguration().getHeartbeatInterval());
 
-        appConfig.put("pushMode", context.getPushMode().toString());
-
         String serviceUrl = getServiceUrl(context);
         if (serviceUrl != null) {
             appConfig.put(ApplicationConstants.SERVICE_URL, serviceUrl);
