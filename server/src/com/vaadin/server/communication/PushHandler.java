@@ -31,7 +31,9 @@ import org.json.JSONException;
 
 import com.vaadin.server.LegacyCommunicationManager.InvalidUIDLSecurityKeyException;
 import com.vaadin.server.ServiceException;
+import com.vaadin.server.ServletPortletHelper;
 import com.vaadin.server.SessionExpiredException;
+import com.vaadin.server.SystemMessages;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServletRequest;
@@ -227,12 +229,26 @@ public class PushHandler implements AtmosphereHandler {
             try {
                 session = service.findVaadinSession(vaadinRequest);
             } catch (ServiceException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                return;
+                getLogger().log(Level.SEVERE,
+                        "Could not get session. This should never happen", e);
             } catch (SessionExpiredException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                SystemMessages msg = service.getSystemMessages(
+                        ServletPortletHelper.findLocale(null, null,
+                                vaadinRequest), vaadinRequest);
+                try {
+                    resource.getResponse()
+                            .getWriter()
+                            .write(VaadinService
+                                    .createCriticalNotificationJSON(
+                                            msg.getSessionExpiredCaption(),
+                                            msg.getSessionExpiredMessage(),
+                                            null, msg.getSessionExpiredURL()));
+                } catch (IOException e1) {
+                    getLogger()
+                            .log(Level.WARNING,
+                                    "Failed to notify client about unavailable session",
+                                    e);
+                }
                 return;
             }
 

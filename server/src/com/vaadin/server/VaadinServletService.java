@@ -17,7 +17,6 @@
 package com.vaadin.server;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -27,14 +26,12 @@ import java.util.logging.Logger;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.atmosphere.util.Version;
 
 import com.vaadin.server.communication.PushRequestHandler;
 import com.vaadin.server.communication.ServletBootstrapHandler;
 import com.vaadin.server.communication.ServletUIInitHandler;
-import com.vaadin.shared.JsonConstants;
 import com.vaadin.ui.UI;
 
 public class VaadinServletService extends VaadinService {
@@ -270,72 +267,6 @@ public class VaadinServletService extends VaadinService {
         }
         appId = appId + "-" + hashCode;
         return appId;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.server.VaadinService#handleSessionExpired(com.vaadin.server
-     * .VaadinRequest, com.vaadin.server.VaadinResponse)
-     */
-    @Override
-    protected void handleSessionExpired(VaadinRequest request,
-            VaadinResponse response) throws ServiceException {
-        if (!(request instanceof VaadinServletRequest)) {
-            throw new ServiceException(new IllegalArgumentException(
-                    "handleSessionExpired called with a non-VaadinServletRequest: "
-                            + request.getClass().getName()));
-        }
-
-        VaadinServletRequest servletRequest = (VaadinServletRequest) request;
-        VaadinServletResponse servletResponse = (VaadinServletResponse) response;
-
-        try {
-            SystemMessages ci = getSystemMessages(
-                    ServletPortletHelper.findLocale(null, null, request),
-                    request);
-            if (ServletPortletHelper.isUIDLRequest(request)) {
-                /*
-                 * Invalidate session (weird to have session if we're saying
-                 * that it's expired)
-                 * 
-                 * Session must be invalidated before criticalNotification as it
-                 * commits the response.
-                 */
-                servletRequest.getSession().invalidate();
-
-                writeStringResponse(
-                        response,
-                        JsonConstants.JSON_CONTENT_TYPE,
-                        createCriticalNotificationJSON(
-                                ci.getSessionExpiredCaption(),
-                                ci.getSessionExpiredMessage(), null,
-                                ci.getSessionExpiredURL()));
-            } else if (ServletPortletHelper.isHeartbeatRequest(request)) {
-                response.sendError(HttpServletResponse.SC_GONE,
-                        "Session expired");
-            } else {
-                // 'plain' http req - e.g. browser reload;
-                // just go ahead redirect the browser
-                String sessionExpiredURL = ci.getSessionExpiredURL();
-                if (sessionExpiredURL != null) {
-                    servletResponse.sendRedirect(sessionExpiredURL);
-                } else {
-                    /*
-                     * Session expired as a result of a standard http request
-                     * and we have nowhere to redirect. Reloading would likely
-                     * cause an endless loop. This can at least happen if
-                     * refreshing a resource when the session has expired.
-                     */
-                    response.sendError(HttpServletResponse.SC_GONE,
-                            "Session expired");
-                }
-            }
-        } catch (IOException e) {
-            throw new ServiceException(e);
-        }
-
     }
 
     private static final Logger getLogger() {

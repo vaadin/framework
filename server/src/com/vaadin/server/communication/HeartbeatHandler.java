@@ -21,6 +21,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.server.ServletPortletHelper;
+import com.vaadin.server.SessionExpiredHandler;
 import com.vaadin.server.SynchronizedRequestHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
@@ -39,7 +40,8 @@ import com.vaadin.ui.UI;
  * @author Vaadin Ltd
  * @since 7.1
  */
-public class HeartbeatHandler extends SynchronizedRequestHandler {
+public class HeartbeatHandler extends SynchronizedRequestHandler implements
+        SessionExpiredHandler {
 
     /**
      * Handles a heartbeat request for the given session. Reads the GET
@@ -65,6 +67,24 @@ public class HeartbeatHandler extends SynchronizedRequestHandler {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "UI not found");
         }
 
+        return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.server.SessionExpiredHandler#handleSessionExpired(com.vaadin
+     * .server.VaadinRequest, com.vaadin.server.VaadinResponse)
+     */
+    @Override
+    public boolean handleSessionExpired(VaadinRequest request,
+            VaadinResponse response) throws IOException {
+        if (!ServletPortletHelper.isHeartbeatRequest(request)) {
+            return false;
+        }
+
+        response.sendError(HttpServletResponse.SC_GONE, "Session expired");
         return true;
     }
 }

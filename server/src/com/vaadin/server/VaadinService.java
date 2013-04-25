@@ -1283,6 +1283,13 @@ public abstract class VaadinService implements Serializable {
     /**
      * Handles the incoming request and writes the response into the response
      * object. Uses {@link #getRequestHandlers()} for handling the request.
+     * <p>
+     * If a session expiration is detected during request handling then each
+     * {@link RequestHandler request handler} has an opportunity to handle the
+     * expiration event if it implements {@link SessionExpiredHandler}. If no
+     * request handler handles session expiration a default expiration message
+     * will be written.
+     * </p>
      * 
      * @param request
      *            The incoming request
@@ -1409,8 +1416,48 @@ public abstract class VaadinService implements Serializable {
      *             Thrown if there was any problem handling the expiration of
      *             the session
      */
-    protected abstract void handleSessionExpired(VaadinRequest request,
-            VaadinResponse response) throws ServiceException;
+    protected void handleSessionExpired(VaadinRequest request,
+            VaadinResponse response) throws ServiceException {
+        SystemMessages systemMessages = getSystemMessages(
+                ServletPortletHelper.findLocale(null, null, request), request);
+
+        for (RequestHandler handler : getRequestHandlers()) {
+            if (handler instanceof SessionExpiredHandler) {
+                try {
+                    if (((SessionExpiredHandler) handler).handleSessionExpired(
+                            request, response)) {
+                        return;
+                    }
+                } catch (IOException e) {
+                    throw new ServiceException(
+                            "Handling of session expired failed", e);
+                }
+            }
+        }
+
+        // No request handlers handled the request. Write a normal HTTP response
+
+        try {
+            // If there is a URL, try to redirect there
+            String sessionExpiredURL = systemMessages.getSessionExpiredURL();
+            if (sessionExpiredURL != null
+                    && (response instanceof VaadinServletResponse)) {
+                ((VaadinServletResponse) response)
+                        .sendRedirect(sessionExpiredURL);
+            } else {
+                /*
+                 * Session expired as a result of a standard http request and we
+                 * have nowhere to redirect. Reloading would likely cause an
+                 * endless loop. This can at least happen if refreshing a
+                 * resource when the session has expired.
+                 */
+                response.sendError(HttpServletResponse.SC_GONE,
+                        "Session expired");
+            }
+        } catch (IOException e) {
+            throw new ServiceException(e);
+        }
+    }
 
     /**
      * Creates a JSON message which, when sent to client as-is, will cause a

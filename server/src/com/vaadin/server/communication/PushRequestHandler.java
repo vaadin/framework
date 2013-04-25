@@ -28,6 +28,7 @@ import org.atmosphere.cpr.AtmosphereResponse;
 import com.vaadin.server.RequestHandler;
 import com.vaadin.server.ServiceException;
 import com.vaadin.server.ServletPortletHelper;
+import com.vaadin.server.SessionExpiredHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinServletRequest;
@@ -43,12 +44,14 @@ import com.vaadin.server.VaadinSession;
  * @author Vaadin Ltd
  * @since 7.1
  */
-public class PushRequestHandler implements RequestHandler {
+public class PushRequestHandler implements RequestHandler,
+        SessionExpiredHandler {
 
     private AtmosphereFramework atmosphere;
     private PushHandler pushHandler;
 
-    public PushRequestHandler(VaadinServletService service) throws ServiceException {
+    public PushRequestHandler(VaadinServletService service)
+            throws ServiceException {
 
         atmosphere = new AtmosphereFramework();
 
@@ -100,5 +103,21 @@ public class PushRequestHandler implements RequestHandler {
 
     public void destroy() {
         atmosphere.destroy();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.server.SessionExpiredHandler#handleSessionExpired(com.vaadin
+     * .server.VaadinRequest, com.vaadin.server.VaadinResponse)
+     */
+    @Override
+    public boolean handleSessionExpired(VaadinRequest request,
+            VaadinResponse response) throws IOException {
+        // Websockets request must be handled by accepting the websocket
+        // connection and then sending session expired so we let
+        // PushRequestHandler handle it
+        return handleRequest(null, request, response);
     }
 }
