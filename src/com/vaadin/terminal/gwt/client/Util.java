@@ -1299,7 +1299,7 @@ public class Util {
              */
             boolean notZeroSized = widget.getOffsetHeight() > 0
                     || widget.getOffsetWidth() > 0;
-                    return notZeroSized || checkVisibilityRecursively(widget);
+            return notZeroSized || checkVisibilityRecursively(widget);
         } else {
             return false;
         }
