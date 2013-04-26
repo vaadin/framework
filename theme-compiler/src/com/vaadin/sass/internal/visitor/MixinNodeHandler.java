@@ -60,16 +60,10 @@ public class MixinNodeHandler {
             replacePossibleArguments(mixinNode, defClone);
 
             Node previous = mixinNode;
-            for (final Node child : defClone.getChildren()) {
-
-                Node clone = (Node) DeepCopy.copy(child);
-
-                replaceChildVariables(defClone, clone);
-
-                mixinNode.getParentNode().appendChild(clone, previous);
-
-                previous = clone;
-
+            for (final Node child : new ArrayList<Node>(defClone.getChildren())) {
+                replaceChildVariables(defClone, child);
+                mixinNode.getParentNode().appendChild(child, previous);
+                previous = child;
             }
 
         }
