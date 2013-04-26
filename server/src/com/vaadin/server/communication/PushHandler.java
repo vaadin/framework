@@ -94,10 +94,7 @@ public class PushHandler implements AtmosphereHandler {
                                 resource.getRequest().getRemoteHost());
                 // Refresh on client side, create connection just for
                 // sending a message
-                AtmospherePushConnection connection = new AtmospherePushConnection(
-                        ui);
-                connection.connect(resource);
-                sendRefresh(connection);
+                sendRefreshAndDisconnect(resource);
                 return;
             }
 
@@ -144,13 +141,13 @@ public class PushHandler implements AtmosphereHandler {
                 getLogger().log(Level.SEVERE, "Error writing JSON to response",
                         e);
                 // Refresh on client side
-                sendRefresh(connection);
+                sendRefreshAndDisconnect(resource);
             } catch (InvalidUIDLSecurityKeyException e) {
                 getLogger().log(Level.WARNING,
                         "Invalid security key received from {0}",
                         resource.getRequest().getRemoteHost());
                 // Refresh on client side
-                sendRefresh(connection);
+                sendRefreshAndDisconnect(resource);
             }
         }
     };
@@ -349,9 +346,26 @@ public class PushHandler implements AtmosphereHandler {
     public void destroy() {
     }
 
-    private static void sendRefresh(AtmospherePushConnection connection) {
+    /**
+     * Sends a refresh message to the given atmosphere resource. Uses an
+     * AtmosphereResource instead of an AtmospherePushConnection even though it
+     * might be possible to look up the AtmospherePushConnection from the UI to
+     * ensure border cases work correctly, especially when there temporarily are
+     * two push connections which try to use the same UI. Using the
+     * AtmosphereResource directly guarantees the message goes to the correct
+     * recipient.
+     * 
+     * @param resource
+     *            The atmosphere resource to send refresh to
+     * 
+     */
+    private static void sendRefreshAndDisconnect(AtmosphereResource resource)
+            throws IOException {
+        AtmospherePushConnection connection = new AtmospherePushConnection(null);
+        connection.connect(resource);
         connection.sendMessage(VaadinService.createCriticalNotificationJSON(
                 null, null, null, null));
+        connection.disconnect();
     }
 
     private static final Logger getLogger() {
