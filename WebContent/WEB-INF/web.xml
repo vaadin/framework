@@ -74,6 +74,7 @@
 	<servlet>
 		<servlet-name>VaadinApplicationRunnerWithPush</servlet-name>
 		<servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
+		<async-supported>true</async-supported>
 		<init-param>
 			<param-name>pushmode</param-name>
 			<param-value>automatic</param-value>
@@ -84,6 +85,7 @@
 	<servlet>
 		<servlet-name>IntegrationTest</servlet-name>
 		<servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
+		<async-supported>true</async-supported>
 		<init-param>
 			<param-name>UI</param-name>
 			<param-value>com.vaadin.tests.integration.IntegrationTestUI</param-value>
