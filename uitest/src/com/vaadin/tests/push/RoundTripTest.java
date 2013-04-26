@@ -34,11 +34,17 @@ public class RoundTripTest extends AbstractTestUI {
         final TextField payloadSize = new TextField("Payload size (bytes)");
         payloadSize.setConverter(Integer.class);
         payloadSize.setConvertedValue(10000);
+        if (request.getParameter("payload") != null) {
+            payloadSize.setValue(request.getParameter("payload"));
+        }
         addComponent(payloadSize);
         final TextField testDuration = new TextField("Test duration (ms)");
         testDuration.setConverter(Integer.class);
         testDuration.setConvertedValue(10000);
         addComponent(testDuration);
+        if (request.getParameter("duration") != null) {
+            testDuration.setValue(request.getParameter("duration"));
+        }
 
         Button start = new Button("Start test");
         start.addClickListener(new ClickListener() {
@@ -52,6 +58,10 @@ public class RoundTripTest extends AbstractTestUI {
         });
         addComponent(roundTripTester);
         addComponent(start);
+
+        if (request.getParameter("go") != null) {
+            start.click();
+        }
     }
 
     @Override
