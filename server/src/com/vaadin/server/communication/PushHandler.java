@@ -325,7 +325,7 @@ public class PushHandler implements AtmosphereHandler {
             getLogger().log(Level.FINER, "Writing message to resource {0}", id);
 
             Writer writer = resource.getResponse().getWriter();
-            writer.write("for(;;);[{" + event.getMessage() + "}]");
+            writer.write(event.getMessage().toString());
 
             switch (resource.transport()) {
             case SSE:
