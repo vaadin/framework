@@ -104,7 +104,10 @@ public final class Slot extends SimplePanel {
 
         @Override
         public void onElementResize(ElementResizeEvent e) {
-            Util.forceIE8Redraw(getCaptionElement());
+            Element caption = getCaptionElement();
+            if (caption != null) {
+                Util.forceIE8Redraw(caption);
+            }
         }
     };
 
