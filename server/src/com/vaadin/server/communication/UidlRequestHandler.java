@@ -30,12 +30,15 @@ import com.vaadin.server.Constants;
 import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.LegacyCommunicationManager.InvalidUIDLSecurityKeyException;
 import com.vaadin.server.ServletPortletHelper;
+import com.vaadin.server.SessionExpiredHandler;
 import com.vaadin.server.SynchronizedRequestHandler;
+import com.vaadin.server.SystemMessages;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.Version;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
@@ -50,7 +53,8 @@ import com.vaadin.ui.UI;
  * @author Vaadin Ltd
  * @since 7.1
  */
-public class UidlRequestHandler extends SynchronizedRequestHandler {
+public class UidlRequestHandler extends SynchronizedRequestHandler implements
+        SessionExpiredHandler {
 
     public static final String UIDL_PATH = "UIDL/";
 
@@ -253,5 +257,31 @@ public class UidlRequestHandler extends SynchronizedRequestHandler {
 
     private static final Logger getLogger() {
         return Logger.getLogger(UidlRequestHandler.class.getName());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.server.SessionExpiredHandler#handleSessionExpired(com.vaadin
+     * .server.VaadinRequest, com.vaadin.server.VaadinResponse)
+     */
+    @Override
+    public boolean handleSessionExpired(VaadinRequest request,
+            VaadinResponse response) throws IOException {
+        if (!ServletPortletHelper.isUIDLRequest(request)) {
+            return false;
+        }
+        VaadinService service = request.getService();
+        SystemMessages systemMessages = service.getSystemMessages(
+                ServletPortletHelper.findLocale(null, null, request), request);
+
+        service.writeStringResponse(response, JsonConstants.JSON_CONTENT_TYPE,
+                VaadinService.createCriticalNotificationJSON(
+                        systemMessages.getSessionExpiredCaption(),
+                        systemMessages.getSessionExpiredMessage(), null,
+                        systemMessages.getSessionExpiredURL()));
+
+        return true;
     }
 }

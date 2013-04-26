@@ -1392,7 +1392,7 @@ public abstract class VaadinService implements Serializable {
      * @throws IOException
      *             If an error occured while writing the response
      */
-    protected void writeStringResponse(VaadinResponse response,
+    public void writeStringResponse(VaadinResponse response,
             String contentType, String reponseString) throws IOException {
 
         response.setContentType(contentType);
@@ -1418,9 +1418,6 @@ public abstract class VaadinService implements Serializable {
      */
     protected void handleSessionExpired(VaadinRequest request,
             VaadinResponse response) throws ServiceException {
-        SystemMessages systemMessages = getSystemMessages(
-                ServletPortletHelper.findLocale(null, null, request), request);
-
         for (RequestHandler handler : getRequestHandlers()) {
             if (handler instanceof SessionExpiredHandler) {
                 try {
@@ -1439,6 +1436,9 @@ public abstract class VaadinService implements Serializable {
 
         try {
             // If there is a URL, try to redirect there
+            SystemMessages systemMessages = getSystemMessages(
+                    ServletPortletHelper.findLocale(null, null, request),
+                    request);
             String sessionExpiredURL = systemMessages.getSessionExpiredURL();
             if (sessionExpiredURL != null
                     && (response instanceof VaadinServletResponse)) {
