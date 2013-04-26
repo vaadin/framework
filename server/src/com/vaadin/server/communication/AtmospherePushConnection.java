@@ -21,6 +21,10 @@ import java.io.Serializable;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.atmosphere.cpr.AtmosphereResource;
 import org.json.JSONException;
@@ -125,12 +129,18 @@ public class AtmospherePushConnection implements Serializable, PushConnection {
     @Override
     public void disconnect() {
         if (lastMessage != null) {
+            // Wait for the last message to be sent before closing the
+            // connection (assumes that futures are completed in order)
             try {
-                // Wait for the last message to be sent before closing the
-                // connection (assumes that futures are completed in order)
-                lastMessage.get();
+                lastMessage.get(1000, TimeUnit.MILLISECONDS);
+            } catch (TimeoutException e) {
+                getLogger()
+                        .log(Level.INFO,
+                                "Timeout waiting for messages to be sent to client before disconnect");
             } catch (Exception e) {
-                e.printStackTrace();
+                getLogger()
+                        .log(Level.INFO,
+                                "Error waiting for messages to be sent to client before disconnect");
             }
             lastMessage = null;
         }
@@ -139,5 +149,13 @@ public class AtmospherePushConnection implements Serializable, PushConnection {
         assert !resource.getBroadcaster().getAtmosphereResources()
                 .contains(resource);
         resource = null;
+    }
+
+    /**
+     * @since
+     * @return
+     */
+    private static Logger getLogger() {
+        return Logger.getLogger(AtmospherePushConnection.class.getName());
     }
 }
