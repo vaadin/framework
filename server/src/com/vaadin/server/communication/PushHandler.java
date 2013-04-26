@@ -258,9 +258,14 @@ public class PushHandler implements AtmosphereHandler {
                 // Sets UI.currentInstance
                 final UI ui = service.findUI(vaadinRequest);
                 if (ui == null) {
-                    // This should not happen
-                    getLogger().warning(
-                            "Could not find the requested UI in session");
+                    // This a request through an already open push connection to
+                    // a UI which no longer exists.
+                    resource.getResponse()
+                            .getWriter()
+                            .write(UidlRequestHandler.getUINotFoundErrorJSON(
+                                    service, vaadinRequest));
+                    // End the connection
+                    resource.resume();
                     return;
                 }
 

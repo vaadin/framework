@@ -71,8 +71,10 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
         }
         UI uI = session.getService().findUI(request);
         if (uI == null) {
-            // This should not happen
-            getLogger().warning("Could not find the requested UI in session");
+            // This should not happen but it will if the UI has been closed. We
+            // really don't want to see it in the server logs though
+            response.getWriter().write(
+                    getUINotFoundErrorJSON(session.getService(), request));
             return true;
         }
 
@@ -284,4 +286,31 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
 
         return true;
     }
+
+    /**
+     * Returns the JSON which should be returned to the client when a request
+     * for a non-existent UI arrives.
+     * 
+     * @param service
+     *            The VaadinService
+     * @param vaadinRequest
+     *            The request which triggered this, or null if not available
+     * @since 7.1
+     * @return A JSON string
+     */
+    static String getUINotFoundErrorJSON(VaadinService service,
+            VaadinRequest vaadinRequest) {
+        SystemMessages ci = service.getSystemMessages(
+                vaadinRequest.getLocale(), vaadinRequest);
+        // Session Expired is not really the correct message as the
+        // session exists but the requested UI does not.
+        // Using Communication Error for now.
+        String json = VaadinService.createCriticalNotificationJSON(
+                ci.getCommunicationErrorCaption(),
+                ci.getCommunicationErrorMessage(), null,
+                ci.getCommunicationErrorURL());
+
+        return json;
+    }
+
 }
