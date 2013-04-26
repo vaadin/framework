@@ -104,7 +104,7 @@ public class CloseUI extends AbstractTestUI {
                                         "/statictestfiles/static.html");
                                 close();
                             }
-                        };
+                        }.start();
                     }
                 }));
 
