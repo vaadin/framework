@@ -193,7 +193,8 @@ public class ServerRpcHandler implements Serializable {
                     getLogger().warning(msg);
                     continue;
                 }
-                if (connector.getUI().isClosing()) {
+                // DragAndDropService has null UI
+                if (connector.getUI() != null && connector.getUI().isClosing()) {
                     String msg = "Ignoring RPC call for connector "
                             + connector.getClass().getName();
                     if (connector instanceof Component) {
