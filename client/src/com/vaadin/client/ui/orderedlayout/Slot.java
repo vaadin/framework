@@ -25,8 +25,11 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.StyleConstants;
+import com.vaadin.client.Util;
+import com.vaadin.client.ui.layout.ElementResizeEvent;
 import com.vaadin.client.ui.layout.ElementResizeListener;
 import com.vaadin.shared.ui.AlignmentInfo;
 
@@ -92,6 +95,22 @@ public final class Slot extends SimplePanel {
     private ElementResizeListener widgetResizeListener;
 
     private ElementResizeListener spacingResizeListener;
+
+    /*
+     * This listener is applied only in IE8 to workaround browser issue where
+     * IE8 forgets to update the error indicator position when the slot gets
+     * resized by widget resizing itself. #11693
+     */
+    private ElementResizeListener ie8CaptionElementResizeUpdateListener = new ElementResizeListener() {
+
+        @Override
+        public void onElementResize(ElementResizeEvent e) {
+            Element caption = getCaptionElement();
+            if (caption != null) {
+                Util.forceIE8Redraw(caption);
+            }
+        }
+    };
 
     // Caption is placed after component unless there is some part which
     // moves it above.
@@ -161,6 +180,11 @@ public final class Slot extends SimplePanel {
                 lm.addElementResizeListener(getSpacingElement(),
                         spacingResizeListener);
             }
+
+            if (BrowserInfo.get().isIE8()) {
+                lm.addElementResizeListener(getWidget().getElement(),
+                        ie8CaptionElementResizeUpdateListener);
+            }
         }
     }
 
@@ -181,6 +205,11 @@ public final class Slot extends SimplePanel {
             if (getSpacingElement() != null && spacingResizeListener != null) {
                 lm.removeElementResizeListener(getSpacingElement(),
                         spacingResizeListener);
+            }
+
+            if (BrowserInfo.get().isIE8()) {
+                lm.removeElementResizeListener(getWidget().getElement(),
+                        ie8CaptionElementResizeUpdateListener);
             }
         }
     }
