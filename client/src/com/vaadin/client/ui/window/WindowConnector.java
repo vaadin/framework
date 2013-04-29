@@ -333,7 +333,11 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         WindowState state = getState();
         if (state.windowMode == WindowMode.NORMAL) {
             // if centered, position handled in postLayout()
-            if (!state.centered) {
+            if (!state.centered
+                    && (state.positionX >= 0 || state.positionY >= 0)) {
+                // If both positions are negative, then
+                // setWindowOrderAndPosition has already taken care of
+                // positioning the window so it stacks with other windows
                 window.setPopupPosition(state.positionX, state.positionY);
             }
         } else if (state.windowMode == WindowMode.MAXIMIZED) {
