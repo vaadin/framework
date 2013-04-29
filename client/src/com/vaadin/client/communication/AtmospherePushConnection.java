@@ -333,6 +333,7 @@ public class AtmospherePushConnection implements PushConnection {
             fallbackTransport: 'streaming',
             contentType: 'application/json; charset=UTF-8',
             reconnectInterval: '5000',
+            maxReconnectOnClose: 10000000, 
             trackMessageLength: true 
         };
     }-*/;
