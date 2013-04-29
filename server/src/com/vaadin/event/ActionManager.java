@@ -15,7 +15,7 @@
  */
 package com.vaadin.event;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 
 import com.vaadin.event.Action.Container;
@@ -44,10 +44,10 @@ public class ActionManager implements Action.Container, Action.Handler,
     private static final long serialVersionUID = 1641868163608066491L;
 
     /** List of action handlers */
-    protected HashSet<Action> ownActions = null;
+    protected LinkedHashSet<Action> ownActions = null;
 
     /** List of action handlers */
-    protected HashSet<Handler> actionHandlers = null;
+    protected LinkedHashSet<Handler> actionHandlers = null;
 
     /** Action mapper */
     protected KeyMapper<Action> actionMapper = null;
@@ -90,7 +90,7 @@ public class ActionManager implements Action.Container, Action.Handler,
     @Override
     public <T extends Action & Action.Listener> void addAction(T action) {
         if (ownActions == null) {
-            ownActions = new HashSet<Action>();
+            ownActions = new LinkedHashSet<Action>();
         }
         if (ownActions.add(action)) {
             requestRepaint();
@@ -115,7 +115,7 @@ public class ActionManager implements Action.Container, Action.Handler,
         if (actionHandler != null) {
 
             if (actionHandlers == null) {
-                actionHandlers = new HashSet<Handler>();
+                actionHandlers = new LinkedHashSet<Handler>();
             }
 
             if (actionHandlers.add(actionHandler)) {
@@ -150,20 +150,7 @@ public class ActionManager implements Action.Container, Action.Handler,
 
         actionMapper = null;
 
-        HashSet<Action> actions = new HashSet<Action>();
-        if (actionHandlers != null) {
-            for (Action.Handler handler : actionHandlers) {
-                Action[] as = handler.getActions(actionTarget, viewer);
-                if (as != null) {
-                    for (Action action : as) {
-                        actions.add(action);
-                    }
-                }
-            }
-        }
-        if (ownActions != null) {
-            actions.addAll(ownActions);
-        }
+        LinkedHashSet<Action> actions = getActionSet(actionTarget, viewer);
 
         /*
          * Must repaint whenever there are actions OR if all actions have been
@@ -225,22 +212,7 @@ public class ActionManager implements Action.Container, Action.Handler,
 
     @Override
     public Action[] getActions(Object target, Object sender) {
-        HashSet<Action> actions = new HashSet<Action>();
-        if (ownActions != null) {
-            for (Action a : ownActions) {
-                actions.add(a);
-            }
-        }
-        if (actionHandlers != null) {
-            for (Action.Handler h : actionHandlers) {
-                Action[] as = h.getActions(target, sender);
-                if (as != null) {
-                    for (Action a : as) {
-                        actions.add(a);
-                    }
-                }
-            }
-        }
+        LinkedHashSet<Action> actions = getActionSet(target, sender);
         return actions.toArray(new Action[actions.size()]);
     }
 
@@ -259,4 +231,22 @@ public class ActionManager implements Action.Container, Action.Handler,
         }
     }
 
+    private LinkedHashSet<Action> getActionSet(Object target, Object sender) {
+        LinkedHashSet<Action> actions = new LinkedHashSet<Action>();
+        if (ownActions != null) {
+            actions.addAll(ownActions);
+
+        }
+        if (actionHandlers != null) {
+            for (Action.Handler h : actionHandlers) {
+                Action[] as = h.getActions(target, sender);
+                if (as != null) {
+                    for (Action a : as) {
+                        actions.add(a);
+                    }
+                }
+            }
+        }
+        return actions;
+    }
 }
