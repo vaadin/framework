@@ -50,18 +50,17 @@
         <!-- Newest Jetty does not work with Ivy currently (orbit -> jar 
             mapping problem) -->
         <dependency org="org.eclipse.jetty" name="jetty-server"
-            rev="7.5.0.v20110901" conf="build, ide, jetty-run->default" />
-        <!-- jetty-servlets needed in .war by ProxyTest, but not by jetty-runner -->
+            rev="7.5.0.v20110901" conf="ide, jetty-run->default" />
+        <!-- jetty-servlets needed by ProxyTest, but not by jetty-runner -->
         <dependency org="org.eclipse.jetty" name="jetty-servlets"
-            rev="7.5.0.v20110901" conf="build, ide->default" />
+            rev="7.5.0.v20110901" conf="ide, jetty-run->default" />
         <dependency org="org.eclipse.jetty" name="jetty-websocket"
-            rev="7.5.0.v20110901" conf="build, ide->default" />
-        <!-- <dependency org="org.mortbay.jetty" name="jetty-util" -->
-        <!-- rev="8.1.5.v20120716" conf="build,ide,jetty-run->default" /> -->
+            rev="7.5.0.v20110901" conf="ide, jetty-run->default" />
         <dependency org="org.eclipse.jetty" name="jetty-webapp"
-            rev="7.5.0.v20110901" conf="build, ide,jetty-run->default" />
+            rev="7.5.0.v20110901" conf="ide, jetty-run->default" />
         <dependency org="org.mortbay.jetty" name="jetty-runner"
             rev="7.5.0.v20110901" conf="jetty-run->default" />
+
         <dependency org="junit" name="junit" rev="4.5"
             conf="build,ide -> default" />
 
