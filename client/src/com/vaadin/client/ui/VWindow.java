@@ -419,14 +419,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     @Override
     public void hide() {
-        if (vaadinModality) {
-            hideModalityCurtain();
-        }
-        super.hide();
-
-        // Remove window from windowOrder to avoid references being left
-        // hanging.
-        windowOrder.remove(this);
 
         /*
          * If the window has a RichTextArea and the RTA is focused at the time
@@ -443,20 +435,28 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         if (BrowserInfo.get().isIE8()) {
             fixIE8FocusCaptureIssue();
         }
+
+        if (vaadinModality) {
+            hideModalityCurtain();
+        }
+        super.hide();
+
+        // Remove window from windowOrder to avoid references being left
+        // hanging.
+        windowOrder.remove(this);
     }
 
     private void fixIE8FocusCaptureIssue() {
         Element e = DOM.createInputText();
         Style elemStyle = e.getStyle();
         elemStyle.setPosition(Position.ABSOLUTE);
-        elemStyle.setLeft(-10, Unit.PX);
+        elemStyle.setTop(-10, Unit.PX);
         elemStyle.setWidth(0, Unit.PX);
         elemStyle.setHeight(0, Unit.PX);
 
-        Element rootPanel = RootPanel.getBodyElement();
-        rootPanel.appendChild(e);
+        contentPanel.getElement().appendChild(e);
         e.focus();
-        rootPanel.removeChild(e);
+        contentPanel.getElement().removeChild(e);
     }
 
     /** For internal use only. May be removed or replaced in the future. */
