@@ -122,10 +122,10 @@ public class PopupDateField extends DateField {
      * Set a description that explains the usage of the Widget for users of
      * assistive devices.
      * 
-     * @param descriptionForAssistiveDevices
+     * @param description
      *            String with the description
      */
-    public void setAssisitiveText(String description) {
+    public void setAssistiveText(String description) {
         getState().descriptionForAssistiveDevices = description;
     }
 
@@ -135,7 +135,7 @@ public class PopupDateField extends DateField {
      * 
      * @return String with the description
      */
-    public String getAssisitiveText() {
+    public String getAssistiveText() {
         return getState().descriptionForAssistiveDevices;
     }
 }
