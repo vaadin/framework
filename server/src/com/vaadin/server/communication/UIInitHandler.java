@@ -204,17 +204,17 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
             ui.setSession(session);
         }
 
-        // Set thread local here so it is available in init
-        UI.setCurrent(ui);
-
-        ui.doInit(request, uiId.intValue());
-
         PushMode pushMode = provider.getPushMode(event);
         if (pushMode == null) {
             pushMode = session.getService().getDeploymentConfiguration()
                     .getPushMode();
         }
         ui.setPushMode(pushMode);
+
+        // Set thread local here so it is available in init
+        UI.setCurrent(ui);
+
+        ui.doInit(request, uiId.intValue());
 
         session.addUI(ui);
 
