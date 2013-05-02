@@ -77,7 +77,7 @@
         <li><b>Window</b> has Maximize/Restore controls</li>
         <li>WAI-ARIA support for form fields, <b>Button</b>, and <b>Tree</b></li>
         <li>The page can be reloaded programmatically with <tt>Page.reload()</tt></li>
-        <li><tt>Property.toString()</tt> no longer returns the property value!</li>
+        <li>The legacy behavior of Property.toString() can be toggled using the <tt>legacyPropertyToString</tt> init parameter</li>
         <li>Sass compiler now supports arithmetics</li>
         <li>Sass compiler now supports <tt>@content</tt></li>
         <li>Tooltip delays can be configured</li>
@@ -99,11 +99,14 @@
       </p>
 
       <h3 id="limitations">Limitations</h3>
-
       <ul>
         <li>It is currently not possible to specify <tt>font-size</tt> as <tt>em</tt> or
         <tt>%</tt>, or layout component sizes with <tt>em</tt> (<a
         href="http://dev.vaadin.com/ticket/10634">#10634</a>)</li>
+        <li>Push using streaming does not work in Opera (<a
+        href="http://dev.vaadin.com/ticket/11642">#11642</a>)</li>
+        <li>Some debug console features such as analyze layouts do not work when push is enabled (<a
+        href="http://dev.vaadin.com/ticket/11536">#11536</a>)</li>
       </ul>
 
       <h3 id="changelog">ChangeLog</h3>
