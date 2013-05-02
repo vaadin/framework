@@ -1541,6 +1541,25 @@ public abstract class VaadinService implements Serializable {
     }
 
     /**
+     * Checks that another {@link VaadinSession} instance is not locked. This is
+     * internally used by {@link VaadinSession#access(Runnable)} and
+     * {@link UI#access(Runnable)} to help avoid causing deadlocks.
+     * 
+     * @since 7.1
+     * @param session
+     *            the session that is being locked
+     * @throws IllegalStateException
+     *             if the current thread holds the lock for another session
+     */
+    public static void verifyNoOtherSessionLocked(VaadinSession session) {
+        VaadinSession otherSession = VaadinSession.getCurrent();
+        if (otherSession != null && otherSession != session) {
+            throw new IllegalStateException(
+                    "Can't access session while another session is locked by the same thread. This restriction is intended to help avoid deadlocks.");
+        }
+    }
+
+    /**
      * Verifies that the given CSRF token (aka double submit cookie) is valid
      * for the given session. This is used to protect against Cross Site Request
      * Forgery attacks.
