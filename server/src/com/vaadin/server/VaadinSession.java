@@ -1075,15 +1075,27 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * as the session is automatically locked by the framework during request
      * handling.
      * </p>
+     * <p>
+     * Note that calling this method while another session is locked by the
+     * current thread will cause an exception. This is to prevent deadlock
+     * situations when two threads have locked one session each and are both
+     * waiting for the lock for the other session.
+     * </p>
      * 
      * @param runnable
      *            the runnable which accesses the session
+     * 
+     * @throws IllegalStateException
+     *             if the current thread holds the lock for another session
+     * 
      * 
      * @see #lock()
      * @see #getCurrent()
      * @see UI#access(Runnable)
      */
     public void access(Runnable runnable) {
+        VaadinService.verifyNoOtherSessionLocked(this);
+
         Map<Class<?>, CurrentInstance> old = null;
         lock();
         try {

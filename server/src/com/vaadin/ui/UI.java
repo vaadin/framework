@@ -1103,12 +1103,20 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * RPC handlers for components inside this UI do not need this method as the
      * session is automatically locked by the framework during request handling.
      * </p>
+     * <p>
+     * Note that calling this method while another session is locked by the
+     * current thread will cause an exception. This is to prevent deadlock
+     * situations when two threads have locked one session each and are both
+     * waiting for the lock for the other session.
+     * </p>
      * 
      * @param runnable
      *            the runnable which accesses the UI
      * @throws UIDetachedException
      *             if the UI is not attached to a session (and locking can
      *             therefore not be done)
+     * @throws IllegalStateException
+     *             if the current thread holds the lock for another session
      * 
      * @see #getCurrent()
      * @see VaadinSession#access(Runnable)
@@ -1122,6 +1130,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         if (session == null) {
             throw new UIDetachedException();
         }
+
+        VaadinService.verifyNoOtherSessionLocked(session);
 
         session.lock();
         try {
