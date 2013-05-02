@@ -228,6 +228,12 @@ public class VTextField extends TextBoxBase implements Paintable, Field,
             return;
         }
 
+        if (focusedTextField == this) {
+            // Re-add this here as all stylenames are overwritten by
+            // the client.updateComponent call above (#11623)
+            addStyleDependentName(CLASSNAME_FOCUS);
+        }
+
         if (uidl.getBooleanAttribute("readonly")) {
             setReadOnly(true);
         } else {
