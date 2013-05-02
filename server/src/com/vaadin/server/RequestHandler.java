@@ -37,8 +37,7 @@ public interface RequestHandler extends Serializable {
      * using VaadinSession or anything inside the VaadinSession you must ensure
      * the session is locked. This can be done by extending
      * {@link SynchronizedRequestHandler} or by using
-     * {@link VaadinSession#runSafely(Runnable)} or
-     * {@link UI#runSafely(Runnable)}.
+     * {@link VaadinSession#access(Runnable)} or {@link UI#access(Runnable)}.
      * </p>
      * 
      * @param session

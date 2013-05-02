@@ -39,7 +39,7 @@ public class UIPolling extends AbstractTestUIWithLog {
                 } catch (InterruptedException e) {
                 }
                 final int iteration = i;
-                runSafely(new Runnable() {
+                access(new Runnable() {
                     @Override
                     public void run() {
                         log.log((iteration * SLEEP_TIME) + "ms has passed");

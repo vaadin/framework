@@ -11,7 +11,7 @@ public abstract class UIRunSafelyThread extends Thread {
 
     @Override
     public void run() {
-        ui.runSafely(new Runnable() {
+        ui.access(new Runnable() {
 
             @Override
             public void run() {

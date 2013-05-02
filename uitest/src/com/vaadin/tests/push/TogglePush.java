@@ -52,7 +52,7 @@ public class TogglePush extends AbstractTestUI {
                         new Timer().schedule(new TimerTask() {
                             @Override
                             public void run() {
-                                runSafely(new Runnable() {
+                                access(new Runnable() {
                                     @Override
                                     public void run() {
                                         updateCounter();

@@ -43,7 +43,7 @@ public class BroadcasterUI extends UI implements BroadcastListener {
 
     @Override
     public void receiveBroadcast(final String message) {
-        runSafely(new Runnable() {
+        access(new Runnable() {
             @Override
             public void run() {
                 Notification n = new Notification("Message received", message,

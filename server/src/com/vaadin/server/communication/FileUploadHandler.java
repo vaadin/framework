@@ -632,7 +632,7 @@ public class FileUploadHandler implements RequestHandler {
 
     private void cleanStreamVariable(VaadinSession session,
             final ClientConnector owner, final String variableName) {
-        session.runSafely(new Runnable() {
+        session.access(new Runnable() {
             @Override
             public void run() {
                 owner.getUI()

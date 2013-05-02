@@ -407,12 +407,12 @@ public abstract class VaadinService implements Serializable {
      */
     public void fireSessionDestroy(VaadinSession vaadinSession) {
         final VaadinSession session = vaadinSession;
-        session.runSafely(new Runnable() {
+        session.access(new Runnable() {
             @Override
             public void run() {
                 ArrayList<UI> uis = new ArrayList<UI>(session.getUIs());
                 for (final UI ui : uis) {
-                    ui.runSafely(new Runnable() {
+                    ui.access(new Runnable() {
                         @Override
                         public void run() {
                             /*
@@ -1087,7 +1087,7 @@ public abstract class VaadinService implements Serializable {
     private void removeClosedUIs(final VaadinSession session) {
         ArrayList<UI> uis = new ArrayList<UI>(session.getUIs());
         for (final UI ui : uis) {
-            ui.runSafely(new Runnable() {
+            ui.access(new Runnable() {
                 @Override
                 public void run() {
                     if (ui.isClosing()) {
@@ -1245,7 +1245,7 @@ public abstract class VaadinService implements Serializable {
         if (session != null) {
             final VaadinSession finalSession = session;
 
-            session.runSafely(new Runnable() {
+            session.access(new Runnable() {
                 @Override
                 public void run() {
                     cleanupSession(finalSession);
@@ -1254,7 +1254,7 @@ public abstract class VaadinService implements Serializable {
 
             final long duration = (System.nanoTime() - (Long) request
                     .getAttribute(REQUEST_START_TIME_ATTRIBUTE)) / 1000000;
-            session.runSafely(new Runnable() {
+            session.access(new Runnable() {
                 @Override
                 public void run() {
                     finalSession.setLastRequestDuration(duration);

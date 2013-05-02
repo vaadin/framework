@@ -766,13 +766,12 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * Locks this session to protect its data from concurrent access. Accessing
      * the UI state from outside the normal request handling should always lock
      * the session and unlock it when done. The preferred way to ensure locking
-     * is done correctly is to wrap your code using
-     * {@link UI#runSafely(Runnable)} (or
-     * {@link VaadinSession#runSafely(Runnable)} if you are only touching the
+     * is done correctly is to wrap your code using {@link UI#access(Runnable)}
+     * (or {@link VaadinSession#access(Runnable)} if you are only touching the
      * session and not any UI), e.g.:
      * 
      * <pre>
-     * myUI.runSafely(new Runnable() {
+     * myUI.access(new Runnable() {
      *     &#064;Override
      *     public void run() {
      *         // Here it is safe to update the UI.
@@ -1064,23 +1063,27 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     /**
-     * Performs a safe update of this VaadinSession.
+     * Provides exclusive access to this session from outside a request handling
+     * thread.
      * <p>
-     * This method runs the runnable code so that it is safe to update session
-     * variables. It also ensures that all thread locals are set correctly when
-     * executing the runnable.
+     * The given runnable is executed while holding the session lock to ensure
+     * exclusive access to this session. The session and related thread locals
+     * are set properly before executing the runnable.
      * </p>
      * <p>
-     * Note that using this method for a VaadinSession which has been detached
-     * from its underlying HTTP session is not necessarily safe. Exclusive
-     * access is provided through locking which is done using the underlying
-     * session.
+     * RPC handlers for components inside this session do not need this method
+     * as the session is automatically locked by the framework during request
+     * handling.
      * </p>
      * 
      * @param runnable
-     *            The runnable which updates the session
+     *            the runnable which accesses the session
+     * 
+     * @see #lock()
+     * @see #getCurrent()
+     * @see UI#access(Runnable)
      */
-    public void runSafely(Runnable runnable) {
+    public void access(Runnable runnable) {
         Map<Class<?>, CurrentInstance> old = null;
         lock();
         try {
@@ -1093,6 +1096,15 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
             }
         }
 
+    }
+
+    /**
+     * @deprecated As of 7.1.0.beta1, use {@link #access(Runnable)} instead.
+     *             This method will be removed before the final 7.1.0 release.
+     */
+    @Deprecated
+    public void runSafely(Runnable runnable) {
+        access(runnable);
     }
 
     /**

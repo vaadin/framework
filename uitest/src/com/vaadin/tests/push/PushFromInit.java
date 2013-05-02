@@ -11,7 +11,7 @@ public class PushFromInit extends AbstractTestUIWithLog {
         new Thread() {
             @Override
             public void run() {
-                runSafely(new Runnable() {
+                access(new Runnable() {
                     @Override
                     public void run() {
                         log("Logged from background thread started in init");

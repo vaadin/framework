@@ -119,7 +119,7 @@ public class CloseUI extends AbstractTestUI {
 
         @Override
         public void run() {
-            ui.runSafely(new Runnable() {
+            ui.access(new Runnable() {
 
                 @Override
                 public void run() {

@@ -27,7 +27,7 @@ public class BasicPush extends AbstractTestUI {
 
         @Override
         public void run() {
-            runSafely(new Runnable() {
+            access(new Runnable() {
                 @Override
                 public void run() {
                     counter2.setValue(counter2.getValue() + 1);
