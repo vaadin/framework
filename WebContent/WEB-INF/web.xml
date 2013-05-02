@@ -75,22 +75,22 @@
 	<servlet>
 		<servlet-name>VaadinApplicationRunnerWithPush</servlet-name>
 		<servlet-class>com.vaadin.launcher.ApplicationRunnerServlet</servlet-class>
-		<async-supported>true</async-supported>
 		<init-param>
 			<param-name>pushmode</param-name>
 			<param-value>automatic</param-value>
 		</init-param>
+		<async-supported>true</async-supported>
 	</servlet>
 
 	<!-- For testing GAE - the deployment script changes this to use GAEVaadinServlet -->
 	<servlet>
 		<servlet-name>IntegrationTest</servlet-name>
 		<servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
-		<async-supported>true</async-supported>
 		<init-param>
 			<param-name>UI</param-name>
 			<param-value>com.vaadin.tests.integration.IntegrationTestUI</param-value>
 		</init-param>
+		<async-supported>true</async-supported>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Embed App 1</servlet-name>
