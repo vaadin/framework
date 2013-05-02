@@ -1092,20 +1092,29 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     }
 
     /**
-     * Performs a safe update of this UI.
+     * Provides exclusive access to this UI from outside a request handling
+     * thread.
      * <p>
-     * This method runs the runnable code so that it is safe to update UI and
-     * session variables. It also ensures that all thread locals are set
-     * correctly when executing the runnable.
+     * The given runnable is executed while holding the session lock to ensure
+     * exclusive access to this UI and its session. The UI and related thread
+     * locals are set properly before executing the runnable.
+     * </p>
+     * <p>
+     * RPC handlers for components inside this UI do not need this method as the
+     * session is automatically locked by the framework during request handling.
      * </p>
      * 
      * @param runnable
-     *            The runnable which updates the UI
+     *            the runnable which accesses the UI
      * @throws UIDetachedException
      *             if the UI is not attached to a session (and locking can
      *             therefore not be done)
+     * 
+     * @see #getCurrent()
+     * @see VaadinSession#access(Runnable)
+     * @see VaadinSession#lock()
      */
-    public void runSafely(Runnable runnable) throws UIDetachedException {
+    public void access(Runnable runnable) throws UIDetachedException {
         Map<Class<?>, CurrentInstance> old = null;
 
         VaadinSession session = getSession();
@@ -1118,7 +1127,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         try {
             if (getSession() == null) {
                 // UI was detached after fetching the session but before we
-                // acquiried the lock.
+                // acquired the lock.
                 throw new UIDetachedException();
             }
             old = CurrentInstance.setThreadLocals(this);
@@ -1130,6 +1139,15 @@ public abstract class UI extends AbstractSingleComponentContainer implements
             }
         }
 
+    }
+
+    /**
+     * @deprecated As of 7.1.0.beta1, use {@link #access(Runnable)} instead.
+     *             This method will be removed before the final 7.1.0 release.
+     */
+    @Deprecated
+    public void runSafely(Runnable runnable) throws UIDetachedException {
+        access(runnable);
     }
 
     /**
