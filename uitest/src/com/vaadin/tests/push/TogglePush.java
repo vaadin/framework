@@ -22,6 +22,9 @@ public class TogglePush extends AbstractTestUI {
         updateCounter();
         addComponent(counterLabel);
 
+        setPushMode("disabled".equals(request.getParameter("push")) ? PushMode.DISABLED
+                : PushMode.AUTOMATIC);
+
         CheckBox pushSetting = new CheckBox("Push enabled");
         pushSetting.setValue(Boolean.valueOf(getPushMode().isEnabled()));
         pushSetting.setImmediate(true);
