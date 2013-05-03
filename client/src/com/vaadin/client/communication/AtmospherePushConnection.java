@@ -220,14 +220,13 @@ public class AtmospherePushConnection implements PushConnection {
 
         VConsole.log("Push connection established using " + transport);
 
-        for (String message : messageQueue) {
-            push(message);
-        }
-        messageQueue.clear();
-
         switch (state) {
         case CONNECT_PENDING:
             state = State.CONNECTED;
+            for (String message : messageQueue) {
+                push(message);
+            }
+            messageQueue.clear();
             break;
         case DISCONNECT_PENDING:
             // Set state to connected to make disconnect close the connection
