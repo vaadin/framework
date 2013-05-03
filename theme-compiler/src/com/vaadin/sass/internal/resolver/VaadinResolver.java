@@ -15,6 +15,7 @@
  */
 package com.vaadin.sass.internal.resolver;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -29,6 +30,9 @@ public class VaadinResolver implements ScssStylesheetResolver {
          * Normalize classpath so ../../ segments are resolved
          */
         try {
+            // Ensure only "/" is used, also in Windows
+            identifier = identifier.replace(File.separatorChar, '/');
+            // Resolve "foo/../bar" -> "bar"
             identifier = new URI(identifier).normalize().getPath();
         } catch (URISyntaxException e) {
             // No worries, continuing with the unnormalized path and hope for
