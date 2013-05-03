@@ -1553,7 +1553,8 @@ public abstract class VaadinService implements Serializable {
      */
     public static void verifyNoOtherSessionLocked(VaadinSession session) {
         VaadinSession otherSession = VaadinSession.getCurrent();
-        if (otherSession != null && otherSession != session) {
+        if (otherSession != null && otherSession != session
+                && otherSession.hasLock()) {
             throw new IllegalStateException(
                     "Can't access session while another session is locked by the same thread. This restriction is intended to help avoid deadlocks.");
         }
