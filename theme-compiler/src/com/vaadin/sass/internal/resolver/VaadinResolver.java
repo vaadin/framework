@@ -16,8 +16,7 @@
 package com.vaadin.sass.internal.resolver;
 
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.Stack;
 
 import org.w3c.css.sac.InputSource;
 
@@ -26,18 +25,8 @@ public class VaadinResolver implements ScssStylesheetResolver {
     @Override
     public InputSource resolve(String identifier) {
 
-        /*
-         * Normalize classpath so ../../ segments are resolved
-         */
-        try {
-            // Ensure only "/" is used, also in Windows
-            identifier = identifier.replace(File.separatorChar, '/');
-            // Resolve "foo/../bar" -> "bar"
-            identifier = new URI(identifier).normalize().getPath();
-        } catch (URISyntaxException e) {
-            // No worries, continuing with the unnormalized path and hope for
-            // the best
-        }
+        // Remove extra "." and ".."
+        identifier = normalize(identifier);
 
         InputSource source = null;
 
@@ -53,4 +42,49 @@ public class VaadinResolver implements ScssStylesheetResolver {
 
         return source;
     }
+
+    /**
+     * Normalizes "." and ".." from the path string where parent path segments
+     * can be removed. Preserve leading "..".
+     * 
+     * @param path
+     *            A relative or absolute file path
+     * @return The normalized path
+     */
+    private static String normalize(String path) {
+
+        // Ensure only "/" is used, also in Windows
+        path = path.replace(File.separatorChar, '/');
+
+        // Split into segments
+        String[] segments = path.split("/");
+        Stack<String> result = new Stack<String>();
+
+        // Replace '.' and '..' segments
+        for (int i = 0; i < segments.length; i++) {
+            if (segments[i].equals(".")) {
+                // Segments marked '.' are ignored
+
+            } else if (segments[i].equals("..") && !result.isEmpty()
+                    && !result.lastElement().equals("..")) {
+                // If segment is ".." then remove the previous iff the previous
+                // element is not a ".." and the result stack is not empty
+                result.pop();
+            } else {
+                // Other segments are just added to the stack
+                result.push(segments[i]);
+            }
+        }
+
+        // Reconstruct path
+        StringBuilder pathBuilder = new StringBuilder();
+        for (int i = 0; i < result.size(); i++) {
+            if (i > 0) {
+                pathBuilder.append("/");
+            }
+            pathBuilder.append(result.get(i));
+        }
+        return pathBuilder.toString();
+    }
+
 }
