@@ -67,6 +67,14 @@ maybe_commit_and_push() {
         pushMerged
 }
 
+nothingToCommit=`git status | grep "nothing to commit"`
+if [ "$nothingToCommit" == "" ]
+then
+	git status
+	echo "Can not merge when there are unstaged changes."
+	exit 1;
+fi 
+
 git checkout $TO
 git fetch
 
