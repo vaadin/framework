@@ -1,8 +1,10 @@
 #!/bin/bash
 
-FROM=origin/7.0
-TO=master
-PUSH="origin HEAD:refs/for/master"
+FROM=7.0
+TO=7.1
+
+FROM_HEAD=origin/$FROM
+PUSH="origin HEAD:refs/for/$TO"
 
 show() {
         sCommit=$1
@@ -23,7 +25,7 @@ merge() {
 
 #       echo "merge($mCommit)"
 
-        git merge $mCommit $2
+        git merge -m "Should be overwritten by merge script" $mCommit $2
         if [ "$?" != "0" ]
         then
                 echo "Merge failed for commit $mCommit"
@@ -61,14 +63,14 @@ maybe_commit_and_push() {
         fi
 #       echo "maybe_commit_and_push: Merging $cpCommit"
         merge $cpCommit
-	echo -e "Merge changes from $FROM\n\n$cpCommitMsg"|git commit --amend -F -
+	echo -e "Merge changes from $FROM_HEAD\n\n$cpCommitMsg"|git commit --amend -F -
         pushMerged
 }
 
 git checkout $TO
 git fetch
 
-pending=`git log $TO..$FROM --reverse|grep "^commit "|sed "s/commit //"`
+pending=`git log $TO..$FROM_HEAD --reverse|grep "^commit "|sed "s/commit //"`
 
 pendingCommit=
 pendingCommitMessage=
@@ -93,7 +95,7 @@ do
                 echo
                 # Do a no-op merge
                 git merge $commit -s ours
-                echo -e "No-op merge from $FROM\n\n$commitMsg"|git commit --amend -F -
+                echo -e "No-op merge from $FROM_HEAD\n\n$commitMsg"|git commit --amend -F -
                 pushMerged
         elif [ "$mergeDirective" == "manual" ]
         then
