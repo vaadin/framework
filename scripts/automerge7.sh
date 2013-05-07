@@ -1,7 +1,7 @@
 #!/bin/bash
 
-FROM=7.0
-TO=7.1
+FROM=7.1
+TO=master
 
 FROM_HEAD=origin/$FROM
 PUSH="origin HEAD:refs/for/$TO"
