@@ -27,6 +27,10 @@ public class UIState extends TabIndexState {
 
     public PushMode pushMode = PushMode.DISABLED;
 
+    // Informing users of assistive devices, that the content of this container
+    // is announced automatically and does not need to be navigated into
+    public String overlayContainerLabel = "This content is announced automatically and does not need to be navigated into.";
+
     public static class LoadingIndicatorConfigurationState implements
             Serializable {
         public int firstDelay = 300;

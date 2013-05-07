@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gwt.aria.client.LiveValue;
+import com.google.gwt.aria.client.RelevantValue;
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -81,6 +84,7 @@ import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.VContextMenu;
 import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.VNotification.HideEvent;
+import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.client.ui.window.WindowConnector;
@@ -456,6 +460,15 @@ public class ApplicationConnection {
                 webkitMaybeIgnoringRequests = true;
             }
         });
+
+        // Ensure the overlay container is added to the dom and set as a live
+        // area for assistive devices
+        Element overlayContainer = VOverlay.getOverlayContainer(this);
+        Roles.getAlertRole().setAriaLiveProperty(overlayContainer,
+                LiveValue.ASSERTIVE);
+        setOverlayContainerLabel(getUIConnector().getState().overlayContainerLabel);
+        Roles.getAlertRole().setAriaRelevantProperty(overlayContainer,
+                RelevantValue.ADDITIONS);
     }
 
     /**
@@ -3420,5 +3433,18 @@ public class ApplicationConnection {
 
     public void handlePushMessage(String message) {
         handleJSONText(message, 200);
+    }
+
+    /**
+     * Set the label of the container element, where tooltip, notification and
+     * dialgs are added to.
+     * 
+     * @param overlayContainerLabel
+     *            label for the container
+     */
+    public void setOverlayContainerLabel(String overlayContainerLabel) {
+        Roles.getAlertRole().setAriaLabelProperty(
+                VOverlay.getOverlayContainer(this),
+                getUIConnector().getState().overlayContainerLabel);
     }
 }
