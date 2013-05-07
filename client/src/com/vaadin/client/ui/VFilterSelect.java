@@ -68,6 +68,7 @@ import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.aria.AriaHelper;
+import com.vaadin.client.ui.aria.HandlesAriaCaption;
 import com.vaadin.client.ui.aria.HandlesAriaInvalid;
 import com.vaadin.client.ui.aria.HandlesAriaRequired;
 import com.vaadin.client.ui.menubar.MenuBar;
@@ -85,7 +86,8 @@ import com.vaadin.shared.ui.combobox.FilteringMode;
 @SuppressWarnings("deprecation")
 public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         KeyUpHandler, ClickHandler, FocusHandler, BlurHandler, Focusable,
-        SubPartAware, HandlesAriaInvalid, HandlesAriaRequired {
+        SubPartAware, HandlesAriaCaption, HandlesAriaInvalid,
+        HandlesAriaRequired {
 
     /**
      * Represents a suggestion in the suggestion popup box
@@ -1072,8 +1074,6 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         tb.addBlurHandler(this);
         tb.addClickHandler(this);
 
-        Roles.getTextboxRole().set(tb.getElement());
-
         popupOpener.addClickHandler(this);
 
         setStyleName(CLASSNAME);
@@ -1845,5 +1845,10 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     @Override
     public void setAriaInvalid(boolean invalid) {
         AriaHelper.handleInputInvalid(tb, invalid);
+    }
+
+    @Override
+    public void bindAriaCaption(Element captionElement) {
+        AriaHelper.bindCaption(tb, captionElement);
     }
 }

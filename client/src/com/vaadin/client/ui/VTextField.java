@@ -16,7 +16,6 @@
 
 package com.vaadin.client.ui;
 
-import com.google.gwt.aria.client.Roles;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -96,9 +95,6 @@ public class VTextField extends TextBoxBase implements Field, ChangeHandler,
         }
         addFocusHandler(this);
         addBlurHandler(this);
-
-        // Add a11y role "textbox"
-        Roles.getTextboxRole().set(node);
     }
 
     /**

@@ -39,6 +39,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.VConsole;
@@ -102,10 +103,10 @@ public class VPopupCalendar extends VTextualDate implements Field,
         descriptionForAssisitveDevicesElement
                 .setInnerText(PopupDateFieldState.DESCRIPTION_FOR_ASSISTIVE_DEVICES);
         AriaHelper.ensureHasId(descriptionForAssisitveDevicesElement);
-        Id.of(descriptionForAssisitveDevicesElement);
+        Roles.getTextboxRole().setAriaDescribedbyProperty(text.getElement(),
+                Id.of(descriptionForAssisitveDevicesElement));
         AriaHelper.setVisibleForAssistiveDevicesOnly(
                 descriptionForAssisitveDevicesElement, true);
-        DOM.appendChild(getElement(), descriptionForAssisitveDevicesElement);
 
         calendar = GWT.create(VCalendarPanel.class);
         calendar.setParentField(this);
@@ -118,6 +119,11 @@ public class VPopupCalendar extends VTextualDate implements Field,
             }
         });
 
+        // FIXME: Problem is, that the element with the provided id does not
+        // exist yet in html. This is the same problem as with the context menu.
+        // Apply here the same fix (#11795)
+        Roles.getTextboxRole().setAriaControlsProperty(text.getElement(),
+                Id.of(calendar.getElement()));
         Roles.getButtonRole().setAriaControlsProperty(
                 calendarToggle.getElement(), Id.of(calendar.getElement()));
 
@@ -164,6 +170,19 @@ public class VPopupCalendar extends VTextualDate implements Field,
         sinkEvents(Event.ONKEYDOWN);
 
         updateStyleNames();
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        DOM.appendChild(RootPanel.get().getElement(),
+                descriptionForAssisitveDevicesElement);
+    }
+
+    @Override
+    protected void onDetach() {
+        super.onDetach();
+        descriptionForAssisitveDevicesElement.removeFromParent();
     }
 
     @SuppressWarnings("deprecation")

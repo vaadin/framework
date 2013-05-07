@@ -103,8 +103,6 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
             }
         });
 
-        Roles.getTextboxRole().set(text.getElement());
-
         add(text);
     }
 
