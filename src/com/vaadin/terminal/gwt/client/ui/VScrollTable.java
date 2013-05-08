@@ -503,7 +503,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         }
     }
 
-    private ContextMenuDetails contextMenu;
+    ContextMenuDetails contextMenu;
 
     private boolean hadScrollBars = false;
 
