@@ -46,6 +46,7 @@ import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -483,19 +484,27 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
      * Used to recall the position of an open context menu if we need to close
      * and reopen it during a row update.
      */
-    private class ContextMenuDetails {
+    private class ContextMenuDetails implements CloseHandler<PopupPanel> {
         String rowKey;
         int left;
         int top;
+        HandlerRegistration closeRegistration;
 
-        ContextMenuDetails(String rowKey, int left, int top) {
+        ContextMenuDetails(VContextMenu menu, String rowKey, int left, int top) {
             this.rowKey = rowKey;
             this.left = left;
             this.top = top;
+            this.closeRegistration = menu.addCloseHandler(this);
+        }
+
+        public void onClose(CloseEvent<PopupPanel> event) {
+            contextMenu = null;
+            closeRegistration.removeHandler();
         }
     }
 
-    ContextMenuDetails contextMenu;
+    private ContextMenuDetails contextMenu;
+
     private boolean hadScrollBars = false;
 
     public VScrollTable() {
@@ -859,16 +868,6 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         rendering = true;
 
-        // On the first rendering, add a handler to clear saved context menu
-        // details when the menu closes. See #8526.
-        if (this.client == null) {
-            client.getContextMenu().addCloseHandler(
-                    new CloseHandler<PopupPanel>() {
-                        public void onClose(CloseEvent<PopupPanel> event) {
-                            contextMenu = null;
-                        }
-                    });
-        }
         // If a row has an open context menu, it will be closed as the row is
         // detached. Retain a reference here so we can restore the menu if
         // required.
@@ -1032,9 +1031,9 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 VScrollTableRow row = (VScrollTableRow) w;
                 if (row.isVisible()
                         && row.getKey().equals(savedContextMenu.rowKey)) {
-                    contextMenu = savedContextMenu;
-                    client.getContextMenu().showAt(row, savedContextMenu.left,
+                    row.showContextMenu(savedContextMenu.left,
                             savedContextMenu.top);
+                    break;
                 }
             }
         }
@@ -6103,13 +6102,18 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             public void showContextMenu(Event event) {
                 if (enabled && actionKeys != null) {
                     // Show context menu if there are registered action handlers
-                    int left = Util.getTouchOrMouseClientX(event);
-                    int top = Util.getTouchOrMouseClientY(event);
-                    top += Window.getScrollTop();
-                    left += Window.getScrollLeft();
-                    contextMenu = new ContextMenuDetails(getKey(), left, top);
-                    client.getContextMenu().showAt(this, left, top);
+                    int left = Util.getTouchOrMouseClientX(event)
+                            + Window.getScrollLeft();
+                    int top = Util.getTouchOrMouseClientY(event)
+                            + Window.getScrollTop();
+                    showContextMenu(left, top);
                 }
+            }
+
+            protected void showContextMenu(int left, int top) {
+                VContextMenu menu = client.getContextMenu();
+                contextMenu = new ContextMenuDetails(menu, getKey(), left, top);
+                menu.showAt(this, left, top);
             }
 
             /**
