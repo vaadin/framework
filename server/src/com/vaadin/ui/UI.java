@@ -63,7 +63,7 @@ import com.vaadin.util.CurrentInstance;
  * When a new UI instance is needed, typically because the user opens a URL in a
  * browser window which points to e.g. {@link VaadinServlet}, all
  * {@link UIProvider}s registered to the current {@link VaadinSession} are
- * queried for the UI class that should be used. The selection is by defaylt
+ * queried for the UI class that should be used. The selection is by default
  * based on the {@value VaadinSession#UI_PARAMETER} parameter from web.xml.
  * </p>
  * <p>
