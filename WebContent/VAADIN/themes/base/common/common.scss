@@ -237,12 +237,13 @@ input::-ms-clear {
 	width: 0;
 	height: 0;
 }
+}
 
+/* Outside the base mixin because elements might be added directly to the body */
 .v-assistive-device-only {
 	position: absolute;
 	top: -2000px;
 	left: -2000px;
 	width: 10px;
 	overflow: hidden;
-}
 }
