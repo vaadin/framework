@@ -131,8 +131,7 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             if (optionUidl.hasAttribute("selected")) {
                 if (!getWidget().waitingForFilteringResponse
                         || getWidget().popupOpenerClicked) {
-                    String newSelectedOptionKey = Integer.toString(suggestion
-                            .getOptionKey());
+                    String newSelectedOptionKey = suggestion.getOptionKey();
                     if (!newSelectedOptionKey
                             .equals(getWidget().selectedOptionKey)
                             || suggestion.getReplacementString().equals(

@@ -147,8 +147,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * 
          * @return The key of the item
          */
-        public int getOptionKey() {
-            return Integer.parseInt(key);
+        public String getOptionKey() {
+            return key;
         }
 
         /**
@@ -1281,7 +1281,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             newKey = "";
         } else {
             // normal selection
-            newKey = String.valueOf(suggestion.getOptionKey());
+            newKey = suggestion.getOptionKey();
         }
 
         String text = suggestion.getReplacementString();
