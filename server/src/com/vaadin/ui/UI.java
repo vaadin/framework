@@ -218,6 +218,9 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     private PushConfiguration pushConfiguration = new PushConfigurationImpl(
             this);
 
+    private NotificationConfiguration notificationConfiguration = new NotificationConfigurationImpl(
+            this);
+
     /**
      * Creates a new empty UI without a caption. The content of the UI must be
      * set by calling {@link #setContent(Component)} before using the UI.
@@ -1279,6 +1282,15 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      */
     public TooltipConfiguration getTooltipConfiguration() {
         return tooltipConfiguration;
+    }
+
+    /**
+     * Retrieves the object used for configuring notifications.
+     * 
+     * @return The instance used for notification configuration
+     */
+    public NotificationConfiguration getNotificationConfiguration() {
+        return notificationConfiguration;
     }
 
     /**
