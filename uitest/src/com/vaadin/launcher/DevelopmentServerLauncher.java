@@ -22,8 +22,19 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
@@ -163,6 +174,25 @@ public class DevelopmentServerLauncher {
         webappcontext.setWar(serverArgs.get("webroot"));
         server.setHandler(webappcontext);
 
+        // --slowdown=/run/APP/PUBLISHED/*,/other/path/asd.jpg
+        // slows down specified paths
+        if (serverArgs.containsKey("slowdown")) {
+            String[] paths = serverArgs.get("slowdown").split(",");
+            for (String p : paths) {
+                System.out.println("Slowing down: " + p);
+                webappcontext.addFilter(SlowFilter.class, p, 1);
+            }
+        }
+        // --cache=/run/APP/PUBLISHED/*,/other/path/asd.jpg
+        // caches specified paths
+        if (serverArgs.containsKey("cache")) {
+            String[] paths = serverArgs.get("cache").split(",");
+            for (String p : paths) {
+                System.out.println("Enabling cache for: " + p);
+                webappcontext.addFilter(CacheFilter.class, p, 1);
+            }
+        }
+
         try {
             server.start();
 
@@ -241,6 +271,85 @@ public class DevelopmentServerLauncher {
             }
         }
         return map;
+    }
+
+    /**
+     * Sleeps for 2-5 seconds when serving resources that matches given
+     * pathSpec. --slowdown=/run/APP/PUBLISHED/*,/other/path/asd.jpg
+     */
+    public static class SlowFilter implements Filter {
+
+        @Override
+        public void init(FilterConfig filterConfig) throws ServletException {
+            // TODO Auto-generated method stub
+        }
+
+        @Override
+        public void doFilter(ServletRequest request, ServletResponse response,
+                FilterChain chain) throws IOException, ServletException {
+
+            String path = ((HttpServletRequest) request).getPathInfo();
+            long delay = Math.round(Math.random() * 3000) + 2000;
+            System.out.println("Delaying " + path + " for " + delay);
+
+            try {
+                Thread.sleep(delay);
+            } catch (InterruptedException e) {
+                System.out.println("Delay interrupted for " + path);
+            } finally {
+                System.out.println("Resuming " + path);
+            }
+
+            chain.doFilter(request, response);
+        }
+
+        @Override
+        public void destroy() {
+            // TODO Auto-generated method stub
+        }
+
+    }
+
+    /**
+     * Adds "Expires" and "Cache-control" headers when serving resources that
+     * match given pathSpec, in order to cache resource for CACHE_MINUTES.
+     * --cache=/run/APP/PUBLISHED/*,/other/path/asd.jpg
+     */
+    public static class CacheFilter implements Filter {
+
+        private static final int CACHE_MINUTES = 1;
+
+        @Override
+        public void init(FilterConfig filterConfig) throws ServletException {
+            // TODO Auto-generated method stub
+        }
+
+        @Override
+        public void doFilter(ServletRequest request, ServletResponse response,
+                FilterChain chain) throws IOException, ServletException {
+
+            String path = ((HttpServletRequest) request).getPathInfo();
+            System.out.println("Caching " + path + " for " + CACHE_MINUTES
+                    + " minutes");
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.MINUTE, CACHE_MINUTES);
+
+            String expires = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z")
+                    .format(calendar.getTime());
+
+            ((HttpServletResponse) response).setHeader("Expires", expires);
+            ((HttpServletResponse) response).setHeader("Cache-Control",
+                    "max-age=" + (CACHE_MINUTES * 60));
+
+            chain.doFilter(request, response);
+        }
+
+        @Override
+        public void destroy() {
+            // TODO Auto-generated method stub
+        }
+
     }
 
 }

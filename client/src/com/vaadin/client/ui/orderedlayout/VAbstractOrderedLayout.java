@@ -503,14 +503,10 @@ public class VAbstractOrderedLayout extends FlowPanel {
                         // TODO check caption position
                         if (vertical) {
                             int size = layoutManager.getOuterHeight(slot
-                                    .getWidget().getElement())
-                                    - layoutManager.getMarginHeight(slot
-                                            .getWidget().getElement());
+                                    .getWidget().getElement());
                             if (slot.hasCaption()) {
                                 size += layoutManager.getOuterHeight(slot
-                                        .getCaptionElement())
-                                        - layoutManager.getMarginHeight(slot
-                                                .getCaptionElement());
+                                        .getCaptionElement());
                             }
                             if (size > 0) {
                                 totalSize += size;
@@ -518,14 +514,10 @@ public class VAbstractOrderedLayout extends FlowPanel {
                         } else {
                             int max = -1;
                             max = layoutManager.getOuterWidth(slot.getWidget()
-                                    .getElement())
-                                    - layoutManager.getMarginWidth(slot
-                                            .getWidget().getElement());
+                                    .getElement());
                             if (slot.hasCaption()) {
                                 int max2 = layoutManager.getOuterWidth(slot
-                                        .getCaptionElement())
-                                        - layoutManager.getMarginWidth(slot
-                                                .getCaptionElement());
+                                        .getCaptionElement());
                                 max = Math.max(max, max2);
                             }
                             if (max > 0) {
