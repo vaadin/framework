@@ -199,6 +199,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          */
         SuggestionPopup() {
             super(true, false, true);
+            debug("VFS.SP: constructor()");
             setOwner(VFilterSelect.this);
             menu = new SuggestionMenu();
             setWidget(menu);
@@ -234,6 +235,11 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         public void showSuggestions(
                 final Collection<FilterSelectSuggestion> currentSuggestions,
                 final int currentPage, final int totalSuggestions) {
+
+            if (enableDebug) {
+                debug("VFS.SP: showSuggestions(" + currentSuggestions + ", "
+                        + currentPage + ", " + totalSuggestions + ")");
+            }
 
             /*
              * We need to defer the opening of the popup so that the parent DOM
@@ -302,6 +308,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * @param active
          */
         private void setNextButtonActive(boolean active) {
+            if (enableDebug) {
+                debug("VFS.SP: setNextButtonActive(" + active + ")");
+            }
             if (active) {
                 DOM.sinkEvents(down, Event.ONCLICK);
                 down.setClassName(VFilterSelect.this.getStylePrimaryName()
@@ -319,6 +328,10 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * @param active
          */
         private void setPrevButtonActive(boolean active) {
+            if (enableDebug) {
+                debug("VFS.SP: setPrevButtonActive(" + active + ")");
+            }
+
             if (active) {
                 DOM.sinkEvents(up, Event.ONCLICK);
                 up.setClassName(VFilterSelect.this.getStylePrimaryName()
@@ -335,6 +348,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * Selects the next item in the filtered selections
          */
         public void selectNextItem() {
+            debug("VFS.SP: selectNextItem()");
             final MenuItem cur = menu.getSelectedItem();
             final int index = 1 + menu.getItems().indexOf(cur);
             if (menu.getItems().size() > index) {
@@ -354,6 +368,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * Selects the previous item in the filtered selections
          */
         public void selectPrevItem() {
+            debug("VFS.SP: selectPrevItem()");
             final MenuItem cur = menu.getSelectedItem();
             final int index = -1 + menu.getItems().indexOf(cur);
             if (index > -1) {
@@ -388,6 +403,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
             @Override
             public void run() {
+                debug("VFS.SP.LPS: run()");
                 if (pagesToScroll != 0) {
                     if (!waitingForFilteringResponse) {
                         /*
@@ -408,6 +424,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             }
 
             public void scrollUp() {
+                debug("VFS.SP.LPS: scrollUp()");
                 if (currentPage + pagesToScroll > 0) {
                     pagesToScroll--;
                     cancel();
@@ -416,6 +433,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             }
 
             public void scrollDown() {
+                debug("VFS.SP.LPS: scrollDown()");
                 if (totalMatches > (currentPage + pagesToScroll + 1)
                         * pageLength) {
                     pagesToScroll++;
@@ -435,6 +453,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         @Override
         public void onBrowserEvent(Event event) {
+            debug("VFS.SP: onBrowserEvent()");
             if (event.getTypeInt() == Event.ONCLICK) {
                 final Element target = DOM.eventGetTarget(event);
                 if (target == up || target == DOM.getChild(up, 0)) {
@@ -468,6 +487,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          *            Should the paging be turned on?
          */
         public void setPagingEnabled(boolean paging) {
+            debug("VFS.SP: setPagingEnabled(" + paging + ")");
             if (isPagingEnabled == paging) {
                 return;
             }
@@ -493,6 +513,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         @Override
         public void setPosition(int offsetWidth, int offsetHeight) {
+            debug("VFS.SP: setPosition()");
 
             int top = -1;
             int left = -1;
@@ -571,6 +592,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * @return true if popup was just closed
          */
         public boolean isJustClosed() {
+            debug("VFS.SP: justClosed()");
             final long now = (new Date()).getTime();
             return (lastAutoClosed > 0 && (now - lastAutoClosed) < 200);
         }
@@ -585,6 +607,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         @Override
         public void onClose(CloseEvent<PopupPanel> event) {
+            if (enableDebug) {
+                debug("VFS.SP: onClose(" + event.isAutoClosed() + ")");
+            }
             if (event.isAutoClosed()) {
                 lastAutoClosed = (new Date()).getTime();
             }
@@ -600,6 +625,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          */
         public void updateStyleNames(UIDL uidl,
                 AbstractComponentState componentState) {
+            debug("VFS.SP: updateStyleNames()");
             setStyleName(VFilterSelect.this.getStylePrimaryName()
                     + "-suggestpopup");
             menu.setStyleName(VFilterSelect.this.getStylePrimaryName()
@@ -635,6 +661,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
                     @Override
                     public void execute() {
+                        debug("VFS.SM: delayedImageLoadExecutioner()");
                         if (suggestionPopup.isVisible()
                                 && suggestionPopup.isAttached()) {
                             setWidth("");
@@ -652,6 +679,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          */
         SuggestionMenu() {
             super(true);
+            debug("VFS.SM: constructor()");
             addDomHandler(this, LoadEvent.getType());
         }
 
@@ -675,6 +703,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          */
         public void setSuggestions(
                 Collection<FilterSelectSuggestion> suggestions) {
+            if (enableDebug) {
+                debug("VFS.SM: setSuggestions(" + suggestions + ")");
+            }
             // Reset keyboard selection when contents is updated to avoid
             // reusing old, invalid data
             setKeyboardSelectedItem(null);
@@ -699,6 +730,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * is made or on a blur event.
          */
         public void doSelectedItemAction() {
+            debug("VFS.SM: doSelectedItemAction()");
             // do not send a value change event if null was and stays selected
             final String enteredItemValue = tb.getText();
             if (nullSelectionAllowed && "".equals(enteredItemValue)
@@ -728,6 +760,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * Triggered after a selection has been made
          */
         public void doPostFilterSelectedItemAction() {
+            debug("VFS.SM: doPostFilterSelectedItemAction()");
             final MenuItem item = getSelectedItem();
             final String enteredItemValue = tb.getText();
 
@@ -824,6 +857,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
         @Override
         public void onLoad(LoadEvent event) {
+            debug("VFS.SM: onLoad()");
             // Handle icon onload events to ensure shadow is resized
             // correctly
             delayedImageLoadExecutioner.trigger();
@@ -831,6 +865,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         }
 
         public void selectFirstItem() {
+            debug("VFS.SM: selectFirstItem()");
             MenuItem firstItem = getItems().get(0);
             selectItem(firstItem);
         }
@@ -844,6 +879,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         }
 
         public void selectLastItem() {
+            debug("VFS.SM: selectLastItem()");
             List<MenuItem> items = getItems();
             MenuItem lastItem = items.get(items.size() - 1);
             selectItem(lastItem);
@@ -1130,6 +1166,10 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      *            Whether to send the options request immediately
      */
     private void filterOptions(int page, String filter, boolean immediate) {
+        if (enableDebug) {
+            debug("VFS: filterOptions(" + page + ", " + filter + ", "
+                    + immediate + ")");
+        }
         if (filter.equals(lastFilter) && currentPage == page) {
             if (!suggestionPopup.isAttached()) {
                 suggestionPopup.showSuggestions(currentSuggestions,
@@ -1156,10 +1196,12 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     /** For internal use only. May be removed or replaced in the future. */
     public void updateReadOnly() {
+        debug("VFS: updateReadOnly()");
         tb.setReadOnly(readonly || !textInputEnabled);
     }
 
     public void setTextInputEnabled(boolean textInputEnabled) {
+        debug("VFS: setTextInputEnabled()");
         // Always update styles as they might have been overwritten
         if (textInputEnabled) {
             removeStyleDependentName(STYLE_NO_INPUT);
@@ -1182,6 +1224,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      *            the text to set in the text box
      */
     public void setTextboxText(final String text) {
+        if (enableDebug) {
+            debug("VFS: setTextboxText(" + text + ")");
+        }
         tb.setText(text);
     }
 
@@ -1190,6 +1235,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      * in the text box if nothing has been entered.
      */
     public void setPromptingOn() {
+        debug("VFS: setPromptingOn()");
         if (!prompting) {
             prompting = true;
             addStyleDependentName(CLASSNAME_PROMPT);
@@ -1207,6 +1253,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      *            The text the text box should contain.
      */
     public void setPromptingOff(String text) {
+        debug("VFS: setPromptingOff()");
         setTextboxText(text);
         if (prompting) {
             prompting = false;
@@ -1221,6 +1268,10 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      *            The suggestion that just got selected.
      */
     public void onSuggestionSelected(FilterSelectSuggestion suggestion) {
+        if (enableDebug) {
+            debug("VFS: onSuggestionSelected(" + suggestion.caption + ": "
+                    + suggestion.key + ")");
+        }
         updateSelectionWhenReponseIsReceived = false;
 
         currentSuggestion = suggestion;
@@ -1316,7 +1367,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         if (enabled && !readonly) {
             int keyCode = event.getNativeKeyCode();
 
-            debug("key down: " + keyCode);
+            if (enableDebug) {
+                debug("VFS: key down: " + keyCode);
+            }
             if (waitingForFilteringResponse
                     && navigationKeyCodes.contains(keyCode)) {
                 /*
@@ -1324,18 +1377,25 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                  * waiting for a response. This avoids flickering, disappearing
                  * items, wrongly interpreted responses and more.
                  */
-                debug("Ignoring " + keyCode
-                        + " because we are waiting for a filtering response");
+                if (enableDebug) {
+                    debug("Ignoring "
+                            + keyCode
+                            + " because we are waiting for a filtering response");
+                }
                 DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
                 event.stopPropagation();
                 return;
             }
 
             if (suggestionPopup.isAttached()) {
-                debug("Keycode " + keyCode + " target is popup");
+                if (enableDebug) {
+                    debug("Keycode " + keyCode + " target is popup");
+                }
                 popupKeyDown(event);
             } else {
-                debug("Keycode " + keyCode + " target is text field");
+                if (enableDebug) {
+                    debug("Keycode " + keyCode + " target is text field");
+                }
                 inputFieldKeyDown(event);
             }
         }
@@ -1354,6 +1414,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      *            The KeyDownEvent
      */
     private void inputFieldKeyDown(KeyDownEvent event) {
+        if (enableDebug) {
+            debug("VFS: inputFieldKeyDown(" + event.getNativeKeyCode() + ")");
+        }
         switch (event.getNativeKeyCode()) {
         case KeyCodes.KEY_DOWN:
         case KeyCodes.KEY_UP:
@@ -1396,6 +1459,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      *            The KeyDownEvent of the key
      */
     private void popupKeyDown(KeyDownEvent event) {
+        if (enableDebug) {
+            debug("VFS: popupKeyDown(" + event.getNativeKeyCode() + ")");
+        }
         // Propagation of handled events is stopped so other handlers such as
         // shortcut key handlers do not also handle the same events.
         switch (event.getNativeKeyCode()) {
@@ -1476,6 +1542,9 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     @Override
     public void onKeyUp(KeyUpEvent event) {
+        if (enableDebug) {
+            debug("VFS: onKeyUp(" + event.getNativeKeyCode() + ")");
+        }
         if (enabled && !readonly) {
             switch (event.getNativeKeyCode()) {
             case KeyCodes.KEY_ENTER:
@@ -1503,6 +1572,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      * Resets the Select to its initial state
      */
     private void reset() {
+        debug("VFS: reset()");
         if (currentSuggestion != null) {
             String text = currentSuggestion.getReplacementString();
             setPromptingOff(text);
@@ -1525,6 +1595,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     @Override
     public void onClick(ClickEvent event) {
+        debug("VFS: onClick()");
         if (textInputEnabled
                 && event.getNativeEvent().getEventTarget().cast() == tb
                         .getElement()) {
@@ -1592,6 +1663,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     @Override
     public void onFocus(FocusEvent event) {
+        debug("VFS: onFocus()");
 
         /*
          * When we disable a blur event in ie we need to refocus the textfield.
@@ -1630,6 +1702,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     @Override
     public void onBlur(BlurEvent event) {
+        debug("VFS: onBlur()");
 
         if (BrowserInfo.get().isIE() && preventNextBlurEventInIE) {
             /*
@@ -1690,6 +1763,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
     @Override
     public void focus() {
+        debug("VFS: focus()");
         focused = true;
         if (prompting && !readonly) {
             setPromptingOff("");
@@ -1789,6 +1863,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
              */
             if (BrowserInfo.get().isIE() && focused) {
                 preventNextBlurEventInIE = true;
+                debug("VFS: Going to prevent next blur event on IE");
             }
         }
     }
