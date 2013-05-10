@@ -20,7 +20,6 @@ import java.util.Iterator;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
-import com.vaadin.client.Util;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.client.ui.VFilterSelect;
@@ -124,9 +123,6 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             getWidget().totalMatches = 0;
         }
 
-        // used only to calculate minimum popup width
-        String captions = Util.escapeHTML(getWidget().inputPrompt);
-
         for (final Iterator<?> i = options.getChildIterator(); i.hasNext();) {
             final UIDL optionUidl = (UIDL) i.next();
             final FilterSelectSuggestion suggestion = getWidget().new FilterSelectSuggestion(
@@ -152,12 +148,6 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
                 getWidget().currentSuggestion = suggestion;
                 getWidget().setSelectedItemIcon(suggestion.getIconUri());
             }
-
-            // Collect captions so we can calculate minimum width for textarea
-            if (captions.length() > 0) {
-                captions += "|";
-            }
-            captions += Util.escapeHTML(suggestion.getReplacementString());
         }
 
         if ((!getWidget().waitingForFilteringResponse || getWidget().popupOpenerClicked)
@@ -222,8 +212,8 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             }
         }
 
-        // Calculate minumum textarea width
-        getWidget().suggestionPopupMinWidth = getWidget().minWidth(captions);
+        // Calculate minimum textarea width
+        getWidget().updateSuggestionPopupMinWidth();
 
         getWidget().popupOpenerClicked = false;
 

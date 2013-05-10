@@ -1622,6 +1622,29 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     }
 
     /**
+     * Update minimum width for FilterSelect textarea based on input prompt and
+     * suggestions.
+     * <p>
+     * For internal use only. May be removed or replaced in the future.
+     */
+    public void updateSuggestionPopupMinWidth() {
+        // used only to calculate minimum width
+        String captions = Util.escapeHTML(inputPrompt);
+
+        for (FilterSelectSuggestion suggestion : currentSuggestions) {
+            // Collect captions so we can calculate minimum width for
+            // textarea
+            if (captions.length() > 0) {
+                captions += "|";
+            }
+            captions += Util.escapeHTML(suggestion.getReplacementString());
+        }
+
+        // Calculate minimum textarea width
+        suggestionPopupMinWidth = minWidth(captions);
+    }
+
+    /**
      * Calculate minimum width for FilterSelect textarea.
      * <p>
      * For internal use only. May be removed or replaced in the future.
