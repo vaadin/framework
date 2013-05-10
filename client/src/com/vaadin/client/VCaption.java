@@ -90,13 +90,29 @@ public class VCaption extends HTML {
         this.client = client;
         owner = component;
 
-        AriaHelper.bindCaption(component.getWidget(), getElement());
-
         if (client != null && owner != null) {
             setOwnerPid(getElement(), owner.getConnectorId());
         }
 
         setStyleName(CLASSNAME);
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+
+        if (null != owner) {
+            AriaHelper.bindCaption(owner.getWidget(), getElement());
+        }
+    }
+
+    @Override
+    protected void onDetach() {
+        super.onDetach();
+
+        if (null != owner) {
+            AriaHelper.bindCaption(owner.getWidget(), null);
+        }
     }
 
     /**

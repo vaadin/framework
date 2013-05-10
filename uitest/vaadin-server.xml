@@ -8,7 +8,7 @@
 
 		<ivy:resolve file="${dir}/ivy.xml" />
 		<ivy:cachepath pathid="classpath.jetty" conf="jetty-run" />
-		<java classname="org.mortbay.jetty.runner.Runner" fork="yes">
+		<java classname="org.mortbay.jetty.runner.Runner" fork="yes" output="${vaadin.basedir}/result/jetty.java.out" resultproperty="resultCode">
 			<arg value="--port" />
 			<arg value="8888" />
 			<arg value="--out" />
@@ -19,6 +19,7 @@
 			<classpath refid="classpath.jetty" />
 			<jvmarg value="-ea" />
 		</java>
+		<echo message="Jetty process ended with result code ${resultCode}" />
 
 	</target>
 

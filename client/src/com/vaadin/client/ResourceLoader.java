@@ -50,8 +50,8 @@ public class ResourceLoader {
      * Event fired when a resource has been loaded.
      */
     public static class ResourceLoadEvent {
-        private ResourceLoader loader;
-        private String resourceUrl;
+        private final ResourceLoader loader;
+        private final String resourceUrl;
         private final boolean preload;
 
         /**
@@ -286,25 +286,35 @@ public class ResourceLoader {
             // Inject loader element if this is the first time this is preloaded
             // AND the resources isn't already being loaded in the normal way
 
-            Element element = getPreloadElement(url);
+            final Element element = getPreloadElement(url);
             addOnloadHandler(element, new ResourceLoadListener() {
                 @Override
                 public void onLoad(ResourceLoadEvent event) {
                     fireLoad(event);
+                    Document.get().getBody().removeChild(element);
                 }
 
                 @Override
                 public void onError(ResourceLoadEvent event) {
                     fireError(event);
+                    Document.get().getBody().removeChild(element);
                 }
             }, event);
 
-            // TODO Remove object when loaded (without causing spinner in FF)
             Document.get().getBody().appendChild(element);
         }
     }
 
     private static Element getPreloadElement(String url) {
+        /*-
+         * TODO
+         * In Chrome, FF:
+         * <object> does not fire event if resource is 404 -> eternal spinner.
+         * <img> always fires onerror -> no way to know if it loaded -> eternal spinner
+         * <script type="text/javascript> fires, but also executes -> not preloading
+         * <script type="text/cache"> does not fire events
+         *  XHR not tested - should work, probably causes other issues
+         -*/
         if (BrowserInfo.get().isIE()) {
             ScriptElement element = Document.get().createScriptElement();
             element.setSrc(url);

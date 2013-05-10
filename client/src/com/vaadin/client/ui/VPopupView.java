@@ -202,7 +202,6 @@ public class VPopupView extends HTML implements Iterable<Widget> {
         private boolean hasHadMouseOver = false;
         private boolean hideOnMouseOut = true;
         private final Set<Element> activeChildren = new HashSet<Element>();
-        private boolean hiding = false;
 
         private ShortcutActionHandler shortcutActionHandler;
 
@@ -264,7 +263,6 @@ public class VPopupView extends HTML implements Iterable<Widget> {
         @Override
         public void hide(boolean autoClosed) {
             VConsole.log("Hiding popupview");
-            hiding = true;
             syncChildren();
             if (popupComponentWidget != null && popupComponentWidget != loading) {
                 remove(popupComponentWidget);
@@ -276,8 +274,6 @@ public class VPopupView extends HTML implements Iterable<Widget> {
 
         @Override
         public void show() {
-            hiding = false;
-
             // Find the shortcut action handler that should handle keyboard
             // events from the popup. The events do not propagate automatically
             // because the popup is directly attached to the RootPanel.
@@ -351,31 +347,6 @@ public class VPopupView extends HTML implements Iterable<Widget> {
 
         public void setHideOnMouseOut(boolean hideOnMouseOut) {
             this.hideOnMouseOut = hideOnMouseOut;
-        }
-
-        /*
-         * 
-         * We need a hack make popup act as a child of VPopupView in Vaadin's
-         * component tree, but work in default GWT manner when closing or
-         * opening.
-         * 
-         * (non-Javadoc)
-         * 
-         * @see com.google.gwt.user.client.ui.Widget#getParent()
-         */
-        @Override
-        public Widget getParent() {
-            if (!isAttached() || hiding) {
-                return super.getParent();
-            } else {
-                return VPopupView.this;
-            }
-        }
-
-        @Override
-        protected void onDetach() {
-            super.onDetach();
-            hiding = false;
         }
 
         @Override
