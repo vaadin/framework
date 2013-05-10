@@ -1079,6 +1079,7 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         if (!previousStyles.equals(getStyleName())) {
             // recalculate, might have changed
             componentPadding = -1;
+            updateRootWidth();
         }
 
         // Inverse logic here to make the default case (text input enabled)
