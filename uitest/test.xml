@@ -182,6 +182,7 @@
 			<sequential>
 				<ant antfile="${test.xml.dir}/vaadin-server.xml" target="wait-for-startup" />
 				<antcall inheritall="true" inheritrefs="true" target="run-and-clean-up" />
+				<echo message="All TestBench tests have been run" />
 			</sequential>
 		</parallel>
 	</target>
