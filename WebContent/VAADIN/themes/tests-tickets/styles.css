@@ -1,6 +1,16 @@
 @import url(../runo/styles.css);
 
-/* DO NOT ADD GENERIC RULES LIKE .v-table IN THIS FILE */
+/* DO NOT ADD GENERIC RULES LIKE .v-table IN THIS FILE                       */
+/* Instead prefix with e.g .v-app-<TestClass> or other unique selectors      */
+/*****************************************************************************/
+
+/*****************************************************************************/
+/* com.vaadin.tests.components.combobox.ComboBoxBorder                       */
+/*****************************************************************************/
+.v-app-ComboBoxBorder .v-filterselect-error {
+	/* Ticket 11267 */
+   border: 1px solid #FF0000 ;
+}
 
 /*****************************************************************************/
 /* Ticket 1904                                                               */

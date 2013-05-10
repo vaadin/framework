@@ -1069,8 +1069,16 @@ public class VFilterSelect extends Composite implements Paintable, Field,
         tb.setEnabled(enabled);
         updateReadOnly();
 
+        // save stylenames to see if they changed
+        final String previousStyles = getStyleName();
+
         if (client.updateComponent(this, uidl, true)) {
             return;
+        }
+
+        if (!previousStyles.equals(getStyleName())) {
+            // recalculate, might have changed
+            componentPadding = -1;
         }
 
         // Inverse logic here to make the default case (text input enabled)
