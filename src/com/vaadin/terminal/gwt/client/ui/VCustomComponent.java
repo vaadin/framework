@@ -25,6 +25,8 @@ public class VCustomComponent extends SimplePanel implements Container {
     private boolean rendering;
     private String width;
     private RenderSpace renderSpace = new RenderSpace();
+    private int horizontalPaddingAndBorder = -1;
+    private int verticalPaddingAndBorder = -1;
 
     public VCustomComponent() {
         super();
@@ -54,6 +56,11 @@ public class VCustomComponent extends SimplePanel implements Container {
 
         boolean updateDynamicSize = updateDynamicSize();
         if (updateDynamicSize) {
+            renderSpace.setWidth(getElement().getOffsetWidth()
+                    - horizontalPaddingAndBorder);
+            renderSpace.setHeight(getElement().getOffsetHeight()
+                    - verticalPaddingAndBorder);
+
             Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
                     // FIXME deferred relative size update needed to fix some
@@ -64,9 +71,6 @@ public class VCustomComponent extends SimplePanel implements Container {
                 }
             });
         }
-
-        renderSpace.setWidth(getElement().getOffsetWidth());
-        renderSpace.setHeight(getElement().getOffsetHeight());
 
         /*
          * Needed to update client size if the size of this component has
@@ -141,8 +145,12 @@ public class VCustomComponent extends SimplePanel implements Container {
 
     @Override
     public void setHeight(String height) {
-        super.setHeight(height);
-        renderSpace.setHeight(getElement().getOffsetHeight());
+        if (verticalPaddingAndBorder == -1) {
+            verticalPaddingAndBorder = Util.setHeightExcludingPaddingAndBorder(
+                    this, height, 0);
+        }
+        renderSpace.setHeight(getElement().getOffsetHeight()
+                - verticalPaddingAndBorder);
 
         if (!height.equals(this.height)) {
             this.height = height;
@@ -154,8 +162,12 @@ public class VCustomComponent extends SimplePanel implements Container {
 
     @Override
     public void setWidth(String width) {
-        super.setWidth(width);
-        renderSpace.setWidth(getElement().getOffsetWidth());
+        if (horizontalPaddingAndBorder == -1) {
+            horizontalPaddingAndBorder = Util
+                    .setWidthExcludingPaddingAndBorder(this, width, 0);
+        }
+        renderSpace.setWidth(getElement().getOffsetWidth()
+                - horizontalPaddingAndBorder);
 
         if (!width.equals(this.width)) {
             this.width = width;
@@ -164,5 +176,4 @@ public class VCustomComponent extends SimplePanel implements Container {
             }
         }
     }
-
 }
