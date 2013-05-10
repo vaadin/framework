@@ -47,7 +47,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
-import com.liferay.portal.kernel.util.PortalClassInvoker;
+import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.vaadin.Application;
 import com.vaadin.Application.SystemMessages;
@@ -1646,16 +1646,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     private static String getLiferayHTTPRequestParameter(
             PortletRequest request, String name) {
         try {
-            // httpRequest = PortalUtil.getHttpServletRequest(request);
-            HttpServletRequest httpRequest = (HttpServletRequest) PortalClassInvoker
-                    .invoke("com.liferay.portal.util.PortalUtil",
-                            "getHttpServletRequest", request);
-
-            // httpRequest =
-            // PortalUtil.getOriginalServletRequest(httpRequest);
-            httpRequest = (HttpServletRequest) PortalClassInvoker.invoke(
-                    "com.liferay.portal.util.PortalUtil",
-                    "getOriginalServletRequest", httpRequest);
+            HttpServletRequest httpRequest = getLiferayOriginalServletRequest(request);
             if (httpRequest != null) {
                 return httpRequest.getParameter(name);
             }
@@ -1682,16 +1673,7 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
     private static String getLiferayHTTPHeader(PortletRequest request,
             String name) {
         try {
-            // httpRequest = PortalUtil.getHttpServletRequest(request);
-            HttpServletRequest httpRequest = (HttpServletRequest) PortalClassInvoker
-                    .invoke("com.liferay.portal.util.PortalUtil",
-                            "getHttpServletRequest", request);
-
-            // httpRequest =
-            // PortalUtil.getOriginalServletRequest(httpRequest);
-            httpRequest = (HttpServletRequest) PortalClassInvoker.invoke(
-                    "com.liferay.portal.util.PortalUtil",
-                    "getOriginalServletRequest", httpRequest);
+            HttpServletRequest httpRequest = getLiferayOriginalServletRequest(request);
             if (httpRequest != null) {
                 return httpRequest.getHeader(name);
             }
@@ -1699,6 +1681,71 @@ public abstract class AbstractApplicationPortlet extends GenericPortlet
             // ignore and return null - unable to get the original request
         }
         return null;
+    }
+
+    /**
+     * Simplified version of what Liferay PortalClassInvoker did. This is used
+     * because the API of PortalClassInvoker has changed in Liferay 6.2.
+     * 
+     * This simply uses reflection with Liferay class loader. Parameters are
+     * Strings to avoid static dependencies and to load all classes with
+     * Liferay's own class loader. Only static utility methods are supported.
+     * 
+     * This method is for internal use only and may change in future versions.
+     * 
+     * @param className
+     *            name of the Liferay class to call
+     * @param methodName
+     *            name of the method to call
+     * @param parameterClassName
+     *            name of the parameter class of the method
+     * @throws Exception
+     * @return return value of the invoked method
+     */
+    private static Object invokeStaticLiferayMethod(String className,
+            String methodName, Object argument, String parameterClassName)
+            throws Exception {
+        Thread currentThread = Thread.currentThread();
+
+        ClassLoader contextClassLoader = currentThread.getContextClassLoader();
+
+        try {
+            // this should be available across all Liferay versions with no
+            // problematic static dependencies
+            ClassLoader portalClassLoader = PortalClassLoaderUtil
+                    .getClassLoader();
+            // this is in case the class loading triggers code that explicitly
+            // uses current thread class loader
+            currentThread.setContextClassLoader(portalClassLoader);
+
+            Class<?> targetClass = portalClassLoader.loadClass(className);
+            Class<?> parameterClass = portalClassLoader
+                    .loadClass(parameterClassName);
+            Method method = targetClass.getMethod(methodName, parameterClass);
+
+            return method.invoke(null, new Object[] { argument });
+        } catch (InvocationTargetException ite) {
+            throw (Exception) ite.getCause();
+        } finally {
+            currentThread.setContextClassLoader(contextClassLoader);
+        }
+    }
+
+    private static HttpServletRequest getLiferayOriginalServletRequest(
+            PortletRequest request) throws Exception {
+        // httpRequest = PortalUtil.getHttpServletRequest(request);
+        HttpServletRequest httpRequest = (HttpServletRequest) invokeStaticLiferayMethod(
+                "com.liferay.portal.util.PortalUtil", "getHttpServletRequest",
+                request, "javax.portlet.PortletRequest");
+
+        // httpRequest =
+        // PortalUtil.getOriginalServletRequest(httpRequest);
+        httpRequest = (HttpServletRequest) invokeStaticLiferayMethod(
+                "com.liferay.portal.util.PortalUtil",
+                "getOriginalServletRequest", httpRequest,
+                "javax.servlet.http.HttpServletRequest");
+
+        return httpRequest;
     }
 
     /**
