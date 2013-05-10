@@ -168,6 +168,27 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         public void execute() {
             onSuggestionSelected(this);
         }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof FilterSelectSuggestion)) {
+                return false;
+            }
+            FilterSelectSuggestion other = (FilterSelectSuggestion) obj;
+            if ((key == null && other.key != null)
+                    || (key != null && !key.equals(other.key))) {
+                return false;
+            }
+            if ((caption == null && other.caption != null)
+                    || (caption != null && !caption.equals(other.caption))) {
+                return false;
+            }
+            if ((iconUri == null && other.iconUri != null)
+                    || (iconUri != null && !iconUri.equals(other.iconUri))) {
+                return false;
+            }
+            return true;
+        }
     }
 
     /**
