@@ -148,7 +148,14 @@ public class VCustomComponent extends SimplePanel implements Container {
         if (verticalPaddingAndBorder == -1) {
             verticalPaddingAndBorder = Util.setHeightExcludingPaddingAndBorder(
                     this, height, 0);
+        } else if (height.equals("")) {
+            super.setHeight(height);
+        } else if (height.endsWith("px")) {
+            super.setHeight((Integer.parseInt(height.substring(0,
+                    height.length() - 2)) - verticalPaddingAndBorder)
+                    + "px");
         }
+
         renderSpace.setHeight(getElement().getOffsetHeight()
                 - verticalPaddingAndBorder);
 
@@ -165,7 +172,13 @@ public class VCustomComponent extends SimplePanel implements Container {
         if (horizontalPaddingAndBorder == -1) {
             horizontalPaddingAndBorder = Util
                     .setWidthExcludingPaddingAndBorder(this, width, 0);
+        } else if (width.equals("")) {
+            super.setWidth(width);
+        } else if (width.endsWith("px")) {
+            super.setWidth((Integer.parseInt(width.substring(0,
+                    width.length() - 2)) - horizontalPaddingAndBorder) + "px");
         }
+
         renderSpace.setWidth(getElement().getOffsetWidth()
                 - horizontalPaddingAndBorder);
 

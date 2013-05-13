@@ -18,6 +18,7 @@ package com.vaadin.tests.components.draganddropwrapper;
 
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DragAndDropWrapper;
 import com.vaadin.ui.Label;
@@ -28,6 +29,17 @@ public class DragAndDropWrapperInPanel extends TestBase {
 
     @Override
     protected void setup() {
+
+        addComponent(new Button("Click to resize", new Button.ClickListener() {
+            public void buttonClick(ClickEvent event) {
+                for (int i = 1; i < getLayout().getComponentCount(); ++i) {
+                    Component c = getLayout().getComponent(i);
+                    c.setWidth("400px");
+                    c.setHeight("200px");
+                }
+            }
+        }));
+
         Component content;
 
         content = new Button("Undefined-sized Button");
@@ -38,7 +50,7 @@ public class DragAndDropWrapperInPanel extends TestBase {
         content.setSizeFull();
         addDnDPanel(content);
 
-        content = new TextArea(null, "100x100px TextArea");
+        content = new TextArea(null, "200x100px TextArea");
         content.setWidth("200px");
         content.setHeight("100px");
         addDnDPanel(content);
@@ -57,8 +69,8 @@ public class DragAndDropWrapperInPanel extends TestBase {
     private void addDnDPanel(Component content) {
         Panel panel = new Panel();
         panel.setSizeUndefined();
-        panel.setWidth("400px");
-        panel.setHeight("200px");
+        panel.setWidth("300px");
+        panel.setHeight("150px");
         DragAndDropWrapper dndWrapper = new DragAndDropWrapper(content);
         dndWrapper.setSizeFull();
         panel.setContent(dndWrapper);
