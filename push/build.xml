@@ -11,6 +11,11 @@
 	<property name="module.symbolic" value="com.vaadin.push" />
 	<property name="result.dir" location="result" />
 	<property name="vaadinPush.js" location="${result.dir}/js/VAADIN/vaadinPush.js" />
+
+	<!-- Keep the version number in sync with ivy.xml -->
+	<property name="atmosphere.version" value="1.0.12" />
+	<property name="jquery.version" value="1.7.2" />
+
 	<path id="classpath.compile.custom" />
 
 	<union id="jar.includes">
@@ -24,7 +29,7 @@
 		<property name="vaadinPush.js.output" location="${result.dir}/js/VAADIN/vaadinPush.js" />
 		<property name="vaadinPush.js.combined.output" location="${result.dir}/js/VAADIN/push.combined.js" />
 
-		<loadfile srcfile="${vaadin.basedir}/WebContent/VAADIN/jquery-1.7.2.js" property="jquery.js.contents" />
+		<loadfile srcfile="${vaadin.basedir}/WebContent/VAADIN/jquery-${jquery.version}.js" property="jquery.js.contents" />
 		<loadfile srcfile="${vaadin.basedir}/WebContent/VAADIN/jquery.atmosphere.js" property="jquery.atmosphere.js.contents" />
 		<loadfile srcfile="${vaadin.basedir}/WebContent/VAADIN/vaadinPush.js.tpl" property="vaadinPush.js.contents">
 			<filterchain>
@@ -47,10 +52,8 @@
 	</target>
 		
 	<target name="jar" depends="vaadinPush.js">
-		<property name="server.osgi.import" value="" />
 		<antcall target="common.jar">
-			<param name="require-bundle" value="" />
-			<param name="import-package" value="${server.osgi.import}" />
+			<param name="require-bundle" value="org.atmosphere.atmosphere-runtime;bundle-version=&quot;${atmosphere.version}&quot;;visibility:=reexport" />
 			<reference torefid="extra.jar.includes" refid="jar.includes" />
 		</antcall>
 	</target>

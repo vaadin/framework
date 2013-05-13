@@ -20,8 +20,6 @@
         <artifact type="pom" ext="pom" />
     </publications>
     <dependencies>
-	
-		
         <!-- API DEPENDENCIES -->
         
         <!--Servlet API version 2.4 -->
@@ -29,6 +27,7 @@
             rev="2.4" conf="build-provided,ide,test -> default" />
                        
         <!-- Atmosphere -->
+        <!-- Keep the version number in sync with build.xml -->
         <dependency org="org.atmosphere" name="atmosphere-runtime" rev="1.0.12"
         	conf="build,ide,test -> default">
         </dependency>
