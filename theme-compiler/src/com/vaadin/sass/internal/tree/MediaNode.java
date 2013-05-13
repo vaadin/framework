@@ -41,6 +41,9 @@ public class MediaNode extends Node {
         StringBuilder builder = new StringBuilder("@media ");
         if (media != null) {
             for (int i = 0; i < media.getLength(); i++) {
+                if (i > 0) {
+                    builder.append(", ");
+                }
                 builder.append(media.item(i));
             }
         }

@@ -823,7 +823,7 @@ void importDeclaration() :
 	       }
 	   }
 		  )
-       ( <S> )* ( mediaStatement(ml) )? ";"
+       ( <S> )* mediaStatement(ml) ";"
        ( <S> )*
 	   {
 	       if (ml.getLength() == 0) {
@@ -903,6 +903,7 @@ void keyframeSelector():
 /**
  * @exception ParseException exception during the parse
  */
+/* see http://www.w3.org/TR/css3-mediaqueries/ */
 void media() :
 { 
     boolean start = false;
@@ -927,12 +928,33 @@ void media() :
 }
 
 void mediaStatement(MediaListImpl ml) :
-{ 
-    String m;
+{
+  Token t;
 }
 {
-   m=medium() ( <COMMA> ( <S> )* { ml.addItem(m); } m=medium() )* 
-   { ml.addItem(m); }
+    {
+      t = getToken(1);
+      // loop over comma separated parts, add each to ml
+      while ((t.kind != LBRACE) && (t.kind != EOF) && (t.kind != SEMICOLON)) {
+        StringBuffer s = new StringBuffer();
+        s.append(getToken(0).image);
+        while ((t.kind != COMMA) && (t.kind != LBRACE) && (t.kind != EOF) && (t.kind != SEMICOLON)) {
+	      s.append(t.image);
+	      getNextToken();
+          t = getToken(1);
+        }
+        if (t.kind == COMMA) {
+          // skip the comma and the token before it that is still the active token
+          getNextToken();
+          getNextToken();
+          t = getToken(1);
+        }
+        String str = s.toString().trim();
+        if (str.length() > 0) {
+          ml.addItem(str);
+        }
+      }
+    }
 }
 
 /**
@@ -941,7 +963,7 @@ void mediaStatement(MediaListImpl ml) :
 String medium() : /* tv, projection, screen, ... */
 {Token n;}
 {
-    n=<IDENT> ( <S> )* { return convertIdent(n.image); }
+    n=<IDENT> { return convertIdent(n.image); }
 }
 
 /**
