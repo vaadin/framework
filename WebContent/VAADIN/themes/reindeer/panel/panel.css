@@ -36,6 +36,10 @@
 	background: #fff;
 	min-height: 100%;
 }
+.v-panel-content > .v-ddwrapper {
+	/* A hack to make the padding in .v-ddwrapper work correctly */
+	min-height: 0;
+}
 .v-ie6 .v-panel-content {
 	background: #fff;
 }
