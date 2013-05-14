@@ -629,23 +629,25 @@ public class SQLContainer implements Container, Container.Filterable,
             getPage();
         }
         int size = size();
-        boolean wrappedAround = false;
-        while (!wrappedAround) {
+        // this protects against infinite looping
+        int counter = 0;
+        while (counter < size) {
             for (Integer i : itemIndexes.keySet()) {
                 if (itemIndexes.get(i).equals(itemId)) {
                     return i;
                 }
+                counter++;
             }
             // load in the next page.
             int nextIndex = (currentOffset / (pageLength * CACHE_RATIO) + 1)
                     * (pageLength * CACHE_RATIO);
             if (nextIndex >= size) {
                 // Container wrapped around, start from index 0.
-                wrappedAround = true;
                 nextIndex = 0;
             }
             updateOffsetAndCache(nextIndex);
         }
+        // safeguard in case item not found
         return -1;
     }
 
