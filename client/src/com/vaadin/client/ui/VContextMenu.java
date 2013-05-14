@@ -35,6 +35,8 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
@@ -43,6 +45,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.Util;
@@ -56,6 +59,8 @@ public class VContextMenu extends VOverlay implements SubPartAware {
     private int left;
 
     private int top;
+
+    private Element focusedElement;
 
     private VLazyExecutor delayedImageLoadExecutioner = new VLazyExecutor(100,
             new ScheduledCommand() {
@@ -77,6 +82,20 @@ public class VContextMenu extends VOverlay implements SubPartAware {
         setWidget(menu);
         setStyleName("v-contextmenu");
         getElement().setId(DOM.createUniqueId());
+
+        addCloseHandler(new CloseHandler<PopupPanel>() {
+            @Override
+            public void onClose(CloseEvent<PopupPanel> event) {
+                Element currentFocus = Util.getFocusedElement();
+                if (focusedElement != null
+                        && (currentFocus == null
+                                || menu.getElement().isOrHasChild(currentFocus) || RootPanel
+                                .getBodyElement().equals(currentFocus))) {
+                    focusedElement.focus();
+                    focusedElement = null;
+                }
+            }
+        });
     }
 
     protected void imagesLoaded() {
@@ -116,6 +135,10 @@ public class VContextMenu extends VOverlay implements SubPartAware {
 
         // Attach onload listeners to all images
         Util.sinkOnloadForImages(menu.getElement());
+
+        // Store the currently focused element, which will be re-focused when
+        // context menu is closed
+        focusedElement = Util.getFocusedElement();
 
         setPopupPositionAndShow(new PositionCallback() {
             @Override
