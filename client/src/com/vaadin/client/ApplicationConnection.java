@@ -438,7 +438,7 @@ public class ApplicationConnection {
 
         tooltip.setOwner(uIConnector.getWidget());
 
-        getLoadingIndicator().trigger();
+        getLoadingIndicator().show();
 
         scheduleHeartbeat();
 
