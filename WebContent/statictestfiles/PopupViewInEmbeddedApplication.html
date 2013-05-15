@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  
+  <script type="text/javascript">
+    var vaadin = {
+      vaadinConfigurations: {
+        helloworld: {
+          appUri:'/run/com.vaadin.tests.components.popupview.PopupViewInEmbeddedApplication',
+          pathInfo: '/',
+          themeUri:'/VAADIN/themes/reindeer',
+          versionInfo : {}
+        }
+      }};
+  </script>
+  
+  <script language='javascript' src='/VAADIN/widgetsets/com.vaadin.terminal.gwt.DefaultWidgetSet/com.vaadin.terminal.gwt.DefaultWidgetSet.nocache.js'></script>
+
+  <link rel="stylesheet" type="text/css" href="/VAADIN/themes/reindeer/styles.css"/>
+</head>
+
+<body>  
+  <p>This is a static web page that contains an embedded Vaadin
+     application. The embedded application div has been taken out of the normal element flow by applying 'float:left' causing the application
+     to float to the left.</p>
+     
+  <div id="helloworld" style="border: 2px solid green; float:left; width:400px; height:400px"></div>
+  
+  <div style="clear:both"></div>
+  
+  <hr/>
+
+</body>
+</html>
