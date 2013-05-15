@@ -170,8 +170,16 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
     public void onClick(ClickEvent event) {
         super.onClick(event);
         if (event.getSource() instanceof CheckBox) {
-            final boolean selected = ((CheckBox) event.getSource()).getValue();
-            final String key = optionsToKeys.get(event.getSource());
+            CheckBox source = (CheckBox) event.getSource();
+
+            if (BrowserInfo.get().isWebkit()) {
+                // Webkit does not focus non-text input elements on click
+                // (#11854)
+                source.setFocus(true);
+            }
+
+            final boolean selected = source.getValue();
+            final String key = optionsToKeys.get(source);
             if (!isMultiselect()) {
                 selectedKeys.clear();
             }

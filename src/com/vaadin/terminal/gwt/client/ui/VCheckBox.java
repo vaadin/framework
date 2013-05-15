@@ -54,6 +54,11 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
                 if (id == null || client == null || !isEnabled()) {
                     return;
                 }
+                if (BrowserInfo.get().isWebkit()) {
+                    // Webkit does not focus non-text input elements on click
+                    // (#11854)
+                    setFocus(true);
+                }
 
                 // Add mouse details
                 MouseEventDetails details = new MouseEventDetails(
