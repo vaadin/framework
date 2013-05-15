@@ -1076,12 +1076,6 @@ public class VFilterSelect extends Composite implements Paintable, Field,
             return;
         }
 
-        if (!previousStyles.equals(getStyleName())) {
-            // recalculate, might have changed
-            componentPadding = -1;
-            updateRootWidth();
-        }
-
         // Inverse logic here to make the default case (text input enabled)
         // work without additional UIDL messages
         boolean noTextInput = uidl.hasAttribute(ATTR_NO_TEXT_INPUT)
@@ -1242,20 +1236,32 @@ public class VFilterSelect extends Composite implements Paintable, Field,
 
         popupOpenerClicked = false;
 
+        boolean updateRootWidth = false;
+
         if (!initDone) {
-            updateRootWidth();
+            updateRootWidth = true;
         }
 
         // Popup opener width may have changed due to a style change (#8801)
         if (!readonly && popupWidth != Util.getRequiredWidth(popupOpener)) {
             popupWidth = Util.getRequiredWidth(popupOpener);
-            updateRootWidth();
+            updateRootWidth = true;
         }
 
         // Focus dependent style names are lost during the update, so we add
         // them here back again
         if (focused) {
             addStyleDependentName("focus");
+        }
+
+        if (!previousStyles.equals(getStyleName())) {
+            // recalculate, might have changed
+            componentPadding = -1;
+            updateRootWidth = true;
+        }
+
+        if (updateRootWidth) {
+            updateRootWidth();
         }
 
         initDone = true;
