@@ -18,6 +18,7 @@ import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -174,29 +175,29 @@ public class VPopupView extends HTML implements Container, Iterable<Widget> {
      * @param popup
      */
     protected void showPopup(final CustomPopup popup) {
-        int windowTop = RootPanel.get().getAbsoluteTop();
-        int windowLeft = RootPanel.get().getAbsoluteLeft();
-        int windowRight = windowLeft + RootPanel.get().getOffsetWidth();
-        int windowBottom = windowTop + RootPanel.get().getOffsetHeight();
 
-        int offsetWidth = popup.getOffsetWidth();
-        int offsetHeight = popup.getOffsetHeight();
+        // Calculate position based on the VPopupView element position
+        int offsetWidth = Util.getRequiredWidth(popup);
+        int offsetHeight = Util.getRequiredHeight(popup);
 
-        int hostHorizontalCenter = VPopupView.this.getAbsoluteLeft()
-                + VPopupView.this.getOffsetWidth() / 2;
-        int hostVerticalCenter = VPopupView.this.getAbsoluteTop()
-                + VPopupView.this.getOffsetHeight() / 2;
+        int hostHorizontalCenter = getAbsoluteLeft()
+                + Util.getRequiredWidth(this) / 2;
+
+        int hostVerticalCenter = getAbsoluteTop()
+                + Util.getRequiredHeight(this) / 2;
 
         int left = hostHorizontalCenter - offsetWidth / 2;
         int top = hostVerticalCenter - offsetHeight / 2;
+        int right = left + offsetWidth;
+        int bottom = top + offsetHeight;
 
         // Don't show the popup outside the screen.
-        if ((left + offsetWidth) > windowRight) {
-            left -= (left + offsetWidth) - windowRight;
+        if (right > Window.getClientWidth()) {
+            left = Window.getClientWidth() - offsetWidth;
         }
 
-        if ((top + offsetHeight) > windowBottom) {
-            top -= (top + offsetHeight) - windowBottom;
+        if (bottom > Window.getClientHeight()) {
+            top = Window.getClientHeight() - offsetHeight;
         }
 
         if (left < 0) {
