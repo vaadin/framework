@@ -388,8 +388,17 @@ public class BrowserInfo {
                 && (getOperatingSystemMajorVersion() == 3 || getOperatingSystemMajorVersion() == 4);
     }
 
+    public boolean isAndroid23() {
+        return isAndroid() && getOperatingSystemMajorVersion() == 2
+                && getOperatingSystemMinorVersion() == 3;
+    }
+
     private int getOperatingSystemMajorVersion() {
         return browserDetails.getOperatingSystemMajorVersion();
+    }
+
+    private int getOperatingSystemMinorVersion() {
+        return browserDetails.getOperatingSystemMinorVersion();
     }
 
     /**

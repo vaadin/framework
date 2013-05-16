@@ -6692,6 +6692,17 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     private void setContainerHeight() {
         if (!isDynamicHeight()) {
+
+            /*
+             * Android 2.3 cannot measure the height of the inline-block
+             * properly, and will return the wrong offset height. So for android
+             * 2.3 we set the element to a block element while measuring and
+             * then restore it which yields the correct result. #11331
+             */
+            if (BrowserInfo.get().isAndroid23()) {
+                getElement().getStyle().setDisplay(Display.BLOCK);
+            }
+
             containerHeight = getOffsetHeight();
             containerHeight -= showColHeaders ? tHead.getOffsetHeight() : 0;
             containerHeight -= tFoot.getOffsetHeight();
@@ -6699,7 +6710,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             if (containerHeight < 0) {
                 containerHeight = 0;
             }
+
             scrollBodyPanel.setHeight(containerHeight + "px");
+
+            if (BrowserInfo.get().isAndroid23()) {
+                getElement().getStyle().clearDisplay();
+            }
         }
     }
 
