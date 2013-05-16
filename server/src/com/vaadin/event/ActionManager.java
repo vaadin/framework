@@ -15,6 +15,7 @@
  */
 package com.vaadin.event;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
@@ -43,11 +44,15 @@ public class ActionManager implements Action.Container, Action.Handler,
 
     private static final long serialVersionUID = 1641868163608066491L;
 
-    /** List of action handlers */
-    protected LinkedHashSet<Action> ownActions = null;
+    /**
+     * List of action handlers. Guaranteed to keep the original insertion order.
+     */
+    protected HashSet<Action> ownActions = null;
 
-    /** List of action handlers */
-    protected LinkedHashSet<Handler> actionHandlers = null;
+    /**
+     * List of action handlers. Guaranteed to keep the original insertion order.
+     */
+    protected HashSet<Handler> actionHandlers = null;
 
     /** Action mapper */
     protected KeyMapper<Action> actionMapper = null;
