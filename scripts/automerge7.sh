@@ -67,6 +67,14 @@ maybe_commit_and_push() {
         pushMerged
 }
 
+can_merge() {
+    commit=$1
+    git merge --no-commit --no-ff $commit > /dev/null 2>&1
+    result=$?
+    git reset --hard HEAD  > /dev/null 2>&1
+    return $result
+}
+
 nothingToCommit=`git status | grep "nothing to commit"`
 if [ "$nothingToCommit" == "" ]
 then
@@ -89,9 +97,21 @@ do
         commitMsg=`git log -n 1 --format=oneline --abbrev-commit $commit`
         if [ "$mergeDirective" == "" ]
         then
-                pendingCommit=$commit
-                pendingCommitMessage=$pendingCommitMessage"$commitMsg\n"
-                echo pendingCommitMessage: $pendingCommitMessage
+                if can_merge $commit
+                then
+                        pendingCommit=$commit
+                        pendingCommitMessage=$pendingCommitMessage"$commitMsg\n"
+                        echo pendingCommitMessage: $pendingCommitMessage
+                else
+                        maybe_commit_and_push $pendingCommit "$pendingCommitMessage"
+                        pendingCommit=
+                        pendingCommitMessage=
+                        echo
+                        echo "Stopping merge because $commit because of merge conflicts"
+                        echo "The following commit must be manually merged."
+                        show $commit
+                        exit 3
+		        fi
         elif [ "$mergeDirective" == "no" ]
         then
                 maybe_commit_and_push $pendingCommit "$pendingCommitMessage"
