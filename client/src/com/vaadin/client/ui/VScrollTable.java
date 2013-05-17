@@ -2104,6 +2104,15 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
              * might have been (incorrectly) calculated earlier
              */
 
+            /*
+             * TreeTable updates stuff in a funky order, so we must set the
+             * height as zero here before doing the real update to make it
+             * realize that there is no content,
+             */
+            if (pageLength == totalRows && pageLength == 0) {
+                scrollBody.setHeight("0px");
+            }
+
             int bodyHeight;
             if (pageLength == totalRows) {
                 /*
@@ -4796,8 +4805,20 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                 prepx = 0;
             }
             preSpacer.getStyle().setPropertyPx("height", prepx);
-            int postpx = measureRowHeightOffset(totalRows - 1)
-                    - measureRowHeightOffset(lastRendered);
+            int postpx;
+            if (pageLength == 0 && totalRows == pageLength) {
+                /*
+                 * TreeTable depends on having lastRendered out of sync in some
+                 * situations, which makes this method miss the special
+                 * situation in which one row worth of post spacer to be added
+                 * if there are no rows in the table. #9203
+                 */
+                postpx = measureRowHeightOffset(1);
+            } else {
+                postpx = measureRowHeightOffset(totalRows - 1)
+                        - measureRowHeightOffset(lastRendered);
+            }
+
             if (postpx < 0) {
                 postpx = 0;
             }
