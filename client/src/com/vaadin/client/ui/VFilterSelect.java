@@ -153,8 +153,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
          * 
          * @return The key of the item
          */
-        public int getOptionKey() {
-            return Integer.parseInt(key);
+        public String getOptionKey() {
+            return key;
         }
 
         /**
@@ -173,6 +173,27 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         @Override
         public void execute() {
             onSuggestionSelected(this);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof FilterSelectSuggestion)) {
+                return false;
+            }
+            FilterSelectSuggestion other = (FilterSelectSuggestion) obj;
+            if ((key == null && other.key != null)
+                    || (key != null && !key.equals(other.key))) {
+                return false;
+            }
+            if ((caption == null && other.caption != null)
+                    || (caption != null && !caption.equals(other.caption))) {
+                return false;
+            }
+            if ((iconUri == null && other.iconUri != null)
+                    || (iconUri != null && !iconUri.equals(other.iconUri))) {
+                return false;
+            }
+            return true;
         }
     }
 
@@ -1299,7 +1320,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             newKey = "";
         } else {
             // normal selection
-            newKey = String.valueOf(suggestion.getOptionKey());
+            newKey = suggestion.getOptionKey();
         }
 
         String text = suggestion.getReplacementString();

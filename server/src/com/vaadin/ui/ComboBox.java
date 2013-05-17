@@ -262,8 +262,8 @@ public class ComboBox extends AbstractSelect implements
                     target.addAttribute("nullselection", true);
                 }
                 target.addAttribute("key", key);
-                if (isSelected(id) && keyIndex < selectedKeys.length) {
-                    target.addAttribute("selected", true);
+                if (keyIndex < selectedKeys.length && isSelected(id)) {
+                    // at most one item can be selected at a time
                     selectedKeys[keyIndex++] = key;
                 }
                 target.endTag("so");
