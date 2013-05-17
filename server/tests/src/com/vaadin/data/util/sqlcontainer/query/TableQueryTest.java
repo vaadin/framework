@@ -661,4 +661,77 @@ public class TableQueryTest {
         container.commit();
     }
 
+    @Test
+    public void construction_explicitSchema_shouldSucceed() throws SQLException {
+        if (SQLTestsConstants.createSchema == null
+                || SQLTestsConstants.createProductTable == null
+                || SQLTestsConstants.dropSchema == null) {
+            // only perform the test on the databases for which the setup and
+            // cleanup statements are available
+            return;
+        }
+
+        // create schema "oaas" and table "product" in it
+        Connection conn = connectionPool.reserveConnection();
+        Statement statement = conn.createStatement();
+        try {
+            statement.execute(SQLTestsConstants.dropSchema);
+        } catch (SQLException e) {
+            // May fail if schema doesn't exist, which is OK.
+            conn.rollback();
+        }
+        statement.execute(SQLTestsConstants.createSchema);
+        statement.execute(SQLTestsConstants.createProductTable);
+        conn.commit();
+
+        try {
+            // metadata scanning at query creation time should not fail
+            TableQuery tq1 = new TableQuery(null, "oaas", "product",
+                    connectionPool, SQLTestsConstants.sqlGen);
+            Assert.assertNotNull(tq1);
+        } finally {
+            // cleanup - might not be an in-memory DB
+            statement.execute(SQLTestsConstants.dropSchema);
+        }
+    }
+
+    @Test
+    public void construction_explicitCatalogAndSchema_shouldSucceed()
+            throws SQLException {
+        // not all databases support explicit catalogs, test with PostgreSQL
+        // using database name as catalog
+        if (SQLTestsConstants.db != SQLTestsConstants.DB.POSTGRESQL
+                || SQLTestsConstants.createSchema == null
+                || SQLTestsConstants.createProductTable == null
+                || SQLTestsConstants.dropSchema == null) {
+            // only perform the test on the databases for which the setup and
+            // cleanup statements are available
+            return;
+        }
+
+        // create schema "oaas" and table "product" in it
+        Connection conn = connectionPool.reserveConnection();
+        Statement statement = conn.createStatement();
+        try {
+            statement.execute(SQLTestsConstants.dropSchema);
+        } catch (SQLException e) {
+            // May fail if schema doesn't exist, which is OK.
+            conn.rollback();
+        }
+        statement.execute(SQLTestsConstants.createSchema);
+        statement.execute(SQLTestsConstants.createProductTable);
+        conn.commit();
+
+        try {
+            // metadata scanning at query creation time should not fail
+            // note that for most DBMS, catalog is just an optional database
+            // name
+            TableQuery tq1 = new TableQuery("sqlcontainer", "oaas", "product",
+                    connectionPool, SQLTestsConstants.sqlGen);
+            Assert.assertNotNull(tq1);
+        } finally {
+            // cleanup - might not be an in-memory DB
+            statement.execute(SQLTestsConstants.dropSchema);
+        }
+    }
 }

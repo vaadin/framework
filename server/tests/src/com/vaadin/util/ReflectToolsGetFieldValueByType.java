@@ -3,8 +3,6 @@ package com.vaadin.util;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.junit.Test;
 
 public class ReflectToolsGetFieldValueByType {
@@ -56,8 +54,8 @@ public class ReflectToolsGetFieldValueByType {
             memberField = myInstance.getClass().getField("field");
             // Should throw an IllegalArgument exception as the mySubClass class
             // doesn't have an Integer field.
-            ReflectTools.getJavaFieldValue(myInstance,
-                    memberField, Integer.class);
+            ReflectTools.getJavaFieldValue(myInstance, memberField,
+                    Integer.class);
             fail("Previous method call should have thrown an exception");
         } catch (Exception e) {
         }

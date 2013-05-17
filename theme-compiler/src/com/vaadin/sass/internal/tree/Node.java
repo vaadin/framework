@@ -45,6 +45,23 @@ public abstract class Node implements Serializable {
         }
     }
 
+    public void appendChildrenAfter(Collection<Node> childrenNodes, Node after) {
+        if (childrenNodes != null && !childrenNodes.isEmpty()) {
+            int index = children.indexOf(after);
+            if (index != -1) {
+                children.addAll(index, childrenNodes);
+                for (final Node child : childrenNodes) {
+                    if (child.getParentNode() != null) {
+                        child.getParentNode().removeChild(child);
+                    }
+                    child.setParentNode(this);
+                }
+            } else {
+                throw new NullPointerException("after-node was not found");
+            }
+        }
+    }
+
     public void appendChild(Node node) {
         if (node != null) {
             children.add(node);

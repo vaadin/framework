@@ -45,9 +45,7 @@ public class TestClassesSerializable extends TestCase {
             "com\\.vaadin\\.util\\.SerializerHelper", // fully static
             // class level filtering, also affecting nested classes and
             // interfaces
-            "com\\.vaadin\\.server\\.AbstractCommunicationManager.*", //
-            "com\\.vaadin\\.server\\.CommunicationManager.*", //
-            "com\\.vaadin\\.server\\.PortletCommunicationManager.*", //
+            "com\\.vaadin\\.server\\.LegacyCommunicationManager.*", //
             "com\\.vaadin\\.buildhelpers.*", //
             "com\\.vaadin\\.util\\.ReflectTools.*", //
             "com\\.vaadin\\.data\\.util\\.ReflectTools.*", //

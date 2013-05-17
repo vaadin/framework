@@ -15,7 +15,7 @@
 	<property name="sass.parser.jj" location="src/com/vaadin/sass/internal/parser/Parser.jj" />
 	<path id="classpath.compile.custom">
 	</path>
-	<path id="classpath.tests.custom" />
+	<path id="classpath.test.custom" />
 
 	<!--<property name="classes.exclude" value="com/vaadin/buildhelpers/**" />-->
 
@@ -51,8 +51,8 @@
 		</antcall>
 	</target>
 
-	<target name="tests" depends="checkstyle">
-		<antcall target="common.tests.run" />
+	<target name="test" depends="checkstyle">
+		<antcall target="common.test.run" />
 	</target>
 
 </project>

@@ -184,16 +184,14 @@ public class GAEVaadinServlet extends VaadinServlet {
             return;
         }
 
-        RequestType requestType = getRequestType(request);
-
-        if (requestType == RequestType.STATIC_FILE) {
+        if (isStaticResourceRequest(request)) {
             // no locking needed, let superclass handle
             super.service(request, response);
             cleanSession(request);
             return;
         }
 
-        if (requestType == RequestType.APP) {
+        if (ServletPortletHelper.isAppRequest(request)) {
             // no locking needed, let superclass handle
             getApplicationContext(request,
                     MemcacheServiceFactory.getMemcacheService());
@@ -205,7 +203,11 @@ public class GAEVaadinServlet extends VaadinServlet {
         final HttpSession session = request.getSession(getService()
                 .requestCanCreateSession(request));
         if (session == null) {
-            handleServiceSessionExpired(request, response);
+            try {
+                getService().handleSessionExpired(request, response);
+            } catch (ServiceException e) {
+                throw new ServletException(e);
+            }
             cleanSession(request);
             return;
         }
@@ -218,19 +220,21 @@ public class GAEVaadinServlet extends VaadinServlet {
             // try to get lock
             long started = new Date().getTime();
             // non-UIDL requests will try indefinitely
-            while (requestType != RequestType.UIDL
-                    || new Date().getTime() - started < MAX_UIDL_WAIT_MILLISECONDS) {
-                locked = memcache.put(mutex, 1, Expiration.byDeltaSeconds(40),
-                        MemcacheService.SetPolicy.ADD_ONLY_IF_NOT_PRESENT);
-                if (locked) {
-                    break;
-                }
-                try {
-                    Thread.sleep(RETRY_AFTER_MILLISECONDS);
-                } catch (InterruptedException e) {
-                    getLogger().finer(
-                            "Thread.sleep() interrupted while waiting for lock. Trying again. "
-                                    + e);
+            if (!ServletPortletHelper.isUIDLRequest(request)) {
+                while (new Date().getTime() - started < MAX_UIDL_WAIT_MILLISECONDS) {
+                    locked = memcache.put(mutex, 1,
+                            Expiration.byDeltaSeconds(40),
+                            MemcacheService.SetPolicy.ADD_ONLY_IF_NOT_PRESENT);
+                    if (locked) {
+                        break;
+                    }
+                    try {
+                        Thread.sleep(RETRY_AFTER_MILLISECONDS);
+                    } catch (InterruptedException e) {
+                        getLogger().finer(
+                                "Thread.sleep() interrupted while waiting for lock. Trying again. "
+                                        + e);
+                    }
                 }
             }
 

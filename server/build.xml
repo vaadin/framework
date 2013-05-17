@@ -13,7 +13,7 @@
 	<property name="module.symbolic" value="com.vaadin.server" />
 	<property name="result.dir" value="result" />
 	<path id="classpath.compile.custom" />
-	<path id="classpath.tests.custom" />
+	<path id="classpath.test.custom" />
 
 	<union id="jar.includes">
 		<union refid="server.gwt.includes" />
@@ -51,8 +51,8 @@
 		</antcall>
 	</target>
 
-	<target name="tests" depends="checkstyle">
-		<antcall target="common.tests.run" />
+	<target name="test" depends="checkstyle">
+		<antcall target="common.test.run" />
 	</target>
 
 

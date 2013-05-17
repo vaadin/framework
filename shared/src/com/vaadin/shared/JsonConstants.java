@@ -32,4 +32,6 @@ public class JsonConstants implements Serializable {
     public static final String VTYPE_SET = "q";
     public static final String VTYPE_NULL = "n";
 
+    public static final String JSON_CONTENT_TYPE = "application/json; charset=UTF-8";
+
 }

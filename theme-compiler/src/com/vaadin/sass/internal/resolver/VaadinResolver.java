@@ -15,8 +15,8 @@
  */
 package com.vaadin.sass.internal.resolver;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.File;
+import java.util.Stack;
 
 import org.w3c.css.sac.InputSource;
 
@@ -24,41 +24,67 @@ public class VaadinResolver implements ScssStylesheetResolver {
 
     @Override
     public InputSource resolve(String identifier) {
-        if (identifier.endsWith(".css")) {
-            // CSS support mainly for testing, don't load from classpath etc
-            ScssStylesheetResolver resolver = new FilesystemResolver();
-            return resolver.resolve(identifier);
-        }
+
+        // Remove extra "." and ".."
+        identifier = normalize(identifier);
 
         InputSource source = null;
 
-        Pattern pattern = Pattern
-                .compile("\\.\\.\\/([^\\/]+)\\/([^\\/]+\\.scss)");
-        Matcher matcher = pattern.matcher(identifier);
+        // Can we find the scss from the file system?
+        ScssStylesheetResolver resolver = new FilesystemResolver();
+        source = resolver.resolve(identifier);
 
-        if (matcher.find()) {
-            // theme include
-            ScssStylesheetResolver resolver = new FilesystemResolver();
+        if (source == null) {
+            // How about the classpath?
+            resolver = new ClassloaderResolver();
             source = resolver.resolve(identifier);
-
-            if (source == null) {
-                String themeName = matcher.group(1);
-                String fileName = matcher.group(2);
-                resolver = new ClassloaderResolver();
-                String id = "VAADIN/themes/" + themeName + "/" + fileName;
-                source = resolver.resolve(id);
-            }
-
-        } else {
-            ScssStylesheetResolver resolver = new FilesystemResolver();
-            source = resolver.resolve(identifier);
-
-            if (source == null) {
-                resolver = new ClassloaderResolver();
-                source = resolver.resolve(identifier);
-            }
         }
 
         return source;
     }
+
+    /**
+     * Normalizes "." and ".." from the path string where parent path segments
+     * can be removed. Preserve leading "..".
+     * 
+     * @param path
+     *            A relative or absolute file path
+     * @return The normalized path
+     */
+    private static String normalize(String path) {
+
+        // Ensure only "/" is used, also in Windows
+        path = path.replace(File.separatorChar, '/');
+
+        // Split into segments
+        String[] segments = path.split("/");
+        Stack<String> result = new Stack<String>();
+
+        // Replace '.' and '..' segments
+        for (int i = 0; i < segments.length; i++) {
+            if (segments[i].equals(".")) {
+                // Segments marked '.' are ignored
+
+            } else if (segments[i].equals("..") && !result.isEmpty()
+                    && !result.lastElement().equals("..")) {
+                // If segment is ".." then remove the previous iff the previous
+                // element is not a ".." and the result stack is not empty
+                result.pop();
+            } else {
+                // Other segments are just added to the stack
+                result.push(segments[i]);
+            }
+        }
+
+        // Reconstruct path
+        StringBuilder pathBuilder = new StringBuilder();
+        for (int i = 0; i < result.size(); i++) {
+            if (i > 0) {
+                pathBuilder.append("/");
+            }
+            pathBuilder.append(result.get(i));
+        }
+        return pathBuilder.toString();
+    }
+
 }

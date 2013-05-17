@@ -1,31 +1,55 @@
 <?xml version="1.0"?>
 
 <project xmlns:antcontrib="antlib:net.sf.antcontrib" xmlns:artifact="antlib:org.apache.maven.artifact.ant" xmlns:ivy="antlib:org.apache.ivy.ant" name="Build script for IDE users" basedir=".." default="theme-and-default-widgetset">
-	<!-- FIXME, should use 7.0-SNAPSHOT of client compiler -->
-	<property name="work.dir" location="work" />
-	<property name="gwt.root" location="${basedir}/../trunk" />
-	<property name="gwt.lib.dir" location="${gwt.root}/build/lib" />
-	<property name="gwt.user.jar" location="${gwt.lib.dir}/gwt-user.jar" />
-	<property name="gwt.dev.jar" location="${gwt.lib.dir}/gwt-dev.jar" />
-	<property name="theme-version" location="9.9.9.INTERNAL-DEBUG-BUILD" />
-	<echo>Using gwt-dev.jar from ${gwt.dev.jar}</echo>
+	<include file="${basedir}/gwt-files.xml" />
 
-	<ivy:resolve file="build/ivy-ide.xml" />
-	<ivy:cachepath pathid="ivy.deps" conf="default" />
+	<property name="gwt.dev.classes" location="${gwt.eclipse.basedir}/dev/bin" />
+	<property name="gwt.user.classes" location="${gwt.eclipse.basedir}/user/bin" />
+	<property name="gwt.dev.src" location="${gwt.basedir}/dev/core/src" />
+	<property name="gwt.dev.super.src" location="${gwt.basedir}/dev/core/super" />
+	<property name="gwt.user.src" location="${gwt.basedir}/user/src" />
+	<property name="gwt.user.super.src" location="${gwt.basedir}/user/super" />
+
+	<property name="work.dir" location="work" />
+	<property name="theme-version" location="9.9.9.INTERNAL-DEBUG-BUILD" />
+	<echo>Using gwt files from ${gwt.user.classes} and ${gwt.dev.classes}</echo>
+
+	<ivy:resolve file="client-compiler/ivy.xml" conf="ide" />
+	<ivy:cachepath pathid="client-compiler.deps" conf="ide" />
+	<ivy:resolve file="server/ivy.xml" conf="ide" />
+	<ivy:cachepath pathid="server.deps" conf="ide" />
+	<ivy:resolve file="client/ivy.xml" conf="ide" />
+	<ivy:cachepath pathid="client.deps" conf="ide" />
+	<ivy:resolve file="shared/ivy.xml" conf="ide" />
+	<ivy:cachepath pathid="shared.deps" conf="ide" />
+	<ivy:resolve file="uitest/ivy.xml" conf="ide" />
+	<ivy:cachepath pathid="uitest.deps" conf="ide" />
+	<ivy:resolve file="theme-compiler/ivy.xml" conf="ide" />
+	<ivy:cachepath pathid="theme-compiler.deps" conf="ide" />
 
 	<path id="classpath">
 		<path location="bin" />
 		<path location="build/classes" />
-		<pathelement location="${gwt.user.jar}" />
-		<pathelement location="${gwt.dev.jar}" />
-		<path refid="ivy.deps" />
+		<path location="${gwt.user.classes}" />
+		<path location="${gwt.user.src}" />
+		<path location="${gwt.user.super.src}" />
+		<path location="${gwt.dev.classes}" />
+		<path location="${gwt.dev.super.src}" />
+		<path location="${gwt.dev.src}" />
+		<path refid="client-compiler.deps" />
+		<path refid="theme-compiler.deps" />
+		<path refid="server.deps" />
+		<path refid="shared.deps" />
+		<path refid="uitest.deps" />
+		<path refid="client.deps" />
+		<path location="theme-compiler/src" />
 		<path location="server/src" />
 		<path location="shared/src" />
 		<path location="uitest/src" />
 		<path location="client/src" />
 	</path>
 
-	<target name="theme-and-default-widgetset" depends="default-widgetset, themes">
+	<target name="theme-and-default-widgetset" depends="default-widgetset, themes, vaadinPush.js">
 	</target>
 	<target name="themes">
 		<antcall target="compile-theme">
@@ -58,8 +82,22 @@
 		</java>
 
 	</target>
+
+
 	<target name="default-widgetset">
-		<property name="module" value="com.vaadin.DefaultWidgetSet" />
+		<antcall target="compile-widgetset">
+			<param name="widgetset" value="com.vaadin.DefaultWidgetSet" />
+		</antcall>
+	</target>
+
+	<target name="testing-widgetset">
+		<antcall target="compile-widgetset">
+			<param name="widgetset" value="com.vaadin.tests.widgetset.TestingWidgetSet" />
+		</antcall>
+	</target>
+
+	<target name="compile-widgetset">
+		<property name="module" value="${widgetset}" />
 		<property name="module.output.dir" location="WebContent/VAADIN/widgetsets" />
 		<property name="style" value="PRETTY" />
 		<property name="localWorkers" value="2" />
@@ -93,7 +131,22 @@
 			<jvmarg value="-Xss8M" />
 			<jvmarg value="-XX:MaxPermSize=256M" />
 			<jvmarg value="-Djava.awt.headless=true" />
+			<jvmarg value="-Dgwt.usearchives=false" />
 		</java>
+	</target>
+	<target name="vaadinPush.js">
+		<property name="vaadinPush.js.output" location="WebContent/VAADIN/vaadinPush.js" />
 
+		<loadfile srcfile="WebContent/VAADIN/jquery-1.7.2.js" property="jquery.js.contents" />
+		<loadfile srcfile="WebContent/VAADIN/jquery.atmosphere.js" property="jquery.atmosphere.js.contents" />
+		<loadfile srcfile="WebContent/VAADIN/vaadinPush.js.tpl" property="vaadinPush.js.contents">
+			<filterchain>
+				<replacetokens begintoken="@" endtoken="@">
+					<token key="jquery.js" value="${jquery.js.contents}" />
+					<token key="jquery.atmosphere.js" value="${jquery.atmosphere.js.contents}" />
+				</replacetokens>
+			</filterchain>
+		</loadfile>
+		<echo file="${vaadinPush.js.output}">${vaadinPush.js.contents}</echo>
 	</target>
 </project>

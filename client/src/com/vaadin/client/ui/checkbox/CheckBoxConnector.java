@@ -69,6 +69,8 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
                 blurHandlerRegistration);
 
         if (null != getState().errorMessage) {
+            getWidget().setAriaInvalid(true);
+
             if (getWidget().errorIndicatorElement == null) {
                 getWidget().errorIndicatorElement = DOM.createSpan();
                 getWidget().errorIndicatorElement.setInnerHTML("&nbsp;");
@@ -85,8 +87,11 @@ public class CheckBoxConnector extends AbstractFieldConnector implements
         } else if (getWidget().errorIndicatorElement != null) {
             DOM.setStyleAttribute(getWidget().errorIndicatorElement, "display",
                     "none");
+
+            getWidget().setAriaInvalid(false);
         }
 
+        getWidget().setAriaRequired(isRequired());
         if (isReadOnly()) {
             getWidget().setEnabled(false);
         }

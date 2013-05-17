@@ -17,7 +17,10 @@
 package com.vaadin.server;
 
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.vaadin.shared.communication.PushMode;
 
 /**
  * The default implementation of {@link DeploymentConfiguration} based on a base
@@ -33,7 +36,9 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
     private int resourceCacheTime;
     private int heartbeatInterval;
     private boolean closeIdleSessions;
+    private PushMode pushMode;
     private final Class<?> systemPropertyBaseClass;
+    private LegacyProperyToStringMode legacyPropertyToStringMode;
 
     /**
      * Create a new deployment configuration instance.
@@ -55,6 +60,27 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
         checkResourceCacheTime();
         checkHeartbeatInterval();
         checkCloseIdleSessions();
+        checkPushMode();
+        checkLegacyPropertyToString();
+    }
+
+    private void checkLegacyPropertyToString() {
+        String param = getApplicationOrSystemProperty(
+                Constants.SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING, "warning");
+        if ("true".equals(param)) {
+            legacyPropertyToStringMode = LegacyProperyToStringMode.ENABLED;
+        } else if ("false".equals(param)) {
+            legacyPropertyToStringMode = LegacyProperyToStringMode.DISABLED;
+        } else {
+            if (!"warning".equals(param)) {
+                getLogger()
+                        .log(Level.WARNING,
+                                Constants.WARNING_UNKNOWN_LEGACY_PROPERTY_TOSTRING_VALUE,
+                                param);
+            }
+            legacyPropertyToStringMode = LegacyProperyToStringMode.WARNING;
+
+        }
     }
 
     @Override
@@ -167,9 +193,29 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
         return heartbeatInterval;
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The default value is false.
+     */
     @Override
     public boolean isCloseIdleSessions() {
         return closeIdleSessions;
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The default mode is {@link PushMode#DISABLED}.
+     */
+    @Override
+    public PushMode getPushMode() {
+        return pushMode;
+    }
+
+    @Override
+    public Properties getInitParameters() {
+        return initParameters;
     }
 
     /**
@@ -231,13 +277,26 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
                 .equals("true");
     }
 
+    private void checkPushMode() {
+        String mode = getApplicationOrSystemProperty(
+                Constants.SERVLET_PARAMETER_PUSH_MODE,
+                PushMode.DISABLED.toString());
+        try {
+            pushMode = Enum.valueOf(PushMode.class, mode.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            getLogger().warning(Constants.WARNING_PUSH_MODE_NOT_RECOGNIZED);
+            pushMode = PushMode.DISABLED;
+        }
+    }
+
     private Logger getLogger() {
         return Logger.getLogger(getClass().getName());
     }
 
     @Override
-    public Properties getInitParameters() {
-        return initParameters;
+    @Deprecated
+    public LegacyProperyToStringMode getLegacyPropertyToStringMode() {
+        return legacyPropertyToStringMode;
     }
 
 }

@@ -17,7 +17,7 @@
         </filesystem>
         <dual name="custom-smartsprites">
             <filesystem name="smartsprites-ivy">
-                <ivy pattern="${basedir}/ivymodule/[module]-ivy-[revision].xml" />
+                <ivy pattern="${ivy.settings.dir}/theme-compiler/ivymodule/[module]-ivy-[revision].xml" />
             </filesystem>
             <url name="smartsprites-artifact">
                 <artifact
@@ -50,6 +50,8 @@
         <module organisation="com.vaadin" name="vaadin-theme-compiler"
             resolver="build-temp" />
         <module organisation="com.vaadin" name="vaadin-themes"
+            resolver="build-temp" />
+        <module organisation="com.vaadin" name="vaadin-push"
             resolver="build-temp" />
     </modules>
 

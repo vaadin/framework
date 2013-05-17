@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import com.vaadin.sass.internal.ScssStylesheet;
+import com.vaadin.sass.internal.expression.ArithmeticExpressionEvaluator;
 import com.vaadin.sass.internal.parser.LexicalUnitImpl;
 import com.vaadin.sass.internal.util.StringUtil;
 
@@ -140,6 +141,20 @@ public class RuleNode extends Node implements IVariableNode {
 
     @Override
     public void traverse() {
-        replaceVariables(ScssStylesheet.getVariables());
+        /*
+         * "replaceVariables(ScssStylesheet.getVariables());" seems duplicated
+         * and can be extracted out of if, but it is not.
+         * containsArithmeticalOperator must be called before replaceVariables.
+         * Because for the "/" operator, it needs to see if its predecessor or
+         * successor is a Variable or not, to determine it is an arithmetic
+         * operator.
+         */
+        if (ArithmeticExpressionEvaluator.get().containsArithmeticalOperator(
+                value)) {
+            replaceVariables(ScssStylesheet.getVariables());
+            value = ArithmeticExpressionEvaluator.get().evaluate(value);
+        } else {
+            replaceVariables(ScssStylesheet.getVariables());
+        }
     }
 }

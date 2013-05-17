@@ -667,7 +667,7 @@ public class JsonCodec implements Serializable {
         } else if (value instanceof Connector) {
             Connector connector = (Connector) value;
             if (value instanceof Component
-                    && !(AbstractCommunicationManager
+                    && !(LegacyCommunicationManager
                             .isComponentVisibleToClient((Component) value))) {
                 return encodeNull();
             }
@@ -871,7 +871,7 @@ public class JsonCodec implements Serializable {
 
         for (Entry<?, ?> entry : map.entrySet()) {
             ClientConnector key = (ClientConnector) entry.getKey();
-            if (AbstractCommunicationManager.isConnectorVisibleToClient(key)) {
+            if (LegacyCommunicationManager.isConnectorVisibleToClient(key)) {
                 EncodeResult encodedValue = encode(entry.getValue(), null,
                         valueType, connectorTracker);
                 jsonMap.put(key.getConnectorId(),

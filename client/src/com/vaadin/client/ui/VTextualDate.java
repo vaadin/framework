@@ -18,6 +18,7 @@ package com.vaadin.client.ui;
 
 import java.util.Date;
 
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -30,11 +31,16 @@ import com.vaadin.client.Focusable;
 import com.vaadin.client.LocaleNotLoadedException;
 import com.vaadin.client.LocaleService;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.ui.aria.AriaHelper;
+import com.vaadin.client.ui.aria.HandlesAriaCaption;
+import com.vaadin.client.ui.aria.HandlesAriaInvalid;
+import com.vaadin.client.ui.aria.HandlesAriaRequired;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.datefield.Resolution;
 
 public class VTextualDate extends VDateField implements Field, ChangeHandler,
-        Focusable, SubPartAware {
+        Focusable, SubPartAware, HandlesAriaCaption, HandlesAriaInvalid,
+        HandlesAriaRequired {
 
     private static final String PARSE_ERROR_CLASSNAME = "-parseerror";
 
@@ -76,6 +82,9 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
                     getClient()
                             .updateVariable(getId(), EventId.FOCUS, "", true);
                 }
+
+                // Needed for tooltip event handling
+                VTextualDate.this.fireEvent(event);
             }
         });
         text.addBlurHandler(new BlurHandler() {
@@ -94,8 +103,12 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
                                 EventId.BLUR)) {
                     getClient().updateVariable(getId(), EventId.BLUR, "", true);
                 }
+
+                // Needed for tooltip event handling
+                VTextualDate.this.fireEvent(event);
             }
         });
+
         add(text);
     }
 
@@ -150,6 +163,21 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
         return formatStr;
     }
 
+    @Override
+    public void bindAriaCaption(Element captionElement) {
+        AriaHelper.bindCaption(text, captionElement);
+    }
+
+    @Override
+    public void setAriaRequired(boolean required) {
+        AriaHelper.handleInputRequired(text, required);
+    }
+
+    @Override
+    public void setAriaInvalid(boolean invalid) {
+        AriaHelper.handleInputInvalid(text, invalid);
+    }
+
     /**
      * Updates the text field according to the current date (provided by
      * {@link #getDate()}). Takes care of updating text, enabling and disabling
@@ -178,8 +206,12 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
 
         if (readonly) {
             text.addStyleName("v-readonly");
+            Roles.getTextboxRole().setAriaReadonlyProperty(text.getElement(),
+                    true);
         } else {
             text.removeStyleName("v-readonly");
+            Roles.getTextboxRole()
+                    .removeAriaReadonlyProperty(text.getElement());
         }
 
     }
@@ -348,5 +380,4 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
 
         return null;
     }
-
 }

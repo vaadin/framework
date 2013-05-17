@@ -14,6 +14,7 @@ public class CountView extends Panel implements View {
         setContent(new Label("Created: " + count++));
     }
 
+    @Override
     public void enter(ViewChangeEvent event) {
 
     }

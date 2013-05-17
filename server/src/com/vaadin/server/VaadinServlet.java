@@ -24,7 +24,6 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -35,42 +34,17 @@ import java.util.logging.Logger;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.sass.internal.ScssStylesheet;
-import com.vaadin.server.AbstractCommunicationManager.Callback;
-import com.vaadin.shared.ApplicationConstants;
-import com.vaadin.ui.UI;
+import com.vaadin.server.communication.ServletUIInitHandler;
+import com.vaadin.shared.JsonConstants;
 import com.vaadin.util.CurrentInstance;
 
 @SuppressWarnings("serial")
 public class VaadinServlet extends HttpServlet implements Constants {
-
-    private static class AbstractApplicationServletWrapper implements Callback {
-
-        private final VaadinServlet servlet;
-
-        public AbstractApplicationServletWrapper(VaadinServlet servlet) {
-            this.servlet = servlet;
-        }
-
-        @Override
-        public void criticalNotification(VaadinRequest request,
-                VaadinResponse response, String cap, String msg,
-                String details, String outOfSyncURL) throws IOException {
-            servlet.criticalNotification((VaadinServletRequest) request,
-                    ((VaadinServletResponse) response), cap, msg, details,
-                    outOfSyncURL);
-        }
-    }
-
-    // TODO Move some (all?) of the constants to a separate interface (shared
-    // with portlet)
-
-    private final String resourcePath = null;
 
     private VaadinServletService servletService;
 
@@ -110,7 +84,11 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         DeploymentConfiguration deploymentConfiguration = createDeploymentConfiguration(initParameters);
-        servletService = createServletService(deploymentConfiguration);
+        try {
+            servletService = createServletService(deploymentConfiguration);
+        } catch (ServiceException e) {
+            throw new ServletException("Could not initialize VaadinServlet", e);
+        }
         // Sets current service even though there are no request and response
         servletService.setCurrentInstances(null, null);
 
@@ -168,8 +146,12 @@ public class VaadinServlet extends HttpServlet implements Constants {
     }
 
     protected VaadinServletService createServletService(
-            DeploymentConfiguration deploymentConfiguration) {
-        return new VaadinServletService(this, deploymentConfiguration);
+            DeploymentConfiguration deploymentConfiguration)
+            throws ServiceException {
+        VaadinServletService service = new VaadinServletService(this,
+                deploymentConfiguration);
+        service.init();
+        return service;
     }
 
     /**
@@ -198,7 +180,23 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
         CurrentInstance.clearAll();
         setCurrent(this);
-        service(createVaadinRequest(request), createVaadinResponse(response));
+
+        VaadinServletRequest vaadinRequest = createVaadinRequest(request);
+        VaadinServletResponse vaadinResponse = createVaadinResponse(response);
+        if (!ensureCookiesEnabled(vaadinRequest, vaadinResponse)) {
+            return;
+        }
+
+        if (isStaticResourceRequest(request)) {
+            serveStaticResources(request, response);
+            return;
+        }
+        try {
+            getService().handleRequest(vaadinRequest, vaadinResponse);
+        } catch (ServiceException e) {
+            throw new ServletException(e);
+        }
+
     }
 
     /**
@@ -218,7 +216,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
      */
     protected boolean handleContextRootWithoutSlash(HttpServletRequest request,
             HttpServletResponse response) throws IOException {
-        if ("/".equals(request.getPathInfo())
+        if ((request.getPathInfo() == null || "/".equals(request.getPathInfo()))
                 && "".equals(request.getServletPath())
                 && !request.getRequestURI().endsWith("/")) {
             /*
@@ -234,119 +232,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return true;
         } else {
             return false;
-        }
-    }
-
-    private void service(VaadinServletRequest request,
-            VaadinServletResponse response) throws ServletException,
-            IOException {
-        RequestTimer requestTimer = new RequestTimer();
-        requestTimer.start();
-
-        getService().setCurrentInstances(request, response);
-
-        AbstractApplicationServletWrapper servletWrapper = new AbstractApplicationServletWrapper(
-                this);
-
-        RequestType requestType = getRequestType(request);
-        if (!ensureCookiesEnabled(requestType, request, response)) {
-            return;
-        }
-
-        if (requestType == RequestType.STATIC_FILE) {
-            serveStaticResources(request, response);
-            return;
-        }
-
-        VaadinSession vaadinSession = null;
-
-        try {
-            // If a duplicate "close application" URL is received for an
-            // application that is not open, redirect to the application's main
-            // page.
-            // This is needed as e.g. Spring Security remembers the last
-            // URL from the application, which is the logout URL, and repeats
-            // it.
-            // We can tell apart a real onunload request from a repeated one
-            // based on the real one having content (at least the UIDL security
-            // key).
-            if (requestType == RequestType.UIDL
-                    && request.getParameterMap().containsKey(
-                            ApplicationConstants.PARAM_UNLOADBURST)
-                    && request.getContentLength() < 1
-                    && getService().getExistingSession(request, false) == null) {
-                redirectToApplication(request, response);
-                return;
-            }
-
-            // Find out the service session this request is related to
-            vaadinSession = getService().findVaadinSession(request);
-            if (vaadinSession == null) {
-                return;
-            }
-
-            CommunicationManager communicationManager = (CommunicationManager) vaadinSession
-                    .getCommunicationManager();
-
-            if (requestType == RequestType.PUBLISHED_FILE) {
-                communicationManager.servePublishedFile(request, response);
-                return;
-            } else if (requestType == RequestType.HEARTBEAT) {
-                communicationManager.handleHeartbeatRequest(request, response,
-                        vaadinSession);
-                return;
-            }
-
-            /* Update browser information from the request */
-            vaadinSession.getBrowser().updateRequestDetails(request);
-
-            /* Handle the request */
-            if (requestType == RequestType.FILE_UPLOAD) {
-                // UI is resolved in communication manager
-                communicationManager.handleFileUpload(vaadinSession, request,
-                        response);
-                return;
-            } else if (requestType == RequestType.UIDL) {
-                UI uI = getService().findUI(request);
-                if (uI == null) {
-                    throw new ServletException(ERROR_NO_UI_FOUND);
-                }
-                // Handles AJAX UIDL requests
-                communicationManager.handleUidlRequest(request, response,
-                        servletWrapper, uI);
-
-                // Ensure that the browser does not cache UIDL responses.
-                // iOS 6 Safari requires this (#9732)
-                response.setHeader("Cache-Control", "no-cache");
-
-                return;
-            } else if (requestType == RequestType.BROWSER_DETAILS) {
-                // Browser details - not related to a specific UI
-                communicationManager.handleBrowserDetailsRequest(request,
-                        response, vaadinSession);
-                return;
-            }
-
-            if (communicationManager.handleOtherRequest(request, response)) {
-                return;
-            }
-
-            // Request not handled by any RequestHandler -> 404
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-
-        } catch (final SessionExpiredException e) {
-            // Session has expired, notify user
-            handleServiceSessionExpired(request, response);
-        } catch (final GeneralSecurityException e) {
-            handleServiceSecurityException(request, response);
-        } catch (final Throwable e) {
-            handleServiceException(request, response, vaadinSession, e);
-        } finally {
-            if (vaadinSession != null) {
-                getService().cleanupSession(vaadinSession);
-                requestTimer.stop(vaadinSession);
-            }
-            CurrentInstance.clearAll();
         }
     }
 
@@ -391,10 +276,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @return false if cookies are disabled, true otherwise
      * @throws IOException
      */
-    private boolean ensureCookiesEnabled(RequestType requestType,
-            VaadinServletRequest request, VaadinServletResponse response)
-            throws IOException {
-        if (requestType == RequestType.UIDL) {
+    private boolean ensureCookiesEnabled(VaadinServletRequest request,
+            VaadinServletResponse response) throws IOException {
+        if (ServletPortletHelper.isUIDLRequest(request)) {
             // In all other but the first UIDL request a cookie should be
             // returned by the browser.
             // This can be removed if cookieless mode (#3228) is supported
@@ -403,10 +287,13 @@ public class VaadinServlet extends HttpServlet implements Constants {
                 SystemMessages systemMessages = getService().getSystemMessages(
                         ServletPortletHelper.findLocale(null, null, request),
                         request);
-                criticalNotification(request, response,
-                        systemMessages.getCookiesDisabledCaption(),
-                        systemMessages.getCookiesDisabledMessage(), null,
-                        systemMessages.getCookiesDisabledURL());
+                getService().writeStringResponse(
+                        response,
+                        JsonConstants.JSON_CONTENT_TYPE,
+                        VaadinService.createCriticalNotificationJSON(
+                                systemMessages.getCookiesDisabledCaption(),
+                                systemMessages.getCookiesDisabledMessage(),
+                                null, systemMessages.getCookiesDisabledURL()));
                 return false;
             }
         }
@@ -437,39 +324,19 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @throws IOException
      *             if the writing failed due to input/output error.
      * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future
-     *             version
+     * @deprecated As of 7.0. This method is retained only for backwards
+     *             compatibility and for {@link GAEVaadinServlet}.
      */
     @Deprecated
     protected void criticalNotification(VaadinServletRequest request,
-            HttpServletResponse response, String caption, String message,
+            VaadinServletResponse response, String caption, String message,
             String details, String url) throws IOException {
 
         if (ServletPortletHelper.isUIDLRequest(request)) {
-
-            if (caption != null) {
-                caption = "\"" + JsonPaintTarget.escapeJSON(caption) + "\"";
-            }
-            if (details != null) {
-                if (message == null) {
-                    message = details;
-                } else {
-                    message += "<br/><br/>" + details;
-                }
-            }
-
-            if (message != null) {
-                message = "\"" + JsonPaintTarget.escapeJSON(message) + "\"";
-            }
-            if (url != null) {
-                url = "\"" + JsonPaintTarget.escapeJSON(url) + "\"";
-            }
-
-            String output = "for(;;);[{\"changes\":[], \"meta\" : {"
-                    + "\"appError\": {" + "\"caption\":" + caption + ","
-                    + "\"message\" : " + message + "," + "\"url\" : " + url
-                    + "}}, \"resources\": {}, \"locales\":[]}]";
-            writeResponse(response, "application/json; charset=UTF-8", output);
+            String output = VaadinService.createCriticalNotificationJSON(
+                    caption, message, details, url);
+            getService().writeStringResponse(response,
+                    JsonConstants.JSON_CONTENT_TYPE, output);
         } else {
             // Create an HTML reponse with the error
             String output = "";
@@ -492,10 +359,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
             if (url != null) {
                 output += "</a>";
             }
-            writeResponse(response, "text/html; charset=UTF-8", output);
-
+            getService().writeStringResponse(response,
+                    "text/html; charset=UTF-8", output);
         }
-
     }
 
     /**
@@ -511,7 +377,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
     private void writeResponse(HttpServletResponse response,
             String contentType, String output) throws IOException {
         response.setContentType(contentType);
-        final ServletOutputStream out = response.getOutputStream();
+        final OutputStream out = response.getOutputStream();
         // Set the response type
         final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
                 new OutputStreamWriter(out, "UTF-8")));
@@ -553,33 +419,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
             }
         }
         return resultPath;
-    }
-
-    private void handleServiceException(VaadinServletRequest request,
-            VaadinServletResponse response, VaadinSession vaadinSession,
-            Throwable e) throws IOException, ServletException {
-        ErrorHandler errorHandler = ErrorEvent.findErrorHandler(vaadinSession);
-
-        // if this was an UIDL request, response UIDL back to client
-        if (getRequestType(request) == RequestType.UIDL) {
-            SystemMessages ci = getService().getSystemMessages(
-                    ServletPortletHelper.findLocale(null, vaadinSession,
-                            request), request);
-            criticalNotification(request, response,
-                    ci.getInternalErrorCaption(), ci.getInternalErrorMessage(),
-                    null, ci.getInternalErrorURL());
-            if (errorHandler != null) {
-                errorHandler.error(new ErrorEvent(e));
-            }
-        } else {
-            if (errorHandler != null) {
-                errorHandler.error(new ErrorEvent(e));
-            }
-
-            // Re-throw other exceptions
-            throw new ServletException(e);
-        }
-
     }
 
     /**
@@ -626,74 +465,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
         return DEFAULT_THEME_NAME;
     }
 
-    /**
-     * @param request
-     * @param response
-     * @throws IOException
-     * @throws ServletException
-     * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future
-     *             version
-     */
-    @Deprecated
-    void handleServiceSessionExpired(VaadinServletRequest request,
-            VaadinServletResponse response) throws IOException,
-            ServletException {
-
-        if (isOnUnloadRequest(request)) {
-            /*
-             * Request was an unload request (e.g. window close event) and the
-             * client expects no response if it fails.
-             */
-            return;
-        }
-
-        try {
-            SystemMessages ci = getService().getSystemMessages(
-                    ServletPortletHelper.findLocale(null, null, request),
-                    request);
-            RequestType requestType = getRequestType(request);
-            if (requestType == RequestType.UIDL) {
-                /*
-                 * Invalidate session (weird to have session if we're saying
-                 * that it's expired, and worse: portal integration will fail
-                 * since the session is not created by the portal.
-                 * 
-                 * Session must be invalidated before criticalNotification as it
-                 * commits the response.
-                 */
-                request.getSession().invalidate();
-
-                // send uidl redirect
-                criticalNotification(request, response,
-                        ci.getSessionExpiredCaption(),
-                        ci.getSessionExpiredMessage(), null,
-                        ci.getSessionExpiredURL());
-
-            } else if (requestType == RequestType.HEARTBEAT) {
-                response.sendError(HttpServletResponse.SC_GONE,
-                        "Session expired");
-            } else {
-                // 'plain' http req - e.g. browser reload;
-                // just go ahead redirect the browser
-                response.sendRedirect(ci.getSessionExpiredURL());
-            }
-        } catch (SystemMessageException ee) {
-            throw new ServletException(ee);
-        }
-
-    }
-
     private void handleServiceSecurityException(VaadinServletRequest request,
             VaadinServletResponse response) throws IOException,
             ServletException {
-        if (isOnUnloadRequest(request)) {
-            /*
-             * Request was an unload request (e.g. window close event) and the
-             * client expects no response if it fails.
-             */
-            return;
-        }
 
         try {
             /*
@@ -702,20 +476,17 @@ public class VaadinServlet extends HttpServlet implements Constants {
              */
             SystemMessages ci = getService().getSystemMessages(
                     request.getLocale(), request);
-            RequestType requestType = getRequestType(request);
-            if (requestType == RequestType.UIDL) {
+            if (ServletPortletHelper.isUIDLRequest(request)) {
                 // send uidl redirect
-                criticalNotification(request, response,
-                        ci.getCommunicationErrorCaption(),
-                        ci.getCommunicationErrorMessage(),
-                        INVALID_SECURITY_KEY_MSG, ci.getCommunicationErrorURL());
-                /*
-                 * Invalidate session. Portal integration will fail otherwise
-                 * since the session is not created by the portal.
-                 */
-                request.getSession().invalidate();
-
-            } else if (requestType == RequestType.HEARTBEAT) {
+                getService().writeStringResponse(
+                        response,
+                        JsonConstants.JSON_CONTENT_TYPE,
+                        VaadinService.createCriticalNotificationJSON(
+                                ci.getCommunicationErrorCaption(),
+                                ci.getCommunicationErrorMessage(),
+                                INVALID_SECURITY_KEY_MSG,
+                                ci.getCommunicationErrorURL()));
+            } else if (ServletPortletHelper.isHeartbeatRequest(request)) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN,
                         "Forbidden");
             } else {
@@ -744,9 +515,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
     private boolean serveStaticResources(HttpServletRequest request,
             HttpServletResponse response) throws IOException, ServletException {
 
-        // FIXME What does 10 refer to?
         String pathInfo = request.getPathInfo();
-        if (pathInfo == null || pathInfo.length() <= 10) {
+        if (pathInfo == null) {
             return false;
         }
 
@@ -1118,10 +888,12 @@ public class VaadinServlet extends HttpServlet implements Constants {
     /**
      * 
      * @author Vaadin Ltd
-     * @since 7.0.0
+     * @since 7.0
      * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future
-     *             version
+     * @deprecated As of 7.0. This is no longer used and only provided for
+     *             backwards compatibility. Each {@link RequestHandler} can
+     *             individually decide whether it wants to handle a request or
+     *             not.
      */
     @Deprecated
     protected enum RequestType {
@@ -1132,8 +904,10 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * @param request
      * @return
      * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future
-     *             version
+     * @deprecated As of 7.0. This is no longer used and only provided for
+     *             backwards compatibility. Each {@link RequestHandler} can
+     *             individually decide whether it wants to handle a request or
+     *             not.
      */
     @Deprecated
     protected RequestType getRequestType(VaadinServletRequest request) {
@@ -1141,7 +915,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return RequestType.FILE_UPLOAD;
         } else if (ServletPortletHelper.isPublishedFileRequest(request)) {
             return RequestType.PUBLISHED_FILE;
-        } else if (isBrowserDetailsRequest(request)) {
+        } else if (ServletUIInitHandler.isUIInitRequest(request)) {
             return RequestType.BROWSER_DETAILS;
         } else if (ServletPortletHelper.isUIDLRequest(request)) {
             return RequestType.UIDL;
@@ -1156,14 +930,9 @@ public class VaadinServlet extends HttpServlet implements Constants {
 
     }
 
-    private static boolean isBrowserDetailsRequest(HttpServletRequest request) {
-        return "POST".equals(request.getMethod())
-                && request.getParameter("v-browserDetails") != null;
-    }
-
-    private boolean isStaticResourceRequest(HttpServletRequest request) {
+    protected boolean isStaticResourceRequest(HttpServletRequest request) {
         String pathInfo = request.getPathInfo();
-        if (pathInfo == null || pathInfo.length() <= 10) {
+        if (pathInfo == null) {
             return false;
         }
 
@@ -1176,10 +945,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         return false;
-    }
-
-    private boolean isOnUnloadRequest(HttpServletRequest request) {
-        return request.getParameter(ApplicationConstants.PARAM_UNLOADBURST) != null;
     }
 
     /**
@@ -1301,4 +1066,5 @@ public class VaadinServlet extends HttpServlet implements Constants {
     private static final Logger getLogger() {
         return Logger.getLogger(VaadinServlet.class.getName());
     }
+
 }

@@ -42,8 +42,12 @@ import com.vaadin.client.ui.UnknownComponentConnector;
 import com.vaadin.client.ui.VWindow;
 
 /**
- * TODO Rename to something more Vaadin7-ish?
+ * @author Vaadin Ltd
+ * 
+ * @deprecated as of 7.1. This class was mainly used by the old debug console
+ *             but is retained for now for backwards compatibility.
  */
+@Deprecated
 public class VUIDLBrowser extends SimpleTree {
     private static final String HELP = "Shift click handle to open recursively. "
             + " Click components to highlight them on client side."

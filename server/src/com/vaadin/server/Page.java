@@ -21,14 +21,18 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.EventObject;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.vaadin.event.EventRouter;
 import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.ui.PageClientRpc;
+import com.vaadin.shared.ui.ui.PageState;
 import com.vaadin.shared.ui.ui.UIConstants;
+import com.vaadin.shared.ui.ui.UIState;
 import com.vaadin.ui.JavaScript;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Link;
@@ -218,7 +222,7 @@ public class Page implements Serializable {
         }
     }
 
-    private static final Method BROWSWER_RESIZE_METHOD = ReflectTools
+    private static final Method BROWSER_RESIZE_METHOD = ReflectTools
             .findMethod(BrowserWindowResizeListener.class,
                     "browserWindowResized", BrowserWindowResizeEvent.class);
 
@@ -303,6 +307,102 @@ public class Page implements Serializable {
         }
     }
 
+    /**
+     * Contains dynamically injected styles injected in the HTML document at
+     * runtime.
+     * 
+     * @since 7.1
+     */
+    public static class Styles implements Serializable {
+
+        private final Map<Integer, String> stringInjections = new HashMap<Integer, String>();
+
+        private final Map<Integer, Resource> resourceInjections = new HashMap<Integer, Resource>();
+
+        // The combined injection counter between both string and resource
+        // injections. Used as the key for the injection maps
+        private int injectionCounter = 0;
+
+        // Points to the next injection that has not yet been made into the Page
+        private int nextInjectionPosition = 0;
+
+        private final UI ui;
+
+        private Styles(UI ui) {
+            this.ui = ui;
+        }
+
+        /**
+         * Injects a raw CSS string into the page.
+         * 
+         * @param css
+         *            The CSS to inject
+         */
+        public void add(String css) {
+            if (css == null) {
+                throw new IllegalArgumentException(
+                        "Cannot inject null CSS string");
+            }
+
+            stringInjections.put(injectionCounter++, css);
+            ui.markAsDirty();
+        }
+
+        /**
+         * Injects a CSS resource into the page
+         * 
+         * @param resource
+         *            The resource to inject.
+         */
+        public void add(Resource resource) {
+            if (resource == null) {
+                throw new IllegalArgumentException(
+                        "Cannot inject null resource");
+            }
+
+            resourceInjections.put(injectionCounter++, resource);
+            ui.markAsDirty();
+        }
+
+        private void paint(PaintTarget target) throws PaintException {
+
+            // If full repaint repaint all injections
+            if (target.isFullRepaint()) {
+                nextInjectionPosition = 0;
+            }
+
+            if (injectionCounter > nextInjectionPosition) {
+
+                target.startTag("css-injections");
+
+                while (injectionCounter > nextInjectionPosition) {
+
+                    String stringInjection = stringInjections
+                            .get(nextInjectionPosition);
+                    if (stringInjection != null) {
+                        target.startTag("css-string");
+                        target.addAttribute("id", nextInjectionPosition);
+                        target.addText(stringInjection);
+                        target.endTag("css-string");
+                    }
+
+                    Resource resourceInjection = resourceInjections
+                            .get(nextInjectionPosition);
+                    if (resourceInjection != null) {
+                        target.startTag("css-resource");
+                        target.addAttribute("id", nextInjectionPosition);
+                        target.addAttribute("url", resourceInjection);
+                        target.endTag("css-resource");
+                    }
+
+                    nextInjectionPosition++;
+                }
+
+                target.endTag("css-injections");
+            }
+        }
+    }
+
     private EventRouter eventRouter;
 
     private final UI uI;
@@ -312,13 +412,18 @@ public class Page implements Serializable {
 
     private JavaScript javaScript;
 
+    private Styles styles;
+
     /**
      * The current browser location.
      */
     private URI location;
 
-    public Page(UI uI) {
+    private final PageState state;
+
+    public Page(UI uI, PageState state) {
         this.uI = uI;
+        this.state = state;
     }
 
     private void addListener(Class<?> eventType, Object target, Method method) {
@@ -504,20 +609,27 @@ public class Page implements Serializable {
     }
 
     /**
-     * Adds a new {@link BrowserWindowResizeListener} to this uI. The listener
-     * will be notified whenever the browser window within which this uI resides
+     * Adds a new {@link BrowserWindowResizeListener} to this UI. The listener
+     * will be notified whenever the browser window within which this UI resides
      * is resized.
+     * <p>
+     * In most cases, the UI should be in lazy resize mode when using browser
+     * window resize listeners. Otherwise, a large number of events can be
+     * received while a resize is being performed. Use
+     * {@link UI#setResizeLazy(boolean)}.
+     * </p>
      * 
      * @param resizeListener
      *            the listener to add
      * 
      * @see BrowserWindowResizeListener#browserWindowResized(BrowserWindowResizeEvent)
-     * @see #setResizeLazy(boolean)
+     * @see UI#setResizeLazy(boolean)
      */
     public void addBrowserWindowResizeListener(
             BrowserWindowResizeListener resizeListener) {
         addListener(BrowserWindowResizeEvent.class, resizeListener,
-                BROWSWER_RESIZE_METHOD);
+                BROWSER_RESIZE_METHOD);
+        getState(true).hasResizeListeners = true;
     }
 
     /**
@@ -539,7 +651,9 @@ public class Page implements Serializable {
     public void removeBrowserWindowResizeListener(
             BrowserWindowResizeListener resizeListener) {
         removeListener(BrowserWindowResizeEvent.class, resizeListener,
-                BROWSWER_RESIZE_METHOD);
+                BROWSER_RESIZE_METHOD);
+        getState(true).hasResizeListeners = eventRouter
+                .hasListeners(BrowserWindowResizeEvent.class);
     }
 
     /**
@@ -576,8 +690,21 @@ public class Page implements Serializable {
             javaScript = new JavaScript();
             javaScript.extend(uI);
         }
-
         return javaScript;
+    }
+
+    /**
+     * Returns that stylesheet associated with this Page. The stylesheet
+     * contains additional styles injected at runtime into the HTML document.
+     * 
+     * @since 7.1
+     */
+    public Styles getStyles() {
+
+        if (styles == null) {
+            styles = new Styles(uI);
+        }
+        return styles;
     }
 
     public void paintContent(PaintTarget target) throws PaintException {
@@ -637,6 +764,9 @@ public class Page implements Serializable {
                     location.toString());
         }
 
+        if (styles != null) {
+            styles.paint(target);
+        }
     }
 
     /**
@@ -913,6 +1043,38 @@ public class Page implements Serializable {
      */
     public void setTitle(String title) {
         uI.getRpcProxy(PageClientRpc.class).setTitle(title);
+    }
+
+    /**
+     * Reloads the page in the browser.
+     */
+    public void reload() {
+        uI.getRpcProxy(PageClientRpc.class).reload();
+    }
+
+    /**
+     * Returns the page state.
+     * <p>
+     * The page state is transmitted to UIConnector together with
+     * {@link UIState} rather than as an individual entity.
+     * </p>
+     * <p>
+     * The state should be considered an internal detail of Page. Classes
+     * outside of Page should not access it directly but only through public
+     * APIs provided by Page.
+     * </p>
+     * 
+     * @since 7.1
+     * @param markAsDirty
+     *            true to mark the state as dirty
+     * @return PageState object that can be read in any case and modified if
+     *         markAsDirty is true
+     */
+    protected PageState getState(boolean markAsDirty) {
+        if (markAsDirty) {
+            uI.markAsDirty();
+        }
+        return state;
     }
 
 }

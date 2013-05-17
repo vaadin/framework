@@ -70,12 +70,12 @@ public final class ValueMap extends JavaScriptObject {
         return attrs;
     }
 
-    native JsArrayString getJSStringArray(String name)
+    public native JsArrayString getJSStringArray(String name)
     /*-{
         return this[name];
     }-*/;
 
-    native JsArray<ValueMap> getJSValueMapArray(String name)
+    public native JsArray<ValueMap> getJSValueMapArray(String name)
     /*-{
         return this[name];
     }-*/;

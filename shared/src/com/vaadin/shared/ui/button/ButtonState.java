@@ -37,4 +37,5 @@ public class ButtonState extends TabIndexState {
      * If caption should be rendered in HTML
      */
     public boolean htmlContentAllowed = false;
+    public String iconAltText = "";
 }

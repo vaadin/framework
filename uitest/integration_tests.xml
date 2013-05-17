@@ -13,7 +13,7 @@
 	<fail unless="test.integration.antfile" message="test.integration.antfile must be set for integration tests to run" />
 
 	<!-- Test with these browsers -->
-	<property name="test_browsers" value="winxp-firefox11" />
+	<property name="test_browsers" value="winxp-firefox17-esr" />
 
 	<!-- Path to key file. Default value -->
 	<property name="sshkey.file" value="id_dsa" />
@@ -40,6 +40,23 @@
 	<!-- Run basic integration test test -->
 	<target name="integration-test-servlet">
 		<fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-${server-name}-servlet.html" />
+		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
+		<subant target="run-tests" failonerror="false" antfile="test.xml">
+			<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
+			<property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
+			<property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
+			<property name="server.start.succeeded" value="1" />
+			<property name="browsers" value="${test_browsers}" />
+			<property name="testfiles" value="${testfiles}" />
+			<property name="test-output-dir" value="${integration_test.dir}/result/integration-test-output/${server-name}" />
+			<property name="retries" value="0" />
+
+			<fileset dir="." includes="test.xml" />
+		</subant>
+	</target>
+	
+	<target name="integration-test-push-servlet">
+		<fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-${server-name}-push-servlet.html" />
 		<pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 		<subant target="run-tests" failonerror="false" antfile="test.xml">
 			<property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
@@ -412,6 +429,24 @@
 
 				<copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-${target-server}-servlet.html" overwrite="true" />
 				<antcall target="integration-test-servlet">
+					<param name="server-name" value="${target-server}" />
+					<param name="deployment.url" value="http://${target-host}:${target-port}" />
+				</antcall>
+
+				<!-- Run theme tests in all browsers if there's a property with the test files -->
+				<antcontrib:if>
+					<isset property="testfiles-theme" />
+					<antcontrib:then>
+						<antcall target="integration-test-theme">
+							<param name="server-name" value="${target-server}" />
+							<param name="deployment.url" value="http://${target-host}:${target-port}" />
+						</antcall>
+					</antcontrib:then>
+				</antcontrib:if>
+
+				<!-- Run integration tests with push -->
+				<copy file="integration-testscripts/common/integration_push_test.tpl" tofile="integration-testscripts/integration-test-${target-server}-push-servlet.html" overwrite="true" />
+				<antcall target="integration-test-push-servlet">
 					<param name="server-name" value="${target-server}" />
 					<param name="deployment.url" value="http://${target-host}:${target-port}" />
 				</antcall>

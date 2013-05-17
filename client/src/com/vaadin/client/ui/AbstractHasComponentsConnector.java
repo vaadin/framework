@@ -20,9 +20,9 @@ import java.util.List;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
+import com.vaadin.client.HasComponentsConnector;
 
 public abstract class AbstractHasComponentsConnector extends
         AbstractComponentConnector implements HasComponentsConnector,

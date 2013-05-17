@@ -30,6 +30,7 @@ public class TreeTableInternalError extends TestBase {
         Button button = new Button("Resize") {
             {
                 addClickListener(new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         t.setHeight("300px");
                     }
@@ -64,12 +65,14 @@ public class TreeTableInternalError extends TestBase {
     }
 
     public class ButtonColumnGenerator implements ColumnGenerator {
+        @Override
         public Component generateCell(final com.vaadin.ui.Table source,
                 final Object itemId, Object columnId) {
             String identifier = "Expand/Collapse";
             Button btnCol = new NativeButton(identifier);
             btnCol.setId("cacheTestButtonToggle-" + itemId);
             btnCol.addClickListener(new Button.ClickListener() {
+                @Override
                 public void buttonClick(ClickEvent event) {
                     t.setCollapsed(itemId, !t.isCollapsed(itemId));
                 }

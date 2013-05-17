@@ -16,7 +16,6 @@
 
 package com.vaadin.client.ui;
 
-import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.client.ApplicationConnection;
@@ -57,10 +56,8 @@ public class VLabel extends HTML {
         super.setWidth(width);
         if (width == null || width.equals("")) {
             setStyleName(getElement(), CLASSNAME_UNDEFINED_WIDTH, true);
-            getElement().getStyle().setDisplay(Display.INLINE_BLOCK);
         } else {
             setStyleName(getElement(), CLASSNAME_UNDEFINED_WIDTH, false);
-            getElement().getStyle().clearDisplay();
         }
     }
 

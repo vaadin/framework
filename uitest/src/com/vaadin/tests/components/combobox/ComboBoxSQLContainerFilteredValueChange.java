@@ -53,6 +53,7 @@ public class ComboBoxSQLContainerFilteredValueChange extends TestBase {
         myCombo.setWidth("100.0%");
         myCombo.setHeight("-1px");
         myCombo.addListener(new Property.ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 selectedLabel.setValue("Selected: "
                         + event.getProperty().getValue());
@@ -72,6 +73,7 @@ public class ComboBoxSQLContainerFilteredValueChange extends TestBase {
 
     /**
      * (Re)creates the test table
+     * 
      * @param connectionPool
      */
     private void createTestTable(JDBCConnectionPool connectionPool) {
@@ -97,6 +99,7 @@ public class ComboBoxSQLContainerFilteredValueChange extends TestBase {
 
     /**
      * Adds test data to the test table
+     * 
      * @param connectionPool
      * @throws SQLException
      */
@@ -111,7 +114,7 @@ public class ComboBoxSQLContainerFilteredValueChange extends TestBase {
             statement.executeUpdate("INSERT INTO mytable VALUES(2, 'A1')");
             statement.executeUpdate("INSERT INTO mytable VALUES(3, 'B0')");
             statement.executeUpdate("INSERT INTO mytable VALUES(4, 'B1')");
-            
+
             statement.close();
             conn.commit();
         } catch (SQLException e) {

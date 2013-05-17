@@ -19,6 +19,7 @@ package com.vaadin.sass.internal.tree;
 import java.util.ArrayList;
 
 import com.vaadin.sass.internal.ScssStylesheet;
+import com.vaadin.sass.internal.expression.ArithmeticExpressionEvaluator;
 import com.vaadin.sass.internal.parser.LexicalUnitImpl;
 import com.vaadin.sass.internal.util.StringUtil;
 import com.vaadin.sass.internal.visitor.VariableNodeHandler;
@@ -101,7 +102,21 @@ public class VariableNode extends Node implements IVariableNode {
 
     @Override
     public void traverse() {
-        replaceVariables(ScssStylesheet.getVariables());
+        /*
+         * "replaceVariables(ScssStylesheet.getVariables());" seems duplicated
+         * and can be extracted out of if, but it is not.
+         * containsArithmeticalOperator must be called before replaceVariables.
+         * Because for the "/" operator, it needs to see if its predecessor or
+         * successor is a Variable or not, to determine it is an arithmetic
+         * operator.
+         */
+        if (ArithmeticExpressionEvaluator.get().containsArithmeticalOperator(
+                expr)) {
+            replaceVariables(ScssStylesheet.getVariables());
+            expr = ArithmeticExpressionEvaluator.get().evaluate(expr);
+        } else {
+            replaceVariables(ScssStylesheet.getVariables());
+        }
         VariableNodeHandler.traverse(this);
     }
 }

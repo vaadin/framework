@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gwt.aria.client.LiveValue;
+import com.google.gwt.aria.client.RelevantValue;
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -66,6 +69,7 @@ import com.vaadin.client.communication.HasJavaScriptConnectorHelper;
 import com.vaadin.client.communication.JavaScriptMethodInvocation;
 import com.vaadin.client.communication.JsonDecoder;
 import com.vaadin.client.communication.JsonEncoder;
+import com.vaadin.client.communication.PushConnection;
 import com.vaadin.client.communication.RpcManager;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
@@ -80,6 +84,7 @@ import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.VContextMenu;
 import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.VNotification.HideEvent;
+import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.dd.VDragAndDropManager;
 import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.client.ui.window.WindowConnector;
@@ -94,7 +99,7 @@ import com.vaadin.shared.ui.ui.UIConstants;
 /**
  * This is the client side communication "engine", managing client-server
  * communication with its server side counterpart
- * com.vaadin.server.AbstractCommunicationManager.
+ * com.vaadin.server.VaadinService.
  * 
  * Client-side connectors receive updates from the corresponding server-side
  * connector (typically component) as state updates or RPC calls. The connector
@@ -155,8 +160,8 @@ public class ApplicationConnection {
      */
     public static final String UIDL_REFRESH_TOKEN = "Vaadin-Refresh";
 
-    // will hold the UIDL security key (for XSS protection) once received
-    private String uidlSecurityKey = "init";
+    // will hold the CSRF token once received
+    private String csrfToken = "init";
 
     private final HashMap<String, String> resourcesMap = new HashMap<String, String>();
 
@@ -176,11 +181,6 @@ public class ApplicationConnection {
     private WidgetSet widgetSet;
 
     private VContextMenu contextMenu = null;
-
-    private Timer loadTimer;
-    private Timer loadTimer2;
-    private Timer loadTimer3;
-    private Element loadElement;
 
     private final UIConnector uIConnector;
 
@@ -226,6 +226,8 @@ public class ApplicationConnection {
     private final LayoutManager layoutManager;
 
     private final RpcManager rpcManager;
+
+    private PushConnection push;
 
     /**
      * If responseHandlingLocks contains any objects, response handling is
@@ -378,6 +380,8 @@ public class ApplicationConnection {
 
     private CommunicationErrorHandler communicationErrorDelegate = null;
 
+    private VLoadingIndicator loadingIndicator;
+
     public static class MultiStepDuration extends Duration {
         private int previousStep = elapsedMillis();
 
@@ -404,6 +408,8 @@ public class ApplicationConnection {
         layoutManager = GWT.create(LayoutManager.class);
         layoutManager.setConnection(this);
         tooltip = GWT.create(VTooltip.class);
+        loadingIndicator = GWT.create(VLoadingIndicator.class);
+        loadingIndicator.setConnection(this);
     }
 
     public void init(WidgetSet widgetSet, ApplicationConfiguration cnf) {
@@ -436,7 +442,7 @@ public class ApplicationConnection {
 
         tooltip.setOwner(uIConnector.getWidget());
 
-        showLoadingIndicator();
+        getLoadingIndicator().show();
 
         scheduleHeartbeat();
 
@@ -454,6 +460,15 @@ public class ApplicationConnection {
                 webkitMaybeIgnoringRequests = true;
             }
         });
+
+        // Ensure the overlay container is added to the dom and set as a live
+        // area for assistive devices
+        Element overlayContainer = VOverlay.getOverlayContainer(this);
+        Roles.getAlertRole().setAriaLiveProperty(overlayContainer,
+                LiveValue.ASSERTIVE);
+        setOverlayContainerLabel(getUIConnector().getState().overlayContainerLabel);
+        Roles.getAlertRole().setAriaRelevantProperty(overlayContainer,
+                RelevantValue.ADDITIONS);
     }
 
     /**
@@ -656,8 +671,7 @@ public class ApplicationConnection {
     }-*/;
 
     protected void repaintAll() {
-        String repainAllParameters = getRepaintAllParameters();
-        makeUidlRequest("", repainAllParameters, false);
+        makeUidlRequest("", getRepaintAllParameters());
     }
 
     /**
@@ -667,7 +681,7 @@ public class ApplicationConnection {
     public void analyzeLayouts() {
         String params = getRepaintAllParameters() + "&"
                 + ApplicationConstants.PARAM_ANALYZE_LAYOUTS + "=1";
-        makeUidlRequest("", params, false);
+        makeUidlRequest("", params);
     }
 
     /**
@@ -681,7 +695,7 @@ public class ApplicationConnection {
         String params = getRepaintAllParameters() + "&"
                 + ApplicationConstants.PARAM_HIGHLIGHT_CONNECTOR + "="
                 + serverConnector.getConnectorId();
-        makeUidlRequest("", params, false);
+        makeUidlRequest("", params);
     }
 
     /**
@@ -694,14 +708,12 @@ public class ApplicationConnection {
      *            Contains key=value pairs joined by & characters or is empty if
      *            no parameters should be added. Should not start with any
      *            special character.
-     * @param forceSync
-     *            true if the request should be synchronous, false otherwise
      */
     protected void makeUidlRequest(final String requestData,
-            final String extraParams, final boolean forceSync) {
+            final String extraParams) {
         startRequest();
         // Security: double cookie submission pattern
-        final String payload = uidlSecurityKey + VAR_BURST_SEPARATOR
+        final String payload = getCsrfToken() + VAR_BURST_SEPARATOR
                 + requestData;
         VConsole.log("Making UIDL Request with params: " + payload);
         String uri = translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
@@ -713,7 +725,7 @@ public class ApplicationConnection {
         uri = addGetParameters(uri, UIConstants.UI_ID_PARAMETER + "="
                 + configuration.getUIId());
 
-        doUidlRequest(uri, payload, forceSync);
+        doUidlRequest(uri, payload);
 
     }
 
@@ -725,143 +737,127 @@ public class ApplicationConnection {
      *            The URI to use for the request. May includes GET parameters
      * @param payload
      *            The contents of the request to send
-     * @param synchronous
-     *            true if the request should be synchronous, false otherwise
      */
-    protected void doUidlRequest(final String uri, final String payload,
-            final boolean synchronous) {
-        if (!synchronous) {
-            RequestCallback requestCallback = new RequestCallback() {
-                @Override
-                public void onError(Request request, Throwable exception) {
-                    handleCommunicationError(exception.getMessage(), -1);
-                }
+    protected void doUidlRequest(final String uri, final String payload) {
+        RequestCallback requestCallback = new RequestCallback() {
+            @Override
+            public void onError(Request request, Throwable exception) {
+                handleCommunicationError(exception.getMessage(), -1);
+            }
 
-                private void handleCommunicationError(String details,
-                        int statusCode) {
-                    if (!handleErrorInDelegate(details, statusCode)) {
-                        showCommunicationError(details, statusCode);
+            private void handleCommunicationError(String details, int statusCode) {
+                if (!handleErrorInDelegate(details, statusCode)) {
+                    showCommunicationError(details, statusCode);
+                }
+                endRequest();
+            }
+
+            @Override
+            public void onResponseReceived(Request request, Response response) {
+                VConsole.log("Server visit took "
+                        + String.valueOf((new Date()).getTime()
+                                - requestStartTime.getTime()) + "ms");
+
+                int statusCode = response.getStatusCode();
+
+                switch (statusCode) {
+                case 0:
+                    if (retryCanceledActiveRequest) {
+                        /*
+                         * Request was most likely canceled because the browser
+                         * is maybe navigating away from the page. Just send the
+                         * request again without displaying any error in case
+                         * the navigation isn't carried through.
+                         */
+                        retryCanceledActiveRequest = false;
+                        doUidlRequest(uri, payload);
+                    } else {
+                        handleCommunicationError(
+                                "Invalid status code 0 (server down?)",
+                                statusCode);
                     }
+                    return;
+
+                case 401:
+                    /*
+                     * Authorization has failed. Could be that the session has
+                     * timed out and the container is redirecting to a login
+                     * page.
+                     */
+                    showAuthenticationError("");
                     endRequest();
+                    return;
+
+                case 503:
+                    /*
+                     * We'll assume msec instead of the usual seconds. If
+                     * there's no Retry-After header, handle the error like a
+                     * 500, as per RFC 2616 section 10.5.4.
+                     */
+                    String delay = response.getHeader("Retry-After");
+                    if (delay != null) {
+                        VConsole.log("503, retrying in " + delay + "msec");
+                        (new Timer() {
+                            @Override
+                            public void run() {
+                                doUidlRequest(uri, payload);
+                            }
+                        }).schedule(Integer.parseInt(delay));
+                        return;
+                    }
                 }
 
-                @Override
-                public void onResponseReceived(Request request,
-                        Response response) {
-                    VConsole.log("Server visit took "
-                            + String.valueOf((new Date()).getTime()
-                                    - requestStartTime.getTime()) + "ms");
-
-                    int statusCode = response.getStatusCode();
-
-                    switch (statusCode) {
-                    case 0:
-                        if (retryCanceledActiveRequest) {
-                            /*
-                             * Request was most likely canceled because the
-                             * browser is maybe navigating away from the page.
-                             * Just send the request again without displaying
-                             * any error in case the navigation isn't carried
-                             * through.
-                             */
-                            retryCanceledActiveRequest = false;
-                            doUidlRequest(uri, payload, synchronous);
-                        } else {
-                            handleCommunicationError(
-                                    "Invalid status code 0 (server down?)",
-                                    statusCode);
-                        }
-                        return;
-
-                    case 401:
-                        /*
-                         * Authorization has failed. Could be that the session
-                         * has timed out and the container is redirecting to a
-                         * login page.
-                         */
-                        showAuthenticationError("");
-                        endRequest();
-                        return;
-
-                    case 503:
-                        /*
-                         * We'll assume msec instead of the usual seconds. If
-                         * there's no Retry-After header, handle the error like
-                         * a 500, as per RFC 2616 section 10.5.4.
-                         */
-                        String delay = response.getHeader("Retry-After");
-                        if (delay != null) {
-                            VConsole.log("503, retrying in " + delay + "msec");
-                            (new Timer() {
-                                @Override
-                                public void run() {
-                                    doUidlRequest(uri, payload, synchronous);
-                                }
-                            }).schedule(Integer.parseInt(delay));
-                            return;
-                        }
-                    }
-
-                    if ((statusCode / 100) == 4) {
-                        // Handle all 4xx errors the same way as (they are
-                        // all permanent errors)
-                        showCommunicationError(
-                                "UIDL could not be read from server. Check servlets mappings. Error code: "
-                                        + statusCode, statusCode);
-                        endRequest();
-                        return;
-                    } else if ((statusCode / 100) == 5) {
-                        // Something's wrong on the server, there's nothing the
-                        // client can do except maybe try again.
-                        handleCommunicationError("Server error. Error code: "
-                                + statusCode, statusCode);
-                        return;
-                    }
-
-                    String contentType = response.getHeader("Content-Type");
-                    if (contentType == null
-                            || !contentType.startsWith("application/json")) {
-                        /*
-                         * A servlet filter or equivalent may have intercepted
-                         * the request and served non-UIDL content (for
-                         * instance, a login page if the session has expired.)
-                         * If the response contains a magic substring, do a
-                         * synchronous refresh. See #8241.
-                         */
-                        MatchResult refreshToken = RegExp.compile(
-                                UIDL_REFRESH_TOKEN + "(:\\s*(.*?))?(\\s|$)")
-                                .exec(response.getText());
-                        if (refreshToken != null) {
-                            redirect(refreshToken.getGroup(2));
-                            return;
-                        }
-                    }
-
-                    // for(;;);[realjson]
-                    final String jsonText = response.getText().substring(9,
-                            response.getText().length() - 1);
-                    handleJSONText(jsonText, statusCode);
+                if ((statusCode / 100) == 4) {
+                    // Handle all 4xx errors the same way as (they are
+                    // all permanent errors)
+                    showCommunicationError(
+                            "UIDL could not be read from server. Check servlets mappings. Error code: "
+                                    + statusCode, statusCode);
+                    endRequest();
+                    return;
+                } else if ((statusCode / 100) == 5) {
+                    // Something's wrong on the server, there's nothing the
+                    // client can do except maybe try again.
+                    handleCommunicationError("Server error. Error code: "
+                            + statusCode, statusCode);
+                    return;
                 }
 
-            };
+                String contentType = response.getHeader("Content-Type");
+                if (contentType == null
+                        || !contentType.startsWith("application/json")) {
+                    /*
+                     * A servlet filter or equivalent may have intercepted the
+                     * request and served non-UIDL content (for instance, a
+                     * login page if the session has expired.) If the response
+                     * contains a magic substring, do a synchronous refresh. See
+                     * #8241.
+                     */
+                    MatchResult refreshToken = RegExp.compile(
+                            UIDL_REFRESH_TOKEN + "(:\\s*(.*?))?(\\s|$)").exec(
+                            response.getText());
+                    if (refreshToken != null) {
+                        redirect(refreshToken.getGroup(2));
+                        return;
+                    }
+                }
+
+                // for(;;);[realjson]
+                final String jsonText = response.getText().substring(9,
+                        response.getText().length() - 1);
+                handleJSONText(jsonText, statusCode);
+            }
+        };
+        if (push != null) {
+            push.push(payload);
+        } else {
             try {
-                doAsyncUIDLRequest(uri, payload, requestCallback);
+                doAjaxRequest(uri, payload, requestCallback);
             } catch (RequestException e) {
                 VConsole.error(e);
                 endRequest();
             }
-        } else {
-            // Synchronized call, discarded response (leaving the page)
-            SynchronousXHR syncXHR = (SynchronousXHR) SynchronousXHR.create();
-            syncXHR.synchronousPost(uri + "&"
-                    + ApplicationConstants.PARAM_UNLOADBURST + "=1", payload);
-            /*
-             * Although we are in theory leaving the page, the page may still
-             * stay open. End request properly here too. See #3289
-             */
-            endRequest();
         }
-
     }
 
     /**
@@ -905,11 +901,12 @@ public class ApplicationConnection {
      * @throws RequestException
      *             if the request could not be sent
      */
-    protected void doAsyncUIDLRequest(String uri, String payload,
+    protected void doAjaxRequest(String uri, String payload,
             RequestCallback requestCallback) throws RequestException {
         RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, uri);
         // TODO enable timeout
         // rb.setTimeoutMillis(timeoutMillis);
+        // TODO this should be configurable
         rb.setHeader("Content-Type", "text/plain;charset=utf-8");
         rb.setRequestData(payload);
         rb.setCallback(requestCallback);
@@ -1008,7 +1005,7 @@ public class ApplicationConnection {
      */
     protected boolean isCSSLoaded() {
         return cssLoaded
-                || DOM.getElementPropertyInt(loadElement, "offsetHeight") != 0;
+                || getLoadingIndicator().getElement().getOffsetHeight() != 0;
     }
 
     /**
@@ -1042,7 +1039,7 @@ public class ApplicationConnection {
      * @param details
      *            Optional details for debugging.
      */
-    protected void showSessionExpiredError(String details) {
+    public void showSessionExpiredError(String details) {
         VConsole.error("Session expired: " + details);
         showError(details, configuration.getSessionExpiredError());
     }
@@ -1106,25 +1103,7 @@ public class ApplicationConnection {
         }
         hasActiveRequest = true;
         requestStartTime = new Date();
-        // show initial throbber
-        if (loadTimer == null) {
-            loadTimer = new Timer() {
-                @Override
-                public void run() {
-                    /*
-                     * IE7 does not properly cancel the event with
-                     * loadTimer.cancel() so we have to check that we really
-                     * should make it visible
-                     */
-                    if (loadTimer != null) {
-                        showLoadingIndicator();
-                    }
-
-                }
-            };
-            // First one kicks in at 300ms
-        }
-        loadTimer.schedule(300);
+        loadingIndicator.trigger();
         eventBus.fireEvent(new RequestStartingEvent(this));
     }
 
@@ -1145,12 +1124,13 @@ public class ApplicationConnection {
             checkForPendingVariableBursts();
             runPostRequestHooks(configuration.getRootPanelId());
         }
+
         // deferring to avoid flickering
         Scheduler.get().scheduleDeferred(new Command() {
             @Override
             public void execute() {
                 if (!hasActiveRequest()) {
-                    hideLoadingIndicator();
+                    getLoadingIndicator().hide();
 
                     // If on Liferay and session expiration management is in
                     // use, extend session duration on each request.
@@ -1179,7 +1159,7 @@ public class ApplicationConnection {
             }
             LinkedHashMap<String, MethodInvocation> nextBurst = pendingBursts
                     .remove(0);
-            buildAndSendVariableBurst(nextBurst, false);
+            buildAndSendVariableBurst(nextBurst);
         }
     }
 
@@ -1200,54 +1180,6 @@ public class ApplicationConnection {
                 iterator.remove();
                 VConsole.log("Removed variable from removed component: " + id);
             }
-        }
-    }
-
-    private void showLoadingIndicator() {
-        // show initial throbber
-        if (loadElement == null) {
-            loadElement = DOM.createDiv();
-            DOM.setStyleAttribute(loadElement, "position", "absolute");
-            DOM.appendChild(uIConnector.getWidget().getElement(), loadElement);
-            VConsole.log("inserting load indicator");
-        }
-        DOM.setElementProperty(loadElement, "className", "v-loading-indicator");
-        DOM.setStyleAttribute(loadElement, "display", "block");
-        // Initialize other timers
-        loadTimer2 = new Timer() {
-            @Override
-            public void run() {
-                DOM.setElementProperty(loadElement, "className",
-                        "v-loading-indicator-delay");
-            }
-        };
-        // Second one kicks in at 1500ms from request start
-        loadTimer2.schedule(1200);
-
-        loadTimer3 = new Timer() {
-            @Override
-            public void run() {
-                DOM.setElementProperty(loadElement, "className",
-                        "v-loading-indicator-wait");
-            }
-        };
-        // Third one kicks in at 5000ms from request start
-        loadTimer3.schedule(4700);
-    }
-
-    private void hideLoadingIndicator() {
-        if (loadTimer != null) {
-            loadTimer.cancel();
-            loadTimer = null;
-        }
-        if (loadTimer2 != null) {
-            loadTimer2.cancel();
-            loadTimer3.cancel();
-            loadTimer2 = null;
-            loadTimer3 = null;
-        }
-        if (loadElement != null) {
-            DOM.setStyleAttribute(loadElement, "display", "none");
         }
     }
 
@@ -1273,19 +1205,24 @@ public class ApplicationConnection {
     }
 
     /**
+     * Returns the loading indicator used by this ApplicationConnection
+     * 
+     * @return The loading indicator for this ApplicationConnection
+     */
+    public VLoadingIndicator getLoadingIndicator() {
+        return loadingIndicator;
+    }
+
+    /**
      * Determines whether or not the loading indicator is showing.
      * 
      * @return true if the loading indicator is visible
+     * @deprecated As of 7.1. Use {@link #getLoadingIndicator()} and
+     *             {@link VLoadingIndicator#isVisible()}.isVisible() instead.
      */
+    @Deprecated
     public boolean isLoadingIndicatorVisible() {
-        if (loadElement == null) {
-            return false;
-        }
-        if (loadElement.getStyle().getProperty("display").equals("none")) {
-            return false;
-        }
-
-        return true;
+        return getLoadingIndicator().isVisible();
     }
 
     private static native ValueMap parseJSONResponse(String jsonText)
@@ -1332,6 +1269,14 @@ public class ApplicationConnection {
             return;
         }
 
+        /*
+         * Lock response handling to avoid a situation where something pushed
+         * from the server gets processed while waiting for e.g. lazily loaded
+         * connectors that are needed for processing the current message.
+         */
+        final Object lock = new Object();
+        suspendReponseHandling(lock);
+
         VConsole.log("Handling message from server");
         eventBus.fireEvent(new ResponseHandlingStartedEvent(this));
 
@@ -1349,7 +1294,7 @@ public class ApplicationConnection {
 
         // Get security key
         if (json.containsKey(ApplicationConstants.UIDL_SECURITY_TOKEN_ID)) {
-            uidlSecurityKey = json
+            csrfToken = json
                     .getString(ApplicationConstants.UIDL_SECURITY_TOKEN_ID);
         }
         VConsole.log(" * Handling resources from server");
@@ -1545,7 +1490,12 @@ public class ApplicationConnection {
                         + jsonText.length() + " characters of JSON");
                 VConsole.log("Referenced paintables: " + connectorMap.size());
 
-                endRequest();
+                if (meta == null || !meta.containsKey("async")) {
+                    // End the request if the received message was a response,
+                    // not sent asynchronously
+                    endRequest();
+                }
+                resumeResponseHandling(lock);
 
                 if (Profiler.isEnabled()) {
                     Scheduler.get().scheduleDeferred(new ScheduledCommand() {
@@ -1556,7 +1506,6 @@ public class ApplicationConnection {
                         }
                     });
                 }
-
             }
 
             /**
@@ -2417,6 +2366,23 @@ public class ApplicationConnection {
     }
 
     /**
+     * Removes any pending invocation of the given method from the queue
+     * 
+     * @param invocation
+     *            The invocation to remove
+     */
+    public void removePendingInvocations(MethodInvocation invocation) {
+        Iterator<MethodInvocation> iter = pendingInvocations.values()
+                .iterator();
+        while (iter.hasNext()) {
+            MethodInvocation mi = iter.next();
+            if (mi.equals(invocation)) {
+                iter.remove();
+            }
+        }
+    }
+
+    /**
      * This method sends currently queued variable changes to server. It is
      * called when immediate variable update must happen.
      * 
@@ -2429,7 +2395,7 @@ public class ApplicationConnection {
     public void sendPendingVariableChanges() {
         if (!deferedSendPending) {
             deferedSendPending = true;
-            Scheduler.get().scheduleDeferred(sendPendingCommand);
+            Scheduler.get().scheduleFinally(sendPendingCommand);
         }
     }
 
@@ -2444,7 +2410,7 @@ public class ApplicationConnection {
 
     private void doSendPendingVariableChanges() {
         if (applicationRunning) {
-            if (hasActiveRequest()) {
+            if (hasActiveRequest() || (push != null && !push.isActive())) {
                 // skip empty queues if there are pending bursts to be sent
                 if (pendingInvocations.size() > 0 || pendingBursts.size() == 0) {
                     pendingBursts.add(pendingInvocations);
@@ -2453,7 +2419,7 @@ public class ApplicationConnection {
                     lastInvocationTag = 0;
                 }
             } else {
-                buildAndSendVariableBurst(pendingInvocations, false);
+                buildAndSendVariableBurst(pendingInvocations);
             }
         }
     }
@@ -2467,12 +2433,9 @@ public class ApplicationConnection {
      * 
      * @param pendingInvocations
      *            List of RPC method invocations to send
-     * @param forceSync
-     *            Should we use synchronous request?
      */
     private void buildAndSendVariableBurst(
-            LinkedHashMap<String, MethodInvocation> pendingInvocations,
-            boolean forceSync) {
+            LinkedHashMap<String, MethodInvocation> pendingInvocations) {
         final StringBuffer req = new StringBuffer();
 
         while (!pendingInvocations.isEmpty()) {
@@ -2526,12 +2489,6 @@ public class ApplicationConnection {
             pendingInvocations.clear();
             // Keep tag string short
             lastInvocationTag = 0;
-            // Append all the bursts to this synchronous request
-            if (forceSync && !pendingBursts.isEmpty()) {
-                pendingInvocations = pendingBursts.get(0);
-                pendingBursts.remove(0);
-                req.append(VAR_BURST_SEPARATOR);
-            }
         }
 
         // Include the browser detail parameters if they aren't already sent
@@ -2552,7 +2509,7 @@ public class ApplicationConnection {
 
             getConfiguration().setWidgetsetVersionSent();
         }
-        makeUidlRequest(req.toString(), extraParams, forceSync);
+        makeUidlRequest(req.toString(), extraParams);
     }
 
     private boolean isJavascriptRpc(MethodInvocation invocation) {
@@ -3056,7 +3013,17 @@ public class ApplicationConnection {
     private ConnectorMap connectorMap = GWT.create(ConnectorMap.class);
 
     protected String getUidlSecurityKey() {
-        return uidlSecurityKey;
+        return getCsrfToken();
+    }
+
+    /**
+     * Gets the token (aka double submit cookie) that the server uses to protect
+     * against Cross Site Request Forgery attacks.
+     * 
+     * @return the CSRF token string
+     */
+    public String getCsrfToken() {
+        return csrfToken;
     }
 
     /**
@@ -3309,6 +3276,14 @@ public class ApplicationConnection {
     Timer forceHandleMessage = new Timer() {
         @Override
         public void run() {
+            if (responseHandlingLocks.isEmpty()) {
+                /*
+                 * Timer fired but there's nothing to clear. This can happen
+                 * with IE8 as Timer.cancel is not always effective (see GWT
+                 * issue 8101).
+                 */
+                return;
+            }
             VConsole.log("WARNING: reponse handling was never resumed, forcibly removing locks...");
             responseHandlingLocks.clear();
             handlePendingMessages();
@@ -3333,9 +3308,13 @@ public class ApplicationConnection {
     public void resumeResponseHandling(Object lock) {
         responseHandlingLocks.remove(lock);
         if (responseHandlingLocks.isEmpty()) {
-            VConsole.log("No more response handling locks, handling pending requests.");
+            // Cancel timer that breaks the lock
             forceHandleMessage.cancel();
-            handlePendingMessages();
+
+            if (!pendingUIDLMessages.isEmpty()) {
+                VConsole.log("No more response handling locks, handling pending requests.");
+                handlePendingMessages();
+            }
         }
     }
 
@@ -3344,11 +3323,19 @@ public class ApplicationConnection {
      * suspended.
      */
     private void handlePendingMessages() {
-        for (PendingUIDLMessage pending : pendingUIDLMessages) {
-            handleUIDLMessage(pending.getStart(), pending.getJsonText(),
-                    pending.getJson());
+        if (!pendingUIDLMessages.isEmpty()) {
+            /*
+             * Clear the list before processing enqueued messages to support
+             * reentrancy
+             */
+            List<PendingUIDLMessage> pendingMessages = pendingUIDLMessages;
+            pendingUIDLMessages = new ArrayList<PendingUIDLMessage>();
+
+            for (PendingUIDLMessage pending : pendingMessages) {
+                handleReceivedJSONMessage(pending.getStart(),
+                        pending.getJsonText(), pending.getJson());
+            }
         }
-        pendingUIDLMessages.clear();
     }
 
     private boolean handleErrorInDelegate(String details, int statusCode) {
@@ -3405,5 +3392,59 @@ public class ApplicationConnection {
         }
         return Util.getConnectorForElement(this, getUIConnector().getWidget(),
                 focusedElement);
+    }
+
+    /**
+     * Sets the status for the push connection.
+     * 
+     * @param enabled
+     *            <code>true</code> to enable the push connection;
+     *            <code>false</code> to disable the push connection.
+     */
+    public void setPushEnabled(boolean enabled) {
+        if (enabled && push == null) {
+            push = GWT.create(PushConnection.class);
+            push.init(this);
+        } else if (!enabled && push != null && push.isActive()) {
+            push.disconnect(new Command() {
+                @Override
+                public void execute() {
+                    push = null;
+                    /*
+                     * If push has been enabled again while we were waiting for
+                     * the old connection to disconnect, now is the right time
+                     * to open a new connection
+                     */
+                    if (uIConnector.getState().pushMode.isEnabled()) {
+                        setPushEnabled(true);
+                    }
+
+                    /*
+                     * Send anything that was enqueued while we waited for the
+                     * connection to close
+                     */
+                    if (pendingInvocations.size() > 0) {
+                        sendPendingVariableChanges();
+                    }
+                }
+            });
+        }
+    }
+
+    public void handlePushMessage(String message) {
+        handleJSONText(message, 200);
+    }
+
+    /**
+     * Set the label of the container element, where tooltip, notification and
+     * dialgs are added to.
+     * 
+     * @param overlayContainerLabel
+     *            label for the container
+     */
+    public void setOverlayContainerLabel(String overlayContainerLabel) {
+        Roles.getAlertRole().setAriaLabelProperty(
+                VOverlay.getOverlayContainer(this),
+                getUIConnector().getState().overlayContainerLabel);
     }
 }

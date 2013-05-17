@@ -40,7 +40,10 @@
 	<target name="checkstyle" depends="buildorder">
 		<subant buildpathref="build-path" target="checkstyle"/>
 	</target>
-	<target name="tests" depends="buildorder">
+	<target name="test" depends="buildorder">
+		<subant buildpathref="build-path" target="test" />
+	</target>
+	<target name="test-all" depends="buildorder">
 		<property name="war.file" location="result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
 		<parallel>
 			<sequential>
@@ -50,7 +53,7 @@
 					<property name="demo.war" value="${war.file}" />
 				</ant>
 			</sequential>
-			<subant buildpathref="build-path" target="tests" />
+			<subant buildpathref="build-path" target="test" />
 			<ant antfile="uitest/test.xml" target="test-package">
 				<property name="war.file" location="${war.file}" />
 			</ant>

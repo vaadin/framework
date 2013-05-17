@@ -96,4 +96,10 @@ public interface SCSSDocumentHandler extends DocumentHandler {
 
     void endKeyframeSelector();
 
+    void contentDirective();
+
+    void startIncludeContentBlock(String name);
+
+    void endIncludeContentBlock();
+
 }

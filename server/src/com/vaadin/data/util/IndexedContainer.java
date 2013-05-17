@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.data.Container;
@@ -954,29 +953,32 @@ public class IndexedContainer extends
         }
 
         /**
-         * Returns the value of the Property in human readable textual format.
-         * The return value should be assignable to the <code>setValue</code>
-         * method if the Property is not in read-only mode.
+         * Returns a string representation of this object. The returned string
+         * representation depends on if the legacy Property toString mode is
+         * enabled or disabled.
+         * <p>
+         * If legacy Property toString mode is enabled, returns the value of the
+         * <code>Property</code> converted to a String.
+         * </p>
+         * <p>
+         * If legacy Property toString mode is disabled, the string
+         * representation has no special meaning
+         * </p>
          * 
-         * @return <code>String</code> representation of the value stored in the
-         *         Property
-         * @deprecated As of 7.0, use {@link #getValue()} instead and possibly
-         *             toString on that
+         * @return A string representation of the value value stored in the
+         *         Property or a string representation of the Property object.
+         * @deprecated As of 7.0. To get the property value, use
+         *             {@link #getValue()} instead (and possibly toString on
+         *             that)
          */
         @Deprecated
         @Override
         public String toString() {
-            getLogger()
-                    .log(Level.WARNING,
-                            "You are using IndexedContainerProperty.toString() instead of getValue() to get the value for a {0}."
-                                    + " This will not be supported starting from Vaadin 7.1 "
-                                    + "(your debugger might call toString() and cause this message to appear).",
-                            getClass().getSimpleName());
-            Object v = getValue();
-            if (v == null) {
-                return null;
+            if (!LegacyPropertyHelper.isLegacyToStringEnabled()) {
+                return super.toString();
+            } else {
+                return LegacyPropertyHelper.legacyPropertyToString(this);
             }
-            return v.toString();
         }
 
         private Logger getLogger() {
@@ -1190,4 +1192,23 @@ public class IndexedContainer extends
         removeFilter(filter);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.util.AbstractInMemoryContainer#getContainerFilters()
+     */
+    @Override
+    public boolean hasContainerFilters() {
+        return super.hasContainerFilters();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.util.AbstractInMemoryContainer#getContainerFilters()
+     */
+    @Override
+    public Collection<Filter> getContainerFilters() {
+        return super.getContainerFilters();
+    }
 }

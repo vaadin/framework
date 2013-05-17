@@ -16,7 +16,7 @@
 	</path>
 
 	<target name="dependencies">
-		<!-- This is copied from common.xml to be able to add server.tests.source to the source path -->
+		<!-- This is copied from common.xml to be able to add server.test.source to the source path -->
 
 		<ivy:resolve resolveid="common" conf="build, build-provided" />
 		<ivy:cachepath pathid="classpath.compile.dependencies" conf="build, build-provided" />
@@ -28,12 +28,12 @@
 		<property name="result.dir" location="result" />
 		<property name="src" location="${result.dir}/../src" />
 		<property name="classes" location="${result.dir}/classes" />
-		<property name="server.tests.sources" location="${result.dir}/../../server/tests/src" />
+		<property name="server.test.sources" location="${result.dir}/../../server/tests/src" />
 		<mkdir dir="${classes}" />
 
 		<!-- TODO: Get rid of this -->
 		<javac destdir="${classes}" source="${vaadin.java.version}" target="${vaadin.java.version}" debug="true" encoding="UTF-8" includeantruntime="false">
-			<src path="${server.tests.sources}" />
+			<src path="${server.test.sources}" />
 			<include name="com/vaadin/tests/data/bean/**" />
 			<include name="com/vaadin/tests/VaadinClasses.java" />
 			<include name="com/vaadin/data/util/sqlcontainer/SQLTestsConstants.java" />
@@ -140,8 +140,8 @@
 	<target name="checkstyle">
 		<echo>Checkstyle is disabled for uitest for now</echo>
 	</target>
-	<target name="tests" depends="checkstyle">
-		<!--<antcall target="common.tests.run" />-->
+	<target name="test" depends="checkstyle">
+		<!--<antcall target="common.test.run" />-->
 		<echo>WHAT? No JUnit tests for ${module.name}!</echo>
 	</target>
 

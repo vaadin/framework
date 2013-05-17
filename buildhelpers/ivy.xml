@@ -18,7 +18,7 @@
         <conf name="build" />
         <conf name="build-provided" />
         <conf name="ide" visibility="private" />
-        <conf name="tests" />
+        <conf name="test" />
     </configurations>
     <publications>
         <artifact type="jar" />
@@ -28,7 +28,7 @@
 
     </publications>
     <dependencies>
-            <dependency org="commons-io" name="commons-io" rev="1.4" />
+            <dependency org="commons-io" name="commons-io" rev="2.2" />
     </dependencies>
 
 </ivy-module>

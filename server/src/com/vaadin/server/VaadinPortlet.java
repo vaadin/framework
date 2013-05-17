@@ -15,16 +15,10 @@
  */
 package com.vaadin.server;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.security.GeneralSecurityException;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
@@ -46,12 +40,11 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
 
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
-import com.vaadin.server.AbstractCommunicationManager.Callback;
-import com.vaadin.ui.UI;
+import com.vaadin.server.communication.PortletDummyRequestHandler;
+import com.vaadin.server.communication.PortletUIInitHandler;
 import com.vaadin.util.CurrentInstance;
 
 /**
@@ -257,24 +250,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
 
     }
 
-    public static class AbstractApplicationPortletWrapper implements Callback {
-
-        private final VaadinPortlet portlet;
-
-        public AbstractApplicationPortletWrapper(VaadinPortlet portlet) {
-            this.portlet = portlet;
-        }
-
-        @Override
-        public void criticalNotification(VaadinRequest request,
-                VaadinResponse response, String cap, String msg,
-                String details, String outOfSyncURL) throws IOException {
-            portlet.criticalNotification((VaadinPortletRequest) request,
-                    (VaadinPortletResponse) response, cap, msg, details,
-                    outOfSyncURL);
-        }
-    }
-
     /**
      * This portlet parameter is used to add styles to the main element. E.g
      * "height:500px" generates a style="height:500px" to the main element.
@@ -332,11 +307,16 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
         }
 
         DeploymentConfiguration deploymentConfiguration = createDeploymentConfiguration(initParameters);
-        vaadinService = createPortletService(deploymentConfiguration);
+        try {
+            vaadinService = createPortletService(deploymentConfiguration);
+        } catch (ServiceException e) {
+            throw new PortletException("Could not initialized VaadinPortlet", e);
+        }
         // Sets current service even though there are no request and response
         vaadinService.setCurrentInstances(null, null);
 
         portletInitialized();
+
         CurrentInstance.clearAll();
     }
 
@@ -350,15 +330,21 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
     }
 
     protected VaadinPortletService createPortletService(
-            DeploymentConfiguration deploymentConfiguration) {
-        return new VaadinPortletService(this, deploymentConfiguration);
+            DeploymentConfiguration deploymentConfiguration)
+            throws ServiceException {
+        VaadinPortletService service = new VaadinPortletService(this,
+                deploymentConfiguration);
+        service.init();
+        return service;
     }
 
     /**
      * @author Vaadin Ltd
      * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future
-     *             version
+     * @deprecated As of 7.0. This is no longer used and only provided for
+     *             backwards compatibility. Each {@link RequestHandler} can
+     *             individually decide whether it wants to handle a request or
+     *             not.
      */
     @Deprecated
     protected enum RequestType {
@@ -369,8 +355,10 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
      * @param vaadinRequest
      * @return
      * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future
-     *             version
+     * @deprecated As of 7.0. This is no longer used and only provided for
+     *             backwards compatibility. Each {@link RequestHandler} can
+     *             individually decide whether it wants to handle a request or
+     *             not.
      */
     @Deprecated
     protected RequestType getRequestType(VaadinPortletRequest vaadinRequest) {
@@ -381,7 +369,7 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
             ResourceRequest resourceRequest = (ResourceRequest) request;
             if (ServletPortletHelper.isUIDLRequest(vaadinRequest)) {
                 return RequestType.UIDL;
-            } else if (isBrowserDetailsRequest(resourceRequest)) {
+            } else if (PortletUIInitHandler.isUIInitRequest(vaadinRequest)) {
                 return RequestType.BROWSER_DETAILS;
             } else if (ServletPortletHelper.isFileUploadRequest(vaadinRequest)) {
                 return RequestType.FILE_UPLOAD;
@@ -392,12 +380,9 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
                 return RequestType.APP;
             } else if (ServletPortletHelper.isHeartbeatRequest(vaadinRequest)) {
                 return RequestType.HEARTBEAT;
-            } else if (isDummyRequest(resourceRequest)) {
+            } else if (PortletDummyRequestHandler.isDummyRequest(vaadinRequest)) {
                 return RequestType.DUMMY;
             } else {
-                // these are not served with ResourceRequests, but by a servlet
-                // on the portal at portlet root path (configured by default by
-                // Liferay at deployment time, similar on other portals)
                 return RequestType.STATIC_FILE;
             }
         } else if (request instanceof ActionRequest) {
@@ -406,16 +391,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
             return RequestType.EVENT;
         }
         return RequestType.UNKNOWN;
-    }
-
-    private boolean isBrowserDetailsRequest(ResourceRequest request) {
-        return request.getResourceID() != null
-                && request.getResourceID().equals("v-browserDetails");
-    }
-
-    private boolean isDummyRequest(ResourceRequest request) {
-        return request.getResourceID() != null
-                && request.getResourceID().equals("DUMMY");
     }
 
     /**
@@ -430,145 +405,14 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
     @Deprecated
     protected void handleRequest(PortletRequest request,
             PortletResponse response) throws PortletException, IOException {
-        RequestTimer requestTimer = new RequestTimer();
-        requestTimer.start();
 
         CurrentInstance.clearAll();
         setCurrent(this);
-
         try {
-            AbstractApplicationPortletWrapper portletWrapper = new AbstractApplicationPortletWrapper(
-                    this);
-
-            VaadinPortletRequest vaadinRequest = createVaadinRequest(request);
-
-            VaadinPortletResponse vaadinResponse = new VaadinPortletResponse(
-                    response, getService());
-
-            getService().setCurrentInstances(vaadinRequest, vaadinResponse);
-
-            RequestType requestType = getRequestType(vaadinRequest);
-
-            if (requestType == RequestType.UNKNOWN) {
-                handleUnknownRequest(request, response);
-            } else if (requestType == RequestType.DUMMY) {
-                /*
-                 * This dummy page is used by action responses to redirect to,
-                 * in order to prevent the boot strap code from being rendered
-                 * into strange places such as iframes.
-                 */
-                ((ResourceResponse) response).setContentType("text/html");
-                final OutputStream out = ((ResourceResponse) response)
-                        .getPortletOutputStream();
-                final PrintWriter outWriter = new PrintWriter(
-                        new BufferedWriter(new OutputStreamWriter(out, "UTF-8")));
-                outWriter.print("<html><body>dummy page</body></html>");
-                outWriter.close();
-            } else {
-                VaadinPortletSession vaadinSession = null;
-
-                try {
-                    // TODO What about PARAM_UNLOADBURST &
-                    // redirectToApplication??
-
-                    vaadinSession = (VaadinPortletSession) getService()
-                            .findVaadinSession(vaadinRequest);
-                    if (vaadinSession == null) {
-                        return;
-                    }
-
-                    PortletCommunicationManager communicationManager = (PortletCommunicationManager) vaadinSession
-                            .getCommunicationManager();
-
-                    if (requestType == RequestType.PUBLISHED_FILE) {
-                        communicationManager.servePublishedFile(vaadinRequest,
-                                vaadinResponse);
-                        return;
-                    } else if (requestType == RequestType.HEARTBEAT) {
-                        communicationManager.handleHeartbeatRequest(
-                                vaadinRequest, vaadinResponse, vaadinSession);
-                        return;
-                    }
-
-                    /* Update browser information from request */
-                    vaadinSession.getBrowser().updateRequestDetails(
-                            vaadinRequest);
-
-                    /* Notify listeners */
-
-                    // Finds the right UI
-                    UI uI = null;
-                    if (requestType == RequestType.UIDL) {
-                        uI = getService().findUI(vaadinRequest);
-                    }
-
-                    // TODO Should this happen before or after the transaction
-                    // starts?
-                    if (request instanceof RenderRequest) {
-                        vaadinSession.firePortletRenderRequest(uI,
-                                (RenderRequest) request,
-                                (RenderResponse) response);
-                    } else if (request instanceof ActionRequest) {
-                        vaadinSession.firePortletActionRequest(uI,
-                                (ActionRequest) request,
-                                (ActionResponse) response);
-                    } else if (request instanceof EventRequest) {
-                        vaadinSession.firePortletEventRequest(uI,
-                                (EventRequest) request,
-                                (EventResponse) response);
-                    } else if (request instanceof ResourceRequest) {
-                        vaadinSession.firePortletResourceRequest(uI,
-                                (ResourceRequest) request,
-                                (ResourceResponse) response);
-                    }
-
-                    /* Handle the request */
-                    if (requestType == RequestType.FILE_UPLOAD) {
-                        // UI is resolved in handleFileUpload by
-                        // PortletCommunicationManager
-                        communicationManager.handleFileUpload(vaadinSession,
-                                vaadinRequest, vaadinResponse);
-                        return;
-                    } else if (requestType == RequestType.BROWSER_DETAILS) {
-                        communicationManager.handleBrowserDetailsRequest(
-                                vaadinRequest, vaadinResponse, vaadinSession);
-                        return;
-                    } else if (requestType == RequestType.UIDL) {
-                        // Handles AJAX UIDL requests
-                        communicationManager.handleUidlRequest(vaadinRequest,
-                                vaadinResponse, portletWrapper, uI);
-
-                        // Ensure that the browser does not cache UIDL
-                        // responses.
-                        // iOS 6 Safari requires this (#9732)
-                        response.setProperty("Cache-Control", "no-cache");
-                        return;
-                    } else {
-                        handleOtherRequest(vaadinRequest, vaadinResponse,
-                                requestType, vaadinSession,
-                                communicationManager);
-                    }
-                } catch (final SessionExpiredException e) {
-                    // TODO Figure out a better way to deal with
-                    // SessionExpiredExceptions
-                    getLogger().finest("A user session has expired");
-                } catch (final GeneralSecurityException e) {
-                    // TODO Figure out a better way to deal with
-                    // GeneralSecurityExceptions
-                    getLogger()
-                            .fine("General security exception, the security key was probably incorrect.");
-                } catch (final Throwable e) {
-                    handleServiceException(vaadinRequest, vaadinResponse,
-                            vaadinSession, e);
-                } finally {
-                    if (vaadinSession != null) {
-                        getService().cleanupSession(vaadinSession);
-                        requestTimer.stop(vaadinSession);
-                    }
-                }
-            }
-        } finally {
-            CurrentInstance.clearAll();
+            getService().handleRequest(createVaadinRequest(request),
+                    createVaadinResponse(response));
+        } catch (ServiceException e) {
+            throw new PortletException(e);
         }
     }
 
@@ -592,50 +436,12 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
 
     }
 
+    private VaadinPortletResponse createVaadinResponse(PortletResponse response) {
+        return new VaadinPortletResponse(response, getService());
+    }
+
     protected VaadinPortletService getService() {
         return vaadinService;
-    }
-
-    private void handleUnknownRequest(PortletRequest request,
-            PortletResponse response) {
-        getLogger().warning("Unknown request type");
-    }
-
-    /**
-     * Handle a portlet request that is not for static files, UIDL or upload.
-     * Also render requests are handled here.
-     * 
-     * This method is called after starting the application and calling portlet
-     * and transaction listeners.
-     * 
-     * @param request
-     * @param response
-     * @param requestType
-     * @param vaadinSession
-     * @param vaadinSession
-     * @param communicationManager
-     * @throws PortletException
-     * @throws IOException
-     * @throws MalformedURLException
-     */
-    private void handleOtherRequest(VaadinPortletRequest request,
-            VaadinResponse response, RequestType requestType,
-            VaadinSession vaadinSession,
-            PortletCommunicationManager communicationManager)
-            throws PortletException, IOException, MalformedURLException {
-        if (requestType == RequestType.APP || requestType == RequestType.RENDER) {
-            if (!communicationManager.handleOtherRequest(request, response)) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND,
-                        "Not found");
-            }
-        } else if (requestType == RequestType.EVENT) {
-            // nothing to do, listeners do all the work
-        } else if (requestType == RequestType.ACTION) {
-            // nothing to do, listeners do all the work
-        } else {
-            throw new IllegalStateException(
-                    "handleRequest() without anything to do - should never happen!");
-        }
     }
 
     @Override
@@ -676,98 +482,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
     public void serveResource(ResourceRequest request, ResourceResponse response)
             throws PortletException, IOException {
         handleRequest(request, response);
-    }
-
-    private void handleServiceException(VaadinPortletRequest request,
-            VaadinPortletResponse response, VaadinSession vaadinSession,
-            Throwable e) throws IOException, PortletException {
-        // TODO Check that this error handler is working when running inside a
-        // portlet
-
-        // if this was an UIDL request, response UIDL back to client
-        ErrorHandler errorHandler = ErrorEvent.findErrorHandler(vaadinSession);
-        if (getRequestType(request) == RequestType.UIDL) {
-            SystemMessages ci = getService().getSystemMessages(
-                    ServletPortletHelper.findLocale(null, vaadinSession,
-                            request), request);
-            criticalNotification(request, response,
-                    ci.getInternalErrorCaption(), ci.getInternalErrorMessage(),
-                    null, ci.getInternalErrorURL());
-            if (errorHandler != null) {
-                errorHandler.error(new ErrorEvent(e));
-            }
-        } else {
-            if (errorHandler != null) {
-                errorHandler.error(new ErrorEvent(e));
-            } else {
-                // Re-throw other exceptions
-                throw new PortletException(e);
-            }
-        }
-    }
-
-    /**
-     * Send notification to client's application. Used to notify client of
-     * critical errors and session expiration due to long inactivity. Server has
-     * no knowledge of what application client refers to.
-     * 
-     * @param request
-     *            the Portlet request instance.
-     * @param response
-     *            the Portlet response to write to.
-     * @param caption
-     *            for the notification
-     * @param message
-     *            for the notification
-     * @param details
-     *            a detail message to show in addition to the passed message.
-     *            Currently shown directly but could be hidden behind a details
-     *            drop down.
-     * @param url
-     *            url to load after message, null for current page
-     * @throws IOException
-     *             if the writing failed due to input/output error.
-     * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future
-     *             version
-     */
-    @Deprecated
-    void criticalNotification(VaadinPortletRequest request,
-            VaadinPortletResponse response, String caption, String message,
-            String details, String url) throws IOException {
-
-        // clients JS app is still running, but server application either
-        // no longer exists or it might fail to perform reasonably.
-        // send a notification to client's application and link how
-        // to "restart" application.
-
-        if (caption != null) {
-            caption = "\"" + caption + "\"";
-        }
-        if (details != null) {
-            if (message == null) {
-                message = details;
-            } else {
-                message += "<br/><br/>" + details;
-            }
-        }
-        if (message != null) {
-            message = "\"" + message + "\"";
-        }
-        if (url != null) {
-            url = "\"" + url + "\"";
-        }
-
-        // Set the response type
-        response.setContentType("application/json; charset=UTF-8");
-        final OutputStream out = response.getOutputStream();
-        final PrintWriter outWriter = new PrintWriter(new BufferedWriter(
-                new OutputStreamWriter(out, "UTF-8")));
-        outWriter.print("for(;;);[{\"changes\":[], \"meta\" : {"
-                + "\"appError\": {" + "\"caption\":" + caption + ","
-                + "\"message\" : " + message + "," + "\"url\" : " + url
-                + "}}, \"resources\": {}, \"locales\":[]}]");
-        outWriter.close();
     }
 
     private static final Logger getLogger() {

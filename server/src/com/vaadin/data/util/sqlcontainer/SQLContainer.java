@@ -590,11 +590,30 @@ public class SQLContainer implements Container, Container.Filterable,
     /**
      * {@inheritDoc}
      */
-
     @Override
     public void removeAllContainerFilters() {
         filters.clear();
         refresh();
+    }
+
+    /**
+     * Returns true if any filters have been applied to the container.
+     * 
+     * @return true if the container has filters applied, false otherwise
+     * @since 7.1
+     */
+    public boolean hasContainerFilters() {
+        return !getContainerFilters().isEmpty();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.Container.Filterable#getContainerFilters()
+     */
+    @Override
+    public Collection<Filter> getContainerFilters() {
+        return Collections.unmodifiableCollection(filters);
     }
 
     /**********************************************/
@@ -1818,4 +1837,5 @@ public class SQLContainer implements Container, Container.Filterable,
     private static final Logger getLogger() {
         return Logger.getLogger(SQLContainer.class.getName());
     }
+
 }

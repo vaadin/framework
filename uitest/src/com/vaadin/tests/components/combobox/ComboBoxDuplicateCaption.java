@@ -38,6 +38,7 @@ public class ComboBoxDuplicateCaption extends TestBase {
         box.setImmediate(true);
         box.addValueChangeListener(new ValueChangeListener() {
 
+            @Override
             public void valueChange(
                     com.vaadin.data.Property.ValueChangeEvent event) {
                 Person p = (Person) event.getProperty().getValue();

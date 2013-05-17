@@ -61,24 +61,30 @@ public class LoginForm extends CustomComponent {
     private Embedded iframe = new Embedded();
 
     @Override
-    public boolean handleConnectorRequest(VaadinRequest request,
-            VaadinResponse response, String path) throws IOException {
-        String method = VaadinServletService.getCurrentServletRequest()
-                .getMethod();
+    public boolean handleConnectorRequest(final VaadinRequest request,
+            final VaadinResponse response, String path) throws IOException {
         if (!path.equals("login")) {
             return super.handleConnectorRequest(request, response, path);
         }
-        String responseString = null;
-        if (method.equalsIgnoreCase("post")) {
-            responseString = handleLogin(request);
-        } else {
-            responseString = getLoginHTML();
-        }
+        final StringBuilder responseBuilder = new StringBuilder();
 
-        if (responseString != null) {
+        getUI().access(new Runnable() {
+            @Override
+            public void run() {
+                String method = VaadinServletService.getCurrentServletRequest()
+                        .getMethod();
+                if (method.equalsIgnoreCase("post")) {
+                    responseBuilder.append(handleLogin(request));
+                } else {
+                    responseBuilder.append(getLoginHTML());
+                }
+            }
+        });
+
+        if (responseBuilder.length() > 0) {
             response.setContentType("text/html; charset=utf-8");
             response.setCacheTime(-1);
-            response.getWriter().write(responseString);
+            response.getWriter().write(responseBuilder.toString());
             return true;
         } else {
             return false;

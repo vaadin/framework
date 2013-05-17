@@ -194,6 +194,7 @@ public class ColorPickerHistory extends CustomComponent implements
      * @param listener
      *            The listener
      */
+    @Override
     public void addColorChangeListener(ColorChangeListener listener) {
         addListener(ColorChangeEvent.class, listener, COLOR_CHANGE_METHOD);
     }
@@ -204,6 +205,7 @@ public class ColorPickerHistory extends CustomComponent implements
      * @param listener
      *            The listener
      */
+    @Override
     public void removeColorChangeListener(ColorChangeListener listener) {
         removeListener(ColorChangeEvent.class, listener);
     }

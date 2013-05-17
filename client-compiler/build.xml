@@ -60,8 +60,8 @@ gwt.svnrev=${git.revision}</echo>
 		</antcall>
 	</target>
 
-	<target name="tests" depends="checkstyle">
-		<!--<antcall target="common.tests.run" />-->
+	<target name="test" depends="checkstyle">
+		<!--<antcall target="common.test.run" />-->
 		<echo>WHAT? No tests for ${module.name}!</echo>
 	</target>
 

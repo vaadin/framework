@@ -15,18 +15,23 @@
  */
 package com.vaadin.data.fieldgroup;
 
+import java.util.Date;
 import java.util.EnumSet;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.fieldgroup.FieldGroup.BindException;
+import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.Field;
+import com.vaadin.ui.InlineDateField;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.OptionGroup;
+import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
@@ -39,6 +44,8 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
     public <T extends Field> T createField(Class<?> type, Class<T> fieldType) {
         if (Enum.class.isAssignableFrom(type)) {
             return createEnumField(type, fieldType);
+        } else if (Date.class.isAssignableFrom(type)) {
+            return createDateField(type, fieldType);
         } else if (Boolean.class.isAssignableFrom(type)
                 || boolean.class.isAssignableFrom(type)) {
             return createBooleanField(fieldType);
@@ -68,6 +75,25 @@ public class DefaultFieldGroupFieldFactory implements FieldGroupFieldFactory {
         }
 
         return null;
+    }
+
+    private <T extends Field> T createDateField(Class<?> type,
+            Class<T> fieldType) {
+        AbstractField field;
+
+        if (InlineDateField.class.isAssignableFrom(fieldType)) {
+            field = new InlineDateField();
+        } else if (DateField.class.isAssignableFrom(fieldType)
+                || fieldType == Field.class) {
+            field = new PopupDateField();
+        } else if (AbstractTextField.class.isAssignableFrom(fieldType)) {
+            field = createAbstractTextField((Class<? extends AbstractTextField>) fieldType);
+        } else {
+            return null;
+        }
+
+        field.setImmediate(true);
+        return (T) field;
     }
 
     protected AbstractSelect createCompatibleSelect(

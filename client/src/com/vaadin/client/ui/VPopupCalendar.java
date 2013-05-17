@@ -18,6 +18,9 @@ package com.vaadin.client.ui;
 
 import java.util.Date;
 
+import com.google.gwt.aria.client.Id;
+import com.google.gwt.aria.client.LiveValue;
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -25,18 +28,25 @@ import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.VCalendarPanel.FocusOutListener;
 import com.vaadin.client.ui.VCalendarPanel.SubmitListener;
+import com.vaadin.client.ui.aria.AriaHelper;
+import com.vaadin.shared.ui.datefield.PopupDateFieldState;
 import com.vaadin.shared.ui.datefield.Resolution;
 
 /**
@@ -68,6 +78,12 @@ public class VPopupCalendar extends VTextualDate implements Field,
 
     private boolean textFieldEnabled = true;
 
+    private String captionId;
+
+    private Label selectedDate;
+
+    private Element descriptionForAssisitveDevicesElement;
+
     public VPopupCalendar() {
         super();
 
@@ -75,7 +91,22 @@ public class VPopupCalendar extends VTextualDate implements Field,
         calendarToggle.addClickHandler(this);
         // -2 instead of -1 to avoid FocusWidget.onAttach to reset it
         calendarToggle.getElement().setTabIndex(-2);
+
+        Roles.getButtonRole().set(calendarToggle.getElement());
+        Roles.getButtonRole().setAriaHiddenState(calendarToggle.getElement(),
+                true);
+
         add(calendarToggle);
+
+        // Description of the usage of the widget for assisitve device users
+        descriptionForAssisitveDevicesElement = DOM.createDiv();
+        descriptionForAssisitveDevicesElement
+                .setInnerText(PopupDateFieldState.DESCRIPTION_FOR_ASSISTIVE_DEVICES);
+        AriaHelper.ensureHasId(descriptionForAssisitveDevicesElement);
+        Roles.getTextboxRole().setAriaDescribedbyProperty(text.getElement(),
+                Id.of(descriptionForAssisitveDevicesElement));
+        AriaHelper.setVisibleForAssistiveDevicesOnly(
+                descriptionForAssisitveDevicesElement, true);
 
         calendar = GWT.create(VCalendarPanel.class);
         calendar.setParentField(this);
@@ -87,6 +118,14 @@ public class VPopupCalendar extends VTextualDate implements Field,
                 return true;
             }
         });
+
+        // FIXME: Problem is, that the element with the provided id does not
+        // exist yet in html. This is the same problem as with the context menu.
+        // Apply here the same fix (#11795)
+        Roles.getTextboxRole().setAriaControlsProperty(text.getElement(),
+                Id.of(calendar.getElement()));
+        Roles.getButtonRole().setAriaControlsProperty(
+                calendarToggle.getElement(), Id.of(calendar.getElement()));
 
         calendar.setSubmitListener(new SubmitListener() {
             @Override
@@ -109,7 +148,20 @@ public class VPopupCalendar extends VTextualDate implements Field,
         popup = new VOverlay(true, true, true);
         popup.setOwner(this);
 
-        popup.setWidget(calendar);
+        FlowPanel wrapper = new FlowPanel();
+        selectedDate = new Label();
+        selectedDate.setStyleName(getStylePrimaryName() + "-selecteddate");
+        AriaHelper.setVisibleForAssistiveDevicesOnly(selectedDate.getElement(),
+                true);
+
+        Roles.getTextboxRole().setAriaLiveProperty(selectedDate.getElement(),
+                LiveValue.ASSERTIVE);
+        Roles.getTextboxRole().setAriaAtomicProperty(selectedDate.getElement(),
+                true);
+        wrapper.add(selectedDate);
+        wrapper.add(calendar);
+
+        popup.setWidget(wrapper);
         popup.addCloseHandler(this);
 
         DOM.setElementProperty(calendar.getElement(), "id",
@@ -118,6 +170,19 @@ public class VPopupCalendar extends VTextualDate implements Field,
         sinkEvents(Event.ONKEYDOWN);
 
         updateStyleNames();
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+        DOM.appendChild(RootPanel.get().getElement(),
+                descriptionForAssisitveDevicesElement);
+    }
+
+    @Override
+    protected void onDetach() {
+        super.onDetach();
+        descriptionForAssisitveDevicesElement.removeFromParent();
     }
 
     @SuppressWarnings("deprecation")
@@ -181,8 +246,54 @@ public class VPopupCalendar extends VTextualDate implements Field,
         text.setEnabled(textFieldEnabled);
         if (textFieldEnabled) {
             calendarToggle.setTabIndex(-1);
+            Roles.getButtonRole().setAriaHiddenState(
+                    calendarToggle.getElement(), true);
         } else {
             calendarToggle.setTabIndex(0);
+            Roles.getButtonRole().setAriaHiddenState(
+                    calendarToggle.getElement(), false);
+        }
+
+        handleAriaAttributes();
+    }
+
+    @Override
+    public void bindAriaCaption(Element captionElement) {
+        if (captionElement == null) {
+            captionId = null;
+        } else {
+            captionId = captionElement.getId();
+        }
+
+        if (isTextFieldEnabled()) {
+            super.bindAriaCaption(captionElement);
+        } else {
+            AriaHelper.bindCaption(calendarToggle, captionElement);
+        }
+
+        handleAriaAttributes();
+    }
+
+    private void handleAriaAttributes() {
+        Widget removeFromWidget;
+        Widget setForWidget;
+
+        if (isTextFieldEnabled()) {
+            setForWidget = text;
+            removeFromWidget = calendarToggle;
+        } else {
+            setForWidget = calendarToggle;
+            removeFromWidget = text;
+        }
+
+        Roles.getFormRole().removeAriaLabelledbyProperty(
+                removeFromWidget.getElement());
+        if (captionId == null) {
+            Roles.getFormRole().removeAriaLabelledbyProperty(
+                    setForWidget.getElement());
+        } else {
+            Roles.getFormRole().setAriaLabelledbyProperty(
+                    setForWidget.getElement(), Id.of(captionId));
         }
     }
 
@@ -270,10 +381,6 @@ public class VPopupCalendar extends VTextualDate implements Field,
                         }
                     }
 
-                    // fix size
-                    popup.setWidth(w + "px");
-                    popup.setHeight(h + "px");
-
                     popup.setPopupPosition(l,
                             t + calendarToggle.getOffsetHeight() + 2);
 
@@ -348,6 +455,32 @@ public class VPopupCalendar extends VTextualDate implements Field,
      */
     public void setFocus(boolean focus) {
         calendar.setFocus(focus);
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+
+        if (enabled) {
+            Roles.getButtonRole().setAriaDisabledState(
+                    calendarToggle.getElement(), true);
+        } else {
+            Roles.getButtonRole().setAriaDisabledState(
+                    calendarToggle.getElement(), false);
+        }
+    }
+
+    /**
+     * Sets the content of a special field for assistive devices, so that they
+     * can recognize the change and inform the user (reading out in case of
+     * screen reader)
+     * 
+     * @param selectedDate
+     *            Date that is currently selected
+     */
+    public void setFocusedDate(Date selectedDate) {
+        this.selectedDate.setText(DateTimeFormat.getFormat("dd, MMMM, yyyy")
+                .format(selectedDate));
     }
 
     /**
@@ -437,6 +570,52 @@ public class VPopupCalendar extends VTextualDate implements Field,
         }
 
         return super.getSubPartName(subElement);
+    }
+
+    /**
+     * Set a description that explains the usage of the Widget for users of
+     * assistive devices.
+     * 
+     * @param descriptionForAssistiveDevices
+     *            String with the description
+     */
+    public void setDescriptionForAssistiveDevices(
+            String descriptionForAssistiveDevices) {
+        descriptionForAssisitveDevicesElement
+                .setInnerText(descriptionForAssistiveDevices);
+    }
+
+    /**
+     * Get the description that explains the usage of the Widget for users of
+     * assistive devices.
+     * 
+     * @return String with the description
+     */
+    public String getDescriptionForAssistiveDevices() {
+        return descriptionForAssisitveDevicesElement.getInnerText();
+    }
+
+    /**
+     * Sets the start range for this component. The start range is inclusive,
+     * and it depends on the current resolution, what is considered inside the
+     * range.
+     * 
+     * @param startDate
+     *            - the allowed range's start date
+     */
+    public void setRangeStart(Date rangeStart) {
+        calendar.setRangeStart(rangeStart);
+    }
+
+    /**
+     * Sets the end range for this component. The end range is inclusive, and it
+     * depends on the current resolution, what is considered inside the range.
+     * 
+     * @param endDate
+     *            - the allowed range's end date
+     */
+    public void setRangeEnd(Date rangeEnd) {
+        calendar.setRangeEnd(rangeEnd);
     }
 
 }

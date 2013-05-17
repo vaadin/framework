@@ -11,7 +11,7 @@
         <conf name="build" />
         <conf name="build-provided" />
         <conf name="ide" visibility="private" />
-        <conf name="tests" />
+        <conf name="test" />
     </configurations>
     <publications>
         <artifact type="jar" ext="jar" />
@@ -23,17 +23,17 @@
         <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->
         <dependency org="com.vaadin" name="vaadin-shared"
-            rev="${vaadin.version}" conf="build,tests" />
+            rev="${vaadin.version}" conf="build,test->build" />
 
         <!-- Required build libs -->
         <dependency org="org.apache.commons" name="commons-jexl"
-            rev="2.1.1" conf="build,ide,tests->default" />
+            rev="2.1.1" conf="build,ide,test->default" />
         <dependency org="org.w3c.css" name="sac" rev="1.3"
-            conf="build,ide,tests->default" />
+            conf="build,ide,test->default" />
         <dependency org="net.sourceforge.cssparser" name="cssparser"
-            rev="0.9.5" conf="build,ide,tests->default" />
+            rev="0.9.5" conf="build,ide,test->default" />
         <dependency org="commons-cli" name="commons-cli" rev="1.2"
-            conf="build,ide,tests->default" />
+            conf="build,ide,test->default" />
 
         <!-- Provided build libs -->
         <dependency org="javax.servlet" name="servlet-api"
@@ -41,7 +41,7 @@
 
         <!-- Testing libs -->
         <dependency org="junit" name="junit" rev="4.5"
-            conf="tests -> default" />
+            conf="test -> default" />
 
         <!-- Internally used, for now -->
         <dependency org="com.carrotsearch" name="smartsprites"

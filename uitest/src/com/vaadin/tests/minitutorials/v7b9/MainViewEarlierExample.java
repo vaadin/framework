@@ -41,6 +41,7 @@ public class MainViewEarlierExample extends Panel implements View {
         // login/logout toggle so we can test this
         Button logInOut = new Button("Toggle login",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         Object user = ((NavigationtestUI) UI.getCurrent())
                                 .getLoggedInUser();

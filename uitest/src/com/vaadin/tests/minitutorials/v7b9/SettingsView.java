@@ -43,6 +43,7 @@ public class SettingsView extends Panel implements View {
         date.setBuffered(true);
         // show buttons when date is changed
         date.addValueChangeListener(new ValueChangeListener() {
+            @Override
             public void valueChange(ValueChangeEvent event) {
                 hideOrShowButtons();
                 pendingViewAndParameters = null;
@@ -51,6 +52,7 @@ public class SettingsView extends Panel implements View {
 
         // commit the TextField changes when "Save" is clicked
         apply = new Button("Apply", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 date.commit();
                 hideOrShowButtons();
@@ -61,6 +63,7 @@ public class SettingsView extends Panel implements View {
 
         // Discard the TextField changes when "Cancel" is clicked
         cancel = new Button("Cancel", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 date.discard();
                 hideOrShowButtons();
@@ -72,6 +75,7 @@ public class SettingsView extends Panel implements View {
 
         // attach a listener so that we'll get asked isViewChangeAllowed?
         navigator.addViewChangeListener(new ViewChangeListener() {
+            @Override
             public boolean beforeViewChange(ViewChangeEvent event) {
                 if (event.getOldView() == SettingsView.this
                         && date.isModified()) {
@@ -93,6 +97,7 @@ public class SettingsView extends Panel implements View {
                 }
             }
 
+            @Override
             public void afterViewChange(ViewChangeEvent event) {
                 pendingViewAndParameters = null;
             }

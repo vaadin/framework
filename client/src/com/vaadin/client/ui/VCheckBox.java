@@ -22,9 +22,12 @@ import com.google.gwt.user.client.Event;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Util;
 import com.vaadin.client.VTooltip;
+import com.vaadin.client.ui.aria.AriaHelper;
+import com.vaadin.client.ui.aria.HandlesAriaInvalid;
+import com.vaadin.client.ui.aria.HandlesAriaRequired;
 
 public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
-        Field {
+        Field, HandlesAriaInvalid, HandlesAriaRequired {
 
     public static final String CLASSNAME = "v-checkbox";
 
@@ -69,4 +72,23 @@ public class VCheckBox extends com.google.gwt.user.client.ui.CheckBox implements
         }
     }
 
+    /**
+     * Gives access to the input element.
+     * 
+     * @return Element of the CheckBox itself
+     */
+    private Element getCheckBoxElement() {
+        // FIXME: Would love to use a better way to access the checkbox element
+        return (Element) getElement().getFirstChildElement();
+    }
+
+    @Override
+    public void setAriaRequired(boolean required) {
+        AriaHelper.handleInputRequired(getCheckBoxElement(), required);
+    }
+
+    @Override
+    public void setAriaInvalid(boolean invalid) {
+        AriaHelper.handleInputInvalid(getCheckBoxElement(), invalid);
+    }
 }

@@ -139,7 +139,7 @@ public class ServerRpcManager<T extends ServerRpc> implements Serializable {
      * 
      * @return RPC interface type
      */
-    protected Class<T> getRpcInterface() {
+    public Class<T> getRpcInterface() {
         return rpcInterface;
     }
 

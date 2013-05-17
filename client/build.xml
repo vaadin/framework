@@ -20,7 +20,7 @@
 		-->
 		<fileset file="${gwt.user.jar}" />
 	</path>
-	<path id="classpath.tests.custom" />
+	<path id="classpath.test.custom" />
 
 	<target name="jar">
 		<property name="jar.file" location="${result.dir}/lib/${module.name}-${vaadin.version}.jar" />
@@ -69,8 +69,8 @@
 		</antcall>
 	</target>
 
-	<target name="tests" depends="checkstyle">
-		<antcall target="common.tests.run" />
+	<target name="test" depends="checkstyle">
+		<antcall target="common.test.run" />
 	</target>
 
 </project>

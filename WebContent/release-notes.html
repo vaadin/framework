@@ -38,9 +38,8 @@
       <h2 id="tableofcontents">Release Notes for Vaadin Framework @version@</h2>
       <ul>
         <li><a href="#overview">Overview of Vaadin @version@ Release</a></li>
-        <li><a href="#security-fixes">Security fixes in Vaadin @version-minor@</a></li>
-        <li><a href="#changelog">Complete change log for Vaadin @version@</a></li>
         <li><a href="#enhancements">Enhancements in Vaadin @version-minor@</a></li>
+        <li><a href="#changelog">Complete change log for Vaadin @version@</a></li>
         <li><a href="#limitations">Limitations in @version-minor@</a></li>
         <li><a href="#vaadin">Vaadin Installation</a></li>
         <li><a href="#package">Package Contents</a></li>
@@ -54,48 +53,62 @@
       <h2 id="overview">Overview of Vaadin @version@ Release</h2>
 
       <p>
-        Vaadin @version@ is a maintenance release that includes a number of important bug
-        fixes, as listed in the <a href="#changelog">change log</a> below. You can also
-        view the <a
+        Vaadin @version@ is a feature release that includes a number of enhancements as
+        well as important bug fixes, as listed in the <a href="#changelog">change log</a>
+        below. You can also view the <a
         href="http://dev.vaadin.com/query?status=closed&resolution=fixed&milestone=Vaadin+@version@&order=priority">list
         of the closed issues</a> at the Vaadin developer's site.
       </p>
 
-      <p>
-        For a list of enhancements in the last feature release, see <a
-        href="#enhancements">Enhancements in Vaadin @version-minor@</a> and the <a
-        href="http://vaadin.com/download/release/@version-minor@/@version-minor@.0/release-notes.html">Release
-        Notes for Vaadin @version-minor@.0</a>.
-      </p>
-
-      <!-- ================================================================ -->
-      <h2 id="security-fixes">Security fixes in Vaadin Framework 7.0.4</h2>
+      <h2 id="enhancements">Enhancements in Vaadin @version-minor@</h2>
 
       <p>
-        Vaadin 7.0.4 fixes a critical security issue discovered during an
-        internal review. All users of Vaadin portlets are strongly urged to
-        upgrade to Vaadin 7.0.4 or Vaadin 6.8.10 immediately.
+        The @version-minor@ includes many major and minor enhancements. Below is a list of
+        the most notable changes:
       </p>
+      
+      <ul>
+        <li>Server push based on Atmosphere</li>
+        <li>CSS injection through a <b>Styles</b> object from <tt>Page.getCurrent().getStyles()</tt></li>
+        <li>Enhanced Debug Window</li>
+        <li><b>Calendar</b> is now included in the core framework</li>
+        <li>The <b>VaadinServlet</b>/-<b>Portlet</b> and <b>-Service</b> have been refactored</li>
+        <li><b>DateField</b> can now have a range</li>
+        <li><b>Window</b> has Maximize/Restore controls</li>
+        <li>WAI-ARIA support for form fields, <b>Button</b>, and <b>Tree</b></li>
+        <li>The page can be reloaded programmatically with <tt>Page.reload()</tt></li>
+        <li>The legacy behavior of Property.toString() can be toggled using the <tt>legacyPropertyToString</tt> init parameter</li>
+        <li>Sass compiler now supports arithmetics</li>
+        <li>Sass compiler now supports <tt>@content</tt></li>
+        <li>Tooltip delays can be configured</li>
+        <li>Loading indicator delays can be configured</li>
+        <li>Layout components have a default alignment</li>
+        <li><b>DefaultFieldGroupFieldFactory</b> supports date fields</li>
+
+        <li>Add-ons containing a theme should specify it with a <tt>Vaadin-Stylesheet</tt>
+        attribute in the manifest</li>
+
+        <li>Native support for Internet Explorer 10</li>
+        <li>Many locking fixes</li>
+        <li>Java <tt>assert</tt> statements added to critical code sections. Start JVM with <tt>-ea</tt> to use.</li>
+      </ul>
+
       <p>
-       Vaadin portlets (Portlet 2.0 - JSR-286) prior to Vaadin versions 6.8.10
-       and 7.0.4 are vulnerable to an attack that allows a remote user who has
-       access to a portlet on the portal to read files in the portlet deployment
-       directory using specially crafted resource requests provided the attacker
-       knows the file name.
+        For enchancements introduced in Vaadin 7, see the <a
+        href="http://vaadin.com/download/release/7.0/7.0.0/release-notes.html">Release
+        Notes for Vaadin 7.0.0</a>.
       </p>
-      <p>
-        The vulnerability has been classified as critical as it potentially
-        allows unauthorized access to portlet object code and configuration
-        information. Files outside the portlet deployment directory are not
-        accessible using this vulnerability. Portlets that are not visible
-        to the remote user are not vulnerable to this attack.
-        Servlet deployments are not vulnerable to this attack.
-      </p>
-      <p>
-        All users of Vaadin portlets are strongly urged to upgrade Vaadin
-        in the portlets immediately. Where that is not possible, access to
-        affected portlets should be restricted to trusted users only.
-      </p>
+
+      <h3 id="limitations">Limitations</h3>
+      <ul>
+        <li>It is currently not possible to specify <tt>font-size</tt> as <tt>em</tt> or
+        <tt>%</tt>, or layout component sizes with <tt>em</tt> (<a
+        href="http://dev.vaadin.com/ticket/10634">#10634</a>)</li>
+        <li>Push using streaming does not work in Opera (<a
+        href="http://dev.vaadin.com/ticket/11642">#11642</a>)</li>
+        <li>Some debug console features such as analyze layouts do not work when push is enabled (<a
+        href="http://dev.vaadin.com/ticket/11536">#11536</a>)</li>
+      </ul>
 
       <h3 id="changelog">ChangeLog</h3>
 
@@ -112,283 +125,6 @@
         href="http://dev.vaadin.com/query?status=closed&resolution=fixed&milestone=Vaadin+@version@&order=priority">full
         list of the closed issues</a> can also be found at <tt>dev.vaadin.com</tt>.
       </p>
-
-      <h2 id="enhancements">Enhancements in Vaadin @version-minor@</h2>
-
-      <p>
-        The @version-minor@ includes many major and minor enhancements and changes first
-        introduced in Vaadin @version-minor@.0. Below is a list of the most notable changes:
-      </p>
-      
-      <ul>
-        <li>UI replaces Application as the main entry point
-          <ul>
-            <li>Heartbeat to reliably detect closed UI</li>
-            <li>Supports multiple browser tabs by default</li>
-            <li>Browser and request details available in UI init</li>
-            <li>Direct access to request and session in UI init</li>
-            <li>Access detected browser details in UI init</li>
-            <li>Default UI class chosen based on a servlet parameter</li>
-            <li>Custom UIProvider allows providing different UIs based on request parameters</li>
-            <li>UI is by default reinitialized when the page is reloaded</li>
-          </ul>
-        </li>
-		<li>Redesigned layouts
-		  <ul>
-		    <li>Minimal or no layout calculations to maximize layout speed</li>
-		    <li>Full control of layouts with CSS including borders and margins</li>
-		    <li>Redesigned lighter DOM for vertical, horizontal and css layout</li>
-		    <li>Client-side ComputedStyle API available</li>
-		  </ul>
-		</li>
-		<li>Split to seven jars to allow deploying only what you need</li>
-		<li>Adding multiple components with varargs in addComponents and appropriate constructors</li>
-		<li>Support for mixing multiple themes on the same page</li>
-
-		<li>RPC for communication between the server and the browser
-		  <ul>
-		    <li>Static typing allows compile time checking</li>
-		    <li>Supports Java's primitive and boxed types, String, enums, arrays, List, Set, Map and Java beans</li>
-		    <li>Supports references to external or self served resources and references to other components</li>
-		    <li>Call from browser to server can be delayed to piggyback on the next XHR, optionally folding similar calls to only send the last value</li>
-		    <li>Calls to disabled or invisible components are ignored for security reasons</li>
-		  </ul>
-		</li>
-		<li>Server-client shared state
-		  <ul>
-		    <li>Java objects can be shared between client and server for easy component development</li>
-		    <li>State is automatically mirrored from server to client</li>
-		    <li>Support both public fields and bean properties</li>
-		    <li>Supports the same types as with RPC</li>
-		    <li>Only parts of the state that are modified are sent over the wire</li>
-		    <li>Allow calculating state on the fly just before state is sent to client</li>
-		    <li>Client-side can listen to shared state changes to simplify connectors</li>
-		    <li>State class can be annotated to automatically delegate state changes to corresponding properties in widgets</li>
-		  </ul>
-		</li>
-		<li>Google Web Toolkit included
-		  <ul>
-		    <li>A full copy of GWT is included in Vaadin Framework</li>
-		    <li>Vaadin team maintains a branch of GWT to include bug fixes and new features independent of official GWT release schedules</li>
-		    <li>All functionality of GWT is included to enable writing of client side UI:s, stateless applications, offline functionality and custom widgets</li>
-		    <li>Included Elemental library gives direct access to all cutting edge browser features</li>
-		    <li>Both browser plug-in based dev mode debugging as well as super dev mode are supported</li>
-		  </ul>
-		</li>
-		<li>No more need to call requestRepaint() in components</li>
-		<li>High level view navigation
-		  <ul>
-		    <li>Support for URI fragment based view management</li>
-		    <li>Support for registering both pre-initialized view instances as well as view classes</li>
-		    <li>Programmatic navigation with navigateTo()</li>
-		    <li>Supports saving bookmarks to views</li>
-		    <li>Supports parameterized views</li>
-		    <li>Views can block navigation</li>
-		  </ul>
-		</li>
-		<li>Connectors
-		  <ul>
-		    <li>Connectors provide a flexible communication channel between client and server</li>
-		    <li>Separating communication code from widgets promotes reusability</li>
-		    <li>An explicit Connector hierarchy is maintained</li>
-		    <li>Mapping between server-side and client-side defined in client-side code to avoid server-side classpath issues</li>
-		  </ul>
-		</li>
-		<li>JavaScript Connectors
-		  <ul>
-		    <li>Implement connector logic using JavaScript instead of Java for easier integration with JavaScript libraries</li>
-		    <li>Wrap around any existing JavaScript based widget to adapt it for use in Vaadin</li>
-		    <li>No widgetset compilation needed</li>
-		    <li>Support for shared state and RPC as well as JSON-based communication based on simple JavaScript functions</li>
-		  </ul>
-		</li>		
-		<li>ColorPicker component
-		  <ul>
-		    <li>Easy to use interface with clickable color gradients</li>
-		    <li>RGB, HSV and swatches color modes</li>
-		    <li>Color history</li>
-		    <li>Color preview</li>
-		    <li>CSS color code representation and handling</li>
-		  </ul>
-		</li>
-		<li>Add listeners without method overloads
-		  <ul>
-		    <li>Write addClickListener() instead of generic addListener()</li>
-		    <li>Supports code completion in IDE:s better</li>
-		    <li>Enables using Java 8 Lambda</li>
-		  </ul>
-		</li>
-		<li>Renewed Vaadin Maven Plugin including features from GWT Maven Plugin
-		  <ul>
-		    <li>New Maven architype eases creation of Vaadin 7 applications</li>
-		  </ul>
-		</li>
-		<li>Renewed Eclipse Plugin adding Apache Ivy based dependency management</li>
-		<li>Page bootstrapping renewed
-		  <ul>
-		    <li>Simpler inclusion of Vaadin UIs to custom web pages</li>
-		    <li>Add-ons and applications can dynamically modify bootstrap page HTML</li>
-		  </ul>
-		</li>
-		<li>VaadinSession
-		  <ul>
-		    <li>Full control over session lifecycle</li>
-		    <li>Abstract away from servlets and portlets</li>
-		  </ul>
-		</li>
-		<li>VaadinService
-		  <ul>
-		    <li>Easily access deployment information and HTTP requests</li>
-		    <li>Abstract away from servlets and portlets</li>
-		  </ul>
-		</li>
-		<li>Component extension API
-		  <ul>
-		    <li>Allow adding functionality and customizations to any component</li>
-		    <li>Modify DOM and hook event listeners</li>
-		  </ul>
-		</li>
-		<li>JavaScript callbacks
-		  <ul>
-		    <li>Declare client-side JavaScript API from server</li>
-		    <li>Eases integration with parts of the page not controlled with Vaadin</li>
-		  </ul>
-		</li>
-		<li>Relative paths used for all requests
-		  <ul>
-		    <li>More flexible deployment</li>
-		    <li>Adds support for Apache ProxyPass and other similar proxies</li>
-		  </ul>
-		</li>
-		<li>HTML5
-		  <ul>
-		    <li>Vaadin 7 uses HTML5 doctype</li>
-		    <li>Use any parts of HTML5 in your application</li>
-		  </ul>
-		</li>
-		<li>Page
-		  <ul>
-		    <li>Abstraction for one browser window</li>
-		    <li>Run JavaScript</li>
-		    <li>Listen to page resizes</li>
-		    <li>Control navigation</li>
-		  </ul>
-		</li>
-		<li>Loading custom JavaScript
-		  <ul>
-		    <li>Annotate server-side classes with @JavaScript to request loading of JavaScript files</li>
-		    <li>Automated control of loading order and ensuring that files are loaded only once</li>
-		  </ul>
-		</li>
-		<li>API cleanup
-		  <ul>
-		    <li>API deprecated in Vaadin 6 or before removed</li>
-		    <li>Use enums instead of integer constants</li>
-		  </ul>
-		</li>
-		<li>Embedded split up to different components for different purposes
-		  <ul>
-		    <li>Image for showing images</li>
-		    <li>BrowserFrame for embedding web pages with iframes</li>
-		    <li>Flash for embedding Flash content</li>
-		    <li>Embedded now only intended for embedding using &lt;object&gt;
-		  </ul>
-		</li>
-		<li>Support for Firefox 17 extended support release in addition to latest stable Firefox release</li>
-		<li>Sass Compiler
-		  <ul>
-		    <li>Allows modularization of themes for better reuse and easier maintenance</li>
-		    <li>Support the most important features of SCSS</li>
-		    <li>Pure Java implementation without Ruby dependency</li>
-		    <li>Supports all of CSS</li>
-		    <li>On the fly conversion of SCSS to CSS during development</li>
-		    <li>Built in themes are now based on Sass</li>
-		    <li>Can be used in client-side projects as well</li>
-		  </ul>
-		</li>
-		<li>@StyleSheet for automatic injection of css files</li>
-		<li>ConnectorResource replaces ApplicationResource to reduce memory consumption</li>
-		<li>Hierarchical error handling</li>
-		<li>Open popups and start downloads in a way not stopped by popup blockers</li>
-		<li>ThreadLocal access to VaadinService, VaadinRequest, VaadinResponse, VaadinSession and the current UI instance</li>
-		<li>Component id replaces debug ids to allow wider use possibilities for identifying corresponding widget elements in DOM</li>
-		<li>Range retrieval for indexed containers to enable optimize performance</li>
-		<li>Native support for percent sizes to let the browser do the percent to pixel calculation speeds up rendering</li>
-		<li>Custom class loader
-		  <ul>
-		    <li>Allow specifying custom class loaders to better support Java EE, CDI and Spring</li>
-		    <li>Supports both servlets and portlets</li>
-		  </ul>
-		</li>
-		<li>Updated data model
-		  <ul>
-		    <li>Property getValue() uses generics to return the expected type</li>
-		    <li>Two phase commit support for commit/rollback</li>
-		    <li>BeanItem supports nested properties to allow flattening complex datatypes</li>
-		  </ul>
-		</li>
-		<li>Bean Validation - Annotate beans with JSR-303 standard annotations to automatically create validators for the fields</li>
-		<li>Field group
-		  <ul>
-		    <li>Allow data binding of multiple fields together to item data source</li>
-		    <li>Supports buffering</li>
-		    <li>Supports two phase commit</li>
-		    <li>Annotation based and field name based property mapping</li>
-		  </ul>
-		</li>
-		<li>Explicit data model converters
-		  <ul>
-		    <li>All fields support explicit conversion from presentation format to data source format</li>
-		    <li>Conversions are bidirectional</li>
-		    <li>Allow defining a default converter for a specific type and override for specific fields</li>
-		    <li>Converters can be set per Table column to customize column formatting</li>
-		  </ul>
-		</li>
-		<li>Built-in default converters
-		  <ul>
-		    <li>automated conversions beween String, Boolean, Long, Date, Double, Float, Integer and Number</li>
-		    <li>Built in converters support internationalization</li>
-		  </ul>
-		</li>
-		<li>Custom field component for building new fields as composition of existing components</li>
-		<li>Simplified validation API
-		  <ul>
-		    <li>No need to implement isValid() in validators any more</li>
-		  </ul>
-		</li>
-		<li>Unsupported browser detection with customizable information page</li>
-		<li>Vaadin 6 compatibility layer to ease migration from Vaadin 6</li>
-		<li>Explicit layouts for Window and Panel</li>
-		  <ul>
-		    <li>Window and Panel components now require setting layout explicitly</li>
-		    <li>Distinction between Window or Panel and it's layout</li>
-		  </ul>
-		</li>
-		<li>Layout manager
-		  <ul>
-		    <li>Allows building custom layout calculations for widgets when browser based layouts are not powerful enough</li>
-		    <li>Optimizes number of reflows by batching layout calculations from multiple widgets together</li>
-		  </ul>
-		</li>
-      </ul>
-        
-      <p>
-        There are many other enhancements. Most of them are described in more detail in
-        the <a href="https://vaadin.com/wiki/-/wiki/Main/Vaadin+7">mini-tutorials</a> in
-        the Vaadin Wiki. Also see the <a
-        href="https://vaadin.com/wiki/-/wiki/Main/Migrating+from+Vaadin+6+to+Vaadin+7">Vaadin
-        6 to 7 Migration Guide</a>. See also the <a
-        href="http://vaadin.com/download/release/@version-minor@/@version-minor@.0/release-notes.html">Release
-        Notes for Vaadin @version-minor@.0</a>.
-      </p>
-
-      <h3 id="limitations">Limitations</h3>
-
-      <ul>
-        <li>It is currently not possible to specify <tt>font-size</tt> as <tt>em</tt> or
-        <tt>%</tt>, or layout component sizes with <tt>em</tt> (<a
-        href="http://dev.vaadin.com/ticket/10634">#10634</a>)</li>
-      </ul>
 
       <h2 id="vaadin">Vaadin Installation</h2>
 
@@ -409,7 +145,8 @@
         of this release) to create a new project</li>
 
         <li>If using Eclipse, use the Vaadin Plugin for Eclipse, which automatically
-        downloads the Vaadin libraries</li>
+        downloads the Vaadin libraries. To use this prerelease version, the plugin should be
+        installed from the experimental update site (<tt>http://vaadin.com/eclipse/experimental</tt>).</li>
       </ul>
 
       <p>
@@ -688,12 +425,12 @@
       </p>
 
       <ul>
-        <li>Mozilla Firefox 18-19</li>
+        <li>Mozilla Firefox 18-20</li>
         <li>Mozilla Firefox 17 ESR</li>
         <li>Internet Explorer 8-10</li>
         <li>Safari 6</li>
         <li>Opera 12</li>
-        <li>Google Chrome 23-25</li>
+        <li>Google Chrome 23-26</li>
       </ul>
 
       <p>

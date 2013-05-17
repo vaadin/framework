@@ -21,6 +21,7 @@ public class WindowState extends PanelState {
     {
         primaryStyleName = "v-window";
     }
+
     public boolean modal = false;
     public boolean resizable = true;
     public boolean resizeLazy = false;
@@ -28,4 +29,5 @@ public class WindowState extends PanelState {
     public boolean centered = false;;
     public int positionX = -1;
     public int positionY = -1;
+    public WindowMode windowMode = WindowMode.NORMAL;
 }

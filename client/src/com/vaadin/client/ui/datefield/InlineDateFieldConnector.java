@@ -114,6 +114,8 @@ public class InlineDateFieldConnector extends AbstractDateFieldConnector {
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
         getWidget().setTabIndex(getState().tabIndex);
+        getWidget().calendarPanel.setRangeStart(getState().rangeStart);
+        getWidget().calendarPanel.setRangeEnd(getState().rangeEnd);
     }
 
     @Override

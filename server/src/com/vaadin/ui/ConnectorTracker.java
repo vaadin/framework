@@ -17,6 +17,7 @@ package com.vaadin.ui;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,9 +32,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.vaadin.server.AbstractClientConnector;
-import com.vaadin.server.AbstractCommunicationManager;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.GlobalResourceHandler;
+import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.StreamVariable;
 
 /**
@@ -295,7 +296,7 @@ public class ConnectorTracker implements Serializable {
                 uninitializedConnectors.remove(connector);
                 diffStates.remove(connector);
                 iterator.remove();
-            } else if (!AbstractCommunicationManager
+            } else if (!LegacyCommunicationManager
                     .isConnectorVisibleToClient(connector)
                     && !uninitializedConnectors.contains(connector)) {
                 uninitializedConnectors.add(connector);
@@ -460,6 +461,31 @@ public class ConnectorTracker implements Serializable {
      *         contain invisible connectors.
      */
     public Collection<ClientConnector> getDirtyConnectors() {
+        return dirtyConnectors;
+    }
+
+    /**
+     * Checks if there a dirty connectors.
+     * 
+     * @return true if there are dirty connectors, false otherwise
+     */
+    public boolean hasDirtyConnectors() {
+        return !getDirtyConnectors().isEmpty();
+    }
+
+    /**
+     * Returns a collection of those {@link #getDirtyConnectors() dirty
+     * connectors} that are actually visible to the client.
+     * 
+     * @return A list of dirty and visible connectors.
+     */
+    public ArrayList<ClientConnector> getDirtyVisibleConnectors() {
+        ArrayList<ClientConnector> dirtyConnectors = new ArrayList<ClientConnector>();
+        for (ClientConnector c : getDirtyConnectors()) {
+            if (LegacyCommunicationManager.isConnectorVisibleToClient(c)) {
+                dirtyConnectors.add(c);
+            }
+        }
         return dirtyConnectors;
     }
 

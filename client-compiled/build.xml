@@ -85,6 +85,7 @@
 			<arg value="-localWorkers" />
 			<arg value="${localWorkers}" />
 			<arg value="-strict" />
+			<arg value="-XenableClosureCompiler" />
 			<arg line="${extraParams}" />
 			<arg value="${module}" />
 
@@ -130,8 +131,8 @@
 	<target name="checkstyle">
 		<echo>No java files in module</echo>
 	</target>
-	<target name="tests" depends="checkstyle">
-		<!--<antcall target="common.tests.run" />-->
+	<target name="test" depends="checkstyle">
+		<!--<antcall target="common.test.run" />-->
 		<echo>WHAT? No tests for ${module.name}!</echo>
 	</target>
 

@@ -92,6 +92,7 @@ public class GridLayout extends AbstractLayout implements
 
     private Map<Integer, Float> columnExpandRatio = new HashMap<Integer, Float>();
     private Map<Integer, Float> rowExpandRatio = new HashMap<Integer, Float>();
+    private Alignment defaultComponentAlignment = Alignment.TOP_LEFT;
 
     /**
      * Constructor for a grid of given size (number of columns and rows).
@@ -573,6 +574,7 @@ public class GridLayout extends AbstractLayout implements
                 int row2) {
             this.component = component;
             childData = new ChildComponentData();
+            childData.alignment = getDefaultComponentAlignment().getBitMask();
             childData.column1 = column1;
             childData.row1 = row1;
             childData.column2 = column2;
@@ -1224,6 +1226,28 @@ public class GridLayout extends AbstractLayout implements
     @Override
     public MarginInfo getMargin() {
         return new MarginInfo(getState().marginsBitmask);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.Layout.AlignmentHandler#getDefaultComponentAlignment()
+     */
+    @Override
+    public Alignment getDefaultComponentAlignment() {
+        return defaultComponentAlignment;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.Layout.AlignmentHandler#setDefaultComponentAlignment(com
+     * .vaadin.ui.Alignment)
+     */
+    @Override
+    public void setDefaultComponentAlignment(Alignment defaultAlignment) {
+        defaultComponentAlignment = defaultAlignment;
     }
 
 }

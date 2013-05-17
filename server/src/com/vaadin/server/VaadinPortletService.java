@@ -17,21 +17,30 @@
 package com.vaadin.server;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.portlet.EventRequest;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
+import javax.portlet.RenderRequest;
 
 import com.vaadin.server.VaadinPortlet.RequestType;
+import com.vaadin.server.communication.PortletBootstrapHandler;
+import com.vaadin.server.communication.PortletDummyRequestHandler;
+import com.vaadin.server.communication.PortletListenerNotifier;
+import com.vaadin.server.communication.PortletUIInitHandler;
 import com.vaadin.ui.UI;
 
 public class VaadinPortletService extends VaadinService {
     private final VaadinPortlet portlet;
 
     public VaadinPortletService(VaadinPortlet portlet,
-            DeploymentConfiguration deploymentConfiguration) {
+            DeploymentConfiguration deploymentConfiguration)
+            throws ServiceException {
         super(deploymentConfiguration);
         this.portlet = portlet;
 
@@ -46,7 +55,25 @@ public class VaadinPortletService extends VaadinService {
         }
     }
 
-    protected VaadinPortlet getPortlet() {
+    @Override
+    protected List<RequestHandler> createRequestHandlers()
+            throws ServiceException {
+        List<RequestHandler> handlers = super.createRequestHandlers();
+
+        handlers.add(new PortletUIInitHandler());
+        handlers.add(new PortletListenerNotifier());
+        handlers.add(0, new PortletDummyRequestHandler());
+        handlers.add(0, new PortletBootstrapHandler());
+
+        return handlers;
+    }
+
+    /**
+     * Retrieves a reference to the portlet associated with this service.
+     * 
+     * @return A reference to the VaadinPortlet this service is using
+     */
+    public VaadinPortlet getPortlet() {
         return portlet;
     }
 
@@ -155,13 +182,19 @@ public class VaadinPortletService extends VaadinService {
 
     @Override
     protected boolean requestCanCreateSession(VaadinRequest request) {
-        RequestType requestType = getRequestType(request);
-        if (requestType == RequestType.RENDER) {
+        if (!(request instanceof VaadinPortletRequest)) {
+            throw new IllegalArgumentException(
+                    "Request is not a VaadinPortletRequest");
+        }
+
+        PortletRequest portletRequest = ((VaadinPortletRequest) request)
+                .getPortletRequest();
+        if (portletRequest instanceof RenderRequest) {
             // In most cases the first request is a render request that
             // renders the HTML fragment. This should create a Vaadin
             // session unless there is already one.
             return true;
-        } else if (requestType == RequestType.EVENT) {
+        } else if (portletRequest instanceof EventRequest) {
             // A portlet can also be sent an event even though it has not
             // been rendered, e.g. portlet on one page sends an event to a
             // portlet on another page and then moves the user to that page.
@@ -189,12 +222,6 @@ public class VaadinPortletService extends VaadinService {
             request.setAttribute(RequestType.class.getName(), type);
         }
         return type;
-    }
-
-    @Override
-    protected AbstractCommunicationManager createCommunicationManager(
-            VaadinSession session) {
-        return new PortletCommunicationManager(session);
     }
 
     public static PortletRequest getCurrentPortletRequest() {
@@ -230,6 +257,17 @@ public class VaadinPortletService extends VaadinService {
     }
 
     @Override
+    public InputStream getThemeResourceAsStream(UI uI, String themeName,
+            String resource) {
+        VaadinPortletSession session = (VaadinPortletSession) uI.getSession();
+        PortletContext portletContext = session.getPortletSession()
+                .getPortletContext();
+        return portletContext.getResourceAsStream("/"
+                + VaadinPortlet.THEME_DIR_PATH + '/' + themeName + "/"
+                + resource);
+    }
+
+    @Override
     public String getMainDivId(VaadinSession session, VaadinRequest request,
             Class<? extends UI> uiClass) {
         PortletRequest portletRequest = ((VaadinPortletRequest) request)
@@ -240,4 +278,20 @@ public class VaadinPortletService extends VaadinService {
          */
         return "v-" + portletRequest.getWindowID();
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.server.VaadinService#handleSessionExpired(com.vaadin.server
+     * .VaadinRequest, com.vaadin.server.VaadinResponse)
+     */
+    @Override
+    protected void handleSessionExpired(VaadinRequest request,
+            VaadinResponse response) {
+        // TODO Figure out a better way to deal with
+        // SessionExpiredExceptions
+        getLogger().finest("A user session has expired");
+    }
+
 }

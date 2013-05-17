@@ -16,6 +16,7 @@
 
 package com.vaadin.client;
 
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
@@ -23,6 +24,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;
 import com.vaadin.client.ui.Icon;
+import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.AbstractFieldState;
 import com.vaadin.shared.ComponentConstants;
@@ -93,6 +95,24 @@ public class VCaption extends HTML {
         }
 
         setStyleName(CLASSNAME);
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+
+        if (null != owner) {
+            AriaHelper.bindCaption(owner.getWidget(), getElement());
+        }
+    }
+
+    @Override
+    protected void onDetach() {
+        super.onDetach();
+
+        if (null != owner) {
+            AriaHelper.bindCaption(owner.getWidget(), null);
+        }
     }
 
     /**
@@ -200,6 +220,8 @@ public class VCaption extends HTML {
             removeStyleDependentName("hasdescription");
         }
 
+        AriaHelper.handleInputRequired(owner.getWidget(), showRequired);
+
         if (showRequired) {
             if (requiredFieldIndicator == null) {
                 requiredFieldIndicator = DOM.createDiv();
@@ -209,12 +231,18 @@ public class VCaption extends HTML {
 
                 DOM.insertChild(getElement(), requiredFieldIndicator,
                         getInsertPosition(InsertPosition.REQUIRED));
+
+                // Hide the required indicator from assistive device
+                Roles.getTextboxRole().setAriaHiddenState(
+                        requiredFieldIndicator, true);
             }
         } else if (requiredFieldIndicator != null) {
             // Remove existing
             DOM.removeChild(getElement(), requiredFieldIndicator);
             requiredFieldIndicator = null;
         }
+
+        AriaHelper.handleInputInvalid(owner.getWidget(), showError);
 
         if (showError) {
             if (errorIndicatorElement == null) {
@@ -225,6 +253,10 @@ public class VCaption extends HTML {
 
                 DOM.insertChild(getElement(), errorIndicatorElement,
                         getInsertPosition(InsertPosition.ERROR));
+
+                // Hide error indicator from assistive devices
+                Roles.getTextboxRole().setAriaHiddenState(
+                        errorIndicatorElement, true);
             }
         } else if (errorIndicatorElement != null) {
             // Remove existing

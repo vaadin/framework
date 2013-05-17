@@ -57,6 +57,7 @@ public class BackButtonTest extends AbstractTestUI {
             addComponent(l);
 
             Button b = new Button("Go to Page 2", new Button.ClickListener() {
+                @Override
                 public void buttonClick(ClickEvent event) {
                     l.setCaption("Data from Page 1 : " + value);
                     getPage().setUriFragment("page2");
@@ -85,6 +86,7 @@ public class BackButtonTest extends AbstractTestUI {
 
             addComponent(f);
             f.addValueChangeListener(new ValueChangeListener() {
+                @Override
                 public void valueChange(ValueChangeEvent event) {
                     value = f.getValue();
                     p1.l.setCaption("Data from Page 2 : " + value);
@@ -92,6 +94,7 @@ public class BackButtonTest extends AbstractTestUI {
             });
 
             Button b = new Button("Go Back", new Button.ClickListener() {
+                @Override
                 public void buttonClick(ClickEvent event) {
                     getPage().setUriFragment("page1");
                 }

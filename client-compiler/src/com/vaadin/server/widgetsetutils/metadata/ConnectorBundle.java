@@ -63,7 +63,6 @@ public class ConnectorBundle {
     private final Set<JClassType> needsGwtConstructor = new HashSet<JClassType>();
     private final Set<JClassType> visitedTypes = new HashSet<JClassType>();
     private final Set<JClassType> needsProxySupport = new HashSet<JClassType>();
-    private final Set<JClassType> hasGetTooltip = new HashSet<JClassType>();
 
     private final Map<JClassType, Set<String>> identifiers = new HashMap<JClassType, Set<String>>();
     private final Map<JClassType, Set<JMethod>> needsReturnType = new HashMap<JClassType, Set<JMethod>>();
@@ -620,37 +619,4 @@ public class ConnectorBundle {
         return Collections.unmodifiableSet(needsDelegateToWidget);
     }
 
-    /**
-     * @deprecated As of 7.0.1. This is just a hack to avoid breaking backwards
-     *             compatibility and will be removed in Vaadin 7.1
-     */
-    @Deprecated
-    public Set<JClassType> getHasGetTooltip() {
-        return Collections.unmodifiableSet(hasGetTooltip);
-    }
-
-    /**
-     * @deprecated As of 7.0.1. This is just a hack to avoid breaking backwards
-     *             compatibility and will be removed in Vaadin 7.1
-     */
-    @Deprecated
-    public void setHasGetTooltip(JClassType type) {
-        if (!isHasGetTooltip(type)) {
-            hasGetTooltip.add(type);
-        }
-    }
-
-    /**
-     * @deprecated As of 7.0.1. This is just a hack to avoid breaking backwards
-     *             compatibility and will be removed in Vaadin 7.1
-     */
-    @Deprecated
-    private boolean isHasGetTooltip(JClassType type) {
-        if (hasGetTooltip.contains(type)) {
-            return true;
-        } else {
-            return previousBundle != null
-                    && previousBundle.isHasGetTooltip(type);
-        }
-    }
 }

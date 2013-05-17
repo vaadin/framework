@@ -37,9 +37,12 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.server.communication.PushConnection;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.ScrollClientRpc;
+import com.vaadin.shared.ui.ui.UIClientRpc;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIServerRpc;
 import com.vaadin.shared.ui.ui.UIState;
@@ -114,7 +117,10 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     /** Identifies the click event */
     private ConnectorTracker connectorTracker = new ConnectorTracker(this);
 
-    private Page page = new Page(this);
+    private Page page = new Page(this, getState(false).pageState);
+
+    private LoadingIndicatorConfiguration loadingIndicatorConfiguration = new LoadingIndicatorConfigurationImpl(
+            this);
 
     /**
      * Scroll Y position.
@@ -144,6 +150,14 @@ public abstract class UI extends AbstractSingleComponentContainer implements
             UI.this.scrollTop = scrollTop;
             UI.this.scrollLeft = scrollLeft;
         }
+
+        @Override
+        public void poll() {
+            /*
+             * No-op. This is only called to cause a server visit to check for
+             * changes.
+             */
+        }
     };
 
     /**
@@ -154,6 +168,9 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     private long lastHeartbeatTimestamp = System.currentTimeMillis();
 
     private boolean closing = false;
+
+    private TooltipConfiguration tooltipConfiguration = new TooltipConfigurationImpl(
+            this);
 
     /**
      * Creates a new empty UI without a caption. The content of the UI must be
@@ -347,6 +364,12 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         } else {
             if (session == null) {
                 detach();
+                if (pushConnection != null && pushConnection.isConnected()) {
+                    // Close the push connection when UI is detached. Otherwise
+                    // the push connection and possibly VaadinSession will live
+                    // on.
+                    pushConnection.disconnect();
+                }
             }
             this.session = session;
         }
@@ -465,6 +488,10 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     private String theme;
 
     private Navigator navigator;
+
+    private PushConnection pushConnection = null;
+
+    private boolean hasPendingPush = false;
 
     /**
      * This method is used by Component.Focusable objects to request focus to
@@ -659,10 +686,16 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
     /**
      * Should resize operations be lazy, i.e. should there be a delay before
-     * layout sizes are recalculated. Speeds up resize operations in slow UIs
-     * with the penalty of slightly decreased usability.
+     * layout sizes are recalculated and resize events are sent to the server.
+     * Speeds up resize operations in slow UIs with the penalty of slightly
+     * decreased usability.
      * <p>
      * Default value: <code>false</code>
+     * </p>
+     * <p>
+     * When there are active window resize listeners, lazy resize mode should be
+     * used to avoid a large number of events during resize.
+     * </p>
      * 
      * @param resizeLazy
      *            true to use a delay before recalculating sizes, false to
@@ -986,6 +1019,15 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      */
     public void close() {
         closing = true;
+
+        boolean sessionExpired = (session == null || session.isClosing());
+        getRpcProxy(UIClientRpc.class).uiClosed(sessionExpired);
+        if (getPushConnection() != null && getPushConnection().isConnected()) {
+            // Push the Rpc to the client. The connection will be closed when
+            // the UI is detached and cleaned up.
+            getPushConnection().push();
+        }
+
     }
 
     /**
@@ -1053,5 +1095,266 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     @Override
     public int getTabIndex() {
         return getState(false).tabIndex;
+    }
+
+    /**
+     * Provides exclusive access to this UI from outside a request handling
+     * thread.
+     * <p>
+     * The given runnable is executed while holding the session lock to ensure
+     * exclusive access to this UI and its session. The UI and related thread
+     * locals are set properly before executing the runnable.
+     * </p>
+     * <p>
+     * RPC handlers for components inside this UI do not need this method as the
+     * session is automatically locked by the framework during request handling.
+     * </p>
+     * <p>
+     * Note that calling this method while another session is locked by the
+     * current thread will cause an exception. This is to prevent deadlock
+     * situations when two threads have locked one session each and are both
+     * waiting for the lock for the other session.
+     * </p>
+     * 
+     * @param runnable
+     *            the runnable which accesses the UI
+     * @throws UIDetachedException
+     *             if the UI is not attached to a session (and locking can
+     *             therefore not be done)
+     * @throws IllegalStateException
+     *             if the current thread holds the lock for another session
+     * 
+     * @see #getCurrent()
+     * @see VaadinSession#access(Runnable)
+     * @see VaadinSession#lock()
+     */
+    public void access(Runnable runnable) throws UIDetachedException {
+        Map<Class<?>, CurrentInstance> old = null;
+
+        VaadinSession session = getSession();
+
+        if (session == null) {
+            throw new UIDetachedException();
+        }
+
+        VaadinService.verifyNoOtherSessionLocked(session);
+
+        session.lock();
+        try {
+            if (getSession() == null) {
+                // UI was detached after fetching the session but before we
+                // acquired the lock.
+                throw new UIDetachedException();
+            }
+            old = CurrentInstance.setThreadLocals(this);
+            runnable.run();
+        } finally {
+            session.unlock();
+            if (old != null) {
+                CurrentInstance.restoreThreadLocals(old);
+            }
+        }
+
+    }
+
+    /**
+     * @deprecated As of 7.1.0.beta1, use {@link #access(Runnable)} instead.
+     *             This method will be removed before the final 7.1.0 release.
+     */
+    @Deprecated
+    public void runSafely(Runnable runnable) throws UIDetachedException {
+        access(runnable);
+    }
+
+    /**
+     * Retrieves the object used for configuring tooltips.
+     * 
+     * @return The instance used for tooltip configuration
+     */
+    public TooltipConfiguration getTooltipConfiguration() {
+        return tooltipConfiguration;
+    }
+
+    /**
+     * Retrieves the object used for configuring the loading indicator.
+     * 
+     * @return The instance used for configuring the loading indicator
+     */
+    public LoadingIndicatorConfiguration getLoadingIndicatorConfiguration() {
+        return loadingIndicatorConfiguration;
+    }
+
+    /**
+     * Pushes the pending changes and client RPC invocations of this UI to the
+     * client-side.
+     * <p>
+     * As with all UI methods, it is not safe to call push() without holding the
+     * {@link VaadinSession#lock() session lock}.
+     * 
+     * @throws IllegalStateException
+     *             if push is disabled.
+     * @throws UIDetachedException
+     *             if this UI is not attached to a session.
+     * 
+     * @see #getPushMode()
+     * 
+     * @since 7.1
+     */
+    public void push() {
+        VaadinSession session = getSession();
+        if (session != null) {
+            assert session.hasLock();
+            if (!getConnectorTracker().hasDirtyConnectors()) {
+                // Do not push if there is nothing to push
+                return;
+            }
+
+            if (!getPushMode().isEnabled()) {
+                throw new IllegalStateException("Push not enabled");
+            }
+
+            if (pushConnection == null) {
+                hasPendingPush = true;
+            } else {
+                pushConnection.push();
+            }
+        } else {
+            throw new UIDetachedException("Trying to push a detached UI");
+        }
+    }
+
+    /**
+     * Returns the internal push connection object used by this UI. This method
+     * should only be called by the framework.
+     */
+    public PushConnection getPushConnection() {
+        return pushConnection;
+    }
+
+    /**
+     * Sets the internal push connection object used by this UI. This method
+     * should only be called by the framework.
+     */
+    public void setPushConnection(PushConnection pushConnection) {
+        // If pushMode is disabled then there should never be a pushConnection
+        assert (getPushMode().isEnabled() || pushConnection == null);
+
+        if (pushConnection == this.pushConnection) {
+            return;
+        }
+
+        if (this.pushConnection != null) {
+            this.pushConnection.disconnect();
+        }
+
+        this.pushConnection = pushConnection;
+        if (pushConnection != null && hasPendingPush) {
+            hasPendingPush = false;
+            pushConnection.push();
+        }
+    }
+
+    /**
+     * Sets the interval with which the UI should poll the server to see if
+     * there are any changes. Polling is disabled by default.
+     * <p>
+     * Note that it is possible to enable push and polling at the same time but
+     * it should not be done to avoid excessive server traffic.
+     * </p>
+     * <p>
+     * Add-on developers should note that this method is only meant for the
+     * application developer. An add-on should not set the poll interval
+     * directly, rather instruct the user to set it.
+     * </p>
+     * 
+     * @param intervalInMillis
+     *            The interval (in ms) with which the UI should poll the server
+     *            or -1 to disable polling
+     */
+    public void setPollInterval(int intervalInMillis) {
+        getState().pollInterval = intervalInMillis;
+    }
+
+    /**
+     * Returns the interval with which the UI polls the server.
+     * 
+     * @return The interval (in ms) with which the UI polls the server or -1 if
+     *         polling is disabled
+     */
+    public int getPollInterval() {
+        return getState(false).pollInterval;
+    }
+
+    /**
+     * Returns the mode of bidirectional ("push") communication that is used in
+     * this UI.
+     * 
+     * @return The push mode.
+     */
+    public PushMode getPushMode() {
+        return getState(false).pushMode;
+    }
+
+    /**
+     * Sets the mode of bidirectional ("push") communication that should be used
+     * in this UI.
+     * <p>
+     * Add-on developers should note that this method is only meant for the
+     * application developer. An add-on should not set the push mode directly,
+     * rather instruct the user to set it.
+     * </p>
+     * 
+     * @param pushMode
+     *            The push mode to use.
+     * 
+     * @throws IllegalArgumentException
+     *             if the argument is null.
+     * @throws IllegalStateException
+     *             if push support is not available.
+     */
+    public void setPushMode(PushMode pushMode) {
+        if (pushMode == null) {
+            throw new IllegalArgumentException("Push mode cannot be null");
+        }
+
+        if (pushMode.isEnabled()) {
+            VaadinSession session = getSession();
+            if (session != null && !session.getService().ensurePushAvailable()) {
+                throw new IllegalStateException(
+                        "Push is not available. See previous log messages for more information.");
+            }
+        }
+
+        /*
+         * Client-side will open a new connection or disconnect the old
+         * connection, so there's nothing more to do on the server at this
+         * point.
+         */
+        getState().pushMode = pushMode;
+    }
+
+    /**
+     * Get the label that is added to the container element, where tooltip,
+     * notification and dialogs are added to.
+     * 
+     * @return the label of the container
+     */
+    public String getOverlayContainerLabel() {
+        return getState().overlayContainerLabel;
+    }
+
+    /**
+     * Sets the label that is added to the container element, where tooltip,
+     * notifications and dialogs are added to.
+     * <p>
+     * This is helpful for users of assistive devices, as this element is
+     * reachable for them.
+     * </p>
+     * 
+     * @param overlayContainerLabel
+     *            label to use for the container
+     */
+    public void setOverlayContainerLabel(String overlayContainerLabel) {
+        getState().overlayContainerLabel = overlayContainerLabel;
     }
 }
