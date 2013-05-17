@@ -40,7 +40,8 @@ public abstract class AbstractTestUI extends UI {
 
     protected void warnIfWidgetsetMaybeNotCompiled() {
         // Ignore if using debug mode
-        if (getPage().getLocation().getQuery().matches(".*[&?]gwt\\.codesvr.*")) {
+        String query = getPage().getLocation().getQuery();
+        if (query != null && query.matches(".*[&?]gwt\\.codesvr.*")) {
             return;
         }
 

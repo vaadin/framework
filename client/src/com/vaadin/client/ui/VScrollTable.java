@@ -60,6 +60,7 @@ import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -556,15 +557,24 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
      * <p>
      * For internal use only. May be removed or replaced in the future.
      */
-    public class ContextMenuDetails {
+    public class ContextMenuDetails implements CloseHandler<PopupPanel> {
         public String rowKey;
         public int left;
         public int top;
+        HandlerRegistration closeRegistration;
 
-        public ContextMenuDetails(String rowKey, int left, int top) {
+        public ContextMenuDetails(VContextMenu menu, String rowKey, int left,
+                int top) {
             this.rowKey = rowKey;
             this.left = left;
             this.top = top;
+            this.closeRegistration = menu.addCloseHandler(this);
+        }
+
+        @Override
+        public void onClose(CloseEvent<PopupPanel> event) {
+            contextMenu = null;
+            closeRegistration.removeHandler();
         }
     }
 
@@ -6021,13 +6031,18 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             public void showContextMenu(Event event) {
                 if (enabled && actionKeys != null) {
                     // Show context menu if there are registered action handlers
-                    int left = Util.getTouchOrMouseClientX(event);
-                    int top = Util.getTouchOrMouseClientY(event);
-                    top += Window.getScrollTop();
-                    left += Window.getScrollLeft();
-                    contextMenu = new ContextMenuDetails(getKey(), left, top);
-                    client.getContextMenu().showAt(this, left, top);
+                    int left = Util.getTouchOrMouseClientX(event)
+                            + Window.getScrollLeft();
+                    int top = Util.getTouchOrMouseClientY(event)
+                            + Window.getScrollTop();
+                    showContextMenu(left, top);
                 }
+            }
+
+            public void showContextMenu(int left, int top) {
+                VContextMenu menu = client.getContextMenu();
+                contextMenu = new ContextMenuDetails(menu, getKey(), left, top);
+                menu.showAt(this, left, top);
             }
 
             /**

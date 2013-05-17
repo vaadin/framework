@@ -15,7 +15,9 @@
  */
 package com.vaadin.client.ui.combobox;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
@@ -98,24 +100,6 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         getWidget().allowNewItem = uidl.hasAttribute("allownewitem");
         getWidget().lastNewItemString = null;
 
-        getWidget().currentSuggestions.clear();
-        if (!getWidget().waitingForFilteringResponse) {
-            /*
-             * Clear the current suggestions as the server response always
-             * includes the new ones. Exception is when filtering, then we need
-             * to retain the value if the user does not select any of the
-             * options matching the filter.
-             */
-            getWidget().currentSuggestion = null;
-            /*
-             * Also ensure no old items in menu. Unless cleared the old values
-             * may cause odd effects on blur events. Suggestions in menu might
-             * not necessary exist in select at all anymore.
-             */
-            getWidget().suggestionPopup.menu.clearItems();
-
-        }
-
         final UIDL options = uidl.getChildUIDL(0);
         if (uidl.hasAttribute("totalMatches")) {
             getWidget().totalMatches = uidl.getIntAttribute("totalMatches");
@@ -123,55 +107,52 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
             getWidget().totalMatches = 0;
         }
 
+        List<FilterSelectSuggestion> newSuggestions = new ArrayList<FilterSelectSuggestion>();
+
         for (final Iterator<?> i = options.getChildIterator(); i.hasNext();) {
             final UIDL optionUidl = (UIDL) i.next();
             final FilterSelectSuggestion suggestion = getWidget().new FilterSelectSuggestion(
                     optionUidl);
-            getWidget().currentSuggestions.add(suggestion);
-            if (optionUidl.hasAttribute("selected")) {
-                if (!getWidget().waitingForFilteringResponse
-                        || getWidget().popupOpenerClicked) {
-                    String newSelectedOptionKey = Integer.toString(suggestion
-                            .getOptionKey());
-                    if (!newSelectedOptionKey
-                            .equals(getWidget().selectedOptionKey)
-                            || suggestion.getReplacementString().equals(
-                                    getWidget().tb.getText())) {
-                        // Update text field if we've got a new selection
-                        // Also update if we've got the same text to retain old
-                        // text selection behavior
-                        getWidget().setPromptingOff(
-                                suggestion.getReplacementString());
-                        getWidget().selectedOptionKey = newSelectedOptionKey;
-                    }
-                }
-                getWidget().currentSuggestion = suggestion;
-                getWidget().setSelectedItemIcon(suggestion.getIconUri());
+            newSuggestions.add(suggestion);
+        }
+
+        // only close the popup if the suggestions list has actually changed
+        boolean suggestionsChanged = !getWidget().initDone
+                || !newSuggestions.equals(getWidget().currentSuggestions);
+
+        if (suggestionsChanged) {
+            getWidget().currentSuggestions.clear();
+
+            if (!getWidget().waitingForFilteringResponse) {
+                /*
+                 * Clear the current suggestions as the server response always
+                 * includes the new ones. Exception is when filtering, then we
+                 * need to retain the value if the user does not select any of
+                 * the options matching the filter.
+                 */
+                getWidget().currentSuggestion = null;
+                /*
+                 * Also ensure no old items in menu. Unless cleared the old
+                 * values may cause odd effects on blur events. Suggestions in
+                 * menu might not necessary exist in select at all anymore.
+                 */
+                getWidget().suggestionPopup.menu.clearItems();
+
+            }
+
+            for (FilterSelectSuggestion suggestion : newSuggestions) {
+                getWidget().currentSuggestions.add(suggestion);
             }
         }
 
-        if ((!getWidget().waitingForFilteringResponse || getWidget().popupOpenerClicked)
-                && uidl.hasVariable("selected")
-                && uidl.getStringArrayVariable("selected").length == 0) {
-            // select nulled
-            if (!getWidget().waitingForFilteringResponse
-                    || !getWidget().popupOpenerClicked) {
-                if (!getWidget().focused) {
-                    /*
-                     * client.updateComponent overwrites all styles so we must
-                     * ALWAYS set the prompting style at this point, even though
-                     * we think it has been set already...
-                     */
-                    getWidget().prompting = false;
-                    getWidget().setPromptingOn();
-                } else {
-                    // we have focus in field, prompting can't be set on,
-                    // instead just clear the input
-                    getWidget().tb.setValue("");
-                }
+        // handle selection (null or a single value)
+        if (uidl.hasVariable("selected")) {
+            String[] selectedKeys = uidl.getStringArrayVariable("selected");
+            if (selectedKeys.length > 0) {
+                performSelection(selectedKeys[0]);
+            } else {
+                resetSelection();
             }
-            getWidget().setSelectedItemIcon(null);
-            getWidget().selectedOptionKey = null;
         }
 
         if (getWidget().waitingForFilteringResponse
@@ -228,6 +209,55 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         }
 
         getWidget().initDone = true;
+    }
+
+    private void performSelection(String selectedKey) {
+        // some item selected
+        for (FilterSelectSuggestion suggestion : getWidget().currentSuggestions) {
+            String suggestionKey = suggestion.getOptionKey();
+            if (suggestionKey.equals(selectedKey)) {
+                if (!getWidget().waitingForFilteringResponse
+                        || getWidget().popupOpenerClicked) {
+                    if (!suggestionKey.equals(getWidget().selectedOptionKey)
+                            || suggestion.getReplacementString().equals(
+                                    getWidget().tb.getText())) {
+                        // Update text field if we've got a new
+                        // selection
+                        // Also update if we've got the same text to
+                        // retain old text selection behavior
+                        getWidget().setPromptingOff(
+                                suggestion.getReplacementString());
+                        getWidget().selectedOptionKey = suggestionKey;
+                    }
+                }
+                getWidget().currentSuggestion = suggestion;
+                getWidget().setSelectedItemIcon(suggestion.getIconUri());
+                // only a single item can be selected
+                break;
+            }
+        }
+    }
+
+    private void resetSelection() {
+        if (!getWidget().waitingForFilteringResponse
+                || getWidget().popupOpenerClicked) {
+            // select nulled
+            if (!getWidget().focused) {
+                /*
+                 * client.updateComponent overwrites all styles so we must
+                 * ALWAYS set the prompting style at this point, even though we
+                 * think it has been set already...
+                 */
+                getWidget().prompting = false;
+                getWidget().setPromptingOn();
+            } else {
+                // we have focus in field, prompting can't be set on, instead
+                // just clear the input
+                getWidget().tb.setValue("");
+            }
+            getWidget().setSelectedItemIcon(null);
+            getWidget().selectedOptionKey = null;
+        }
     }
 
     @Override
