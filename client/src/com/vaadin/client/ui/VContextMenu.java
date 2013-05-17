@@ -29,10 +29,13 @@ import com.google.gwt.event.dom.client.HasBlurHandlers;
 import com.google.gwt.event.dom.client.HasFocusHandlers;
 import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
@@ -193,10 +196,11 @@ public class VContextMenu extends VOverlay implements SubPartAware {
      */
     class CMenuBar extends MenuBar implements HasFocusHandlers,
             HasBlurHandlers, HasKeyDownHandlers, HasKeyPressHandlers,
-            Focusable, LoadHandler {
+            Focusable, LoadHandler, KeyUpHandler {
         public CMenuBar() {
             super(true);
             addDomHandler(this, LoadEvent.getType());
+            addDomHandler(this, KeyUpEvent.getType());
         }
 
         @Override
@@ -265,6 +269,13 @@ public class VContextMenu extends VOverlay implements SubPartAware {
             delayedImageLoadExecutioner.trigger();
         }
 
+        @Override
+        public void onKeyUp(KeyUpEvent event) {
+            // Allow to close context menu with ESC
+            if (event.getNativeKeyCode() == KeyCodes.KEY_ESCAPE) {
+                hide();
+            }
+        }
     }
 
     @Override
