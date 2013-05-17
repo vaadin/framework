@@ -15,6 +15,7 @@ import com.vaadin.server.UIClassSelectionEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.UI;
 
 public class CustomUIClassLoader extends TestCase {
@@ -113,7 +114,7 @@ public class CustomUIClassLoader extends TestCase {
     }
 
     private VaadinSession createStubApplication() {
-        return new VaadinSession(null) {
+        return new AlwaysLockedVaadinSession(null) {
             @Override
             public DeploymentConfiguration getConfiguration() {
                 return createConfigurationMock();

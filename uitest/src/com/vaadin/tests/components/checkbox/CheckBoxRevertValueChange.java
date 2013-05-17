@@ -29,6 +29,7 @@ public class CheckBoxRevertValueChange extends AbstractTestUIWithLog {
         final CheckBox alwaysUnchecked = new CheckBox("You may not check me");
         alwaysUnchecked
                 .addValueChangeListener(new Property.ValueChangeListener() {
+                    @Override
                     public void valueChange(Property.ValueChangeEvent event) {
                         if (alwaysUnchecked.getValue()) {
                             log("I said no checking!");
@@ -40,6 +41,7 @@ public class CheckBoxRevertValueChange extends AbstractTestUIWithLog {
         alwaysChecked.setValue(true);
         alwaysChecked
                 .addValueChangeListener(new Property.ValueChangeListener() {
+                    @Override
                     public void valueChange(Property.ValueChangeEvent event) {
                         if (!alwaysChecked.getValue()) {
                             log("I said no unchecking!");

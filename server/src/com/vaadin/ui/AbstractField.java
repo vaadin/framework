@@ -25,13 +25,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Logger;
 
 import com.vaadin.data.Buffered;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validatable;
 import com.vaadin.data.Validator;
 import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.data.util.LegacyPropertyHelper;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.data.util.converter.ConverterUtil;
@@ -42,6 +42,7 @@ import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.CompositeErrorMessage;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.shared.util.SharedUtil;
 
 /**
  * <p>
@@ -73,9 +74,6 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         Property.ReadOnlyStatusChangeNotifier, Action.ShortcutNotifier {
 
     /* Private members */
-
-    private static final Logger logger = Logger.getLogger(AbstractField.class
-            .getName());
 
     /**
      * Value of the abstract field.
@@ -370,13 +368,24 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         return buffered;
     }
 
-    /* Property interface implementation */
-
     /**
-     * Returns the (field) value converted to a String using toString().
+     * Returns a string representation of this object. The returned string
+     * representation depends on if the legacy Property toString mode is enabled
+     * or disabled.
+     * <p>
+     * If legacy Property toString mode is enabled, returns the value of this
+     * <code>Field</code> converted to a String.
+     * </p>
+     * <p>
+     * If legacy Property toString mode is disabled, the string representation
+     * has no special meaning
+     * </p>
      * 
-     * @see java.lang.Object#toString()
-     * @deprecated As of 7.0, use {@link #getValue()} to get the value of the
+     * @see LegacyPropertyHelper#isLegacyToStringEnabled()
+     * 
+     * @return A string representation of the value value stored in the Property
+     *         or a string representation of the Property object.
+     * @deprecated As of 7.0. Use {@link #getValue()} to get the value of the
      *             field, {@link #getConvertedValue()} to get the field value
      *             converted to the data model type or
      *             {@link #getPropertyDataSource()} .getValue() to get the value
@@ -385,16 +394,14 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     @Deprecated
     @Override
     public String toString() {
-        logger.warning("You are using AbstractField.toString() to get the value for a "
-                + getClass().getSimpleName()
-                + ". This will not be supported starting from Vaadin 7.1 "
-                + "(your debugger might call toString() and cause this message to appear).");
-        final Object value = getFieldValue();
-        if (value == null) {
-            return null;
+        if (!LegacyPropertyHelper.isLegacyToStringEnabled()) {
+            return super.toString();
+        } else {
+            return LegacyPropertyHelper.legacyPropertyToString(this);
         }
-        return value.toString();
     }
+
+    /* Property interface implementation */
 
     /**
      * Gets the current value of the field.
@@ -451,7 +458,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             throws Property.ReadOnlyException, Converter.ConversionException,
             InvalidValueException {
 
-        if (!equals(newFieldValue, getInternalValue())) {
+        if (!SharedUtil.equals(newFieldValue, getInternalValue())) {
 
             // Read only fields can not be changed
             if (isReadOnly()) {
@@ -459,7 +466,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             }
             try {
                 T doubleConvertedFieldValue = convertFromModel(convertToModel(newFieldValue));
-                if (!equals(newFieldValue, doubleConvertedFieldValue)) {
+                if (!SharedUtil
+                        .equals(newFieldValue, doubleConvertedFieldValue)) {
                     newFieldValue = doubleConvertedFieldValue;
                     repaintIsNotNeeded = false;
                 }
@@ -536,11 +544,9 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         }
     }
 
+    @Deprecated
     static boolean equals(Object value1, Object value2) {
-        if (value1 == null) {
-            return value2 == null;
-        }
-        return value1.equals(value2);
+        return SharedUtil.equals(value1, value2);
     }
 
     /* External data source */
@@ -1228,8 +1234,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     public void valueChange(Property.ValueChangeEvent event) {
         if (!isBuffered()) {
             if (committingValueToDataSource) {
-                boolean propertyNotifiesOfTheBufferedValue = equals(event
-                        .getProperty().getValue(), getInternalValue());
+                boolean propertyNotifiesOfTheBufferedValue = SharedUtil.equals(
+                        event.getProperty().getValue(), getInternalValue());
                 if (!propertyNotifiesOfTheBufferedValue) {
                     /*
                      * Property (or chained property like PropertyFormatter) now
@@ -1345,15 +1351,33 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     }
 
     private void localeMightHaveChanged() {
-        if (!equals(valueLocale, getLocale()) && dataSource != null
-                && !isModified()) {
-            // When we have a data source and the internal value is directly
-            // read from that we want to update the value
-            T newInternalValue = convertFromModel(getPropertyDataSource()
-                    .getValue());
-            if (!equals(newInternalValue, getInternalValue())) {
-                setInternalValue(newInternalValue);
-                fireValueChange(false);
+        if (!SharedUtil.equals(valueLocale, getLocale())) {
+            // The locale HAS actually changed
+
+            if (dataSource != null && !isModified()) {
+                // When we have a data source and the internal value is directly
+                // read from that we want to update the value
+                T newInternalValue = convertFromModel(getPropertyDataSource()
+                        .getValue());
+                if (!SharedUtil.equals(newInternalValue, getInternalValue())) {
+                    setInternalValue(newInternalValue);
+                    fireValueChange(false);
+                }
+            } else if (dataSource == null && converter != null) {
+                /*
+                 * No data source but a converter has been set. The same issues
+                 * as above but we cannot use propertyDataSource. Convert the
+                 * current value back to a model value using the old locale and
+                 * then convert back using the new locale. If this does not
+                 * match the field value we need to set the converted value
+                 * again.
+                 */
+                Object convertedValue = convertToModel(getInternalValue(),
+                        valueLocale);
+                T newinternalValue = convertFromModel(convertedValue);
+                if (!SharedUtil.equals(getInternalValue(), newinternalValue)) {
+                    setConvertedValue(convertedValue);
+                }
             }
         }
     }
@@ -1600,7 +1624,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             setModified(false);
 
             // If the new value differs from the previous one
-            if (!equals(newFieldValue, getInternalValue())) {
+            if (!SharedUtil.equals(newFieldValue, getInternalValue())) {
                 setInternalValue(newFieldValue);
                 fireValueChange(false);
             } else if (wasModified) {

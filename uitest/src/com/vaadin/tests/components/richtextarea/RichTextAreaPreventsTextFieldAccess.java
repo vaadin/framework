@@ -50,6 +50,7 @@ public class RichTextAreaPreventsTextFieldAccess extends TestBase {
         Button addWindowButton = new Button("Open RichTextArea-Dialog");
         addWindowButton.addClickListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 getMainWindow().addWindow(subWindow);
 
@@ -60,6 +61,7 @@ public class RichTextAreaPreventsTextFieldAccess extends TestBase {
         Button removeWindowButton = new Button("removeWindowButton");
         removeWindowButton.addClickListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 getMainWindow().removeWindow(subWindow);
 
@@ -70,6 +72,7 @@ public class RichTextAreaPreventsTextFieldAccess extends TestBase {
         Button focusButton = new Button("Set focus on TextField");
         focusButton.addClickListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 testField.focus();
 
@@ -80,6 +83,7 @@ public class RichTextAreaPreventsTextFieldAccess extends TestBase {
         Button removeRTA = new Button("Remove RTA");
         removeRTA.addClickListener(new Button.ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 wLayout.removeComponent(rText);
 

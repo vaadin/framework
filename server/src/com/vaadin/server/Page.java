@@ -21,9 +21,11 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.EventObject;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.vaadin.event.EventRouter;
 import com.vaadin.shared.ui.BorderStyle;
@@ -303,6 +305,102 @@ public class Page implements Serializable {
         }
     }
 
+    /**
+     * Contains dynamically injected styles injected in the HTML document at
+     * runtime.
+     * 
+     * @since 7.1
+     */
+    public static class Styles implements Serializable {
+
+        private final Map<Integer, String> stringInjections = new HashMap<Integer, String>();
+
+        private final Map<Integer, Resource> resourceInjections = new HashMap<Integer, Resource>();
+
+        // The combined injection counter between both string and resource
+        // injections. Used as the key for the injection maps
+        private int injectionCounter = 0;
+
+        // Points to the next injection that has not yet been made into the Page
+        private int nextInjectionPosition = 0;
+
+        private final UI ui;
+
+        private Styles(UI ui) {
+            this.ui = ui;
+        }
+
+        /**
+         * Injects a raw CSS string into the page.
+         * 
+         * @param css
+         *            The CSS to inject
+         */
+        public void add(String css) {
+            if (css == null) {
+                throw new IllegalArgumentException(
+                        "Cannot inject null CSS string");
+            }
+
+            stringInjections.put(injectionCounter++, css);
+            ui.markAsDirty();
+        }
+
+        /**
+         * Injects a CSS resource into the page
+         * 
+         * @param resource
+         *            The resource to inject.
+         */
+        public void add(Resource resource) {
+            if (resource == null) {
+                throw new IllegalArgumentException(
+                        "Cannot inject null resource");
+            }
+
+            resourceInjections.put(injectionCounter++, resource);
+            ui.markAsDirty();
+        }
+
+        private void paint(PaintTarget target) throws PaintException {
+
+            // If full repaint repaint all injections
+            if (target.isFullRepaint()) {
+                nextInjectionPosition = 0;
+            }
+
+            if (injectionCounter > nextInjectionPosition) {
+
+                target.startTag("css-injections");
+
+                while (injectionCounter > nextInjectionPosition) {
+
+                    String stringInjection = stringInjections
+                            .get(nextInjectionPosition);
+                    if (stringInjection != null) {
+                        target.startTag("css-string");
+                        target.addAttribute("id", nextInjectionPosition);
+                        target.addText(stringInjection);
+                        target.endTag("css-string");
+                    }
+
+                    Resource resourceInjection = resourceInjections
+                            .get(nextInjectionPosition);
+                    if (resourceInjection != null) {
+                        target.startTag("css-resource");
+                        target.addAttribute("id", nextInjectionPosition);
+                        target.addAttribute("url", resourceInjection);
+                        target.endTag("css-resource");
+                    }
+
+                    nextInjectionPosition++;
+                }
+
+                target.endTag("css-injections");
+            }
+        }
+    }
+
     private EventRouter eventRouter;
 
     private final UI uI;
@@ -311,6 +409,8 @@ public class Page implements Serializable {
     private int browserWindowHeight = -1;
 
     private JavaScript javaScript;
+
+    private Styles styles;
 
     /**
      * The current browser location.
@@ -576,8 +676,21 @@ public class Page implements Serializable {
             javaScript = new JavaScript();
             javaScript.extend(uI);
         }
-
         return javaScript;
+    }
+
+    /**
+     * Returns that stylesheet associated with this Page. The stylesheet
+     * contains additional styles injected at runtime into the HTML document.
+     * 
+     * @since 7.1
+     */
+    public Styles getStyles() {
+
+        if (styles == null) {
+            styles = new Styles(uI);
+        }
+        return styles;
     }
 
     public void paintContent(PaintTarget target) throws PaintException {
@@ -637,6 +750,9 @@ public class Page implements Serializable {
                     location.toString());
         }
 
+        if (styles != null) {
+            styles.paint(target);
+        }
     }
 
     /**
@@ -913,6 +1029,13 @@ public class Page implements Serializable {
      */
     public void setTitle(String title) {
         uI.getRpcProxy(PageClientRpc.class).setTitle(title);
+    }
+
+    /**
+     * Reloads the page in the browser.
+     */
+    public void reload() {
+        uI.getRpcProxy(PageClientRpc.class).reload();
     }
 
 }

@@ -48,6 +48,7 @@ import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.ui.ComponentStateUtil;
+import com.vaadin.shared.util.SharedUtil;
 
 public class Util {
 
@@ -550,12 +551,21 @@ public class Util {
         }
     }
 
+    /**
+     * Checks if a and b are equals using {@link #equals(Object)}. Handles null
+     * values as well. Does not ensure that objects are of the same type.
+     * Assumes that the first object's equals method handle equals properly.
+     * 
+     * @param a
+     *            The first value to compare
+     * @param b
+     *            The second value to compare
+     * @return
+     * @deprecated As of 7.1 use {@link SharedUtil#equals(Object)} instead
+     */
+    @Deprecated
     public static boolean equals(Object a, Object b) {
-        if (a == null) {
-            return b == null;
-        }
-
-        return a.equals(b);
+        return SharedUtil.equals(a, b);
     }
 
     public static void updateRelativeChildrenAndSendSizeUpdateEvent(
@@ -630,6 +640,10 @@ public class Util {
     /*-{
          var cs = element.ownerDocument.defaultView.getComputedStyle(element);
          var heightPx = cs.height;
+         if(heightPx == 'auto'){
+             // Fallback for when IE reports auto
+             heightPx = @com.vaadin.client.Util::getRequiredHeightBoundingClientRect(Lcom/google/gwt/dom/client/Element;)(element) + 'px';
+         }
          var borderTopPx = cs.borderTop;
          var borderBottomPx = cs.borderBottom;
          var paddingTopPx = cs.paddingTop;
@@ -646,6 +660,10 @@ public class Util {
     /*-{
          var cs = element.ownerDocument.defaultView.getComputedStyle(element);
          var widthPx = cs.width;
+         if(widthPx == 'auto'){
+             // Fallback for when IE reports auto
+             widthPx = @com.vaadin.client.Util::getRequiredWidthBoundingClientRect(Lcom/google/gwt/dom/client/Element;)(element) + 'px';
+         }
          var borderLeftPx = cs.borderLeft;
          var borderRightPx = cs.borderRight;
          var paddingLeftPx = cs.paddingLeft;
@@ -1338,6 +1356,5 @@ public class Util {
             return a.getHref();
         }
     }
-
 
 }

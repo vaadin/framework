@@ -953,6 +953,15 @@ public interface Container extends Serializable {
          */
         public void removeAllContainerFilters();
 
+        /**
+         * Returns the filters which have been applied to the container
+         * 
+         * @return A collection of filters which have been applied to the
+         *         container. An empty collection if no filters have been
+         *         applied.
+         * @since 7.1
+         */
+        public Collection<Filter> getContainerFilters();
     }
 
     /**

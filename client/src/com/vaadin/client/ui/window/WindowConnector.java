@@ -20,7 +20,10 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.DOM;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.vaadin.client.ApplicationConnection;
@@ -31,6 +34,7 @@ import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
+import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.PostLayoutListener;
@@ -41,6 +45,7 @@ import com.vaadin.client.ui.VWindow;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.Connect;
+import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.shared.ui.window.WindowServerRpc;
 import com.vaadin.shared.ui.window.WindowState;
 
@@ -57,7 +62,32 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         }
     };
 
-    boolean minWidthChecked = false;
+    abstract class WindowEventHandler implements ClickHandler,
+            DoubleClickHandler {
+    }
+
+    private WindowEventHandler maximizeRestoreClickHandler = new WindowEventHandler() {
+
+        @Override
+        public void onClick(ClickEvent event) {
+            final Element target = event.getNativeEvent().getEventTarget()
+                    .cast();
+            if (target == getWidget().maximizeRestoreBox) {
+                // Click on maximize/restore box
+                onMaximizeRestore();
+            }
+        }
+
+        @Override
+        public void onDoubleClick(DoubleClickEvent event) {
+            final Element target = event.getNativeEvent().getEventTarget()
+                    .cast();
+            if (getWidget().header.isOrHasChild(target)) {
+                // Double click on header
+                onMaximizeRestore();
+            }
+        }
+    };
 
     @Override
     public boolean delegateCaptionHandling() {
@@ -68,12 +98,18 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
     protected void init() {
         super.init();
 
-        getLayoutManager().registerDependency(this,
-                getWidget().contentPanel.getElement());
-        getLayoutManager().registerDependency(this, getWidget().header);
-        getLayoutManager().registerDependency(this, getWidget().footer);
+        VWindow window = getWidget();
 
-        getWidget().setOwner(getConnection().getUIConnector().getWidget());
+        getLayoutManager().registerDependency(this,
+                window.contentPanel.getElement());
+        getLayoutManager().registerDependency(this, window.header);
+        getLayoutManager().registerDependency(this, window.footer);
+
+        window.addHandler(maximizeRestoreClickHandler, ClickEvent.getType());
+        window.addHandler(maximizeRestoreClickHandler,
+                DoubleClickEvent.getType());
+
+        window.setOwner(getConnection().getUIConnector().getWidget());
     }
 
     @Override
@@ -87,98 +123,36 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
 
     @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-        getWidget().id = getConnectorId();
-        getWidget().client = client;
+
+        VWindow window = getWidget();
+        String connectorId = getConnectorId();
+
+        window.id = getConnectorId();
+        window.client = client;
 
         // Workaround needed for Testing Tools (GWT generates window DOM
         // slightly different in different browsers).
-        DOM.setElementProperty(getWidget().closeBox, "id", getConnectorId()
-                + "_window_close");
+        window.closeBox.setId(connectorId + "_window_close");
+        window.maximizeRestoreBox
+                .setId(connectorId + "_window_maximizerestore");
 
-        if (isRealUpdate(uidl)) {
-            if (getState().modal != getWidget().vaadinModality) {
-                getWidget().setVaadinModality(!getWidget().vaadinModality);
-            }
-            if (!getWidget().isAttached()) {
-                getWidget().setVisible(false); // hide until
-                // possible centering
-                getWidget().show();
-            }
-            if (getState().resizable != getWidget().resizable) {
-                getWidget().setResizable(getState().resizable);
-            }
-            getWidget().resizeLazy = getState().resizeLazy;
-
-            getWidget().setDraggable(getState().draggable);
-
-            // Caption must be set before required header size is measured. If
-            // the caption attribute is missing the caption should be cleared.
-            String iconURL = null;
-            if (getIcon() != null) {
-                iconURL = getIcon();
-            }
-            getWidget().setCaption(getState().caption, iconURL);
-        }
-
-        getWidget().visibilityChangesDisabled = true;
+        window.visibilityChangesDisabled = true;
         if (!isRealUpdate(uidl)) {
             return;
         }
-        getWidget().visibilityChangesDisabled = false;
-
-        clickEventHandler.handleEventHandlerRegistration();
-
-        getWidget().immediate = getState().immediate;
-
-        getWidget().setClosable(!isReadOnly());
-
-        // Initialize the position form UIDL
-        int positionx = getState().positionX;
-        int positiony = getState().positionY;
-        if (positionx >= 0 || positiony >= 0) {
-            if (positionx < 0) {
-                positionx = 0;
-            }
-            if (positiony < 0) {
-                positiony = 0;
-            }
-            getWidget().setPopupPosition(positionx, positiony);
-        }
-
-        int childIndex = 0;
+        window.visibilityChangesDisabled = false;
 
         // we may have actions
         for (int i = 0; i < uidl.getChildCount(); i++) {
             UIDL childUidl = uidl.getChildUIDL(i);
             if (childUidl.getTag().equals("actions")) {
-                if (getWidget().shortcutHandler == null) {
-                    getWidget().shortcutHandler = new ShortcutActionHandler(
-                            getConnectorId(), client);
+                if (window.shortcutHandler == null) {
+                    window.shortcutHandler = new ShortcutActionHandler(
+                            connectorId, client);
                 }
-                getWidget().shortcutHandler.updateActionMap(childUidl);
+                window.shortcutHandler.updateActionMap(childUidl);
             }
 
-        }
-
-        // setting scrollposition must happen after children is rendered
-        getWidget().contentPanel.setScrollPosition(getState().scrollTop);
-        getWidget().contentPanel
-                .setHorizontalScrollPosition(getState().scrollLeft);
-
-        // Center this window on screen if requested
-        // This had to be here because we might not know the content size before
-        // everything is painted into the window
-
-        // centered is this is unset on move/resize
-        getWidget().centered = getState().centered;
-        getWidget().setVisible(true);
-
-        // ensure window is not larger than browser window
-        if (getWidget().getOffsetWidth() > Window.getClientWidth()) {
-            getWidget().setWidth(Window.getClientWidth() + "px");
-        }
-        if (getWidget().getOffsetHeight() > Window.getClientHeight()) {
-            getWidget().setHeight(Window.getClientHeight() + "px");
         }
 
         if (uidl.hasAttribute("bringToFront")) {
@@ -187,9 +161,8 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
              * ApplicationConnection if another component was focused by the
              * server side.
              */
-            getWidget().contentPanel.focus();
-            getWidget().bringToFrontSequence = uidl
-                    .getIntAttribute("bringToFront");
+            window.contentPanel.focus();
+            window.bringToFrontSequence = uidl.getIntAttribute("bringToFront");
             VWindow.deferOrdering();
         }
     }
@@ -223,26 +196,6 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         ComponentConnector content = getContent();
         boolean hasContent = (content != null);
         Element contentElement = window.contentPanel.getElement();
-
-        if (!minWidthChecked) {
-            boolean needsMinWidth = !isUndefinedWidth() || !hasContent
-                    || content.isRelativeWidth();
-            int minWidth = window.getMinWidth();
-            if (needsMinWidth && lm.getInnerWidth(contentElement) < minWidth) {
-                minWidthChecked = true;
-                // Use minimum width if less than a certain size
-                window.setWidth(minWidth + "px");
-            }
-            minWidthChecked = true;
-        }
-
-        boolean needsMinHeight = !isUndefinedHeight() || !hasContent
-                || content.isRelativeHeight();
-        int minHeight = window.getMinHeight();
-        if (needsMinHeight && lm.getInnerHeight(contentElement) < minHeight) {
-            // Use minimum height if less than a certain size
-            window.setHeight(minHeight + "px");
-        }
 
         Style contentStyle = window.contents.getStyle();
 
@@ -291,9 +244,8 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
 
     @Override
     public void postLayout() {
-        minWidthChecked = false;
         VWindow window = getWidget();
-        if (window.centered) {
+        if (window.centered && getState().windowMode != WindowMode.MAXIMIZED) {
             window.center();
         }
         window.positionOrSizeUpdated();
@@ -302,6 +254,126 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
     @Override
     public WindowState getState() {
         return (WindowState) super.getState();
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+
+        VWindow window = getWidget();
+        WindowState state = getState();
+
+        if (state.modal != window.vaadinModality) {
+            window.setVaadinModality(!window.vaadinModality);
+        }
+        if (!window.isAttached()) {
+            window.setVisible(false); // hide until possible centering
+            window.show();
+        }
+        boolean resizeable = state.resizable
+                && state.windowMode == WindowMode.NORMAL;
+        window.setResizable(resizeable);
+
+        window.resizeLazy = state.resizeLazy;
+
+        window.setDraggable(state.draggable
+                && state.windowMode == WindowMode.NORMAL);
+
+        window.updateMaximizeRestoreClassName(state.resizable, state.windowMode);
+
+        // Caption must be set before required header size is measured. If
+        // the caption attribute is missing the caption should be cleared.
+        String iconURL = null;
+        if (getIcon() != null) {
+            iconURL = getIcon();
+        }
+        window.setCaption(state.caption, iconURL);
+
+        clickEventHandler.handleEventHandlerRegistration();
+
+        window.immediate = state.immediate;
+
+        window.setClosable(!isReadOnly());
+        // initialize position from state
+        updateWindowPosition();
+
+        // setting scrollposition must happen after children is rendered
+        window.contentPanel.setScrollPosition(state.scrollTop);
+        window.contentPanel.setHorizontalScrollPosition(state.scrollLeft);
+
+        // Center this window on screen if requested
+        // This had to be here because we might not know the content size before
+        // everything is painted into the window
+
+        // centered is this is unset on move/resize
+        window.centered = state.centered;
+        window.setVisible(true);
+
+        // ensure window is not larger than browser window
+        if (window.getOffsetWidth() > Window.getClientWidth()) {
+            window.setWidth(Window.getClientWidth() + "px");
+        }
+        if (window.getOffsetHeight() > Window.getClientHeight()) {
+            window.setHeight(Window.getClientHeight() + "px");
+        }
+    }
+
+    // Need to override default because of window mode
+    @Override
+    protected void updateComponentSize() {
+        if (getState().windowMode == WindowMode.NORMAL) {
+            super.updateComponentSize();
+        } else if (getState().windowMode == WindowMode.MAXIMIZED) {
+            super.updateComponentSize("100%", "100%");
+        }
+    }
+
+    protected void updateWindowPosition() {
+        VWindow window = getWidget();
+        WindowState state = getState();
+        if (state.windowMode == WindowMode.NORMAL) {
+            // if centered, position handled in postLayout()
+            if (!state.centered
+                    && (state.positionX >= 0 || state.positionY >= 0)) {
+                // If both positions are negative, then
+                // setWindowOrderAndPosition has already taken care of
+                // positioning the window so it stacks with other windows
+                window.setPopupPosition(state.positionX, state.positionY);
+            }
+        } else if (state.windowMode == WindowMode.MAXIMIZED) {
+            window.setPopupPositionNoUpdate(0, 0);
+            window.bringToFront();
+        }
+    }
+
+    protected void updateWindowMode() {
+        VWindow window = getWidget();
+        WindowState state = getState();
+
+        // update draggable on widget
+        window.setDraggable(state.draggable
+                && state.windowMode == WindowMode.NORMAL);
+        // update resizable on widget
+        window.setResizable(state.resizable
+                && state.windowMode == WindowMode.NORMAL);
+        updateComponentSize();
+        updateWindowPosition();
+        window.updateMaximizeRestoreClassName(state.resizable, state.windowMode);
+        window.updateContentsSize();
+    }
+
+    protected void onMaximizeRestore() {
+        WindowState state = getState();
+        if (state.resizable) {
+            if (state.windowMode == WindowMode.MAXIMIZED) {
+                state.windowMode = WindowMode.NORMAL;
+            } else {
+                state.windowMode = WindowMode.MAXIMIZED;
+            }
+            updateWindowMode();
+            getRpcProxy(WindowServerRpc.class).windowModeChanged(
+                    state.windowMode);
+        }
     }
 
     /**

@@ -156,10 +156,6 @@
 }
 .v-ie & .#{$primaryStyleName}-tabs .v-errorindicator {
 	zoom: 1;
-	display: inline;
-}
-.v-ie8 & .#{$primaryStyleName}-tabs .v-errorindicator,
-.v-ie9 & .#{$primaryStyleName}-tabs .v-errorindicator {
 	display: inline-block;
 }
 

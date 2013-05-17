@@ -9,6 +9,7 @@ import com.vaadin.data.util.AbstractProperty;
 import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.UI;
 
@@ -18,7 +19,8 @@ public class RemoveListenersOnDetach {
     int numReadOnlyChanges = 0;
 
     AbstractField field = new AbstractField() {
-        final private VaadinSession application = new VaadinSession(null);
+        final private VaadinSession application = new AlwaysLockedVaadinSession(
+                null);
         private UI uI = new UI() {
 
             @Override

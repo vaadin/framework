@@ -7,5 +7,9 @@
     <replace-with class="com.vaadin.tests.widgetset.client.CustomUIConnector">
         <when-type-is class="com.vaadin.client.ui.ui.UIConnector" />
     </replace-with>
+    
+     <replace-with class="com.vaadin.tests.widgetset.client.TestingPushConnection">
+        <when-type-is class="com.vaadin.client.communication.PushConnection" />
+    </replace-with>
 	
 </module>

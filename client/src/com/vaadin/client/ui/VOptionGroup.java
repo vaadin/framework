@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -99,6 +100,13 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
     public void buildOptions(UIDL uidl) {
         panel.clear();
         optionsEnabled.clear();
+
+        if (isMultiselect()) {
+            Roles.getGroupRole().set(getElement());
+        } else {
+            Roles.getRadiogroupRole().set(getElement());
+        }
+
         for (final Iterator<?> it = uidl.getChildIterator(); it.hasNext();) {
             final UIDL opUidl = (UIDL) it.next();
             CheckBox op;

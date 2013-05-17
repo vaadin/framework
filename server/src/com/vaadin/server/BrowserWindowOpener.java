@@ -38,7 +38,8 @@ public class BrowserWindowOpener extends AbstractExtension {
         private final String path;
         private final Class<? extends UI> uiClass;
 
-        public BrowserWindowOpenerUIProvider(Class<? extends UI> uiClass, String path) {
+        public BrowserWindowOpenerUIProvider(Class<? extends UI> uiClass,
+                String path) {
             this.path = ensureInitialSlash(path);
             this.uiClass = uiClass;
         }

@@ -53,6 +53,7 @@ public class TableQueryWithNonUniqueFirstPrimaryKey extends LegacyApplication {
             myCombo.setWidth("100.0%");
             myCombo.setHeight("-1px");
             myCombo.addValueChangeListener(new Property.ValueChangeListener() {
+                @Override
                 public void valueChange(ValueChangeEvent event) {
                     if (myCombo.getValue() != null) {
                         Item item = myCombo.getItem(event.getProperty()

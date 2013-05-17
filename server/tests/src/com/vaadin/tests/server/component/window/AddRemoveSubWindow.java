@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
@@ -25,7 +26,7 @@ public class AddRemoveSubWindow {
 
     @Test
     public void addSubWindow() {
-        VaadinSession.setCurrent(new VaadinSession(null));
+        VaadinSession.setCurrent(new AlwaysLockedVaadinSession(null));
         TestApp app = new TestApp();
         app.init();
         Window subWindow = new Window("Sub window");

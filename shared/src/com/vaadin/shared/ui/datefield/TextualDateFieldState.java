@@ -15,10 +15,24 @@
  */
 package com.vaadin.shared.ui.datefield;
 
+import java.util.Date;
+
 import com.vaadin.shared.AbstractFieldState;
 
 public class TextualDateFieldState extends AbstractFieldState {
     {
         primaryStyleName = "v-datefield";
     }
+
+    /*
+     * Start range that has been cleared, depending on the resolution of the
+     * date field
+     */
+    public Date rangeStart = null;
+
+    /*
+     * End range that has been cleared, depending on the resolution of the date
+     * field
+     */
+    public Date rangeEnd = null;
 }

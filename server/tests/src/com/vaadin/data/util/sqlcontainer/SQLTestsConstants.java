@@ -45,6 +45,10 @@ public class SQLTestsConstants {
     public static String peopleFirst;
     public static String peopleSecond;
     public static String peopleThird;
+    /* Schema test creation statement(s) */
+    public static String createSchema;
+    public static String createProductTable;
+    public static String dropSchema;
     /* Versioned -test table createion statement(s) */
     public static String[] versionStatements;
     /* SQL Generator used during the testing */
@@ -66,6 +70,10 @@ public class SQLTestsConstants {
             versionStatements = new String[] {
                     "create table versioned (id integer generated always as identity, text varchar(255), version tinyint default 0)",
                     "alter table versioned add primary key (id)" };
+            // TODO these should ideally exist for all databases
+            createSchema = "create schema oaas authorization DBA";
+            createProductTable = "create table oaas.product (\"ID\" integer generated always as identity primary key, \"NAME\" VARCHAR(32))";
+            dropSchema = "drop schema if exists oaas cascade";
             break;
         case MYSQL:
             offset = 1;
@@ -104,6 +112,9 @@ public class SQLTestsConstants {
                     "CREATE TRIGGER \"mytable_modify_dt_tr\" BEFORE UPDATE"
                             + "   ON VERSIONED FOR EACH ROW"
                             + "   EXECUTE PROCEDURE \"public\".\"zz_row_version\"();" };
+            createSchema = "create schema oaas";
+            createProductTable = "create table oaas.product (\"ID\" serial primary key, \"NAME\" VARCHAR(32))";
+            dropSchema = "drop schema oaas cascade";
             break;
         case MSSQL:
             offset = 1;

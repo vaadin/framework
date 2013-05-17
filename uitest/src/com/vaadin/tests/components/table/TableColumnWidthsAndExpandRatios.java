@@ -38,10 +38,11 @@ public class TableColumnWidthsAndExpandRatios extends TestBase {
         return new NativeButton("Reset " + property + " width",
                 new Button.ClickListener() {
 
-            public void buttonClick(ClickEvent event) {
-                table.setColumnWidth(property, -1);
-            }
-        });
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        table.setColumnWidth(property, -1);
+                    }
+                });
     }
 
     @Override

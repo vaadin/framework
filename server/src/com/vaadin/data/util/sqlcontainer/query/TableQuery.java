@@ -50,9 +50,23 @@ import com.vaadin.data.util.sqlcontainer.query.generator.StatementHelper;
 public class TableQuery extends AbstractTransactionalQuery implements
         QueryDelegate, QueryDelegate.RowIdChangeNotifier {
 
-    /** Table name, primary key column name(s) and version column name */
+    /**
+     * Table name (without catalog or schema information).
+     */
     private String tableName;
+    private String catalogName;
+    private String schemaName;
+    /**
+     * Cached concatenated version of the table name.
+     */
+    private String fullTableName;
+    /**
+     * Primary key column name(s) in the table.
+     */
     private List<String> primaryKeyColumns;
+    /**
+     * Version column name in the table.
+     */
     private String versionColumn;
 
     /** Currently set Filters and OrderBys */
@@ -70,14 +84,14 @@ public class TableQuery extends AbstractTransactionalQuery implements
     /** Set to true to output generated SQL Queries to System.out */
     private final boolean debug = false;
 
-    /** Prevent no-parameters instantiation of TableQuery */
-    @SuppressWarnings("unused")
-    private TableQuery() {
-    }
-
     /**
      * Creates a new TableQuery using the given connection pool, SQL generator
      * and table name to fetch the data from. All parameters must be non-null.
+     * 
+     * The table name must be a simple name with no catalog or schema
+     * information. If those are needed, use
+     * {@link #TableQuery(String, String, String, JDBCConnectionPool, SQLGenerator)}
+     * .
      * 
      * @param tableName
      *            Name of the database table to connect to
@@ -88,21 +102,41 @@ public class TableQuery extends AbstractTransactionalQuery implements
      */
     public TableQuery(String tableName, JDBCConnectionPool connectionPool,
             SQLGenerator sqlGenerator) {
-        super(connectionPool);
-        if (tableName == null || tableName.trim().length() < 1
-                || connectionPool == null || sqlGenerator == null) {
-            throw new IllegalArgumentException(
-                    "All parameters must be non-null and a table name must be given.");
-        }
-        this.tableName = tableName;
-        this.sqlGenerator = sqlGenerator;
-        fetchMetaData();
+        this(null, null, tableName, connectionPool, sqlGenerator);
+    }
+
+    /**
+     * Creates a new TableQuery using the given connection pool, SQL generator
+     * and table name to fetch the data from. Catalog and schema names can be
+     * null, all other parameters must be non-null.
+     * 
+     * @param catalogName
+     *            Name of the database catalog (can be null)
+     * @param schemaName
+     *            Name of the database schema (can be null)
+     * @param tableName
+     *            Name of the database table to connect to
+     * @param connectionPool
+     *            Connection pool for accessing the database
+     * @param sqlGenerator
+     *            SQL query generator implementation
+     * @since 7.1
+     */
+    public TableQuery(String catalogName, String schemaName, String tableName,
+            JDBCConnectionPool connectionPool, SQLGenerator sqlGenerator) {
+        this(catalogName, schemaName, tableName, connectionPool, sqlGenerator,
+                true);
     }
 
     /**
      * Creates a new TableQuery using the given connection pool and table name
      * to fetch the data from. All parameters must be non-null. The default SQL
      * generator will be used for queries.
+     * 
+     * The table name must be a simple name with no catalog or schema
+     * information. If those are needed, use
+     * {@link #TableQuery(String, String, String, JDBCConnectionPool, SQLGenerator)}
+     * .
      * 
      * @param tableName
      *            Name of the database table to connect to
@@ -113,6 +147,48 @@ public class TableQuery extends AbstractTransactionalQuery implements
         this(tableName, connectionPool, new DefaultSQLGenerator());
     }
 
+    /**
+     * Creates a new TableQuery using the given connection pool, SQL generator
+     * and table name to fetch the data from. Catalog and schema names can be
+     * null, all other parameters must be non-null.
+     * 
+     * @param catalogName
+     *            Name of the database catalog (can be null)
+     * @param schemaName
+     *            Name of the database schema (can be null)
+     * @param tableName
+     *            Name of the database table to connect to
+     * @param connectionPool
+     *            Connection pool for accessing the database
+     * @param sqlGenerator
+     *            SQL query generator implementation
+     * @param escapeNames
+     *            true to escape special characters in catalog, schema and table
+     *            names, false to use the names as-is
+     * @since 7.1
+     */
+    protected TableQuery(String catalogName, String schemaName,
+            String tableName, JDBCConnectionPool connectionPool,
+            SQLGenerator sqlGenerator, boolean escapeNames) {
+        super(connectionPool);
+        if (tableName == null || tableName.trim().length() < 1
+                || connectionPool == null || sqlGenerator == null) {
+            throw new IllegalArgumentException(
+                    "Table name, connection pool and SQL generator parameters must be non-null and non-empty.");
+        }
+        if (escapeNames) {
+            this.catalogName = SQLUtil.escapeSQL(catalogName);
+            this.schemaName = SQLUtil.escapeSQL(schemaName);
+            this.tableName = SQLUtil.escapeSQL(tableName);
+        } else {
+            this.catalogName = catalogName;
+            this.schemaName = schemaName;
+            this.tableName = tableName;
+        }
+        this.sqlGenerator = sqlGenerator;
+        fetchMetaData();
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -121,8 +197,8 @@ public class TableQuery extends AbstractTransactionalQuery implements
     @Override
     public int getCount() throws SQLException {
         getLogger().log(Level.FINE, "Fetching count...");
-        StatementHelper sh = sqlGenerator.generateSelectQuery(tableName,
-                filters, null, 0, 0, "COUNT(*)");
+        StatementHelper sh = sqlGenerator.generateSelectQuery(
+                getFullTableName(), filters, null, 0, 0, "COUNT(*)");
         boolean shouldCloseTransaction = false;
         if (!isInTransaction()) {
             shouldCloseTransaction = true;
@@ -167,11 +243,11 @@ public class TableQuery extends AbstractTransactionalQuery implements
             for (int i = 0; i < primaryKeyColumns.size(); i++) {
                 ob.add(new OrderBy(primaryKeyColumns.get(i), true));
             }
-            sh = sqlGenerator.generateSelectQuery(tableName, filters, ob,
-                    offset, pagelength, null);
+            sh = sqlGenerator.generateSelectQuery(getFullTableName(), filters,
+                    ob, offset, pagelength, null);
         } else {
-            sh = sqlGenerator.generateSelectQuery(tableName, filters, orderBys,
-                    offset, pagelength, null);
+            sh = sqlGenerator.generateSelectQuery(getFullTableName(), filters,
+                    orderBys, offset, pagelength, null);
         }
         return executeQuery(sh);
     }
@@ -204,11 +280,11 @@ public class TableQuery extends AbstractTransactionalQuery implements
         int result = 0;
         if (row.getId() instanceof TemporaryRowId) {
             setVersionColumnFlagInProperty(row);
-            sh = sqlGenerator.generateInsertQuery(tableName, row);
+            sh = sqlGenerator.generateInsertQuery(getFullTableName(), row);
             result = executeUpdateReturnKeys(sh, row);
         } else {
             setVersionColumnFlagInProperty(row);
-            sh = sqlGenerator.generateUpdateQuery(tableName, row);
+            sh = sqlGenerator.generateUpdateQuery(getFullTableName(), row);
             result = executeUpdate(sh);
         }
         if (versionColumn != null && result == 0) {
@@ -244,7 +320,8 @@ public class TableQuery extends AbstractTransactionalQuery implements
         /* Set version column, if one is provided */
         setVersionColumnFlagInProperty(row);
         /* Generate query */
-        StatementHelper sh = sqlGenerator.generateInsertQuery(tableName, row);
+        StatementHelper sh = sqlGenerator.generateInsertQuery(
+                getFullTableName(), row);
         Connection connection = null;
         PreparedStatement pstmt = null;
         ResultSet generatedKeys = null;
@@ -371,8 +448,59 @@ public class TableQuery extends AbstractTransactionalQuery implements
         versionColumn = column;
     }
 
+    /**
+     * Returns the table name for the query without catalog and schema
+     * information.
+     * 
+     * @return table name, not null
+     */
     public String getTableName() {
         return tableName;
+    }
+
+    /**
+     * Returns the catalog name for the query.
+     * 
+     * @return catalog name, can be null
+     * @since 7.1
+     */
+    public String getCatalogName() {
+        return catalogName;
+    }
+
+    /**
+     * Returns the catalog name for the query.
+     * 
+     * @return catalog name, can be null
+     * @since 7.1
+     */
+    public String getSchemaName() {
+        return schemaName;
+    }
+
+    /**
+     * Returns the complete table name obtained by concatenation of the catalog
+     * and schema names (if any) and the table name.
+     * 
+     * This method can be overridden if customization is needed.
+     * 
+     * @return table name in the form it should be used in query and update
+     *         statements
+     * @since 7.1
+     */
+    protected String getFullTableName() {
+        if (fullTableName == null) {
+            StringBuilder sb = new StringBuilder();
+            if (catalogName != null) {
+                sb.append(catalogName).append(".");
+            }
+            if (schemaName != null) {
+                sb.append(schemaName).append(".");
+            }
+            sb.append(tableName);
+            fullTableName = sb.toString();
+        }
+        return fullTableName;
     }
 
     public SQLGenerator getSqlGenerator() {
@@ -480,22 +608,28 @@ public class TableQuery extends AbstractTransactionalQuery implements
             connection = getConnection();
             DatabaseMetaData dbmd = connection.getMetaData();
             if (dbmd != null) {
-                tableName = SQLUtil.escapeSQL(tableName);
-                tables = dbmd.getTables(null, null, tableName, null);
+                tables = dbmd.getTables(catalogName, schemaName, tableName,
+                        null);
                 if (!tables.next()) {
-                    tables = dbmd.getTables(null, null,
+                    String catalog = (catalogName != null) ? catalogName
+                            .toUpperCase() : null;
+                    String schema = (schemaName != null) ? schemaName
+                            .toUpperCase() : null;
+                    tables = dbmd.getTables(catalog, schema,
                             tableName.toUpperCase(), null);
                     if (!tables.next()) {
                         throw new IllegalArgumentException(
                                 "Table with the name \""
-                                        + tableName
+                                        + getFullTableName()
                                         + "\" was not found. Check your database contents.");
                     } else {
+                        catalogName = catalog;
+                        schemaName = schema;
                         tableName = tableName.toUpperCase();
                     }
                 }
                 tables.close();
-                rs = dbmd.getPrimaryKeys(null, null, tableName);
+                rs = dbmd.getPrimaryKeys(catalogName, schemaName, tableName);
                 List<String> names = new ArrayList<String>();
                 while (rs.next()) {
                     names.add(rs.getString("COLUMN_NAME"));
@@ -507,7 +641,7 @@ public class TableQuery extends AbstractTransactionalQuery implements
                 if (primaryKeyColumns == null || primaryKeyColumns.isEmpty()) {
                     throw new IllegalArgumentException(
                             "Primary key constraints have not been defined for the table \""
-                                    + tableName
+                                    + getFullTableName()
                                     + "\". Use FreeFormQuery to access this table.");
                 }
                 for (String colName : primaryKeyColumns) {
@@ -592,7 +726,7 @@ public class TableQuery extends AbstractTransactionalQuery implements
             getLogger().log(Level.FINE, "Removing row with id: {0}",
                     row.getId().getId()[0]);
         }
-        if (executeUpdate(sqlGenerator.generateDeleteQuery(getTableName(),
+        if (executeUpdate(sqlGenerator.generateDeleteQuery(getFullTableName(),
                 primaryKeyColumns, versionColumn, row)) == 1) {
             return true;
         }
@@ -622,8 +756,8 @@ public class TableQuery extends AbstractTransactionalQuery implements
             filtersAndKeys.add(new Equal(colName, keys[ix]));
             ix++;
         }
-        StatementHelper sh = sqlGenerator.generateSelectQuery(tableName,
-                filtersAndKeys, orderBys, 0, 0, "*");
+        StatementHelper sh = sqlGenerator.generateSelectQuery(
+                getFullTableName(), filtersAndKeys, orderBys, 0, 0, "*");
 
         boolean shouldCloseTransaction = false;
         if (!isInTransaction()) {

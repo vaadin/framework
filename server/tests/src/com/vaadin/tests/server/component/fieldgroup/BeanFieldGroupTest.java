@@ -3,6 +3,7 @@ package com.vaadin.tests.server.component.fieldgroup;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 
 public class BeanFieldGroupTest {

@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style;
@@ -66,6 +67,10 @@ import com.vaadin.client.Focusable;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.ui.aria.AriaHelper;
+import com.vaadin.client.ui.aria.HandlesAriaCaption;
+import com.vaadin.client.ui.aria.HandlesAriaInvalid;
+import com.vaadin.client.ui.aria.HandlesAriaRequired;
 import com.vaadin.client.ui.menubar.MenuBar;
 import com.vaadin.client.ui.menubar.MenuItem;
 import com.vaadin.shared.AbstractComponentState;
@@ -81,7 +86,8 @@ import com.vaadin.shared.ui.combobox.FilteringMode;
 @SuppressWarnings("deprecation")
 public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         KeyUpHandler, ClickHandler, FocusHandler, BlurHandler, Focusable,
-        SubPartAware {
+        SubPartAware, HandlesAriaCaption, HandlesAriaInvalid,
+        HandlesAriaRequired {
 
     /**
      * Represents a suggestion in the suggestion popup box
@@ -241,6 +247,8 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
 
             DOM.sinkEvents(root, Event.ONMOUSEDOWN | Event.ONMOUSEWHEEL);
             addCloseHandler(this);
+
+            Roles.getListRole().set(getElement());
         }
 
         /**
@@ -736,6 +744,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             while (it.hasNext()) {
                 final FilterSelectSuggestion s = it.next();
                 final MenuItem mi = new MenuItem(s.getDisplayString(), true, s);
+                Roles.getListitemRole().set(mi.getElement());
 
                 Util.sinkOnloadForImages(mi.getElement());
 
@@ -1106,9 +1115,15 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         });
 
         popupOpener.sinkEvents(Event.ONMOUSEDOWN);
+        Roles.getButtonRole()
+                .setAriaHiddenState(popupOpener.getElement(), true);
+        Roles.getButtonRole().set(popupOpener.getElement());
+
         panel.add(tb);
         panel.add(popupOpener);
         initWidget(panel);
+        Roles.getComboboxRole().set(panel.getElement());
+
         tb.addKeyDownHandler(this);
         tb.addKeyUpHandler(this);
 
@@ -1226,8 +1241,11 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         // Always update styles as they might have been overwritten
         if (textInputEnabled) {
             removeStyleDependentName(STYLE_NO_INPUT);
+            Roles.getTextboxRole().removeAriaReadonlyProperty(tb.getElement());
         } else {
             addStyleDependentName(STYLE_NO_INPUT);
+            Roles.getTextboxRole().setAriaReadonlyProperty(tb.getElement(),
+                    true);
         }
 
         if (this.textInputEnabled == textInputEnabled) {
@@ -1936,5 +1954,20 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             return "button";
         }
         return null;
+    }
+
+    @Override
+    public void setAriaRequired(boolean required) {
+        AriaHelper.handleInputRequired(tb, required);
+    }
+
+    @Override
+    public void setAriaInvalid(boolean invalid) {
+        AriaHelper.handleInputInvalid(tb, invalid);
+    }
+
+    @Override
+    public void bindAriaCaption(Element captionElement) {
+        AriaHelper.bindCaption(tb, captionElement);
     }
 }

@@ -11,7 +11,7 @@
         <conf name="build" />
         <conf name="build-provided" />
         <conf name="ide" visibility="private" />
-        <conf name="tests" />
+        <conf name="test" />
     </configurations>
     <publications>
         <artifact type="jar" ext="jar" />
@@ -25,15 +25,15 @@
         <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->
         <dependency org="com.vaadin" name="vaadin-shared"
-            rev="${vaadin.version}" conf="build,tests->build"></dependency>
+            rev="${vaadin.version}" conf="build,test->build"></dependency>
         <dependency org="com.vaadin" name="vaadin-server"
-            rev="${vaadin.version}" conf="build->build"></dependency>
+            rev="${vaadin.version}" conf="build,test->build"></dependency>
 
         <!-- gwt-user dependencies -->
         <dependency org="org.w3c.css" name="sac" rev="1.3" />
 
         <dependency org="junit" name="junit" rev="4.5"
-            conf="tests->default" />
+            conf="test->default" />
 
         <dependency org="javax.validation" name="validation-api"
             rev="1.0.0.GA" conf="build->default,sources" />

@@ -141,4 +141,13 @@ public class FormLayoutConnector extends AbstractLayoutConnector {
         return info;
     }
 
+    @Override
+    public boolean hasTooltip() {
+        /*
+         * Tooltips are fetched from child connectors -> there's no quick way of
+         * checking whether there might a tooltip hiding somewhere
+         */
+        return true;
+    }
+
 }

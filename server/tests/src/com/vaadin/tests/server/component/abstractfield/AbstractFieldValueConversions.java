@@ -17,6 +17,7 @@ import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
 import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.Sex;
+import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.TextField;
 
@@ -45,7 +46,7 @@ public class AbstractFieldValueConversions extends TestCase {
     }
 
     public void testNonmodifiedBufferedFieldConversion() {
-        VaadinSession.setCurrent(new VaadinSession(null));
+        VaadinSession.setCurrent(new AlwaysLockedVaadinSession(null));
         TextField tf = new TextField("salary");
         tf.setBuffered(true);
         tf.setLocale(new Locale("en", "US"));
@@ -61,7 +62,7 @@ public class AbstractFieldValueConversions extends TestCase {
     }
 
     public void testModifiedBufferedFieldConversion() {
-        VaadinSession.setCurrent(new VaadinSession(null));
+        VaadinSession.setCurrent(new AlwaysLockedVaadinSession(null));
         TextField tf = new TextField("salary");
         tf.setBuffered(true);
         tf.setLocale(new Locale("en", "US"));
@@ -129,7 +130,7 @@ public class AbstractFieldValueConversions extends TestCase {
     }
 
     public void testChangeReadOnlyFieldLocale() {
-        VaadinSession.setCurrent(new VaadinSession(null));
+        VaadinSession.setCurrent(new AlwaysLockedVaadinSession(null));
 
         TextField tf = new TextField("salary");
         tf.setLocale(new Locale("en", "US"));
@@ -214,7 +215,7 @@ public class AbstractFieldValueConversions extends TestCase {
     }
 
     public void testNumberDoubleConverterChange() {
-        final VaadinSession a = new VaadinSession(null);
+        final VaadinSession a = new AlwaysLockedVaadinSession(null);
         VaadinSession.setCurrent(a);
         TextField tf = new TextField() {
             @Override

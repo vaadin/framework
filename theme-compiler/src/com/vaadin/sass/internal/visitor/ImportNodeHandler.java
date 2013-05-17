@@ -67,12 +67,9 @@ public class ImportNodeHandler {
                             updateUrlInImportedSheet(imported, prefix);
                         }
 
-                        Node pre = importNode;
-                        for (Node importedChild : new ArrayList<Node>(
-                                imported.getChildren())) {
-                            node.appendChild(importedChild, pre);
-                            pre = importedChild;
-                        }
+                        node.appendChildrenAfter(
+                                new ArrayList<Node>(imported.getChildren()),
+                                importNode);
                         node.removeChild(importNode);
                     } catch (CSSException e) {
                         e.printStackTrace();

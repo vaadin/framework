@@ -501,6 +501,25 @@ public abstract class AbstractInMemoryContainer<ITEMIDTYPE, PROPERTYIDCLASS, ITE
     }
 
     /**
+     * Returns true if any filters have been applied to the container.
+     * 
+     * @return true if the container has filters applied, false otherwise
+     * @since 7.1
+     */
+    protected boolean hasContainerFilters() {
+        return !getContainerFilters().isEmpty();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.Container.Filterable#getContainerFilters()
+     */
+    protected Collection<Filter> getContainerFilters() {
+        return Collections.unmodifiableCollection(filters);
+    }
+
+    /**
      * Remove a specific container filter and re-filter the view (if necessary).
      * 
      * This can be used to implement

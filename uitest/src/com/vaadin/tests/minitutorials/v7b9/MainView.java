@@ -42,6 +42,7 @@ public class MainView extends Panel implements View {
         layout.addComponent(lnk);
 
         logOut = new Button("Logout", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
 
                 ((NavigationtestUI) UI.getCurrent()).setLoggedInUser(null);

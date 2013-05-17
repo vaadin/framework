@@ -19,9 +19,14 @@ import com.vaadin.ui.themes.Reindeer;
 public class LayoutTesterApplication extends AbstractTestCase {
     Button nextButton = new Button("Next");
     private int layoutIndex = -1;
-    private int layoutCount = 1;
 
-    private Method[] layoutGetters;
+    private static final String[] layoutGetters = new String[] {
+            "getCaptionsTests", "getIconsTests",
+            "getRequiredErrorIndicatorsTests", "getAlignmentTests",
+            "getExpandRatiosTests", "getMarginSpacingTests",
+            "getComponentAddReplaceMoveTests", "getComponentSizingTests",
+            "getLayoutSizingTests" };
+
     private LegacyWindow mainWindow;
     private NativeSelect layoutSelector;
 
@@ -29,33 +34,32 @@ public class LayoutTesterApplication extends AbstractTestCase {
     public void init() {
         mainWindow = new LegacyWindow("LayoutTesterApplication");
         setMainWindow(mainWindow);
-        loadLayoutGetters();
-        nextLaytout();
+        nextLayout();
 
         nextButton.addListener(new Button.ClickListener() {
             private static final long serialVersionUID = -1577298910202253538L;
 
             @Override
             public void buttonClick(ClickEvent event) {
-                nextLaytout();
+                nextLayout();
             }
         });
     }
 
-    private void nextLaytout() {
+    private void nextLayout() {
         try {
             mainWindow.removeAllComponents();
             HorizontalLayout vlo = new HorizontalLayout();
             vlo.setSpacing(true);
             ++layoutIndex;
-            if (layoutIndex >= layoutCount) {
+            if (layoutIndex >= layoutGetters.length) {
                 layoutIndex = 0;
             }
             mainWindow.addComponent(vlo);
             vlo.addComponent(nextButton);
             vlo.addComponent(getLayoutTypeSelect());
-            vlo.addComponent(new UndefWideLabel(layoutGetters[layoutIndex]
-                    .getName()));
+            vlo.addComponent(new UndefWideLabel(getLayoutGetterMethod(
+                    layoutGetters[layoutIndex]).getName()));
 
             Layout lo = null;
             if (layoutSelector.getValue() == VerticalLayout.class) {
@@ -75,24 +79,34 @@ public class LayoutTesterApplication extends AbstractTestCase {
         }
     }
 
-    public void loadLayoutGetters() {
-        layoutGetters = AbstractLayoutTests.class.getDeclaredMethods();
-        layoutCount = layoutGetters.length;
+    private Method getLayoutGetterMethod(String method) {
+        try {
+            return AbstractLayoutTests.class.getDeclaredMethod(method);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     public Layout getVerticalTestLayout(int index) throws Exception {
         VerticalLayoutTests vlotest = new VerticalLayoutTests(this);
-        return (Layout) layoutGetters[index].invoke(vlotest, (Object[]) null);
+        return (Layout) getLayoutGetterMethod(layoutGetters[index]).invoke(
+                vlotest, (Object[]) null);
     }
 
     public Layout getHorizontalTestLayout(int index) throws Exception {
         HorizontalLayoutTests hlotest = new HorizontalLayoutTests(this);
-        return (Layout) layoutGetters[index].invoke(hlotest, (Object[]) null);
+        return (Layout) getLayoutGetterMethod(layoutGetters[index]).invoke(
+                hlotest, (Object[]) null);
     }
 
     public Layout getGridTestLayout(int index) throws Exception {
         GridLayoutTests hlotest = new GridLayoutTests(this);
-        return (Layout) layoutGetters[index].invoke(hlotest, (Object[]) null);
+        return (Layout) getLayoutGetterMethod(layoutGetters[index]).invoke(
+                hlotest, (Object[]) null);
     }
 
     private NativeSelect getLayoutTypeSelect() {
@@ -110,7 +124,7 @@ public class LayoutTesterApplication extends AbstractTestCase {
                 @Override
                 public void valueChange(ValueChangeEvent event) {
                     layoutIndex = -1;
-                    nextLaytout();
+                    nextLayout();
                 }
             });
         }

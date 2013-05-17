@@ -13,7 +13,7 @@
 .#{$primaryStyleName}-outerheader {
 	height: 49px;
 	margin-left: 9px;
-	padding: 15px 40px 11px 12px;
+	padding: 15px 61px 11px 12px;
 	background: transparent url(img/top-right.png) no-repeat right top;
 }
 .#{$primaryStyleName}-header {
@@ -51,17 +51,48 @@
 	background: transparent;
 	display: block;
 }
-.#{$primaryStyleName}-closebox {
+.#{$primaryStyleName}-closebox,
+.#{$primaryStyleName}-maximizebox,
+.#{$primaryStyleName}-restorebox {
 	position: absolute;
 	top: 21px;
-	right: 24px;
-	width: 12px;
 	height: 12px;
 	background: transparent url(img/close.png);
 }
-.#{$primaryStyleName}-closebox:hover {
-	background-position: 0 -12px;
+.#{$primaryStyleName}-closebox {
+	width: 12px;
+	height: 12px;
+	right: 24px;
+	background: transparent url(img/close.png);
+	&:hover {
+		background-position: 0 -12px;
+	}
 }
+
+.#{$primaryStyleName}-maximizebox,
+.#{$primaryStyleName}-restorebox {
+	right: 42px;
+}
+
+.#{$primaryStyleName}-restorebox {
+	width: 15px;
+	height: 14px;
+
+	background: transparent url(img/restore.png);
+	&:hover {
+		background-position: 0 -14px;
+	}
+}
+.#{$primaryStyleName}-maximizebox {
+	width: 13px;
+	height: 12px;
+
+	background: transparent url(img/maximize.png);
+	&:hover {
+		background-position: 0 -12px;
+	}
+}
+
 .#{$primaryStyleName}-modalitycurtain {
 	background: #fff;
 }

@@ -35,8 +35,10 @@ import com.vaadin.server.ClientConnector;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.shared.ui.window.WindowServerRpc;
 import com.vaadin.shared.ui.window.WindowState;
+import com.vaadin.util.ReflectTools;
 
 /**
  * A component that represents a floating popup window that can be added to a
@@ -70,6 +72,11 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         @Override
         public void click(MouseEventDetails mouseDetails) {
             fireEvent(new ClickEvent(Window.this, mouseDetails));
+        }
+
+        @Override
+        public void windowModeChanged(WindowMode newState) {
+            setWindowMode(newState);
         }
     };
 
@@ -234,10 +241,10 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Gets the distance of Window left border in pixels from left border of the
-     * containing (main window).
+     * containing (main window) when the window is in {@link WindowMode#NORMAL}.
      * 
      * @return the Distance of Window left border in pixels from left border of
-     *         the containing (main window). or -1 if unspecified.
+     *         the containing (main window).or -1 if unspecified
      * @since 4.0.0
      */
     public int getPositionX() {
@@ -246,7 +253,8 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Sets the distance of Window left border in pixels from left border of the
-     * containing (main window).
+     * containing (main window). Has effect only if in {@link WindowMode#NORMAL}
+     * mode.
      * 
      * @param positionX
      *            the Distance of Window left border in pixels from left border
@@ -260,10 +268,11 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Gets the distance of Window top border in pixels from top border of the
-     * containing (main window).
+     * containing (main window) when the window is in {@link WindowMode#NORMAL}
+     * state, or when next set to that state.
      * 
      * @return Distance of Window top border in pixels from top border of the
-     *         containing (main window). or -1 if unspecified .
+     *         containing (main window). or -1 if unspecified
      * 
      * @since 4.0.0
      */
@@ -273,7 +282,8 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Sets the distance of Window top border in pixels from top border of the
-     * containing (main window).
+     * containing (main window). Has effect only if in {@link WindowMode#NORMAL}
+     * mode.
      * 
      * @param positionY
      *            the Distance of Window top border in pixels from top border of
@@ -399,6 +409,101 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     protected void fireClose() {
         fireEvent(new Window.CloseEvent(this));
+    }
+
+    /**
+     * Event which is fired when the mode of the Window changes.
+     * 
+     * @author Vaadin Ltd
+     * @since 7.1
+     * 
+     */
+    public static class WindowModeChangeEvent extends Component.Event {
+
+        private final WindowMode windowMode;
+
+        /**
+         * 
+         * @param source
+         */
+        public WindowModeChangeEvent(Component source, WindowMode windowMode) {
+            super(source);
+            this.windowMode = windowMode;
+        }
+
+        /**
+         * Gets the Window.
+         * 
+         * @return the window
+         */
+        public Window getWindow() {
+            return (Window) getSource();
+        }
+
+        /**
+         * Gets the new window mode.
+         * 
+         * @return the new mode
+         */
+        public WindowMode getWindowMode() {
+            return windowMode;
+        }
+    }
+
+    /**
+     * An interface used for listening to Window maximize / restore events. Add
+     * the WindowModeChangeListener to a window and
+     * {@link WindowModeChangeListener#windowModeChanged(WindowModeChangeEvent)}
+     * will be called whenever the window is maximized (
+     * {@link WindowMode#MAXIMIZED}) or restored ({@link WindowMode#NORMAL} ).
+     */
+    public interface WindowModeChangeListener extends Serializable {
+
+        public static final Method windowModeChangeMethod = ReflectTools
+                .findMethod(WindowModeChangeListener.class,
+                        "windowModeChanged", WindowModeChangeEvent.class);
+
+        /**
+         * Called when the user maximizes / restores a window. Use
+         * {@link WindowModeChangeEvent#getWindow()} to get a reference to the
+         * {@link Window} that was maximized / restored. Use
+         * {@link WindowModeChangeEvent#getWindowMode()} to get a reference to
+         * the new state.
+         * 
+         * @param event
+         */
+        public void windowModeChanged(WindowModeChangeEvent event);
+    }
+
+    /**
+     * Adds a WindowModeChangeListener to the window.
+     * 
+     * The WindowModeChangeEvent is fired when the user changed the display
+     * state by clicking the maximize/restore button or by double clicking on
+     * the window header. The event is also fired if the state is changed using
+     * {@link #setWindowMode(WindowMode)}.
+     * 
+     * @param listener
+     *            the WindowModeChangeListener to add.
+     */
+    public void addWindowModeChangeListener(WindowModeChangeListener listener) {
+        addListener(WindowModeChangeEvent.class, listener,
+                WindowModeChangeListener.windowModeChangeMethod);
+    }
+
+    /**
+     * Removes the WindowModeChangeListener from the window.
+     * 
+     * @param listener
+     *            the WindowModeChangeListener to remove.
+     */
+    public void removeWindowModeChangeListener(WindowModeChangeListener listener) {
+        removeListener(WindowModeChangeEvent.class, listener,
+                WindowModeChangeListener.windowModeChangeMethod);
+    }
+
+    protected void fireWindowWindowModeChange() {
+        fireEvent(new Window.WindowModeChangeEvent(this, getState().windowMode));
     }
 
     /**
@@ -670,6 +775,30 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         getState().draggable = draggable;
     }
 
+    /**
+     * Gets the current mode of the window.
+     * 
+     * @see WindowMode
+     * @return the mode of the window.
+     */
+    public WindowMode getWindowMode() {
+        return getState(false).windowMode;
+    }
+
+    /**
+     * Sets the mode for the window
+     * 
+     * @see WindowMode
+     * @param windowMode
+     *            The new mode
+     */
+    public void setWindowMode(WindowMode windowMode) {
+        if (windowMode != getWindowMode()) {
+            getState().windowMode = windowMode;
+            fireWindowWindowModeChange();
+        }
+    }
+
     /*
      * Actions
      */
@@ -872,5 +1001,10 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     @Override
     protected WindowState getState() {
         return (WindowState) super.getState();
+    }
+
+    @Override
+    protected WindowState getState(boolean markAsDirty) {
+        return (WindowState) super.getState(markAsDirty);
     }
 }

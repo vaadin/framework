@@ -21,9 +21,13 @@ import java.util.List;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.HeadElement;
+import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -34,6 +38,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -45,7 +50,6 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.Paintable;
-import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -57,12 +61,15 @@ import com.vaadin.client.ui.VNotification;
 import com.vaadin.client.ui.VUI;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.client.ui.window.WindowConnector;
+import com.vaadin.server.Page.Styles;
 import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.ui.PageClientRpc;
 import com.vaadin.shared.ui.ui.ScrollClientRpc;
+import com.vaadin.shared.ui.ui.UIClientRpc;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIServerRpc;
 import com.vaadin.shared.ui.ui.UIState;
@@ -91,6 +98,12 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             public void setTitle(String title) {
                 com.google.gwt.user.client.Window.setTitle(title);
             }
+
+            @Override
+            public void reload() {
+                Window.Location.reload();
+
+            }
         });
         registerRpc(ScrollClientRpc.class, new ScrollClientRpc() {
             @Override
@@ -101,6 +114,22 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             @Override
             public void setScrollLeft(int scrollLeft) {
                 getWidget().getElement().setScrollLeft(scrollLeft);
+            }
+        });
+        registerRpc(UIClientRpc.class, new UIClientRpc() {
+            @Override
+            public void uiClosed(final boolean sessionExpired) {
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        if (sessionExpired) {
+                            getConnection().showSessionExpiredError(null);
+                        } else {
+                            getState().enabled = false;
+                            updateEnabledState(getState().enabled);
+                        }
+                    }
+                });
             }
         });
         getWidget().addResizeHandler(new ResizeHandler() {
@@ -257,6 +286,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                     final UIDL notification = (UIDL) it.next();
                     VNotification.showNotification(client, notification);
                 }
+            } else if (tag == "css-injections") {
+                injectCSS(childUidl);
             }
         }
 
@@ -326,6 +357,47 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         getWidget().rendering = false;
     }
 
+    /**
+     * Reads CSS strings and resources injected by {@link Styles#inject} from
+     * the UIDL stream.
+     * 
+     * @param uidl
+     *            The uidl which contains "css-resource" and "css-string" tags
+     */
+    private void injectCSS(UIDL uidl) {
+
+        final HeadElement head = HeadElement.as(Document.get()
+                .getElementsByTagName(HeadElement.TAG).getItem(0));
+
+        /*
+         * Search the UIDL stream for CSS resources and strings to be injected.
+         */
+        for (Iterator<?> it = uidl.getChildIterator(); it.hasNext();) {
+            UIDL cssInjectionsUidl = (UIDL) it.next();
+
+            // Check if we have resources to inject
+            if (cssInjectionsUidl.getTag().equals("css-resource")) {
+                String url = getWidget().connection
+                        .translateVaadinUri(cssInjectionsUidl
+                                .getStringAttribute("url"));
+                LinkElement link = LinkElement.as(DOM
+                        .createElement(LinkElement.TAG));
+                link.setRel("stylesheet");
+                link.setHref(url);
+                link.setType("text/css");
+                head.appendChild(link);
+
+                // Check if we have CSS string to inject
+            } else if (cssInjectionsUidl.getTag().equals("css-string")) {
+                for (Iterator<?> it2 = cssInjectionsUidl.getChildIterator(); it2
+                        .hasNext();) {
+                    StyleInjector.injectAtEnd((String) it2.next());
+                    StyleInjector.flush();
+                }
+            }
+        }
+    }
+
     public void init(String rootPanelId,
             ApplicationConnection applicationConnection) {
         DOM.sinkEvents(getWidget().getElement(), Event.ONKEYDOWN
@@ -339,8 +411,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
         String themeName = applicationConnection.getConfiguration()
                 .getThemeName();
-        // Remove chars that are not suitable for style names
-        themeName = themeName.replaceAll("[^a-zA-Z0-9]", "");
         root.addStyleName(themeName);
 
         root.add(getWidget());
@@ -367,6 +437,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }
 
     };
+
+    private Timer pollTimer = null;
 
     @Override
     public void updateCaption(ComponentConnector component) {
@@ -477,13 +549,13 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     }
 
     @Override
-    public TooltipInfo getTooltipInfo(com.google.gwt.dom.client.Element element) {
+    public boolean hasTooltip() {
         /*
-         * Override method to make AbstractComponentConnector.hasTooltip()
-         * return true so there's a top level handler that takes care of hiding
-         * tooltips whenever the mouse is moved somewhere else.
+         * Always return true so there's always top level tooltip handler that
+         * takes care of hiding tooltips whenever the mouse is moved somewhere
+         * else.
          */
-        return super.getTooltipInfo(element);
+        return true;
     }
 
     /**
@@ -504,5 +576,70 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 componentConnector.getWidget().getElement().scrollIntoView();
             }
         });
+    }
+
+    @Override
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
+        if (stateChangeEvent.hasPropertyChanged("tooltipConfiguration")) {
+            getConnection().getVTooltip().setCloseTimeout(
+                    getState().tooltipConfiguration.closeTimeout);
+            getConnection().getVTooltip().setOpenDelay(
+                    getState().tooltipConfiguration.openDelay);
+            getConnection().getVTooltip().setQuickOpenDelay(
+                    getState().tooltipConfiguration.quickOpenDelay);
+            getConnection().getVTooltip().setQuickOpenTimeout(
+                    getState().tooltipConfiguration.quickOpenTimeout);
+            getConnection().getVTooltip().setMaxWidth(
+                    getState().tooltipConfiguration.maxWidth);
+        }
+
+        if (stateChangeEvent
+                .hasPropertyChanged("loadingIndicatorConfiguration")) {
+            getConnection().getLoadingIndicator().setFirstDelay(
+                    getState().loadingIndicatorConfiguration.firstDelay);
+            getConnection().getLoadingIndicator().setSecondDelay(
+                    getState().loadingIndicatorConfiguration.secondDelay);
+            getConnection().getLoadingIndicator().setThirdDelay(
+                    getState().loadingIndicatorConfiguration.thirdDelay);
+        }
+
+        if (stateChangeEvent.hasPropertyChanged("pollInterval")) {
+            configurePolling();
+        }
+
+        if (stateChangeEvent.hasPropertyChanged("pushMode")) {
+            getConnection().setPushEnabled(getState().pushMode.isEnabled());
+        }
+    }
+
+    private void configurePolling() {
+        if (pollTimer != null) {
+            pollTimer.cancel();
+            pollTimer = null;
+        }
+        if (getState().pollInterval >= 0) {
+            pollTimer = new Timer() {
+                @Override
+                public void run() {
+                    /*
+                     * Verify that polling has not recently been canceled. This
+                     * is needed because Timer.cancel() does not always work
+                     * properly in IE 8 until GWT issue 8101 has been fixed.
+                     */
+                    if (pollTimer != null) {
+                        getRpcProxy(UIServerRpc.class).poll();
+                        // Send changes even though poll is @Delayed
+                        getConnection().sendPendingVariableChanges();
+                    }
+                }
+            };
+            pollTimer.scheduleRepeating(getState().pollInterval);
+        } else {
+            // Ensure no more polls are sent as polling has been disabled
+            getConnection().removePendingInvocations(
+                    new MethodInvocation(getConnectorId(), UIServerRpc.class
+                            .getName(), "poll"));
+        }
     }
 }

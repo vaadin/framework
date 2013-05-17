@@ -25,6 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.vaadin.server.ConnectorResource;
+import com.vaadin.server.DownloadStream;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
 import com.vaadin.server.VaadinRequest;
@@ -83,7 +84,14 @@ public abstract class AbstractMedia extends AbstractComponent {
     public boolean handleConnectorRequest(VaadinRequest request,
             VaadinResponse response, String path) throws IOException {
         Matcher matcher = Pattern.compile("(\\d+)(/.*)?").matcher(path);
-        if (matcher.matches()) {
+        if (!matcher.matches()) {
+            return super.handleConnectorRequest(request, response, path);
+        }
+
+        DownloadStream stream;
+
+        getSession().lock();
+        try {
             List<URLReference> sources = getState().sources;
 
             int sourceIndex = Integer.parseInt(matcher.group(1));
@@ -98,11 +106,13 @@ public abstract class AbstractMedia extends AbstractComponent {
             URLReference reference = sources.get(sourceIndex);
             ConnectorResource resource = (ConnectorResource) ResourceReference
                     .getResource(reference);
-            resource.getStream().writeResponse(request, response);
-            return true;
-        } else {
-            return super.handleConnectorRequest(request, response, path);
+            stream = resource.getStream();
+        } finally {
+            getSession().unlock();
         }
+
+        stream.writeResponse(request, response);
+        return true;
     }
 
     private Logger getLogger() {

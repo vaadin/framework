@@ -1,4 +1,5 @@
 package com.vaadin.tests.components.orderedlayout;
+
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Panel;

@@ -40,6 +40,12 @@ public class ClassloaderResolver implements ScssStylesheetResolver {
         // Ensure only "/" is used, also in Windows
         fileName = fileName.replace(File.separatorChar, '/');
 
+        // Filename should be a relative path starting with VAADIN/...
+        int vaadinIdx = fileName.lastIndexOf("VAADIN/");
+        if (vaadinIdx > -1) {
+            fileName = fileName.substring(vaadinIdx);
+        }
+
         // Can the classloader find it?
         InputStream is = getClass().getClassLoader().getResourceAsStream(
                 fileName);

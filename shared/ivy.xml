@@ -11,7 +11,7 @@
         <conf name="build" />
         <conf name="build-provided" />
         <conf name="ide" visibility="private" />
-        <conf name="tests" />
+        <conf name="test" />
     </configurations>
     <publications>
         <artifact type="jar" ext="jar" />
@@ -21,7 +21,7 @@
     </publications>
     <dependencies>
         <dependency org="com.vaadin" name="vaadin-shared-deps"
-            rev="1.0.2" conf="build,ide,tests->default" />
+            rev="1.0.2" conf="build,ide,test->default" />
     </dependencies>
 
 </ivy-module>

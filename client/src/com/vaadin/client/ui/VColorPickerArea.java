@@ -67,6 +67,7 @@ public class VColorPickerArea extends Widget implements ClickHandler, HasHTML,
      * @param handler
      * @return HandlerRegistration used to remove the handler
      */
+    @Override
     public HandlerRegistration addClickHandler(ClickHandler handler) {
         return addDomHandler(handler, ClickEvent.getType());
     }

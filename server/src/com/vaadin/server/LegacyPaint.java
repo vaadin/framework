@@ -50,7 +50,7 @@ public class LegacyPaint implements Serializable {
     public static void paint(Component component, PaintTarget target)
             throws PaintException {
         // Only paint content of visible components.
-        if (!AbstractCommunicationManager.isComponentVisibleToClient(component)) {
+        if (!LegacyCommunicationManager.isComponentVisibleToClient(component)) {
             return;
         }
 

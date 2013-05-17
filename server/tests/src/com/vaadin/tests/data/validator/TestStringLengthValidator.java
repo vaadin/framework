@@ -45,7 +45,7 @@ public class TestStringLengthValidator extends TestCase {
                 validatorMinValue
                         .isValid("This is a really long string to test that no upper bound exists"));
     }
-    
+
     public void testNoLowerBound() {
         assertTrue("Didn't accept short string", validatorMaxValue.isValid(""));
         assertTrue("Didn't accept short string", validatorMaxValue.isValid("1"));

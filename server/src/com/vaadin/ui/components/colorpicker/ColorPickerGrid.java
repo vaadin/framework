@@ -187,6 +187,7 @@ public class ColorPickerGrid extends AbstractComponent implements ColorSelector 
      * @param listener
      *            The color change listener
      */
+    @Override
     public void addColorChangeListener(ColorChangeListener listener) {
         addListener(ColorChangeEvent.class, listener, COLOR_CHANGE_METHOD);
     }
@@ -202,6 +203,7 @@ public class ColorPickerGrid extends AbstractComponent implements ColorSelector 
      * @param listener
      *            The listener
      */
+    @Override
     public void removeColorChangeListener(ColorChangeListener listener) {
         removeListener(ColorChangeEvent.class, listener);
     }

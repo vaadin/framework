@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>midnightEventsTest</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">midnightEventsTest</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.components.calendar.CalendarTest?testBench&amp;width=1000px&amp;height=600px&amp;secondsResolution&amp;restartApplication</td>
+	<td></td>
+</tr>
+<!--Add event from 0:00 to 0:00-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscalendarCalendarTest::/VGridLayout[0]/VCalendar[0]/domChild[0]/domChild[1]/domChild[1]/domChild[0]/domChild[1]/domChild[1]/domChild[1]/domChild[0]/domChild[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>enterCharacter</td>
+	<td>vaadin=runcomvaadintestscomponentscalendarCalendarTest::/VWindow[0]/FocusableScrollPanel[0]/VVerticalLayout[0]/Slot[0]/VFormLayout[0]/VFormLayout$VFormLayoutTable[0]/VPopupCalendar[0]#field</td>
+	<td>1/3/00 12:00:00 AM</td>
+</tr>
+<tr>
+	<td>enterCharacter</td>
+	<td>vaadin=runcomvaadintestscomponentscalendarCalendarTest::/VWindow[0]/FocusableScrollPanel[0]/VVerticalLayout[0]/Slot[0]/VFormLayout[0]/VFormLayout$VFormLayoutTable[0]/VPopupCalendar[1]#field</td>
+	<td>1/4/00 12:00:00 AM</td>
+</tr>
+<tr>
+	<td>enterCharacter</td>
+	<td>vaadin=runcomvaadintestscomponentscalendarCalendarTest::/VWindow[0]/FocusableScrollPanel[0]/VVerticalLayout[0]/Slot[0]/VFormLayout[0]/VFormLayout$VFormLayoutTable[0]/VTextField[0]</td>
+	<td>Midnight to midnight</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentscalendarCalendarTest::/VWindow[0]/FocusableScrollPanel[0]/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[0]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<!--Add event from 00:00 to 00:00 on the same day-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscalendarCalendarTest::/VGridLayout[0]/VCalendar[0]/domChild[0]/domChild[1]/domChild[1]/domChild[0]/domChild[1]/domChild[1]/domChild[1]/domChild[0]/domChild[2]</td>
+	<td>84,10</td>
+</tr>
+<tr>
+	<td>enterCharacter</td>
+	<td>vaadin=runcomvaadintestscomponentscalendarCalendarTest::/VWindow[0]/FocusableScrollPanel[0]/VVerticalLayout[0]/Slot[0]/VFormLayout[0]/VFormLayout$VFormLayoutTable[0]/VPopupCalendar[1]#field</td>
+	<td>1/7/00 12:00:00 AM</td>
+</tr>
+<tr>
+	<td>enterCharacter</td>
+	<td>vaadin=runcomvaadintestscomponentscalendarCalendarTest::/VWindow[0]/FocusableScrollPanel[0]/VVerticalLayout[0]/Slot[0]/VFormLayout[0]/VFormLayout$VFormLayoutTable[0]/VTextField[0]</td>
+	<td>Zero-length midnight event</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentscalendarCalendarTest::/VWindow[0]/FocusableScrollPanel[0]/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[0]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td></td>
+</tr>
+<!--Go to weekly view-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscalendarCalendarTest::/VGridLayout[0]/VCalendar[0]/domChild[0]/domChild[1]/domChild[0]/domChild[0]/domChild[1]/domChild[1]/domChild[0]/domChild[0]</td>
+	<td>10,48</td>
+</tr>
+<!--Assert zero-length event exists-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscalendarCalendarTest::/VGridLayout[0]/VCalendar[0]/domChild[0]/domChild[3]/domChild[0]/domChild[0]/domChild[0]/domChild[0]/domChild[0]/domChild[0]/domChild[2]/domChild[0]/domChild[48]/domChild[0]</td>
+	<td>50,4</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentscalendarCalendarTest::/VWindow[0]/FocusableScrollPanel[0]/VVerticalLayout[0]/Slot[0]/VFormLayout[0]/VFormLayout$VFormLayoutTable[0]/VTextField[0]</td>
+	<td>Zero-length midnight event</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentscalendarCalendarTest::/VWindow[0]/FocusableScrollPanel[0]/VVerticalLayout[0]/ChildComponentContainer[1]/VHorizontalLayout[0]/ChildComponentContainer[2]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<!--Assert that the the all day event does not overflow to the next day by checking that the first time-cell is empty-->
+<tr>
+	<td>dragAndDrop</td>
+	<td>vaadin=runcomvaadintestscomponentscalendarCalendarTest::/VGridLayout[0]/VCalendar[0]/domChild[0]/domChild[3]/domChild[0]/domChild[0]/domChild[0]/domChild[0]/domChild[0]/domChild[0]/domChild[1]/domChild[0]/domChild[5]</td>
+	<td>+0,+5</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>vaadin=runcomvaadintestscomponentscalendarCalendarTest::/VWindow[0]/FocusableScrollPanel[0]/VVerticalLayout[0]/Slot[0]/VFormLayout[0]/VFormLayout$VFormLayoutTable[0]/VTextField[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentscalendarCalendarTest::/VWindow[0]/FocusableScrollPanel[0]/VVerticalLayout[0]/Slot[1]/VHorizontalLayout[0]/Slot[1]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
