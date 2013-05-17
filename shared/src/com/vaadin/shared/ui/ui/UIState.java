@@ -42,6 +42,11 @@ public class UIState extends TabIndexState {
         public int maxWidth = 500;
     }
 
+    /**
+     * State related to the {@link Page} class.
+     */
+    public PageState pageState = new PageState();
+
     {
         primaryStyleName = "v-ui";
         // Default is 1 for legacy reasons

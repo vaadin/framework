@@ -74,7 +74,7 @@ public class VaadinSessionTest {
         session.storeInSession(mockService, mockWrappedSession);
 
         ui = new UI() {
-            Page page = new Page(this) {
+            Page page = new Page(this, getState(false).pageState) {
                 @Override
                 public void init(VaadinRequest request) {
                 }

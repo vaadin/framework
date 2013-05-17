@@ -30,7 +30,9 @@ import java.util.Map;
 import com.vaadin.event.EventRouter;
 import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.ui.PageClientRpc;
+import com.vaadin.shared.ui.ui.PageState;
 import com.vaadin.shared.ui.ui.UIConstants;
+import com.vaadin.shared.ui.ui.UIState;
 import com.vaadin.ui.JavaScript;
 import com.vaadin.ui.LegacyWindow;
 import com.vaadin.ui.Link;
@@ -220,7 +222,7 @@ public class Page implements Serializable {
         }
     }
 
-    private static final Method BROWSWER_RESIZE_METHOD = ReflectTools
+    private static final Method BROWSER_RESIZE_METHOD = ReflectTools
             .findMethod(BrowserWindowResizeListener.class,
                     "browserWindowResized", BrowserWindowResizeEvent.class);
 
@@ -417,8 +419,11 @@ public class Page implements Serializable {
      */
     private URI location;
 
-    public Page(UI uI) {
+    private final PageState state;
+
+    public Page(UI uI, PageState state) {
         this.uI = uI;
+        this.state = state;
     }
 
     private void addListener(Class<?> eventType, Object target, Method method) {
@@ -604,20 +609,27 @@ public class Page implements Serializable {
     }
 
     /**
-     * Adds a new {@link BrowserWindowResizeListener} to this uI. The listener
-     * will be notified whenever the browser window within which this uI resides
+     * Adds a new {@link BrowserWindowResizeListener} to this UI. The listener
+     * will be notified whenever the browser window within which this UI resides
      * is resized.
+     * <p>
+     * In most cases, the UI should be in lazy resize mode when using browser
+     * window resize listeners. Otherwise, a large number of events can be
+     * received while a resize is being performed. Use
+     * {@link UI#setResizeLazy(boolean)}.
+     * </p>
      * 
      * @param resizeListener
      *            the listener to add
      * 
      * @see BrowserWindowResizeListener#browserWindowResized(BrowserWindowResizeEvent)
-     * @see #setResizeLazy(boolean)
+     * @see UI#setResizeLazy(boolean)
      */
     public void addBrowserWindowResizeListener(
             BrowserWindowResizeListener resizeListener) {
         addListener(BrowserWindowResizeEvent.class, resizeListener,
-                BROWSWER_RESIZE_METHOD);
+                BROWSER_RESIZE_METHOD);
+        getState(true).hasResizeListeners = true;
     }
 
     /**
@@ -639,7 +651,9 @@ public class Page implements Serializable {
     public void removeBrowserWindowResizeListener(
             BrowserWindowResizeListener resizeListener) {
         removeListener(BrowserWindowResizeEvent.class, resizeListener,
-                BROWSWER_RESIZE_METHOD);
+                BROWSER_RESIZE_METHOD);
+        getState(true).hasResizeListeners = eventRouter
+                .hasListeners(BrowserWindowResizeEvent.class);
     }
 
     /**
@@ -1036,6 +1050,31 @@ public class Page implements Serializable {
      */
     public void reload() {
         uI.getRpcProxy(PageClientRpc.class).reload();
+    }
+
+    /**
+     * Returns the page state.
+     * <p>
+     * The page state is transmitted to UIConnector together with
+     * {@link UIState} rather than as an individual entity.
+     * </p>
+     * <p>
+     * The state should be considered an internal detail of Page. Classes
+     * outside of Page should not access it directly but only through public
+     * APIs provided by Page.
+     * </p>
+     * 
+     * @since 7.1
+     * @param markAsDirty
+     *            true to mark the state as dirty
+     * @return PageState object that can be read in any case and modified if
+     *         markAsDirty is true
+     */
+    protected PageState getState(boolean markAsDirty) {
+        if (markAsDirty) {
+            uI.markAsDirty();
+        }
+        return state;
     }
 
 }

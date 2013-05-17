@@ -117,7 +117,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     /** Identifies the click event */
     private ConnectorTracker connectorTracker = new ConnectorTracker(this);
 
-    private Page page = new Page(this);
+    private Page page = new Page(this, getState(false).pageState);
 
     private LoadingIndicatorConfiguration loadingIndicatorConfiguration = new LoadingIndicatorConfigurationImpl(
             this);
@@ -686,10 +686,16 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
     /**
      * Should resize operations be lazy, i.e. should there be a delay before
-     * layout sizes are recalculated. Speeds up resize operations in slow UIs
-     * with the penalty of slightly decreased usability.
+     * layout sizes are recalculated and resize events are sent to the server.
+     * Speeds up resize operations in slow UIs with the penalty of slightly
+     * decreased usability.
      * <p>
      * Default value: <code>false</code>
+     * </p>
+     * <p>
+     * When there are active window resize listeners, lazy resize mode should be
+     * used to avoid a large number of events during resize.
+     * </p>
      * 
      * @param resizeLazy
      *            true to use a delay before recalculating sizes, false to
