@@ -17,10 +17,8 @@ package com.vaadin.shared.ui.ui;
 
 import java.io.Serializable;
 
-import com.vaadin.server.Page;
-
 /**
- * The shared state of a {@link Page}.
+ * The shared state of a {@link com.vaadin.server.Page Page}.
  * 
  * Note that at the moment this is not a stand-alone state class but embedded in
  * {@link UIState}. This might change in the future.
