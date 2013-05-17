@@ -95,6 +95,8 @@ public class VFormLayout extends SimplePanel {
         public VFormLayoutTable() {
             DOM.setElementProperty(getElement(), "cellPadding", "0");
             DOM.setElementProperty(getElement(), "cellSpacing", "0");
+
+            Roles.getPresentationRole().set(getElement());
         }
 
         /*
