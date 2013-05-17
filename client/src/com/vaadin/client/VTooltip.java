@@ -16,7 +16,6 @@
 package com.vaadin.client;
 
 import com.google.gwt.aria.client.Id;
-import com.google.gwt.aria.client.LiveValue;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
@@ -86,10 +85,8 @@ public class VTooltip extends VOverlay {
         DOM.appendChild(layoutElement, description);
         setSinkShadowEvents(true);
 
-        // WAI-ARIA additions
+        // Used to bind the tooltip to the owner for assistive devices
         layoutElement.setId(uniqueId);
-        Roles.getTooltipRole().setAriaLiveProperty(getElement(),
-                LiveValue.POLITE);
 
         description.setId(DOM.createUniqueId());
         Roles.getTooltipRole().set(layoutElement);

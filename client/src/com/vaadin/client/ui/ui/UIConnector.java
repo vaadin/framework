@@ -68,6 +68,7 @@ import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.ui.PageClientRpc;
+import com.vaadin.shared.ui.ui.PageState;
 import com.vaadin.shared.ui.ui.ScrollClientRpc;
 import com.vaadin.shared.ui.ui.UIClientRpc;
 import com.vaadin.shared.ui.ui.UIConstants;
@@ -138,7 +139,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 getRpcProxy(UIServerRpc.class).resize(event.getHeight(),
                         event.getWidth(), Window.getClientWidth(),
                         Window.getClientHeight());
-                if (getState().immediate) {
+                if (getState().immediate || getPageState().hasResizeListeners) {
                     getConnection().sendPendingVariableChanges();
                 }
             }
@@ -504,6 +505,23 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         return (UIState) super.getState();
     }
 
+    /**
+     * Returns the state of the Page associated with the UI.
+     * <p>
+     * Note that state is considered an internal part of the connector. You
+     * should not rely on the state object outside of the connector who owns it.
+     * If you depend on the state of other connectors you should use their
+     * public API instead of their state object directly. The page state might
+     * not be an independent state object but can be embedded in UI state.
+     * </p>
+     * 
+     * @since 7.1
+     * @return state object of the page
+     */
+    public PageState getPageState() {
+        return getState().pageState;
+    }
+
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
         ComponentConnector oldChild = null;
@@ -610,6 +628,11 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
         if (stateChangeEvent.hasPropertyChanged("pushMode")) {
             getConnection().setPushEnabled(getState().pushMode.isEnabled());
+        }
+
+        if (stateChangeEvent.hasPropertyChanged("overlayContainerLabel")) {
+            getConnection().setOverlayContainerLabel(
+                    getState().overlayContainerLabel);
         }
     }
 

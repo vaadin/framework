@@ -27,6 +27,7 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -688,5 +689,69 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         }
         return container;
     }
+
+    @Override
+    public void center() {
+        super.center();
+
+        // Some devices can be zoomed in, we should center to the visual
+        // viewport for those devices
+        BrowserInfo b = BrowserInfo.get();
+        if (b.isAndroid() || b.isIOS()) {
+            int left = (getVisualViewportWidth() - getOffsetWidth()) >> 1;
+            int top = (getVisualViewportHeight() - getOffsetHeight()) >> 1;
+            setPopupPosition(Math.max(Window.getScrollLeft() + left, 0),
+                    Math.max(Window.getScrollTop() + top, 0));
+        }
+
+    }
+
+    /**
+     * Gets the visual viewport width, which is useful for e.g iOS where the
+     * view can be zoomed in while keeping the layout viewport intact.
+     * 
+     * Falls back to layout viewport; for those browsers/devices the difference
+     * is that the scrollbar with is included (if there is a scrollbar).
+     * 
+     * @since 7.0.7
+     * @return
+     */
+    private int getVisualViewportWidth() {
+        int w = (int) getSubpixelInnerWidth();
+        if (w < 0) {
+            return Window.getClientWidth();
+        } else {
+            return w;
+        }
+    }
+
+    /**
+     * Gets the visual viewport height, which is useful for e.g iOS where the
+     * view can be zoomed in while keeping the layout viewport intact.
+     * 
+     * Falls back to layout viewport; for those browsers/devices the difference
+     * is that the scrollbar with is included (if there is a scrollbar).
+     * 
+     * @since 7.0.7
+     * @return
+     */
+    private int getVisualViewportHeight() {
+        int h = (int) getSubpixelInnerHeight();
+        if (h < 0) {
+            return Window.getClientHeight();
+        } else {
+            return h;
+        }
+    }
+
+    private native double getSubpixelInnerWidth()
+    /*-{
+         return $wnd.innerWidth !== undefined ? $wnd.innerWidth : -1;
+    }-*/;
+
+    private native double getSubpixelInnerHeight()
+    /*-{
+         return $wnd.innerHeight !== undefined ? $wnd.innerHeight :-1;
+    }-*/;
 
 }

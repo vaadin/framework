@@ -117,7 +117,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     /** Identifies the click event */
     private ConnectorTracker connectorTracker = new ConnectorTracker(this);
 
-    private Page page = new Page(this);
+    private Page page = new Page(this, getState(false).pageState);
 
     private LoadingIndicatorConfiguration loadingIndicatorConfiguration = new LoadingIndicatorConfigurationImpl(
             this);
@@ -686,10 +686,16 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
     /**
      * Should resize operations be lazy, i.e. should there be a delay before
-     * layout sizes are recalculated. Speeds up resize operations in slow UIs
-     * with the penalty of slightly decreased usability.
+     * layout sizes are recalculated and resize events are sent to the server.
+     * Speeds up resize operations in slow UIs with the penalty of slightly
+     * decreased usability.
      * <p>
      * Default value: <code>false</code>
+     * </p>
+     * <p>
+     * When there are active window resize listeners, lazy resize mode should be
+     * used to avoid a large number of events during resize.
+     * </p>
      * 
      * @param resizeLazy
      *            true to use a delay before recalculating sizes, false to
@@ -1327,4 +1333,28 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         getState().pushMode = pushMode;
     }
 
+    /**
+     * Get the label that is added to the container element, where tooltip,
+     * notification and dialogs are added to.
+     * 
+     * @return the label of the container
+     */
+    public String getOverlayContainerLabel() {
+        return getState().overlayContainerLabel;
+    }
+
+    /**
+     * Sets the label that is added to the container element, where tooltip,
+     * notifications and dialogs are added to.
+     * <p>
+     * This is helpful for users of assistive devices, as this element is
+     * reachable for them.
+     * </p>
+     * 
+     * @param overlayContainerLabel
+     *            label to use for the container
+     */
+    public void setOverlayContainerLabel(String overlayContainerLabel) {
+        getState().overlayContainerLabel = overlayContainerLabel;
+    }
 }

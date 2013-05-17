@@ -27,6 +27,10 @@ public class UIState extends TabIndexState {
 
     public PushMode pushMode = PushMode.DISABLED;
 
+    // Informing users of assistive devices, that the content of this container
+    // is announced automatically and does not need to be navigated into
+    public String overlayContainerLabel = "This content is announced automatically and does not need to be navigated into.";
+
     public static class LoadingIndicatorConfigurationState implements
             Serializable {
         public int firstDelay = 300;
@@ -41,6 +45,11 @@ public class UIState extends TabIndexState {
         public int closeTimeout = 300;
         public int maxWidth = 500;
     }
+
+    /**
+     * State related to the {@link Page} class.
+     */
+    public PageState pageState = new PageState();
 
     {
         primaryStyleName = "v-ui";

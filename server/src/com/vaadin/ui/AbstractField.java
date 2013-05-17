@@ -323,7 +323,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     @Override
     public boolean isModified() {
-        return getState().modified;
+        return getState(false).modified;
     }
 
     private void setModified(boolean modified) {
@@ -1276,7 +1276,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     @Override
     public int getTabIndex() {
-        return getState().tabIndex;
+        return getState(false).tabIndex;
     }
 
     /*
@@ -1408,7 +1408,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     @Override
     public boolean isRequired() {
-        return getState().required;
+        return getState(false).required;
     }
 
     /**
@@ -1660,6 +1660,11 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     @Override
     protected AbstractFieldState getState() {
         return (AbstractFieldState) super.getState();
+    }
+
+    @Override
+    protected AbstractFieldState getState(boolean markAsDirty) {
+        return (AbstractFieldState) super.getState(markAsDirty);
     }
 
     @Override

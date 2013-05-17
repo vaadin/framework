@@ -82,6 +82,9 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
                     getClient()
                             .updateVariable(getId(), EventId.FOCUS, "", true);
                 }
+
+                // Needed for tooltip event handling
+                VTextualDate.this.fireEvent(event);
             }
         });
         text.addBlurHandler(new BlurHandler() {
@@ -100,6 +103,9 @@ public class VTextualDate extends VDateField implements Field, ChangeHandler,
                                 EventId.BLUR)) {
                     getClient().updateVariable(getId(), EventId.BLUR, "", true);
                 }
+
+                // Needed for tooltip event handling
+                VTextualDate.this.fireEvent(event);
             }
         });
 
