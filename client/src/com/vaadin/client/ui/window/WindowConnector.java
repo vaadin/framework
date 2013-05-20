@@ -29,6 +29,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Paintable;
+import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
@@ -311,5 +312,15 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
      */
     public void setWindowOrderAndPosition() {
         getWidget().setWindowOrderAndPosition();
+    }
+
+    @Override
+    public TooltipInfo getTooltipInfo(com.google.gwt.dom.client.Element element) {
+        /*
+         * Override method to make AbstractComponentConnector.hasTooltip()
+         * return true so there's a top level handler that takes care of hiding
+         * tooltips whenever the mouse is moved somewhere else.
+         */
+        return super.getTooltipInfo(element);
     }
 }
