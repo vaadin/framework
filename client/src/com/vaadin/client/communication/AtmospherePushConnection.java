@@ -27,6 +27,7 @@ import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.VConsole;
 import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.communication.PushConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
 
 /**
@@ -67,8 +68,7 @@ public class AtmospherePushConnection implements PushConnection {
      */
     protected static class FragmentedMessage {
 
-        // Jetty requires length less than buffer size
-        private int FRAGMENT_LENGTH = ApplicationConstants.WEBSOCKET_BUFFER_SIZE - 1;
+        private static final int FRAGMENT_LENGTH = PushConstants.WEBSOCKET_FRAGMENT_SIZE;
 
         private String message;
         private int index = 0;
@@ -82,10 +82,12 @@ public class AtmospherePushConnection implements PushConnection {
         }
 
         public String getNextFragment() {
+            assert hasNextFragment();
+
             String result;
             if (index == 0) {
                 String header = "" + message.length()
-                        + ApplicationConstants.WEBSOCKET_MESSAGE_DELIMITER;
+                        + PushConstants.MESSAGE_DELIMITER;
                 int fragmentLen = FRAGMENT_LENGTH - header.length();
                 result = header + getFragment(0, fragmentLen);
                 index += fragmentLen;
@@ -384,7 +386,8 @@ public class AtmospherePushConnection implements PushConnection {
             contentType: 'application/json; charset=UTF-8',
             reconnectInterval: '5000',
             maxReconnectOnClose: 10000000, 
-            trackMessageLength: true 
+            trackMessageLength: true,
+            messageDelimiter: String.fromCharCode(@com.vaadin.shared.communication.PushConstants::MESSAGE_DELIMITER)
         };
     }-*/;
 

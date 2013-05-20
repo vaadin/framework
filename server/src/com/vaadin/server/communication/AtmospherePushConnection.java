@@ -32,7 +32,7 @@ import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResource.TRANSPORT;
 import org.json.JSONException;
 
-import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.communication.PushConstants;
 import com.vaadin.ui.UI;
 
 /**
@@ -52,11 +52,12 @@ public class AtmospherePushConnection implements Serializable, PushConnection {
         private final int messageLength;
 
         public FragmentedMessage(Reader reader) throws IOException {
-            // Messages are prefixed by the total message length plus '|'
+            // Messages are prefixed by the total message length plus a
+            // delimiter
             String length = "";
             int c;
             while ((c = reader.read()) != -1
-                    && c != ApplicationConstants.WEBSOCKET_MESSAGE_DELIMITER) {
+                    && c != PushConstants.MESSAGE_DELIMITER) {
                 length += (char) c;
             }
             try {
@@ -76,7 +77,7 @@ public class AtmospherePushConnection implements Serializable, PushConnection {
          * @throws IOException
          */
         public boolean append(Reader reader) throws IOException {
-            char[] buffer = new char[ApplicationConstants.WEBSOCKET_BUFFER_SIZE];
+            char[] buffer = new char[PushConstants.WEBSOCKET_BUFFER_SIZE];
             int read;
             while ((read = reader.read(buffer)) != -1) {
                 message.append(buffer, 0, read);
