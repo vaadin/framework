@@ -57,6 +57,7 @@ import com.vaadin.client.ui.calendar.schedule.DateCell.DateCellSlot;
 import com.vaadin.client.ui.calendar.schedule.DateCellDayEvent;
 import com.vaadin.client.ui.calendar.schedule.DateUtil;
 import com.vaadin.client.ui.calendar.schedule.HasTooltipKey;
+import com.vaadin.client.ui.calendar.schedule.MonthEventLabel;
 import com.vaadin.client.ui.calendar.schedule.SimpleDayCell;
 import com.vaadin.client.ui.calendar.schedule.dd.CalendarDropHandler;
 import com.vaadin.client.ui.dd.VHasDropHandler;
@@ -287,7 +288,16 @@ public class CalendarConnector extends AbstractComponentConnector implements
                                 ((VCalendarAction) action).setEvent(event);
                             }
                             return actions;
-
+                        } else if (widget instanceof MonthEventLabel) {
+                            MonthEventLabel mel = (MonthEventLabel) widget;
+                            CalendarEvent event = mel.getCalendarEvent();
+                            Action[] actions = CalendarConnector.this
+                                    .getActionsBetween(event.getStartTime(),
+                                            event.getEndTime());
+                            for (Action action : actions) {
+                                ((VCalendarAction) action).setEvent(event);
+                            }
+                            return actions;
                         }
                         return null;
                     }
