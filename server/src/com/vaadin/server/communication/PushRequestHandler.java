@@ -56,7 +56,12 @@ public class PushRequestHandler implements RequestHandler,
     public PushRequestHandler(VaadinServletService service)
             throws ServiceException {
 
-        atmosphere = new AtmosphereFramework();
+        atmosphere = new AtmosphereFramework() {
+            @Override
+            protected void analytics() {
+                // Overridden to disable version number check
+            }
+        };
 
         pushHandler = new PushHandler(service);
         atmosphere.addAtmosphereHandler("/*", pushHandler);
