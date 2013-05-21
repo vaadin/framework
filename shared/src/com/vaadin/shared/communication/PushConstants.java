@@ -42,5 +42,5 @@ public class PushConstants implements Serializable {
      * The character used to mark message boundaries when messages may be split
      * into multiple fragments.
      */
-    public static final char MESSAGE_DELIMITER = '\0';
+    public static final char MESSAGE_DELIMITER = '|';
 }

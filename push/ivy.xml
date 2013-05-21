@@ -28,7 +28,7 @@
                        
         <!-- Atmosphere -->
         <!-- Keep the version number in sync with build.xml -->
-        <dependency org="org.atmosphere" name="atmosphere-runtime" rev="1.0.12"
+        <dependency org="org.atmosphere" name="atmosphere-runtime" rev="1.0.13"
         	conf="build,ide,test -> default">
         </dependency>
     </dependencies>
