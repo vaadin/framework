@@ -242,14 +242,17 @@ public class Label extends AbstractComponent implements Property<String>,
             ((Property.ValueChangeNotifier) dataSource).removeListener(this);
         }
 
+        // Check if the current converter is compatible.
         if (newDataSource != null
-                && !ConverterUtil.canConverterHandle(getConverter(),
-                        String.class, newDataSource.getType())) {
-            // Try to find a converter
+                && !ConverterUtil.canConverterPossiblyHandle(getConverter(),
+                        getType(), newDataSource.getType())) {
+            // There is no converter set or there is no way the current
+            // converter can be compatible.
             Converter<String, ?> c = ConverterUtil.getConverter(String.class,
                     newDataSource.getType(), getSession());
             setConverter(c);
         }
+
         dataSource = newDataSource;
         if (dataSource != null) {
             // Update the value from the data source. If data source was set to
