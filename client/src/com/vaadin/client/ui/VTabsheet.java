@@ -860,57 +860,17 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
          */
         tab.recalculateCaptionWidth();
 
-        UIDL tabContentUIDL = null;
-        ComponentConnector tabContentPaintable = null;
-        Widget tabContentWidget = null;
-        if (tabUidl.getChildCount() > 0) {
-            tabContentUIDL = tabUidl.getChildUIDL(0);
-            tabContentPaintable = client.getPaintable(tabContentUIDL);
-            tabContentWidget = tabContentPaintable.getWidget();
-        }
-
-        if (tabContentPaintable != null) {
-            /* This is a tab with content information */
-
-            int oldIndex = tp.getWidgetIndex(tabContentWidget);
-            if (oldIndex != -1 && oldIndex != index) {
-                /*
-                 * The tab has previously been rendered in another position so
-                 * we must move the cached content to correct position
-                 */
-                tp.insert(tabContentWidget, index);
-            }
-        } else {
-            /* A tab whose content has not yet been loaded */
-
-            /*
-             * Make sure there is a corresponding empty tab in tp. The same
-             * operation as the moving above but for not-loaded tabs.
-             */
-            if (index < tp.getWidgetCount()) {
-                Widget oldWidget = tp.getWidget(index);
-                if (!(oldWidget instanceof PlaceHolder)) {
-                    tp.insert(new PlaceHolder(), index);
-                }
-            }
-
-        }
-
         if (selected) {
-            renderContent(tabContentUIDL);
+            renderContent(tabUidl.getChildUIDL(0));
             tb.selectTab(index);
-        } else {
-            if (tabContentUIDL != null) {
-                // updating a drawn child on hidden tab
-                if (tp.getWidgetIndex(tabContentWidget) < 0) {
-                    tp.insert(tabContentWidget, index);
-                }
-            } else if (tp.getWidgetCount() <= index) {
-                tp.add(new PlaceHolder());
-            }
         }
     }
 
+    /**
+     * @deprecated as of 7.1, VTabsheet only keeps the active tab in the DOM
+     *             without any place holders.
+     */
+    @Deprecated
     public class PlaceHolder extends VLabel {
         public PlaceHolder() {
             super("");
@@ -920,17 +880,20 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     private void renderContent(final UIDL contentUIDL) {
         final ComponentConnector content = client.getPaintable(contentUIDL);
         Widget newWidget = content.getWidget();
-        if (tp.getWidgetCount() > activeTabIndex) {
-            Widget old = tp.getWidget(activeTabIndex);
-            if (old != newWidget) {
-                tp.remove(activeTabIndex);
-                tp.insert(content.getWidget(), activeTabIndex);
-            }
-        } else {
-            tp.add(content.getWidget());
+
+        assert tp.getWidgetCount() <= 1;
+
+        if (tp.getWidgetCount() == 0) {
+            tp.add(newWidget);
+        } else if (tp.getWidget(0) != newWidget) {
+            tp.remove(0);
+            tp.add(newWidget);
         }
 
-        tp.showWidget(activeTabIndex);
+        assert tp.getWidgetCount() <= 1;
+
+        // There's never any other index than 0, but maintaining API for now
+        tp.showWidget(0);
 
         VTabsheet.this.iLayout();
         updateOpenTabSize();
@@ -1114,13 +1077,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     @Override
     public void removeTab(int index) {
         tb.removeTab(index);
-        /*
-         * This must be checked because renderTab automatically removes the
-         * active tab content when it changes
-         */
-        if (tp.getWidgetCount() > index) {
-            tp.remove(index);
-        }
+
+        // Removing content from tp is handled by the connector
     }
 
     @Override
