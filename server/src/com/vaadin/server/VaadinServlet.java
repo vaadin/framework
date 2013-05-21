@@ -63,7 +63,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
     public void init(javax.servlet.ServletConfig servletConfig)
             throws ServletException {
         CurrentInstance.clearAll();
-        setCurrent(this);
         super.init(servletConfig);
         Properties initParameters = new Properties();
 
@@ -108,36 +107,23 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * servlet is defined (see {@link InheritableThreadLocal}). In other cases,
      * (e.g. from background threads started in some other way), the current
      * servlet is not automatically defined.
+     * <p>
+     * The current servlet is derived from the current service using
+     * {@link VaadinService#getCurrent()}
      * 
      * @return the current Vaadin servlet instance if available, otherwise
      *         <code>null</code>
      * 
-     * @see #setCurrent(VaadinServlet)
-     * 
      * @since 7.0
      */
     public static VaadinServlet getCurrent() {
-        return CurrentInstance.get(VaadinServlet.class);
-    }
-
-    /**
-     * Sets the current Vaadin servlet. This method is used by the framework to
-     * set the current servlet whenever a new request is processed and it is
-     * cleared when the request has been processed.
-     * <p>
-     * The application developer can also use this method to define the current
-     * servlet outside the normal request handling, e.g. when initiating custom
-     * background threads.
-     * </p>
-     * 
-     * @param servlet
-     *            the Vaadin servlet to register as the current servlet
-     * 
-     * @see #getCurrent()
-     * @see InheritableThreadLocal
-     */
-    public static void setCurrent(VaadinServlet servlet) {
-        CurrentInstance.setInheritable(VaadinServlet.class, servlet);
+        VaadinService vaadinService = CurrentInstance.get(VaadinService.class);
+        if (vaadinService instanceof VaadinServletService) {
+            VaadinServletService vss = (VaadinServletService) vaadinService;
+            return vss.getServlet();
+        } else {
+            return null;
+        }
     }
 
     protected DeploymentConfiguration createDeploymentConfiguration(
@@ -179,7 +165,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return;
         }
         CurrentInstance.clearAll();
-        setCurrent(this);
 
         VaadinServletRequest vaadinRequest = createVaadinRequest(request);
         VaadinServletResponse vaadinResponse = createVaadinResponse(response);
@@ -188,8 +173,14 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         if (isStaticResourceRequest(request)) {
-            serveStaticResources(request, response);
-            return;
+            // Define current servlet and service, but no request and response
+            getService().setCurrentInstances(null, null);
+            try {
+                serveStaticResources(request, response);
+                return;
+            } finally {
+                CurrentInstance.clearAll();
+            }
         }
         try {
             getService().handleRequest(vaadinRequest, vaadinResponse);

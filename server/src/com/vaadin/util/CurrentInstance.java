@@ -22,12 +22,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.vaadin.server.VaadinPortlet;
-import com.vaadin.server.VaadinPortletService;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
 
@@ -51,18 +49,6 @@ import com.vaadin.ui.UI;
 public class CurrentInstance implements Serializable {
     private final Object instance;
     private final boolean inheritable;
-
-    private static boolean portletAvailable = false;
-    {
-        try {
-            /*
-             * VaadinPortlet depends on portlet API which is available only if
-             * running in a portal.
-             */
-            portletAvailable = (VaadinPortlet.class.getName() != null);
-        } catch (Throwable t) {
-        }
-    }
 
     private static InheritableThreadLocal<Map<Class<?>, CurrentInstance>> instances = new InheritableThreadLocal<Map<Class<?>, CurrentInstance>>() {
         @Override
@@ -235,18 +221,6 @@ public class CurrentInstance implements Serializable {
 
         VaadinSession.setCurrent(session);
         VaadinService.setCurrent(service);
-
-        if (service instanceof VaadinServletService) {
-            old.put(VaadinServlet.class,
-                    new CurrentInstance(VaadinServlet.getCurrent(), true));
-            VaadinServlet.setCurrent(((VaadinServletService) service)
-                    .getServlet());
-        } else if (portletAvailable && service instanceof VaadinPortletService) {
-            old.put(VaadinPortlet.class,
-                    new CurrentInstance(VaadinPortlet.getCurrent(), true));
-            VaadinPortlet.setCurrent(((VaadinPortletService) service)
-                    .getPortlet());
-        }
 
         return old;
     }

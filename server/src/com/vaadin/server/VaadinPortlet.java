@@ -287,7 +287,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
     @Override
     public void init(PortletConfig config) throws PortletException {
         CurrentInstance.clearAll();
-        setCurrent(this);
         super.init(config);
         Properties initParameters = new Properties();
 
@@ -407,7 +406,6 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
             PortletResponse response) throws PortletException, IOException {
 
         CurrentInstance.clearAll();
-        setCurrent(this);
         try {
             getService().handleRequest(createVaadinRequest(request),
                     createVaadinResponse(response));
@@ -495,36 +493,23 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
      * portlet is defined (see {@link InheritableThreadLocal}). In other cases,
      * (e.g. from background threads started in some other way), the current
      * portlet is not automatically defined.
+     * <p>
+     * The current portlet is derived from the current service using
+     * {@link VaadinService#getCurrent()}
      * 
      * @return the current vaadin portlet instance if available, otherwise
      *         <code>null</code>
      * 
-     * @see #setCurrent(VaadinPortlet)
-     * 
      * @since 7.0
      */
     public static VaadinPortlet getCurrent() {
-        return CurrentInstance.get(VaadinPortlet.class);
-    }
-
-    /**
-     * Sets the current Vaadin portlet. This method is used by the framework to
-     * set the current portlet whenever a new request is processed and it is
-     * cleared when the request has been processed.
-     * <p>
-     * The application developer can also use this method to define the current
-     * portlet outside the normal request handling, e.g. when initiating custom
-     * background threads.
-     * </p>
-     * 
-     * @param portlet
-     *            the Vaadin portlet to register as the current portlet
-     * 
-     * @see #getCurrent()
-     * @see InheritableThreadLocal
-     */
-    public static void setCurrent(VaadinPortlet portlet) {
-        CurrentInstance.setInheritable(VaadinPortlet.class, portlet);
+        VaadinService vaadinService = CurrentInstance.get(VaadinService.class);
+        if (vaadinService instanceof VaadinPortletService) {
+            VaadinPortletService vps = (VaadinPortletService) vaadinService;
+            return vps.getPortlet();
+        } else {
+            return null;
+        }
     }
 
 }
