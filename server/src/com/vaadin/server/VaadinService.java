@@ -407,12 +407,12 @@ public abstract class VaadinService implements Serializable {
      */
     public void fireSessionDestroy(VaadinSession vaadinSession) {
         final VaadinSession session = vaadinSession;
-        session.access(new Runnable() {
+        session.accessSynchronously(new Runnable() {
             @Override
             public void run() {
                 ArrayList<UI> uis = new ArrayList<UI>(session.getUIs());
                 for (final UI ui : uis) {
-                    ui.access(new Runnable() {
+                    ui.accessSynchronously(new Runnable() {
                         @Override
                         public void run() {
                             /*
@@ -1087,7 +1087,7 @@ public abstract class VaadinService implements Serializable {
     private void removeClosedUIs(final VaadinSession session) {
         ArrayList<UI> uis = new ArrayList<UI>(session.getUIs());
         for (final UI ui : uis) {
-            ui.access(new Runnable() {
+            ui.accessSynchronously(new Runnable() {
                 @Override
                 public void run() {
                     if (ui.isClosing()) {
@@ -1245,7 +1245,7 @@ public abstract class VaadinService implements Serializable {
         if (session != null) {
             final VaadinSession finalSession = session;
 
-            session.access(new Runnable() {
+            session.accessSynchronously(new Runnable() {
                 @Override
                 public void run() {
                     cleanupSession(finalSession);
@@ -1254,7 +1254,7 @@ public abstract class VaadinService implements Serializable {
 
             final long duration = (System.nanoTime() - (Long) request
                     .getAttribute(REQUEST_START_TIME_ATTRIBUTE)) / 1000000;
-            session.access(new Runnable() {
+            session.accessSynchronously(new Runnable() {
                 @Override
                 public void run() {
                     finalSession.setLastRequestDuration(duration);
@@ -1542,8 +1542,9 @@ public abstract class VaadinService implements Serializable {
 
     /**
      * Checks that another {@link VaadinSession} instance is not locked. This is
-     * internally used by {@link VaadinSession#access(Runnable)} and
-     * {@link UI#access(Runnable)} to help avoid causing deadlocks.
+     * internally used by {@link VaadinSession#accessSynchronously(Runnable)}
+     * and {@link UI#accessSynchronously(Runnable)} to help avoid causing
+     * deadlocks.
      * 
      * @since 7.1
      * @param session

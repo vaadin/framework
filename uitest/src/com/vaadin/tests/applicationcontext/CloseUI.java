@@ -119,7 +119,7 @@ public class CloseUI extends AbstractTestUI {
 
         @Override
         public void run() {
-            ui.access(new Runnable() {
+            ui.accessSynchronously(new Runnable() {
 
                 @Override
                 public void run() {

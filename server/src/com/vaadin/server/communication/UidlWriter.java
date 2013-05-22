@@ -74,9 +74,14 @@ public class UidlWriter implements Serializable {
     public void write(UI ui, Writer writer, boolean repaintAll,
             boolean analyzeLayouts, boolean async) throws IOException,
             JSONException {
+        VaadinSession session = ui.getSession();
+
+        // Purge pending access calls as they might produce additional changes
+        // to write out
+        session.runPendingAccessTasks();
+
         ArrayList<ClientConnector> dirtyVisibleConnectors = ui
                 .getConnectorTracker().getDirtyVisibleConnectors();
-        VaadinSession session = ui.getSession();
         LegacyCommunicationManager manager = session.getCommunicationManager();
         // Paints components
         ConnectorTracker uiConnectorTracker = ui.getConnectorTracker();

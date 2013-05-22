@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
@@ -86,7 +87,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     /**
      * The application to which this UI belongs
      */
-    private VaadinSession session;
+    private volatile VaadinSession session;
 
     /**
      * List of windows in this UI.
@@ -1098,23 +1099,33 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     }
 
     /**
-     * Provides exclusive access to this UI from outside a request handling
-     * thread.
+     * Locks the session of this UI and runs the provided Runnable right away.
      * <p>
-     * The given runnable is executed while holding the session lock to ensure
-     * exclusive access to this UI and its session. The UI and related thread
-     * locals are set properly before executing the runnable.
+     * It is generally recommended to use {@link #access(Runnable)} instead of
+     * this method for accessing a session from a different thread as
+     * {@link #access(Runnable)} can be used while holding the lock of another
+     * session. To avoid causing deadlocks, this methods throws an exception if
+     * it is detected than another session is also locked by the current thread.
      * </p>
      * <p>
-     * RPC handlers for components inside this UI do not need this method as the
-     * session is automatically locked by the framework during request handling.
+     * This method behaves differently than {@link #access(Runnable)} in some
+     * situations:
+     * <ul>
+     * <li>If the current thread is currently holding the lock of the session,
+     * {@link #accessSynchronously(Runnable)} runs the task right away whereas
+     * {@link #access(Runnable)} defers the task to a later point in time.</li>
+     * <li>If some other thread is currently holding the lock for the session,
+     * {@link #accessSynchronously(Runnable)} blocks while waiting for the lock
+     * to be available whereas {@link #access(Runnable)} defers the task to a
+     * later point in time.</li>
+     * <li>If the session is currently not locked,
+     * {@link #accessSynchronously(Runnable)} runs the task right away whereas
+     * {@link #access(Runnable)} defers the task to a later point in time unless
+     * there are UIs with automatic push enabled.</li>
+     * </ul>
      * </p>
-     * <p>
-     * Note that calling this method while another session is locked by the
-     * current thread will cause an exception. This is to prevent deadlock
-     * situations when two threads have locked one session each and are both
-     * waiting for the lock for the other session.
-     * </p>
+     * 
+     * @since 7.1
      * 
      * @param runnable
      *            the runnable which accesses the UI
@@ -1124,11 +1135,11 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * @throws IllegalStateException
      *             if the current thread holds the lock for another session
      * 
-     * @see #getCurrent()
-     * @see VaadinSession#access(Runnable)
-     * @see VaadinSession#lock()
+     * @see #access(Runnable)
+     * @see VaadinSession#accessSynchronously(Runnable)
      */
-    public void access(Runnable runnable) throws UIDetachedException {
+    public void accessSynchronously(Runnable runnable)
+            throws UIDetachedException {
         Map<Class<?>, CurrentInstance> old = null;
 
         VaadinSession session = getSession();
@@ -1158,12 +1169,69 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     }
 
     /**
-     * @deprecated As of 7.1.0.beta1, use {@link #access(Runnable)} instead.
-     *             This method will be removed before the final 7.1.0 release.
+     * Provides exclusive access to this UI from outside a request handling
+     * thread.
+     * <p>
+     * The given runnable is executed while holding the session lock to ensure
+     * exclusive access to this UI. If the session is not locked, the lock will
+     * be acquired and the runnable is run right away. If the session is
+     * currently locked, the runnable will be run before that lock is released.
+     * </p>
+     * <p>
+     * RPC handlers for components inside this UI do not need to use this method
+     * as the session is automatically locked by the framework during RPC
+     * handling.
+     * </p>
+     * <p>
+     * Please note that the runnable might be invoked on a different thread or
+     * later on the current thread, which means that custom thread locals might
+     * not have the expected values when the runnable is executed. The UI and
+     * other thread locals provided by Vaadin are set properly before executing
+     * the runnable.
+     * </p>
+     * <p>
+     * The returned future can be used to check for task completion and to
+     * cancel the task.
+     * </p>
+     * 
+     * @see #getCurrent()
+     * @see #accessSynchronously(Runnable)
+     * @see VaadinSession#access(Runnable)
+     * @see VaadinSession#lock()
+     * 
+     * @since 7.1
+     * 
+     * @param runnable
+     *            the runnable which accesses the UI
+     * @throws UIDetachedException
+     *             if the UI is not attached to a session (and locking can
+     *             therefore not be done)
+     * @return a future that can be used to check for task completion and to
+     *         cancel the task
+     */
+    public Future<Void> access(final Runnable runnable) {
+        VaadinSession session = getSession();
+
+        if (session == null) {
+            throw new UIDetachedException();
+        }
+
+        return session.access(new Runnable() {
+            @Override
+            public void run() {
+                accessSynchronously(runnable);
+            }
+        });
+    }
+
+    /**
+     * @deprecated As of 7.1.0.beta1, use {@link #accessSynchronously(Runnable)}
+     *             or {@link #access(Runnable)} instead. This method will be
+     *             removed before the final 7.1.0 release.
      */
     @Deprecated
     public void runSafely(Runnable runnable) throws UIDetachedException {
-        access(runnable);
+        accessSynchronously(runnable);
     }
 
     /**
@@ -1204,6 +1272,14 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         VaadinSession session = getSession();
         if (session != null) {
             assert session.hasLock();
+
+            /*
+             * Purge the pending access queue as it might mark a connector as
+             * dirty when the push would otherwise be ignored because there are
+             * no changes to push.
+             */
+            session.runPendingAccessTasks();
+
             if (!getConnectorTracker().hasDirtyConnectors()) {
                 // Do not push if there is nothing to push
                 return;
