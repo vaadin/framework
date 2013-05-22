@@ -52,7 +52,7 @@ public class StateChangeEvent extends
     @Deprecated
     private Set<String> changedPropertiesSet;
 
-    private boolean isNewConnector = false;
+    private boolean initialStateChange = false;
 
     private JSONObject stateJson;
 
@@ -110,15 +110,15 @@ public class StateChangeEvent extends
      *            the event whose state has changed
      * @param stateJson
      *            the JSON representation of the state change
-     * @param isNewConnector
+     * @param initialStateChange
      *            <code>true</code> if the state change is for a new connector,
      *            otherwise <code>false</code>
      */
     public StateChangeEvent(ServerConnector connector, JSONObject stateJson,
-            boolean isNewConnector) {
+            boolean initialStateChange) {
         setConnector(connector);
         this.stateJson = stateJson;
-        this.isNewConnector = isNewConnector;
+        this.initialStateChange = initialStateChange;
     }
 
     @Override
@@ -178,7 +178,7 @@ public class StateChangeEvent extends
             changedProperties = FastStringSet.create();
 
             addJsonFields(stateJson, changedProperties, "");
-            if (isNewConnector) {
+            if (isInitialStateChange()) {
                 addAllStateFields(
                         AbstractConnector.getStateType(getConnector()),
                         changedProperties, "");
@@ -198,7 +198,7 @@ public class StateChangeEvent extends
      *         <code>false></code>
      */
     public boolean hasPropertyChanged(String property) {
-        if (isNewConnector) {
+        if (isInitialStateChange()) {
             // Everything has changed for a new connector
             return true;
         } else if (stateJson != null) {
@@ -309,4 +309,17 @@ public class StateChangeEvent extends
             }
         }
     }
+
+    /**
+     * Checks if the state change event is the first one for the given
+     * connector.
+     * 
+     * @since 7.1
+     * @return true if this is the first state change event for the connector,
+     *         false otherwise
+     */
+    public boolean isInitialStateChange() {
+        return initialStateChange;
+    }
+
 }
