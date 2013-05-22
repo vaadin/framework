@@ -3404,7 +3404,13 @@ public class ApplicationConnection {
     public void setPushEnabled(boolean enabled) {
         if (enabled && push == null) {
             push = GWT.create(PushConnection.class);
-            push.init(this);
+            push.init(this, new CommunicationErrorHandler() {
+                @Override
+                public boolean onError(String details, int statusCode) {
+                    showCommunicationError(details, statusCode);
+                    return true;
+                }
+            });
         } else if (!enabled && push != null && push.isActive()) {
             push.disconnect(new Command() {
                 @Override

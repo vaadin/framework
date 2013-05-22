@@ -22,6 +22,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
 import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.ApplicationConnection.CommunicationErrorHandler;
 import com.vaadin.client.ResourceLoader;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
@@ -117,6 +118,8 @@ public class AtmospherePushConnection implements PushConnection {
 
     private String transport;
 
+    private CommunicationErrorHandler errorHandler;
+
     /**
      * Keeps track of the disconnect confirmation command for cases where
      * pending messages should be pushed before actually disconnecting.
@@ -134,8 +137,10 @@ public class AtmospherePushConnection implements PushConnection {
      * .ApplicationConnection)
      */
     @Override
-    public void init(final ApplicationConnection connection) {
+    public void init(final ApplicationConnection connection,
+            CommunicationErrorHandler errorHandler) {
         this.connection = connection;
+        this.errorHandler = errorHandler;
 
         runWhenAtmosphereLoaded(new Command() {
             @Override
@@ -433,22 +438,30 @@ public class AtmospherePushConnection implements PushConnection {
         if (isAtmosphereLoaded()) {
             command.execute();
         } else {
-            VConsole.log("Loading " + ApplicationConstants.VAADIN_PUSH_JS);
+            final String pushJs = ApplicationConstants.VAADIN_PUSH_JS;
+            VConsole.log("Loading " + pushJs);
             ResourceLoader.get().loadScript(
-                    connection.getConfiguration().getVaadinDirUrl()
-                            + ApplicationConstants.VAADIN_PUSH_JS,
+                    connection.getConfiguration().getVaadinDirUrl() + pushJs,
                     new ResourceLoadListener() {
                         @Override
                         public void onLoad(ResourceLoadEvent event) {
-                            VConsole.log(ApplicationConstants.VAADIN_PUSH_JS
-                                    + " loaded");
-                            command.execute();
+                            if (isAtmosphereLoaded()) {
+                                VConsole.log(pushJs + " loaded");
+                                command.execute();
+                            } else {
+                                // If bootstrap tried to load vaadinPush.js,
+                                // ResourceLoader assumes it succeeded even if
+                                // it failed (#11673)
+                                onError(event);
+                            }
                         }
 
                         @Override
                         public void onError(ResourceLoadEvent event) {
-                            VConsole.error(event.getResourceUrl()
-                                    + " could not be loaded. Push will not work.");
+                            errorHandler.onError(
+                                    event.getResourceUrl()
+                                            + " could not be loaded. Push will not work.",
+                                    0);
                         }
                     });
         }

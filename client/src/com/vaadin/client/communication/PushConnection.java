@@ -18,6 +18,7 @@ package com.vaadin.client.communication;
 
 import com.google.gwt.user.client.Command;
 import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.ApplicationConnection.CommunicationErrorHandler;
 
 /**
  * Represents the client-side endpoint of a bidirectional ("push") communication
@@ -37,7 +38,8 @@ public interface PushConnection {
      * @param connection
      *            The ApplicationConnection
      */
-    public void init(ApplicationConnection connection);
+    public void init(ApplicationConnection connection,
+            CommunicationErrorHandler errorHandler);
 
     /**
      * Pushes a message to the server. Will throw an exception if the connection
