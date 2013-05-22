@@ -18,6 +18,7 @@ package com.vaadin.server;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
@@ -30,7 +31,6 @@ import org.junit.Test;
 
 import com.vaadin.server.ClientConnector.DetachEvent;
 import com.vaadin.server.ClientConnector.DetachListener;
-import com.vaadin.tests.util.MockDeploymentConfiguration;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
@@ -39,6 +39,7 @@ public class VaadinSessionTest {
     private VaadinSession session;
     private VaadinServlet mockServlet;
     private VaadinServletService mockService;
+    private ServletConfig mockServletConfig;
     private HttpSession mockHttpSession;
     private WrappedSession mockWrappedSession;
     private VaadinServletRequest vaadinRequest;
@@ -46,24 +47,22 @@ public class VaadinSessionTest {
 
     @Before
     public void setup() throws Exception {
-        mockServlet = new VaadinServlet() {
-            @Override
-            public String getServletName() {
-                return "mockServlet";
-            };
-        };
-
-        mockService = new VaadinServletService(mockServlet,
-                new MockDeploymentConfiguration());
-        mockService.init();
+        mockServletConfig = new MockServletConfig();
+        mockServlet = new VaadinServlet();
+        mockServlet.init(mockServletConfig);
+        mockService = mockServlet.getService();
 
         mockHttpSession = EasyMock.createMock(HttpSession.class);
         mockWrappedSession = new WrappedHttpSession(mockHttpSession) {
             final ReentrantLock lock = new ReentrantLock();
+            {
+                lock.lock();
+            }
 
             @Override
             public Object getAttribute(String name) {
-                if ("mockServlet.lock".equals(name)) {
+                String lockAttribute = mockService.getServiceName() + ".lock";
+                if (lockAttribute.equals(name)) {
                     return lock;
                 }
                 return super.getAttribute(name);
