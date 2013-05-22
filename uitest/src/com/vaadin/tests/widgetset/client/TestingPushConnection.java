@@ -2,6 +2,7 @@ package com.vaadin.tests.widgetset.client;
 
 import com.google.gwt.user.client.Window;
 import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.ApplicationConnection.CommunicationErrorHandler;
 import com.vaadin.client.communication.AtmospherePushConnection;
 
 public class TestingPushConnection extends AtmospherePushConnection {
@@ -9,8 +10,9 @@ public class TestingPushConnection extends AtmospherePushConnection {
     private String transport;
 
     @Override
-    public void init(ApplicationConnection connection) {
-        super.init(connection);
+    public void init(ApplicationConnection connection,
+            CommunicationErrorHandler errorHandler) {
+        super.init(connection, errorHandler);
         transport = Window.Location.getParameter("transport");
     }
 
