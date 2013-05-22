@@ -162,17 +162,6 @@
 	<td>vaadin=runcomvaadintestscomponentswindowWindowMaximizeRestoreTest::/VWindow[0]/FocusableScrollPanel[0]/VVerticalLayout[0]/Slot[0]/VNativeButton[0]</td>
 	<td>43,12</td>
 </tr>
-<!--Remove the following two commands once #11737 is fixed-->
-<tr>
-	<td>mouseClick</td>
-	<td>vaadin=runcomvaadintestscomponentswindowWindowMaximizeRestoreTest::/VWindow[0]/FocusableScrollPanel[0]/VVerticalLayout[0]/Slot[0]/VNativeButton[0]</td>
-	<td>43,12</td>
-</tr>
-<tr>
-	<td>mouseClick</td>
-	<td>vaadin=runcomvaadintestscomponentswindowWindowMaximizeRestoreTest::/VWindow[0]/FocusableScrollPanel[0]/VVerticalLayout[0]/Slot[0]/VNativeButton[0]</td>
-	<td>43,12</td>
-</tr>
 <!--maximize window 2 content-->
 <tr>
 	<td>mouseClick</td>
@@ -233,6 +222,37 @@
 	<td>screenCapture</td>
 	<td></td>
 	<td>window-1-maximized-with-doubleclick</td>
+</tr>
+<!--Test that size and position is preserved when maximizing and restoring-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentswindowWindowMaximizeRestoreTest::/VWindow[0]/domChild[0]/domChild[0]/domChild[1]</td>
+	<td>8,4</td>
+</tr>
+<tr>
+	<td>dragAndDrop</td>
+	<td>vaadin=runcomvaadintestscomponentswindowWindowMaximizeRestoreTest::/VWindow[0]/domChild[0]/domChild[0]/domChild[0]/domChild[0]</td>
+	<td>-200,-200</td>
+</tr>
+<tr>
+	<td>dragAndDrop</td>
+	<td>vaadin=runcomvaadintestscomponentswindowWindowMaximizeRestoreTest::/VWindow[0]/domChild[0]/domChild[0]/domChild[4]/domChild[0]</td>
+	<td>+100,+100</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentswindowWindowMaximizeRestoreTest::/VWindow[0]/domChild[0]/domChild[0]/domChild[1]</td>
+	<td>6,5</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentswindowWindowMaximizeRestoreTest::/VWindow[0]/domChild[0]/domChild[0]/domChild[1]</td>
+	<td>5,8</td>
+</tr>
+<tr>
+	<td>screenCapture</td>
+	<td></td>
+	<td>window-1-moved-maximized-restored</td>
 </tr>
 </tbody></table>
 </body>
