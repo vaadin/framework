@@ -38,12 +38,12 @@ import java.util.Locale;
  * If conversion of a value fails, a {@link ConversionException} is thrown.
  * </p>
  * 
- * @param <MODEL>
- *            The model type. Must be compatible with what
- *            {@link #getModelType()} returns.
  * @param <PRESENTATION>
  *            The presentation type. Must be compatible with what
  *            {@link #getPresentationType()} returns.
+ * @param <MODEL>
+ *            The model type. Must be compatible with what
+ *            {@link #getModelType()} returns.
  * @author Vaadin Ltd.
  * @since 7.0
  */
