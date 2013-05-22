@@ -55,7 +55,7 @@
 			rev="0.6" conf="build,ide -> default" />
 
 		<dependency org="com.vaadin" name="vaadin-client-compiler-deps"
-			rev="1.0.1" conf="build,ide -> default" />
+			rev="1.0.2" conf="build,ide -> default" />
 
 	</dependencies>
 
