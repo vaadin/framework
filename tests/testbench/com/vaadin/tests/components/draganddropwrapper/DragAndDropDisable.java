@@ -47,7 +47,6 @@ public class DragAndDropDisable extends TestBase {
         enabled.setImmediate(true);
         enabled.addListener(new ValueChangeListener() {
 
-            @Override
             public void valueChange(ValueChangeEvent event) {
                 dnd.setEnabled(enabled.booleanValue());
             }
@@ -55,12 +54,10 @@ public class DragAndDropDisable extends TestBase {
 
         dnd.setDropHandler(new DropHandler() {
 
-            @Override
             public AcceptCriterion getAcceptCriterion() {
                 return AcceptAll.get();
             }
 
-            @Override
             public void drop(DragAndDropEvent event) {
                 final WrapperTransferable tr = (WrapperTransferable) event
                         .getTransferable();
