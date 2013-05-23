@@ -45,6 +45,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
@@ -712,6 +713,18 @@ public final class VDebugWindow extends VOverlay {
         for (Section s : sections) {
             s.uidl(ac, uidl);
         }
+    }
+
+    /**
+     * Gets the container element for this window. The debug window is always
+     * global to the document and not related to any
+     * {@link ApplicationConnection} in particular.
+     * 
+     * @return The global overlay container element.
+     */
+    @Override
+    public com.google.gwt.user.client.Element getOverlayContainer() {
+        return RootPanel.get().getElement();
     }
 
     /*
