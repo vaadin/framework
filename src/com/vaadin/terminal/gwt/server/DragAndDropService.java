@@ -50,6 +50,14 @@ public class DragAndDropService implements VariableOwner {
         // owner cannot be null here
 
         DropTarget dropTarget = (DropTarget) owner;
+        if (!dropTarget.isEnabled()) {
+            getLogger()
+                    .warning(
+                            "Client dropped on " + owner
+                                    + " even though it's disabled");
+            return;
+        }
+
         lastVisitId = (Integer) variables.get("visitId");
 
         // request may be dropRequest or request during drag operation (commonly

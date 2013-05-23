@@ -64,6 +64,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
     private boolean hasTooltip = false;
 
+    protected boolean enabled = true;
+
     public VDragAndDropWrapper() {
         super();
         sinkEvents(VTooltip.TOOLTIP_EVENTS);
@@ -160,8 +162,9 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         this.client = client;
         super.updateFromUIDL(uidl, client);
-        if (!uidl.hasAttribute("cached") && !uidl.hasAttribute("hidden")) {
 
+        if (!uidl.hasAttribute("cached") && !uidl.hasAttribute("hidden")) {
+            enabled = !uidl.getBooleanAttribute("disabled");
             // Used to prevent wrapper from stealing tooltips when not defined
             hasTooltip = uidl.hasAttribute("description");
 
@@ -510,6 +513,9 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
         @Override
         public void dragEnter(VDragEvent drag) {
+            if (!enabled) {
+                return;
+            }
             updateDropDetails(drag);
             currentlyValid = false;
             super.dragEnter(drag);
@@ -523,6 +529,9 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
         @Override
         public void dragOver(final VDragEvent drag) {
+            if (!enabled) {
+                return;
+            }
             boolean detailsChanged = updateDropDetails(drag);
             if (detailsChanged) {
                 currentlyValid = false;
@@ -536,6 +545,9 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
         @Override
         public boolean drop(VDragEvent drag) {
+            if (!enabled) {
+                return false;
+            }
             deEmphasis(true);
 
             Map<String, Object> dd = drag.getDropDetails();
