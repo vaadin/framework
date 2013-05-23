@@ -23,11 +23,12 @@ Start Eclipse
 -------------
 Start Eclipse and use the root checkout folder (the one containing the *vaadin*, *gwt* and *gwt-tools* folders) as the workspace folder
 
-Define Required Variables for the GWT Eclipse Projects
+Set up the Workspace and define required variables for projects
 --------
-To be able to find all files, the GWT project requires you to define a couple of variables:
-
 1. Open *Window* -> *Preferences* (Windows) or *Eclipse* -> *Preferences* (Mac)
+1. Go to *General* ->  *Workspace*
+ 1. Set *Text file encoding* to *UTF-8*
+ 1. Set *New text file line delimiter* to *Unix*
 1. Go to *General* ->  *Workspace* -> *Linked Resources*
 1. Add a new Path Variable **GWT_ROOT** referring to the gwt folder containing the gwt project
 ![GWT_ROOT](http://f.cl.ly/items/430q0H0z3t362Z1A1n3L/LinkedResources.png "Defining GWT_ROOT")
