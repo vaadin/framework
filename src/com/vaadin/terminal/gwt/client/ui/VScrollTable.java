@@ -494,7 +494,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             this.rowKey = rowKey;
             this.left = left;
             this.top = top;
-            this.closeRegistration = menu.addCloseHandler(this);
+            closeRegistration = menu.addCloseHandler(this);
         }
 
         public void onClose(CloseEvent<PopupPanel> event) {
@@ -1077,7 +1077,18 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
         if (focusedRow != null) {
             if (!focusedRow.isAttached() && !rowRequestHandler.isRunning()) {
                 // focused row has been orphaned, can't focus
-                focusRowFromBody();
+                if (selectedRowKeys.contains(focusedRow.getKey())) {
+                    // if row cache was refreshed, focused row should be
+                    // in selection and exists with same index
+                    setRowFocus(getRenderedRowByKey(focusedRow.getKey()));
+                } else if (selectedRowKeys.size() > 0) {
+                    // try to focus any row in selection
+                    setRowFocus(getRenderedRowByKey(selectedRowKeys.iterator()
+                            .next()));
+                } else {
+                    // try to focus any row
+                    focusRowFromBody();
+                }
             }
         }
 
