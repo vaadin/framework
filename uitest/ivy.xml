@@ -77,10 +77,8 @@
         <!-- Mainly for SQLContainer tests -->
         <dependency org="org.hsqldb" name="hsqldb" rev="2.2.6"
             conf="build,ide -> default" />
-
         <dependency org="com.vaadin" name="vaadin-testbench"
-            rev="3.0.5" conf="build,ide -> default" />
-
+            rev="3.1.0" conf="build,ide -> default" />
     </dependencies>
 
 </ivy-module>
