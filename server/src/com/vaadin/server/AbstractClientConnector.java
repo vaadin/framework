@@ -577,7 +577,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
         }
 
         // Send detach event if the component have been connected to a window
-        if (getSession() != null) {
+        if (isAttached()) {
             detach();
         }
 
@@ -585,7 +585,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
         this.parent = parent;
 
         // Send attach event if connected to an application
-        if (getSession() != null) {
+        if (isAttached()) {
             attach();
         }
     }
@@ -593,6 +593,16 @@ public abstract class AbstractClientConnector implements ClientConnector,
     @Override
     public ClientConnector getParent() {
         return parent;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.server.ClientConnector#isAttached()
+     */
+    @Override
+    public boolean isAttached() {
+        return getSession() != null;
     }
 
     @Override

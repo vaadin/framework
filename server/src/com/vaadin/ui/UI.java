@@ -419,7 +419,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
             throw new NullPointerException("Argument must not be null");
         }
 
-        if (window.getUI() != null && window.getUI().getSession() != null) {
+        if (window.isAttached()) {
             throw new IllegalArgumentException(
                     "Window is already attached to an application.");
         }
