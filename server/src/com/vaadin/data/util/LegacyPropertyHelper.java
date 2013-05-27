@@ -15,6 +15,7 @@
  */
 package com.vaadin.data.util;
 
+import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,7 +33,7 @@ import com.vaadin.server.VaadinService;
  * @deprecated This is only used internally for backwards compatibility
  */
 @Deprecated
-public class LegacyPropertyHelper {
+public class LegacyPropertyHelper implements Serializable {
 
     /**
      * Returns the property value converted to a String.

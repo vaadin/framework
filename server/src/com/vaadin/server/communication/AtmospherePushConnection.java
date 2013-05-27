@@ -42,12 +42,12 @@ import com.vaadin.ui.UI;
  * @author Vaadin Ltd
  * @since 7.1
  */
-public class AtmospherePushConnection implements Serializable, PushConnection {
+public class AtmospherePushConnection implements PushConnection {
 
     /**
      * Represents a message that can arrive as multiple fragments.
      */
-    protected static class FragmentedMessage {
+    protected static class FragmentedMessage implements Serializable {
         private final StringBuilder message = new StringBuilder();
         private final int messageLength;
 

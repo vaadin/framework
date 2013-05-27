@@ -15,12 +15,14 @@
  */
 package com.vaadin.shared.ui.calendar;
 
+import java.io.Serializable;
+
 /**
  * 
  * @since 7.1
  * 
  */
-public class DateConstants {
+public class DateConstants implements Serializable {
 
     public static final String ACTION_DATE_FORMAT_PATTERN = "yyyy-MM-dd HH:mm:ss";
     public static final String CLIENT_DATE_FORMAT = "yyyy-MM-dd";
