@@ -69,7 +69,7 @@
 	</target>
 
 	<target name="fetch-release-notes-tickets" unless="built.release-notes" if="build.release-notes">
-		<mkdir dir="${vaadin.basedir}/result"/>
+		<mkdir dir="${vaadin.basedir}/result" />
 		<subant buildpath="${vaadin.basedir}/buildhelpers" target="fetch-release-notes-tickets" antfile="build.xml" inheritall="true">
 			<property name="output" location="${release-notes-tickets-file}" />
 		</subant>
@@ -391,12 +391,16 @@
 	<target name="checkstyle">
 		<fail unless="result.dir" message="No result.dir parameter given" />
 		<fail unless="cs.src" message="No cs.src parameter given" />
-		<property name="result.dir.full" location="${result.dir}"/>
+		<property name="result.dir.full" location="${result.dir}" />
 		<mkdir dir="${result.dir}" />
 		<echo>##teamcity[importData type='checkstyle' path='${result.dir.full}/checkstyle-errors.xml']</echo>
 		<cs:checkstyle config="${cs.xml}" failOnViolation="false">
-			<fileset dir="${cs.src}" includes="**/*.java" />
-			<formatter type="xml" toFile="${result.dir}/checkstyle-errors.xml"/>
+			<fileset dir="${cs.src}" includes="**/*.java">
+				<exclude name="com/vaadin/sass/internal/parser/Parser.java" />
+				<exclude name="com/vaadin/sass/internal/parser/ParserConstants.java" />
+				<exclude name="com/vaadin/sass/internal/parser/ParserTokenManager.java" />
+			</fileset>
+			<formatter type="xml" toFile="${result.dir}/checkstyle-errors.xml" />
 			<property key="checkstyle.header.file" file="${cs.header-file}" />
 		</cs:checkstyle>
 	</target>
