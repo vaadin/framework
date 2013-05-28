@@ -26,10 +26,24 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.util.CurrentInstance;
 
 public class UiAccess extends AbstractTestUIWithLog {
 
     private Future<Void> checkFromBeforeClientResponse;
+
+    private class CurrentInstanceTestType {
+        private String value;
+
+        public CurrentInstanceTestType(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return value;
+        }
+    }
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -209,6 +223,74 @@ public class UiAccess extends AbstractTestUIWithLog {
                                 future.cancel(true);
                             }
                         }.start();
+                    }
+                }));
+        addComponent(new Button("CurrentInstance accessSynchronously values",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        log.clear();
+                        // accessSynchronously should maintain values
+                        CurrentInstance.set(CurrentInstanceTestType.class,
+                                new CurrentInstanceTestType(
+                                        "Set before accessSynchronosly"));
+                        accessSynchronously(new Runnable() {
+                            @Override
+                            public void run() {
+                                log.log("accessSynchronously has request? "
+                                        + (VaadinService.getCurrentRequest() != null));
+                                log.log("Test value in accessSynchronously: "
+                                        + CurrentInstance
+                                                .get(CurrentInstanceTestType.class));
+                                CurrentInstance.set(
+                                        CurrentInstanceTestType.class,
+                                        new CurrentInstanceTestType(
+                                                "Set in accessSynchronosly"));
+                            }
+                        });
+                        log.log("has request after accessSynchronously? "
+                                + (VaadinService.getCurrentRequest() != null));
+                        log("Test value after accessSynchornously: "
+                                + CurrentInstance
+                                        .get(CurrentInstanceTestType.class));
+                    }
+                }));
+        addComponent(new Button("CurrentInstance access values",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        log.clear();
+                        // accessSynchronously should maintain values
+                        CurrentInstance
+                                .setInheritable(CurrentInstanceTestType.class,
+                                        new CurrentInstanceTestType(
+                                                "Set before access"));
+                        access(new Runnable() {
+                            @Override
+                            public void run() {
+                                log.log("access has request? "
+                                        + (VaadinService.getCurrentRequest() != null));
+                                log.log("Test value in access: "
+                                        + CurrentInstance
+                                                .get(CurrentInstanceTestType.class));
+                                CurrentInstance.setInheritable(
+                                        CurrentInstanceTestType.class,
+                                        new CurrentInstanceTestType(
+                                                "Set in access"));
+                            }
+                        });
+                        CurrentInstance.setInheritable(
+                                CurrentInstanceTestType.class,
+                                new CurrentInstanceTestType(
+                                        "Set before run pending"));
+
+                        getSession().runPendingAccessTasks();
+
+                        log.log("has request after access? "
+                                + (VaadinService.getCurrentRequest() != null));
+                        log("Test value after access: "
+                                + CurrentInstance
+                                        .get(CurrentInstanceTestType.class));
                     }
                 }));
     }

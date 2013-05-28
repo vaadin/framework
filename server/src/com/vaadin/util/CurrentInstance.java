@@ -17,33 +17,35 @@
 package com.vaadin.util;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.vaadin.server.VaadinPortlet;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinService;
-import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
 
 /**
- * Keeps track of various thread local instances used by the framework.
+ * Keeps track of various current instances for the current thread. All the
+ * instances are automatically cleared after handling a request from the client
+ * to avoid leaking memory. The inheritable values are also maintained when
+ * execution is moved to another thread, both when a new thread is created and
+ * when {@link VaadinSession#access(Runnable)} or {@link UI#access(Runnable)} is
+ * used.
  * <p>
  * Currently the framework uses the following instances:
  * </p>
  * <p>
- * Inheritable: {@link UI}, {@link VaadinPortlet}, {@link VaadinService},
- * {@link VaadinServlet}, {@link VaadinSession}.
+ * Inheritable: {@link UI}, {@link VaadinService}, {@link VaadinSession}.
  * </p>
  * <p>
  * Non-inheritable: {@link VaadinRequest}, {@link VaadinResponse}.
  * </p>
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public class CurrentInstance implements Serializable {
@@ -115,7 +117,9 @@ public class CurrentInstance implements Serializable {
 
     /**
      * Sets the current inheritable instance of the given type. A current
-     * instance that is inheritable will be available for child threads.
+     * instance that is inheritable will be available for child threads and in
+     * code run by {@link VaadinSession#access(Runnable)} and
+     * {@link UI#access(Runnable)}.
      * 
      * @see #set(Class, Object)
      * @see InheritableThreadLocal
@@ -180,6 +184,34 @@ public class CurrentInstance implements Serializable {
         for (Class c : old.keySet()) {
             CurrentInstance ci = old.get(c);
             set(c, ci.instance, ci.inheritable);
+        }
+    }
+
+    /**
+     * Gets the currently set instances so that they can later be restored using
+     * {@link #restoreThreadLocals(Map)}.
+     * 
+     * @since 7.1
+     * 
+     * @param onlyInheritable
+     *            <code>true</code> if only the inheritable instances should be
+     *            included; <code>false</code> to get all instances.
+     * @return a map containing the current instances
+     */
+    public static Map<Class<?>, CurrentInstance> getInstances(
+            boolean onlyInheritable) {
+        Map<Class<?>, CurrentInstance> map = instances.get();
+        if (map == null) {
+            return Collections.emptyMap();
+        } else {
+            Map<Class<?>, CurrentInstance> copy = new HashMap<Class<?>, CurrentInstance>();
+            for (Class<?> c : map.keySet()) {
+                CurrentInstance ci = map.get(c);
+                if (ci.inheritable || !onlyInheritable) {
+                    copy.put(c, ci);
+                }
+            }
+            return copy;
         }
     }
 

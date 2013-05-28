@@ -1185,9 +1185,14 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * <p>
      * Please note that the runnable might be invoked on a different thread or
      * later on the current thread, which means that custom thread locals might
-     * not have the expected values when the runnable is executed. The UI and
-     * other thread locals provided by Vaadin are set properly before executing
-     * the runnable.
+     * not have the expected values when the runnable is executed. Inheritable
+     * values in {@link CurrentInstance} will have the same values as when this
+     * method was invoked. {@link UI#getCurrent()},
+     * {@link VaadinSession#getCurrent()} and {@link VaadinService#getCurrent()}
+     * are set according to this UI before executing the runnable.
+     * Non-inheritable CurrentInstance values including
+     * {@link VaadinService#getCurrentRequest()} and
+     * {@link VaadinService#getCurrentResponse()} will not be defined.
      * </p>
      * <p>
      * The returned future can be used to check for task completion and to

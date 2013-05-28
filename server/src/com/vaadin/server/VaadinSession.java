@@ -67,6 +67,35 @@ import com.vaadin.util.ReflectTools;
 @SuppressWarnings("serial")
 public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
+    private class FutureAccess extends FutureTask<Void> {
+        /**
+         * Snapshot of all non-inheritable current instances at the time this
+         * object was created.
+         */
+        private final Map<Class<?>, CurrentInstance> instances = CurrentInstance
+                .getInstances(true);
+
+        public FutureAccess(Runnable arg0) {
+            super(arg0, null);
+        }
+
+        @Override
+        public Void get() throws InterruptedException, ExecutionException {
+            /*
+             * Help the developer avoid programming patterns that cause
+             * deadlocks unless implemented very carefully. get(long, TimeUnit)
+             * does not have the same detection since a sensible timeout should
+             * avoid completely locking up the application.
+             * 
+             * Even though no deadlock could occur after the runnable has been
+             * run, the check is always done as the deterministic behavior makes
+             * it easier to detect potential problems.
+             */
+            VaadinService.verifyNoOtherSessionLocked(VaadinSession.this);
+            return super.get();
+        }
+    }
+
     /**
      * The name of the parameter that is by default used in e.g. web.xml to
      * define the name of the default {@link UI} class.
@@ -140,7 +169,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * session is serialized as long as it doesn't happen while some other
      * thread has the lock.
      */
-    private transient final ConcurrentLinkedQueue<FutureTask<Void>> pendingAccessQueue = new ConcurrentLinkedQueue<FutureTask<Void>>();
+    private transient final ConcurrentLinkedQueue<FutureAccess> pendingAccessQueue = new ConcurrentLinkedQueue<FutureAccess>();
 
     /**
      * Create a new service session tied to a Vaadin service
@@ -1152,9 +1181,13 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * <p>
      * Please note that the runnable might be invoked on a different thread or
      * later on the current thread, which means that custom thread locals might
-     * not have the expected values when the runnable is executed. The session
-     * and other thread locals provided by Vaadin are set properly before
-     * executing the runnable.
+     * not have the expected values when the runnable is executed. Inheritable
+     * values in {@link CurrentInstance} will have the same values as when this
+     * method was invoked. {@link VaadinSession#getCurrent()} and
+     * {@link VaadinService#getCurrent()} are set according to this session
+     * before executing the runnable. Non-inheritable CurrentInstance values
+     * including {@link VaadinService#getCurrentRequest()} and
+     * {@link VaadinService#getCurrentResponse()} will not be defined.
      * </p>
      * <p>
      * The returned future can be used to check for task completion and to
@@ -1176,23 +1209,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *         cancel the task
      */
     public Future<Void> access(Runnable runnable) {
-        FutureTask<Void> future = new FutureTask<Void>(runnable, null) {
-            @Override
-            public Void get() throws InterruptedException, ExecutionException {
-                /*
-                 * Help the developer avoid programming patterns that cause
-                 * deadlocks unless implemented very carefully. get(long,
-                 * TimeUnit) does not have the same detection since a sensible
-                 * timeout should avoid completely locking up the application.
-                 * 
-                 * Even though no deadlock could occur after the runnable has
-                 * been run, the check is always done as the deterministic
-                 * behavior makes it easier to detect potential problems.
-                 */
-                VaadinService.verifyNoOtherSessionLocked(VaadinSession.this);
-                return super.get();
-            }
-        };
+        FutureAccess future = new FutureAccess(runnable);
         pendingAccessQueue.add(future);
 
         /*
@@ -1233,11 +1250,26 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     public void runPendingAccessTasks() {
         assert hasLock();
 
-        FutureTask<Void> pendingAccess;
-        while ((pendingAccess = pendingAccessQueue.poll()) != null) {
-            if (!pendingAccess.isCancelled()) {
-                accessSynchronously(pendingAccess);
+        if (pendingAccessQueue.isEmpty()) {
+            return;
+        }
+
+        Map<Class<?>, CurrentInstance> oldInstances = CurrentInstance
+                .getInstances(false);
+
+        FutureAccess pendingAccess;
+        try {
+            while ((pendingAccess = pendingAccessQueue.poll()) != null) {
+                if (!pendingAccess.isCancelled()) {
+                    CurrentInstance.clearAll();
+                    CurrentInstance
+                            .restoreThreadLocals(pendingAccess.instances);
+                    accessSynchronously(pendingAccess);
+                }
             }
+        } finally {
+            CurrentInstance.clearAll();
+            CurrentInstance.restoreThreadLocals(oldInstances);
         }
     }
 
