@@ -16,18 +16,12 @@
 
 package com.vaadin.server;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Serializable;
-import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -37,7 +31,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.vaadin.server.ClientConnector.ConnectorErrorEvent;
-import com.vaadin.server.communication.LocaleWriter;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.JavaScriptConnectorState;
 import com.vaadin.shared.communication.SharedState;
@@ -69,9 +62,6 @@ public class LegacyCommunicationManager implements Serializable {
      */
     private final VaadinSession session;
 
-    // TODO Refactor to UI shared state (#11378)
-    private List<String> locales;
-
     // TODO Move to VaadinSession (#11409)
     private DragAndDropService dragAndDropService;
 
@@ -88,7 +78,6 @@ public class LegacyCommunicationManager implements Serializable {
      */
     public LegacyCommunicationManager(VaadinSession session) {
         this.session = session;
-        requireLocale(session.getLocale().toString());
     }
 
     protected VaadinSession getSession() {
@@ -313,52 +302,6 @@ public class LegacyCommunicationManager implements Serializable {
     }
 
     /**
-     * Prints the queued (pending) locale definitions to a {@link PrintWriter}
-     * in a (UIDL) format that can be sent to the client and used there in
-     * formatting dates, times etc.
-     * 
-     * @deprecated As of 7.1. See #11378.
-     * 
-     * @param outWriter
-     */
-    @Deprecated
-    public void printLocaleDeclarations(Writer writer) throws IOException {
-        new LocaleWriter().write(locales, writer);
-    }
-
-    /**
-     * Queues a locale to be sent to the client (browser) for date and time
-     * entry etc. All locale specific information is derived from server-side
-     * {@link Locale} instances and sent to the client when needed, eliminating
-     * the need to use the {@link Locale} class and all the framework behind it
-     * on the client.
-     * 
-     * @deprecated As of 7.1. See #11378.
-     * 
-     * @see Locale#toString()
-     * 
-     * @param value
-     */
-    @Deprecated
-    public void requireLocale(String value) {
-        if (locales == null) {
-            locales = new ArrayList<String>();
-            locales.add(session.getLocale().toString());
-        }
-        if (!locales.contains(value)) {
-            locales.add(value);
-        }
-    }
-
-    /**
-     * @deprecated As of 7.1. See #11378.
-     */
-    @Deprecated
-    public void resetLocales() {
-        locales = null;
-    }
-
-    /**
      * @deprecated As of 7.1. Will be removed in the future.
      */
     @Deprecated
@@ -486,10 +429,6 @@ public class LegacyCommunicationManager implements Serializable {
         getClientCache(ui).clear();
         ui.getConnectorTracker().markAllConnectorsDirty();
         ui.getConnectorTracker().markAllClientSidesUninitialized();
-
-        // Reset sent locales
-        resetLocales();
-        requireLocale(session.getLocale().toString());
     }
 
     private static final Logger getLogger() {

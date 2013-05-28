@@ -283,10 +283,6 @@ public class UidlWriter implements Serializable {
                         + new JSONArray(styleDependencies).toString());
             }
 
-            // add any pending locale definitions requested by the client
-            writer.write(", \"locales\": ");
-            manager.printLocaleDeclarations(writer);
-
             if (manager.getDragAndDropService() != null) {
                 manager.getDragAndDropService().printJSONResponse(writer);
             }

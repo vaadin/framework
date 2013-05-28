@@ -16,7 +16,11 @@
 package com.vaadin.shared.ui.ui;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.vaadin.server.LocaleService;
+import com.vaadin.server.Page;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.TabIndexState;
 
@@ -50,10 +54,34 @@ public class UIState extends TabIndexState {
      * State related to the {@link Page} class.
      */
     public PageState pageState = new PageState();
+    /**
+     * State related to the {@link LocaleService} class.
+     */
+    public LocaleServiceState localeServiceState = new LocaleServiceState();
 
     {
         primaryStyleName = "v-ui";
         // Default is 1 for legacy reasons
         tabIndex = 1;
     }
+
+    public static class LocaleServiceState implements Serializable {
+        public List<LocaleData> localeData = new ArrayList<LocaleData>();
+    }
+
+    public static class LocaleData implements Serializable {
+        public String name;
+        public String[] monthNames;
+        public String[] shortMonthNames;
+        public String[] shortDayNames;
+        public String[] dayNames;
+        public int firstDayOfWeek;
+        public String dateFormat;
+        public boolean twelveHourClock;
+        public String hourMinuteDelimiter;
+        public String am;
+        public String pm;
+
+    }
+
 }

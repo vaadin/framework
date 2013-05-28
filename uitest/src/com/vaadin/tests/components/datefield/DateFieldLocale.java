@@ -16,7 +16,7 @@ public class DateFieldLocale extends TestBase {
         final DateField dateField = new DateField("DateField");
         dateField.setLocale(new Locale("fi", "FI"));
         dateField.setCaption(dateField.getLocale().toString());
-        dateField.setValue(new Date());
+        dateField.setValue(new Date(2013 - 1900, 7 - 1, 27));
         dateField.setResolution(DateField.RESOLUTION_DAY);
 
         addComponent(new Button("Change locale", new ClickListener() {

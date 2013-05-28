@@ -30,6 +30,7 @@ import com.vaadin.event.ActionManager;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.navigator.Navigator;
+import com.vaadin.server.LocaleService;
 import com.vaadin.server.Page;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
@@ -493,6 +494,9 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     private PushConnection pushConnection = null;
 
     private boolean hasPendingPush = false;
+
+    private LocaleService localeService = new LocaleService(this,
+            getState(false).localeServiceState);
 
     /**
      * This method is used by Component.Focusable objects to request focus to
@@ -1052,6 +1056,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     @Override
     public void attach() {
         super.attach();
+        getLocaleService().addLocale(getLocale());
     }
 
     /**
@@ -1428,4 +1433,16 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     public void setOverlayContainerLabel(String overlayContainerLabel) {
         getState().overlayContainerLabel = overlayContainerLabel;
     }
+
+    /**
+     * Returns the locale service which handles transmission of Locale data to
+     * the client.
+     * 
+     * @since 7.1
+     * @return The LocaleService for this UI
+     */
+    public LocaleService getLocaleService() {
+        return localeService;
+    }
+
 }

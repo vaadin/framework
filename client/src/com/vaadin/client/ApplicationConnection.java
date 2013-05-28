@@ -1350,16 +1350,6 @@ public class ApplicationConnection {
                 handleUIDLDuration.logDuration(" * Loading widgets completed",
                         10);
 
-                Profiler.enter("Handling locales");
-                if (json.containsKey("locales")) {
-                    VConsole.log(" * Handling locales");
-                    // Store locale data
-                    JsArray<ValueMap> valueMapArray = json
-                            .getJSValueMapArray("locales");
-                    LocaleService.addLocales(valueMapArray);
-                }
-                Profiler.leave("Handling locales");
-
                 Profiler.enter("Handling meta information");
                 ValueMap meta = null;
                 if (json.containsKey("meta")) {
@@ -1398,6 +1388,17 @@ public class ApplicationConnection {
                 // Update states, do not fire events
                 JsArrayObject<StateChangeEvent> pendingStateChangeEvents = updateConnectorState(
                         json, createdConnectorIds);
+
+                /*
+                 * Doing this here so that locales are available also to the
+                 * connectors which get a state change event before the UI.
+                 */
+                Profiler.enter("Handling locales");
+                VConsole.log(" * Handling locales");
+                // Store locale data
+                LocaleService
+                        .addLocales(getUIConnector().getState().localeServiceState.localeData);
+                Profiler.leave("Handling locales");
 
                 // Update hierarchy, do not fire events
                 ConnectorHierarchyUpdateResult connectorHierarchyUpdateResult = updateConnectorHierarchy(json);

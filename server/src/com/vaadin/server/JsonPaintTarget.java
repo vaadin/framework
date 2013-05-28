@@ -388,10 +388,6 @@ public class JsonPaintTarget implements PaintTarget {
             getUsedResources().add("layouts/" + value + ".html");
         }
 
-        if (name.equals("locale")) {
-            manager.requireLocale(value);
-        }
-
     }
 
     @Override
