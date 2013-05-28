@@ -107,17 +107,6 @@ public class UiAccess extends AbstractTestUIWithLog {
                                 } finally {
                                     getSession().unlock();
                                 }
-                                final Thread thisThread = this;
-                                access(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        log("Access has current response? "
-                                                + (VaadinService
-                                                        .getCurrentResponse() != null));
-                                        log("Thread is still alive? "
-                                                + thisThread.isAlive());
-                                    }
-                                });
                             }
                         }.start();
 
