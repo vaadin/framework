@@ -17,24 +17,27 @@
 package com.vaadin.ui;
 
 import com.vaadin.data.Property;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.progressindicator.ProgressIndicatorServerRpc;
 import com.vaadin.shared.ui.progressindicator.ProgressIndicatorState;
 
 /**
- * <code>ProgressIndicator</code> is component that shows user state of a
- * process (like long computing or file upload)
- * 
- * <code>ProgressIndicator</code> has two main modes. One for indeterminate
- * processes and other (default) for processes which progress can be measured
- * 
- * May view an other property that indicates progress 0...1
+ * A {@link ProgressBar} which polls the server for updates.
+ * <p>
+ * Polling in this way is generally not recommended since there is no
+ * centralized management of when messages are sent to the server. Furthermore,
+ * polling might not be needed at all if {@link UI#setPushMode(PushMode)} or
+ * {@link UI#setPollInterval(int)} is used.
  * 
  * @author Vaadin Ltd.
  * @since 4
+ * @deprecated as of 7.1, use {@link ProgressBar} combined with
+ *             {@link UI#setPushMode(PushMode)} or
+ *             {@link UI#setPollInterval(int)} instead.
  */
+@Deprecated
 @SuppressWarnings("serial")
-public class ProgressIndicator extends AbstractField<Float> implements
-        Property.Viewer, Property.ValueChangeListener {
+public class ProgressIndicator extends ProgressBar {
 
     private ProgressIndicatorServerRpc rpc = new ProgressIndicatorServerRpc() {
 
@@ -57,7 +60,7 @@ public class ProgressIndicator extends AbstractField<Float> implements
      * @param value
      */
     public ProgressIndicator(float value) {
-        setValue(value);
+        super(value);
         registerRpc(rpc);
     }
 
@@ -68,50 +71,8 @@ public class ProgressIndicator extends AbstractField<Float> implements
      * @param contentSource
      */
     public ProgressIndicator(Property contentSource) {
-        setPropertyDataSource(contentSource);
+        super(contentSource);
         registerRpc(rpc);
-    }
-
-    @Override
-    public void beforeClientResponse(boolean initial) {
-        super.beforeClientResponse(initial);
-
-        getState().state = getValue();
-    }
-
-    /**
-     * Gets the value of the ProgressIndicator. Value of the ProgressIndicator
-     * is Float between 0 and 1.
-     * 
-     * @return the Value of the ProgressIndicator.
-     * @see com.vaadin.ui.AbstractField#getValue()
-     */
-    @Override
-    public Float getValue() {
-        return super.getValue();
-    }
-
-    /**
-     * Sets the value of the ProgressIndicator. Value of the ProgressIndicator
-     * is the Float between 0 and 1.
-     * 
-     * @param newValue
-     *            the New value of the ProgressIndicator.
-     * @see com.vaadin.ui.AbstractField#setValue()
-     */
-    @Override
-    public void setValue(Float newValue) {
-        super.setValue(newValue);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.ui.AbstractField#getType()
-     */
-    @Override
-    public Class<Float> getType() {
-        return Float.class;
     }
 
     @Override
@@ -119,23 +80,9 @@ public class ProgressIndicator extends AbstractField<Float> implements
         return (ProgressIndicatorState) super.getState();
     }
 
-    /**
-     * Sets whether or not the ProgressIndicator is indeterminate.
-     * 
-     * @param indeterminate
-     *            true to set to indeterminate mode.
-     */
-    public void setIndeterminate(boolean indeterminate) {
-        getState().indeterminate = indeterminate;
-    }
-
-    /**
-     * Gets whether or not the ProgressIndicator is indeterminate.
-     * 
-     * @return true to set to indeterminate mode.
-     */
-    public boolean isIndeterminate() {
-        return getState().indeterminate;
+    @Override
+    protected ProgressIndicatorState getState(boolean markAsDirty) {
+        return (ProgressIndicatorState) super.getState(markAsDirty);
     }
 
     /**
@@ -154,22 +101,6 @@ public class ProgressIndicator extends AbstractField<Float> implements
      * @return the interval in milliseconds.
      */
     public int getPollingInterval() {
-        return getState().pollingInterval;
-    }
-
-    /*
-     * Overridden to keep the shared state in sync with the AbstractField
-     * internal value. Should be removed once AbstractField is refactored to use
-     * shared state.
-     * 
-     * See tickets #10921 and #11064.
-     */
-    @Override
-    protected void setInternalValue(Float newValue) {
-        super.setInternalValue(newValue);
-        if (newValue == null) {
-            newValue = 0.0f;
-        }
-        getState().state = newValue;
+        return getState(false).pollingInterval;
     }
 }

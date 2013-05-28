@@ -15,10 +15,7 @@
  */
 package com.vaadin.shared.ui.progressindicator;
 
-import com.vaadin.shared.AbstractFieldState;
-
-public class ProgressIndicatorState extends AbstractFieldState {
-    public boolean indeterminate = false;
+@Deprecated
+public class ProgressIndicatorState extends ProgressBarState {
     public int pollingInterval = 1000;
-    public Float state = 0.0f;
 }

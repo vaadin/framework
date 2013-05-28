@@ -18,15 +18,23 @@ package com.vaadin.client.ui.progressindicator;
 
 import com.google.gwt.user.client.Timer;
 import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.ui.AbstractFieldConnector;
-import com.vaadin.client.ui.VProgressIndicator;
+import com.vaadin.client.ui.VProgressBar;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.progressindicator.ProgressIndicatorServerRpc;
 import com.vaadin.shared.ui.progressindicator.ProgressIndicatorState;
 import com.vaadin.ui.ProgressIndicator;
 
+/**
+ * Connector for {@link VProgressBar} with polling support.
+ * 
+ * @since 7.0
+ * @author Vaadin Ltd
+ * @deprecated as of 7.1, use {@link ProgressBarConnector} combined with server
+ *             push or UI polling.
+ */
 @Connect(ProgressIndicator.class)
-public class ProgressIndicatorConnector extends AbstractFieldConnector {
+@Deprecated
+public class ProgressIndicatorConnector extends ProgressBarConnector {
 
     @Override
     public ProgressIndicatorState getState() {
@@ -45,8 +53,6 @@ public class ProgressIndicatorConnector extends AbstractFieldConnector {
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
-        getWidget().setIndeterminate(getState().indeterminate);
-        getWidget().setState(getState().state);
 
         if (isEnabled()) {
             poller.scheduleRepeating(getState().pollingInterval);
@@ -59,10 +65,5 @@ public class ProgressIndicatorConnector extends AbstractFieldConnector {
     public void onUnregister() {
         super.onUnregister();
         poller.cancel();
-    }
-
-    @Override
-    public VProgressIndicator getWidget() {
-        return (VProgressIndicator) super.getWidget();
     }
 }

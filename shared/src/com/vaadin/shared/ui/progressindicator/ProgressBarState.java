@@ -14,15 +14,20 @@
  * the License.
  */
 
-package com.vaadin.client.ui;
+package com.vaadin.shared.ui.progressindicator;
+
+import com.vaadin.shared.AbstractFieldState;
+import com.vaadin.shared.communication.SharedState;
 
 /**
+ * {@link SharedState} for {@link com.vaadin.ui.ProgressBar}
  * 
+ * @since 7.1
  * @author Vaadin Ltd
- * 
- * @deprecated as of 7.1, renamed to VProgressBar
  */
-@Deprecated
-public class VProgressIndicator extends VProgressBar {
+public class ProgressBarState extends AbstractFieldState {
+
+    public boolean indeterminate = false;
+    public Float state = 0.0f;
 
 }
