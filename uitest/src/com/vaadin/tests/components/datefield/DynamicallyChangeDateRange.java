@@ -1,6 +1,7 @@
 package com.vaadin.tests.components.datefield;
 
 import java.util.Date;
+import java.util.Locale;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
@@ -19,6 +20,7 @@ public class DynamicallyChangeDateRange extends AbstractTestUI {
 
     @Override
     protected void setup(VaadinRequest request) {
+        setLocale(Locale.ENGLISH);
         final VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
         setContent(layout);
