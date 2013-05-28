@@ -16,11 +16,12 @@
 
 package com.vaadin.client.ui;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
@@ -49,8 +50,8 @@ import com.vaadin.client.ui.richtextarea.VRichTextToolbar;
  * @author Vaadin Ltd.
  * 
  */
-public class VRichTextArea extends Composite implements Field, ChangeHandler,
-        BlurHandler, KeyPressHandler, KeyDownHandler, Focusable {
+public class VRichTextArea extends Composite implements Field, KeyPressHandler,
+        KeyDownHandler, Focusable {
 
     /**
      * The input node CSS classname.
@@ -91,10 +92,9 @@ public class VRichTextArea extends Composite implements Field, ChangeHandler,
 
     private ShortcutActionHandlerOwner hasShortcutActionHandler;
 
-    /** For internal use only. May be removed or replaced in the future. */
-    public String currentValue = "";
-
     private boolean readOnly = false;
+
+    private final Map<BlurHandler, HandlerRegistration> blurHandlers = new HashMap<BlurHandler, HandlerRegistration>();
 
     public VRichTextArea() {
         createRTAComponents();
@@ -110,9 +110,19 @@ public class VRichTextArea extends Composite implements Field, ChangeHandler,
     private void createRTAComponents() {
         rta = new RichTextArea();
         rta.setWidth("100%");
-        rta.addBlurHandler(this);
         rta.addKeyDownHandler(this);
         formatter = new VRichTextToolbar(rta);
+
+        // Add blur handlers
+        for (Entry<BlurHandler, HandlerRegistration> handler : blurHandlers
+                .entrySet()) {
+
+            // Remove old registration
+            handler.getValue().removeHandler();
+
+            // Add blur handlers
+            addBlurHandler(handler.getKey());
+        }
     }
 
     public void setEnabled(boolean enabled) {
@@ -127,6 +137,7 @@ public class VRichTextArea extends Composite implements Field, ChangeHandler,
      * Swaps html to rta and visa versa.
      */
     private void swapEditableArea() {
+        String value = getValue();
         if (html.isAttached()) {
             fp.remove(html);
             if (BrowserInfo.get().isWebkit()) {
@@ -134,13 +145,12 @@ public class VRichTextArea extends Composite implements Field, ChangeHandler,
                 createRTAComponents(); // recreate new RTA to bypass #5379
                 fp.add(formatter);
             }
-            rta.setHTML(currentValue);
             fp.add(rta);
         } else {
-            html.setHTML(currentValue);
             fp.remove(rta);
             fp.add(html);
         }
+        setValue(value);
     }
 
     /** For internal use only. May be removed or replaced in the future. */
@@ -178,62 +188,6 @@ public class VRichTextArea extends Composite implements Field, ChangeHandler,
 
     private boolean isReadOnly() {
         return readOnly;
-    }
-
-    // TODO is this really used, or does everything go via onBlur() only?
-    @Override
-    public void onChange(ChangeEvent event) {
-        synchronizeContentToServer();
-    }
-
-    /**
-     * Method is public to let popupview force synchronization on close.
-     */
-    public void synchronizeContentToServer() {
-        if (client != null && id != null) {
-            final String html = sanitizeRichTextAreaValue(rta.getHTML());
-            if (!html.equals(currentValue)) {
-                client.updateVariable(id, "text", html, immediate);
-                currentValue = html;
-            }
-        }
-    }
-
-    /**
-     * Browsers differ in what they return as the content of a visually empty
-     * rich text area. This method is used to normalize these to an empty
-     * string. See #8004.
-     * 
-     * @param html
-     * @return cleaned html string
-     */
-    private String sanitizeRichTextAreaValue(String html) {
-        BrowserInfo browser = BrowserInfo.get();
-        String result = html;
-        if (browser.isFirefox()) {
-            if ("<br>".equals(html)) {
-                result = "";
-            }
-        } else if (browser.isWebkit()) {
-            if ("<div><br></div>".equals(html)) {
-                result = "";
-            }
-        } else if (browser.isIE()) {
-            if ("<P>&nbsp;</P>".equals(html)) {
-                result = "";
-            }
-        } else if (browser.isOpera()) {
-            if ("<br>".equals(html) || "<p><br></p>".equals(html)) {
-                result = "";
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public void onBlur(BlurEvent event) {
-        synchronizeContentToServer();
-        // TODO notify possible server side blur/focus listeners
     }
 
     /**
@@ -409,4 +363,81 @@ public class VRichTextArea extends Composite implements Field, ChangeHandler,
         rta.setTabIndex(index);
     }
 
+    /**
+     * Set the value of the text area
+     * 
+     * @param value
+     *            The text value. Can be html.
+     */
+    public void setValue(String value) {
+        if (rta.isAttached()) {
+            rta.setHTML(value);
+        } else {
+            html.setHTML(value);
+        }
+    }
+
+    /**
+     * Get the value the text area
+     */
+    public String getValue() {
+        if (rta.isAttached()) {
+            return rta.getHTML();
+        } else {
+            return html.getHTML();
+        }
+    }
+
+    /**
+     * Browsers differ in what they return as the content of a visually empty
+     * rich text area. This method is used to normalize these to an empty
+     * string. See #8004.
+     * 
+     * @return cleaned html string
+     */
+    public String getSanitazedValue() {
+        BrowserInfo browser = BrowserInfo.get();
+        String result = getValue();
+        if (browser.isFirefox()) {
+            if ("<br>".equals(html)) {
+                result = "";
+            }
+        } else if (browser.isWebkit()) {
+            if ("<div><br></div>".equals(html)) {
+                result = "";
+            }
+        } else if (browser.isIE()) {
+            if ("<P>&nbsp;</P>".equals(html)) {
+                result = "";
+            }
+        } else if (browser.isOpera()) {
+            if ("<br>".equals(html) || "<p><br></p>".equals(html)) {
+                result = "";
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Adds a blur handler to the component.
+     * 
+     * @param blurHandler
+     *            the blur handler to add
+     */
+    public void addBlurHandler(BlurHandler blurHandler) {
+        blurHandlers.put(blurHandler, rta.addBlurHandler(blurHandler));
+    }
+
+    /**
+     * Removes a blur handler.
+     * 
+     * @param blurHandler
+     *            the handler to remove
+     */
+    public void removeBlurHandler(BlurHandler blurHandler) {
+        HandlerRegistration registration = blurHandlers.remove(blurHandler);
+        if (registration != null) {
+            registration.removeHandler();
+        }
+    }
 }

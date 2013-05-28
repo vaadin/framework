@@ -40,6 +40,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.Util;
 import com.vaadin.client.VCaptionWrapper;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
@@ -313,8 +314,11 @@ public class VPopupView extends HTML implements Iterable<Widget> {
 
         private void checkForRTE(Widget popupComponentWidget2) {
             if (popupComponentWidget2 instanceof VRichTextArea) {
-                ((VRichTextArea) popupComponentWidget2)
-                        .synchronizeContentToServer();
+                ComponentConnector rtaConnector = Util
+                        .findConnectorFor(popupComponentWidget2);
+                if (rtaConnector != null) {
+                    rtaConnector.flush();
+                }
             } else if (popupComponentWidget2 instanceof HasWidgets) {
                 HasWidgets hw = (HasWidgets) popupComponentWidget2;
                 Iterator<Widget> iterator = hw.iterator();
