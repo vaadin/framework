@@ -174,13 +174,15 @@ public class CurrentInstance implements Serializable {
     }
 
     /**
-     * Restores the given thread locals to the given values. Note that this
-     * should only be used internally to restore Vaadin classes.
+     * Restores the given instances to the given values. Note that this should
+     * only be used internally to restore Vaadin classes.
+     * 
+     * @since 7.1
      * 
      * @param old
-     *            A Class -> Object map to set as thread locals
+     *            A Class -> CurrentInstance map to set as current instances
      */
-    public static void restoreThreadLocals(Map<Class<?>, CurrentInstance> old) {
+    public static void restoreInstances(Map<Class<?>, CurrentInstance> old) {
         for (Class c : old.keySet()) {
             CurrentInstance ci = old.get(c);
             set(c, ci.instance, ci.inheritable);
@@ -189,7 +191,7 @@ public class CurrentInstance implements Serializable {
 
     /**
      * Gets the currently set instances so that they can later be restored using
-     * {@link #restoreThreadLocals(Map)}.
+     * {@link #restoreInstances(Map)}.
      * 
      * @since 7.1
      * 
@@ -216,30 +218,38 @@ public class CurrentInstance implements Serializable {
     }
 
     /**
-     * Sets thread locals for the UI and all related classes
+     * Sets current instances for the UI and all related classes. The previously
+     * defined values can be restored by passing the returned map to
+     * {@link #restoreInstances(Map)}.
+     * 
+     * @since 7.1
      * 
      * @param ui
      *            The UI
-     * @return A map containing the old values of the thread locals this method
+     * @return A map containing the old values of the instances that this method
      *         updated.
      */
-    public static Map<Class<?>, CurrentInstance> setThreadLocals(UI ui) {
+    public static Map<Class<?>, CurrentInstance> setCurrent(UI ui) {
         Map<Class<?>, CurrentInstance> old = new HashMap<Class<?>, CurrentInstance>();
         old.put(UI.class, new CurrentInstance(UI.getCurrent(), true));
         UI.setCurrent(ui);
-        old.putAll(setThreadLocals(ui.getSession()));
+        old.putAll(setCurrent(ui.getSession()));
         return old;
     }
 
     /**
-     * Sets thread locals for the {@link VaadinSession} and all related classes
+     * Sets current instances for the {@link VaadinSession} and all related
+     * classes. The previously defined values can be restored by passing the
+     * returned map to {@link #restoreInstances(Map)}.
+     * 
+     * @since 7.1
      * 
      * @param session
      *            The VaadinSession
-     * @return A map containing the old values of the thread locals this method
+     * @return A map containing the old values of the instances this method
      *         updated.
      */
-    public static Map<Class<?>, CurrentInstance> setThreadLocals(
+    public static Map<Class<?>, CurrentInstance> setCurrent(
             VaadinSession session) {
         Map<Class<?>, CurrentInstance> old = new HashMap<Class<?>, CurrentInstance>();
         old.put(VaadinSession.class,

@@ -1153,15 +1153,15 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         Map<Class<?>, CurrentInstance> old = null;
         lock();
         try {
-            old = CurrentInstance.setThreadLocals(this);
+            old = CurrentInstance.setCurrent(this);
             runnable.run();
         } finally {
             unlock();
             if (old != null) {
-                CurrentInstance.restoreThreadLocals(old);
+                CurrentInstance.restoreInstances(old);
             }
         }
-
+ 
     }
 
     /**
@@ -1262,14 +1262,13 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
             while ((pendingAccess = pendingAccessQueue.poll()) != null) {
                 if (!pendingAccess.isCancelled()) {
                     CurrentInstance.clearAll();
-                    CurrentInstance
-                            .restoreThreadLocals(pendingAccess.instances);
+                    CurrentInstance.restoreInstances(pendingAccess.instances);
                     accessSynchronously(pendingAccess);
                 }
             }
         } finally {
             CurrentInstance.clearAll();
-            CurrentInstance.restoreThreadLocals(oldInstances);
+            CurrentInstance.restoreInstances(oldInstances);
         }
     }
 

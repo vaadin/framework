@@ -1157,12 +1157,12 @@ public abstract class UI extends AbstractSingleComponentContainer implements
                 // acquired the lock.
                 throw new UIDetachedException();
             }
-            old = CurrentInstance.setThreadLocals(this);
+            old = CurrentInstance.setCurrent(this);
             runnable.run();
         } finally {
             session.unlock();
             if (old != null) {
-                CurrentInstance.restoreThreadLocals(old);
+                CurrentInstance.restoreInstances(old);
             }
         }
 
