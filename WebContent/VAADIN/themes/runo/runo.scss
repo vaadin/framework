@@ -58,7 +58,11 @@ $line-height: 18px;
 	@include runo-orderedlayout;
 	@include runo-panel;
 	@include runo-popupview;
-	@include runo-progressindicator;
+	
+	@include runo-progressindicator(v-progressbar);
+	/* For legacy ProgressIndicator component */
+	@include runo-progressindicator(v-progressindicator);
+	
 	@include runo-select;
 	@include runo-shadow;
 	@include runo-slider;

@@ -16,6 +16,8 @@
 
 package com.vaadin.client.ui;
 
+import com.vaadin.shared.ui.progressindicator.ProgressIndicatorState;
+
 /**
  * 
  * @author Vaadin Ltd
@@ -25,4 +27,8 @@ package com.vaadin.client.ui;
 @Deprecated
 public class VProgressIndicator extends VProgressBar {
 
+    public VProgressIndicator() {
+        super();
+        setStylePrimaryName(ProgressIndicatorState.PRIMARY_STYLE_NAME);
+    }
 }

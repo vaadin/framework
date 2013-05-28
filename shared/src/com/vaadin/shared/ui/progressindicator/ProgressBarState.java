@@ -26,7 +26,11 @@ import com.vaadin.shared.communication.SharedState;
  * @author Vaadin Ltd
  */
 public class ProgressBarState extends AbstractFieldState {
+    public static final String PRIMARY_STYLE_NAME = "v-progressbar";
 
+    {
+        primaryStyleName = PRIMARY_STYLE_NAME;
+    }
     public boolean indeterminate = false;
     public Float state = 0.0f;
 

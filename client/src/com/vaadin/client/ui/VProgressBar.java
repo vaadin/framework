@@ -21,6 +21,8 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.ApplicationConnection;
+import com.vaadin.shared.ui.progressindicator.ProgressBarState;
 
 /**
  * Widget for showing the current progress of a long running task.
@@ -35,26 +37,39 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class VProgressBar extends Widget implements HasEnabled {
 
-    public static final String CLASSNAME = "v-progressindicator";
     Element wrapper = DOM.createDiv();
     Element indicator = DOM.createDiv();
 
-    protected boolean indeterminate = false;
-    protected float state = 0.0f;
+    private boolean indeterminate = false;
+    private float state = 0.0f;
     private boolean enabled;
 
     public VProgressBar() {
         setElement(DOM.createDiv());
         getElement().appendChild(wrapper);
-        setStyleName(CLASSNAME);
         wrapper.appendChild(indicator);
-        indicator.setClassName(CLASSNAME + "-indicator");
-        wrapper.setClassName(CLASSNAME + "-wrapper");
+
+        setStylePrimaryName(ProgressBarState.PRIMARY_STYLE_NAME);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.google.gwt.user.client.ui.UIObject#setStylePrimaryName(java.lang.
+     * String)
+     */
+    @Override
+    public void setStylePrimaryName(String style) {
+        super.setStylePrimaryName(style);
+        indicator.setClassName(getStylePrimaryName() + "-indicator");
+        wrapper.setClassName(getStylePrimaryName() + "-wrapper");
+
     }
 
     public void setIndeterminate(boolean indeterminate) {
         this.indeterminate = indeterminate;
-        setStyleName(CLASSNAME + "-indeterminate", indeterminate);
+        setStyleName(getStylePrimaryName() + "-indeterminate", indeterminate);
     }
 
     public void setState(float state) {
@@ -78,8 +93,7 @@ public class VProgressBar extends Widget implements HasEnabled {
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-        setStyleName("v-disabled", !enabled);
-
+        setStyleName(ApplicationConnection.DISABLED_CLASSNAME, !enabled);
     }
 
 }

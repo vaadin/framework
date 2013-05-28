@@ -226,6 +226,13 @@ public abstract class AbstractComponentTestCase<T extends AbstractComponent>
         }
     };
 
+    protected Command<T, String> primaryStyleNameCommand = new Command<T, String>() {
+        @Override
+        public void execute(T c, String value, Object data) {
+            c.setPrimaryStyleName(value);
+        }
+    };
+
     @Override
     protected String getDescription() {
         return "Generic test case for " + getTestClass().getSimpleName();
