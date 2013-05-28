@@ -1263,7 +1263,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
                 if (!pendingAccess.isCancelled()) {
                     CurrentInstance.clearAll();
                     CurrentInstance.restoreInstances(pendingAccess.instances);
-                    accessSynchronously(pendingAccess);
+                    CurrentInstance.setCurrent(this);
+                    pendingAccess.run();
                 }
             }
         } finally {
