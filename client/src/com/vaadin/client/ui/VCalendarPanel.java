@@ -2216,6 +2216,11 @@ public class VCalendarPanel extends FocusableFlexTable implements
      */
     public void setRangeStart(Date rangeStart) {
         this.rangeStart = rangeStart;
+        if (initialRenderDone) {
+            // Dynamic updates to the range needs to render the calendar to
+            // update the element stylenames
+            renderCalendar();
+        }
 
     }
 
@@ -2228,6 +2233,10 @@ public class VCalendarPanel extends FocusableFlexTable implements
      */
     public void setRangeEnd(Date rangeEnd) {
         this.rangeEnd = rangeEnd;
-
+        if (initialRenderDone) {
+            // Dynamic updates to the range needs to render the calendar to
+            // update the element stylenames
+            renderCalendar();
+        }
     }
 }
