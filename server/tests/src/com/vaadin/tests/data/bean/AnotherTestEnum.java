@@ -1,4 +1,4 @@
-package com.vaadin.tests.data.converter;
+package com.vaadin.tests.data.bean;
 
 public enum AnotherTestEnum {
     ONE("ONE"), TWO("TWO");

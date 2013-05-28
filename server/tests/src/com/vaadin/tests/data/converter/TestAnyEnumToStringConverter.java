@@ -25,6 +25,8 @@ import org.junit.Test;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ReverseConverter;
+import com.vaadin.tests.data.bean.AnotherTestEnum;
+import com.vaadin.tests.data.bean.TestEnum;
 import com.vaadin.ui.TextField;
 
 public class TestAnyEnumToStringConverter {
