@@ -45,11 +45,9 @@
 
         <!-- Internally used, for now -->
         <dependency org="com.carrotsearch" name="smartsprites"
-            rev="0.2.3-itmill" />
-        <!-- Use 1.1.1 even though smartsprites indirectly depends on an
-            older version -->
-	<override org="commons-logging" module="commons-logging"
-            rev="1.1.1"/>
+            rev="0.2.10-vaadin" />
+        <!-- Use the same commons-io as the rest of the project -->
+        <override org="commons-io" module="commons-io" rev="2.2" />
     </dependencies>
 
 </ivy-module>

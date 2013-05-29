@@ -16,12 +16,12 @@
                 pattern="${user.home}/.m2/repository/[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]" />
         </filesystem>
         <dual name="custom-smartsprites">
-            <filesystem name="smartsprites-ivy">
-                <ivy pattern="${ivy.settings.dir}/theme-compiler/ivymodule/[module]-ivy-[revision].xml" />
-            </filesystem>
+            <url name="smartsprites-ivy">
+                <ivy pattern="http://vaadin.com/download/external/[module]-ivy-[revision].xml" />
+            </url>
             <url name="smartsprites-artifact">
                 <artifact
-                    pattern="http://dev.vaadin.com/svn/versions/6.8/build/smartsprites/lib/[artifact](-[revision]).[ext]" />
+                    pattern="http://vaadin.com/download/external/[artifact](-[revision]).[ext]" />
             </url>
         </dual>
         <filesystem name="build-temp">
@@ -32,9 +32,9 @@
         </filesystem>
     </resolvers>
     <modules>
-        <!-- IT Mill patched SmartSprites -->
+        <!-- Custom SmartSprites until 0.2.10 is released -->
         <module organisation="com.carrotsearch" name="smartsprites"
-            revision="0.2.3-itmill" resolver="custom-smartsprites" />
+            revision="0.2.10-vaadin" resolver="custom-smartsprites" />
         <module organisation="com.vaadin" name="vaadin-buildhelpers"
             resolver="build-temp" />
         <module organisation="com.vaadin" name="vaadin-shared"
