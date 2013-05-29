@@ -1,5 +1,6 @@
 package com.vaadin.tests.minitutorials.broadcastingmessages;
 
+import com.vaadin.annotations.Push;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.minitutorials.broadcastingmessages.Broadcaster.BroadcastListener;
 import com.vaadin.ui.Button;
@@ -10,6 +11,7 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
+@Push
 public class BroadcasterUI extends UI implements BroadcastListener {
 
     @Override

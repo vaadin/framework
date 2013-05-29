@@ -16,44 +16,25 @@
 
 package com.vaadin.tests.minitutorials.broadcastingmessages;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Broadcaster {
 
-    private static List<BroadcastListener> listeners = new ArrayList<BroadcastListener>();
+    private static final List<BroadcastListener> listeners = new CopyOnWriteArrayList<BroadcastListener>();
 
-    public synchronized static void register(BroadcastListener listener) {
+    public static void register(BroadcastListener listener) {
         listeners.add(listener);
     }
 
-    public synchronized static void unregister(BroadcastListener listener) {
+    public static void unregister(BroadcastListener listener) {
         listeners.remove(listener);
     }
 
-    private synchronized static List<BroadcastListener> getListeners() {
-        List<BroadcastListener> listenerCopy = new ArrayList<BroadcastListener>();
-        listenerCopy.addAll(listeners);
-        return listenerCopy;
-    }
-
     public static void broadcast(final String message) {
-        // Make a copy of the listener list while synchronized, can't be
-        // synchronized while firing the event or we would have to fire each
-        // event in a separate thread.
-        final List<BroadcastListener> listenerCopy = getListeners();
-
-        // We spawn another thread to avoid potential deadlocks with
-        // multiple UIs locked simultaneously
-        Thread eventThread = new Thread() {
-            @Override
-            public void run() {
-                for (BroadcastListener listener : listenerCopy) {
-                    listener.receiveBroadcast(message);
-                }
-            }
-        };
-        eventThread.start();
+        for (BroadcastListener listener : listeners) {
+            listener.receiveBroadcast(message);
+        }
     }
 
     public interface BroadcastListener {
