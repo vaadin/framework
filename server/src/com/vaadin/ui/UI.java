@@ -1230,16 +1230,6 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     }
 
     /**
-     * @deprecated As of 7.1.0.beta1, use {@link #accessSynchronously(Runnable)}
-     *             or {@link #access(Runnable)} instead. This method will be
-     *             removed before the final 7.1.0 release.
-     */
-    @Deprecated
-    public void runSafely(Runnable runnable) throws UIDetachedException {
-        accessSynchronously(runnable);
-    }
-
-    /**
      * Retrieves the object used for configuring tooltips.
      * 
      * @return The instance used for tooltip configuration

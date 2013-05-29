@@ -1161,7 +1161,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
                 CurrentInstance.restoreInstances(old);
             }
         }
- 
+
     }
 
     /**
@@ -1271,16 +1271,6 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
             CurrentInstance.clearAll();
             CurrentInstance.restoreInstances(oldInstances);
         }
-    }
-
-    /**
-     * @deprecated As of 7.1.0.beta1, use {@link #accessSynchronously(Runnable)}
-     *             or {@link #access(Runnable)} instead. This method will be
-     *             removed before the final 7.1.0 release.
-     */
-    @Deprecated
-    public void runSafely(Runnable runnable) {
-        accessSynchronously(runnable);
     }
 
     /**
