@@ -19,8 +19,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vaadin.server.LocaleService;
-import com.vaadin.server.Page;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.TabIndexState;
 
@@ -51,11 +49,11 @@ public class UIState extends TabIndexState {
     }
 
     /**
-     * State related to the {@link Page} class.
+     * State related to the Page class.
      */
     public PageState pageState = new PageState();
     /**
-     * State related to the {@link LocaleService} class.
+     * State related to the LocaleService class.
      */
     public LocaleServiceState localeServiceState = new LocaleServiceState();
 
