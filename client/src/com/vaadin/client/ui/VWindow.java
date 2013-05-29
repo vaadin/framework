@@ -38,7 +38,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
@@ -793,6 +792,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         int w = Util.getTouchOrMouseClientX(event) - startX + origW;
         int h = Util.getTouchOrMouseClientY(event) - startY + origH;
 
+        w = Math.max(w, getMinWidth());
+        h = Math.max(h, getMinHeight());
+
         setWidth(w + "px");
         setHeight(h + "px");
 
@@ -808,6 +810,22 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         } else {
             // Lazy resize - wait for a while before re-rendering contents
             delayedContentsSizeUpdater.trigger();
+        }
+    }
+
+    private int getMinHeight() {
+        return getPixelValue(getElement().getStyle().getProperty("minHeight"));
+    }
+
+    private int getMinWidth() {
+        return getPixelValue(getElement().getStyle().getProperty("minWidth"));
+    }
+
+    private static int getPixelValue(String size) {
+        if (size == null || !size.endsWith("px")) {
+            return -1;
+        } else {
+            return Integer.parseInt(size.substring(0, size.length() - 2));
         }
     }
 

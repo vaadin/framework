@@ -207,6 +207,14 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         contentStyle.setPaddingBottom(footerHeight, Unit.PX);
         contentStyle.setMarginBottom(-footerHeight, Unit.PX);
 
+        int minWidth = lm.getOuterWidth(window.header)
+                - lm.getInnerWidth(window.header);
+        int minHeight = footerHeight + headerHeight;
+
+        getWidget().getElement().getStyle().setPropertyPx("minWidth", minWidth);
+        getWidget().getElement().getStyle()
+                .setPropertyPx("minHeight", minHeight);
+
         /*
          * Must set absolute position if the child has relative height and
          * there's a chance of horizontal scrolling as some browsers will
