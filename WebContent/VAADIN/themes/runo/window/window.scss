@@ -99,30 +99,32 @@
 /* Dialog style */
 .#{$primaryStyleName}-dialog {
 	background-image: url(img/dialog/bottom-left.png);
+
+	.#{$primaryStyleName}-outerheader {
+		height: 32px;
+		padding: 13px 30px 5px 8px;
+		background: transparent url(img/top-right.png) no-repeat right top;
+	}
+	.#{$primaryStyleName}-header {
+		font-size: 12px;
+		line-height: normal;
+		font-weight: bold;
+		letter-spacing: 0;
+		text-shadow: 0 1px 0 #fff;
+	}
+	.#{$primaryStyleName}-contents > div {
+		background: #f1f3f3;
+	}
+	div.#{$primaryStyleName}-footer {
+		background-image: url(img/dialog/bottom-right.png);
+	}
+	.#{$primaryStyleName}-closebox {
+		top: 14px;
+		right: 16px;
+		background-image: url(img/dialog/close.png);
+	}
 }
-.#{$primaryStyleName}-dialog .#{$primaryStyleName}-outerheader {
-	height: 32px;
-	padding: 13px 30px 5px 8px;
-	background: transparent url(img/top-right.png) no-repeat right top;
-}
-.#{$primaryStyleName}-dialog .#{$primaryStyleName}-header {
-	font-size: 12px;
-	line-height: normal;
-	font-weight: bold;
-	letter-spacing: 0;
-	text-shadow: 0 1px 0 #fff;
-}
-.#{$primaryStyleName}-dialog .#{$primaryStyleName}-contents > div {
-	background: #f1f3f3;
-}
-.#{$primaryStyleName}-dialog div.#{$primaryStyleName}-footer {
-	background-image: url(img/dialog/bottom-right.png);
-}
-.#{$primaryStyleName}-dialog .#{$primaryStyleName}-closebox {
-	top: 14px;
-	right: 16px;
-	background-image: url(img/dialog/close.png);
-}
+
 /* Shadow for window */
 .v-shadow-window .top-left {
     top: -13px;             left: -20px;
