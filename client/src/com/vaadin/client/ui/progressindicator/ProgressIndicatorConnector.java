@@ -19,6 +19,7 @@ package com.vaadin.client.ui.progressindicator;
 import com.google.gwt.user.client.Timer;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.VProgressBar;
+import com.vaadin.client.ui.VProgressIndicator;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.progressindicator.ProgressIndicatorServerRpc;
 import com.vaadin.shared.ui.progressindicator.ProgressIndicatorState;
@@ -59,6 +60,11 @@ public class ProgressIndicatorConnector extends ProgressBarConnector {
         } else {
             poller.cancel();
         }
+    }
+
+    @Override
+    public VProgressIndicator getWidget() {
+        return (VProgressIndicator) super.getWidget();
     }
 
     @Override
