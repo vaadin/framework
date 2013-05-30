@@ -645,16 +645,9 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             pollTimer = new Timer() {
                 @Override
                 public void run() {
-                    /*
-                     * Verify that polling has not recently been canceled. This
-                     * is needed because Timer.cancel() does not always work
-                     * properly in IE 8 until GWT issue 8101 has been fixed.
-                     */
-                    if (pollTimer != null) {
-                        getRpcProxy(UIServerRpc.class).poll();
-                        // Send changes even though poll is @Delayed
-                        getConnection().sendPendingVariableChanges();
-                    }
+                    getRpcProxy(UIServerRpc.class).poll();
+                    // Send changes even though poll is @Delayed
+                    getConnection().sendPendingVariableChanges();
                 }
             };
             pollTimer.scheduleRepeating(getState().pollInterval);

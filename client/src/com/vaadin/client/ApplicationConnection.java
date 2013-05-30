@@ -3277,14 +3277,6 @@ public class ApplicationConnection {
     Timer forceHandleMessage = new Timer() {
         @Override
         public void run() {
-            if (responseHandlingLocks.isEmpty()) {
-                /*
-                 * Timer fired but there's nothing to clear. This can happen
-                 * with IE8 as Timer.cancel is not always effective (see GWT
-                 * issue 8101).
-                 */
-                return;
-            }
             VConsole.log("WARNING: reponse handling was never resumed, forcibly removing locks...");
             responseHandlingLocks.clear();
             handlePendingMessages();

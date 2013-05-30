@@ -42,75 +42,24 @@ public class VLoadingIndicator {
     private int secondDelay = 1500;
     private int thirdDelay = 5000;
 
-    /**
-     * Timer with method for checking if it has been cancelled. This class is a
-     * workaround for a IE8 problem which causes a timer to be fired even if it
-     * has been cancelled.
-     * 
-     * @author Vaadin Ltd
-     * @since 7.1
-     */
-    private abstract static class LoadingIndicatorTimer extends Timer {
-        private boolean cancelled = false;
-
-        @Override
-        public void cancel() {
-            super.cancel();
-            cancelled = true;
-        }
-
-        @Override
-        public void schedule(int delayMillis) {
-            super.schedule(delayMillis);
-            cancelled = false;
-        }
-
-        @Override
-        public void scheduleRepeating(int periodMillis) {
-            super.scheduleRepeating(periodMillis);
-            cancelled = false;
-        }
-
-        /**
-         * Checks if this timer has been cancelled.
-         * 
-         * @return true if the timer has been cancelled, false otherwise
-         */
-        public boolean isCancelled() {
-            return cancelled;
-        }
-    }
-
-    private Timer firstTimer = new LoadingIndicatorTimer() {
+    private Timer firstTimer = new Timer() {
         @Override
         public void run() {
-            if (isCancelled()) {
-                // IE8 does not properly cancel the timer in all cases.
-                return;
-            }
             show();
         }
     };
-    private Timer secondTimer = new LoadingIndicatorTimer() {
+    private Timer secondTimer = new Timer() {
         @Override
         public void run() {
-            if (isCancelled()) {
-                // IE8 does not properly cancel the timer in all cases.
-                return;
-            }
             getElement().setClassName(PRIMARY_STYLE_NAME);
             getElement().addClassName("second");
             // For backwards compatibility only
             getElement().addClassName(PRIMARY_STYLE_NAME + "-delay");
         }
     };
-    private Timer thirdTimer = new LoadingIndicatorTimer() {
+    private Timer thirdTimer = new Timer() {
         @Override
         public void run() {
-            if (isCancelled()) {
-                // IE8 does not properly cancel the timer in all cases.
-                return;
-            }
             getElement().setClassName(PRIMARY_STYLE_NAME);
             getElement().addClassName("third");
             // For backwards compatibility only
