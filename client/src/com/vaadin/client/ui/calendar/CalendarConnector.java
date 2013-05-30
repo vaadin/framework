@@ -19,6 +19,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.core.shared.GWT;
@@ -30,6 +31,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.Paintable;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
@@ -60,7 +62,8 @@ import com.vaadin.client.ui.calendar.schedule.HasTooltipKey;
 import com.vaadin.client.ui.calendar.schedule.MonthEventLabel;
 import com.vaadin.client.ui.calendar.schedule.SimpleDayCell;
 import com.vaadin.client.ui.calendar.schedule.dd.CalendarDropHandler;
-import com.vaadin.client.ui.dd.VHasDropHandler;
+import com.vaadin.client.ui.calendar.schedule.dd.CalendarMonthDropHandler;
+import com.vaadin.client.ui.calendar.schedule.dd.CalendarWeekDropHandler;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
 import com.vaadin.shared.ui.calendar.CalendarClientRpc;
@@ -79,15 +82,15 @@ import com.vaadin.ui.Calendar;
  */
 @Connect(value = Calendar.class, loadStyle = LoadStyle.LAZY)
 public class CalendarConnector extends AbstractComponentConnector implements
-        VHasDropHandler, ActionOwner, SimpleManagedLayout {
+        ActionOwner, SimpleManagedLayout, Paintable {
 
     private CalendarServerRpc rpc = RpcProxy.create(CalendarServerRpc.class,
             this);
 
-    private CalendarDropHandler dropHandler;
-
     private final HashMap<String, String> actionMap = new HashMap<String, String>();
     private HashMap<Object, String> tooltips = new HashMap<Object, String>();
+
+    private static final String DROPHANDLER_ACCEPT_CRITERIA_PAINT_TAG = "-ac";
 
     /**
      * 
@@ -306,13 +309,16 @@ public class CalendarConnector extends AbstractComponentConnector implements
         });
     }
 
+    private boolean showingMonthView() {
+        return getState().days.size() > 7;
+    }
+
     @Override
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
 
         CalendarState state = getState();
         VCalendar widget = getWidget();
-        boolean monthView = state.days.size() > 7;
 
         // Enable or disable the forward and backward navigation buttons
         widget.setForwardNavigationEnabled(hasEventListener(CalendarEventId.FORWARD));
@@ -336,10 +342,19 @@ public class CalendarConnector extends AbstractComponentConnector implements
         List<CalendarState.Day> days = state.days;
         List<CalendarState.Event> events = state.events;
 
-        if (monthView) {
+        CalendarDropHandler dropHandler = getWidget().getDropHandler();
+        if (showingMonthView()) {
             updateMonthView(days, events);
+            if (dropHandler != null
+                    && !(dropHandler instanceof CalendarMonthDropHandler)) {
+                getWidget().setDropHandler(new CalendarMonthDropHandler(this));
+            }
         } else {
             updateWeekView(days, events);
+            if (dropHandler != null
+                    && !(dropHandler instanceof CalendarWeekDropHandler)) {
+                getWidget().setDropHandler(new CalendarWeekDropHandler(this));
+            }
         }
 
         updateSizes();
@@ -355,32 +370,22 @@ public class CalendarConnector extends AbstractComponentConnector implements
      * com.vaadin.terminal.gwt.client.Paintable#updateFromUIDL(com.vaadin.terminal
      * .gwt.client.UIDL, com.vaadin.terminal.gwt.client.ApplicationConnection)
      */
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-
-        // check for DD -related access criteria
-        // Iterator<Object> childIterator = uidl.getChildIterator();
-        // while (childIterator.hasNext()) {
-        // UIDL child = (UIDL) childIterator.next();
-        //
-        // // Drag&drop
-        // if (ACCESSCRITERIA.equals(child.getTag())) {
-        // if (monthView
-        // && !(getDropHandler() instanceof CalendarMonthDropHandler)) {
-        // setDropHandler(new CalendarMonthDropHandler());
-        //
-        // } else if (!monthView
-        // && !(getDropHandler() instanceof CalendarWeekDropHandler)) {
-        // setDropHandler(new CalendarWeekDropHandler());
-        // }
-        //
-        // getDropHandler().setCalendarPaintable(this);
-        // getDropHandler().updateAcceptRules(child);
-        //
-        // } else {
-        // setDropHandler(null);
-        // }
-        //
-        // }
+        Iterator<Object> childIterator = uidl.getChildIterator();
+        while (childIterator.hasNext()) {
+            UIDL child = (UIDL) childIterator.next();
+            if (DROPHANDLER_ACCEPT_CRITERIA_PAINT_TAG.equals(child.getTag())) {
+                if (getWidget().getDropHandler() == null) {
+                    getWidget().setDropHandler(
+                            showingMonthView() ? new CalendarMonthDropHandler(
+                                    this) : new CalendarWeekDropHandler(this));
+                }
+                getWidget().getDropHandler().updateAcceptRules(child);
+            } else {
+                getWidget().setDropHandler(null);
+            }
+        }
     }
 
     /**
@@ -447,27 +452,6 @@ public class CalendarConnector extends AbstractComponentConnector implements
                 state.firstDayOfWeek,
                 calendarEventListOf(events, state.format24H),
                 calendarDayListOf(days));
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.terminal.gwt.client.ui.dd.VHasDropHandler#getDropHandler()
-     */
-    @Override
-    public CalendarDropHandler getDropHandler() {
-        return dropHandler;
-    }
-
-    /**
-     * Set the drop handler
-     * 
-     * @param dropHandler
-     *            The drophandler to use
-     */
-    public void setDropHandler(CalendarDropHandler dropHandler) {
-        this.dropHandler = dropHandler;
     }
 
     private Action[] getActionsBetween(Date start, Date end) {

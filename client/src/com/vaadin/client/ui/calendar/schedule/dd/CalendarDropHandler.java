@@ -28,15 +28,16 @@ import com.vaadin.client.ui.dd.VAbstractDropHandler;
  */
 public abstract class CalendarDropHandler extends VAbstractDropHandler {
 
-    protected CalendarConnector calendarConnector;
+    protected final CalendarConnector calendarConnector;
 
     /**
-     * Set the calendar instance
+     * Constructor
      * 
-     * @param calendarPaintable
+     * @param connector
+     *            The connector of the calendar
      */
-    public void setConnector(CalendarConnector calendarConnector) {
-        this.calendarConnector = calendarConnector;
+    public CalendarDropHandler(CalendarConnector connector) {
+        calendarConnector = connector;
     }
 
     /*

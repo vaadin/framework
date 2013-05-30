@@ -39,6 +39,8 @@ import com.vaadin.client.ui.calendar.schedule.SimpleDayToolbar;
 import com.vaadin.client.ui.calendar.schedule.SimpleWeekToolbar;
 import com.vaadin.client.ui.calendar.schedule.WeekGrid;
 import com.vaadin.client.ui.calendar.schedule.WeeklyLongEvents;
+import com.vaadin.client.ui.calendar.schedule.dd.CalendarDropHandler;
+import com.vaadin.client.ui.dd.VHasDropHandler;
 import com.vaadin.shared.ui.calendar.DateConstants;
 
 /**
@@ -47,7 +49,7 @@ import com.vaadin.shared.ui.calendar.DateConstants;
  * @since 7.1
  * @author Vaadin Ltd.
  */
-public class VCalendar extends Composite {
+public class VCalendar extends Composite implements VHasDropHandler {
 
     public static final String ATTR_FIRSTDAYOFWEEK = "firstDay";
     public static final String ATTR_LASTDAYOFWEEK = "lastDay";
@@ -95,6 +97,8 @@ public class VCalendar extends Composite {
     private int lastDay;
     private int firstHour;
     private int lastHour;
+
+    private CalendarDropHandler dropHandler;
 
     /**
      * Listener interface for listening to event click events
@@ -1442,5 +1446,25 @@ public class VCalendar extends Composite {
 
     public void setForwardNavigationEnabled(boolean enabled) {
         forwardNavigationEnabled = enabled;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.client.ui.dd.VHasDropHandler#getDropHandler()
+     */
+    @Override
+    public CalendarDropHandler getDropHandler() {
+        return dropHandler;
+    }
+
+    /**
+     * Set the drop handler
+     * 
+     * @param dropHandler
+     *            The drophandler to use
+     */
+    public void setDropHandler(CalendarDropHandler dropHandler) {
+        this.dropHandler = dropHandler;
     }
 }
