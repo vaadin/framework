@@ -331,9 +331,9 @@ public class PushHandler implements AtmosphereHandler {
             writer.write(event.getMessage().toString());
 
             switch (resource.transport()) {
-            case SSE:
             case WEBSOCKET:
                 break;
+            case SSE:
             case STREAMING:
                 writer.flush();
                 break;
