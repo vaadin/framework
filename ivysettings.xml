@@ -17,7 +17,8 @@
         </filesystem>
         <dual name="custom-smartsprites">
             <url name="smartsprites-ivy">
-                <ivy pattern="http://vaadin.com/download/external/[module]-ivy-[revision].xml" />
+                <ivy
+                    pattern="http://vaadin.com/download/external/[module]-ivy-[revision].xml" />
             </url>
             <url name="smartsprites-artifact">
                 <artifact

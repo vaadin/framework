@@ -1,58 +1,64 @@
 <?xml version="1.0"?>
 
-<project name="vaadin-theme-compiler" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant">
-	<description>
-		Compiles build helpers used when building other modules.
-	</description>
-	<include file="../common.xml" as="common" />
-	<include file="../build.xml" as="vaadin" />
-	<include file="../gwt-files.xml" as="gwtfiles" />
+<project name="vaadin-theme-compiler" basedir="." default="publish-local"
+    xmlns:ivy="antlib:org.apache.ivy.ant">
+    <description>
+        Compiles build helpers used when building other modules.
+    </description>
+    <include file="../common.xml" as="common" />
+    <include file="../build.xml" as="vaadin" />
+    <include file="../gwt-files.xml" as="gwtfiles" />
 
-	<!-- global properties -->
-	<property name="module.name" value="vaadin-theme-compiler" />
-	<property name="module.symbolic" value="com.vaadin.theme-compiler" />
-	<property name="result.dir" value="result" />
-	<property name="sass.parser.jj" location="src/com/vaadin/sass/internal/parser/Parser.jj" />
-	<path id="classpath.compile.custom">
-	</path>
-	<path id="classpath.test.custom" />
+    <!-- global properties -->
+    <property name="module.name" value="vaadin-theme-compiler" />
+    <property name="module.symbolic" value="com.vaadin.theme-compiler" />
+    <property name="result.dir" value="result" />
+    <property name="sass.parser.jj"
+        location="src/com/vaadin/sass/internal/parser/Parser.jj" />
+    <path id="classpath.compile.custom">
+    </path>
+    <path id="classpath.test.custom" />
 
-	<!--<property name="classes.exclude" value="com/vaadin/buildhelpers/**" />-->
+    <!--<property name="classes.exclude" value="com/vaadin/buildhelpers/**" 
+        /> -->
 
-	<target name="parser">
-		<!-- Copy javacc-5.0.jar to ${result.dir}/javacc/javacc.jar as the javacc task requires the jar to be named javacc.jar -->
-		<property name="javacc.home" location="${result.dir}/javacc" />
-		<ivy:retrieve organisation="net.java.dev.javacc" module="javacc" revision="5.0" inline="true" type="jar" pattern="${javacc.home}/[artifact].[ext]" />
-		<javacc target="${sass.parser.jj}" javacchome="${javacc.home}">
-		</javacc>
-	</target>
+    <target name="parser">
+        <!-- Copy javacc-5.0.jar to ${result.dir}/javacc/javacc.jar as the 
+            javacc task requires the jar to be named javacc.jar -->
+        <property name="javacc.home" location="${result.dir}/javacc" />
+        <ivy:retrieve organisation="net.java.dev.javacc"
+            module="javacc" revision="5.0" inline="true" type="jar"
+            pattern="${javacc.home}/[artifact].[ext]" />
+        <javacc target="${sass.parser.jj}" javacchome="${javacc.home}">
+        </javacc>
+    </target>
 
-	<target name="jar" depends="parser">
-		<antcall target="common.jar">
-			<reference torefid="extra.jar.includes" refid="empty.reference" />
-		</antcall>
-	</target>
-	<target name="publish-local" depends="jar">
-		<antcall target="common.sources.jar">
-			<reference torefid="extra.jar.includes" refid="empty.reference" />
-		</antcall>
-		<antcall target="common.javadoc.jar" />
+    <target name="jar" depends="parser">
+        <antcall target="common.jar">
+            <reference torefid="extra.jar.includes" refid="empty.reference" />
+        </antcall>
+    </target>
+    <target name="publish-local" depends="jar">
+        <antcall target="common.sources.jar">
+            <reference torefid="extra.jar.includes" refid="empty.reference" />
+        </antcall>
+        <antcall target="common.javadoc.jar" />
 
-		<antcall target="common.publish-local" />
-	</target>
+        <antcall target="common.publish-local" />
+    </target>
 
-	<target name="clean">
-		<antcall target="common.clean" />
-	</target>
+    <target name="clean">
+        <antcall target="common.clean" />
+    </target>
 
-	<target name="checkstyle">
-		<antcall target="common.checkstyle">
-			<param name="cs.src" location="src" />
-		</antcall>
-	</target>
+    <target name="checkstyle">
+        <antcall target="common.checkstyle">
+            <param name="cs.src" location="src" />
+        </antcall>
+    </target>
 
-	<target name="test" depends="checkstyle">
-		<antcall target="common.test.run" />
-	</target>
+    <target name="test" depends="checkstyle">
+        <antcall target="common.test.run" />
+    </target>
 
 </project>

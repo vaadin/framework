@@ -4,7 +4,7 @@
 <liferay-portlet-app>
     <portlet>
         <portlet-name>JSR286TestPortlet</portlet-name>
-        <instanceable>false</instanceable>       
+        <instanceable>false</instanceable>
         <ajaxable>false</ajaxable>
     </portlet>
     <portlet>
@@ -12,7 +12,7 @@
         <instanceable>false</instanceable>
         <ajaxable>false</ajaxable>
     </portlet>
-    
+
     <role-mapper>
         <role-name>administrator</role-name>
         <role-link>Administrator</role-link>
@@ -29,5 +29,5 @@
         <role-name>user</role-name>
         <role-link>User</role-link>
     </role-mapper>
-    
+
 </liferay-portlet-app>

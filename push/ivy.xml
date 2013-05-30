@@ -4,8 +4,7 @@
     xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"
     xmlns:m="http://ant.apache.org/ivy/maven">
 
-    <info organisation="com.vaadin" module="vaadin-push"
-        revision="${vaadin.version}" />
+    <info organisation="com.vaadin" module="vaadin-push" revision="${vaadin.version}" />
 
     <configurations>
         <conf name="build" />
@@ -15,23 +14,21 @@
     </configurations>
     <publications>
         <artifact type="jar" ext="jar" />
-<!-- 
-        <artifact type="source" ext="jar" m:classifier="sources" />
-        <artifact type="javadoc" ext="jar" m:classifier="javadoc" />
--->        
+        <!-- <artifact type="source" ext="jar" m:classifier="sources" /> 
+            <artifact type="javadoc" ext="jar" m:classifier="javadoc" /> -->
         <artifact type="pom" ext="pom" />
     </publications>
     <dependencies>
         <!-- API DEPENDENCIES -->
-        
+
         <!--Servlet API version 2.4 -->
         <dependency org="javax.servlet" name="servlet-api"
             rev="2.4" conf="build-provided,ide,test -> default" />
-                       
+
         <!-- Atmosphere -->
         <!-- Keep the version number in sync with build.xml -->
-        <dependency org="org.atmosphere" name="atmosphere-runtime" rev="1.0.13"
-        	conf="build,ide,test -> default">
+        <dependency org="org.atmosphere" name="atmosphere-runtime"
+            rev="1.0.13" conf="build,ide,test -> default">
         </dependency>
     </dependencies>
 

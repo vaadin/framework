@@ -14,8 +14,8 @@
         <conf name="jetty-run" extends="build" visibility="private" />
     </configurations>
     <publications>
-        <artifact type="war" ext="war"/>
-                   </publications>
+        <artifact type="war" ext="war" />
+    </publications>
     <dependencies defaultconf="build" defaultconfmapping="build,ide->default">
         <!-- API DEPENDENCIES -->
         <dependency org="javax.portlet" name="portlet-api"
@@ -40,9 +40,9 @@
             rev="${vaadin.version}" conf="build->build"></dependency>
         <dependency org="com.vaadin" name="vaadin-themes"
             rev="${vaadin.version}" conf="build->build"></dependency>
-        <dependency org="com.vaadin" name="vaadin-push"
-            rev="${vaadin.version}" conf="build->build"></dependency>
-            
+        <dependency org="com.vaadin" name="vaadin-push" rev="${vaadin.version}"
+            conf="build->build"></dependency>
+
         <!-- For compiling TestingWidgetSet -->
         <dependency org="com.vaadin" name="vaadin-client-compiler"
             rev="${vaadin.version}" conf="build-provided-> build"></dependency>

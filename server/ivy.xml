@@ -45,8 +45,8 @@
             rev="${vaadin.version}" conf="build,test->build" />
         <dependency org="com.vaadin" name="vaadin-theme-compiler"
             rev="${vaadin.version}" conf="build,test->build" />
-        <dependency org="com.vaadin" name="vaadin-push"
-            rev="${vaadin.version}" conf="build-provided,test->build" />
+        <dependency org="com.vaadin" name="vaadin-push" rev="${vaadin.version}"
+            conf="build-provided,test->build" />
 
         <!-- Jsoup for BootstrapHandler -->
         <dependency org="org.jsoup" name="jsoup" rev="1.6.3"
@@ -70,12 +70,10 @@
             conf="test -> default" />
         <dependency org="org.hibernate" name="hibernate-validator"
             rev="4.2.0.Final" conf="test -> default" />
-        
+
         <!-- For manual testing with PostgreSQL (see SQLTestConstants) -->
-        <!--
-        <dependency org="postgresql" name="postgresql"
-            rev="9.1-901.jdbc3" conf="test,ide->default" />
-        -->
+        <!-- <dependency org="postgresql" name="postgresql" rev="9.1-901.jdbc3" 
+            conf="test,ide->default" /> -->
 
     </dependencies>
 
