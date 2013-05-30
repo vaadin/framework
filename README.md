@@ -39,6 +39,15 @@ Set up the Workspace and define required variables for projects
      ![GWT_TOOLS](http://f.cl.ly/items/1k2Z1n2v0p0y3l0X0D1G/ClasspathVars.png "Defining GWT_TOOLS")
 1. Go to Java -> Compiler
   1. Check that the compliance level has been set to 1.6 (or higher)
+1. Go to XML -> XML Files -> Editor
+ 1. Ensure the settings are follows:
+<pre><code>Line width: 72
+Format comments: true
+Join lines: true
+Insert whitespace before closing empty end-tags: true
+Indent-using spaces: true
+Indentation size: 4
+</code></pre>
 
 Import the Projects into the Workspace
 ------------
