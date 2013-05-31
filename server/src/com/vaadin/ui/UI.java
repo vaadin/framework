@@ -1123,10 +1123,6 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * {@link #accessSynchronously(Runnable)} blocks while waiting for the lock
      * to be available whereas {@link #access(Runnable)} defers the task to a
      * later point in time.</li>
-     * <li>If the session is currently not locked,
-     * {@link #accessSynchronously(Runnable)} runs the task right away whereas
-     * {@link #access(Runnable)} defers the task to a later point in time unless
-     * there are UIs with automatic push enabled.</li>
      * </ul>
      * </p>
      * 

@@ -1127,10 +1127,6 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * {@link #accessSynchronously(Runnable)} blocks while waiting for the lock
      * to be available whereas {@link #access(Runnable)} defers the task to a
      * later point in time.</li>
-     * <li>If this session is currently not locked,
-     * {@link #accessSynchronously(Runnable)} runs the task right away whereas
-     * {@link #access(Runnable)} defers the task to a later point in time unless
-     * there are UIs with automatic push enabled.</li>
      * </ul>
      * </p>
      * 
