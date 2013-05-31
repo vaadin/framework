@@ -751,24 +751,36 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             return ConverterUtil.convertToModel(fieldValue,
                     (Class<Object>) modelType, getConverter(), locale);
         } catch (ConversionException e) {
-            throw new ConversionException(getConversionError(modelType), e);
+            throw new ConversionException(getConversionError(modelType, e), e);
         }
     }
 
     /**
-     * Returns the conversion error with {0} replaced by the data source type.
+     * Returns the conversion error with {0} replaced by the data source type
+     * and {1} replaced by the exception (localized) message.
      * 
+     * @since 7.1
      * @param dataSourceType
-     *            The type of the data source
+     *            the type of the data source
+     * @param e
+     *            a conversion exception which can provide additional
+     *            information
      * @return The value conversion error string with parameters replaced.
      */
-    protected String getConversionError(Class<?> dataSourceType) {
-        if (dataSourceType == null) {
-            return getConversionError();
-        } else {
-            return getConversionError().replace("{0}",
+    protected String getConversionError(Class<?> dataSourceType,
+            ConversionException e) {
+        String conversionError = getConversionError();
+
+        if (dataSourceType != null) {
+            conversionError = conversionError.replace("{0}",
                     dataSourceType.getSimpleName());
         }
+        if (e != null) {
+            conversionError = conversionError.replace("{1}",
+                    e.getLocalizedMessage());
+        }
+
+        return conversionError;
     }
 
     /**
@@ -924,9 +936,9 @@ public abstract class AbstractField<T> extends AbstractComponent implements
             try {
                 valueToValidate = getConverter().convertToModel(fieldValue,
                         getLocale());
-            } catch (Exception e) {
-                throw new InvalidValueException(
-                        getConversionError(getConverter().getModelType()));
+            } catch (ConversionException e) {
+                throw new InvalidValueException(getConversionError(
+                        getConverter().getModelType(), e));
             }
         }
 
@@ -1461,7 +1473,8 @@ public abstract class AbstractField<T> extends AbstractComponent implements
     /**
      * Sets the error that is shown if the field value cannot be converted to
      * the data source type. If {0} is present in the message, it will be
-     * replaced by the simple name of the data source type.
+     * replaced by the simple name of the data source type. If {1} is present in
+     * the message, it will be replaced by the ConversionException message.
      * 
      * @param valueConversionError
      *            Message to be shown when conversion of the value fails
