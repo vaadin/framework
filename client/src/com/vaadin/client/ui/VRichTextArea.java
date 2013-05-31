@@ -395,7 +395,7 @@ public class VRichTextArea extends Composite implements Field, KeyPressHandler,
      * 
      * @return cleaned html string
      */
-    public String getSanitazedValue() {
+    public String getSanitizedValue() {
         BrowserInfo browser = BrowserInfo.get();
         String result = getValue();
         if (browser.isFirefox()) {

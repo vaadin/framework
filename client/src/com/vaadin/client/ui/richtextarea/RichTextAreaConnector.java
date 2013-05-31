@@ -102,7 +102,7 @@ public class RichTextAreaConnector extends AbstractFieldConnector implements
     @Override
     public void flush() {
         if (getConnection() != null && getConnectorId() != null) {
-            final String html = getWidget().getSanitazedValue();
+            final String html = getWidget().getSanitizedValue();
             if (!html.equals(cachedValue)) {
                 getConnection().updateVariable(getConnectorId(), "text", html,
                         getState().immediate);
