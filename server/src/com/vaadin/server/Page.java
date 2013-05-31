@@ -21,11 +21,10 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.EventObject;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import com.vaadin.event.EventRouter;
 import com.vaadin.shared.ui.BorderStyle;
@@ -307,6 +306,61 @@ public class Page implements Serializable {
         }
     }
 
+    private static interface InjectedStyle {
+        public void paint(int id, PaintTarget target) throws PaintException;
+    }
+
+    private static class InjectedStyleString implements InjectedStyle {
+
+        private String css;
+
+        public InjectedStyleString(String css) {
+            this.css = css;
+        }
+
+        @Override
+        public void paint(int id, PaintTarget target) throws PaintException {
+            target.startTag("css-string");
+            target.addAttribute("id", id);
+            target.addText(css);
+            target.endTag("css-string");
+        }
+    }
+
+    private static class InjectedStyleResource implements InjectedStyle {
+
+        private final Resource resource;
+
+        public InjectedStyleResource(Resource resource) {
+            this.resource = resource;
+        }
+
+        @Override
+        public void paint(int id, PaintTarget target) throws PaintException {
+            target.startTag("css-resource");
+            target.addAttribute("id", id);
+            target.addAttribute("url", resource);
+            target.endTag("css-resource");
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) {
+                return true;
+            } else if (obj instanceof InjectedStyleResource) {
+                InjectedStyleResource that = (InjectedStyleResource) obj;
+                return resource.equals(that.resource);
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        public int hashCode() {
+            return resource.hashCode();
+        }
+    }
+
     /**
      * Contains dynamically injected styles injected in the HTML document at
      * runtime.
@@ -315,16 +369,9 @@ public class Page implements Serializable {
      */
     public static class Styles implements Serializable {
 
-        private final Map<Integer, String> stringInjections = new HashMap<Integer, String>();
+        private LinkedHashSet<InjectedStyle> injectedStyles = new LinkedHashSet<InjectedStyle>();
 
-        private final Map<Integer, Resource> resourceInjections = new HashMap<Integer, Resource>();
-
-        // The combined injection counter between both string and resource
-        // injections. Used as the key for the injection maps
-        private int injectionCounter = 0;
-
-        // Points to the next injection that has not yet been made into the Page
-        private int nextInjectionPosition = 0;
+        private LinkedHashSet<InjectedStyle> pendingInjections = new LinkedHashSet<InjectedStyle>();
 
         private final UI ui;
 
@@ -344,7 +391,7 @@ public class Page implements Serializable {
                         "Cannot inject null CSS string");
             }
 
-            stringInjections.put(injectionCounter++, css);
+            pendingInjections.add(new InjectedStyleString(css));
             ui.markAsDirty();
         }
 
@@ -360,43 +407,33 @@ public class Page implements Serializable {
                         "Cannot inject null resource");
             }
 
-            resourceInjections.put(injectionCounter++, resource);
-            ui.markAsDirty();
+            InjectedStyleResource injection = new InjectedStyleResource(
+                    resource);
+            if (!injectedStyles.contains(injection)
+                    && pendingInjections.add(injection)) {
+                ui.markAsDirty();
+            }
         }
 
         private void paint(PaintTarget target) throws PaintException {
 
             // If full repaint repaint all injections
             if (target.isFullRepaint()) {
-                nextInjectionPosition = 0;
+                injectedStyles.addAll(pendingInjections);
+                pendingInjections = injectedStyles;
+                injectedStyles = new LinkedHashSet<InjectedStyle>();
             }
 
-            if (injectionCounter > nextInjectionPosition) {
+            if (!pendingInjections.isEmpty()) {
 
                 target.startTag("css-injections");
 
-                while (injectionCounter > nextInjectionPosition) {
-
-                    String stringInjection = stringInjections
-                            .get(nextInjectionPosition);
-                    if (stringInjection != null) {
-                        target.startTag("css-string");
-                        target.addAttribute("id", nextInjectionPosition);
-                        target.addText(stringInjection);
-                        target.endTag("css-string");
-                    }
-
-                    Resource resourceInjection = resourceInjections
-                            .get(nextInjectionPosition);
-                    if (resourceInjection != null) {
-                        target.startTag("css-resource");
-                        target.addAttribute("id", nextInjectionPosition);
-                        target.addAttribute("url", resourceInjection);
-                        target.endTag("css-resource");
-                    }
-
-                    nextInjectionPosition++;
+                for (InjectedStyle pending : pendingInjections) {
+                    int id = injectedStyles.size();
+                    pending.paint(id, target);
+                    injectedStyles.add(pending);
                 }
+                pendingInjections.clear();
 
                 target.endTag("css-injections");
             }
