@@ -77,8 +77,8 @@ public class LegacyPropertyHelper implements Serializable {
      */
     public static boolean isLegacyToStringEnabled() {
         if (VaadinService.getCurrent() == null) {
-            // This should really not happen but we need to handle it somehow.
-            // IF it happens it seems more safe to use the legacy mode and log.
+            // This will happen at least in JUnit tests. We do not what the real
+            // value should be but it seems more safe to use the legacy mode.
             return true;
         }
         return VaadinService.getCurrent().getDeploymentConfiguration()
@@ -87,9 +87,9 @@ public class LegacyPropertyHelper implements Serializable {
 
     private static boolean logLegacyToStringWarning() {
         if (VaadinService.getCurrent() == null) {
-            // This should really not happen but we need to handle it somehow.
-            // IF it happens it seems more safe to use the legacy mode and log.
-            return true;
+            // This will happen at least in JUnit tests. We do not want to spam
+            // the log with these messages in this case.
+            return false;
         }
         return VaadinService.getCurrent().getDeploymentConfiguration()
                 .getLegacyPropertyToStringMode() == LegacyProperyToStringMode.WARNING;
