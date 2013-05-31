@@ -110,6 +110,11 @@ public abstract class VaadinService implements Serializable {
     private boolean pushWarningEmitted = false;
 
     /**
+     * Has {@link #init()} been run?
+     */
+    private boolean initialized = false;
+
+    /**
      * Creates a new vaadin service based on a deployment configuration
      * 
      * @param deploymentConfiguration
@@ -148,6 +153,8 @@ public abstract class VaadinService implements Serializable {
         List<RequestHandler> handlers = createRequestHandlers();
         Collections.reverse(handlers);
         requestHandlers = Collections.unmodifiableCollection(handlers);
+
+        initialized = true;
     }
 
     /**
@@ -1224,6 +1231,10 @@ public abstract class VaadinService implements Serializable {
      *            The response
      */
     public void requestStart(VaadinRequest request, VaadinResponse response) {
+        if (!initialized) {
+            throw new IllegalStateException(
+                    "Can not process requests before init() has been called");
+        }
         setCurrentInstances(request, response);
         request.setAttribute(REQUEST_START_TIME_ATTRIBUTE, System.nanoTime());
     }
