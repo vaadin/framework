@@ -58,6 +58,7 @@ import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.ShortcutActionHandler;
 import com.vaadin.client.ui.VNotification;
+import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.VUI;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.client.ui.window.WindowConnector;
@@ -631,7 +632,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         }
 
         if (stateChangeEvent.hasPropertyChanged("overlayContainerLabel")) {
-            getConnection().setOverlayContainerLabel(
+            VOverlay.setOverlayContainerLabel(getConnection(),
                     getState().overlayContainerLabel);
         }
     }

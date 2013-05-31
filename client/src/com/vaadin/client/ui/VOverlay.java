@@ -17,6 +17,7 @@
 package com.vaadin.client.ui;
 
 import com.google.gwt.animation.client.Animation;
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.dom.client.Style;
@@ -688,6 +689,23 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             RootPanel.get().getElement().appendChild(container);
         }
         return container;
+    }
+
+    /**
+     * Set the label of the container element, where tooltip, notification and
+     * dialgs are added to.
+     * 
+     * @param applicationConnection
+     *            the application connection for which to change the label
+     * @param overlayContainerLabel
+     *            label for the container
+     */
+    public static void setOverlayContainerLabel(
+            ApplicationConnection applicationConnection,
+            String overlayContainerLabel) {
+        Roles.getAlertRole().setAriaLabelProperty(
+                VOverlay.getOverlayContainer(applicationConnection),
+                overlayContainerLabel);
     }
 
     @Override

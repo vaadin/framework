@@ -466,7 +466,8 @@ public class ApplicationConnection {
         Element overlayContainer = VOverlay.getOverlayContainer(this);
         Roles.getAlertRole().setAriaLiveProperty(overlayContainer,
                 LiveValue.ASSERTIVE);
-        setOverlayContainerLabel(getUIConnector().getState().overlayContainerLabel);
+        VOverlay.setOverlayContainerLabel(this,
+                getUIConnector().getState().overlayContainerLabel);
         Roles.getAlertRole().setAriaRelevantProperty(overlayContainer,
                 RelevantValue.ADDITIONS);
     }
@@ -3432,18 +3433,5 @@ public class ApplicationConnection {
 
     public void handlePushMessage(String message) {
         handleJSONText(message, 200);
-    }
-
-    /**
-     * Set the label of the container element, where tooltip, notification and
-     * dialgs are added to.
-     * 
-     * @param overlayContainerLabel
-     *            label for the container
-     */
-    public void setOverlayContainerLabel(String overlayContainerLabel) {
-        Roles.getAlertRole().setAriaLabelProperty(
-                VOverlay.getOverlayContainer(this),
-                getUIConnector().getState().overlayContainerLabel);
     }
 }
