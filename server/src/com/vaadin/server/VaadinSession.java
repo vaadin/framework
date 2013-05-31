@@ -25,12 +25,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
@@ -67,16 +67,37 @@ import com.vaadin.util.ReflectTools;
 @SuppressWarnings("serial")
 public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
-    private class FutureAccess extends FutureTask<Void> {
+    /**
+     * Encapsulates a {@link Runnable} submitted using
+     * {@link VaadinSession#access(Runnable)}. This class is used internally by
+     * the framework and is not intended to be directly used by application
+     * developers.
+     * 
+     * @since 7.1
+     * @author Vaadin Ltd
+     */
+    public static class FutureAccess extends FutureTask<Void> {
         /**
          * Snapshot of all non-inheritable current instances at the time this
          * object was created.
          */
         private final Map<Class<?>, CurrentInstance> instances = CurrentInstance
                 .getInstances(true);
+        private final VaadinSession session;
 
-        public FutureAccess(Runnable arg0) {
-            super(arg0, null);
+        /**
+         * Creates an instance for the given runnable
+         * 
+         * @param session
+         *            the session to which the task belongs
+         * 
+         * @param runnable
+         *            the runnable to run when this task is purged from the
+         *            queue
+         */
+        public FutureAccess(VaadinSession session, Runnable runnable) {
+            super(runnable, null);
+            this.session = session;
         }
 
         @Override
@@ -91,8 +112,20 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
              * run, the check is always done as the deterministic behavior makes
              * it easier to detect potential problems.
              */
-            VaadinService.verifyNoOtherSessionLocked(VaadinSession.this);
+            VaadinService.verifyNoOtherSessionLocked(session);
             return super.get();
+        }
+
+        /**
+         * Gets the current instance values that should be used when running
+         * this task.
+         * 
+         * @see CurrentInstance#restoreInstances(Map)
+         * 
+         * @return a map of current instances.
+         */
+        public Map<Class<?>, CurrentInstance> getCurrentInstances() {
+            return instances;
         }
     }
 
@@ -866,7 +899,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
              * released by this unlock() invocation.
              */
             if (((ReentrantLock) getLockInstance()).getHoldCount() == 1) {
-                runPendingAccessTasks();
+                getService().runPendingAccessTasks(this);
 
                 for (UI ui : getUIs()) {
                     if (ui.getPushMode() == PushMode.AUTOMATIC) {
@@ -1205,68 +1238,18 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      *         cancel the task
      */
     public Future<Void> access(Runnable runnable) {
-        FutureAccess future = new FutureAccess(runnable);
-        pendingAccessQueue.add(future);
-
-        /*
-         * If no thread is currently holding the lock, pending changes for UIs
-         * with automatic push would not be processed and pushed until the next
-         * time there is a request or someone does an explicit push call.
-         * 
-         * To remedy this, we try to get the lock at this point. If the lock is
-         * currently held by another thread, we just back out as the queue will
-         * get purged once it is released. If the lock is held by the current
-         * thread, we just release it knowing that the queue gets purged once
-         * the lock is ultimately released. If the lock is not held by any
-         * thread and we acquire it, we just release it again to purge the queue
-         * right away.
-         */
-        try {
-            // tryLock() would be shorter, but it does not guarantee fairness
-            if (getLockInstance().tryLock(0, TimeUnit.SECONDS)) {
-                // unlock triggers runPendingAccessTasks
-                unlock();
-            }
-        } catch (InterruptedException e) {
-            // Just ignore
-        }
-
-        return future;
+        return getService().accessSession(this, runnable);
     }
 
     /**
-     * Purges the queue of pending access invocations enqueued with
-     * {@link #access(Runnable)}.
-     * <p>
-     * This method is automatically run by the framework at appropriate
-     * situations and is not intended to be used by application developers.
+     * Gets the queue of tasks submitted using {@link #access(Runnable)}.
      * 
      * @since 7.1
+     * 
+     * @return the pending access queue
      */
-    public void runPendingAccessTasks() {
-        assert hasLock();
-
-        if (pendingAccessQueue.isEmpty()) {
-            return;
-        }
-
-        Map<Class<?>, CurrentInstance> oldInstances = CurrentInstance
-                .getInstances(false);
-
-        FutureAccess pendingAccess;
-        try {
-            while ((pendingAccess = pendingAccessQueue.poll()) != null) {
-                if (!pendingAccess.isCancelled()) {
-                    CurrentInstance.clearAll();
-                    CurrentInstance.restoreInstances(pendingAccess.instances);
-                    CurrentInstance.setCurrent(this);
-                    pendingAccess.run();
-                }
-            }
-        } finally {
-            CurrentInstance.clearAll();
-            CurrentInstance.restoreInstances(oldInstances);
-        }
+    public Queue<FutureAccess> getPendingAccessQueue() {
+        return pendingAccessQueue;
     }
 
     /**

@@ -1274,7 +1274,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
              * dirty when the push would otherwise be ignored because there are
              * no changes to push.
              */
-            session.runPendingAccessTasks();
+            session.getService().runPendingAccessTasks(session);
 
             if (!getConnectorTracker().hasDirtyConnectors()) {
                 // Do not push if there is nothing to push

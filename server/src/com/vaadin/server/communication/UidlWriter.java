@@ -78,7 +78,7 @@ public class UidlWriter implements Serializable {
 
         // Purge pending access calls as they might produce additional changes
         // to write out
-        session.runPendingAccessTasks();
+        session.getService().runPendingAccessTasks(session);
 
         ArrayList<ClientConnector> dirtyVisibleConnectors = ui
                 .getConnectorTracker().getDirtyVisibleConnectors();

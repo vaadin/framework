@@ -273,7 +273,8 @@ public class UiAccess extends AbstractTestUIWithLog {
                                 new CurrentInstanceTestType(
                                         "Set before run pending"));
 
-                        getSession().runPendingAccessTasks();
+                        getSession().getService().runPendingAccessTasks(
+                                getSession());
 
                         log.log("has request after access? "
                                 + (VaadinService.getCurrentRequest() != null));
