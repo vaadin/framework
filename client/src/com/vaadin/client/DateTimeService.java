@@ -308,10 +308,11 @@ public class DateTimeService {
      */
     public String formatDate(Date date, String formatStr) {
         /*
-         * Format month names separately when locale for the DateTimeService is
-         * not the same as the browser locale
+         * Format month and day names separately when locale for the
+         * DateTimeService is not the same as the browser locale
          */
         formatStr = formatMonthNames(date, formatStr);
+        formatStr = formatDayNames(date, formatStr);
 
         // Format uses the browser locale
         DateTimeFormat format = DateTimeFormat.getFormat(formatStr);
@@ -319,6 +320,49 @@ public class DateTimeService {
         String result = format.format(date);
 
         return result;
+    }
+
+    private String formatDayNames(Date date, String formatStr) {
+        if (formatStr.contains("EEEE")) {
+            String dayName = getDay(date.getDay());
+
+            if (dayName != null) {
+                /*
+                 * Replace 4 or more E:s with the quoted day name. Also
+                 * concatenate generated string with any other string prepending
+                 * or following the EEEE pattern, i.e. 'EEEE'ta ' becomes 'DAYta
+                 * ' and not 'DAY''ta ', 'ab'EEEE becomes 'abDAY', 'x'EEEE'y'
+                 * becomes 'xDAYy'.
+                 */
+                formatStr = formatStr.replaceAll("'([E]{4,})'", dayName);
+                formatStr = formatStr.replaceAll("([E]{4,})'", "'" + dayName);
+                formatStr = formatStr.replaceAll("'([E]{4,})", dayName + "'");
+                formatStr = formatStr
+                        .replaceAll("[E]{4,}", "'" + dayName + "'");
+            }
+        }
+
+        if (formatStr.contains("EEE")) {
+
+            String dayName = getShortDay(date.getMonth());
+
+            if (dayName != null) {
+                /*
+                 * Replace 3 or more E:s with the quoted month name. Also
+                 * concatenate generated string with any other string prepending
+                 * or following the EEE pattern, i.e. 'EEE'ta ' becomes 'DAYta '
+                 * and not 'DAY''ta ', 'ab'EEE becomes 'abDAY', 'x'EEE'y'
+                 * becomes 'xDAYy'.
+                 */
+                formatStr = formatStr.replaceAll("'([E]{3,})'", dayName);
+                formatStr = formatStr.replaceAll("([E]{3,})'", "'" + dayName);
+                formatStr = formatStr.replaceAll("'([E]{3,})", dayName + "'");
+                formatStr = formatStr
+                        .replaceAll("[E]{3,}", "'" + dayName + "'");
+            }
+        }
+
+        return formatStr;
     }
 
     private String formatMonthNames(Date date, String formatStr) {

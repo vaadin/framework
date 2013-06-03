@@ -104,6 +104,7 @@ public class CustomDateFormats extends TestBase {
                 locale);
         addDateField(gridLayout, getDatePattern(locale, DateFormat.SHORT),
                 locale);
+        addDateField(gridLayout, "EEE d MMMM yyyy", locale);
 
     }
 
