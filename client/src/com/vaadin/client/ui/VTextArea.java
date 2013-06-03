@@ -285,4 +285,12 @@ public class VTextArea extends VTextField {
         }
         this.wordwrap = wordwrap;
     }
+
+    @Override
+    public void onKeyDown(KeyDownEvent event) {
+        // Overridden to avoid submitting TextArea value on enter in IE. This is
+        // another reason why widgets should inherit a common abstract
+        // class instead of directly each other.
+    }
+
 }
