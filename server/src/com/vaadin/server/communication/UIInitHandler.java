@@ -39,6 +39,7 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.PushMode;
+import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.UI;
 
@@ -210,6 +211,11 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
                     .getPushMode();
         }
         ui.getPushConfiguration().setPushMode(pushMode);
+
+        Transport transport = provider.getPushTransport(event);
+        if (transport != null) {
+            ui.getPushConfiguration().setTransport(transport);
+        }
 
         // Set thread local here so it is available in init
         UI.setCurrent(ui);
