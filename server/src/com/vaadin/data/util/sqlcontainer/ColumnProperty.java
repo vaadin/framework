@@ -18,10 +18,10 @@ package com.vaadin.data.util.sqlcontainer;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.data.Property;
+import com.vaadin.data.util.LegacyPropertyHelper;
 import com.vaadin.data.util.converter.Converter.ConversionException;
 
 /**
@@ -255,26 +255,33 @@ final public class ColumnProperty implements Property {
     }
 
     /**
-     * Returns the value of the Property in human readable textual format.
+     * Returns a string representation of this object. The returned string
+     * representation depends on if the legacy Property toString mode is enabled
+     * or disabled.
+     * <p>
+     * If legacy Property toString mode is enabled, returns the value of this
+     * <code>Property</code> converted to a String.
+     * </p>
+     * <p>
+     * If legacy Property toString mode is disabled, the string representation
+     * has no special meaning
+     * </p>
      * 
-     * @see java.lang.Object#toString()
-     * @deprecated As of 7.0, use {@link #getValue()} instead and possibly
-     *             toString on that
+     * @see LegacyPropertyHelper#isLegacyToStringEnabled()
+     * 
+     * @return A string representation of the value value stored in the Property
+     *         or a string representation of the Property object.
+     * @deprecated As of 7.0. To get the property value, use {@link #getValue()}
+     *             instead (and possibly toString on that)
      */
     @Deprecated
     @Override
     public String toString() {
-        getLogger()
-                .log(Level.WARNING,
-                        "You are using ColumnProperty.toString() instead of getValue() to get the value for a {0}. "
-                                + "This will not be supported starting from Vaadin 7.1 (your debugger might call toString() "
-                                + "and cause this message to appear).",
-                        getClass().getSimpleName());
-        Object v = getValue();
-        if (v == null) {
-            return null;
+        if (!LegacyPropertyHelper.isLegacyToStringEnabled()) {
+            return super.toString();
+        } else {
+            return LegacyPropertyHelper.legacyPropertyToString(this);
         }
-        return v.toString();
     }
 
     private static Logger getLogger() {

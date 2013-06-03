@@ -439,6 +439,7 @@ public abstract class AbstractConnector implements ServerConnector,
      * 
      * @see com.vaadin.client.ServerConnector#hasEventListener(java.lang.String)
      */
+    @Override
     public boolean hasEventListener(String eventIdentifier) {
         Set<String> reg = getState().registeredEventListeners;
         return (reg != null && reg.contains(eventIdentifier));

@@ -21,10 +21,13 @@ import java.util.Locale;
 import java.util.logging.Logger;
 
 import com.vaadin.data.Property;
+import com.vaadin.data.util.AbstractProperty;
+import com.vaadin.data.util.LegacyPropertyHelper;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterUtil;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.shared.ui.label.LabelState;
+import com.vaadin.shared.util.SharedUtil;
 
 /**
  * Label component for showing non-editable short texts.
@@ -203,23 +206,6 @@ public class Label extends AbstractComponent implements Property<String>,
     }
 
     /**
-     * Returns the value displayed by this label.
-     * 
-     * @see java.lang.Object#toString()
-     * @deprecated As of 7.0, use {@link #getValue()} to get the value of the
-     *             label or {@link #getPropertyDataSource()} .getValue() to get
-     *             the value of the data source.
-     */
-    @Deprecated
-    @Override
-    public String toString() {
-        logger.warning("You are using Label.toString() to get the value for a "
-                + getClass().getSimpleName()
-                + ".  This will not be supported starting from Vaadin 7.1 (your debugger might call toString() and cause this message to appear).");
-        return getValue();
-    }
-
-    /**
      * Gets the type of the Property.
      * 
      * @see com.vaadin.data.Property#getType()
@@ -256,14 +242,17 @@ public class Label extends AbstractComponent implements Property<String>,
             ((Property.ValueChangeNotifier) dataSource).removeListener(this);
         }
 
+        // Check if the current converter is compatible.
         if (newDataSource != null
-                && !ConverterUtil.canConverterHandle(getConverter(),
-                        String.class, newDataSource.getType())) {
-            // Try to find a converter
+                && !ConverterUtil.canConverterPossiblyHandle(getConverter(),
+                        getType(), newDataSource.getType())) {
+            // There is no converter set or there is no way the current
+            // converter can be compatible.
             Converter<String, ?> c = ConverterUtil.getConverter(String.class,
                     newDataSource.getType(), getSession());
             setConverter(c);
         }
+
         dataSource = newDataSource;
         if (dataSource != null) {
             // Update the value from the data source. If data source was set to
@@ -419,7 +408,7 @@ public class Label extends AbstractComponent implements Property<String>,
     private void updateValueFromDataSource() {
         // Update the internal value from the data source
         String newConvertedValue = getDataSourceValue();
-        if (!AbstractField.equals(newConvertedValue, getState().text)) {
+        if (!SharedUtil.equals(newConvertedValue, getState().text)) {
             getState().text = newConvertedValue;
             fireValueChange();
         }
@@ -541,4 +530,35 @@ public class Label extends AbstractComponent implements Property<String>,
         markAsDirty();
     }
 
+    /**
+     * Returns a string representation of this object. The returned string
+     * representation depends on if the legacy Property toString mode is enabled
+     * or disabled.
+     * <p>
+     * If legacy Property toString mode is enabled, returns the value displayed
+     * by this label.
+     * </p>
+     * <p>
+     * If legacy Property toString mode is disabled, the string representation
+     * has no special meaning
+     * </p>
+     * 
+     * @see AbstractProperty#isLegacyToStringEnabled()
+     * 
+     * @return The value displayed by this label or a string representation of
+     *         this Label object.
+     * 
+     * @deprecated As of 7.0, use {@link #getValue()} to get the value of the
+     *             label or {@link #getPropertyDataSource()}.getValue() to get
+     *             the value of the data source.
+     */
+    @Deprecated
+    @Override
+    public String toString() {
+        if (!LegacyPropertyHelper.isLegacyToStringEnabled()) {
+            return super.toString();
+        } else {
+            return LegacyPropertyHelper.legacyPropertyToString(this);
+        }
+    }
 }

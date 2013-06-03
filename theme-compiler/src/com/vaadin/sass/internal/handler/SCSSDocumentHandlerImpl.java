@@ -30,6 +30,7 @@ import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.sass.internal.parser.LexicalUnitImpl;
 import com.vaadin.sass.internal.tree.BlockNode;
 import com.vaadin.sass.internal.tree.CommentNode;
+import com.vaadin.sass.internal.tree.ContentNode;
 import com.vaadin.sass.internal.tree.ExtendNode;
 import com.vaadin.sass.internal.tree.FontFaceNode;
 import com.vaadin.sass.internal.tree.ForNode;
@@ -363,6 +364,25 @@ public class SCSSDocumentHandlerImpl implements SCSSDocumentHandler {
 
     @Override
     public void endKeyframeSelector() {
+        nodeStack.pop();
+    }
+
+    @Override
+    public void contentDirective() {
+        ContentNode node = new ContentNode();
+        nodeStack.peek().appendChild(node);
+    }
+
+    @Override
+    public void startIncludeContentBlock(String name) {
+        MixinNode node = new MixinNode(name);
+        nodeStack.peek().appendChild(node);
+        nodeStack.push(node);
+
+    }
+
+    @Override
+    public void endIncludeContentBlock() {
         nodeStack.pop();
     }
 }

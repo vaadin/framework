@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -33,6 +34,7 @@ public class TestClassesSerializable extends TestCase {
             "com\\.vaadin\\.launcher\\..*", //
             "com\\.vaadin\\.client\\..*", //
             "com\\.vaadin\\.server\\.widgetsetutils\\..*", //
+            "com\\.vaadin\\.server\\.themeutils\\..*", //
             "com\\.vaadin\\.tests\\..*", // exclude automated tests
             "com\\.vaadin\\.tools\\..*", //
             "com\\.vaadin\\.ui\\.themes\\..*", //
@@ -41,17 +43,22 @@ public class TestClassesSerializable extends TestCase {
             "com\\.vaadin\\.event\\.LayoutEvents", //
             "com\\.vaadin\\.event\\.MouseEvents", //
             "com\\.vaadin\\.server\\.VaadinPortlet", //
+            "com\\.vaadin\\.server\\.MockServletConfig", //
+            "com\\.vaadin\\.server\\.MockServletContext", //
             "com\\.vaadin\\.server\\.Constants", //
+            "com\\.vaadin\\.server\\.communication\\.FileUploadHandler\\$SimpleMultiPartInputStream", //
+            "com\\.vaadin\\.server\\.communication\\.PushRequestHandler.*",
+            "com\\.vaadin\\.server\\.communication\\.PushHandler.*", // PushHandler
+            // and its inner classes do not need to be serializable
             "com\\.vaadin\\.util\\.SerializerHelper", // fully static
             // class level filtering, also affecting nested classes and
             // interfaces
-            "com\\.vaadin\\.server\\.AbstractCommunicationManager.*", //
-            "com\\.vaadin\\.server\\.CommunicationManager.*", //
-            "com\\.vaadin\\.server\\.PortletCommunicationManager.*", //
+            "com\\.vaadin\\.server\\.LegacyCommunicationManager.*", //
             "com\\.vaadin\\.buildhelpers.*", //
             "com\\.vaadin\\.util\\.ReflectTools.*", //
             "com\\.vaadin\\.data\\.util\\.ReflectTools.*", //
             "com\\.vaadin\\.sass.*", //
+            "com\\.vaadin\\.testbench.*", //
             "com\\.vaadin\\.util\\.CurrentInstance\\$1", //
     };
 
@@ -90,6 +97,19 @@ public class TestClassesSerializable extends TestCase {
 
             // report non-serializable classes and interfaces
             if (!Serializable.class.isAssignableFrom(cls)) {
+                if (cls.getSuperclass() == Object.class
+                        && cls.getInterfaces().length == 1) {
+                    // Single interface implementors
+                    Class<?> iface = cls.getInterfaces()[0];
+
+                    if (iface == Runnable.class) {
+                        // Ignore Runnables used with access()
+                        continue;
+                    } else if (iface == Comparator.class) {
+                        // Ignore inline comparators
+                        continue;
+                    }
+                }
                 nonSerializableClasses.add(cls);
                 // TODO easier to read when testing
                 // System.err.println(cls);

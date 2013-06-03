@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.ui.UI;
+import com.vaadin.util.CurrentInstance;
 
 /**
  * A {@link RequestHandler} that takes care of {@link ConnectorResource}s that
@@ -85,30 +86,38 @@ public class GlobalResourceHandler implements RequestHandler {
             return error(request, response, pathInfo
                     + " is not a valid global resource path");
         }
+        session.lock();
+        Map<Class<?>, CurrentInstance> oldInstances = null;
+        DownloadStream stream = null;
+        try {
+            UI ui = session.getUIById(Integer.parseInt(uiid));
+            if (ui == null) {
+                return error(request, response, "No UI found for id  " + uiid);
+            }
+            oldInstances = CurrentInstance.setCurrent(ui);
+            ConnectorResource resource;
+            if (LEGACY_TYPE.equals(type)) {
+                resource = legacyResources.get(key);
+            } else {
+                return error(request, response, "Unknown global resource type "
+                        + type + " in requested path " + pathInfo);
+            }
 
-        UI ui = session.getUIById(Integer.parseInt(uiid));
-        if (ui == null) {
-            return error(request, response, "No UI found for id  " + uiid);
-        }
-        UI.setCurrent(ui);
+            if (resource == null) {
+                return error(request, response, "Global resource " + key
+                        + " not found");
+            }
 
-        ConnectorResource resource;
-        if (LEGACY_TYPE.equals(type)) {
-            resource = legacyResources.get(key);
-        } else {
-            return error(request, response, "Unknown global resource type "
-                    + type + " in requested path " + pathInfo);
-        }
-
-        if (resource == null) {
-            return error(request, response, "Global resource " + key
-                    + " not found");
-        }
-
-        DownloadStream stream = resource.getStream();
-        if (stream == null) {
-            return error(request, response, "Resource " + resource
-                    + " didn't produce any stream.");
+            stream = resource.getStream();
+            if (stream == null) {
+                return error(request, response, "Resource " + resource
+                        + " didn't produce any stream.");
+            }
+        } finally {
+            session.unlock();
+            if (oldInstances != null) {
+                CurrentInstance.restoreInstances(oldInstances);
+            }
         }
 
         stream.writeResponse(request, response);

@@ -226,14 +226,22 @@ public interface ClientConnector extends Connector {
     public void setParent(ClientConnector parent);
 
     /**
-     * Notifies the connector that it is connected to an application.
+     * Checks if the connector is attached to a VaadinSession.
      * 
+     * @since 7.1
+     * @return true if the connector is attached to a session, false otherwise
+     */
+    public boolean isAttached();
+
+    /**
+     * Notifies the connector that it is connected to a VaadinSession (and
+     * therefore also to a UI).
      * <p>
      * The caller of this method is {@link #setParent(ClientConnector)} if the
-     * parent is itself already attached to the application. If not, the parent
-     * will call the {@link #attach()} for all its children when it is attached
-     * to the application. This method is always called before the connector's
-     * data is sent to the client-side for the first time.
+     * parent is itself already attached to the session. If not, the parent will
+     * call the {@link #attach()} for all its children when it is attached to
+     * the session. This method is always called before the connector's data is
+     * sent to the client-side for the first time.
      * </p>
      * 
      * <p>
@@ -243,13 +251,13 @@ public interface ClientConnector extends Connector {
     public void attach();
 
     /**
-     * Notifies the connector that it is detached from the application.
+     * Notifies the connector that it is detached from its VaadinSession.
      * 
      * <p>
      * The caller of this method is {@link #setParent(ClientConnector)} if the
-     * parent is in the application. When the parent is detached from the
-     * application it is its responsibility to call {@link #detach()} for each
-     * of its children.
+     * parent is in the session. When the parent is detached from the session it
+     * is its responsibility to call {@link #detach()} for each of its children.
+     * 
      * </p>
      */
     public void detach();
@@ -300,7 +308,7 @@ public interface ClientConnector extends Connector {
     /**
      * Called by the framework to encode the state to a JSONObject. This is
      * typically done by calling the static method
-     * {@link AbstractCommunicationManager#encodeState(ClientConnector, SharedState)}
+     * {@link LegacyCommunicationManager#encodeState(ClientConnector, SharedState)}
      * .
      * 
      * @return a JSON object with the encoded connector state
@@ -318,8 +326,12 @@ public interface ClientConnector extends Connector {
      * routed to this method with the remaining part of the requested path
      * available in the path parameter.
      * <p>
-     * {@link DynamicConnectorResource} can be used to easily make an
-     * appropriate URL available to the client-side code.
+     * NOTE that the session is not locked when this method is called. It is the
+     * responsibility of the connector to ensure that the session is locked
+     * while handling state or other session related data. For best performance
+     * the session should be unlocked before writing a large response to the
+     * client.
+     * </p>
      * 
      * @param request
      *            the request that should be handled

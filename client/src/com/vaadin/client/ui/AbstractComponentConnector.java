@@ -35,7 +35,6 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Type;
 import com.vaadin.client.metadata.TypeData;
-import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.client.ui.datefield.PopupDateFieldConnector;
 import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.shared.AbstractComponentState;
@@ -51,8 +50,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
 
     private String lastKnownWidth = "";
     private String lastKnownHeight = "";
-
-    private boolean initialStateEvent = true;
 
     private boolean tooltipListenersAttached = false;
 
@@ -125,7 +122,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         if (stateChangeEvent.hasPropertyChanged("id")) {
             if (getState().id != null) {
                 getWidget().getElement().setId(getState().id);
-            } else if (!initialStateEvent) {
+            } else if (!stateChangeEvent.isInitialStateChange()) {
                 getWidget().getElement().removeAttribute("id");
             }
         }
@@ -176,8 +173,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         }
         Profiler.leave("AbstractComponentContainer.onStateChanged check tooltip");
 
-        initialStateEvent = false;
-
         Profiler.leave("AbstractComponentConnector.onStateChanged");
     }
 
@@ -205,11 +200,13 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         }
     }
 
-    private void updateComponentSize() {
-        Profiler.enter("AbstractComponentConnector.updateComponentSize");
+    protected void updateComponentSize() {
+        updateComponentSize(getState().width == null ? "" : getState().width,
+                getState().height == null ? "" : getState().height);
+    }
 
-        String newWidth = getState().width == null ? "" : getState().width;
-        String newHeight = getState().height == null ? "" : getState().height;
+    protected void updateComponentSize(String newWidth, String newHeight) {
+        Profiler.enter("AbstractComponentConnector.updateComponentSize");
 
         // Parent should be updated if either dimension changed between relative
         // and non-relative
@@ -428,40 +425,13 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         }
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * <p>
-     * When overriding this method, {@link #hasTooltip()} should also be
-     * overridden to return true in all situations where this method might
-     * return a non-empty result.
-     * </p>
-     * 
-     * @see ComponentConnector#getTooltipInfo(Element)
-     */
     @Override
     public TooltipInfo getTooltipInfo(Element element) {
         return new TooltipInfo(getState().description, getState().errorMessage);
     }
 
-    /**
-     * Check whether there might be a tooltip for this component. The framework
-     * will only add event listeners for automatically handling tooltips (using
-     * {@link #getTooltipInfo(Element)}) if this method returns true.
-     * 
-     * @return <code>true</code> if some part of the component might have a
-     *         tooltip, otherwise <code>false</code>
-     */
-    private boolean hasTooltip() {
-        /*
-         * Hack to avoid breaking backwards compatibility - use a generator to
-         * know whether there's a custom implementation of getTooltipInfo, and
-         * in that case always assume that there might be tooltip.
-         */
-        if (TypeDataStore.getHasGetTooltipInfo(getClass())) {
-            return true;
-        }
-
+    @Override
+    public boolean hasTooltip() {
         // Normally, there is a tooltip if description or errorMessage is set
         AbstractComponentState state = getState();
         if (state.description != null && !state.description.equals("")) {

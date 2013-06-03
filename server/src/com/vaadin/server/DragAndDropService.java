@@ -16,7 +16,7 @@
 package com.vaadin.server;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -50,13 +50,13 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
 
     private DragAndDropEvent dragEvent;
 
-    private final AbstractCommunicationManager manager;
+    private final LegacyCommunicationManager manager;
 
     private AcceptCriterion acceptCriterion;
 
     private ErrorHandler errorHandler;
 
-    public DragAndDropService(AbstractCommunicationManager manager) {
+    public DragAndDropService(LegacyCommunicationManager manager) {
         this.manager = manager;
     }
 
@@ -209,10 +209,10 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
         return true;
     }
 
-    void printJSONResponse(PrintWriter outWriter) throws PaintException {
+    public void printJSONResponse(Writer outWriter) throws IOException {
         if (isDirty()) {
 
-            outWriter.print(", \"dd\":");
+            outWriter.write(", \"dd\":");
 
             JsonPaintTarget jsonPaintTarget = new JsonPaintTarget(manager,
                     outWriter, false);
@@ -374,5 +374,15 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
 
     @Override
     public void removeDetachListener(DetachListener listener) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.server.ClientConnector#isAttached()
+     */
+    @Override
+    public boolean isAttached() {
+        return true;
     }
 }

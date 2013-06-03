@@ -1,50 +1,51 @@
 <?xml version="1.0"?>
 
 <project name="vaadin-buildhelpers" basedir="." default="publish-local">
-	<description>
-		Compiles build helpers used when building other modules.
-	</description>
-	<include file="../build.xml" as="vaadin" />
-	<include file="../common.xml" as="common" />
+    <description>
+        Compiles build helpers used when building other modules.
+    </description>
+    <include file="../build.xml" as="vaadin" />
+    <include file="../common.xml" as="common" />
 
-	<property name="module.name" value="vaadin-buildhelpers" />
-	<property name="module.symbolic" value="com.vaadin.buildhelpers" />
-	<property name="result.dir" location="result" />
-	<path id="classpath.compile.custom" />
+    <property name="module.name" value="vaadin-buildhelpers" />
+    <property name="module.symbolic" value="com.vaadin.buildhelpers" />
+    <property name="result.dir" location="result" />
+    <path id="classpath.compile.custom" />
 
-	<target name="jar">
-		<antcall target="common.jar">
-			<reference torefid="extra.jar.includes" refid="empty.reference" />
-		</antcall>
-	</target>
+    <target name="jar">
+        <antcall target="common.jar">
+            <reference torefid="extra.jar.includes" refid="empty.reference" />
+        </antcall>
+    </target>
 
-	<target name="publish-local" depends="jar">
-		<antcall target="common.sources.jar">
-			<reference torefid="extra.jar.includes" refid="empty.reference" />
-		</antcall>
-		<antcall target="common.javadoc.jar" />
-		<antcall target="common.publish-local" />
-	</target>
+    <target name="publish-local" depends="jar">
+        <antcall target="common.sources.jar">
+            <reference torefid="extra.jar.includes" refid="empty.reference" />
+        </antcall>
+        <antcall target="common.javadoc.jar" />
+        <antcall target="common.publish-local" />
+    </target>
 
-	<target name="clean">
-		<antcall target="common.clean" />
-	</target>
+    <target name="clean">
+        <antcall target="common.clean" />
+    </target>
 
-	<target name="checkstyle">
-		<antcall target="common.checkstyle">
-			<param name="cs.src" location="src" />
-		</antcall>
-	</target>
+    <target name="checkstyle">
+        <antcall target="common.checkstyle">
+            <param name="cs.src" location="src" />
+        </antcall>
+    </target>
 
-	<target name="fetch-release-notes-tickets">
-		<antcall target="common.exec-buildhelper">
-			<param name="main.class" value="com.vaadin.buildhelpers.FetchReleaseNotesTickets" />
-			<param name="output" value="${output}" />
-		</antcall>
-	</target>
+    <target name="fetch-release-notes-tickets">
+        <antcall target="common.exec-buildhelper">
+            <param name="main.class"
+                value="com.vaadin.buildhelpers.FetchReleaseNotesTickets" />
+            <param name="output" value="${output}" />
+        </antcall>
+    </target>
 
-	<target name="tests" depends="checkstyle">
-		<!--<antcall target="common.tests.run" />-->
-		<echo>WHAT? No JUnit tests for ${module.name}!</echo>
-	</target>
+    <target name="test" depends="checkstyle">
+        <!--<antcall target="common.test.run" /> -->
+        <echo>WHAT? No JUnit tests for ${module.name}!</echo>
+    </target>
 </project>

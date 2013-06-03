@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
@@ -34,6 +35,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.StyleConstants;
 import com.vaadin.client.VTooltip;
+import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ComponentConstants;
 import com.vaadin.shared.ui.ComponentStateUtil;
@@ -93,6 +95,8 @@ public class VFormLayout extends SimplePanel {
         public VFormLayoutTable() {
             DOM.setElementProperty(getElement(), "cellPadding", "0");
             DOM.setElementProperty(getElement(), "cellSpacing", "0");
+
+            Roles.getPresentationRole().set(getElement());
         }
 
         /*
@@ -276,6 +280,9 @@ public class VFormLayout extends SimplePanel {
             if (state.caption != null) {
                 if (captionText == null) {
                     captionText = DOM.createSpan();
+
+                    AriaHelper.bindCaption(owner.getWidget(), captionText);
+
                     DOM.insertChild(getElement(), captionText, icon == null ? 0
                             : 1);
                 }
@@ -298,6 +305,9 @@ public class VFormLayout extends SimplePanel {
 
             boolean required = owner instanceof AbstractFieldConnector
                     && ((AbstractFieldConnector) owner).isRequired();
+
+            AriaHelper.handleInputRequired(owner.getWidget(), required);
+
             if (required) {
                 if (requiredFieldIndicator == null) {
                     requiredFieldIndicator = DOM.createSpan();
@@ -305,6 +315,11 @@ public class VFormLayout extends SimplePanel {
                     DOM.setElementProperty(requiredFieldIndicator, "className",
                             "v-required-field-indicator");
                     DOM.appendChild(getElement(), requiredFieldIndicator);
+
+                    // Hide the required indicator from screen reader, as this
+                    // information is set directly at the input field
+                    Roles.getTextboxRole().setAriaHiddenState(
+                            requiredFieldIndicator, true);
                 }
             } else {
                 if (requiredFieldIndicator != null) {
@@ -364,6 +379,8 @@ public class VFormLayout extends SimplePanel {
                 showError = false;
             }
 
+            AriaHelper.handleInputInvalid(owner.getWidget(), showError);
+
             if (showError) {
                 if (errorIndicatorElement == null) {
                     errorIndicatorElement = DOM.createDiv();
@@ -371,6 +388,11 @@ public class VFormLayout extends SimplePanel {
                     DOM.setElementProperty(errorIndicatorElement, "className",
                             "v-errorindicator");
                     DOM.appendChild(getElement(), errorIndicatorElement);
+
+                    // Hide the error indicator from screen reader, as this
+                    // information is set directly at the input field
+                    Roles.getFormRole().setAriaHiddenState(
+                            errorIndicatorElement, true);
                 }
 
             } else if (errorIndicatorElement != null) {

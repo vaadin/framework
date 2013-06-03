@@ -43,6 +43,7 @@ public class ViewPortCalculation extends TestBase {
         }
 
         table.setCellStyleGenerator(new CellStyleGenerator() {
+            @Override
             public String getStyle(Table source, Object itemId,
                     Object propertyId) {
                 if (itemId.equals(lastDoubleClickedItemId)) {
@@ -53,6 +54,7 @@ public class ViewPortCalculation extends TestBase {
         });
 
         table.addItemClickListener(new ItemClickListener() {
+            @Override
             public void itemClick(ItemClickEvent event) {
                 if (event.isDoubleClick()) {
                     lastDoubleClickedItemId = event.getItemId();

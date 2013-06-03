@@ -497,19 +497,22 @@ public class Navigator implements Serializable {
      */
     public void navigateTo(String navigationState) {
         String longestViewName = null;
+        ViewProvider longestViewNameProvider = null;
         View viewWithLongestName = null;
         for (ViewProvider provider : providers) {
             String viewName = provider.getViewName(navigationState);
             if (null != viewName
                     && (longestViewName == null || viewName.length() > longestViewName
                             .length())) {
-                View view = provider.getView(viewName);
-                if (null != view) {
-                    longestViewName = viewName;
-                    viewWithLongestName = view;
-                }
+                longestViewName = viewName;
+                longestViewNameProvider = provider;
             }
         }
+        if (longestViewName != null) {
+            viewWithLongestName = longestViewNameProvider
+                    .getView(longestViewName);
+        }
+
         if (viewWithLongestName == null && errorProvider != null) {
             longestViewName = errorProvider.getViewName(navigationState);
             viewWithLongestName = errorProvider.getView(longestViewName);

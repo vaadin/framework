@@ -17,19 +17,38 @@
 package com.vaadin.server;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import com.vaadin.server.VaadinServlet.RequestType;
+import org.atmosphere.util.Version;
+
+import com.vaadin.server.communication.PushRequestHandler;
+import com.vaadin.server.communication.ServletBootstrapHandler;
+import com.vaadin.server.communication.ServletUIInitHandler;
 import com.vaadin.ui.UI;
 
 public class VaadinServletService extends VaadinService {
     private final VaadinServlet servlet;
 
+    private final static boolean atmosphereAvailable = checkAtmosphereSupport();
+
+    /**
+     * Keeps track of whether a warning about missing push support has already
+     * been logged. This is used to avoid spamming the log with the same message
+     * every time a new UI is bootstrapped.
+     */
+    private boolean pushWarningLogged = false;
+
     public VaadinServletService(VaadinServlet servlet,
-            DeploymentConfiguration deploymentConfiguration) {
+            DeploymentConfiguration deploymentConfiguration)
+            throws ServiceException {
         super(deploymentConfiguration);
         this.servlet = servlet;
 
@@ -44,7 +63,40 @@ public class VaadinServletService extends VaadinService {
         }
     }
 
-    protected VaadinServlet getServlet() {
+    private static boolean checkAtmosphereSupport() {
+        try {
+            String rawVersion = Version.getRawVersion();
+            if (!Constants.REQUIRED_ATMOSPHERE_VERSION.equals(rawVersion)) {
+                getLogger().log(
+                        Level.WARNING,
+                        Constants.INVALID_ATMOSPHERE_VERSION_WARNING,
+                        new Object[] { Constants.REQUIRED_ATMOSPHERE_VERSION,
+                                rawVersion });
+            }
+            return true;
+        } catch (NoClassDefFoundError e) {
+            return false;
+        }
+    }
+
+    @Override
+    protected List<RequestHandler> createRequestHandlers()
+            throws ServiceException {
+        List<RequestHandler> handlers = super.createRequestHandlers();
+        handlers.add(0, new ServletBootstrapHandler());
+        handlers.add(new ServletUIInitHandler());
+        if (atmosphereAvailable) {
+            handlers.add(new PushRequestHandler(this));
+        }
+        return handlers;
+    }
+
+    /**
+     * Retrieves a reference to the servlet associated with this service.
+     * 
+     * @return A reference to the VaadinServlet this service is using
+     */
+    public VaadinServlet getServlet() {
         return servlet;
     }
 
@@ -127,12 +179,11 @@ public class VaadinServletService extends VaadinService {
 
     @Override
     protected boolean requestCanCreateSession(VaadinRequest request) {
-        RequestType requestType = getRequestType(request);
-        if (requestType == RequestType.BROWSER_DETAILS) {
+        if (ServletUIInitHandler.isUIInitRequest(request)) {
             // This is the first request if you are embedding by writing the
             // embedding code yourself
             return true;
-        } else if (requestType == RequestType.OTHER) {
+        } else if (isOtherRequest(request)) {
             /*
              * I.e URIs that are not RPC calls or static (theme) files.
              */
@@ -142,37 +193,22 @@ public class VaadinServletService extends VaadinService {
         return false;
     }
 
-    /**
-     * Gets the request type for the request.
-     * 
-     * @param request
-     *            the request to get a request type for
-     * @return the request type
-     * 
-     * @deprecated As of 7.0. Will likely change or be removed in a future
-     *             version
-     */
-    @Deprecated
-    protected RequestType getRequestType(VaadinRequest request) {
-        RequestType type = (RequestType) request.getAttribute(RequestType.class
-                .getName());
-        if (type == null) {
-            type = getServlet().getRequestType((VaadinServletRequest) request);
-            request.setAttribute(RequestType.class.getName(), type);
-        }
-        return type;
+    private boolean isOtherRequest(VaadinRequest request) {
+        // TODO This should be refactored in some way. It should not be
+        // necessary to check all these types.
+        return (!ServletPortletHelper.isAppRequest(request)
+                && !ServletUIInitHandler.isUIInitRequest(request)
+                && !ServletPortletHelper.isFileUploadRequest(request)
+                && !ServletPortletHelper.isHeartbeatRequest(request)
+                && !ServletPortletHelper.isPublishedFileRequest(request)
+                && !ServletPortletHelper.isUIDLRequest(request) && !ServletPortletHelper
+                    .isPushRequest(request));
     }
 
     @Override
     protected URL getApplicationUrl(VaadinRequest request)
             throws MalformedURLException {
         return getServlet().getApplicationUrl((VaadinServletRequest) request);
-    }
-
-    @Override
-    protected AbstractCommunicationManager createCommunicationManager(
-            VaadinSession session) {
-        return new CommunicationManager(session);
     }
 
     public static HttpServletRequest getCurrentServletRequest() {
@@ -191,6 +227,18 @@ public class VaadinServletService extends VaadinService {
     @Override
     public String getServiceName() {
         return getServlet().getServletName();
+    }
+
+    @Override
+    public InputStream getThemeResourceAsStream(UI uI, String themeName,
+            String resource) {
+        VaadinServletService service = (VaadinServletService) uI.getSession()
+                .getService();
+        ServletContext servletContext = service.getServlet()
+                .getServletContext();
+        return servletContext.getResourceAsStream("/"
+                + VaadinServlet.THEME_DIR_PATH + '/' + themeName + "/"
+                + resource);
     }
 
     @Override
@@ -219,5 +267,23 @@ public class VaadinServletService extends VaadinService {
         }
         appId = appId + "-" + hashCode;
         return appId;
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(VaadinServletService.class.getName());
+    }
+
+    @Override
+    public boolean ensurePushAvailable() {
+        if (atmosphereAvailable) {
+            return true;
+        } else {
+            if (!pushWarningLogged) {
+                pushWarningLogged = true;
+                getLogger().log(Level.WARNING,
+                        Constants.ATMOSPHERE_MISSING_ERROR);
+            }
+            return false;
+        }
     }
 }

@@ -14,8 +14,8 @@
         <conf name="jetty-run" extends="build" visibility="private" />
     </configurations>
     <publications>
-        <artifact type="war" ext="war"/>
-                   </publications>
+        <artifact type="war" ext="war" />
+    </publications>
     <dependencies defaultconf="build" defaultconfmapping="build,ide->default">
         <!-- API DEPENDENCIES -->
         <dependency org="javax.portlet" name="portlet-api"
@@ -40,7 +40,9 @@
             rev="${vaadin.version}" conf="build->build"></dependency>
         <dependency org="com.vaadin" name="vaadin-themes"
             rev="${vaadin.version}" conf="build->build"></dependency>
-            
+        <dependency org="com.vaadin" name="vaadin-push" rev="${vaadin.version}"
+            conf="build->build"></dependency>
+
         <!-- For compiling TestingWidgetSet -->
         <dependency org="com.vaadin" name="vaadin-client-compiler"
             rev="${vaadin.version}" conf="build-provided-> build"></dependency>
@@ -48,22 +50,23 @@
         <!-- Newest Jetty does not work with Ivy currently (orbit -> jar 
             mapping problem) -->
         <dependency org="org.eclipse.jetty" name="jetty-server"
-            rev="7.4.5.v20110725" conf="build, ide, jetty-run->default" />
-        <!-- jetty-servlets needed in .war by ProxyTest, but not by jetty-runner -->
+            rev="7.5.0.v20110901" conf="ide, build-provided, jetty-run->default" />
+        <!-- jetty-servlets needed by ProxyTest, but not by jetty-runner -->
         <dependency org="org.eclipse.jetty" name="jetty-servlets"
-            rev="7.4.5.v20110725" conf="build, ide->default" />
-        <!-- <dependency org="org.mortbay.jetty" name="jetty-util" -->
-        <!-- rev="8.1.5.v20120716" conf="build,ide,jetty-run->default" /> -->
+            rev="7.5.0.v20110901" conf="ide, build-provided, jetty-run->default" />
+        <dependency org="org.eclipse.jetty" name="jetty-websocket"
+            rev="7.5.0.v20110901" conf="ide, jetty-run->default" />
         <dependency org="org.eclipse.jetty" name="jetty-webapp"
-            rev="7.4.5.v20110725" conf="build, ide,jetty-run->default" />
+            rev="7.5.0.v20110901" conf="ide, build-provided, jetty-run->default" />
         <dependency org="org.mortbay.jetty" name="jetty-runner"
-            rev="7.4.5.v20110725" conf="jetty-run->default" />
+            rev="7.5.0.v20110901" conf="jetty-run->default" />
+
         <dependency org="junit" name="junit" rev="4.5"
             conf="build,ide -> default" />
 
         <dependency org="commons-codec" name="commons-codec"
             rev="1.5" conf="build,ide->default" />
-        <dependency org="commons-io" name="commons-io" rev="1.4"
+        <dependency org="commons-io" name="commons-io" rev="2.2"
             conf="build,ide->default" />
         <!-- Mainly for SQLContainer tests -->
         <dependency org="org.hsqldb" name="hsqldb" rev="2.2.6"

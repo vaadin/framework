@@ -19,6 +19,8 @@ import org.w3c.css.sac.LexicalUnit;
 
 public interface SCSSLexicalUnit extends LexicalUnit {
     static final short SCSS_VARIABLE = 100;
+    static final short SCSS_OPERATOR_LEFT_PAREN = 101;
+    static final short SCSS_OPERATOR_RIGHT_PAREN = 102;
 
     static final short SAC_LEM = 200;
     static final short SAC_REM = 201;
@@ -30,5 +32,7 @@ public interface SCSSLexicalUnit extends LexicalUnit {
     LexicalUnitImpl minus(LexicalUnitImpl another);
 
     LexicalUnitImpl multiply(LexicalUnitImpl another);
+
+    LexicalUnitImpl modulo(LexicalUnitImpl another);
 
 }

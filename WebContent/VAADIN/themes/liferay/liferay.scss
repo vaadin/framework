@@ -42,7 +42,9 @@
 	@include liferay-notification;
 	@include liferay-panel;
 	@include liferay-popupview;
-	@include liferay-progressindicator;
+	@include liferay-progressindicator(v-progressbar);
+	/* For legacy ProgressIndicator component */
+	@include liferay-progressindicator(v-progressindicator);
 	@include liferay-select;
 	@include liferay-slider;
 	@include liferay-splitpanel;

@@ -20,6 +20,7 @@ public class TableInSubWindowMemoryLeak extends TestBase {
         final Button openButton = new Button("open me");
         openButton.addClickListener(new ClickListener() {
 
+            @Override
             public void buttonClick(final ClickEvent event) {
                 final Window window = new Window("Simple Window");
                 window.setModal(true);
@@ -29,6 +30,7 @@ public class TableInSubWindowMemoryLeak extends TestBase {
                 window.setContent(table);
                 UI.getCurrent().addWindow(window);
                 window.addCloseListener(new CloseListener() {
+                    @Override
                     public void windowClose(final CloseEvent e) {
                         window.setContent(new Label());
                         UI.getCurrent().removeWindow(window);
@@ -40,6 +42,7 @@ public class TableInSubWindowMemoryLeak extends TestBase {
 
         final Button openButton2 = new Button("open me without Table");
         openButton2.addClickListener(new ClickListener() {
+            @Override
             public void buttonClick(final ClickEvent event) {
                 final Window window = new Window("Simple Window");
                 window.setModal(true);
@@ -47,6 +50,7 @@ public class TableInSubWindowMemoryLeak extends TestBase {
                 window.setWidth("200px");
                 UI.getCurrent().addWindow(window);
                 window.addCloseListener(new CloseListener() {
+                    @Override
                     public void windowClose(final CloseEvent e) {
                         UI.getCurrent().removeWindow(window);
                     }

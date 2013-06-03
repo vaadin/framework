@@ -27,6 +27,7 @@ import java.io.Serializable;
 
 import org.w3c.css.sac.LexicalUnit;
 
+import com.vaadin.sass.internal.expression.exception.IncompatibleUnitsException;
 import com.vaadin.sass.internal.util.ColorUtil;
 import com.vaadin.sass.internal.util.DeepCopy;
 
@@ -68,12 +69,14 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
     LexicalUnitImpl(int line, int column, LexicalUnitImpl previous, int i) {
         this(SAC_INTEGER, line, column, previous);
         this.i = i;
+        f = i;
     }
 
     LexicalUnitImpl(int line, int column, LexicalUnitImpl previous,
             short dimension, String sdimension, float f) {
         this(dimension, line, column, previous);
         this.f = f;
+        i = (int) f;
         this.dimension = dimension;
         this.sdimension = sdimension;
     }
@@ -137,6 +140,7 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
 
     void setIntegerValue(int i) {
         this.i = i;
+        f = i;
     }
 
     @Override
@@ -146,6 +150,7 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
 
     public void setFloatValue(float f) {
         this.f = f;
+        i = (int) f;
     }
 
     @Override
@@ -364,25 +369,62 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
 
     @Override
     public LexicalUnitImpl divide(LexicalUnitImpl denominator) {
-        setFloatValue(getFloatValue() / denominator.getIntegerValue());
+        if (denominator.getLexicalUnitType() != SAC_INTEGER
+                && denominator.getLexicalUnitType() != SAC_REAL
+                && getLexicalUnitType() != denominator.getLexicalUnitType()) {
+            throw new IncompatibleUnitsException(toString());
+        }
+        setFloatValue(getFloatValue() / denominator.getFloatValue());
+        if (getLexicalUnitType() == denominator.getLexicalUnitType()) {
+            setLexicalUnitType(SAC_REAL);
+        }
+        setNextLexicalUnit(denominator.getNextLexicalUnit());
         return this;
     }
 
     @Override
     public LexicalUnitImpl add(LexicalUnitImpl another) {
+        checkAndSetUnit(another);
         setFloatValue(getFloatValue() + another.getFloatValue());
         return this;
     }
 
     @Override
     public LexicalUnitImpl minus(LexicalUnitImpl another) {
+        checkAndSetUnit(another);
         setFloatValue(getFloatValue() - another.getFloatValue());
         return this;
     }
 
     @Override
     public LexicalUnitImpl multiply(LexicalUnitImpl another) {
+        checkAndSetUnit(another);
         setFloatValue(getFloatValue() * another.getIntegerValue());
+        return this;
+    }
+
+    protected void checkAndSetUnit(LexicalUnitImpl another) {
+        if (getLexicalUnitType() != SAC_INTEGER
+                && getLexicalUnitType() != SAC_REAL
+                && another.getLexicalUnitType() != SAC_INTEGER
+                && another.getLexicalUnitType() != SAC_REAL
+                && getLexicalUnitType() != another.getLexicalUnitType()) {
+            throw new IncompatibleUnitsException(toString());
+        }
+        if (another.getLexicalUnitType() != SAC_INTEGER
+                && another.getLexicalUnitType() != SAC_REAL) {
+            setLexicalUnitType(another.getLexicalUnitType());
+        }
+        setNextLexicalUnit(another.getNextLexicalUnit());
+    }
+
+    @Override
+    public LexicalUnitImpl modulo(LexicalUnitImpl another) {
+        if (getLexicalUnitType() != another.getLexicalUnitType()) {
+            throw new IncompatibleUnitsException(toString());
+        }
+        setIntegerValue(getIntegerValue() % another.getIntegerValue());
+        setNextLexicalUnit(another.getNextLexicalUnit());
         return this;
     }
 
@@ -470,16 +512,12 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
         return new LexicalUnitImpl(line, column, previous, SAC_EX, null, v);
     }
 
-    public static LexicalUnitImpl createPixel(float p) {
-        return new LexicalUnitImpl(0, 0, null, SAC_PIXEL, null, p);
-    }
-
-    static LexicalUnitImpl createPX(int line, int column,
+    public static LexicalUnitImpl createPX(int line, int column,
             LexicalUnitImpl previous, float v) {
         return new LexicalUnitImpl(line, column, previous, SAC_PIXEL, null, v);
     }
 
-    static LexicalUnitImpl createCM(int line, int column,
+    public static LexicalUnitImpl createCM(int line, int column,
             LexicalUnitImpl previous, float v) {
         return new LexicalUnitImpl(line, column, previous, SAC_CENTIMETER,
                 null, v);
@@ -635,6 +673,39 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
     public static LexicalUnitImpl createSlash(int line, int column,
             LexicalUnitImpl previous) {
         return new LexicalUnitImpl(SAC_OPERATOR_SLASH, line, column, previous);
+    }
+
+    public static LexicalUnitImpl createAdd(int line, int column,
+            LexicalUnitImpl previous) {
+        return new LexicalUnitImpl(SAC_OPERATOR_PLUS, line, column, previous);
+    }
+
+    public static LexicalUnitImpl createMinus(int line, int column,
+            LexicalUnitImpl previous) {
+        return new LexicalUnitImpl(SAC_OPERATOR_MINUS, line, column, previous);
+    }
+
+    public static LexicalUnitImpl createMultiply(int line, int column,
+            LexicalUnitImpl previous) {
+        return new LexicalUnitImpl(SAC_OPERATOR_MULTIPLY, line, column,
+                previous);
+    }
+
+    public static LexicalUnitImpl createModulo(int line, int column,
+            LexicalUnitImpl previous) {
+        return new LexicalUnitImpl(SAC_OPERATOR_MOD, line, column, previous);
+    }
+
+    public static LexicalUnitImpl createLeftParenthesis(int line, int column,
+            LexicalUnitImpl previous) {
+        return new LexicalUnitImpl(SCSS_OPERATOR_LEFT_PAREN, line, column,
+                previous);
+    }
+
+    public static LexicalUnitImpl createRightParenthesis(int line, int column,
+            LexicalUnitImpl previous) {
+        return new LexicalUnitImpl(SCSS_OPERATOR_LEFT_PAREN, line, column,
+                previous);
     }
 
     @Override

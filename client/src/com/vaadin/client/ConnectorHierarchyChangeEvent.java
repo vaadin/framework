@@ -67,19 +67,17 @@ public class ConnectorHierarchyChangeEvent extends
     }
 
     /**
-     * Returns the {@link HasComponentsConnector} for which this event
-     * occurred.
+     * Returns the {@link HasComponentsConnector} for which this event occurred.
      * 
-     * @return The {@link HasComponentsConnector} whose child collection
-     *         has changed. Never returns null.
+     * @return The {@link HasComponentsConnector} whose child collection has
+     *         changed. Never returns null.
      */
     public HasComponentsConnector getParent() {
         return parent;
     }
 
     /**
-     * Sets the {@link HasComponentsConnector} for which this event
-     * occurred.
+     * Sets the {@link HasComponentsConnector} for which this event occurred.
      * 
      * @param The
      *            {@link HasComponentsConnector} whose child collection has

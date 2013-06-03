@@ -72,6 +72,13 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
 
     /* Private members */
 
+    private static final String NULL_ALT_EXCEPTION_MESSAGE = "Parameter 'altText' needs to be non null";
+
+    /**
+     * Item icons alt texts.
+     */
+    private final HashMap<Object, String> itemIconAlts = new HashMap<Object, String>();
+
     /**
      * Set of expanded nodes.
      */
@@ -161,6 +168,70 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
      */
     public Tree(String caption, Container dataSource) {
         super(caption, dataSource);
+    }
+
+    @Override
+    public void setItemIcon(Object itemId, Resource icon) {
+        setItemIcon(itemId, icon, "");
+    }
+
+    /**
+     * Sets the icon for an item.
+     * 
+     * @param itemId
+     *            the id of the item to be assigned an icon.
+     * @param icon
+     *            the icon to use or null.
+     * 
+     * @param altText
+     *            the alternative text for the icon
+     */
+    public void setItemIcon(Object itemId, Resource icon, String altText) {
+        if (itemId != null) {
+            super.setItemIcon(itemId, icon);
+
+            if (icon == null) {
+                itemIconAlts.remove(itemId);
+            } else if (altText == null) {
+                throw new IllegalArgumentException(NULL_ALT_EXCEPTION_MESSAGE);
+            } else {
+                itemIconAlts.put(itemId, altText);
+            }
+            markAsDirty();
+        }
+    }
+
+    /**
+     * Set the alternate text for an item.
+     * 
+     * Used when the item has an icon.
+     * 
+     * @param itemId
+     *            the id of the item to be assigned an icon.
+     * @param altText
+     *            the alternative text for the icon
+     */
+    public void setItemIconAlternateText(Object itemId, String altText) {
+        if (itemId != null) {
+            if (altText == null) {
+                throw new IllegalArgumentException(NULL_ALT_EXCEPTION_MESSAGE);
+            } else {
+                itemIconAlts.put(itemId, altText);
+            }
+        }
+    }
+
+    /**
+     * Return the alternate text of an icon in a tree item.
+     * 
+     * @param itemId
+     *            Object with the ID of the item
+     * @return String with the alternate text of the icon, or null when no icon
+     *         was set
+     */
+    public String getItemIconAlternateText(Object itemId) {
+        String storedAlt = itemIconAlts.get(itemId);
+        return storedAlt == null ? "" : storedAlt;
     }
 
     /* Expanding and collapsing */
@@ -638,6 +709,8 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
                 if (icon != null) {
                     target.addAttribute(TreeConstants.ATTRIBUTE_NODE_ICON,
                             getItemIcon(itemId));
+                    target.addAttribute(TreeConstants.ATTRIBUTE_NODE_ICON_ALT,
+                            getItemIconAlternateText(itemId));
                 }
                 final String key = itemIdMapper.key(itemId);
                 target.addAttribute("key", key);
@@ -857,6 +930,37 @@ public class Tree extends AbstractSelect implements Container.Hierarchical,
              * initialized.
              */
             cleanupExpandedItems();
+        }
+
+    }
+
+    @Override
+    public void containerItemSetChange(
+            com.vaadin.data.Container.ItemSetChangeEvent event) {
+        super.containerItemSetChange(event);
+        if (getContainerDataSource() instanceof Filterable) {
+            boolean hasFilters = !((Filterable) getContainerDataSource())
+                    .getContainerFilters().isEmpty();
+            if (!hasFilters) {
+                /*
+                 * If Container is not filtered then the itemsetchange is caused
+                 * by either adding or removing items to the container. To
+                 * prevent a memory leak we should cleanup the expanded list
+                 * from items which was removed.
+                 * 
+                 * However, there will still be a leak if the container is
+                 * filtered to show only a subset of the items in the tree and
+                 * later unfiltered items are removed from the container. In
+                 * that case references to the unfiltered item ids will remain
+                 * in the expanded list until the Tree instance is removed and
+                 * the list is destroyed, or the container data source is
+                 * replaced/updated. To force the removal of the removed items
+                 * the application developer needs to a) remove the container
+                 * filters temporarly or b) re-apply the container datasource
+                 * using setContainerDataSource(getContainerDataSource())
+                 */
+                cleanupExpandedItems();
+            }
         }
 
     }

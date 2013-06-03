@@ -13,7 +13,7 @@
 .#{$primaryStyleName}-outerheader {
 	height: 49px;
 	margin-left: 9px;
-	padding: 15px 40px 11px 12px;
+	padding: 15px 61px 11px 12px;
 	background: transparent url(img/top-right.png) no-repeat right top;
 }
 .#{$primaryStyleName}-header {
@@ -51,47 +51,103 @@
 	background: transparent;
 	display: block;
 }
-.#{$primaryStyleName}-closebox {
+.#{$primaryStyleName}-closebox,
+.#{$primaryStyleName}-maximizebox,
+.#{$primaryStyleName}-restorebox {
 	position: absolute;
 	top: 21px;
-	right: 24px;
+	height: 12px;
+}
+.#{$primaryStyleName}-closebox {
 	width: 12px;
 	height: 12px;
+	right: 24px;
 	background: transparent url(img/close.png);
+	&:hover {
+		background-position: 0 -12px;
+	}
 }
-.#{$primaryStyleName}-closebox:hover {
-	background-position: 0 -12px;
+
+.#{$primaryStyleName}-maximizebox,
+.#{$primaryStyleName}-restorebox {
+	right: 42px;
 }
+
+.#{$primaryStyleName}-restorebox {
+	width: 15px;
+	height: 14px;
+
+	background: transparent url(img/restore.png);
+	&:hover {
+		background-position: 0 -14px;
+	}
+}
+.#{$primaryStyleName}-maximizebox {
+	width: 13px;
+	height: 12px;
+
+	background: transparent url(img/maximize.png);
+	&:hover {
+		background-position: 0 -12px;
+	}
+}
+
 .#{$primaryStyleName}-modalitycurtain {
 	background: #fff;
 }
 /* Dialog style */
 .#{$primaryStyleName}-dialog {
 	background-image: url(img/dialog/bottom-left.png);
+
+	.#{$primaryStyleName}-outerheader {
+		height: 32px;
+		padding: 13px 30px 5px 8px;
+		background: transparent url(img/top-right.png) no-repeat right top;
+	}
+	.#{$primaryStyleName}-header {
+		font-size: 12px;
+		line-height: normal;
+		font-weight: bold;
+		letter-spacing: 0;
+		text-shadow: 0 1px 0 #fff;
+	}
+	.#{$primaryStyleName}-contents > div {
+		background: #f1f3f3;
+	}
+	div.#{$primaryStyleName}-footer {
+		background-image: url(img/dialog/bottom-right.png);
+	}
+	.#{$primaryStyleName}-closebox {
+		top: 14px;
+		right: 16px;
+		background-image: url(img/dialog/close.png);
+	}
+	
+	.#{$primaryStyleName}-restorebox {
+		width: 12px;
+		height: 12px;
+		top: 15px;
+		right: 32px;
+	
+		background: transparent url(img/dialog/restore.png);
+		&:hover {
+			background-position: 0 -12px;
+		}
+	}
+	
+	.#{$primaryStyleName}-maximizebox {
+		width: 11px;
+		height: 10px;
+		top: 15px;
+		right: 32px;
+	
+		background: transparent url(img/dialog/maximize.png);
+		&:hover {
+			background-position: 0 -10px;
+		}
+	}
 }
-.#{$primaryStyleName}-dialog .#{$primaryStyleName}-outerheader {
-	height: 32px;
-	padding: 13px 30px 5px 8px;
-	background: transparent url(img/top-right.png) no-repeat right top;
-}
-.#{$primaryStyleName}-dialog .#{$primaryStyleName}-header {
-	font-size: 12px;
-	line-height: normal;
-	font-weight: bold;
-	letter-spacing: 0;
-	text-shadow: 0 1px 0 #fff;
-}
-.#{$primaryStyleName}-dialog .#{$primaryStyleName}-contents > div {
-	background: #f1f3f3;
-}
-.#{$primaryStyleName}-dialog div.#{$primaryStyleName}-footer {
-	background-image: url(img/dialog/bottom-right.png);
-}
-.#{$primaryStyleName}-dialog .#{$primaryStyleName}-closebox {
-	top: 14px;
-	right: 16px;
-	background-image: url(img/dialog/close.png);
-}
+
 /* Shadow for window */
 .v-shadow-window .top-left {
     top: -13px;             left: -20px;

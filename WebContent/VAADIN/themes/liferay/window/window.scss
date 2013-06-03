@@ -42,21 +42,35 @@
 	height: 5px;
 }
 
+.v-window-restorebox,
+.v-window-maximizebox,
 .v-window-closebox {
-	background: url(closebutton_sprites.png) no-repeat scroll 0 0 transparent;
 	position: absolute;
 	width: 24px;
 	height: 24px;
-	right: 9px;
 	top: 8px;
+	&:hover {
+		background-position: 0 -24px;	
+	}
+	&:active {
+		background-position: 0 -48px;
+	}	
+	
+}
+.v-window-closebox {
+	right: 9px;
+	background: url(closebutton_sprites.png) no-repeat scroll 0 0 transparent;
 }
 
-.v-window-closebox:hover {
-	background-position: 0 -24px;	
+.v-window-restorebox,
+.v-window-maximizebox {
+	right: 36px;
 }
-
-.v-window-closebox:active {
-	background-position: 0 -48px;	
+.v-window-restorebox {
+	background: url(restore_sprites.png) no-repeat scroll 0 0 transparent;
+}
+.v-window-maximizebox {
+	background: url(maximize_sprites.png) no-repeat scroll 0 0 transparent;
 }
 
 .v-window-resizebox {

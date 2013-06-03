@@ -59,10 +59,21 @@
 .v-disabled .#{$primaryStyleName}-calendarpanel-day-today {
 	cursor: default;
 }
-.#{$primaryStyleName}-calendarpanel-day-disabled {
+.#{$primaryStyleName}-calendarpanel-day-disabled,
+.#{$primaryStyleName}-calendarpanel-day-outside-range {
 	cursor: default;
 	opacity: .5;
 }
+
+.#{$primaryStyleName}-calendarpanel-prevyear,
+.#{$primaryStyleName}-calendarpanel-nextyear,
+.#{$primaryStyleName}-calendarpanel-prevmonth,
+.#{$primaryStyleName}-calendarpanel-nextmonth {
+	button.outside-range{
+		opacity: .5;
+ 	}
+}
+
 .#{$primaryStyleName}-calendarpanel-day-selected {
 	cursor: default;
 	background: #333;

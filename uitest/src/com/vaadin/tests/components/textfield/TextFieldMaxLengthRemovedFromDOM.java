@@ -17,6 +17,7 @@ public class TextFieldMaxLengthRemovedFromDOM extends TestBase {
 
         tf.addFocusListener(new FieldEvents.FocusListener() {
 
+            @Override
             public void focus(FocusEvent event) {
                 // Resetting Max length should not remove maxlength attribute
                 tf.setMaxLength(11);

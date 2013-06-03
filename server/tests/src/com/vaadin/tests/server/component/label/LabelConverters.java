@@ -21,6 +21,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.tests.data.bean.Person;
+import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.Label;
 
 public class LabelConverters extends TestCase {
@@ -37,7 +38,7 @@ public class LabelConverters extends TestCase {
     }
 
     public void testIntegerDataSource() {
-        VaadinSession.setCurrent(new VaadinSession(null));
+        VaadinSession.setCurrent(new AlwaysLockedVaadinSession(null));
         Label l = new Label("Foo");
         Property ds = new MethodProperty<Integer>(Person.createTestPerson1(),
                 "age");

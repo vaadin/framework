@@ -1,6 +1,5 @@
 package com.vaadin.tests.layouts;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.HorizontalLayout;

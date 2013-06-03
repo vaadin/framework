@@ -19,4 +19,7 @@ import com.vaadin.shared.communication.ServerRpc;
 import com.vaadin.shared.ui.ClickRpc;
 
 public interface WindowServerRpc extends ClickRpc, ServerRpc {
+
+    public void windowModeChanged(WindowMode newState);
+
 }

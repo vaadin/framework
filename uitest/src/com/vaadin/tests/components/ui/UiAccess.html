@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>New Test</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">New Test</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.components.ui.UiAccess?restartApplication</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot[0]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_2</td>
+	<td>exact:0. Access from UI thread future is done? false</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_1</td>
+	<td>1. Access from UI thread is run</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_0</td>
+	<td>exact:2. beforeClientResponse future is done? true</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot[1]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_1</td>
+	<td>0. Initial background message</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_0</td>
+	<td>exact:1. Thread has current response? false</td>
+</tr>
+<tr>
+	<td>waitForText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_2</td>
+	<td>0. Initial background message</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_0</td>
+	<td>exact:2. Thread got lock, inital future done? true</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot[2]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_2</td>
+	<td>0. Throwing exception in access</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_1</td>
+	<td>exact:1. firstFuture is done? true</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_0</td>
+	<td>2. Got exception from firstFuture: java.lang.RuntimeException: Catch me if you can</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot[3]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_0</td>
+	<td>0. future was cancled, should not start</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot[4]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_2</td>
+	<td>0. Waiting for thread to start</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_1</td>
+	<td>1. Thread started, waiting for interruption</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_0</td>
+	<td>2. I was interrupted</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot[5]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_3</td>
+	<td>0. accessSynchronously has request? true</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_2</td>
+	<td>1. Test value in accessSynchronously: Set before accessSynchronosly</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_1</td>
+	<td>2. has request after accessSynchronously? true</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_0</td>
+	<td>3. Test value after accessSynchornously: Set in accessSynchronosly</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot[6]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_3</td>
+	<td>0. access has request? false</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_2</td>
+	<td>1. Test value in access: Set before access</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_1</td>
+	<td>2. has request after access? true</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_0</td>
+	<td>3. Test value after access: Set before run pending</td>
+</tr>
+</tbody></table>
+</body>
+</html>

@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Element;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
@@ -26,6 +27,7 @@ import com.vaadin.client.Paintable;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
+import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.VTree;
@@ -93,7 +95,7 @@ public class TreeConnector extends AbstractComponentConnector implements
             }
             childTree = getWidget().new TreeNode();
             getConnection().getVTooltip().connectHandlersToWidget(childTree);
-            updateNodeFromUIDL(childTree, childUidl);
+            updateNodeFromUIDL(childTree, childUidl, 1);
             getWidget().body.add(childTree);
             childTree.addStyleDependentName("root");
             childTree.childNodeContainer.addStyleDependentName("root");
@@ -108,6 +110,9 @@ public class TreeConnector extends AbstractComponentConnector implements
         getWidget().isMultiselect = "multi".equals(selectMode);
 
         if (getWidget().isMultiselect) {
+            Roles.getTreeRole().setAriaMultiselectableProperty(
+                    getWidget().getElement(), true);
+
             if (BrowserInfo.get().isTouchDevice()) {
                 // Always use the simple mode for touch devices that do not have
                 // shift/ctrl keys (#8595)
@@ -116,6 +121,9 @@ public class TreeConnector extends AbstractComponentConnector implements
                 getWidget().multiSelectMode = MultiSelectMode.valueOf(uidl
                         .getStringAttribute("multiselectmode"));
             }
+        } else {
+            Roles.getTreeRole().setAriaMultiselectableProperty(
+                    getWidget().getElement(), false);
         }
 
         getWidget().selectedIds = uidl.getStringArrayVariableAsSet("selected");
@@ -169,7 +177,18 @@ public class TreeConnector extends AbstractComponentConnector implements
                 // expanding node happened server side
                 rootNode.setState(true, false);
             }
-            renderChildNodes(rootNode, (Iterator) uidl.getChildIterator());
+            String levelPropertyString = Roles.getTreeitemRole()
+                    .getAriaLevelProperty(rootNode.getElement());
+            int levelProperty;
+            try {
+                levelProperty = Integer.valueOf(levelPropertyString);
+            } catch (NumberFormatException e) {
+                levelProperty = 1;
+                VConsole.error(e);
+            }
+
+            renderChildNodes(rootNode, (Iterator) uidl.getChildIterator(),
+                    levelProperty + 1);
         }
     }
 
@@ -196,7 +215,10 @@ public class TreeConnector extends AbstractComponentConnector implements
 
     }
 
-    public void updateNodeFromUIDL(TreeNode treeNode, UIDL uidl) {
+    public void updateNodeFromUIDL(TreeNode treeNode, UIDL uidl, int level) {
+        Roles.getTreeitemRole().setAriaLevelProperty(treeNode.getElement(),
+                level);
+
         String nodeKey = uidl.getStringAttribute("key");
         treeNode.setText(uidl
                 .getStringAttribute(TreeConstants.ATTRIBUTE_NODE_CAPTION));
@@ -212,7 +234,8 @@ public class TreeConnector extends AbstractComponentConnector implements
             if (uidl.getChildCount() == 0) {
                 treeNode.childNodeContainer.setVisible(false);
             } else {
-                renderChildNodes(treeNode, (Iterator) uidl.getChildIterator());
+                renderChildNodes(treeNode, (Iterator) uidl.getChildIterator(),
+                        level + 1);
                 treeNode.childrenLoaded = true;
             }
         } else {
@@ -239,11 +262,14 @@ public class TreeConnector extends AbstractComponentConnector implements
             getWidget().selectedIds.add(nodeKey);
         }
 
-        treeNode.setIcon(uidl
-                .getStringAttribute(TreeConstants.ATTRIBUTE_NODE_ICON));
+        String iconUrl = uidl
+                .getStringAttribute(TreeConstants.ATTRIBUTE_NODE_ICON);
+        String iconAltText = uidl
+                .getStringAttribute(TreeConstants.ATTRIBUTE_NODE_ICON_ALT);
+        treeNode.setIcon(iconUrl, iconAltText);
     }
 
-    void renderChildNodes(TreeNode containerNode, Iterator<UIDL> i) {
+    void renderChildNodes(TreeNode containerNode, Iterator<UIDL> i, int level) {
         containerNode.childNodeContainer.clear();
         containerNode.childNodeContainer.setVisible(true);
         while (i.hasNext()) {
@@ -256,7 +282,7 @@ public class TreeConnector extends AbstractComponentConnector implements
             }
             final TreeNode childTree = getWidget().new TreeNode();
             getConnection().getVTooltip().connectHandlersToWidget(childTree);
-            updateNodeFromUIDL(childTree, childUidl);
+            updateNodeFromUIDL(childTree, childUidl, level);
             containerNode.childNodeContainer.add(childTree);
             if (!i.hasNext()) {
                 childTree
@@ -304,6 +330,16 @@ public class TreeConnector extends AbstractComponentConnector implements
         }
 
         return info;
+    }
+
+    @Override
+    public boolean hasTooltip() {
+        /*
+         * Item tooltips are not processed until updateFromUIDL, so we can't be
+         * sure that there are no tooltips during onStateChange when this method
+         * is used.
+         */
+        return true;
     }
 
 }

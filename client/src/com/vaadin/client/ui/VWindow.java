@@ -38,17 +38,17 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ConnectorMap;
-import com.vaadin.client.Console;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Util;
+import com.vaadin.client.debug.internal.VDebugWindow;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.shared.EventId;
+import com.vaadin.shared.ui.window.WindowMode;
 
 /**
  * "Sub window" component.
@@ -57,18 +57,6 @@ import com.vaadin.shared.EventId;
  */
 public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         ScrollHandler, KeyDownHandler, FocusHandler, BlurHandler, Focusable {
-
-    /**
-     * Minimum allowed height of a window. This refers to the content area, not
-     * the outer borders.
-     */
-    private static final int MIN_CONTENT_AREA_HEIGHT = 100;
-
-    /**
-     * Minimum allowed width of a window. This refers to the content area, not
-     * the outer borders.
-     */
-    private static final int MIN_CONTENT_AREA_WIDTH = 150;
 
     private static ArrayList<VWindow> windowOrder = new ArrayList<VWindow>();
 
@@ -112,6 +100,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     /** For internal use only. May be removed or replaced in the future. */
     public Element closeBox;
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public Element maximizeRestoreBox;
 
     /** For internal use only. May be removed or replaced in the future. */
     public ApplicationConnection client;
@@ -262,6 +253,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         resizeBox = DOM.createDiv();
         DOM.setElementProperty(resizeBox, "className", CLASSNAME + "-resizebox");
         closeBox = DOM.createDiv();
+        maximizeRestoreBox = DOM.createDiv();
+        DOM.setElementProperty(maximizeRestoreBox, "className", CLASSNAME
+                + "-maximizebox");
         DOM.setElementProperty(closeBox, "className", CLASSNAME + "-closebox");
         DOM.appendChild(footer, resizeBox);
 
@@ -269,14 +263,15 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         DOM.setElementProperty(wrapper, "className", CLASSNAME + "-wrap");
 
         DOM.appendChild(wrapper, header);
+        DOM.appendChild(wrapper, maximizeRestoreBox);
         DOM.appendChild(wrapper, closeBox);
         DOM.appendChild(header, headerText);
         DOM.appendChild(wrapper, contents);
         DOM.appendChild(wrapper, footer);
         DOM.appendChild(super.getContainerElement(), wrapper);
 
-        sinkEvents(Event.MOUSEEVENTS | Event.TOUCHEVENTS | Event.ONCLICK
-                | Event.ONLOSECAPTURE);
+        sinkEvents(Event.ONDBLCLICK | Event.MOUSEEVENTS | Event.TOUCHEVENTS
+                | Event.ONCLICK | Event.ONLOSECAPTURE);
 
         setWidget(contentPanel);
 
@@ -575,6 +570,31 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         }
     }
 
+    public void updateMaximizeRestoreClassName(boolean visible,
+            WindowMode windowMode) {
+        String className;
+        if (windowMode == WindowMode.MAXIMIZED) {
+            className = CLASSNAME + "-restorebox";
+        } else {
+            className = CLASSNAME + "-maximizebox";
+        }
+        if (!visible) {
+            className = className + " " + className + "-disabled";
+        }
+        maximizeRestoreBox.setClassName(className);
+    }
+
+    // TODO this will eventually be removed, currently used to avoid updating to
+    // server side.
+    public void setPopupPositionNoUpdate(int left, int top) {
+        if (top < 0) {
+            // ensure window is not moved out of browser window from top of the
+            // screen
+            top = 0;
+        }
+        super.setPopupPosition(left, top);
+    }
+
     @Override
     public void setPopupPosition(int left, int top) {
         if (top < 0) {
@@ -616,6 +636,8 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         return contents;
     }
 
+    private Event headerDragPending;
+
     @Override
     public void onBrowserEvent(final Event event) {
         boolean bubble = true;
@@ -632,6 +654,28 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 onCloseClick();
             }
             bubble = false;
+        } else if (target == maximizeRestoreBox) {
+            // handled in connector
+            if (type != Event.ONCLICK) {
+                bubble = false;
+            }
+        } else if (header.isOrHasChild(target) && !dragging) {
+            // dblclick handled in connector
+            if (type != Event.ONDBLCLICK && draggable) {
+                if (type == Event.ONMOUSEDOWN) {
+                    headerDragPending = event;
+                } else if (type == Event.ONMOUSEMOVE
+                        && headerDragPending != null) {
+                    // ie won't work unless this is set here
+                    dragging = true;
+                    onDragEvent(headerDragPending);
+                    onDragEvent(event);
+                    headerDragPending = null;
+                } else {
+                    headerDragPending = null;
+                }
+                bubble = false;
+            }
         } else if (dragging || !contents.isOrHasChild(target)) {
             onDragEvent(event);
             bubble = false;
@@ -648,7 +692,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
          */
         if (type == Event.ONMOUSEDOWN
                 && !contentPanel.getElement().isOrHasChild(target)
-                && target != closeBox) {
+                && target != closeBox && target != maximizeRestoreBox) {
             contentPanel.focus();
         }
 
@@ -746,16 +790,10 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         }
 
         int w = Util.getTouchOrMouseClientX(event) - startX + origW;
-        int minWidth = getMinWidth();
-        if (w < minWidth) {
-            w = minWidth;
-        }
-
         int h = Util.getTouchOrMouseClientY(event) - startY + origH;
-        int minHeight = getMinHeight();
-        if (h < minHeight) {
-            h = minHeight;
-        }
+
+        w = Math.max(w, getMinWidth());
+        h = Math.max(h, getMinHeight());
 
         setWidth(w + "px");
         setHeight(h + "px");
@@ -775,7 +813,23 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         }
     }
 
-    private void updateContentsSize() {
+    private int getMinHeight() {
+        return getPixelValue(getElement().getStyle().getProperty("minHeight"));
+    }
+
+    private int getMinWidth() {
+        return getPixelValue(getElement().getStyle().getProperty("minWidth"));
+    }
+
+    private static int getPixelValue(String size) {
+        if (size == null || !size.endsWith("px")) {
+            return -1;
+        } else {
+            return Integer.parseInt(size.substring(0, size.length() - 2));
+        }
+    }
+
+    public void updateContentsSize() {
         LayoutManager layoutManager = getLayoutManager();
         layoutManager.setNeedsMeasure(ConnectorMap.get(client).getConnector(
                 this));
@@ -896,7 +950,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 // debug window
                 Widget w = Util.findWidget(target, null);
                 while (w != null) {
-                    if (w instanceof Console) {
+                    if (w instanceof VDebugWindow) {
                         return true; // allow debug-window clicks
                     } else if (ConnectorMap.get(client).isConnector(w)) {
                         return false;
@@ -959,10 +1013,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         contentPanel.focus();
     }
 
-    public int getMinHeight() {
-        return MIN_CONTENT_AREA_HEIGHT + getDecorationHeight();
-    }
-
     private int getDecorationHeight() {
         LayoutManager lm = getLayoutManager();
         int headerHeight = lm.getOuterHeight(header);
@@ -972,10 +1022,6 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     private LayoutManager getLayoutManager() {
         return LayoutManager.get(client);
-    }
-
-    public int getMinWidth() {
-        return MIN_CONTENT_AREA_WIDTH + getDecorationWidth();
     }
 
     private int getDecorationWidth() {

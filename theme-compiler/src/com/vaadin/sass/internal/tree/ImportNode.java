@@ -18,7 +18,6 @@ package com.vaadin.sass.internal.tree;
 
 import org.w3c.css.sac.SACMediaList;
 
-import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.sass.internal.visitor.ImportNodeHandler;
 
 public class ImportNode extends Node {
@@ -74,7 +73,7 @@ public class ImportNode extends Node {
 
     @Override
     public void traverse() {
-        // TODO shouldn't be reached with current setup, try anyway?
-        ImportNodeHandler.traverse((ScssStylesheet) getParentNode());
+        // nested imports
+        ImportNodeHandler.traverse(getParentNode());
     }
 }

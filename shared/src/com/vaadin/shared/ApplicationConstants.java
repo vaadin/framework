@@ -28,6 +28,8 @@ public class ApplicationConstants implements Serializable {
 
     public static final String HEARTBEAT_PATH = "HEARTBEAT";
 
+    public static final String PUSH_PATH = "PUSH";
+
     public static final String PUBLISHED_FILE_PATH = APP_PATH + '/'
             + "PUBLISHED";
 
@@ -37,7 +39,6 @@ public class ApplicationConstants implements Serializable {
             + "://";
     public static final String UIDL_SECURITY_TOKEN_ID = "Vaadin-Security-Key";
 
-    public static final String PARAM_UNLOADBURST = "onunloadburst";
     public static final String PARAM_ANALYZE_LAYOUTS = "analyzeLayouts";
     public static final String PARAM_HIGHLIGHT_CONNECTOR = "highlightConnector";
 
@@ -71,4 +72,15 @@ public class ApplicationConstants implements Serializable {
      * </p>
      */
     public static final String VAADIN_DIR_URL = "vaadinDir";
+
+    /**
+     * The name of the javascript containing push support. The file is located
+     * in the VAADIN directory.
+     */
+    public static final String VAADIN_PUSH_JS = "vaadinPush.js";
+
+    /**
+     * Name of the parameter used to transmit the CSRF token.
+     */
+    public static final String CSRF_TOKEN_PARAMETER = "v-csrfToken";
 }

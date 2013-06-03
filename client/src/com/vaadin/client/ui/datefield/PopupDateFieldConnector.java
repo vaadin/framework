@@ -119,6 +119,8 @@ public class PopupDateFieldConnector extends TextualDateConnector {
                     + "-button-readonly");
         }
 
+        getWidget().setDescriptionForAssistiveDevices(
+                getState().descriptionForAssistiveDevices);
         getWidget().calendarToggle.setEnabled(true);
     }
 
@@ -136,6 +138,8 @@ public class PopupDateFieldConnector extends TextualDateConnector {
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
         getWidget().setTextFieldEnabled(getState().textFieldEnabled);
+        getWidget().setRangeStart(getState().rangeStart);
+        getWidget().setRangeEnd(getState().rangeEnd);
     }
 
     @Override

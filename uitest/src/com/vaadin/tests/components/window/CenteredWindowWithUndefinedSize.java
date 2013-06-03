@@ -9,7 +9,7 @@ public class CenteredWindowWithUndefinedSize extends TestBase {
 
     @Override
     protected String getDescription() {
-        return "The centered sub-window with undefined height and a 100% high layout should be rendered in the center of the screen and not in the top-left corner.";
+        return "The centered sub-window with undefined height and a undefined high layout should be rendered in the center of the screen and not in the top-left corner.";
     }
 
     @Override
@@ -23,7 +23,7 @@ public class CenteredWindowWithUndefinedSize extends TestBase {
         layout.setMargin(true);
         Window centered = new Window("A window", layout);
         centered.setSizeUndefined();
-        layout.setSizeFull();
+        layout.setSizeUndefined();
         centered.center();
 
         Label l = new Label("This window should be centered");

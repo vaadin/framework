@@ -22,6 +22,7 @@ import junit.framework.TestCase;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.TextField;
 
 public class ConverterFactory extends TestCase {
@@ -66,7 +67,7 @@ public class ConverterFactory extends TestCase {
 
     public void testApplicationConverterFactoryInBackgroundThread() {
         VaadinSession.setCurrent(null);
-        final VaadinSession appWithCustomIntegerConverter = new VaadinSession(
+        final VaadinSession appWithCustomIntegerConverter = new AlwaysLockedVaadinSession(
                 null);
         appWithCustomIntegerConverter
                 .setConverterFactory(new ConverterFactory42());
@@ -84,7 +85,7 @@ public class ConverterFactory extends TestCase {
     }
 
     public void testApplicationConverterFactoryForDetachedComponent() {
-        final VaadinSession appWithCustomIntegerConverter = new VaadinSession(
+        final VaadinSession appWithCustomIntegerConverter = new AlwaysLockedVaadinSession(
                 null);
         appWithCustomIntegerConverter
                 .setConverterFactory(new ConverterFactory42());
@@ -98,11 +99,11 @@ public class ConverterFactory extends TestCase {
     }
 
     public void testApplicationConverterFactoryForDifferentThanCurrentApplication() {
-        final VaadinSession fieldAppWithCustomIntegerConverter = new VaadinSession(
+        final VaadinSession fieldAppWithCustomIntegerConverter = new AlwaysLockedVaadinSession(
                 null);
         fieldAppWithCustomIntegerConverter
                 .setConverterFactory(new ConverterFactory42());
-        VaadinSession.setCurrent(new VaadinSession(null));
+        VaadinSession.setCurrent(new AlwaysLockedVaadinSession(null));
 
         TextField tf = new TextField("", "123") {
             @Override

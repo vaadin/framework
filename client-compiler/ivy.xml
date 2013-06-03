@@ -25,11 +25,14 @@
             rev="${vaadin.version}" conf="build" />
         <dependency org="com.vaadin" name="vaadin-client"
             rev="${vaadin.version}" conf="build" />
-		<dependency org="com.vaadin" name="vaadin-theme-compiler"
-			rev="${vaadin.version}" conf="build" />
-            
+        <dependency org="com.vaadin" name="vaadin-theme-compiler"
+            rev="${vaadin.version}" conf="build" />
+
         <dependency org="commons-collections" name="commons-collections"
             rev="3.1" conf="build,ide -> default" />
+        <dependency org="commons-logging" name="commons-logging"
+            rev="1.1.1" conf="build,ide -> default" />
+
         <dependency org="ant" name="ant" rev="1.6.5"
             conf="build,ide -> default" />
         <dependency org="net.sourceforge.cssparser" name="cssparser"
@@ -46,12 +49,16 @@
             rev="1.1" conf="build,ide -> default" />
         <dependency org="commons-codec" name="commons-codec"
             rev="1.3" conf="build,ide -> default" />
-        <dependency org="commons-io" name="commons-io" rev="1.4"
+        <dependency org="commons-io" name="commons-io" rev="2.2"
             conf="build,ide -> default" />
         <dependency org="commons-lang" name="commons-lang"
             rev="2.6" conf="build,ide -> default" />
         <dependency org="org.apache.james" name="apache-mime4j"
             rev="0.6" conf="build,ide -> default" />
+
+        <dependency org="com.vaadin" name="vaadin-client-compiler-deps"
+            rev="1.0.2" conf="build,ide -> default" />
+
     </dependencies>
 
 </ivy-module>

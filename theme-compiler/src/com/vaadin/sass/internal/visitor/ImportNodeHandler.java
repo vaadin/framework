@@ -26,6 +26,7 @@ import org.w3c.css.sac.LexicalUnit;
 
 import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.sass.internal.parser.LexicalUnitImpl;
+import com.vaadin.sass.internal.parser.ParseException;
 import com.vaadin.sass.internal.tree.ImportNode;
 import com.vaadin.sass.internal.tree.Node;
 import com.vaadin.sass.internal.tree.RuleNode;
@@ -33,7 +34,23 @@ import com.vaadin.sass.internal.util.StringUtil;
 
 public class ImportNodeHandler {
 
-    public static void traverse(ScssStylesheet node) {
+    public static void traverse(Node node) {
+        ScssStylesheet styleSheet = null;
+        if (node instanceof ScssStylesheet) {
+            styleSheet = (ScssStylesheet) node;
+        } else {
+            // iterate to parents of node, find ScssStylesheet
+            Node parent = node.getParentNode();
+            while (parent != null && !(parent instanceof ScssStylesheet)) {
+                parent = parent.getParentNode();
+            }
+            if (parent instanceof ScssStylesheet) {
+                styleSheet = (ScssStylesheet) parent;
+            }
+        }
+        if (styleSheet == null) {
+            throw new ParseException("Nested import in an invalid context");
+        }
         ArrayList<Node> c = new ArrayList<Node>(node.getChildren());
         for (Node n : c) {
             if (n instanceof ImportNode) {
@@ -41,7 +58,7 @@ public class ImportNodeHandler {
                 if (!importNode.isPureCssImport()) {
                     try {
                         StringBuilder filePathBuilder = new StringBuilder(
-                                node.getFileName());
+                                styleSheet.getFileName());
                         filePathBuilder.append(File.separatorChar).append(
                                 importNode.getUri());
                         if (!filePathBuilder.toString().endsWith(".scss")) {
@@ -50,7 +67,8 @@ public class ImportNodeHandler {
 
                         // set parent's charset to imported node.
                         ScssStylesheet imported = ScssStylesheet.get(
-                                filePathBuilder.toString(), node.getCharset());
+                                filePathBuilder.toString(),
+                                styleSheet.getCharset());
                         if (imported == null) {
                             imported = ScssStylesheet.get(importNode.getUri());
                         }
@@ -67,17 +85,19 @@ public class ImportNodeHandler {
                             updateUrlInImportedSheet(imported, prefix);
                         }
 
-                        Node pre = importNode;
-                        for (Node importedChild : new ArrayList<Node>(
-                                imported.getChildren())) {
-                            node.appendChild(importedChild, pre);
-                            pre = importedChild;
-                        }
+                        node.appendChildrenAfter(
+                                new ArrayList<Node>(imported.getChildren()),
+                                importNode);
                         node.removeChild(importNode);
                     } catch (CSSException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
+                    }
+                } else {
+                    if (styleSheet != node) {
+                        throw new ParseException(
+                                "CSS imports can only be used at the top level, not as nested imports. Within style rules, use SCSS imports.");
                     }
                 }
             }

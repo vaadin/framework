@@ -385,6 +385,26 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
         removeFilter(filter);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.util.AbstractInMemoryContainer#hasContainerFilters()
+     */
+    @Override
+    public boolean hasContainerFilters() {
+        return super.hasContainerFilters();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.data.util.AbstractInMemoryContainer#getContainerFilters()
+     */
+    @Override
+    public Collection<Filter> getContainerFilters() {
+        return super.getContainerFilters();
+    }
+
     /**
      * Make this container listen to the given property provided it notifies
      * when its value changes.

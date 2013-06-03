@@ -16,10 +16,12 @@
 package com.vaadin.shared.ui.datefield;
 
 public class PopupDateFieldState extends TextualDateFieldState {
+    public static final String DESCRIPTION_FOR_ASSISTIVE_DEVICES = "Arrow down key opens calendar element for choosing the date";
+
     {
         primaryStyleName = "v-datefield";
     }
 
     public boolean textFieldEnabled = true;
-
+    public String descriptionForAssistiveDevices = DESCRIPTION_FOR_ASSISTIVE_DEVICES;
 }

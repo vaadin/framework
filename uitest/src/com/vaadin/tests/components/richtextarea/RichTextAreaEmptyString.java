@@ -29,6 +29,7 @@ public class RichTextAreaEmptyString extends TestBase {
 
         final Button b = new Button("get area value", new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 l.setValue(area.getValue());
             }

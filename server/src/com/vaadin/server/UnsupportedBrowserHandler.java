@@ -24,18 +24,18 @@ import java.io.Writer;
  * 
  * <p>
  * This handler is usually added to the application by
- * {@link AbstractCommunicationManager}.
+ * {@link LegacyCommunicationManager}.
  * </p>
  */
 @SuppressWarnings("serial")
-public class UnsupportedBrowserHandler implements RequestHandler {
+public class UnsupportedBrowserHandler extends SynchronizedRequestHandler {
 
     /** Cookie used to ignore browser checks */
     public static final String FORCE_LOAD_COOKIE = "vaadinforceload=1";
 
     @Override
-    public boolean handleRequest(VaadinSession session, VaadinRequest request,
-            VaadinResponse response) throws IOException {
+    public boolean synchronizedHandleRequest(VaadinSession session,
+            VaadinRequest request, VaadinResponse response) throws IOException {
 
         // Check if the browser is supported
         // If Chrome Frame is available we'll assume it's ok

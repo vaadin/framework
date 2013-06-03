@@ -118,4 +118,24 @@ public class PopupDateField extends DateField {
         getState().textFieldEnabled = state;
     }
 
+    /**
+     * Set a description that explains the usage of the Widget for users of
+     * assistive devices.
+     * 
+     * @param description
+     *            String with the description
+     */
+    public void setAssistiveText(String description) {
+        getState().descriptionForAssistiveDevices = description;
+    }
+
+    /**
+     * Get the description that explains the usage of the Widget for users of
+     * assistive devices.
+     * 
+     * @return String with the description
+     */
+    public String getAssistiveText() {
+        return getState().descriptionForAssistiveDevices;
+    }
 }

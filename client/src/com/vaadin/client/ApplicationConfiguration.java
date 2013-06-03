@@ -20,6 +20,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -28,8 +31,16 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
+import com.vaadin.client.debug.internal.ErrorNotificationHandler;
+import com.vaadin.client.debug.internal.HierarchySection;
+import com.vaadin.client.debug.internal.LogSection;
+import com.vaadin.client.debug.internal.NetworkSection;
+import com.vaadin.client.debug.internal.ProfilerSection;
+import com.vaadin.client.debug.internal.Section;
+import com.vaadin.client.debug.internal.VDebugWindow;
 import com.vaadin.client.metadata.BundleLoadCallback;
 import com.vaadin.client.metadata.ConnectorBundleLoader;
 import com.vaadin.client.metadata.NoDataException;
@@ -259,7 +270,16 @@ public class ApplicationConfiguration implements EntryPoint {
     }
 
     public String getThemeUri() {
-        return vaadinDirUrl + "themes/" + getThemeName();
+        return getVaadinDirUrl() + "themes/" + getThemeName();
+    }
+
+    /**
+     * Gets the URL of the VAADIN directory on the server.
+     * 
+     * @return the URL of the VAADIN directory
+     */
+    public String getVaadinDirUrl() {
+        return vaadinDirUrl;
     }
 
     public void setAppId(String appId) {
@@ -365,7 +385,6 @@ public class ApplicationConfiguration implements EntryPoint {
         if (jsoConfiguration.getConfigBoolean("initPending") == Boolean.FALSE) {
             setBrowserDetailsSent();
         }
-
     }
 
     /**
@@ -546,32 +565,53 @@ public class ApplicationConfiguration implements EntryPoint {
             enableIOS6castFix();
         }
 
-        // Prepare VConsole for debugging
+        // Prepare the debugging window
         if (isDebugMode()) {
-            Console console = GWT.create(Console.class);
-            console.setQuietMode(isQuietDebugMode());
-            console.init();
-            VConsole.setImplementation(console);
-        } else {
-            VConsole.setImplementation((Console) GWT.create(NullConsole.class));
-        }
-        /*
-         * Display some sort of error of exceptions in web mode to debug
-         * console. After this, exceptions are reported to VConsole and possible
-         * GWT hosted mode.
-         */
-        GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+            /*
+             * XXX Lots of implementation details here right now. This should be
+             * cleared up when an API for extending the debug window is
+             * implemented.
+             */
+            VDebugWindow window = GWT.create(VDebugWindow.class);
 
-            @Override
-            public void onUncaughtException(Throwable e) {
-                /*
-                 * Note in case of null console (without ?debug) we eat
-                 * exceptions. "a1 is not an object" style errors helps nobody,
-                 * especially end user. It does not work tells just as much.
-                 */
-                VConsole.getImplementation().error(e);
+            if (LogConfiguration.loggingIsEnabled()) {
+                window.addSection((Section) GWT.create(LogSection.class));
             }
-        });
+            window.addSection((Section) GWT.create(HierarchySection.class));
+            window.addSection((Section) GWT.create(NetworkSection.class));
+            if (Profiler.isEnabled()) {
+                window.addSection((Section) GWT.create(ProfilerSection.class));
+            }
+
+            if (isQuietDebugMode()) {
+                window.close();
+            } else {
+                window.init();
+            }
+
+            // Connect to the legacy API
+            VConsole.setImplementation(window);
+
+            Handler errorNotificationHandler = GWT
+                    .create(ErrorNotificationHandler.class);
+            Logger.getLogger("").addHandler(errorNotificationHandler);
+        }
+
+        if (LogConfiguration.loggingIsEnabled()) {
+            GWT.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+
+                @Override
+                public void onUncaughtException(Throwable e) {
+                    /*
+                     * If the debug window is not enabled (?debug), this will
+                     * not show anything to normal users. "a1 is not an object"
+                     * style errors helps nobody, especially end user. It does
+                     * not work tells just as much.
+                     */
+                    getLogger().log(Level.SEVERE, e.getMessage(), e);
+                }
+            });
+        }
         Profiler.leave("ApplicationConfiguration.onModuleLoad");
 
         if (SuperDevMode.enableBasedOnParameter()) {
@@ -677,6 +717,10 @@ public class ApplicationConfiguration implements EntryPoint {
      */
     public void setWidgetsetVersionSent() {
         widgetsetVersionSent = true;
+    }
+
+    private static final Logger getLogger() {
+        return Logger.getLogger(ApplicationConfiguration.class.getName());
     }
 
 }

@@ -28,6 +28,7 @@ public class LoginView extends Panel implements View {
         layout.addComponent(password);
 
         final Button login = new Button("Login", new Button.ClickListener() {
+            @Override
             public void buttonClick(ClickEvent event) {
                 Notification.show("Ok, let's pretend you're " + email);
 

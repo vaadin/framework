@@ -61,6 +61,23 @@ public interface Layout extends ComponentContainer, Serializable {
          */
         public Alignment getComponentAlignment(Component childComponent);
 
+        /**
+         * Sets the alignment used for new components added to this layout. The
+         * default is {@link Alignment#TOP_LEFT}.
+         * 
+         * @param defaultComponentAlignment
+         *            The new default alignment
+         */
+        public void setDefaultComponentAlignment(
+                Alignment defaultComponentAlignment);
+
+        /**
+         * Returns the alignment used for new components added to this layout
+         * 
+         * @return The default alignment
+         */
+        public Alignment getDefaultComponentAlignment();
+
     }
 
     /**

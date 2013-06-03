@@ -169,6 +169,7 @@ public class Parser implements org.w3c.css.sac.Parser {
      * @exception IOException the source can't be parsed.
      * @exception CSSException the source is not CSS valid.
      */    
+    // TODO required by original parser but not used by Vaadin?
     public void parseRule(InputSource source) 
 	    throws CSSException, IOException {
 	this.source = source;
@@ -534,6 +535,7 @@ TOKEN :
   | < LBRACKET  : "[" >
   | < RBRACKET  : "]" >
   | < ANY       : "*" >
+  | < MOD       : "%" >
   | < PARENT    : "&" >
   | < DOT       : "." >
   | < LPARAN    : "(" >
@@ -603,6 +605,7 @@ TOKEN :
   | <EXTEND_SYM         : "@extend">
   | <MOZ_DOCUMENT_SYM   : "@-moz-document">
   | <SUPPORTS_SYM       : "@supports">
+  | <CONTENT_SYM        : "@content">
 }
 
 < DEFAULT >
@@ -1186,7 +1189,8 @@ void styleRule() :
 	 start = true;
 	 documentHandler.startSelector(l);
      }
-     ( ifContentStatement() | controlDirective() | microsoftExtension() )*
+     // a CSS import here will not work
+     ( ifContentStatement() | controlDirective() | microsoftExtension() | importDeclaration() )*
      <RBRACE> (<S>)*
  } catch (ThrowedParseException e) {
      if (errorHandler != null) {
@@ -1531,7 +1535,7 @@ void controlDirective() :
 void ifContentStatement() :
 {}
 {
-    includeDirective() | media() | extendDirective() | styleRuleOrDeclarationOrNestedProperties() 
+    contentDirective() | includeDirective() | media() | extendDirective() | styleRuleOrDeclarationOrNestedProperties() 
     | keyframes() | LOOKAHEAD(variable()) variable() | listModifyDirective()
 }
 
@@ -1731,8 +1735,13 @@ void includeDirective() :
     (<S>)*
     (name = property()|name = variableName(){ name = "$"+name;}
          |(name = functionName() 
-           args = argValuelist()) <RPARAN>)(";"(<S>)*)+
+           args = argValuelist()) <RPARAN>)
+    ((";"(<S>)*)+
            {documentHandler.includeDirective(name, args);}
+    | <LBRACE> (<S>)* {documentHandler.startIncludeContentBlock(name);}
+      (styleRuleOrDeclarationOrNestedProperties())*
+      <RBRACE> (<S>)* {documentHandler.endIncludeContentBlock();}
+    )
 }
 
 String interpolation() :
@@ -1995,6 +2004,15 @@ void extendDirective() :
     {documentHandler.extendDirective(list);}
 }
 
+void contentDirective() : 
+{}
+{
+    <CONTENT_SYM>
+    (<S>)*
+    (";"(<S>)*)+
+    {documentHandler.contentDirective();}
+}
+
 JAVACODE
 Node importDirective(){
     return null;
@@ -2215,12 +2233,40 @@ boolean guarded() :
 LexicalUnitImpl operator(LexicalUnitImpl prev) :
 {Token n;}
 {
-n="/" ( <S> )* { return LexicalUnitImpl.createSlash(n.beginLine, 
-						       n.beginColumn,
-						       prev); }
-| n="," ( <S> )* { return LexicalUnitImpl.createComma(n.beginLine, 
-							 n.beginColumn,
-							 prev); }
+/* (comments copied from basic_arithmetics.scss)
+*supports:
+* 1. standard arithmetic operations (+, -, *, /, %)
+* 2. / is treated as css operator, unless one of its operands is variable or there is another binary arithmetic operator
+*limits:
+* 1. cannot mix arithmetic and css operations, e.g. "margin: 1px + 3px 2px" will fail
+* 2. space between add and minus operator and their following operand is mandatory. e.g. "1 + 2" is valid, "1+2" is not
+* 3. parenthesis is not supported now.  
+*/
+n="," ( <S> )* { return LexicalUnitImpl.createComma(n.beginLine, 
+            n.beginColumn,
+            prev); }
+|n="/" ( <S> )* { return LexicalUnitImpl.createSlash(n.beginLine, 
+            n.beginColumn,
+            prev); }
+| n="*" ( <S> )* { return LexicalUnitImpl.createMultiply(n.beginLine,
+            n.beginColumn,
+            prev); }
+| n="%" ( <S> )* { return LexicalUnitImpl.createModulo(n.beginLine,
+            n.beginColumn,
+            prev); }
+/*
+* for '+', since it can be either a binary operator or an unary operator,
+* which is ambiguous. To avoid this, the binary operator '+' always has
+* a space before the following term. so '2+3' is not a valid binary expression,
+* but '2 + 3' is.  The same for '-' operator.
+*/
+
+| n="+" ( <S> )+{ return LexicalUnitImpl.createAdd(n.beginLine,
+        n.beginColumn,
+        prev); }
+| n="-" ( <S> )+{ return LexicalUnitImpl.createMinus(n.beginLine,
+        n.beginColumn,
+        prev); }
 }
 
 /**
@@ -2233,7 +2279,7 @@ LexicalUnitImpl expr() :
 }
 {
     first=term(null){ res = first; }
-    ( LOOKAHEAD(2) ( res=operator(res) )? res=term(res))*
+    ( LOOKAHEAD(2) ( LOOKAHEAD(2) res=operator(res) )? res=term(res))*
   { return first; }
 }
 
@@ -2903,7 +2949,7 @@ String skipAfterExpression() {
  * The following functions are useful for a DOM CSS implementation only and are
  * not part of the general CSS2 parser.
  */
-
+// TODO required by original parser but not used by Vaadin?
 void _parseRule() :
 {String ret = null;
 }

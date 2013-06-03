@@ -191,7 +191,6 @@ public class ComponentSizeValidator implements Serializable {
         }
 
         public void reportErrors(PrintWriter clientJSON,
-                AbstractCommunicationManager communicationManager,
                 PrintStream serverErrorStream) {
             clientJSON.write("{");
 
@@ -269,8 +268,7 @@ public class ComponentSizeValidator implements Serializable {
                     } else {
                         first = false;
                     }
-                    subError.reportErrors(clientJSON, communicationManager,
-                            serverErrorStream);
+                    subError.reportErrors(clientJSON, serverErrorStream);
                 }
                 clientJSON.write("]");
                 serverErrorStream.println("<< Sub erros");

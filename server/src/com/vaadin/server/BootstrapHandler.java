@@ -41,6 +41,7 @@ import org.jsoup.parser.Tag;
 
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.Version;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.ui.UI;
 
 /**
@@ -51,7 +52,14 @@ import com.vaadin.ui.UI;
  * @deprecated As of 7.0. Will likely change or be removed in a future version
  */
 @Deprecated
-public abstract class BootstrapHandler implements RequestHandler {
+public abstract class BootstrapHandler extends SynchronizedRequestHandler {
+
+    /**
+     * Parameter that is added to the UI init request if the session has already
+     * been restarted when generating the bootstrap HTML and ?restartApplication
+     * should thus be ignored when handling the UI init request.
+     */
+    public static final String IGNORE_RESTART_PARAM = "ignoreRestart";
 
     protected class BootstrapContext implements Serializable {
 
@@ -61,6 +69,7 @@ public abstract class BootstrapHandler implements RequestHandler {
         private String widgetsetName;
         private String themeName;
         private String appId;
+        private PushMode pushMode;
 
         public BootstrapContext(VaadinResponse response,
                 BootstrapFragmentResponse bootstrapResponse) {
@@ -98,6 +107,30 @@ public abstract class BootstrapHandler implements RequestHandler {
             return themeName;
         }
 
+        public PushMode getPushMode() {
+            if (pushMode == null) {
+                UICreateEvent event = new UICreateEvent(getRequest(),
+                        getUIClass());
+
+                pushMode = getBootstrapResponse().getUIProvider().getPushMode(
+                        event);
+                if (pushMode == null) {
+                    pushMode = getRequest().getService()
+                            .getDeploymentConfiguration().getPushMode();
+                }
+
+                if (pushMode.isEnabled()
+                        && !getRequest().getService().ensurePushAvailable()) {
+                    /*
+                     * Fall back if not supported (ensurePushAvailable will log
+                     * information to the developer the first time this happens)
+                     */
+                    pushMode = PushMode.DISABLED;
+                }
+            }
+            return pushMode;
+        }
+
         public String getAppId() {
             if (appId == null) {
                 appId = getRequest().getService().getMainDivId(getSession(),
@@ -113,10 +146,19 @@ public abstract class BootstrapHandler implements RequestHandler {
     }
 
     @Override
-    public boolean handleRequest(VaadinSession session, VaadinRequest request,
-            VaadinResponse response) throws IOException {
+    public boolean synchronizedHandleRequest(VaadinSession session,
+            VaadinRequest request, VaadinResponse response) throws IOException {
+        if (ServletPortletHelper.isAppRequest(request)) {
+            // We do not want to handle /APP requests here, instead let it fall
+            // through and produce a 404
+            return false;
+        }
 
         try {
+            // Update WebBrowser here only to make WebBrowser information
+            // available in init for LegacyApplications
+            session.getBrowser().updateRequestDetails(request);
+
             List<UIProvider> uiProviders = session.getUIProviders();
 
             UIClassSelectionEvent classSelectionEvent = new UIClassSelectionEvent(
@@ -241,11 +283,9 @@ public abstract class BootstrapHandler implements RequestHandler {
 
         /*
          * Enable Chrome Frame in all versions of IE if installed.
-         * 
-         * Claim IE10 support to avoid using compatibility mode.
          */
         head.appendElement("meta").attr("http-equiv", "X-UA-Compatible")
-                .attr("content", "IE=9;chrome=1");
+                .attr("content", "IE=10;chrome=1");
 
         String title = response.getUIProvider().getPageTitle(
                 new UICreateEvent(context.getRequest(), context.getUIClass()));
@@ -334,8 +374,8 @@ public abstract class BootstrapHandler implements RequestHandler {
         VaadinRequest request = context.getRequest();
 
         VaadinService vaadinService = request.getService();
-        String staticFileLocation = vaadinService
-                .getStaticFileLocation(request);
+        String vaadinLocation = vaadinService.getStaticFileLocation(request)
+                + "/VAADIN/";
 
         fragmentNodes
                 .add(new Element(Tag.valueOf("iframe"), "")
@@ -345,8 +385,14 @@ public abstract class BootstrapHandler implements RequestHandler {
                                 "position:absolute;width:0;height:0;border:0;overflow:hidden")
                         .attr("src", "javascript:false"));
 
-        String bootstrapLocation = staticFileLocation
-                + "/VAADIN/vaadinBootstrap.js";
+        if (context.getPushMode().isEnabled()) {
+            // Load client-side dependencies for push support
+            fragmentNodes.add(new Element(Tag.valueOf("script"), "").attr(
+                    "type", "text/javascript").attr("src",
+                    vaadinLocation + ApplicationConstants.VAADIN_PUSH_JS));
+        }
+
+        String bootstrapLocation = vaadinLocation + "vaadinBootstrap.js";
         fragmentNodes.add(new Element(Tag.valueOf("script"), "").attr("type",
                 "text/javascript").attr("src", bootstrapLocation));
         Element mainScriptTag = new Element(Tag.valueOf("script"), "").attr(
@@ -413,6 +459,12 @@ public abstract class BootstrapHandler implements RequestHandler {
         String themeName = context.getThemeName();
         if (themeName != null) {
             appConfig.put("theme", themeName);
+        }
+
+        // Ignore restartApplication that might be passed to UI init
+        if (request
+                .getParameter(VaadinService.URL_PARAMETER_RESTART_APPLICATION) != null) {
+            appConfig.put("extraParams", "&" + IGNORE_RESTART_PARAM + "=1");
         }
 
         JSONObject versionInfo = new JSONObject();

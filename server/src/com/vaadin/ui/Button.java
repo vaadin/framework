@@ -32,6 +32,7 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
+import com.vaadin.server.Resource;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.button.ButtonServerRpc;
 import com.vaadin.shared.ui.button.ButtonState;
@@ -578,6 +579,35 @@ public class Button extends AbstractComponent implements
     @Override
     protected ButtonState getState() {
         return (ButtonState) super.getState();
+    }
+
+    /**
+     * Sets the component's icon and alt text.
+     * 
+     * An alt text is shown when an image could not be loaded, and read by
+     * assisitve devices.
+     * 
+     * @param icon
+     *            the icon to be shown with the component's caption.
+     * @param iconAltText
+     *            String to use as alt text
+     */
+    public void setIcon(Resource icon, String iconAltText) {
+        super.setIcon(icon);
+        getState().iconAltText = iconAltText == null ? "" : iconAltText;
+    }
+
+    /**
+     * Returns the icon's alt text.
+     * 
+     * @return String with the alt text
+     */
+    public String getIconAlternateText() {
+        return getState().iconAltText;
+    }
+
+    public void setIconAlternateText(String iconAltText) {
+        getState().iconAltText = iconAltText;
     }
 
     /**

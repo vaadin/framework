@@ -134,6 +134,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
     /* Documentation copied from interface */
     @Override
     public void markAsDirty() {
+        assert getSession() == null || getSession().hasLock() : "Session must be locked when markAsDirty() is called";
         UI uI = getUI();
         if (uI != null) {
             uI.getConnectorTracker().markDirty(this);
@@ -218,6 +219,8 @@ public abstract class AbstractClientConnector implements ClientConnector,
      * @see #getState()
      */
     protected SharedState getState(boolean markAsDirty) {
+        assert getSession() == null || getSession().hasLock() : "Session must be locked when getState() is called";
+
         if (null == sharedState) {
             sharedState = createState();
         }
@@ -233,7 +236,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
 
     @Override
     public JSONObject encodeState() throws JSONException {
-        return AbstractCommunicationManager.encodeState(this, getState());
+        return LegacyCommunicationManager.encodeState(this, getState());
     }
 
     /**
@@ -574,7 +577,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
         }
 
         // Send detach event if the component have been connected to a window
-        if (getSession() != null) {
+        if (isAttached()) {
             detach();
         }
 
@@ -582,7 +585,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
         this.parent = parent;
 
         // Send attach event if connected to an application
-        if (getSession() != null) {
+        if (isAttached()) {
             attach();
         }
     }
@@ -590,6 +593,16 @@ public abstract class AbstractClientConnector implements ClientConnector,
     @Override
     public ClientConnector getParent() {
         return parent;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.server.ClientConnector#isAttached()
+     */
+    @Override
+    public boolean isAttached() {
+        return getSession() != null;
     }
 
     @Override
@@ -642,17 +655,22 @@ public abstract class AbstractClientConnector implements ClientConnector,
     @Override
     public boolean handleConnectorRequest(VaadinRequest request,
             VaadinResponse response, String path) throws IOException {
+        DownloadStream stream = null;
         String[] parts = path.split("/", 2);
         String key = parts[0];
 
-        ConnectorResource resource = (ConnectorResource) getResource(key);
-        if (resource != null) {
-            DownloadStream stream = resource.getStream();
-            stream.writeResponse(request, response);
-            return true;
-        } else {
-            return false;
+        getSession().lock();
+        try {
+            ConnectorResource resource = (ConnectorResource) getResource(key);
+            if (resource == null) {
+                return false;
+            }
+            stream = resource.getStream();
+        } finally {
+            getSession().unlock();
         }
+        stream.writeResponse(request, response);
+        return true;
     }
 
     /**

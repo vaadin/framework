@@ -28,9 +28,11 @@ public class TestAbstractApplicationServletStaticFilesLocation extends TestCase 
         // Workaround to avoid calling init and creating servlet config
         Field f = VaadinServlet.class.getDeclaredField("servletService");
         f.setAccessible(true);
-        f.set(servlet, new VaadinServletService(servlet,
+        VaadinServletService service = new VaadinServletService(servlet,
                 new DefaultDeploymentConfiguration(servlet.getClass(),
-                        new Properties())));
+                        new Properties()));
+        service.init();
+        f.set(servlet, service);
 
     }
 

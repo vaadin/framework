@@ -15,6 +15,8 @@
  */
 package com.vaadin.server;
 
+import com.vaadin.shared.communication.PushMode;
+
 /**
  * TODO Document me!
  * 
@@ -47,6 +49,13 @@ public interface Constants {
             + "in web.xml. The default of 5min will be used.\n"
             + "===========================================================";
 
+    static final String WARNING_PUSH_MODE_NOT_RECOGNIZED = "\n"
+            + "===========================================================\n"
+            + "WARNING: pushMode has been set to an unrecognized value\n"
+            + "in web.xml. The permitted values are \"disabled\", \"manual\",\n"
+            + "and \"automatic\". The default of \"disabled\" will be used.\n"
+            + "===========================================================";
+
     static final String WIDGETSET_MISMATCH_INFO = "\n"
             + "=================================================================\n"
             + "The widgetset in use does not seem to be built for the Vaadin\n"
@@ -56,6 +65,53 @@ public interface Constants {
             + " Widgetset version: %s\n"
             + "=================================================================";
 
+    static final String REQUIRED_ATMOSPHERE_VERSION = "1.0.13";
+
+    static final String INVALID_ATMOSPHERE_VERSION_WARNING = "\n"
+            + "=================================================================\n"
+            + "Vaadin depends on Atmosphere {0} but version {1} was found.\n"
+            + "This might cause compatibility problems if push is used.\n"
+            + "=================================================================";
+
+    static final String ATMOSPHERE_MISSING_ERROR = "\n"
+            + "=================================================================\n"
+            + "Atmosphere could not be loaded. When using push with Vaadin, the\n"
+            + "Atmosphere framework must be present on the classpath.\n"
+            + "If using a dependency management system, please add a dependency\n"
+            + "to vaadin-push.\n"
+            + "If managing dependencies manually, please make sure Atmosphere\n"
+            + REQUIRED_ATMOSPHERE_VERSION
+            + " is included on the classpath.\n"
+            + "Will fall back to using "
+            + PushMode.class.getSimpleName()
+            + "."
+            + PushMode.DISABLED.name()
+            + ".\n"
+            + "=================================================================";
+
+    static final String PUSH_NOT_SUPPORTED_ERROR = "\n"
+            + "=================================================================\n"
+            + "Push is not supported for {0}\n"
+            + "Will fall back to using "
+            + PushMode.class.getSimpleName()
+            + "."
+            + PushMode.DISABLED.name()
+            + ".\n"
+            + "=================================================================";
+
+    public static final String WARNING_LEGACY_PROPERTY_TOSTRING = "You are using toString() instead of getValue() to get the value for a Property of type {0}"
+            + ". This is strongly discouraged and only provided for backwards compatibility with Vaadin 6. "
+            + "To disable this warning message and retain the behavior, set the init parameter \""
+            + Constants.SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING
+            + "\" to \"true\". To disable the legacy functionality, set \""
+            + Constants.SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING
+            + "\" to false."
+            + " (Note that your debugger might call toString() and trigger this message).";
+
+    static final String WARNING_UNKNOWN_LEGACY_PROPERTY_TOSTRING_VALUE = "Unknown value '{0}' for parameter "
+            + Constants.SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING
+            + ". Supported values are 'false','warning','true'";
+
     static final String URL_PARAMETER_THEME = "theme";
 
     static final String SERVLET_PARAMETER_PRODUCTION_MODE = "productionMode";
@@ -63,7 +119,9 @@ public interface Constants {
     static final String SERVLET_PARAMETER_RESOURCE_CACHE_TIME = "resourceCacheTime";
     static final String SERVLET_PARAMETER_HEARTBEAT_INTERVAL = "heartbeatInterval";
     static final String SERVLET_PARAMETER_CLOSE_IDLE_SESSIONS = "closeIdleSessions";
+    static final String SERVLET_PARAMETER_PUSH_MODE = "pushMode";
     static final String SERVLET_PARAMETER_UI_PROVIDER = "UIProvider";
+    static final String SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING = "legacyPropertyToString";
 
     // Configurable parameter names
     static final String PARAMETER_VAADIN_RESOURCES = "Resources";

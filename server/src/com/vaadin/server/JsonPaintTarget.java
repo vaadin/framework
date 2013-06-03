@@ -18,6 +18,7 @@ package com.vaadin.server;
 
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.Writer;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -60,7 +61,7 @@ public class JsonPaintTarget implements PaintTarget {
 
     private boolean closed = false;
 
-    private final AbstractCommunicationManager manager;
+    private final LegacyCommunicationManager manager;
 
     private int changes = 0;
 
@@ -86,14 +87,13 @@ public class JsonPaintTarget implements PaintTarget {
      * @throws PaintException
      *             if the paint operation failed.
      */
-    public JsonPaintTarget(AbstractCommunicationManager manager,
-            PrintWriter outWriter, boolean cachingRequired)
-            throws PaintException {
+    public JsonPaintTarget(LegacyCommunicationManager manager,
+            Writer outWriter, boolean cachingRequired) throws PaintException {
 
         this.manager = manager;
 
         // Sets the target for UIDL writing
-        uidlBuffer = outWriter;
+        uidlBuffer = new PrintWriter(outWriter);
 
         // Initialize tag-writing
         mOpenTags = new Stack<String>();
@@ -386,10 +386,6 @@ public class JsonPaintTarget implements PaintTarget {
 
         if (customLayoutArgumentsOpen && "template".equals(name)) {
             getUsedResources().add("layouts/" + value + ".html");
-        }
-
-        if (name.equals("locale")) {
-            manager.requireLocale(value);
         }
 
     }
@@ -1007,7 +1003,7 @@ public class JsonPaintTarget implements PaintTarget {
         return manager.getTagForType(clientConnectorClass);
     }
 
-    Collection<Class<? extends ClientConnector>> getUsedClientConnectors() {
+    public Collection<Class<? extends ClientConnector>> getUsedClientConnectors() {
         return usedClientConnectors;
     }
 

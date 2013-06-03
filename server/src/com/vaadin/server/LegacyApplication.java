@@ -64,7 +64,7 @@ public abstract class LegacyApplication implements ErrorHandler {
         if (this.mainWindow != null) {
             throw new IllegalStateException("mainWindow has already been set");
         }
-        if (mainWindow.getSession() != null) {
+        if (mainWindow.isAttached()) {
             throw new IllegalStateException(
                     "mainWindow is attached to another application");
         }

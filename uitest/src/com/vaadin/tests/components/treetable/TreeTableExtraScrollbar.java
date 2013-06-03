@@ -49,6 +49,7 @@ public class TreeTableExtraScrollbar extends TestBase {
         button.setId("button");
         button.addClickListener(new ClickListener() {
 
+            @Override
             public void buttonClick(ClickEvent event) {
                 table.addItem(new TestObject("name 6-1", "value 6-1"));
                 table.addItem(new TestObject("name 6-2", "value 6-2"));
@@ -68,12 +69,14 @@ public class TreeTableExtraScrollbar extends TestBase {
     }
 
     private class EmptyColumnGenerator implements Table.ColumnGenerator {
+        @Override
         public Object generateCell(Table table, Object itemId, Object columnId) {
             return null;
         }
     }
 
     private class TypeColumnGenerator implements Table.ColumnGenerator {
+        @Override
         public Object generateCell(Table table, Object itemId, Object columnId) {
             if (itemId instanceof TestObject) {
                 return new Label(((TestObject) itemId).getValue());

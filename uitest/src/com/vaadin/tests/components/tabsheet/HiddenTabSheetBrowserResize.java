@@ -17,6 +17,7 @@ public class HiddenTabSheetBrowserResize extends TestBase {
 
         Button toggleButton = new Button("Toggle TabSheet",
                 new Button.ClickListener() {
+                    @Override
                     public void buttonClick(ClickEvent event) {
                         tabSheet.setVisible(!tabSheet.isVisible());
                     }

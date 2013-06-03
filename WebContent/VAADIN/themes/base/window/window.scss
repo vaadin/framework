@@ -38,6 +38,10 @@
 }
 .#{$primaryStyleName}-header {
 	font-weight: bold;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ie-user-select: none;
+	user-select: none;
 }
 /* A more specific selector to make sure padding isn't so easily overridden */
 div.#{$primaryStyleName}-header {
@@ -77,19 +81,36 @@ div.#{$primaryStyleName}-header {
 .#{$primaryStyleName} div.#{$primaryStyleName}-footer-noresize {
 	height: 0;
 }
-.#{$primaryStyleName}-resizebox-disabled {
+.#{$primaryStyleName}-resizebox-disabled,
+.#{$primaryStyleName}-restorebox-disabled,
+.#{$primaryStyleName}-maximizebox-disabled {
 	cursor: default;
 	display: none;
 }
-.#{$primaryStyleName}-closebox {
+.#{$primaryStyleName}-closebox,
+.#{$primaryStyleName}-restorebox,
+.#{$primaryStyleName}-maximizebox {
 	position: absolute;
 	top: 0;
 	right: 0;
 	width: 1em;
 	height: 1em;
-	background: red;
 	cursor: pointer;
 	overflow: hidden;
+}
+.#{$primaryStyleName}-maximizebox,
+.#{$primaryStyleName}-restorebox {
+	right: 1.1em;
+}
+
+.#{$primaryStyleName}-closebox {
+	background: red;
+}
+.#{$primaryStyleName}-maximizebox {
+	background: blue;
+}
+.#{$primaryStyleName}-restorebox {
+	background: yellow;
 }
 .#{$primaryStyleName}-modalitycurtain {
 	top: 0;

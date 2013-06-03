@@ -323,7 +323,11 @@ public class ResourceLoader {
         } else {
             ObjectElement element = Document.get().createObjectElement();
             element.setData(url);
-            element.setType("text/plain");
+            if (BrowserInfo.get().isChrome()) {
+                element.setType("text/cache");
+            } else {
+                element.setType("text/plain");
+            }
             element.setHeight("0px");
             element.setWidth("0px");
             return element;

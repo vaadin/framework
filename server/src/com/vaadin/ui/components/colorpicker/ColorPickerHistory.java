@@ -95,7 +95,7 @@ public class ColorPickerHistory extends CustomComponent implements
 
     @SuppressWarnings("unchecked")
     private ArrayBlockingQueue<Color> getColorHistory() {
-        if (getSession() != null) {
+        if (isAttached()) {
             Object colorHistory = getSession().getAttribute(
                     "colorPickerHistory");
             if (colorHistory instanceof ArrayBlockingQueue<?>) {
@@ -194,6 +194,7 @@ public class ColorPickerHistory extends CustomComponent implements
      * @param listener
      *            The listener
      */
+    @Override
     public void addColorChangeListener(ColorChangeListener listener) {
         addListener(ColorChangeEvent.class, listener, COLOR_CHANGE_METHOD);
     }
@@ -204,6 +205,7 @@ public class ColorPickerHistory extends CustomComponent implements
      * @param listener
      *            The listener
      */
+    @Override
     public void removeColorChangeListener(ColorChangeListener listener) {
         removeListener(ColorChangeEvent.class, listener);
     }

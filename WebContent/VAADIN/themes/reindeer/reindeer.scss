@@ -56,7 +56,10 @@ $line-height: normal;
 	@include reindeer-notification;
 	@include reindeer-panel;
 	@include reindeer-popupview;
-	@include reindeer-progressindicator;
+	@include reindeer-progressindicator(v-progressbar);
+	/* For legacy ProgressIndicator component */
+	@include reindeer-progressindicator(v-progressindicator);
+	
 	@include reindeer-select;
 	@include reindeer-slider;
 	@include reindeer-splitpanel;

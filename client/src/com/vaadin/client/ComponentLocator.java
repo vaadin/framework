@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.VCssLayout;
 import com.vaadin.client.ui.VGridLayout;
+import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.VTabsheetPanel;
 import com.vaadin.client.ui.VUI;
 import com.vaadin.client.ui.VWindow;
@@ -446,7 +447,10 @@ public class ComponentLocator {
             return null;
         }
         String elementId = w.getElement().getId();
-        if (elementId != null && !elementId.isEmpty()) {
+        if (elementId != null && !elementId.isEmpty()
+                && !elementId.startsWith("gwt-uid-")) {
+            // Use PID_S+id if the user has set an id but do not use it for auto
+            // generated id:s as these might not be consistent
             return "PID_S" + elementId;
         } else if (w instanceof VUI) {
             return "";
@@ -575,7 +579,12 @@ public class ComponentLocator {
                     // is always 0 which indicates the widget in the active tab
                     widgetPosition = 0;
                 }
-
+                if (w instanceof VOverlay
+                        && "VCalendarPanel".equals(widgetClassName)) {
+                    // Vaadin 7.1 adds a wrapper for datefield popups
+                    parent = (Iterable<?>) ((Iterable) parent).iterator()
+                            .next();
+                }
                 /*
                  * The new grid and ordered layotus do not contain
                  * ChildComponentContainer widgets. This is instead simulated by

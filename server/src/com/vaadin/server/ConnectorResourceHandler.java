@@ -16,6 +16,7 @@
 package com.vaadin.server;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.UI;
+import com.vaadin.util.CurrentInstance;
 
 public class ConnectorResourceHandler implements RequestHandler {
     // APP/connector/[uiid]/[cid]/[filename.xyz]
@@ -46,28 +48,38 @@ public class ConnectorResourceHandler implements RequestHandler {
             return false;
         }
         Matcher matcher = CONNECTOR_RESOURCE_PATTERN.matcher(requestPath);
-        if (matcher.matches()) {
-            String uiId = matcher.group(1);
-            String cid = matcher.group(2);
-            String key = matcher.group(3);
-            UI ui = session.getUIById(Integer.parseInt(uiId));
+        if (!matcher.matches()) {
+            return false;
+        }
+        String uiId = matcher.group(1);
+        String cid = matcher.group(2);
+        String key = matcher.group(3);
+
+        session.lock();
+        UI ui;
+        ClientConnector connector;
+        try {
+            ui = session.getUIById(Integer.parseInt(uiId));
             if (ui == null) {
                 return error(request, response,
                         "Ignoring connector request for no-existent root "
                                 + uiId);
             }
 
-            UI.setCurrent(ui);
-            VaadinSession.setCurrent(ui.getSession());
-
-            ClientConnector connector = ui.getConnectorTracker().getConnector(
-                    cid);
+            connector = ui.getConnectorTracker().getConnector(cid);
             if (connector == null) {
                 return error(request, response,
                         "Ignoring connector request for no-existent connector "
                                 + cid + " in root " + uiId);
             }
 
+        } finally {
+            session.unlock();
+        }
+
+        Map<Class<?>, CurrentInstance> oldInstances = CurrentInstance
+                .setCurrent(ui);
+        try {
             if (!connector.handleConnectorRequest(request, response, key)) {
                 return error(request, response, connector.getClass()
                         .getSimpleName()
@@ -75,20 +87,11 @@ public class ConnectorResourceHandler implements RequestHandler {
                         + connector.getConnectorId()
                         + ") did not handle connector request for " + key);
             }
-
-            return true;
-        } else if (requestPath.matches('/' + ApplicationConstants.APP_PATH
-                + "(/.*)?")) {
-            /*
-             * This should be the last request handler before we get to
-             * bootstrap logic. Prevent /APP requests from reaching bootstrap
-             * handlers to help protect the /APP name space for framework usage.
-             */
-            return error(request, response,
-                    "Returning 404 for /APP request not yet handled.");
-        } else {
-            return false;
+        } finally {
+            CurrentInstance.restoreInstances(oldInstances);
         }
+
+        return true;
     }
 
     private static boolean error(VaadinRequest request,

@@ -83,6 +83,7 @@ public class ButtonWithShortcutNotRendered extends AbstractTestUI {
 
             addValueChangeListener(new Property.ValueChangeListener() {
 
+                @Override
                 public void valueChange(
                         com.vaadin.data.Property.ValueChangeEvent event) {
                     final Item item = getItem(getValue());
@@ -162,6 +163,7 @@ public class ButtonWithShortcutNotRendered extends AbstractTestUI {
             }
         }
 
+        @Override
         public void buttonClick(ClickEvent event) {
             // NOP
         }

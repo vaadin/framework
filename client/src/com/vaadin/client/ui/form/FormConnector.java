@@ -231,4 +231,9 @@ public class FormConnector extends AbstractComponentContainerConnector
         // as a part of the actual layout
         return null;
     }
+
+    @Override
+    public boolean hasTooltip() {
+        return false;
+    }
 }

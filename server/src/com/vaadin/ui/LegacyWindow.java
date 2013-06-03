@@ -125,7 +125,7 @@ public class LegacyWindow extends UI {
     public void setName(String name) {
         this.name = name;
         // The name can not be changed in application
-        if (getSession() != null) {
+        if (isAttached()) {
             throw new IllegalStateException(
                     "Window name can not be changed while "
                             + "the window is in application");
