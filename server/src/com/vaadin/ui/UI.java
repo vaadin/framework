@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.logging.Logger;
@@ -32,6 +33,8 @@ import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.ClientConnector;
+import com.vaadin.server.ComponentSizeValidator;
+import com.vaadin.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.server.LocaleService;
 import com.vaadin.server.Page;
 import com.vaadin.server.PaintException;
@@ -46,6 +49,7 @@ import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.communication.PushMode;
+import com.vaadin.shared.ui.ui.DebugWindowClientRpc;
 import com.vaadin.shared.ui.ui.DebugWindowServerRpc;
 import com.vaadin.shared.ui.ui.ScrollClientRpc;
 import com.vaadin.shared.ui.ui.UIClientRpc;
@@ -173,6 +177,32 @@ public abstract class UI extends AbstractSingleComponentContainer implements
                     .getDebugInformation((ClientConnector) connector);
             getLogger().info(info);
         }
+
+        @Override
+        public void analyzeLayouts() {
+            // TODO Move to client side
+            List<InvalidLayout> invalidSizes = ComponentSizeValidator
+                    .validateLayouts(UI.this);
+            StringBuilder json = new StringBuilder();
+            json.append("{\"invalidLayouts\":");
+            json.append("[");
+
+            if (invalidSizes != null) {
+                boolean first = true;
+                for (InvalidLayout invalidSize : invalidSizes) {
+                    if (!first) {
+                        json.append(",");
+                    } else {
+                        first = false;
+                    }
+                    invalidSize.reportErrors(json, System.err);
+                }
+            }
+            json.append("]}");
+            getRpcProxy(DebugWindowClientRpc.class).reportLayoutProblems(
+                    json.toString());
+        }
+
     };
 
     /**

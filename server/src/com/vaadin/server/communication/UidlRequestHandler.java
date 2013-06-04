@@ -86,13 +86,6 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
         repaintAll = (request
                 .getParameter(ApplicationConstants.URL_PARAMETER_REPAINT_ALL) != null);
 
-        boolean analyzeLayouts = false;
-        if (repaintAll) {
-            // analyzing can be done only with repaintAll
-            analyzeLayouts = (request
-                    .getParameter(ApplicationConstants.PARAM_ANALYZE_LAYOUTS) != null);
-        }
-
         StringWriter stringWriter = new StringWriter();
 
         try {
@@ -102,8 +95,7 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
                 session.getCommunicationManager().repaintAll(uI);
             }
 
-            writeUidl(request, response, uI, stringWriter, repaintAll,
-                    analyzeLayouts);
+            writeUidl(request, response, uI, stringWriter, repaintAll);
         } catch (JSONException e) {
             getLogger().log(Level.SEVERE, "Error writing JSON to response", e);
             // Refresh on client side
@@ -152,11 +144,11 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
     }
 
     private void writeUidl(VaadinRequest request, VaadinResponse response,
-            UI ui, Writer writer, boolean repaintAll, boolean analyzeLayouts)
-            throws IOException, JSONException {
+            UI ui, Writer writer, boolean repaintAll) throws IOException,
+            JSONException {
         openJsonMessage(writer, response);
 
-        new UidlWriter().write(ui, writer, repaintAll, analyzeLayouts, false);
+        new UidlWriter().write(ui, writer, repaintAll, false);
 
         closeJsonMessage(writer);
     }

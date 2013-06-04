@@ -123,7 +123,7 @@ public class AtmospherePushConnection implements PushConnection {
     protected void push(boolean async) throws IOException {
         Writer writer = new StringWriter();
         try {
-            new UidlWriter().write(getUI(), writer, false, false, async);
+            new UidlWriter().write(getUI(), writer, false, async);
         } catch (JSONException e) {
             throw new IOException("Error writing UIDL", e);
         }

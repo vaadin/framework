@@ -53,6 +53,7 @@ import com.vaadin.client.Paintable;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.ValueMap;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
@@ -69,6 +70,7 @@ import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
+import com.vaadin.shared.ui.ui.DebugWindowClientRpc;
 import com.vaadin.shared.ui.ui.DebugWindowServerRpc;
 import com.vaadin.shared.ui.ui.PageClientRpc;
 import com.vaadin.shared.ui.ui.PageState;
@@ -136,6 +138,19 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 });
             }
         });
+        registerRpc(DebugWindowClientRpc.class, new DebugWindowClientRpc() {
+
+            @Override
+            public void reportLayoutProblems(String json) {
+                VConsole.printLayoutProblems(getValueMap(json), getConnection());
+            }
+
+            private native ValueMap getValueMap(String json)
+            /*-{
+                return JSON.parse(json);
+            }-*/;
+        });
+
         getWidget().addResizeHandler(new ResizeHandler() {
             @Override
             public void onResize(ResizeEvent event) {
@@ -660,6 +675,15 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                     new MethodInvocation(getConnectorId(), UIServerRpc.class
                             .getName(), "poll"));
         }
+    }
+
+    /**
+     * Invokes the layout analyzer on the server
+     * 
+     * @since 7.1
+     */
+    public void analyzeLayouts() {
+        getRpcProxy(DebugWindowServerRpc.class).analyzeLayouts();
     }
 
     /**

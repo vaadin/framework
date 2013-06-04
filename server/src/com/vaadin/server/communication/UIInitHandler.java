@@ -273,7 +273,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
             if (session.getConfiguration().isXsrfProtectionEnabled()) {
                 writer.write(getSecurityKeyUIDL(session));
             }
-            new UidlWriter().write(uI, writer, true, false, false);
+            new UidlWriter().write(uI, writer, true, false);
             writer.write("}");
 
             String initialUIDL = writer.toString();

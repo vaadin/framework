@@ -71,9 +71,8 @@ public class UidlWriter implements Serializable {
      * @throws JSONException
      *             If the JSON serialization fails.
      */
-    public void write(UI ui, Writer writer, boolean repaintAll,
-            boolean analyzeLayouts, boolean async) throws IOException,
-            JSONException {
+    public void write(UI ui, Writer writer, boolean repaintAll, boolean async)
+            throws IOException, JSONException {
         VaadinSession session = ui.getSession();
 
         // Purge pending access calls as they might produce additional changes
@@ -161,8 +160,7 @@ public class UidlWriter implements Serializable {
             SystemMessages messages = ui.getSession().getService()
                     .getSystemMessages(ui.getLocale(), null);
             // TODO hilightedConnector
-            new MetadataWriter().write(ui, writer, repaintAll, analyzeLayouts,
-                    async, messages);
+            new MetadataWriter().write(ui, writer, repaintAll, async, messages);
             writer.write(", ");
 
             writer.write("\"resources\" : ");

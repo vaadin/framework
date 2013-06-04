@@ -16,8 +16,8 @@
 package com.vaadin.server;
 
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -40,6 +40,7 @@ import com.vaadin.ui.GridLayout.Area;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -190,14 +191,14 @@ public class ComponentSizeValidator implements Serializable {
             subErrors.add(error);
         }
 
-        public void reportErrors(PrintWriter clientJSON,
+        public void reportErrors(StringBuilder clientJSON,
                 PrintStream serverErrorStream) {
-            clientJSON.write("{");
+            clientJSON.append("{");
 
             Component parent = component.getParent();
             String paintableId = component.getConnectorId();
 
-            clientJSON.print("id:\"" + paintableId + "\"");
+            clientJSON.append("\"id\":\"" + paintableId + "\"");
 
             if (invalidHeight) {
                 Stack<ComponentInfo> attributes = null;
@@ -227,7 +228,7 @@ public class ComponentSizeValidator implements Serializable {
                     attributes = getHeightAttributes(component);
                 }
                 printServerError(msg, attributes, false, serverErrorStream);
-                clientJSON.print(",\"heightMsg\":\"" + msg + "\"");
+                clientJSON.append(",\"heightMsg\":\"" + msg + "\"");
             }
             if (invalidWidth) {
                 Stack<ComponentInfo> attributes = null;
@@ -255,25 +256,25 @@ public class ComponentSizeValidator implements Serializable {
                     msg = "A component with relative width needs a parent with defined width.";
                     attributes = getWidthAttributes(component);
                 }
-                clientJSON.print(",\"widthMsg\":\"" + msg + "\"");
+                clientJSON.append(",\"widthMsg\":\"" + msg + "\"");
                 printServerError(msg, attributes, true, serverErrorStream);
             }
             if (subErrors.size() > 0) {
                 serverErrorStream.println("Sub errors >>");
-                clientJSON.write(", \"subErrors\" : [");
+                clientJSON.append(", \"subErrors\" : [");
                 boolean first = true;
                 for (InvalidLayout subError : subErrors) {
                     if (!first) {
-                        clientJSON.print(",");
+                        clientJSON.append(",");
                     } else {
                         first = false;
                     }
                     subError.reportErrors(clientJSON, serverErrorStream);
                 }
-                clientJSON.write("]");
+                clientJSON.append("]");
                 serverErrorStream.println("<< Sub erros");
             }
-            clientJSON.write("}");
+            clientJSON.append("}");
         }
     }
 
@@ -671,6 +672,33 @@ public class ComponentSizeValidator implements Serializable {
 
     private static Logger getLogger() {
         return Logger.getLogger(ComponentSizeValidator.class.getName());
+    }
+
+    /**
+     * Validates the layout and returns a collection of errors
+     * 
+     * @since 7.1
+     * @param ui
+     *            The UI to validate
+     * @return A collection of errors. An empty collection if there are no
+     *         errors.
+     */
+    public static List<InvalidLayout> validateLayouts(UI ui) {
+        List<InvalidLayout> invalidRelativeSizes = ComponentSizeValidator
+                .validateComponentRelativeSizes(ui.getContent(),
+                        new ArrayList<ComponentSizeValidator.InvalidLayout>(),
+                        null);
+
+        // Also check any existing subwindows
+        if (ui.getWindows() != null) {
+            for (Window subWindow : ui.getWindows()) {
+                invalidRelativeSizes = ComponentSizeValidator
+                        .validateComponentRelativeSizes(subWindow.getContent(),
+                                invalidRelativeSizes, null);
+            }
+        }
+        return invalidRelativeSizes;
+
     }
 
 }

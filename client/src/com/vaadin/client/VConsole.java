@@ -15,7 +15,6 @@
  */
 package com.vaadin.client;
 
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -81,9 +80,7 @@ public class VConsole {
     }
 
     public static void printLayoutProblems(ValueMap meta,
-            ApplicationConnection applicationConnection,
-            Set<ComponentConnector> zeroHeightComponents,
-            Set<ComponentConnector> zeroWidthComponents) {
+            ApplicationConnection applicationConnection) {
         if (impl != null) {
             impl.meta(applicationConnection, meta);
         }

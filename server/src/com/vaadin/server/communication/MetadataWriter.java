@@ -17,16 +17,11 @@
 package com.vaadin.server.communication;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.Writer;
-import java.util.List;
 
-import com.vaadin.server.ComponentSizeValidator;
-import com.vaadin.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.server.SystemMessages;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.Window;
 
 /**
  * Serializes miscellaneous metadata to JSON.
@@ -60,26 +55,8 @@ public class MetadataWriter implements Serializable {
      *             If the serialization fails.
      * 
      */
-    public void write(UI ui, Writer writer, boolean repaintAll,
-            boolean analyzeLayouts, boolean async, SystemMessages messages)
-            throws IOException {
-
-        List<InvalidLayout> invalidComponentRelativeSizes = null;
-
-        if (analyzeLayouts) {
-            invalidComponentRelativeSizes = ComponentSizeValidator
-                    .validateComponentRelativeSizes(ui.getContent(), null, null);
-
-            // Also check any existing subwindows
-            if (ui.getWindows() != null) {
-                for (Window subWindow : ui.getWindows()) {
-                    invalidComponentRelativeSizes = ComponentSizeValidator
-                            .validateComponentRelativeSizes(
-                                    subWindow.getContent(),
-                                    invalidComponentRelativeSizes, null);
-                }
-            }
-        }
+    public void write(UI ui, Writer writer, boolean repaintAll, boolean async,
+            SystemMessages messages) throws IOException {
 
         writer.write("{");
 
@@ -87,23 +64,6 @@ public class MetadataWriter implements Serializable {
         if (repaintAll) {
             metaOpen = true;
             writer.write("\"repaintAll\":true");
-            if (analyzeLayouts) {
-                writer.write(", \"invalidLayouts\":");
-                writer.write("[");
-                if (invalidComponentRelativeSizes != null) {
-                    boolean first = true;
-                    for (InvalidLayout invalidLayout : invalidComponentRelativeSizes) {
-                        if (!first) {
-                            writer.write(",");
-                        } else {
-                            first = false;
-                        }
-                        invalidLayout.reportErrors(new PrintWriter(writer),
-                                System.err);
-                    }
-                }
-                writer.write("]");
-            }
         }
 
         if (async) {

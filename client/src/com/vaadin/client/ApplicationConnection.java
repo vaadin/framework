@@ -221,8 +221,6 @@ public class ApplicationConnection {
 
     private Date requestStartTime;
 
-    private boolean validatingLayouts = false;
-
     private final LayoutManager layoutManager;
 
     private final RpcManager rpcManager;
@@ -678,11 +676,12 @@ public class ApplicationConnection {
     /**
      * Requests an analyze of layouts, to find inconsistencies. Exclusively used
      * for debugging during development.
+     * 
+     * @deprecated as of 7.1. Replaced by {@link UIConnector#analyzeLayouts()}
      */
+    @Deprecated
     public void analyzeLayouts() {
-        String params = getRepaintAllParameters() + "&"
-                + ApplicationConstants.PARAM_ANALYZE_LAYOUTS + "=1";
-        makeUidlRequest("", params);
+        getUIConnector().analyzeLayouts();
     }
 
     /**
@@ -1358,9 +1357,6 @@ public class ApplicationConnection {
                     meta = json.getValueMap("meta");
                     if (meta.containsKey("repaintAll")) {
                         prepareRepaintAll();
-                        if (meta.containsKey("invalidLayouts")) {
-                            validatingLayouts = true;
-                        }
                     }
                     if (meta.containsKey("timedRedirect")) {
                         final ValueMap timedRedirect = meta
@@ -1460,17 +1456,6 @@ public class ApplicationConnection {
                                 error.getString("url"));
 
                         applicationRunning = false;
-                    }
-                    if (validatingLayouts) {
-                        Set<ComponentConnector> zeroHeightComponents = new HashSet<ComponentConnector>();
-                        Set<ComponentConnector> zeroWidthComponents = new HashSet<ComponentConnector>();
-                        findZeroSizeComponents(zeroHeightComponents,
-                                zeroWidthComponents, getUIConnector());
-                        VConsole.printLayoutProblems(meta,
-                                ApplicationConnection.this,
-                                zeroHeightComponents, zeroWidthComponents);
-                        validatingLayouts = false;
-
                     }
                     Profiler.leave("Error handling");
                 }
@@ -2224,28 +2209,6 @@ public class ApplicationConnection {
 
         };
         ApplicationConfiguration.runWhenDependenciesLoaded(c);
-    }
-
-    private void findZeroSizeComponents(
-            Set<ComponentConnector> zeroHeightComponents,
-            Set<ComponentConnector> zeroWidthComponents,
-            ComponentConnector connector) {
-        Widget widget = connector.getWidget();
-        ComputedStyle computedStyle = new ComputedStyle(widget.getElement());
-        if (computedStyle.getIntProperty("height") == 0) {
-            zeroHeightComponents.add(connector);
-        }
-        if (computedStyle.getIntProperty("width") == 0) {
-            zeroWidthComponents.add(connector);
-        }
-        List<ServerConnector> children = connector.getChildren();
-        for (ServerConnector serverConnector : children) {
-            if (serverConnector instanceof ComponentConnector) {
-                findZeroSizeComponents(zeroHeightComponents,
-                        zeroWidthComponents,
-                        (ComponentConnector) serverConnector);
-            }
-        }
     }
 
     private void loadStyleDependencies(JsArrayString dependencies) {

@@ -39,8 +39,6 @@ public class ApplicationConstants implements Serializable {
             + "://";
     public static final String UIDL_SECURITY_TOKEN_ID = "Vaadin-Security-Key";
 
-    public static final String PARAM_ANALYZE_LAYOUTS = "analyzeLayouts";
-
     @Deprecated
     public static final String UPDATE_VARIABLE_INTERFACE = "v";
     @Deprecated
