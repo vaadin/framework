@@ -103,6 +103,8 @@ public class VPopupView extends HTML implements Iterable<Widget> {
         });
 
         popup.setAnimationEnabled(true);
+
+        popup.setAutoHideOnHistoryEventsEnabled(false);
     }
 
     /** For internal use only. May be removed or replaced in the future. */
