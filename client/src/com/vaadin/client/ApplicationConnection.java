@@ -691,12 +691,12 @@ public class ApplicationConnection {
      * source code.
      * 
      * @param serverConnector
+     * @deprecated as of 7.1. Replaced by
+     *             {@link UIConnector#showServerDebugInfo(ServerConnector)}
      */
+    @Deprecated
     void highlightConnector(ServerConnector serverConnector) {
-        String params = getRepaintAllParameters() + "&"
-                + ApplicationConstants.PARAM_HIGHLIGHT_CONNECTOR + "="
-                + serverConnector.getConnectorId();
-        makeUidlRequest("", params);
+        getUIConnector().showServerDebugInfo(serverConnector);
     }
 
     /**

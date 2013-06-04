@@ -50,6 +50,7 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.Paintable;
+import com.vaadin.client.ServerConnector;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -68,6 +69,7 @@ import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
+import com.vaadin.shared.ui.ui.DebugWindowServerRpc;
 import com.vaadin.shared.ui.ui.PageClientRpc;
 import com.vaadin.shared.ui.ui.PageState;
 import com.vaadin.shared.ui.ui.ScrollClientRpc;
@@ -658,5 +660,19 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                     new MethodInvocation(getConnectorId(), UIServerRpc.class
                             .getName(), "poll"));
         }
+    }
+
+    /**
+     * Sends a request to the server to print details to console that will help
+     * the developer to locate the corresponding server-side connector in the
+     * source code.
+     * 
+     * @since 7.1
+     * @param serverConnector
+     *            the connector to locate
+     */
+    public void showServerDebugInfo(ServerConnector serverConnector) {
+        getRpcProxy(DebugWindowServerRpc.class).showServerDebugInfo(
+                serverConnector);
     }
 }

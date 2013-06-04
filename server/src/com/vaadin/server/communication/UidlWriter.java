@@ -162,7 +162,7 @@ public class UidlWriter implements Serializable {
                     .getSystemMessages(ui.getLocale(), null);
             // TODO hilightedConnector
             new MetadataWriter().write(ui, writer, repaintAll, analyzeLayouts,
-                    async, null, messages);
+                    async, messages);
             writer.write(", ");
 
             writer.write("\"resources\" : ");

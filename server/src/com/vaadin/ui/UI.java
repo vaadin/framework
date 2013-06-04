@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.concurrent.Future;
+import java.util.logging.Logger;
 
 import com.vaadin.event.Action;
 import com.vaadin.event.Action.Handler;
@@ -30,6 +31,7 @@ import com.vaadin.event.ActionManager;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.navigator.Navigator;
+import com.vaadin.server.ClientConnector;
 import com.vaadin.server.LocaleService;
 import com.vaadin.server.Page;
 import com.vaadin.server.PaintException;
@@ -40,15 +42,18 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.server.communication.PushConnection;
+import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.communication.PushMode;
+import com.vaadin.shared.ui.ui.DebugWindowServerRpc;
 import com.vaadin.shared.ui.ui.ScrollClientRpc;
 import com.vaadin.shared.ui.ui.UIClientRpc;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.shared.ui.ui.UIServerRpc;
 import com.vaadin.shared.ui.ui.UIState;
 import com.vaadin.ui.Component.Focusable;
+import com.vaadin.util.ConnectorHelper;
 import com.vaadin.util.CurrentInstance;
 
 /**
@@ -161,6 +166,14 @@ public abstract class UI extends AbstractSingleComponentContainer implements
              */
         }
     };
+    private DebugWindowServerRpc debugRpc = new DebugWindowServerRpc() {
+        @Override
+        public void showServerDebugInfo(Connector connector) {
+            String info = ConnectorHelper
+                    .getDebugInformation((ClientConnector) connector);
+            getLogger().info(info);
+        }
+    };
 
     /**
      * Timestamp keeping track of the last heartbeat of this UI. Updated to the
@@ -193,6 +206,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      */
     public UI(Component content) {
         registerRpc(rpc);
+        registerRpc(debugRpc);
         setSizeFull();
         setContent(content);
     }
@@ -1441,4 +1455,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         return localeService;
     }
 
+    private static Logger getLogger() {
+        return Logger.getLogger(UI.class.getName());
+    }
 }

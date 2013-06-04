@@ -22,7 +22,6 @@ import java.io.Serializable;
 import java.io.Writer;
 import java.util.List;
 
-import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.ComponentSizeValidator.InvalidLayout;
 import com.vaadin.server.SystemMessages;
@@ -54,9 +53,6 @@ public class MetadataWriter implements Serializable {
      * @param async
      *            True if this message is sent by the server asynchronously,
      *            false if it is a response to a client message.
-     * @param hilightedConnector
-     *            The connector that should be highlighted on the client or null
-     *            if none.
      * @param messages
      *            a {@link SystemMessages} containing client-side error
      *            messages.
@@ -65,8 +61,7 @@ public class MetadataWriter implements Serializable {
      * 
      */
     public void write(UI ui, Writer writer, boolean repaintAll,
-            boolean analyzeLayouts, boolean async,
-            ClientConnector hilightedConnector, SystemMessages messages)
+            boolean analyzeLayouts, boolean async, SystemMessages messages)
             throws IOException {
 
         List<InvalidLayout> invalidComponentRelativeSizes = null;
@@ -108,11 +103,6 @@ public class MetadataWriter implements Serializable {
                     }
                 }
                 writer.write("]");
-            }
-            if (hilightedConnector != null) {
-                writer.write(", \"hl\":\"");
-                writer.write(hilightedConnector.getConnectorId());
-                writer.write("\"");
             }
         }
 
