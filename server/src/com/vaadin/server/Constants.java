@@ -106,7 +106,8 @@ public interface Constants {
             + "\" to \"true\". To disable the legacy functionality, set \""
             + Constants.SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING
             + "\" to false."
-            + " (Note that your debugger might call toString() and trigger this message).";
+            + " (Note that your debugger might call toString() and trigger this message)."
+            + " To find out who is calling toString(), enable FINE level logging.";
 
     static final String WARNING_UNKNOWN_LEGACY_PROPERTY_TOSTRING_VALUE = "Unknown value '{0}' for parameter "
             + Constants.SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING

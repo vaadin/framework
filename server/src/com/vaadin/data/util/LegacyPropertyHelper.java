@@ -60,6 +60,11 @@ public class LegacyPropertyHelper implements Serializable {
         getLogger().log(Level.WARNING,
                 Constants.WARNING_LEGACY_PROPERTY_TOSTRING,
                 p.getClass().getName());
+        if (getLogger().isLoggable(Level.FINE)) {
+            getLogger().log(Level.FINE,
+                    "Strack trace for legacy toString to ease debugging",
+                    new Throwable());
+        }
     }
 
     /**
