@@ -19,8 +19,8 @@
  */
 package com.vaadin.server;
 
-import java.util.Collections;
 import java.util.Enumeration;
+import java.util.Properties;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -33,6 +33,15 @@ import javax.servlet.ServletContext;
 public class MockServletConfig implements ServletConfig {
 
     private ServletContext context = new MockServletContext();
+    private final Properties initParameters;
+
+    public MockServletConfig() {
+        this(new Properties());
+    }
+
+    public MockServletConfig(Properties initParameters) {
+        this.initParameters = initParameters;
+    }
 
     /*
      * (non-Javadoc)
@@ -61,7 +70,7 @@ public class MockServletConfig implements ServletConfig {
      */
     @Override
     public String getInitParameter(String name) {
-        return null;
+        return initParameters.getProperty(name);
     }
 
     /*
@@ -71,7 +80,7 @@ public class MockServletConfig implements ServletConfig {
      */
     @Override
     public Enumeration getInitParameterNames() {
-        return Collections.enumeration(Collections.EMPTY_LIST);
+        return initParameters.propertyNames();
     }
 
 }

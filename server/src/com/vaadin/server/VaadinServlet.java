@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -38,6 +39,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.annotations.VaadinServletConfiguration.InitParameterName;
 import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.server.communication.ServletUIInitHandler;
 import com.vaadin.shared.JsonConstants;
@@ -65,6 +68,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
         CurrentInstance.clearAll();
         super.init(servletConfig);
         Properties initParameters = new Properties();
+
+        readConfigurationAnnotation(initParameters);
 
         // Read default parameters from server.xml
         final ServletContext context = servletConfig.getServletContext();
@@ -94,6 +99,39 @@ public class VaadinServlet extends HttpServlet implements Constants {
         servletInitialized();
 
         CurrentInstance.clearAll();
+    }
+
+    private void readConfigurationAnnotation(Properties initParameters)
+            throws ServletException {
+        VaadinServletConfiguration configAnnotation = UIProvider
+                .getAnnotationFor(getClass(), VaadinServletConfiguration.class);
+        if (configAnnotation != null) {
+            Method[] methods = VaadinServletConfiguration.class
+                    .getDeclaredMethods();
+            for (Method method : methods) {
+                InitParameterName name = method
+                        .getAnnotation(InitParameterName.class);
+                assert name != null : "All methods declared in VaadinServletConfiguration should have a @InitParameterName annotation";
+
+                try {
+                    Object value = method.invoke(configAnnotation);
+
+                    String stringValue;
+                    if (value instanceof Class<?>) {
+                        stringValue = ((Class<?>) value).getName();
+                    } else {
+                        stringValue = value.toString();
+                    }
+
+                    initParameters.setProperty(name.value(), stringValue);
+                } catch (Exception e) {
+                    // This should never happen
+                    throw new ServletException(
+                            "Could not read @VaadinServletConfiguration value "
+                                    + method.getName(), e);
+                }
+            }
+        }
     }
 
     protected void servletInitialized() throws ServletException {
