@@ -19,6 +19,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.IFrameElement;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.BrowserInfo;
 
 public class VBrowserFrame extends Widget {
 
@@ -133,5 +134,24 @@ public class VBrowserFrame extends Widget {
         if (iframe != null) {
             iframe.setName(name);
         }
+    }
+
+    @Override
+    protected void onDetach() {
+        if (BrowserInfo.get().isIE()) {
+            // Force browser to fire unload event when component is detached
+            // from the view (IE doesn't do this automatically)
+            if (iframe != null) {
+                /*
+                 * src was previously set to javascript:false, but this was not
+                 * enough to overcome a bug when detaching an iframe with a pdf
+                 * loaded in IE9. about:blank seems to cause the adobe reader
+                 * plugin to unload properly before the iframe is removed. See
+                 * #7855
+                 */
+                iframe.setSrc("about:blank");
+            }
+        }
+        super.onDetach();
     }
 }
