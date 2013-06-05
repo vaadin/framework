@@ -263,9 +263,9 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     /**
      * Get the web browser associated with this session.
      * 
-     * @return
-     * @deprecated As of 7.0. Will likely change or be removed in a future
-     *             version
+     * @return the web browser object
+     * 
+     * @deprecated As of 7.0, use {@link Page#getWebBrowser()} instead.
      */
     @Deprecated
     public WebBrowser getBrowser() {
