@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8888/" />
+<title>New Test</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">New Test</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.components.combobox.ComboBoxParentDisable?restartApplication</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboBoxParentDisable::/VVerticalLayout[0]/Slot[1]/VFormLayout[0]/VFormLayout$VFormLayoutTable[0]/VFilterSelect[0]#button</td>
+	<td>6,16</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//div[@id='VAADIN_COMBOBOX_OPTIONLIST']/div/div[2]/table/tbody/tr[2]/td/span</td>
+	<td>Item 1</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboBoxParentDisable::/VVerticalLayout[0]/domChild[1]</td>
+	<td>371,22</td>
+</tr>
+<tr>
+	<td>assertElementNotPresent</td>
+	<td>//div[@id='VAADIN_COMBOBOX_OPTIONLIST']</td>
+	<td>Item 1</td>
+</tr>
+<!--Disable combobox-->
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboBoxParentDisable::/VVerticalLayout[0]/Slot[2]/VButton[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboBoxParentDisable::/VVerticalLayout[0]/Slot[1]/VFormLayout[0]/VFormLayout$VFormLayoutTable[0]/VFilterSelect[0]#button</td>
+	<td>8,12</td>
+</tr>
+<tr>
+	<td>assertElementNotPresent</td>
+	<td>//div[@id='VAADIN_COMBOBOX_OPTIONLIST']</td>
+	<td>Item 1</td>
+</tr>
+<!--Enable combobox-->
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboBoxParentDisable::/VVerticalLayout[0]/Slot[2]/VButton[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td></td>
+	<td>100</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboBoxParentDisable::/VVerticalLayout[0]/Slot[1]/VFormLayout[0]/VFormLayout$VFormLayoutTable[0]/VFilterSelect[0]#button</td>
+	<td>8,12</td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>//div[@id='VAADIN_COMBOBOX_OPTIONLIST']</td>
+	<td>Item 1</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboBoxParentDisable::/VVerticalLayout[0]/domChild[1]</td>
+	<td>371,22</td>
+</tr>
+<!--Disable parent-->
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboBoxParentDisable::/VVerticalLayout[0]/Slot[3]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboBoxParentDisable::/VVerticalLayout[0]/Slot[1]/VFormLayout[0]/VFormLayout$VFormLayoutTable[0]/VFilterSelect[0]#button</td>
+	<td>8,12</td>
+</tr>
+<tr>
+	<td>assertElementNotPresent</td>
+	<td>//div[@id='VAADIN_COMBOBOX_OPTIONLIST']</td>
+	<td>Item 1</td>
+</tr>
+<!--Enable parent-->
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboBoxParentDisable::/VVerticalLayout[0]/Slot[3]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td></td>
+	<td>100</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboBoxParentDisable::/VVerticalLayout[0]/Slot[1]/VFormLayout[0]/VFormLayout$VFormLayoutTable[0]/VFilterSelect[0]#button</td>
+	<td>8,12</td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>//div[@id='VAADIN_COMBOBOX_OPTIONLIST']</td>
+	<td>Item 1</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentscomboboxComboBoxParentDisable::/VVerticalLayout[0]/domChild[1]</td>
+	<td>371,22</td>
+</tr>
+</tbody></table>
+</body>
+</html>
