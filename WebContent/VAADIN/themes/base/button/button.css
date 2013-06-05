@@ -18,7 +18,12 @@
 	-khtml-user-select: none;
 	-moz-user-select: none;
 	-ie-user-select: none;
-	user-select: none;
+	-webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;	
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-ms-box-sizing: border-box;
