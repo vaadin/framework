@@ -12,7 +12,7 @@ import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
 
-public class AbstractFieldDataSourceLocaleChange {
+public class AbsFieldDataSourceLocaleChange {
 
     private VaadinSession vaadinSession;
     private UI ui;

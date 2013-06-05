@@ -21,7 +21,7 @@ import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.TextField;
 
-public class AbstractFieldValueConversions extends TestCase {
+public class AbsFieldValueConversions extends TestCase {
 
     Person paulaBean = new Person("Paula", "Brilliant", "paula@brilliant.com",
             34, Sex.FEMALE, new Address("Paula street 1", 12345, "P-town",
