@@ -55,9 +55,10 @@ public class UIState extends TabIndexState {
         public PushMode mode = PushMode.DISABLED;
         public Map<String, String> parameters = new HashMap<String, String>();
         {
-            parameters.put(TRANSPORT_PARAM, Transport.DEFAULT.getIdentifier());
+            parameters
+                    .put(TRANSPORT_PARAM, Transport.WEBSOCKET.getIdentifier());
             parameters.put(FALLBACK_TRANSPORT_PARAM,
-                    Transport.DEFAULT_FALLBACK.getIdentifier());
+                    Transport.STREAMING.getIdentifier());
         }
     }
 

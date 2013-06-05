@@ -32,16 +32,6 @@ public enum Transport {
      */
     STREAMING("streaming");
 
-    /**
-     * The default transport mechanism for push
-     */
-    public static final Transport DEFAULT = Transport.WEBSOCKET;
-
-    /**
-     * The default fallback transport mechanism for push
-     */
-    public static final Transport DEFAULT_FALLBACK = Transport.STREAMING;
-
     private String identifier;
 
     private Transport(String identifier) {
