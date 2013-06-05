@@ -242,7 +242,7 @@ public class VButton extends FocusWidget implements Paintable, ClickHandler,
                 DOM.setCapture(getElement());
                 isCapturing = true;
                 // Prevent dragging (on some browsers);
-                // DOM.eventPreventDefault(event);
+                event.preventDefault();
                 if (BrowserInfo.get().isIE() || BrowserInfo.get().isOpera()) {
                     addStyleName(CLASSNAME_PRESSED);
                 }
