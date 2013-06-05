@@ -22,6 +22,7 @@ import com.google.gwt.dom.client.Style.WhiteSpace;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.Command;
@@ -285,4 +286,12 @@ public class VTextArea extends VTextField {
         }
         this.wordwrap = wordwrap;
     }
+
+    @Override
+    public void onKeyDown(KeyDownEvent event) {
+        // Overridden to avoid submitting TextArea value on enter in IE. This is
+        // another reason why widgets should inherit a common abstract
+        // class instead of directly each other.
+    }
+
 }

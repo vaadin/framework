@@ -50,9 +50,6 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         getWidget().paintableId = uidl.getId();
 
         getWidget().readonly = isReadOnly();
-        getWidget().enabled = isEnabled();
-
-        getWidget().tb.setEnabled(getWidget().enabled);
         getWidget().updateReadOnly();
 
         if (!isRealUpdate(uidl)) {
@@ -279,5 +276,12 @@ public class ComboBoxConnector extends AbstractFieldConnector implements
         if (widget.initDone) {
             widget.updateRootWidth();
         }
+    }
+
+    @Override
+    public void setWidgetEnabled(boolean widgetEnabled) {
+        super.setWidgetEnabled(widgetEnabled);
+        getWidget().enabled = widgetEnabled;
+        getWidget().tb.setEnabled(widgetEnabled);
     }
 }
