@@ -109,8 +109,7 @@ public class PushHandler implements AtmosphereHandler {
             resource.suspend();
 
             AtmospherePushConnection connection = new AtmospherePushConnection(
-                    ui);
-            connection.connect(resource);
+                    ui, resource);
 
             ui.setPushConnection(connection);
         }
@@ -305,12 +304,9 @@ public class PushHandler implements AtmosphereHandler {
     private static AtmospherePushConnection getConnectionForUI(UI ui) {
         PushConnection pushConnection = ui.getPushConnection();
         if (pushConnection instanceof AtmospherePushConnection) {
-            AtmospherePushConnection apc = (AtmospherePushConnection) pushConnection;
-            if (apc.isConnected()) {
-                return apc;
-            }
+            assert pushConnection.isConnected();
+            return (AtmospherePushConnection) pushConnection;
         }
-
         return null;
     }
 
@@ -374,11 +370,14 @@ public class PushHandler implements AtmosphereHandler {
      */
     private static void sendRefreshAndDisconnect(AtmosphereResource resource)
             throws IOException {
-        AtmospherePushConnection connection = new AtmospherePushConnection(null);
-        connection.connect(resource);
-        connection.sendMessage(VaadinService.createCriticalNotificationJSON(
-                null, null, null, null));
-        connection.disconnect();
+        AtmospherePushConnection connection = new AtmospherePushConnection(
+                null, resource);
+        try {
+            connection.sendMessage(VaadinService
+                    .createCriticalNotificationJSON(null, null, null, null));
+        } finally {
+            connection.disconnect();
+        }
     }
 
     private static final Logger getLogger() {

@@ -93,12 +93,13 @@ public class AtmospherePushConnection implements PushConnection {
     }
 
     private UI ui;
-    private transient AtmosphereResource resource;
-    private transient Future<String> outgoingMessage;
-    private transient FragmentedMessage incomingMessage;
+    private AtmosphereResource resource;
+    private Future<String> outgoingMessage;
+    private FragmentedMessage incomingMessage;
 
-    public AtmospherePushConnection(UI ui) {
+    public AtmospherePushConnection(UI ui, AtmosphereResource resource) {
         this.ui = ui;
+        this.resource = resource;
     }
 
     @Override
@@ -176,21 +177,6 @@ public class AtmospherePushConnection implements PushConnection {
         }
     }
 
-    /**
-     * Associates this connection with the given AtmosphereResource. If there is
-     * a push pending, commits it.
-     * 
-     * @param resource
-     *            The AtmosphereResource representing the push channel.
-     * @throws IOException
-     */
-    protected void connect(AtmosphereResource resource) throws IOException {
-        this.resource = resource;
-    }
-
-    /**
-     * Returns whether this connection is currently open.
-     */
     @Override
     public boolean isConnected() {
         return resource != null
@@ -215,6 +201,8 @@ public class AtmospherePushConnection implements PushConnection {
 
     @Override
     public void disconnect() {
+        assert isConnected();
+
         if (outgoingMessage != null) {
             // Wait for the last message to be sent before closing the
             // connection (assumes that futures are completed in order)
