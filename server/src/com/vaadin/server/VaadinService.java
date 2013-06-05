@@ -1584,8 +1584,7 @@ public abstract class VaadinService implements Serializable {
      * This protection is enabled by default, but it might need to be disabled
      * to allow a certain type of testing. For these cases, the check can be
      * disabled by setting the init parameter
-     * {@value Constants#SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION} to
-     * <code>true</code>.
+     * <code>disable-xsrf-protection</code> to <code>true</code>.
      * 
      * @see DeploymentConfiguration#isXsrfProtectionEnabled()
      * 
