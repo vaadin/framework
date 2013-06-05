@@ -22,19 +22,22 @@ public class TogglePush extends AbstractTestUI {
         updateCounter();
         addComponent(counterLabel);
 
-        setPushMode("disabled".equals(request.getParameter("push")) ? PushMode.DISABLED
-                : PushMode.AUTOMATIC);
+        getPushConfiguration()
+                .setPushMode(
+                        "disabled".equals(request.getParameter("push")) ? PushMode.DISABLED
+                                : PushMode.AUTOMATIC);
 
         CheckBox pushSetting = new CheckBox("Push enabled");
-        pushSetting.setValue(Boolean.valueOf(getPushMode().isEnabled()));
+        pushSetting.setValue(Boolean.valueOf(getPushConfiguration()
+                .getPushMode().isEnabled()));
         pushSetting.setImmediate(true);
         pushSetting.addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
                 if (event.getProperty().getValue() == Boolean.TRUE) {
-                    setPushMode(PushMode.AUTOMATIC);
+                    getPushConfiguration().setPushMode(PushMode.AUTOMATIC);
                 } else {
-                    setPushMode(PushMode.DISABLED);
+                    getPushConfiguration().setPushMode(PushMode.DISABLED);
                 }
             }
         });

@@ -902,7 +902,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
                 getService().runPendingAccessTasks(this);
 
                 for (UI ui : getUIs()) {
-                    if (ui.getPushMode() == PushMode.AUTOMATIC) {
+                    if (ui.getPushConfiguration().getPushMode() == PushMode.AUTOMATIC) {
                         ui.push();
                     }
                 }

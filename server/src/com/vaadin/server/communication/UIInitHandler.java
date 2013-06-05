@@ -209,7 +209,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
             pushMode = session.getService().getDeploymentConfiguration()
                     .getPushMode();
         }
-        ui.setPushMode(pushMode);
+        ui.getPushConfiguration().setPushMode(pushMode);
 
         // Set thread local here so it is available in init
         UI.setCurrent(ui);

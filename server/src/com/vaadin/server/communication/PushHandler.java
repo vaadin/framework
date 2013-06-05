@@ -171,7 +171,7 @@ public class PushHandler implements AtmosphereHandler {
     PushEventCallback disconnectCallback = new PushEventCallback() {
         @Override
         public void run(AtmosphereResource resource, UI ui) throws IOException {
-            PushMode pushMode = ui.getPushMode();
+            PushMode pushMode = ui.getPushConfiguration().getPushMode();
             AtmospherePushConnection pushConnection = getConnectionForUI(ui);
 
             String id = resource.uuid();

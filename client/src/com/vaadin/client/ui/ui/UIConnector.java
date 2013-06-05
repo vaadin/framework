@@ -644,8 +644,9 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             configurePolling();
         }
 
-        if (stateChangeEvent.hasPropertyChanged("pushMode")) {
-            getConnection().setPushEnabled(getState().pushMode.isEnabled());
+        if (stateChangeEvent.hasPropertyChanged("pushConfiguration")) {
+            getConnection().setPushEnabled(
+                    getState().pushConfiguration.mode.isEnabled());
         }
 
         if (stateChangeEvent.hasPropertyChanged("overlayContainerLabel")) {

@@ -48,7 +48,6 @@ import com.vaadin.server.communication.PushConnection;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.MouseEventDetails;
-import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.DebugWindowClientRpc;
 import com.vaadin.shared.ui.ui.DebugWindowServerRpc;
 import com.vaadin.shared.ui.ui.ScrollClientRpc;
@@ -215,6 +214,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     private boolean closing = false;
 
     private TooltipConfiguration tooltipConfiguration = new TooltipConfigurationImpl(
+            this);
+    private PushConfiguration pushConfiguration = new PushConfigurationImpl(
             this);
 
     /**
@@ -1325,7 +1326,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
                 return;
             }
 
-            if (!getPushMode().isEnabled()) {
+            if (!getPushConfiguration().getPushMode().isEnabled()) {
                 throw new IllegalStateException("Push not enabled");
             }
 
@@ -1353,7 +1354,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      */
     public void setPushConnection(PushConnection pushConnection) {
         // If pushMode is disabled then there should never be a pushConnection
-        assert (getPushMode().isEnabled() || pushConnection == null);
+        assert (getPushConfiguration().getPushMode().isEnabled() || pushConnection == null);
 
         if (pushConnection == this.pushConnection) {
             return;
@@ -1402,51 +1403,13 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     }
 
     /**
-     * Returns the mode of bidirectional ("push") communication that is used in
-     * this UI.
+     * Retrieves the object used for configuring the push channel.
      * 
-     * @return The push mode.
+     * @since 7.1
+     * @return The instance used for push configuration
      */
-    public PushMode getPushMode() {
-        return getState(false).pushMode;
-    }
-
-    /**
-     * Sets the mode of bidirectional ("push") communication that should be used
-     * in this UI.
-     * <p>
-     * Add-on developers should note that this method is only meant for the
-     * application developer. An add-on should not set the push mode directly,
-     * rather instruct the user to set it.
-     * </p>
-     * 
-     * @param pushMode
-     *            The push mode to use.
-     * 
-     * @throws IllegalArgumentException
-     *             if the argument is null.
-     * @throws IllegalStateException
-     *             if push support is not available.
-     */
-    public void setPushMode(PushMode pushMode) {
-        if (pushMode == null) {
-            throw new IllegalArgumentException("Push mode cannot be null");
-        }
-
-        if (pushMode.isEnabled()) {
-            VaadinSession session = getSession();
-            if (session != null && !session.getService().ensurePushAvailable()) {
-                throw new IllegalStateException(
-                        "Push is not available. See previous log messages for more information.");
-            }
-        }
-
-        /*
-         * Client-side will open a new connection or disconnect the old
-         * connection, so there's nothing more to do on the server at this
-         * point.
-         */
-        getState().pushMode = pushMode;
+    public PushConfiguration getPushConfiguration() {
+        return pushConfiguration;
     }
 
     /**

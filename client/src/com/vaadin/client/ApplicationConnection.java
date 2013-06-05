@@ -95,6 +95,7 @@ import com.vaadin.shared.communication.LegacyChangeVariablesInvocation;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.ui.ui.UIConstants;
+import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
 
 /**
  * This is the client side communication "engine", managing client-server
@@ -3359,9 +3360,11 @@ public class ApplicationConnection {
      *            <code>false</code> to disable the push connection.
      */
     public void setPushEnabled(boolean enabled) {
+        final PushConfigurationState pushState = uIConnector.getState().pushConfiguration;
+
         if (enabled && push == null) {
             push = GWT.create(PushConnection.class);
-            push.init(this, new CommunicationErrorHandler() {
+            push.init(this, pushState, new CommunicationErrorHandler() {
                 @Override
                 public boolean onError(String details, int statusCode) {
                     showCommunicationError(details, statusCode);
@@ -3378,7 +3381,7 @@ public class ApplicationConnection {
                      * the old connection to disconnect, now is the right time
                      * to open a new connection
                      */
-                    if (uIConnector.getState().pushMode.isEnabled()) {
+                    if (pushState.mode.isEnabled()) {
                         setPushEnabled(true);
                     }
 

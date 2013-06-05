@@ -30,6 +30,7 @@ import com.vaadin.client.VConsole;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.PushConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
+import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
 
 /**
  * The default {@link PushConnection} implementation that uses Atmosphere for
@@ -133,14 +134,21 @@ public class AtmospherePushConnection implements PushConnection {
      * (non-Javadoc)
      * 
      * @see
-     * com.vaadin.client.communication.PushConenction#init(com.vaadin.client
-     * .ApplicationConnection)
+     * com.vaadin.client.communication.PushConnection#init(ApplicationConnection
+     * , Map<String, String>, CommunicationErrorHandler)
      */
     @Override
     public void init(final ApplicationConnection connection,
+            final PushConfigurationState pushConfiguration,
             CommunicationErrorHandler errorHandler) {
         this.connection = connection;
         this.errorHandler = errorHandler;
+
+        config = createConfig();
+        for (String param : pushConfiguration.parameters.keySet()) {
+            config.setStringValue(param,
+                    pushConfiguration.parameters.get(param));
+        }
 
         runWhenAtmosphereLoaded(new Command() {
             @Override
@@ -216,9 +224,6 @@ public class AtmospherePushConnection implements PushConnection {
     }
 
     protected AtmosphereConfiguration getConfig() {
-        if (config == null) {
-            config = createConfig();
-        }
         return config;
     }
 
