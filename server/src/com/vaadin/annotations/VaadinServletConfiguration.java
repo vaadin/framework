@@ -84,8 +84,7 @@ public @interface VaadinServletConfiguration {
 
     /**
      * The time resources can be cached in the browser, in seconds. The default
-     * value is
-     * {@value DefaultDeploymentConfiguration#DEFAULT_RESOURCE_CACHE_TIME}.
+     * value is 3600 seconds, i.e. one hour.
      * 
      * @return the resource cache time
      * 
@@ -96,8 +95,8 @@ public @interface VaadinServletConfiguration {
 
     /**
      * The number of seconds between heartbeat requests of a UI, or a
-     * non-positive number if heartbeat is disabled. The default value is
-     * {@value DefaultDeploymentConfiguration#DEFAULT_HEARTBEAT_INTERVAL}.
+     * non-positive number if heartbeat is disabled. The default value is 300
+     * seconds, i.e. 5 minutes.
      * 
      * @return the time between heartbeats
      * 
@@ -109,7 +108,7 @@ public @interface VaadinServletConfiguration {
     /**
      * Whether a session should be closed when all its open UIs have been idle
      * for longer than its configured maximum inactivity time. The default value
-     * is {@value DefaultDeploymentConfiguration#DEFAULT_CLOSE_IDLE_SESSIONS}.
+     * is <code>false</code>.
      * 
      * @return true if UIs and sessions receiving only heartbeat requests are
      *         eventually closed; false if heartbeat requests extend UI and
@@ -122,7 +121,7 @@ public @interface VaadinServletConfiguration {
 
     /**
      * The default widgetset to use for the servlet. The default value is
-     * {@value VaadinServlet#DEFAULT_WIDGETSET}.
+     * <code>com.vaadin.DefaultWidgetSet</code>.
      * 
      * @return the default widgetset name
      */
