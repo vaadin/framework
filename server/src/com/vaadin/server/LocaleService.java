@@ -19,6 +19,7 @@
  */
 package com.vaadin.server;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -37,7 +38,7 @@ import com.vaadin.ui.UI;
  * @since 7.1
  * @author Vaadin Ltd
  */
-public class LocaleService {
+public class LocaleService implements Serializable {
 
     private UI ui;
 

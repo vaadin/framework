@@ -306,7 +306,7 @@ public class Page implements Serializable {
         }
     }
 
-    private static interface InjectedStyle {
+    private static interface InjectedStyle extends Serializable {
         public void paint(int id, PaintTarget target) throws PaintException;
     }
 
