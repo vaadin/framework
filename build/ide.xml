@@ -14,7 +14,6 @@
     <property name="gwt.user.super.src" location="${gwt.basedir}/user/super" />
 
     <property name="work.dir" location="work" />
-    <property name="theme-version" location="9.9.9.INTERNAL-DEBUG-BUILD" />
     <echo>Using gwt files from ${gwt.user.classes} and
         ${gwt.dev.classes}</echo>
 
@@ -80,8 +79,6 @@
             <jvmarg value="-Djava.awt.headless=true" />
             <arg value="--theme" />
             <arg value="${theme}" />
-            <arg value="--theme-version" />
-            <arg value="${theme-version}" />
             <arg value="--theme-folder" />
             <arg value="WebContent/VAADIN/themes" />
         </java>

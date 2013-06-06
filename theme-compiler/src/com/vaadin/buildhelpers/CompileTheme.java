@@ -29,6 +29,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 
 import com.vaadin.sass.internal.ScssStylesheet;
+import com.vaadin.shared.Version;
 
 /**
  * Helper to combine css divided into separate per component dirs into one to
@@ -44,8 +45,6 @@ public class CompileTheme {
     public static void main(String[] args) throws IOException, ParseException {
         Options options = new Options();
         options.addOption("t", "theme", true, "the theme to compile");
-        options.addOption("v", "theme-version", true,
-                "the version to add to the compiled theme");
         options.addOption("f", "theme-folder", true,
                 "the folder containing the theme");
         CommandLineParser parser = new PosixParser();
@@ -58,11 +57,11 @@ public class CompileTheme {
         }
         String themeName = params.getOptionValue("theme");
         String themeFolder = params.getOptionValue("theme-folder");
-        String themeVersion = params.getOptionValue("theme-version");
 
         // Regular theme
         try {
-            processSassTheme(themeFolder, themeName, "styles", themeVersion);
+            processSassTheme(themeFolder, themeName, "styles",
+                    Version.getFullVersion());
             System.out.println("Compiling theme " + themeName
                     + " styles successful");
         } catch (Exception e) {
@@ -73,7 +72,7 @@ public class CompileTheme {
         // Legacy theme w/o .themename{} wrapping
         try {
             processSassTheme(themeFolder, themeName, "legacy-styles",
-                    themeVersion);
+                    Version.getFullVersion());
             System.out.println("Compiling theme " + themeName
                     + " legacy-styles successful");
         } catch (Exception e) {
@@ -87,11 +86,6 @@ public class CompileTheme {
             String variant, String version) throws Exception {
 
         StringBuffer cssHeader = new StringBuffer();
-
-        version = version.replaceAll("\\.", "_");
-        cssHeader.append(".v-theme-version:after {content:\"" + version
-                + "\";}\n");
-        cssHeader.append(".v-theme-version-" + version + " {display: none;}\n");
 
         String stylesCssDir = themeFolder + File.separator + themeName
                 + File.separator;
@@ -107,10 +101,9 @@ public class CompileTheme {
                     + " not found");
         }
         scss.compile();
-
         BufferedWriter out = new BufferedWriter(new FileWriter(stylesCssName));
         out.write(cssHeader.toString());
-        out.write(scss.toString());
+        out.write(scss.toString().replace("@version@", version));
         out.close();
 
         System.out.println("Compiled CSS to " + stylesCssName + " ("

@@ -58,7 +58,13 @@
 
         <copy todir="${theme.result.dir}">
             <fileset dir="${theme.source.dir}">
-                <include name="${theme}/**" />
+                <include name="${theme}/**/*.scss" />
+            </fileset>
+            <filterset refid="filter-vaadin.version"/>
+        </copy>
+        <copy todir="${theme.result.dir}">
+            <fileset dir="${theme.source.dir}">
+                <exclude name="${theme}/**/*.scss" />
             </fileset>
         </copy>
     </target>
@@ -84,8 +90,6 @@
             <arg value="${theme}" />
             <arg value="--theme-folder" />
             <arg value="${theme.result.dir}" />
-            <arg value="--theme-version" />
-            <arg value="${vaadin.version}" />
             <jvmarg value="-Xss8M" />
             <jvmarg value="-XX:MaxPermSize=256M" />
             <jvmarg value="-Djava.awt.headless=true" />

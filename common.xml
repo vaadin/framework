@@ -37,7 +37,10 @@
     <antcontrib:propertyregex property="vaadin.version.revision"
         input="${vaadin.version}" regexp="([^\.]*)\.([^\.]*)\.([^\.]*)"
         select="\3" />
-
+    <filterset begintoken="@" endtoken="@" id="filter-vaadin.version">
+    	<filter token="version" value="${vaadin.version}" />
+    </filterset>
+    
     <union id="empty.reference" />
 
     <property name="filtered.webcontent.dir"
