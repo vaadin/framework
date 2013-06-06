@@ -103,6 +103,7 @@
                     provided by the container -->
                 <exclude name="**/servlet-api*" />
                 <exclude name="**/portlet-api*" />
+                <exclude name="**/portal-service-*" />
                 <!-- Buildhelpers should not even get here ... -->
                 <exclude name="*buildhelpers*" />
                 <!-- Zip users should not need javadoc, sources or pom files -->
