@@ -363,6 +363,7 @@
             <batchtest fork="yes">
                 <fileset dir="${test.src}">
                     <exclude name="**/Abstract*" />
+                    <exclude name="**/Mock*" />
                     <exclude name="com/vaadin/tests/data/bean/*" />
                     <exclude name="com/vaadin/tests/util/*" />
                     <exclude name="**/VaadinClasses.java" />

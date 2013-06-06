@@ -4,10 +4,8 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 
-import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,16 +22,7 @@ public class TestAbstractApplicationServletStaticFilesLocation extends TestCase 
         super.setUp();
 
         servlet = new VaadinServlet();
-
-        // Workaround to avoid calling init and creating servlet config
-        Field f = VaadinServlet.class.getDeclaredField("servletService");
-        f.setAccessible(true);
-        VaadinServletService service = new VaadinServletService(servlet,
-                new DefaultDeploymentConfiguration(servlet.getClass(),
-                        new Properties()));
-        service.init();
-        f.set(servlet, service);
-
+        servlet.init(new MockServletConfig());
     }
 
     public void testWidgetSetLocation() throws Exception {
