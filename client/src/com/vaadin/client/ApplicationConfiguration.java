@@ -36,6 +36,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.vaadin.client.debug.internal.ErrorNotificationHandler;
 import com.vaadin.client.debug.internal.HierarchySection;
+import com.vaadin.client.debug.internal.InfoSection;
 import com.vaadin.client.debug.internal.LogSection;
 import com.vaadin.client.debug.internal.NetworkSection;
 import com.vaadin.client.debug.internal.ProfilerSection;
@@ -575,6 +576,7 @@ public class ApplicationConfiguration implements EntryPoint {
             if (LogConfiguration.loggingIsEnabled()) {
                 window.addSection((Section) GWT.create(LogSection.class));
             }
+            window.addSection((Section) GWT.create(InfoSection.class));
             window.addSection((Section) GWT.create(HierarchySection.class));
             window.addSection((Section) GWT.create(NetworkSection.class));
             if (Profiler.isEnabled()) {
