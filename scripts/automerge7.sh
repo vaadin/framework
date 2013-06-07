@@ -96,7 +96,7 @@ for commit in $pending
 do
         echo "Checking $commit..."
         mergeDirective=`git log -n 1 --format=%B $commit|grep "^Merge:"|sed "s/Merge: //"`
-        commitMsg=`git log -n 1 --format=oneline --abbrev-commit $commit`
+        commitMsg=`git log -n 1 --format=oneline --abbrev-commit $commit | sed 's/\\\\/\\\\\\\\/g'` #Multiple levels of unescaping, sed just changes \ to \\
         if [ "$mergeDirective" == "" ]
         then
                 if can_merge $commit
