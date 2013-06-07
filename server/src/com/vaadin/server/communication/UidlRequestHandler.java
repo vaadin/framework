@@ -75,7 +75,6 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
         }
 
         checkWidgetsetVersion(request);
-        String requestThemeName = request.getParameter("theme");
         // repaint requested or session has timed out and new one is created
         boolean repaintAll;
 
@@ -114,7 +113,6 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
             return true;
         } finally {
             stringWriter.close();
-            requestThemeName = null;
         }
 
         return UIInitHandler.commitJsonResponse(request, response,
