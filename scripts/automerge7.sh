@@ -1,8 +1,10 @@
 #!/bin/bash
 
+IGNORE=7.0
 FROM=7.1
 TO=master
 
+IGNORE_HEAD=origin/$IGNORE
 FROM_HEAD=origin/$FROM
 PUSH="origin HEAD:refs/for/$TO"
 
@@ -86,7 +88,7 @@ fi
 git checkout $TO
 git fetch
 
-pending=`git log $TO..$FROM_HEAD --reverse|grep "^commit "|sed "s/commit //"`
+pending=`git log $TO..$FROM_HEAD ^$IGNORE_HEAD --reverse|grep "^commit "|sed "s/commit //"`
 
 pendingCommit=
 pendingCommitMessage=
