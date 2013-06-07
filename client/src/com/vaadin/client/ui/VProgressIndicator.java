@@ -16,59 +16,19 @@
 
 package com.vaadin.client.ui;
 
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.HasEnabled;
-import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.shared.ui.progressindicator.ProgressIndicatorState;
 
-public class VProgressIndicator extends Widget implements HasEnabled {
-
-    public static final String CLASSNAME = "v-progressindicator";
-    Element wrapper = DOM.createDiv();
-    Element indicator = DOM.createDiv();
-
-    protected boolean indeterminate = false;
-    protected float state = 0.0f;
-    private boolean enabled;
+/**
+ * 
+ * @author Vaadin Ltd
+ * 
+ * @deprecated as of 7.1, renamed to VProgressBar
+ */
+@Deprecated
+public class VProgressIndicator extends VProgressBar {
 
     public VProgressIndicator() {
-        setElement(DOM.createDiv());
-        getElement().appendChild(wrapper);
-        setStyleName(CLASSNAME);
-        wrapper.appendChild(indicator);
-        indicator.setClassName(CLASSNAME + "-indicator");
-        wrapper.setClassName(CLASSNAME + "-wrapper");
+        super();
+        setStylePrimaryName(ProgressIndicatorState.PRIMARY_STYLE_NAME);
     }
-
-    public void setIndeterminate(boolean indeterminate) {
-        this.indeterminate = indeterminate;
-        setStyleName(CLASSNAME + "-indeterminate", indeterminate);
-    }
-
-    public void setState(float state) {
-        final int size = Math.round(100 * state);
-        indicator.getStyle().setWidth(size, Unit.PCT);
-    }
-
-    public boolean isIndeterminate() {
-        return indeterminate;
-    }
-
-    public float getState() {
-        return state;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    @Override
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-        setStyleName("v-disabled", !enabled);
-
-    }
-
 }

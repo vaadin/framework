@@ -8,7 +8,7 @@ import com.vaadin.data.Validator;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Field;
 
-public class AbstractFieldValidators extends TestCase {
+public class AbsFieldValidators extends TestCase {
 
     Field<Object> field = new AbstractField<Object>() {
         @Override

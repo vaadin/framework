@@ -46,8 +46,15 @@ public class FetchReleaseNotesTickets {
                 // This is the header
                 continue;
             }
+            String summary = fields[1];
+            if (summary.startsWith("\"") && summary.endsWith("\"")) {
+                // If a summary starts with " and ends with " then all quotes in
+                // the summary are encoded as double quotes
+                summary = summary.substring(1, summary.length() - 1);
+                summary = summary.replace("\"\"", "\"");
+            }
             System.out.println(ticketTemplate.replace("@ticket@", fields[0])
-                    .replace("@description@", fields[1]));
+                    .replace("@description@", summary));
         }
         urlStream.close();
     }

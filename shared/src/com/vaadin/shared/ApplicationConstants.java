@@ -39,9 +39,6 @@ public class ApplicationConstants implements Serializable {
             + "://";
     public static final String UIDL_SECURITY_TOKEN_ID = "Vaadin-Security-Key";
 
-    public static final String PARAM_ANALYZE_LAYOUTS = "analyzeLayouts";
-    public static final String PARAM_HIGHLIGHT_CONNECTOR = "highlightConnector";
-
     @Deprecated
     public static final String UPDATE_VARIABLE_INTERFACE = "v";
     @Deprecated
@@ -83,8 +80,4 @@ public class ApplicationConstants implements Serializable {
      * Name of the parameter used to transmit the CSRF token.
      */
     public static final String CSRF_TOKEN_PARAMETER = "v-csrfToken";
-
-    public static final int WEBSOCKET_BUFFER_SIZE = 65536;
-
-    public static final char WEBSOCKET_MESSAGE_DELIMITER = '|';
 }

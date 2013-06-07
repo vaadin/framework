@@ -151,10 +151,14 @@ public class ConverterUtil implements Serializable {
 
     /**
      * Checks if the given converter can handle conversion between the given
-     * presentation and model type
+     * presentation and model type. Does strict type checking and only returns
+     * true if the converter claims it can handle exactly the given types.
+     * 
+     * @see #canConverterPossiblyHandle(Converter, Class, Class)
      * 
      * @param converter
-     *            The converter to check
+     *            The converter to check. If this is null the result is always
+     *            false.
      * @param presentationType
      *            The presentation type
      * @param modelType
@@ -168,10 +172,48 @@ public class ConverterUtil implements Serializable {
             return false;
         }
 
-        if (!modelType.isAssignableFrom(converter.getModelType())) {
+        if (modelType != converter.getModelType()) {
             return false;
         }
-        if (!presentationType.isAssignableFrom(converter.getPresentationType())) {
+        if (presentationType != converter.getPresentationType()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if it possible that the given converter can handle conversion
+     * between the given presentation and model type somehow.
+     * 
+     * @param converter
+     *            The converter to check. If this is null the result is always
+     *            false.
+     * @param presentationType
+     *            The presentation type
+     * @param modelType
+     *            The model type
+     * @return true if the converter possibly support conversion between the
+     *         given presentation and model type, false otherwise
+     */
+    public static boolean canConverterPossiblyHandle(Converter<?, ?> converter,
+            Class<?> presentationType, Class<?> modelType) {
+        if (converter == null) {
+            return false;
+        }
+        Class<?> converterModelType = converter.getModelType();
+
+        if (!modelType.isAssignableFrom(converterModelType)
+                && !converterModelType.isAssignableFrom(modelType)) {
+            // model types are not compatible in any way
+            return false;
+        }
+
+        Class<?> converterPresentationType = converter.getPresentationType();
+        if (!presentationType.isAssignableFrom(converterPresentationType)
+                && !converterPresentationType
+                        .isAssignableFrom(presentationType)) {
+            // presentation types are not compatible in any way
             return false;
         }
 

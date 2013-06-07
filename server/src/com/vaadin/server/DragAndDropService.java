@@ -375,4 +375,14 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     @Override
     public void removeDetachListener(DetachListener listener) {
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.server.ClientConnector#isAttached()
+     */
+    @Override
+    public boolean isAttached() {
+        return true;
+    }
 }

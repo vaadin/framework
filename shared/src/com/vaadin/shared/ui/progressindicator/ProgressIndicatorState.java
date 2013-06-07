@@ -15,10 +15,13 @@
  */
 package com.vaadin.shared.ui.progressindicator;
 
-import com.vaadin.shared.AbstractFieldState;
+@Deprecated
+public class ProgressIndicatorState extends ProgressBarState {
+    public static final String PRIMARY_STYLE_NAME = "v-progressindicator";
 
-public class ProgressIndicatorState extends AbstractFieldState {
-    public boolean indeterminate = false;
+    {
+        primaryStyleName = PRIMARY_STYLE_NAME;
+    }
+
     public int pollingInterval = 1000;
-    public Float state = 0.0f;
 }

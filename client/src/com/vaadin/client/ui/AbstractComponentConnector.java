@@ -51,8 +51,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     private String lastKnownWidth = "";
     private String lastKnownHeight = "";
 
-    private boolean initialStateEvent = true;
-
     private boolean tooltipListenersAttached = false;
 
     /**
@@ -124,7 +122,7 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         if (stateChangeEvent.hasPropertyChanged("id")) {
             if (getState().id != null) {
                 getWidget().getElement().setId(getState().id);
-            } else if (!initialStateEvent) {
+            } else if (!stateChangeEvent.isInitialStateChange()) {
                 getWidget().getElement().removeAttribute("id");
             }
         }
@@ -174,8 +172,6 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             getConnection().getVTooltip().connectHandlersToWidget(getWidget());
         }
         Profiler.leave("AbstractComponentContainer.onStateChanged check tooltip");
-
-        initialStateEvent = false;
 
         Profiler.leave("AbstractComponentConnector.onStateChanged");
     }

@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -38,6 +39,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.annotations.VaadinServletConfiguration.InitParameterName;
 import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.server.communication.ServletUIInitHandler;
 import com.vaadin.shared.JsonConstants;
@@ -63,9 +66,10 @@ public class VaadinServlet extends HttpServlet implements Constants {
     public void init(javax.servlet.ServletConfig servletConfig)
             throws ServletException {
         CurrentInstance.clearAll();
-        setCurrent(this);
         super.init(servletConfig);
         Properties initParameters = new Properties();
+
+        readConfigurationAnnotation(initParameters);
 
         // Read default parameters from server.xml
         final ServletContext context = servletConfig.getServletContext();
@@ -97,6 +101,39 @@ public class VaadinServlet extends HttpServlet implements Constants {
         CurrentInstance.clearAll();
     }
 
+    private void readConfigurationAnnotation(Properties initParameters)
+            throws ServletException {
+        VaadinServletConfiguration configAnnotation = UIProvider
+                .getAnnotationFor(getClass(), VaadinServletConfiguration.class);
+        if (configAnnotation != null) {
+            Method[] methods = VaadinServletConfiguration.class
+                    .getDeclaredMethods();
+            for (Method method : methods) {
+                InitParameterName name = method
+                        .getAnnotation(InitParameterName.class);
+                assert name != null : "All methods declared in VaadinServletConfiguration should have a @InitParameterName annotation";
+
+                try {
+                    Object value = method.invoke(configAnnotation);
+
+                    String stringValue;
+                    if (value instanceof Class<?>) {
+                        stringValue = ((Class<?>) value).getName();
+                    } else {
+                        stringValue = value.toString();
+                    }
+
+                    initParameters.setProperty(name.value(), stringValue);
+                } catch (Exception e) {
+                    // This should never happen
+                    throw new ServletException(
+                            "Could not read @VaadinServletConfiguration value "
+                                    + method.getName(), e);
+                }
+            }
+        }
+    }
+
     protected void servletInitialized() throws ServletException {
         // Empty by default
     }
@@ -108,36 +145,23 @@ public class VaadinServlet extends HttpServlet implements Constants {
      * servlet is defined (see {@link InheritableThreadLocal}). In other cases,
      * (e.g. from background threads started in some other way), the current
      * servlet is not automatically defined.
+     * <p>
+     * The current servlet is derived from the current service using
+     * {@link VaadinService#getCurrent()}
      * 
      * @return the current Vaadin servlet instance if available, otherwise
      *         <code>null</code>
      * 
-     * @see #setCurrent(VaadinServlet)
-     * 
      * @since 7.0
      */
     public static VaadinServlet getCurrent() {
-        return CurrentInstance.get(VaadinServlet.class);
-    }
-
-    /**
-     * Sets the current Vaadin servlet. This method is used by the framework to
-     * set the current servlet whenever a new request is processed and it is
-     * cleared when the request has been processed.
-     * <p>
-     * The application developer can also use this method to define the current
-     * servlet outside the normal request handling, e.g. when initiating custom
-     * background threads.
-     * </p>
-     * 
-     * @param servlet
-     *            the Vaadin servlet to register as the current servlet
-     * 
-     * @see #getCurrent()
-     * @see InheritableThreadLocal
-     */
-    public static void setCurrent(VaadinServlet servlet) {
-        CurrentInstance.setInheritable(VaadinServlet.class, servlet);
+        VaadinService vaadinService = CurrentInstance.get(VaadinService.class);
+        if (vaadinService instanceof VaadinServletService) {
+            VaadinServletService vss = (VaadinServletService) vaadinService;
+            return vss.getServlet();
+        } else {
+            return null;
+        }
     }
 
     protected DeploymentConfiguration createDeploymentConfiguration(
@@ -179,7 +203,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return;
         }
         CurrentInstance.clearAll();
-        setCurrent(this);
 
         VaadinServletRequest vaadinRequest = createVaadinRequest(request);
         VaadinServletResponse vaadinResponse = createVaadinResponse(response);
@@ -188,8 +211,14 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
 
         if (isStaticResourceRequest(request)) {
-            serveStaticResources(request, response);
-            return;
+            // Define current servlet and service, but no request and response
+            getService().setCurrentInstances(null, null);
+            try {
+                serveStaticResources(request, response);
+                return;
+            } finally {
+                CurrentInstance.clearAll();
+            }
         }
         try {
             getService().handleRequest(vaadinRequest, vaadinResponse);

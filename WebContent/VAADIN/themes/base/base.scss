@@ -88,7 +88,10 @@ $line-height: normal;
 	@include base-orderedlayout;
 	@include base-panel;
 	@include base-popupview;
-	@include base-progressindicator;
+	@include base-progressindicator(v-progressbar);
+	/* For legacy ProgressIndicator component */
+	@include base-progressindicator(v-progressindicator);
+	
 	@include base-select;
 	@include base-shadow;
 	@include base-slider;

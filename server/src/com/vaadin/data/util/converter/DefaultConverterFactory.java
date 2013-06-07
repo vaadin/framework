@@ -87,6 +87,8 @@ public class DefaultConverterFactory implements ConverterFactory {
     protected Converter<Date, ?> createDateConverter(Class<?> sourceType) {
         if (Long.class.isAssignableFrom(sourceType)) {
             return new DateToLongConverter();
+        } else if (java.sql.Date.class.isAssignableFrom(sourceType)) {
+            return new DateToSqlDateConverter();
         } else {
             return null;
         }

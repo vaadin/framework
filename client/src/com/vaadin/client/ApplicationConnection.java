@@ -95,6 +95,7 @@ import com.vaadin.shared.communication.LegacyChangeVariablesInvocation;
 import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.communication.SharedState;
 import com.vaadin.shared.ui.ui.UIConstants;
+import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
 
 /**
  * This is the client side communication "engine", managing client-server
@@ -220,8 +221,6 @@ public class ApplicationConnection {
     private int sessionExpirationInterval;
 
     private Date requestStartTime;
-
-    private boolean validatingLayouts = false;
 
     private final LayoutManager layoutManager;
 
@@ -466,7 +465,8 @@ public class ApplicationConnection {
         Element overlayContainer = VOverlay.getOverlayContainer(this);
         Roles.getAlertRole().setAriaLiveProperty(overlayContainer,
                 LiveValue.ASSERTIVE);
-        setOverlayContainerLabel(getUIConnector().getState().overlayContainerLabel);
+        VOverlay.setOverlayContainerLabel(this,
+                getUIConnector().getState().overlayContainerLabel);
         Roles.getAlertRole().setAriaRelevantProperty(overlayContainer,
                 RelevantValue.ADDITIONS);
     }
@@ -677,11 +677,12 @@ public class ApplicationConnection {
     /**
      * Requests an analyze of layouts, to find inconsistencies. Exclusively used
      * for debugging during development.
+     * 
+     * @deprecated as of 7.1. Replaced by {@link UIConnector#analyzeLayouts()}
      */
+    @Deprecated
     public void analyzeLayouts() {
-        String params = getRepaintAllParameters() + "&"
-                + ApplicationConstants.PARAM_ANALYZE_LAYOUTS + "=1";
-        makeUidlRequest("", params);
+        getUIConnector().analyzeLayouts();
     }
 
     /**
@@ -690,12 +691,12 @@ public class ApplicationConnection {
      * source code.
      * 
      * @param serverConnector
+     * @deprecated as of 7.1. Replaced by
+     *             {@link UIConnector#showServerDebugInfo(ServerConnector)}
      */
+    @Deprecated
     void highlightConnector(ServerConnector serverConnector) {
-        String params = getRepaintAllParameters() + "&"
-                + ApplicationConstants.PARAM_HIGHLIGHT_CONNECTOR + "="
-                + serverConnector.getConnectorId();
-        makeUidlRequest("", params);
+        getUIConnector().showServerDebugInfo(serverConnector);
     }
 
     /**
@@ -1350,16 +1351,6 @@ public class ApplicationConnection {
                 handleUIDLDuration.logDuration(" * Loading widgets completed",
                         10);
 
-                Profiler.enter("Handling locales");
-                if (json.containsKey("locales")) {
-                    VConsole.log(" * Handling locales");
-                    // Store locale data
-                    JsArray<ValueMap> valueMapArray = json
-                            .getJSValueMapArray("locales");
-                    LocaleService.addLocales(valueMapArray);
-                }
-                Profiler.leave("Handling locales");
-
                 Profiler.enter("Handling meta information");
                 ValueMap meta = null;
                 if (json.containsKey("meta")) {
@@ -1367,9 +1358,6 @@ public class ApplicationConnection {
                     meta = json.getValueMap("meta");
                     if (meta.containsKey("repaintAll")) {
                         prepareRepaintAll();
-                        if (meta.containsKey("invalidLayouts")) {
-                            validatingLayouts = true;
-                        }
                     }
                     if (meta.containsKey("timedRedirect")) {
                         final ValueMap timedRedirect = meta
@@ -1398,6 +1386,17 @@ public class ApplicationConnection {
                 // Update states, do not fire events
                 JsArrayObject<StateChangeEvent> pendingStateChangeEvents = updateConnectorState(
                         json, createdConnectorIds);
+
+                /*
+                 * Doing this here so that locales are available also to the
+                 * connectors which get a state change event before the UI.
+                 */
+                Profiler.enter("Handling locales");
+                VConsole.log(" * Handling locales");
+                // Store locale data
+                LocaleService
+                        .addLocales(getUIConnector().getState().localeServiceState.localeData);
+                Profiler.leave("Handling locales");
 
                 // Update hierarchy, do not fire events
                 ConnectorHierarchyUpdateResult connectorHierarchyUpdateResult = updateConnectorHierarchy(json);
@@ -1458,17 +1457,6 @@ public class ApplicationConnection {
                                 error.getString("url"));
 
                         applicationRunning = false;
-                    }
-                    if (validatingLayouts) {
-                        Set<ComponentConnector> zeroHeightComponents = new HashSet<ComponentConnector>();
-                        Set<ComponentConnector> zeroWidthComponents = new HashSet<ComponentConnector>();
-                        findZeroSizeComponents(zeroHeightComponents,
-                                zeroWidthComponents, getUIConnector());
-                        VConsole.printLayoutProblems(meta,
-                                ApplicationConnection.this,
-                                zeroHeightComponents, zeroWidthComponents);
-                        validatingLayouts = false;
-
                     }
                     Profiler.leave("Error handling");
                 }
@@ -2222,28 +2210,6 @@ public class ApplicationConnection {
 
         };
         ApplicationConfiguration.runWhenDependenciesLoaded(c);
-    }
-
-    private void findZeroSizeComponents(
-            Set<ComponentConnector> zeroHeightComponents,
-            Set<ComponentConnector> zeroWidthComponents,
-            ComponentConnector connector) {
-        Widget widget = connector.getWidget();
-        ComputedStyle computedStyle = new ComputedStyle(widget.getElement());
-        if (computedStyle.getIntProperty("height") == 0) {
-            zeroHeightComponents.add(connector);
-        }
-        if (computedStyle.getIntProperty("width") == 0) {
-            zeroWidthComponents.add(connector);
-        }
-        List<ServerConnector> children = connector.getChildren();
-        for (ServerConnector serverConnector : children) {
-            if (serverConnector instanceof ComponentConnector) {
-                findZeroSizeComponents(zeroHeightComponents,
-                        zeroWidthComponents,
-                        (ComponentConnector) serverConnector);
-            }
-        }
     }
 
     private void loadStyleDependencies(JsArrayString dependencies) {
@@ -3276,14 +3242,6 @@ public class ApplicationConnection {
     Timer forceHandleMessage = new Timer() {
         @Override
         public void run() {
-            if (responseHandlingLocks.isEmpty()) {
-                /*
-                 * Timer fired but there's nothing to clear. This can happen
-                 * with IE8 as Timer.cancel is not always effective (see GWT
-                 * issue 8101).
-                 */
-                return;
-            }
             VConsole.log("WARNING: reponse handling was never resumed, forcibly removing locks...");
             responseHandlingLocks.clear();
             handlePendingMessages();
@@ -3402,9 +3360,17 @@ public class ApplicationConnection {
      *            <code>false</code> to disable the push connection.
      */
     public void setPushEnabled(boolean enabled) {
+        final PushConfigurationState pushState = uIConnector.getState().pushConfiguration;
+
         if (enabled && push == null) {
             push = GWT.create(PushConnection.class);
-            push.init(this);
+            push.init(this, pushState, new CommunicationErrorHandler() {
+                @Override
+                public boolean onError(String details, int statusCode) {
+                    showCommunicationError(details, statusCode);
+                    return true;
+                }
+            });
         } else if (!enabled && push != null && push.isActive()) {
             push.disconnect(new Command() {
                 @Override
@@ -3415,7 +3381,7 @@ public class ApplicationConnection {
                      * the old connection to disconnect, now is the right time
                      * to open a new connection
                      */
-                    if (uIConnector.getState().pushMode.isEnabled()) {
+                    if (pushState.mode.isEnabled()) {
                         setPushEnabled(true);
                     }
 
@@ -3433,18 +3399,5 @@ public class ApplicationConnection {
 
     public void handlePushMessage(String message) {
         handleJSONText(message, 200);
-    }
-
-    /**
-     * Set the label of the container element, where tooltip, notification and
-     * dialgs are added to.
-     * 
-     * @param overlayContainerLabel
-     *            label for the container
-     */
-    public void setOverlayContainerLabel(String overlayContainerLabel) {
-        Roles.getAlertRole().setAriaLabelProperty(
-                VOverlay.getOverlayContainer(this),
-                getUIConnector().getState().overlayContainerLabel);
     }
 }

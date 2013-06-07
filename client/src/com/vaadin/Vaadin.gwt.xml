@@ -12,13 +12,14 @@
     <inherits name="com.google.gwt.http.HTTP" />
 
     <inherits name="com.google.gwt.json.JSON" />
-    
+
     <inherits name="com.google.gwt.logging.Logging" />
-    <!-- Firebug handler is deprecated but for some reason still enabled by default -->
+    <!-- Firebug handler is deprecated but for some reason still enabled 
+        by default -->
     <set-property name="gwt.logging.firebugHandler" value="DISABLED" />
     <!-- Disable popup logging as we have our own popup logger -->
     <set-property name="gwt.logging.popupHandler" value="DISABLED" />
-    
+
     <inherits name="com.vaadin.VaadinBrowserSpecificOverrides" />
 
     <source path="client" />
@@ -40,21 +41,26 @@
         <when-type-assignable
             class="com.vaadin.client.metadata.ConnectorBundleLoader" />
     </generate-with>
-    
-    <replace-with class="com.vaadin.client.communication.AtmospherePushConnection">
+
+    <replace-with
+        class="com.vaadin.client.communication.AtmospherePushConnection">
         <when-type-is class="com.vaadin.client.communication.PushConnection" />
-    </replace-with>    
-    
-    <!-- Set vaadin.profiler to true to include profiling support in the module -->
+    </replace-with>
+
+    <!-- Set vaadin.profiler to true to include profiling support in the 
+        module -->
     <define-property name="vaadin.profiler" values="true,false" />
-    <set-property name="vaadin.profiler" value="false" />    
-    
+    <set-property name="vaadin.profiler" value="false" />
+
     <replace-with class="com.vaadin.client.Profiler.EnabledProfiler">
         <when-type-is class="com.vaadin.client.Profiler" />
         <when-property-is name="vaadin.profiler" value="true" />
-    </replace-with>    
+    </replace-with>
 
     <!-- Use the new cross site linker to get a nocache.js without document.write -->
     <add-linker name="xsiframe" />
+
+    <!-- Remove IE6/IE7 permutation as they are not supported -->
+    <set-property name="user.agent" value="ie8,ie9,gecko1_8,safari,opera" />
 
 </module>

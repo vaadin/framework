@@ -15,6 +15,8 @@
  */
 package com.vaadin.shared.util;
 
+import java.io.Serializable;
+
 /**
  * Misc internal utility methods used by both the server and the client package.
  * 
@@ -22,7 +24,7 @@ package com.vaadin.shared.util;
  * @since 7.1
  * 
  */
-public class SharedUtil {
+public class SharedUtil implements Serializable {
     /**
      * Checks if a and b are equals using {@link #equals(Object)}. Handles null
      * values as well. Does not ensure that objects are of the same type.

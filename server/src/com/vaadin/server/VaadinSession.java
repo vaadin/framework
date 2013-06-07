@@ -25,7 +25,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Queue;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
@@ -61,6 +66,68 @@ import com.vaadin.util.ReflectTools;
  */
 @SuppressWarnings("serial")
 public class VaadinSession implements HttpSessionBindingListener, Serializable {
+
+    /**
+     * Encapsulates a {@link Runnable} submitted using
+     * {@link VaadinSession#access(Runnable)}. This class is used internally by
+     * the framework and is not intended to be directly used by application
+     * developers.
+     * 
+     * @since 7.1
+     * @author Vaadin Ltd
+     */
+    public static class FutureAccess extends FutureTask<Void> {
+        /**
+         * Snapshot of all non-inheritable current instances at the time this
+         * object was created.
+         */
+        private final Map<Class<?>, CurrentInstance> instances = CurrentInstance
+                .getInstances(true);
+        private final VaadinSession session;
+
+        /**
+         * Creates an instance for the given runnable
+         * 
+         * @param session
+         *            the session to which the task belongs
+         * 
+         * @param runnable
+         *            the runnable to run when this task is purged from the
+         *            queue
+         */
+        public FutureAccess(VaadinSession session, Runnable runnable) {
+            super(runnable, null);
+            this.session = session;
+        }
+
+        @Override
+        public Void get() throws InterruptedException, ExecutionException {
+            /*
+             * Help the developer avoid programming patterns that cause
+             * deadlocks unless implemented very carefully. get(long, TimeUnit)
+             * does not have the same detection since a sensible timeout should
+             * avoid completely locking up the application.
+             * 
+             * Even though no deadlock could occur after the runnable has been
+             * run, the check is always done as the deterministic behavior makes
+             * it easier to detect potential problems.
+             */
+            VaadinService.verifyNoOtherSessionLocked(session);
+            return super.get();
+        }
+
+        /**
+         * Gets the current instance values that should be used when running
+         * this task.
+         * 
+         * @see CurrentInstance#restoreInstances(Map)
+         * 
+         * @return a map of current instances.
+         */
+        public Map<Class<?>, CurrentInstance> getCurrentInstances() {
+            return instances;
+        }
+    }
 
     /**
      * The name of the parameter that is by default used in e.g. web.xml to
@@ -130,6 +197,13 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     private transient Lock lock;
 
+    /*
+     * Pending tasks can't be serialized and the queue should be empty when the
+     * session is serialized as long as it doesn't happen while some other
+     * thread has the lock.
+     */
+    private transient final ConcurrentLinkedQueue<FutureAccess> pendingAccessQueue = new ConcurrentLinkedQueue<FutureAccess>();
+
     /**
      * Create a new service session tied to a Vaadin service
      * 
@@ -189,9 +263,9 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     /**
      * Get the web browser associated with this session.
      * 
-     * @return
-     * @deprecated As of 7.0. Will likely change or be removed in a future
-     *             version
+     * @return the web browser object
+     * 
+     * @deprecated As of 7.0, use {@link Page#getWebBrowser()} instead.
      */
     @Deprecated
     public WebBrowser getBrowser() {
@@ -820,11 +894,15 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     public void unlock() {
         assert hasLock();
         try {
+            /*
+             * Run pending tasks and push if the reentrant lock will actually be
+             * released by this unlock() invocation.
+             */
             if (((ReentrantLock) getLockInstance()).getHoldCount() == 1) {
-                // Only push if the reentrant lock will actually be released by
-                // this unlock() invocation.
+                getService().runPendingAccessTasks(this);
+
                 for (UI ui : getUIs()) {
-                    if (ui.getPushMode() == PushMode.AUTOMATIC) {
+                    if (ui.getPushConfiguration().getPushMode() == PushMode.AUTOMATIC) {
                         ui.push();
                     }
                 }
@@ -1063,23 +1141,26 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     /**
-     * Provides exclusive access to this session from outside a request handling
-     * thread.
+     * Locks this session and runs the provided Runnable right away.
      * <p>
-     * The given runnable is executed while holding the session lock to ensure
-     * exclusive access to this session. The session and related thread locals
-     * are set properly before executing the runnable.
+     * It is generally recommended to use {@link #access(Runnable)} instead of
+     * this method for accessing a session from a different thread as
+     * {@link #access(Runnable)} can be used while holding the lock of another
+     * session. To avoid causing deadlocks, this methods throws an exception if
+     * it is detected than another session is also locked by the current thread.
      * </p>
      * <p>
-     * RPC handlers for components inside this session do not need this method
-     * as the session is automatically locked by the framework during request
-     * handling.
-     * </p>
-     * <p>
-     * Note that calling this method while another session is locked by the
-     * current thread will cause an exception. This is to prevent deadlock
-     * situations when two threads have locked one session each and are both
-     * waiting for the lock for the other session.
+     * This method behaves differently than {@link #access(Runnable)} in some
+     * situations:
+     * <ul>
+     * <li>If the current thread is currently holding the lock of this session,
+     * {@link #accessSynchronously(Runnable)} runs the task right away whereas
+     * {@link #access(Runnable)} defers the task to a later point in time.</li>
+     * <li>If some other thread is currently holding the lock for this session,
+     * {@link #accessSynchronously(Runnable)} blocks while waiting for the lock
+     * to be available whereas {@link #access(Runnable)} defers the task to a
+     * later point in time.</li>
+     * </ul>
      * </p>
      * 
      * @param runnable
@@ -1088,35 +1169,87 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @throws IllegalStateException
      *             if the current thread holds the lock for another session
      * 
+     * @since 7.1
      * 
      * @see #lock()
      * @see #getCurrent()
-     * @see UI#access(Runnable)
+     * @see #access(Runnable)
+     * @see UI#accessSynchronously(Runnable)
      */
-    public void access(Runnable runnable) {
+    public void accessSynchronously(Runnable runnable) {
         VaadinService.verifyNoOtherSessionLocked(this);
 
         Map<Class<?>, CurrentInstance> old = null;
         lock();
         try {
-            old = CurrentInstance.setThreadLocals(this);
+            old = CurrentInstance.setCurrent(this);
             runnable.run();
         } finally {
             unlock();
             if (old != null) {
-                CurrentInstance.restoreThreadLocals(old);
+                CurrentInstance.restoreInstances(old);
             }
         }
 
     }
 
     /**
-     * @deprecated As of 7.1.0.beta1, use {@link #access(Runnable)} instead.
-     *             This method will be removed before the final 7.1.0 release.
+     * Provides exclusive access to this session from outside a request handling
+     * thread.
+     * <p>
+     * The given runnable is executed while holding the session lock to ensure
+     * exclusive access to this session. If this session is not locked, the lock
+     * will be acquired and the runnable is run right away. If this session is
+     * currently locked, the runnable will be run before that lock is released.
+     * </p>
+     * <p>
+     * RPC handlers for components inside this session do not need to use this
+     * method as the session is automatically locked by the framework during RPC
+     * handling.
+     * </p>
+     * <p>
+     * Please note that the runnable might be invoked on a different thread or
+     * later on the current thread, which means that custom thread locals might
+     * not have the expected values when the runnable is executed. Inheritable
+     * values in {@link CurrentInstance} will have the same values as when this
+     * method was invoked. {@link VaadinSession#getCurrent()} and
+     * {@link VaadinService#getCurrent()} are set according to this session
+     * before executing the runnable. Non-inheritable CurrentInstance values
+     * including {@link VaadinService#getCurrentRequest()} and
+     * {@link VaadinService#getCurrentResponse()} will not be defined.
+     * </p>
+     * <p>
+     * The returned future can be used to check for task completion and to
+     * cancel the task. To help avoiding deadlocks, {@link Future#get()} throws
+     * an exception if it is detected that the current thread holds the lock for
+     * some other session.
+     * </p>
+     * 
+     * @see #lock()
+     * @see #getCurrent()
+     * @see #accessSynchronously(Runnable)
+     * @see UI#access(Runnable)
+     * 
+     * @since 7.1
+     * 
+     * @param runnable
+     *            the runnable which accesses the session
+     * @return a future that can be used to check for task completion and to
+     *         cancel the task
      */
-    @Deprecated
-    public void runSafely(Runnable runnable) {
-        access(runnable);
+    public Future<Void> access(Runnable runnable) {
+        return getService().accessSession(this, runnable);
+    }
+
+    /**
+     * Gets the queue of tasks submitted using {@link #access(Runnable)}.
+     * 
+     * @since 7.1
+     * 
+     * @return the pending access queue
+     */
+    public Queue<FutureAccess> getPendingAccessQueue() {
+        return pendingAccessQueue;
     }
 
     /**

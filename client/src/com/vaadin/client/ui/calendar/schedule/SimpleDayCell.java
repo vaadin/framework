@@ -264,6 +264,7 @@ public class SimpleDayCell extends FocusableFlowPanel implements
         eventDiv.addMouseUpHandler(this);
         eventDiv.setCalendar(calendar);
         eventDiv.setEventIndex(e.getIndex());
+        eventDiv.setCalendarEvent(e);
 
         if (timeEvent) {
             eventDiv.setTimeSpecificEvent(true);

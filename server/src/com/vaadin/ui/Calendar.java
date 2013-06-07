@@ -45,6 +45,8 @@ import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.TargetDetails;
 import com.vaadin.server.KeyMapper;
+import com.vaadin.server.PaintException;
+import com.vaadin.server.PaintTarget;
 import com.vaadin.shared.ui.calendar.CalendarEventId;
 import com.vaadin.shared.ui.calendar.CalendarServerRpc;
 import com.vaadin.shared.ui.calendar.CalendarState;
@@ -114,7 +116,7 @@ public class Calendar extends AbstractComponent implements
         CalendarComponentEvents.RangeSelectNotifier,
         CalendarComponentEvents.EventResizeNotifier,
         CalendarEventProvider.EventSetChangeListener, DropTarget,
-        CalendarEditableEventProvider, Action.Container {
+        CalendarEditableEventProvider, Action.Container, LegacyComponent {
 
     /**
      * Calendar can use either 12 hours clock or 24 hours clock.
@@ -1840,6 +1842,33 @@ public class Calendar extends AbstractComponent implements
             for (Action.Handler ah : actionHandlers) {
                 ah.handleAction(action, this, events.get(eventIndex));
             }
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.server.VariableOwner#changeVariables(java.lang.Object,
+     * java.util.Map)
+     */
+    @Override
+    public void changeVariables(Object source, Map<String, Object> variables) {
+        /*
+         * Only defined to fulfill the LegacyComponent interface used for
+         * calendar drag & drop. No implementation required.
+         */
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.ui.LegacyComponent#paintContent(com.vaadin.server.PaintTarget)
+     */
+    @Override
+    public void paintContent(PaintTarget target) throws PaintException {
+        if (dropHandler != null) {
+            dropHandler.getAcceptCriterion().paint(target);
         }
     }
 }

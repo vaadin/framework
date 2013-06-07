@@ -16,6 +16,10 @@
 package com.vaadin.shared.ui.ui;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.TabIndexState;
@@ -24,8 +28,6 @@ public class UIState extends TabIndexState {
     public TooltipConfigurationState tooltipConfiguration = new TooltipConfigurationState();
     public LoadingIndicatorConfigurationState loadingIndicatorConfiguration = new LoadingIndicatorConfigurationState();
     public int pollInterval = -1;
-
-    public PushMode pushMode = PushMode.DISABLED;
 
     // Informing users of assistive devices, that the content of this container
     // is announced automatically and does not need to be navigated into
@@ -46,14 +48,56 @@ public class UIState extends TabIndexState {
         public int maxWidth = 500;
     }
 
+    public static class PushConfigurationState implements Serializable {
+        public static final String TRANSPORT_PARAM = "transport";
+        public static final String FALLBACK_TRANSPORT_PARAM = "fallbackTransport";
+
+        public PushMode mode = PushMode.DISABLED;
+        public Map<String, String> parameters = new HashMap<String, String>();
+        {
+            parameters.put(TRANSPORT_PARAM, Transport.DEFAULT.getIdentifier());
+            parameters.put(FALLBACK_TRANSPORT_PARAM,
+                    Transport.DEFAULT_FALLBACK.getIdentifier());
+        }
+    }
+
     /**
-     * State related to the {@link Page} class.
+     * State related to the Page class.
      */
     public PageState pageState = new PageState();
+    /**
+     * State related to the LocaleService class.
+     */
+    public LocaleServiceState localeServiceState = new LocaleServiceState();
+
+    /**
+     * Configuration for the push channel
+     */
+    public PushConfigurationState pushConfiguration = new PushConfigurationState();
 
     {
         primaryStyleName = "v-ui";
         // Default is 1 for legacy reasons
         tabIndex = 1;
     }
+
+    public static class LocaleServiceState implements Serializable {
+        public List<LocaleData> localeData = new ArrayList<LocaleData>();
+    }
+
+    public static class LocaleData implements Serializable {
+        public String name;
+        public String[] monthNames;
+        public String[] shortMonthNames;
+        public String[] shortDayNames;
+        public String[] dayNames;
+        public int firstDayOfWeek;
+        public String dateFormat;
+        public boolean twelveHourClock;
+        public String hourMinuteDelimiter;
+        public String am;
+        public String pm;
+
+    }
+
 }

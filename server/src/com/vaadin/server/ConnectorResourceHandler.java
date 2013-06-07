@@ -77,8 +77,8 @@ public class ConnectorResourceHandler implements RequestHandler {
             session.unlock();
         }
 
-        Map<Class<?>, CurrentInstance> oldThreadLocals = CurrentInstance
-                .setThreadLocals(ui);
+        Map<Class<?>, CurrentInstance> oldInstances = CurrentInstance
+                .setCurrent(ui);
         try {
             if (!connector.handleConnectorRequest(request, response, key)) {
                 return error(request, response, connector.getClass()
@@ -88,7 +88,7 @@ public class ConnectorResourceHandler implements RequestHandler {
                         + ") did not handle connector request for " + key);
             }
         } finally {
-            CurrentInstance.restoreThreadLocals(oldThreadLocals);
+            CurrentInstance.restoreInstances(oldInstances);
         }
 
         return true;

@@ -84,6 +84,13 @@ public class PushHandler implements AtmosphereHandler {
                 if (browser.isIE() && browser.getBrowserMajorVersion() == 8) {
                     resource.padding(LONG_PADDING);
                 }
+
+                // Must ensure that the streaming response contains
+                // "Connection: close", otherwise iOS 6 will wait for the
+                // response to this request before sending another request to
+                // the same server (as it will apparently try to reuse the same
+                // connection)
+                resource.getResponse().addHeader("Connection", "close");
             }
 
             String requestToken = resource.getRequest().getParameter(
@@ -164,7 +171,7 @@ public class PushHandler implements AtmosphereHandler {
     PushEventCallback disconnectCallback = new PushEventCallback() {
         @Override
         public void run(AtmosphereResource resource, UI ui) throws IOException {
-            PushMode pushMode = ui.getPushMode();
+            PushMode pushMode = ui.getPushConfiguration().getPushMode();
             AtmospherePushConnection pushConnection = getConnectionForUI(ui);
 
             String id = resource.uuid();
@@ -331,9 +338,9 @@ public class PushHandler implements AtmosphereHandler {
             writer.write(event.getMessage().toString());
 
             switch (resource.transport()) {
-            case SSE:
             case WEBSOCKET:
                 break;
+            case SSE:
             case STREAMING:
                 writer.flush();
                 break;

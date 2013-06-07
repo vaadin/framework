@@ -17,52 +17,40 @@
 package com.vaadin.util;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.vaadin.server.VaadinPortlet;
-import com.vaadin.server.VaadinPortletService;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinService;
-import com.vaadin.server.VaadinServlet;
-import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.UI;
 
 /**
- * Keeps track of various thread local instances used by the framework.
+ * Keeps track of various current instances for the current thread. All the
+ * instances are automatically cleared after handling a request from the client
+ * to avoid leaking memory. The inheritable values are also maintained when
+ * execution is moved to another thread, both when a new thread is created and
+ * when {@link VaadinSession#access(Runnable)} or {@link UI#access(Runnable)} is
+ * used.
  * <p>
  * Currently the framework uses the following instances:
  * </p>
  * <p>
- * Inheritable: {@link UI}, {@link VaadinPortlet}, {@link VaadinService},
- * {@link VaadinServlet}, {@link VaadinSession}.
+ * Inheritable: {@link UI}, {@link VaadinService}, {@link VaadinSession}.
  * </p>
  * <p>
  * Non-inheritable: {@link VaadinRequest}, {@link VaadinResponse}.
  * </p>
  * 
  * @author Vaadin Ltd
- * @version @VERSION@
  * @since 7.0.0
  */
 public class CurrentInstance implements Serializable {
     private final Object instance;
     private final boolean inheritable;
-
-    private static boolean portletAvailable = false;
-    {
-        try {
-            /*
-             * VaadinPortlet depends on portlet API which is available only if
-             * running in a portal.
-             */
-            portletAvailable = (VaadinPortlet.class.getName() != null);
-        } catch (Throwable t) {
-        }
-    }
 
     private static InheritableThreadLocal<Map<Class<?>, CurrentInstance>> instances = new InheritableThreadLocal<Map<Class<?>, CurrentInstance>>() {
         @Override
@@ -129,7 +117,9 @@ public class CurrentInstance implements Serializable {
 
     /**
      * Sets the current inheritable instance of the given type. A current
-     * instance that is inheritable will be available for child threads.
+     * instance that is inheritable will be available for child threads and in
+     * code run by {@link VaadinSession#access(Runnable)} and
+     * {@link UI#access(Runnable)}.
      * 
      * @see #set(Class, Object)
      * @see InheritableThreadLocal
@@ -184,13 +174,15 @@ public class CurrentInstance implements Serializable {
     }
 
     /**
-     * Restores the given thread locals to the given values. Note that this
-     * should only be used internally to restore Vaadin classes.
+     * Restores the given instances to the given values. Note that this should
+     * only be used internally to restore Vaadin classes.
+     * 
+     * @since 7.1
      * 
      * @param old
-     *            A Class -> Object map to set as thread locals
+     *            A Class -> CurrentInstance map to set as current instances
      */
-    public static void restoreThreadLocals(Map<Class<?>, CurrentInstance> old) {
+    public static void restoreInstances(Map<Class<?>, CurrentInstance> old) {
         for (Class c : old.keySet()) {
             CurrentInstance ci = old.get(c);
             set(c, ci.instance, ci.inheritable);
@@ -198,30 +190,66 @@ public class CurrentInstance implements Serializable {
     }
 
     /**
-     * Sets thread locals for the UI and all related classes
+     * Gets the currently set instances so that they can later be restored using
+     * {@link #restoreInstances(Map)}.
+     * 
+     * @since 7.1
+     * 
+     * @param onlyInheritable
+     *            <code>true</code> if only the inheritable instances should be
+     *            included; <code>false</code> to get all instances.
+     * @return a map containing the current instances
+     */
+    public static Map<Class<?>, CurrentInstance> getInstances(
+            boolean onlyInheritable) {
+        Map<Class<?>, CurrentInstance> map = instances.get();
+        if (map == null) {
+            return Collections.emptyMap();
+        } else {
+            Map<Class<?>, CurrentInstance> copy = new HashMap<Class<?>, CurrentInstance>();
+            for (Class<?> c : map.keySet()) {
+                CurrentInstance ci = map.get(c);
+                if (ci.inheritable || !onlyInheritable) {
+                    copy.put(c, ci);
+                }
+            }
+            return copy;
+        }
+    }
+
+    /**
+     * Sets current instances for the UI and all related classes. The previously
+     * defined values can be restored by passing the returned map to
+     * {@link #restoreInstances(Map)}.
+     * 
+     * @since 7.1
      * 
      * @param ui
      *            The UI
-     * @return A map containing the old values of the thread locals this method
+     * @return A map containing the old values of the instances that this method
      *         updated.
      */
-    public static Map<Class<?>, CurrentInstance> setThreadLocals(UI ui) {
+    public static Map<Class<?>, CurrentInstance> setCurrent(UI ui) {
         Map<Class<?>, CurrentInstance> old = new HashMap<Class<?>, CurrentInstance>();
         old.put(UI.class, new CurrentInstance(UI.getCurrent(), true));
         UI.setCurrent(ui);
-        old.putAll(setThreadLocals(ui.getSession()));
+        old.putAll(setCurrent(ui.getSession()));
         return old;
     }
 
     /**
-     * Sets thread locals for the {@link VaadinSession} and all related classes
+     * Sets current instances for the {@link VaadinSession} and all related
+     * classes. The previously defined values can be restored by passing the
+     * returned map to {@link #restoreInstances(Map)}.
+     * 
+     * @since 7.1
      * 
      * @param session
      *            The VaadinSession
-     * @return A map containing the old values of the thread locals this method
+     * @return A map containing the old values of the instances this method
      *         updated.
      */
-    public static Map<Class<?>, CurrentInstance> setThreadLocals(
+    public static Map<Class<?>, CurrentInstance> setCurrent(
             VaadinSession session) {
         Map<Class<?>, CurrentInstance> old = new HashMap<Class<?>, CurrentInstance>();
         old.put(VaadinSession.class,
@@ -235,18 +263,6 @@ public class CurrentInstance implements Serializable {
 
         VaadinSession.setCurrent(session);
         VaadinService.setCurrent(service);
-
-        if (service instanceof VaadinServletService) {
-            old.put(VaadinServlet.class,
-                    new CurrentInstance(VaadinServlet.getCurrent(), true));
-            VaadinServlet.setCurrent(((VaadinServletService) service)
-                    .getServlet());
-        } else if (portletAvailable && service instanceof VaadinPortletService) {
-            old.put(VaadinPortlet.class,
-                    new CurrentInstance(VaadinPortlet.getCurrent(), true));
-            VaadinPortlet.setCurrent(((VaadinPortletService) service)
-                    .getPortlet());
-        }
 
         return old;
     }

@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import com.vaadin.shared.communication.PushMode;
+import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.ui.UI;
 
 /**
@@ -45,5 +46,14 @@ public @interface Push {
      * @return the push mode to use
      */
     public PushMode value() default PushMode.AUTOMATIC;
+
+    /**
+     * Returns the transport type used for the push for the annotated UI. The
+     * default transport type when this annotation is present is
+     * {@link Transport#WEBSOCKET}.
+     * 
+     * @return the transport type to use
+     */
+    public Transport transport() default Transport.DEFAULT;
 
 }

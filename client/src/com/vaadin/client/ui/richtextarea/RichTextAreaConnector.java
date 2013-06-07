@@ -15,6 +15,8 @@
  */
 package com.vaadin.client.ui.richtextarea;
 
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.user.client.Event;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
@@ -24,11 +26,28 @@ import com.vaadin.client.ui.ShortcutActionHandler.BeforeShortcutActionListener;
 import com.vaadin.client.ui.VRichTextArea;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
+import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.RichTextArea;
 
 @Connect(value = RichTextArea.class, loadStyle = LoadStyle.LAZY)
 public class RichTextAreaConnector extends AbstractFieldConnector implements
         Paintable, BeforeShortcutActionListener {
+
+    /*
+     * Last value received from the server
+     */
+    private String cachedValue = "";
+
+    @Override
+    protected void init() {
+        getWidget().addBlurHandler(new BlurHandler() {
+
+            @Override
+            public void onBlur(BlurEvent event) {
+                flush();
+            }
+        });
+    }
 
     @Override
     public void updateFromUIDL(final UIDL uidl, ApplicationConnection client) {
@@ -36,21 +55,18 @@ public class RichTextAreaConnector extends AbstractFieldConnector implements
         getWidget().id = uidl.getId();
 
         if (uidl.hasVariable("text")) {
-            getWidget().currentValue = uidl.getStringVariable("text");
-            if (getWidget().rta.isAttached()) {
-                getWidget().rta.setHTML(getWidget().currentValue);
-            } else {
-                getWidget().html.setHTML(getWidget().currentValue);
+            String newValue = uidl.getStringVariable("text");
+            if (!SharedUtil.equals(newValue, cachedValue)) {
+                getWidget().setValue(newValue);
+                cachedValue = newValue;
             }
-        }
-        if (isRealUpdate(uidl)) {
-            getWidget().setEnabled(isEnabled());
         }
 
         if (!isRealUpdate(uidl)) {
             return;
         }
 
+        getWidget().setEnabled(isEnabled());
         getWidget().setReadOnly(isReadOnly());
         getWidget().immediate = getState().immediate;
         int newMaxLength = uidl.hasAttribute("maxLength") ? uidl
@@ -85,7 +101,13 @@ public class RichTextAreaConnector extends AbstractFieldConnector implements
 
     @Override
     public void flush() {
-        getWidget().synchronizeContentToServer();
+        if (getConnection() != null && getConnectorId() != null) {
+            final String html = getWidget().getSanitizedValue();
+            if (!html.equals(cachedValue)) {
+                getConnection().updateVariable(getConnectorId(), "text", html,
+                        getState().immediate);
+                getWidget().setValue(html);
+            }
+        }
     };
-
 }

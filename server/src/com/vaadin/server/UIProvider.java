@@ -25,6 +25,7 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.shared.communication.PushMode;
+import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.ui.UI;
 
 public abstract class UIProvider implements Serializable {
@@ -174,4 +175,27 @@ public abstract class UIProvider implements Serializable {
             return push.value();
         }
     }
+
+    /**
+     * Finds the {@link Transport} to use for a specific UI. If no transport is
+     * defined, <code>null</code> is returned.
+     * <p>
+     * The default implementation uses the @{@link Push} annotation if it's
+     * defined for the UI class.
+     * 
+     * @param event
+     *            the UI create event with information about the UI and the
+     *            current request.
+     * @return the transport type to use, or <code>null</code> if the default
+     *         transport type should be used
+     */
+    public Transport getPushTransport(UICreateEvent event) {
+        Push push = getAnnotationFor(event.getUIClass(), Push.class);
+        if (push == null) {
+            return null;
+        } else {
+            return push.transport();
+        }
+    }
+
 }

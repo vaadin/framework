@@ -18,6 +18,7 @@ package com.vaadin.client.ui.calendar.schedule.dd;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.vaadin.client.Util;
+import com.vaadin.client.ui.calendar.CalendarConnector;
 import com.vaadin.client.ui.calendar.schedule.DateCell;
 import com.vaadin.client.ui.calendar.schedule.DateCellDayEvent;
 import com.vaadin.client.ui.dd.VAcceptCallback;
@@ -35,6 +36,10 @@ public class CalendarWeekDropHandler extends CalendarDropHandler {
 
     private com.google.gwt.user.client.Element currentTargetElement;
     private DateCell currentTargetDay;
+
+    public CalendarWeekDropHandler(CalendarConnector connector) {
+        super(connector);
+    }
 
     /*
      * (non-Javadoc)

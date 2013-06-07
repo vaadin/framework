@@ -39,6 +39,7 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.shared.communication.PushMode;
+import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.shared.ui.ui.UIConstants;
 import com.vaadin.ui.UI;
 
@@ -209,7 +210,12 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
             pushMode = session.getService().getDeploymentConfiguration()
                     .getPushMode();
         }
-        ui.setPushMode(pushMode);
+        ui.getPushConfiguration().setPushMode(pushMode);
+
+        Transport transport = provider.getPushTransport(event);
+        if (transport != null) {
+            ui.getPushConfiguration().setTransport(transport);
+        }
 
         // Set thread local here so it is available in init
         UI.setCurrent(ui);
@@ -273,7 +279,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
             if (session.getConfiguration().isXsrfProtectionEnabled()) {
                 writer.write(getSecurityKeyUIDL(session));
             }
-            new UidlWriter().write(uI, writer, true, false, false);
+            new UidlWriter().write(uI, writer, true, false);
             writer.write("}");
 
             String initialUIDL = writer.toString();

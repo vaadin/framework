@@ -50,14 +50,17 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.Paintable;
+import com.vaadin.client.ServerConnector;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.VConsole;
+import com.vaadin.client.ValueMap;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
 import com.vaadin.client.ui.ShortcutActionHandler;
 import com.vaadin.client.ui.VNotification;
+import com.vaadin.client.ui.VOverlay;
 import com.vaadin.client.ui.VUI;
 import com.vaadin.client.ui.layout.MayScrollChildren;
 import com.vaadin.client.ui.window.WindowConnector;
@@ -67,6 +70,8 @@ import com.vaadin.shared.communication.MethodInvocation;
 import com.vaadin.shared.ui.ComponentStateUtil;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.Connect.LoadStyle;
+import com.vaadin.shared.ui.ui.DebugWindowClientRpc;
+import com.vaadin.shared.ui.ui.DebugWindowServerRpc;
 import com.vaadin.shared.ui.ui.PageClientRpc;
 import com.vaadin.shared.ui.ui.PageState;
 import com.vaadin.shared.ui.ui.ScrollClientRpc;
@@ -133,6 +138,19 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                 });
             }
         });
+        registerRpc(DebugWindowClientRpc.class, new DebugWindowClientRpc() {
+
+            @Override
+            public void reportLayoutProblems(String json) {
+                VConsole.printLayoutProblems(getValueMap(json), getConnection());
+            }
+
+            private native ValueMap getValueMap(String json)
+            /*-{
+                return JSON.parse(json);
+            }-*/;
+        });
+
         getWidget().addResizeHandler(new ResizeHandler() {
             @Override
             public void onResize(ResizeEvent event) {
@@ -626,12 +644,13 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             configurePolling();
         }
 
-        if (stateChangeEvent.hasPropertyChanged("pushMode")) {
-            getConnection().setPushEnabled(getState().pushMode.isEnabled());
+        if (stateChangeEvent.hasPropertyChanged("pushConfiguration")) {
+            getConnection().setPushEnabled(
+                    getState().pushConfiguration.mode.isEnabled());
         }
 
         if (stateChangeEvent.hasPropertyChanged("overlayContainerLabel")) {
-            getConnection().setOverlayContainerLabel(
+            VOverlay.setOverlayContainerLabel(getConnection(),
                     getState().overlayContainerLabel);
         }
     }
@@ -645,16 +664,9 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             pollTimer = new Timer() {
                 @Override
                 public void run() {
-                    /*
-                     * Verify that polling has not recently been canceled. This
-                     * is needed because Timer.cancel() does not always work
-                     * properly in IE 8 until GWT issue 8101 has been fixed.
-                     */
-                    if (pollTimer != null) {
-                        getRpcProxy(UIServerRpc.class).poll();
-                        // Send changes even though poll is @Delayed
-                        getConnection().sendPendingVariableChanges();
-                    }
+                    getRpcProxy(UIServerRpc.class).poll();
+                    // Send changes even though poll is @Delayed
+                    getConnection().sendPendingVariableChanges();
                 }
             };
             pollTimer.scheduleRepeating(getState().pollInterval);
@@ -664,5 +676,28 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                     new MethodInvocation(getConnectorId(), UIServerRpc.class
                             .getName(), "poll"));
         }
+    }
+
+    /**
+     * Invokes the layout analyzer on the server
+     * 
+     * @since 7.1
+     */
+    public void analyzeLayouts() {
+        getRpcProxy(DebugWindowServerRpc.class).analyzeLayouts();
+    }
+
+    /**
+     * Sends a request to the server to print details to console that will help
+     * the developer to locate the corresponding server-side connector in the
+     * source code.
+     * 
+     * @since 7.1
+     * @param serverConnector
+     *            the connector to locate
+     */
+    public void showServerDebugInfo(ServerConnector serverConnector) {
+        getRpcProxy(DebugWindowServerRpc.class).showServerDebugInfo(
+                serverConnector);
     }
 }

@@ -23,6 +23,7 @@ import javax.servlet.ServletException;
 import org.atmosphere.client.TrackMessageSizeInterceptor;
 import org.atmosphere.cpr.ApplicationConfig;
 import org.atmosphere.cpr.AtmosphereFramework;
+import org.atmosphere.cpr.AtmosphereInterceptor;
 import org.atmosphere.cpr.AtmosphereRequest;
 import org.atmosphere.cpr.AtmosphereResponse;
 
@@ -36,7 +37,7 @@ import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.server.VaadinServletResponse;
 import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.communication.PushConstants;
 
 /**
  * Handles requests to open a push (bidirectional) communication channel between
@@ -55,15 +56,22 @@ public class PushRequestHandler implements RequestHandler,
     public PushRequestHandler(VaadinServletService service)
             throws ServiceException {
 
-        atmosphere = new AtmosphereFramework();
+        atmosphere = new AtmosphereFramework() {
+            @Override
+            protected void analytics() {
+                // Overridden to disable version number check
+            }
+        };
 
         pushHandler = new PushHandler(service);
         atmosphere.addAtmosphereHandler("/*", pushHandler);
         atmosphere.addInitParameter(ApplicationConfig.PROPERTY_SESSION_SUPPORT,
                 "true");
+        atmosphere.addInitParameter(ApplicationConfig.MESSAGE_DELIMITER,
+                String.valueOf(PushConstants.MESSAGE_DELIMITER));
 
         final String bufferSize = String
-                .valueOf(ApplicationConstants.WEBSOCKET_BUFFER_SIZE);
+                .valueOf(PushConstants.WEBSOCKET_BUFFER_SIZE);
         atmosphere.addInitParameter(ApplicationConfig.WEBSOCKET_BUFFER_SIZE,
                 bufferSize);
         atmosphere.addInitParameter(ApplicationConfig.WEBSOCKET_MAXTEXTSIZE,
@@ -75,12 +83,14 @@ public class PushRequestHandler implements RequestHandler,
         atmosphere.addInitParameter("org.atmosphere.cpr.showSupportMessage",
                 "false");
 
-        // Required to ensure the client-side knows at which points to split the
-        // message stream into individual messages when using certain transports
-        atmosphere.interceptor(new TrackMessageSizeInterceptor());
-
         try {
             atmosphere.init(service.getServlet().getServletConfig());
+
+            // Ensure the client-side knows how to split the message stream
+            // into individual messages when using certain transports
+            AtmosphereInterceptor trackMessageSize = new TrackMessageSizeInterceptor();
+            trackMessageSize.configure(atmosphere.getAtmosphereConfig());
+            atmosphere.interceptor(trackMessageSize);
         } catch (ServletException e) {
             throw new ServiceException("Could not read atmosphere settings", e);
         }

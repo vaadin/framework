@@ -616,17 +616,14 @@ public abstract class AbstractField<T> extends AbstractComponent implements
 
         // Check if the current converter is compatible.
         if (newDataSource != null
-                && !ConverterUtil.canConverterHandle(getConverter(), getType(),
-                        newDataSource.getType())) {
-            // Changing from e.g. Number -> Double should set a new converter,
-            // changing from Double -> Number can keep the old one (Property
-            // accepts Number)
-
-            // Set a new converter if there is a new data source and
-            // there is no old converter or the old is incompatible.
+                && !ConverterUtil.canConverterPossiblyHandle(getConverter(),
+                        getType(), newDataSource.getType())) {
+            // There is no converter set or there is no way the current
+            // converter can be compatible.
             setConverter(newDataSource.getType());
         }
-        // Gets the value from source
+        // Gets the value from source. This requires that a valid converter has
+        // been set.
         try {
             if (dataSource != null) {
                 T fieldValue = convertFromModel(getDataSourceValue());

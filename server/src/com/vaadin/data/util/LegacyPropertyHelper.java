@@ -15,6 +15,7 @@
  */
 package com.vaadin.data.util;
 
+import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,7 +33,7 @@ import com.vaadin.server.VaadinService;
  * @deprecated This is only used internally for backwards compatibility
  */
 @Deprecated
-public class LegacyPropertyHelper {
+public class LegacyPropertyHelper implements Serializable {
 
     /**
      * Returns the property value converted to a String.
@@ -59,6 +60,11 @@ public class LegacyPropertyHelper {
         getLogger().log(Level.WARNING,
                 Constants.WARNING_LEGACY_PROPERTY_TOSTRING,
                 p.getClass().getName());
+        if (getLogger().isLoggable(Level.FINE)) {
+            getLogger().log(Level.FINE,
+                    "Strack trace for legacy toString to ease debugging",
+                    new Throwable());
+        }
     }
 
     /**
@@ -76,8 +82,8 @@ public class LegacyPropertyHelper {
      */
     public static boolean isLegacyToStringEnabled() {
         if (VaadinService.getCurrent() == null) {
-            // This should really not happen but we need to handle it somehow.
-            // IF it happens it seems more safe to use the legacy mode and log.
+            // This will happen at least in JUnit tests. We do not what the real
+            // value should be but it seems more safe to use the legacy mode.
             return true;
         }
         return VaadinService.getCurrent().getDeploymentConfiguration()
@@ -86,9 +92,9 @@ public class LegacyPropertyHelper {
 
     private static boolean logLegacyToStringWarning() {
         if (VaadinService.getCurrent() == null) {
-            // This should really not happen but we need to handle it somehow.
-            // IF it happens it seems more safe to use the legacy mode and log.
-            return true;
+            // This will happen at least in JUnit tests. We do not want to spam
+            // the log with these messages in this case.
+            return false;
         }
         return VaadinService.getCurrent().getDeploymentConfiguration()
                 .getLegacyPropertyToStringMode() == LegacyProperyToStringMode.WARNING;

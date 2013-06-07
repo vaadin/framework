@@ -68,7 +68,7 @@ public class LoginForm extends CustomComponent {
         }
         final StringBuilder responseBuilder = new StringBuilder();
 
-        getUI().access(new Runnable() {
+        getUI().accessSynchronously(new Runnable() {
             @Override
             public void run() {
                 String method = VaadinServletService.getCurrentServletRequest()

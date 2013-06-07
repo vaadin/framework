@@ -87,14 +87,14 @@ public class GlobalResourceHandler implements RequestHandler {
                     + " is not a valid global resource path");
         }
         session.lock();
-        Map<Class<?>, CurrentInstance> oldThreadLocals = null;
+        Map<Class<?>, CurrentInstance> oldInstances = null;
         DownloadStream stream = null;
         try {
             UI ui = session.getUIById(Integer.parseInt(uiid));
             if (ui == null) {
                 return error(request, response, "No UI found for id  " + uiid);
             }
-            oldThreadLocals = CurrentInstance.setThreadLocals(ui);
+            oldInstances = CurrentInstance.setCurrent(ui);
             ConnectorResource resource;
             if (LEGACY_TYPE.equals(type)) {
                 resource = legacyResources.get(key);
@@ -115,8 +115,8 @@ public class GlobalResourceHandler implements RequestHandler {
             }
         } finally {
             session.unlock();
-            if (oldThreadLocals != null) {
-                CurrentInstance.restoreThreadLocals(oldThreadLocals);
+            if (oldInstances != null) {
+                CurrentInstance.restoreInstances(oldInstances);
             }
         }
 

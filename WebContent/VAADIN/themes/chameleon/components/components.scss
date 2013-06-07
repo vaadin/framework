@@ -29,7 +29,11 @@
 	@include chameleon-notification;
 	@include chameleon-panel;
 	@include chameleon-popupview;
-	@include chameleon-progressindicator;
+	
+	@include chameleon-progressindicator(v-progressbar);
+	/* For legacy ProgressIndicator component */
+	@include chameleon-progressindicator(v-progressindicator);
+	
 	@include chameleon-slider;
 	@include chameleon-splitpanel;
 	@include chameleon-table;

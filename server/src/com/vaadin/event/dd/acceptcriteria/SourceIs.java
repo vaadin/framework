@@ -48,7 +48,7 @@ public class SourceIs extends ClientSideCriterion {
         int paintedComponents = 0;
         for (int i = 0; i < components.length; i++) {
             Component c = components[i];
-            if (c.getUI() != null && c.getUI().getSession() != null) {
+            if (c.isAttached()) {
                 target.addAttribute("component" + paintedComponents++, c);
             } else {
                 Logger.getLogger(SourceIs.class.getName())

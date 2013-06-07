@@ -23,13 +23,14 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Duration;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.shared.GWT;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.debug.internal.ProfilerSection.Node;
+import com.vaadin.client.debug.internal.ProfilerSection.ProfilerResultConsumer;
 
 /**
  * Lightweight profiling tool that can be used to collect profiling data with
@@ -96,137 +97,7 @@ public class Profiler {
         }
     }
 
-    private static class Node {
-
-        private final String name;
-        private final LinkedHashMap<String, Node> children = new LinkedHashMap<String, Node>();
-        private double time = 0;
-        private int count = 0;
-
-        public Node(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        private Node accessChild(String name, double time) {
-            Node child = children.get(name);
-            if (child == null) {
-                child = new Node(name);
-                children.put(name, child);
-            }
-            child.time -= time;
-            child.count++;
-            return child;
-        }
-
-        public double getTimeSpent() {
-            return time;
-        }
-
-        public int getCount() {
-            return count;
-        }
-
-        public double getOwnTime() {
-            double time = getTimeSpent();
-            for (Node node : children.values()) {
-                time -= node.getTimeSpent();
-            }
-            return time;
-        }
-
-        public Widget buildTree() {
-            String message = getStringRepresentation("");
-
-            if (getName() == null || !children.isEmpty()) {
-                SimpleTree tree = new SimpleTree(message);
-                for (Node node : children.values()) {
-                    Widget child = node.buildTree();
-                    tree.add(child);
-                }
-                return tree;
-            } else {
-                return new Label(message);
-            }
-        }
-
-        public void buildRecursiveString(StringBuilder builder, String prefix) {
-            if (getName() != null) {
-                String msg = getStringRepresentation(prefix);
-                builder.append(msg + '\n');
-            }
-            String childPrefix = prefix + "*";
-            for (Node node : children.values()) {
-                node.buildRecursiveString(builder, childPrefix);
-            }
-        }
-
-        @Override
-        public String toString() {
-            return getStringRepresentation("");
-        }
-
-        private String getStringRepresentation(String prefix) {
-            if (getName() == null) {
-                return "";
-            }
-            String msg = prefix + " " + getName() + " in " + getTimeSpent()
-                    + " ms.";
-            if (getCount() > 1) {
-                msg += " Invoked "
-                        + getCount()
-                        + " times ("
-                        + roundToSignificantFigures(getTimeSpent() / getCount())
-                        + " ms per time).";
-            }
-            if (!children.isEmpty()) {
-                double ownTime = getOwnTime();
-                msg += " " + ownTime + " ms spent in own code";
-                if (getCount() > 1) {
-                    msg += " ("
-                            + roundToSignificantFigures(ownTime / getCount())
-                            + " ms per time)";
-                }
-                msg += '.';
-            }
-            return msg;
-        }
-
-        public static double roundToSignificantFigures(double num) {
-            // Number of significant digits
-            int n = 3;
-            if (num == 0) {
-                return 0;
-            }
-
-            final double d = Math.ceil(Math.log10(num < 0 ? -num : num));
-            final int power = n - (int) d;
-
-            final double magnitude = Math.pow(10, power);
-            final long shifted = Math.round(num * magnitude);
-            return shifted / magnitude;
-        }
-
-        public void sumUpTotals(Map<String, Node> totals) {
-            String name = getName();
-            if (name != null) {
-                Node totalNode = totals.get(name);
-                if (totalNode == null) {
-                    totalNode = new Node(name);
-                    totals.put(name, totalNode);
-                }
-
-                totalNode.time += getOwnTime();
-                totalNode.count += getCount();
-            }
-            for (Node node : children.values()) {
-                node.sumUpTotals(totals);
-            }
-        }
-    }
+    private static ProfilerResultConsumer consumer;
 
     /**
      * Checks whether the profiling gathering is enabled.
@@ -323,7 +194,8 @@ public class Profiler {
      */
     public static void logTimings() {
         if (!isEnabled()) {
-            VConsole.log("Profiler is not enabled, no data has been collected.");
+            getLogger().warning(
+                    "Profiler is not enabled, no data has been collected.");
             return;
         }
 
@@ -332,7 +204,9 @@ public class Profiler {
         stack.add(rootNode);
         JsArray<GwtStatsEvent> gwtStatsEvents = getGwtStatsEvents();
         if (gwtStatsEvents.length() == 0) {
-            VConsole.log("No profiling events recorded, this might happen if another __gwtStatsEvent handler is installed.");
+            getLogger()
+                    .warning(
+                            "No profiling events recorded, this might happen if another __gwtStatsEvent handler is installed.");
             return;
         }
 
@@ -347,10 +221,10 @@ public class Profiler {
                     && !isBeginEvent;
 
             if (!inEvent && stack.size() >= 2
-                    && eventName.equals(stack.get(stack.size() - 2).name)
+                    && eventName.equals(stack.get(stack.size() - 2).getName())
                     && !isBeginEvent) {
                 // back out of sub event
-                stackTop.time += gwtStatsEvent.getMillis();
+                stackTop.addTime(gwtStatsEvent.getMillis());
                 stack.removeLast();
                 stackTop = stack.getLast();
 
@@ -359,40 +233,34 @@ public class Profiler {
 
             if (type.equals("end")) {
                 if (!inEvent) {
-                    VConsole.error("Got end event for " + eventName
-                            + " but is currently in " + stackTop.getName());
+                    getLogger().severe(
+                            "Got end event for " + eventName
+                                    + " but is currently in "
+                                    + stackTop.getName());
                     return;
                 }
                 Node previousStackTop = stack.removeLast();
-                previousStackTop.time += gwtStatsEvent.getMillis();
+                previousStackTop.addTime(gwtStatsEvent.getMillis());
             } else {
                 if (!inEvent) {
-                    stackTop = stackTop.accessChild(eventName,
+                    stackTop = stackTop.enterChild(eventName,
                             gwtStatsEvent.getMillis());
                     stack.add(stackTop);
                 }
                 if (!isBeginEvent) {
                     // Create sub event
-                    stack.add(stackTop.accessChild(eventName + "." + type,
+                    stack.add(stackTop.enterChild(eventName + "." + type,
                             gwtStatsEvent.getMillis()));
                 }
             }
         }
 
         if (stack.size() != 1) {
-            VConsole.log("Not all nodes are left, the last node is "
-                    + stack.getLast().getName());
+            getLogger().warning(
+                    "Not all nodes are left, the last node is "
+                            + stack.getLast().getName());
             return;
         }
-
-        StringBuilder stringBuilder = new StringBuilder();
-        rootNode.buildRecursiveString(stringBuilder, "");
-
-        /*
-         * Should really output to a separate section in the debug window, but
-         * just dump it to the log for now.
-         */
-        VConsole.log(stringBuilder.toString());
 
         Map<String, Node> totals = new HashMap<String, Node>();
         rootNode.sumUpTotals(totals);
@@ -405,27 +273,7 @@ public class Profiler {
             }
         });
 
-        double total = 0;
-        double top20total = 0;
-        for (int i = 0; i < totalList.size(); i++) {
-            Node node = totalList.get(i);
-            double timeSpent = node.getTimeSpent();
-            total += timeSpent;
-            if (i < 20) {
-                top20total += timeSpent;
-            }
-        }
-
-        VConsole.log("Largest individual contributors using " + top20total
-                + " ms out of " + total + " ms");
-        for (int i = 0; i < 20 && i < totalList.size(); i++) {
-            Node node = totalList.get(i);
-            double timeSpent = node.getTimeSpent();
-            total += timeSpent;
-            VConsole.log(" * " + node.getName() + ": " + timeSpent + " ms in "
-                    + node.getCount() + " invokations.");
-        }
-
+        getConsumer().addProfilerData(stack.getFirst(), totalList);
     }
 
     /**
@@ -460,28 +308,24 @@ public class Profiler {
                     "domContentLoadedEventStart", "domContentLoadedEventEnd",
                     "domComplete", "loadEventStart", "loadEventEnd" };
 
+            LinkedHashMap<String, Double> timings = new LinkedHashMap<String, Double>();
+
             for (String key : keys) {
                 double value = getPerformanceTiming(key);
                 if (value == 0) {
                     // Ignore missing value
                     continue;
                 }
-                String text = key + ": " + (now - value);
-                tree.add(new Label(text));
-                stringBuilder.append("\n * ");
-                stringBuilder.append(text);
+                timings.put(key, Double.valueOf(now - value));
             }
 
-            if (tree.getWidgetCount() == 0) {
-                VConsole.log("Bootstrap timings not supported, please ensure your browser supports performance.timing");
+            if (timings.isEmpty()) {
+                getLogger()
+                        .info("Bootstrap timings not supported, please ensure your browser supports performance.timing");
                 return;
             }
 
-            /*
-             * Should really output to a separate section in the debug window,
-             * but just dump it to the log for now.
-             */
-            VConsole.log(stringBuilder.toString());
+            getConsumer().addBootstrapData(timings);
         }
     }
 
@@ -534,5 +378,36 @@ public class Profiler {
     /*-{
         $wnd.vaadin.gwtStatsEvents = [];
     }-*/;
+
+    /**
+     * Sets the profiler result consumer that is used to output the profiler
+     * data to the user.
+     * <p>
+     * <b>Warning!</b> This is internal API and should not be used by
+     * applications or add-ons.
+     * 
+     * @since 7.1
+     * @param profilerResultConsumer
+     *            the consumer that gets profiler data
+     */
+    public static void setProfilerResultConsuer(
+            ProfilerResultConsumer profilerResultConsumer) {
+        if (consumer != null) {
+            throw new IllegalStateException("The consumer has already been set");
+        }
+        consumer = profilerResultConsumer;
+    }
+
+    private static ProfilerResultConsumer getConsumer() {
+        if (consumer == null) {
+            throw new IllegalStateException("No consumer has been registered");
+        } else {
+            return consumer;
+        }
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(Profiler.class.getName());
+    }
 
 }

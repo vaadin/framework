@@ -30,6 +30,27 @@ import com.vaadin.shared.communication.PushMode;
  * @since 7.0.0
  */
 public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
+    /**
+     * Default value for {@link #getResourceCacheTime()} = {@value} .
+     */
+    public static final int DEFAULT_RESOURCE_CACHE_TIME = 3600;
+
+    /**
+     * Default value for {@link #getHeartbeatInterval()} = {@value} .
+     */
+    public static final int DEFAULT_HEARTBEAT_INTERVAL = 300;
+
+    /**
+     * Default value for {@link #isCloseIdleSessions()} = {@value} .
+     */
+    public static final boolean DEFAULT_CLOSE_IDLE_SESSIONS = false;
+
+    /**
+     * Default value for {@link #getLegacyPropertyToStringMode()} =
+     * {@link LegacyProperyToStringMode#WARNING}.
+     */
+    public static final LegacyProperyToStringMode DEFAULT_LEGACY_PROPERTY_TO_STRING = LegacyProperyToStringMode.WARNING;
+
     private final Properties initParameters;
     private boolean productionMode;
     private boolean xsrfProtectionEnabled;
@@ -66,20 +87,17 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
 
     private void checkLegacyPropertyToString() {
         String param = getApplicationOrSystemProperty(
-                Constants.SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING, "warning");
-        if ("true".equals(param)) {
-            legacyPropertyToStringMode = LegacyProperyToStringMode.ENABLED;
-        } else if ("false".equals(param)) {
-            legacyPropertyToStringMode = LegacyProperyToStringMode.DISABLED;
-        } else {
-            if (!"warning".equals(param)) {
-                getLogger()
-                        .log(Level.WARNING,
-                                Constants.WARNING_UNKNOWN_LEGACY_PROPERTY_TOSTRING_VALUE,
-                                param);
-            }
-            legacyPropertyToStringMode = LegacyProperyToStringMode.WARNING;
+                Constants.SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING,
+                DEFAULT_LEGACY_PROPERTY_TO_STRING.name().toLowerCase());
 
+        try {
+            legacyPropertyToStringMode = LegacyProperyToStringMode
+                    .valueOf(param.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            getLogger().log(Level.WARNING,
+                    Constants.WARNING_UNKNOWN_LEGACY_PROPERTY_TOSTRING_VALUE,
+                    param);
+            legacyPropertyToStringMode = DEFAULT_LEGACY_PROPERTY_TO_STRING;
         }
     }
 
@@ -250,11 +268,11 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
             resourceCacheTime = Integer
                     .parseInt(getApplicationOrSystemProperty(
                             Constants.SERVLET_PARAMETER_RESOURCE_CACHE_TIME,
-                            "3600"));
+                            Integer.toString(DEFAULT_RESOURCE_CACHE_TIME)));
         } catch (NumberFormatException e) {
             getLogger().warning(
                     Constants.WARNING_RESOURCE_CACHING_TIME_NOT_NUMERIC);
-            resourceCacheTime = 3600;
+            resourceCacheTime = DEFAULT_RESOURCE_CACHE_TIME;
         }
     }
 
@@ -263,18 +281,18 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
             heartbeatInterval = Integer
                     .parseInt(getApplicationOrSystemProperty(
                             Constants.SERVLET_PARAMETER_HEARTBEAT_INTERVAL,
-                            "300"));
+                            Integer.toString(DEFAULT_HEARTBEAT_INTERVAL)));
         } catch (NumberFormatException e) {
             getLogger().warning(
                     Constants.WARNING_HEARTBEAT_INTERVAL_NOT_NUMERIC);
-            heartbeatInterval = 300;
+            heartbeatInterval = DEFAULT_HEARTBEAT_INTERVAL;
         }
     }
 
     private void checkCloseIdleSessions() {
         closeIdleSessions = getApplicationOrSystemProperty(
-                Constants.SERVLET_PARAMETER_CLOSE_IDLE_SESSIONS, "false")
-                .equals("true");
+                Constants.SERVLET_PARAMETER_CLOSE_IDLE_SESSIONS,
+                Boolean.toString(DEFAULT_CLOSE_IDLE_SESSIONS)).equals("true");
     }
 
     private void checkPushMode() {

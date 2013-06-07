@@ -22,12 +22,15 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
 import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.ApplicationConnection.CommunicationErrorHandler;
 import com.vaadin.client.ResourceLoader;
 import com.vaadin.client.ResourceLoader.ResourceLoadEvent;
 import com.vaadin.client.ResourceLoader.ResourceLoadListener;
 import com.vaadin.client.VConsole;
 import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.communication.PushConstants;
 import com.vaadin.shared.ui.ui.UIConstants;
+import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
 
 /**
  * The default {@link PushConnection} implementation that uses Atmosphere for
@@ -67,8 +70,7 @@ public class AtmospherePushConnection implements PushConnection {
      */
     protected static class FragmentedMessage {
 
-        // Jetty requires length less than buffer size
-        private int FRAGMENT_LENGTH = ApplicationConstants.WEBSOCKET_BUFFER_SIZE - 1;
+        private static final int FRAGMENT_LENGTH = PushConstants.WEBSOCKET_FRAGMENT_SIZE;
 
         private String message;
         private int index = 0;
@@ -82,10 +84,12 @@ public class AtmospherePushConnection implements PushConnection {
         }
 
         public String getNextFragment() {
+            assert hasNextFragment();
+
             String result;
             if (index == 0) {
                 String header = "" + message.length()
-                        + ApplicationConstants.WEBSOCKET_MESSAGE_DELIMITER;
+                        + PushConstants.MESSAGE_DELIMITER;
                 int fragmentLen = FRAGMENT_LENGTH - header.length();
                 result = header + getFragment(0, fragmentLen);
                 index += fragmentLen;
@@ -115,6 +119,8 @@ public class AtmospherePushConnection implements PushConnection {
 
     private String transport;
 
+    private CommunicationErrorHandler errorHandler;
+
     /**
      * Keeps track of the disconnect confirmation command for cases where
      * pending messages should be pushed before actually disconnecting.
@@ -128,12 +134,21 @@ public class AtmospherePushConnection implements PushConnection {
      * (non-Javadoc)
      * 
      * @see
-     * com.vaadin.client.communication.PushConenction#init(com.vaadin.client
-     * .ApplicationConnection)
+     * com.vaadin.client.communication.PushConnection#init(ApplicationConnection
+     * , Map<String, String>, CommunicationErrorHandler)
      */
     @Override
-    public void init(final ApplicationConnection connection) {
+    public void init(final ApplicationConnection connection,
+            final PushConfigurationState pushConfiguration,
+            CommunicationErrorHandler errorHandler) {
         this.connection = connection;
+        this.errorHandler = errorHandler;
+
+        config = createConfig();
+        for (String param : pushConfiguration.parameters.keySet()) {
+            config.setStringValue(param,
+                    pushConfiguration.parameters.get(param));
+        }
 
         runWhenAtmosphereLoaded(new Command() {
             @Override
@@ -209,9 +224,6 @@ public class AtmospherePushConnection implements PushConnection {
     }
 
     protected AtmosphereConfiguration getConfig() {
-        if (config == null) {
-            config = createConfig();
-        }
         return config;
     }
 
@@ -384,7 +396,8 @@ public class AtmospherePushConnection implements PushConnection {
             contentType: 'application/json; charset=UTF-8',
             reconnectInterval: '5000',
             maxReconnectOnClose: 10000000, 
-            trackMessageLength: true 
+            trackMessageLength: true,
+            messageDelimiter: String.fromCharCode(@com.vaadin.shared.communication.PushConstants::MESSAGE_DELIMITER)
         };
     }-*/;
 
@@ -430,22 +443,30 @@ public class AtmospherePushConnection implements PushConnection {
         if (isAtmosphereLoaded()) {
             command.execute();
         } else {
-            VConsole.log("Loading " + ApplicationConstants.VAADIN_PUSH_JS);
+            final String pushJs = ApplicationConstants.VAADIN_PUSH_JS;
+            VConsole.log("Loading " + pushJs);
             ResourceLoader.get().loadScript(
-                    connection.getConfiguration().getVaadinDirUrl()
-                            + ApplicationConstants.VAADIN_PUSH_JS,
+                    connection.getConfiguration().getVaadinDirUrl() + pushJs,
                     new ResourceLoadListener() {
                         @Override
                         public void onLoad(ResourceLoadEvent event) {
-                            VConsole.log(ApplicationConstants.VAADIN_PUSH_JS
-                                    + " loaded");
-                            command.execute();
+                            if (isAtmosphereLoaded()) {
+                                VConsole.log(pushJs + " loaded");
+                                command.execute();
+                            } else {
+                                // If bootstrap tried to load vaadinPush.js,
+                                // ResourceLoader assumes it succeeded even if
+                                // it failed (#11673)
+                                onError(event);
+                            }
                         }
 
                         @Override
                         public void onError(ResourceLoadEvent event) {
-                            VConsole.error(event.getResourceUrl()
-                                    + " could not be loaded. Push will not work.");
+                            errorHandler.onError(
+                                    event.getResourceUrl()
+                                            + " could not be loaded. Push will not work.",
+                                    0);
                         }
                     });
         }

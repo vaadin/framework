@@ -15,6 +15,8 @@
  */
 package com.vaadin.shared.ui.calendar;
 
+import java.io.Serializable;
+
 /**
  * CalendarEventId contains static String identifiers for all Calendar events.
  * These are used both in the client and server side code.
@@ -22,7 +24,7 @@ package com.vaadin.shared.ui.calendar;
  * @since 7.1
  * @author Vaadin Ltd.
  */
-public class CalendarEventId {
+public class CalendarEventId implements Serializable {
 
     public static final String EVENTMOVE = "eventMove";
     public static final String RANGESELECT = "rangeSelect";

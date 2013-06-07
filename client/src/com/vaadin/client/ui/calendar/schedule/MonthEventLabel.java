@@ -17,6 +17,8 @@ package com.vaadin.client.ui.calendar.schedule;
 
 import java.util.Date;
 
+import com.google.gwt.event.dom.client.ContextMenuEvent;
+import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.user.client.ui.HTML;
 import com.vaadin.client.ui.VCalendar;
 
@@ -35,11 +37,27 @@ public class MonthEventLabel extends HTML implements HasTooltipKey {
     private String caption;
     private Date time;
 
+    private CalendarEvent calendarEvent;
+
     /**
      * Default constructor
      */
     public MonthEventLabel() {
         setStylePrimaryName(STYLENAME);
+
+        addDomHandler(new ContextMenuHandler() {
+            @Override
+            public void onContextMenu(ContextMenuEvent event) {
+                calendar.getMouseEventListener().contextMenu(event,
+                        MonthEventLabel.this);
+                event.stopPropagation();
+                event.preventDefault();
+            }
+        }, ContextMenuEvent.getType());
+    }
+
+    public void setCalendarEvent(CalendarEvent e) {
+        calendarEvent = e;
     }
 
     /**
@@ -138,5 +156,9 @@ public class MonthEventLabel extends HTML implements HasTooltipKey {
     @Override
     public Object getTooltipKey() {
         return eventIndex;
+    }
+
+    public CalendarEvent getCalendarEvent() {
+        return calendarEvent;
     }
 }

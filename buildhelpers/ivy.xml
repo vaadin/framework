@@ -28,7 +28,7 @@
 
     </publications>
     <dependencies>
-            <dependency org="commons-io" name="commons-io" rev="2.2" />
+        <dependency org="commons-io" name="commons-io" rev="2.2" />
     </dependencies>
 
 </ivy-module>

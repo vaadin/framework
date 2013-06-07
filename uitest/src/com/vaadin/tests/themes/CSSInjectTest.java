@@ -22,14 +22,16 @@ public class CSSInjectTest extends TestBase {
         final Styles stylesheet = Page.getCurrent().getStyles();
 
         // Inject some resources initially
-        stylesheet.add(new StreamResource(new StreamResource.StreamSource() {
+        final StreamResource initialResource = new StreamResource(
+                new StreamResource.StreamSource() {
 
-            @Override
-            public InputStream getStream() {
-                return new ByteArrayInputStream(
-                        ".hello, .world { color:silver; }".getBytes());
-            }
-        }, "mystyles-" + System.currentTimeMillis() + ".css"));
+                    @Override
+                    public InputStream getStream() {
+                        return new ByteArrayInputStream(
+                                ".hello, .world { color:silver; }".getBytes());
+                    }
+                }, "mystyles-" + System.currentTimeMillis() + ".css");
+        stylesheet.add(initialResource);
 
         Label hello = new Label(
                 "<span class='hello'>Hello</span> <span class='world'>world</span>",
@@ -72,6 +74,14 @@ public class CSSInjectTest extends TestBase {
                     }
                 });
         addComponent(injectRandom);
+
+        addComponent(new Button("Inject initial again!",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        stylesheet.add(initialResource);
+                    }
+                }));
     }
 
     @Override

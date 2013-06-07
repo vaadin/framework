@@ -291,7 +291,10 @@ public abstract class AbstractComponent extends AbstractClientConnector
     public void setLocale(Locale locale) {
         this.locale = locale;
 
-        // FIXME: Reload value if there is a converter
+        if (locale != null && isAttached()) {
+            getUI().getLocaleService().addLocale(locale);
+        }
+
         markAsDirty();
     }
 
@@ -556,6 +559,10 @@ public abstract class AbstractComponent extends AbstractClientConnector
             focus();
         }
         setActionManagerViewer();
+        if (locale != null) {
+            getUI().getLocaleService().addLocale(locale);
+        }
+
     }
 
     /*

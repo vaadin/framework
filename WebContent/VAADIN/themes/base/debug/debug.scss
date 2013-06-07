@@ -207,12 +207,21 @@
 	.v-debugwindow-row:nth-child(odd) {
 		background-color: rgba(0, 61, 255, 0.11);
 	}
-	.v-debugwindow-row.ERROR {
+	.v-debugwindow-row.SEVERE {
 		color: #550000;
 		background-color: #FFC5C5;
 	}
 	.v-debugwindow-row.WARNING {
 		background-color: #FFFF99;
+	}
+	.v-debugwindow-row.FINE {
+		color: lighten($maincolor, 5%);
+	}
+	.v-debugwindow-row.FINER {
+		color: lighten($maincolor, 10%);
+	}
+	.v-debugwindow-row.FINEST {
+		color: lighten($maincolor, 15%);
 	}
 	
 	.v-debugwindow-row > span {

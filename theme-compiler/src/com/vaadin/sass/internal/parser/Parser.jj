@@ -169,6 +169,7 @@ public class Parser implements org.w3c.css.sac.Parser {
      * @exception IOException the source can't be parsed.
      * @exception CSSException the source is not CSS valid.
      */    
+    // TODO required by original parser but not used by Vaadin?
     public void parseRule(InputSource source) 
 	    throws CSSException, IOException {
 	this.source = source;
@@ -1188,7 +1189,8 @@ void styleRule() :
 	 start = true;
 	 documentHandler.startSelector(l);
      }
-     ( ifContentStatement() | controlDirective() | microsoftExtension() )*
+     // a CSS import here will not work
+     ( ifContentStatement() | controlDirective() | microsoftExtension() | importDeclaration() )*
      <RBRACE> (<S>)*
  } catch (ThrowedParseException e) {
      if (errorHandler != null) {
@@ -2947,7 +2949,7 @@ String skipAfterExpression() {
  * The following functions are useful for a DOM CSS implementation only and are
  * not part of the general CSS2 parser.
  */
-
+// TODO required by original parser but not used by Vaadin?
 void _parseRule() :
 {String ret = null;
 }

@@ -33,6 +33,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
@@ -47,6 +50,7 @@ import org.json.JSONObject;
 
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.event.EventRouter;
+import com.vaadin.server.VaadinSession.FutureAccess;
 import com.vaadin.server.communication.FileUploadHandler;
 import com.vaadin.server.communication.HeartbeatHandler;
 import com.vaadin.server.communication.PublishedFileHandler;
@@ -110,6 +114,11 @@ public abstract class VaadinService implements Serializable {
     private boolean pushWarningEmitted = false;
 
     /**
+     * Has {@link #init()} been run?
+     */
+    private boolean initialized = false;
+
+    /**
      * Creates a new vaadin service based on a deployment configuration
      * 
      * @param deploymentConfiguration
@@ -148,6 +157,8 @@ public abstract class VaadinService implements Serializable {
         List<RequestHandler> handlers = createRequestHandlers();
         Collections.reverse(handlers);
         requestHandlers = Collections.unmodifiableCollection(handlers);
+
+        initialized = true;
     }
 
     /**
@@ -407,12 +418,12 @@ public abstract class VaadinService implements Serializable {
      */
     public void fireSessionDestroy(VaadinSession vaadinSession) {
         final VaadinSession session = vaadinSession;
-        session.access(new Runnable() {
+        session.accessSynchronously(new Runnable() {
             @Override
             public void run() {
                 ArrayList<UI> uis = new ArrayList<UI>(session.getUIs());
                 for (final UI ui : uis) {
-                    ui.access(new Runnable() {
+                    ui.accessSynchronously(new Runnable() {
                         @Override
                         public void run() {
                             /*
@@ -1087,7 +1098,7 @@ public abstract class VaadinService implements Serializable {
     private void removeClosedUIs(final VaadinSession session) {
         ArrayList<UI> uis = new ArrayList<UI>(session.getUIs());
         for (final UI ui : uis) {
-            ui.access(new Runnable() {
+            ui.accessSynchronously(new Runnable() {
                 @Override
                 public void run() {
                     if (ui.isClosing()) {
@@ -1224,6 +1235,10 @@ public abstract class VaadinService implements Serializable {
      *            The response
      */
     public void requestStart(VaadinRequest request, VaadinResponse response) {
+        if (!initialized) {
+            throw new IllegalStateException(
+                    "Can not process requests before init() has been called");
+        }
         setCurrentInstances(request, response);
         request.setAttribute(REQUEST_START_TIME_ATTRIBUTE, System.nanoTime());
     }
@@ -1245,7 +1260,7 @@ public abstract class VaadinService implements Serializable {
         if (session != null) {
             final VaadinSession finalSession = session;
 
-            session.access(new Runnable() {
+            session.accessSynchronously(new Runnable() {
                 @Override
                 public void run() {
                     cleanupSession(finalSession);
@@ -1254,7 +1269,7 @@ public abstract class VaadinService implements Serializable {
 
             final long duration = (System.nanoTime() - (Long) request
                     .getAttribute(REQUEST_START_TIME_ATTRIBUTE)) / 1000000;
-            session.access(new Runnable() {
+            session.accessSynchronously(new Runnable() {
                 @Override
                 public void run() {
                     finalSession.setLastRequestDuration(duration);
@@ -1542,8 +1557,9 @@ public abstract class VaadinService implements Serializable {
 
     /**
      * Checks that another {@link VaadinSession} instance is not locked. This is
-     * internally used by {@link VaadinSession#access(Runnable)} and
-     * {@link UI#access(Runnable)} to help avoid causing deadlocks.
+     * internally used by {@link VaadinSession#accessSynchronously(Runnable)}
+     * and {@link UI#accessSynchronously(Runnable)} to help avoid causing
+     * deadlocks.
      * 
      * @since 7.1
      * @param session
@@ -1595,6 +1611,90 @@ public abstract class VaadinService implements Serializable {
             }
         }
         return true;
+    }
+
+    /**
+     * Implementation for {@link VaadinSession#access(Runnable)}. This method is
+     * implemented here instead of in {@link VaadinSession} to enable overriding
+     * the implementation without using a custom subclass of VaadinSession.
+     * 
+     * @since 7.1
+     * @see VaadinSession#access(Runnable)
+     * 
+     * @param session
+     *            the vaadin session to access
+     * @param runnable
+     *            the runnable to run with the session locked
+     * 
+     * @return a future that can be used to check for task completion and to
+     *         cancel the task
+     */
+    public Future<Void> accessSession(VaadinSession session, Runnable runnable) {
+        FutureAccess future = new FutureAccess(session, runnable);
+        session.getPendingAccessQueue().add(future);
+
+        /*
+         * If no thread is currently holding the lock, pending changes for UIs
+         * with automatic push would not be processed and pushed until the next
+         * time there is a request or someone does an explicit push call.
+         * 
+         * To remedy this, we try to get the lock at this point. If the lock is
+         * currently held by another thread, we just back out as the queue will
+         * get purged once it is released. If the lock is held by the current
+         * thread, we just release it knowing that the queue gets purged once
+         * the lock is ultimately released. If the lock is not held by any
+         * thread and we acquire it, we just release it again to purge the queue
+         * right away.
+         */
+        try {
+            // tryLock() would be shorter, but it does not guarantee fairness
+            if (session.getLockInstance().tryLock(0, TimeUnit.SECONDS)) {
+                // unlock triggers runPendingAccessTasks
+                session.unlock();
+            }
+        } catch (InterruptedException e) {
+            // Just ignore
+        }
+
+        return future;
+    }
+
+    /**
+     * Purges the queue of pending access invocations enqueued with
+     * {@link VaadinSession#access(Runnable)}.
+     * <p>
+     * This method is automatically run by the framework at appropriate
+     * situations and is not intended to be used by application developers.
+     * 
+     * @param session
+     *            the vaadin session to purge the queue for
+     * @since 7.1
+     */
+    public void runPendingAccessTasks(VaadinSession session) {
+        assert session.hasLock();
+
+        if (session.getPendingAccessQueue().isEmpty()) {
+            return;
+        }
+
+        Map<Class<?>, CurrentInstance> oldInstances = CurrentInstance
+                .getInstances(false);
+
+        FutureAccess pendingAccess;
+        try {
+            while ((pendingAccess = session.getPendingAccessQueue().poll()) != null) {
+                if (!pendingAccess.isCancelled()) {
+                    CurrentInstance.clearAll();
+                    CurrentInstance.restoreInstances(pendingAccess
+                            .getCurrentInstances());
+                    CurrentInstance.setCurrent(session);
+                    pendingAccess.run();
+                }
+            }
+        } finally {
+            CurrentInstance.clearAll();
+            CurrentInstance.restoreInstances(oldInstances);
+        }
     }
 
 }

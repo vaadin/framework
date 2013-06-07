@@ -71,12 +71,16 @@ public class UidlWriter implements Serializable {
      * @throws JSONException
      *             If the JSON serialization fails.
      */
-    public void write(UI ui, Writer writer, boolean repaintAll,
-            boolean analyzeLayouts, boolean async) throws IOException,
-            JSONException {
+    public void write(UI ui, Writer writer, boolean repaintAll, boolean async)
+            throws IOException, JSONException {
+        VaadinSession session = ui.getSession();
+
+        // Purge pending access calls as they might produce additional changes
+        // to write out
+        session.getService().runPendingAccessTasks(session);
+
         ArrayList<ClientConnector> dirtyVisibleConnectors = ui
                 .getConnectorTracker().getDirtyVisibleConnectors();
-        VaadinSession session = ui.getSession();
         LegacyCommunicationManager manager = session.getCommunicationManager();
         // Paints components
         ConnectorTracker uiConnectorTracker = ui.getConnectorTracker();
@@ -156,8 +160,7 @@ public class UidlWriter implements Serializable {
             SystemMessages messages = ui.getSession().getService()
                     .getSystemMessages(ui.getLocale(), null);
             // TODO hilightedConnector
-            new MetadataWriter().write(ui, writer, repaintAll, analyzeLayouts,
-                    async, null, messages);
+            new MetadataWriter().write(ui, writer, repaintAll, async, messages);
             writer.write(", ");
 
             writer.write("\"resources\" : ");
@@ -277,10 +280,6 @@ public class UidlWriter implements Serializable {
                 writer.write(", \"styleDependencies\": "
                         + new JSONArray(styleDependencies).toString());
             }
-
-            // add any pending locale definitions requested by the client
-            writer.write(", \"locales\": ");
-            manager.printLocaleDeclarations(writer);
 
             if (manager.getDragAndDropService() != null) {
                 manager.getDragAndDropService().printJSONResponse(writer);
