@@ -24,9 +24,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -180,7 +182,8 @@ public class DevelopmentServerLauncher {
             String[] paths = serverArgs.get("slowdown").split(",");
             for (String p : paths) {
                 System.out.println("Slowing down: " + p);
-                webappcontext.addFilter(SlowFilter.class, p, 1);
+                webappcontext.addFilter(SlowFilter.class, p,
+                        EnumSet.of(DispatcherType.REQUEST));
             }
         }
         // --cache=/run/APP/PUBLISHED/*,/other/path/asd.jpg
@@ -189,7 +192,8 @@ public class DevelopmentServerLauncher {
             String[] paths = serverArgs.get("cache").split(",");
             for (String p : paths) {
                 System.out.println("Enabling cache for: " + p);
-                webappcontext.addFilter(CacheFilter.class, p, 1);
+                webappcontext.addFilter(CacheFilter.class, p,
+                        EnumSet.of(DispatcherType.REQUEST));
             }
         }
 

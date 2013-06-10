@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ivy-module [
+    <!ENTITY jetty.version "8.1.7.v20120910">
+]>
 <ivy-module version="2.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"
@@ -23,9 +26,6 @@
 
         <dependency org="javax.validation" name="validation-api"
             rev="1.0.0.GA" conf="build,ide -> default,sources" />
-        <!-- Servlet API -->
-        <dependency org="javax.servlet" name="servlet-api"
-            rev="2.4" conf="build-provided,ide -> default" />
         <!-- Google App Engine -->
         <dependency org="com.google.appengine" name="appengine-api-1.0-sdk"
             rev="1.2.1" conf="build-provided,ide -> default" />
@@ -47,19 +47,23 @@
         <dependency org="com.vaadin" name="vaadin-client-compiler"
             rev="${vaadin.version}" conf="build-provided-> build"></dependency>
 
-        <!-- Newest Jetty does not work with Ivy currently (orbit -> jar 
-            mapping problem) -->
+        <!-- Servlet 3.0 API -->
+        <dependency org="javax.servlet" name="javax.servlet-api"
+            rev="3.0.1" conf="build-provided,ide -> default" />
+
         <dependency org="org.eclipse.jetty" name="jetty-server"
-            rev="7.5.0.v20110901" conf="ide, build-provided, jetty-run->default" />
+            rev="&jetty.version;" conf="ide, build-provided, jetty-run->default">
+            <exclude org="org.eclipse.jetty.orbit"></exclude>
+        </dependency>
         <!-- jetty-servlets needed by ProxyTest, but not by jetty-runner -->
         <dependency org="org.eclipse.jetty" name="jetty-servlets"
-            rev="7.5.0.v20110901" conf="ide, build-provided, jetty-run->default" />
+            rev="&jetty.version;" conf="ide, build-provided, jetty-run->default" />
         <dependency org="org.eclipse.jetty" name="jetty-websocket"
-            rev="7.5.0.v20110901" conf="ide, jetty-run->default" />
+            rev="&jetty.version;" conf="ide, jetty-run->default" />
         <dependency org="org.eclipse.jetty" name="jetty-webapp"
-            rev="7.5.0.v20110901" conf="ide, build-provided, jetty-run->default" />
+            rev="&jetty.version;" conf="ide, build-provided, jetty-run->default" />
         <dependency org="org.mortbay.jetty" name="jetty-runner"
-            rev="7.5.0.v20110901" conf="jetty-run->default" />
+            rev="&jetty.version;" conf="jetty-run->default" />
 
         <dependency org="junit" name="junit" rev="4.5"
             conf="build,ide -> default" />
@@ -71,6 +75,10 @@
         <!-- Mainly for SQLContainer tests -->
         <dependency org="org.hsqldb" name="hsqldb" rev="2.2.6"
             conf="build,ide -> default" />
+
+        <dependency org="com.vaadin" name="vaadin-testbench"
+            rev="3.0.5" conf="build,ide -> default" />
+
     </dependencies>
 
 </ivy-module>
