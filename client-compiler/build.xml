@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 
-<project name="vaadin-client-compiler" basedir="." default="publish-local"
-    xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="vaadin-client-compiler" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant">
     <description>
-        Compiles build helpers used when building other modules.
+        Compiles build helpers used when building other
+        modules.
     </description>
     <include file="../common.xml" as="common" />
     <include file="../build.xml" as="vaadin" />
@@ -26,8 +26,7 @@
 
     <target name="jar">
         <!-- Get Git revision -->
-        <exec executable="git" outputproperty="git.revision"
-            failifexecutionfails="false" errorproperty="">
+        <exec executable="git" outputproperty="git.revision" failifexecutionfails="false" errorproperty="">
             <arg value="describe" />
             <arg value="--tags" />
             <arg value="--always" />

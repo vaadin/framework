@@ -1,21 +1,16 @@
 <?xml version="1.0"?>
 
-<project xmlns:antcontrib="antlib:net.sf.antcontrib" name="Vaadin Integration Tests"
-    basedir="." default="integration-test-all">
+<project xmlns:antcontrib="antlib:net.sf.antcontrib" name="Vaadin Integration Tests" basedir="." default="integration-test-all">
 
     <!-- Import common targets -->
     <import file="../common.xml" />
-    <dirname file="${ant.file.Vaadin Integration Tests}"
-        property="integration_test.dir" />
+    <dirname file="${ant.file.Vaadin Integration Tests}" property="integration_test.dir" />
 
     <!-- Target deploying demo.war -->
-    <fail unless="test.integration.server"
-        message="test.integration.server must be set for integration tests to run" />
+    <fail unless="test.integration.server" message="test.integration.server must be set for integration tests to run" />
 
-    <fail unless="test.integration.user"
-        message="test.integration.user must be set for integration tests to run" />
-    <fail unless="test.integration.antfile"
-        message="test.integration.antfile must be set for integration tests to run" />
+    <fail unless="test.integration.user" message="test.integration.user must be set for integration tests to run" />
+    <fail unless="test.integration.antfile" message="test.integration.antfile must be set for integration tests to run" />
 
     <!-- Test with these browsers -->
     <property name="test_browsers" value="winxp-firefox17-esr" />
@@ -39,28 +34,21 @@
 
     <!-- Upload war to deploy to ssh host -->
     <target name="integration-test-upload-demo">
-        <scp file="${demo.war}"
-            todir="${user}@${test.integration.server}:integration-tests/servers/demo.war"
-            keyfile="${sshkey.file}" passphrase="${passphrase}" />
+        <scp file="${demo.war}" todir="${user}@${test.integration.server}:integration-tests/servers/demo.war" keyfile="${sshkey.file}" passphrase="${passphrase}" />
     </target>
 
     <!-- Run basic integration test test -->
     <target name="integration-test-servlet">
-        <fileset dir="integration-testscripts" id="html-test-files"
-            includes="integration-test-${server-name}-servlet.html" />
+        <fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-${server-name}-servlet.html" />
         <pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
         <subant target="run-tests" failonerror="false" antfile="test.xml">
-            <property name="com.vaadin.testbench.lib.dir"
-                value="${com.vaadin.testbench.lib.dir}" />
-            <property name="com.vaadin.testbench.tester.host"
-                value="${com.vaadin.testbench.tester.host}" />
-            <property name="com.vaadin.testbench.deployment.url"
-                value="${deployment.url}" />
+            <property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
+            <property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
+            <property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
             <property name="server.start.succeeded" value="1" />
             <property name="browsers" value="${test_browsers}" />
             <property name="testfiles" value="${testfiles}" />
-            <property name="test-output-dir"
-                value="${integration_test.dir}/result/integration-test-output/${server-name}" />
+            <property name="test-output-dir" value="${integration_test.dir}/result/integration-test-output/${server-name}" />
             <property name="retries" value="0" />
 
             <fileset dir="." includes="test.xml" />
@@ -68,21 +56,16 @@
     </target>
 
     <target name="integration-test-push-servlet">
-        <fileset dir="integration-testscripts" id="html-test-files"
-            includes="integration-test-${server-name}-push-servlet.html" />
+        <fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-${server-name}-push-servlet.html" />
         <pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
         <subant target="run-tests" failonerror="false" antfile="test.xml">
-            <property name="com.vaadin.testbench.lib.dir"
-                value="${com.vaadin.testbench.lib.dir}" />
-            <property name="com.vaadin.testbench.tester.host"
-                value="${com.vaadin.testbench.tester.host}" />
-            <property name="com.vaadin.testbench.deployment.url"
-                value="${deployment.url}" />
+            <property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
+            <property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
+            <property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
             <property name="server.start.succeeded" value="1" />
             <property name="browsers" value="${test_browsers}" />
             <property name="testfiles" value="${testfiles}" />
-            <property name="test-output-dir"
-                value="${integration_test.dir}/result/integration-test-output/${server-name}" />
+            <property name="test-output-dir" value="${integration_test.dir}/result/integration-test-output/${server-name}" />
             <property name="retries" value="0" />
 
             <fileset dir="." includes="test.xml" />
@@ -91,16 +74,12 @@
 
     <target name="integration-test-theme">
         <subant target="run-tests" failonerror="false" antfile="test.xml">
-            <property name="com.vaadin.testbench.lib.dir"
-                value="${com.vaadin.testbench.lib.dir}" />
-            <property name="com.vaadin.testbench.tester.host"
-                value="${com.vaadin.testbench.tester.host}" />
-            <property name="com.vaadin.testbench.deployment.url"
-                value="${deployment.url}" />
+            <property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
+            <property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
+            <property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
             <property name="server.start.succeeded" value="1" />
             <property name="testfiles" value="${testfiles-theme}" />
-            <property name="test-output-dir"
-                value="${integration_test.dir}/result/integration-test-output/${server-name}" />
+            <property name="test-output-dir" value="${integration_test.dir}/result/integration-test-output/${server-name}" />
 
             <fileset dir="." includes="test.xml" />
         </subant>
@@ -108,30 +87,24 @@
 
     <!-- Run integration test on GAE -->
     <target name="integration-test-test-GAE">
-        <fileset dir="integration-testscripts" id="html-test-files"
-            includes="GoogleAppEngine/integration-test-GAE.html" />
+        <fileset dir="integration-testscripts" id="html-test-files" includes="GoogleAppEngine/integration-test-GAE.html" />
         <pathconvert pathsep=" " property="test-GAE" refid="html-test-files" />
 
         <subant target="run-tests" failonerror="false" antfile="test.xml">
-            <property name="com.vaadin.testbench.lib.dir"
-                value="${com.vaadin.testbench.lib.dir}" />
-            <property name="com.vaadin.testbench.tester.host"
-                value="${com.vaadin.testbench.tester.host}" />
-            <property name="com.vaadin.testbench.deployment.url"
-                value="http://vaadin-integration-test.appspot.com/" />
+            <property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
+            <property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
+            <property name="com.vaadin.testbench.deployment.url" value="http://vaadin-integration-test.appspot.com/" />
             <property name="server.start.succeeded" value="1" />
             <property name="browsers" value="${test_browsers}" />
             <property name="testfiles" value="${test-GAE}" />
-            <property name="test-output-dir"
-                value="../build/integration-test-gae-output" />
+            <property name="test-output-dir" value="../build/integration-test-gae-output" />
 
             <fileset dir="." includes="test.xml" />
         </subant>
     </target>
 
     <target name="integration-test-deploy-to-GAE">
-        <sshexec host="${test.integration.server}" username="${user}"
-            keyfile="${sshkey.file}" command="ant -f ${ant.hub} deploy-to-GAE" />
+        <sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} deploy-to-GAE" />
     </target>
 
 
@@ -224,8 +197,7 @@
 
 
     <target name="integration-test-liferay6">
-        <fileset dir="integration-testscripts" id="html-test-files"
-            includes="Liferay-6/integration-test-liferay-6.0.5.html" />
+        <fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-6/integration-test-liferay-6.0.5.html" />
         <pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 
         <antcall target="run-generic-integration-test">
@@ -236,14 +208,11 @@
     </target>
 
     <target name="integration-test-liferay6-theme">
-        <fileset dir="integration-testscripts" id="html-test-files"
-            includes="Liferay-6/Liferay6-and-6EE-theme-deploy.html" />
+        <fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-6/Liferay6-and-6EE-theme-deploy.html" />
         <pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 
-        <fileset dir="integration-testscripts" id="html-theme-files"
-            includes="Liferay-6/Liferay6-theme.html" />
-        <pathconvert pathsep=" " property="testfiles-theme"
-            refid="html-theme-files" />
+        <fileset dir="integration-testscripts" id="html-theme-files" includes="Liferay-6/Liferay6-theme.html" />
+        <pathconvert pathsep=" " property="testfiles-theme" refid="html-theme-files" />
 
 
         <antcall target="run-generic-integration-test">
@@ -254,8 +223,7 @@
     </target>
 
     <target name="integration-test-liferay5">
-        <fileset dir="integration-testscripts" id="html-test-files"
-            includes="Liferay-5/integration-test-liferay-5.2.3-portlet2.html" />
+        <fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-5/integration-test-liferay-5.2.3-portlet2.html" />
         <pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 
         <antcall target="run-generic-integration-test">
@@ -266,8 +234,7 @@
     </target>
 
     <target name="integration-test-liferay6ee">
-        <fileset dir="integration-testscripts" id="html-test-files"
-            includes="Liferay-6EE/integration-test-liferay-6ee.html" />
+        <fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-6EE/integration-test-liferay-6ee.html" />
         <pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 
         <antcall target="run-generic-integration-test">
@@ -278,14 +245,11 @@
     </target>
 
     <target name="integration-test-liferay6ee-theme">
-        <fileset dir="integration-testscripts" id="html-test-files"
-            includes="Liferay-6/Liferay6-and-6EE-theme-deploy.html" />
+        <fileset dir="integration-testscripts" id="html-test-files" includes="Liferay-6/Liferay6-and-6EE-theme-deploy.html" />
         <pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
 
-        <fileset dir="integration-testscripts" id="html-theme-files"
-            includes="Liferay-6EE/Liferay6EE-theme.html" />
-        <pathconvert pathsep=" " property="testfiles-theme"
-            refid="html-theme-files" />
+        <fileset dir="integration-testscripts" id="html-theme-files" includes="Liferay-6EE/Liferay6EE-theme.html" />
+        <pathconvert pathsep=" " property="testfiles-theme" refid="html-theme-files" />
 
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="600" />
@@ -295,8 +259,7 @@
     </target>
 
     <target name="integration-test-gatein3">
-        <fileset dir="integration-testscripts" id="html-test-files"
-            includes="GateIn-3/integration-test-GateIn-3.1.0-portlet2.html" />
+        <fileset dir="integration-testscripts" id="html-test-files" includes="GateIn-3/integration-test-GateIn-3.1.0-portlet2.html" />
         <pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="600" />
@@ -306,8 +269,7 @@
     </target>
 
     <target name="integration-test-exo3">
-        <fileset dir="integration-testscripts" id="html-test-files"
-            includes="eXo-3/integration-test-eXo-3.0.3-portlet2.html" />
+        <fileset dir="integration-testscripts" id="html-test-files" includes="eXo-3/integration-test-eXo-3.0.3-portlet2.html" />
         <pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="600" />
@@ -342,8 +304,7 @@
 
 
     <target name="integration-test-weblogicPortal">
-        <fileset dir="integration-testscripts" id="html-test-files"
-            includes="weblogic-portal/integration-test-WebLogic-Portal-10.3.2-portlet2.html" />
+        <fileset dir="integration-testscripts" id="html-test-files" includes="weblogic-portal/integration-test-WebLogic-Portal-10.3.2-portlet2.html" />
         <pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="600" />
@@ -362,8 +323,7 @@
     <target name="integration-test-all">
         <property name="passphrase" value="${passphrase}" />
         <fail unless="sshkey.file" message="You must define an ssh.keyfile parameter" />
-        <fail unless="com.vaadin.testbench.screenshot.directory"
-            message="You must define a com.vaadin.testbench.screenshot.directory parameter" />
+        <fail unless="com.vaadin.testbench.screenshot.directory" message="You must define a com.vaadin.testbench.screenshot.directory parameter" />
         <parallel>
             <antcontrib:trycatch property="tried">
                 <try>
@@ -423,8 +383,7 @@
         <antcontrib:if>
             <isset property="startDelay" />
             <then>
-                <antcontrib:math result="sleepTime"
-                    datatype="int">
+                <antcontrib:math result="sleepTime" datatype="int">
                     <op op="rint">
                         <op op="*">
                             <num value="${startDelay}" />
@@ -438,8 +397,7 @@
             </then>
         </antcontrib:if>
 
-        <scp todir="${user}@${target-host}:." keyfile="${sshkey.file}"
-            trust="yes" passphrase="${passphrase}">
+        <scp todir="${user}@${target-host}:." keyfile="${sshkey.file}" trust="yes" passphrase="${passphrase}">
             <fileset dir="integration_base_files">
                 <include name="*" />
             </fileset>
@@ -451,22 +409,16 @@
             <try>
                 <!-- timeout in one hour (remote end should timeout in 55 
                     minutes) -->
-                <sshexec host="${target-host}" outputproperty="lock-output"
-                    timeout="3600000" username="${user}" keyfile="${sshkey.file}"
-                    trust="yes" command="chmod +x *.sh; ant -f deploy.xml get-lock" />
+                <sshexec host="${target-host}" outputproperty="lock-output" timeout="3600000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="chmod +x *.sh; ant -f deploy.xml get-lock" />
                 <antcall target="echo-prefix">
                     <param name="prefix" value="${target-server}: " />
                     <param name="message" value="${lock-output}" />
                 </antcall>
 
-                <scp file="${demo.war}" todir="${user}@${target-host}:demo.war"
-                    keyfile="${sshkey.file}" trust="yes" passphrase="${passphrase}" />
+                <scp file="${demo.war}" todir="${user}@${target-host}:demo.war" keyfile="${sshkey.file}" trust="yes" passphrase="${passphrase}" />
 
                 <!-- timeout in 15 minutes -->
-                <sshexec host="${target-host}" outputproperty="start-output"
-                    timeout="900000" username="${user}" keyfile="${sshkey.file}"
-                    trust="yes" command="ant -f deploy.xml startup-and-deploy"
-                    failonerror="false" />
+                <sshexec host="${target-host}" outputproperty="start-output" timeout="900000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml startup-and-deploy" failonerror="false" />
                 <antcall target="echo-prefix">
                     <param name="prefix" value="${target-server}: " />
                     <param name="message" value="${start-output}" />
@@ -475,20 +427,15 @@
                 <fail message="${start-output}">
                     <condition>
                         <not>
-                            <contains string="${start-output}"
-                                substring="Demo deployed successfully" />
+                            <contains string="${start-output}" substring="Demo deployed successfully" />
                         </not>
                     </condition>
                 </fail>
 
-                <copy
-                    file="integration-testscripts/common/integration_test.tpl"
-                    tofile="integration-testscripts/integration-test-${target-server}-servlet.html"
-                    overwrite="true" />
+                <copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-${target-server}-servlet.html" overwrite="true" />
                 <antcall target="integration-test-servlet">
                     <param name="server-name" value="${target-server}" />
-                    <param name="deployment.url"
-                        value="http://${target-host}:${target-port}" />
+                    <param name="deployment.url" value="http://${target-host}:${target-port}" />
                 </antcall>
 
                 <!-- Run theme tests in all browsers if there's a property 
@@ -498,21 +445,16 @@
                     <antcontrib:then>
                         <antcall target="integration-test-theme">
                             <param name="server-name" value="${target-server}" />
-                            <param name="deployment.url"
-                                value="http://${target-host}:${target-port}" />
+                            <param name="deployment.url" value="http://${target-host}:${target-port}" />
                         </antcall>
                     </antcontrib:then>
                 </antcontrib:if>
 
                 <!-- Run integration tests with push -->
-                <copy
-                    file="integration-testscripts/common/integration_push_test.tpl"
-                    tofile="integration-testscripts/integration-test-${target-server}-push-servlet.html"
-                    overwrite="true" />
+                <copy file="integration-testscripts/common/integration_push_test.tpl" tofile="integration-testscripts/integration-test-${target-server}-push-servlet.html" overwrite="true" />
                 <antcall target="integration-test-push-servlet">
                     <param name="server-name" value="${target-server}" />
-                    <param name="deployment.url"
-                        value="http://${target-host}:${target-port}" />
+                    <param name="deployment.url" value="http://${target-host}:${target-port}" />
                 </antcall>
 
                 <!-- Run theme tests in all browsers if there's a property 
@@ -522,17 +464,13 @@
                     <antcontrib:then>
                         <antcall target="integration-test-theme">
                             <param name="server-name" value="${target-server}" />
-                            <param name="deployment.url"
-                                value="http://${target-host}:${target-port}" />
+                            <param name="deployment.url" value="http://${target-host}:${target-port}" />
                         </antcall>
                     </antcontrib:then>
                 </antcontrib:if>
 
                 <!-- timeout in five minutes -->
-                <sshexec host="${target-host}" outputproperty="stop-output"
-                    timeout="600000" username="${user}" keyfile="${sshkey.file}"
-                    trust="yes" command="ant -f deploy.xml shutdown-and-cleanup"
-                    failonerror="false" />
+                <sshexec host="${target-host}" outputproperty="stop-output" timeout="600000" username="${user}" keyfile="${sshkey.file}" trust="yes" command="ant -f deploy.xml shutdown-and-cleanup" failonerror="false" />
                 <antcall target="echo-prefix">
                     <param name="prefix" value="${target-server}: " />
                     <param name="message" value="${stop-output}" />
@@ -545,9 +483,7 @@
     </target>
 
     <target name="echo-prefix">
-        <antcontrib:propertyregex property="message-prefixed"
-            input="${prefix}${message}" regexp="\n" replace="\0${prefix}"
-            global="true" defaultValue="${prefix}${message}" />
+        <antcontrib:propertyregex property="message-prefixed" input="${prefix}${message}" regexp="\n" replace="\0${prefix}" global="true" defaultValue="${prefix}${message}" />
         <echo message="${message-prefixed}" />
     </target>
 
@@ -559,8 +495,7 @@
                 <antcall target="do-run-generic-test" />
             </try>
             <catch>
-                <antcontrib:antcallback target="teamcity-escape"
-                    return="tried-escaped">
+                <antcontrib:antcallback target="teamcity-escape" return="tried-escaped">
                     <param name="returnTo" value="tried-escaped" />
                     <param name="message" value="${tried}" />
                 </antcontrib:antcallback>
@@ -580,15 +515,9 @@
         <!-- Should also perform other escaping (\u0085, \u2028 and \u2029) 
             - see http://confluence.jetbrains.net/display/TCD65/Build+Script+Interaction+with+TeamCity -->
         <!-- Immutable properties -> needs to create a new one every time -->
-        <antcontrib:propertyregex property="details-escaped1"
-            input="${message}" regexp="['|\[\]]" replace="|\0" global="true"
-            defaultValue="${message}" />
-        <antcontrib:propertyregex property="details-escaped2"
-            input="${details-escaped1}" regexp="\n" replace="|n" global="true"
-            defaultValue="${details-escaped1}" />
-        <antcontrib:propertyregex property="details-escaped3"
-            input="${details-escaped2}" regexp="\r" replace="|r" global="true"
-            defaultValue="${details-escaped2}" />
+        <antcontrib:propertyregex property="details-escaped1" input="${message}" regexp="['|\[\]]" replace="|\0" global="true" defaultValue="${message}" />
+        <antcontrib:propertyregex property="details-escaped2" input="${details-escaped1}" regexp="\n" replace="|n" global="true" defaultValue="${details-escaped1}" />
+        <antcontrib:propertyregex property="details-escaped3" input="${details-escaped2}" regexp="\r" replace="|r" global="true" defaultValue="${details-escaped2}" />
 
         <property name="${returnTo}" value="${details-escaped3}" />
     </target>
@@ -601,8 +530,7 @@
                 <antcall target="integration-test-${target-server}" />
             </try>
             <catch>
-                <antcallback target="teamcity-escape"
-                    return="tried-escaped">
+                <antcallback target="teamcity-escape" return="tried-escaped">
                     <param name="returnTo" value="tried-escaped" />
                     <param name="message" value="${tried}" />
                 </antcallback>
@@ -617,18 +545,15 @@
     </target>
 
     <target name="integration-test-get-lock">
-        <sshexec host="${test.integration.server}" username="${user}"
-            keyfile="${sshkey.file}" command="ant -f ${ant.hub} get-lock" />
+        <sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} get-lock" />
     </target>
 
     <target name="integration-test-release-lock">
-        <sshexec host="${test.integration.server}" username="${user}"
-            keyfile="${sshkey.file}" command="ant -f ${ant.hub} release-lock" />
+        <sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} release-lock" />
     </target>
 
     <!-- Remove demo.war -->
     <target name="integration-test-clean">
-        <sshexec host="${test.integration.server}" username="${user}"
-            keyfile="${sshkey.file}" command="ant -f ${ant.hub} clean" />
+        <sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} clean" />
     </target>
 </project>

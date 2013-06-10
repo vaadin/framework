@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="vaadin" basedir="." default="package"
-    xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="vaadin" basedir="." default="package" xmlns:ivy="antlib:org.apache.ivy.ant">
     <include file="common.xml" as="common" />
 
     <path id="vaadin.buildhelpers.classpath" location="${vaadin.basedir}/buildhelpers/result/classes" />
@@ -9,9 +8,7 @@
     <!-- ================================= target: all ================================= -->
     <!--<target name="all" description="Compiles all parts of the project" 
         depends="buildhelpers,theme-compiler,shared,server,client"> -->
-    <target name="package"
-        description="Compiles and packages all modules in the project"
-        depends="buildorder">
+    <target name="package" description="Compiles and packages all modules in the project" depends="buildorder">
         <subant buildpathref="build-path" target="publish-local">
         </subant>
     </target>
@@ -47,15 +44,13 @@
         <subant buildpathref="build-path" target="test" />
     </target>
     <target name="test-all" depends="buildorder">
-        <property name="war.file"
-            location="result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
+        <property name="war.file" location="result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
         <parallel>
             <sequential>
                 <!-- Sleep before running integration tests so testbench 
                     tests have time to compile and start -->
                 <sleep minutes="4" />
-                <ant antfile="uitest/integration_tests.xml" target="integration-test-all"
-                    inheritall="false" inheritrefs="false">
+                <ant antfile="uitest/integration_tests.xml" target="integration-test-all" inheritall="false" inheritrefs="false">
                     <property name="demo.war" value="${war.file}" />
                 </ant>
             </sequential>
@@ -70,8 +65,7 @@
         <condition property="java.version.matches">
             <equals arg1="${ant.java.version}" arg2="${vaadin.java.version}" />
         </condition>
-        <fail unless="java.version.matches"
-            message="Java version is ${ant.java.version}, but Vaadin must be compiled with genuine Java ${vaadin.java.version} compiler." />
+        <fail unless="java.version.matches" message="Java version is ${ant.java.version}, but Vaadin must be compiled with genuine Java ${vaadin.java.version} compiler." />
         <echo>Java version is ${ant.java.version} as required.</echo>
     </target>
 

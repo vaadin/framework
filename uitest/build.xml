@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="vaadin-uitest" basedir="." default="publish-local"
-    xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="vaadin-uitest" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant">
     <description>
         Provides a uitest WAR containing Vaadin UI tests
     </description>
@@ -11,8 +10,7 @@
     <!-- global properties -->
     <property name="module.name" value="vaadin-uitest" />
     <property name="result.dir" value="result" />
-    <property name="result.war"
-        location="${result.dir}/lib/${module.name}-${vaadin.version}.war" />
+    <property name="result.war" location="${result.dir}/lib/${module.name}-${vaadin.version}.war" />
 
     <path id="classpath.compile.custom">
     </path>
@@ -22,12 +20,10 @@
             to the source path -->
 
         <ivy:resolve resolveid="common" conf="build, build-provided" />
-        <ivy:cachepath pathid="classpath.compile.dependencies"
-            conf="build, build-provided" />
+        <ivy:cachepath pathid="classpath.compile.dependencies" conf="build, build-provided" />
     </target>
 
-    <target name="compile" description="Compiles the module"
-        depends="dependencies">
+    <target name="compile" description="Compiles the module" depends="dependencies">
 
         <fail unless="module.name" message="No module name given" />
         <property name="result.dir" location="result" />
@@ -37,21 +33,16 @@
         <mkdir dir="${classes}" />
 
         <!-- TODO: Get rid of this -->
-        <javac destdir="${classes}" source="${vaadin.java.version}"
-            target="${vaadin.java.version}" debug="true" encoding="UTF-8"
-            includeantruntime="false">
+        <javac destdir="${classes}" source="${vaadin.java.version}" target="${vaadin.java.version}" debug="true" encoding="UTF-8" includeantruntime="false">
             <src path="${server.test.sources}" />
             <include name="com/vaadin/tests/data/bean/**" />
             <include name="com/vaadin/tests/VaadinClasses.java" />
-            <include
-                name="com/vaadin/data/util/sqlcontainer/SQLTestsConstants.java" />
+            <include name="com/vaadin/data/util/sqlcontainer/SQLTestsConstants.java" />
             <classpath refid="classpath.compile.dependencies" />
             <classpath refid="classpath.compile.custom" />
         </javac>
 
-        <javac destdir="${classes}" source="${vaadin.java.version}"
-            target="${vaadin.java.version}" debug="true" encoding="UTF-8"
-            includeantruntime="false">
+        <javac destdir="${classes}" source="${vaadin.java.version}" target="${vaadin.java.version}" debug="true" encoding="UTF-8" includeantruntime="false">
             <src path="${src}" />
             <classpath location="${classes}" />
             <classpath refid="classpath.compile.dependencies" />
@@ -60,8 +51,7 @@
     </target>
 
     <target name="testing-widgetset" depends="dependencies,compile">
-        <property name="module"
-            value="com.vaadin.tests.widgetset.TestingWidgetSet" />
+        <property name="module" value="com.vaadin.tests.widgetset.TestingWidgetSet" />
         <property name="style" value="OBF" />
         <property name="localWorkers" value="2" />
         <property name="extraParams" value="" />
@@ -73,8 +63,7 @@
         <echo>Compiling ${module} to ${module.output.dir}</echo>
 
         <!-- compile the module -->
-        <java classname="com.google.gwt.dev.Compiler" classpathref="classpath.compile.dependencies"
-            failonerror="yes" fork="yes" maxmemory="512m">
+        <java classname="com.google.gwt.dev.Compiler" classpathref="classpath.compile.dependencies" failonerror="yes" fork="yes" maxmemory="512m">
             <classpath location="src" />
             <classpath location="${classes}" />
             <arg value="-workDir" />
@@ -109,8 +98,7 @@
         <property name="src" location="${result.dir}/../src" />
 
         <ivy:resolve resolveid="common" conf="build" />
-        <ivy:cachepath pathid="classpath.runtime.dependencies"
-            conf="build" />
+        <ivy:cachepath pathid="classpath.runtime.dependencies" conf="build" />
 
         <delete dir="${deps.dir}" />
         <mkdir dir="${deps.dir}" />

@@ -2,7 +2,8 @@
 
 <project name="vaadin-buildhelpers" basedir="." default="publish-local">
     <description>
-        Compiles build helpers used when building other modules.
+        Compiles build helpers used when building other
+        modules.
     </description>
     <include file="../build.xml" as="vaadin" />
     <include file="../common.xml" as="common" />
@@ -38,8 +39,7 @@
 
     <target name="fetch-release-notes-tickets">
         <antcall target="common.exec-buildhelper">
-            <param name="main.class"
-                value="com.vaadin.buildhelpers.FetchReleaseNotesTickets" />
+            <param name="main.class" value="com.vaadin.buildhelpers.FetchReleaseNotesTickets" />
             <param name="output" value="${output}" />
         </antcall>
     </target>
