@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -176,11 +177,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
         List<String> styles = getState().styles;
         styles.clear();
-        String[] styleParts = style.split(" +");
-        for (String part : styleParts) {
-            if (part.length() > 0) {
-                styles.add(part);
-            }
+        StringTokenizer tokenizer = new StringTokenizer(style, " ");
+        while (tokenizer.hasMoreTokens()) {
+            styles.add(tokenizer.nextToken());
         }
     }
 
@@ -201,8 +200,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
         }
         if (style.contains(" ")) {
             // Split space separated style names and add them one by one.
-            for (String realStyle : style.split(" ")) {
-                addStyleName(realStyle);
+            StringTokenizer tokenizer = new StringTokenizer(style, " ");
+            while (tokenizer.hasMoreTokens()) {
+                addStyleName(tokenizer.nextToken());
             }
             return;
         }
@@ -219,11 +219,9 @@ public abstract class AbstractComponent extends AbstractClientConnector
     @Override
     public void removeStyleName(String style) {
         if (ComponentStateUtil.hasStyles(getState())) {
-            String[] styleParts = style.split(" +");
-            for (String part : styleParts) {
-                if (part.length() > 0) {
-                    getState().styles.remove(part);
-                }
+            StringTokenizer tokenizer = new StringTokenizer(style, " ");
+            while (tokenizer.hasMoreTokens()) {
+                getState().styles.remove(tokenizer.nextToken());
             }
         }
     }
