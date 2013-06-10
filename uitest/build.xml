@@ -121,6 +121,7 @@
                 <include name="VAADIN/themes/tests-*/**" />
                 <include name="VAADIN/themes/reindeer-tests/**" />
                 <include name="WEB-INF/*.xml" />
+                <include name="WEB-INF/web.xml.2.4" />
             </fileset>
             <classes dir="${classes}" />
             <classes dir="${src}" />
