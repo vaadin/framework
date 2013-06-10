@@ -399,8 +399,7 @@
         <fail unless="cs.src" message="No cs.src parameter given" />
         <property name="result.dir.full" location="${result.dir}" />
         <mkdir dir="${result.dir}" />
-        <echo>##teamcity[importData type='checkstyle'
-            path='${result.dir.full}/checkstyle-errors.xml']</echo>
+        <echo>##teamcity[importData type='checkstyle' path='${result.dir.full}/checkstyle-errors.xml']</echo>
         <cs:checkstyle config="${cs.xml}" failOnViolation="false">
             <fileset dir="${cs.src}" includes="**/*.java">
                 <exclude name="com/vaadin/sass/internal/parser/Parser.java" />

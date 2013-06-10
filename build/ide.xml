@@ -11,8 +11,7 @@
     <property name="gwt.user.super.src" location="${gwt.basedir}/user/super" />
 
     <property name="work.dir" location="work" />
-    <echo>Using gwt files from ${gwt.user.classes} and
-        ${gwt.dev.classes}</echo>
+    <echo>Using gwt files from ${gwt.user.classes} and ${gwt.dev.classes}</echo>
 
     <ivy:resolve file="client-compiler/ivy.xml" conf="ide" />
     <ivy:cachepath pathid="client-compiler.deps" conf="ide" />
@@ -103,9 +102,7 @@
 
         <mkdir dir="${module.output.dir}" />
 
-        <echo>Compiling ${module} to ${module.output.dir} with
-            parameters -logLevel TRACE -style ${style} -localWorkers
-            ${localWorkers} -strict ${extraParams}</echo>
+        <echo>Compiling ${module} to ${module.output.dir} with parameters -logLevel TRACE -style ${style} -localWorkers ${localWorkers} -strict ${extraParams}</echo>
 
         <!--<ivy:resolve inline="true" organisation="javax.validation" module="validation-api" 
             revision="1.0.0.GA"/> -->

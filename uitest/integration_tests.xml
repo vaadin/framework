@@ -391,8 +391,7 @@
                         </op>
                     </op>
                 </antcontrib:math>
-                <echo>Delaying startup of ${target-server} with
-                    ${sleepTime} seconds</echo>
+                <echo>Delaying startup of ${target-server} with ${sleepTime} seconds</echo>
                 <sleep seconds="${sleepTime}" />
             </then>
         </antcontrib:if>
@@ -488,8 +487,7 @@
     </target>
 
     <target name="run-generic-integration-test">
-        <concat>##teamcity[testStarted name='${target-server}'
-            flowId='${target-server}']</concat>
+        <concat>##teamcity[testStarted name='${target-server}' flowId='${target-server}']</concat>
         <antcontrib:trycatch property="tried">
             <try>
                 <antcall target="do-run-generic-test" />
@@ -499,14 +497,10 @@
                     <param name="returnTo" value="tried-escaped" />
                     <param name="message" value="${tried}" />
                 </antcontrib:antcallback>
-                <concat>##teamcity[testFailed name='${target-server}'
-                    flowId='${target-server}' message='Integration test
-                    for ${target-server} failed.'
-                    details='${tried-escaped}']</concat>
+                <concat>##teamcity[testFailed name='${target-server}' flowId='${target-server}' message='Integration test for ${target-server} failed.' details='${tried-escaped}']</concat>
             </catch>
         </antcontrib:trycatch>
-        <concat>##teamcity[testFinished name='${target-server}'
-            flowId='${target-server}']"</concat>
+        <concat>##teamcity[testFinished name='${target-server}' flowId='${target-server}']"</concat>
     </target>
 
     <target name="teamcity-escape">
@@ -523,8 +517,7 @@
     </target>
 
     <target name="run-integration-test">
-        <concat>##teamcity[testStarted name='${target-server}'
-            flowId='${target-server}']</concat>
+        <concat>##teamcity[testStarted name='${target-server}' flowId='${target-server}']</concat>
         <antcontrib:trycatch property="tried">
             <try>
                 <antcall target="integration-test-${target-server}" />
@@ -534,14 +527,10 @@
                     <param name="returnTo" value="tried-escaped" />
                     <param name="message" value="${tried}" />
                 </antcallback>
-                <concat>##teamcity[testFailed name='${target-server}'
-                    flowId='${target-server}' message='Integration test
-                    for ${target-server} failed.'
-                    details='${tried-escaped}']"</concat>
+                <concat>##teamcity[testFailed name='${target-server}' flowId='${target-server}' message='Integration test for ${target-server} failed.' details='${tried-escaped}']"</concat>
             </catch>
         </antcontrib:trycatch>
-        <concat>##teamcity[testFinished name='${target-server}'
-            flowId='${target-server}']"</concat>
+        <concat>##teamcity[testFinished name='${target-server}' flowId='${target-server}']"</concat>
     </target>
 
     <target name="integration-test-get-lock">
