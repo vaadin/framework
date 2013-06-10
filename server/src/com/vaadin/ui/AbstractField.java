@@ -740,19 +740,31 @@ public abstract class AbstractField<T> extends AbstractComponent implements
      */
     private Object convertToModel(T fieldValue, Locale locale)
             throws Converter.ConversionException {
-        Class<?> modelType = null;
-        Property pd = getPropertyDataSource();
-        if (pd != null) {
-            modelType = pd.getType();
-        } else if (getConverter() != null) {
-            modelType = getConverter().getModelType();
-        }
+        Class<?> modelType = getModelType();
         try {
             return ConverterUtil.convertToModel(fieldValue,
                     (Class<Object>) modelType, getConverter(), locale);
         } catch (ConversionException e) {
             throw new ConversionException(getConversionError(modelType, e), e);
         }
+    }
+
+    /**
+     * Retrieves the type of the currently used data model. If the field has no
+     * data source then the model type of the converter is used.
+     * 
+     * @since 7.1
+     * @return The type of the currently used data model or null if no data
+     *         source or converter is set.
+     */
+    protected Class<?> getModelType() {
+        Property<?> pd = getPropertyDataSource();
+        if (pd != null) {
+            return pd.getType();
+        } else if (getConverter() != null) {
+            return getConverter().getModelType();
+        }
+        return null;
     }
 
     /**
@@ -935,7 +947,7 @@ public abstract class AbstractField<T> extends AbstractComponent implements
         if (getConverter() != null) {
             try {
                 valueToValidate = getConverter().convertToModel(fieldValue,
-                        getLocale());
+                        getModelType(), getLocale());
             } catch (ConversionException e) {
                 throw new InvalidValueException(getConversionError(
                         getConverter().getModelType(), e));

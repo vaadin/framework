@@ -44,9 +44,10 @@ public class StringToDoubleConverter extends
      * java.util.Locale)
      */
     @Override
-    public Double convertToModel(String value, Locale locale)
+    public Double convertToModel(String value,
+            Class<? extends Double> targetType, Locale locale)
             throws ConversionException {
-        Number n = convertToNumber(value, locale);
+        Number n = convertToNumber(value, targetType, locale);
         return n == null ? null : n.doubleValue();
     }
 

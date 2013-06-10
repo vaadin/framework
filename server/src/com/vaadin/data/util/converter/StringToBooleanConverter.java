@@ -35,10 +35,11 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
      * 
      * @see
      * com.vaadin.data.util.converter.Converter#convertToModel(java.lang.Object,
-     * java.util.Locale)
+     * java.lang.Class, java.util.Locale)
      */
     @Override
-    public Boolean convertToModel(String value, Locale locale)
+    public Boolean convertToModel(String value,
+            Class<? extends Boolean> targetType, Locale locale)
             throws ConversionException {
         if (value == null || value.isEmpty()) {
             return null;
@@ -80,10 +81,11 @@ public class StringToBooleanConverter implements Converter<String, Boolean> {
      * 
      * @see
      * com.vaadin.data.util.converter.Converter#convertToPresentation(java.lang
-     * .Object, java.util.Locale)
+     * .Object, java.lang.Class, java.util.Locale)
      */
     @Override
-    public String convertToPresentation(Boolean value, Locale locale)
+    public String convertToPresentation(Boolean value,
+            Class<? extends String> targetType, Locale locale)
             throws ConversionException {
         if (value == null) {
             return null;

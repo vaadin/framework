@@ -9,14 +9,15 @@ public class TestStringToIntegerConverter extends TestCase {
     StringToIntegerConverter converter = new StringToIntegerConverter();
 
     public void testNullConversion() {
-        assertEquals(null, converter.convertToModel(null, null));
+        assertEquals(null, converter.convertToModel(null, null, null));
     }
 
     public void testEmptyStringConversion() {
-        assertEquals(null, converter.convertToModel("", null));
+        assertEquals(null, converter.convertToModel("", Integer.class, null));
     }
 
     public void testValueConversion() {
-        assertEquals(Integer.valueOf(10), converter.convertToModel("10", null));
+        assertEquals(Integer.valueOf(10),
+                converter.convertToModel("10", Integer.class, null));
     }
 }
