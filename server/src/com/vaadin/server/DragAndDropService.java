@@ -315,12 +315,6 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     }
 
     @Override
-    public void setParent(ClientConnector parent) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void attach() {
         // TODO Auto-generated method stub
 

@@ -84,8 +84,6 @@ public abstract class AbstractClientConnector implements ClientConnector,
 
     private ArrayList<Extension> extensions = new ArrayList<Extension>();
 
-    private ClientConnector parent;
-
     /**
      * The EventRouter used for the event model.
      */
@@ -561,38 +559,6 @@ public abstract class AbstractClientConnector implements ClientConnector,
         extension.setParent(null);
         extensions.remove(extension);
         markAsDirty();
-    }
-
-    @Override
-    public void setParent(ClientConnector parent) {
-
-        // If the parent is not changed, don't do anything
-        if (parent == this.parent) {
-            return;
-        }
-
-        if (parent != null && this.parent != null) {
-            throw new IllegalStateException(getClass().getName()
-                    + " already has a parent.");
-        }
-
-        // Send detach event if the component have been connected to a window
-        if (isAttached()) {
-            detach();
-        }
-
-        // Connect to new parent
-        this.parent = parent;
-
-        // Send attach event if connected to an application
-        if (isAttached()) {
-            attach();
-        }
-    }
-
-    @Override
-    public ClientConnector getParent() {
-        return parent;
     }
 
     /*
