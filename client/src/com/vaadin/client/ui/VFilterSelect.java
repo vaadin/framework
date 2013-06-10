@@ -1201,7 +1201,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      * @param immediate
      *            Whether to send the options request immediately
      */
-    private void filterOptions(int page, String filter, boolean immediate) {
+    protected void filterOptions(int page, String filter, boolean immediate) {
         if (enableDebug) {
             debug("VFS: filterOptions(" + page + ", " + filter + ", "
                     + immediate + ")");
