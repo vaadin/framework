@@ -32,14 +32,33 @@ import org.junit.Test;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.DeploymentConfiguration.LegacyProperyToStringMode;
 import com.vaadin.server.VaadinServletConfigurationTest.MockUI;
+import com.vaadin.server.VaadinServletConfigurationTest.MockUI.ServletInUI;
 import com.vaadin.ui.UI;
 
 public class VaadinServletConfigurationTest {
     public static class MockUI extends UI {
+
+        public static class ServletInUI extends VaadinServlet {
+            // This servlet should automatically be configured to use the
+            // enclosing UI class
+        }
+
         @Override
         protected void init(VaadinRequest request) {
             // Do nothing
         }
+    }
+
+    @Test
+    public void testEnclosingUIClass() throws Exception {
+        ServletInUI servlet = new MockUI.ServletInUI();
+        servlet.init(new MockServletConfig());
+
+        Class<? extends UI> uiClass = new DefaultUIProvider()
+                .getUIClass(new UIClassSelectionEvent(new VaadinServletRequest(
+                        EasyMock.createMock(HttpServletRequest.class), servlet
+                                .getService())));
+        Assert.assertEquals(MockUI.class, uiClass);
     }
 
     @Test

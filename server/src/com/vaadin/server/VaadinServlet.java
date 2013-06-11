@@ -44,6 +44,7 @@ import com.vaadin.annotations.VaadinServletConfiguration.InitParameterName;
 import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.server.communication.ServletUIInitHandler;
 import com.vaadin.shared.JsonConstants;
+import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
 @SuppressWarnings("serial")
@@ -68,6 +69,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
         CurrentInstance.clearAll();
         super.init(servletConfig);
         Properties initParameters = new Properties();
+
+        readUiFromEnclosingClass(initParameters);
 
         readConfigurationAnnotation(initParameters);
 
@@ -99,6 +102,15 @@ public class VaadinServlet extends HttpServlet implements Constants {
         servletInitialized();
 
         CurrentInstance.clearAll();
+    }
+
+    private void readUiFromEnclosingClass(Properties initParameters) {
+        Class<?> enclosingClass = getClass().getEnclosingClass();
+
+        if (enclosingClass != null && UI.class.isAssignableFrom(enclosingClass)) {
+            initParameters.put(VaadinSession.UI_PARAMETER,
+                    enclosingClass.getName());
+        }
     }
 
     private void readConfigurationAnnotation(Properties initParameters)
