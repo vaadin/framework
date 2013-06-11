@@ -33,6 +33,8 @@ public abstract class AbstractExtension extends AbstractClientConnector
         implements Extension {
     private boolean previouslyAttached = false;
 
+    private ClientConnector parent;
+
     /**
      * Gets a type that the parent must be an instance of. Override this if the
      * extension only support certain targets, e.g. if only TextFields can be
@@ -69,7 +71,7 @@ public abstract class AbstractExtension extends AbstractClientConnector
 
         Class<? extends ClientConnector> supportedParentType = getSupportedParentType();
         if (parent == null || supportedParentType.isInstance(parent)) {
-            super.setParent(parent);
+            internalSetParent(parent);
             previouslyAttached = true;
         } else {
             throw new IllegalArgumentException(getClass().getName()
@@ -77,6 +79,35 @@ public abstract class AbstractExtension extends AbstractClientConnector
                     + supportedParentType.getName() + " but attach to "
                     + parent.getClass().getName() + " was attempted.");
         }
+    }
+
+    /**
+     * Actually sets the parent and calls required listeners.
+     * 
+     * @since 7.1
+     * @param parent
+     *            The parent to set
+     */
+    private void internalSetParent(ClientConnector parent) {
+
+        // Send a detach event if the component is currently attached
+        if (isAttached()) {
+            detach();
+        }
+
+        // Connect to new parent
+        this.parent = parent;
+
+        // Send attach event if the component is now attached
+        if (isAttached()) {
+            attach();
+        }
+
+    }
+
+    @Override
+    public ClientConnector getParent() {
+        return parent;
     }
 
 }

@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="vaadin-push" basedir="." default="publish-local"
-    xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="vaadin-push" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant">
     <description>
         Meta package which defines dependencies needed for push
     </description>
@@ -28,18 +27,11 @@
     <target name="vaadinPush.js">
         <mkdir dir="${result.dir}/js/VAADIN" />
         <property name="vaadinPush.js.output" location="${result.dir}/js/VAADIN/vaadinPush.js" />
-        <property name="vaadinPush.js.combined.output"
-            location="${result.dir}/js/VAADIN/push.combined.js" />
+        <property name="vaadinPush.js.combined.output" location="${result.dir}/js/VAADIN/push.combined.js" />
 
-        <loadfile
-            srcfile="${vaadin.basedir}/WebContent/VAADIN/jquery-${jquery.version}.js"
-            property="jquery.js.contents" />
-        <loadfile
-            srcfile="${vaadin.basedir}/WebContent/VAADIN/jquery.atmosphere.js"
-            property="jquery.atmosphere.js.contents" />
-        <loadfile
-            srcfile="${vaadin.basedir}/WebContent/VAADIN/vaadinPush.js.tpl"
-            property="vaadinPush.js.contents">
+        <loadfile srcfile="${vaadin.basedir}/WebContent/VAADIN/jquery-${jquery.version}.js" property="jquery.js.contents" />
+        <loadfile srcfile="${vaadin.basedir}/WebContent/VAADIN/jquery.atmosphere.js" property="jquery.atmosphere.js.contents" />
+        <loadfile srcfile="${vaadin.basedir}/WebContent/VAADIN/vaadinPush.js.tpl" property="vaadinPush.js.contents">
             <filterchain>
                 <replacetokens begintoken="@" endtoken="@">
                     <token key="jquery.js" value="${jquery.js.contents}" />
@@ -50,9 +42,7 @@
         <echo file="${vaadinPush.js.combined.output}">${vaadinPush.js.contents}</echo>
 
         <!-- Minify -->
-        <ivy:retrieve organisation="com.yahoo.platform.yui"
-            module="yuicompressor" revision="2.4.7" inline="true" type="jar"
-            pattern="${result.dir}/compressor.jar" />
+        <ivy:retrieve organisation="com.yahoo.platform.yui" module="yuicompressor" revision="2.4.7" inline="true" type="jar" pattern="${result.dir}/compressor.jar" />
         <java jar="${result.dir}/compressor.jar" fork="true">
             <arg value="-v" />
             <arg value="-o" />
@@ -63,8 +53,7 @@
 
     <target name="jar" depends="vaadinPush.js">
         <antcall target="common.jar">
-            <param name="require-bundle"
-                value="org.atmosphere.atmosphere-runtime;bundle-version=&quot;${atmosphere.version}&quot;;visibility:=reexport" />
+            <param name="require-bundle" value="org.atmosphere.atmosphere-runtime;bundle-version=&quot;${atmosphere.version}&quot;;visibility:=reexport" />
             <reference torefid="extra.jar.includes" refid="jar.includes" />
         </antcall>
     </target>

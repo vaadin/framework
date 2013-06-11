@@ -25,12 +25,9 @@
 
     <target name="unpack.gwt">
         <fail unless="gwt.dev.jar.found" message="Could not find gwt-dev.jar at ${gwt.dev.jar}" />
-        <fail unless="gwt.user.jar.found"
-            message="Could not find gwt-user.jar at ${gwt.user.jar}" />
-        <fail unless="gwt.elemental.jar.found"
-            message="Could not find gwt-elemental.jar at ${gwt.elemental.jar}" />
-        <fail unless="gwt.codeserver.jar.found"
-            message="Could not find gwt-codeserver.jar at ${gwt.codeserver.jar}" />
+        <fail unless="gwt.user.jar.found" message="Could not find gwt-user.jar at ${gwt.user.jar}" />
+        <fail unless="gwt.elemental.jar.found" message="Could not find gwt-elemental.jar at ${gwt.elemental.jar}" />
+        <fail unless="gwt.codeserver.jar.found" message="Could not find gwt-codeserver.jar at ${gwt.codeserver.jar}" />
 
         <delete dir="${gwt.unpack.dir}" />
 

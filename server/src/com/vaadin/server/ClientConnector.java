@@ -27,8 +27,6 @@ import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ConnectorEventListener;
 import com.vaadin.shared.Connector;
 import com.vaadin.shared.communication.SharedState;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.UI;
 import com.vaadin.util.ReflectTools;
 
@@ -193,37 +191,6 @@ public interface ClientConnector extends Connector {
      * @since 7.0.0
      */
     public void markAsDirtyRecursive();
-
-    /**
-     * Sets the parent connector of the connector.
-     * 
-     * <p>
-     * This method automatically calls {@link #attach()} if the connector
-     * becomes attached to the application, regardless of whether it was
-     * attached previously. Conversely, if the parent is {@code null} and the
-     * connector is attached to the application, {@link #detach()} is called for
-     * the connector.
-     * </p>
-     * <p>
-     * This method is rarely called directly. One of the
-     * {@link ComponentContainer#addComponent(Component)} or
-     * {@link AbstractClientConnector#addExtension(Extension)} methods are
-     * normally used for adding connectors to a parent and they will call this
-     * method implicitly.
-     * </p>
-     * 
-     * <p>
-     * It is not possible to change the parent without first setting the parent
-     * to {@code null}.
-     * </p>
-     * 
-     * @param parent
-     *            the parent connector
-     * @throws IllegalStateException
-     *             if a parent is given even though the connector already has a
-     *             parent
-     */
-    public void setParent(ClientConnector parent);
 
     /**
      * Checks if the connector is attached to a VaadinSession.

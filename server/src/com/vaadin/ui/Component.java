@@ -333,6 +333,32 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public void setVisible(boolean visible);
 
     /**
+     * Sets the parent connector of the component.
+     * 
+     * <p>
+     * This method automatically calls {@link #attach()} if the component
+     * becomes attached to the session, regardless of whether it was attached
+     * previously. Conversely, if the component currently is attached to the
+     * session, {@link #detach()} is called for the connector before attaching
+     * it to a new parent.
+     * </p>
+     * <p>
+     * This method is rarely called directly.
+     * {@link ComponentContainer#addComponent(Component)} or a
+     * {@link HasComponents} specific method is normally used for adding
+     * components to a parent and the used method will call this method
+     * implicitly.
+     * </p>
+     * 
+     * @param parent
+     *            the parent connector
+     * @throws IllegalStateException
+     *             if a parent is given even though the connector already has a
+     *             parent
+     */
+    public void setParent(HasComponents parent);
+
+    /**
      * Gets the parent component of the component.
      * 
      * <p>

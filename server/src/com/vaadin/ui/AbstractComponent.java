@@ -28,7 +28,6 @@ import java.util.regex.Pattern;
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.AbstractClientConnector;
-import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.ErrorMessage;
@@ -93,6 +92,8 @@ public abstract class AbstractComponent extends AbstractClientConnector
     private ActionManager actionManager;
 
     private boolean visible = true;
+
+    private HasComponents parent;
 
     /* Constructor */
 
@@ -451,17 +452,32 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     @Override
     public HasComponents getParent() {
-        return (HasComponents) super.getParent();
+        return parent;
     }
 
     @Override
-    public void setParent(ClientConnector parent) {
-        if (parent == null || parent instanceof HasComponents) {
-            super.setParent(parent);
-        } else {
-            throw new IllegalArgumentException(
-                    "The parent of a Component must implement HasComponents, which "
-                            + parent.getClass() + " doesn't do.");
+    public void setParent(HasComponents parent) {
+        // If the parent is not changed, don't do anything
+        if (parent == this.parent) {
+            return;
+        }
+
+        if (parent != null && this.parent != null) {
+            throw new IllegalStateException(getClass().getName()
+                    + " already has a parent.");
+        }
+
+        // Send a detach event if the component is currently attached
+        if (isAttached()) {
+            detach();
+        }
+
+        // Connect to new parent
+        this.parent = parent;
+
+        // Send attach event if the component is now attached
+        if (isAttached()) {
+            attach();
         }
     }
 
