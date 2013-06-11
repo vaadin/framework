@@ -63,7 +63,9 @@
         <dependency org="org.eclipse.jetty" name="jetty-webapp"
             rev="&jetty.version;" conf="ide, build-provided, jetty-run->default" />
         <dependency org="org.mortbay.jetty" name="jetty-runner"
-            rev="&jetty.version;" conf="jetty-run->default" />
+            rev="&jetty.version;" conf="ide, jetty-run->default">
+            <exclude org="org.eclipse.jetty.orbit"></exclude>
+        </dependency>
 
         <dependency org="junit" name="junit" rev="4.5"
             conf="build,ide -> default" />
