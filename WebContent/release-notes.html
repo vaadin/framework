@@ -78,39 +78,87 @@
             enhancements. Below is a list of the most notable changes:</p>
 
         <ul>
-            <li>Server push based on Atmosphere</li>
-            <li>CSS injection through a <b>Styles</b> object from <tt>Page.getCurrent().getStyles()</tt></li>
-            <li>Enhanced Debug Window</li>
-            <li><b>Calendar</b> is now included in the core
-                framework</li>
-            <li>The <b>VaadinServlet</b>/-<b>Portlet</b> and <b>-Service</b>
-                have been refactored
+            <li>Server push (Use the <b>@Push</b> annotation to
+                enable push for a UI)
             </li>
-            <li><b>DateField</b> can now have a range</li>
-            <li><b>Window</b> has Maximize/Restore controls</li>
+            <li>Server polling using <b>UI</b>.<tt>setPollInterval()</tt></li>
+            <li>Enhanced debug window</li>
+            <li>Internet Explorer 10 support</li>
+            <li>Sass compiler improvements: arithmetics, @content</li>
+            <li>Dynamic CSS injection</li>
+            <li>Support for SCSS/CSS files in all add-ons (Use <tt>Vaadin-Stylesheet</tt>
+                in the manifest)
+            </li>
+            <li><b>Calendar</b> is included in the core framework</li>
+            <li><b>ProgressBar</b> provides progress indication
+                without polling (separated from <b>ProgressIndicator</b>)</li>
+            <li>Tooltip and loading indicator delays configurable
+                on server side</li>
+            <li>The range of a <b>DateField</b> can be limited
+            </li>
+            <li><b>Window</b> has maximize/restore controls</li>
+            <li><b>UI</b> and <b>VaadinSession</b> provide <tt>access()</tt>
+                to access the UI and session while holding the needed
+                lock</li>
+            <li>A new <b>@VaadinServletConfiguration</b> annotation
+                for configuring servlet parameters
+            </li>
             <li>WAI-ARIA support for form fields, <b>Button</b>,
                 and <b>Tree</b></li>
-            <li>The page can be reloaded programmatically with <tt>Page.reload()</tt></li>
-            <li>The legacy behavior of Property.toString() can be
+            <li>The behavior of <b>Property</b>.toString() can be
                 toggled using the <tt>legacyPropertyToString</tt> init
                 parameter
             </li>
-            <li>Sass compiler now supports arithmetics</li>
-            <li>Sass compiler now supports <tt>@content</tt></li>
-            <li>Tooltip delays can be configured</li>
-            <li>Loading indicator delays can be configured</li>
-            <li>Layout components have a default alignment</li>
-            <li><b>DefaultFieldGroupFieldFactory</b> supports date
-                fields</li>
-
-            <li>Add-ons containing a theme should specify it with a
-                <tt>Vaadin-Stylesheet</tt> attribute in the manifest
+            <li>Default alignment can be set for layout components</li>
+            <li><b>FieldGroup</b> supports SQL date fields and date
+                field creation</li>
+            <li><b>Converter</b>.<tt>convertToModel</tt>/<tt>convertFromModel</tt>
+                now gets an additional parameter describing the target
+                type</li>
+            <li>The browser page can be reloaded programmatically
+                using <tt>Page.reload()</tt>
             </li>
+            <li>The <b>VaadinServlet</b>/<b>VaadinPortlet</b> and <b>VaadinService</b>
+                classes have been refactored
+            </li>
+            <li>Several locking related fixes</li>
+            <li>Client compiler dependencies are packaged as a
+                separate jar</li>
+            <li>DefaultWidgetSet is even more optimized (using
+                compiler parameter <tt>-XenableClosureCompiler</tt>)
+            </li>
+            <li>Java <tt>assert</tt> statements have been added to
+                critical code sections. Start JVM with <tt>-ea</tt> to
+                use.
+            </li>
+            <li><b>StateChangeEvent</b>.<tt>isInitialState()</tt>
+                indicates if event is the first for a connector</li>
+            <li><b>ClientConnector</b>.<tt>isAttached()</tt>
+                indicates if connector is attached</li>
+            <li><b>Container.Filterable</b> now contains a <tt>getContainerFilters()</tt>
+                method</li>
+            <li><b>TableQuery</b> now supports schemas and catalogs</li>
+        </ul>
 
-            <li>Native support for Internet Explorer 10</li>
-            <li>Many locking fixes</li>
-            <li>Java <tt>assert</tt> statements added to critical
-                code sections. Start JVM with <tt>-ea</tt> to use.
+        <p>Tools have been updated for Vaadin @vaadin-minor@ with
+            the following changes:</p>
+
+        <ul>
+            <li>Maven
+                <ul>
+                    <li>Theme compilation support using <tt>vaadin:update-theme</tt>
+                        and <tt>vaadin:compile-theme</tt></li>
+                </ul>
+            </li>
+            <li>Eclipse
+                <ul>
+                    <li>Theme compilation support using the
+                        provided button</li>
+                    <li>New projects are by default generated using
+                        Servlet 3.0 API</li>
+                    <li>Additional GWT compiler parameters can be
+                        specified</li>
+                </ul>
             </li>
         </ul>
 
@@ -127,13 +175,21 @@
                 with <tt>em</tt> (<a
                 href="http://dev.vaadin.com/ticket/10634">#10634</a>)
             </li>
-            <li>Push using streaming does not work in Opera (<a
-                href="http://dev.vaadin.com/ticket/11642">#11642</a>)
+            <li>Push is currently not supported in portals (See <a
+                href="http://dev.vaadin.com/ticket/11493">#11493</a>)
             </li>
-            <li>Some debug console features such as analyze layouts
-                do not work when push is enabled (<a
-                href="http://dev.vaadin.com/ticket/11536">#11536</a>)
+            <li>HTTP session can not be invalidated while using
+                push (<a href="http://dev.vaadin.com/ticket/11721">#11721</a>)
             </li>
+            <li>Cookies are not available while using push (<a
+                href="http://dev.vaadin.com/ticket/11808">#11808</a>)
+            </li>
+            <li>Not all proxies are compatible with websockets. If
+                you are using push with an incompatible proxy you might
+                have to force the transport mode to streaming. Some
+                proxies have problems with streaming also - you need to
+                ensure that the proxy does not buffer responses for HTTP
+                streaming to work.</li>
         </ul>
 
         <h3 id="changelog">ChangeLog</h3>
@@ -145,7 +201,7 @@
 
         <p>
             The <a
-                href="http://dev.vaadin.com/query?status=closed&resolution=fixed&milestone=Vaadin+@version@&order=priority">full
+                href="http://dev.vaadin.com/query?status=closed&resolution=fixed&milestone=Vaadin+7.1.0.beta1&milestone=Vaadin+7.1.0&order=id">full
                 list of the closed issues</a> can also be found at
             <tt>dev.vaadin.com</tt>
             .
@@ -469,8 +525,8 @@
         <h2 id="supportedversions">Supported Technologies</h2>
 
         <p>
-            Vaadin 7 is compatible with <b>Java 6</b>. Vaadin 7 is
-            especially supported on the following <b>operating
+            Vaadin 7 is compatible with <b>Java 6</b> and newer. Vaadin
+            7 is especially supported on the following <b>operating
                 systems</b>:
         </p>
 
@@ -498,9 +554,9 @@
         </ul>
 
         <p>
-            Vaadin 7 supports the JSR-286 Portlet specification. All
-            portals that implement either of the portlet specifications
-            should work. The following <b>portals</b> are supported:
+            Vaadin 7 supports the JSR-286 Portlet specification and all
+            portals that implement the specification should work. The
+            following <b>portals</b> are supported:
         </p>
 
         <ul>
@@ -518,12 +574,12 @@
         </p>
 
         <ul>
-            <li>Mozilla Firefox 18-20</li>
+            <li>Mozilla Firefox 18-21</li>
             <li>Mozilla Firefox 17 ESR</li>
             <li>Internet Explorer 8-10</li>
             <li>Safari 6</li>
             <li>Opera 12</li>
-            <li>Google Chrome 23-26</li>
+            <li>Google Chrome 23-27</li>
         </ul>
 
         <p>
