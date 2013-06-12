@@ -292,6 +292,14 @@ public class AtmospherePushConnection implements PushConnection {
             message = message.substring(9, message.length() - 1);
             connection.handlePushMessage(message);
         }
+
+        if (!connection.isApplicationRunning()) {
+            disconnect(new Command() {
+                @Override
+                public void execute() {
+                }
+            });
+        }
     }
 
     /**
@@ -309,9 +317,21 @@ public class AtmospherePushConnection implements PushConnection {
      * the connection until successful.
      * 
      */
-    protected void onError() {
-        VConsole.error("Push connection using " + getConfig().getTransport()
-                + " failed!");
+    protected void onError(AtmosphereResponse response) {
+        state = State.DISCONNECTED;
+        errorHandler.onError("Push connection using "
+                + getConfig().getTransport() + " failed!",
+                response.getStatusCode());
+    }
+
+    protected void onClose(AtmosphereResponse response) {
+        VConsole.log("Push connection closed, awaiting reconnection");
+        state = State.CONNECT_PENDING;
+    }
+
+    protected void onReconnect(JavaScriptObject request,
+            final AtmosphereResponse response) {
+        VConsole.log("Reopening push connection");
     }
 
     public static abstract class AbstractJSO extends JavaScriptObject {
@@ -370,6 +390,10 @@ public class AtmospherePushConnection implements PushConnection {
 
         }
 
+        public final int getStatusCode() {
+            return getIntValue("status");
+        }
+
         public final String getResponseBody() {
             return getStringValue("responseBody");
         }
@@ -394,7 +418,7 @@ public class AtmospherePushConnection implements PushConnection {
             transport: 'websocket',
             fallbackTransport: 'streaming',
             contentType: 'application/json; charset=UTF-8',
-            reconnectInterval: '5000',
+            reconnectInterval: 5000,
             maxReconnectOnClose: 10000000, 
             trackMessageLength: true,
             messageDelimiter: String.fromCharCode(@com.vaadin.shared.communication.PushConstants::MESSAGE_DELIMITER)
@@ -414,10 +438,16 @@ public class AtmospherePushConnection implements PushConnection {
             self.@com.vaadin.client.communication.AtmospherePushConnection::onMessage(*)(response);
         });
         config.onError = $entry(function(response) {
-            self.@com.vaadin.client.communication.AtmospherePushConnection::onError()(response);
+            self.@com.vaadin.client.communication.AtmospherePushConnection::onError(*)(response);
         });
         config.onTransportFailure = $entry(function(reason,request) {
             self.@com.vaadin.client.communication.AtmospherePushConnection::onTransportFailure(*)(reason);
+        });
+        config.onClose = $entry(function(response) {
+            self.@com.vaadin.client.communication.AtmospherePushConnection::onClose(*)(response);
+        });
+        config.onReconnect = $entry(function(request, response) {
+            self.@com.vaadin.client.communication.AtmospherePushConnection::onReconnect(*)(request, response);
         });
 
         return $wnd.jQueryVaadin.atmosphere.subscribe(config);
