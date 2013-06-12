@@ -81,7 +81,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
     private Unit widthUnit = Unit.PIXELS;
     private Unit heightUnit = Unit.PIXELS;
     private static final Pattern sizePattern = Pattern
-            .compile("^(-?\\d+(\\.\\d+)?)(%|px|em|ex|in|cm|mm|pt|pc)?$");
+            .compile("^(-?\\d+(\\.\\d+)?)(%|px|em|rem|ex|in|cm|mm|pt|pc)?$");
 
     private ErrorHandler errorHandler = null;
 
