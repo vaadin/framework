@@ -411,12 +411,9 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         } else {
             if (session == null) {
                 detach();
-                if (pushConnection != null && pushConnection.isConnected()) {
-                    // Close the push connection when UI is detached. Otherwise
-                    // the push connection and possibly VaadinSession will live
-                    // on.
-                    pushConnection.disconnect();
-                }
+                // Close the push connection when UI is detached. Otherwise the
+                // push connection and possibly VaadinSession will live on.
+                setPushConnection(null);
             }
             this.session = session;
         }
@@ -536,7 +533,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
     private Navigator navigator;
 
-    private PushConnection pushConnection = null;
+    private transient PushConnection pushConnection = null;
 
     private boolean hasPendingPush = false;
 
@@ -1072,7 +1069,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
         boolean sessionExpired = (session == null || session.isClosing());
         getRpcProxy(UIClientRpc.class).uiClosed(sessionExpired);
-        if (getPushConnection() != null && getPushConnection().isConnected()) {
+        if (getPushConnection() != null) {
             // Push the Rpc to the client. The connection will be closed when
             // the UI is detached and cleaned up.
             getPushConnection().push();
@@ -1342,19 +1339,24 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
     /**
      * Returns the internal push connection object used by this UI. This method
-     * should only be called by the framework.
+     * should only be called by the framework. If the returned PushConnection is
+     * not null, it is guaranteed to have {@code isConnected() == true}.
      */
     public PushConnection getPushConnection() {
+        assert (pushConnection == null || pushConnection.isConnected());
         return pushConnection;
     }
 
     /**
      * Sets the internal push connection object used by this UI. This method
-     * should only be called by the framework.
+     * should only be called by the framework. If {@pushConnection} is not null,
+     * its {@code isConnected()} must be true.
      */
     public void setPushConnection(PushConnection pushConnection) {
         // If pushMode is disabled then there should never be a pushConnection
-        assert (getPushConfiguration().getPushMode().isEnabled() || pushConnection == null);
+        assert (pushConnection == null || getPushConfiguration().getPushMode()
+                .isEnabled());
+        assert (pushConnection == null || pushConnection.isConnected());
 
         if (pushConnection == this.pushConnection) {
             return;

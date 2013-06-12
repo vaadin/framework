@@ -16,8 +16,6 @@
 
 package com.vaadin.server.communication;
 
-import java.io.Serializable;
-
 import com.vaadin.ui.UI;
 
 /**
@@ -27,18 +25,20 @@ import com.vaadin.ui.UI;
  * @author Vaadin Ltd
  * @since 7.1
  */
-public interface PushConnection extends Serializable {
+public interface PushConnection {
 
     /**
-     * Pushes pending state changes and client RPC calls to the client. It is
-     * NOT safe to invoke this method if not holding the session lock.
+     * Pushes pending state changes and client RPC calls to the client. Cannot
+     * be called if {@link #isConnected()} is false. It is NOT safe to invoke
+     * this method if not holding the session lock.
      * <p>
      * This is internal API; please use {@link UI#push()} instead.
      */
     public void push();
 
     /**
-     * Disconnects the connection.
+     * Closes the connection. Cannot be called if {@link #isConnected()} is
+     * false.
      */
     public void disconnect();
 

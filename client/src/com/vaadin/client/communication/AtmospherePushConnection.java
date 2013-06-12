@@ -471,4 +471,14 @@ public class AtmospherePushConnection implements PushConnection {
                     });
         }
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.client.communication.PushConnection#getTransportType()
+     */
+    @Override
+    public String getTransportType() {
+        return transport;
+    }
 }

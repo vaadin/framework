@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
-<project xmlns:antcontrib="antlib:net.sf.antcontrib" xmlns:ivy="antlib:org.apache.ivy.ant"
-    name="vaadin-server" default="deploy-and-start" basedir=".">
+<project xmlns:antcontrib="antlib:net.sf.antcontrib" xmlns:ivy="antlib:org.apache.ivy.ant" name="vaadin-server" default="deploy-and-start" basedir=".">
     <include file="../common.xml" />
     <dirname property="dir" file="${ant.file.vaadin-server}" />
 
@@ -9,9 +8,7 @@
 
         <ivy:resolve file="${dir}/ivy.xml" />
         <ivy:cachepath pathid="classpath.jetty" conf="jetty-run" />
-        <java classname="org.mortbay.jetty.runner.Runner" fork="yes"
-            output="${vaadin.basedir}/result/jetty.java.out"
-            resultproperty="resultCode">
+        <java classname="org.mortbay.jetty.runner.Runner" fork="yes" output="${vaadin.basedir}/result/jetty.java.out" resultproperty="resultCode">
             <arg value="--port" />
             <arg value="8888" />
             <arg value="--out" />
@@ -28,8 +25,7 @@
 
     <target name="wait-for-startup">
         <echo>Waiting for Servlet Container to start up.</echo>
-        <waitfor maxwait="60" maxwaitunit="second" checkevery="5"
-            checkeveryunit="second" timeoutproperty="server.start.failed">
+        <waitfor maxwait="60" maxwaitunit="second" checkevery="5" checkeveryunit="second" timeoutproperty="server.start.failed">
             <http url="http://localhost:8888" />
         </waitfor>
         <fail if="server.start.failed" message="Server startup failed" />

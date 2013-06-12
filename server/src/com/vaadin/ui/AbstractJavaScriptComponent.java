@@ -82,6 +82,16 @@ import com.vaadin.shared.ui.JavaScriptComponentState;
  * <li><code>translateVaadinUri(uri)</code> - Translates a Vaadin URI to a URL
  * that can be used in the browser. This is just way of accessing
  * {@link com.vaadin.client.ApplicationConnection#translateVaadinUri(String)}</li>
+ * <li><code>addResizeListener(element, callbackFunction)</code> - Registers a
+ * listener that gets notified whenever the size of the provided element
+ * changes. The listener is called with one parameter: an event object with the
+ * <code>element</code> property pointing to the element that has been resized.
+ * <li><code>removeResizeListener(element, callbackFunction)</code> -
+ * Unregisters a combination of an element and a listener that has previously
+ * been registered using <code>addResizeListener</code>. All registered
+ * listeners are automatically unregistered when this connector is unregistered,
+ * but this method can be use to to unregister a listener at an earlier point in
+ * time.
  * </ul>
  * The connector wrapper also supports these special functions:
  * <ul>

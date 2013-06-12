@@ -37,8 +37,9 @@ import java.util.Locale;
 public class StringToDateConverter implements Converter<String, Date> {
 
     /**
-     * Returns the format used by {@link #convertToPresentation(Date, Locale)}
-     * and {@link #convertToModel(String, Locale)}.
+     * Returns the format used by
+     * {@link #convertToPresentation(Date, Class,Locale)} and
+     * {@link #convertToModel(String, Class, Locale)}.
      * 
      * @param locale
      *            The locale to use
@@ -60,11 +61,18 @@ public class StringToDateConverter implements Converter<String, Date> {
      * 
      * @see
      * com.vaadin.data.util.converter.Converter#convertToModel(java.lang.Object,
-     * java.util.Locale)
+     * java.lang.Class, java.util.Locale)
      */
     @Override
-    public Date convertToModel(String value, Locale locale)
+    public Date convertToModel(String value, Class<? extends Date> targetType,
+            Locale locale)
             throws com.vaadin.data.util.converter.Converter.ConversionException {
+        if (targetType != getModelType()) {
+            throw new ConversionException("Converter only supports "
+                    + getModelType().getName() + " (targetType was "
+                    + targetType.getName() + ")");
+        }
+
         if (value == null) {
             return null;
         }
@@ -87,10 +95,11 @@ public class StringToDateConverter implements Converter<String, Date> {
      * 
      * @see
      * com.vaadin.data.util.converter.Converter#convertToPresentation(java.lang
-     * .Object, java.util.Locale)
+     * .Object, java.lang.Class, java.util.Locale)
      */
     @Override
-    public String convertToPresentation(Date value, Locale locale)
+    public String convertToPresentation(Date value,
+            Class<? extends String> targetType, Locale locale)
             throws com.vaadin.data.util.converter.Converter.ConversionException {
         if (value == null) {
             return null;

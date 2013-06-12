@@ -92,4 +92,13 @@ public interface PushConnection {
      */
     public void disconnect(Command command);
 
+    /**
+     * Returns a human readable string representation of the transport type used
+     * to communicate with the server.
+     * 
+     * @since 7.1
+     * @return A human readable string representation of the transport type
+     */
+    public String getTransportType();
+
 }

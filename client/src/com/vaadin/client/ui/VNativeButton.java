@@ -143,8 +143,10 @@ public class VNativeButton extends Button implements ClickHandler {
             return;
         }
 
-        if (BrowserInfo.get().isSafari()) {
-            VNativeButton.this.setFocus(true);
+        if (BrowserInfo.get().isWebkit()) {
+            // Webkit does not focus non-text input elements on click
+            // (#11854)
+            setFocus(true);
         }
         if (disableOnClick) {
             setEnabled(false);

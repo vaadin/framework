@@ -287,7 +287,7 @@ public class VDragAndDropManager {
     protected VDragAndDropManager() {
     }
 
-    private NativePreviewHandler defaultDragAndDropEventHandler = new DefaultDragAndDropEventHandler();
+    private final NativePreviewHandler defaultDragAndDropEventHandler = new DefaultDragAndDropEventHandler();
 
     /**
      * Flag to indicate if drag operation has really started or not. Null check
@@ -469,7 +469,8 @@ public class VDragAndDropManager {
             if (w == null) {
                 return null;
             }
-            while (!(w instanceof VHasDropHandler)) {
+            while (!(w instanceof VHasDropHandler)
+                    || !isDropEnabled((VHasDropHandler) w)) {
                 w = w.getParent();
                 if (w == null) {
                     break;
@@ -489,6 +490,15 @@ public class VDragAndDropManager {
             return null;
         }
 
+    }
+
+    /**
+     * Checks if the given {@link VHasDropHandler} really is able to accept
+     * drops.
+     */
+    private static boolean isDropEnabled(VHasDropHandler target) {
+        VDropHandler dh = target.getDropHandler();
+        return dh != null && dh.getConnector().isEnabled();
     }
 
     /**

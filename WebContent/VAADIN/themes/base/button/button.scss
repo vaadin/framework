@@ -18,9 +18,11 @@
 	font: inherit;
 	font-size: $font-size;
 	line-height: normal;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
 	-khtml-user-select: none;
 	-moz-user-select: none;
-	-ie-user-select: none;
+	-ms-user-select: none;
 	user-select: none;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;

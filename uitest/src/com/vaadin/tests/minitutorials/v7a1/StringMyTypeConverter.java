@@ -52,8 +52,8 @@ public class StringMyTypeConverter extends AbstractTestUI {
 
 class StringToNameConverter implements Converter<String, Name> {
     @Override
-    public Name convertToModel(String text, Locale locale)
-            throws ConversionException {
+    public Name convertToModel(String text, Class<? extends Name> targetType,
+            Locale locale) throws ConversionException {
         if (text == null) {
             return null;
         }
@@ -66,7 +66,8 @@ class StringToNameConverter implements Converter<String, Name> {
     }
 
     @Override
-    public String convertToPresentation(Name name, Locale locale)
+    public String convertToPresentation(Name name,
+            Class<? extends String> targetType, Locale locale)
             throws ConversionException {
         if (name == null) {
             return null;

@@ -29,14 +29,16 @@ public class TableWithCustomConverterFactory extends AbstractTestUI {
             Converter<String, Integer> {
 
         @Override
-        public Integer convertToModel(String value, Locale locale)
+        public Integer convertToModel(String value,
+                Class<? extends Integer> targetType, Locale locale)
                 throws com.vaadin.data.util.converter.Converter.ConversionException {
             // TODO Auto-generated method stub
             return null;
         }
 
         @Override
-        public String convertToPresentation(Integer value, Locale locale)
+        public String convertToPresentation(Integer value,
+                Class<? extends String> targetType, Locale locale)
                 throws com.vaadin.data.util.converter.Converter.ConversionException {
             return "Integer: " + value;
         }

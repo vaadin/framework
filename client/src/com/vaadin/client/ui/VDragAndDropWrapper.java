@@ -80,7 +80,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
             @Override
             public void onMouseDown(MouseDownEvent event) {
-                if (startDrag(event.getNativeEvent())) {
+                if (getConnector().isEnabled()
+                        && startDrag(event.getNativeEvent())) {
                     event.preventDefault(); // prevent text selection
                 }
             }
@@ -90,7 +91,8 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
             @Override
             public void onTouchStart(TouchStartEvent event) {
-                if (startDrag(event.getNativeEvent())) {
+                if (getConnector().isEnabled()
+                        && startDrag(event.getNativeEvent())) {
                     /*
                      * Dont let eg. panel start scrolling.
                      */
@@ -112,8 +114,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     private boolean startDrag(NativeEvent event) {
         if (dragStartMode == WRAPPER || dragStartMode == COMPONENT) {
             VTransferable transferable = new VTransferable();
-            transferable.setDragSource(ConnectorMap.get(client).getConnector(
-                    VDragAndDropWrapper.this));
+            transferable.setDragSource(getConnector());
 
             ComponentConnector paintable = Util.findPaintable(client,
                     (Element) event.getEventTarget().cast());
@@ -187,7 +188,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
     private boolean uploading;
 
-    private ReadyStateChangeHandler readyStateChangeHandler = new ReadyStateChangeHandler() {
+    private final ReadyStateChangeHandler readyStateChangeHandler = new ReadyStateChangeHandler() {
 
         @Override
         public void onReadyStateChange(XMLHttpRequest xhr) {
@@ -261,8 +262,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             }
             if (VDragAndDropManager.get().getCurrentDropHandler() != getDropHandler()) {
                 VTransferable transferable = new VTransferable();
-                transferable.setDragSource(ConnectorMap.get(client)
-                        .getConnector(this));
+                transferable.setDragSource(getConnector());
 
                 vaadinDragEvent = VDragAndDropManager.get().startDrag(
                         transferable, event, false);
@@ -458,6 +458,9 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
         @Override
         public void dragEnter(VDragEvent drag) {
+            if (!getConnector().isEnabled()) {
+                return;
+            }
             updateDropDetails(drag);
             currentlyValid = false;
             super.dragEnter(drag);
@@ -471,6 +474,9 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
         @Override
         public void dragOver(final VDragEvent drag) {
+            if (!getConnector().isEnabled()) {
+                return;
+            }
             boolean detailsChanged = updateDropDetails(drag);
             if (detailsChanged) {
                 currentlyValid = false;
@@ -486,6 +492,9 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
         @Override
         public boolean drop(VDragEvent drag) {
+            if (!getConnector().isEnabled()) {
+                return false;
+            }
             deEmphasis(true);
 
             Map<String, Object> dd = drag.getDropDetails();
@@ -511,14 +520,16 @@ public class VDragAndDropWrapper extends VCustomComponent implements
 
         @Override
         protected void dragAccepted(VDragEvent drag) {
+            if (!getConnector().isEnabled()) {
+                return;
+            }
             currentlyValid = true;
             emphasis(drag);
         }
 
         @Override
         public ComponentConnector getConnector() {
-            return ConnectorMap.get(client).getConnector(
-                    VDragAndDropWrapper.this);
+            return VDragAndDropWrapper.this.getConnector();
         }
 
         @Override
@@ -526,6 +537,10 @@ public class VDragAndDropWrapper extends VCustomComponent implements
             return client;
         }
 
+    }
+
+    public ComponentConnector getConnector() {
+        return ConnectorMap.get(client).getConnector(this);
     }
 
     protected native void hookHtml5DragStart(Element el)
@@ -594,8 +609,7 @@ public class VDragAndDropWrapper extends VCustomComponent implements
     }
 
     private void notifySizePotentiallyChanged() {
-        LayoutManager.get(client).setNeedsMeasure(
-                ConnectorMap.get(client).getConnector(getElement()));
+        LayoutManager.get(client).setNeedsMeasure(getConnector());
     }
 
     protected void emphasis(VDragEvent drag) {

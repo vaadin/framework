@@ -150,14 +150,16 @@ public class DoublesInTable extends TestBase {
         t.setConverter("sex", new Converter<String, Sex>() {
 
             @Override
-            public Sex convertToModel(String value, Locale locale)
+            public Sex convertToModel(String value,
+                    Class<? extends Sex> targetType, Locale locale)
                     throws com.vaadin.data.util.converter.Converter.ConversionException {
                 // not used in this test - Table only converts to presentation
                 return null;
             }
 
             @Override
-            public String convertToPresentation(Sex value, Locale locale)
+            public String convertToPresentation(Sex value,
+                    Class<? extends String> targetType, Locale locale)
                     throws com.vaadin.data.util.converter.Converter.ConversionException {
                 if (value == null) {
                     value = Sex.UNKNOWN;
@@ -178,14 +180,16 @@ public class DoublesInTable extends TestBase {
         t.setConverter("deceased", new Converter<String, Boolean>() {
 
             @Override
-            public Boolean convertToModel(String value, Locale locale) {
+            public Boolean convertToModel(String value,
+                    Class<? extends Boolean> targetType, Locale locale) {
                 // not used in this test - Table only converts from source to
                 // target
                 return null;
             }
 
             @Override
-            public String convertToPresentation(Boolean value, Locale locale) {
+            public String convertToPresentation(Boolean value,
+                    Class<? extends String> targetType, Locale locale) {
                 if (value == null || value) {
                     return "YES, DEAD!";
                 } else {
@@ -206,7 +210,8 @@ public class DoublesInTable extends TestBase {
         t.setConverter("age", new Converter<String, Integer>() {
 
             @Override
-            public Integer convertToModel(String value, Locale locale)
+            public Integer convertToModel(String value,
+                    Class<? extends Integer> targetType, Locale locale)
                     throws com.vaadin.data.util.converter.Converter.ConversionException {
                 // not used in this test - Table only converts from source to
                 // target
@@ -214,7 +219,8 @@ public class DoublesInTable extends TestBase {
             }
 
             @Override
-            public String convertToPresentation(Integer value, Locale locale)
+            public String convertToPresentation(Integer value,
+                    Class<? extends String> targetType, Locale locale)
                     throws com.vaadin.data.util.converter.Converter.ConversionException {
                 if (value == null) {
                     return null;
@@ -243,14 +249,16 @@ public class DoublesInTable extends TestBase {
         t.setConverter("address", new Converter<String, Address>() {
 
             @Override
-            public Address convertToModel(String value, Locale locale)
+            public Address convertToModel(String value,
+                    Class<? extends Address> targetType, Locale locale)
                     throws ConversionException {
                 // not used in this test - Table only converts to presentation
                 return null;
             }
 
             @Override
-            public String convertToPresentation(Address value, Locale locale)
+            public String convertToPresentation(Address value,
+                    Class<? extends String> targetType, Locale locale)
                     throws ConversionException {
                 return value.getStreetAddress() + ", " + value.getCity() + " ("
                         + value.getCountry() + ")";

@@ -3400,4 +3400,20 @@ public class ApplicationConnection {
     public void handlePushMessage(String message) {
         handleJSONText(message, 200);
     }
+
+    /**
+     * Returns a human readable string representation of the method used to
+     * communicate with the server.
+     * 
+     * @since 7.1
+     * @return A string representation of the current transport type
+     */
+    public String getCommunicationMethod() {
+        if (push != null) {
+            return "Push (" + push.getTransportType() + ")";
+        } else {
+            return "XHR";
+        }
+    }
+
 }

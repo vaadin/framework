@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>New Test</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">New Test</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.components.javascriptcomponent.JavaScriptResizeListener?restartApplication&amp;debug</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsjavascriptcomponentJavaScriptResizeListener::/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[2]/VCssLayout[0]/JavaScriptWidget[0]</td>
+	<td>Initial state</td>
+</tr>
+<!--Changing size has no effect without listener-->
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentsjavascriptcomponentJavaScriptResizeListener::/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsjavascriptcomponentJavaScriptResizeListener::/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[2]/VCssLayout[0]/JavaScriptWidget[0]</td>
+	<td>Initial state</td>
+</tr>
+<!--Reports the size when the listener is added-->
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsjavascriptcomponentJavaScriptResizeListener::/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[1]/VCheckBox[0]/domChild[0]</td>
+	<td>52,4</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsjavascriptcomponentJavaScriptResizeListener::/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[2]/VCssLayout[0]/JavaScriptWidget[0]</td>
+	<td>Current size is 200 x 50</td>
+</tr>
+<!--Size change is detected when listener is active-->
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentsjavascriptcomponentJavaScriptResizeListener::/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VButton[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsjavascriptcomponentJavaScriptResizeListener::/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[2]/VCssLayout[0]/JavaScriptWidget[0]</td>
+	<td>Current size is 100 x 100</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsjavascriptcomponentJavaScriptResizeListener::/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[1]/VCheckBox[0]/domChild[0]</td>
+	<td>69,2</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsjavascriptcomponentJavaScriptResizeListener::/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[2]/VCssLayout[0]/JavaScriptWidget[0]</td>
+	<td>Listener disabled</td>
+</tr>
+<!--Nothing happens when changing size after removing listener-->
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentsjavascriptcomponentJavaScriptResizeListener::/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsjavascriptcomponentJavaScriptResizeListener::/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[2]/VCssLayout[0]/JavaScriptWidget[0]</td>
+	<td>Listener disabled</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

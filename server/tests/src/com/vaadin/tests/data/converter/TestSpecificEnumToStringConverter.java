@@ -41,7 +41,8 @@ public class TestSpecificEnumToStringConverter {
         }
 
         @Override
-        public String convertToModel(Enum value, Locale locale)
+        public String convertToModel(Enum value,
+                Class<? extends String> targetType, Locale locale)
                 throws com.vaadin.data.util.converter.Converter.ConversionException {
             if (value == null) {
                 return null;
@@ -51,7 +52,8 @@ public class TestSpecificEnumToStringConverter {
         }
 
         @Override
-        public Enum convertToPresentation(String value, Locale locale)
+        public Enum convertToPresentation(String value,
+                Class<? extends Enum> targetType, Locale locale)
                 throws com.vaadin.data.util.converter.Converter.ConversionException {
             if (value == null) {
                 return null;
@@ -90,19 +92,21 @@ public class TestSpecificEnumToStringConverter {
 
     @Test
     public void nullConversion() {
-        Assert.assertEquals(null, testEnumConverter.convertToModel(null, null));
+        Assert.assertEquals(null,
+                testEnumConverter.convertToModel(null, null, null));
     }
 
     @Test
     public void enumToStringConversion() {
-        Assert.assertEquals(TestEnum.TWO.toString(),
-                testEnumConverter.convertToModel(TestEnum.TWO, null));
+        Assert.assertEquals(TestEnum.TWO.toString(), testEnumConverter
+                .convertToModel(TestEnum.TWO, String.class, null));
     }
 
     @Test
     public void stringToEnumConversion() {
         Assert.assertEquals(TestEnum.TWO, testEnumConverter
-                .convertToPresentation(TestEnum.TWO.toString(), null));
+                .convertToPresentation(TestEnum.TWO.toString(), TestEnum.class,
+                        null));
     }
 
     @Test

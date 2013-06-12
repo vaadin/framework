@@ -64,6 +64,16 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
     public void changeVariables(Object source, Map<String, Object> variables) {
         Object owner = variables.get("dhowner");
 
+        final Component sourceComponent = (Component) variables
+                .get("component");
+        if (sourceComponent != null && !sourceComponent.isEnabled()) {
+            // source component not supposed to be enabled
+            getLogger().warning(
+                    "Client dropped from " + sourceComponent
+                            + " even though it's disabled");
+            return;
+        }
+
         // Validate drop handler owner
         if (!(owner instanceof DropTarget)) {
             getLogger()
@@ -74,6 +84,15 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
         // owner cannot be null here
 
         DropTarget dropTarget = (DropTarget) owner;
+
+        if (!dropTarget.isEnabled()) {
+            getLogger()
+                    .warning(
+                            "Client dropped on " + owner
+                                    + " even though it's disabled");
+            return;
+        }
+
         lastVisitId = (Integer) variables.get("visitId");
 
         // request may be dropRequest or request during drag operation (commonly
@@ -291,12 +310,6 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
 
     @Override
     public void markAsDirtyRecursive() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void setParent(ClientConnector parent) {
         // TODO Auto-generated method stub
 
     }

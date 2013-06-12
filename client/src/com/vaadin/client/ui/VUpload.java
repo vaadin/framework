@@ -270,13 +270,22 @@ public class VUpload extends SimplePanel {
             /*
              * Visit server a moment after upload has started to see possible
              * changes from UploadStarted event. Will be cleared on complete.
+             * 
+             * Must get the id here as the upload can finish before the timer
+             * expires and in that case nextUploadId has been updated and is
+             * wrong.
              */
+            final int thisUploadId = nextUploadId;
             t = new Timer() {
                 @Override
                 public void run() {
-                    VConsole.log("Visiting server to see if upload started event changed UI.");
-                    client.updateVariable(paintableId, "pollForStart",
-                            nextUploadId, true);
+                    // Only visit the server if the upload has not already
+                    // finished
+                    if (thisUploadId == nextUploadId) {
+                        VConsole.log("Visiting server to see if upload started event changed UI.");
+                        client.updateVariable(paintableId, "pollForStart",
+                                thisUploadId, true);
+                    }
                 }
             };
             t.schedule(800);

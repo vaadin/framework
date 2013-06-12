@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="vaadin-themes" basedir="." default="publish-local"
-    xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="vaadin-themes" basedir="." default="publish-local" xmlns:ivy="antlib:org.apache.ivy.ant">
     <description>
         Themes compiled to CSS
     </description>
@@ -24,8 +23,7 @@
 
     <target name="compile-themes">
         <ivy:resolve resolveid="common" conf="build" />
-        <ivy:cachepath pathid="classpath.compile.theme"
-            conf="build" />
+        <ivy:cachepath pathid="classpath.compile.theme" conf="build" />
 
         <antcall target="compile-theme">
             <param name="theme" value="base" />
@@ -52,40 +50,38 @@
     </target>
 
     <target name="copy-theme">
-        <fail unless="theme"
-            message="You must give the theme name to copy n the 'theme' parameter" />
+        <fail unless="theme" message="You must give the theme name to copy n the 'theme' parameter" />
         <property name="theme.source.dir" location="../WebContent/VAADIN/themes" />
 
         <copy todir="${theme.result.dir}">
             <fileset dir="${theme.source.dir}">
-                <include name="${theme}/**" />
+                <include name="${theme}/**/*.scss" />
+            </fileset>
+            <filterset refid="filter-vaadin.version" />
+        </copy>
+        <copy todir="${theme.result.dir}">
+            <fileset dir="${theme.source.dir}">
+                <exclude name="${theme}/**/*.scss" />
             </fileset>
         </copy>
     </target>
 
     <target name="compile-theme" depends="copy-theme">
-        <fail unless="theme"
-            message="You must give the theme name to compile in the 'theme' parameter" />
+        <fail unless="theme" message="You must give the theme name to compile in the 'theme' parameter" />
 
         <ivy:resolve resolveid="common" conf="compile-theme" />
-        <ivy:cachepath pathid="classpath.compile.theme"
-            conf="compile-theme" />
-        <ivy:cachepath pathid="classpath.runtime.theme"
-            conf="build" />
+        <ivy:cachepath pathid="classpath.compile.theme" conf="compile-theme" />
+        <ivy:cachepath pathid="classpath.runtime.theme" conf="build" />
 
         <echo>Compiling ${theme}</echo>
         <mkdir dir="${theme.result.dir}" />
 
         <!-- compile the theme -->
-        <java classname="com.vaadin.buildhelpers.CompileTheme"
-            classpathref="classpath.compile.theme" failonerror="yes"
-            fork="yes" maxmemory="512m">
+        <java classname="com.vaadin.buildhelpers.CompileTheme" classpathref="classpath.compile.theme" failonerror="yes" fork="yes" maxmemory="512m">
             <arg value="--theme" />
             <arg value="${theme}" />
             <arg value="--theme-folder" />
             <arg value="${theme.result.dir}" />
-            <arg value="--theme-version" />
-            <arg value="${vaadin.version}" />
             <jvmarg value="-Xss8M" />
             <jvmarg value="-XX:MaxPermSize=256M" />
             <jvmarg value="-Djava.awt.headless=true" />

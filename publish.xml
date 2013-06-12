@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="publish" basedir="." default=""
-    xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:antcontrib="antlib:net.sf.antcontrib"
-    xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+<project name="publish" basedir="." default="" xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:antcontrib="antlib:net.sf.antcontrib" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
     <include file="common.xml" as="common" />
     <include file="build.xml" as="vaadin" />
 
@@ -18,17 +16,14 @@
     <fail unless="ant-jsch.present" message="Please install ant-jsch.jar into ANT_HOME/lib" />
     <fail unless="jsch.present" message="Please install jsch.jar into ANT_HOME/lib" />
 
-    <target name="nightly.publish"
-        depends="nightly.download.publish, nightly.maven.publish">
+    <target name="nightly.publish" depends="nightly.download.publish, nightly.maven.publish">
 
     </target>
 
     <!-- Copies the nightly build artifacts to the download server. -->
     <target name="nightly.tests.publish" if="nightly.tests.publish">
-        <property name="file.war"
-            location="result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${version}.war" />
-        <property name="target"
-            value="${nightly.tests.publish}/${vaadin.version.major}.${vaadin.version.minor}-${build.tag}.war" />
+        <property name="file.war" location="result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${version}.war" />
+        <property name="target" value="${nightly.tests.publish}/${vaadin.version.major}.${vaadin.version.minor}-${build.tag}.war" />
 
         <echo>Installing ${src} to ${target}</echo>
 
@@ -37,22 +32,18 @@
     </target>
 
     <target name="nightly.download.publish">
-        <antcontrib:foreach list="${modules.to.publish.to.download}"
-            target="publish.module.to.download.site" param="module" />
+        <antcontrib:foreach list="${modules.to.publish.to.download}" target="publish.module.to.download.site" param="module" />
     </target>
 
     <target name="nightly.maven.publish">
-        <antcontrib:foreach list="${modules.to.publish.to.maven}"
-            target="publish.module.to.maven" param="module" />
+        <antcontrib:foreach list="${modules.to.publish.to.maven}" target="publish.module.to.maven" param="module" />
     </target>
 
     <target name="publish.module.to.download.site">
         <fail unless="module" message="No module to publish defined" />
         <ivy:resolve file="${module}/ivy.xml" />
-        <ivy:publish publishivy="false" settingsref="publish.settings"
-            conf="*(public)" resolver="sftp-publish">
-            <artifacts
-                pattern="${ivy.settings.dir}/result/artifacts/[revision]/[module]/[artifact]-[revision](-[classifier]).[ext]" />
+        <ivy:publish publishivy="false" settingsref="publish.settings" conf="*(public)" resolver="sftp-publish">
+            <artifacts pattern="${ivy.settings.dir}/result/artifacts/[revision]/[module]/[artifact]-[revision](-[classifier]).[ext]" />
         </ivy:publish>
     </target>
 
@@ -65,22 +56,17 @@
             publishivy="false" settingsref="publish.settings" conf="*(public)" resolver="sonatype"> 
             <artifacts pattern="${ivy.settings.dir}/result/artifacts/${vaadin.version}/[module]/[artifact]-${vaadin.version}(-[classifier]).[ext]" 
             /> </ivy:publish> -->
-        <property name="jar.file"
-            location="result/artifacts/${vaadin.version}/vaadin-${module}/vaadin-${module}-${vaadin.version}.jar" />
-        <property name="pom.file"
-            location="result/artifacts/${vaadin.version}/vaadin-${module}/vaadin-${module}-${vaadin.version}.pom" />
+        <property name="jar.file" location="result/artifacts/${vaadin.version}/vaadin-${module}/vaadin-${module}-${vaadin.version}.jar" />
+        <property name="pom.file" location="result/artifacts/${vaadin.version}/vaadin-${module}/vaadin-${module}-${vaadin.version}.pom" />
 
         <artifact:mvn failonerror="true">
             <arg value="gpg:sign-and-deploy-file" />
             <sysproperty key="file" value="${jar.file}" />
             <sysproperty key="pomFile" value="${pom.file}" />
-            <sysproperty key="repositoryId"
-                value="${maven.snapshot.repository.id}" />
-            <sysproperty key="url"
-                value="${maven.snapshot.repository.url}" />
+            <sysproperty key="repositoryId" value="${maven.snapshot.repository.id}" />
+            <sysproperty key="url" value="${maven.snapshot.repository.url}" />
             <sysproperty key="gpg.passphrase" value="${gpg.passphrase}" />
-            <sysproperty key="retryFailedDeploymentCount"
-                value="10" />
+            <sysproperty key="retryFailedDeploymentCount" value="10" />
         </artifact:mvn>
     </target>
 

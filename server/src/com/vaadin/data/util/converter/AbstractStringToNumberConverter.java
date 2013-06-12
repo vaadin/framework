@@ -65,7 +65,8 @@ public abstract class AbstractStringToNumberConverter<T> implements
      *             If there was a problem converting the value
      * @since 7.1
      */
-    protected Number convertToNumber(String value, Locale locale)
+    protected Number convertToNumber(String value,
+            Class<? extends Number> targetType, Locale locale)
             throws ConversionException {
         if (value == null) {
             return null;
@@ -98,7 +99,8 @@ public abstract class AbstractStringToNumberConverter<T> implements
      * .Object, java.util.Locale)
      */
     @Override
-    public String convertToPresentation(T value, Locale locale)
+    public String convertToPresentation(T value,
+            Class<? extends String> targetType, Locale locale)
             throws ConversionException {
         if (value == null) {
             return null;

@@ -37,12 +37,19 @@ public class StringToNumberConverter extends
      * 
      * @see
      * com.vaadin.data.util.converter.Converter#convertToModel(java.lang.Object,
-     * java.util.Locale)
+     * java.lang.Class, java.util.Locale)
      */
     @Override
-    public Number convertToModel(String value, Locale locale)
+    public Number convertToModel(String value,
+            Class<? extends Number> targetType, Locale locale)
             throws ConversionException {
-        return convertToNumber(value, locale);
+        if (targetType != getModelType()) {
+            throw new ConversionException("Converter only supports "
+                    + getModelType().getName() + " (targetType was "
+                    + targetType.getName() + ")");
+        }
+
+        return convertToNumber(value, targetType, locale);
     }
 
     /*

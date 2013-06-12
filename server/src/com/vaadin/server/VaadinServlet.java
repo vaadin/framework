@@ -44,6 +44,7 @@ import com.vaadin.annotations.VaadinServletConfiguration.InitParameterName;
 import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.server.communication.ServletUIInitHandler;
 import com.vaadin.shared.JsonConstants;
+import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
 @SuppressWarnings("serial")
@@ -68,6 +69,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
         CurrentInstance.clearAll();
         super.init(servletConfig);
         Properties initParameters = new Properties();
+
+        readUiFromEnclosingClass(initParameters);
 
         readConfigurationAnnotation(initParameters);
 
@@ -99,6 +102,15 @@ public class VaadinServlet extends HttpServlet implements Constants {
         servletInitialized();
 
         CurrentInstance.clearAll();
+    }
+
+    private void readUiFromEnclosingClass(Properties initParameters) {
+        Class<?> enclosingClass = getClass().getEnclosingClass();
+
+        if (enclosingClass != null && UI.class.isAssignableFrom(enclosingClass)) {
+            initParameters.put(VaadinSession.UI_PARAMETER,
+                    enclosingClass.getName());
+        }
     }
 
     private void readConfigurationAnnotation(Properties initParameters)
@@ -742,11 +754,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
     private boolean serveOnTheFlyCompiledScss(String filename,
             HttpServletRequest request, HttpServletResponse response,
             ServletContext sc) throws IOException {
-        if (getService().getDeploymentConfiguration().isProductionMode()) {
-            // This is not meant for production mode.
-            return false;
-        }
-
         if (!filename.endsWith(".css")) {
             return false;
         }
@@ -766,9 +773,21 @@ public class VaadinServlet extends HttpServlet implements Constants {
                             "Requested resource [{0}] not accessible in the VAADIN directory or access to it is forbidden.",
                             filename);
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+
             // Handled, return true so no further processing is done
             return true;
         }
+        if (getService().getDeploymentConfiguration().isProductionMode()) {
+            // This is not meant for production mode.
+            getLogger()
+                    .log(Level.INFO,
+                            "Request for {0} not handled by sass compiler while in production mode",
+                            filename);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            // Handled, return true so no further processing is done
+            return true;
+        }
+
         synchronized (SCSS_MUTEX) {
             String realFilename = sc.getRealPath(scssFilename);
             ScssStylesheet scss = ScssStylesheet.get(realFilename);

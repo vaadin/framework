@@ -9,14 +9,14 @@ public class TestStringToDoubleConverter extends TestCase {
     StringToDoubleConverter converter = new StringToDoubleConverter();
 
     public void testNullConversion() {
-        assertEquals(null, converter.convertToModel(null, null));
+        assertEquals(null, converter.convertToModel(null, null, null));
     }
 
     public void testEmptyStringConversion() {
-        assertEquals(null, converter.convertToModel("", null));
+        assertEquals(null, converter.convertToModel("", Double.class, null));
     }
 
     public void testValueConversion() {
-        assertEquals(10.0, converter.convertToModel("10", null));
+        assertEquals(10.0, converter.convertToModel("10", Double.class, null));
     }
 }

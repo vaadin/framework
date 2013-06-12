@@ -11,6 +11,7 @@ import org.junit.Test;
 import com.vaadin.data.util.converter.StringToIntegerConverter;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.tests.util.AlwaysLockedVaadinSession;
 
 public class AbsFieldDataSourceLocaleChange {
 
@@ -19,7 +20,7 @@ public class AbsFieldDataSourceLocaleChange {
 
     @Before
     public void setup() {
-        vaadinSession = new VaadinSession(null);
+        vaadinSession = new AlwaysLockedVaadinSession(null);
         VaadinSession.setCurrent(vaadinSession);
         ui = new UI() {
 

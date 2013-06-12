@@ -254,5 +254,13 @@
 	.v-debugwindow-row > span.value {
 		width: 100%;
 	}
+	
+	/* INFO */
+	.v-debugwindow-info {
+		.v-debugwindow-row {
+			display:block;
+			min-width: 100%;
+		}
+	}
 
 }

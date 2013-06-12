@@ -86,7 +86,17 @@ public class ConverterUtil implements Serializable {
             Converter<PRESENTATIONTYPE, MODELTYPE> converter, Locale locale)
             throws Converter.ConversionException {
         if (converter != null) {
-            return converter.convertToPresentation(modelValue, locale);
+            PRESENTATIONTYPE presentation = converter.convertToPresentation(
+                    modelValue, presentationType, locale);
+            if (!presentationType.isInstance(presentation)) {
+                throw new Converter.ConversionException(
+                        "Converter returned an object of type "
+                                + presentation.getClass().getName()
+                                + " when expecting "
+                                + presentationType.getName());
+            }
+
+            return presentation;
         }
         if (modelValue == null) {
             return null;
@@ -123,7 +133,17 @@ public class ConverterUtil implements Serializable {
              * If there is a converter, always use it. It must convert or throw
              * an exception.
              */
-            return converter.convertToModel(presentationValue, locale);
+            MODELTYPE model = converter.convertToModel(presentationValue,
+                    modelType, locale);
+            if (!modelType.isInstance(model)) {
+                throw new Converter.ConversionException(
+                        "Converter returned an object of type "
+                                + model.getClass().getName()
+                                + " when expecting " + modelType.getName());
+            }
+
+            return model;
+
         }
 
         if (presentationValue == null) {

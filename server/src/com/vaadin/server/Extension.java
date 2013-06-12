@@ -35,4 +35,25 @@ public interface Extension extends ClientConnector {
      * removed, it cannot be attached again.
      */
     void remove();
+
+    /**
+     * Sets the parent connector of the connector.
+     * 
+     * This method automatically calls {@link #attach()} if the connector
+     * becomes attached to the session.
+     * <p>
+     * This method is rarely called directly.
+     * {@link AbstractClientConnector#addExtension(Extension)} is normally used
+     * for adding extensions to a parent and it will call this method
+     * implicitly.
+     * </p>
+     * 
+     * @param parent
+     *            the parent connector
+     * @throws IllegalStateException
+     *             if a parent is given even though the connector already has a
+     *             parent
+     */
+    public void setParent(ClientConnector parent);
+
 }

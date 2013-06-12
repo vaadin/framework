@@ -12,15 +12,15 @@ public class TestStringToDateConverter extends TestCase {
     StringToDateConverter converter = new StringToDateConverter();
 
     public void testNullConversion() {
-        assertEquals(null, converter.convertToModel(null, null));
+        assertEquals(null, converter.convertToModel(null, null, null));
     }
 
     public void testEmptyStringConversion() {
-        assertEquals(null, converter.convertToModel("", null));
+        assertEquals(null, converter.convertToModel("", Date.class, null));
     }
 
     public void testValueConversion() {
         assertEquals(new Date(100, 0, 1), converter.convertToModel(
-                "Jan 1, 2000 12:00:00 AM", Locale.ENGLISH));
+                "Jan 1, 2000 12:00:00 AM", Date.class, Locale.ENGLISH));
     }
 }

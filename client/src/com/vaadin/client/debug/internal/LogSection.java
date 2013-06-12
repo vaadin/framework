@@ -153,11 +153,11 @@ public class LogSection implements Section {
                         .as(event.getNativeEvent().getEventTarget());
                 while (!el.getClassName().contains(
                         VDebugWindow.STYLENAME + "-message")) {
-                    el = el.getParentElement();
                     if (el == contentElement) {
                         // clicked something else
                         return;
                     }
+                    el = el.getParentElement();
                 }
                 selectText(el);
             }
