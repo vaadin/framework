@@ -29,17 +29,17 @@ public class ConverterUtil implements Serializable {
      * {@link VaadinSession#getCurrent()}.
      * 
      * @param <PRESENTATIONTYPE>
-     *            The presentation type
+     *            the presentation type
      * @param <MODELTYPE>
-     *            The model type
+     *            the model type
      * @param presentationType
-     *            The presentation type
+     *            the presentation type
      * @param modelType
-     *            The model type
+     *            the model type
      * @param session
-     *            The session to use to find a ConverterFactory or null to use
+     *            the session to use to find a ConverterFactory or null to use
      *            the current session
-     * @return A Converter capable of converting between the given types or null
+     * @return a Converter capable of converting between the given types or null
      *         if no converter was found
      */
     public static <PRESENTATIONTYPE, MODELTYPE> Converter<PRESENTATIONTYPE, MODELTYPE> getConverter(
@@ -62,22 +62,23 @@ public class ConverterUtil implements Serializable {
      * Convert the given value from the data source type to the UI type.
      * 
      * @param modelValue
-     *            The model value to convert
+     *            the model value to convert
      * @param presentationType
-     *            The type of the presentation value
+     *            the type of the presentation value
      * @param converter
-     *            The converter to (try to) use
+     *            the converter to use
      * @param locale
-     *            The locale to use for conversion
+     *            the locale to use for conversion
      * @param <PRESENTATIONTYPE>
-     *            Presentation type
+     *            the presentation type
+     * @param <MODELTYPE>
+     *            the model type
      * 
-     * @return The converted value, compatible with the presentation type, or
+     * @return the converted value, compatible with the presentation type, or
      *         the original value if its type is compatible and no converter is
      *         set.
      * @throws Converter.ConversionException
-     *             if there is no converter and the type is not compatible with
-     *             the model type.
+     *             if there was a problem converting the value
      */
     @SuppressWarnings("unchecked")
     public static <PRESENTATIONTYPE, MODELTYPE> PRESENTATIONTYPE convertFromModel(
@@ -86,9 +87,14 @@ public class ConverterUtil implements Serializable {
             Converter<PRESENTATIONTYPE, MODELTYPE> converter, Locale locale)
             throws Converter.ConversionException {
         if (converter != null) {
+            /*
+             * If there is a converter, always use it. It must convert or throw
+             * an exception.
+             */
             PRESENTATIONTYPE presentation = converter.convertToPresentation(
                     modelValue, presentationType, locale);
-            if (!presentationType.isInstance(presentation)) {
+            if (presentation != null
+                    && !presentationType.isInstance(presentation)) {
                 throw new Converter.ConversionException(
                         "Converter returned an object of type "
                                 + presentation.getClass().getName()
@@ -99,6 +105,8 @@ public class ConverterUtil implements Serializable {
             return presentation;
         }
         if (modelValue == null) {
+            // Null should always be passed through the converter but if there
+            // is no converter we can safely return null
             return null;
         }
 
@@ -115,14 +123,26 @@ public class ConverterUtil implements Serializable {
     }
 
     /**
-     * @param <MODELTYPE>
-     * @param <PRESENTATIONTYPE>
+     * Convert the given value from the presentation (UI) type to model (data
+     * source) type.
+     * 
      * @param presentationValue
+     *            the presentation value to convert
      * @param modelType
+     *            the type of the model
      * @param converter
+     *            the converter to use
      * @param locale
-     * @return
+     *            the locale to use for conversion
+     * @param <PRESENTATIONTYPE>
+     *            the presentation type
+     * @param <MODELTYPE>
+     *            the model type
+     * 
+     * @return the converted value, compatible with the model type, or the
+     *         original value if its type is compatible and no converter is set.
      * @throws Converter.ConversionException
+     *             if there was a problem converting the value
      */
     public static <MODELTYPE, PRESENTATIONTYPE> MODELTYPE convertToModel(
             PRESENTATIONTYPE presentationValue, Class<MODELTYPE> modelType,
@@ -135,7 +155,7 @@ public class ConverterUtil implements Serializable {
              */
             MODELTYPE model = converter.convertToModel(presentationValue,
                     modelType, locale);
-            if (!modelType.isInstance(model)) {
+            if (model != null && !modelType.isInstance(model)) {
                 throw new Converter.ConversionException(
                         "Converter returned an object of type "
                                 + model.getClass().getName()
@@ -143,7 +163,6 @@ public class ConverterUtil implements Serializable {
             }
 
             return model;
-
         }
 
         if (presentationValue == null) {
