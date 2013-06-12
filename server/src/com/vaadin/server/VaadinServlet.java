@@ -1006,20 +1006,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
     }
 
     protected boolean isStaticResourceRequest(HttpServletRequest request) {
-        String pathInfo = request.getPathInfo();
-        if (pathInfo == null) {
-            return false;
-        }
-
-        if ((request.getContextPath() != null)
-                && (request.getRequestURI().startsWith("/VAADIN/"))) {
-            return true;
-        } else if (request.getRequestURI().startsWith(
-                request.getContextPath() + "/VAADIN/")) {
-            return true;
-        }
-
-        return false;
+        return request.getRequestURI().startsWith(
+                request.getContextPath() + "/VAADIN/");
     }
 
     /**
