@@ -88,7 +88,7 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
     private void checkLegacyPropertyToString() {
         // Verify that the default value has not changed without also
         // updating logic here
-        assert DEFAULT_LEGACY_PROPERTY_TO_STRING.toString().equals("warning");
+        assert DEFAULT_LEGACY_PROPERTY_TO_STRING == LegacyProperyToStringMode.WARNING;
 
         String param = getApplicationOrSystemProperty(
                 Constants.SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING, "warning");
