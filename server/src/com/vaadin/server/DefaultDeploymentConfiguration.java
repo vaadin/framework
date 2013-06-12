@@ -86,17 +86,25 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
     }
 
     private void checkLegacyPropertyToString() {
-        String param = getApplicationOrSystemProperty(
-                Constants.SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING,
-                DEFAULT_LEGACY_PROPERTY_TO_STRING.name().toLowerCase());
+        // Verify that the default value has not changed without also
+        // updating logic here
+        assert DEFAULT_LEGACY_PROPERTY_TO_STRING.toString().equals("warning");
 
-        try {
-            legacyPropertyToStringMode = LegacyProperyToStringMode
-                    .valueOf(param.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            getLogger().log(Level.WARNING,
-                    Constants.WARNING_UNKNOWN_LEGACY_PROPERTY_TOSTRING_VALUE,
-                    param);
+        String param = getApplicationOrSystemProperty(
+                Constants.SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING, "warning");
+
+        if ("true".equals(param)) {
+            legacyPropertyToStringMode = LegacyProperyToStringMode.ENABLED;
+        } else if ("false".equals(param)) {
+            legacyPropertyToStringMode = LegacyProperyToStringMode.DISABLED;
+        } else {
+            if (!"warning".equals(param)) {
+                getLogger()
+                        .log(Level.WARNING,
+                                Constants.WARNING_UNKNOWN_LEGACY_PROPERTY_TOSTRING_VALUE,
+                                param);
+
+            }
             legacyPropertyToStringMode = DEFAULT_LEGACY_PROPERTY_TO_STRING;
         }
     }
