@@ -1,6 +1,5 @@
 package com.vaadin.tests.tb3;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -18,8 +17,15 @@ import com.vaadin.testbench.TestBench;
 import com.vaadin.testbench.TestBenchTestCase;
 import com.vaadin.ui.UI;
 
-public abstract class AbstractTest extends TestBenchTestCase {
+public abstract class AbstractTB3Test extends TestBenchTestCase {
     protected WebDriver driver;
+    private DesiredCapabilities desiredCapabilities;
+    {
+        // Default browser to run on unless setDesiredCapabilities is called
+        desiredCapabilities = DesiredCapabilities.firefox();
+        desiredCapabilities.setVersion("17");
+        desiredCapabilities.setPlatform(Platform.WIN8);
+    }
 
     @Before
     public void setup() throws MalformedURLException {
@@ -33,24 +39,14 @@ public abstract class AbstractTest extends TestBenchTestCase {
         driver.get(getBaseURL() + getPath());
     }
 
-    /**
-     * @since
-     * @return
-     */
-    protected String getHubURL() {
-        // FIXME property
-        return "http://tb3-hub.intra.itmill.com:4444/wd/hub";
+    protected abstract String getHubURL();
+
+    protected DesiredCapabilities getDesiredCapabilities() {
+        return desiredCapabilities;
     }
 
-    /**
-     * @since
-     * @return
-     */
-    protected DesiredCapabilities getDesiredCapabilities() {
-        DesiredCapabilities c = DesiredCapabilities.firefox();
-        c.setVersion("17");
-        c.setPlatform(Platform.WIN8);
-        return c;
+    public void setDesiredCapabilities(DesiredCapabilities desiredCapabilities) {
+        this.desiredCapabilities = desiredCapabilities;
     }
 
     @After
@@ -105,10 +101,7 @@ public abstract class AbstractTest extends TestBenchTestCase {
     }
 
     protected String getBaseURL() {
-        return "http://192.168.10.22:8888";
-        // FIXME Property with fallback to property file outside git repo or in
-        // private folder
-        // System.getProperty("com.vaadin.testbench.deployment.url");
+        return System.getProperty("com.vaadin.testbench.deployment.url");
     }
 
     /**
@@ -133,22 +126,11 @@ public abstract class AbstractTest extends TestBenchTestCase {
         return pre + post;
     }
 
-    /**
-     * @since
-     * @param identifier
-     * @throws AssertionError
-     * @throws IOException
-     */
-    protected void compareScreen(String identifier) throws IOException,
-            AssertionError {
-        // FIXME Should use TB2 compatible format
-        // FIXME Does not actually fail the test if comparison fails
-        testBench(driver).compareScreen(
-                getClass().getSimpleName() + "_" + identifier);
+    protected String getTestName() {
+        return getClass().getSimpleName();
     }
 
     protected void sleep(int timeoutMillis) throws InterruptedException {
         Thread.sleep(timeoutMillis);
     }
-
 }

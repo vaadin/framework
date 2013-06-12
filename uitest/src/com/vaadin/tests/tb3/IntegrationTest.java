@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
-public class IntegrationTest extends AbstractTest {
+public class IntegrationTest extends PrivateTB3Configuration {
 
     @Test
     public void runTest() throws IOException, AssertionError {

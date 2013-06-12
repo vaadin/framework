@@ -1,13 +1,8 @@
 package com.vaadin.tests.tb3;
 
 import org.junit.Test;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 public class LabelModesTest extends MultiBrowserTest {
-
-    public LabelModesTest(DesiredCapabilities desiredCapabilities) {
-        super(desiredCapabilities);
-    }
 
     @Test
     public void test() throws Exception {

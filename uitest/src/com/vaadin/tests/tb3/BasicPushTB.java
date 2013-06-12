@@ -4,13 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 public class BasicPushTB extends MultiBrowserTest {
-
-    public BasicPushTB(DesiredCapabilities desiredCapabilities) {
-        super(desiredCapabilities);
-    }
 
     @Test
     public void runTest() throws Exception {
