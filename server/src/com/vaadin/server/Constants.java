@@ -116,6 +116,7 @@ public interface Constants {
     static final String URL_PARAMETER_THEME = "theme";
 
     static final String SERVLET_PARAMETER_PRODUCTION_MODE = "productionMode";
+    // Javadocs for VaadinService should be updated if this value is changed
     static final String SERVLET_PARAMETER_DISABLE_XSRF_PROTECTION = "disable-xsrf-protection";
     static final String SERVLET_PARAMETER_RESOURCE_CACHE_TIME = "resourceCacheTime";
     static final String SERVLET_PARAMETER_HEARTBEAT_INTERVAL = "heartbeatInterval";

@@ -48,6 +48,7 @@ public class ApplicationConstants implements Serializable {
 
     public static final String SERVICE_URL_PATH_AS_PARAMETER = "usePathParameter";
 
+    // Javadocs in ApplicationConfiguration should be updated if this is changed
     public static final String V_RESOURCE_PATH = "v-resourcePath";
 
     @Deprecated

@@ -74,7 +74,7 @@ import com.vaadin.util.CurrentInstance;
  * browser window which points to e.g. {@link VaadinServlet}, all
  * {@link UIProvider}s registered to the current {@link VaadinSession} are
  * queried for the UI class that should be used. The selection is by default
- * based on the {@value VaadinSession#UI_PARAMETER} parameter from web.xml.
+ * based on the <code>UI</code> init parameter from web.xml.
  * </p>
  * <p>
  * After a UI has been created by the application, it is initialized using

@@ -133,6 +133,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * The name of the parameter that is by default used in e.g. web.xml to
      * define the name of the default {@link UI} class.
      */
+    // javadoc in UI should be updated if this value is changed
     public static final String UI_PARAMETER = "UI";
 
     private static final Method BOOTSTRAP_FRAGMENT_METHOD = ReflectTools

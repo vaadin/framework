@@ -232,9 +232,8 @@ public class ApplicationConfiguration implements EntryPoint {
 
     /**
      * Checks whether path info in requests to the server-side service should be
-     * in a request parameter (named
-     * {@value ApplicationConstants#V_RESOURCE_PATH}) or appended to the end of
-     * the service URL.
+     * in a request parameter (named <code>v-resourcePath</code>) or appended to
+     * the end of the service URL.
      * 
      * @see #getServiceUrl()
      * 
@@ -253,9 +252,8 @@ public class ApplicationConfiguration implements EntryPoint {
     /**
      * Gets the URL to the server-side VaadinService. If
      * {@link #useServiceUrlPathParam()} return <code>true</code>, the requested
-     * path info should be in the {@value ApplicationConstants#V_RESOURCE_PATH}
-     * query parameter; else the path info should be appended to the end of the
-     * URL.
+     * path info should be in the <code>v-resourcePath</code> query parameter;
+     * else the path info should be appended to the end of the URL.
      * 
      * @see #useServiceUrlPathParam()
      * 
