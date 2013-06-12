@@ -271,7 +271,7 @@ public class FileUploadHandler implements RequestHandler {
             // if boundary string does not exist, the posted file is from
             // XHR2.post(File)
             doHandleXhrFilePost(session, request, response, streamVariable,
-                    variableName, source, request.getContentLength());
+                    variableName, source, getContentLength(request));
         }
         return true;
     }
@@ -323,7 +323,7 @@ public class FileUploadHandler implements RequestHandler {
 
         final InputStream inputStream = request.getInputStream();
 
-        int contentLength = request.getContentLength();
+        long contentLength = getContentLength(request);
 
         boolean atStart = false;
         boolean firstFileFieldFound = false;
@@ -390,9 +390,22 @@ public class FileUploadHandler implements RequestHandler {
 
     }
 
+    /*
+     * request.getContentLength() is limited to "int" by the Servlet
+     * specification. To support larger file uploads manually evaluate the
+     * Content-Length header which can contain long values.
+     */
+    private long getContentLength(VaadinRequest request) {
+        try {
+            return Long.parseLong(request.getHeader("Content-Length"));
+        } catch (NumberFormatException e) {
+            return -1l;
+        }
+    }
+
     private void handleFileUploadValidationAndData(VaadinSession session,
             InputStream inputStream, StreamVariable streamVariable,
-            String filename, String mimeType, int contentLength,
+            String filename, String mimeType, long contentLength,
             ClientConnector connector, String variableName)
             throws UploadException {
         session.lock();
@@ -461,7 +474,7 @@ public class FileUploadHandler implements RequestHandler {
     protected void doHandleXhrFilePost(VaadinSession session,
             VaadinRequest request, VaadinResponse response,
             StreamVariable streamVariable, String variableName,
-            ClientConnector owner, int contentLength) throws IOException {
+            ClientConnector owner, long contentLength) throws IOException {
 
         // These are unknown in filexhr ATM, maybe add to Accept header that
         // is accessible in portlets
@@ -491,7 +504,7 @@ public class FileUploadHandler implements RequestHandler {
      */
     protected final boolean streamToReceiver(VaadinSession session,
             final InputStream in, StreamVariable streamVariable,
-            String filename, String type, int contentLength)
+            String filename, String type, long contentLength)
             throws UploadException {
         if (streamVariable == null) {
             throw new IllegalStateException(
@@ -499,7 +512,7 @@ public class FileUploadHandler implements RequestHandler {
         }
 
         OutputStream out = null;
-        int totalBytes = 0;
+        long totalBytes = 0;
         StreamingStartEventImpl startedEvent = new StreamingStartEventImpl(
                 filename, type, contentLength);
         try {
