@@ -16,6 +16,7 @@
 package com.vaadin.server;
 
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -645,19 +646,19 @@ public class VaadinServlet extends HttpServlet implements Constants {
                             "Failed to find out last modified timestamp. Continuing without it.",
                             e);
         } finally {
-            if (connection instanceof URLConnection) {
-                try {
-                    // Explicitly close the input stream to prevent it
-                    // from remaining hanging
-                    // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4257700
-                    InputStream is = connection.getInputStream();
-                    if (is != null) {
-                        is.close();
-                    }
-                } catch (IOException e) {
-                    getLogger().log(Level.INFO,
-                            "Error closing URLConnection input stream", e);
+            try {
+                // Explicitly close the input stream to prevent it
+                // from remaining hanging
+                // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4257700
+                InputStream is = connection.getInputStream();
+                if (is != null) {
+                    is.close();
                 }
+            } catch (FileNotFoundException e) {
+                // Not logging when the file does not exist.
+            } catch (IOException e) {
+                getLogger().log(Level.INFO,
+                        "Error closing URLConnection input stream", e);
             }
         }
 
@@ -720,14 +721,17 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // prevent it from hanging, but that is done below.
         }
 
-        InputStream is = connection.getInputStream();
+        InputStream is = null;
         try {
+            is = connection.getInputStream();
             final OutputStream os = response.getOutputStream();
             final byte buffer[] = new byte[DEFAULT_BUFFER_SIZE];
             int bytes;
             while ((bytes = is.read(buffer)) >= 0) {
                 os.write(buffer, 0, bytes);
             }
+        } catch (FileNotFoundException e) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         } finally {
             if (is != null) {
                 is.close();
