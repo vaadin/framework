@@ -341,12 +341,7 @@ jQuery.atmosphere = function() {
                 _request.ctime = jQuery.now();
 
                 if (_request.transport != 'websocket' && _request.transport != 'sse') {
-                    // Gives a chance to the connection to be established before calling the callback
-                    setTimeout(function() {
-                        _open('opening', _request.transport, _request);
-                    }, 500);
                     _executeRequest();
-
                 } else if (_request.transport == 'websocket') {
                     if (!_supportWebsocket()) {
                         _reconnectWithFallbackTransport("Websocket is not supported, using request.fallbackTransport (" + _request.fallbackTransport + ")");
@@ -1025,10 +1020,6 @@ jQuery.atmosphere = function() {
                     jQuery.atmosphere.debug("Using URL: " + location);
                 }
 
-                if (webSocketOpened) {
-                    _open('re-opening', "websocket", _request);
-                }
-
                 if (webSocketOpened && !_request.reconnect) {
                     if (_websocket != null) {
                         _clearState();
@@ -1068,9 +1059,7 @@ jQuery.atmosphere = function() {
                         jQuery.atmosphere.debug("Websocket successfully opened");
                     }
 
-                    if (!webSocketOpened) {
-                        _open('opening', "websocket", _request);
-                    }
+                    _open('opening', 'websocket', _request);
 
                     webSocketOpened = true;
                     _websocket.webSocketOpened = webSocketOpened;
@@ -1445,10 +1434,14 @@ jQuery.atmosphere = function() {
                         if (_abordingConnection) {
                             return;
                         }
+
                         _response.error = null;
                         var skipCallbackInvocation = false;
                         var update = false;
 
+                        if (rq.transport == 'streaming' && ajaxRequest.readyState == 2) {
+                            _open('opening', rq.transport, rq);
+                        }
 
                         // Opera doesn't call onerror if the server disconnect.
                         if (jQuery.browser.opera
@@ -1483,6 +1476,7 @@ jQuery.atmosphere = function() {
                                 // Prevent onerror callback to be called
                                 _response.errorHandled = true;
                                 _clearState();
+                                _invokeClose(true);
                                 reconnectF();
                                 return;
                             }
@@ -1579,6 +1573,11 @@ jQuery.atmosphere = function() {
                             }
 
                             _verifyStreamingLength(ajaxRequest, rq);
+
+                            if (rq.transport == 'streaming' && rq.readyState == 4) {
+                                _invokeClose(true);
+                                reconnectF();
+                            }
                         }
                     };
                     ajaxRequest.send(rq.data);
@@ -1669,16 +1668,12 @@ jQuery.atmosphere = function() {
                         _response.status = status == 0 ? 204 : status;
                         _response.reason = status == 0 ? "Server resumed the connection or down." : "OK";
 
-                        var reconnectInterval = (request.connectTimeout == -1) ? 0 : request.connectTimeout;
+                        var reconnectInterval = request.reconnectInterval;
 
                         // Reconnect immedialtely
-                        if (!force) {
-                            request.id = setTimeout(function () {
-                                _executeRequest(request);
-                            }, reconnectInterval);
-                        } else {
+                        request.id = setTimeout(function () {
                             _executeRequest(request);
-                        }
+                        }, reconnectInterval);
                     }
                 }
             }
@@ -2182,6 +2177,7 @@ jQuery.atmosphere = function() {
                         if (typeof(f.onError) != 'undefined') f.onError(response);
                         break;
                     case "opening" :
+                        _request.closed = false;
                         if (typeof(f.onOpen) != 'undefined') f.onOpen(response);
                         break;
                     case "messagePublished" :

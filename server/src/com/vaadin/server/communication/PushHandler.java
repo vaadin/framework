@@ -28,6 +28,7 @@ import org.atmosphere.cpr.AtmosphereRequest;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResource.TRANSPORT;
 import org.atmosphere.cpr.AtmosphereResourceEvent;
+import org.atmosphere.cpr.AtmosphereResourceEventListenerAdapter;
 import org.json.JSONException;
 
 import com.vaadin.server.LegacyCommunicationManager.InvalidUIDLSecurityKeyException;
@@ -51,7 +52,8 @@ import com.vaadin.ui.UI;
  * @author Vaadin Ltd
  * @since 7.1
  */
-public class PushHandler implements AtmosphereHandler {
+public class PushHandler extends AtmosphereResourceEventListenerAdapter
+        implements AtmosphereHandler {
 
     /**
      * Callback interface used internally to process an event with the
@@ -67,12 +69,15 @@ public class PushHandler implements AtmosphereHandler {
      * open by calling resource.suspend(). If there is a pending push, send it
      * now.
      */
-    private static PushEventCallback establishCallback = new PushEventCallback() {
+    private final PushEventCallback establishCallback = new PushEventCallback() {
         @Override
         public void run(AtmosphereResource resource, UI ui) throws IOException {
             getLogger().log(Level.FINER,
                     "New push connection with transport {0}",
                     resource.transport());
+
+            resource.addEventListener(PushHandler.this);
+
             resource.getResponse().setContentType("text/plain; charset=UTF-8");
 
             VaadinSession session = ui.getSession();
@@ -122,9 +127,12 @@ public class PushHandler implements AtmosphereHandler {
      * the request and send changed UI state via the push channel (we do not
      * respond to the request directly.)
      */
-    private static PushEventCallback receiveCallback = new PushEventCallback() {
+    private final PushEventCallback receiveCallback = new PushEventCallback() {
         @Override
         public void run(AtmosphereResource resource, UI ui) throws IOException {
+            getLogger().log(Level.FINER, "Received message from resource {0}",
+                    resource.uuid());
+
             AtmosphereRequest req = resource.getRequest();
 
             AtmospherePushConnection connection = getConnectionForUI(ui);
@@ -167,7 +175,7 @@ public class PushHandler implements AtmosphereHandler {
     /**
      * Callback used when a connection is closed by the client.
      */
-    PushEventCallback disconnectCallback = new PushEventCallback() {
+    private final PushEventCallback disconnectCallback = new PushEventCallback() {
         @Override
         public void run(AtmosphereResource resource, UI ui) throws IOException {
             PushMode pushMode = ui.getPushConfiguration().getPushMode();
@@ -187,7 +195,7 @@ public class PushHandler implements AtmosphereHandler {
                      * mode has been set to disabled, just clean up some stuff
                      * and be done with it
                      */
-                    getLogger().log(Level.FINEST,
+                    getLogger().log(Level.FINER,
                             "Connection closed for resource {0}", id);
                 } else {
                     /*
@@ -195,7 +203,7 @@ public class PushHandler implements AtmosphereHandler {
                      * tab.
                      */
                     getLogger()
-                            .log(Level.FINE,
+                            .log(Level.FINER,
                                     "Connection unexpectedly closed for resource {0} with transport {1}",
                                     new Object[] { id, resource.transport() });
                 }
@@ -316,7 +324,8 @@ public class PushHandler implements AtmosphereHandler {
 
         String id = resource.uuid();
         if (event.isCancelled()) {
-            callWithUi(resource, disconnectCallback);
+            // Disconnected for whatever reason, handle in onDisconnect() as
+            // it's more reliable
         } else if (event.isResuming()) {
             // A connection that was suspended earlier was resumed (committed to
             // the client.) Should only happen if the transport is JSONP or
@@ -349,6 +358,13 @@ public class PushHandler implements AtmosphereHandler {
                         resource.transport());
             }
         }
+    }
+
+    @Override
+    public void onDisconnect(AtmosphereResourceEvent event) {
+        // Log event on trace level
+        super.onDisconnect(event);
+        callWithUi(event.getResource(), disconnectCallback);
     }
 
     @Override

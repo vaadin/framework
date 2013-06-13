@@ -19,7 +19,6 @@ package com.vaadin.client;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
@@ -58,14 +57,14 @@ public class SimpleTree extends ComplexPanel implements HasDoubleClickHandlers {
 
         style = handle.getStyle();
         style.setDisplay(Display.NONE);
-        style.setProperty("textAlign", "center");
-        style.setWidth(10, Unit.PX);
+        style.setWidth(0.5, Unit.EM);
+        style.setHeight(0.5, Unit.EM);
         style.setCursor(Cursor.POINTER);
-        style.setBorderStyle(BorderStyle.SOLID);
-        style.setBorderColor("#666");
-        style.setBorderWidth(1, Unit.PX);
+        style.setBackgroundColor("gray");
+        style.setColor("white");
+        style.setPadding(4, Unit.PX);
         style.setMarginRight(3, Unit.PX);
-        style.setProperty("borderRadius", "4px");
+        style.setLineHeight(0.5, Unit.EM);
         handle.setInnerHTML("+");
         getElement().appendChild(handle);
         getElement().appendChild(text);

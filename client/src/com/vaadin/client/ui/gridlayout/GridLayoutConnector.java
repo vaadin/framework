@@ -192,6 +192,7 @@ public class GridLayoutConnector extends AbstractComponentContainerConnector
             caption.updateCaption();
         } else {
             layout.setCaption(childConnector.getWidget(), null);
+            getLayoutManager().setNeedsLayout(this);
         }
     }
 

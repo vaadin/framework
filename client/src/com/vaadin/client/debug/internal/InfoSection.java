@@ -16,12 +16,13 @@
 
 package com.vaadin.client.debug.internal;
 
+import java.util.List;
 import java.util.logging.Level;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -44,8 +45,16 @@ public class InfoSection implements Section {
             + "-info";
     private static final String ERROR_STYLE = Level.SEVERE.getName();
     private final HTML content = new HTML();
-    private DebugButton tabButton = new DebugButton(Icon.INFO);
-    private FlowPanel controls = new FlowPanel();
+    private DebugButton tabButton = new DebugButton(Icon.INFO,
+            "General information about the application(s)");
+    private HTML controls = new HTML(tabButton.getTitle());
+
+    private Timer refresher = new Timer() {
+        @Override
+        public void run() {
+            refresh();
+        }
+    };
 
     /**
      * 
@@ -73,7 +82,12 @@ public class InfoSection implements Section {
             row.addClassName(className);
         }
         Element span = DOM.createSpan();
-        span.setInnerText(parameter + ": " + value);
+        span.setClassName("caption");
+        span.setInnerText(parameter);
+        row.appendChild(span);
+        span = DOM.createSpan();
+        span.setClassName("value");
+        span.setInnerText(value);
         row.appendChild(span);
         content.getElement().appendChild(row);
 
@@ -126,9 +140,15 @@ public class InfoSection implements Section {
      */
     private void refresh() {
         clear();
-        for (ApplicationConnection application : ApplicationConfiguration
-                .getRunningApplications()) {
-            refresh(application);
+        List<ApplicationConnection> apps = ApplicationConfiguration
+                .getRunningApplications();
+        if (apps.size() == 0) {
+            // try again in a while
+            refresher.schedule(1000);
+        } else {
+            for (ApplicationConnection application : apps) {
+                refresh(application);
+            }
         }
     }
 
@@ -263,7 +283,7 @@ public class InfoSection implements Section {
      */
     @Override
     public void hide() {
-
+        refresher.cancel();
     }
 
     /*
@@ -274,6 +294,7 @@ public class InfoSection implements Section {
      */
     @Override
     public void meta(ApplicationConnection ac, ValueMap meta) {
+
     }
 
     /*

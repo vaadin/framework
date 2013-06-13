@@ -101,6 +101,10 @@ public interface Sizeable extends Serializable {
          */
         EM("em"),
         /**
+         * Unit code representing the font-size of the root font.
+         */
+        REM("rem"),
+        /**
          * Unit code representing the x-height of the relevant font.
          */
         EX("ex"),

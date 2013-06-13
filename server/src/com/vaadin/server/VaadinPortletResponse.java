@@ -65,7 +65,13 @@ public class VaadinPortletResponse implements VaadinResponse {
 
     @Override
     public OutputStream getOutputStream() throws IOException {
-        return ((MimeResponse) response).getPortletOutputStream();
+        if (response instanceof MimeResponse) {
+            return ((MimeResponse) response).getPortletOutputStream();
+        } else {
+            throw new IOException(
+                    "Output stream not available for response of type "
+                            + response.getClass().getName());
+        }
     }
 
     /**
