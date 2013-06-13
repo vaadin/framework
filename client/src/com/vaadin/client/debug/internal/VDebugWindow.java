@@ -324,9 +324,9 @@ public final class VDebugWindow extends VOverlay {
         writeState(storage, STORAGE_MIN_Y, minY);
         writeState(storage, STORAGE_FONT_SIZE, fontSize);
 
-        if (activeSection != null) {
-            writeState(storage, STORAGE_ACTIVE_SECTION,
-                    activeSection.getTabButton());
+        int activeIdx = getActiveSection();
+        if (activeIdx >= 0) {
+            writeState(storage, STORAGE_ACTIVE_SECTION, activeIdx);
         }
 
         writeState(storage, STORAGE_IS_MINIMIZED, minimized);
@@ -579,6 +579,10 @@ public final class VDebugWindow extends VOverlay {
         if (n < sections.size()) {
             activateSection(sections.get(n));
         }
+    }
+
+    int getActiveSection() {
+        return sections.indexOf(activeSection);
     }
 
     /**
