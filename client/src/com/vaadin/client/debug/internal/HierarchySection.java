@@ -168,6 +168,7 @@ public class HierarchySection implements Section {
                 @Override
                 public void onClick(ClickEvent event) {
                     Highlight.showOnly(connector);
+                    Highlight.showServerDebugInfo(connector);
                 }
             });
             widget = label;
@@ -177,6 +178,7 @@ public class HierarchySection implements Section {
                 protected void select(ClickEvent event) {
                     super.select(event);
                     Highlight.showOnly(connector);
+                    Highlight.showServerDebugInfo(connector);
                 }
             };
             for (ServerConnector child : children) {
@@ -417,7 +419,6 @@ public class HierarchySection implements Section {
                     @Override
                     public void onClick(ClickEvent event) {
                         printState(connector);
-                        Highlight.show(connector);
                     }
                 });
 
@@ -559,6 +560,7 @@ public class HierarchySection implements Section {
 
     private void printState(ServerConnector connector) {
         Highlight.showOnly(connector);
+        Highlight.showServerDebugInfo(connector);
 
         SharedState state = connector.getState();
 
