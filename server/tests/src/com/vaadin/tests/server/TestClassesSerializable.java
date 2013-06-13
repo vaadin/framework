@@ -63,7 +63,8 @@ public class TestClassesSerializable extends TestCase {
             "com\\.vaadin\\.server\\.communication\\.PushConnection", //
             "com\\.vaadin\\.server\\.communication\\.AtmospherePushConnection", //
             "com\\.vaadin\\.util\\.ConnectorHelper", //
-            "com\\.vaadin\\.server\\.VaadinSession$FutureAccess", //
+            "com\\.vaadin\\.server\\.VaadinSession\\$FutureAccess", //
+            "com\\.vaadin\\.external\\..*", //
     };
 
     /**
