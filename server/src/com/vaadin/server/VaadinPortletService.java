@@ -32,6 +32,7 @@ import com.vaadin.server.VaadinPortlet.RequestType;
 import com.vaadin.server.communication.PortletBootstrapHandler;
 import com.vaadin.server.communication.PortletDummyRequestHandler;
 import com.vaadin.server.communication.PortletListenerNotifier;
+import com.vaadin.server.communication.PortletStateAwareRequestHandler;
 import com.vaadin.server.communication.PortletUIInitHandler;
 import com.vaadin.ui.UI;
 
@@ -64,6 +65,7 @@ public class VaadinPortletService extends VaadinService {
         handlers.add(new PortletListenerNotifier());
         handlers.add(0, new PortletDummyRequestHandler());
         handlers.add(0, new PortletBootstrapHandler());
+        handlers.add(0, new PortletStateAwareRequestHandler());
 
         return handlers;
     }
