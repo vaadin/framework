@@ -16,7 +16,7 @@
 package com.vaadin.client.debug.internal;
 
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.VUIDLBrowser;
@@ -37,8 +37,12 @@ public class NetworkSection implements Section {
     private final DebugButton tabButton = new DebugButton(Icon.NETWORK,
             "Communication");
 
-    private final HorizontalPanel controls = new HorizontalPanel();
+    private final HTML controls = new HTML(tabButton.getTitle());
     private final FlowPanel content = new FlowPanel();
+
+    public NetworkSection() {
+        content.setStyleName(VDebugWindow.STYLENAME + "-network");
+    }
 
     @Override
     public DebugButton getTabButton() {
@@ -76,19 +80,16 @@ public class NetworkSection implements Section {
     public void uidl(ApplicationConnection ac, ValueMap uidl) {
         int sinceStart = VDebugWindow.getMillisSinceStart();
         int sinceReset = VDebugWindow.getMillisSinceReset();
+
         VUIDLBrowser vuidlBrowser = new VUIDLBrowser(uidl, ac);
         vuidlBrowser.addStyleName(VDebugWindow.STYLENAME + "-row");
-        // TODO style this
-        /*-
-        vuidlBrowser.setText("<span class=\"" + VDebugWindow.STYLENAME
-                + "-time\">" + sinceReset + "ms</span><span class=\""
-                + VDebugWindow.STYLENAME + "-message\">response</span>");
-        -*/
         vuidlBrowser.setText("Response @ " + sinceReset + "ms");
         vuidlBrowser.setTitle(VDebugWindow.getTimingTooltip(sinceStart,
                 sinceReset));
         vuidlBrowser.close();
+
         content.add(vuidlBrowser);
+
         while (content.getWidgetCount() > maxSize) {
             content.remove(0);
         }

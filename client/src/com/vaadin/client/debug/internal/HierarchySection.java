@@ -126,6 +126,14 @@ public class HierarchySection implements Section {
         });
 
         content.setStylePrimaryName(VDebugWindow.STYLENAME + "-hierarchy");
+
+        HTML info = new HTML(showHierarchy.getHTML() + " "
+                + showHierarchy.getTitle() + "<br/>" + find.getHTML() + " "
+                + find.getTitle() + "<br/>" + analyze.getHTML() + " "
+                + analyze.getTitle() + "<br/>" + generateWS.getHTML() + " "
+                + generateWS.getTitle() + "<br/>");
+        info.setStyleName(VDebugWindow.STYLENAME + "-info");
+        content.add(info);
     }
 
     private void showHierarchy() {
