@@ -680,8 +680,6 @@ jQuery.atmosphere = function() {
                     _close();
                 };
 
-                request.closed = false;
-
                 if (_response.error == null) {
                     _response.request = request;
                     var prevState = _response.state;
@@ -2179,6 +2177,7 @@ jQuery.atmosphere = function() {
                         if (typeof(f.onError) != 'undefined') f.onError(response);
                         break;
                     case "opening" :
+                        _request.closed = false;
                         if (typeof(f.onOpen) != 'undefined') f.onOpen(response);
                         break;
                     case "messagePublished" :
