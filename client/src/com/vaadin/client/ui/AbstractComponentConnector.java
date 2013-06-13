@@ -185,19 +185,20 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         if (getWidget() instanceof HasEnabled) {
             // set widget specific enabled state
             ((HasEnabled) getWidget()).setEnabled(widgetEnabled);
+        }
 
-            // make sure the caption has or has not v-disabled style
-            if (delegateCaptionHandling()) {
-                ServerConnector parent = getParent();
-                if (parent instanceof HasComponentsConnector) {
-                    ((HasComponentsConnector) parent).updateCaption(this);
-                } else if (parent == null && !(this instanceof UIConnector)) {
-                    VConsole.error("Parent of connector "
-                            + Util.getConnectorString(this)
-                            + " is null. This is typically an indication of a broken component hierarchy");
-                }
+        // make sure the caption has or has not v-disabled style
+        if (delegateCaptionHandling()) {
+            ServerConnector parent = getParent();
+            if (parent instanceof HasComponentsConnector) {
+                ((HasComponentsConnector) parent).updateCaption(this);
+            } else if (parent == null && !(this instanceof UIConnector)) {
+                VConsole.error("Parent of connector "
+                        + Util.getConnectorString(this)
+                        + " is null. This is typically an indication of a broken component hierarchy");
             }
         }
+
     }
 
     protected void updateComponentSize() {
