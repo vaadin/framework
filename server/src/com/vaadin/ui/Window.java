@@ -1100,4 +1100,81 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     public WindowRole getAssistiveRole() {
         return getState().role;
     }
+
+    /**
+     * Set if it should be prevented to set the focus to a component outside the
+     * window with the tab key.
+     * <p>
+     * This is meant to help users of assistive devices to not leaving the
+     * window unintentionally.
+     * 
+     * @param tabStop
+     *            true to keep the focus inside the window when reaching the top
+     *            or bottom, false (default) to allow leaving the window
+     */
+    public void setTabStopEnabled(boolean tabStop) {
+        getState().assistiveTabStop = tabStop;
+    }
+
+    /**
+     * Get if it is prevented to leave a window with the tab key.
+     * 
+     * @return true when the focus is limited to inside the window, false when
+     *         focus can leave the window
+     */
+    public boolean isTabStopEnabled() {
+        return getState().assistiveTabStop;
+    }
+
+    /**
+     * Sets the message that is provided to users of assistive devices when the
+     * user reaches the top of the window when leaving a window with the tab key
+     * is prevented.
+     * <p>
+     * This message is not visible on the screen.
+     * 
+     * @param topMessage
+     *            String provided when the user navigates with Shift-Tab keys to
+     *            the top of the window
+     */
+    public void setTabStopTopAssistiveText(String topMessage) {
+        getState().assistiveTabStopTopText = topMessage;
+    }
+
+    /**
+     * Sets the message that is provided to users of assistive devices when the
+     * user reaches the bottom of the window when leaving a window with the tab
+     * key is prevented.
+     * <p>
+     * This message is not visible on the screen.
+     * 
+     * @param bottomMessage
+     *            String provided when the user navigates with the Tab key to
+     *            the bottom of the window
+     */
+    public void setTabStopBottomAssistiveText(String bottomMessage) {
+        getState().assistiveTabStopBottomText = bottomMessage;
+    }
+
+    /**
+     * Gets the message that is provided to users of assistive devices when the
+     * user reaches the top of the window when leaving a window with the tab key
+     * is prevented.
+     * 
+     * @return the top message
+     */
+    public String getTabStopTopAssistiveText() {
+        return getState().assistiveTabStopTopText;
+    }
+
+    /**
+     * Gets the message that is provided to users of assistive devices when the
+     * user reaches the bottom of the window when leaving a window with the tab
+     * key is prevented.
+     * 
+     * @return the bottom message
+     */
+    public String getTabStopBottomAssistiveText() {
+        return getState().assistiveTabStopBottomText;
+    }
 }

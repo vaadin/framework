@@ -43,4 +43,7 @@ public class WindowState extends PanelState {
     public String assistivePostfix = "";
     public Connector[] contentDescription;
     public WindowRole role = WindowRole.DIALOG;
+    public boolean assistiveTabStop = false;
+    public String assistiveTabStopTopText = "Top of dialog";
+    public String assistiveTabStopBottomText = "Bottom of Dialog";
 }

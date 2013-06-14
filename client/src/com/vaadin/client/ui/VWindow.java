@@ -25,6 +25,7 @@ import com.google.gwt.aria.client.RelevantValue;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
@@ -39,10 +40,13 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
@@ -152,6 +156,18 @@ public class VWindow extends VWindowOverlay implements
     private String assistivePrefix;
     private String assistivePostfix;
 
+    private Element topTabStop;
+    private Element bottomTabStop;
+
+    private NativePreviewHandler topEventBlocker;
+    private NativePreviewHandler bottomEventBlocker;
+
+    private HandlerRegistration topBlockerRegistration;
+    private HandlerRegistration bottomBlockerRegistration;
+
+    // Prevents leaving the window with the Tab key when true
+    private boolean doTabStop;
+
     /**
      * If centered (via UIDL), the window should stay in the centered -mode
      * until a position is received from the server, or the user moves or
@@ -211,6 +227,12 @@ public class VWindow extends VWindowOverlay implements
          * window is open.
          */
         getApplicationConnection().getUIConnector().getWidget().storeFocus();
+
+        /*
+         * When this window gets reattached, set the tabstop to the previous
+         * state.
+         */
+        setTabStopEnabled(doTabStop);
     }
 
     @Override
@@ -225,6 +247,18 @@ public class VWindow extends VWindowOverlay implements
          */
         getApplicationConnection().getUIConnector().getWidget()
                 .focusStoredElement();
+
+        removeTabBlockHandlers();
+    }
+
+    private void removeTabBlockHandlers() {
+        if (topBlockerRegistration != null) {
+            topBlockerRegistration.removeHandler();
+            topBlockerRegistration = null;
+
+            bottomBlockerRegistration.removeHandler();
+            bottomBlockerRegistration = null;
+        }
     }
 
     public void bringToFront() {
@@ -290,6 +324,9 @@ public class VWindow extends VWindowOverlay implements
     protected void constructDOM() {
         setStyleName(CLASSNAME);
 
+        topTabStop = DOM.createDiv();
+        DOM.setElementAttribute(topTabStop, "tabindex", "0");
+
         header = DOM.createDiv();
         DOM.setElementProperty(header, "className", CLASSNAME + "-outerheader");
         headerText = DOM.createDiv();
@@ -309,15 +346,20 @@ public class VWindow extends VWindowOverlay implements
         DOM.setElementAttribute(closeBox, "tabindex", "0");
         DOM.appendChild(footer, resizeBox);
 
+        bottomTabStop = DOM.createDiv();
+        DOM.setElementAttribute(bottomTabStop, "tabindex", "0");
+
         wrapper = DOM.createDiv();
         DOM.setElementProperty(wrapper, "className", CLASSNAME + "-wrap");
 
+        DOM.appendChild(wrapper, topTabStop);
         DOM.appendChild(wrapper, header);
         DOM.appendChild(wrapper, maximizeRestoreBox);
         DOM.appendChild(wrapper, closeBox);
         DOM.appendChild(header, headerText);
         DOM.appendChild(wrapper, contents);
         DOM.appendChild(wrapper, footer);
+        DOM.appendChild(wrapper, bottomTabStop);
         DOM.appendChild(super.getContainerElement(), wrapper);
 
         sinkEvents(Event.ONDBLCLICK | Event.MOUSEEVENTS | Event.TOUCHEVENTS
@@ -338,6 +380,83 @@ public class VWindow extends VWindowOverlay implements
         AriaHelper.ensureHasId(headerText);
         Roles.getDialogRole().setAriaLabelledbyProperty(getElement(),
                 Id.of(headerText));
+
+        // Handlers to Prevent tab to leave the window
+        topEventBlocker = new NativePreviewHandler() {
+            @Override
+            public void onPreviewNativeEvent(NativePreviewEvent event) {
+                NativeEvent nativeEvent = event.getNativeEvent();
+                if (nativeEvent.getEventTarget().cast() == topTabStop
+                        && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
+                        && nativeEvent.getShiftKey()) {
+                    nativeEvent.preventDefault();
+                }
+            }
+        };
+
+        bottomEventBlocker = new NativePreviewHandler() {
+            @Override
+            public void onPreviewNativeEvent(NativePreviewEvent event) {
+                NativeEvent nativeEvent = event.getNativeEvent();
+                if (nativeEvent.getEventTarget().cast() == bottomTabStop
+                        && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
+                        && !nativeEvent.getShiftKey()) {
+                    nativeEvent.preventDefault();
+                }
+            }
+        };
+    }
+
+    /**
+     * Sets the message that is provided to users of assistive devices when the
+     * user reaches the top of the window when leaving a window with the tab key
+     * is prevented.
+     * <p>
+     * This message is not visible on the screen.
+     * 
+     * @param topMessage
+     *            String provided when the user navigates with Shift-Tab keys to
+     *            the top of the window
+     */
+    public void setTabStopTopAssistiveText(String topMessage) {
+        Roles.getNoteRole().setAriaLabelProperty(topTabStop, topMessage);
+    }
+
+    /**
+     * Sets the message that is provided to users of assistive devices when the
+     * user reaches the bottom of the window when leaving a window with the tab
+     * key is prevented.
+     * <p>
+     * This message is not visible on the screen.
+     * 
+     * @param bottomMessage
+     *            String provided when the user navigates with the Tab key to
+     *            the bottom of the window
+     */
+    public void setTabStopBottomAssistiveText(String bottomMessage) {
+        Roles.getNoteRole().setAriaLabelProperty(bottomTabStop, bottomMessage);
+    }
+
+    /**
+     * Gets the message that is provided to users of assistive devices when the
+     * user reaches the top of the window when leaving a window with the tab key
+     * is prevented.
+     * 
+     * @return the top message
+     */
+    public String getTabStopTopAssistiveText() {
+        return Roles.getNoteRole().getAriaLabelProperty(topTabStop);
+    }
+
+    /**
+     * Gets the message that is provided to users of assistive devices when the
+     * user reaches the bottom of the window when leaving a window with the tab
+     * key is prevented.
+     * 
+     * @return the bottom message
+     */
+    public String getTabStopBottomAssistiveText() {
+        return Roles.getNoteRole().getAriaLabelProperty(bottomTabStop);
     }
 
     /**
@@ -1201,6 +1320,29 @@ public class VWindow extends VWindowOverlay implements
             Roles.getAlertdialogRole().set(getElement());
         } else {
             Roles.getDialogRole().set(getElement());
+        }
+    }
+
+    /**
+     * Registers the handlers that prevent to leave the window using the
+     * Tab-key.
+     * 
+     * @param doTabStop
+     *            true to prevent leaving the window, false to allow leaving the
+     *            window
+     */
+    public void setTabStopEnabled(boolean doTabStop) {
+        this.doTabStop = doTabStop;
+
+        if (doTabStop) {
+            if (topBlockerRegistration == null) {
+                topBlockerRegistration = Event
+                        .addNativePreviewHandler(topEventBlocker);
+                bottomBlockerRegistration = Event
+                        .addNativePreviewHandler(bottomEventBlocker);
+            }
+        } else {
+            removeTabBlockHandlers();
         }
     }
 }
