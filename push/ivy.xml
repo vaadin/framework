@@ -28,7 +28,7 @@
         <!-- Atmosphere -->
         <!-- Keep the version number in sync with build.xml -->
         <dependency org="com.vaadin.external.atmosphere" name="atmosphere-runtime"
-            rev="1.0.14-2" conf="build,ide,test -> default">
+            rev="1.0.14-vaadin1" conf="build,ide,test -> default">
         </dependency>
     </dependencies>
 
