@@ -9,7 +9,7 @@ public class TestStringToNumberConverter extends TestCase {
     StringToNumberConverter converter = new StringToNumberConverter();
 
     public void testNullConversion() {
-        assertEquals(null, converter.convertToModel(null, null, null));
+        assertEquals(null, converter.convertToModel(null, Number.class, null));
     }
 
     public void testEmptyStringConversion() {

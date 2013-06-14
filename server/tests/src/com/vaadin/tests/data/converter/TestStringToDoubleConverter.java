@@ -9,7 +9,7 @@ public class TestStringToDoubleConverter extends TestCase {
     StringToDoubleConverter converter = new StringToDoubleConverter();
 
     public void testNullConversion() {
-        assertEquals(null, converter.convertToModel(null, null, null));
+        assertEquals(null, converter.convertToModel(null, Double.class, null));
     }
 
     public void testEmptyStringConversion() {
