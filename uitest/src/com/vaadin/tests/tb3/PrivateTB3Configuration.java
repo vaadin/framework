@@ -21,29 +21,19 @@ package com.vaadin.tests.tb3;
 
 public class PrivateTB3Configuration extends ScreenshotTB3Test {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.tests.tb3.AbstractTB3Test#getBaseURL()
-     */
-    @Override
-    protected String getBaseURL() {
-        throw new RuntimeException("You must configure getBaseURL in "
-                + PrivateTB3Configuration.class.getName());
-    }
-
     @Override
     protected String getScreenshotDirectory() {
-        throw new RuntimeException(
-                "You must configure getScreenshotDirectory in "
-                        + PrivateTB3Configuration.class.getName());
-
+        return "C:/Vaadin/workspace/vaadin7/vaadin-screenshots";
     }
 
     @Override
-    protected String getHubURL() {
-        throw new RuntimeException("You must configure getHubURL in "
-                + PrivateTB3Configuration.class.getName());
+    protected String getHubHostname() {
+        return "tb3-hub.intra.itmill.com";
+    }
+
+    @Override
+    protected String getDeploymentHostname() {
+        return "192.168.2.75";
     }
 
 }

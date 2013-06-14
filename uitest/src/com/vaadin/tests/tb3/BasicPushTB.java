@@ -5,7 +5,19 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
+import com.vaadin.tests.push.BasicPush;
+
 public class BasicPushTB extends MultiBrowserTest {
+
+    @Override
+    protected Class<?> getUIClass() {
+        return BasicPush.class;
+    }
+
+    @Override
+    protected boolean isPushEnabled() {
+        return true;
+    }
 
     @Test
     public void runTest() throws Exception {
@@ -43,13 +55,4 @@ public class BasicPushTB extends MultiBrowserTest {
         return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[1]/VLabel[0]");
     }
 
-    @Override
-    protected String getPath() {
-        return "/tests-7.1.0.beta1/run-push/BasicPush?restartApplication";
-    }
-
-    @Override
-    public String getBaseURL() {
-        return "http://demo-us1.demo.vaadin.com";
-    }
 }

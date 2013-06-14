@@ -39,7 +39,13 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         driver.get(getBaseURL() + getPath());
     }
 
-    protected abstract String getHubURL();
+    protected String getHubURL() {
+        return "http://" + getHubHostname() + ":4444/wd/hub";
+    }
+
+    protected abstract String getHubHostname();
+
+    protected abstract String getDeploymentHostname();
 
     protected DesiredCapabilities getDesiredCapabilities() {
         return desiredCapabilities;
@@ -58,7 +64,6 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * @since
      * @param string
      * @return
-     * @return
      */
     protected WebElement vaadinElement(String vaadinLocator) {
         String base = getLocatorBase(getPath());
@@ -73,9 +78,9 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * @return
      */
     protected String getPath() {
-        Class<?> enclosingClass = getClass().getEnclosingClass();
-        if (enclosingClass != null) {
-            return getPath(enclosingClass);
+        Class<?> uiClass = getUIClass();
+        if (uiClass != null) {
+            return getPath(uiClass);
         }
         throw new IllegalArgumentException("Unable to determine path for "
                 + getClass().getCanonicalName());
@@ -84,24 +89,45 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
 
     /**
      * @since
+     * @return
+     */
+    protected Class<?> getUIClass() {
+        Class<?> enclosingClass = getClass().getEnclosingClass();
+        if (enclosingClass != null) {
+            return enclosingClass;
+        }
+        return null;
+    }
+
+    protected boolean isPushEnabled() {
+        return false;
+    }
+
+    /**
+     * @since
      * @param enclosingClass
      * @return
      */
-    private String getPath(Class<?> enclosingClass) {
-        if (UI.class.isAssignableFrom(enclosingClass)) {
-            return "/run/" + enclosingClass.getCanonicalName();
-        } else if (LegacyApplication.class.isAssignableFrom(enclosingClass)) {
-            return "/run/" + enclosingClass.getCanonicalName()
+    private String getPath(Class<?> uiClass) {
+        String runPath = "/run";
+        if (isPushEnabled()) {
+            runPath = "/run-push";
+        }
+
+        if (UI.class.isAssignableFrom(uiClass)) {
+            return runPath + "/" + uiClass.getCanonicalName();
+        } else if (LegacyApplication.class.isAssignableFrom(uiClass)) {
+            return runPath + "/" + uiClass.getCanonicalName()
                     + "?restartApplication";
         } else {
             throw new IllegalArgumentException(
-                    "Unable to determin path for enclosing class "
-                            + enclosingClass.getCanonicalName());
+                    "Unable to determine path for enclosing class "
+                            + uiClass.getCanonicalName());
         }
     }
 
     protected String getBaseURL() {
-        return System.getProperty("com.vaadin.testbench.deployment.url");
+        return "http://" + getDeploymentHostname() + ":8888";
     }
 
     /**
