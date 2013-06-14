@@ -192,7 +192,7 @@ public class HierarchySection implements Section {
             has.addDoubleClickHandler(new DoubleClickHandler() {
                 @Override
                 public void onDoubleClick(DoubleClickEvent event) {
-                    printState(connector);
+                    printState(connector, true);
                 }
             });
         }
@@ -418,7 +418,7 @@ public class HierarchySection implements Section {
                 errorDetails.addClickHandler(new ClickHandler() {
                     @Override
                     public void onClick(ClickEvent event) {
-                        printState(connector);
+                        printState(connector, true);
                     }
                 });
 
@@ -469,7 +469,7 @@ public class HierarchySection implements Section {
             public void onClick(ClickEvent event) {
                 if (event.getNativeEvent().getEventTarget().cast() == errorNode
                         .getElement().getChild(1).cast()) {
-                    printState(connector);
+                    printState(connector, true);
                 }
             }
         }, ClickEvent.getType());
@@ -558,9 +558,11 @@ public class HierarchySection implements Section {
         }
     }
 
-    private void printState(ServerConnector connector) {
+    private void printState(ServerConnector connector, boolean serverDebug) {
         Highlight.showOnly(connector);
-        Highlight.showServerDebugInfo(connector);
+        if (serverDebug) {
+            Highlight.showServerDebugInfo(connector);
+        }
 
         SharedState state = connector.getState();
 
@@ -645,7 +647,7 @@ public class HierarchySection implements Section {
                                 RootPanel.get(), eventTarget);
                     }
                     if (connector != null) {
-                        printState(connector);
+                        printState(connector, false);
                         event.cancel();
                         event.consume();
                         event.getNativeEvent().stopPropagation();
@@ -673,7 +675,7 @@ public class HierarchySection implements Section {
                     }
 
                     if (connector != null) {
-                        printState(connector);
+                        printState(connector, true);
                         return;
                     }
                 }
