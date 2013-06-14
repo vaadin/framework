@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import com.google.gwt.aria.client.Id;
+import com.google.gwt.aria.client.RelevantValue;
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style;
@@ -29,8 +32,11 @@ import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.user.client.Command;
@@ -41,22 +47,27 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Util;
 import com.vaadin.client.debug.internal.VDebugWindow;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
+import com.vaadin.client.ui.aria.AriaHelper;
+import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.window.WindowMode;
+import com.vaadin.shared.ui.window.WindowState.WindowRole;
 
 /**
  * "Sub window" component.
  * 
  * @author Vaadin Ltd
  */
-public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
-        ScrollHandler, KeyDownHandler, FocusHandler, BlurHandler, Focusable {
+public class VWindow extends VWindowOverlay implements
+        ShortcutActionHandlerOwner, ScrollHandler, KeyDownHandler,
+        KeyUpHandler, FocusHandler, BlurHandler, Focusable {
 
     private static ArrayList<VWindow> windowOrder = new ArrayList<VWindow>();
 
@@ -138,6 +149,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     private boolean closable = true;
 
+    private String assistivePrefix;
+    private String assistivePostfix;
+
     /**
      * If centered (via UIDL), the window should stay in the centered -mode
      * until a position is received from the server, or the user moves or
@@ -172,11 +186,45 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         // Different style of shadow for windows
         setShadowStyle("window");
 
+        Roles.getDialogRole().set(getElement());
+        Roles.getDialogRole().setAriaRelevantProperty(getElement(),
+                RelevantValue.ADDITIONS);
+
         constructDOM();
         contentPanel.addScrollHandler(this);
         contentPanel.addKeyDownHandler(this);
+        contentPanel.addKeyUpHandler(this);
         contentPanel.addFocusHandler(this);
         contentPanel.addBlurHandler(this);
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+
+        /*
+         * Stores the element that has focus in the application UI when the
+         * window is opened, so it can be restored when the window closes.
+         * 
+         * This is currently implemented for the case when one non-modal window
+         * can be open at the same time, and the focus is not changed while the
+         * window is open.
+         */
+        getApplicationConnection().getUIConnector().getWidget().storeFocus();
+    }
+
+    @Override
+    protected void onDetach() {
+        super.onDetach();
+
+        /*
+         * Restores the previously stored focused element.
+         * 
+         * When the focus was changed outside the window while the window was
+         * open, the originally stored element is restored.
+         */
+        getApplicationConnection().getUIConnector().getWidget()
+                .focusStoredElement();
     }
 
     public void bringToFront() {
@@ -256,7 +304,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         maximizeRestoreBox = DOM.createDiv();
         DOM.setElementProperty(maximizeRestoreBox, "className", CLASSNAME
                 + "-maximizebox");
+        DOM.setElementAttribute(maximizeRestoreBox, "tabindex", "0");
         DOM.setElementProperty(closeBox, "className", CLASSNAME + "-closebox");
+        DOM.setElementAttribute(closeBox, "tabindex", "0");
         DOM.appendChild(footer, resizeBox);
 
         wrapper = DOM.createDiv();
@@ -275,6 +325,19 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
         setWidget(contentPanel);
 
+        // Make the closebox accessible for assistive devices
+        Roles.getButtonRole().set(closeBox);
+        Roles.getButtonRole().setAriaLabelProperty(closeBox, "close button");
+
+        // Make the maximizebox accessible for assistive devices
+        Roles.getButtonRole().set(maximizeRestoreBox);
+        Roles.getButtonRole().setAriaLabelProperty(maximizeRestoreBox,
+                "maximize button");
+
+        // Provide the title to assistive devices
+        AriaHelper.ensureHasId(headerText);
+        Roles.getDialogRole().setAriaLabelledbyProperty(getElement(),
+                Id.of(headerText));
     }
 
     /**
@@ -622,9 +685,62 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         if (icon != null) {
             icon = client.translateVaadinUri(icon);
             html = "<img src=\"" + Util.escapeAttribute(icon)
-                    + "\" class=\"v-icon\" />" + html;
+                    + "\" class=\"v-icon\" alt=\"\" />" + html;
         }
+
+        // Provide information to assistive device users that a sub window was
+        // opened
+        String prefix = "<span class='"
+                + AriaHelper.ASSISTIVE_DEVICE_ONLY_STYLE + "'>"
+                + assistivePrefix + "</span>";
+        String postfix = "<span class='"
+                + AriaHelper.ASSISTIVE_DEVICE_ONLY_STYLE + "'>"
+                + assistivePostfix + "</span>";
+
+        html = prefix + html + postfix;
         DOM.setInnerHTML(headerText, html);
+    }
+
+    /**
+     * Setter for the text for assistive devices the window caption is prefixed
+     * with.
+     * 
+     * @param assistivePrefix
+     *            the assistivePrefix to set
+     */
+    public void setAssistivePrefix(String assistivePrefix) {
+        this.assistivePrefix = assistivePrefix;
+    }
+
+    /**
+     * Getter for the text for assistive devices the window caption is prefixed
+     * with.
+     * 
+     * @return the assistivePrefix
+     */
+    public String getAssistivePrefix() {
+        return assistivePrefix;
+    }
+
+    /**
+     * Setter for the text for assistive devices the window caption is postfixed
+     * with.
+     * 
+     * @param assistivePostfix
+     *            the assistivePostfix to set
+     */
+    public void setAssistivePostfix(String assistivePostfix) {
+        this.assistivePostfix = assistivePostfix;
+    }
+
+    /**
+     * Getter for the text for assistive devices the window caption is postfixed
+     * with.
+     * 
+     * @return the assistivePostfix
+     */
+    public String getAssistivePostfix() {
+        return assistivePostfix;
     }
 
     @Override
@@ -995,6 +1111,13 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     @Override
+    public void onKeyUp(KeyUpEvent event) {
+        if (isClosable() && event.getNativeKeyCode() == KeyCodes.KEY_ESCAPE) {
+            onCloseClick();
+        }
+    }
+
+    @Override
     public void onBlur(BlurEvent event) {
         if (client.hasEventListeners(this, EventId.BLUR)) {
             client.updateVariable(id, EventId.BLUR, "", true);
@@ -1030,4 +1153,54 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 - contentPanel.getElement().getOffsetWidth();
     }
 
+    /**
+     * Allows to specify which connectors contain the description for the
+     * window. Text contained in the widgets of the connectors will be read by
+     * assistive devices when it is opened.
+     * 
+     * @param connectors
+     *            with the connectors of the widgets to use as description
+     */
+    public void setAssistiveDescription(Connector[] connectors) {
+        if (connectors != null) {
+            Id[] ids = new Id[connectors.length];
+            for (int index = 0; index < connectors.length; index++) {
+                if (connectors[index] == null) {
+                    throw new IllegalArgumentException(
+                            "All values in parameter description need to be non-null");
+                }
+
+                Element element = ((ComponentConnector) connectors[index])
+                        .getWidget().getElement();
+                AriaHelper.ensureHasId(element);
+                ids[index] = Id.of(element);
+            }
+
+            Roles.getDialogRole().setAriaDescribedbyProperty(getElement(), ids);
+        } else {
+            throw new IllegalArgumentException(
+                    "Parameter description must be non-null");
+        }
+    }
+
+    /**
+     * Sets the WAI-ARIA role the window.
+     * 
+     * This role defines how an assistive device handles a window. Available
+     * roles are alertdialog and dialog (@see <a
+     * href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
+     * Model</a>).
+     * 
+     * The default role is dialog.
+     * 
+     * @param role
+     *            WAI-ARIA role to set for the window
+     */
+    public void setWaiAriaRole(WindowRole role) {
+        if ("alertdialog".equals(role)) {
+            Roles.getAlertdialogRole().set(getElement());
+        } else {
+            Roles.getDialogRole().set(getElement());
+        }
+    }
 }

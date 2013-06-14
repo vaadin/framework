@@ -33,10 +33,12 @@ import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
+import com.vaadin.shared.Connector;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.shared.ui.window.WindowServerRpc;
 import com.vaadin.shared.ui.window.WindowState;
+import com.vaadin.shared.ui.window.WindowState.WindowRole;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -228,8 +230,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
         // Don't do anything if not attached to a UI
         if (uI != null) {
-            // focus is restored to the parent window
-            uI.focus();
             // window is removed from the UI
             uI.removeWindow(this);
         }
@@ -994,5 +994,110 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     @Override
     protected WindowState getState(boolean markAsDirty) {
         return (WindowState) super.getState(markAsDirty);
+    }
+
+    /**
+     * Allows to specify which component contains the description for the
+     * window. Text contained in this component will be read by assistive
+     * devices when it is opened.
+     * 
+     * @param connector
+     *            with the component to use as description
+     */
+    public void setAssistiveDescription(Connector connector) {
+        setAssistiveDescription(new Connector[] { connector });
+    }
+
+    /**
+     * Allows to specify which components contain the description for the
+     * window. Text contained in this component will be read by assistive
+     * devices when it is opened.
+     * 
+     * @param connectors
+     *            with the components to use as description
+     */
+    public void setAssistiveDescription(Connector... connectors) {
+        getState().contentDescription = connectors;
+    }
+
+    /**
+     * Sets the accessibility prefix for the window caption.
+     * 
+     * This prefix is read to assistive device users before the window caption,
+     * but not visible on the page.
+     * 
+     * @param prefix
+     *            String that is placed before the window caption
+     */
+    public void setAssistivePrefix(String prefix) {
+        getState().assistivePrefix = prefix;
+    }
+
+    /**
+     * Gets the accessibility prefix for the window caption.
+     * 
+     * This prefix is read to assistive device users before the window caption,
+     * but not visible on the page.
+     * 
+     * @return The accessibility prefix
+     */
+    public String getAssistivePrefix() {
+        return getState().assistivePrefix;
+    }
+
+    /**
+     * Sets the accessibility postfix for the window caption.
+     * 
+     * This postfix is read to assistive device users after the window caption,
+     * but not visible on the page.
+     * 
+     * @param prefix
+     *            String that is placed after the window caption
+     */
+    public void setAssistivePostfix(String assistivePostfix) {
+        getState().assistivePostfix = assistivePostfix;
+    }
+
+    /**
+     * Gets the accessibility postfix for the window caption.
+     * 
+     * This postfix is read to assistive device users after the window caption,
+     * but not visible on the page.
+     * 
+     * @return The accessibility postfix
+     */
+    public String getAssistivePostfix() {
+        return getState().assistivePostfix;
+    }
+
+    /**
+     * Sets the WAI-ARIA role the window.
+     * 
+     * This role defines how an assistive device handles a window. Available
+     * roles are alertdialog and dialog (@see <a
+     * href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
+     * Model</a>).
+     * 
+     * The default role is dialog.
+     * 
+     * @param role
+     *            WAI-ARIA role to set for the window
+     */
+    public void setAssistiveRole(WindowRole role) {
+        getState().role = role;
+    }
+
+    /**
+     * Gets the WAI-ARIA role the window.
+     * 
+     * This role defines how an assistive device handles a window. Available
+     * roles are alertdialog and dialog (@see <a
+     * href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
+     * Model</a>).
+     * 
+     * @return WAI-ARIA role set for the window
+     */
+    public WindowRole getAssistiveRole() {
+        return getState().role;
     }
 }

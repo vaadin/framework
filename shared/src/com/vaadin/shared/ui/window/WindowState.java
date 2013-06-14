@@ -15,12 +15,20 @@
  */
 package com.vaadin.shared.ui.window;
 
+import com.vaadin.shared.Connector;
 import com.vaadin.shared.ui.panel.PanelState;
 
 public class WindowState extends PanelState {
     {
         primaryStyleName = "v-window";
     }
+
+    /**
+     * Available WAI-ARIA roles for a window.
+     */
+    public enum WindowRole {
+        ALERTDIALOG, DIALOG
+    };
 
     public boolean modal = false;
     public boolean resizable = true;
@@ -30,4 +38,9 @@ public class WindowState extends PanelState {
     public int positionX = -1;
     public int positionY = -1;
     public WindowMode windowMode = WindowMode.NORMAL;
+
+    public String assistivePrefix = "";
+    public String assistivePostfix = "";
+    public Connector[] contentDescription;
+    public WindowRole role = WindowRole.DIALOG;
 }
