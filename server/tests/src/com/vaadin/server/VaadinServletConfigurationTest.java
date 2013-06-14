@@ -70,6 +70,28 @@ public class VaadinServletConfigurationTest {
     }
 
     @Test
+    public void testLegacyEnabledAnnotation() throws ServletException {
+        VaadinServlet servlet = new LegacyPropertyEnabledTestServlet();
+        servlet.init(new MockServletConfig());
+        DeploymentConfiguration configuration = servlet.getService()
+                .getDeploymentConfiguration();
+
+        Assert.assertEquals(LegacyProperyToStringMode.ENABLED,
+                configuration.getLegacyPropertyToStringMode());
+    }
+
+    @Test
+    public void testLegacyWarningAnnotation() throws ServletException {
+        VaadinServlet servlet = new LegacyPropertyWarningTestServlet();
+        servlet.init(new MockServletConfig());
+        DeploymentConfiguration configuration = servlet.getService()
+                .getDeploymentConfiguration();
+
+        Assert.assertEquals(LegacyProperyToStringMode.WARNING,
+                configuration.getLegacyPropertyToStringMode());
+    }
+
+    @Test
     public void testValuesOverriddenForServlet() throws ServletException {
         Properties servletInitParams = new Properties();
         servletInitParams.setProperty("productionMode", "false");
@@ -100,5 +122,15 @@ public class VaadinServletConfigurationTest {
 
 @VaadinServletConfiguration(productionMode = true, ui = MockUIContainingServlet.class, closeIdleSessions = true, heartbeatInterval = 1234, resourceCacheTime = 4321)
 class TestServlet extends VaadinServlet {
+
+}
+
+@VaadinServletConfiguration(productionMode = true, ui = MockUIContainingServlet.class, legacyPropertyToStringMode = LegacyProperyToStringMode.WARNING)
+class LegacyPropertyWarningTestServlet extends VaadinServlet {
+
+}
+
+@VaadinServletConfiguration(productionMode = true, ui = MockUIContainingServlet.class, legacyPropertyToStringMode = LegacyProperyToStringMode.ENABLED)
+class LegacyPropertyEnabledTestServlet extends VaadinServlet {
 
 }

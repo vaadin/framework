@@ -86,27 +86,24 @@ public class DefaultDeploymentConfiguration implements DeploymentConfiguration {
     }
 
     private void checkLegacyPropertyToString() {
-        // Verify that the default value has not changed without also
-        // updating logic here
-        assert DEFAULT_LEGACY_PROPERTY_TO_STRING == LegacyProperyToStringMode.WARNING;
-
         String param = getApplicationOrSystemProperty(
-                Constants.SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING, "warning");
+                Constants.SERVLET_PARAMETER_LEGACY_PROPERTY_TOSTRING,
+                DEFAULT_LEGACY_PROPERTY_TO_STRING.getPropertyString());
 
-        if ("true".equals(param)) {
-            legacyPropertyToStringMode = LegacyProperyToStringMode.ENABLED;
-        } else if ("false".equals(param)) {
-            legacyPropertyToStringMode = LegacyProperyToStringMode.DISABLED;
-        } else {
-            if (!"warning".equals(param)) {
-                getLogger()
-                        .log(Level.WARNING,
-                                Constants.WARNING_UNKNOWN_LEGACY_PROPERTY_TOSTRING_VALUE,
-                                param);
-
+        for (LegacyProperyToStringMode mode : LegacyProperyToStringMode
+                .values()) {
+            if (mode.getPropertyString().equals(param)) {
+                legacyPropertyToStringMode = mode;
+                return;
             }
-            legacyPropertyToStringMode = DEFAULT_LEGACY_PROPERTY_TO_STRING;
         }
+
+        getLogger()
+                .log(Level.WARNING,
+                        Constants.WARNING_UNKNOWN_LEGACY_PROPERTY_TOSTRING_VALUE,
+                        param);
+
+        legacyPropertyToStringMode = DEFAULT_LEGACY_PROPERTY_TO_STRING;
     }
 
     @Override
