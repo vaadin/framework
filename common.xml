@@ -320,6 +320,7 @@
                     <exclude name="**/Mock*" />
                     <exclude name="com/vaadin/tests/data/bean/*" />
                     <exclude name="com/vaadin/tests/util/*" />
+                    <exclude name="com/vaadin/benchmarks/*" />
                     <exclude name="**/VaadinClasses.java" />
                     <exclude name="**/*TestRunner.java" />
                     <exclude name="**/SQLTestsConstants.java" />
