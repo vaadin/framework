@@ -22,10 +22,10 @@ import java.util.Locale;
 /**
  * Interface that implements conversion between a model and a presentation type.
  * <p>
- * Typically {@link #convertToPresentation(Object, Locale)} and
- * {@link #convertToModel(Object, Locale)} should be symmetric so that chaining
- * these together returns the original result for all input but this is not a
- * requirement.
+ * Typically {@link #convertToPresentation(Object, Class, Locale)} and
+ * {@link #convertToModel(Object, Class, Locale)} should be symmetric so that
+ * chaining these together returns the original result for all input but this is
+ * not a requirement.
  * </p>
  * <p>
  * Converters must not have any side effects (never update UI from inside a
@@ -55,19 +55,23 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
      * A converter can optionally use locale to do the conversion.
      * </p>
      * A converter should in most cases be symmetric so chaining
-     * {@link #convertToPresentation(Object, Locale)} and
-     * {@link #convertToModel(Object, Locale)} should return the original value.
+     * {@link #convertToPresentation(Object, Class, Locale)} and
+     * {@link #convertToModel(Object, Class, Locale)} should return the original
+     * value.
      * 
      * @param value
      *            The value to convert, compatible with the target type. Can be
      *            null
+     * @param targetType
+     *            The requested type of the return value
      * @param locale
      *            The locale to use for conversion. Can be null.
      * @return The converted value compatible with the source type
      * @throws ConversionException
      *             If the value could not be converted
      */
-    public MODEL convertToModel(PRESENTATION value, Locale locale)
+    public MODEL convertToModel(PRESENTATION value,
+            Class<? extends MODEL> targetType, Locale locale)
             throws ConversionException;
 
     /**
@@ -76,26 +80,30 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
      * A converter can optionally use locale to do the conversion.
      * </p>
      * A converter should in most cases be symmetric so chaining
-     * {@link #convertToPresentation(Object, Locale)} and
-     * {@link #convertToModel(Object, Locale)} should return the original value.
+     * {@link #convertToPresentation(Object, Class, Locale)} and
+     * {@link #convertToModel(Object, Class, Locale)} should return the original
+     * value.
      * 
      * @param value
      *            The value to convert, compatible with the target type. Can be
      *            null
+     * @param targetType
+     *            The requested type of the return value
      * @param locale
      *            The locale to use for conversion. Can be null.
      * @return The converted value compatible with the source type
      * @throws ConversionException
      *             If the value could not be converted
      */
-    public PRESENTATION convertToPresentation(MODEL value, Locale locale)
+    public PRESENTATION convertToPresentation(MODEL value,
+            Class<? extends PRESENTATION> targetType, Locale locale)
             throws ConversionException;
 
     /**
      * The source type of the converter.
      * 
      * Values of this type can be passed to
-     * {@link #convertToPresentation(Object, Locale)}.
+     * {@link #convertToPresentation(Object, Class, Locale)}.
      * 
      * @return The source type
      */
@@ -105,7 +113,7 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
      * The target type of the converter.
      * 
      * Values of this type can be passed to
-     * {@link #convertToModel(Object, Locale)}.
+     * {@link #convertToModel(Object, Class, Locale)}.
      * 
      * @return The target type
      */
@@ -113,8 +121,9 @@ public interface Converter<PRESENTATION, MODEL> extends Serializable {
 
     /**
      * An exception that signals that the value passed to
-     * {@link Converter#convertToPresentation(Object, Locale)} or
-     * {@link Converter#convertToModel(Object, Locale)} could not be converted.
+     * {@link Converter#convertToPresentation(Object, Class, Locale)} or
+     * {@link Converter#convertToModel(Object, Class, Locale)} could not be
+     * converted.
      * 
      * @author Vaadin Ltd
      * @since 7.0

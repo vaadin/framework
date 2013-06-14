@@ -28,7 +28,8 @@ public class ConverterThatEnforcesAFormat extends TestBase {
                         + "). Two-way conversion gives: "
                         + tf.getConverter().convertToPresentation(
                                 tf.getConverter().convertToModel(tf.getValue(),
-                                        tf.getLocale()), tf.getLocale()) + ")");
+                                        Double.class, tf.getLocale()),
+                                String.class, tf.getLocale()) + ")");
             }
         });
         tf.setImmediate(true);

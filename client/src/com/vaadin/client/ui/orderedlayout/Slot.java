@@ -455,6 +455,7 @@ public final class Slot extends SimplePanel {
         // since last time, and only run those changes
 
         // Caption wrappers
+        Widget widget = getWidget();
         if (captionText != null || iconUrl != null || error != null || required) {
             if (caption == null) {
                 caption = DOM.createDiv();
@@ -462,10 +463,14 @@ public final class Slot extends SimplePanel {
                 captionWrap.addClassName(StyleConstants.UI_WIDGET);
                 captionWrap.addClassName("v-has-caption");
                 getElement().appendChild(captionWrap);
-                captionWrap.appendChild(getWidget().getElement());
+                orphan(widget);
+                captionWrap.appendChild(widget.getElement());
+                adopt(widget);
             }
         } else if (caption != null) {
-            getElement().appendChild(getWidget().getElement());
+            orphan(widget);
+            getElement().appendChild(widget.getElement());
+            adopt(widget);
             captionWrap.removeFromParent();
             caption = null;
             captionWrap = null;

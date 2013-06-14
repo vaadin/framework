@@ -259,6 +259,26 @@ public class WebBrowser implements Serializable {
     }
 
     /**
+     * Tests if the browser is run on Android.
+     * 
+     * @return true if run on Android false if the user is not using Android or
+     *         if no information on the browser is present
+     */
+    public boolean isAndroid() {
+        return browserDetails.isAndroid();
+    }
+
+    /**
+     * Tests if the browser is run in iOS.
+     * 
+     * @return true if run in iOS false if the user is not using iOS or if no
+     *         information on the browser is present
+     */
+    public boolean isIOS() {
+        return browserDetails.isIOS();
+    }
+
+    /**
      * Returns the browser-reported TimeZone offset in milliseconds from GMT.
      * This includes possible daylight saving adjustments, to figure out which
      * TimeZone the user actually might be in, see

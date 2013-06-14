@@ -9,15 +9,15 @@ public class TestStringToBooleanConverter extends TestCase {
     StringToBooleanConverter converter = new StringToBooleanConverter();
 
     public void testNullConversion() {
-        assertEquals(null, converter.convertToModel(null, null));
+        assertEquals(null, converter.convertToModel(null, null, null));
     }
 
     public void testEmptyStringConversion() {
-        assertEquals(null, converter.convertToModel("", null));
+        assertEquals(null, converter.convertToModel("", Boolean.class, null));
     }
 
     public void testValueConversion() {
-        assertTrue(converter.convertToModel("true", null));
-        assertFalse(converter.convertToModel("false", null));
+        assertTrue(converter.convertToModel("true", Boolean.class, null));
+        assertFalse(converter.convertToModel("false", Boolean.class, null));
     }
 }

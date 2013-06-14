@@ -73,6 +73,25 @@
 		color: $maincolor;
 		
 		font-size: 13px;
+		
+		.v-debugwindow-handle {
+			position: absolute;
+			bottom: 0;
+			background-color: #fff;
+			-moz-opacity: 0;
+			-webkit-opacity: 0;
+			opacity: 0;
+			z-index: 1000;
+		}
+		.v-debugwindow-handle-sw {
+			width: 7px;
+			height: 7px;
+		}
+		.v-debugwindow-handle-se {
+			right: 0;
+			width: 14px;
+			height: 14px;
+		}
 	}
 	.v-debugwindow:hover {
 		-moz-opacity: 1;
@@ -95,8 +114,7 @@
 	
 	.v-debugwindow-head {
 		text-align: right;
-		cursor: move;
-		bakcground-color: transparent;
+		background-color: transparent;
 	}
 	
 	.v-debugwindow-tabs {
@@ -143,6 +161,8 @@
 		
 		box-shadow: 0px 0px 7px 0 rgba(55,55,55,0.6);
 		min-height: 1.5em;
+		
+		padding-left: 5px;
 	}
 	
 	.v-debugwindow-button {

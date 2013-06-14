@@ -37,6 +37,7 @@ import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.storage.client.Storage;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
@@ -77,9 +78,11 @@ public final class VDebugWindow extends VOverlay {
     // drag this far before actually moving window
     protected static final int MOVE_TRESHOLD = 5;
 
-    // window minimum sizes
+    // window minimum height, minimum width comes from tab+controls
     protected static final int MIN_HEIGHT = 40;
-    protected static final int HANDLE_SIZE = 5;
+
+    // size of area to grab for resize; bottom corners size in CSS
+    protected static final int HANDLE_SIZE = 7;
 
     // identifiers for localStorage
     private static final String STORAGE_PREFIX = "v-debug-";
@@ -129,14 +132,9 @@ public final class VDebugWindow extends VOverlay {
     // sections
     protected ArrayList<Section> sections = new ArrayList<Section>();
 
-    // handles resizing (mouse)
-    protected ResizeHandler resizeHandler = new ResizeHandler();
-    protected HandlerRegistration resizeReg = null;
-    protected HandlerRegistration resizeReg2 = null;
-
-    // handles window movement (mouse)
-    protected MoveHandler moveHandler = new MoveHandler();
-    protected HandlerRegistration moveReg = null;
+    // handles resize/move
+    protected HandlerRegistration mouseDownHandler = null;
+    protected HandlerRegistration mouseMoveHandler = null;
 
     // TODO this class should really be a singleton.
     static VDebugWindow instance;
@@ -187,6 +185,8 @@ public final class VDebugWindow extends VOverlay {
         head.add(sectionHead);
         window.add(content);
 
+        addHandles();
+
         head.setStylePrimaryName(STYLENAME_HEAD);
         tabs.setStylePrimaryName(STYLENAME_TABS);
         controls.setStylePrimaryName(STYLENAME_CONTROLS);
@@ -221,14 +221,31 @@ public final class VDebugWindow extends VOverlay {
         Style s = content.getElement().getStyle();
         s.setOverflow(Overflow.AUTO);
 
-        // window can be moved by dragging header
-        moveReg = head.addDomHandler(moveHandler, MouseDownEvent.getType());
-        // resize from all sides and corners
-        resizeReg = content.addDomHandler(resizeHandler,
+        // move/resize
+        final MouseHandler mouseHandler = new MouseHandler();
+        mouseDownHandler = this.addDomHandler(mouseHandler,
                 MouseDownEvent.getType());
-        // changes mouse pointer when hovering sides / corners
-        resizeReg2 = content.addDomHandler(resizeHandler,
+        mouseMoveHandler = this.addDomHandler(mouseHandler,
                 MouseMoveEvent.getType());
+
+    }
+
+    /**
+     * Adds dummy handle elements to the bottom corners that might have
+     * scrollbars that interfere with resizing on some platforms.
+     * 
+     * @since 7.1
+     */
+    private void addHandles() {
+        Element el = DOM.createDiv();
+        el.setClassName(VDebugWindow.STYLENAME + "-handle "
+                + VDebugWindow.STYLENAME + "-handle-sw");
+        content.getElement().appendChild(el);
+
+        el = DOM.createDiv();
+        el.setClassName(VDebugWindow.STYLENAME + "-handle "
+                + VDebugWindow.STYLENAME + "-handle-se");
+        content.getElement().appendChild(el);
     }
 
     /**
@@ -248,10 +265,11 @@ public final class VDebugWindow extends VOverlay {
      */
     public void close() {
         // TODO disable even more
-        if (resizeReg != null) {
-            resizeReg.removeHandler();
-            resizeReg2.removeHandler();
-            moveReg.removeHandler();
+        if (mouseDownHandler != null) {
+            mouseDownHandler.removeHandler();
+            mouseMoveHandler.removeHandler();
+            mouseDownHandler = null;
+            mouseMoveHandler = null;
         }
         Highlight.hideAll();
         hide();
@@ -306,9 +324,9 @@ public final class VDebugWindow extends VOverlay {
         writeState(storage, STORAGE_MIN_Y, minY);
         writeState(storage, STORAGE_FONT_SIZE, fontSize);
 
-        if (activeSection != null) {
-            writeState(storage, STORAGE_ACTIVE_SECTION,
-                    activeSection.getTabButton());
+        int activeIdx = getActiveSection();
+        if (activeIdx >= 0) {
+            writeState(storage, STORAGE_ACTIVE_SECTION, activeIdx);
         }
 
         writeState(storage, STORAGE_IS_MINIMIZED, minimized);
@@ -446,6 +464,16 @@ public final class VDebugWindow extends VOverlay {
             content.setHeight(fullH + "px");
         }
 
+        applyBounds(x, y);
+    }
+
+    private void applyBounds() {
+        int x = getPopupLeft();
+        int y = getPopupTop();
+        applyBounds(x, y);
+    }
+
+    private void applyBounds(int x, int y) {
         // bounds check
         if (x < 0) {
             x = 0;
@@ -462,6 +490,7 @@ public final class VDebugWindow extends VOverlay {
         }
 
         setPopupPosition(x, y);
+
     }
 
     /**
@@ -552,6 +581,10 @@ public final class VDebugWindow extends VOverlay {
         }
     }
 
+    int getActiveSection() {
+        return sections.indexOf(activeSection);
+    }
+
     /**
      * Toggles the window between minimized and full states.
      */
@@ -635,8 +668,8 @@ public final class VDebugWindow extends VOverlay {
      */
     static String getTimingTooltip(int sinceStart, int sinceReset) {
         String title = formatDuration(sinceStart) + " since start";
-        title += ", &#10;" + formatDuration(sinceReset) + " since timer reset";
-        title += " &#10;@ "
+        title += ", &#10; " + formatDuration(sinceReset) + " since timer reset";
+        title += " &#10; @ "
                 + DateTimeFormat.getFormat("HH:mm:ss.SSS").format(new Date());
         return title;
     }
@@ -861,31 +894,120 @@ public final class VDebugWindow extends VOverlay {
     }
 
     /**
-     * Handler for moving window.
+     * Handler for resizing and moving window, also updates cursor on mousemove.
      * 
      * @since 7.1
      * @author Vaadin Ltd
      */
-    protected class MoveHandler implements MouseDownHandler,
+    protected class MouseHandler implements MouseMoveHandler, MouseDownHandler,
             NativePreviewHandler {
 
-        HandlerRegistration handler;
+        boolean resizeLeft;
+        boolean resizeRight;
+        boolean resizeUp;
+        boolean resizeDown;
+        boolean move;
+        boolean sizing;
+
+        // dragging stopped, remove handler on next event
+        boolean stop;
+
+        HandlerRegistration dragHandler;
+
         int startX;
         int startY;
+        int startW;
+        int startH;
         int startTop;
         int startLeft;
 
-        // moving stopped, remove handler on next event
-        boolean stop;
+        @Override
+        public void onMouseMove(MouseMoveEvent event) {
+            if (null == dragHandler) {
+                updateResizeFlags(event);
+                updateCursor();
+            }
+        }
+
+        @Override
+        public void onMouseDown(MouseDownEvent event) {
+            if (event.getNativeButton() != NativeEvent.BUTTON_LEFT
+                    || dragHandler != null) {
+                return;
+            }
+            updateResizeFlags(event);
+            if (sizing || move) {
+                // some os/browsers don't pass events trough scrollbars; hide
+                // while dragging (esp. important for resize from right/bottom)
+                content.getElement().getStyle().setOverflow(Overflow.HIDDEN);
+
+                startX = event.getClientX();
+                startY = event.getClientY();
+
+                startW = content.getOffsetWidth();
+                startH = content.getOffsetHeight();
+
+                startTop = getPopupTop();
+                startLeft = getPopupLeft();
+
+                dragHandler = Event.addNativePreviewHandler(this);
+
+                event.preventDefault();
+
+                stop = false;
+            }
+
+        }
 
         @Override
         public void onPreviewNativeEvent(NativePreviewEvent event) {
             if (event.getTypeInt() == Event.ONMOUSEMOVE && !stop
                     && hasMoved(event.getNativeEvent())) {
+
                 int dx = event.getNativeEvent().getClientX() - startX;
                 int dy = event.getNativeEvent().getClientY() - startY;
 
-                setPopupPosition(startLeft + dx, startTop + dy);
+                if (sizing) {
+                    int minWidth = tabs.getOffsetWidth()
+                            + controls.getOffsetWidth();
+
+                    if (resizeLeft) {
+                        int w = startW - dx;
+                        if (w < minWidth) {
+                            w = minWidth;
+                            dx = startW - minWidth;
+                        }
+                        content.setWidth(w + "px");
+                        setPopupPosition(startLeft + dx, getPopupTop());
+
+                    } else if (resizeRight) {
+                        int w = startW + dx;
+                        if (w < minWidth) {
+                            w = minWidth;
+                        }
+                        content.setWidth(w + "px");
+                    }
+                    if (resizeUp) {
+                        int h = startH - dy;
+                        if (h < MIN_HEIGHT) {
+                            h = MIN_HEIGHT;
+                            dy = startH - MIN_HEIGHT;
+                        }
+                        content.setHeight(h + "px");
+                        setPopupPosition(getPopupLeft(), startTop + dy);
+
+                    } else if (resizeDown) {
+                        int h = startH + dy;
+                        if (h < MIN_HEIGHT) {
+                            h = MIN_HEIGHT;
+                        }
+                        content.setHeight(h + "px");
+
+                    }
+
+                } else if (move) {
+                    setPopupPosition(startLeft + dx, startTop + dy);
+                }
                 event.cancel();
 
             } else if (event.getTypeInt() == Event.ONMOUSEUP) {
@@ -902,12 +1024,23 @@ public final class VDebugWindow extends VOverlay {
 
             } else if (stop) {
                 stop = false;
-                handler.removeHandler();
-                handler = null;
+                dragHandler.removeHandler();
+                dragHandler = null;
+                sizing = false;
+                move = false;
 
+                // restore scrollbars
+                content.getElement().getStyle().setOverflow(Overflow.AUTO);
+
+                updateCursor();
+
+                applyBounds();
                 readPositionAndSize();
                 writeStoredState();
+
+                event.cancel();
             }
+
         }
 
         private boolean hasMoved(NativeEvent event) {
@@ -915,75 +1048,8 @@ public final class VDebugWindow extends VOverlay {
                     || Math.abs(startY - event.getClientY()) > MOVE_TRESHOLD;
         }
 
-        @Override
-        public void onMouseDown(MouseDownEvent event) {
-            if (handler == null) {
-                handler = Event.addNativePreviewHandler(MoveHandler.this);
-            }
-            startX = event.getClientX();
-            startY = event.getClientY();
-            startLeft = getPopupLeft();
-            startTop = getPopupTop();
-            stop = false;
-            event.preventDefault();
-        }
-
-    }
-
-    /**
-     * Handler for resizing window.
-     * 
-     * @since 7.1
-     * @author Vaadin Ltd
-     */
-    protected class ResizeHandler implements MouseDownHandler,
-            MouseMoveHandler, NativePreviewHandler {
-
-        boolean resizeLeft;
-        boolean resizeRight;
-        boolean resizeUp;
-        boolean resizeDown;
-
-        boolean sizing;
-
-        HandlerRegistration dragHandler;
-
-        int startX;
-        int startY;
-        int startW;
-        int startH;
-        int startTop;
-        int startLeft;
-
-        @Override
-        public void onMouseDown(MouseDownEvent event) {
-            sizing = updateResizeFlags(event);
-
-            if (sizing) {
-                startX = event.getClientX();
-                startY = event.getClientY();
-
-                startW = content.getOffsetWidth();
-                startH = content.getOffsetHeight();
-
-                startTop = getPopupTop();
-                startLeft = getPopupLeft();
-
-                dragHandler = Event.addNativePreviewHandler(this);
-
-                event.preventDefault();
-            }
-
-        }
-
-        @Override
-        public void onMouseMove(MouseMoveEvent event) {
-            updateResizeFlags(event);
-            updateCursor();
-        }
-
         private void updateCursor() {
-            Element c = content.getElement();
+            Element c = getElement();
             if (resizeLeft) {
                 if (resizeUp) {
                     c.getStyle().setCursor(Cursor.NW_RESIZE);
@@ -1004,70 +1070,54 @@ public final class VDebugWindow extends VOverlay {
                 c.getStyle().setCursor(Cursor.N_RESIZE);
             } else if (resizeDown) {
                 c.getStyle().setCursor(Cursor.S_RESIZE);
+            } else if (move) {
+                c.getStyle().setCursor(Cursor.MOVE);
             } else {
                 c.getStyle().setCursor(Cursor.AUTO);
             }
         }
 
-        private boolean updateResizeFlags(MouseEvent event) {
-            Element c = getElement();
-            int w = c.getOffsetWidth();
-            int h = c.getOffsetHeight() - head.getOffsetHeight();
-            int x = event.getRelativeX(c);
-            int y = event.getRelativeY(c) - head.getOffsetHeight();
+        protected void updateResizeFlags(MouseEvent event) {
+            if (event.isShiftKeyDown()) {
+                // resize from lower right
+                resizeUp = false;
+                resizeLeft = false;
+                resizeRight = true;
+                resizeDown = true;
+                move = false;
+                sizing = true;
+                return;
 
-            resizeLeft = x < HANDLE_SIZE;
-            resizeRight = x > (w - HANDLE_SIZE);
-            resizeUp = y < HANDLE_SIZE;
-            resizeDown = y > (h - HANDLE_SIZE);
-
-            return resizeLeft || resizeRight || resizeUp || resizeDown;
-
-        }
-
-        @Override
-        public void onPreviewNativeEvent(NativePreviewEvent event) {
-            if (event.getTypeInt() == Event.ONMOUSEMOVE) {
-
-                int dx = event.getNativeEvent().getClientX() - startX;
-                int dy = event.getNativeEvent().getClientY() - startY;
-
-                int minw = tabs.getOffsetWidth() + controls.getOffsetWidth();
-                if (resizeLeft) {
-                    int w = startW - dx;
-                    if (w >= minw) {
-                        content.setWidth(w + "px");
-                        setPopupPosition(startLeft + dx, getPopupTop());
-                    }
-                } else if (resizeRight) {
-                    int w = startW + dx;
-                    if (w >= minw) {
-                        content.setWidth(w + "px");
-                    }
-                }
-                if (resizeUp) {
-                    int h = startH - dy;
-                    if (h >= MIN_HEIGHT) {
-                        content.setHeight(h + "px");
-                        setPopupPosition(getPopupLeft(), startTop + dy);
-                    }
-                } else if (resizeDown) {
-                    int h = startH + dy;
-                    if (h >= MIN_HEIGHT) {
-                        content.setHeight(h + "px");
-                    }
-                }
-
-            } else if (event.getTypeInt() == Event.ONMOUSEUP) {
-                dragHandler.removeHandler();
-                dragHandler = null;
-                content.getElement().getStyle().setCursor(Cursor.AUTO);
+            } else if (event.isAltKeyDown()) {
+                // move it
+                move = true;
+                resizeUp = false;
+                resizeLeft = false;
+                resizeRight = false;
+                resizeDown = false;
                 sizing = false;
-                readPositionAndSize();
-                writeStoredState();
+                return;
             }
 
-            event.cancel();
+            Element c = getElement();
+            int w = c.getOffsetWidth();
+            int h = c.getOffsetHeight();
+            int x = event.getRelativeX(c);
+            int y = event.getRelativeY(c);
+
+            resizeLeft = x < HANDLE_SIZE && y > tabs.getOffsetHeight();
+            resizeRight = (x > (w - HANDLE_SIZE) && y > tabs.getOffsetHeight())
+                    || (x > (w - 2 * HANDLE_SIZE) && y > (h - 2 * HANDLE_SIZE));
+            resizeUp = y > tabs.getOffsetHeight()
+                    && y < tabs.getOffsetHeight() + HANDLE_SIZE;
+            resizeDown = y > (h - HANDLE_SIZE)
+                    || (x > (w - 2 * HANDLE_SIZE) && y > (h - 2 * HANDLE_SIZE));
+
+            move = !resizeDown && !resizeLeft && !resizeRight && !resizeUp
+                    && y < head.getOffsetHeight();
+
+            sizing = resizeLeft || resizeRight || resizeUp || resizeDown;
+
         }
 
     }

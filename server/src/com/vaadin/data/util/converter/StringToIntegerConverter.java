@@ -35,8 +35,8 @@ public class StringToIntegerConverter extends
 
     /**
      * Returns the format used by
-     * {@link #convertToPresentation(Integer, Locale)} and
-     * {@link #convertToModel(String, Locale)}.
+     * {@link #convertToPresentation(Integer, Class, Locale)} and
+     * {@link #convertToModel(String, Class, Locale)}
      * 
      * @param locale
      *            The locale to use
@@ -55,12 +55,13 @@ public class StringToIntegerConverter extends
      * 
      * @see
      * com.vaadin.data.util.converter.Converter#convertToModel(java.lang.Object,
-     * java.util.Locale)
+     * java.lang.Class, java.util.Locale)
      */
     @Override
-    public Integer convertToModel(String value, Locale locale)
+    public Integer convertToModel(String value,
+            Class<? extends Integer> targetType, Locale locale)
             throws ConversionException {
-        Number n = convertToNumber(value, locale);
+        Number n = convertToNumber(value, targetType, locale);
         return n == null ? null : n.intValue();
 
     }

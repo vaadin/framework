@@ -85,12 +85,14 @@ public class AbsFieldValueConversions extends TestCase {
         tf.setConverter(new Converter<String, String>() {
 
             @Override
-            public String convertToModel(String value, Locale locale) {
+            public String convertToModel(String value,
+                    Class<? extends String> targetType, Locale locale) {
                 return value;
             }
 
             @Override
-            public String convertToPresentation(String value, Locale locale) {
+            public String convertToPresentation(String value,
+                    Class<? extends String> targetType, Locale locale) {
                 return value;
             }
 
@@ -150,7 +152,8 @@ public class AbsFieldValueConversions extends TestCase {
         cb.setConverter(new Converter<Boolean, Boolean>() {
 
             @Override
-            public Boolean convertToModel(Boolean value, Locale locale) {
+            public Boolean convertToModel(Boolean value,
+                    Class<? extends Boolean> targetType, Locale locale) {
                 // value from a CheckBox should never be null as long as it is
                 // not set to null (handled by conversion below).
                 assertNotNull(value);
@@ -158,7 +161,8 @@ public class AbsFieldValueConversions extends TestCase {
             }
 
             @Override
-            public Boolean convertToPresentation(Boolean value, Locale locale) {
+            public Boolean convertToPresentation(Boolean value,
+                    Class<? extends Boolean> targetType, Locale locale) {
                 // Datamodel -> field
                 if (value == null) {
                     return false;
@@ -184,7 +188,7 @@ public class AbsFieldValueConversions extends TestCase {
         assertEquals(Boolean.FALSE, property.getValue());
         assertEquals(Boolean.FALSE, cb.getValue());
         Boolean newDmValue = cb.getConverter().convertToPresentation(
-                cb.getValue(), new Locale("fi", "FI"));
+                cb.getValue(), Boolean.class, new Locale("fi", "FI"));
         assertEquals(Boolean.FALSE, newDmValue);
 
         // FIXME: Should be able to set to false here to cause datamodel to be

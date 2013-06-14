@@ -4011,7 +4011,8 @@ public class Table extends AbstractSelect implements Action.Container,
         }
         Object value = property.getValue();
         if (converter != null) {
-            return converter.convertToPresentation(value, getLocale());
+            return converter.convertToPresentation(value, String.class,
+                    getLocale());
         }
         return (null != value) ? value.toString() : "";
     }

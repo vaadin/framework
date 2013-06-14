@@ -33,14 +33,12 @@ public class TestAnyEnumToStringConverter {
 
     public class AnyEnumToStringConverter implements Converter<Enum, String> {
 
-        private Class<? extends Enum>[] enumClass;
-
-        public AnyEnumToStringConverter(Class<? extends Enum>... enumClass) {
-            this.enumClass = enumClass;
+        public AnyEnumToStringConverter() {
         }
 
         @Override
-        public String convertToModel(Enum value, Locale locale)
+        public String convertToModel(Enum value,
+                Class<? extends String> targetType, Locale locale)
                 throws com.vaadin.data.util.converter.Converter.ConversionException {
             if (value == null) {
                 return null;
@@ -50,16 +48,15 @@ public class TestAnyEnumToStringConverter {
         }
 
         @Override
-        public Enum convertToPresentation(String value, Locale locale)
+        public Enum convertToPresentation(String value,
+                Class<? extends Enum> targetType, Locale locale)
                 throws com.vaadin.data.util.converter.Converter.ConversionException {
             if (value == null) {
                 return null;
             }
-            for (Class<? extends Enum> candidate : enumClass) {
-                for (Enum e : candidate.getEnumConstants()) {
-                    if (e.toString().equals(value)) {
-                        return e;
-                    }
+            for (Enum e : targetType.getEnumConstants()) {
+                if (e.toString().equals(value)) {
+                    return e;
                 }
             }
 
@@ -82,29 +79,29 @@ public class TestAnyEnumToStringConverter {
 
     @Before
     public void setup() {
-        converter = new AnyEnumToStringConverter(TestEnum.class,
-                AnotherTestEnum.class);
+        converter = new AnyEnumToStringConverter();
     }
 
     @Test
     public void nullConversion() {
-        Assert.assertEquals(null, converter.convertToModel(null, null));
+        Assert.assertEquals(null, converter.convertToModel(null, null, null));
     }
 
     @Test
     public void enumToStringConversion() {
         Assert.assertEquals(TestEnum.TWO.toString(),
-                converter.convertToModel(TestEnum.TWO, null));
-        Assert.assertEquals(AnotherTestEnum.TWO.toString(),
-                converter.convertToModel(AnotherTestEnum.TWO, null));
+                converter.convertToModel(TestEnum.TWO, String.class, null));
+        Assert.assertEquals(AnotherTestEnum.TWO.toString(), converter
+                .convertToModel(AnotherTestEnum.TWO, String.class, null));
     }
 
     @Test
     public void stringToEnumConversion() {
-        Assert.assertEquals(TestEnum.TWO,
-                converter.convertToPresentation(TestEnum.TWO.toString(), null));
+        Assert.assertEquals(TestEnum.TWO, converter.convertToPresentation(
+                TestEnum.TWO.toString(), TestEnum.class, null));
         Assert.assertEquals(AnotherTestEnum.TWO, converter
-                .convertToPresentation(AnotherTestEnum.TWO.toString(), null));
+                .convertToPresentation(AnotherTestEnum.TWO.toString(),
+                        AnotherTestEnum.class, null));
     }
 
     @Test

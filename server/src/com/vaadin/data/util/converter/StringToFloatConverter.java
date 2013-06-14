@@ -44,9 +44,10 @@ public class StringToFloatConverter extends
      * java.util.Locale)
      */
     @Override
-    public Float convertToModel(String value, Locale locale)
+    public Float convertToModel(String value,
+            Class<? extends Float> targetType, Locale locale)
             throws ConversionException {
-        Number n = convertToNumber(value, locale);
+        Number n = convertToNumber(value, targetType, locale);
         return n == null ? null : n.floatValue();
     }
 

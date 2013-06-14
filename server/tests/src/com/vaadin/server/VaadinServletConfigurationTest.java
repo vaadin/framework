@@ -31,15 +31,21 @@ import org.junit.Test;
 
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.DeploymentConfiguration.LegacyProperyToStringMode;
-import com.vaadin.server.VaadinServletConfigurationTest.MockUI;
+import com.vaadin.server.MockUIContainingServlet.ServletInUI;
 import com.vaadin.ui.UI;
 
 public class VaadinServletConfigurationTest {
-    public static class MockUI extends UI {
-        @Override
-        protected void init(VaadinRequest request) {
-            // Do nothing
-        }
+
+    @Test
+    public void testEnclosingUIClass() throws Exception {
+        ServletInUI servlet = new MockUIContainingServlet.ServletInUI();
+        servlet.init(new MockServletConfig());
+
+        Class<? extends UI> uiClass = new DefaultUIProvider()
+                .getUIClass(new UIClassSelectionEvent(new VaadinServletRequest(
+                        EasyMock.createMock(HttpServletRequest.class), servlet
+                                .getService())));
+        Assert.assertEquals(MockUIContainingServlet.class, uiClass);
     }
 
     @Test
@@ -60,7 +66,7 @@ public class VaadinServletConfigurationTest {
                 .getUIClass(new UIClassSelectionEvent(new VaadinServletRequest(
                         EasyMock.createMock(HttpServletRequest.class), servlet
                                 .getService())));
-        Assert.assertEquals(MockUI.class, uiClass);
+        Assert.assertEquals(MockUIContainingServlet.class, uiClass);
     }
 
     @Test
@@ -88,11 +94,11 @@ public class VaadinServletConfigurationTest {
                 .getUIClass(new UIClassSelectionEvent(new VaadinServletRequest(
                         EasyMock.createMock(HttpServletRequest.class), servlet
                                 .getService())));
-        Assert.assertEquals(MockUI.class, uiClass);
+        Assert.assertEquals(MockUIContainingServlet.class, uiClass);
     }
 }
 
-@VaadinServletConfiguration(productionMode = true, ui = MockUI.class, closeIdleSessions = true, heartbeatInterval = 1234, resourceCacheTime = 4321)
+@VaadinServletConfiguration(productionMode = true, ui = MockUIContainingServlet.class, closeIdleSessions = true, heartbeatInterval = 1234, resourceCacheTime = 4321)
 class TestServlet extends VaadinServlet {
 
 }
