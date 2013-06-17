@@ -431,7 +431,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
                         icon);
             }
             final String caption = tab.getCaption();
-            if (caption != null && caption.length() > 0) {
+            if (caption != null && !caption.isEmpty()) {
                 target.addAttribute(
                         TabsheetBaseConstants.ATTRIBUTE_TAB_CAPTION, caption);
             }
@@ -449,8 +449,13 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             }
 
             final String styleName = tab.getStyleName();
-            if (styleName != null && styleName.length() != 0) {
+            if (styleName != null && !styleName.isEmpty()) {
                 target.addAttribute(TabsheetConstants.TAB_STYLE_NAME, styleName);
+            }
+
+            final String id = tab.getId();
+            if (id != null && !id.isEmpty()) {
+                target.addAttribute("id", id);
             }
 
             target.addAttribute("key", keyMapper.key(component));
@@ -1015,6 +1020,23 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
          * @see #setStyleName(String)
          */
         public String getStyleName();
+
+        /**
+         * Adds an unique id for component that is used in the client-side for
+         * testing purposes. Keeping identifiers unique is the responsibility of
+         * the programmer.
+         * 
+         * @param id
+         *            An alphanumeric id
+         */
+        public void setId(String id);
+
+        /**
+         * Gets currently set debug identifier
+         * 
+         * @return current id, null if not set
+         */
+        public String getId();
     }
 
     /**
@@ -1030,6 +1052,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         private String description = null;
         private ErrorMessage componentError = null;
         private String styleName;
+        private String id;
 
         public TabSheetTabImpl(String caption, Resource icon) {
             if (caption == null) {
@@ -1149,6 +1172,18 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         @Override
         public String getStyleName() {
             return styleName;
+        }
+
+        @Override
+        public void setId(String id) {
+            this.id = id;
+            markAsDirty();
+
+        }
+
+        @Override
+        public String getId() {
+            return id;
         }
     }
 

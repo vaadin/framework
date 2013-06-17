@@ -651,7 +651,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public Locale getLocale();
 
     /**
-     * Adds an unique id for component that get's transferred to terminal for
+     * Adds an unique id for component that is used in the client-side for
      * testing purposes. Keeping identifiers unique is the responsibility of the
      * programmer.
      * 
@@ -661,7 +661,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
     public void setId(String id);
 
     /**
-     * Get's currently set debug identifier
+     * Gets currently set debug identifier
      * 
      * @return current id, null if not set
      */
@@ -669,7 +669,7 @@ public interface Component extends ClientConnector, Sizeable, Serializable {
 
     /**
      * <p>
-     * Gets the component's description, used in tooltips and can be displayed
+     * Gets the components description, used in tooltips and can be displayed
      * directly in certain other components such as forms. The description can
      * be used to briefly describe the state of the component to the user. The
      * description string may contain certain XML tags:

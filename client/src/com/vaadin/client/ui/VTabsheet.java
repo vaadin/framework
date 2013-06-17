@@ -112,6 +112,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         private String styleName;
 
+        private String id;
+
         private Tab(TabBar tabBar) {
             super(DOM.createTD());
             this.tabBar = tabBar;
@@ -204,10 +206,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             String newStyleName = tabUidl
                     .getStringAttribute(TabsheetConstants.TAB_STYLE_NAME);
             // Find the nth td element
-            if (newStyleName != null && newStyleName.length() != 0) {
+            if (newStyleName != null && !newStyleName.isEmpty()) {
                 if (!newStyleName.equals(styleName)) {
                     // If we have a new style name
-                    if (styleName != null && styleName.length() != 0) {
+                    if (styleName != null && !styleName.isEmpty()) {
                         // Remove old style name if present
                         td.removeClassName(TD_CLASSNAME + "-" + styleName);
                     }
@@ -220,6 +222,15 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                 // uidl
                 td.removeClassName(TD_CLASSNAME + "-" + styleName);
                 styleName = null;
+            }
+
+            String newId = tabUidl.getStringAttribute("id");
+            if (newId != null && !newId.isEmpty()) {
+                td.setId(newId);
+                id = newId;
+            } else if (id != null) {
+                td.removeAttribute("id");
+                id = null;
             }
         }
 
