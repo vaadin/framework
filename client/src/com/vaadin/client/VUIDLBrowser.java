@@ -49,9 +49,7 @@ import com.vaadin.client.ui.VWindow;
  */
 @Deprecated
 public class VUIDLBrowser extends SimpleTree {
-    private static final String HELP = "Shift click handle to open recursively. "
-            + " Click components to highlight them on client side."
-            + " Shift click components to highlight them also on the server side.";
+    private static final String HELP = "Alt-click handle to open recursively. ";
     private ApplicationConnection client;
     private String highlightedPid;
 
@@ -107,7 +105,6 @@ public class VUIDLBrowser extends SimpleTree {
 
         protected StateChangeItem() {
             setTitle(HELP);
-
             addDomHandler(new MouseOutHandler() {
                 @Override
                 public void onMouseOut(MouseOutEvent event) {
@@ -120,8 +117,7 @@ public class VUIDLBrowser extends SimpleTree {
         protected void select(ClickEvent event) {
             ServerConnector connector = getConnector();
 
-            if (connector != null && event != null
-                    && event.getNativeEvent().getShiftKey()) {
+            if (connector != null && event != null) {
                 connector.getConnection().highlightConnector(connector);
             }
 

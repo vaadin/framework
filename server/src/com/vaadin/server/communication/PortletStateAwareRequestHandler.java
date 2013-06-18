@@ -17,9 +17,11 @@ package com.vaadin.server.communication;
 
 import java.io.IOException;
 
+import javax.portlet.PortletResponse;
 import javax.portlet.StateAwareResponse;
 
 import com.vaadin.server.RequestHandler;
+import com.vaadin.server.VaadinPortletResponse;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinSession;
@@ -43,7 +45,12 @@ public class PortletStateAwareRequestHandler implements RequestHandler {
     @Override
     public boolean handleRequest(VaadinSession session, VaadinRequest request,
             VaadinResponse response) throws IOException {
-        if (response instanceof StateAwareResponse) {
+        if (!(response instanceof VaadinPortletResponse)) {
+            return false;
+        }
+        PortletResponse portletResponse = ((VaadinPortletResponse) response)
+                .getPortletResponse();
+        if (portletResponse instanceof StateAwareResponse) {
             // StateAwareResponse is fully handled by listeners through
             // PortletListenerNotifier
             return true;

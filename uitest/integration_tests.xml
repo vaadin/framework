@@ -194,6 +194,12 @@
             <param name="target-server" value="glassfish3" />
         </antcall>
     </target>
+    <target name="integration-test-glassfish4">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="10" />
+            <param name="target-server" value="glassfish4" />
+        </antcall>
+    </target>
 
 
     <target name="integration-test-liferay6">
@@ -360,6 +366,7 @@
             <antcall target="integration-test-gatein3" />
             <antcall target="integration-test-glassfish2" />
             <antcall target="integration-test-glassfish3" />
+            <antcall target="integration-test-glassfish4" />
             <antcall target="integration-test-jboss4" />
             <antcall target="integration-test-jboss5" />
             <antcall target="integration-test-jboss6" />

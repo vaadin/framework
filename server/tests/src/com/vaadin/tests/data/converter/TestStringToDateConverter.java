@@ -12,7 +12,7 @@ public class TestStringToDateConverter extends TestCase {
     StringToDateConverter converter = new StringToDateConverter();
 
     public void testNullConversion() {
-        assertEquals(null, converter.convertToModel(null, null, null));
+        assertEquals(null, converter.convertToModel(null, Date.class, null));
     }
 
     public void testEmptyStringConversion() {

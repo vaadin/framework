@@ -6,11 +6,14 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.WebBrowser;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.PushConfiguration;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
@@ -34,6 +37,8 @@ public abstract class AbstractTestUI extends UI {
         ((VerticalLayout) getContent()).setExpandRatio(layout, 1);
 
         warnIfWidgetsetMaybeNotCompiled();
+
+        setTransport(request);
 
         setup(request);
     }
@@ -92,6 +97,26 @@ public abstract class AbstractTestUI extends UI {
                             + newestWidgetsetName
                             + "). Are you sure you have compiled the right widgetset?",
                             Type.WARNING_MESSAGE);
+        }
+    }
+
+    protected void setTransport(VaadinRequest request) {
+        String transport = request.getParameter("transport");
+        PushConfiguration config = getPushConfiguration();
+        PushMode mode = config.getPushMode();
+
+        if ("xhr".equals(transport)) {
+            config.setPushMode(PushMode.DISABLED);
+        } else if ("websocket".equals(transport)) {
+            if (!mode.isEnabled()) {
+                config.setPushMode(PushMode.AUTOMATIC);
+            }
+            config.setTransport(Transport.WEBSOCKET);
+        } else if ("streaming".equals(transport)) {
+            if (!mode.isEnabled()) {
+                config.setPushMode(PushMode.AUTOMATIC);
+            }
+            config.setTransport(Transport.STREAMING);
         }
     }
 

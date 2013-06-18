@@ -79,7 +79,7 @@ public class SimpleTree extends ComplexPanel implements HasDoubleClickHandlers {
                 if (event.getNativeEvent().getEventTarget().cast() == handle) {
                     if (children.getStyle().getDisplay().intern() == Display.NONE
                             .getCssName()) {
-                        open(event.getNativeEvent().getShiftKey());
+                        open(event.getNativeEvent().getAltKey());
                     } else {
                         close();
                     }

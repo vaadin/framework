@@ -3408,7 +3408,7 @@ public class ApplicationConnection {
      * @since 7.1
      * @return A string representation of the current transport type
      */
-    public String getCommunicationMethod() {
+    public String getCommunicationMethodName() {
         if (push != null) {
             return "Push (" + push.getTransportType() + ")";
         } else {

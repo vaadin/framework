@@ -9,7 +9,7 @@ public class TestStringToFloatConverter extends TestCase {
     StringToFloatConverter converter = new StringToFloatConverter();
 
     public void testNullConversion() {
-        assertEquals(null, converter.convertToModel(null, null, null));
+        assertEquals(null, converter.convertToModel(null, Float.class, null));
     }
 
     public void testEmptyStringConversion() {

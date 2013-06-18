@@ -40,7 +40,29 @@ public interface DeploymentConfiguration extends Serializable {
      */
     @Deprecated
     public enum LegacyProperyToStringMode {
-        DISABLED, WARNING, ENABLED;
+        DISABLED("false"), WARNING("warning"), ENABLED("true");
+
+        private final String propertyString;
+
+        private LegacyProperyToStringMode(String propertyString) {
+            this.propertyString = propertyString;
+        }
+
+        /**
+         * Gets the string that should be used in e.g. web.xml for selecting
+         * this mode.
+         * 
+         * @return the property value
+         */
+        public String getPropertyString() {
+            return propertyString;
+        }
+
+        @Override
+        public String toString() {
+            // Used by VaadinServlet.readConfigurationAnnotation()
+            return getPropertyString();
+        }
 
         public boolean useLegacyMode() {
             return this == WARNING || this == ENABLED;

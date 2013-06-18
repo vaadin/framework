@@ -85,12 +85,23 @@ public class VaadinPortletResponse implements VaadinResponse {
 
     @Override
     public void setContentType(String type) {
-        ((MimeResponse) response).setContentType(type);
+        if (response instanceof MimeResponse) {
+            ((MimeResponse) response).setContentType(type);
+        } else {
+            throw new RuntimeException(
+                    "Content type cannot be set for response of type "
+                            + response.getClass().getName());
+        }
     }
 
     @Override
     public PrintWriter getWriter() throws IOException {
-        return ((MimeResponse) response).getWriter();
+        if (response instanceof MimeResponse) {
+            return ((MimeResponse) response).getWriter();
+        } else {
+            throw new IOException("Writer not available for response of type "
+                    + response.getClass().getName());
+        }
     }
 
     @Override
