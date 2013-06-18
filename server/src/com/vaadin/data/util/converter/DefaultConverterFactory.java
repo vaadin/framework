@@ -16,6 +16,7 @@
 
 package com.vaadin.data.util.converter;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -101,6 +102,8 @@ public class DefaultConverterFactory implements ConverterFactory {
             return new StringToFloatConverter();
         } else if (Integer.class.isAssignableFrom(sourceType)) {
             return new StringToIntegerConverter();
+        } else if (BigDecimal.class.isAssignableFrom(sourceType)) {
+            return new StringToBigDecimalConverter();
         } else if (Boolean.class.isAssignableFrom(sourceType)) {
             return new StringToBooleanConverter();
         } else if (Date.class.isAssignableFrom(sourceType)) {
