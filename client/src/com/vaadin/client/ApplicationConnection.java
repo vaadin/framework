@@ -2940,6 +2940,14 @@ public class ApplicationConnection {
                 uidlUri = serviceUrl + relativeUrl;
             }
         }
+        if (uidlUri.startsWith(ApplicationConstants.VAADIN_PROTOCOL_PREFIX)) {
+            final String vaadinUri = configuration.getVaadinDirUrl();
+            String relativeUrl = uidlUri
+                    .substring(ApplicationConstants.VAADIN_PROTOCOL_PREFIX
+                            .length());
+            uidlUri = vaadinUri + relativeUrl;
+        }
+
         return uidlUri;
     }
 

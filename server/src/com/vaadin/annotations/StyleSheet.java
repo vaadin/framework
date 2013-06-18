@@ -32,6 +32,11 @@ import com.vaadin.server.ClientConnector;
  * Relative urls are mapped to APP/PUBLISHED/[url] which are by default served
  * from the classpath relative to the class where the annotation is defined.
  * <p>
+ * Special Vaadin urls are also supported. The most useful is vaadin:// which
+ * maps to the location of the automatically published VAADIN folder. Using the
+ * VAADIN folder and vaadin:// you can publish stylesheets which use images or
+ * other files with relative paths.
+ * <p>
  * Example: {@code @StyleSheet( "http://host.com/file1.css", "file2.css"})} on
  * the class com.example.MyConnector would load the file
  * http://host.com/file1.css as is and file2.css from /com/example/file2.css on
