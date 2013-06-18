@@ -437,6 +437,12 @@ public class VCaption extends HTML {
             return true;
         }
 
+        if (state instanceof AbstractFieldState) {
+            if (((AbstractFieldState) state).required) {
+                return true;
+            }
+        }
+
         return false;
     }
 
