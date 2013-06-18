@@ -203,7 +203,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * session is serialized as long as it doesn't happen while some other
      * thread has the lock.
      */
-    private transient final ConcurrentLinkedQueue<FutureAccess> pendingAccessQueue = new ConcurrentLinkedQueue<FutureAccess>();
+    private transient ConcurrentLinkedQueue<FutureAccess> pendingAccessQueue;
 
     /**
      * Create a new service session tied to a Vaadin service
@@ -1250,6 +1250,11 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * @return the pending access queue
      */
     public Queue<FutureAccess> getPendingAccessQueue() {
+        if (pendingAccessQueue == null) {
+            // pendingAccessQueue is transient, so will be null after
+            // deserialization
+            pendingAccessQueue = new ConcurrentLinkedQueue<FutureAccess>();
+        }
         return pendingAccessQueue;
     }
 
