@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <project name="test" basedir=".">
     <property file="deploy.properties" />
+    <property name="vaadin.major.7" value="1" />
     <property name="lock" value="deploy/lock.file" />
     <property name="deployDir" value="deploy/${server}" />
     <property name="serverPort" value="8080" />
