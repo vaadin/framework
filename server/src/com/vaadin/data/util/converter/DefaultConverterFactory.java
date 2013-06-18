@@ -103,8 +103,6 @@ public class DefaultConverterFactory implements ConverterFactory {
             return new StringToIntegerConverter();
         } else if (Boolean.class.isAssignableFrom(sourceType)) {
             return new StringToBooleanConverter();
-        } else if (Number.class.isAssignableFrom(sourceType)) {
-            return new StringToNumberConverter();
         } else if (Date.class.isAssignableFrom(sourceType)) {
             return new StringToDateConverter();
         } else {
