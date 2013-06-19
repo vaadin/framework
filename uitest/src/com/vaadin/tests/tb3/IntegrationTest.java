@@ -32,8 +32,23 @@ public class IntegrationTest extends PrivateTB3Configuration {
         return "/demo/run/com.vaadin.tests.integration.IntegrationTestApplication?restartApplication";
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.tests.tb3.PrivateTB3Configuration#getDeploymentHostname()
+     */
     @Override
-    public String getBaseURL() {
-        return "http://jboss5.devnet.vaadin.com:8080";
+    protected String getBaseURL() {
+        return System.getProperty("deployment.url");
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.tests.tb3.AbstractTB3Test#getTestName()
+     */
+    @Override
+    protected String getTestName() {
+        return System.getProperty("test.name");
     }
 }
