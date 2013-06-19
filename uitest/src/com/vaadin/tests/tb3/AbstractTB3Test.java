@@ -22,9 +22,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     private DesiredCapabilities desiredCapabilities;
     {
         // Default browser to run on unless setDesiredCapabilities is called
-        desiredCapabilities = DesiredCapabilities.firefox();
-        desiredCapabilities.setVersion("17");
-        desiredCapabilities.setPlatform(Platform.WIN8);
+        desiredCapabilities = firefox(17);
     }
 
     @Before
@@ -36,7 +34,12 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         } catch (UnsupportedOperationException e) {
             // Opera does not support this...
         }
-        driver.get(getBaseURL() + getPath());
+        String baseUrl = getBaseURL();
+        if (baseUrl.endsWith("/")) {
+            baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+        }
+
+        driver.get(baseUrl + getPath());
     }
 
     protected String getHubURL() {
@@ -99,6 +102,10 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         return null;
     }
 
+    protected boolean isDebug() {
+        return false;
+    }
+
     protected boolean isPushEnabled() {
         return false;
     }
@@ -115,10 +122,11 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         }
 
         if (UI.class.isAssignableFrom(uiClass)) {
-            return runPath + "/" + uiClass.getCanonicalName();
+            return runPath + "/" + uiClass.getCanonicalName()
+                    + (isDebug() ? "?debug" : "");
         } else if (LegacyApplication.class.isAssignableFrom(uiClass)) {
             return runPath + "/" + uiClass.getCanonicalName()
-                    + "?restartApplication";
+                    + "?restartApplication" + (isDebug() ? "&debug" : "");
         } else {
             throw new IllegalArgumentException(
                     "Unable to determine path for enclosing class "
@@ -156,7 +164,42 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         return getClass().getSimpleName();
     }
 
-    protected void sleep(int timeoutMillis) throws InterruptedException {
-        Thread.sleep(timeoutMillis);
+    protected void sleep(int timeoutMillis) {
+        try {
+            Thread.sleep(timeoutMillis);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected static DesiredCapabilities safari(int version) {
+        DesiredCapabilities c = DesiredCapabilities.safari();
+        c.setVersion("" + version);
+        return c;
+    }
+
+    protected static DesiredCapabilities chrome(int version) {
+        DesiredCapabilities c = DesiredCapabilities.chrome();
+        // c.setVersion("" + version);
+        return c;
+    }
+
+    protected static DesiredCapabilities opera(int version) {
+        DesiredCapabilities c = DesiredCapabilities.opera();
+        c.setVersion("" + version);
+        return c;
+    }
+
+    protected static DesiredCapabilities firefox(int version) {
+        DesiredCapabilities c = DesiredCapabilities.firefox();
+        c.setVersion("" + version);
+        c.setPlatform(Platform.XP);
+        return c;
+    }
+
+    protected static DesiredCapabilities ie(int version) {
+        DesiredCapabilities c = DesiredCapabilities.internetExplorer();
+        c.setVersion("" + version);
+        return c;
     }
 }

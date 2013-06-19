@@ -29,33 +29,4 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
         return Collections.unmodifiableCollection(allBrowsers);
     }
 
-    protected static DesiredCapabilities safari(int version) {
-        DesiredCapabilities c = DesiredCapabilities.safari();
-        c.setVersion("" + version);
-        return c;
-    }
-
-    protected static DesiredCapabilities chrome(int version) {
-        DesiredCapabilities c = DesiredCapabilities.chrome();
-        // c.setVersion("" + version);
-        return c;
-    }
-
-    protected static DesiredCapabilities opera(int version) {
-        DesiredCapabilities c = DesiredCapabilities.opera();
-        c.setVersion("" + version);
-        return c;
-    }
-
-    protected static DesiredCapabilities firefox(int version) {
-        DesiredCapabilities c = DesiredCapabilities.firefox();
-        c.setVersion("" + version);
-        return c;
-    }
-
-    protected static DesiredCapabilities ie(int version) {
-        DesiredCapabilities c = DesiredCapabilities.internetExplorer();
-        c.setVersion("" + version);
-        return c;
-    }
 }

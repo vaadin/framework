@@ -29,6 +29,8 @@ import org.openqa.selenium.Platform;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.testbench.Parameters;
+
 /**
  * 
  * @since
@@ -46,6 +48,9 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      */
     protected void compareScreen(String identifier) throws IOException,
             AssertionError {
+        Parameters.setScreenshotErrorDirectory(getScreenshotDirectory()
+                + "/errors");
+        Parameters.setScreenshotReferenceDirectory(getReferenceDirectory());
         File ref = new File(getScreenshotFileName(getTestName(),
                 getDesiredCapabilities(), identifier));
         if (!testBench(driver).compareScreen(ref)) {
@@ -94,7 +99,9 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      */
     public static String getPlatform(DesiredCapabilities capabilities) {
         if (capabilities.getPlatform() == Platform.WIN8
-                || capabilities.getPlatform() == Platform.WINDOWS) {
+                || capabilities.getPlatform() == Platform.WINDOWS
+                || capabilities.getPlatform() == Platform.VISTA
+                || capabilities.getPlatform() == Platform.XP) {
             return "Windows";
         } else if (capabilities.getPlatform() == Platform.MAC) {
             return "Mac";
