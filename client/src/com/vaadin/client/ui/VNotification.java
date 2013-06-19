@@ -52,6 +52,12 @@ public class VNotification extends VOverlay {
     public static final Position BOTTOM_LEFT = Position.BOTTOM_LEFT;
     public static final Position BOTTOM_RIGHT = Position.BOTTOM_RIGHT;
 
+    /**
+     * Position that is only accessible for assistive devices, invisible for
+     * visual users.
+     */
+    public static final Position ASSISTIVE = Position.ASSISTIVE;
+
     public static final int DELAY_FOREVER = -1;
     public static final int DELAY_NONE = 0;
 
@@ -314,6 +320,10 @@ public class VNotification extends VOverlay {
             center();
             DOM.setStyleAttribute(el, "top", "");
             DOM.setStyleAttribute(el, "bottom", "0px");
+            break;
+        case ASSISTIVE:
+            DOM.setStyleAttribute(el, "top", "-2000px");
+            DOM.setStyleAttribute(el, "left", "-2000px");
             break;
         default:
         case MIDDLE_CENTER:

@@ -63,6 +63,9 @@ public class NotificationsWaiAria extends TestBase {
         item = type.addItem(Notification.TYPE_TRAY_NOTIFICATION);
         item.getItemProperty(CAPTION).setValue("Tray");
 
+        item = type.addItem(Notification.Type.ASSISTIVE_NOTIFICATION);
+        item.getItemProperty(CAPTION).setValue("Assistive");
+
         type.setValue(type.getItemIds().iterator().next());
         addComponent(type);
 

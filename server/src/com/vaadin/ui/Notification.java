@@ -64,7 +64,7 @@ import com.vaadin.shared.ui.ui.NotificationConfigurationBean.Role;
  */
 public class Notification implements Serializable {
     public enum Type {
-        HUMANIZED_MESSAGE, WARNING_MESSAGE, ERROR_MESSAGE, TRAY_NOTIFICATION;
+        HUMANIZED_MESSAGE, WARNING_MESSAGE, ERROR_MESSAGE, TRAY_NOTIFICATION, ASSISTIVE_NOTIFICATION;
     }
 
     @Deprecated
@@ -204,6 +204,12 @@ public class Notification implements Serializable {
             position = Position.BOTTOM_RIGHT;
             styleName = "tray";
             setNavigationConfiguration("Info: ", "", Role.STATUS);
+            break;
+        case ASSISTIVE_NOTIFICATION:
+            delayMsec = 3000;
+            position = Position.ASSISTIVE;
+            styleName = "assistive";
+            setNavigationConfiguration("Note: ", "", Role.ALERT);
             break;
         case HUMANIZED_MESSAGE:
         default:
@@ -446,6 +452,10 @@ public class Notification implements Serializable {
             break;
         case TRAY_NOTIFICATION:
             style = "tray";
+            break;
+        case ASSISTIVE_NOTIFICATION:
+            style = "assistive";
+            break;
         case HUMANIZED_MESSAGE:
         default:
             style = "humanized";
