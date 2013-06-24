@@ -5,7 +5,9 @@ import java.io.IOException;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
-public class IntegrationTest extends PrivateTB3Configuration {
+import com.vaadin.tests.integration.IntegrationTestUI;
+
+public class IntegrationTestXHR extends PrivateTB3Configuration {
 
     @Test
     public void runTest() throws IOException, AssertionError {
@@ -28,27 +30,22 @@ public class IntegrationTest extends PrivateTB3Configuration {
     }
 
     @Override
-    protected String getPath() {
-        return "/demo/run/com.vaadin.tests.integration.IntegrationTestApplication?restartApplication";
+    protected Class<?> getUIClass() {
+        return IntegrationTestUI.class;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.tests.tb3.PrivateTB3Configuration#getDeploymentHostname()
-     */
+    @Override
+    protected String getPath() {
+        return "/demo" + super.getPath();
+    }
+
     @Override
     protected String getBaseURL() {
         return System.getProperty("deployment.url");
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.vaadin.tests.tb3.AbstractTB3Test#getTestName()
-     */
     @Override
     protected String getTestName() {
-        return System.getProperty("test.name");
+        return super.getTestName() + "-" + System.getProperty("server-name");
     }
 }

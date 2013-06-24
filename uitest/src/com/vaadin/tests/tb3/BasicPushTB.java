@@ -14,11 +14,6 @@ public class BasicPushTB extends MultiBrowserTest {
         return BasicPush.class;
     }
 
-    @Override
-    protected boolean isPushEnabled() {
-        return true;
-    }
-
     @Test
     public void runTest() throws Exception {
         // Test client initiated push

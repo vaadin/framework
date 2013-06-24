@@ -31,11 +31,6 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.Parameters;
 
-/**
- * 
- * @since
- * @author Vaadin Ltd
- */
 public abstract class ScreenshotTB3Test extends AbstractTB3Test {
 
     private List<String> screenshotFailures = new ArrayList<String>();;
@@ -43,17 +38,19 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
     /**
      * @since
      * @param identifier
-     * @throws AssertionError
      * @throws IOException
      */
-    protected void compareScreen(String identifier) throws IOException,
-            AssertionError {
+    protected void compareScreen(String identifier) throws IOException {
         Parameters.setScreenshotErrorDirectory(getScreenshotDirectory()
                 + "/errors");
         Parameters.setScreenshotReferenceDirectory(getReferenceDirectory());
         File ref = new File(getScreenshotFileName(getTestName(),
                 getDesiredCapabilities(), identifier));
-        if (!testBench(driver).compareScreen(ref)) {
+        try {
+            if (!testBench(driver).compareScreen(ref)) {
+                throw new AssertionError("comparison failed");
+            }
+        } catch (AssertionError t) {
             screenshotFailures.add(identifier);
         }
     }

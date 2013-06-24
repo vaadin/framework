@@ -8,18 +8,17 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.annotations.Widgetset;
+import com.vaadin.annotations.Push;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.AbstractTestUI;
 import com.vaadin.tests.tb3.MultiBrowserTest;
-import com.vaadin.tests.widgetset.TestingWidgetSet;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 
-@Widgetset(TestingWidgetSet.NAME)
+@Push
 public class BasicPush extends AbstractTestUI {
 
     public static class BasicPushTest extends MultiBrowserTest {
@@ -27,24 +26,44 @@ public class BasicPush extends AbstractTestUI {
         @Test
         public void testPush() {
             // Test client initiated push
-            Assert.assertEquals("0", getClientCounter().getText());
+            Assert.assertEquals(0, getClientCounter());
             getIncrementButton().click();
-            Assert.assertEquals("1", getClientCounter().getText());
+            Assert.assertEquals(
+                    "Client counter not incremented by button click", 1,
+                    getClientCounter());
             getIncrementButton().click();
             getIncrementButton().click();
             getIncrementButton().click();
-            Assert.assertEquals("4", getClientCounter().getText());
+            Assert.assertEquals(
+                    "Four clicks should have incremented counter to 4", 4,
+                    getClientCounter());
 
             // Test server initiated push
             getServerCounterResetButton().click();
-            Assert.assertEquals("0", getServerCounter().getText());
+            Assert.assertEquals(0, getServerCounter());
             sleep(3000);
-            Assert.assertEquals("1", getServerCounter().getText());
+            int serverCounter = getServerCounter();
+            if (serverCounter < 1) {
+                // No push has happened
+                Assert.fail("No push has occured within 3s");
+            }
             sleep(3000);
-            Assert.assertEquals("2", getServerCounter().getText());
+            if (getServerCounter() <= serverCounter) {
+                // No push has happened
+                Assert.fail("Only one push took place within 6s");
+
+            }
         }
 
-        private WebElement getServerCounter() {
+        private int getServerCounter() {
+            return Integer.parseInt(getServerCounterElement().getText());
+        }
+
+        private int getClientCounter() {
+            return Integer.parseInt(getClientCounterElement().getText());
+        }
+
+        private WebElement getServerCounterElement() {
             return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[4]/VLabel[0]");
         }
 
@@ -56,13 +75,8 @@ public class BasicPush extends AbstractTestUI {
             return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[2]/VButton[0]/domChild[0]/domChild[0]");
         }
 
-        private WebElement getClientCounter() {
+        private WebElement getClientCounterElement() {
             return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[1]/VLabel[0]");
-        }
-
-        @Override
-        protected boolean isPushEnabled() {
-            return true;
         }
     }
 
