@@ -9,7 +9,7 @@ public class TestStringToBooleanConverter extends TestCase {
     StringToBooleanConverter converter = new StringToBooleanConverter();
 
     public void testNullConversion() {
-        assertEquals(null, converter.convertToModel(null, null, null));
+        assertEquals(null, converter.convertToModel(null, Boolean.class, null));
     }
 
     public void testEmptyStringConversion() {

@@ -6,7 +6,6 @@ import java.net.URL;
 import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.Platform;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -18,7 +17,6 @@ import com.vaadin.testbench.TestBenchTestCase;
 import com.vaadin.ui.UI;
 
 public abstract class AbstractTB3Test extends TestBenchTestCase {
-    protected WebDriver driver;
     private DesiredCapabilities desiredCapabilities;
     {
         // Default browser to run on unless setDesiredCapabilities is called
@@ -30,7 +28,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         driver = TestBench.createDriver(new RemoteWebDriver(
                 new URL(getHubURL()), getDesiredCapabilities()));
         try {
-            testBench(driver).resizeViewPortTo(1500, 850);
+            testBench().resizeViewPortTo(1500, 850);
         } catch (UnsupportedOperationException e) {
             // Opera does not support this...
         }
@@ -61,6 +59,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     @After
     public void tearDown() throws Exception {
         driver.quit();
+        driver = null;
     }
 
     /**
@@ -201,5 +200,10 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         DesiredCapabilities c = DesiredCapabilities.internetExplorer();
         c.setVersion("" + version);
         return c;
+    }
+
+    public void onUncaughtException(Throwable t) {
+        // Do nothing by default
+
     }
 }

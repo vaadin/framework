@@ -14,6 +14,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 public abstract class MultiBrowserTest extends PrivateTB3Configuration {
 
     private static List<DesiredCapabilities> allBrowsers = new ArrayList<DesiredCapabilities>();
+    private static List<DesiredCapabilities> websocketBrowsers = new ArrayList<DesiredCapabilities>();
     static {
         allBrowsers.add(ie(8));
         allBrowsers.add(ie(9));
@@ -22,11 +23,23 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
         // browsers.add(safari(6));
         allBrowsers.add(chrome(21));
         allBrowsers.add(opera(12));
+
+        websocketBrowsers.addAll(allBrowsers);
+        websocketBrowsers.remove(ie(8));
+        websocketBrowsers.remove(ie(9));
     }
 
     @Parameters
+    public static Collection<DesiredCapabilities> getBrowserForTest() {
+        return getAllBrowsers();
+    }
+
     public static Collection<DesiredCapabilities> getAllBrowsers() {
         return Collections.unmodifiableCollection(allBrowsers);
+    }
+
+    public static Collection<DesiredCapabilities> getWebsocketBrowsers() {
+        return Collections.unmodifiableCollection(websocketBrowsers);
     }
 
 }

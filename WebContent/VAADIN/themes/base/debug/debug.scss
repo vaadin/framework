@@ -72,6 +72,7 @@
 		opacity: 0.8;
 		color: $maincolor;
 		
+		font-family: Arial, Helvetica, Tahoma, Verdana, sans-serif;
 		font-size: 13px;
 		
 		.v-debugwindow-handle {
@@ -160,8 +161,10 @@
 		border-bottom: 1px solid $lightborder;
 		
 		box-shadow: 0px 0px 7px 0 rgba(55,55,55,0.6);
-		min-height: 1.5em;
 		
+		min-height: 1.5em;
+		line-height: 1.5em;
+
 		padding-left: 5px;
 	}
 	
@@ -189,8 +192,6 @@
 		background-color: $mainbg;
 		border: 1px solid $darkborder;
 		border-top: none;
-		
-		font-family: monospace;
 	}
 	
 	.v-debugwindow-menu {
@@ -213,20 +214,18 @@
 		width: 33%;
 	}
 	
-	
-	/* LOG */
-	.v-debugwindow-reset {
-		color: #fff;
-		background-color: #4C92ED;
-		padding: 4px;
-	}
-	
+	/* GLOBAL color every other row */
 	.v-debugwindow-row {
 		display: table-row;
 	}
 	.v-debugwindow-row:nth-child(odd) {
 		background-color: rgba(0, 61, 255, 0.11);
 	}
+	.v-debugwindow-row > span {
+		display: table-cell;
+		padding: 4px;
+	}
+	
 	.v-debugwindow-row.SEVERE {
 		color: #550000;
 		background-color: #FFC5C5;
@@ -243,29 +242,6 @@
 	.v-debugwindow-row.FINEST {
 		color: lighten($maincolor, 15%);
 	}
-	
-	.v-debugwindow-row > span {
-		display: table-cell;
-		padding: 4px;
-	}
-	
-	.v-debugwindow-time {		
-		text-align: right;
-		color: #999;
-	}
-	.v-debugwindow-message {
-		white-space: nowrap;
-		width: 100%
-	}
-	.v-debugwindow-message:hover {
-		white-space: normal;
-		word-wrap: break-word;
-	}
-	.v-debugwindow-message em {
-	 	background-color: #C4E6F8;
-	 }
-
-	/* HIERARCHY */	
 	.v-debugwindow-row > span.caption {
 		color: #999;
 		text-align: right;
@@ -275,11 +251,48 @@
 		width: 100%;
 	}
 	
-	/* INFO */
-	.v-debugwindow-info {
+	/* LOG */
+	.v-debugwindow-log {
+		font-family: monospace;
+		
+		.v-debugwindow-reset {
+			color: #fff;
+			background-color: #4C92ED;
+			padding: 4px;
+		}
+
+		.v-debugwindow-time {		
+			text-align: right;
+			color: #999;
+		}
+		.v-debugwindow-message {
+			white-space: nowrap;
+			width: 100%
+		}
+		.v-debugwindow-message:hover {
+			white-space: normal;
+			word-wrap: break-word;
+		}
+		.v-debugwindow-message em {
+		 	background-color: #C4E6F8;
+		}
+	}
+
+	/* HIERARCHY */	
+	.v-debugwindow-hierarchy {
+		.v-debugwindow-info {
+			padding: 1em;
+		}
+	}
+	
+	
+	/* NETWORK */
+	.v-debugwindow-network {
 		.v-debugwindow-row {
-			display:block;
-			min-width: 100%;
+			display: block !important;
+		}
+		.v-debugwindow-row > span {
+			display: inline;
 		}
 	}
 

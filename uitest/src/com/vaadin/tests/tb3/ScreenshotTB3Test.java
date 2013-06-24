@@ -19,13 +19,21 @@
  */
 package com.vaadin.tests.tb3;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+
 import org.junit.After;
+import org.junit.Before;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Platform;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
@@ -41,10 +49,10 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      * @throws IOException
      */
     protected void compareScreen(String identifier) throws IOException {
-        Parameters.setScreenshotErrorDirectory(getScreenshotDirectory()
-                + "/errors");
-        Parameters.setScreenshotReferenceDirectory(getReferenceDirectory());
-        File ref = new File(getScreenshotFileName(getTestName(),
+        Parameters.setScreenshotErrorDirectory(getScreenshotErrorDirectory());
+        Parameters
+                .setScreenshotReferenceDirectory(getScreenshotReferenceDirectory());
+        File ref = new File(getScreenshotReferenceName(getTestName(),
                 getDesiredCapabilities(), identifier));
         try {
             if (!testBench(driver).compareScreen(ref)) {
@@ -55,29 +63,33 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
         }
     }
 
+    private String getScreenshotErrorDirectory() {
+        return getScreenshotDirectory() + "/errors";
+    }
+
     /**
      * @since
      * @param testName
      * @param desiredCapabilities2
      * @return
      */
-    private String getScreenshotFileName(String testName,
+    private String getScreenshotReferenceName(String testName,
             DesiredCapabilities capabilities, String identifier) {
         String browserIdentifier = getBrowserIdentifier(capabilities);
         String platform = getPlatform(capabilities);
         String browserVersion = capabilities.getVersion();
 
         // WindowMaximizeRestoreTest_Windows_InternetExplorer_8_window-1-moved-maximized-restored.png
-        return getReferenceDirectory() + "/" + testName + "_" + platform + "_"
-                + browserIdentifier + "_" + browserVersion + "_" + identifier
-                + ".png";
+        return getScreenshotReferenceDirectory() + "/" + testName + "_"
+                + platform + "_" + browserIdentifier + "_" + browserVersion
+                + "_" + identifier + ".png";
     }
 
     /**
      * @since
      * @return
      */
-    protected String getReferenceDirectory() {
+    protected String getScreenshotReferenceDirectory() {
         return getScreenshotDirectory() + "/reference";
     }
 
@@ -159,4 +171,69 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
 
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.tests.tb3.AbstractTB3Test#onUncaughtException(java.lang.Throwable
+     * )
+     */
+    @Override
+    public void onUncaughtException(Throwable cause) {
+        super.onUncaughtException(cause);
+        try {
+            testBench().disableWaitForVaadin();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+        try {
+            BufferedImage screenshotImage = ImageIO
+                    .read(new ByteArrayInputStream(((TakesScreenshot) driver)
+                            .getScreenshotAs(OutputType.BYTES)));
+            ImageIO.write(screenshotImage, "png", new File(
+                    getScreenshotFailureName()));
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+
+    }
+
+    /**
+     * @since
+     * @return
+     */
+    private String getScreenshotFailureName() {
+        return getScreenshotErrorBaseName() + "-failure.png";
+    }
+
+    private String getScreenshotErrorBaseName() {
+        return getScreenshotReferenceName(getTestName(),
+                getDesiredCapabilities(), "").replace(
+                getScreenshotReferenceDirectory(),
+                getScreenshotErrorDirectory()).replace("_.png", "");
+    }
+
+    @Before
+    public void cleanErrorDirectory() {
+        // Remove any screenshots for this test from the error directory
+        // before running it. Leave unrelated files as-is
+        File errorDirectory = new File(getScreenshotErrorDirectory());
+
+        final String errorBase = getScreenshotErrorBaseName()
+                .replace("\\", "/");
+        File[] files = errorDirectory.listFiles(new FileFilter() {
+
+            @Override
+            public boolean accept(File pathname) {
+                String thisFile = pathname.getAbsolutePath().replace("\\", "/");
+                if (thisFile.startsWith(errorBase)) {
+                    return true;
+                }
+                return false;
+            }
+        });
+        for (File f : files) {
+            f.delete();
+        }
+    }
 }

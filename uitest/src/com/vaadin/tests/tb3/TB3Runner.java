@@ -33,7 +33,6 @@ import org.junit.runners.model.Statement;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-
 /**
  * This runner is loosely based on FactoryTestRunner by Ted Young
  * (http://tedyoung.me/2011/01/23/junit-runtime-tests-custom-runners/). The
@@ -128,7 +127,15 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
             public void evaluate() throws Throwable {
                 ((AbstractTB3Test) target)
                         .setDesiredCapabilities(tb3method.capabilities);
-                realBefores.evaluate();
+                try {
+                    realBefores.evaluate();
+                } catch (Throwable t) {
+                    // Give the test a chance to e.g. produce an error
+                    // screenshot before failing the test by re-throwing the
+                    // exception
+                    ((AbstractTB3Test) target).onUncaughtException(t);
+                    throw t;
+                }
             }
         };
     }
