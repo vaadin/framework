@@ -615,6 +615,11 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         // connector
         if (selected != null) {
             selected.markAsDirtyRecursive();
+
+            Tab tab = getTab(c);
+            if (tab != null && tab.getDefaultFocusComponent() != null) {
+                tab.getDefaultFocusComponent().focus();
+            }
         }
     }
 
@@ -955,6 +960,23 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         public void setClosable(boolean closable);
 
         /**
+         * Set the component that should automatically focused when the tab is
+         * selected.
+         * 
+         * @param component
+         *            the component to focus
+         */
+        public void setDefaultFocusComponent(Focusable component);
+
+        /**
+         * Get the component that should be automatically focused when the tab
+         * is selected.
+         * 
+         * @return the focusable component
+         */
+        public Focusable getDefaultFocusComponent();
+
+        /**
          * Returns the enabled status for the tab. A disabled tab is shown as
          * such in the tab bar and cannot be selected.
          * 
@@ -1136,6 +1158,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         private String styleName;
         private String id;
         private String iconAltText = "";
+        private Focusable defaultFocus;
 
         public TabSheetTabImpl(String caption, Resource icon) {
             if (caption == null) {
@@ -1186,6 +1209,16 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         public void setIconAltText(String iconAltText) {
             this.iconAltText = iconAltText;
             markAsDirty();
+        }
+
+        @Override
+        public void setDefaultFocusComponent(Focusable defaultFocus) {
+            this.defaultFocus = defaultFocus;
+        }
+
+        @Override
+        public Focusable getDefaultFocusComponent() {
+            return defaultFocus;
         }
 
         @Override

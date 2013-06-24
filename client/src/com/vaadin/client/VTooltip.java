@@ -94,6 +94,17 @@ public class VTooltip extends VOverlay {
     }
 
     /**
+     * Show the tooltip with the provided info for assistive devices.
+     * 
+     * @param info
+     *            with the content of the tooltip
+     */
+    public void showAssistive(TooltipInfo info) {
+        updatePosition(null, true);
+        show(info);
+    }
+
+    /**
      * Show a popup containing the information in the "info" tooltip
      * 
      * @param info

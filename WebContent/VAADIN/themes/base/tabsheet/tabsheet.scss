@@ -106,6 +106,12 @@
 .#{$primaryStyleName}-tabitem-selected .v-caption {
 	cursor: default;
 }
+.#{$primaryStyleName}-tabitem-focus .v-captiontext {
+    text-decoration: underline;
+}
+.#{$primaryStyleName}-tabitem-selected.#{$primaryStyleName}-tabitem-focus .v-captiontext {
+    text-decoration: inherit;
+}
 .#{$primaryStyleName}-content {
 	border: 1px solid #aaa;
 	/* Vertical borders are not supported, use v-tabsheet-tabcontainer and v-tabsheet-deco to present these borders */
