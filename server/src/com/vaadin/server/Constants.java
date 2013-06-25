@@ -65,7 +65,7 @@ public interface Constants {
             + " Widgetset version: %s\n"
             + "=================================================================";
 
-    static final String REQUIRED_ATMOSPHERE_VERSION = "1.0.14.vaadin2";
+    static final String REQUIRED_ATMOSPHERE_VERSION = "1.0.14.vaadin3";
 
     static final String INVALID_ATMOSPHERE_VERSION_WARNING = "\n"
             + "=================================================================\n"
