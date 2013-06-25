@@ -29,5 +29,7 @@ public class TabsheetBaseConstants implements Serializable {
     public static final String ATTRIBUTE_TAB_CAPTION = "caption";
     @Deprecated
     public static final String ATTRIBUTE_TAB_ICON = "icon";
+    @Deprecated
+    public static final String ATTRIBUTE_TAB_ICON_ALT = "iconalt";
 
 }

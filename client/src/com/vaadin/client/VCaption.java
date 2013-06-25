@@ -42,6 +42,8 @@ public class VCaption extends HTML {
 
     private Icon icon;
 
+    private String iconAltText = "";
+
     private Element captionText;
 
     private final ApplicationConnection client;
@@ -300,6 +302,14 @@ public class VCaption extends HTML {
     @Deprecated
     public boolean updateCaptionWithoutOwner(String caption, boolean disabled,
             boolean hasDescription, boolean hasError, String iconURL) {
+        return updateCaptionWithoutOwner(caption, disabled, hasDescription,
+                hasError, iconURL, "");
+    }
+
+    @Deprecated
+    public boolean updateCaptionWithoutOwner(String caption, boolean disabled,
+            boolean hasDescription, boolean hasError, String iconURL,
+            String iconAltText) {
         boolean wasPlacedAfterComponent = placedAfterComponent;
 
         // Caption is placed after component unless there is some part which
@@ -332,7 +342,7 @@ public class VCaption extends HTML {
             // Icon forces the caption to be above the component
             placedAfterComponent = false;
 
-            icon.setUri(iconURL);
+            icon.setUri(iconURL, iconAltText);
 
         } else if (icon != null) {
             // Remove existing

@@ -291,7 +291,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                     uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_DISABLED),
                     uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_DESCRIPTION),
                     uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ERROR_MESSAGE),
-                    uidl.getStringAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ICON));
+                    uidl.getStringAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ICON),
+                    uidl.getStringAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ICON_ALT));
 
             setClosable(uidl.hasAttribute("closable"));
 

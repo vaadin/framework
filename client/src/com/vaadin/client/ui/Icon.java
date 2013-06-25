@@ -34,11 +34,19 @@ public class Icon extends UIObject {
     }
 
     public Icon(ApplicationConnection client, String uidlUri) {
+        this(client, uidlUri, "");
+    }
+
+    public Icon(ApplicationConnection client, String uidlUri, String iconAltText) {
         this(client);
-        setUri(uidlUri);
+        setUri(uidlUri, iconAltText);
     }
 
     public void setUri(String uidlUri) {
+        setUri(uidlUri, "");
+    }
+
+    public void setUri(String uidlUri, String uidlAlt) {
         if (!uidlUri.equals(myUri)) {
             /*
              * Start sinking onload events, widgets responsibility to react. We
@@ -51,6 +59,18 @@ public class Icon extends UIObject {
             DOM.setElementProperty(getElement(), "src", uri);
             myUri = uidlUri;
         }
+
+        setAlternateText(uidlAlt);
     }
 
+    /**
+     * Sets the alternate text for the icon.
+     * 
+     * @param uidlAlt
+     *            with the alternate text. Must be non null
+     */
+    public void setAlternateText(String uidlAlt) {
+        assert uidlAlt != null : "Alternate text must be non null";
+        DOM.setElementProperty(getElement(), "alt", uidlAlt);
+    }
 }

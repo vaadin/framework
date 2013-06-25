@@ -26,7 +26,7 @@ public class TabSheetTest<T extends TabSheet> extends
 
         @Override
         public void execute(T c, Integer value, Object data) {
-            c.getTab(value).setIcon((Resource) data);
+            c.getTab(value).setIcon((Resource) data, "tabicon");
 
         }
     };
