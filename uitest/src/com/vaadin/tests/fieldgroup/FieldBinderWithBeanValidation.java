@@ -7,7 +7,6 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
-import com.vaadin.tests.data.bean.Person;
 import com.vaadin.tests.data.bean.PersonWithBeanValidationAnnotations;
 import com.vaadin.tests.data.bean.Sex;
 import com.vaadin.tests.util.Log;
@@ -90,8 +89,10 @@ public class FieldBinderWithBeanValidation extends TestBase {
                         p));
     }
 
-    public static Person getPerson(FieldGroup binder) {
-        return ((BeanItem<Person>) binder.getItemDataSource()).getBean();
+    public static PersonWithBeanValidationAnnotations getPerson(
+            FieldGroup binder) {
+        return ((BeanItem<PersonWithBeanValidationAnnotations>) binder
+                .getItemDataSource()).getBean();
     }
 
     @Override
