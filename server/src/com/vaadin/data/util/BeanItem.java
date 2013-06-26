@@ -141,7 +141,7 @@ public class BeanItem<BT> extends PropertysetItem {
      * @param propertyIds
      *            ids of the properties.
      */
-    public BeanItem(BT bean, String[] propertyIds) {
+    public BeanItem(BT bean, String... propertyIds) {
         this(bean, Arrays.asList(propertyIds));
     }
 

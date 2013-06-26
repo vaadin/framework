@@ -18,7 +18,7 @@ package com.vaadin.data.util.sqlcontainer;
 public class TemporaryRowId extends RowId {
     private static final long serialVersionUID = -641983830469018329L;
 
-    public TemporaryRowId(Object[] id) {
+    public TemporaryRowId(Object... id) {
         super(id);
     }
 

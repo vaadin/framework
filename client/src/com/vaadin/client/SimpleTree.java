@@ -21,6 +21,7 @@ import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -54,9 +55,10 @@ public class SimpleTree extends ComplexPanel implements HasDoubleClickHandlers {
         style.setProperty("whiteSpace", "nowrap");
         style.setPadding(3, Unit.PX);
         style.setPaddingLeft(12, Unit.PX);
-
+        // handle styling
         style = handle.getStyle();
         style.setDisplay(Display.NONE);
+        style.setTextAlign(TextAlign.CENTER);
         style.setWidth(0.5, Unit.EM);
         style.setHeight(0.5, Unit.EM);
         style.setCursor(Cursor.POINTER);
@@ -68,8 +70,9 @@ public class SimpleTree extends ComplexPanel implements HasDoubleClickHandlers {
         handle.setInnerHTML("+");
         getElement().appendChild(handle);
         getElement().appendChild(text);
+        // children styling
         style = children.getStyle();
-        style.setPaddingLeft(9, Unit.PX);
+        style.setPaddingLeft(1.5, Unit.EM);
         style.setDisplay(Display.NONE);
 
         getElement().appendChild(children);

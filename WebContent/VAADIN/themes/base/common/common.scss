@@ -11,7 +11,7 @@
 .v-caption {
 	cursor: default;
 }
-body &.v-app-loading {
+body &.v-app .v-app-loading {
 	/* You can use this to provide indication for the user that the application is loading. */
 	/* It is applied to the same element as .v-app */
 	background-image: url(img/loading-indicator.gif);
