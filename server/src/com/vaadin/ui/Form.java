@@ -1131,7 +1131,7 @@ public class Form extends AbstractField<Object> implements Item.Editor,
      * @param visibleProperties
      *            the visibleProperties to set.
      */
-    public void setVisibleItemProperties(Object[] visibleProperties) {
+    public void setVisibleItemProperties(Object... visibleProperties) {
         LinkedList<Object> v = new LinkedList<Object>();
         for (int i = 0; i < visibleProperties.length; i++) {
             v.add(visibleProperties[i]);

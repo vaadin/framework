@@ -152,19 +152,6 @@ public interface Buffered extends Serializable {
         }
 
         /**
-         * Creates a source exception from a cause exception.
-         * 
-         * @param source
-         *            the source object implementing the Buffered interface.
-         * @param cause
-         *            the original cause for this exception.
-         */
-        public SourceException(Buffered source, Throwable cause) {
-            this.source = source;
-            causes = new Throwable[] { cause };
-        }
-
-        /**
          * Creates a source exception from multiple causes.
          * 
          * @param source
@@ -172,7 +159,7 @@ public interface Buffered extends Serializable {
          * @param causes
          *            the original causes for this exception.
          */
-        public SourceException(Buffered source, Throwable[] causes) {
+        public SourceException(Buffered source, Throwable... causes) {
             this.source = source;
             this.causes = causes;
         }
