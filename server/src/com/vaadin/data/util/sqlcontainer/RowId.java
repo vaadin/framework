@@ -34,7 +34,7 @@ public class RowId implements Serializable {
     protected RowId() {
     }
 
-    public RowId(Object[] id) {
+    public RowId(Object... id) {
         if (id == null) {
             throw new IllegalArgumentException("id parameter must not be null!");
         }
