@@ -1,6 +1,6 @@
-package com.vaadin.tests.tb3;
+package com.vaadin.tests.integration;
 
-public class IntegrationTestWebsocket extends IntegrationTestXHR {
+public class IntegrationTestStreamingTB3 extends IntegrationTestXhrTB3 {
 
     @Override
     protected Class<?> getUIClass() {

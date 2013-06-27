@@ -19,7 +19,7 @@
  */
 package com.vaadin.tests.tb3;
 
-public class PrivateTB3Configuration extends ScreenshotTB3Test {
+public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
 
     @Override
     protected String getScreenshotDirectory() {

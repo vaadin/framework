@@ -17,6 +17,8 @@ import com.vaadin.testbench.TestBenchTestCase;
 import com.vaadin.ui.UI;
 
 public abstract class AbstractTB3Test extends TestBenchTestCase {
+    private String testName = getClass().getSimpleName();
+
     private DesiredCapabilities desiredCapabilities;
     {
         // Default browser to run on unless setDesiredCapabilities is called
@@ -96,6 +98,8 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     protected Class<?> getUIClass() {
         Class<?> enclosingClass = getClass().getEnclosingClass();
         if (enclosingClass != null) {
+            // For compatibility in screenshot naming
+            setTestName(enclosingClass.getSimpleName());
             return enclosingClass;
         }
         return null;
@@ -159,8 +163,12 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         return pre + post;
     }
 
+    protected void setTestName(String testName) {
+        this.testName = testName;
+    }
+
     protected String getTestName() {
-        return getClass().getSimpleName();
+        return testName;
     }
 
     protected void sleep(int timeoutMillis) {
@@ -179,13 +187,15 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
 
     protected static DesiredCapabilities chrome(int version) {
         DesiredCapabilities c = DesiredCapabilities.chrome();
-        // c.setVersion("" + version);
+        c.setVersion("" + version);
+        c.setPlatform(Platform.XP);
         return c;
     }
 
     protected static DesiredCapabilities opera(int version) {
         DesiredCapabilities c = DesiredCapabilities.opera();
         c.setVersion("" + version);
+        c.setPlatform(Platform.XP);
         return c;
     }
 

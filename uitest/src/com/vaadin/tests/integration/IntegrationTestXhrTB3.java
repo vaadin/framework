@@ -1,13 +1,13 @@
-package com.vaadin.tests.tb3;
+package com.vaadin.tests.integration;
 
 import java.io.IOException;
 
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
-import com.vaadin.tests.integration.IntegrationTestUI;
+import com.vaadin.tests.tb3.PrivateTB3Configuration;
 
-public class IntegrationTestXHR extends PrivateTB3Configuration {
+public class IntegrationTestXhrTB3 extends PrivateTB3Configuration {
 
     @Test
     public void runTest() throws IOException, AssertionError {

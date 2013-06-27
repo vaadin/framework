@@ -33,6 +33,8 @@ import org.junit.runners.model.Statement;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.tests.tb3.AllTB3Tests.ParallelScheduler;
+
 /**
  * This runner is loosely based on FactoryTestRunner by Ted Young
  * (http://tedyoung.me/2011/01/23/junit-runtime-tests-custom-runners/). The
@@ -45,6 +47,7 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
 
     public TB3Runner(Class<?> klass) throws InitializationError {
         super(klass);
+        setScheduler(new ParallelScheduler());
     }
 
     @Override
