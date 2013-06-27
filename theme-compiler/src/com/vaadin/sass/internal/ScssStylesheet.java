@@ -62,6 +62,7 @@ public class ScssStylesheet extends Node {
     private String fileName;
 
     private String charset;
+    private static ArrayList<String> importPaths = new ArrayList<String>();
 
     /**
      * Read in a file SCSS and parse it into a ScssStylesheet
@@ -377,5 +378,40 @@ public class ScssStylesheet extends Node {
 
     public void setCharset(String charset) {
         this.charset = charset;
+    }
+
+    public static void setImportPaths(ArrayList<String> paths) {
+        if (paths == null) {
+            importPaths = new ArrayList<String>();
+        }
+        else {
+            importPaths = paths;
+        }
+    } 
+
+    public static ArrayList<String> getImportPaths() {
+        return (ArrayList<String>) importPaths.clone();
+    }
+
+    public static void setImportPath(String path) {
+        if (!importPaths.contains(path)) {
+            if (path != null) {
+                importPaths.add(path);
+            }
+        }
+    }
+
+    public static String getImportPath(int i) {
+        if ((i >= 0 ) && (i < importPaths.size())) {
+            return importPaths.get(i);
+        }
+        return null;
+    }
+
+    public static boolean removeImportPath(String path) {
+        if (importPaths.contains(path)) {
+            return importPaths.remove(path);
+        }
+        return false;
     }
 }
