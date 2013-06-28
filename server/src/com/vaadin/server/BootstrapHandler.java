@@ -363,6 +363,7 @@ public abstract class BootstrapHandler extends SynchronizedRequestHandler {
         Element mainDiv = new Element(Tag.valueOf("div"), "");
         mainDiv.attr("id", context.getAppId());
         mainDiv.addClass("v-app");
+        mainDiv.addClass(context.getThemeName());
         if (style != null && style.length() != 0) {
             mainDiv.attr("style", style);
         }

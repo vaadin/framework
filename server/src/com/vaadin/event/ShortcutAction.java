@@ -70,7 +70,7 @@ public class ShortcutAction extends Action {
      * @param m
      *            optional modifier keys
      */
-    public ShortcutAction(String caption, int kc, int[] m) {
+    public ShortcutAction(String caption, int kc, int... m) {
         super(caption);
         keyCode = kc;
         modifiers = m;
@@ -91,7 +91,7 @@ public class ShortcutAction extends Action {
      * @param m
      *            optional modifier keys
      */
-    public ShortcutAction(String caption, Resource icon, int kc, int[] m) {
+    public ShortcutAction(String caption, Resource icon, int kc, int... m) {
         super(caption, icon);
         keyCode = kc;
         modifiers = m;
@@ -174,7 +174,7 @@ public class ShortcutAction extends Action {
      * @param shorthandCaption
      * @param modifierKeys
      */
-    public ShortcutAction(String shorthandCaption, int[] modifierKeys) {
+    public ShortcutAction(String shorthandCaption, int... modifierKeys) {
         // && -> & etc
         super(SHORTHAND_ESCAPE.matcher(shorthandCaption).replaceAll("$1$2$3"));
         // replace escaped chars with something that won't accidentally match

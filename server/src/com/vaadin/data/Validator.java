@@ -105,7 +105,7 @@ public interface Validator extends Serializable {
          *            this exception.
          */
         public InvalidValueException(String message,
-                InvalidValueException[] causes) {
+                InvalidValueException... causes) {
             super(message);
             if (causes == null) {
                 throw new NullPointerException(

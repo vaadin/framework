@@ -32,10 +32,10 @@ public class CompositeErrorMessage extends AbstractErrorMessage {
      * Constructor for CompositeErrorMessage.
      * 
      * @param errorMessages
-     *            the Array of error messages that are listed togeter. Nulls are
-     *            ignored, but at least one message is required.
+     *            the array of error messages that are listed together. Nulls
+     *            are ignored, but at least one message is required.
      */
-    public CompositeErrorMessage(ErrorMessage[] errorMessages) {
+    public CompositeErrorMessage(ErrorMessage... errorMessages) {
         super(null);
         setErrorLevel(ErrorLevel.INFORMATION);
 

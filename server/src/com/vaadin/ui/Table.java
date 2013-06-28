@@ -623,7 +623,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * @param visibleColumns
      *            the Array of shown property id:s.
      */
-    public void setVisibleColumns(Object[] visibleColumns) {
+    public void setVisibleColumns(Object... visibleColumns) {
 
         // Visible columns must exist
         if (visibleColumns == null) {
@@ -722,7 +722,7 @@ public class Table extends AbstractSelect implements Action.Container,
      *            the Array of column headers that match the
      *            {@link #getVisibleColumns()} method.
      */
-    public void setColumnHeaders(String[] columnHeaders) {
+    public void setColumnHeaders(String... columnHeaders) {
 
         if (columnHeaders.length != visibleColumns.size()) {
             throw new IllegalArgumentException(
@@ -781,7 +781,7 @@ public class Table extends AbstractSelect implements Action.Container,
      *            the Array of icons that match the {@link #getVisibleColumns()}
      *            .
      */
-    public void setColumnIcons(Resource[] columnIcons) {
+    public void setColumnIcons(Resource... columnIcons) {
 
         if (columnIcons.length != visibleColumns.size()) {
             throw new IllegalArgumentException(
