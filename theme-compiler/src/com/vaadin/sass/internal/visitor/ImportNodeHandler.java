@@ -59,10 +59,32 @@ public class ImportNodeHandler {
                     try {
                         StringBuilder filePathBuilder = new StringBuilder(
                                 styleSheet.getFileName());
+                        StringBuilder filePathBuilder2 = new StringBuilder(
+                                styleSheet.getFileName());
                         filePathBuilder.append(File.separatorChar).append(
                                 importNode.getUri());
                         if (!filePathBuilder.toString().endsWith(".scss")) {
                             filePathBuilder.append(".scss");
+                        }
+
+                        if (importNode.getUri().contains(
+                                String.valueOf(File.separatorChar))) {
+                            filePathBuilder2.append(File.separatorChar);
+                            int index = importNode.getUri().lastIndexOf(
+                                    File.separatorChar);
+                            filePathBuilder2.append(importNode.getUri()
+                                    .substring(0, index + 1));
+                            filePathBuilder2.append(new String("_"));
+                            filePathBuilder2.append(importNode.getUri()
+                                    .substring((index + 1),
+                                            importNode.getUri().length()));
+                        } else {
+                            filePathBuilder2.append(File.separatorChar);
+                            filePathBuilder2.append(new String("_"));
+                            filePathBuilder2.append(importNode.getUri());
+                        }
+                        if (!filePathBuilder2.toString().endsWith(".scss")) {
+                            filePathBuilder2.append(".scss");
                         }
 
                         // set parent's charset to imported node.
@@ -70,7 +92,66 @@ public class ImportNodeHandler {
                                 filePathBuilder.toString(),
                                 styleSheet.getCharset());
                         if (imported == null) {
+                            imported = ScssStylesheet.get(
+                                    filePathBuilder2.toString(),
+                                    styleSheet.getCharset());
+                        }
+                        if (imported == null) {
                             imported = ScssStylesheet.get(importNode.getUri());
+                        }
+                        if (imported == null) {
+                            ArrayList<String> importPaths = styleSheet
+                                    .getImportPaths();
+                            int i = 0;
+                            while (i < importPaths.size() && (imported == null)) {
+                                String item = importPaths.get(i).concat(
+                                        String.valueOf((File.separatorChar))
+                                                .concat(importNode.getUri()));
+                                String item2 = null;
+                                if (importNode.getUri().contains(
+                                        String.valueOf(File.separatorChar))) {
+                                    StringBuilder filePath = new StringBuilder();
+                                    filePath.append(importPaths.get(i));
+                                    filePath.append(File.separatorChar);
+                                    int index = importNode.getUri()
+                                            .lastIndexOf(File.separatorChar);
+                                    filePath.append(importNode.getUri()
+                                            .substring(0, index + 1));
+                                    filePath.append(new String("_"));
+                                    filePath.append(importNode.getUri()
+                                            .substring(
+                                                    (index + 1),
+                                                    importNode.getUri()
+                                                            .length()));
+                                    item2 = filePath.toString();
+                                } else {
+                                    item2 = importPaths
+                                            .get(i)
+                                            .concat(String.valueOf(
+                                                    File.separatorChar).concat(
+                                                    (new String("_"))
+                                                            .concat(importNode
+                                                                    .getUri())));
+                                }
+
+                                imported = ScssStylesheet.get(item,
+                                        styleSheet.getCharset());
+                                if (imported == null) {
+                                    imported = ScssStylesheet.get(
+                                            item.concat(".scss"),
+                                            styleSheet.getCharset());
+                                }
+                                if (imported == null) {
+                                    imported = ScssStylesheet.get(item2,
+                                            styleSheet.getCharset());
+                                }
+                                if (imported == null) {
+                                    imported = ScssStylesheet.get(
+                                            item2.concat(".scss"),
+                                            styleSheet.getCharset());
+                                }
+                                i++;
+                            }
                         }
                         if (imported == null) {
                             throw new FileNotFoundException(importNode.getUri()
