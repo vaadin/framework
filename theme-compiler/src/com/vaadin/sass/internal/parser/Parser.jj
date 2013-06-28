@@ -467,24 +467,15 @@ TOKEN :
     < S : ( [ " ", "\t" , "\n" , "\r", "\f" ] )+ > 
 	{ image = Parser.SPACE; }
 }
-   
+
+/*
+ * for fixing #11638: Ending an imported SCSS file with a comment causes an error in the Sass.
+ * now the single line comment is parsed as special token, before, they were simply skipped.
+ * solution got from http://www.engr.mun.ca/~theo/JavaCC-FAQ/javacc-faq-moz.htm#tth_sEc3.15
+ */
 <DEFAULT>
-MORE :
-{
-  "//" : IN_SINGLE_LINE_COMMENT
-}
-
-<IN_SINGLE_LINE_COMMENT>
-MORE :
-{
-    < ~["\n","\r"] > : IN_SINGLE_LINE_COMMENT
-}
-
-<IN_SINGLE_LINE_COMMENT>
-SKIP :
-{
-    < "\n"|"\r"|"\r\n" > : DEFAULT
-}
+SPECIAL_TOKEN : {
+< SINGLE_LINE_COMMENT: "//"(~["\n","\r"])* ("\n"|"\r"|"\r\n")? > }
 
 <DEFAULT>
 MORE :
@@ -2111,7 +2102,8 @@ void declarationOrNestedProperties() :
                  skipStatement();
                  next = getToken(1);
              }
-             if(token.specialToken!=null){
+             //only add special token kept for sprites '/**'
+             if(token.specialToken!=null && token.specialToken!=null && token.specialToken.image.startsWith("/**")){
                  documentHandler.property(name, exp, important, token.specialToken.image);
              }else{
                  documentHandler.property(name, exp, important, null);
@@ -2904,7 +2896,8 @@ String convertString(String s) {
 
 JAVACODE
 void comments(){
-    if (token.specialToken != null){
+	/*keeps only the multiple line comments, single line comments are skipped*/
+    if (token.specialToken != null && token.specialToken.image!=null && token.specialToken.image.startsWith("/*")){
         Token tmp_t = token.specialToken;
         while (tmp_t.specialToken != null) tmp_t = tmp_t.specialToken;
         while (tmp_t != null) {
