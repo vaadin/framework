@@ -1079,7 +1079,7 @@ public class Page implements Serializable {
      *            the new page title to set
      */
     public void setTitle(String title) {
-        uI.getRpcProxy(PageClientRpc.class).setTitle(title);
+        getState(true).title = title;
     }
 
     /**

@@ -30,4 +30,9 @@ public class PageState implements Serializable {
      * True if the page has browser window resize listeners.
      */
     public boolean hasResizeListeners = false;
+
+    /**
+     * Non-null if the title is set.
+     */
+    public String title = null;
 }
