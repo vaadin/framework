@@ -276,11 +276,9 @@ public class ColorPickerPopup extends Window implements ClickListener,
         sliders.setStyleName("rgb-sliders");
 
         redSlider = createRGBSlider("Red", "red");
-
-        try {
-            redSlider.setValue(((Integer) color.getRed()).doubleValue());
-        } catch (ValueOutOfBoundsException e) {
-        }
+        greenSlider = createRGBSlider("Green", "green");
+        blueSlider = createRGBSlider("Blue", "blue");
+        setRgbSliderValues(color);
 
         redSlider.addValueChangeListener(new ValueChangeListener() {
             @Override
@@ -296,13 +294,6 @@ public class ColorPickerPopup extends Window implements ClickListener,
 
         sliders.addComponent(redSlider);
 
-        greenSlider = createRGBSlider("Green", "green");
-
-        try {
-            greenSlider.setValue(((Integer) color.getGreen()).doubleValue());
-        } catch (ValueOutOfBoundsException e) {
-        }
-
         greenSlider.addValueChangeListener(new ValueChangeListener() {
             @Override
             public void valueChange(ValueChangeEvent event) {
@@ -315,13 +306,6 @@ public class ColorPickerPopup extends Window implements ClickListener,
             }
         });
         sliders.addComponent(greenSlider);
-
-        blueSlider = createRGBSlider("Blue", "blue");
-
-        try {
-            blueSlider.setValue(((Integer) color.getBlue()).doubleValue());
-        } catch (ValueOutOfBoundsException e) {
-        }
 
         blueSlider.addValueChangeListener(new ValueChangeListener() {
             @Override
@@ -368,15 +352,15 @@ public class ColorPickerPopup extends Window implements ClickListener,
         hsvLayout.addComponent(hsvGradient);
         selectors.add(hsvGradient);
 
-        float[] hsv = color.getHSV();
         VerticalLayout sliders = new VerticalLayout();
         sliders.setStyleName("hsv-sliders");
 
         hueSlider = new Slider("Hue", 0, 360);
-        try {
-            hueSlider.setValue(((Float) hsv[0]).doubleValue());
-        } catch (ValueOutOfBoundsException e1) {
-        }
+        saturationSlider = new Slider("Saturation", 0, 100);
+        valueSlider = new Slider("Value", 0, 100);
+
+        float[] hsv = color.getHSV();
+        setHsvSliderValues(hsv);
 
         hueSlider.setStyleName("hsv-slider");
         hueSlider.addStyleName("hue-slider");
@@ -410,13 +394,6 @@ public class ColorPickerPopup extends Window implements ClickListener,
         });
         sliders.addComponent(hueSlider);
 
-        saturationSlider = new Slider("Saturation", 0, 100);
-
-        try {
-            saturationSlider.setValue(((Float) hsv[1]).doubleValue());
-        } catch (ValueOutOfBoundsException e1) {
-        }
-
         saturationSlider.setStyleName("hsv-slider");
         saturationSlider.setWidth("220px");
         saturationSlider.setImmediate(true);
@@ -437,13 +414,6 @@ public class ColorPickerPopup extends Window implements ClickListener,
             }
         });
         sliders.addComponent(saturationSlider);
-
-        valueSlider = new Slider("Value", 0, 100);
-
-        try {
-            valueSlider.setValue(((Float) hsv[2]).doubleValue());
-        } catch (ValueOutOfBoundsException e1) {
-        }
 
         valueSlider.setStyleName("hsv-slider");
         valueSlider.setWidth("220px");
@@ -576,23 +546,11 @@ public class ColorPickerPopup extends Window implements ClickListener,
         setColor(event.getColor());
 
         updatingColors = true;
-        try {
-            redSlider
-                    .setValue(((Integer) selectedColor.getRed()).doubleValue());
-            blueSlider.setValue(((Integer) selectedColor.getBlue())
-                    .doubleValue());
-            greenSlider.setValue(((Integer) selectedColor.getGreen())
-                    .doubleValue());
 
-            float[] hsv = selectedColor.getHSV();
+        setRgbSliderValues(selectedColor);
+        float[] hsv = selectedColor.getHSV();
+        setHsvSliderValues(hsv);
 
-            hueSlider.setValue(((Float) (hsv[0] * 360f)).doubleValue());
-            saturationSlider.setValue(((Float) (hsv[1] * 100f)).doubleValue());
-            valueSlider.setValue(((Float) (hsv[2] * 100f)).doubleValue());
-
-        } catch (ValueOutOfBoundsException e) {
-            e.printStackTrace();
-        }
         updatingColors = false;
 
         for (ColorSelector s : selectors) {
@@ -600,6 +558,26 @@ public class ColorPickerPopup extends Window implements ClickListener,
                     && s.getColor() != selectedColor) {
                 s.setColor(selectedColor);
             }
+        }
+    }
+
+    private void setRgbSliderValues(Color color) {
+        try {
+            redSlider.setValue(((Integer) color.getRed()).doubleValue());
+            blueSlider.setValue(((Integer) color.getBlue()).doubleValue());
+            greenSlider.setValue(((Integer) color.getGreen()).doubleValue());
+        } catch (ValueOutOfBoundsException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setHsvSliderValues(float[] hsv) {
+        try {
+            hueSlider.setValue(((Float) (hsv[0] * 360f)).doubleValue());
+            saturationSlider.setValue(((Float) (hsv[1] * 100f)).doubleValue());
+            valueSlider.setValue(((Float) (hsv[2] * 100f)).doubleValue());
+        } catch (ValueOutOfBoundsException e) {
+            e.printStackTrace();
         }
     }
 
