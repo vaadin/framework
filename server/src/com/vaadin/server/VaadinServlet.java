@@ -814,7 +814,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                         new Object[] { realFilename, filename });
                 scss.compile();
             } catch (Exception e) {
-                e.printStackTrace();
+                getLogger().log(Level.WARNING, "Scss compilation failed", e);
                 return false;
             }
 

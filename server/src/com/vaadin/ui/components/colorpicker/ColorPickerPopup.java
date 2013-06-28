@@ -22,6 +22,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -567,7 +569,10 @@ public class ColorPickerPopup extends Window implements ClickListener,
             blueSlider.setValue(((Integer) color.getBlue()).doubleValue());
             greenSlider.setValue(((Integer) color.getGreen()).doubleValue());
         } catch (ValueOutOfBoundsException e) {
-            e.printStackTrace();
+            getLogger().log(
+                    Level.WARNING,
+                    "Unable to set RGB color value to " + color.getRed() + ","
+                            + color.getGreen() + "," + color.getBlue(), e);
         }
     }
 
@@ -577,7 +582,10 @@ public class ColorPickerPopup extends Window implements ClickListener,
             saturationSlider.setValue(((Float) (hsv[1] * 100f)).doubleValue());
             valueSlider.setValue(((Float) (hsv[2] * 100f)).doubleValue());
         } catch (ValueOutOfBoundsException e) {
-            e.printStackTrace();
+            getLogger().log(
+                    Level.WARNING,
+                    "Unable to set HSV color value to " + hsv[0] + "," + hsv[1]
+                            + "," + hsv[2], e);
         }
     }
 
@@ -764,4 +772,8 @@ public class ColorPickerPopup extends Window implements ClickListener,
             return color;
         }
     };
+
+    public static Logger getLogger() {
+        return Logger.getLogger(ColorPickerPopup.class.getName());
+    }
 }
