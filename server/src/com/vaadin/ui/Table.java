@@ -1615,7 +1615,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * guaranteed to be recreated.
      */
     protected void refreshRenderedCells() {
-        if (getParent() == null) {
+        if (!isAttached()) {
             return;
         }
 
