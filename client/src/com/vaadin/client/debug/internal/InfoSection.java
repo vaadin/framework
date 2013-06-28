@@ -165,10 +165,12 @@ public class InfoSection implements Section {
         addRow("Widget set", GWT.getModuleName());
         addRow("Theme", connection.getConfiguration().getThemeName());
 
-        String communicationMethodInfo = connection.getCommunicationMethodName();
+        String communicationMethodInfo = connection
+                .getCommunicationMethodName();
         int pollInterval = connection.getUIConnector().getState().pollInterval;
         if (pollInterval > 0) {
-            communicationMethodInfo += " (poll interval " + pollInterval + "s)";
+            communicationMethodInfo += " (poll interval " + pollInterval
+                    + "ms)";
         }
         addRow("Communication method", communicationMethodInfo);
 
