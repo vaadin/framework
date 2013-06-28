@@ -16,6 +16,8 @@
 
 package com.vaadin.ui;
 
+import org.json.JSONException;
+
 import com.vaadin.shared.ui.slider.SliderOrientation;
 import com.vaadin.shared.ui.slider.SliderServerRpc;
 import com.vaadin.shared.ui.slider.SliderState;
@@ -31,6 +33,21 @@ public class Slider extends AbstractField<Double> {
 
         @Override
         public void valueChanged(double value) {
+
+            /*
+             * Client side updates the state before sending the event so we need
+             * to make sure the cached state is updated to match the client. If
+             * we do not do this, a reverting setValue() call in a listener will
+             * not cause the new state to be sent to the client.
+             * 
+             * See #12133.
+             */
+            try {
+                getUI().getConnectorTracker().getDiffState(Slider.this)
+                        .put("value", value);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
 
             try {
                 setValue(value, true);
