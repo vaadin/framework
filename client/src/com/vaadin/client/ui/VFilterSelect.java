@@ -1537,6 +1537,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
             break;
         case KeyCodes.KEY_ESCAPE:
             reset();
+            DOM.eventPreventDefault(DOM.eventGetCurrentEvent());
             event.stopPropagation();
             break;
         case KeyCodes.KEY_ENTER:
