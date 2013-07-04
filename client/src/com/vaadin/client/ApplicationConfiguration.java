@@ -559,8 +559,7 @@ public class ApplicationConfiguration implements EntryPoint {
         BrowserInfo browserInfo = BrowserInfo.get();
 
         // Enable iOS6 cast fix (see #10460)
-        if (browserInfo.isIOS() && browserInfo.isWebkit()
-                && browserInfo.getBrowserMajorVersion() == 6) {
+        if (browserInfo.isIOS6() && browserInfo.isWebkit()) {
             enableIOS6castFix();
         }
 
