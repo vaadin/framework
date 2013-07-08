@@ -23,12 +23,17 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
+import com.vaadin.server.VaadinSession;
+import com.vaadin.shared.communication.PushMode;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
 public class UiAccess extends AbstractTestUIWithLog {
+
+    private volatile boolean checkCurrentInstancesBeforeResponse = false;
 
     private Future<Void> checkFromBeforeClientResponse;
 
@@ -283,6 +288,46 @@ public class UiAccess extends AbstractTestUIWithLog {
                                         .get(CurrentInstanceTestType.class));
                     }
                 }));
+
+        addComponent(new Button("CurrentInstance when pushing",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        log.clear();
+                        if (getPushConfiguration().getPushMode() != PushMode.AUTOMATIC) {
+                            log("Can only test with automatic push enabled");
+                            return;
+                        }
+
+                        final VaadinSession session = getSession();
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                // Pretend this isn't a Vaadin thread
+                                CurrentInstance.clearAll();
+
+                                /*
+                                 * Get explicit lock to ensure the (implicit)
+                                 * push does not happen during normal request
+                                 * handling.
+                                 */
+                                session.lock();
+                                try {
+                                    access(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            checkCurrentInstancesBeforeResponse = true;
+                                            // Trigger beforeClientResponse
+                                            markAsDirty();
+                                        }
+                                    });
+                                } finally {
+                                    session.unlock();
+                                }
+                            }
+                        }.start();
+                    }
+                }));
     }
 
     @Override
@@ -291,6 +336,15 @@ public class UiAccess extends AbstractTestUIWithLog {
             log("beforeClientResponse future is done? "
                     + checkFromBeforeClientResponse.isDone());
             checkFromBeforeClientResponse = null;
+        }
+        if (checkCurrentInstancesBeforeResponse) {
+            UI currentUI = UI.getCurrent();
+            VaadinSession currentSession = VaadinSession.getCurrent();
+
+            log("Current UI matches in beforeResponse? " + (currentUI == this));
+            log("Current session matches in beforeResponse? "
+                    + (currentSession == getSession()));
+            checkCurrentInstancesBeforeResponse = false;
         }
     }
 

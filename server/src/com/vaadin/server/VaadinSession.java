@@ -885,9 +885,9 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * Unlocks this session. This method should always be used in a finally
      * block after {@link #lock()} to ensure that the lock is always released.
      * <p>
-     * If {@link #getPushMode() the push mode} is {@link PushMode#AUTOMATIC
-     * automatic}, pushes the changes in all UIs in this session to their
-     * respective clients.
+     * For UIs in this session that have its push mode set to
+     * {@link PushMode#AUTOMATIC automatic}, pending changes will be pushed to
+     * their respective clients.
      * 
      * @see #lock()
      * @see UI#push()
@@ -904,7 +904,13 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
                 for (UI ui : getUIs()) {
                     if (ui.getPushConfiguration().getPushMode() == PushMode.AUTOMATIC) {
-                        ui.push();
+                        Map<Class<?>, CurrentInstance> oldCurrent = CurrentInstance
+                                .setCurrent(ui);
+                        try {
+                            ui.push();
+                        } finally {
+                            CurrentInstance.restoreInstances(oldCurrent);
+                        }
                     }
                 }
             }
