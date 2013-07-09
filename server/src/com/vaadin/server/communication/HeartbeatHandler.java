@@ -63,6 +63,9 @@ public class HeartbeatHandler extends SynchronizedRequestHandler implements
             // Ensure that the browser does not cache heartbeat responses.
             // iOS 6 Safari requires this (#10370)
             response.setHeader("Cache-Control", "no-cache");
+            // If Content-Type is not set, browsers assume text/html and may
+            // complain about the empty response body (#12182)
+            response.setHeader("Content-Type", "text/plain");
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "UI not found");
         }
