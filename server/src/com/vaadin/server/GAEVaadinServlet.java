@@ -401,7 +401,18 @@ public class GAEVaadinServlet extends VaadinServlet {
         if (serviceSession == null) {
             return;
         }
+
+        /*
+         * Inform VaadinSession.valueUnbound that it should not kill the session
+         * even though it gets unbound.
+         */
+        serviceSession.setAttribute(
+                VaadinService.PRESERVE_UNBOUND_SESSION_ATTRIBUTE, Boolean.TRUE);
         serviceSession.removeFromSession(getService());
+
+        // Remove preservation marker
+        serviceSession.setAttribute(
+                VaadinService.PRESERVE_UNBOUND_SESSION_ATTRIBUTE, null);
     }
 
     /**

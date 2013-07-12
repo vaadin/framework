@@ -71,8 +71,24 @@ import com.vaadin.util.ReflectTools;
  * @since 7.0
  */
 public abstract class VaadinService implements Serializable {
-    static final String REINITIALIZING_SESSION_MARKER = VaadinService.class
+    /**
+     * Attribute name for telling
+     * {@link VaadinSession#valueUnbound(javax.servlet.http.HttpSessionBindingEvent)}
+     * that it should not close a {@link VaadinSession} even though it gets
+     * unbound. If a {@code VaadinSession} has an attribute with this name and
+     * the attribute value is {@link Boolean#TRUE}, that session will not be
+     * closed when it is unbound from the underlying session.
+     */
+    // Use the old name.reinitializing value for backwards compatibility
+    static final String PRESERVE_UNBOUND_SESSION_ATTRIBUTE = VaadinService.class
             .getName() + ".reinitializing";
+
+    /**
+     * @deprecated As of 7.1.1, use {@link #PRESERVE_UNBOUND_SESSION_ATTRIBUTE}
+     *             instead
+     */
+    @Deprecated
+    static final String REINITIALIZING_SESSION_MARKER = PRESERVE_UNBOUND_SESSION_ATTRIBUTE;
 
     private static final Method SESSION_INIT_METHOD = ReflectTools.findMethod(
             SessionInitListener.class, "sessionInit", SessionInitEvent.class);
@@ -970,7 +986,7 @@ public abstract class VaadinService implements Serializable {
             if (value instanceof VaadinSession) {
                 // set flag to avoid cleanup
                 VaadinSession serviceSession = (VaadinSession) value;
-                serviceSession.setAttribute(REINITIALIZING_SESSION_MARKER,
+                serviceSession.setAttribute(PRESERVE_UNBOUND_SESSION_ATTRIBUTE,
                         Boolean.TRUE);
             }
             attrs.put(name, value);
@@ -997,8 +1013,8 @@ public abstract class VaadinService implements Serializable {
                         serviceSession.getLockInstance());
 
                 serviceSession.storeInSession(service, newSession);
-                serviceSession
-                        .setAttribute(REINITIALIZING_SESSION_MARKER, null);
+                serviceSession.setAttribute(PRESERVE_UNBOUND_SESSION_ATTRIBUTE,
+                        null);
             }
         }
 
