@@ -426,6 +426,13 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     public void storeInSession(VaadinService service, WrappedSession session) {
         assert hasLock(service, session);
         session.setAttribute(getSessionAttributeName(service), this);
+
+        /*
+         * GAEVaadinServlet passes newly deserialized sessions here, which means
+         * that these transient fields need to be populated to avoid NPE from
+         * refreshLock().
+         */
+        this.service = service;
         this.session = session;
         refreshLock();
     }
