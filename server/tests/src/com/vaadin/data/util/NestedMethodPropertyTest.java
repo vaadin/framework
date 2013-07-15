@@ -273,6 +273,23 @@ public class NestedMethodPropertyTest extends TestCase {
         Assert.assertEquals("Joonas", managerNameProperty.getValue());
     }
 
+    public void testNullNestedPropertyWithAllowNullBeans() {
+        NestedMethodProperty<String> managerNameProperty = new NestedMethodProperty<String>(
+                vaadin, "manager.name", true);
+        NestedMethodProperty<String> streetProperty = new NestedMethodProperty<String>(
+                vaadin, "manager.address.street", true);
+
+        joonas.setAddress(null);
+        // should return null
+        Assert.assertNull(streetProperty.getValue());
+
+        vaadin.setManager(null);
+        Assert.assertNull(managerNameProperty.getValue());
+        vaadin.setManager(joonas);
+        Assert.assertEquals("Joonas", managerNameProperty.getValue());
+        Assert.assertNull(streetProperty.getValue());
+    }
+
     public void testMultiLevelNestedPropertySetValue() {
         NestedMethodProperty<String> managerNameProperty = new NestedMethodProperty<String>(
                 vaadin, "manager.name");
@@ -312,6 +329,20 @@ public class NestedMethodPropertyTest extends TestCase {
                 new ByteArrayInputStream(baos.toByteArray())).readObject();
 
         Assert.assertEquals("Ruukinkatu 2-4", property2.getValue());
+    }
+
+    public void testSerializationWithNullBeansAllowed() throws IOException,
+            ClassNotFoundException {
+        vaadin.setManager(null);
+        NestedMethodProperty<String> streetProperty = new NestedMethodProperty<String>(
+                vaadin, "manager.address.street", true);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        new ObjectOutputStream(baos).writeObject(streetProperty);
+        @SuppressWarnings("unchecked")
+        NestedMethodProperty<String> property2 = (NestedMethodProperty<String>) new ObjectInputStream(
+                new ByteArrayInputStream(baos.toByteArray())).readObject();
+
+        Assert.assertNull(property2.getValue());
     }
 
     public void testIsReadOnly() {

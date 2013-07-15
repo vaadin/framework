@@ -714,4 +714,27 @@ public class BeanItemContainerTest extends AbstractBeanContainerTest {
                         .getValue());
     }
 
+    public void testNestedContainerPropertyWithNullBean() {
+        BeanItemContainer<NestedMethodPropertyTest.Person> container = new BeanItemContainer<NestedMethodPropertyTest.Person>(
+                NestedMethodPropertyTest.Person.class);
+        NestedMethodPropertyTest.Person john = new NestedMethodPropertyTest.Person(
+                "John", null);
+        assertNotNull(container.addBean(john));
+        assertTrue(container
+                .addNestedContainerProperty("address.postalCodeObject"));
+        assertTrue(container.addNestedContainerProperty("address.street", true));
+        // the nested properties added with allowNullBean setting should return
+        // null
+        assertNull(container.getContainerProperty(john, "address.street")
+                .getValue());
+        // nested properties added without allowNullBean setting should throw
+        // exception
+        try {
+            container.getContainerProperty(john, "address.postalCodeObject")
+                    .getValue();
+            fail();
+        } catch (Exception e) {
+            // should throw exception
+        }
+    }
 }

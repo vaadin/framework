@@ -32,7 +32,7 @@ import com.vaadin.data.util.MethodProperty.MethodException;
  * can contain multiple levels of nesting.
  * 
  * When accessing the property value, all intermediate getters must return
- * non-null values.
+ * non-null values or the <code>nullBeansAllowed</code> must be set to true.
  * 
  * @see MethodProperty
  * 
@@ -54,6 +54,15 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
      * Bean instance used as a starting point for accessing the property value.
      */
     private Object instance;
+
+    /**
+     * a boolean flag indicating whether intermediate getters may return null
+     * values. If the flag is set to true, calling getValue will return null if
+     * the property or any of its intermediate getters returns null. If set to
+     * false, intermediate getters returning null value will throw Exception.
+     * The default value is false to ensure backwards compatibility.
+     */
+    private boolean nullBeansAllowed = false;
 
     private Class<? extends T> type;
 
@@ -85,7 +94,33 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
      *             if the property name is invalid
      */
     public NestedMethodProperty(Object instance, String propertyName) {
+        this(instance, propertyName, false);
+    }
+
+    /**
+     * Constructs a nested method property for a given object instance. The
+     * property name is a dot separated string pointing to a nested property,
+     * e.g. "manager.address.street". The <code>nullBeansAllowed</code> controls
+     * the behavior in cases where the intermediate getters may return null
+     * values. If the flag is set to true, calling getValue will return null if
+     * the property or any of its intermediate getters returns null. If set to
+     * false, null values returned by intermediate getters will cause
+     * NullPointerException. The default value is false to ensure backwards
+     * compatibility.
+     * 
+     * @param instance
+     *            top-level bean to which the property applies
+     * @param propertyName
+     *            dot separated nested property name
+     * @param nullBeansAllowed
+     *            set true to allow null values from intermediate getters
+     * @throws IllegalArgumentException
+     *             if the property name is invalid
+     */
+    public NestedMethodProperty(Object instance, String propertyName,
+            boolean nullBeansAllowed) {
         this.instance = instance;
+        this.nullBeansAllowed = nullBeansAllowed;
         initialize(instance.getClass(), propertyName);
     }
 
@@ -100,6 +135,25 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
      */
     NestedMethodProperty(Class<?> instanceClass, String propertyName) {
         instance = null;
+        initialize(instanceClass, propertyName);
+    }
+
+    /**
+     * For internal use to deduce property type etc. without a bean instance.
+     * Calling {@link #setValue(Object)} or {@link #getValue()} on properties
+     * constructed this way is not supported.
+     * 
+     * @param instanceClass
+     *            class of the top-level bean
+     * @param propertyName
+     *            dot separated nested property name
+     * @param nullBeansAllowed
+     *            set true to allow null values from intermediate getters
+     */
+    NestedMethodProperty(Class<?> instanceClass, String propertyName,
+            boolean nullBeansAllowed) {
+        instance = null;
+        this.nullBeansAllowed = nullBeansAllowed;
         initialize(instanceClass, propertyName);
     }
 
@@ -199,6 +253,9 @@ public class NestedMethodProperty<T> extends AbstractProperty<T> {
             Object object = instance;
             for (Method m : getMethods) {
                 object = m.invoke(object);
+                if (object == null && nullBeansAllowed) {
+                    return null;
+                }
             }
             return (T) object;
         } catch (final Throwable e) {

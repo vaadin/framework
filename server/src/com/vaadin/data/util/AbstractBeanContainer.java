@@ -845,8 +845,32 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      * @return true if the property was added
      */
     public boolean addNestedContainerProperty(String propertyId) {
+        return addNestedContainerProperty(propertyId, false);
+    }
+
+    /**
+     * Adds a nested container property for the container, e.g.
+     * "manager.address.street".
+     * 
+     * All intermediate getters must exist and must return non-null values when
+     * the property value is accessed or the <code>nullBeansAllowed</code> must
+     * be set to true. If the <code>nullBeansAllowed</code> flag is set to true,
+     * calling getValue of the added property will return null if the property
+     * or any of its intermediate getters returns null. If set to false, null
+     * values returned by intermediate getters will cause NullPointerException.
+     * The default value is false to ensure backwards compatibility.
+     * 
+     * @see NestedMethodProperty
+     * 
+     * @param propertyId
+     * @param nullBeansAllowed
+     *            set true to allow null values from intermediate getters
+     * @return true if the property was added
+     */
+    public boolean addNestedContainerProperty(String propertyId,
+            boolean nullBeansAllowed) {
         return addContainerProperty(propertyId, new NestedPropertyDescriptor(
-                propertyId, type));
+                propertyId, type, nullBeansAllowed));
     }
 
     /**
@@ -864,13 +888,42 @@ public abstract class AbstractBeanContainer<IDTYPE, BEANTYPE> extends
      */
     @SuppressWarnings("unchecked")
     public void addNestedContainerBean(String propertyId) {
+        addNestedContainerBean(propertyId, false);
+    }
+
+    /**
+     * Adds a nested container properties for all sub-properties of a named
+     * property to the container. The named property itself is removed from the
+     * model as its subproperties are added.
+     * 
+     * Unless
+     * <code>nullBeansAllowed<code>  is set to true, all intermediate getters must
+     * exist and must return non-null values when the property values are
+     * accessed. If the <code>nullBeansAllowed</code> flag is set to true,
+     * calling getValue of the added subproperties will return null if the
+     * property or any of their intermediate getters returns null. If set to
+     * false, null values returned by intermediate getters will cause
+     * NullPointerException. The default value is false to ensure backwards
+     * compatibility.
+     * 
+     * @see NestedMethodProperty
+     * @see #addNestedContainerProperty(String)
+     * 
+     * @param propertyId
+     * @param nullBeansAllowed
+     *            set true to allow null values from intermediate getters
+     */
+    @SuppressWarnings("unchecked")
+    public void addNestedContainerBean(String propertyId,
+            boolean nullBeansAllowed) {
         Class<?> propertyType = getType(propertyId);
         LinkedHashMap<String, VaadinPropertyDescriptor<Object>> pds = BeanItem
                 .getPropertyDescriptors((Class<Object>) propertyType);
         for (String subPropertyId : pds.keySet()) {
             String qualifiedPropertyId = propertyId + "." + subPropertyId;
             NestedPropertyDescriptor<BEANTYPE> pd = new NestedPropertyDescriptor<BEANTYPE>(
-                    qualifiedPropertyId, (Class<BEANTYPE>) type);
+                    qualifiedPropertyId, (Class<BEANTYPE>) type,
+                    nullBeansAllowed);
             model.put(qualifiedPropertyId, pd);
             model.remove(propertyId);
             for (BeanItem<BEANTYPE> item : itemIdToItem.values()) {

@@ -52,4 +52,20 @@ public class PropertyDescriptorTest extends TestCase {
         Property<?> property = pd2.createProperty(new Person("John", null));
         Assert.assertEquals("John", property.getValue());
     }
+
+    public void testNestedPropertyDescriptorWithNullBeansAllowedSerialization()
+            throws Exception {
+        NestedPropertyDescriptor<Person> pd = new NestedPropertyDescriptor<Person>(
+                "address.street", Person.class, true);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        new ObjectOutputStream(baos).writeObject(pd);
+        @SuppressWarnings("unchecked")
+        VaadinPropertyDescriptor<Person> pd2 = (VaadinPropertyDescriptor<Person>) new ObjectInputStream(
+                new ByteArrayInputStream(baos.toByteArray())).readObject();
+
+        Property<?> property = pd2.createProperty(new Person("John", null));
+        Assert.assertNull(property.getValue());
+    }
+
 }

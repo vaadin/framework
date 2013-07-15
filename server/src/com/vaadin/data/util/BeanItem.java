@@ -268,6 +268,27 @@ public class BeanItem<BT> extends PropertysetItem {
     }
 
     /**
+     * Adds a nested property to the item. If the <code>nullBeansAllowed</code>
+     * flag is set to true, calling getValue of the added property will return
+     * null if the property or any of its intermediate getters returns null. If
+     * set to false, null values returned by intermediate getters will cause
+     * NullPointerException. The default value is false to ensure backwards
+     * compatibility.
+     * 
+     * @param nestedPropertyId
+     *            property id to add. This property must not exist in the item
+     *            already and must of of form "field1.field2" where field2 is a
+     *            field in the object referenced to by field1
+     * @param nullBeansAllowed
+     *            set true to allow null values from intermediate getters
+     */
+    public void addNestedProperty(String nestedPropertyId,
+            boolean nullBeansAllowed) {
+        addItemProperty(nestedPropertyId, new NestedMethodProperty<Object>(
+                getBean(), nestedPropertyId, nullBeansAllowed));
+    }
+
+    /**
      * Gets the underlying JavaBean object.
      * 
      * @return the bean object.
