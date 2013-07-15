@@ -1306,15 +1306,18 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * Pushes the pending changes and client RPC invocations of this UI to the
      * client-side.
      * <p>
-     * As with all UI methods, it is not safe to call push() without holding the
-     * {@link VaadinSession#lock() session lock}.
+     * As with all UI methods, the session must be locked when calling this
+     * method. It is also recommended that {@link UI#getCurrent()} is set up to
+     * return this UI since writing the response may invoke logic in any
+     * attached component or extension. The recommended way of fulfilling these
+     * conditions is to use {@link #access(Runnable)}.
      * 
      * @throws IllegalStateException
      *             if push is disabled.
      * @throws UIDetachedException
      *             if this UI is not attached to a session.
      * 
-     * @see #getPushMode()
+     * @see #getPushConfiguration()
      * 
      * @since 7.1
      */

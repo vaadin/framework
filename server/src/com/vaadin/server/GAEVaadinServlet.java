@@ -218,23 +218,24 @@ public class GAEVaadinServlet extends VaadinServlet {
         memcache = MemcacheServiceFactory.getMemcacheService();
         try {
             // try to get lock
-            long started = new Date().getTime();
-            // non-UIDL requests will try indefinitely
-            if (!ServletPortletHelper.isUIDLRequest(request)) {
-                while (new Date().getTime() - started < MAX_UIDL_WAIT_MILLISECONDS) {
-                    locked = memcache.put(mutex, 1,
-                            Expiration.byDeltaSeconds(40),
-                            MemcacheService.SetPolicy.ADD_ONLY_IF_NOT_PRESENT);
-                    if (locked) {
-                        break;
-                    }
-                    try {
-                        Thread.sleep(RETRY_AFTER_MILLISECONDS);
-                    } catch (InterruptedException e) {
-                        getLogger().finer(
-                                "Thread.sleep() interrupted while waiting for lock. Trying again. "
-                                        + e);
-                    }
+            long started = System.currentTimeMillis();
+            while (System.currentTimeMillis() - started < MAX_UIDL_WAIT_MILLISECONDS) {
+                locked = memcache.put(mutex, 1, Expiration.byDeltaSeconds(40),
+                        MemcacheService.SetPolicy.ADD_ONLY_IF_NOT_PRESENT);
+                if (locked || ServletPortletHelper.isUIDLRequest(request)) {
+                    /*
+                     * Done if we got a lock. Will also avoid retrying if
+                     * there's a UIDL request because those are retried from the
+                     * client without keeping the server thread stalled.
+                     */
+                    break;
+                }
+                try {
+                    Thread.sleep(RETRY_AFTER_MILLISECONDS);
+                } catch (InterruptedException e) {
+                    getLogger().finer(
+                            "Thread.sleep() interrupted while waiting for lock. Trying again. "
+                                    + e);
                 }
             }
 

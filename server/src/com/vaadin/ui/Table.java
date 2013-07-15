@@ -1251,7 +1251,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @param propertyId
      *            the propertyID identifying the column.
-     * @return the specified column's alignment if it as one; null otherwise.
+     * @return the specified column's alignment if it as one; {@link Align#LEFT}
+     *         otherwise.
      */
     public Align getColumnAlignment(Object propertyId) {
         final Align a = columnAlignments.get(propertyId);
@@ -1614,7 +1615,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * guaranteed to be recreated.
      */
     protected void refreshRenderedCells() {
-        if (getParent() == null) {
+        if (!isAttached()) {
             return;
         }
 

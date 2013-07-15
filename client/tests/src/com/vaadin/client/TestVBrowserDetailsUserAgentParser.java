@@ -43,6 +43,9 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
     private static final String IPHONE_IOS_4_0 = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_0 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8A293 Safari/6531.22.7";
     private static final String IPAD_IOS_4_3_1 = "Mozilla/5.0 (iPad; U; CPU OS 4_3_1 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8G4 Safari/6533.18.5";
 
+    // application on the home screen, without Safari in user agent
+    private static final String IPHONE_IOS_6_1_HOMESCREEN_SIMULATOR = "Mozilla/5.0 (iPhone; CPU iPhone OS 6_1 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Mobile/10B141";
+
     private static final String ANDROID_HTC_2_1 = "Mozilla/5.0 (Linux; U; Android 2.1-update1; en-us; ADR6300 Build/ERE27) AppleWebKit/530.17 (KHTML, like Gecko) Version/4.0 Mobile Safari/530.17";
     private static final String ANDROID_GOOGLE_NEXUS_2_2 = "Mozilla/5.0 (Linux; U; Android 2.2; en-us; Nexus One Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
     private static final String ANDROID_MOTOROLA_3_0 = "Mozilla/5.0 (Linux; U; Android 3.0; en-us; Xoom Build/HRI39) AppleWebKit/534.13 (KHTML, like Gecko) Version/4.0 Safari/534.13";
@@ -66,6 +69,18 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
         assertBrowserMinorVersion(bd, 0);
         assertEngineVersion(bd, 531f);
         assertMacOSX(bd);
+    }
+
+    public void testIPhoneIOS6Homescreen() {
+        VBrowserDetails bd = new VBrowserDetails(
+                IPHONE_IOS_6_1_HOMESCREEN_SIMULATOR);
+        assertWebKit(bd);
+        // not identified as Safari, no browser version available
+        // assertSafari(bd);
+        // assertBrowserMajorVersion(bd, 6);
+        // assertBrowserMinorVersion(bd, 1);
+        assertEngineVersion(bd, 536f);
+        assertIOS(bd, 6, 1);
     }
 
     public void testIPhoneIOS5() {

@@ -353,6 +353,16 @@ public class BrowserInfo {
     }
 
     /**
+     * Checks if the browser is run on iOS 6.
+     * 
+     * @since 7.1.1
+     * @return true if the browser is run on iOS 6, false otherwise
+     */
+    public boolean isIOS6() {
+        return isIOS() && getOperatingSystemMajorVersion() == 6;
+    }
+
+    /**
      * Checks if the browser is run on Android
      * 
      * @return true if the browser is run on Android, false otherwise
@@ -378,7 +388,7 @@ public class BrowserInfo {
         }
         // iOS 6 Safari supports native scrolling; iOS 5 suffers from #8792
         // TODO Should test other iOS browsers
-        if (isIOS() && isSafari() && getBrowserMajorVersion() >= 6) {
+        if (isIOS6() && isWebkit()) {
             return false;
         }
         return true;

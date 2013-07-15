@@ -20,12 +20,33 @@ import java.util.Collections;
 import java.util.Iterator;
 
 /**
- * Custom component provides simple implementation of Component interface for
- * creation of new UI components by composition of existing components.
+ * Custom component provides a simple implementation of the {@link Component}
+ * interface to allow creating new UI components by composition of existing
+ * server-side components.
+ * 
  * <p>
- * The component is used by inheriting the CustomComponent class and setting
- * composite root inside the Custom component. The composite root itself can
- * contain more components, but their interfaces are hidden from the users.
+ * The component is used by inheriting the CustomComponent class and setting the
+ * composition root component. The composition root must be set with
+ * {@link #setCompositionRoot(Component)} before the CustomComponent is used,
+ * such as by adding it to a layout, so it is preferable to set it in the
+ * constructor.
+ * </p>
+ * 
+ * <p>
+ * The composition root itself can contain more components. The advantage of
+ * wrapping it in a CustomComponent is that its details, such as interfaces, are
+ * hidden from the users of the component, thereby contributing to information
+ * hiding.
+ * </p>
+ * 
+ * <p>
+ * The CustomComponent does not display the caption of the composition root, so
+ * if you want to have it shown in the layout where the custom component is
+ * contained, you need to set it as caption of the CustomComponent.
+ * </p>
+ * 
+ * <p>
+ * The component expands horizontally and has undefined height by default.
  * </p>
  * 
  * @author Vaadin Ltd.
@@ -43,27 +64,21 @@ public class CustomComponent extends AbstractComponent implements HasComponents 
      * Constructs a new custom component.
      * 
      * <p>
-     * The component is implemented by wrapping the methods of the composition
-     * root component given as parameter. The composition root must be set
-     * before the component can be used.
+     * Note that you must set the composition root before the component can be
+     * used, preferably in the constructor.
      * </p>
      */
     public CustomComponent() {
-        // expand horizontally by default
-        setWidth(100, UNITS_PERCENTAGE);
+        // Expand horizontally by default
+        setWidth(100, Unit.PERCENTAGE);
     }
 
     /**
      * Constructs a new custom component.
      * 
-     * <p>
-     * The component is implemented by wrapping the methods of the composition
-     * root component given as parameter. The composition root must not be null
-     * and can not be changed after the composition.
-     * </p>
-     * 
      * @param compositionRoot
-     *            the root of the composition component tree.
+     *            the root of the composition component tree. It must not be
+     *            null.
      */
     public CustomComponent(Component compositionRoot) {
         this();
@@ -80,10 +95,11 @@ public class CustomComponent extends AbstractComponent implements HasComponents 
     }
 
     /**
-     * Sets the compositions root.
+     * Sets the composition root for the component.
+     * 
      * <p>
-     * The composition root must be set to non-null value before the component
-     * can be used. The composition root can only be set once.
+     * You must set the composition root must to a non-null value before the
+     * component can be used. You can change it later.
      * </p>
      * 
      * @param compositionRoot

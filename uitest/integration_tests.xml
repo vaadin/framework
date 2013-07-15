@@ -153,6 +153,13 @@
         </antcall>
     </target>
 
+    <target name="integration-test-jetty9">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="300" />
+            <param name="target-server" value="jetty9" />
+        </antcall>
+    </target>
+
     <target name="integration-test-jboss4">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
@@ -375,6 +382,7 @@
             <antcall target="integration-test-jetty6" />
             <antcall target="integration-test-jetty7" />
             <antcall target="integration-test-jetty8" />
+            <antcall target="integration-test-jetty9" />
             <antcall target="integration-test-tomcat5" />
             <antcall target="integration-test-tomcat6" />
             <antcall target="integration-test-tomcat7" />

@@ -905,7 +905,7 @@ public abstract class VaadinService implements Serializable {
      * 
      * @param request
      *            the request for which a UI is desired
-     * @return the UI belonging to the request
+     * @return the UI belonging to the request or null if no UI is found
      * 
      */
     public UI findUI(VaadinRequest request) {
@@ -915,9 +915,11 @@ public abstract class VaadinService implements Serializable {
 
         // Get UI id from the request
         String uiIdString = request.getParameter(UIConstants.UI_ID_PARAMETER);
-        int uiId = Integer.parseInt(uiIdString);
-
-        UI ui = session.getUIById(uiId);
+        UI ui = null;
+        if (uiIdString != null) {
+            int uiId = Integer.parseInt(uiIdString);
+            ui = session.getUIById(uiId);
+        }
 
         UI.setCurrent(ui);
         return ui;

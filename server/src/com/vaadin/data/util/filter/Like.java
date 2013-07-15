@@ -60,6 +60,11 @@ public class Like implements Filter {
         String colValue = (String) item.getItemProperty(getPropertyId())
                 .getValue();
 
+        // Fix issue #10167 - avoid NPE and drop null property values
+        if (colValue == null) {
+            return false;
+        }
+
         String pattern = getValue().replace("%", ".*");
         if (isCaseSensitive()) {
             return colValue.matches(pattern);

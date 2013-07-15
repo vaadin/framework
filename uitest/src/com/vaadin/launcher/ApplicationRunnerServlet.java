@@ -18,6 +18,8 @@ package com.vaadin.launcher;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -64,7 +66,13 @@ public class ApplicationRunnerServlet extends LegacyVaadinServlet {
         String str = TestBase.class.getName().replace('.', '/') + ".class";
         URL url = getService().getClassLoader().getResource(str);
         if ("file".equals(url.getProtocol())) {
-            File comVaadinTests = new File(url.getPath()).getParentFile()
+            String path = url.getPath();
+            try {
+                path = new URI(path).getPath();
+            } catch (URISyntaxException e) {
+                getLogger().log(Level.FINE, "Failed to decode url", e);
+            }
+            File comVaadinTests = new File(path).getParentFile()
                     .getParentFile();
             addDirectories(comVaadinTests, defaultPackages, "com.vaadin.tests");
 
