@@ -37,7 +37,7 @@ import com.vaadin.ui.themes.BaseTheme;
 @SuppressWarnings("serial")
 @ClientWidget(value = VButton.class, loadStyle = LoadStyle.EAGER)
 public class Button extends AbstractField implements FieldEvents.BlurNotifier,
-FieldEvents.FocusNotifier {
+        FieldEvents.FocusNotifier {
 
     /* Private members */
 
