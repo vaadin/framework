@@ -438,8 +438,12 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * the server that originates from this UI.
      * {@link VaadinService#findUI(VaadinRequest)} uses this id to find the
      * route to which the request belongs.
+     * <p>
+     * This method is not intended to be overridden. If it is overridden, care
+     * should be taken since this method might be called in situations where
+     * {@link UI#getCurrent()} does not return this UI.
      * 
-     * @return
+     * @return the id of this UI
      */
     public int getUIId() {
         return uiId;
@@ -1014,9 +1018,12 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
     /**
      * Returns the timestamp of the last received heartbeat for this UI.
+     * <p>
+     * This method is not intended to be overridden. If it is overridden, care
+     * should be taken since this method might be called in situations where
+     * {@link UI#getCurrent()} does not return this UI.
      * 
-     * @see #heartbeat()
-     * @see VaadinSession#cleanupInactiveUIs()
+     * @see VaadinService#closeInactiveUIs(VaadinSession)
      * 
      * @return The time the last heartbeat request occurred, in milliseconds
      *         since the epoch.
@@ -1029,6 +1036,10 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * Sets the last heartbeat request timestamp for this UI. Called by the
      * framework whenever the application receives a valid heartbeat request for
      * this UI.
+     * <p>
+     * This method is not intended to be overridden. If it is overridden, care
+     * should be taken since this method might be called in situations where
+     * {@link UI#getCurrent()} does not return this UI.
      * 
      * @param lastHeartbeat
      *            The time the last heartbeat request occurred, in milliseconds
@@ -1072,6 +1083,11 @@ public abstract class UI extends AbstractSingleComponentContainer implements
         if (getPushConnection() != null) {
             // Push the Rpc to the client. The connection will be closed when
             // the UI is detached and cleaned up.
+
+            // Can't use UI.push() directly since it checks for a valid session
+            if (session != null) {
+                session.getService().runPendingAccessTasks(session);
+            }
             getPushConnection().push();
         }
 
@@ -1079,6 +1095,10 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
     /**
      * Returns whether this UI is marked as closed and is to be detached.
+     * <p>
+     * This method is not intended to be overridden. If it is overridden, care
+     * should be taken since this method might be called in situations where
+     * {@link UI#getCurrent()} does not return this UI.
      * 
      * @see #close()
      * 
@@ -1344,6 +1364,13 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * Returns the internal push connection object used by this UI. This method
      * should only be called by the framework. If the returned PushConnection is
      * not null, it is guaranteed to have {@code isConnected() == true}.
+     * <p>
+     * This method is not intended to be overridden. If it is overridden, care
+     * should be taken since this method might be called in situations where
+     * {@link UI#getCurrent()} does not return this UI.
+     * 
+     * @return the push connection used by this UI, <code>null</code> if there
+     *         is no active push connection.
      */
     public PushConnection getPushConnection() {
         assert (pushConnection == null || pushConnection.isConnected());
@@ -1354,6 +1381,9 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * Sets the internal push connection object used by this UI. This method
      * should only be called by the framework. If {@pushConnection} is not null,
      * its {@code isConnected()} must be true.
+     * 
+     * @param pushConnection
+     *            the push connection to use for this UI
      */
     public void setPushConnection(PushConnection pushConnection) {
         // If pushMode is disabled then there should never be a pushConnection

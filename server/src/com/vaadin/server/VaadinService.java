@@ -1136,13 +1136,18 @@ public abstract class VaadinService implements Serializable {
      * @since 7.0.0
      */
     private void closeInactiveUIs(VaadinSession session) {
-        String sessionId = session.getSession().getId();
-        for (UI ui : session.getUIs()) {
+        final String sessionId = session.getSession().getId();
+        for (final UI ui : session.getUIs()) {
             if (!isUIActive(ui) && !ui.isClosing()) {
-                getLogger().log(Level.FINE,
-                        "Closing inactive UI #{0} in session {1}",
-                        new Object[] { ui.getUIId(), sessionId });
-                ui.close();
+                ui.accessSynchronously(new Runnable() {
+                    @Override
+                    public void run() {
+                        getLogger().log(Level.FINE,
+                                "Closing inactive UI #{0} in session {1}",
+                                new Object[] { ui.getUIId(), sessionId });
+                        ui.close();
+                    }
+                });
             }
         }
     }
