@@ -49,7 +49,8 @@ jQuery.atmosphere = function() {
     };
 
     return {
-        version : "1.0.13",
+    	// Keep the version number in sync with push/build.xml and other locations listed in that file
+        version : "1.0.14.vaadin4",
         requests : [],
         callbacks : [],
 
