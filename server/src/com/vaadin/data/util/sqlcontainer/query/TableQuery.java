@@ -663,7 +663,8 @@ public class TableQuery extends AbstractTransactionalQuery implements
             } catch (SQLException ignore) {
             } finally {
                 try {
-                    tables.close();
+                    if (tables != null) 
+			tables.close();
                 } catch (SQLException ignore) {
                 }
             }
