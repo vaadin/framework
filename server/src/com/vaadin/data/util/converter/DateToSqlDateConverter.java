@@ -43,7 +43,7 @@ public class DateToSqlDateConverter implements Converter<Date, java.sql.Date> {
                     + getModelType().getName() + " (targetType was "
                     + targetType.getName() + ")");
         }
-
+	if (value == null) return null;
         return new java.sql.Date(value.getTime());
     }
 
