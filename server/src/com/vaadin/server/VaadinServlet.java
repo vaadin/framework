@@ -43,6 +43,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.VaadinServletConfiguration.InitParameterName;
 import com.vaadin.sass.internal.ScssStylesheet;
+import com.vaadin.server.communication.PushRequestHandler;
 import com.vaadin.server.communication.ServletUIInitHandler;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.ui.UI;
@@ -1074,6 +1075,17 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
         URL u = new URL(reqURL, servletPath);
         return u;
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+
+        for (RequestHandler handler : getService().getRequestHandlers()) {
+            if (handler instanceof PushRequestHandler) {
+                ((PushRequestHandler) handler).destroy();
+            }
+        }
     }
 
     /**
