@@ -1091,6 +1091,17 @@ public class VaadinServlet extends HttpServlet implements Constants {
         return u;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.servlet.GenericServlet#destroy()
+     */
+    @Override
+    public void destroy() {
+        super.destroy();
+        getService().destroy();
+    }
+
     /**
      * Escapes characters to html entities. An exception is made for some
      * "safe characters" to keep the text somewhat readable.
