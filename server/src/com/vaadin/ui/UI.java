@@ -547,6 +547,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     private LocaleService localeService = new LocaleService(this,
             getState(false).localeServiceState);
 
+    private String embedId;
+
     /**
      * This method is used by Component.Focusable objects to request focus to
      * themselves. Focus renders must be handled at window level (instead of
@@ -594,12 +596,19 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      *            the initialization request
      * @param uiId
      *            the id of the new ui
+     * @param embedId
+     *            the embed id of this UI, or <code>null</code> if no id is
+     *            known
+     * 
+     * @see #getUIId()
+     * @see #getEmbedId()
      */
-    public void doInit(VaadinRequest request, int uiId) {
+    public void doInit(VaadinRequest request, int uiId, String embedId) {
         if (this.uiId != -1) {
             throw new IllegalStateException("UI id has already been defined");
         }
         this.uiId = uiId;
+        this.embedId = embedId;
 
         // Actual theme - used for finding CustomLayout templates
         theme = request.getParameter("theme");
@@ -1498,4 +1507,18 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     private static Logger getLogger() {
         return Logger.getLogger(UI.class.getName());
     }
+
+    /**
+     * Gets a string the uniquely distinguishes this UI instance based on where
+     * it is embedded. The embed identifier is based on the
+     * <code>window.name</code> DOM attribute of the browser window where the UI
+     * is displayed and the id of the div element where the UI is embedded.
+     * 
+     * @since 7.2
+     * @return the embed id for this UI, or <code>null</code> if no id known
+     */
+    public String getEmbedId() {
+        return embedId;
+    }
+
 }

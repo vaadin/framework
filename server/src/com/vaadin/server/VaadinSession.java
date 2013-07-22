@@ -40,7 +40,6 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 
-import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.data.util.converter.ConverterFactory;
 import com.vaadin.data.util.converter.DefaultConverterFactory;
@@ -170,7 +169,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     private int nextUIId = 0;
     private Map<Integer, UI> uIs = new HashMap<Integer, UI>();
 
-    private final Map<String, Integer> retainOnRefreshUIs = new HashMap<String, Integer>();
+    private final Map<String, Integer> embedIdMap = new HashMap<String, Integer>();
 
     private final EventRouter eventRouter = new EventRouter();
 
@@ -793,10 +792,13 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      */
     public void removeUI(UI ui) {
         assert hasLock();
-        int id = ui.getUIId();
+        Integer id = Integer.valueOf(ui.getUIId());
         ui.setSession(null);
         uIs.remove(id);
-        retainOnRefreshUIs.values().remove(id);
+        String embedId = ui.getEmbedId();
+        if (embedId != null && id.equals(embedIdMap.get(embedId))) {
+            embedIdMap.remove(embedId);
+        }
     }
 
     /**
@@ -1050,20 +1052,6 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     /**
-     * Gets the mapping from <code>window.name</code> to UI id for UIs that are
-     * should be retained on refresh.
-     * 
-     * @see VaadinService#preserveUIOnRefresh(VaadinRequest, UI, UIProvider)
-     * @see PreserveOnRefresh
-     * 
-     * @return the mapping between window names and UI ids for this session.
-     */
-    public Map<String, Integer> getPreserveOnRefreshUIs() {
-        assert hasLock();
-        return retainOnRefreshUIs;
-    }
-
-    /**
      * Adds an initialized UI to this session.
      * 
      * @param ui
@@ -1080,7 +1068,21 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
                     "The UI belongs to a different session");
         }
 
-        uIs.put(Integer.valueOf(ui.getUIId()), ui);
+        Integer uiId = Integer.valueOf(ui.getUIId());
+        uIs.put(uiId, ui);
+
+        String embedId = ui.getEmbedId();
+        if (embedId != null) {
+            Integer previousUiId = embedIdMap.put(embedId, uiId);
+            if (previousUiId != null) {
+                UI previousUi = uIs.get(previousUiId);
+                assert previousUi != null
+                        && embedId.equals(previousUi.getEmbedId()) : "UI id map and embed id map not in sync";
+
+                // Will fire cleanup events at the end of the request handling.
+                previousUi.close();
+            }
+        }
     }
 
     /**
@@ -1283,6 +1285,26 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     public String getCsrfToken() {
         assert hasLock();
         return csrfToken;
+    }
+
+    /**
+     * Finds the UI with the corresponding embed id.
+     * 
+     * @since 7.2
+     * @param embedId
+     *            the embed id
+     * @return the UI with the corresponding embed id, or <code>null</code> if
+     *         no UI is found
+     * 
+     * @see UI#getEmbedId()
+     */
+    public UI getUIByEmbedId(String embedId) {
+        Integer uiId = embedIdMap.get(embedId);
+        if (uiId == null) {
+            return null;
+        } else {
+            return getUIById(uiId.intValue());
+        }
     }
 
 }
