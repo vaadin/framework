@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.aria.client.Id;
+import com.google.gwt.aria.client.LiveValue;
 import com.google.gwt.aria.client.Roles;
 import com.google.gwt.aria.client.SelectedValue;
 import com.google.gwt.core.client.Scheduler;
@@ -763,6 +764,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         tabs = DOM.createDiv();
         DOM.setElementProperty(tabs, "className", TABS_CLASSNAME);
         Roles.getTablistRole().set(tabs);
+        Roles.getTablistRole().setAriaLiveProperty(tabs, LiveValue.OFF);
         scroller = DOM.createDiv();
         Roles.getTablistRole().setAriaHiddenState(scroller, true);
 
