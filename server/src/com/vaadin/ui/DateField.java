@@ -402,13 +402,14 @@ public class DateField extends AbstractField<Date> implements
     private void updateRangeValidator() {
         if (currentRangeValidator != null) {
             removeValidator(currentRangeValidator);
+            currentRangeValidator = null;
         }
-
-        currentRangeValidator = new DateRangeValidator(dateOutOfRangeMessage,
-                getRangeStart(resolution), getRangeEnd(resolution), null);
-
-        addValidator(currentRangeValidator);
-
+        if (getRangeStart() != null || getRangeEnd() != null) {
+            currentRangeValidator = new DateRangeValidator(
+                    dateOutOfRangeMessage, getRangeStart(resolution),
+                    getRangeEnd(resolution), null);
+            addValidator(currentRangeValidator);
+        }
     }
 
     /**
