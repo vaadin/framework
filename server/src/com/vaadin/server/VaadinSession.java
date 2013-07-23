@@ -240,9 +240,11 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         } else if (VaadinService.getCurrentRequest() != null
                 && getCurrent() == this) {
             assert hasLock();
-            // Ignore if the session is being moved to a different backing
-            // session
-            if (getAttribute(VaadinService.REINITIALIZING_SESSION_MARKER) == Boolean.TRUE) {
+            /*
+             * Ignore if the session is being moved to a different backing
+             * session or if GAEVaadinServlet is doing its normal cleanup.
+             */
+            if (getAttribute(VaadinService.PRESERVE_UNBOUND_SESSION_ATTRIBUTE) == Boolean.TRUE) {
                 return;
             }
 
