@@ -43,6 +43,11 @@ import com.vaadin.ui.UI;
 public class HeartbeatHandler extends SynchronizedRequestHandler implements
         SessionExpiredHandler {
 
+    @Override
+    protected boolean canHandleRequest(VaadinRequest request) {
+        return ServletPortletHelper.isHeartbeatRequest(request);
+    }
+
     /**
      * Handles a heartbeat request for the given session. Reads the GET
      * parameter named {@link UIConstants#UI_ID_PARAMETER} to identify the UI.
@@ -53,10 +58,6 @@ public class HeartbeatHandler extends SynchronizedRequestHandler implements
     @Override
     public boolean synchronizedHandleRequest(VaadinSession session,
             VaadinRequest request, VaadinResponse response) throws IOException {
-        if (!ServletPortletHelper.isHeartbeatRequest(request)) {
-            return false;
-        }
-
         UI ui = session.getService().findUI(request);
         if (ui != null) {
             ui.setLastHeartbeatTimestamp(System.currentTimeMillis());

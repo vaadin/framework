@@ -60,11 +60,13 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
     }
 
     @Override
+    protected boolean canHandleRequest(VaadinRequest request) {
+        return ServletPortletHelper.isUIDLRequest(request);
+    }
+
+    @Override
     public boolean synchronizedHandleRequest(VaadinSession session,
             VaadinRequest request, VaadinResponse response) throws IOException {
-        if (!ServletPortletHelper.isUIDLRequest(request)) {
-            return false;
-        }
         UI uI = session.getService().findUI(request);
         if (uI == null) {
             // This should not happen but it will if the UI has been closed. We

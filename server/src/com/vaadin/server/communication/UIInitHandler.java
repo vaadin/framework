@@ -56,12 +56,13 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
     protected abstract boolean isInitRequest(VaadinRequest request);
 
     @Override
+    protected boolean canHandleRequest(VaadinRequest request) {
+        return isInitRequest(request);
+    }
+
+    @Override
     public boolean synchronizedHandleRequest(VaadinSession session,
             VaadinRequest request, VaadinResponse response) throws IOException {
-        if (!isInitRequest(request)) {
-            return false;
-        }
-
         StringWriter stringWriter = new StringWriter();
 
         try {

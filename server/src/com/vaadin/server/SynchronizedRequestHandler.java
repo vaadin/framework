@@ -32,6 +32,10 @@ public abstract class SynchronizedRequestHandler implements RequestHandler {
     @Override
     public boolean handleRequest(VaadinSession session, VaadinRequest request,
             VaadinResponse response) throws IOException {
+        if (!canHandleRequest(request)) {
+            return false;
+        }
+
         session.lock();
         try {
             return synchronizedHandleRequest(session, request, response);
@@ -61,5 +65,26 @@ public abstract class SynchronizedRequestHandler implements RequestHandler {
      */
     public abstract boolean synchronizedHandleRequest(VaadinSession session,
             VaadinRequest request, VaadinResponse response) throws IOException;
+
+    /**
+     * Check whether a request may be handled by this handler. This can be used
+     * as an optimization to avoid locking the session just to investigate some
+     * method property. The default implementation just returns
+     * <code>true</code> which means that all requests will be handled by
+     * calling
+     * {@link #synchronizedHandleRequest(VaadinSession, VaadinRequest, VaadinResponse)}
+     * with the session locked.
+     * 
+     * @since 7.2
+     * @param request
+     *            the request to handle
+     * @return <code>true</code> if the request handling should continue once
+     *         the session has been locked; <code>false</code> if there's no
+     *         need to lock the session since the request would still not be
+     *         handled.
+     */
+    protected boolean canHandleRequest(VaadinRequest request) {
+        return true;
+    }
 
 }
