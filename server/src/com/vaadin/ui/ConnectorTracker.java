@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -271,6 +272,12 @@ public class ConnectorTracker implements Serializable {
         }
         unregisteredConnectors.clear();
 
+        // Do this expensive check only with assertions enabled
+        assert isHierarchyComplete() : "The connector hierarchy is corrupted. "
+                + "Check for missing calls to super.setParent(), super.attach() and super.detach() "
+                + "and that all custom component containers call child.setParent(this) when a child is added and child.setParent(null) when the child is no longer used. "
+                + "See previous log messages for details.";
+
         // remove detached components from paintableIdMap so they
         // can be GC'ed
         Iterator<String> iterator = connectorIdToConnector.keySet().iterator();
@@ -311,6 +318,49 @@ public class ConnectorTracker implements Serializable {
         }
 
         cleanStreamVariables();
+    }
+
+    private boolean isHierarchyComplete() {
+        boolean noErrors = true;
+
+        Set<ClientConnector> danglingConnectors = new HashSet<ClientConnector>(
+                connectorIdToConnector.values());
+
+        LinkedList<ClientConnector> stack = new LinkedList<ClientConnector>();
+        stack.add(uI);
+        while (!stack.isEmpty()) {
+            ClientConnector connector = stack.pop();
+            danglingConnectors.remove(connector);
+
+            Iterable<ClientConnector> children = AbstractClientConnector
+                    .getAllChildrenIterable(connector);
+            for (ClientConnector child : children) {
+                stack.add(child);
+
+                if (child.getParent() != connector) {
+                    noErrors = false;
+                    getLogger()
+                            .log(Level.WARNING,
+                                    "{0} claims that {1} is its child, but the child claims {2} is its parent.",
+                                    new Object[] {
+                                            getConnectorString(connector),
+                                            getConnectorString(child),
+                                            getConnectorString(child
+                                                    .getParent()) });
+                }
+            }
+        }
+
+        for (ClientConnector dangling : danglingConnectors) {
+            noErrors = false;
+            getLogger()
+                    .log(Level.WARNING,
+                            "{0} claims that {1} is its parent, but the parent does not acknowledge the parenthood.",
+                            new Object[] { getConnectorString(dangling),
+                                    getConnectorString(dangling.getParent()) });
+        }
+
+        return noErrors;
     }
 
     /**
