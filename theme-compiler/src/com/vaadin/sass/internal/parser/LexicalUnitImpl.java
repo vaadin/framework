@@ -27,15 +27,19 @@ import java.io.Serializable;
 
 import org.w3c.css.sac.LexicalUnit;
 
+import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.sass.internal.expression.exception.IncompatibleUnitsException;
 import com.vaadin.sass.internal.util.ColorUtil;
 import com.vaadin.sass.internal.util.DeepCopy;
+import com.vaadin.sass.internal.tree.FunctionDefNode;
+import com.vaadin.sass.internal.visitor.FunctionNodeHandler;
 
 /**
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @author Philippe Le Hegaret
  * 
  * @modified Sebastian Nyholm @ Vaadin Ltd
+ * @modified James Lefeu @ Liferay, Inc.
  */
 public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
         Serializable {
@@ -71,6 +75,13 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
         this.i = i;
         f = i;
     }
+
+    LexicalUnitImpl(int line, int column, LexicalUnitImpl previous, float f) {
+        this(SAC_REAL, line, column, previous);
+        this.f = f;
+        this.i = (int) f;
+    }
+
 
     LexicalUnitImpl(int line, int column, LexicalUnitImpl previous,
             short dimension, String sdimension, float f) {
@@ -333,6 +344,12 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
                 text = dark.toString();
             } else if ("lighten".equals(funcName)) {
                 text = ColorUtil.lighten(this).toString();
+            } else if 
+                (ScssStylesheet.getFunctionDefinition(funcName) != null) {
+
+                //evaluate the custom function
+                text = FunctionNodeHandler.evaluateFunction(
+                    funcName, firstParam);
             } else {
                 text = getFunctionName() + "(" + getParameters() + ")";
             }
@@ -373,6 +390,9 @@ public class LexicalUnitImpl implements LexicalUnit, SCSSLexicalUnit,
                 && denominator.getLexicalUnitType() != SAC_REAL
                 && getLexicalUnitType() != denominator.getLexicalUnitType()) {
             throw new IncompatibleUnitsException(toString());
+        }
+        if (denominator.getFloatValue() == 0.0) {
+            throw new ParseException("Divide by zero is not allowed");
         }
         setFloatValue(getFloatValue() / denominator.getFloatValue());
         if (getLexicalUnitType() == denominator.getLexicalUnitType()) {

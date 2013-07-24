@@ -43,7 +43,7 @@ public class IfElseNodeHandler {
                 try {
                     String expression = ((IfElseNode) child).getExpression();
                     // We need to add ' ' for strings in the expression for
-                    // jexl to understand that is should do a string
+                    // jexl to understand that it should do a string
                     // comparison
                     expression = replaceStrings(expression);
                     Expression e = evaluator.createExpression(expression);
@@ -111,7 +111,7 @@ public class IfElseNodeHandler {
     private static void replaceDefNodeWithCorrectChild(IfElseDefNode defNode,
             Node parent, final Node child) {
         for (final Node n : new ArrayList<Node>(child.getChildren())) {
-            parent.appendChild(n, defNode);
+            parent.appendChild(n, defNode);//won't this append the children in reverse order? =defNode, lastChild, 2ndLastChild, ... , 1stChild
         }
     }
 }
