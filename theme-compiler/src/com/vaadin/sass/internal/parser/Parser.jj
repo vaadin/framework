@@ -68,7 +68,8 @@ import com.vaadin.sass.internal.tree.*;
  * A CSS2 parser
  *
  * @author Philippe Le H�garet
- * @version $Revision: 1.15 $
+ * @modified James Lefeu @ Liferay, Inc.
+ * @version $Revision: 1.16 $
  */
 public class Parser implements org.w3c.css.sac.Parser {
 
@@ -583,11 +584,11 @@ TOKEN :
 {
     <TO         : "to">
     |<THROUGH   : "through">
-    |<EACH_IN        : "in">
+    |<EACH_IN   : "in">
     |<FROM      : "from">
 }
 
-/* DERECTIVES */
+/* DIRECTIVES */
 <DEFAULT>
 TOKEN :
 {
@@ -777,8 +778,10 @@ void afterImportDeclaration() :
 }
 {
   ( 
-     ( debuggingDirective() | mixinDirective() | controlDirective() | includeDirective() | styleRule() | media() 
-             | page() | fontFace() | keyframes() | LOOKAHEAD(variable()) variable() | listModifyDirective()
+     ( debuggingDirective() | mixinDirective() | functionDirective()
+         | controlDirective() | includeDirective() | styleRule() | media() 
+             | page() | fontFace() | keyframes() |
+              LOOKAHEAD(variable()) variable() | listModifyDirective()
       | { l = getLocator(); } ret=skipStatement() 
       {
 	  if ((ret == null) || (ret.length() == 0)) {
@@ -1125,7 +1128,6 @@ void microsoftExtension() :
   String name = "";
   String value = "";
 }
-
 {
   // This is not really taking the syntax of filter rules into account
   n = < MICROSOFT_RULE > (< S >)* { name = n.image; }
@@ -1529,7 +1531,7 @@ void variable() :
 void controlDirective() :
 {}
 {
-  ifDirective() | eachDirective()
+  ifDirective() | eachDirective() | forDirective() | whileDirective()
 }
 
 void ifContentStatement() :
@@ -1606,7 +1608,7 @@ String booleanExpressionToken() :
    else{return s;}
  }
 }
-  
+
 void eachDirective() :
 {
   Token var;
@@ -1642,6 +1644,23 @@ ArrayList<String > stringList():
 
 }
 
+void functionDirective() :
+{
+    String name;
+    ArrayList<VariableNode> args = null;
+    String body;
+}
+{
+    <FUNCTION_SYM>
+    (<S>)*
+    (name = functionName() 
+      args = arglist()) <RPARAN> (<S>)* <LBRACE> (<S>)*
+    {documentHandler.startFunctionDirective(name, args);}
+    ( ifContentStatement() | controlDirective() | fontFace() | page() | returnDirective())*
+    <RBRACE>(<S>)*
+    {documentHandler.endFunctionDirective(name, args);}
+}
+
 void mixinDirective() :
 {
     String name;
@@ -1675,13 +1694,20 @@ ArrayList<VariableNode> arglist() :
 }
 
 JAVACODE
-boolean checkMixinForNonOptionalArguments(VariableNode arg, boolean hasNonOptionalArguments){
+boolean checkMixinForNonOptionalArguments(VariableNode arg, boolean hasNonOptionalArguments)
+{
 	boolean currentArgHasArguments = arg.getExpr() != null && arg.getExpr().getLexicalUnitType() == LexicalUnitImpl.SCSS_VARIABLE && arg.getExpr().getNextLexicalUnit() != null;
-  	if(currentArgHasArguments)	{
-		if(hasNonOptionalArguments)		{			throw new ParseException("Sass Error: Required argument $"+ arg.getName() +" must come before any optional arguments.");
+  
+	if(currentArgHasArguments)
+	{
+		if(hasNonOptionalArguments)
+		{
+			throw new ParseException("Sass Error: Required argument $"+ arg.getName() +" must come before any optional arguments.");
 		}
 		return hasNonOptionalArguments;
-	}else	{	return true;
+	}else
+	{
+	return true;
 	}
 }
 
@@ -1696,12 +1722,16 @@ VariableNode mixinArg() :
 {
     name=variableName() (< COLON > (< S >)*
 
-    (      first = nonVariableTerm(null)      {
-        prev = first;      }
-	  (LOOKAHEAD(3)(< COMMA >(< S >)*)? prev = nonVariableTerm(prev))*	)
+    (
+      first = nonVariableTerm(null)
+      {
+        prev = first;
+      }
+	  (LOOKAHEAD(3)(< COMMA >(< S >)*)? prev = nonVariableTerm(prev))*
+	)
 	| (variable = < VARIABLE >{ first = LexicalUnitImpl.createVariable(token.beginLine, token.beginColumn,
                  prev, variable.image);}
-		
+
        )
     )?
     {
@@ -1885,49 +1915,78 @@ String listModifyDirectiveArgs(int nest)
 	{
 	        t = getToken(1);
 		String s = t.image;
-		if(t.kind == VARIABLE||t.kind == IDENT)		{
+		if(t.kind == VARIABLE||t.kind == IDENT)
+		{
 		  list += s;
-		}else if(s.toLowerCase().equals("auto")||s.toLowerCase().equals("space")||s.toLowerCase().equals("comma"))		{
+		}else if(s.toLowerCase().equals("auto")||s.toLowerCase().equals("space")||s.toLowerCase().equals("comma"))
+		{
 			int i = 2;
 			Token temp = getToken(i);
 			boolean isLast = true;
 			while(temp.kind != SEMICOLON)
-			{				if(temp.kind != RPARAN || temp.kind != S)
-				{				  isLast = false;				}
+			{
+				if(temp.kind != RPARAN || temp.kind != S)
+				{
+				  isLast = false;
+				}
 				i++;
 				temp = getToken(i);
 			}
 
-		  	if(isLast)		  	{			return list;
+		  	if(isLast)
+		  	{
+			return list;
 			}
-		}		else if(t.kind == STRING)		{			list += s.substring(1,s.length()).substring(0,s.length()-2);
+		}
+		else if(t.kind == STRING)
+		{
+			list += s.substring(1,s.length()).substring(0,s.length()-2);
 			
-		}else if(t.kind == LPARAN)		{			nesting++;
-			if(nesting > nest+1)			{				throw new CSSParseException("Only one ( ) pair per parameter allowed", getLocator());
+		}else if(t.kind == LPARAN)
+		{
+			nesting++;
+			if(nesting > nest+1)
+			{
+				throw new CSSParseException("Only one ( ) pair per parameter allowed", getLocator());
 			}
-		}else if(t.kind == RPARAN)		{			nesting--;
-			if(nesting == 0)			{
+		}else if(t.kind == RPARAN)
+		{
+			nesting--;
+			if(nesting == 0)
+			{
 				return list;
 			}
-		} else if(t.kind == COMMA)		{
-			if(nesting == nest)			{
-			  return list;			}else			{
-			  list += ",";			}
+		} else if(t.kind == COMMA)
+		{
+			if(nesting == nest)
+			{
+			  return list;
+			}else
+			{
+			  list += ",";
+			}
 			  
-		}else if(t.kind == S)		{
-		  list += " ";		} else if(t.kind == LBRACE)		{
-		  throw new CSSParseException("Invalid token,'{' found", getLocator());		}
-				getNextToken();
+		}else if(t.kind == S)
+		{
+		  list += " ";
+		} else if(t.kind == LBRACE)
+		{
+		  throw new CSSParseException("Invalid token,'{' found", getLocator());
+		}
+		
+		getNextToken();
 	}
 }
 
-Node returnDirective() :
+void returnDirective() :
+{}
 {
-    String raw;
-}
-{
-	raw = skipStatement()
-	{return null;}
+    <RETURN_SYM>
+    (<S>)*
+    {documentHandler.startReturnDirective();}
+    (ifContentStatement() | booleanExpressionToken())*
+    (<S>)*
+    {documentHandler.endReturnDirective();}
 }
 
 void debuggingDirective() :
@@ -1960,38 +2019,43 @@ void warnDirective() :
     (<S>)*
 }
 
-Node forDirective() :
+void forDirective() :
 {
-    String var;
-    String from;
-    String to;
-    boolean exclusive;
-    String body;
-    Token tok;
+  Token var;
+  LexicalUnitImpl first = null;
+  LexicalUnitImpl secondTo = null;
+  LexicalUnitImpl secondThrough = null;
 }
 {
-    var = variableName()
-    {
-        int[] toThrough = {TO, THROUGH};
-        from = skipStatementUntil(toThrough);
-    }
-    (tok = <TO> {exclusive = true;}
-    | tok = <THROUGH> {exclusive = false;})
-    to = skipStatementUntilLeftBrace()
-    (<S>)*
-    body = skipStatement()
-    {return documentHandler.forDirective(var, from, to, exclusive, body);}
+  <FOR_SYM>
+  (< S >)*
+  var = < VARIABLE > (< S >)* <FROM> first = term(null)
+  (<TO> (< S >)* secondTo = term(null)
+  {documentHandler.startForDirective(var.image, first, secondTo, false);}
+  | <THROUGH> (< S >)* secondTo = term(null)
+  {documentHandler.startForDirective(var.image, first, secondThrough, true);}
+  )
+  (< S >)*
+  < LBRACE >(< S >)*
+  ( ifContentStatement() )*
+  < RBRACE >(< S >)*
+  { documentHandler.endForDirective();}
 }
 
-Node whileDirective() :
+void whileDirective() :
 {
-    String condition;
-    String body;
+    String s = null;
+    String evaluator = "";
 }
-{
-    condition = skipStatementUntilLeftBrace()
-    body = skipStatement()
-    {   return documentHandler.whileDirective(condition, body);}
+  <WHILE_SYM>
+  ( s = booleanExpressionToken() { evaluator += s;} )+
+  < LBRACE >(< S >)*
+  { documentHandler.startWhileDirective();
+    documentHandler.whileDirective(evaluator);
+  }
+  ( ifContentStatement() )*
+  < RBRACE >(< S >)*
+  { documentHandler.endWhileDirective(); }
 }
 
 void extendDirective() : 
@@ -2051,6 +2115,7 @@ LexicalUnit exp;}
     }
     (<S>)*
 }
+
 /**
  * @exception ParseException exception during the parse
  */
@@ -2308,14 +2373,20 @@ LexicalUnitImpl term(LexicalUnitImpl prev) :
       }
 }
 
-LexicalUnitImpl variableTerm(LexicalUnitImpl prev) :{
+LexicalUnitImpl variableTerm(LexicalUnitImpl prev) :
+{
   LexicalUnitImpl result = null;
-  String varName = "";}{
+  String varName = "";
+}
+{
   varName = variableName()
          {result = LexicalUnitImpl.createVariable(token.beginLine, token.beginColumn,
-                 prev, varName); return result;}}
+                 prev, varName); return result;}
+}
 
-LexicalUnitImpl nonVariableTerm(LexicalUnitImpl prev) :{LexicalUnitImpl result = null;
+LexicalUnitImpl nonVariableTerm(LexicalUnitImpl prev) :
+{
+LexicalUnitImpl result = null;
   Token n = null;
   char op = ' ';
   String varName;
@@ -2437,7 +2508,9 @@ LexicalUnitImpl nonVariableTerm(LexicalUnitImpl prev) :{LexicalUnitImpl result
 	| result=unicode(prev)
          ) ) ( <S> )*
   {
-    return result;  }}
+    return result;
+  }
+}
 
 /**
  * Handle all CSS2 functions.
