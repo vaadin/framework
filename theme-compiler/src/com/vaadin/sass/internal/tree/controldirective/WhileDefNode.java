@@ -13,28 +13,38 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.vaadin.sass.internal.tree.controldirective;
 
-package com.vaadin.sass.internal.tree;
+import com.vaadin.sass.internal.tree.Node;
+import com.vaadin.sass.internal.visitor.WhileNodeHandler;
 
-public class WhileNode extends Node {
-    private static final long serialVersionUID = 7593896018196027279L;
-
-    private String condition;
-    private String body;
-
-    public WhileNode(String condition, String body) {
-        this.condition = condition;
-        this.body = body;
-    }
+/**
+ * @version $Revision: 1.0 $
+ * @author James Lefeu @ Liferay, Inc.
+ */
+public class WhileDefNode extends Node {
 
     @Override
     public String toString() {
-        return "While Node: { condition: " + condition + ", body:" + body + "}";
+        StringBuilder b = new StringBuilder();
+        for (final Node child : getChildren()) {
+            b.append(child.toString());
+            b.append("\n");
+        }
+        return b.toString();
     }
 
     @Override
     public void traverse() {
+        try {
+            for (final Node child : children) {
+                child.traverse();
+            }
 
+            WhileNodeHandler.traverse(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
