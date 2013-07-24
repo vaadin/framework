@@ -39,6 +39,7 @@ import com.vaadin.sass.internal.resolver.ScssStylesheetResolver;
 import com.vaadin.sass.internal.resolver.VaadinResolver;
 import com.vaadin.sass.internal.tree.BlockNode;
 import com.vaadin.sass.internal.tree.MixinDefNode;
+import com.vaadin.sass.internal.tree.FunctionDefNode;
 import com.vaadin.sass.internal.tree.Node;
 import com.vaadin.sass.internal.tree.VariableNode;
 import com.vaadin.sass.internal.tree.controldirective.IfElseDefNode;
@@ -55,6 +56,8 @@ public class ScssStylesheet extends Node {
 
     private static final Map<String, MixinDefNode> mixinDefs = new HashMap<String, MixinDefNode>();
 
+    private static final Map<String, FunctionDefNode> functionDefs = new HashMap<String, FunctionDefNode>();
+
     private static final HashSet<IfElseDefNode> ifElseDefNodes = new HashSet<IfElseDefNode>();
 
     private static HashMap<Node, Node> lastNodeAdded = new HashMap<Node, Node>();
@@ -62,6 +65,7 @@ public class ScssStylesheet extends Node {
     private String fileName;
 
     private String charset;
+    private static ArrayList<String> importPaths = new ArrayList<String>();
 
     /**
      * Read in a file SCSS and parse it into a ScssStylesheet
@@ -178,6 +182,7 @@ public class ScssStylesheet extends Node {
     public void compile() throws Exception {
         mainStyleSheet = this;
         mixinDefs.clear();
+        functionDefs.clear();
         variables.clear();
         ifElseDefNodes.clear();
         lastNodeAdded.clear();
@@ -193,7 +198,9 @@ public class ScssStylesheet extends Node {
     }
 
     private void populateDefinitions(Node node) {
-        if (node instanceof MixinDefNode) {
+        if (node instanceof FunctionDefNode) {
+            functionDefs.put(((FunctionDefNode) node).getName(), (FunctionDefNode) node);
+        } else if (node instanceof MixinDefNode) {
             mixinDefs.put(((MixinDefNode) node).getName(), (MixinDefNode) node);
             node.getParentNode().removeChild(node);
         } else if (node instanceof IfElseDefNode) {
@@ -355,6 +362,10 @@ public class ScssStylesheet extends Node {
         return mixinDefs.get(name);
     }
 
+    public static FunctionDefNode getFunctionDefinition(String name) {
+        return functionDefs.get(name);
+    }
+
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
@@ -377,5 +388,40 @@ public class ScssStylesheet extends Node {
 
     public void setCharset(String charset) {
         this.charset = charset;
+    }
+
+    public static void setImportPaths(ArrayList<String> paths) {
+        if (paths == null) {
+            importPaths = new ArrayList<String>();
+        }
+        else {
+            importPaths = paths;
+        }
+    } 
+
+    public static ArrayList<String> getImportPaths() {
+        return (ArrayList<String>) importPaths.clone();
+    }
+
+    public static void setImportPath(String path) {
+        if (!importPaths.contains(path)) {
+            if (path != null) {
+                importPaths.add(path);
+            }
+        }
+    }
+
+    public static String getImportPath(int i) {
+        if ((i >= 0 ) && (i < importPaths.size())) {
+            return importPaths.get(i);
+        }
+        return null;
+    }
+
+    public static boolean removeImportPath(String path) {
+        if (importPaths.contains(path)) {
+            return importPaths.remove(path);
+        }
+        return false;
     }
 }

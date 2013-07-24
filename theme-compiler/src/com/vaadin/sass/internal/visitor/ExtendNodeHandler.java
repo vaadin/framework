@@ -71,7 +71,6 @@ public class ExtendNodeHandler {
                 }
             }
         }
-
     }
 
     private static void buildExtendsMap(ExtendNode node) {

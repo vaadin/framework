@@ -25,23 +25,34 @@ import org.apache.commons.jexl2.JexlException;
 import org.w3c.flute.parser.ParseException;
 
 import com.vaadin.sass.internal.tree.Node;
-import com.vaadin.sass.internal.tree.controldirective.ElseNode;
-import com.vaadin.sass.internal.tree.controldirective.IfElseDefNode;
-import com.vaadin.sass.internal.tree.controldirective.IfElseNode;
-import com.vaadin.sass.internal.tree.controldirective.IfNode;
+import com.vaadin.sass.internal.tree.controldirective.WhileNode;
+import com.vaadin.sass.internal.tree.controldirective.WhileDefNode;
 
-public class IfElseNodeHandler {
+/**
+ * @version $Revision: 1.0 $
+ * @author James Lefeu @ Liferay, Inc.
+ */
+public class WhileNodeHandler {
 
     private static final JexlEngine evaluator = new JexlEngine();
     private static final Pattern pattern = Pattern
             .compile("[a-zA-Z0-9]*[a-zA-Z]+[a-zA-Z0-9]*");
 
-    public static void traverse(IfElseDefNode node) throws Exception {
+    public static void traverse(WhileDefNode node) throws Exception {
 
+        Node after = node;
+
+        while (evaluateExpression(node, after) == Boolean.TRUE) {
+        }
+
+        node.getParentNode().removeChild(node);
+    }
+
+    private static Boolean evaluateExpression(WhileDefNode node, Node after) {
         for (final Node child : node.getChildren()) {
-            if (child instanceof IfNode) {
+            if (child instanceof WhileNode) {
                 try {
-                    String expression = ((IfElseNode) child).getExpression();
+                    String expression = ((WhileNode) child).getExpression();
                     // We need to add ' ' for strings in the expression for
                     // jexl to understand that it should do a string
                     // comparison
@@ -58,39 +69,31 @@ public class IfElseNodeHandler {
                         }
 
                         if (result) {
-                            replaceDefNodeWithCorrectChild(node,
+                            replaceDefNodeWithCorrectChild(after,
                                     node.getParentNode(), child);
-                            break;
                         }
+
+                        return result;
+
                     } catch (ClassCastException ex) {
                         throw new ParseException(
-                                "Invalid @if/@else in scss file, not a boolean expression : "
+                                "Invalid @while in scss file, not a boolean expression : "
                                         + child.toString());
                     } catch (NullPointerException ex) {
                         throw new ParseException(
-                                "Invalid @if/@else in scss file, not a boolean expression : "
+                                "Invalid @while in scss file, not a boolean expression : "
                                         + child.toString());
                     }
                 } catch (JexlException e) {
                     throw new ParseException(
-                            "Invalid @if/@else in scss file for "
+                            "Invalid @while in scss file for "
                                     + child.toString());
                 }
             } else {
-                if (!(child instanceof ElseNode)
-                        && node.getChildren().indexOf(child) == node
-                                .getChildren().size() - 1) {
-                    throw new ParseException(
-                            "Invalid @if/@else in scss file for " + node);
-                } else {
-                    replaceDefNodeWithCorrectChild(node, node.getParentNode(),
-                            child);
-                    break;
-                }
+                throw new ParseException(
+                            "Invalid @while in scss file for " + node);
             }
         }
-
-        node.getParentNode().removeChild(node);
     }
 
     private static String replaceStrings(String expression) {
@@ -108,10 +111,15 @@ public class IfElseNodeHandler {
         return expression;
     }
 
-    private static void replaceDefNodeWithCorrectChild(IfElseDefNode defNode,
+    private static void replaceDefNodeWithCorrectChild(Node after,
             Node parent, final Node child) {
+
+        Node next = after;
         for (final Node n : new ArrayList<Node>(child.getChildren())) {
-            parent.appendChild(n, defNode);//won't this append the children in reverse order? =defNode, lastChild, 2ndLastChild, ... , 1stChild
+            parent.appendChild(n, next);
+            next = n; 
         }
+
+        after = next;
     }
 }

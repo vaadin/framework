@@ -16,16 +16,21 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=vaadin&amp;ivyXmlPath=client%2Fivy.xml&amp;confs=ide&amp;ivySettingsPath=%24%7Bworkspace_loc%3Avaadin%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles="/>
-	<classpathentry exported="true" kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=vaadin&amp;ivyXmlPath=server%2Fivy.xml&amp;confs=ide&amp;ivySettingsPath=%24%7Bworkspace_loc%3Avaadin%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles="/>
-	<classpathentry exported="true" kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=vaadin&amp;ivyXmlPath=shared%2Fivy.xml&amp;confs=ide&amp;ivySettingsPath=%24%7Bworkspace_loc%3Avaadin%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles="/>
-	<classpathentry exported="true" kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=vaadin&amp;ivyXmlPath=client-compiler%2Fivy.xml&amp;confs=ide&amp;ivySettingsPath=%24%7Bworkspace_loc%3Avaadin%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles="/>
-	<classpathentry exported="true" kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=vaadin&amp;ivyXmlPath=theme-compiler%2Fivy.xml&amp;confs=ide&amp;ivySettingsPath=%24%7Bworkspace_loc%3Avaadin%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles="/>
-	<classpathentry exported="true" kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=vaadin&amp;ivyXmlPath=uitest%2Fivy.xml&amp;confs=ide&amp;ivySettingsPath=%24%7Bworkspace_loc%3Avaadin%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles="/>
-	<classpathentry exported="true" kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=vaadin&amp;ivyXmlPath=push%2Fivy.xml&amp;confs=ide&amp;ivySettingsPath=%24%7Bworkspace_loc%3Avaadin%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles="/>
+	<classpathentry exported="true" kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=Vaadin+7.1Beta+modified&amp;ivyXmlPath=client%2Fivy.xml&amp;confs=ide&amp;ivySettingsPath=%24%7Bworkspace_loc%3Avaadin%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles="/>
+	<classpathentry exported="true" kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=Vaadin+7.1Beta+modified&amp;ivyXmlPath=server%2Fivy.xml&amp;confs=ide&amp;ivySettingsPath=%24%7Bworkspace_loc%3Avaadin%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles="/>
+	<classpathentry exported="true" kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=Vaadin+7.1Beta+modified&amp;ivyXmlPath=shared%2Fivy.xml&amp;confs=ide&amp;ivySettingsPath=%24%7Bworkspace_loc%3Avaadin%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles="/>
+	<classpathentry exported="true" kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=Vaadin+7.1Beta+modified&amp;ivyXmlPath=client-compiler%2Fivy.xml&amp;confs=ide&amp;ivySettingsPath=%24%7Bworkspace_loc%3Avaadin%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles="/>
+	<classpathentry exported="true" kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=Vaadin+7.1Beta+modified&amp;ivyXmlPath=theme-compiler%2Fivy.xml&amp;confs=ide&amp;ivySettingsPath=%24%7Bworkspace_loc%3Avaadin%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles="/>
+	<classpathentry exported="true" kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=Vaadin+7.1Beta+modified&amp;ivyXmlPath=uitest%2Fivy.xml&amp;confs=ide&amp;ivySettingsPath=%24%7Bworkspace_loc%3Avaadin%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles="/>
+	<classpathentry exported="true" kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=Vaadin+7.1Beta+modified&amp;ivyXmlPath=push%2Fivy.xml&amp;confs=ide&amp;ivySettingsPath=%24%7Bworkspace_loc%3Avaadin%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles="/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/gwt-dev"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/gwt-user"/>
+	<classpathentry kind="lib" path="/home/jameslefeu/Downloads/sac-1.3/sac.jar" sourcepath="/home/jameslefeu/Downloads/sac-1.3/org">
+		<attributes>
+			<attribute name="source_encoding" value="US-ASCII"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

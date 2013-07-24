@@ -17,46 +17,46 @@
 package com.vaadin.sass.internal.tree;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
 
-import com.vaadin.sass.internal.ScssStylesheet;
-import com.vaadin.sass.internal.util.StringUtil;
+import com.vaadin.sass.internal.tree.MixinNode;
+import com.vaadin.sass.internal.visitor.FunctionNodeHandler;
 
-public class FunctionNode extends Node implements IVariableNode {
-    private static final long serialVersionUID = -5383104165955523923L;
 
-    private String name;
-    private String args;
-    private String body;
+/**
+ * @version $Revision: 1.0 $
+ * @author James Lefeu @ Liferay, Inc.
+ */
+public class FunctionNode extends MixinNode implements IVariableNode {
+    private static final long serialVersionUID = 4725008226813110659L;
+    private boolean isFunctionNode;
 
     public FunctionNode(String name) {
         super();
-        this.name = name;
+        isFunctionNode = true;
     }
 
-    public FunctionNode(String name, String args, String body) {
-        this.name = name;
-        this.args = args;
-        this.body = body;
-    }
-
-    @Override
-    public String toString() {
-        return "Function Node: {name: " + name + ", args: " + args + ", body: "
-                + body + "}";
-    }
-
-    @Override
-    public void replaceVariables(ArrayList<VariableNode> variables) {
-        for (final VariableNode node : variables) {
-            if (StringUtil.containsVariable(args, node.getName())) {
-                args = StringUtil.replaceVariable(args, node.getName(), node
-                        .getExpr().toString());
-            }
-        }
+    public FunctionNode(String name, Collection<LexicalUnitImpl> args) {
+        super();
+        isFunctionNode = true;
     }
 
     @Override
     public void traverse() {
-        replaceVariables(ScssStylesheet.getVariables());
+        try {
+            // limit variable scope to the function
+            Map<String, VariableNode> variableScope = ScssStylesheet
+                    .openVariableScope();
+
+            replaceVariables(ScssStylesheet.getVariables());
+            replaceVariablesForChildren();
+            FunctionNodeHandler.traverse(this);
+
+            ScssStylesheet.closeVariableScope(variableScope);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

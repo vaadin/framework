@@ -39,12 +39,15 @@ public interface SCSSDocumentHandler extends DocumentHandler {
 
     void endMixinDirective(String name, Collection<VariableNode> args);
 
+    void startFunctionDirective(String name, Collection<VariableNode> args);
+
+    void endFunctionDirective(String name, Collection<VariableNode> args);
+
     void debugDirective();
 
-    ForNode forDirective(String var, String from, String to, boolean exclusive,
-            String body);
+    void startReturnDirective();
 
-    WhileNode whileDirective(String condition, String body);
+    void endReturnDirective();
 
     void startNestedProperties(String name);
 
@@ -57,9 +60,20 @@ public interface SCSSDocumentHandler extends DocumentHandler {
     void property(String name, LexicalUnitImpl value, boolean important,
             String comment);
 
-    EachDefNode startEachDirective(String variable, ArrayList<String> list);
+    void startForDirective(String var, LexicalUnitImpl from, 
+            LexicalUnitImpl to, boolean inclusive);
+
+    void endForDirective();
+
+    void startEachDirective(String variable, ArrayList<String> list);
 
     void endEachDirective();
+
+    void startWhileDirective();
+
+    void endWhileDirective();
+
+    void whileDirective(String evaluator);
 
     void startIfElseDirective();
 
@@ -77,7 +91,7 @@ public interface SCSSDocumentHandler extends DocumentHandler {
 
     void microsoftDirective(String name, String value);
 
-    EachDefNode startEachDirective(String var, String listVariable);
+    void startEachDirective(String var, String listVariable);
 
     void removeDirective(String variable, String list, String remove,
             String separator);

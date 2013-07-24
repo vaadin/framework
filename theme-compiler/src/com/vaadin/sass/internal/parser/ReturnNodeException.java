@@ -13,28 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package com.vaadin.sass.internal.parser;
 
-package com.vaadin.sass.internal.tree;
+import com.vaadin.sass.internal.parser.LexicalUnitImpl;
+import java.lang.Exception;
 
-public class WhileNode extends Node {
-    private static final long serialVersionUID = 7593896018196027279L;
+/**
+ * @version $Revision: 1.0 $
+ * @author James Lefeu @ Liferay, Inc.
+ */
+public class ReturnNodeException extends Exception{
+    private LexicalUnitImpl returnValue;
 
-    private String condition;
-    private String body;
+    public ReturnNodeException(LexicalUnitImpl returnValue) {
+        this.returnValue = returnValue;
+    }
 
-    public WhileNode(String condition, String body) {
-        this.condition = condition;
-        this.body = body;
+    public LexicalUnitImpl getReturnValue() {
+        return returnValue;
     }
 
     @Override
-    public String toString() {
-        return "While Node: { condition: " + condition + ", body:" + body + "}";
+    public String getMessage() {
+        return "@return statement should only be within an @function";
     }
-
-    @Override
-    public void traverse() {
-
-    }
-
 }
