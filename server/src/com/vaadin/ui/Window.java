@@ -18,6 +18,9 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import com.vaadin.event.FieldEvents.BlurEvent;
@@ -997,27 +1000,32 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     /**
-     * Allows to specify which component contains the description for the
-     * window. Text contained in this component will be read by assistive
-     * devices when it is opened.
-     * 
-     * @param connector
-     *            with the component to use as description
-     */
-    public void setAssistiveDescription(Connector connector) {
-        setAssistiveDescription(new Connector[] { connector });
-    }
-
-    /**
      * Allows to specify which components contain the description for the
-     * window. Text contained in this component will be read by assistive
+     * window. Text contained in these components will be read by assistive
      * devices when it is opened.
      * 
      * @param connectors
      *            with the components to use as description
      */
     public void setAssistiveDescription(Connector... connectors) {
-        getState().contentDescription = connectors;
+        if (connectors == null) {
+            throw new IllegalArgumentException(
+                    "Parameter connectors must be non-null");
+        } else {
+            getState().contentDescription = connectors;
+        }
+    }
+
+    /**
+     * Gets the components that are used as assistive description. Text
+     * contained in these components will be read by assistive devices when the
+     * window is opened.
+     * 
+     * @return list of previously set components
+     */
+    public List<Connector> getAssistiveDescription() {
+        return Collections.unmodifiableList(Arrays
+                .asList(getState().contentDescription));
     }
 
     /**

@@ -18,7 +18,9 @@ package com.vaadin.client.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import com.google.gwt.aria.client.Id;
 import com.google.gwt.aria.client.RelevantValue;
@@ -153,6 +155,7 @@ public class VWindow extends VWindowOverlay implements
 
     private boolean closable = true;
 
+    private Connector[] assistiveConnectors = new Connector[0];
     private String assistivePrefix;
     private String assistivePostfix;
 
@@ -1282,6 +1285,8 @@ public class VWindow extends VWindowOverlay implements
      */
     public void setAssistiveDescription(Connector[] connectors) {
         if (connectors != null) {
+            assistiveConnectors = connectors;
+
             Id[] ids = new Id[connectors.length];
             for (int index = 0; index < connectors.length; index++) {
                 if (connectors[index] == null) {
@@ -1300,6 +1305,17 @@ public class VWindow extends VWindowOverlay implements
             throw new IllegalArgumentException(
                     "Parameter description must be non-null");
         }
+    }
+
+    /**
+     * Gets the connectors that are used as assistive description. Text
+     * contained in these connectors will be read by assistive devices when the
+     * window is opened.
+     * 
+     * @return list of previously set connectors
+     */
+    public List<Connector> getAssistiveDescription() {
+        return Collections.unmodifiableList(Arrays.asList(assistiveConnectors));
     }
 
     /**
