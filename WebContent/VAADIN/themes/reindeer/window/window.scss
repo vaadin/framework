@@ -210,12 +210,12 @@
  	.#{$primaryStyleName}-closebox {
 		top: 8px;
 		
-		background-image: url(img/black/close.png); /** sprite-ref: verticals */
+		background-image: url(img/black/close.png); /** sprite-ref: black-verticals */
 		&:hover {
-			background-image: url(img/black/close-hover.png); /** sprite-ref: verticals */
+			background-image: url(img/black/close-hover.png); /** sprite-ref: black-verticals */
 		}
 		&:active {
-			background-image: url(img/black/close-pressed.png); /** sprite-ref: verticals */
+			background-image: url(img/black/close-pressed.png); /** sprite-ref: black-verticals */
 		}
 	}
 	.#{$primaryStyleName}-footer {
@@ -232,23 +232,23 @@
 	.#{$primaryStyleName}-maximizebox {
 		top: 8px;
 		
-		background-image: url(img/black/maximize.png); /** sprite-ref: verticals */
+		background-image: url(img/black/maximize.png); /** sprite-ref: black-verticals */
 		&:hover {
-			background-image: url(img/black/maximize-hover.png); /** sprite-ref: verticals */
+			background-image: url(img/black/maximize-hover.png); /** sprite-ref: black-verticals */
 		}
 		&:active {
-			background-image: url(img/black/maximize-active.png); /** sprite-ref: verticals */
+			background-image: url(img/black/maximize-active.png); /** sprite-ref: black-verticals */
 		}
 	}
 	.#{$primaryStyleName}-restorebox {
 		top: 8px;
 	
-		background-image: url(img/black/restore.png); /** sprite-ref: verticals */
+		background-image: url(img/black/restore.png); /** sprite-ref: black-verticals */
 		&:hover {
-			background-image: url(img/black/restore-hover.png); /** sprite-ref: verticals */
+			background-image: url(img/black/restore-hover.png); /** sprite-ref: black-verticals */
 		}
 		&:active {
-			background-image: url(img/black/restore-active.png); /** sprite-ref: verticals */
+			background-image: url(img/black/restore-active.png); /** sprite-ref: black-verticals */
 		}
 	}
 	
