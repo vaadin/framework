@@ -215,6 +215,8 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
 
     protected WebBrowser browser = new WebBrowser();
 
+    private DragAndDropService dragAndDropService;
+
     private LegacyCommunicationManager communicationManager;
 
     private long cumulativeRequestDuration = 0;
@@ -393,6 +395,13 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     public LegacyCommunicationManager getCommunicationManager() {
         assert hasLock();
         return communicationManager;
+    }
+
+    public DragAndDropService getDragAndDropService() {
+        if (dragAndDropService == null) {
+            dragAndDropService = new DragAndDropService(this);
+        }
+        return dragAndDropService;
     }
 
     /**

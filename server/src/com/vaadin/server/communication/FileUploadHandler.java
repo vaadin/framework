@@ -271,8 +271,7 @@ public class FileUploadHandler implements RequestHandler {
                 return true;
             }
 
-            source = session.getCommunicationManager().getConnector(uI,
-                    connectorId);
+            source = uI.getConnectorTracker().getConnector(connectorId);
         } finally {
             session.unlock();
         }

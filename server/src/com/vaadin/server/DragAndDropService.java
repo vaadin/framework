@@ -50,14 +50,14 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
 
     private DragAndDropEvent dragEvent;
 
-    private final LegacyCommunicationManager manager;
+    private final VaadinSession session;
 
     private AcceptCriterion acceptCriterion;
 
     private ErrorHandler errorHandler;
 
-    public DragAndDropService(LegacyCommunicationManager manager) {
-        this.manager = manager;
+    public DragAndDropService(VaadinSession session) {
+        this.session = session;
     }
 
     @Override
@@ -233,8 +233,8 @@ public class DragAndDropService implements VariableOwner, ClientConnector {
 
             outWriter.write(", \"dd\":");
 
-            JsonPaintTarget jsonPaintTarget = new JsonPaintTarget(manager,
-                    outWriter, false);
+            JsonPaintTarget jsonPaintTarget = new JsonPaintTarget(
+                    session.getCommunicationManager(), outWriter, false);
             jsonPaintTarget.startTag("dd");
             jsonPaintTarget.addAttribute("visitId", lastVisitId);
             if (acceptCriterion != null) {

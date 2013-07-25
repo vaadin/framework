@@ -62,9 +62,6 @@ public class LegacyCommunicationManager implements Serializable {
      */
     private final VaadinSession session;
 
-    // TODO Move to VaadinSession (#11409)
-    private DragAndDropService dragAndDropService;
-
     // TODO Refactor (#11412)
     private String requestThemeName;
 
@@ -277,28 +274,14 @@ public class LegacyCommunicationManager implements Serializable {
     }
 
     /**
-     * @deprecated As of 7.1. See #11411.
+     * @deprecated As of 7.1. In 7.2 and later, use
+     *             {@link ConnectorTracker#getConnector(String)
+     *             uI.getConnectorTracker().getConnector(connectorId)} instead.
+     *             See ticket #11411.
      */
     @Deprecated
     public ClientConnector getConnector(UI uI, String connectorId) {
-        ClientConnector c = uI.getConnectorTracker().getConnector(connectorId);
-        if (c == null
-                && connectorId.equals(getDragAndDropService().getConnectorId())) {
-            return getDragAndDropService();
-        }
-
-        return c;
-    }
-
-    /**
-     * @deprecated As of 7.1. See #11409.
-     */
-    @Deprecated
-    public DragAndDropService getDragAndDropService() {
-        if (dragAndDropService == null) {
-            dragAndDropService = new DragAndDropService(this);
-        }
-        return dragAndDropService;
+        return uI.getConnectorTracker().getConnector(connectorId);
     }
 
     /**
