@@ -535,6 +535,7 @@ public class Calendar extends AbstractComponent implements
                     // Get day start and end times
                     Date start = cal.getTime();
                     cal.add(java.util.Calendar.DATE, 1);
+                    cal.add(java.util.Calendar.SECOND, -1);
                     Date end = cal.getTime();
 
                     boolean monthView = (durationInDays > 7);
