@@ -926,6 +926,18 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         } finally {
             getLockInstance().unlock();
         }
+
+        /*
+         * If the session is locked when a new access task is added, it is
+         * assumed that the queue will be purged when the lock is released. This
+         * might however not happen if a task is enqueued between the moment
+         * when unlock() purges the queue and the moment when the lock is
+         * actually released. This means that the queue should be purged again
+         * if it is not empty after unlocking.
+         */
+        if (!getPendingAccessQueue().isEmpty()) {
+            getService().ensureAccessQueuePurged(this);
+        }
     }
 
     /**
