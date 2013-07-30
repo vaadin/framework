@@ -244,7 +244,8 @@ public class DateCellDayEvent extends FocusableHTML implements
 
     @Override
     public void onMouseUp(MouseUpEvent event) {
-        if (mouseMoveCanceled) {
+        if (mouseMoveCanceled
+                || event.getNativeButton() != NativeEvent.BUTTON_LEFT) {
             return;
         }
 
