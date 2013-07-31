@@ -1,10 +1,14 @@
 package com.vaadin.tests.server.validation;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 
 import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.validator.BeanValidator;
 import com.vaadin.tests.data.bean.BeanToValidate;
+import com.vaadin.ui.Field;
 
 public class TestBeanValidation {
     @Test(expected = InvalidValueException.class)
@@ -52,6 +56,44 @@ public class TestBeanValidation {
         BeanValidator validator = new BeanValidator(BeanToValidate.class,
                 "decimals");
         validator.validate("123.45");
+    }
+
+    @Test
+    public void testBeanValidationNotAddedTwice() {
+        // See ticket #11045
+        BeanFieldGroup<BeanToValidate> fieldGroup = new BeanFieldGroup<BeanToValidate>(
+                BeanToValidate.class);
+
+        BeanToValidate beanToValidate = new BeanToValidate();
+        beanToValidate.setFirstname("a");
+        fieldGroup.setItemDataSource(beanToValidate);
+
+        Field<?> nameField = fieldGroup.buildAndBind("firstname");
+        Assert.assertEquals(1, nameField.getValidators().size());
+
+        try {
+            nameField.validate();
+        } catch (InvalidValueException e) {
+            // NOTE: causes are empty if only one validation fails
+            Assert.assertEquals(0, e.getCauses().length);
+        }
+
+        // Create new, identical bean to cause duplicate validator unless #11045
+        // is fixed
+        beanToValidate = new BeanToValidate();
+        beanToValidate.setFirstname("a");
+        fieldGroup.setItemDataSource(beanToValidate);
+
+        Assert.assertEquals(1, nameField.getValidators().size());
+
+        try {
+            nameField.validate();
+        } catch (InvalidValueException e) {
+            // NOTE: if more than one validation fails, we get the number of
+            // failed validations
+            Assert.assertEquals(0, e.getCauses().length);
+        }
+
     }
 
 }
