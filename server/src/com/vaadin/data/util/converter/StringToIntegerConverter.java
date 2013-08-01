@@ -62,7 +62,22 @@ public class StringToIntegerConverter extends
             Class<? extends Integer> targetType, Locale locale)
             throws ConversionException {
         Number n = convertToNumber(value, targetType, locale);
-        return n == null ? null : n.intValue();
+
+        if (n == null) {
+            return null;
+        }
+
+        int intValue = n.intValue();
+        if (intValue == n.longValue()) {
+            // If the value of n is outside the range of long, the return value
+            // of longValue() is either Long.MIN_VALUE or Long.MAX_VALUE. The
+            // above comparison promotes int to long and thus does not need to
+            // consider wrap-around.
+            return intValue;
+        }
+
+        throw new ConversionException("Could not convert '" + value + "' to "
+                + Integer.class.getName() + ": value out of range");
 
     }
 
