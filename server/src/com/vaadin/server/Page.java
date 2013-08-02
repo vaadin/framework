@@ -552,10 +552,11 @@ public class Page implements Serializable {
      * The fragment is the optional last component of a URI, prefixed with a
      * hash sign ("#").
      * <p>
-     * Passing <code>null</code> as <code>newFragment</code> clears the fragment
-     * (no "#" in the URI); passing an empty string sets an empty fragment (a
-     * trailing "#" in the URI.) This is consistent with the semantics of
-     * {@link java.net.URI}.
+     * Passing an empty string as <code>newFragment</code> sets an empty
+     * fragment (a trailing "#" in the URI.) Passing <code>null</code> if there
+     * is already a non-null fragment will leave a trailing # in the URI since
+     * removing it would cause the browser to reload the page. This is not fully
+     * consistent with the semantics of {@link java.net.URI}.
      * 
      * @param newUriFragment
      *            The new fragment.
@@ -570,6 +571,11 @@ public class Page implements Serializable {
      */
     public void setUriFragment(String newUriFragment, boolean fireEvents) {
         String oldUriFragment = location.getFragment();
+        if (newUriFragment == null && getUriFragment() != null) {
+            // Can't completely remove the fragment once it has been set, will
+            // instead set it to the empty string
+            newUriFragment = "";
+        }
         if (newUriFragment == oldUriFragment
                 || (newUriFragment != null && newUriFragment
                         .equals(oldUriFragment))) {

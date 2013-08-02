@@ -29,6 +29,21 @@ public class UriFragmentTest extends AbstractTestUI {
                         getPage().setUriFragment("test");
                     }
                 }));
+
+        addComponent(new Button("Navigate to #", new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                getPage().setUriFragment("");
+            }
+        }));
+
+        addComponent(new Button("setUriFragment(null)",
+                new Button.ClickListener() {
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        getPage().setUriFragment(null);
+                    }
+                }));
     }
 
     private void updateLabel() {
