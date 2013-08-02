@@ -244,9 +244,23 @@ public class Page implements Serializable {
     public static final BorderStyle BORDER_DEFAULT = BorderStyle.DEFAULT;
 
     /**
-     * Listener that listens to changes in URI fragment.
+     * Listener that that gets notified when the URI fragment of the page
+     * changes.
+     * 
+     * @see Page#addUriFragmentChangedListener(UriFragmentChangedListener)
      */
     public interface UriFragmentChangedListener extends Serializable {
+        /**
+         * Event handler method invoked when the URI fragment of the page
+         * changes. Please note that the initial URI fragment has already been
+         * set when a new UI is initialized, so there will not be any initial
+         * event for listeners added during {@link UI#init(VaadinRequest)}.
+         * 
+         * @see Page#addUriFragmentChangedListener(UriFragmentChangedListener)
+         * 
+         * @param event
+         *            the URI fragment changed event
+         */
         public void uriFragmentChanged(UriFragmentChangedEvent event);
     }
 
@@ -267,12 +281,14 @@ public class Page implements Serializable {
     private List<Notification> notifications;
 
     /**
-     * Event fired when uri fragment changes.
+     * Event fired when the URI fragment of a <code>Page</code> changes.
+     * 
+     * @see Page#addUriFragmentChangedListener(UriFragmentChangedListener)
      */
     public static class UriFragmentChangedEvent extends EventObject {
 
         /**
-         * The new uri fragment
+         * The new URI fragment
          */
         private final String uriFragment;
 
@@ -281,6 +297,8 @@ public class Page implements Serializable {
          * 
          * @param source
          *            the Source of the event.
+         * @param uriFragment
+         *            the new uriFragment
          */
         public UriFragmentChangedEvent(Page source, String uriFragment) {
             super(source);
@@ -288,16 +306,16 @@ public class Page implements Serializable {
         }
 
         /**
-         * Gets the uI in which the fragment has changed.
+         * Gets the page in which the fragment has changed.
          * 
-         * @return the uI in which the fragment has changed
+         * @return the page in which the fragment has changed
          */
         public Page getPage() {
             return (Page) getSource();
         }
 
         /**
-         * Get the new fragment
+         * Get the new URI fragment
          * 
          * @return the new fragment
          */
@@ -476,6 +494,19 @@ public class Page implements Serializable {
         }
     }
 
+    /**
+     * Adds a listener that gets notified every time the URI fragment of this
+     * page is changed. Please note that the initial URI fragment has already
+     * been set when a new UI is initialized, so there will not be any initial
+     * event for listeners added during {@link UI#init(VaadinRequest)}.
+     * 
+     * @see #getUriFragment()
+     * @see #setUriFragment(String)
+     * @see #removeUriFragmentChangedListener(UriFragmentChangedListener)
+     * 
+     * @param listener
+     *            the URI fragment listener to add
+     */
     public void addUriFragmentChangedListener(
             Page.UriFragmentChangedListener listener) {
         addListener(UriFragmentChangedEvent.class, listener,
@@ -491,6 +522,14 @@ public class Page implements Serializable {
         addUriFragmentChangedListener(listener);
     }
 
+    /**
+     * Removes a URI fragment listener that was previously added to this page.
+     * 
+     * @param listener
+     *            the URI fragment listener to remove
+     * 
+     * @see Page#addUriFragmentChangedListener(UriFragmentChangedListener)
+     */
     public void removeUriFragmentChangedListener(
             Page.UriFragmentChangedListener listener) {
         removeListener(UriFragmentChangedEvent.class, listener,
@@ -520,7 +559,7 @@ public class Page implements Serializable {
      * 
      * @param newUriFragment
      *            The new fragment.
-     * @param fireEvent
+     * @param fireEvents
      *            true to fire event
      * 
      * @see #getUriFragment()
