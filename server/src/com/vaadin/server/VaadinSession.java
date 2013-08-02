@@ -903,12 +903,14 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      */
     public void unlock() {
         assert hasLock();
+        boolean ultimateRelease = false;
         try {
             /*
              * Run pending tasks and push if the reentrant lock will actually be
              * released by this unlock() invocation.
              */
             if (((ReentrantLock) getLockInstance()).getHoldCount() == 1) {
+                ultimateRelease = true;
                 getService().runPendingAccessTasks(this);
 
                 for (UI ui : getUIs()) {
@@ -935,7 +937,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
          * actually released. This means that the queue should be purged again
          * if it is not empty after unlocking.
          */
-        if (!getPendingAccessQueue().isEmpty()) {
+        if (ultimateRelease && !getPendingAccessQueue().isEmpty()) {
             getService().ensureAccessQueuePurged(this);
         }
     }
