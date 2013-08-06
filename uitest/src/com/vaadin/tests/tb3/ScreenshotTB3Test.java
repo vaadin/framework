@@ -49,40 +49,105 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      * @throws IOException
      */
     protected void compareScreen(String identifier) throws IOException {
+        if (identifier == null || identifier.isEmpty()) {
+            throw new IllegalArgumentException("Empty identifier not supported");
+        }
+
         Parameters.setScreenshotErrorDirectory(getScreenshotErrorDirectory());
         Parameters
                 .setScreenshotReferenceDirectory(getScreenshotReferenceDirectory());
-        File ref = new File(getScreenshotReferenceName(getTestName(),
-                getDesiredCapabilities(), identifier));
-        try {
-            if (!testBench(driver).compareScreen(ref)) {
-                throw new AssertionError("comparison failed");
+        File ref = getScreenshotReferenceFile(getTestName(),
+                getDesiredCapabilities(), identifier);
+
+        List<File> alternativeFiles = findReferenceAlternatives(ref);
+        List<File> failedAlternatives = new ArrayList<File>();
+
+        for (File file : alternativeFiles) {
+            if (testBench(driver).compareScreen(file)) {
+                break;
+            } else {
+                failedAlternatives.add(file);
+                if (file != ref) {
+                    // Remove alternative reference image since it's the same as
+                    // the original reference
+                    getFailureFile(file).delete();
+                }
             }
-        } catch (AssertionError t) {
-            screenshotFailures.add(identifier);
         }
+
+        if (failedAlternatives.size() < alternativeFiles.size()) {
+            // Success with one of the alternatives, remove files produced by
+            // alternatives that already failed
+            for (File failedAlternative : failedAlternatives) {
+                File failurePng = getFailureFile(failedAlternative);
+                if (failedAlternative == ref) {
+                    // Image not deleted for original alternative
+                    failurePng.delete();
+                }
+                // Html comparison for all failed comparisons
+                new File(failurePng.getParentFile(), failurePng.getName()
+                        .replace(".png", ".html")).delete();
+            }
+        } else {
+            screenshotFailures.add(identifier);
+            throw new AssertionError("comparison failed");
+        }
+    }
+
+    private File getFailureFile(File referenceFile) {
+        return new File(referenceFile.getAbsolutePath().replace(
+                getScreenshotReferenceDirectory(),
+                getScreenshotErrorDirectory()));
+    }
+
+    private List<File> findReferenceAlternatives(File reference) {
+        List<File> files = new ArrayList<File>();
+        files.add(reference);
+
+        File screenshotDir = reference.getParentFile();
+        String name = reference.getName();
+        // Remove ".png"
+        String nameBase = name.substring(0, name.length() - 4);
+        for (int i = 1;; i++) {
+            File file = new File(screenshotDir, nameBase + "_" + i + ".png");
+            if (file.exists()) {
+                files.add(file);
+            } else {
+                break;
+            }
+        }
+
+        return files;
     }
 
     private String getScreenshotErrorDirectory() {
         return getScreenshotDirectory() + "/errors";
     }
 
-    /**
-     * @since
-     * @param testName
-     * @param desiredCapabilities2
-     * @return
-     */
-    private String getScreenshotReferenceName(String testName,
+    private File getScreenshotReferenceFile(String testName,
             DesiredCapabilities capabilities, String identifier) {
         String browserIdentifier = getBrowserIdentifier(capabilities);
         String platform = getPlatform(capabilities);
         String browserVersion = capabilities.getVersion();
 
         // WindowMaximizeRestoreTest_Windows_InternetExplorer_8_window-1-moved-maximized-restored.png
-        return getScreenshotReferenceDirectory() + "/" + testName + "_"
-                + platform + "_" + browserIdentifier + "_" + browserVersion
-                + "_" + identifier + ".png";
+        String nameStart = getScreenshotReferenceDirectory() + "/" + testName
+                + "_" + platform + "_" + browserIdentifier + "_";
+        String nameEnd = "_" + identifier + ".png";
+
+        File originalName = new File(nameStart + browserVersion + nameEnd);
+        if (originalName.exists()) {
+            return originalName;
+        } else if (browserVersion.matches("\\d+")) {
+            for (int version = Integer.parseInt(browserVersion); version > 0; version--) {
+                File file = new File(nameStart + version + nameEnd);
+                if (file.exists()) {
+                    return file;
+                }
+            }
+        }
+
+        return originalName;
     }
 
     /**
@@ -204,6 +269,18 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
      */
     private String getScreenshotFailureName() {
         return getScreenshotErrorBaseName() + "-failure.png";
+    }
+
+    private String getScreenshotReferenceName(String testName,
+            DesiredCapabilities capabilities, String identifier) {
+        String browserIdentifier = getBrowserIdentifier(capabilities);
+        String platform = getPlatform(capabilities);
+        String browserVersion = capabilities.getVersion();
+
+        // WindowMaximizeRestoreTest_Windows_InternetExplorer_8_window-1-moved-maximized-restored.png
+        return getScreenshotReferenceDirectory() + "/" + testName + "_"
+                + platform + "_" + browserIdentifier + "_" + browserVersion
+                + "_" + identifier + ".png";
     }
 
     private String getScreenshotErrorBaseName() {
