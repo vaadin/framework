@@ -19,11 +19,42 @@
  */
 package com.vaadin.tests.tb3;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+import java.util.Properties;
+
 public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
+    private static final String HOSTNAME_PROPERTY = "com.vaadin.testbench.deployment.hostname";
+    private final Properties properties = new Properties();
+
+    public PrivateTB3Configuration() {
+        File file = new File("work", "eclipse-run-selected-test.properties");
+        if (file.exists()) {
+            try {
+                properties.load(new FileInputStream(file));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private String getProperty(String name) {
+        String property = properties.getProperty(name);
+        if (property == null) {
+            property = System.getProperty(name);
+        }
+
+        return property;
+    }
 
     @Override
     protected String getScreenshotDirectory() {
-        return "C:/Vaadin/workspace/vaadin7/vaadin-screenshots";
+        return getProperty("com.vaadin.testbench.screenshot.directory");
     }
 
     @Override
@@ -33,7 +64,43 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
 
     @Override
     protected String getDeploymentHostname() {
-        return "192.168.2.75";
+        String hostName = getProperty(HOSTNAME_PROPERTY);
+
+        if ("auto".equals(hostName)) {
+            hostName = findAutoHostname();
+        }
+
+        return hostName;
+    }
+
+    private String findAutoHostname() {
+        try {
+            Enumeration<NetworkInterface> interfaces = NetworkInterface
+                    .getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                NetworkInterface current = interfaces.nextElement();
+                if (!current.isUp() || current.isLoopback()
+                        || current.isVirtual()) {
+                    continue;
+                }
+                Enumeration<InetAddress> addresses = current.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    InetAddress current_addr = addresses.nextElement();
+                    if (current_addr.isLoopbackAddress()) {
+                        continue;
+                    }
+                    String hostAddress = current_addr.getHostAddress();
+                    if (hostAddress.startsWith("192.168.2.")) {
+                        return hostAddress;
+                    }
+                }
+            }
+        } catch (SocketException e) {
+            throw new RuntimeException("Could not enumerate ");
+        }
+
+        throw new RuntimeException(
+                "No compatible (192.168.2.*) ip address found.");
     }
 
 }
