@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.EventListener;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -535,6 +535,7 @@ public class Calendar extends AbstractComponent implements
                     // Get day start and end times
                     Date start = cal.getTime();
                     cal.add(java.util.Calendar.DATE, 1);
+                    cal.add(java.util.Calendar.SECOND, -1);
                     Date end = cal.getTime();
 
                     boolean monthView = (durationInDays > 7);
@@ -572,7 +573,7 @@ public class Calendar extends AbstractComponent implements
             CalendarDateRange range = new CalendarDateRange(s, e, getTimeZone());
             Action[] actions = actionHandler.getActions(range, this);
             if (actions != null) {
-                Set<Action> actionSet = new HashSet<Action>(
+                Set<Action> actionSet = new LinkedHashSet<Action>(
                         Arrays.asList(actions));
                 actionMap.put(range, actionSet);
             }
@@ -586,7 +587,8 @@ public class Calendar extends AbstractComponent implements
                 getTimeZone());
         Action[] actions = actionHandler.getActions(range, this);
         if (actions != null) {
-            Set<Action> actionSet = new HashSet<Action>(Arrays.asList(actions));
+            Set<Action> actionSet = new LinkedHashSet<Action>(
+                    Arrays.asList(actions));
             actionMap.put(range, actionSet);
         }
     }

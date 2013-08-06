@@ -80,14 +80,14 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     };
 
     /**
-     * Creates a new, empty sub window
+     * Creates a new, empty window
      */
     public Window() {
         this("", null);
     }
 
     /**
-     * Creates a new, empty sub window with a given title.
+     * Creates a new, empty window with a given title.
      * 
      * @param caption
      *            the title of the window.
@@ -97,7 +97,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     /**
-     * Creates a new, empty sub window with the given content and title.
+     * Creates a new, empty window with the given content and title.
      * 
      * @param caption
      *            the title of the window.
@@ -214,15 +214,12 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * Method that handles window closing (from UI).
      * 
      * <p>
-     * By default, sub-windows are removed from their respective parent windows
-     * and thus visually closed on browser-side. Browser-level windows also
-     * closed on the client-side, but they are not implicitly removed from the
-     * application.
+     * By default, windows are removed from their respective UIs and thus
+     * visually closed on browser-side.
      * </p>
      * 
      * <p>
-     * To explicitly close a sub-window, use {@link #removeWindow(Window)}. To
-     * react to a window being closed (after it is closed), register a
+     * To react to a window being closed (after it is closed), register a
      * {@link CloseListener}.
      * </p>
      */
@@ -233,7 +230,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         if (uI != null) {
             // focus is restored to the parent window
             uI.focus();
-            // subwindow is removed from the UI
+            // window is removed from the UI
             uI.removeWindow(this);
         }
     }
@@ -329,7 +326,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * An interface used for listening to Window close events. Add the
-     * CloseListener to a browser level window or a sub window and
+     * CloseListener to a window and
      * {@link CloseListener#windowClose(CloseEvent)} will be called whenever the
      * user closes the window.
      * 
@@ -353,8 +350,8 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     /**
      * Adds a CloseListener to the window.
      * 
-     * For a sub window the CloseListener is fired when the user closes it
-     * (clicks on the close button).
+     * For a window the CloseListener is fired when the user closes it (clicks
+     * on the close button).
      * 
      * For a browser level window the CloseListener is fired when the browser
      * level window is closed. Note that closing a browser level window does not
@@ -636,8 +633,8 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     /**
-     * Sets sub-window modal, so that widgets behind it cannot be accessed.
-     * <b>Note:</b> affects sub-windows only.
+     * Sets window modality. When a modal window is open, components outside
+     * that window it cannot be accessed.
      * 
      * @param modal
      *            true if modality is to be turned on
@@ -655,7 +652,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     /**
-     * Sets sub-window resizable. <b>Note:</b> affects sub-windows only.
+     * Sets window resizable.
      * 
      * @param resizable
      *            true if resizability is to be turned on
@@ -699,7 +696,7 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Sets this window to be centered relative to its parent window. Affects
-     * sub-windows only. If the window is resized as a result of the size of its
+     * windows only. If the window is resized as a result of the size of its
      * content changing, it will keep itself centered as long as its position is
      * not explicitly changed programmatically or by the user.
      * <p>
@@ -711,64 +708,59 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     /**
-     * Returns the closable status of the sub window. If a sub window is
-     * closable it typically shows an X in the upper right corner. Clicking on
-     * the X sends a close event to the server. Setting closable to false will
-     * remove the X from the sub window and prevent the user from closing the
-     * window.
+     * Returns the closable status of the window. If a window is closable, it
+     * typically shows an X in the upper right corner. Clicking on the X sends a
+     * close event to the server. Setting closable to false will remove the X
+     * from the window and prevent the user from closing the window.
      * 
-     * Note! For historical reasons readonly controls the closability of the sub
+     * Note! For historical reasons readonly controls the closability of the
      * window and therefore readonly and closable affect each other. Setting
      * readonly to true will set closable to false and vice versa.
      * <p/>
-     * Closable only applies to sub windows, not to browser level windows.
      * 
-     * @return true if the sub window can be closed by the user.
+     * @return true if the window can be closed by the user.
      */
     public boolean isClosable() {
         return !isReadOnly();
     }
 
     /**
-     * Sets the closable status for the sub window. If a sub window is closable
-     * it typically shows an X in the upper right corner. Clicking on the X
-     * sends a close event to the server. Setting closable to false will remove
-     * the X from the sub window and prevent the user from closing the window.
+     * Sets the closable status for the window. If a window is closable it
+     * typically shows an X in the upper right corner. Clicking on the X sends a
+     * close event to the server. Setting closable to false will remove the X
+     * from the window and prevent the user from closing the window.
      * 
-     * Note! For historical reasons readonly controls the closability of the sub
+     * Note! For historical reasons readonly controls the closability of the
      * window and therefore readonly and closable affect each other. Setting
      * readonly to true will set closable to false and vice versa.
      * <p/>
-     * Closable only applies to sub windows, not to browser level windows.
      * 
      * @param closable
-     *            determines if the sub window can be closed by the user.
+     *            determines if the window can be closed by the user.
      */
     public void setClosable(boolean closable) {
         setReadOnly(!closable);
     }
 
     /**
-     * Indicates whether a sub window can be dragged or not. By default a sub
-     * window is draggable.
+     * Indicates whether a window can be dragged or not. By default a window is
+     * draggable.
      * <p/>
-     * Draggable only applies to sub windows, not to browser level windows.
      * 
      * @param draggable
-     *            true if the sub window can be dragged by the user
+     *            true if the window can be dragged by the user
      */
     public boolean isDraggable() {
         return getState().draggable;
     }
 
     /**
-     * Enables or disables that a sub window can be dragged (moved) by the user.
-     * By default a sub window is draggable.
+     * Enables or disables that a window can be dragged (moved) by the user. By
+     * default a window is draggable.
      * <p/>
-     * Draggable only applies to sub windows, not to browser level windows.
      * 
      * @param draggable
-     *            true if the sub window can be dragged by the user
+     *            true if the window can be dragged by the user
      */
     public void setDraggable(boolean draggable) {
         getState().draggable = draggable;
@@ -807,8 +799,8 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * Makes is possible to close the window by pressing the given
      * {@link KeyCode} and (optional) {@link ModifierKey}s.<br/>
      * Note that this shortcut only reacts while the window has focus, closing
-     * itself - if you want to close a subwindow from a parent window, use
-     * {@link #addAction(com.vaadin.event.Action)} of the parent window instead.
+     * itself - if you want to close a window from a UI, use
+     * {@link UI#addAction(com.vaadin.event.Action)} of the UI instead.
      * 
      * @param keyCode
      *            the keycode for invoking the shortcut
@@ -842,10 +834,10 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
      * <pre>
      * <code>
      *  // within the window using helper
-     *  subWindow.setCloseShortcut(KeyCode.ESCAPE, null);
+     *  window.setCloseShortcut(KeyCode.ESCAPE, null);
      * 
      *  // or globally
-     *  getWindow().addAction(new Window.CloseShortcut(subWindow, KeyCode.ESCAPE));
+     *  getUI().addAction(new Window.CloseShortcut(window, KeyCode.ESCAPE));
      * </code>
      * </pre>
      * 
@@ -902,14 +894,13 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         }
     }
 
-    /**
-     * Note, that focus/blur listeners in Window class are only supported by sub
-     * windows. Also note that Window is not considered focused if its contained
-     * component currently has focus.
+    /*
+     * (non-Javadoc)
      * 
-     * @see com.vaadin.event.FieldEvents.FocusNotifier#addListener(com.vaadin.event.FieldEvents.FocusListener)
+     * @see
+     * com.vaadin.event.FieldEvents.FocusNotifier#addFocusListener(com.vaadin
+     * .event.FieldEvents.FocusListener)
      */
-
     @Override
     public void addFocusListener(FocusListener listener) {
         addListener(FocusEvent.EVENT_ID, FocusEvent.class, listener,
@@ -941,14 +932,13 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
         removeFocusListener(listener);
     }
 
-    /**
-     * Note, that focus/blur listeners in Window class are only supported by sub
-     * windows. Also note that Window is not considered focused if its contained
-     * component currently has focus.
+    /*
+     * (non-Javadoc)
      * 
-     * @see com.vaadin.event.FieldEvents.BlurNotifier#addListener(com.vaadin.event.FieldEvents.BlurListener)
+     * @see
+     * com.vaadin.event.FieldEvents.BlurNotifier#addBlurListener(com.vaadin.
+     * event.FieldEvents.BlurListener)
      */
-
     @Override
     public void addBlurListener(BlurListener listener) {
         addListener(BlurEvent.EVENT_ID, BlurEvent.class, listener,
@@ -982,16 +972,15 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     /**
      * {@inheritDoc}
      * 
-     * If the window is a sub-window focusing will cause the sub-window to be
-     * brought on top of other sub-windows on gain keyboard focus.
+     * Cause the window to be brought on top of other windows and gain keyboard
+     * focus.
      */
-
     @Override
     public void focus() {
         /*
-         * When focusing a sub-window it basically means it should be brought to
-         * the front. Instead of just moving the keyboard focus we focus the
-         * window and bring it top-most.
+         * When focusing a window it basically means it should be brought to the
+         * front. Instead of just moving the keyboard focus we focus the window
+         * and bring it top-most.
          */
         super.focus();
         bringToFront();

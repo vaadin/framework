@@ -194,7 +194,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
     private SelectMode selectMode = SelectMode.NONE;
 
-    private final HashSet<String> selectedRowKeys = new HashSet<String>();
+    public final HashSet<String> selectedRowKeys = new HashSet<String>();
 
     /*
      * When scrolling and selecting at the same time, the selections are not in
@@ -568,7 +568,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             this.rowKey = rowKey;
             this.left = left;
             this.top = top;
-            this.closeRegistration = menu.addCloseHandler(this);
+            closeRegistration = menu.addCloseHandler(this);
         }
 
         @Override

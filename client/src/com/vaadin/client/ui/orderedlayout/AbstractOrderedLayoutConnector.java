@@ -25,6 +25,7 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.ServerConnector;
+import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.Util;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
@@ -347,6 +348,44 @@ public abstract class AbstractOrderedLayoutConnector extends
         getWidget().setSpacing(getState().spacing);
 
         updateInternalState();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.client.ui.AbstractComponentConnector#getTooltipInfo(com.google
+     * .gwt.dom.client.Element)
+     */
+    @Override
+    public TooltipInfo getTooltipInfo(com.google.gwt.dom.client.Element element) {
+        if (element != getWidget().getElement()) {
+            Slot slot = Util.findWidget(
+                    (com.google.gwt.user.client.Element) element, Slot.class);
+            if (slot != null && slot.getCaptionElement() != null
+                    && slot.getCaptionElement().isOrHasChild(element)) {
+                ComponentConnector connector = Util.findConnectorFor(slot
+                        .getWidget());
+                if (connector != null) {
+                    return connector.getTooltipInfo(element);
+                }
+            }
+        }
+        return super.getTooltipInfo(element);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.client.ui.AbstractComponentConnector#hasTooltip()
+     */
+    @Override
+    public boolean hasTooltip() {
+        /*
+         * Tooltips are fetched from child connectors -> there's no quick way of
+         * checking whether there might a tooltip hiding somewhere
+         */
+        return true;
     }
 
     /**

@@ -559,8 +559,7 @@ public class ApplicationConfiguration implements EntryPoint {
         BrowserInfo browserInfo = BrowserInfo.get();
 
         // Enable iOS6 cast fix (see #10460)
-        if (browserInfo.isIOS() && browserInfo.isWebkit()
-                && browserInfo.getBrowserMajorVersion() == 6) {
+        if (browserInfo.isIOS6() && browserInfo.isWebkit()) {
             enableIOS6castFix();
         }
 
@@ -611,6 +610,11 @@ public class ApplicationConfiguration implements EntryPoint {
                     getLogger().log(Level.SEVERE, e.getMessage(), e);
                 }
             });
+
+            if (isProductionMode()) {
+                // Disable all logging if in production mode
+                Logger.getLogger("").setLevel(Level.OFF);
+            }
         }
         Profiler.leave("ApplicationConfiguration.onModuleLoad");
 
@@ -650,13 +654,30 @@ public class ApplicationConfiguration implements EntryPoint {
 
     /**
      * Checks if client side is in debug mode. Practically this is invoked by
-     * adding ?debug parameter to URI.
+     * adding ?debug parameter to URI. Please note that debug mode is always
+     * disabled if production mode is enabled, but disabling production mode
+     * does not automatically enable debug mode.
+     * 
+     * @see #isProductionMode()
      * 
      * @return true if client side is currently been debugged
      */
     public static boolean isDebugMode() {
         return isDebugAvailable()
                 && Window.Location.getParameter("debug") != null;
+    }
+
+    /**
+     * Checks if production mode is enabled. When production mode is enabled,
+     * client-side logging is disabled. There may also be other performance
+     * optimizations.
+     * 
+     * @since 7.1.2
+     * @return <code>true</code> if production mode is enabled; otherwise
+     *         <code>false</code>.
+     */
+    public static boolean isProductionMode() {
+        return !isDebugAvailable();
     }
 
     private native static boolean isDebugAvailable()

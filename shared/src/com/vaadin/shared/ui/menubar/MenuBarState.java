@@ -15,9 +15,9 @@
  */
 package com.vaadin.shared.ui.menubar;
 
-import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.ui.TabIndexState;
 
-public class MenuBarState extends AbstractComponentState {
+public class MenuBarState extends TabIndexState {
     {
         primaryStyleName = "v-menubar";
     }

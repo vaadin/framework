@@ -54,6 +54,7 @@ import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;
 import com.vaadin.event.dd.acceptcriteria.ServerSideCriterion;
 import com.vaadin.server.KeyMapper;
+import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.LegacyPaint;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
@@ -1251,7 +1252,8 @@ public class Table extends AbstractSelect implements Action.Container,
      * 
      * @param propertyId
      *            the propertyID identifying the column.
-     * @return the specified column's alignment if it as one; null otherwise.
+     * @return the specified column's alignment if it as one; {@link Align#LEFT}
+     *         otherwise.
      */
     public Align getColumnAlignment(Object propertyId) {
         final Align a = columnAlignments.get(propertyId);
@@ -1614,7 +1616,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * guaranteed to be recreated.
      */
     protected void refreshRenderedCells() {
-        if (getParent() == null) {
+        if (!isAttached()) {
             return;
         }
 
@@ -3783,7 +3785,9 @@ public class Table extends AbstractSelect implements Action.Container,
                             + currentColumn][indexInRowbuffer])) {
                 final Component c = (Component) cells[CELL_FIRSTCOL
                         + currentColumn][indexInRowbuffer];
-                if (c == null) {
+                if (c == null
+                        || !LegacyCommunicationManager
+                                .isComponentVisibleToClient(c)) {
                     target.addText("");
                 } else {
                     LegacyPaint.paint(c, target);

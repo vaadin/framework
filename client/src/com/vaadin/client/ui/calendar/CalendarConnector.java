@@ -17,6 +17,7 @@ package com.vaadin.client.ui.calendar;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -267,6 +268,18 @@ public class CalendarConnector extends AbstractComponentConnector implements
 
                             return CalendarConnector.this.getActionsBetween(
                                     start, end);
+
+                        } else if (widget instanceof MonthEventLabel) {
+                            MonthEventLabel mel = (MonthEventLabel) widget;
+                            CalendarEvent event = mel.getCalendarEvent();
+                            Action[] actions = CalendarConnector.this
+                                    .getActionsBetween(event.getStartTime(),
+                                            event.getEndTime());
+                            for (Action action : actions) {
+                                ((VCalendarAction) action).setEvent(event);
+                            }
+                            return actions;
+
                         } else if (widget instanceof DateCell) {
                             /*
                              * Week and Day view
@@ -284,22 +297,15 @@ public class CalendarConnector extends AbstractComponentConnector implements
                              */
                             DateCellDayEvent dayEvent = (DateCellDayEvent) widget;
                             CalendarEvent event = dayEvent.getCalendarEvent();
+
                             Action[] actions = CalendarConnector.this
                                     .getActionsBetween(event.getStartTime(),
                                             event.getEndTime());
+
                             for (Action action : actions) {
                                 ((VCalendarAction) action).setEvent(event);
                             }
-                            return actions;
-                        } else if (widget instanceof MonthEventLabel) {
-                            MonthEventLabel mel = (MonthEventLabel) widget;
-                            CalendarEvent event = mel.getCalendarEvent();
-                            Action[] actions = CalendarConnector.this
-                                    .getActionsBetween(event.getStartTime(),
-                                            event.getEndTime());
-                            for (Action action : actions) {
-                                ((VCalendarAction) action).setEvent(event);
-                            }
+
                             return actions;
                         }
                         return null;
@@ -456,27 +462,55 @@ public class CalendarConnector extends AbstractComponentConnector implements
 
     private Action[] getActionsBetween(Date start, Date end) {
         List<Action> actions = new ArrayList<Action>();
-        for (int i = 0; i < actionKeys.size(); i++) {
-            final String actionKey = actionKeys.get(i);
-            Date actionStartDate;
-            Date actionEndDate;
-            try {
-                actionStartDate = getActionStartDate(actionKey);
-                actionEndDate = getActionEndDate(actionKey);
-            } catch (ParseException pe) {
-                VConsole.error("Failed to parse action date");
-                continue;
-            }
+        List<String> ids = new ArrayList<String>();
 
-            boolean startIsValid = start.compareTo(actionStartDate) >= 0;
-            boolean endIsValid = end.compareTo(actionEndDate) <= 0;
-            if (startIsValid && endIsValid) {
-                VCalendarAction a = new VCalendarAction(this, rpc, actionKey);
-                a.setCaption(getActionCaption(actionKey));
-                a.setIconUrl(getActionIcon(actionKey));
-                a.setActionStartDate(start);
-                a.setActionEndDate(end);
-                actions.add(a);
+        for (int i = 0; i < actionKeys.size(); i++) {
+            String actionKey = actionKeys.get(i);
+            String id = getActionID(actionKey);
+            if (!ids.contains(id)) {
+
+                Date actionStartDate;
+                Date actionEndDate;
+                try {
+                    actionStartDate = getActionStartDate(actionKey);
+                    actionEndDate = getActionEndDate(actionKey);
+                } catch (ParseException pe) {
+                    VConsole.error("Failed to parse action date");
+                    continue;
+                }
+
+                // Case 0: action inside event timeframe
+                // Action should start AFTER or AT THE SAME TIME as the event,
+                // and
+                // Action should end BEFORE or AT THE SAME TIME as the event
+                boolean test0 = actionStartDate.compareTo(start) >= 0
+                        && actionEndDate.compareTo(end) <= 0;
+
+                // Case 1: action intersects start of timeframe
+                // Action end time must be between start and end of event
+                boolean test1 = actionEndDate.compareTo(start) > 0
+                        && actionEndDate.compareTo(end) <= 0;
+
+                // Case 2: action intersects end of timeframe
+                // Action start time must be between start and end of event
+                boolean test2 = actionStartDate.compareTo(start) >= 0
+                        && actionStartDate.compareTo(end) < 0;
+
+                // Case 3: event inside action timeframe
+                // Action should start AND END before the event is complete
+                boolean test3 = start.compareTo(actionStartDate) >= 0
+                        && end.compareTo(actionEndDate) <= 0;
+
+                if (test0 || test1 || test2 || test3) {
+                    VCalendarAction a = new VCalendarAction(this, rpc,
+                            actionKey);
+                    a.setCaption(getActionCaption(actionKey));
+                    a.setIconUrl(getActionIcon(actionKey));
+                    a.setActionStartDate(start);
+                    a.setActionEndDate(end);
+                    actions.add(a);
+                    ids.add(id);
+                }
             }
         }
 
@@ -496,6 +530,7 @@ public class CalendarConnector extends AbstractComponentConnector implements
         for (CalendarState.Action action : actions) {
             String id = action.actionKey + "-" + action.startDate + "-"
                     + action.endDate;
+            actionMap.put(id + "_k", action.actionKey);
             actionMap.put(id + "_c", action.caption);
             actionMap.put(id + "_s", action.startDate);
             actionMap.put(id + "_e", action.endDate);
@@ -507,6 +542,20 @@ public class CalendarConnector extends AbstractComponentConnector implements
                 actionMap.remove(id + "_i");
             }
         }
+
+        Collections.sort(actionKeys);
+    }
+
+    /**
+     * Get the original action ID that was passed in from the shared state
+     * 
+     * @since 7.1.2
+     * @param actionKey
+     *            the unique action key
+     * @return
+     */
+    public String getActionID(String actionKey) {
+        return actionMap.get(actionKey + "_k");
     }
 
     /**

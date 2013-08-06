@@ -16,6 +16,7 @@
 package com.vaadin.server;
 
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -42,6 +43,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.VaadinServletConfiguration.InitParameterName;
 import com.vaadin.sass.internal.ScssStylesheet;
+import com.vaadin.server.communication.PushRequestHandler;
 import com.vaadin.server.communication.ServletUIInitHandler;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.ui.UI;
@@ -645,19 +647,19 @@ public class VaadinServlet extends HttpServlet implements Constants {
                             "Failed to find out last modified timestamp. Continuing without it.",
                             e);
         } finally {
-            if (connection instanceof URLConnection) {
-                try {
-                    // Explicitly close the input stream to prevent it
-                    // from remaining hanging
-                    // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4257700
-                    InputStream is = connection.getInputStream();
-                    if (is != null) {
-                        is.close();
-                    }
-                } catch (IOException e) {
-                    getLogger().log(Level.INFO,
-                            "Error closing URLConnection input stream", e);
+            try {
+                // Explicitly close the input stream to prevent it
+                // from remaining hanging
+                // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4257700
+                InputStream is = connection.getInputStream();
+                if (is != null) {
+                    is.close();
                 }
+            } catch (FileNotFoundException e) {
+                // Not logging when the file does not exist.
+            } catch (IOException e) {
+                getLogger().log(Level.INFO,
+                        "Error closing URLConnection input stream", e);
             }
         }
 
@@ -720,14 +722,17 @@ public class VaadinServlet extends HttpServlet implements Constants {
             // prevent it from hanging, but that is done below.
         }
 
-        InputStream is = connection.getInputStream();
+        InputStream is = null;
         try {
+            is = connection.getInputStream();
             final OutputStream os = response.getOutputStream();
             final byte buffer[] = new byte[DEFAULT_BUFFER_SIZE];
             int bytes;
             while ((bytes = is.read(buffer)) >= 0) {
                 os.write(buffer, 0, bytes);
             }
+        } catch (FileNotFoundException e) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         } finally {
             if (is != null) {
                 is.close();
@@ -814,7 +819,7 @@ public class VaadinServlet extends HttpServlet implements Constants {
                         new Object[] { realFilename, filename });
                 scss.compile();
             } catch (Exception e) {
-                e.printStackTrace();
+                getLogger().log(Level.WARNING, "Scss compilation failed", e);
                 return false;
             }
 
@@ -1070,6 +1075,17 @@ public class VaadinServlet extends HttpServlet implements Constants {
         }
         URL u = new URL(reqURL, servletPath);
         return u;
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+
+        for (RequestHandler handler : getService().getRequestHandlers()) {
+            if (handler instanceof PushRequestHandler) {
+                ((PushRequestHandler) handler).destroy();
+            }
+        }
     }
 
     /**

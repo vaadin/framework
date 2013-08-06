@@ -161,6 +161,32 @@
 	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_0</td>
 	<td>3. Test value after access: Set before run pending</td>
 </tr>
+<!-- Run last part with push enabled -->
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.components.ui.UiAccess?restartApplication&amp;transport=websocket</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot[7]/VButton[0]/domChild[0]/domChild[0]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForNotText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_0</td>
+	<td>exact:1. Current session matches in beforeResponse? true</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsuiUiAccess::PID_SLog_row_1</td>
+	<td>exact:0. Current UI matches in beforeResponse? true</td>
+</tr>
 </tbody></table>
 </body>
 </html>

@@ -26,6 +26,8 @@ import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.menubar.MenuBarConstants;
+import com.vaadin.shared.ui.menubar.MenuBarState;
+import com.vaadin.ui.Component.Focusable;
 
 /**
  * <p>
@@ -35,7 +37,8 @@ import com.vaadin.shared.ui.menubar.MenuBarConstants;
  * </p>
  */
 @SuppressWarnings("serial")
-public class MenuBar extends AbstractComponent implements LegacyComponent {
+public class MenuBar extends AbstractComponent implements LegacyComponent,
+        Focusable {
 
     // Items of the top-level menu
     private final List<MenuItem> menuItems;
@@ -48,6 +51,11 @@ public class MenuBar extends AbstractComponent implements LegacyComponent {
     private boolean openRootOnHover;
 
     private boolean htmlContentAllowed;
+
+    @Override
+    protected MenuBarState getState() {
+        return (MenuBarState) super.getState();
+    }
 
     /** Paint (serialise) the component for the client. */
     @Override
@@ -384,6 +392,27 @@ public class MenuBar extends AbstractComponent implements LegacyComponent {
      */
     public boolean isHtmlContentAllowed() {
         return htmlContentAllowed;
+    }
+
+    @Override
+    public int getTabIndex() {
+        return getState().tabIndex;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.ui.Component.Focusable#setTabIndex(int)
+     */
+    @Override
+    public void setTabIndex(int tabIndex) {
+        getState().tabIndex = tabIndex;
+    }
+
+    @Override
+    public void focus() {
+        // Overridden only to make public
+        super.focus();
     }
 
     /**

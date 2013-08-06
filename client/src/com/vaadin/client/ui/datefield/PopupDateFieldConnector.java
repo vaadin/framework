@@ -42,6 +42,9 @@ public class PopupDateFieldConnector extends TextualDateConnector {
     @Override
     @SuppressWarnings("deprecation")
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+
+        String oldLocale = getWidget().getCurrentLocale();
+
         boolean lastReadOnlyState = getWidget().isReadonly();
         boolean lastEnabledState = getWidget().isEnabled();
 
@@ -64,6 +67,12 @@ public class PopupDateFieldConnector extends TextualDateConnector {
                 getWidget().calendar.renderCalendar();
             }
         }
+
+        // Force re-render of calendar if locale has changed (#12153)
+        if (getWidget().getCurrentLocale() != oldLocale) {
+            getWidget().calendar.renderCalendar();
+        }
+
         getWidget().calendarToggle.setEnabled(getWidget().isEnabled());
 
         if (getWidget().getCurrentResolution().getCalendarField() <= Resolution.MONTH

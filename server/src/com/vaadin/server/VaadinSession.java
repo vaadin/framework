@@ -240,9 +240,11 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         } else if (VaadinService.getCurrentRequest() != null
                 && getCurrent() == this) {
             assert hasLock();
-            // Ignore if the session is being moved to a different backing
-            // session
-            if (getAttribute(VaadinService.REINITIALIZING_SESSION_MARKER) == Boolean.TRUE) {
+            /*
+             * Ignore if the session is being moved to a different backing
+             * session or if GAEVaadinServlet is doing its normal cleanup.
+             */
+            if (getAttribute(VaadinService.PRESERVE_UNBOUND_SESSION_ATTRIBUTE) == Boolean.TRUE) {
                 return;
             }
 
@@ -426,6 +428,13 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     public void storeInSession(VaadinService service, WrappedSession session) {
         assert hasLock(service, session);
         session.setAttribute(getSessionAttributeName(service), this);
+
+        /*
+         * GAEVaadinServlet passes newly deserialized sessions here, which means
+         * that these transient fields need to be populated to avoid NPE from
+         * refreshLock().
+         */
+        this.service = service;
         this.session = session;
         refreshLock();
     }
@@ -885,31 +894,51 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * Unlocks this session. This method should always be used in a finally
      * block after {@link #lock()} to ensure that the lock is always released.
      * <p>
-     * If {@link #getPushMode() the push mode} is {@link PushMode#AUTOMATIC
-     * automatic}, pushes the changes in all UIs in this session to their
-     * respective clients.
+     * For UIs in this session that have its push mode set to
+     * {@link PushMode#AUTOMATIC automatic}, pending changes will be pushed to
+     * their respective clients.
      * 
      * @see #lock()
      * @see UI#push()
      */
     public void unlock() {
         assert hasLock();
+        boolean ultimateRelease = false;
         try {
             /*
              * Run pending tasks and push if the reentrant lock will actually be
              * released by this unlock() invocation.
              */
             if (((ReentrantLock) getLockInstance()).getHoldCount() == 1) {
+                ultimateRelease = true;
                 getService().runPendingAccessTasks(this);
 
                 for (UI ui : getUIs()) {
                     if (ui.getPushConfiguration().getPushMode() == PushMode.AUTOMATIC) {
-                        ui.push();
+                        Map<Class<?>, CurrentInstance> oldCurrent = CurrentInstance
+                                .setCurrent(ui);
+                        try {
+                            ui.push();
+                        } finally {
+                            CurrentInstance.restoreInstances(oldCurrent);
+                        }
                     }
                 }
             }
         } finally {
             getLockInstance().unlock();
+        }
+
+        /*
+         * If the session is locked when a new access task is added, it is
+         * assumed that the queue will be purged when the lock is released. This
+         * might however not happen if a task is enqueued between the moment
+         * when unlock() purges the queue and the moment when the lock is
+         * actually released. This means that the queue should be purged again
+         * if it is not empty after unlocking.
+         */
+        if (ultimateRelease && !getPendingAccessQueue().isEmpty()) {
+            getService().ensureAccessQueuePurged(this);
         }
     }
 

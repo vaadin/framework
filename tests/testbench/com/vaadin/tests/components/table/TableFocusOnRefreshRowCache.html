@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8888/" />
+<title>TableFocusOnRefreshRowCache</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">TableFocusOnRefreshRowCache</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.components.table.TableFocusOnRefreshRowCache?restartApplication</td>
+	<td></td>
+</tr>
+<tr>
+	<td>scroll</td>
+	<td>vaadin=runcomvaadintestscomponentstableTableFocusOnRefreshRowCache::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VScrollTable[0]/domChild[1]</td>
+	<td>3161</td>
+</tr>
+<tr>
+	<td>pause</td>
+	<td>500</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentstableTableFocusOnRefreshRowCache::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VScrollTable[0]/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[42]/domChild[0]/domChild[0]</td>
+	<td>186,-3151</td>
+</tr>
+<!-- Opera does some funky stuff with the row indices when this is run in
+     testbench, making it impossible to reliably test that the stylenames are
+     in the right location. Must instead just test that the stylename is not in
+     the position it was prior to fixing the bug, although that could never
+     fail in Opera since it looks at the wrong row
+-->
+<!-- 
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentstableTableFocusOnRefreshRowCache::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VScrollTable[0]/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[35]</td>
+	<td>v-selected</td>
+</tr>
+<tr>
+	<td>assertCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentstableTableFocusOnRefreshRowCache::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VScrollTable[0]/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[35]</td>
+	<td>v-table-focus</td>
+</tr>
+-->
+<!-- Test that the first row in the view does not get focus -->
+<tr>
+	<td>assertNotCSSClass</td>
+	<td>vaadin=runcomvaadintestscomponentstableTableFocusOnRefreshRowCache::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[0]/VScrollTable[0]/domChild[1]/domChild[0]/domChild[1]/domChild[0]/domChild[23]</td>
+	<td>v-table-focus</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

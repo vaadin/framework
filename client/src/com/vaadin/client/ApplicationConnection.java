@@ -2000,12 +2000,15 @@ public class ApplicationConnection {
                                     .getConnector(childConnectorId);
                             if (childConnector == null) {
                                 VConsole.error("Hierarchy claims that "
-                                        + childConnectorId + " is a child for "
-                                        + connectorId + " ("
+                                        + childConnectorId
+                                        + " is a child for "
+                                        + connectorId
+                                        + " ("
                                         + parentConnector.getClass().getName()
                                         + ") but no connector with id "
                                         + childConnectorId
-                                        + " has been registered");
+                                        + " has been registered. "
+                                        + "More information might be available in the server-side log if assertions are enabled");
                                 continue;
                             }
                             newChildren.add(childConnector);

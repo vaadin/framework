@@ -266,7 +266,23 @@ public class TableConnector extends AbstractHasComponentsConnector implements
             if (!getWidget().focusedRow.isAttached()
                     && !getWidget().rowRequestHandler.isRunning()) {
                 // focused row has been orphaned, can't focus
-                getWidget().focusRowFromBody();
+                if (getWidget().selectedRowKeys.contains(getWidget().focusedRow
+                        .getKey())) {
+                    // if row cache was refreshed, focused row should be
+                    // in selection and exists with same index
+                    getWidget().setRowFocus(
+                            getWidget().getRenderedRowByKey(
+                                    getWidget().focusedRow.getKey()));
+                } else if (getWidget().selectedRowKeys.size() > 0) {
+                    // try to focus any row in selection
+                    getWidget().setRowFocus(
+                            getWidget().getRenderedRowByKey(
+                                    getWidget().selectedRowKeys.iterator()
+                                            .next()));
+                } else {
+                    // try to focus any row
+                    getWidget().focusRowFromBody();
+                }
             }
         }
 

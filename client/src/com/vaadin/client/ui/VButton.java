@@ -142,7 +142,7 @@ public class VButton extends FocusWidget implements ClickHandler {
      * 
      * -for IE/Opera added CLASSNAME_PRESSED
      * 
-     * -event.preventDefault() commented from ONMOUSEDOWN (Firefox won't apply
+     * -event.preventDefault() removed from ONMOUSEDOWN (Firefox won't apply
      * :active styles if it is present)
      * 
      * -Tooltip event handling added
@@ -189,10 +189,14 @@ public class VButton extends FocusWidget implements ClickHandler {
                 setFocus(true);
                 DOM.setCapture(getElement());
                 isCapturing = true;
-                // Prevent dragging (on some browsers);
-                event.preventDefault();
-                if (BrowserInfo.get().isIE() || BrowserInfo.get().isOpera()) {
-                    addStyleName(CLASSNAME_PRESSED);
+                addStyleName(CLASSNAME_PRESSED);
+
+                if (BrowserInfo.get().isIE8() || BrowserInfo.get().isIE9()) {
+                    /*
+                     * We need to prevent the default behavior on these browsers
+                     * since user-select is not available.
+                     */
+                    event.preventDefault();
                 }
             }
             break;
@@ -204,9 +208,9 @@ public class VButton extends FocusWidget implements ClickHandler {
                     // Click ok
                     disallowNextClick = false;
                 }
-                if (BrowserInfo.get().isIE() || BrowserInfo.get().isOpera()) {
-                    removeStyleName(CLASSNAME_PRESSED);
-                }
+
+                removeStyleName(CLASSNAME_PRESSED);
+
                 // Explicitly prevent IE 8 from propagating mouseup events
                 // upward (fixes #6753)
                 if (BrowserInfo.get().isIE8()) {
@@ -235,9 +239,7 @@ public class VButton extends FocusWidget implements ClickHandler {
                 if (isCapturing) {
                 }
                 setHovering(false);
-                if (BrowserInfo.get().isIE() || BrowserInfo.get().isOpera()) {
-                    removeStyleName(CLASSNAME_PRESSED);
-                }
+                removeStyleName(CLASSNAME_PRESSED);
             }
             break;
         case Event.ONBLUR:

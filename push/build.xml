@@ -12,8 +12,8 @@
     <property name="result.dir" location="result" />
     <property name="vaadinPush.js" location="${result.dir}/js/VAADIN/vaadinPush.js" />
 
-    <!-- Keep the version number in sync with ivy.xml and server/src/com/vaadin/server/Constants.java-->
-    <property name="atmosphere.version" value="1.0.14.vaadin3" />
+    <!-- Keep the version number in sync with ivy.xml, server/src/com/vaadin/server/Constants.java and jquery.atmosphere.js -->
+    <property name="atmosphere.version" value="1.0.14.vaadin4" />
     <property name="jquery.version" value="1.7.2" />
 
     <path id="classpath.compile.custom" />
@@ -53,7 +53,7 @@
 
     <target name="jar" depends="vaadinPush.js">
         <antcall target="common.jar">
-            <param name="require-bundle" value="org.atmosphere.atmosphere-runtime;bundle-version=&quot;${atmosphere.version}&quot;;visibility:=reexport" />
+            <param name="require-bundle" value="com.vaadin.external.atmosphere.atmosphere-runtime;bundle-version=&quot;${atmosphere.version}&quot;;visibility:=reexport" />
             <reference torefid="extra.jar.includes" refid="jar.includes" />
         </antcall>
     </target>

@@ -29,8 +29,20 @@ import com.vaadin.server.ClientConnector;
  * method for the corresponding client-side connector is invoked.
  * <p>
  * Absolute URLs including protocol and host are used as is on the client-side.
- * Relative urls are mapped to APP/PUBLISHED/[url] which are by default served
+ * Relative URLs are mapped to APP/PUBLISHED/[url] which are by default served
  * from the classpath relative to the class where the annotation is defined.
+ * <p>
+ * The file is only loaded if it has not already been loaded, determined as
+ * follows:
+ * <ul>
+ * <li>For absolute URLs, the URL is considered loaded if the same URL has
+ * previously been loaded using {@code StyleSheet} or if a
+ * {@code <link rel="stylesheet">} tag using the same URL was present in the DOM
+ * when the Vaadin client-side was initialized.
+ * <li>For relative URLs, the URL is considered loaded if another file with the
+ * same name has already been loaded using {@code StyleSheet}, even if that file
+ * was loaded from a different folder.
+ * </ul>
  * <p>
  * Special Vaadin urls are also supported. The most useful is vaadin:// which
  * maps to the location of the automatically published VAADIN folder. Using the

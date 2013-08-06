@@ -26,6 +26,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.vaadin.server.widgetsetutils.ClassPathExplorer;
 import com.vaadin.server.widgetsetutils.ClassPathExplorer.LocationInfo;
@@ -126,8 +128,12 @@ public class SASSAddonImportFileCreator {
 
         } catch (FileNotFoundException e) {
             // Should not happen since file is checked before this
-            e.printStackTrace();
+            getLogger().log(Level.WARNING, "Error updating addons.scss", e);
         }
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(SASSAddonImportFileCreator.class.getName());
     }
 
     private static List<String> addImport(PrintStream stream, String file,

@@ -71,8 +71,24 @@ import com.vaadin.util.ReflectTools;
  * @since 7.0
  */
 public abstract class VaadinService implements Serializable {
-    static final String REINITIALIZING_SESSION_MARKER = VaadinService.class
+    /**
+     * Attribute name for telling
+     * {@link VaadinSession#valueUnbound(javax.servlet.http.HttpSessionBindingEvent)}
+     * that it should not close a {@link VaadinSession} even though it gets
+     * unbound. If a {@code VaadinSession} has an attribute with this name and
+     * the attribute value is {@link Boolean#TRUE}, that session will not be
+     * closed when it is unbound from the underlying session.
+     */
+    // Use the old name.reinitializing value for backwards compatibility
+    static final String PRESERVE_UNBOUND_SESSION_ATTRIBUTE = VaadinService.class
             .getName() + ".reinitializing";
+
+    /**
+     * @deprecated As of 7.1.1, use {@link #PRESERVE_UNBOUND_SESSION_ATTRIBUTE}
+     *             instead
+     */
+    @Deprecated
+    static final String REINITIALIZING_SESSION_MARKER = PRESERVE_UNBOUND_SESSION_ATTRIBUTE;
 
     private static final Method SESSION_INIT_METHOD = ReflectTools.findMethod(
             SessionInitListener.class, "sessionInit", SessionInitEvent.class);
@@ -905,7 +921,7 @@ public abstract class VaadinService implements Serializable {
      * 
      * @param request
      *            the request for which a UI is desired
-     * @return the UI belonging to the request
+     * @return the UI belonging to the request or null if no UI is found
      * 
      */
     public UI findUI(VaadinRequest request) {
@@ -915,9 +931,11 @@ public abstract class VaadinService implements Serializable {
 
         // Get UI id from the request
         String uiIdString = request.getParameter(UIConstants.UI_ID_PARAMETER);
-        int uiId = Integer.parseInt(uiIdString);
-
-        UI ui = session.getUIById(uiId);
+        UI ui = null;
+        if (uiIdString != null) {
+            int uiId = Integer.parseInt(uiIdString);
+            ui = session.getUIById(uiId);
+        }
 
         UI.setCurrent(ui);
         return ui;
@@ -968,7 +986,7 @@ public abstract class VaadinService implements Serializable {
             if (value instanceof VaadinSession) {
                 // set flag to avoid cleanup
                 VaadinSession serviceSession = (VaadinSession) value;
-                serviceSession.setAttribute(REINITIALIZING_SESSION_MARKER,
+                serviceSession.setAttribute(PRESERVE_UNBOUND_SESSION_ATTRIBUTE,
                         Boolean.TRUE);
             }
             attrs.put(name, value);
@@ -995,8 +1013,8 @@ public abstract class VaadinService implements Serializable {
                         serviceSession.getLockInstance());
 
                 serviceSession.storeInSession(service, newSession);
-                serviceSession
-                        .setAttribute(REINITIALIZING_SESSION_MARKER, null);
+                serviceSession.setAttribute(PRESERVE_UNBOUND_SESSION_ATTRIBUTE,
+                        null);
             }
         }
 
@@ -1118,13 +1136,18 @@ public abstract class VaadinService implements Serializable {
      * @since 7.0.0
      */
     private void closeInactiveUIs(VaadinSession session) {
-        String sessionId = session.getSession().getId();
-        for (UI ui : session.getUIs()) {
+        final String sessionId = session.getSession().getId();
+        for (final UI ui : session.getUIs()) {
             if (!isUIActive(ui) && !ui.isClosing()) {
-                getLogger().log(Level.FINE,
-                        "Closing inactive UI #{0} in session {1}",
-                        new Object[] { ui.getUIId(), sessionId });
-                ui.close();
+                ui.accessSynchronously(new Runnable() {
+                    @Override
+                    public void run() {
+                        getLogger().log(Level.FINE,
+                                "Closing inactive UI #{0} in session {1}",
+                                new Object[] { ui.getUIId(), sessionId });
+                        ui.close();
+                    }
+                });
             }
         }
     }
@@ -1632,6 +1655,23 @@ public abstract class VaadinService implements Serializable {
         FutureAccess future = new FutureAccess(session, runnable);
         session.getPendingAccessQueue().add(future);
 
+        ensureAccessQueuePurged(session);
+
+        return future;
+    }
+
+    /**
+     * Makes sure the pending access queue is purged for the provided session.
+     * If the session is currently locked by the current thread or some other
+     * thread, the queue will be purged when the session is unlocked. If the
+     * lock is not held by any thread, it is acquired and the queue is purged
+     * right away.
+     * 
+     * @since 7.1.2
+     * @param session
+     *            the session for which the access queue should be purged
+     */
+    public void ensureAccessQueuePurged(VaadinSession session) {
         /*
          * If no thread is currently holding the lock, pending changes for UIs
          * with automatic push would not be processed and pushed until the next
@@ -1654,8 +1694,6 @@ public abstract class VaadinService implements Serializable {
         } catch (InterruptedException e) {
             // Just ignore
         }
-
-        return future;
     }
 
     /**

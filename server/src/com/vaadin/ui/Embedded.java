@@ -31,13 +31,17 @@ import com.vaadin.shared.ui.embedded.EmbeddedConstants;
 import com.vaadin.shared.ui.embedded.EmbeddedServerRpc;
 
 /**
- * Component for embedding external objects.
+ * A component for embedding external objects.
  * <p>
- * As of Vaadin 7.0, the {@link Image}, {@link Flash}, and {@link BrowserFrame}
- * components should be used instead of <code>Embedded</code> for displaying
- * images, Adobe Flash objects, and embedded web pages, respectively.
- * <code>Embedded</code> is still useful for displaying other multimedia content
- * such as applets and PDF documents.
+ * The {@code Embedded} component is used to display various types of multimedia
+ * content using the HTML {@code <object>} element. This includes PDF documents,
+ * Java applets, and QuickTime videos. Installing a browser plug-in is usually
+ * required to actually view the embedded content.
+ * <p>
+ * Note that before Vaadin 7, {@code Embedded} was also used to display images,
+ * Adobe Flash objects, and embedded web pages. This use of the component is
+ * deprecated in Vaadin 7; the {@link Image}, {@link Flash}, and
+ * {@link BrowserFrame} components should be used instead, respectively.
  * 
  * @see Video
  * @see Audio

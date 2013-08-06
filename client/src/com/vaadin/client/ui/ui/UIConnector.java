@@ -40,6 +40,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -352,14 +353,30 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
         if (uidl.hasAttribute(UIConstants.LOCATION_VARIABLE)) {
             String location = uidl
                     .getStringAttribute(UIConstants.LOCATION_VARIABLE);
+            String newFragment;
+
             int fragmentIndex = location.indexOf('#');
             if (fragmentIndex >= 0) {
                 // Decode fragment to avoid double encoding (#10769)
-                getWidget().currentFragment = URL.decodePathSegment(location
+                newFragment = URL.decodePathSegment(location
                         .substring(fragmentIndex + 1));
+
+                if (newFragment.isEmpty()
+                        && Location.getHref().indexOf('#') == -1) {
+                    // Ensure there is a trailing # even though History and
+                    // Location.getHash() treat null and "" the same way.
+                    Location.assign(Location.getHref() + "#");
+                }
+            } else {
+                // No fragment in server-side location, but can't completely
+                // remove the browser fragment since that would reload the page
+                newFragment = "";
             }
-            if (!getWidget().currentFragment.equals(History.getToken())) {
-                History.newItem(getWidget().currentFragment, true);
+
+            getWidget().currentFragment = newFragment;
+
+            if (!newFragment.equals(History.getToken())) {
+                History.newItem(newFragment, true);
             }
         }
 
