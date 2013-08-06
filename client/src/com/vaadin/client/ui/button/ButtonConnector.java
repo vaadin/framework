@@ -24,7 +24,6 @@ import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.vaadin.client.EventHelper;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -84,13 +83,11 @@ public class ButtonConnector extends AbstractComponentConnector implements
                 if (getIcon() != null) {
                     if (getWidget().icon == null) {
                         getWidget().icon = new Icon(getConnection());
-                        Element iconElement = getWidget().icon.getElement();
-                        iconElement.setAttribute("alt", getState().iconAltText);
-
-                        getWidget().wrapper.insertBefore(iconElement,
+                        getWidget().wrapper.insertBefore(
+                                getWidget().icon.getElement(),
                                 getWidget().captionElement);
                     }
-                    getWidget().icon.setUri(getIcon());
+                    getWidget().icon.setUri(getIcon(), getState().iconAltText);
                 } else {
                     if (getWidget().icon != null) {
                         getWidget().wrapper.removeChild(getWidget().icon

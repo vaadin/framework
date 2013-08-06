@@ -60,7 +60,11 @@ public class Icon extends UIObject {
             myUri = uidlUri;
         }
 
-        setAlternateText(uidlAlt);
+        if (uidlAlt != null) {
+            setAlternateText(uidlAlt);
+        } else {
+            setAlternateText("");
+        }
     }
 
     /**
