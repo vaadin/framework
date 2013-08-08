@@ -1803,6 +1803,7 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
                     || suggestionPopup.isJustClosed()) {
                 // typing so fast the popup was never opened, or it's just
                 // closed
+                waitingForFilteringResponse = false;
                 suggestionPopup.menu.doSelectedItemAction();
             }
             if (selectedOptionKey == null) {
