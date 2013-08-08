@@ -3942,7 +3942,7 @@ public class Table extends AbstractSelect implements Action.Container,
      */
     protected Object getPropertyValue(Object rowId, Object colId,
             Property property) {
-        if (isEditable() && fieldFactory != null) {
+        if (isEditable() && fieldFactory != null && !property.isReadOnly()) {
             final Field<?> f = fieldFactory.createField(
                     getContainerDataSource(), rowId, colId, this);
             if (f != null) {
