@@ -101,6 +101,8 @@ public class DefaultConverterFactory implements ConverterFactory {
             return new StringToFloatConverter();
         } else if (Integer.class.isAssignableFrom(sourceType)) {
             return new StringToIntegerConverter();
+        } else if (Long.class.isAssignableFrom(sourceType)) {
+            return new StringToLongConverter();
         } else if (Boolean.class.isAssignableFrom(sourceType)) {
             return new StringToBooleanConverter();
         } else if (Number.class.isAssignableFrom(sourceType)) {

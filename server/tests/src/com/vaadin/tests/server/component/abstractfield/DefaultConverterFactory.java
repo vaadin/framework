@@ -43,6 +43,33 @@ public class DefaultConverterFactory extends TestCase {
 
     }
 
+    public static class LongBean {
+        long l1;
+        Long l2;
+
+        public LongBean(long l1, Long l2) {
+            this.l1 = l1;
+            this.l2 = l2;
+        }
+
+        public long getL1() {
+            return l1;
+        }
+
+        public void setL1(long l1) {
+            this.l1 = l1;
+        }
+
+        public Long getL2() {
+            return l2;
+        }
+
+        public void setL2(Long l2) {
+            this.l2 = l2;
+        }
+
+    }
+
     Person paulaBean = new Person("Paula", "Brilliant", "paula@brilliant.com",
             34, Sex.FEMALE, new Address("Paula street 1", 12345, "P-town",
                     Country.FINLAND));
@@ -66,6 +93,21 @@ public class DefaultConverterFactory extends TestCase {
         assertEquals("24", tf.getValue());
         assertEquals(24f, tf.getConvertedValue());
         assertEquals(24f, tf.getPropertyDataSource().getValue());
+    }
+
+    public void testLongConversion() {
+        VaadinSession sess = new AlwaysLockedVaadinSession(null);
+        VaadinSession.setCurrent(sess);
+
+        TextField tf = new TextField();
+        tf.setLocale(new Locale("en", "US"));
+        tf.setPropertyDataSource(new MethodProperty<Integer>(new LongBean(12,
+                1982739187238L), "l2"));
+        assertEquals("1,982,739,187,238", tf.getValue());
+        tf.setValue("1982739187239");
+        assertEquals("1,982,739,187,239", tf.getValue());
+        assertEquals(1982739187239L, tf.getConvertedValue());
+        assertEquals(1982739187239L, tf.getPropertyDataSource().getValue());
     }
 
     public void testDefaultNumberConversion() {
