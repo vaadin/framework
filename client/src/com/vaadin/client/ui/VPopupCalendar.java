@@ -217,9 +217,6 @@ public class VPopupCalendar extends VTextualDate implements Field,
                     }
                 }
             }
-            if (isImmediate()) {
-                getClient().sendPendingVariableChanges();
-            }
         }
     }
 
