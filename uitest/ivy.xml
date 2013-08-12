@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE ivy-module [
-    <!ENTITY jetty.version "8.1.7.v20120910">
+    <!ENTITY jetty.version "8.1.9.v20130131">
 ]>
 <ivy-module version="2.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -14,7 +14,7 @@
         <conf name="build" />
         <conf name="build-provided" visibility="private" />
         <conf name="ide" visibility="private" />
-        <conf name="jetty-run" extends="build" visibility="private" />
+        <conf name="jetty-run" visibility="private" />
     </configurations>
     <publications>
         <artifact type="war" ext="war" />
@@ -33,7 +33,9 @@
         <!-- LIBRARY DEPENDENCIES (compile time) -->
         <!-- Project modules -->
         <dependency org="com.vaadin" name="vaadin-server"
-            rev="${vaadin.version}" conf="build->build"></dependency>
+            rev="${vaadin.version}" conf="build->build">
+			<exclude org="javax.servlet"></exclude>
+        </dependency>
         <dependency org="com.vaadin" name="vaadin-client"
             rev="${vaadin.version}" conf="build->build"></dependency>
         <dependency org="com.vaadin" name="vaadin-client-compiled"
@@ -41,7 +43,9 @@
         <dependency org="com.vaadin" name="vaadin-themes"
             rev="${vaadin.version}" conf="build->build"></dependency>
         <dependency org="com.vaadin" name="vaadin-push" rev="${vaadin.version}"
-            conf="build->build"></dependency>
+            conf="build->build">
+			<exclude org="javax.servlet"></exclude>
+        </dependency>
 
         <!-- For compiling TestingWidgetSet -->
         <dependency org="com.vaadin" name="vaadin-client-compiler"

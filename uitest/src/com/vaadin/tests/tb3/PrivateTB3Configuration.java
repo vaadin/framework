@@ -90,7 +90,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
                         continue;
                     }
                     String hostAddress = current_addr.getHostAddress();
-                    if (hostAddress.startsWith("192.168.2.")) {
+                    if (hostAddress.startsWith("192.168.")) {
                         return hostAddress;
                     }
                 }

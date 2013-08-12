@@ -107,6 +107,11 @@
             <path refid="classpath.runtime.dependencies" />
         </copy>
 
+        <delete>
+            <!-- Avoid some potentially conflicting jars in the war -->
+            <fileset dir="${deps.dir}" includes="jetty-*.jar" />
+            <fileset dir="${deps.dir}" includes="servlet-api-*.jar" />
+        </delete>
 
         <!-- Ensure filtered webcontent files are available -->
         <antcall target="common.filter.webcontent" />

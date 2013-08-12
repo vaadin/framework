@@ -83,7 +83,41 @@
         <fail unless="com.vaadin.testbench.deployment.url" message="The 'com.vaadin.testbench.deployment.url' property must be defined." />
     </target>
 
-    <target name="run-tests" depends="compile-tests">
+    <target name="run-tests" depends="run-tb3-tests, run-tb2-tests">
+    </target>
+
+    <target name="run-tb3-tests">
+        <ivy:resolve file="uitest/ivy.xml" conf="build, build-provided" />
+        <ivy:cachepath pathid="classpath.compile.dependencies" conf="build, build-provided" />
+
+        <junit printsummary="withOutAndErr" fork="yes">
+            <formatter usefile="false" type="plain" />
+
+            <classpath location="uitest/result/classes" />
+            <classpath refid="classpath.compile.dependencies" />
+
+            <jvmarg value="-Dcom.vaadin.testbench.tester.host=${com.vaadin.testbench.tester.host}" />
+            <jvmarg value="-Dcom.vaadin.testbench.deployment.hostname=auto" />
+            <!-- Define where the reference screenshots and diff files are 
+                    saved -->
+            <jvmarg value="-Dcom.vaadin.testbench.screenshot.directory=${com.vaadin.testbench.screenshot.directory}" />
+            <!-- Resolution for screenshots -->
+            <jvmarg value="-Dcom.vaadin.testbench.screenshot.resolution=${com.vaadin.testbench.screenshot.resolution}" />
+            <jvmarg value="-Dcom.vaadin.testbench.debug=${com.vaadin.testbench.debug}" />
+            <jvmarg value="-Dcom.vaadin.testbench.screenshot.block.error=${com.vaadin.testbench.screenshot.block.error}" />
+
+            <jvmarg value="-Djava.awt.headless=true" />
+
+            <!-- true/false system arguments -->
+            <jvmarg value="-Dcom.vaadin.testbench.screenshot.softfail=${com.vaadin.testbench.screenshot.softfail}" />
+            <jvmarg value="-Dcom.vaadin.testbench.screenshot.reference.debug=${com.vaadin.testbench.screenshot.reference.debug}" />
+            <jvmarg value="-Dcom.vaadin.testbench.screenshot.cursor=${com.vaadin.testbench.screenshot.cursor}" />
+
+            <test name="com.vaadin.tests.tb3.AllTB3Tests" />
+        </junit>
+    </target>
+
+    <target name="run-tb2-tests" depends="compile-tests">
         <fileset dir="${test-output-dir}" id="tests-fileset">
             <include name="**/**.java" />
         </fileset>
