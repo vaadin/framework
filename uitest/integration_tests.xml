@@ -333,7 +333,7 @@
 
     <!-- Upload demo, clean error screenshots and test deployment on all 
         servers -->
-    <target name="integration-test-all">
+    <target name="integration-test-all" unless="tests.integration.skip">
         <property name="passphrase" value="${passphrase}" />
         <fail unless="sshkey.file" message="You must define an ssh.keyfile parameter" />
         <fail unless="com.vaadin.testbench.screenshot.directory" message="You must define a com.vaadin.testbench.screenshot.directory parameter" />
