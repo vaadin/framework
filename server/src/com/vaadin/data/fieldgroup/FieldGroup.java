@@ -656,7 +656,7 @@ public class FieldGroup implements Serializable {
     /**
      * Checks if any bound field has been modified.
      * 
-     * @return true if at least on field has been modified, false otherwise
+     * @return true if at least one field has been modified, false otherwise
      */
     public boolean isModified() {
         for (Field<?> field : getFields()) {
