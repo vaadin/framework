@@ -60,7 +60,9 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
 
     @After
     public void tearDown() throws Exception {
-        driver.quit();
+        if (driver != null) {
+            driver.quit();
+        }
         driver = null;
     }
 

@@ -38,6 +38,7 @@ import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.vaadin.testbench.Parameters;
+import com.vaadin.testbench.commands.TestBenchCommands;
 
 public abstract class ScreenshotTB3Test extends AbstractTB3Test {
 
@@ -247,16 +248,22 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
     public void onUncaughtException(Throwable cause) {
         super.onUncaughtException(cause);
         try {
-            testBench().disableWaitForVaadin();
+            TestBenchCommands testBench = testBench();
+            if (testBench != null) {
+                testBench.disableWaitForVaadin();
+            }
         } catch (Throwable t) {
             t.printStackTrace();
         }
         try {
-            BufferedImage screenshotImage = ImageIO
-                    .read(new ByteArrayInputStream(((TakesScreenshot) driver)
-                            .getScreenshotAs(OutputType.BYTES)));
-            ImageIO.write(screenshotImage, "png", new File(
-                    getScreenshotFailureName()));
+            if (driver != null) {
+                BufferedImage screenshotImage = ImageIO
+                        .read(new ByteArrayInputStream(
+                                ((TakesScreenshot) driver)
+                                        .getScreenshotAs(OutputType.BYTES)));
+                ImageIO.write(screenshotImage, "png", new File(
+                        getScreenshotFailureName()));
+            }
         } catch (Throwable t) {
             t.printStackTrace();
         }
