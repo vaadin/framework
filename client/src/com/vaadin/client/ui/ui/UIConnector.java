@@ -640,7 +640,7 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             configurePolling();
         }
 
-        if (stateChangeEvent.hasPropertyChanged("title")) {
+        if (stateChangeEvent.hasPropertyChanged("pageState.title")) {
             com.google.gwt.user.client.Window
                     .setTitle(getState().pageState.title);
         }
