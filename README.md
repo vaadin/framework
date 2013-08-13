@@ -23,6 +23,22 @@ Start Eclipse
 -------------
 Start Eclipse and use the root checkout folder (the one containing the *vaadin*, *gwt* and *gwt-tools* folders) as the workspace folder
 
+Install IvyDE
+---------
+You'll need the Apache Ivy plug-in for Eclipse to build the project later on, in “Compiling the Default Widget Set and Themes”.
+
+1. Go to *Help* -> *Install New Software...*
+1. Enter `http://www.apache.org/dist/ant/ivyde/updatesite` in the "Work with:" text field
+1. Select and install all items
+
+If you have installed IvyDE via the Eclipse Marketplace previously, make sure that you also have *Apache Ivy Ant Targets* installed, which is not included in that IvyDE installation:
+
+1. Go to *Help* -> *Install New Software...*
+1. Click the hyperlink in the "What is already installed?" sentence near the bottom right-hand corner
+1. Verify that the list includes *Apache Ivy Ant Tasks*
+
+If it isn't included, follow the installation process above, but select only *Apache Ivy library* > *Apache Ivy Ant Tasks*
+
 Set up the Workspace and define required variables for projects
 --------
 1. Open *Window* -> *Preferences* (Windows) or *Eclipse* -> *Preferences* (Mac)
