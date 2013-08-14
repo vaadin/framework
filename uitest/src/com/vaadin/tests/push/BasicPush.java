@@ -1,6 +1,5 @@
 package com.vaadin.tests.push;
 
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -39,19 +38,24 @@ public class BasicPush extends AbstractTestUI {
                     getClientCounter());
 
             // Test server initiated push
-            getServerCounterResetButton().click();
-            Assert.assertEquals(0, getServerCounter());
-            sleep(3000);
-            int serverCounter = getServerCounter();
-            if (serverCounter < 1) {
-                // No push has happened
-                Assert.fail("No push has occured within 3s");
-            }
-            sleep(3000);
-            if (getServerCounter() <= serverCounter) {
-                // No push has happened
-                Assert.fail("Only one push took place within 6s");
+            getServerCounterStartButton().click();
+            try {
+                Assert.assertEquals(0, getServerCounter());
+                sleep(3000);
+                int serverCounter = getServerCounter();
+                if (serverCounter < 1) {
+                    // No push has happened
+                    Assert.fail("No push has occured within 3s");
+                }
+                sleep(3000);
+                if (getServerCounter() <= serverCounter) {
+                    // No push has happened
+                    Assert.fail("Only one push took place within 6s");
 
+                }
+            } finally {
+                // Avoid triggering push assertions
+                getServerCounterStopButton().click();
             }
         }
 
@@ -67,8 +71,12 @@ public class BasicPush extends AbstractTestUI {
             return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[4]/VLabel[0]");
         }
 
-        private WebElement getServerCounterResetButton() {
+        private WebElement getServerCounterStartButton() {
             return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[5]/VButton[0]/domChild[0]/domChild[0]");
+        }
+
+        private WebElement getServerCounterStopButton() {
+            return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[6]/VButton[0]/domChild[0]/domChild[0]");
         }
 
         private WebElement getIncrementButton() {
@@ -86,18 +94,7 @@ public class BasicPush extends AbstractTestUI {
 
     private final Timer timer = new Timer(true);
 
-    private final TimerTask task = new TimerTask() {
-
-        @Override
-        public void run() {
-            access(new Runnable() {
-                @Override
-                public void run() {
-                    counter2.setValue(counter2.getValue() + 1);
-                }
-            });
-        }
-    };
+    private TimerTask task;
 
     @Override
     protected void setup(VaadinRequest request) {
@@ -128,11 +125,37 @@ public class BasicPush extends AbstractTestUI {
         lbl.setCaption("Server counter (updates each 3s by server thread) :");
         addComponent(lbl);
 
-        addComponent(new Button("Reset", new Button.ClickListener() {
+        addComponent(new Button("Start timer", new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
                 counter2.setValue(0);
+                if (task != null) {
+                    task.cancel();
+                }
+                task = new TimerTask() {
+
+                    @Override
+                    public void run() {
+                        access(new Runnable() {
+                            @Override
+                            public void run() {
+                                counter2.setValue(counter2.getValue() + 1);
+                            }
+                        });
+                    }
+                };
+                timer.scheduleAtFixedRate(task, 3000, 3000);
+            }
+        }));
+
+        addComponent(new Button("Stop timer", new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                if (task != null) {
+                    task.cancel();
+                    task = null;
+                }
             }
         }));
     }
@@ -157,7 +180,6 @@ public class BasicPush extends AbstractTestUI {
     @Override
     public void attach() {
         super.attach();
-        timer.scheduleAtFixedRate(task, new Date(), 3000);
     }
 
     @Override
