@@ -12,7 +12,7 @@ public class LabelModes extends ComponentTestCase<Label> {
     public static class LabelModesTest extends MultiBrowserTest {
         @Test
         public void test() throws Exception {
-            compareScreen("labelmodes");
+            compareScreen("labelmodes-tb3");
         }
 
     }
