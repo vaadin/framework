@@ -570,6 +570,9 @@ public abstract class VaadinService implements Serializable {
      * 
      * @param wrappedSession
      *            The session to lock
+     * 
+     * @throws IllegalStateException
+     *             if the session is invalidated before it can be locked
      */
     protected void lockSession(WrappedSession wrappedSession) {
         Lock lock = getSessionLock(wrappedSession);
@@ -590,6 +593,17 @@ public abstract class VaadinService implements Serializable {
             }
         }
         lock.lock();
+
+        try {
+            // Someone might have invalidated the session between fetching the
+            // lock and acquiring it. Guard for this by calling a method that's
+            // specified to throw IllegalStateException if invalidated
+            // (#12282)
+            wrappedSession.getAttribute(getLockAttributeName());
+        } catch (IllegalStateException e) {
+            lock.unlock();
+            throw e;
+        }
     }
 
     /**
@@ -613,7 +627,12 @@ public abstract class VaadinService implements Serializable {
         WrappedSession wrappedSession = getWrappedSession(request,
                 requestCanCreateSession);
 
-        lockSession(wrappedSession);
+        try {
+            lockSession(wrappedSession);
+        } catch (IllegalStateException e) {
+            throw new SessionExpiredException();
+        }
+
         try {
             return doFindOrCreateVaadinSession(request, requestCanCreateSession);
         } finally {
