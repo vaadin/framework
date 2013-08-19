@@ -16,6 +16,8 @@
 package com.vaadin.data.fieldgroup;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItem;
@@ -27,9 +29,11 @@ public class BeanFieldGroup<T> extends FieldGroup {
     private Class<T> beanType;
 
     private static Boolean beanValidationImplementationAvailable = null;
+    private final Map<Field<?>, BeanValidator> defaultValidators;
 
     public BeanFieldGroup(Class<T> beanType) {
         this.beanType = beanType;
+        this.defaultValidators = new HashMap<Field<?>, BeanValidator>();
     }
 
     @Override
@@ -171,16 +175,28 @@ public class BeanFieldGroup<T> extends FieldGroup {
     }
 
     @Override
+    public void unbind(Field<?> field) throws BindException {
+        super.unbind(field);
+
+        BeanValidator removed = defaultValidators.remove(field);
+        if (removed != null) {
+            field.removeValidator(removed);
+        }
+    }
+
+    @Override
     protected void configureField(Field<?> field) {
         super.configureField(field);
         // Add Bean validators if there are annotations
-        if (isBeanValidationImplementationAvailable()) {
+        if (isBeanValidationImplementationAvailable()
+                && !defaultValidators.containsKey(field)) {
             BeanValidator validator = new BeanValidator(beanType,
                     getPropertyId(field).toString());
             field.addValidator(validator);
             if (field.getLocale() != null) {
                 validator.setLocale(field.getLocale());
             }
+            defaultValidators.put(field, validator);
         }
     }
 
