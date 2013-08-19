@@ -1219,8 +1219,15 @@ jQuery.atmosphere = function() {
                         messages.push(message.substring(0, messageLength));
                     }
 
-                    if (messages.length == 0 || (messageStart != -1 && message.length != 0 && messageLength != message.length)){
-                        response.partialMessage = messageLength + request.messageDelimiter + message ;
+                    if (messages.length == 0 || (message.length != 0 && messageLength != message.length)){
+                        if (messageStart == -1) {
+                            // http://dev.vaadin.com/ticket/12197
+                            // partialMessage must contain length header of next message
+                            // it starts at the end of the last message
+                            response.partialMessage = message.substring(messageLength);
+                        } else {
+                            response.partialMessage = messageLength + request.messageDelimiter + message ;
+                        }
                     } else {
                         response.partialMessage = "";
                     }

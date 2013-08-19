@@ -67,4 +67,16 @@ public abstract class Action implements Command {
     public void setIconUrl(String url) {
         iconUrl = url;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Action [owner=" + owner + ", iconUrl=" + iconUrl + ", caption="
+                + caption + "]";
+    }
+
 }

@@ -83,4 +83,15 @@ public class CalendarDateRange implements Serializable {
 
         return date.compareTo(start) >= 0 && date.compareTo(end) <= 0;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "CalendarDateRange [start=" + start + ", end=" + end + "]";
+    }
+
 }
