@@ -1213,9 +1213,13 @@ jQuery.atmosphere = function() {
                         messageLength = jQuery.trim(message.substring(messageLength, messageStart));
                         message = message.substring(messageStart + request.messageDelimiter.length, message.length);
 
+                        // Stop search if there is not enough characters remaining (wait for next part to arrive)
                         if (message.length == 0 || message.length < messageLength) break;
 
-                        messageStart = message.indexOf(request.messageDelimiter);
+                        // Find start of a possibly existing subsequent message from the remaining data
+                        messageStart = message.substring(messageLength).indexOf(request.messageDelimiter);
+                        
+                        // Store the completely received message 
                         messages.push(message.substring(0, messageLength));
                     }
 
