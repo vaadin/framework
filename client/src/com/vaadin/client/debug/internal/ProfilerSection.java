@@ -71,6 +71,9 @@ public class ProfilerSection implements Section {
         private final LinkedHashMap<String, Node> children = new LinkedHashMap<String, Node>();
         private double time = 0;
         private int count = 0;
+        private double enterTime = 0;
+        private double minTime = 1000000000;
+        private double maxTime = 0;
 
         /**
          * Create a new node with the given name.
@@ -96,17 +99,17 @@ public class ProfilerSection implements Section {
          * 
          * @param name
          *            the name of the child
-         * @param time
+         * @param timestamp
          *            the timestamp for when the node is entered
          * @return the child node object
          */
-        public Node enterChild(String name, double time) {
+        public Node enterChild(String name, double timestamp) {
             Node child = children.get(name);
             if (child == null) {
                 child = new Node(name);
                 children.put(name, child);
             }
-            child.time -= time;
+            child.enterTime = timestamp;
             child.count++;
             return child;
         }
@@ -119,6 +122,26 @@ public class ProfilerSection implements Section {
          */
         public double getTimeSpent() {
             return time;
+        }
+
+        /**
+         * Gets the minimum time spent for one invocation of this node,
+         * including time spent in sub nodes
+         * 
+         * @return the time spent for the fastest invocation, in milliseconds
+         */
+        public double getMinTimeSpent() {
+            return minTime;
+        }
+
+        /**
+         * Gets the maximum time spent for one invocation of this node,
+         * including time spent in sub nodes
+         * 
+         * @return the time spent for the slowest invocation, in milliseconds
+         */
+        public double getMaxTimeSpent() {
+            return maxTime;
         }
 
         /**
@@ -180,7 +203,11 @@ public class ProfilerSection implements Section {
                         + getCount()
                         + " times ("
                         + roundToSignificantFigures(getTimeSpent() / getCount())
-                        + " ms per time).";
+                        + " ms per time, min "
+                        + roundToSignificantFigures(getMinTimeSpent())
+                        + " ms, max "
+                        + roundToSignificantFigures(getMaxTimeSpent())
+                        + " ms).";
             }
             if (!children.isEmpty()) {
                 double ownTime = getOwnTime();
@@ -221,6 +248,10 @@ public class ProfilerSection implements Section {
 
                 totalNode.time += getOwnTime();
                 totalNode.count += getCount();
+                totalNode.minTime = Math.min(totalNode.minTime,
+                        getMinTimeSpent());
+                totalNode.maxTime = Math.max(totalNode.maxTime,
+                        getMaxTimeSpent());
             }
             for (Node node : children.values()) {
                 node.sumUpTotals(totals);
@@ -228,11 +259,18 @@ public class ProfilerSection implements Section {
         }
 
         /**
-         * @since
-         * @param time
+         * @param timestamp
          */
-        public void addTime(double time) {
-            this.time += time;
+        public void leave(double timestamp) {
+            double elapsed = (timestamp - enterTime);
+            time += elapsed;
+            enterTime = 0;
+            if (elapsed < minTime) {
+                minTime = elapsed;
+            }
+            if (elapsed > maxTime) {
+                maxTime = elapsed;
+            }
         }
     }
 

@@ -224,7 +224,7 @@ public class Profiler {
                     && eventName.equals(stack.get(stack.size() - 2).getName())
                     && !isBeginEvent) {
                 // back out of sub event
-                stackTop.addTime(gwtStatsEvent.getMillis());
+                stackTop.leave(gwtStatsEvent.getMillis());
                 stack.removeLast();
                 stackTop = stack.getLast();
 
@@ -240,7 +240,7 @@ public class Profiler {
                     return;
                 }
                 Node previousStackTop = stack.removeLast();
-                previousStackTop.addTime(gwtStatsEvent.getMillis());
+                previousStackTop.leave(gwtStatsEvent.getMillis());
             } else {
                 if (!inEvent) {
                     stackTop = stackTop.enterChild(eventName,
