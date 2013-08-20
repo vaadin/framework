@@ -93,9 +93,7 @@ public class VDragAndDropManager {
                 targetElement = targetNode.getParentElement();
             }
 
-            if (Util.isTouchEvent(nativeEvent)
-                    || (dragElement != null && dragElement
-                            .isOrHasChild(targetElement))) {
+            if (Util.isTouchEvent(nativeEvent) || dragElement != null) {
                 // to detect the "real" target, hide dragelement temporary and
                 // use elementFromPoint
                 String display = dragElement.getStyle().getDisplay();
