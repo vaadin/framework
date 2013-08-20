@@ -14,35 +14,20 @@
  * the License.
  */
 
-/**
- * 
- */
 package com.vaadin.tests.tb3;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.model.InitializationError;
 
-import com.vaadin.tests.tb3.AllTB3Tests.AllTestsFinder;
+import com.vaadin.tests.tb3.AllIntegrationTests.AllIntegrationTestsFinder;
 
-/**
- * 
- * @since
- * @author Vaadin Ltd
- */
-@RunWith(AllTestsFinder.class)
-public class AllTB3Tests {
-
-    public static class AllTestsFinder extends TB3TestFinder {
-
-        /**
-         * @param klass
-         * @throws InitializationError
-         */
-        public AllTestsFinder(Class<?> klass) throws InitializationError {
-            super(klass, AbstractTB3Test.class, "com.vaadin",
-                    new String[] { "com.vaadin.tests.integration" });
+@RunWith(AllIntegrationTestsFinder.class)
+public class AllIntegrationTests {
+    public static class AllIntegrationTestsFinder extends TB3TestFinder {
+        public AllIntegrationTestsFinder(Class<?> klass)
+                throws InitializationError {
+            super(klass, AbstractTB3Test.class, "com.vaadin.tests.integration",
+                    new String[] {});
         }
-
     }
-
 }

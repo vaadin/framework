@@ -33,7 +33,7 @@ import org.junit.runners.model.Statement;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.vaadin.tests.tb3.AllTB3Tests.ParallelScheduler;
+import com.vaadin.tests.tb3.TB3TestFinder.ParallelScheduler;
 
 /**
  * This runner is loosely based on FactoryTestRunner by Ted Young
