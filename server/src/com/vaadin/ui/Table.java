@@ -564,6 +564,8 @@ public class Table extends AbstractSelect implements Action.Container,
 
     private List<Throwable> exceptionsDuringCachePopulation = new ArrayList<Throwable>();
 
+    private boolean isBeingPainted;
+
     /* Table constructors */
 
     /**
@@ -3166,6 +3168,15 @@ public class Table extends AbstractSelect implements Action.Container,
 
     @Override
     public void paintContent(PaintTarget target) throws PaintException {
+        isBeingPainted = true;
+        try {
+            doPaintContent(target);
+        } finally {
+            isBeingPainted = false;
+        }
+    }
+
+    private void doPaintContent(PaintTarget target) throws PaintException {
         /*
          * Body actions - Actions which has the target null and can be invoked
          * by right clicking on the table body.
@@ -4394,6 +4405,10 @@ public class Table extends AbstractSelect implements Action.Container,
 
     @Override
     public void containerItemSetChange(Container.ItemSetChangeEvent event) {
+        if (isBeingPainted) {
+            return;
+        }
+
         super.containerItemSetChange(event);
 
         // super method clears the key map, must inform client about this to
@@ -4416,6 +4431,10 @@ public class Table extends AbstractSelect implements Action.Container,
     @Override
     public void containerPropertySetChange(
             Container.PropertySetChangeEvent event) {
+        if (isBeingPainted) {
+            return;
+        }
+
         disableContentRefreshing();
         super.containerPropertySetChange(event);
 
