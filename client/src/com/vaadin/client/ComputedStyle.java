@@ -130,11 +130,11 @@ public class ComputedStyle {
     }-*/;
 
     public final int getIntProperty(String name) {
-        Integer parsed = parseInt(getProperty(name));
-        if (parsed != null) {
-            return parsed.intValue();
-        }
-        return 0;
+        Profiler.enter("ComputedStyle.getIntProperty");
+        String value = getProperty(name);
+        int result = parseIntNative(value);
+        Profiler.leave("ComputedStyle.getIntProperty");
+        return result;
     }
 
     /**
@@ -177,14 +177,20 @@ public class ComputedStyle {
     }
 
     /**
-     * Takes a String value e.g. "12px" and parses that to int 12.
+     * Takes a String value e.g. "12px" and parses that to Integer 12.
      * 
      * @param String
      *            a value starting with a number
-     * @return int the value from the string before any non-numeric characters.
-     *         If the value cannot be parsed to a number, returns
+     * @return Integer the value from the string before any non-numeric
+     *         characters. If the value cannot be parsed to a number, returns
      *         <code>null</code>.
+     * 
+     * @deprecated Since 7.1.4, the method {@link #parseIntNative(String)} is
+     *             used internally and this method does not belong in the public
+     *             API of {@link ComputedStyle}. {@link #parseInt(String)} might
+     *             be removed or moved to a utility class in future versions.
      */
+    @Deprecated
     public static native Integer parseInt(final String value)
     /*-{
         var number = parseInt(value, 10);
@@ -193,6 +199,26 @@ public class ComputedStyle {
         else
             // $entry not needed as function is not exported
             return @java.lang.Integer::valueOf(I)(number);
+    }-*/;
+
+    /**
+     * Takes a String value e.g. "12px" and parses that to int 12.
+     * 
+     * <p>
+     * This method returns 0 for <code>NaN</code>.
+     * 
+     * @param String
+     *            a value starting with a number
+     * @return int the value from the string before any non-numeric characters.
+     *         If the value cannot be parsed to a number, returns 0.
+     */
+    private static native int parseIntNative(final String value)
+    /*-{
+        var number = parseInt(value, 10);
+        if (isNaN(number))
+            return 0;
+        else
+            return number;
     }-*/;
 
 }
