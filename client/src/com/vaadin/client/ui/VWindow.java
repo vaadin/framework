@@ -254,6 +254,15 @@ public class VWindow extends VWindowOverlay implements
         removeTabBlockHandlers();
     }
 
+    private void addTabBlockHandlers() {
+        if (topBlockerRegistration == null) {
+            topBlockerRegistration = Event
+                    .addNativePreviewHandler(topEventBlocker);
+            bottomBlockerRegistration = Event
+                    .addNativePreviewHandler(bottomEventBlocker);
+        }
+    }
+
     private void removeTabBlockHandlers() {
         if (topBlockerRegistration != null) {
             topBlockerRegistration.removeHandler();
@@ -646,6 +655,7 @@ public class VWindow extends VWindowOverlay implements
             if (isAttached()) {
                 showModalityCurtain();
             }
+            addTabBlockHandlers();
             deferOrdering();
         } else {
             if (modalityCurtain != null) {
@@ -653,6 +663,9 @@ public class VWindow extends VWindowOverlay implements
                     hideModalityCurtain();
                 }
                 modalityCurtain = null;
+            }
+            if (!doTabStop) {
+                removeTabBlockHandlers();
             }
         }
     }
@@ -1342,21 +1355,20 @@ public class VWindow extends VWindowOverlay implements
     /**
      * Registers the handlers that prevent to leave the window using the
      * Tab-key.
+     * <p>
+     * The value of the parameter doTabStop is stored and used for non-modal
+     * windows. For modal windows, the handlers are always registered, while
+     * preserving the stored value.
      * 
      * @param doTabStop
      *            true to prevent leaving the window, false to allow leaving the
-     *            window
+     *            window for non modal windows
      */
     public void setTabStopEnabled(boolean doTabStop) {
         this.doTabStop = doTabStop;
 
-        if (doTabStop) {
-            if (topBlockerRegistration == null) {
-                topBlockerRegistration = Event
-                        .addNativePreviewHandler(topEventBlocker);
-                bottomBlockerRegistration = Event
-                        .addNativePreviewHandler(bottomEventBlocker);
-            }
+        if (doTabStop || vaadinModality) {
+            addTabBlockHandlers();
         } else {
             removeTabBlockHandlers();
         }

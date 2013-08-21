@@ -637,7 +637,10 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Sets window modality. When a modal window is open, components outside
-     * that window it cannot be accessed.
+     * that window cannot be accessed.
+     * <p>
+     * Keyboard navigation is restricted by blocking the tab key at the top and
+     * bottom of the window by activating the tab stop function internally.
      * 
      * @param modal
      *            true if modality is to be turned on
@@ -1110,11 +1113,14 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     }
 
     /**
-     * Set if it should be prevented to set the focus to a component outside the
-     * window with the tab key.
+     * Set if it should be prevented to set the focus to a component outside a
+     * non-modal window with the tab key.
      * <p>
      * This is meant to help users of assistive devices to not leaving the
      * window unintentionally.
+     * <p>
+     * For modal windows, this function is activated automatically, while
+     * preserving the stored value of tabStop.
      * 
      * @param tabStop
      *            true to keep the focus inside the window when reaching the top
