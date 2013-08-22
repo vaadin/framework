@@ -31,6 +31,7 @@ import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.LayoutManager;
+import com.vaadin.client.Profiler;
 import com.vaadin.client.Util;
 import com.vaadin.shared.ui.MarginInfo;
 
@@ -63,6 +64,23 @@ public class VAbstractOrderedLayout extends FlowPanel {
     }
 
     /**
+     * See the method {@link #addOrMoveSlot(Slot, int, boolean)}.
+     * 
+     * <p>
+     * This method always adjusts spacings for the whole layout.
+     * 
+     * @param slot
+     *            The slot to move or add
+     * @param index
+     *            The index where the slot should be placed.
+     * @deprecated since 7.1.4, use {@link #addOrMoveSlot(Slot, int, boolean)}
+     */
+    @Deprecated
+    public void addOrMoveSlot(Slot slot, int index) {
+        addOrMoveSlot(slot, index, true);
+    }
+
+    /**
      * Add or move a slot to another index.
      * <p>
      * For internal use only. May be removed or replaced in the future.
@@ -83,27 +101,42 @@ public class VAbstractOrderedLayout extends FlowPanel {
      * </pre>
      * 
      * When using this method never account for spacings.
+     * <p>
+     * The caller should remove all spacings before calling this method and
+     * re-add them (if necessary) after this method. This can be done before and
+     * after all slots have been added/moved.
      * </p>
+     * 
+     * @since 7.1.4
      * 
      * @param slot
      *            The slot to move or add
      * @param index
      *            The index where the slot should be placed.
+     * @param adjustSpacing
+     *            true to recalculate spacings for the whole layout after the
+     *            operation
      */
-    public void addOrMoveSlot(Slot slot, int index) {
+    public void addOrMoveSlot(Slot slot, int index, boolean adjustSpacing) {
+        Profiler.enter("VAOL.onConnectorHierarchyChange addOrMoveSlot find index");
         if (slot.getParent() == this) {
             int currentIndex = getWidgetIndex(slot);
             if (index == currentIndex) {
+                Profiler.leave("VAOL.onConnectorHierarchyChange addOrMoveSlot find index");
                 return;
             }
         }
+        Profiler.leave("VAOL.onConnectorHierarchyChange addOrMoveSlot find index");
 
+        Profiler.enter("VAOL.onConnectorHierarchyChange addOrMoveSlot insert");
         insert(slot, index);
+        Profiler.leave("VAOL.onConnectorHierarchyChange addOrMoveSlot insert");
 
-        /*
-         * We need to confirm spacings are correctly applied after each insert.
-         */
-        setSpacing(spacing);
+        if (adjustSpacing) {
+            Profiler.enter("VAOL.onConnectorHierarchyChange addOrMoveSlot setSpacing");
+            setSpacing(spacing);
+            Profiler.leave("VAOL.onConnectorHierarchyChange addOrMoveSlot setSpacing");
+        }
     }
 
     /**
@@ -329,14 +362,18 @@ public class VAbstractOrderedLayout extends FlowPanel {
      *            True if spacing should be used, false if not
      */
     public void setSpacing(boolean spacing) {
+        Profiler.enter("VAOL.onConnectorHierarchyChange setSpacing");
         this.spacing = spacing;
-        for (Slot slot : widgetToSlot.values()) {
-            if (getWidgetIndex(slot) > 0) {
-                slot.setSpacing(spacing);
-            } else {
-                slot.setSpacing(false);
-            }
+        // first widget does not have spacing on
+        // optimization to avoid looking up widget indices on every iteration
+        Slot firstSlot = null;
+        if (getWidgetCount() > 0) {
+            firstSlot = widgetToSlot.get(getWidget(0));
         }
+        for (Slot slot : widgetToSlot.values()) {
+            slot.setSpacing(spacing && firstSlot != slot);
+        }
+        Profiler.leave("VAOL.onConnectorHierarchyChange setSpacing");
     }
 
     /**

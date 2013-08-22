@@ -294,7 +294,11 @@ public abstract class AbstractOrderedLayoutConnector extends
         int currentIndex = 0;
         VAbstractOrderedLayout layout = getWidget();
 
-        layout.setSpacing(getState().spacing);
+        // remove spacing as it is exists as separate elements that cannot be
+        // removed easily after reordering the contents
+        Profiler.enter("AOLC.onConnectorHierarchyChange addOrMoveSlot temporarily remove spacing");
+        layout.setSpacing(false);
+        Profiler.leave("AOLC.onConnectorHierarchyChange addOrMoveSlot temporarily remove spacing");
 
         for (ComponentConnector child : getChildComponents()) {
             Profiler.enter("AOLC.onConnectorHierarchyChange add children");
@@ -305,11 +309,19 @@ public abstract class AbstractOrderedLayoutConnector extends
                 Profiler.leave("AOLC.onConnectorHierarchyChange add state change handler");
             }
             Profiler.enter("AOLC.onConnectorHierarchyChange addOrMoveSlot");
-            layout.addOrMoveSlot(slot, currentIndex++);
+            layout.addOrMoveSlot(slot, currentIndex++, false);
             Profiler.leave("AOLC.onConnectorHierarchyChange addOrMoveSlot");
 
             Profiler.leave("AOLC.onConnectorHierarchyChange add children");
         }
+
+        // re-add spacing for the elements that should have it
+        Profiler.enter("AOLC.onConnectorHierarchyChange addOrMoveSlot setSpacing");
+        // spacings were removed above
+        if (getState().spacing) {
+            layout.setSpacing(true);
+        }
+        Profiler.leave("AOLC.onConnectorHierarchyChange addOrMoveSlot setSpacing");
 
         for (ComponentConnector child : previousChildren) {
             Profiler.enter("AOLC.onConnectorHierarchyChange remove children");
@@ -325,7 +337,7 @@ public abstract class AbstractOrderedLayoutConnector extends
                 child.removeStateChangeHandler(childStateChangeHandler);
                 layout.removeWidget(child.getWidget());
             }
-            Profiler.leave("AOL.onConnectorHierarchyChange remove children");
+            Profiler.leave("AOLC.onConnectorHierarchyChange remove children");
         }
         Profiler.leave("AOLC.onConnectorHierarchyChange");
 
