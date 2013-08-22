@@ -366,9 +366,9 @@ public class VAbstractOrderedLayout extends FlowPanel {
         this.spacing = spacing;
         // first widget does not have spacing on
         // optimization to avoid looking up widget indices on every iteration
-        Slot firstSlot = null;
+        Widget firstSlot = null;
         if (getWidgetCount() > 0) {
-            firstSlot = widgetToSlot.get(getWidget(0));
+            firstSlot = getWidget(0);
         }
         for (Slot slot : widgetToSlot.values()) {
             slot.setSpacing(spacing && firstSlot != slot);
