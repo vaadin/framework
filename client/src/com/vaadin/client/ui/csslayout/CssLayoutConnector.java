@@ -22,6 +22,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.FastStringMap;
+import com.vaadin.client.Profiler;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -120,17 +121,23 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
      */
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
-        int index = 0;
+        Profiler.enter("CssLayoutConnector.onConnectorHierarchyChange");
+        Profiler.enter("CssLayoutConnector.onConnectorHierarchyChange add children");
+        // for large layouts, significantly faster to clear the list and always
+        // append to the end than to move the children around
+        getWidget().clear();
         for (ComponentConnector child : getChildComponents()) {
             VCaption childCaption = childIdToCaption
                     .get(child.getConnectorId());
             if (childCaption != null) {
-                getWidget().addOrMove(childCaption, index++);
+                getWidget().add(childCaption);
             }
-            getWidget().addOrMove(child.getWidget(), index++);
+            getWidget().add(child.getWidget());
         }
+        Profiler.leave("CssLayoutConnector.onConnectorHierarchyChange add children");
 
         // Detach old child widgets and possibly their caption
+        Profiler.enter("CssLayoutConnector.onConnectorHierarchyChange remove old children");
         for (ComponentConnector child : event.getOldChildren()) {
             if (child.getParent() == this) {
                 // Skip current children
@@ -143,6 +150,8 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
                 getWidget().remove(vCaption);
             }
         }
+        Profiler.leave("CssLayoutConnector.onConnectorHierarchyChange remove old children");
+        Profiler.leave("CssLayoutConnector.onConnectorHierarchyChange");
     }
 
     /**

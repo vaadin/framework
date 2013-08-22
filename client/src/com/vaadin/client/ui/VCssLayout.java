@@ -40,7 +40,10 @@ public class VCssLayout extends FlowPanel {
 
     /**
      * For internal use only. May be removed or replaced in the future.
+     * 
+     * @deprecated since 7.1.4 no longer used by the framework, might be removed
      */
+    @Deprecated
     public void addOrMove(Widget child, int index) {
         Profiler.enter("VCssLayout.addOrMove");
         if (child.getParent() == this) {
