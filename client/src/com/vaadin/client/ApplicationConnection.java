@@ -49,6 +49,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.regexp.shared.MatchResult;
@@ -266,8 +267,6 @@ public class ApplicationConnection {
 
     /** Event bus for communication events */
     private EventBus eventBus = GWT.create(SimpleEventBus.class);
-
-    private int lastResponseId = -1;
 
     /**
      * The communication handler methods are called at certain points during
@@ -719,6 +718,8 @@ public class ApplicationConnection {
         payload.put(ApplicationConstants.CSRF_TOKEN, new JSONString(
                 getCsrfToken()));
         payload.put(ApplicationConstants.RPC_INVOCATIONS, reqInvocations);
+        payload.put(ApplicationConstants.SERVER_SYNC_ID, new JSONNumber(
+                lastSeenServerSyncId));
 
         VConsole.log("Making UIDL Request with params: " + payload);
         String uri = translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
@@ -977,6 +978,29 @@ public class ApplicationConnection {
      * since they cannot be measured before the request is finished.
      */
     private ValueMap serverTimingInfo;
+
+    /**
+     * Holds the last seen response id given by the server.
+     * <p>
+     * The server generates a strictly increasing id for each response to each
+     * request from the client. This ID is then replayed back to the server on
+     * each request. This helps the server in knowing in what state the client
+     * is, and compare it to its own state. In short, it helps with concurrent
+     * changes between the client and server.
+     * <p>
+     * Initial value, i.e. no responses received from the server, is
+     * {@link #UNDEFINED_SYNC_ID} ({@value #UNDEFINED_SYNC_ID}). This happens
+     * between the bootstrap HTML being loaded and the first UI being rendered;
+     */
+    private int lastSeenServerSyncId = UNDEFINED_SYNC_ID;
+
+    /**
+     * The value of an undefined sync id.
+     * <p>
+     * This must be <code>-1</code>, because of the contract in
+     * {@link #getLastResponseId()}
+     */
+    private static final int UNDEFINED_SYNC_ID = -1;
 
     static final int MAX_CSS_WAITS = 100;
 
@@ -1258,7 +1282,13 @@ public class ApplicationConnection {
      * @return and id identifying the response
      */
     public int getLastResponseId() {
-        return lastResponseId;
+        /*
+         * The discrepancy between field name and getter name is simply historic
+         * - API can't be changed, but the field was repurposed in a more
+         * general, yet compatible, use. "Response id" was deemed unsuitable a
+         * name, so it was called "server sync id" instead.
+         */
+        return lastSeenServerSyncId;
     }
 
     protected void handleUIDLMessage(final Date start, final String jsonText,
@@ -1285,6 +1315,17 @@ public class ApplicationConnection {
         VConsole.log("Handling message from server");
         eventBus.fireEvent(new ResponseHandlingStartedEvent(this));
 
+        if (json.containsKey(ApplicationConstants.SERVER_SYNC_ID)) {
+            int syncId = json.getInt(ApplicationConstants.SERVER_SYNC_ID);
+
+            assert (lastSeenServerSyncId == UNDEFINED_SYNC_ID || syncId == lastSeenServerSyncId + 1) : "Newly retrieved server sync id was not exactly one larger than the previous one (new: "
+                    + syncId + ", last seen: " + lastSeenServerSyncId + ")";
+
+            lastSeenServerSyncId = syncId;
+        } else {
+            VConsole.error("Server response didn't contain an id.");
+        }
+
         // Handle redirect
         if (json.containsKey("redirect")) {
             String url = json.getValueMap("redirect").getString("url");
@@ -1292,8 +1333,6 @@ public class ApplicationConnection {
             redirect(url);
             return;
         }
-
-        lastResponseId++;
 
         final MultiStepDuration handleUIDLDuration = new MultiStepDuration();
 

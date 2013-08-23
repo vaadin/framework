@@ -72,11 +72,13 @@ public class ServerRpcHandler implements Serializable {
 
         private final String csrfToken;
         private final JSONArray invocations;
+        private final int syncId;
         private final JSONObject json;
 
         public RpcRequest(String jsonString) throws JSONException {
             json = new JSONObject(jsonString);
             csrfToken = json.getString(ApplicationConstants.CSRF_TOKEN);
+            syncId = json.getInt(ApplicationConstants.SERVER_SYNC_ID);
             invocations = new JSONArray(
                     json.getString(ApplicationConstants.RPC_INVOCATIONS));
         }
@@ -98,6 +100,16 @@ public class ServerRpcHandler implements Serializable {
          */
         public JSONArray getRpcInvocationsData() {
             return invocations;
+        }
+
+        /**
+         * Gets the sync id last seen by the client.
+         * 
+         * @return the last sync id given by the server, according to the
+         *         client's request
+         */
+        public int getSyncId() {
+            return syncId;
         }
 
         /**
@@ -153,7 +165,11 @@ public class ServerRpcHandler implements Serializable {
                 rpcRequest.getCsrfToken())) {
             throw new InvalidUIDLSecurityKeyException("");
         }
-        handleInvocations(ui, rpcRequest.getRpcInvocationsData());
+        handleInvocations(ui, rpcRequest.getSyncId(),
+                rpcRequest.getRpcInvocationsData());
+
+        ui.getConnectorTracker().cleanConcurrentlyRemovedConnectorIds(
+                rpcRequest.getSyncId());
     }
 
     /**
@@ -169,11 +185,15 @@ public class ServerRpcHandler implements Serializable {
      * 
      * @param uI
      *            the UI receiving the invocations data
+     * @param lastSyncIdSeenByClient
+     *            the most recent sync id the client has seen at the time the
+     *            request was sent
      * @param invocationsData
      *            JSON containing all information needed to execute all
      *            requested RPC calls.
      */
-    private void handleInvocations(UI uI, JSONArray invocationsData) {
+    private void handleInvocations(UI uI, int lastSyncIdSeenByClient,
+            JSONArray invocationsData) {
         // TODO PUSH Refactor so that this is not needed
         LegacyCommunicationManager manager = uI.getSession()
                 .getCommunicationManager();
@@ -182,7 +202,8 @@ public class ServerRpcHandler implements Serializable {
             Set<Connector> enabledConnectors = new HashSet<Connector>();
 
             List<MethodInvocation> invocations = parseInvocations(
-                    uI.getConnectorTracker(), invocationsData);
+                    uI.getConnectorTracker(), invocationsData,
+                    lastSyncIdSeenByClient);
             for (MethodInvocation invocation : invocations) {
                 final ClientConnector connector = manager.getConnector(uI,
                         invocation.getConnectorId());
@@ -302,12 +323,15 @@ public class ServerRpcHandler implements Serializable {
      * @param invocationsJson
      *            JSON containing all information needed to execute all
      *            requested RPC calls.
+     * @param lastSyncIdSeenByClient
+     *            the most recent sync id the client has seen at the time the
+     *            request was sent
      * @return list of MethodInvocation to perform
      * @throws JSONException
      */
     private List<MethodInvocation> parseInvocations(
-            ConnectorTracker connectorTracker, JSONArray invocationsJson)
-            throws JSONException {
+            ConnectorTracker connectorTracker, JSONArray invocationsJson,
+            int lastSyncIdSeenByClient) throws JSONException {
         ArrayList<MethodInvocation> invocations = new ArrayList<MethodInvocation>();
 
         MethodInvocation previousInvocation = null;
@@ -317,7 +341,8 @@ public class ServerRpcHandler implements Serializable {
             JSONArray invocationJson = invocationsJson.getJSONArray(i);
 
             MethodInvocation invocation = parseInvocation(invocationJson,
-                    previousInvocation, connectorTracker);
+                    previousInvocation, connectorTracker,
+                    lastSyncIdSeenByClient);
             if (invocation != null) {
                 // Can be null if the invocation was a legacy invocation and it
                 // was merged with the previous one or if the invocation was
@@ -331,7 +356,8 @@ public class ServerRpcHandler implements Serializable {
 
     private MethodInvocation parseInvocation(JSONArray invocationJson,
             MethodInvocation previousInvocation,
-            ConnectorTracker connectorTracker) throws JSONException {
+            ConnectorTracker connectorTracker, long lastSyncIdSeenByClient)
+            throws JSONException {
         String connectorId = invocationJson.getString(0);
         String interfaceName = invocationJson.getString(1);
         String methodName = invocationJson.getString(2);
@@ -339,18 +365,22 @@ public class ServerRpcHandler implements Serializable {
         if (connectorTracker.getConnector(connectorId) == null
                 && !connectorId
                         .equals(ApplicationConstants.DRAG_AND_DROP_CONNECTOR_ID)) {
-            getLogger()
-                    .log(Level.WARNING,
-                            "RPC call to "
-                                    + interfaceName
-                                    + "."
-                                    + methodName
-                                    + " received for connector "
-                                    + connectorId
-                                    + " but no such connector could be found. Resynchronizing client.");
-            // This is likely an out of sync issue (client tries to update a
-            // connector which is not present). Force resync.
-            connectorTracker.markAllConnectorsDirty();
+
+            if (!connectorTracker.connectorWasPresentAsRequestWasSent(
+                    connectorId, lastSyncIdSeenByClient)) {
+                getLogger()
+                        .log(Level.WARNING,
+                                "RPC call to "
+                                        + interfaceName
+                                        + "."
+                                        + methodName
+                                        + " received for connector "
+                                        + connectorId
+                                        + " but no such connector could be found. Resynchronizing client.");
+                // This is likely an out of sync issue (client tries to update a
+                // connector which is not present). Force resync.
+                connectorTracker.markAllConnectorsDirty();
+            }
             return null;
         }
 
