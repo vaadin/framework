@@ -88,11 +88,12 @@
 
     <target name="run-tb3-tests">
         <echo>Test.xml started</echo>
-        
+
         <property name="junit.test.suite" value="com.vaadin.tests.tb3.AllTB3Tests" />
         <property name="com.vaadin.testbench.deployment.hostname" value="auto" />
         <property name="com.vaadin.testbench.deployment.url" value="" />
-        
+        <property name="server-name" value="" />
+
         <ivy:resolve file="uitest/ivy.xml" conf="build, build-provided" />
         <ivy:cachepath pathid="classpath.compile.dependencies" conf="build, build-provided" />
 
@@ -104,8 +105,11 @@
 
             <jvmarg value="-Dcom.vaadin.testbench.tester.host=${com.vaadin.testbench.tester.host}" />
             <jvmarg value="-Dcom.vaadin.testbench.deployment.hostname=${com.vaadin.testbench.deployment.hostname}" />
+
+            <!-- special parameters used when running integration tests -->
             <jvmarg value="-Ddeployment.url=${com.vaadin.testbench.deployment.url}" />
-            
+            <jvmarg value="-Dserver-name=${server-name}" />
+
             <!-- Define where the reference screenshots and diff files are 
                     saved -->
             <jvmarg value="-Dcom.vaadin.testbench.screenshot.directory=${com.vaadin.testbench.screenshot.directory}" />
