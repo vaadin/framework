@@ -12,11 +12,13 @@ import java.util.Set;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.BodyElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.DomEvent.Type;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -768,6 +770,15 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
             int originalScrollTop = Window.getScrollTop();
             int originalScrollLeft = Window.getScrollLeft();
 
+            /*
+             * As described in #12336, removing applications will decrease the
+             * BODY height in such a way that you might temporarily lose the
+             * scrollbar. As we hide the applications, we need to conserve the
+             * original height of the applications, so that this can be taken
+             * into account.
+             */
+            int heightOfApplications = 0;
+
             // Set display: none for all Vaadin apps
             for (int i = 0; i < vaadinApps.size(); i++) {
                 String appId = vaadinApps.get(i);
@@ -779,13 +790,27 @@ public class VView extends SimplePanel implements Container, ResizeHandler,
                     // Hide everything for other applications
                     targetElement = Document.get().getElementById(appId);
                 }
+                heightOfApplications += targetElement.getOffsetHeight();
+
                 Style layoutStyle = targetElement.getStyle();
 
                 originalDisplays.add(i, layoutStyle.getDisplay());
                 layoutStyle.setDisplay(Display.NONE);
             }
 
+            /*
+             * before measuring the width, let's make sure the body height is
+             * still the same (to account for any possible scrollbars).
+             */
+            com.google.gwt.user.client.Element expander = DOM
+                    .createElement("div");
+            expander.getStyle().setHeight(heightOfApplications, Unit.PX);
+            BodyElement body = Document.get().getBody();
+            body.appendChild(expander);
+
             int w = getElement().getOffsetWidth() - getExcessWidth();
+
+            expander.removeFromParent();
 
             // Then restore the old display style before returning
             for (int i = 0; i < vaadinApps.size(); i++) {

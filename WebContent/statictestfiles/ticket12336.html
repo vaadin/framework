@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<title>Test case for ticket #12336</title>
+
+<!-- Define the application configuration -->
+<script type="text/javascript">
+    var vaadin = {
+      vaadinConfigurations: {
+        embed: {
+          appUri:'/run/com.vaadin.tests.application.EmbeddedApplicationResizeTest',
+          pathInfo: '/',
+          themeUri:'/VAADIN/themes/reindeer',
+          versionInfo : {
+        	  vaadinVersion: "6.8.x",
+              applicationVersion: "NONVERSIONED"
+          }},
+        embed2: {
+          appUri:'/run/com.vaadin.tests.application.EmbeddedApplicationResizeTest',
+          pathInfo: '/',
+          themeUri:'/VAADIN/themes/reindeer',
+          versionInfo : {
+        	  vaadinVersion: "6.8.x",
+              applicationVersion: "NONVERSIONED"
+          }}
+      }};
+  </script>
+
+<!-- Load the widget set, that is, the Client-Side Engine -->
+<script language='javascript'
+	src='/VAADIN/widgetsets/com.vaadin.terminal.gwt.DefaultWidgetSet/com.vaadin.terminal.gwt.DefaultWidgetSet.nocache.js'></script>
+
+<!-- Load the style sheet -->
+<link rel="stylesheet" type="text/css"
+	href="/VAADIN/themes/reindeer/styles.css" />
+</head>
+
+<body>
+	<!-- GWT requires an invisible history frame is needed for -->
+	<!-- page/fragment history in the browser                  -->
+	<iframe tabIndex="-1" id="__gwt_historyFrame"
+		style="position:absolute;width:0;height:0;border:0;overflow:hidden;"
+		src="javascript:false"></iframe>
+
+	<h1>
+		<a href="http://dev.vaadin.com/ticket/12336" target="_blank">Ticket
+			#12336</a>
+	</h1>
+
+	<!-- So here comes the div element in which the Vaadin -->
+	<!-- application is embedded.                          -->
+	<div id="embed" style="border: 2px solid green;"></div>
+	<div id="embed2" style="border: 2px solid green"></div>
+
+	<div style="background: #eee; height: 300px">
+	<div style="padding:1em; width: 300px">
+		<p>
+			The bug in question causes, in a special case, a vertical scrollbar in the div-embedded application.
+		</p>	
+		
+		<p>
+			If the browser window is resized so that it is shorter than the body, but taller than <code>bodyHeight - embeddedAppHeight</code>, a vertical scroll bar will be presented. Webkit-browsers (some/all) will even flicker the vertical scrollbar.
+		</p>
+	</div>
+	</div>
+
+	<noscript>You have to enable javascript in your browser to
+		use an application built with Vaadin.
+	</noscript>
+
+</body>
+</html>
