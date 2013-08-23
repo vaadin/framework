@@ -117,6 +117,11 @@ public class ButtonConnector extends AbstractComponentConnector implements
             }
         }
 
+        if (getWidget().icon != null
+                && stateChangeEvent.hasPropertyChanged("iconAltText")) {
+            getWidget().icon.setAlternateText(getState().iconAltText);
+        }
+
         getWidget().clickShortcut = getState().clickShortcutKeyCode;
     }
 

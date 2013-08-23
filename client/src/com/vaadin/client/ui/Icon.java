@@ -60,21 +60,17 @@ public class Icon extends UIObject {
             myUri = uidlUri;
         }
 
-        if (uidlAlt != null) {
-            setAlternateText(uidlAlt);
-        } else {
-            setAlternateText("");
-        }
+        setAlternateText(uidlAlt);
     }
 
     /**
      * Sets the alternate text for the icon.
      * 
-     * @param uidlAlt
-     *            with the alternate text. Must be non null
+     * @param alternateText
+     *            with the alternate text.
      */
-    public void setAlternateText(String uidlAlt) {
-        assert uidlAlt != null : "Alternate text must be non null";
-        DOM.setElementProperty(getElement(), "alt", uidlAlt);
+    public void setAlternateText(String alternateText) {
+        getElement().setAttribute("alt",
+                alternateText == null ? "" : alternateText);
     }
 }
