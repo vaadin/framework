@@ -490,6 +490,10 @@ public class ApplicationConnection {
 
             // initial UIDL provided in DOM, continue as if returned by request
             handleJSONText(jsonText, -1);
+
+            // Tooltip can't be created earlier because the necessary fields are
+            // not setup to add it in the correct place in the DOM
+            getVTooltip().showAssistive(new TooltipInfo(" "));
         }
     }
 

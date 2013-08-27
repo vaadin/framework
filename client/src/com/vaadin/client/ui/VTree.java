@@ -70,6 +70,7 @@ import com.vaadin.client.ui.dd.VDragEvent;
 import com.vaadin.client.ui.dd.VDropHandler;
 import com.vaadin.client.ui.dd.VHasDropHandler;
 import com.vaadin.client.ui.dd.VTransferable;
+import com.vaadin.client.ui.tree.TreeConnector;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.MouseEventDetails.MouseButton;
 import com.vaadin.shared.ui.MultiSelectMode;
@@ -161,6 +162,9 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
 
     /** For internal use only. May be removed or replaced in the future. */
     public String[] bodyActionKeys;
+
+    /** For internal use only. May be removed or replaced in the future. */
+    public TreeConnector connector;
 
     public VLazyExecutor iconLoaded = new VLazyExecutor(50,
             new ScheduledCommand() {
@@ -1729,6 +1733,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                     }
                 }
             }
+            showTooltipForKeyboardNavigation(node);
             return true;
         }
 
@@ -1754,6 +1759,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                     }
                 }
             }
+            showTooltipForKeyboardNavigation(node);
             return true;
         }
 
@@ -1774,6 +1780,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                     focusAndSelectNode(focusedNode.getParentNode());
                 }
             }
+            showTooltipForKeyboardNavigation(focusedNode);
             return true;
         }
 
@@ -1792,6 +1799,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                     focusAndSelectNode(focusedNode.getChildren().get(0));
                 }
             }
+            showTooltipForKeyboardNavigation(focusedNode);
             return true;
         }
 
@@ -1820,6 +1828,7 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                 selectNode(node, true);
             }
             sendSelectionToServer();
+            showTooltipForKeyboardNavigation(node);
             return true;
         }
 
@@ -1836,10 +1845,18 @@ public class VTree extends FocusElementPanel implements VHasDropHandler,
                 selectNode(node, true);
             }
             sendSelectionToServer();
+            showTooltipForKeyboardNavigation(node);
             return true;
         }
 
         return false;
+    }
+
+    private void showTooltipForKeyboardNavigation(TreeNode node) {
+        if (connector != null) {
+            getClient().getVTooltip().showAssistive(
+                    connector.getTooltipInfo(node.nodeCaptionSpan));
+        }
     }
 
     private void focusAndSelectNode(TreeNode node) {

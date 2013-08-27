@@ -45,6 +45,11 @@ public class TreeConnector extends AbstractComponentConnector implements
     protected final Map<TreeNode, TooltipInfo> tooltipMap = new HashMap<TreeNode, TooltipInfo>();
 
     @Override
+    protected void init() {
+        getWidget().connector = this;
+    }
+
+    @Override
     public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
         if (!isRealUpdate(uidl)) {
             return;
