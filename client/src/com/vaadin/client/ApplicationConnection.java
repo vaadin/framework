@@ -1686,8 +1686,15 @@ public class ApplicationConnection {
                 for (int i = 0; i < size; i++) {
                     ServerConnector c = currentConnectors.get(i);
                     if (c.getParent() != null) {
-                        if (!c.getParent().getChildren().contains(c)) {
-                            VConsole.error("ERROR: Connector is connected to a parent but the parent does not contain the connector");
+                        // only do this check if debug mode is active
+                        if (ApplicationConfiguration.isDebugMode()) {
+                            Profiler.enter("unregisterRemovedConnectors check parent - this is only performed in debug mode");
+                            // this is slow for large layouts, 25-30% of total
+                            // time for some operations even on modern browsers
+                            if (!c.getParent().getChildren().contains(c)) {
+                                VConsole.error("ERROR: Connector is connected to a parent but the parent does not contain the connector");
+                            }
+                            Profiler.leave("unregisterRemovedConnectors check parent - this is only performed in debug mode");
                         }
                     } else if (c == getUIConnector()) {
                         // UIConnector for this connection, leave as-is
