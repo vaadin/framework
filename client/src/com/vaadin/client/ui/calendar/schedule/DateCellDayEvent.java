@@ -185,10 +185,15 @@ public class DateCellDayEvent extends FocusableHTML implements
      *            If false, event is so small that caption must be in time-row
      */
     private void updateCaptions(boolean bigMode) {
-        String separator = bigMode ? "<br />" : ": ";
-        caption.setInnerHTML("<span>" + calendarEvent.getTimeAsText()
-                + "</span>" + separator
-                + Util.escapeHTML(calendarEvent.getCaption()));
+        String innerHtml;
+        String escapedCaption = Util.escapeHTML(calendarEvent.getCaption());
+        String timeAsText = calendarEvent.getTimeAsText();
+        if (bigMode) {
+            innerHtml = "<span>" + timeAsText + "</span><br />" + escapedCaption;
+        } else {
+            innerHtml = "<span>" + timeAsText + "<span>:</span></span> " + escapedCaption;
+        }
+        caption.setInnerHTML(innerHtml);
         eventContent.setInnerHTML("");
     }
 
