@@ -104,9 +104,9 @@ public class RichTextAreaConnector extends AbstractFieldConnector implements
         if (getConnection() != null && getConnectorId() != null) {
             final String html = getWidget().getSanitizedValue();
             if (!html.equals(cachedValue)) {
+                cachedValue = html;
                 getConnection().updateVariable(getConnectorId(), "text", html,
                         getState().immediate);
-                getWidget().setValue(html);
             }
         }
     };
