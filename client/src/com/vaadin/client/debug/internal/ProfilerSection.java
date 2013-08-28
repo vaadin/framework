@@ -283,7 +283,7 @@ public class ProfilerSection implements Section {
     private final FlowPanel content = new FlowPanel();
 
     public ProfilerSection() {
-        Profiler.setProfilerResultConsuer(new ProfilerResultConsumer() {
+        Profiler.setProfilerResultConsumer(new ProfilerResultConsumer() {
             @Override
             public void addProfilerData(Node rootNode, List<Node> totals) {
                 double totalTime = 0;

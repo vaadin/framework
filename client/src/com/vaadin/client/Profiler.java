@@ -273,7 +273,9 @@ public class Profiler {
             }
         });
 
-        getConsumer().addProfilerData(stack.getFirst(), totalList);
+        if (getConsumer() != null) {
+            getConsumer().addProfilerData(stack.getFirst(), totalList);
+        }
     }
 
     /**
@@ -325,7 +327,9 @@ public class Profiler {
                 return;
             }
 
-            getConsumer().addBootstrapData(timings);
+            if (getConsumer() != null) {
+                getConsumer().addBootstrapData(timings);
+            }
         }
     }
 
@@ -386,11 +390,11 @@ public class Profiler {
      * <b>Warning!</b> This is internal API and should not be used by
      * applications or add-ons.
      * 
-     * @since 7.1
+     * @since 7.1.4
      * @param profilerResultConsumer
      *            the consumer that gets profiler data
      */
-    public static void setProfilerResultConsuer(
+    public static void setProfilerResultConsumer(
             ProfilerResultConsumer profilerResultConsumer) {
         if (consumer != null) {
             throw new IllegalStateException("The consumer has already been set");
@@ -399,11 +403,7 @@ public class Profiler {
     }
 
     private static ProfilerResultConsumer getConsumer() {
-        if (consumer == null) {
-            throw new IllegalStateException("No consumer has been registered");
-        } else {
-            return consumer;
-        }
+        return consumer;
     }
 
     private static Logger getLogger() {
