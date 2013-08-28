@@ -40,20 +40,29 @@ public class VCssLayout extends FlowPanel {
 
     /**
      * For internal use only. May be removed or replaced in the future.
-     * 
-     * @deprecated since 7.1.4 no longer used by the framework, might be removed
      */
-    @Deprecated
     public void addOrMove(Widget child, int index) {
         Profiler.enter("VCssLayout.addOrMove");
         if (child.getParent() == this) {
+            Profiler.enter("VCssLayout.addOrMove getWidgetIndex");
             int currentIndex = getWidgetIndex(child);
+            Profiler.leave("VCssLayout.addOrMove getWidgetIndex");
             if (index == currentIndex) {
                 Profiler.leave("VCssLayout.addOrMove");
                 return;
             }
+        } else if (index == getWidgetCount()) {
+            // optimized path for appending components - faster especially for
+            // initial rendering
+            Profiler.enter("VCssLayout.addOrMove add");
+            add(child);
+            Profiler.leave("VCssLayout.addOrMove add");
+            Profiler.leave("VCssLayout.addOrMove");
+            return;
         }
+        Profiler.enter("VCssLayout.addOrMove insert");
         insert(child, index);
+        Profiler.leave("VCssLayout.addOrMove insert");
         Profiler.leave("VCssLayout.addOrMove");
     }
 }

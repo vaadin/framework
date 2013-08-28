@@ -123,16 +123,14 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
         Profiler.enter("CssLayoutConnector.onConnectorHierarchyChange");
         Profiler.enter("CssLayoutConnector.onConnectorHierarchyChange add children");
-        // for large layouts, significantly faster to clear the list and always
-        // append to the end than to move the children around
-        getWidget().clear();
+        int index = 0;
         for (ComponentConnector child : getChildComponents()) {
             VCaption childCaption = childIdToCaption
                     .get(child.getConnectorId());
             if (childCaption != null) {
-                getWidget().add(childCaption);
+                getWidget().addOrMove(childCaption, index++);
             }
-            getWidget().add(child.getWidget());
+            getWidget().addOrMove(child.getWidget(), index++);
         }
         Profiler.leave("CssLayoutConnector.onConnectorHierarchyChange add children");
 
