@@ -16,6 +16,7 @@
 package com.vaadin.client.debug.internal;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -24,11 +25,13 @@ import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.HasDoubleClickHandlers;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration;
 import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.FastStringSet;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.SimpleTree;
 import com.vaadin.client.Util;
@@ -45,15 +48,21 @@ public class HierarchyPanel extends FlowPanel {
     private List<SelectConnectorListener> listeners = new ArrayList<SelectConnectorListener>();
 
     public void update() {
+        // Try to keep track of currently open nodes and reopen them
+        FastStringSet openNodes = FastStringSet.create();
+        Iterator<Widget> it = iterator();
+        while (it.hasNext()) {
+            collectOpenNodes(it.next(), openNodes);
+        }
+
         clear();
-        // TODO Clearing and rebuilding the contents is not optimal for UX as
-        // any previous expansions are lost.
+
         SimplePanel trees = new SimplePanel();
 
         for (ApplicationConnection application : ApplicationConfiguration
                 .getRunningApplications()) {
             ServerConnector uiConnector = application.getUIConnector();
-            Widget connectorTree = buildConnectorTree(uiConnector);
+            Widget connectorTree = buildConnectorTree(uiConnector, openNodes);
 
             trees.add(connectorTree);
         }
@@ -61,7 +70,35 @@ public class HierarchyPanel extends FlowPanel {
         add(trees);
     }
 
-    private Widget buildConnectorTree(final ServerConnector connector) {
+    /**
+     * Adds the captions of all open (non-leaf) nodes in the hierarchy tree
+     * recursively.
+     * 
+     * @param widget
+     *            the widget in which to search for open nodes (if SimpleTree)
+     * @param openNodes
+     *            the set in which open nodes should be added
+     */
+    private void collectOpenNodes(Widget widget, FastStringSet openNodes) {
+        if (widget instanceof SimpleTree) {
+            SimpleTree tree = (SimpleTree) widget;
+            if (tree.isOpen()) {
+                openNodes.add(tree.getCaption());
+            } else {
+                // no need to look inside closed nodes
+                return;
+            }
+        }
+        if (widget instanceof HasWidgets) {
+            Iterator<Widget> it = ((HasWidgets) widget).iterator();
+            while (it.hasNext()) {
+                collectOpenNodes(it.next(), openNodes);
+            }
+        }
+    }
+
+    private Widget buildConnectorTree(final ServerConnector connector,
+            FastStringSet openNodes) {
         String connectorString = Util.getConnectorString(connector);
 
         List<ServerConnector> children = connector.getChildren();
@@ -88,7 +125,10 @@ public class HierarchyPanel extends FlowPanel {
                 }
             };
             for (ServerConnector child : children) {
-                tree.add(buildConnectorTree(child));
+                tree.add(buildConnectorTree(child, openNodes));
+            }
+            if (openNodes.contains(connectorString)) {
+                tree.open(false);
             }
             widget = tree;
         }
