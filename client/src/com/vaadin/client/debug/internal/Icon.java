@@ -32,6 +32,8 @@ public enum Icon {
     LOG("&#xf0c9;"), //
     OPTIMIZE("&#xf0d0;"), //
     HIERARCHY("&#xf0e8;"), //
+    // TODO create more appropriate icon
+    SELECTOR("&#x2263;"), //
     MENU("&#xf013;"), //
     NETWORK("&#xf0ec;"), //
     ANALYZE("&#xf0f0;"), //

@@ -41,6 +41,7 @@ import com.vaadin.client.debug.internal.LogSection;
 import com.vaadin.client.debug.internal.NetworkSection;
 import com.vaadin.client.debug.internal.ProfilerSection;
 import com.vaadin.client.debug.internal.Section;
+import com.vaadin.client.debug.internal.TestBenchSection;
 import com.vaadin.client.debug.internal.VDebugWindow;
 import com.vaadin.client.metadata.BundleLoadCallback;
 import com.vaadin.client.metadata.ConnectorBundleLoader;
@@ -578,6 +579,7 @@ public class ApplicationConfiguration implements EntryPoint {
             window.addSection((Section) GWT.create(InfoSection.class));
             window.addSection((Section) GWT.create(HierarchySection.class));
             window.addSection((Section) GWT.create(NetworkSection.class));
+            window.addSection((Section) GWT.create(TestBenchSection.class));
             if (Profiler.isEnabled()) {
                 window.addSection((Section) GWT.create(ProfilerSection.class));
             }
