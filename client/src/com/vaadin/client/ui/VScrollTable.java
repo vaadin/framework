@@ -1123,6 +1123,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         if (firstvisible != lastRequestedFirstvisible && scrollBody != null) {
             // received 'surprising' firstvisible from server: scroll there
             firstRowInViewPort = firstvisible;
+            // Update lastRequestedFirstvisible right away here
+            // (don't rely on update in the timer which could be cancelled).
+            lastRequestedFirstvisible = firstRowInViewPort;
 
             /*
              * Schedule the scrolling to be executed last so no updates to the
@@ -2406,12 +2409,16 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                         firstToBeRendered, false);
                 client.updateVariable(paintableId, "lastToBeRendered",
                         lastToBeRendered, false);
-                // remember which firstvisible we requested, in case the server
-                // has
-                // a differing opinion
-                lastRequestedFirstvisible = firstRowInViewPort;
-                client.updateVariable(paintableId, "firstvisible",
-                        firstRowInViewPort, false);
+
+                // don't request server to update page first index in case it
+                // has not been changed
+                if (firstRowInViewPort != firstvisible) {
+                    // remember which firstvisible we requested, in case the
+                    // server has a differing opinion
+                    lastRequestedFirstvisible = firstRowInViewPort;
+                    client.updateVariable(paintableId, "firstvisible",
+                            firstRowInViewPort, false);
+                }
                 client.updateVariable(paintableId, "reqfirstrow", reqFirstRow,
                         false);
                 client.updateVariable(paintableId, "reqrows", reqRows, true);

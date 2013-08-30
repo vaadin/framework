@@ -150,17 +150,23 @@ public abstract class AbstractComponentConnector extends AbstractConnector
         }
         Profiler.leave("AbstractComponentConnector.onStateChanged update tab index");
 
+        Profiler.enter("AbstractComponentConnector.onStateChanged AbstractConnector.onStateChanged()");
         super.onStateChanged(stateChangeEvent);
+        Profiler.leave("AbstractComponentConnector.onStateChanged AbstractConnector.onStateChanged()");
 
         // Style names
+        Profiler.enter("AbstractComponentConnector.onStateChanged updateWidgetStyleNames");
         updateWidgetStyleNames();
+        Profiler.leave("AbstractComponentConnector.onStateChanged updateWidgetStyleNames");
 
         /*
          * updateComponentSize need to be after caption update so caption can be
          * taken into account
          */
 
+        Profiler.enter("AbstractComponentConnector.onStateChanged updateComponentSize");
         updateComponentSize();
+        Profiler.leave("AbstractComponentConnector.onStateChanged updateComponentSize");
 
         Profiler.enter("AbstractComponentContainer.onStateChanged check tooltip");
         if (!tooltipListenersAttached && hasTooltip()) {

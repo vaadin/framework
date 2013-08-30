@@ -322,17 +322,22 @@ public class LayoutManager {
                     Collection<ElementResizeListener> listeners = elementResizeListeners
                             .get(element);
                     if (listeners != null) {
+                        Profiler.enter("Layout fire resize events - listeners not null");
+                        Profiler.enter("ElementResizeListener.onElementResize copy list");
                         ElementResizeListener[] array = listeners
                                 .toArray(new ElementResizeListener[listeners
                                         .size()]);
+                        Profiler.leave("ElementResizeListener.onElementResize copy list");
                         ElementResizeEvent event = new ElementResizeEvent(this,
                                 element);
                         for (ElementResizeListener listener : array) {
                             try {
                                 String key = null;
                                 if (Profiler.isEnabled()) {
-                                    key = "ElementReizeListener.onElementReize for "
+                                    Profiler.enter("ElementResizeListener.onElementResize construct profiler key");
+                                    key = "ElementResizeListener.onElementResize for "
                                             + Util.getSimpleName(listener);
+                                    Profiler.leave("ElementResizeListener.onElementResize construct profiler key");
                                     Profiler.enter(key);
                                 }
 
@@ -344,6 +349,7 @@ public class LayoutManager {
                                 VConsole.error(e);
                             }
                         }
+                        Profiler.leave("Layout fire resize events - listeners not null");
                     }
                 }
                 listenersToFire.clear();
@@ -716,13 +722,19 @@ public class LayoutManager {
     private void onConnectorChange(ComponentConnector connector,
             boolean widthChanged, boolean heightChanged) {
         Profiler.enter("LayoutManager.onConnectorChange");
+        Profiler.enter("LayoutManager.onConnectorChange setNeedsOverflowFix");
         setNeedsOverflowFix(connector);
+        Profiler.leave("LayoutManager.onConnectorChange setNeedsOverflowFix");
+        Profiler.enter("LayoutManager.onConnectorChange heightChanged");
         if (heightChanged) {
             currentDependencyTree.markHeightAsChanged(connector);
         }
+        Profiler.leave("LayoutManager.onConnectorChange heightChanged");
+        Profiler.enter("LayoutManager.onConnectorChange widthChanged");
         if (widthChanged) {
             currentDependencyTree.markWidthAsChanged(connector);
         }
+        Profiler.leave("LayoutManager.onConnectorChange widthChanged");
         Profiler.leave("LayoutManager.onConnectorChange");
     }
 

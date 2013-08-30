@@ -27,6 +27,7 @@ import java.util.Calendar;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
@@ -216,8 +217,35 @@ public class DevelopmentServerLauncher {
                             Socket accept = serverSocket.accept();
                             // First stop listening to the port
                             serverSocket.close();
+                            final Thread stopThread = Thread.currentThread();
+
+                            // Start a thread that kills the JVM if
+                            // server.stop() doesn't have any effect
+                            Thread interruptThread = new Thread() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        Thread.sleep(5000);
+                                        if (!server.isStopped()) {
+                                            System.out
+                                                    .println("Jetty still running. Closing JVM.");
+                                            dumpThreadStacks();
+                                            System.exit(-1);
+                                        }
+                                    } catch (InterruptedException e) {
+                                        // Interrupted if server.stop() was
+                                        // successful
+                                    }
+                                }
+                            };
+                            interruptThread.setDaemon(true);
+                            interruptThread.start();
+
                             // Then stop the jetty server
                             server.stop();
+
+                            interruptThread.interrupt();
+
                             // Send a byte to tell the other process that it can
                             // start jetty
                             OutputStream outputStream = accept
@@ -352,6 +380,21 @@ public class DevelopmentServerLauncher {
         @Override
         public void destroy() {
             // TODO Auto-generated method stub
+        }
+
+    }
+
+    private static void dumpThreadStacks() {
+        for (Entry<Thread, StackTraceElement[]> entry : Thread
+                .getAllStackTraces().entrySet()) {
+            Thread thread = entry.getKey();
+            StackTraceElement[] stackTraceElements = entry.getValue();
+
+            System.out.println(thread.getName() + " - " + thread.getState());
+            for (StackTraceElement stackTraceElement : stackTraceElements) {
+                System.out.println("    at " + stackTraceElement.toString());
+            }
+            System.out.println();
         }
 
     }

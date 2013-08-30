@@ -41,7 +41,7 @@
 
         <!-- Testing libs -->
         <dependency org="junit" name="junit" rev="4.5"
-            conf="test -> default" />
+            conf="ide,test -> default" />
 
         <!-- Internally used, for now -->
         <dependency org="com.carrotsearch" name="smartsprites"

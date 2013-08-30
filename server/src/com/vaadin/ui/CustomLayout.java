@@ -80,7 +80,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
      * @param templateStream
      *            Stream containing template data. Must be using UTF-8 encoding.
      *            To use a String as a template use for instance new
-     *            ByteArrayInputStream("<template>".getBytes()).
+     *            ByteArrayInputStream("&lt;template&gt;".getBytes()).
      * @param streamLength
      *            Length of the templateStream
      * @throws IOException
@@ -92,7 +92,7 @@ public class CustomLayout extends AbstractLayout implements LegacyComponent {
 
     /**
      * Constructor for custom layout with given template name. Template file is
-     * fetched from "<theme>/layout/<templateName>".
+     * fetched from "&lt;theme&gt;/layout/&lt;templateName&gt;".
      */
     public CustomLayout(String template) {
         this();

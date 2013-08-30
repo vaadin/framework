@@ -44,10 +44,11 @@ import com.vaadin.server.ClientConnector;
  * file was loaded from a different folder.
  * </ul>
  * <p>
- * Example: {@code @JavaScript( "http://host.com/file1.js", "file2.js"})} on the
- * class com.example.MyConnector would load the file http://host.com/file1.js as
- * is and file2.js from /com/example/file2.js on the server's classpath using
- * the ClassLoader that was used to load com.example.MyConnector.
+ * Example: <code>@JavaScript({"http://host.com/file1.js", "file2.js"})</code>
+ * on the class com.example.MyConnector would load the file
+ * http://host.com/file1.js as is and file2.js from /com/example/file2.js on the
+ * server's classpath using the ClassLoader that was used to load
+ * com.example.MyConnector.
  * 
  * @author Vaadin Ltd
  * @since 7.0.0

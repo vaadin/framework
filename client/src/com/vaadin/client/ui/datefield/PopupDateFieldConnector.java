@@ -18,6 +18,9 @@ package com.vaadin.client.ui.datefield;
 
 import java.util.Date;
 
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.DateTimeService;
 import com.vaadin.client.UIDL;
@@ -32,6 +35,35 @@ import com.vaadin.ui.DateField;
 
 @Connect(DateField.class)
 public class PopupDateFieldConnector extends TextualDateConnector {
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.client.ui.AbstractConnector#init()
+     */
+    @Override
+    protected void init() {
+        getWidget().popup.addCloseHandler(new CloseHandler<PopupPanel>() {
+
+            @Override
+            public void onClose(CloseEvent<PopupPanel> event) {
+                /*
+                 * FIXME This is a hack so we do not have to rewrite half of the
+                 * datefield so values are not sent while selecting a date
+                 * (#6252).
+                 * 
+                 * The datefield will now only set the date UIDL variables while
+                 * the user is selecting year/month/date/time and not send them
+                 * directly. Only when the user closes the popup (by clicking on
+                 * a day/enter/clicking outside of popup) then the new value is
+                 * communicated to the server.
+                 */
+                if (getWidget().isImmediate()) {
+                    getConnection().sendPendingVariableChanges();
+                }
+            }
+        });
+    }
 
     /*
      * (non-Javadoc)

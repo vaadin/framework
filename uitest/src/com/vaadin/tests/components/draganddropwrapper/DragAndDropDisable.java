@@ -31,9 +31,11 @@ public class DragAndDropDisable extends AbstractTestUI {
             addComponent(p);
 
             final CssLayout layout = new CssLayout();
+            layout.setId("csslayout-1");
             layout.setHeight("100px");
 
             final DragAndDropWrapper dnd = new DragAndDropWrapper(layout);
+            dnd.setId("ddwrapper-1");
             p.setContent(dnd);
 
             final CheckBox enabled = new CheckBox("Enabled", true);
@@ -68,9 +70,11 @@ public class DragAndDropDisable extends AbstractTestUI {
             addComponent(p);
 
             final CssLayout layout = new CssLayout();
+            layout.setId("csslayout-2");
             layout.setHeight("100px");
 
             final DragAndDropWrapper dnd = new DragAndDropWrapper(layout);
+            dnd.setId("ddwrapper-2");
             p.setContent(dnd);
 
             final CheckBox enabled = new CheckBox("Enabled", true);

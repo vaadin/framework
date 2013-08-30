@@ -53,4 +53,15 @@ public class Icon extends UIObject {
         }
     }
 
+    /**
+     * Sets the alternate text for the icon.
+     * 
+     * @param alternateText
+     *            with the alternate text.
+     */
+    public void setAlternateText(String alternateText) {
+        getElement().setAttribute("alt",
+                alternateText == null ? "" : alternateText);
+    }
+
 }

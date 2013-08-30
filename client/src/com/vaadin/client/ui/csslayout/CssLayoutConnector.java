@@ -22,6 +22,7 @@ import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.FastStringMap;
+import com.vaadin.client.Profiler;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -120,6 +121,8 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
      */
     @Override
     public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent event) {
+        Profiler.enter("CssLayoutConnector.onConnectorHierarchyChange");
+        Profiler.enter("CssLayoutConnector.onConnectorHierarchyChange add children");
         int index = 0;
         for (ComponentConnector child : getChildComponents()) {
             VCaption childCaption = childIdToCaption
@@ -129,8 +132,10 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
             }
             getWidget().addOrMove(child.getWidget(), index++);
         }
+        Profiler.leave("CssLayoutConnector.onConnectorHierarchyChange add children");
 
         // Detach old child widgets and possibly their caption
+        Profiler.enter("CssLayoutConnector.onConnectorHierarchyChange remove old children");
         for (ComponentConnector child : event.getOldChildren()) {
             if (child.getParent() == this) {
                 // Skip current children
@@ -143,6 +148,8 @@ public class CssLayoutConnector extends AbstractLayoutConnector {
                 getWidget().remove(vCaption);
             }
         }
+        Profiler.leave("CssLayoutConnector.onConnectorHierarchyChange remove old children");
+        Profiler.leave("CssLayoutConnector.onConnectorHierarchyChange");
     }
 
     /**

@@ -17,10 +17,12 @@ package com.vaadin.ui;
 
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.vaadin.event.Transferable;
 import com.vaadin.event.TransferableImpl;
@@ -183,6 +185,8 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
     private final Map<String, Object> html5DataFlavors = new LinkedHashMap<String, Object>();
     private DragStartMode dragStartMode = DragStartMode.NONE;
 
+    private Set<String> sentIds = new HashSet<String>();
+
     /**
      * Wraps given component in a {@link DragAndDropWrapper}.
      * 
@@ -229,10 +233,24 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
                 ProxyReceiver proxyReceiver = entry.getValue();
                 Html5File html5File = proxyReceiver.file;
                 if (html5File.getStreamVariable() != null) {
-                    target.addVariable(this, "rec-" + id, new ProxyReceiver(id,
-                            html5File));
-                    // these are cleaned from receivers once the upload has
-                    // started
+                    if (!sentIds.contains(id)) {
+                        target.addVariable(this, "rec-" + id,
+                                new ProxyReceiver(id, html5File));
+
+                        /*
+                         * if a new batch is requested to be uploaded before the
+                         * last one is done, any remaining ids will be replayed.
+                         * We want to avoid a new ProxyReceiver to be made since
+                         * it'll get a new URL, so we need to keep extra track
+                         * on what has been sent.
+                         * 
+                         * See #12330.
+                         */
+                        sentIds.add(id);
+
+                        // these are cleaned from receivers once the upload has
+                        // started
+                    }
                 } else {
                     // instructs the client side not to send the file
                     target.addVariable(this, "rec-" + id, (String) null);
@@ -317,6 +335,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
             }
             // no need tell to the client about this receiver on next paint
             receivers.remove(id);
+            sentIds.remove(id);
             // let the terminal GC the streamvariable and not to accept other
             // file uploads to this variable
             event.disposeStreamVariable();
