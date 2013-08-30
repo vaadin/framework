@@ -129,7 +129,9 @@ public class FileDownloader extends AbstractExtension {
             // Ignore if it isn't for us
             return false;
         }
-        getSession().lock();
+        VaadinSession session = getSession();
+
+        session.lock();
         DownloadStream stream;
 
         try {
@@ -151,7 +153,7 @@ public class FileDownloader extends AbstractExtension {
                 stream.setContentType("application/octet-stream;charset=UTF-8");
             }
         } finally {
-            getSession().unlock();
+            session.unlock();
         }
         stream.writeResponse(request, response);
         return true;
