@@ -207,19 +207,4 @@ public class Highlight {
         }
     }
 
-    /**
-     * Outputs debug information on the server - usually in the console of an
-     * IDE, with a clickable reference to the relevant code location.
-     * 
-     * @since 7.1
-     * @param connector
-     *            show debug info for this connector
-     */
-    static void showServerDebugInfo(ServerConnector connector) {
-        if (connector != null) {
-            connector.getConnection().getUIConnector()
-                    .showServerDebugInfo(connector);
-        }
-    }
-
 }
