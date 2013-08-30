@@ -249,6 +249,7 @@ public class AbsFieldValueConversions extends TestCase {
     @Test
     public void testNullConverter() {
         TextField tf = new TextField("foo");
+        tf.setConverter(new StringToIntegerConverter());
         tf.setPropertyDataSource(new ObjectProperty<Integer>(12));
         tf.setConverter((Converter) null);
         try {
