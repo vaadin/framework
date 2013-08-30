@@ -871,7 +871,7 @@ void keyframeSelector():
           start = true;
           documentHandler.startKeyframeSelector(n.image);
          }
-        (ifContentStatement() | controlDirective() | microsoftExtension() )*
+        (ifContentStatement() | microsoftExtension() )*
         <RBRACE> (<S>)*
     }
     catch (ThrowedParseException e) {
@@ -1181,7 +1181,7 @@ void styleRule() :
 	 documentHandler.startSelector(l);
      }
      // a CSS import here will not work
-     ( ifContentStatement() | controlDirective() | microsoftExtension() | importDeclaration() )*
+     ( ifContentStatement() | microsoftExtension() | importDeclaration() )*
      <RBRACE> (<S>)*
  } catch (ThrowedParseException e) {
      if (errorHandler != null) {
@@ -1527,7 +1527,7 @@ void ifContentStatement() :
 {}
 {
     contentDirective() | includeDirective() | media() | extendDirective() | styleRuleOrDeclarationOrNestedProperties() 
-    | keyframes() | LOOKAHEAD(variable()) variable() | listModifyDirective()
+    | keyframes() | LOOKAHEAD(variable()) variable() | listModifyDirective() | controlDirective()
 }
 
 void ifDirective() :
@@ -1646,7 +1646,7 @@ void mixinDirective() :
     |(name = functionName() 
       args = arglist()) <RPARAN> (<S>)*) <LBRACE> (<S>)*
     {documentHandler.startMixinDirective(name, args);}
-    ( ifContentStatement() | controlDirective() | fontFace() | page())*
+    ( ifContentStatement() | fontFace() | page())*
     <RBRACE>(<S>)*
     {documentHandler.endMixinDirective(name, args);}
 }

@@ -159,6 +159,7 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
 
     /**
      * This method parses only one rule (style rule or at-rule, except
+     * 
      * @charset).
      * 
      * @param source
@@ -991,6 +992,8 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
                 case INCLUDE_SYM:
                 case DEBUG_SYM:
                 case WARN_SYM:
+                case EACH_SYM:
+                case IF_SYM:
                 case EXTEND_SYM:
                 case CONTENT_SYM:
                 case IDENT:
@@ -999,10 +1002,6 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
                 case MEDIA_SYM:
                 case KEY_FRAME_SYM:
                     ifContentStatement();
-                    break;
-                case EACH_SYM:
-                case IF_SYM:
-                    controlDirective();
                     break;
                 case MICROSOFT_RULE:
                     microsoftExtension();
@@ -1938,6 +1937,8 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
                 case INCLUDE_SYM:
                 case DEBUG_SYM:
                 case WARN_SYM:
+                case EACH_SYM:
+                case IF_SYM:
                 case EXTEND_SYM:
                 case CONTENT_SYM:
                 case IDENT:
@@ -1946,10 +1947,6 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
                 case MEDIA_SYM:
                 case KEY_FRAME_SYM:
                     ifContentStatement();
-                    break;
-                case EACH_SYM:
-                case IF_SYM:
-                    controlDirective();
                     break;
                 case MICROSOFT_RULE:
                     microsoftExtension();
@@ -2863,6 +2860,10 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
                 case VARIABLE:
                     listModifyDirective();
                     break;
+                case EACH_SYM:
+                case IF_SYM:
+                    controlDirective();
+                    break;
                 default:
                     jj_la1[107] = jj_gen;
                     jj_consume_token(-1);
@@ -2934,6 +2935,8 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
             case INCLUDE_SYM:
             case DEBUG_SYM:
             case WARN_SYM:
+            case EACH_SYM:
+            case IF_SYM:
             case EXTEND_SYM:
             case CONTENT_SYM:
             case IDENT:
@@ -3059,6 +3062,8 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
             case INCLUDE_SYM:
             case DEBUG_SYM:
             case WARN_SYM:
+            case EACH_SYM:
+            case IF_SYM:
             case EXTEND_SYM:
             case CONTENT_SYM:
             case IDENT:
@@ -3248,6 +3253,8 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
             case INCLUDE_SYM:
             case DEBUG_SYM:
             case WARN_SYM:
+            case EACH_SYM:
+            case IF_SYM:
             case EXTEND_SYM:
             case CONTENT_SYM:
             case IDENT:
@@ -3436,6 +3443,8 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
             case INCLUDE_SYM:
             case DEBUG_SYM:
             case WARN_SYM:
+            case EACH_SYM:
+            case IF_SYM:
             case EXTEND_SYM:
             case CONTENT_SYM:
             case IDENT:
@@ -3444,10 +3453,6 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
             case MEDIA_SYM:
             case KEY_FRAME_SYM:
                 ifContentStatement();
-                break;
-            case EACH_SYM:
-            case IF_SYM:
-                controlDirective();
                 break;
             case FONT_FACE_SYM:
                 fontFace();
@@ -4908,6 +4913,7 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
                         skipStatement();
                         next = getToken(1);
                     }
+                    // only add special token kept for sprites '/**'
                     if (token.specialToken != null
                             && token.specialToken != null
                             && token.specialToken.image.startsWith("/**")) {
@@ -6588,24 +6594,6 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         }
     }
 
-    private boolean jj_3R_211() {
-        if (jj_scan_token(MINUS)) {
-            return true;
-        }
-        Token xsp;
-        if (jj_scan_token(1)) {
-            return true;
-        }
-        while (true) {
-            xsp = jj_scanpos;
-            if (jj_scan_token(1)) {
-                jj_scanpos = xsp;
-                break;
-            }
-        }
-        return false;
-    }
-
     private boolean jj_3R_187() {
         if (jj_3R_212()) {
             return true;
@@ -6722,6 +6710,21 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         return false;
     }
 
+    private boolean jj_3R_212() {
+        if (jj_scan_token(GUARDED_SYM)) {
+            return true;
+        }
+        Token xsp;
+        while (true) {
+            xsp = jj_scanpos;
+            if (jj_scan_token(1)) {
+                jj_scanpos = xsp;
+                break;
+            }
+        }
+        return false;
+    }
+
     private boolean jj_3R_213() {
         Token xsp;
         xsp = jj_scanpos;
@@ -6772,21 +6775,6 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         while (true) {
             xsp = jj_scanpos;
             if (jj_3R_188()) {
-                jj_scanpos = xsp;
-                break;
-            }
-        }
-        return false;
-    }
-
-    private boolean jj_3R_212() {
-        if (jj_scan_token(GUARDED_SYM)) {
-            return true;
-        }
-        Token xsp;
-        while (true) {
-            xsp = jj_scanpos;
-            if (jj_scan_token(1)) {
                 jj_scanpos = xsp;
                 break;
             }
@@ -7137,15 +7125,15 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         return false;
     }
 
-    private boolean jj_3R_253() {
-        if (jj_scan_token(PARENT)) {
+    private boolean jj_3R_265() {
+        if (jj_3R_186()) {
             return true;
         }
         return false;
     }
 
-    private boolean jj_3R_265() {
-        if (jj_3R_186()) {
+    private boolean jj_3R_253() {
+        if (jj_scan_token(PARENT)) {
             return true;
         }
         return false;
@@ -7207,21 +7195,6 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         return false;
     }
 
-    private boolean jj_3R_179() {
-        if (jj_scan_token(COMMA)) {
-            return true;
-        }
-        Token xsp;
-        while (true) {
-            xsp = jj_scanpos;
-            if (jj_scan_token(1)) {
-                jj_scanpos = xsp;
-                break;
-            }
-        }
-        return false;
-    }
-
     private boolean jj_3R_255() {
         if (jj_scan_token(FUNCTION)) {
             return true;
@@ -7244,8 +7217,30 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         return false;
     }
 
+    private boolean jj_3R_179() {
+        if (jj_scan_token(COMMA)) {
+            return true;
+        }
+        Token xsp;
+        while (true) {
+            xsp = jj_scanpos;
+            if (jj_scan_token(1)) {
+                jj_scanpos = xsp;
+                break;
+            }
+        }
+        return false;
+    }
+
     private boolean jj_3R_297() {
         if (jj_scan_token(IDENT)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean jj_3R_246() {
+        if (jj_3R_259()) {
             return true;
         }
         return false;
@@ -7263,8 +7258,8 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         return false;
     }
 
-    private boolean jj_3R_246() {
-        if (jj_3R_259()) {
+    private boolean jj_3R_245() {
+        if (jj_3R_258()) {
             return true;
         }
         return false;
@@ -7272,13 +7267,6 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
 
     private boolean jj_3R_296() {
         if (jj_3R_218()) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean jj_3R_245() {
-        if (jj_3R_258()) {
             return true;
         }
         return false;
@@ -7531,6 +7519,13 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         return false;
     }
 
+    private boolean jj_3R_242() {
+        if (jj_scan_token(STRING)) {
+            return true;
+        }
+        return false;
+    }
+
     private boolean jj_3R_195() {
         if (jj_3R_219()) {
             return true;
@@ -7546,31 +7541,9 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         return false;
     }
 
-    private boolean jj_3R_242() {
-        if (jj_scan_token(STRING)) {
-            return true;
-        }
-        return false;
-    }
-
     private boolean jj_3R_241() {
         if (jj_3R_255()) {
             return true;
-        }
-        return false;
-    }
-
-    private boolean jj_3R_194() {
-        if (jj_3R_218()) {
-            return true;
-        }
-        Token xsp;
-        while (true) {
-            xsp = jj_scanpos;
-            if (jj_3R_271()) {
-                jj_scanpos = xsp;
-                break;
-            }
         }
         return false;
     }
@@ -7591,6 +7564,21 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
                         }
                     }
                 }
+            }
+        }
+        return false;
+    }
+
+    private boolean jj_3R_194() {
+        if (jj_3R_218()) {
+            return true;
+        }
+        Token xsp;
+        while (true) {
+            xsp = jj_scanpos;
+            if (jj_3R_271()) {
+                jj_scanpos = xsp;
+                break;
             }
         }
         return false;
@@ -7673,6 +7661,13 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         return false;
     }
 
+    private boolean jj_3R_240() {
+        if (jj_scan_token(DIMEN)) {
+            return true;
+        }
+        return false;
+    }
+
     private boolean jj_3R_177() {
         Token xsp;
         xsp = jj_scanpos;
@@ -7694,8 +7689,8 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         return false;
     }
 
-    private boolean jj_3R_240() {
-        if (jj_scan_token(DIMEN)) {
+    private boolean jj_3R_239() {
+        if (jj_scan_token(KHZ)) {
             return true;
         }
         return false;
@@ -7706,13 +7701,6 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
             return true;
         }
         if (jj_3R_177()) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean jj_3R_239() {
-        if (jj_scan_token(KHZ)) {
             return true;
         }
         return false;
@@ -7912,13 +7900,6 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         return false;
     }
 
-    private boolean jj_3_1() {
-        if (jj_3R_175()) {
-            return true;
-        }
-        return false;
-    }
-
     private boolean jj_3R_220() {
         if (jj_3R_254()) {
             return true;
@@ -7926,17 +7907,9 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         return false;
     }
 
-    private boolean jj_3R_181() {
-        if (jj_3R_199()) {
+    private boolean jj_3_1() {
+        if (jj_3R_175()) {
             return true;
-        }
-        Token xsp;
-        while (true) {
-            xsp = jj_scanpos;
-            if (jj_3R_200()) {
-                jj_scanpos = xsp;
-                break;
-            }
         }
         return false;
     }
@@ -8009,6 +7982,21 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
                         }
                     }
                 }
+            }
+        }
+        return false;
+    }
+
+    private boolean jj_3R_181() {
+        if (jj_3R_199()) {
+            return true;
+        }
+        Token xsp;
+        while (true) {
+            xsp = jj_scanpos;
+            if (jj_3R_200()) {
+                jj_scanpos = xsp;
+                break;
             }
         }
         return false;
@@ -8134,6 +8122,18 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         return false;
     }
 
+    private boolean jj_3_8() {
+        Token xsp;
+        xsp = jj_scanpos;
+        if (jj_3_9()) {
+            jj_scanpos = xsp;
+        }
+        if (jj_3R_183()) {
+            return true;
+        }
+        return false;
+    }
+
     private boolean jj_3R_188() {
         if (jj_scan_token(SEMICOLON)) {
             return true;
@@ -8145,18 +8145,6 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
                 jj_scanpos = xsp;
                 break;
             }
-        }
-        return false;
-    }
-
-    private boolean jj_3_8() {
-        Token xsp;
-        xsp = jj_scanpos;
-        if (jj_3_9()) {
-            jj_scanpos = xsp;
-        }
-        if (jj_3R_183()) {
-            return true;
         }
         return false;
     }
@@ -8221,6 +8209,24 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
                 jj_scanpos = xsp;
                 break;
             }
+        }
+        while (true) {
+            xsp = jj_scanpos;
+            if (jj_scan_token(1)) {
+                jj_scanpos = xsp;
+                break;
+            }
+        }
+        return false;
+    }
+
+    private boolean jj_3R_211() {
+        if (jj_scan_token(MINUS)) {
+            return true;
+        }
+        Token xsp;
+        if (jj_scan_token(1)) {
+            return true;
         }
         while (true) {
             xsp = jj_scanpos;
@@ -8297,22 +8303,22 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
                 0x564000c0, 0x0, 0x0, 0x0, 0xc0, 0x0, 0x40, 0x40, 0x40, 0x40,
                 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0xc0, 0x80, 0x80, 0x80,
                 0x80, 0x80, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x40, 0x0, 0x0,
-                0x0, 0x0, 0x0, 0x0, 0x50000000, 0x64000c0, 0x0, 0x3f, 0x0,
-                0x64000c0, 0x0, 0x80000000, 0x0, 0x3f, 0x0, 0x0, 0x64000c0,
-                0x0, 0x3f, 0x0, 0x0, 0x0, 0x0, 0x0, 0x64000c0, 0x0, 0x0, 0x0,
-                0x0, 0x0, 0x0, 0x0, 0x80, 0x0, 0x564000c0, 0x564000c0, 0x0,
-                0x0, 0x0, 0x0, 0x0, 0x0, 0x40, 0x40, 0x160040, 0x0, 0x40, 0x0,
-                0x0, 0x160040, 0x0, 0x40, 0x0, 0x80, 0x0, 0x0, 0x0, 0x60000c0,
-                0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x2, 0x0, 0x0, 0x0, 0x0, 0x0,
-                0x0, 0x0, 0x0, 0x0, 0x2, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-                0x2, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x2, 0x0, 0x0,
-                0x0, 0x0, 0x6000000, 0x0, 0x0, 0x60000, 0x0, 0x0, 0x0, 0x0,
-                0x0, 0x0, 0x0, 0x0, 0x0, 0x80, 0x0, 0x0, 0x80, 0x0, 0x6000000,
-                0xc0, 0x0, 0x0, 0x0, 0x80, 0x0, 0x0, 0x80, 0x0, 0x160000, 0x0,
-                0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-                0x160000, 0x0, 0x0, 0x0, 0x160000, 0x160000, 0x160000, 0x0,
-                0x0, 0x160000, 0x0, 0x60000c0, 0x0, 0x0, 0x0, 0x80, 0x0, 0x0,
-                0x80, 0x0, };
+                0x0, 0x0, 0x0, 0x0, 0x50000000, 0x64000c0, 0x50000000, 0x3f,
+                0x0, 0x564000c0, 0x0, 0x80000000, 0x0, 0x3f, 0x0, 0x0,
+                0x564000c0, 0x0, 0x3f, 0x0, 0x0, 0x0, 0x0, 0x0, 0x564000c0,
+                0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x80, 0x0, 0x564000c0,
+                0x564000c0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x40, 0x40, 0x160040,
+                0x0, 0x40, 0x0, 0x0, 0x160040, 0x0, 0x40, 0x0, 0x80, 0x0, 0x0,
+                0x0, 0x60000c0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x2, 0x0, 0x0,
+                0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x2, 0x0, 0x0, 0x0, 0x0,
+                0x0, 0x0, 0x0, 0x2, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+                0x2, 0x0, 0x0, 0x0, 0x0, 0x6000000, 0x0, 0x0, 0x60000, 0x0,
+                0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x80, 0x0, 0x0, 0x80,
+                0x0, 0x6000000, 0xc0, 0x0, 0x0, 0x0, 0x80, 0x0, 0x0, 0x80, 0x0,
+                0x160000, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+                0x0, 0x0, 0x160000, 0x0, 0x0, 0x0, 0x160000, 0x160000,
+                0x160000, 0x0, 0x0, 0x160000, 0x0, 0x60000c0, 0x0, 0x0, 0x0,
+                0x80, 0x0, 0x0, 0x80, 0x0, };
     }
 
     private static void jj_la1_init_2() {

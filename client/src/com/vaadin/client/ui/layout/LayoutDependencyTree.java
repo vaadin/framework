@@ -26,6 +26,7 @@ import com.vaadin.client.FastStringMap;
 import com.vaadin.client.FastStringSet;
 import com.vaadin.client.HasComponentsConnector;
 import com.vaadin.client.JsArrayObject;
+import com.vaadin.client.Profiler;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
@@ -267,6 +268,7 @@ public class LayoutDependencyTree {
         }
 
         public void markSizeAsChanged() {
+            Profiler.enter("LayoutDependency.markSizeAsChanged phase 1");
             // When the size has changed, all that use that size should be
             // layouted
             JsArrayString needsSizeForLayout = getNeedsSizeForLayout();
@@ -276,14 +278,20 @@ public class LayoutDependencyTree {
                 LayoutDependency layoutDependency = getDependency(connectorId,
                         direction);
                 if (layoutDependency.connector instanceof ManagedLayout) {
+                    Profiler.enter("LayoutDependency.markSizeAsChanged setNeedsLayout");
                     layoutDependency.setNeedsLayout(true);
+                    Profiler.leave("LayoutDependency.markSizeAsChanged setNeedsLayout");
                 } else {
+                    Profiler.enter("LayoutDependency.markSizeAsChanged propagatePostLayoutMeasure");
                     // Should simulate setNeedsLayout(true) + markAsLayouted ->
                     // propagate needs measure
                     layoutDependency.propagatePostLayoutMeasure();
+                    Profiler.leave("LayoutDependency.markSizeAsChanged propagatePostLayoutMeasure");
                 }
             }
+            Profiler.leave("LayoutDependency.markSizeAsChanged phase 1");
 
+            Profiler.enter("LayoutDependency.markSizeAsChanged scrollbars");
             // Should also go through the hierarchy to discover appeared or
             // disappeared scrollbars
             ComponentConnector scrollingBoundary = getScrollingBoundary(connector);
@@ -291,6 +299,7 @@ public class LayoutDependencyTree {
                 getDependency(scrollingBoundary.getConnectorId(),
                         getOppositeDirection()).setNeedsMeasure(true);
             }
+            Profiler.leave("LayoutDependency.markSizeAsChanged scrollbars");
 
         }
 
@@ -332,22 +341,28 @@ public class LayoutDependencyTree {
         }
 
         private void propagatePostLayoutMeasure() {
+            Profiler.enter("LayoutDependency.propagatePostLayoutMeasure getResizedByLayout");
             JsArrayString resizedByLayout = getResizedByLayout();
+            Profiler.leave("LayoutDependency.propagatePostLayoutMeasure getResizedByLayout");
             int length = resizedByLayout.length();
             for (int i = 0; i < length; i++) {
+                Profiler.enter("LayoutDependency.propagatePostLayoutMeasure setNeedsMeasure");
                 String resizedId = resizedByLayout.get(i);
                 LayoutDependency layoutDependency = getDependency(resizedId,
                         direction);
                 layoutDependency.setNeedsMeasure(true);
+                Profiler.leave("LayoutDependency.propagatePostLayoutMeasure setNeedsMeasure");
             }
 
             // Special case for e.g. wrapping texts
+            Profiler.enter("LayoutDependency.propagatePostLayoutMeasure horizontal case");
             if (direction == HORIZONTAL && !connector.isUndefinedWidth()
                     && connector.isUndefinedHeight()) {
                 LayoutDependency dependency = getDependency(
                         connector.getConnectorId(), VERTICAL);
                 dependency.setNeedsMeasure(true);
             }
+            Profiler.leave("LayoutDependency.propagatePostLayoutMeasure horizontal case");
         }
 
         @Override

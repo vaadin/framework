@@ -1686,8 +1686,15 @@ public class ApplicationConnection {
                 for (int i = 0; i < size; i++) {
                     ServerConnector c = currentConnectors.get(i);
                     if (c.getParent() != null) {
-                        if (!c.getParent().getChildren().contains(c)) {
-                            VConsole.error("ERROR: Connector is connected to a parent but the parent does not contain the connector");
+                        // only do this check if debug mode is active
+                        if (ApplicationConfiguration.isDebugMode()) {
+                            Profiler.enter("unregisterRemovedConnectors check parent - this is only performed in debug mode");
+                            // this is slow for large layouts, 25-30% of total
+                            // time for some operations even on modern browsers
+                            if (!c.getParent().getChildren().contains(c)) {
+                                VConsole.error("ERROR: Connector is connected to a parent but the parent does not contain the connector");
+                            }
+                            Profiler.leave("unregisterRemovedConnectors check parent - this is only performed in debug mode");
                         }
                     } else if (c == getUIConnector()) {
                         // UIConnector for this connection, leave as-is
@@ -1701,7 +1708,9 @@ public class ApplicationConnection {
                         // hierarchy, unregister it and any possible
                         // children. The UIConnector should never be
                         // unregistered even though it has no parent.
+                        Profiler.enter("unregisterRemovedConnectors unregisterConnector");
                         connectorMap.unregisterConnector(c);
+                        Profiler.leave("unregisterRemovedConnectors unregisterConnector");
                         unregistered++;
                     }
 
@@ -1984,12 +1993,16 @@ public class ApplicationConnection {
                 JsArrayString hierarchyKeys = hierarchies.getKeyArray();
                 for (int i = 0; i < hierarchyKeys.length(); i++) {
                     try {
+                        Profiler.enter("updateConnectorHierarchy hierarchy entry");
+
                         String connectorId = hierarchyKeys.get(i);
                         ServerConnector parentConnector = connectorMap
                                 .getConnector(connectorId);
                         JsArrayString childConnectorIds = hierarchies
                                 .getJSStringArray(connectorId);
                         int childConnectorSize = childConnectorIds.length();
+
+                        Profiler.enter("updateConnectorHierarchy find new connectors");
 
                         List<ServerConnector> newChildren = new ArrayList<ServerConnector>();
                         List<ComponentConnector> newComponents = new ArrayList<ComponentConnector>();
@@ -2029,6 +2042,8 @@ public class ApplicationConnection {
                             }
                         }
 
+                        Profiler.leave("updateConnectorHierarchy find new connectors");
+
                         // TODO This check should be done on the server side in
                         // the future so the hierarchy update is only sent when
                         // something actually has changed
@@ -2040,6 +2055,8 @@ public class ApplicationConnection {
                         if (!actuallyChanged) {
                             continue;
                         }
+
+                        Profiler.enter("updateConnectorHierarchy handle HasComponentsConnector");
 
                         if (parentConnector instanceof HasComponentsConnector) {
                             HasComponentsConnector ccc = (HasComponentsConnector) parentConnector;
@@ -2062,7 +2079,13 @@ public class ApplicationConnection {
                                     + " has component children even though it isn't a HasComponentsConnector");
                         }
 
+                        Profiler.leave("updateConnectorHierarchy handle HasComponentsConnector");
+
+                        Profiler.enter("updateConnectorHierarchy setChildren");
                         parentConnector.setChildren(newChildren);
+                        Profiler.leave("updateConnectorHierarchy setChildren");
+
+                        Profiler.enter("updateConnectorHierarchy find removed children");
 
                         /*
                          * Find children removed from this parent and mark for
@@ -2084,10 +2107,16 @@ public class ApplicationConnection {
                                 maybeDetached.add(oldChild.getConnectorId());
                             }
                         }
+
+                        Profiler.leave("updateConnectorHierarchy find removed children");
                     } catch (final Throwable e) {
                         VConsole.error(e);
+                    } finally {
+                        Profiler.leave("updateConnectorHierarchy hierarchy entry");
                     }
                 }
+
+                Profiler.enter("updateConnectorHierarchy detach removed connectors");
 
                 /*
                  * Connector is in maybeDetached at this point if it has been
@@ -2099,6 +2128,8 @@ public class ApplicationConnection {
                             .getConnector(maybeDetachedArray.get(i));
                     recursivelyDetach(removed, result.events);
                 }
+
+                Profiler.leave("updateConnectorHierarchy detach removed connectors");
 
                 Profiler.leave("updateConnectorHierarchy");
 
@@ -2116,27 +2147,44 @@ public class ApplicationConnection {
                  * is the closest we can get without data from the server.
                  * #10151
                  */
+                Profiler.enter("ApplicationConnection recursivelyDetach reset state");
                 try {
+                    Profiler.enter("ApplicationConnection recursivelyDetach reset state - getStateType");
                     Type stateType = AbstractConnector.getStateType(connector);
+                    Profiler.leave("ApplicationConnection recursivelyDetach reset state - getStateType");
 
                     // Empty state instance to get default property values from
+                    Profiler.enter("ApplicationConnection recursivelyDetach reset state - createInstance");
                     Object defaultState = stateType.createInstance();
+                    Profiler.leave("ApplicationConnection recursivelyDetach reset state - createInstance");
 
-                    SharedState state = connector.getState();
+                    if (connector instanceof AbstractConnector) {
+                        // optimization as the loop setting properties is very
+                        // slow, especially on IE8
+                        replaceState((AbstractConnector) connector,
+                                defaultState);
+                    } else {
+                        SharedState state = connector.getState();
 
-                    JsArrayObject<Property> properties = stateType
-                            .getPropertiesAsArray();
-                    int size = properties.size();
-                    for (int i = 0; i < size; i++) {
-                        Property property = properties.get(i);
-                        property.setValue(state,
-                                property.getValue(defaultState));
+                        Profiler.enter("ApplicationConnection recursivelyDetach reset state - properties");
+                        JsArrayObject<Property> properties = stateType
+                                .getPropertiesAsArray();
+                        int size = properties.size();
+                        for (int i = 0; i < size; i++) {
+                            Property property = properties.get(i);
+                            property.setValue(state,
+                                    property.getValue(defaultState));
+                        }
+                        Profiler.leave("ApplicationConnection recursivelyDetach reset state - properties");
                     }
                 } catch (NoDataException e) {
                     throw new RuntimeException("Can't reset state for "
                             + Util.getConnectorString(connector), e);
+                } finally {
+                    Profiler.leave("ApplicationConnection recursivelyDetach reset state");
                 }
 
+                Profiler.enter("ApplicationConnection recursivelyDetach perform detach");
                 /*
                  * Recursively detach children to make sure they get
                  * setParent(null) and hierarchy change events as needed.
@@ -2153,18 +2201,22 @@ public class ApplicationConnection {
                     }
                     recursivelyDetach(child, events);
                 }
+                Profiler.leave("ApplicationConnection recursivelyDetach perform detach");
 
                 /*
                  * Clear child list and parent
                  */
+                Profiler.enter("ApplicationConnection recursivelyDetach clear children and parent");
                 connector
                         .setChildren(Collections.<ServerConnector> emptyList());
                 connector.setParent(null);
+                Profiler.leave("ApplicationConnection recursivelyDetach clear children and parent");
 
                 /*
                  * Create an artificial hierarchy event for containers to give
                  * it a chance to clean up after its children if it has any
                  */
+                Profiler.enter("ApplicationConnection recursivelyDetach create hierarchy event");
                 if (connector instanceof HasComponentsConnector) {
                     HasComponentsConnector ccc = (HasComponentsConnector) connector;
                     List<ComponentConnector> oldChildren = ccc
@@ -2185,7 +2237,14 @@ public class ApplicationConnection {
                         events.add(event);
                     }
                 }
+                Profiler.leave("ApplicationConnection recursivelyDetach create hierarchy event");
             }
+
+            private native void replaceState(AbstractConnector connector,
+                    Object defaultState)
+            /*-{
+                connector.@com.vaadin.client.ui.AbstractConnector::state = defaultState;
+            }-*/;
 
             private void handleRpcInvocations(ValueMap json) {
                 if (json.containsKey("rpc")) {

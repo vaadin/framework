@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:7171/" />
+<title>New Test</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">New Test</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/run/com.vaadin.tests.components.datefield.PopupDateFieldValueChangeEvents?restartApplication</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFieldValueChangeEvents::/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VHorizontalLayout[0]/Slot[0]/VPopupCalendar[0]#popupButton</td>
+	<td>12,11</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>//table[@id='PID_VAADIN_POPUPCAL']/tbody/tr[2]/td/table/tbody/tr[4]/td[3]/span</td>
+	<td>18,12</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFieldValueChangeEvents::/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[1]/VLabel[0]/domChild[0]</td>
+	<td>Value changes: 1</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFieldValueChangeEvents::/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VHorizontalLayout[0]/Slot[0]/VPopupCalendar[0]#popupButton</td>
+	<td>12,11</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>//table[@id='PID_VAADIN_POPUPCAL']/tbody/tr[3]/td/div/select</td>
+	<td>label=01</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>//table[@id='PID_VAADIN_POPUPCAL']/tbody/tr[3]/td/div/select[2]</td>
+	<td>label=02</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>//table[@id='PID_VAADIN_POPUPCAL']/tbody/tr[3]/td/div/select[3]</td>
+	<td>label=03</td>
+</tr>
+<tr>
+	<td>pressSpecialKey</td>
+	<td>//table[@id='PID_VAADIN_POPUPCAL']/tbody/tr[3]/td/div/select[3]</td>
+	<td>enter</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFieldValueChangeEvents::/VVerticalLayout[0]/Slot[0]/VLabel[0]</td>
+	<td>410,9</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFieldValueChangeEvents::/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[1]/VLabel[0]/domChild[0]</td>
+	<td>Value changes: 2</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFieldValueChangeEvents::/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VHorizontalLayout[0]/Slot[1]/VNativeSelect[0]/domChild[0]</td>
+	<td>label=MONTH</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFieldValueChangeEvents::/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VHorizontalLayout[0]/Slot[0]/VPopupCalendar[0]#popupButton</td>
+	<td>14,9</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>xpath=(//button[@type='button'])[4]</td>
+	<td>3,13</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>xpath=(//button[@type='button'])[5]</td>
+	<td>9,6</td>
+</tr>
+<tr>
+	<td>mouseClick</td>
+	<td>xpath=(//button[@type='button'])[4]</td>
+	<td>7,8</td>
+</tr>
+<tr>
+	<td>pressSpecialKey</td>
+	<td>xpath=(//button[@type='button'])[4]</td>
+	<td>enter</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>vaadin=runcomvaadintestscomponentsdatefieldPopupDateFieldValueChangeEvents::/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[1]/VLabel[0]/domChild[0]</td>
+	<td>Value changes: 3</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

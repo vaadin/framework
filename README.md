@@ -23,6 +23,22 @@ Start Eclipse
 -------------
 Start Eclipse and use the root checkout folder (the one containing the *vaadin*, *gwt* and *gwt-tools* folders) as the workspace folder
 
+Install IvyDE
+---------
+You'll need the Apache Ivy plug-in for Eclipse to build the project later on, in “Compiling the Default Widget Set and Themes”.
+
+1. Go to *Help* -> *Install New Software...*
+1. Enter `http://www.apache.org/dist/ant/ivyde/updatesite` in the "Work with:" text field
+1. Select and install all items
+
+If you have installed IvyDE via the Eclipse Marketplace previously, make sure that you also have *Apache Ivy Ant Targets* installed, which is not included in that IvyDE installation:
+
+1. Go to *Help* -> *Install New Software...*
+1. Click the hyperlink in the "What is already installed?" sentence near the bottom right-hand corner
+1. Verify that the list includes *Apache Ivy Ant Tasks*
+
+If it isn't included, follow the installation process above, but select only *Apache Ivy library* > *Apache Ivy Ant Tasks*
+
 Set up the Workspace and define required variables for projects
 --------
 1. Open *Window* -> *Preferences* (Windows) or *Eclipse* -> *Preferences* (Mac)
@@ -38,7 +54,7 @@ Set up the Workspace and define required variables for projects
   1. JDK_HOME referring to your jdk installation directory 
      ![GWT_TOOLS](http://f.cl.ly/items/1k2Z1n2v0p0y3l0X0D1G/ClasspathVars.png "Defining GWT_TOOLS")
 1. Go to Java -> Compiler
-  1. Check that the compliance level has been set to 1.6 (or higher)
+  1. Check that the compliance level has been set to 1.6
 1. Go to XML -> XML Files -> Editor
  1. Ensure the settings are follows:
 <pre><code>Line width: 72

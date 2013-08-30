@@ -49,8 +49,8 @@ import com.vaadin.server.ClientConnector;
  * VAADIN folder and vaadin:// you can publish stylesheets which use images or
  * other files with relative paths.
  * <p>
- * Example: {@code @StyleSheet( "http://host.com/file1.css", "file2.css"})} on
- * the class com.example.MyConnector would load the file
+ * Example: <code>@StyleSheet({"http://host.com/file1.css", "file2.css"})</code>
+ * on the class com.example.MyConnector would load the file
  * http://host.com/file1.css as is and file2.css from /com/example/file2.css on
  * the server's classpath using the ClassLoader that was used to load
  * com.example.MyConnector.

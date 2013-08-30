@@ -23,6 +23,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Paintable;
+import com.vaadin.client.Profiler;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.client.ui.ClickEventHandler;
@@ -194,22 +195,31 @@ public class PanelConnector extends AbstractSingleComponentContainerConnector
         VPanel panel = getWidget();
 
         LayoutManager layoutManager = getLayoutManager();
+        Profiler.enter("PanelConnector.layout getHeights");
         int top = layoutManager.getOuterHeight(panel.captionNode);
         int bottom = layoutManager.getInnerHeight(panel.bottomDecoration);
+        Profiler.leave("PanelConnector.layout getHeights");
 
+        Profiler.enter("PanelConnector.layout modify style");
         Style style = panel.getElement().getStyle();
         panel.captionNode.getParentElement().getStyle()
                 .setMarginTop(-top, Unit.PX);
         panel.bottomDecoration.getStyle().setMarginBottom(-bottom, Unit.PX);
         style.setPaddingTop(top, Unit.PX);
         style.setPaddingBottom(bottom, Unit.PX);
+        Profiler.leave("PanelConnector.layout modify style");
 
         // Update scroll positions
+        Profiler.enter("PanelConnector.layout update scroll positions");
         panel.contentNode.setScrollTop(panel.scrollTop);
         panel.contentNode.setScrollLeft(panel.scrollLeft);
+        Profiler.leave("PanelConnector.layout update scroll positions");
+
         // Read actual value back to ensure update logic is correct
+        Profiler.enter("PanelConnector.layout read scroll positions");
         panel.scrollTop = panel.contentNode.getScrollTop();
         panel.scrollLeft = panel.contentNode.getScrollLeft();
+        Profiler.leave("PanelConnector.layout read scroll positions");
     }
 
     @Override
