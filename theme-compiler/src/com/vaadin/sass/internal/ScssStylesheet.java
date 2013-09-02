@@ -59,7 +59,7 @@ public class ScssStylesheet extends Node {
 
     private static HashMap<Node, Node> lastNodeAdded = new HashMap<Node, Node>();
 
-    private String fileName;
+    private File file;
 
     private String charset;
 
@@ -162,7 +162,7 @@ public class ScssStylesheet extends Node {
             InputSource source = resolver.resolve(identifier);
             if (source != null) {
                 File f = new File(source.getURI());
-                setFileName(f.getParent());
+                setFile(f);
                 return source;
             }
         }
@@ -355,12 +355,28 @@ public class ScssStylesheet extends Node {
         return mixinDefs.get(name);
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setFile(File file) {
+        this.file = file;
     }
 
+    /**
+     * Returns the directory containing this style sheet
+     * 
+     * @since 7.2
+     * @return The directory containing this style sheet
+     */
+    public String getDirectory() {
+        return file.getParent();
+    }
+
+    /**
+     * Returns the full file name for this style sheet
+     * 
+     * @since 7.2
+     * @return The full file name for this style sheet
+     */
     public String getFileName() {
-        return fileName;
+        return file.getPath();
     }
 
     public static HashMap<Node, Node> getLastNodeAdded() {

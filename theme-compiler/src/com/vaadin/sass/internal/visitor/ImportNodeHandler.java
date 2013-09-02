@@ -58,7 +58,7 @@ public class ImportNodeHandler {
                 if (!importNode.isPureCssImport()) {
                     try {
                         StringBuilder filePathBuilder = new StringBuilder(
-                                styleSheet.getFileName());
+                                styleSheet.getDirectory());
                         filePathBuilder.append(File.separatorChar).append(
                                 importNode.getUri());
                         if (!filePathBuilder.toString().endsWith(".scss")) {
@@ -73,9 +73,10 @@ public class ImportNodeHandler {
                             imported = ScssStylesheet.get(importNode.getUri());
                         }
                         if (imported == null) {
-                            throw new FileNotFoundException(importNode.getUri()
-                                    + " (parent: "
-                                    + ScssStylesheet.get().getFileName() + ")");
+                            throw new FileNotFoundException("Import '"
+                                    + importNode.getUri() + "' in '"
+                                    + styleSheet.getFileName()
+                                    + "' could not be found");
                         }
 
                         traverse(imported);
