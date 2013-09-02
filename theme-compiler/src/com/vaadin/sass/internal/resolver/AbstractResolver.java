@@ -65,6 +65,13 @@ public abstract class AbstractResolver implements ScssStylesheetResolver,
                 return source;
             }
 
+            // Try to find partial import (_identifier.scss)
+            source = normalizeAndResolve(path + "/_" + identifier);
+
+            if (source != null) {
+                return source;
+            }
+
         }
 
         return normalizeAndResolve(identifier);
