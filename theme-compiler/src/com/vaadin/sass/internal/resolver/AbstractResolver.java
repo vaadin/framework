@@ -18,6 +18,8 @@ package com.vaadin.sass.internal.resolver;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import org.w3c.css.sac.InputSource;
@@ -44,22 +46,81 @@ public abstract class AbstractResolver implements ScssStylesheetResolver,
     @Override
     public InputSource resolve(ScssStylesheet parentStylesheet,
             String identifier) {
-        InputSource source = null;
-        if (parentStylesheet != null) {
-            StringBuilder filePathBuilder = new StringBuilder(
-                    parentStylesheet.getFileName());
-            filePathBuilder.append(File.separatorChar).append(identifier);
-            if (!filePathBuilder.toString().endsWith(".scss")) {
-                filePathBuilder.append(".scss");
+        // Remove a possible ".scss" suffix
+        identifier = identifier.replaceFirst(".scss$", "");
+
+        List<String> potentialParentPaths = getPotentialParentPaths(
+                parentStylesheet, identifier);
+
+        // remove path from identifier as it has already been added to the
+        // parent path
+        if (identifier.contains("/")) {
+            identifier = identifier.substring(identifier.lastIndexOf("/") + 1);
+        }
+
+        for (String path : potentialParentPaths) {
+            InputSource source = normalizeAndResolve(path + "/" + identifier);
+
+            if (source != null) {
+                return source;
             }
-            source = normalizeAndResolve(filePathBuilder.toString());
+
         }
 
-        if (source == null) {
-            source = normalizeAndResolve(identifier);
+        return normalizeAndResolve(identifier);
+    }
+
+    /**
+     * Retrieves the parent paths which should be used while resolving relative
+     * identifiers. By default uses the parent stylesheet location and a
+     * possible absolute path in the identifier.
+     * 
+     * @param parentStylesheet
+     *            The parent stylesheet or null if there is no parent
+     * @param identifier
+     *            The identifier to be resolved
+     * @return a list of paths in which to look for the relative import
+     */
+    protected List<String> getPotentialParentPaths(
+            ScssStylesheet parentStylesheet, String identifier) {
+        List<String> potentialParents = new ArrayList<String>();
+        if (parentStylesheet != null) {
+            potentialParents.add(extractFullPath(
+                    parentStylesheet.getDirectory(), identifier));
         }
 
-        return source;
+        // Identifier can be a full path so extract the path part also as a
+        // potential parent
+        if (identifier.contains("/")) {
+            potentialParents.add(extractFullPath("", identifier));
+        }
+
+        return potentialParents;
+
+    }
+
+    /**
+     * Extracts the full path from the path combined with the identifier
+     * 
+     * @param path
+     *            The base path
+     * @param identifier
+     *            The identifier which may contain a path part, separated by "/"
+     *            from the real identifier
+     * @return a normalized version of the path where identifier does not
+     *         contain any directory information
+     */
+    protected String extractFullPath(String path, String identifier) {
+        int lastSlashPosition = identifier.lastIndexOf("/");
+        if (lastSlashPosition == -1) {
+            return path;
+        }
+        String identifierPath = identifier.substring(0, lastSlashPosition);
+        if ("".equals(path)) {
+            return identifierPath;
+        } else {
+            return path + "/" + identifierPath;
+        }
     }
 
     /**

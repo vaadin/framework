@@ -15,7 +15,6 @@
  */
 package com.vaadin.sass.internal.resolver;
 
-import java.io.File;
 import java.io.InputStream;
 
 import org.w3c.css.sac.InputSource;
@@ -24,21 +23,10 @@ public class ClassloaderResolver extends AbstractResolver {
 
     @Override
     public InputSource resolveNormalized(String identifier) {
-        // identifier should not have .scss, fileName should
-        String ext = ".scss";
-        if (identifier.endsWith(".css")) {
-            ext = ".css";
-        }
         String fileName = identifier;
-        if (identifier.endsWith(ext)) {
-            identifier = identifier.substring(0,
-                    identifier.length() - ext.length());
-        } else {
-            fileName = fileName + ext;
+        if (!fileName.endsWith(".css")) {
+            fileName += ".scss";
         }
-
-        // Ensure only "/" is used, also in Windows
-        fileName = fileName.replace(File.separatorChar, '/');
 
         // Filename should be a relative path starting with VAADIN/...
         int vaadinIdx = fileName.lastIndexOf("VAADIN/");
