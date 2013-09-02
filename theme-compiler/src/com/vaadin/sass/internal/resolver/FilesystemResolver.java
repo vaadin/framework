@@ -21,10 +21,10 @@ import java.io.InputStream;
 
 import org.w3c.css.sac.InputSource;
 
-public class FilesystemResolver implements ScssStylesheetResolver {
+public class FilesystemResolver extends AbstractResolver {
 
     @Override
-    public InputSource resolve(String identifier) {
+    public InputSource resolveNormalized(String identifier) {
         // identifier should not have .scss, fileName should
         String ext = ".scss";
         if (identifier.endsWith(".css")) {

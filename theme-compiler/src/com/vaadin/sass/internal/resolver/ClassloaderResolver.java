@@ -20,10 +20,10 @@ import java.io.InputStream;
 
 import org.w3c.css.sac.InputSource;
 
-public class ClassloaderResolver implements ScssStylesheetResolver {
+public class ClassloaderResolver extends AbstractResolver {
 
     @Override
-    public InputSource resolve(String identifier) {
+    public InputSource resolveNormalized(String identifier) {
         // identifier should not have .scss, fileName should
         String ext = ".scss";
         if (identifier.endsWith(".css")) {

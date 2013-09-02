@@ -13,45 +13,87 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package com.vaadin.sass.internal.resolver;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Stack;
 
 import org.w3c.css.sac.InputSource;
 
-public class VaadinResolver implements ScssStylesheetResolver {
+import com.vaadin.sass.internal.ScssStylesheet;
 
+/**
+ * Base class for resolvers. Implements functionality for locating paths which
+ * an import can be relative to and helpers for extracting path information from
+ * the identifier.
+ * 
+ * @since 7.2
+ * @author Vaadin Ltd
+ */
+public abstract class AbstractResolver implements ScssStylesheetResolver,
+        Serializable {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.sass.internal.resolver.ScssStylesheetResolver#resolve(java
+     * .lang.String)
+     */
     @Override
-    public InputSource resolve(String identifier) {
-
-        // Remove extra "." and ".."
-        identifier = normalize(identifier);
-
+    public InputSource resolve(ScssStylesheet parentStylesheet,
+            String identifier) {
         InputSource source = null;
-
-        // Can we find the scss from the file system?
-        ScssStylesheetResolver resolver = new FilesystemResolver();
-        source = resolver.resolve(identifier);
+        if (parentStylesheet != null) {
+            StringBuilder filePathBuilder = new StringBuilder(
+                    parentStylesheet.getFileName());
+            filePathBuilder.append(File.separatorChar).append(identifier);
+            if (!filePathBuilder.toString().endsWith(".scss")) {
+                filePathBuilder.append(".scss");
+            }
+            source = normalizeAndResolve(filePathBuilder.toString());
+        }
 
         if (source == null) {
-            // How about the classpath?
-            resolver = new ClassloaderResolver();
-            source = resolver.resolve(identifier);
+            source = normalizeAndResolve(identifier);
         }
 
         return source;
     }
 
     /**
+     * Resolves the normalized version of the given identifier
+     * 
+     * @param identifier
+     *            The identifier to resolve
+     * @return An input source if the resolver found one or null otherwise
+     */
+    protected InputSource normalizeAndResolve(String identifier) {
+        String normalized = normalize(identifier);
+        return resolveNormalized(normalized);
+    }
+
+    /**
+     * Resolves the identifier after it has been normalized using
+     * {@link #normalize(String)}.
+     * 
+     * @param identifier
+     *            The normalized identifier
+     * @return an InputSource if the resolver found a source or null otherwise
+     */
+    protected abstract InputSource resolveNormalized(String identifier);
+
+    /**
      * Normalizes "." and ".." from the path string where parent path segments
-     * can be removed. Preserve leading "..".
+     * can be removed. Preserve leading "..". Also ensure / is used instead of \
+     * in all places.
      * 
      * @param path
      *            A relative or absolute file path
      * @return The normalized path
      */
-    private static String normalize(String path) {
+    protected String normalize(String path) {
 
         // Ensure only "/" is used, also in Windows
         path = path.replace(File.separatorChar, '/');
