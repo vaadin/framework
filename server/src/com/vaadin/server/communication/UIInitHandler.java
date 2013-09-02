@@ -37,6 +37,7 @@ import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.shared.ui.ui.UIConstants;
@@ -107,7 +108,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
     static boolean commitJsonResponse(VaadinRequest request,
             VaadinResponse response, String json) throws IOException {
         // The response was produced without errors so write it to the client
-        response.setContentType("application/json; charset=UTF-8");
+        response.setContentType(JsonConstants.JSON_CONTENT_TYPE);
 
         // Ensure that the browser does not cache UIDL responses.
         // iOS 6 Safari requires this (#9732)

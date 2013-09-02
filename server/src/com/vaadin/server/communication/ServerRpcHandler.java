@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Serializable;
 import java.lang.reflect.Type;
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -32,6 +30,7 @@ import java.util.logging.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.JsonCodec;
@@ -62,10 +61,59 @@ import com.vaadin.ui.UI;
  */
 public class ServerRpcHandler implements Serializable {
 
-    /* Variable records indexes */
-    public static final char VAR_BURST_SEPARATOR = '\u001d';
+    /**
+     * A data transfer object representing an RPC request sent by the client
+     * side.
+     * 
+     * @since 7.2
+     * @author Vaadin Ltd
+     */
+    public static class RpcRequest {
 
-    public static final char VAR_ESCAPE_CHARACTER = '\u001b';
+        private final String csrfToken;
+        private final JSONArray invocations;
+        private final JSONObject json;
+
+        public RpcRequest(String jsonString) throws JSONException {
+            json = new JSONObject(jsonString);
+            csrfToken = json.getString(ApplicationConstants.CSRF_TOKEN);
+            invocations = new JSONArray(
+                    json.getString(ApplicationConstants.RPC_INVOCATIONS));
+        }
+
+        /**
+         * Gets the CSRF security token (double submit cookie) for this request.
+         * 
+         * @return the CSRF security token for this current change request
+         */
+        public String getCsrfToken() {
+            return csrfToken;
+        }
+
+        /**
+         * Gets the data to recreate the RPC as requested by the client side.
+         * 
+         * @return the data describing which RPC should be made, and all their
+         *         data
+         */
+        public JSONArray getRpcInvocationsData() {
+            return invocations;
+        }
+
+        /**
+         * Gets the entire request in JSON format, as it was received from the
+         * client.
+         * <p>
+         * <em>Note:</em> This is a shared reference - any modifications made
+         * will be shared.
+         * 
+         * @return the raw JSON object that was received from the client
+         * 
+         */
+        public JSONObject getRawJson() {
+            return json;
+        }
+    }
 
     private static final int MAX_BUFFER_SIZE = 64 * 1024;
 
@@ -90,45 +138,42 @@ public class ServerRpcHandler implements Serializable {
             throws IOException, InvalidUIDLSecurityKeyException, JSONException {
         ui.getSession().setLastRequestTimestamp(System.currentTimeMillis());
 
-        String changes = getMessage(reader);
+        String changeMessage = getMessage(reader);
 
-        final String[] bursts = changes.split(String
-                .valueOf(VAR_BURST_SEPARATOR));
-
-        if (bursts.length > 2) {
-            throw new RuntimeException(
-                    "Multiple variable bursts not supported in Vaadin 7");
-        } else if (bursts.length <= 1) {
+        if (changeMessage == null || changeMessage.equals("")) {
             // The client sometimes sends empty messages, this is probably a bug
             return;
         }
 
+        RpcRequest rpcRequest = new RpcRequest(changeMessage);
+
         // Security: double cookie submission pattern unless disabled by
         // property
-        if (!VaadinService.isCsrfTokenValid(ui.getSession(), bursts[0])) {
+        if (!VaadinService.isCsrfTokenValid(ui.getSession(),
+                rpcRequest.getCsrfToken())) {
             throw new InvalidUIDLSecurityKeyException("");
         }
-        handleBurst(ui, unescapeBurst(bursts[1]));
+        handleInvocations(ui, rpcRequest.getRpcInvocationsData());
     }
 
     /**
-     * Processes a message burst received from the client.
-     * 
-     * A burst can contain any number of RPC calls, including legacy variable
-     * change calls that are processed separately.
-     * 
+     * Processes invocations data received from the client.
+     * <p>
+     * The invocations data can contain any number of RPC calls, including
+     * legacy variable change calls that are processed separately.
+     * <p>
      * Consecutive changes to the value of the same variable are combined and
      * changeVariables() is only called once for them. This preserves the Vaadin
      * 6 semantics for components and add-ons that do not use Vaadin 7 RPC
      * directly.
      * 
-     * @param source
      * @param uI
-     *            the UI receiving the burst
-     * @param burst
-     *            the content of the burst as a String to be parsed
+     *            the UI receiving the invocations data
+     * @param invocationsData
+     *            JSON containing all information needed to execute all
+     *            requested RPC calls.
      */
-    private void handleBurst(UI uI, String burst) {
+    private void handleInvocations(UI uI, JSONArray invocationsData) {
         // TODO PUSH Refactor so that this is not needed
         LegacyCommunicationManager manager = uI.getSession()
                 .getCommunicationManager();
@@ -137,7 +182,7 @@ public class ServerRpcHandler implements Serializable {
             Set<Connector> enabledConnectors = new HashSet<Connector>();
 
             List<MethodInvocation> invocations = parseInvocations(
-                    uI.getConnectorTracker(), burst);
+                    uI.getConnectorTracker(), invocationsData);
             for (MethodInvocation invocation : invocations) {
                 final ClientConnector connector = manager.getConnector(uI,
                         invocation.getConnectorId());
@@ -250,21 +295,19 @@ public class ServerRpcHandler implements Serializable {
     }
 
     /**
-     * Parse a message burst from the client into a list of MethodInvocation
-     * instances.
+     * Parse JSON from the client into a list of MethodInvocation instances.
      * 
      * @param connectorTracker
      *            The ConnectorTracker used to lookup connectors
-     * @param burst
-     *            message string (JSON)
+     * @param invocationsJson
+     *            JSON containing all information needed to execute all
+     *            requested RPC calls.
      * @return list of MethodInvocation to perform
      * @throws JSONException
      */
     private List<MethodInvocation> parseInvocations(
-            ConnectorTracker connectorTracker, String burst)
+            ConnectorTracker connectorTracker, JSONArray invocationsJson)
             throws JSONException {
-        JSONArray invocationsJson = new JSONArray(burst);
-
         ArrayList<MethodInvocation> invocations = new ArrayList<MethodInvocation>();
 
         MethodInvocation previousInvocation = null;
@@ -401,50 +444,6 @@ public class ServerRpcHandler implements Serializable {
     protected void changeVariables(Object source, VariableOwner owner,
             Map<String, Object> m) {
         owner.changeVariables(source, m);
-    }
-
-    /**
-     * Unescape encoded burst separator characters in a burst received from the
-     * client. This protects from separator injection attacks.
-     * 
-     * @param encodedValue
-     *            to decode
-     * @return decoded value
-     */
-    protected String unescapeBurst(String encodedValue) {
-        final StringBuilder result = new StringBuilder();
-        final StringCharacterIterator iterator = new StringCharacterIterator(
-                encodedValue);
-        char character = iterator.current();
-        while (character != CharacterIterator.DONE) {
-            if (VAR_ESCAPE_CHARACTER == character) {
-                character = iterator.next();
-                switch (character) {
-                case VAR_ESCAPE_CHARACTER + 0x30:
-                    // escaped escape character
-                    result.append(VAR_ESCAPE_CHARACTER);
-                    break;
-                case VAR_BURST_SEPARATOR + 0x30:
-                    // +0x30 makes these letters for easier reading
-                    result.append((char) (character - 0x30));
-                    break;
-                case CharacterIterator.DONE:
-                    // error
-                    throw new RuntimeException(
-                            "Communication error: Unexpected end of message");
-                default:
-                    // other escaped character - probably a client-server
-                    // version mismatch
-                    throw new RuntimeException(
-                            "Invalid escaped character from the client - check that the widgetset and server versions match");
-                }
-            } else {
-                // not a special character - add it to the result as is
-                result.append(character);
-            }
-            character = iterator.next();
-        }
-        return result.toString();
     }
 
     protected String getMessage(Reader reader) throws IOException {

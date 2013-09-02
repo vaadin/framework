@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Command;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.CommunicationErrorHandler;
@@ -109,7 +110,7 @@ public class AtmospherePushConnection implements PushConnection {
 
     private JavaScriptObject socket;
 
-    private ArrayList<String> messageQueue = new ArrayList<String>();
+    private ArrayList<JSONObject> messageQueue = new ArrayList<JSONObject>();
 
     private State state = State.CONNECT_PENDING;
 
@@ -190,14 +191,8 @@ public class AtmospherePushConnection implements PushConnection {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.vaadin.client.communication.PushConenction#push(java.lang.String)
-     */
     @Override
-    public void push(String message) {
+    public void push(JSONObject message) {
         switch (state) {
         case CONNECT_PENDING:
             assert isActive();
@@ -209,12 +204,13 @@ public class AtmospherePushConnection implements PushConnection {
             VConsole.log("Sending push message: " + message);
 
             if (transport.equals("websocket")) {
-                FragmentedMessage fragmented = new FragmentedMessage(message);
+                FragmentedMessage fragmented = new FragmentedMessage(
+                        message.toString());
                 while (fragmented.hasNextFragment()) {
                     doPush(socket, fragmented.getNextFragment());
                 }
             } else {
-                doPush(socket, message);
+                doPush(socket, message.toString());
             }
             break;
         case DISCONNECT_PENDING:
@@ -235,7 +231,7 @@ public class AtmospherePushConnection implements PushConnection {
         switch (state) {
         case CONNECT_PENDING:
             state = State.CONNECTED;
-            for (String message : messageQueue) {
+            for (JSONObject message : messageQueue) {
                 push(message);
             }
             messageQueue.clear();

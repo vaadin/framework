@@ -90,6 +90,7 @@ import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.client.ui.window.WindowConnector;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.LegacyChangeVariablesInvocation;
 import com.vaadin.shared.communication.MethodInvocation;
@@ -135,10 +136,6 @@ public class ApplicationConnection {
     public static final String REQUIRED_CLASSNAME_EXT = "-required";
 
     public static final String ERROR_CLASSNAME_EXT = "-error";
-
-    public static final char VAR_BURST_SEPARATOR = '\u001d';
-
-    public static final char VAR_ESCAPE_CHARACTER = '\u001b';
 
     /**
      * A string that, if found in a non-JSON response to a UIDL request, will
@@ -675,7 +672,7 @@ public class ApplicationConnection {
     }-*/;
 
     protected void repaintAll() {
-        makeUidlRequest("", getRepaintAllParameters());
+        makeUidlRequest(new JSONArray(), getRepaintAllParameters());
     }
 
     /**
@@ -706,20 +703,23 @@ public class ApplicationConnection {
     /**
      * Makes an UIDL request to the server.
      * 
-     * @param requestData
-     *            Data that is passed to the server.
+     * @param reqInvocations
+     *            Data containing RPC invocations and all related information.
      * @param extraParams
      *            Parameters that are added as GET parameters to the url.
      *            Contains key=value pairs joined by & characters or is empty if
      *            no parameters should be added. Should not start with any
      *            special character.
      */
-    protected void makeUidlRequest(final String requestData,
+    protected void makeUidlRequest(final JSONArray reqInvocations,
             final String extraParams) {
         startRequest();
-        // Security: double cookie submission pattern
-        final String payload = getCsrfToken() + VAR_BURST_SEPARATOR
-                + requestData;
+
+        JSONObject payload = new JSONObject();
+        payload.put(ApplicationConstants.CSRF_TOKEN, new JSONString(
+                getCsrfToken()));
+        payload.put(ApplicationConstants.RPC_INVOCATIONS, reqInvocations);
+
         VConsole.log("Making UIDL Request with params: " + payload);
         String uri = translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
                 + ApplicationConstants.UIDL_PATH + '/');
@@ -743,7 +743,7 @@ public class ApplicationConnection {
      * @param payload
      *            The contents of the request to send
      */
-    protected void doUidlRequest(final String uri, final String payload) {
+    protected void doUidlRequest(final String uri, final JSONObject payload) {
         RequestCallback requestCallback = new RequestCallback() {
             @Override
             public void onError(Request request, Throwable exception) {
@@ -906,14 +906,14 @@ public class ApplicationConnection {
      * @throws RequestException
      *             if the request could not be sent
      */
-    protected void doAjaxRequest(String uri, String payload,
+    protected void doAjaxRequest(String uri, JSONObject payload,
             RequestCallback requestCallback) throws RequestException {
         RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, uri);
         // TODO enable timeout
         // rb.setTimeoutMillis(timeoutMillis);
         // TODO this should be configurable
-        rb.setHeader("Content-Type", "text/plain;charset=utf-8");
-        rb.setRequestData(payload);
+        rb.setHeader("Content-Type", JsonConstants.JSON_CONTENT_TYPE);
+        rb.setRequestData(payload.toString());
         rb.setCallback(requestCallback);
 
         final Request request = rb.send();
@@ -2468,14 +2468,12 @@ public class ApplicationConnection {
      */
     private void buildAndSendVariableBurst(
             LinkedHashMap<String, MethodInvocation> pendingInvocations) {
-        final StringBuffer req = new StringBuffer();
 
-        while (!pendingInvocations.isEmpty()) {
+        JSONArray reqJson = new JSONArray();
+        if (!pendingInvocations.isEmpty()) {
             if (ApplicationConfiguration.isDebugMode()) {
                 Util.logVariableBurst(this, pendingInvocations.values());
             }
-
-            JSONArray reqJson = new JSONArray();
 
             for (MethodInvocation invocation : pendingInvocations.values()) {
                 JSONArray invocationJson = new JSONArray();
@@ -2515,9 +2513,6 @@ public class ApplicationConnection {
                 reqJson.set(reqJson.size(), invocationJson);
             }
 
-            // escape burst separators (if any)
-            req.append(escapeBurstContents(reqJson.toString()));
-
             pendingInvocations.clear();
             // Keep tag string short
             lastInvocationTag = 0;
@@ -2541,7 +2536,7 @@ public class ApplicationConnection {
 
             getConfiguration().setWidgetsetVersionSent();
         }
-        makeUidlRequest(req.toString(), extraParams);
+        makeUidlRequest(reqJson, extraParams);
     }
 
     private boolean isJavascriptRpc(MethodInvocation invocation) {
@@ -2782,35 +2777,6 @@ public class ApplicationConnection {
     public void updateVariable(String paintableId, String variableName,
             Object[] values, boolean immediate) {
         addVariableToQueue(paintableId, variableName, values, immediate);
-    }
-
-    /**
-     * Encode burst separator characters in a String for transport over the
-     * network. This protects from separator injection attacks.
-     * 
-     * @param value
-     *            to encode
-     * @return encoded value
-     */
-    protected String escapeBurstContents(String value) {
-        final StringBuilder result = new StringBuilder();
-        for (int i = 0; i < value.length(); ++i) {
-            char character = value.charAt(i);
-            switch (character) {
-            case VAR_ESCAPE_CHARACTER:
-                // fall-through - escape character is duplicated
-            case VAR_BURST_SEPARATOR:
-                result.append(VAR_ESCAPE_CHARACTER);
-                // encode as letters for easier reading
-                result.append(((char) (character + 0x30)));
-                break;
-            default:
-                // the char is not a special one - add it to the result as is
-                result.append(character);
-                break;
-            }
-        }
-        return result.toString();
     }
 
     /**

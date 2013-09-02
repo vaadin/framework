@@ -16,6 +16,7 @@
 
 package com.vaadin.client.communication;
 
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Command;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.CommunicationErrorHandler;
@@ -53,14 +54,14 @@ public interface PushConnection {
      * replay those messages in the original order when the connection has been
      * established.
      * 
-     * @param message
-     *            the message to push
+     * @param payload
+     *            the payload to push
      * @throws IllegalStateException
      *             if this connection is not active
      * 
      * @see #isActive()
      */
-    public void push(String message);
+    public void push(JSONObject payload);
 
     /**
      * Checks whether this push connection is in a state where it can push
