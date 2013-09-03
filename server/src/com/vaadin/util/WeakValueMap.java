@@ -30,6 +30,8 @@ import java.util.Set;
  * A Map holding weak references to its values. It is internally backed by a
  * normal HashMap and all values are stored as WeakReferences. Garbage collected
  * entries are removed when touched.
+ * <p>
+ * <em>Note</em> this class is not serializable.
  * 
  * @author Vaadin Ltd
  * @since 7.1.4

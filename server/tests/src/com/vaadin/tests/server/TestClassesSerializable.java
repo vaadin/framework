@@ -65,6 +65,7 @@ public class TestClassesSerializable extends TestCase {
             "com\\.vaadin\\.util\\.ConnectorHelper", //
             "com\\.vaadin\\.server\\.VaadinSession\\$FutureAccess", //
             "com\\.vaadin\\.external\\..*", //
+            "com\\.vaadin\\.util\\.WeakValueMap.*", //
     };
 
     /**
