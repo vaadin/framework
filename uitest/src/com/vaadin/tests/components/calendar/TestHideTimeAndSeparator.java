@@ -10,6 +10,7 @@ import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @Theme("tests-calendar")
 public class TestHideTimeAndSeparator extends AbstractTestUI {
@@ -69,6 +70,8 @@ public class TestHideTimeAndSeparator extends AbstractTestUI {
         Calendar cal = new Calendar();
         cal.setWidth("100%");
         cal.setHeight("500px");
+
+        cal.setLocale(Locale.US);
 
         cal.addEvent(shortEventHidden);
         cal.addEvent(longEventHidden);
