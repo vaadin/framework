@@ -91,7 +91,6 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
             }
         } else {
             screenshotFailures.add(identifier);
-            throw new AssertionError("comparison failed");
         }
     }
 
