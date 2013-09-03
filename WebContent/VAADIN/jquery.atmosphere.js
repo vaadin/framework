@@ -1199,6 +1199,9 @@ jQuery.atmosphere = function() {
              * @param response
              */
             function _trackMessageSize(message, request, response) {
+                if (message.length === 0)
+                    return true;
+
                 if (request.trackMessageLength) {
 
                     // If we have found partial message, prepend them.
@@ -1207,36 +1210,29 @@ jQuery.atmosphere = function() {
                     }
 
                     var messages = [];
-                    var messageLength = 0;
                     var messageStart = message.indexOf(request.messageDelimiter);
-                    while (messageStart != -1) {
-                        messageLength = jQuery.trim(message.substring(messageLength, messageStart));
-                        message = message.substring(messageStart + request.messageDelimiter.length, message.length);
-
-                        // Stop search if there is not enough characters remaining (wait for next part to arrive)
-                        if (message.length == 0 || message.length < messageLength) break;
-
-                        // Find start of a possibly existing subsequent message from the remaining data
-                        messageStart = message.substring(messageLength).indexOf(request.messageDelimiter);
-                        
-                        // Store the completely received message 
-                        messages.push(message.substring(0, messageLength));
-                    }
-
-                    if (messages.length == 0 || (message.length != 0 && messageLength != message.length)){
-                        if (messageStart == -1) {
-                            // http://dev.vaadin.com/ticket/12197
-                            // partialMessage must contain length header of next message
-                            // it starts at the end of the last message
-                            response.partialMessage = message.substring(messageLength);
+                    while (messageStart !== -1) {
+                        var str = jQuery.trim(message.substring(0, messageStart));
+                        var messageLength = parseInt(str, 10);
+                        if (isNaN(messageLength))
+                            throw 'message length "' + str + '" is not a number';
+                        messageStart += request.messageDelimiter.length;
+                        if (messageStart + messageLength > message.length) {
+                            // message not complete, so there is no trailing messageDelimiter
+                            messageStart = -1;
                         } else {
-                            response.partialMessage = messageLength + request.messageDelimiter + message ;
+                            // message complete, so add it
+                            messages.push(message.substring(messageStart, messageStart + messageLength));
+                            // remove consumed characters
+                            message = message.substring(messageStart + messageLength, message.length);
+                            messageStart = message.indexOf(request.messageDelimiter);
                         }
-                    } else {
-                        response.partialMessage = "";
                     }
 
-                    if (messages.length != 0) {
+                    /* keep any remaining data */
+                    response.partialMessage = message;
+
+                    if (messages.length !== 0) {
                         response.responseBody = messages.join(request.messageDelimiter);
                         response.messages = messages;
                         return false;

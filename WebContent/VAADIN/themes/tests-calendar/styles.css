@@ -94,3 +94,11 @@
 	border-color: #cd6a00;
 	background-color: #faa345;
 	}
+
+/**
+ * Hide time in captions
+ */
+.v-calendar-event-hide-time .v-calendar-event-caption>span,
+.v-calendar-event-hide-time .v-calendar-event-caption>br {
+    display: none;
+}

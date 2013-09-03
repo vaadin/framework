@@ -60,7 +60,7 @@ public class CurrentInstance implements Serializable {
                 return null;
             }
 
-            Map<Class<?>, CurrentInstance> value = new HashMap<Class<?>, CurrentInstance>();
+            Map<Class<?>, CurrentInstance> value = new WeakValueMap<Class<?>, CurrentInstance>();
 
             // Copy all inheritable values to child map
             for (Entry<Class<?>, CurrentInstance> e : parentValue.entrySet()) {

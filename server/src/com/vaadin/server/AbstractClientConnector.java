@@ -625,7 +625,8 @@ public abstract class AbstractClientConnector implements ClientConnector,
         String[] parts = path.split("/", 2);
         String key = parts[0];
 
-        getSession().lock();
+        VaadinSession session = getSession();
+        session.lock();
         try {
             ConnectorResource resource = (ConnectorResource) getResource(key);
             if (resource == null) {
@@ -633,7 +634,7 @@ public abstract class AbstractClientConnector implements ClientConnector,
             }
             stream = resource.getStream();
         } finally {
-            getSession().unlock();
+            session.unlock();
         }
         stream.writeResponse(request, response);
         return true;
