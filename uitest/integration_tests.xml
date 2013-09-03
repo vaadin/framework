@@ -46,7 +46,6 @@
 
     <!-- Run basic integration test test -->
     <target name="legacy-integration-test">
-        <fail unless="html-test-files">html-test-files must be defined</fail>
         <pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
         <subant target="run-tests" failonerror="false" antfile="test.xml">
             <property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
