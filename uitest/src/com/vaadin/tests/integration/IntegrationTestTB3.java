@@ -33,7 +33,7 @@ import com.vaadin.tests.tb3.PrivateTB3Configuration;
  * @author Vaadin Ltd
  */
 @RunWith(IntegrationTestRunner.class)
-public class IntegrationTestTB3 extends PrivateTB3Configuration {
+public abstract class IntegrationTestTB3 extends PrivateTB3Configuration {
     @Test
     public void runTest() throws IOException, AssertionError {
         compareScreen("initial");
@@ -61,7 +61,13 @@ public class IntegrationTestTB3 extends PrivateTB3Configuration {
 
     @Override
     protected String getBaseURL() {
-        return System.getProperty("deployment.url");
+        String deploymentUrl = System.getProperty("deployment.url");
+        if (deploymentUrl == null || deploymentUrl.equals("")) {
+            throw new RuntimeException(
+                    "Deployment url must be given as deployment.url");
+        }
+
+        return deploymentUrl;
     }
 
     @Override
