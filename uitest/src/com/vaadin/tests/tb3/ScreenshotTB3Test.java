@@ -303,6 +303,11 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
         // before running it. Leave unrelated files as-is
         File errorDirectory = new File(getScreenshotErrorDirectory());
 
+        // Create errors directory if it does not exist
+        if (!errorDirectory.exists()) {
+            errorDirectory.mkdirs();
+        }
+
         final String errorBase = getScreenshotErrorBaseName()
                 .replace("\\", "/");
         File[] files = errorDirectory.listFiles(new FileFilter() {

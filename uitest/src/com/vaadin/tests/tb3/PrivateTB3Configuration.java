@@ -54,7 +54,12 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
 
     @Override
     protected String getScreenshotDirectory() {
-        return getProperty("com.vaadin.testbench.screenshot.directory");
+        String screenshotDirectory = getProperty("com.vaadin.testbench.screenshot.directory");
+        if (screenshotDirectory == null) {
+            throw new RuntimeException(
+                    "No screenshot directory defined. Use -Dcom.vaadin.testbench.screenshot.directory=<path>");
+        }
+        return screenshotDirectory;
     }
 
     @Override
