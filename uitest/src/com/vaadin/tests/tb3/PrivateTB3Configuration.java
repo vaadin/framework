@@ -71,7 +71,7 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     protected String getDeploymentHostname() {
         String hostName = getProperty(HOSTNAME_PROPERTY);
 
-        if ("auto".equals(hostName)) {
+        if (hostName == null || "".equals(hostName)) {
             hostName = findAutoHostname();
         }
 
