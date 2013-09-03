@@ -35,10 +35,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConfiguration;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
-import com.vaadin.client.ComponentLocator;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.ValueMap;
+import com.vaadin.client.componentlocator.ComponentLocator;
 
 /**
  * Provides functionality for picking selectors for Vaadin TestBench.

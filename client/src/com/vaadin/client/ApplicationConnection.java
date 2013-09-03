@@ -72,6 +72,7 @@ import com.vaadin.client.communication.JsonEncoder;
 import com.vaadin.client.communication.PushConnection;
 import com.vaadin.client.communication.RpcManager;
 import com.vaadin.client.communication.StateChangeEvent;
+import com.vaadin.client.componentlocator.ComponentLocator;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.metadata.ConnectorBundleLoader;
 import com.vaadin.client.metadata.Method;
@@ -496,38 +497,38 @@ public class ApplicationConnection {
     private native void initializeTestbenchHooks(
             ComponentLocator componentLocator, String TTAppId)
     /*-{
-    	var ap = this;
-    	var client = {};
-    	client.isActive = $entry(function() {
-    		return ap.@com.vaadin.client.ApplicationConnection::hasActiveRequest()()
-    				|| ap.@com.vaadin.client.ApplicationConnection::isExecutingDeferredCommands()();
-    	});
-    	var vi = ap.@com.vaadin.client.ApplicationConnection::getVersionInfo()();
-    	if (vi) {
-    		client.getVersionInfo = function() {
-    			return vi;
-    		}
-    	}
+        var ap = this;
+        var client = {};
+        client.isActive = $entry(function() {
+            return ap.@com.vaadin.client.ApplicationConnection::hasActiveRequest()()
+                    || ap.@com.vaadin.client.ApplicationConnection::isExecutingDeferredCommands()();
+        });
+        var vi = ap.@com.vaadin.client.ApplicationConnection::getVersionInfo()();
+        if (vi) {
+            client.getVersionInfo = function() {
+                return vi;
+            }
+        }
 
-    	client.getProfilingData = $entry(function() {
-    	    var pd = [
-        	    ap.@com.vaadin.client.ApplicationConnection::lastProcessingTime,
+        client.getProfilingData = $entry(function() {
+            var pd = [
+                ap.@com.vaadin.client.ApplicationConnection::lastProcessingTime,
                     ap.@com.vaadin.client.ApplicationConnection::totalProcessingTime
-    	        ];
-    	    pd = pd.concat(ap.@com.vaadin.client.ApplicationConnection::serverTimingInfo);
-    	    pd[pd.length] = ap.@com.vaadin.client.ApplicationConnection::bootstrapTime;
-    	    return pd;
-    	});
+                ];
+            pd = pd.concat(ap.@com.vaadin.client.ApplicationConnection::serverTimingInfo);
+            pd[pd.length] = ap.@com.vaadin.client.ApplicationConnection::bootstrapTime;
+            return pd;
+        });
 
-    	client.getElementByPath = $entry(function(id) {
-    		return componentLocator.@com.vaadin.client.ComponentLocator::getElementByPath(Ljava/lang/String;)(id);
-    	});
-    	client.getPathForElement = $entry(function(element) {
-    		return componentLocator.@com.vaadin.client.ComponentLocator::getPathForElement(Lcom/google/gwt/user/client/Element;)(element);
-    	});
-    	client.initializing = false;
+        client.getElementByPath = $entry(function(id) {
+            return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getElementByPath(Ljava/lang/String;)(id);
+        });
+        client.getPathForElement = $entry(function(element) {
+            return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getPathForElement(Lcom/google/gwt/user/client/Element;)(element);
+        });
+        client.initializing = false;
 
-    	$wnd.vaadin.clients[TTAppId] = client;
+        $wnd.vaadin.clients[TTAppId] = client;
     }-*/;
 
     private static native final int calculateBootstrapTime()
