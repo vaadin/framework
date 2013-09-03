@@ -19,12 +19,12 @@ package com.vaadin.tests.tb3;
 import org.junit.runner.RunWith;
 import org.junit.runners.model.InitializationError;
 
-import com.vaadin.tests.tb3.AllIntegrationTests.AllIntegrationTestsFinder;
+import com.vaadin.tests.tb3.ServletIntegrationTests.ServletIntegrationTestsFinder;
 
-@RunWith(AllIntegrationTestsFinder.class)
-public class AllIntegrationTests {
-    public static class AllIntegrationTestsFinder extends TB3TestFinder {
-        public AllIntegrationTestsFinder(Class<?> klass)
+@RunWith(ServletIntegrationTestsFinder.class)
+public class ServletIntegrationTests {
+    public static class ServletIntegrationTestsFinder extends TB3TestFinder {
+        public ServletIntegrationTestsFinder(Class<?> klass)
                 throws InitializationError {
             super(klass, AbstractTB3Test.class, "com.vaadin.tests.integration",
                     new String[] {});

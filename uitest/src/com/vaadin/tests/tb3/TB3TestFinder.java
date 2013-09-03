@@ -77,9 +77,9 @@ public class TB3TestFinder extends Suite {
      * @param suiteClasses
      * @throws InitializationError
      */
-    public TB3TestFinder(Class<?> klass, Class<AbstractTB3Test> baseClass,
-            String basePackage, String[] ignorePackages)
-            throws InitializationError {
+    public TB3TestFinder(Class<?> klass,
+            Class<? extends AbstractTB3Test> baseClass, String basePackage,
+            String[] ignorePackages) throws InitializationError {
         // Could consider reading settings from annoations on klass instead
         // creating sub classes
         super(klass, getAllTB3Tests(baseClass, basePackage, ignorePackages));
@@ -90,11 +90,11 @@ public class TB3TestFinder extends Suite {
      * @since
      * @return
      */
-    private static Class<?>[] getAllTB3Tests(Class<AbstractTB3Test> baseClass,
-            String basePackage, String[] ignorePackages) {
+    private static Class<?>[] getAllTB3Tests(
+            Class<? extends AbstractTB3Test> baseClass, String basePackage,
+            String[] ignorePackages) {
         try {
-            List<Class<? extends AbstractTB3Test>> l = findClasses(baseClass,
-                    basePackage, ignorePackages);
+            List<?> l = findClasses(baseClass, basePackage, ignorePackages);
             return l.toArray(new Class[] {});
         } catch (IOException e) {
             // TODO Auto-generated catch block

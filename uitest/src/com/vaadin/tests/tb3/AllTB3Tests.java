@@ -39,7 +39,7 @@ public class AllTB3Tests {
          * @throws InitializationError
          */
         public AllTestsFinder(Class<?> klass) throws InitializationError {
-            super(klass, AbstractTB3Test.class, "com.vaadin",
+            super(klass, AbstractTB3Test.class, "com.vaadin.tests",
                     new String[] { "com.vaadin.tests.integration" });
         }
 

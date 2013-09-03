@@ -39,6 +39,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
             baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
         }
 
+        System.out.println("Starting TB3 test for " + baseUrl + getPath());
         driver.get(baseUrl + getPath());
     }
 

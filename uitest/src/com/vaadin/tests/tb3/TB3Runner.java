@@ -178,14 +178,7 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
                 browserName = "Opera";
             }
 
-            String format = browserName + capabilities.getVersion();
-
-            String serverName = System.getProperty("server-name");
-            if (serverName != null && !serverName.isEmpty()) {
-                format = serverName + "_" + format;
-            }
-
-            return format;
+            return browserName + capabilities.getVersion();
         }
     }
 }

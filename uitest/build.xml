@@ -9,6 +9,7 @@
 
     <!-- global properties -->
     <property name="module.name" value="vaadin-uitest" />
+    <property name="uitest.dir" location="${vaadin.basedir}/uitest" />
     <property name="result.dir" value="result" />
     <property name="result.war" location="${result.dir}/lib/${module.name}-${vaadin.version}.war" />
 
@@ -150,6 +151,56 @@
     <target name="test" depends="checkstyle">
         <!--<antcall target="common.test.run" /> -->
         <echo>WHAT? No JUnit tests for ${module.name}!</echo>
+    </target>
+
+    <target name="test-testbench" depends="clean-testbench-errors" description="Run all TestBench based tests, including server tests">
+        <parallel>
+            <daemons>
+                <!-- Start server -->
+                <ant antfile="${uitest.dir}/vaadin-server.xml" inheritall="true" inheritrefs="true" target="deploy-and-start" />
+            </daemons>
+            <sequential>
+                <!-- Server tests -->
+
+                <!-- Sleep before running integration tests so testbench 2 
+                        tests have time to compile and start -->
+                <sleep minutes="4" />
+                <ant antfile="${uitest.dir}/integration_tests.xml" target="integration-test-all" inheritall="false" inheritrefs="false">
+                    <property name="demo.war" value="${war.file}" />
+                </ant>
+            </sequential>
+            <sequential>
+                <!-- Wait for server to start -->
+                <ant antfile="${uitest.dir}/vaadin-server.xml" target="wait-for-startup" />
+
+                <!-- Run all different kinds of TestBench tests in parallel -->
+                <parallel>
+
+                    <!-- Legacy TestBench 2 tests -->
+                    <sequential>
+                        <ant antfile="${uitest.dir}/test.xml" target="tb2-tests" />
+                        <echo message="TestBench 2 tests complete" />
+                    </sequential>
+
+                    <!-- TestBench 3 tests -->
+                    <sequential>
+                        <ant antfile="${uitest.dir}/tb3test.xml" target="run-all-tb3-tests" inheritall="true" />
+                        <echo message="TestBench 3 tests complete" />
+                    </sequential>
+                </parallel>
+            </sequential>
+
+        </parallel>
+    </target>
+
+    <target name="clean-testbench-errors">
+        <fail unless="com.vaadin.testbench.screenshot.directory" message="Define screenshot directory using -Dcom.vaadin.testbench.screenshot.directory" />
+        <mkdir dir="${com.vaadin.testbench.screenshot.directory}/errors" />
+        <delete>
+            <fileset dir="${com.vaadin.testbench.screenshot.directory}/errors">
+                <include name="**/**.*" />
+            </fileset>
+        </delete>
     </target>
 
 </project>

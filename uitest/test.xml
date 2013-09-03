@@ -39,7 +39,7 @@
 
     <!-- fileset containing all TestBench tests to run -->
     <fileset dir="${test.xml.dir}" id="html-test-files">
-        <include name="src/**/*.html" />
+        <include name="src/**/*Clipping*.html" />
         <exclude name="integration-testscripts/**/*.html" />
     </fileset>
 
@@ -83,53 +83,7 @@
         <fail unless="com.vaadin.testbench.deployment.url" message="The 'com.vaadin.testbench.deployment.url' property must be defined." />
     </target>
 
-    <target name="run-tests" depends="run-tb3-tests, run-tb2-tests">
-    </target>
-
-    <target name="run-tb3-tests">
-        <echo>Test.xml started</echo>
-
-        <property name="junit.test.suite" value="com.vaadin.tests.tb3.AllTB3Tests" />
-        <property name="com.vaadin.testbench.deployment.hostname" value="auto" />
-        <property name="com.vaadin.testbench.deployment.url" value="" />
-        <property name="server-name" value="" />
-
-        <ivy:resolve file="uitest/ivy.xml" conf="build, build-provided" />
-        <ivy:cachepath pathid="classpath.compile.dependencies" conf="build, build-provided" />
-
-        <junit printsummary="withOutAndErr" fork="yes">
-            <formatter usefile="false" type="plain" />
-
-            <classpath location="uitest/result/classes" />
-            <classpath refid="classpath.compile.dependencies" />
-
-            <jvmarg value="-Dcom.vaadin.testbench.tester.host=${com.vaadin.testbench.tester.host}" />
-            <jvmarg value="-Dcom.vaadin.testbench.deployment.hostname=${com.vaadin.testbench.deployment.hostname}" />
-
-            <!-- special parameters used when running integration tests -->
-            <jvmarg value="-Ddeployment.url=${com.vaadin.testbench.deployment.url}" />
-            <jvmarg value="-Dserver-name=${server-name}" />
-
-            <!-- Define where the reference screenshots and diff files are 
-                    saved -->
-            <jvmarg value="-Dcom.vaadin.testbench.screenshot.directory=${com.vaadin.testbench.screenshot.directory}" />
-            <!-- Resolution for screenshots -->
-            <jvmarg value="-Dcom.vaadin.testbench.screenshot.resolution=${com.vaadin.testbench.screenshot.resolution}" />
-            <jvmarg value="-Dcom.vaadin.testbench.debug=${com.vaadin.testbench.debug}" />
-            <jvmarg value="-Dcom.vaadin.testbench.screenshot.block.error=${com.vaadin.testbench.screenshot.block.error}" />
-
-            <jvmarg value="-Djava.awt.headless=true" />
-
-            <!-- true/false system arguments -->
-            <jvmarg value="-Dcom.vaadin.testbench.screenshot.softfail=${com.vaadin.testbench.screenshot.softfail}" />
-            <jvmarg value="-Dcom.vaadin.testbench.screenshot.reference.debug=${com.vaadin.testbench.screenshot.reference.debug}" />
-            <jvmarg value="-Dcom.vaadin.testbench.screenshot.cursor=${com.vaadin.testbench.screenshot.cursor}" />
-
-            <test name="${junit.test.suite}" />
-        </junit>
-    </target>
-
-    <target name="run-tb2-tests" depends="compile-tests">
+    <target name="run-tb2-tests" depends="check-parameters,compile-tests">
         <fileset dir="${test-output-dir}" id="tests-fileset">
             <include name="**/**.java" />
         </fileset>
@@ -207,12 +161,10 @@
     <!-- ================================================================== -->
 
     <!-- The default target. -->
-    <target name="run-and-clean-up" depends="check-parameters,remove-error-screens,run-tests" />
+    <target name="run-and-clean-up" depends="check-parameters,remove-error-screens,run-tb2-tests" />
 
-
-    <!-- Starts the server and runs all TestBench tests -->
-    <target name="test-package">
-        <fail unless="war.file" message="No 'war.file' parameter given." />
+    <!-- Runs all TestBench 2 tests -->
+    <target name="tb2-tests">
         <property name="test-output-dir" location="${test.xml.dir}/result/testbench-junit-classes" />
         <property name="retries" value="2" />
 
@@ -223,15 +175,6 @@
         <property name="com.vaadin.testbench.screenshot.block.error" value="0.025" />
         <property name="com.vaadin.testbench.debug" value="false" />
 
-        <parallel>
-            <daemons>
-                <ant antfile="${test.xml.dir}/vaadin-server.xml" inheritall="true" inheritrefs="true" target="deploy-and-start" />
-            </daemons>
-            <sequential>
-                <ant antfile="${test.xml.dir}/vaadin-server.xml" target="wait-for-startup" />
-                <antcall inheritall="true" inheritrefs="true" target="run-and-clean-up" />
-                <echo message="All TestBench tests have been run" />
-            </sequential>
-        </parallel>
+        <antcall inheritall="true" inheritrefs="true" target="run-tb2-tests" />
     </target>
 </project>
