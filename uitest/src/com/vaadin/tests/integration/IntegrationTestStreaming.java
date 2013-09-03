@@ -28,7 +28,7 @@ import com.vaadin.shared.ui.ui.Transport;
  * @since 7.1
  * @author Vaadin Ltd
  */
-@Push(transport = Transport.WEBSOCKET)
+@Push(transport = Transport.STREAMING)
 public class IntegrationTestStreaming extends IntegrationTestUI {
 
 }
