@@ -41,7 +41,7 @@
 
     <target name="publish.module.to.download.site">
         <fail unless="module" message="No module to publish defined" />
-        <ivy:resolve file="${module}/ivy.xml" />
+        <ivy:resolve log="download-only" file="${module}/ivy.xml" />
         <ivy:publish publishivy="false" settingsref="publish.settings" conf="*(public)" resolver="sftp-publish">
             <artifacts pattern="${ivy.settings.dir}/result/artifacts/[revision]/[module]/[artifact]-[revision](-[classifier]).[ext]" />
         </ivy:publish>
@@ -52,7 +52,7 @@
         <property file="${gpg.passphrase.file}" />
 
         <!-- Ivy should be able to handle this but this does not work at 
-            the moment <ivy:resolve file="${module}/ivy.xml" /> <ivy:publish pubrevision="7.0-SNAPSHOT" 
+            the moment <ivy:resolve log="download-only" file="${module}/ivy.xml" /> <ivy:publish pubrevision="7.0-SNAPSHOT" 
             publishivy="false" settingsref="publish.settings" conf="*(public)" resolver="sonatype"> 
             <artifacts pattern="${ivy.settings.dir}/result/artifacts/${vaadin.version}/[module]/[artifact]-${vaadin.version}(-[classifier]).[ext]" 
             /> </ivy:publish> -->

@@ -32,7 +32,7 @@
 
     <target name="init-taskdefs" depends="ivy-configure" unless="deps.initialized">
         <echo>Loading Ant tasks</echo>
-        <ivy:resolve file="${project.root}/build/ivy/ivy.xml" conf="taskdefs" />
+        <ivy:resolve log="download-only" file="${project.root}/build/ivy/ivy.xml" conf="taskdefs" />
         <ivy:cachepath pathid="taskdefs.classpath" conf="taskdefs" />
         <taskdef resource="emma_ant.properties" classpathref="taskdefs.classpath" />
 
