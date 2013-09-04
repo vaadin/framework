@@ -13,8 +13,6 @@
 
     <available property="ant-jsch.present" file="${ant.home}/lib/ant-jsch.jar" />
     <available property="jsch.present" file="${ant.home}/lib/jsch-0.1.48.jar" />
-    <fail unless="ant-jsch.present" message="Please install ant-jsch.jar into ANT_HOME/lib" />
-    <fail unless="jsch.present" message="Please install jsch.jar into ANT_HOME/lib" />
 
     <target name="nightly.publish" depends="nightly.download.publish, nightly.maven.publish">
 
@@ -24,6 +22,9 @@
     <target name="nightly.tests.publish" if="nightly.tests.publish">
         <property name="file.war" location="result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${version}.war" />
         <property name="target" value="${nightly.tests.publish}/${vaadin.version.major}.${vaadin.version.minor}-${build.tag}.war" />
+
+        <fail unless="ant-jsch.present" message="Please install ant-jsch.jar into ANT_HOME/lib" />
+        <fail unless="jsch.present" message="Please install jsch.jar into ANT_HOME/lib" />
 
         <echo>Installing ${src} to ${target}</echo>
 
@@ -39,7 +40,7 @@
         <antcontrib:foreach list="${modules.to.publish.to.maven}" target="publish.module.to.maven" param="module" />
     </target>
 
-    <target name="publish.module.to.download.site">
+	<target name="publish.module.to.download.site">
         <fail unless="module" message="No module to publish defined" />
         <ivy:resolve file="${module}/ivy.xml" />
         <ivy:publish publishivy="false" settingsref="publish.settings" conf="*(public)" resolver="sftp-publish">
@@ -70,4 +71,31 @@
         </artifact:mvn>
     </target>
 
+	<!-- Use this to publish to local Maven repo                              -->
+	<!-- If you have compiled a snapshot build with:                          -->
+	<!--    ant -Dvaadin.version=7.x.x.zzz package                            -->
+	<!-- Publish with:                                                        -->
+	<!--    ant -f publish.xml -Dvaadin.version=7.x.x.zzz local.maven.publish -->
+	<!-- Note that if the build is a snapshot build, it will be installed as  -->
+	<!-- 7.x-SNAPSHOT.                                                        -->
+    <target name="local.maven.publish">
+        <antcontrib:foreach list="${modules.to.publish.to.maven}" target="publish.module.to.local.maven" param="module" />
+    </target>
+
+    <target name="publish.module.to.local.maven">
+        <fail unless="module" message="No module to publish defined" />
+
+        <property name="jar.file" location="result/artifacts/${vaadin.version}/vaadin-${module}/vaadin-${module}-${vaadin.version}.jar" />
+        <property name="javadoc.file" location="result/artifacts/${vaadin.version}/vaadin-${module}/vaadin-${module}-${vaadin.version}-javadoc.jar" />
+        <property name="sources.file" location="result/artifacts/${vaadin.version}/vaadin-${module}/vaadin-${module}-${vaadin.version}-sources.jar" />
+        <property name="pom.file" location="result/artifacts/${vaadin.version}/vaadin-${module}/vaadin-${module}-${vaadin.version}.pom" />
+
+        <artifact:mvn failonerror="true">
+            <arg value="install:install-file" />
+            <sysproperty key="file" value="${jar.file}" />
+            <sysproperty key="pomFile" value="${pom.file}" />
+            <sysproperty key="javadoc" value="${javadoc.file}" />
+            <sysproperty key="sources" value="${sources.file}" />
+        </artifact:mvn>
+    </target>
 </project>
