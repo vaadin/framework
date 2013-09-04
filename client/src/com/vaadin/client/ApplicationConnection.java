@@ -523,6 +523,9 @@ public class ApplicationConnection {
         client.getElementByPath = $entry(function(id) {
             return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getElementByPath(Ljava/lang/String;)(id);
         });
+        client.getElementByPathStartingAt = $entry(function(id, element) {
+            return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getElementByPathStartingAt(Ljava/lang/String;Lcom/google/gwt/user/client/Element;)(id, element);
+        });
         client.getPathForElement = $entry(function(element) {
             return componentLocator.@com.vaadin.client.componentlocator.ComponentLocator::getPathForElement(Lcom/google/gwt/user/client/Element;)(element);
         });

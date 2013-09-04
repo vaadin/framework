@@ -205,6 +205,19 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
         return null;
     }
 
+    @Override
+    public Element getElementByPathStartingAt(String path, Element root) {
+        // Not supported by the legacy format
+        return null;
+    }
+
+    @Override
+    public boolean handlesPathSyntax(String path) {
+        // The legacy strategy is always used if all else fails, so just return
+        // true here.
+        return true;
+    }
+
     /**
      * Finds the first widget in the hierarchy (moving upwards) that implements
      * SubPartAware. Returns the SubPartAware implementor or null if none is
