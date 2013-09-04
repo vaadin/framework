@@ -61,7 +61,7 @@
         <dependency org="org.mortbay.jetty" name="jetty-runner"
             rev="7.5.0.v20110901" conf="jetty-run->default" />
 
-        <dependency org="junit" name="junit" rev="4.5"
+        <dependency org="junit" name="junit" rev="4.11"
             conf="build,ide -> default" />
 
         <dependency org="commons-codec" name="commons-codec"

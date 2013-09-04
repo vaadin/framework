@@ -40,7 +40,7 @@
             rev="2.4" conf="build-provided->default" />
 
         <!-- Testing libs -->
-        <dependency org="junit" name="junit" rev="4.5"
+        <dependency org="junit" name="junit" rev="4.11"
             conf="ide,test -> default" />
 
         <!-- Internally used, for now -->
