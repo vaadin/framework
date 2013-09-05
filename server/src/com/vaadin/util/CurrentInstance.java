@@ -17,10 +17,14 @@
 package com.vaadin.util;
 
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
@@ -36,6 +40,10 @@ import com.vaadin.ui.UI;
  * when {@link VaadinSession#access(Runnable)} or {@link UI#access(Runnable)} is
  * used.
  * <p>
+ * Please note that the instances are stored using {@link WeakReference}. This
+ * means that the a current instance value may suddenly disappear if there a no
+ * other references to the object.
+ * <p>
  * Currently the framework uses the following instances:
  * </p>
  * <p>
@@ -49,7 +57,7 @@ import com.vaadin.ui.UI;
  * @since 7.0.0
  */
 public class CurrentInstance implements Serializable {
-    private final Object instance;
+    private final WeakReference<Object> instance;
     private final boolean inheritable;
 
     private static InheritableThreadLocal<Map<Class<?>, CurrentInstance>> instances = new InheritableThreadLocal<Map<Class<?>, CurrentInstance>>() {
@@ -60,7 +68,7 @@ public class CurrentInstance implements Serializable {
                 return null;
             }
 
-            Map<Class<?>, CurrentInstance> value = new WeakValueMap<Class<?>, CurrentInstance>();
+            Map<Class<?>, CurrentInstance> value = new HashMap<Class<?>, CurrentInstance>();
 
             // Copy all inheritable values to child map
             for (Entry<Class<?>, CurrentInstance> e : parentValue.entrySet()) {
@@ -74,7 +82,7 @@ public class CurrentInstance implements Serializable {
     };
 
     private CurrentInstance(Object instance, boolean inheritable) {
-        this.instance = instance;
+        this.instance = new WeakReference<Object>(instance);
         this.inheritable = inheritable;
     }
 
@@ -93,9 +101,46 @@ public class CurrentInstance implements Serializable {
         }
         CurrentInstance currentInstance = map.get(type);
         if (currentInstance != null) {
-            return type.cast(currentInstance.instance);
+            Object value = currentInstance.instance.get();
+            if (value == null) {
+                /*
+                 * This is believed to never actually happen since the
+                 * ThreadLocal should only outlive the referenced object on
+                 * threads that are not doing anything related to Vaadin, which
+                 * should thus never invoke CurrentInstance.get().
+                 * 
+                 * At this point, there might also be other values that have
+                 * been collected, so we'll scan the entire map and remove stale
+                 * CurrentInstance objects. Using a ReferenceQueue could make
+                 * this assumingly rare case slightly more efficient, but would
+                 * significantly increase the complexity of the code for
+                 * maintaining a separate ReferenceQueue for each Thread.
+                 */
+                removeStaleInstances(map);
+
+                if (map.isEmpty()) {
+                    instances.remove();
+                }
+
+                return null;
+            }
+            return type.cast(value);
         } else {
             return null;
+        }
+    }
+
+    private static void removeStaleInstances(Map<Class<?>, CurrentInstance> map) {
+        for (Iterator<Entry<Class<?>, CurrentInstance>> iterator = map
+                .entrySet().iterator(); iterator.hasNext();) {
+            Entry<Class<?>, CurrentInstance> entry = iterator.next();
+            Object instance = entry.getValue().instance.get();
+            if (instance == null) {
+                iterator.remove();
+                getLogger().log(Level.WARNING,
+                        "CurrentInstance for {0} has been garbage collected.",
+                        entry.getKey());
+            }
         }
     }
 
@@ -183,9 +228,19 @@ public class CurrentInstance implements Serializable {
      *            A Class -> CurrentInstance map to set as current instances
      */
     public static void restoreInstances(Map<Class<?>, CurrentInstance> old) {
+        boolean removeStale = false;
         for (Class c : old.keySet()) {
             CurrentInstance ci = old.get(c);
-            set(c, ci.instance, ci.inheritable);
+            Object v = ci.instance.get();
+            if (v == null) {
+                removeStale = true;
+            } else {
+                set(c, v, ci.inheritable);
+            }
+        }
+
+        if (removeStale) {
+            removeStaleInstances(old);
         }
     }
 
@@ -207,10 +262,19 @@ public class CurrentInstance implements Serializable {
             return Collections.emptyMap();
         } else {
             Map<Class<?>, CurrentInstance> copy = new HashMap<Class<?>, CurrentInstance>();
+            boolean removeStale = false;
             for (Class<?> c : map.keySet()) {
                 CurrentInstance ci = map.get(c);
-                if (ci.inheritable || !onlyInheritable) {
+                if (ci.instance.isEnqueued()) {
+                    removeStale = true;
+                } else if (ci.inheritable || !onlyInheritable) {
                     copy.put(c, ci);
+                }
+            }
+            if (removeStale) {
+                removeStaleInstances(map);
+                if (map.isEmpty()) {
+                    instances.remove();
                 }
             }
             return copy;
@@ -265,5 +329,9 @@ public class CurrentInstance implements Serializable {
         VaadinService.setCurrent(service);
 
         return old;
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(CurrentInstance.class.getName());
     }
 }
