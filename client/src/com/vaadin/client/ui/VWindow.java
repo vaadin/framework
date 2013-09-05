@@ -1323,6 +1323,8 @@ public class VWindow extends VWindowOverlay implements
      * Allows to specify which connectors contain the description for the
      * window. Text contained in the widgets of the connectors will be read by
      * assistive devices when it is opened.
+     * <p>
+     * When the provided array is empty, an existing description is removed.
      * 
      * @param connectors
      *            with the connectors of the widgets to use as description
@@ -1331,20 +1333,26 @@ public class VWindow extends VWindowOverlay implements
         if (connectors != null) {
             assistiveConnectors = connectors;
 
-            Id[] ids = new Id[connectors.length];
-            for (int index = 0; index < connectors.length; index++) {
-                if (connectors[index] == null) {
-                    throw new IllegalArgumentException(
-                            "All values in parameter description need to be non-null");
+            if (connectors.length == 0) {
+                Roles.getDialogRole().removeAriaDescribedbyProperty(
+                        getElement());
+            } else {
+                Id[] ids = new Id[connectors.length];
+                for (int index = 0; index < connectors.length; index++) {
+                    if (connectors[index] == null) {
+                        throw new IllegalArgumentException(
+                                "All values in parameter description need to be non-null");
+                    }
+
+                    Element element = ((ComponentConnector) connectors[index])
+                            .getWidget().getElement();
+                    AriaHelper.ensureHasId(element);
+                    ids[index] = Id.of(element);
                 }
 
-                Element element = ((ComponentConnector) connectors[index])
-                        .getWidget().getElement();
-                AriaHelper.ensureHasId(element);
-                ids[index] = Id.of(element);
+                Roles.getDialogRole().setAriaDescribedbyProperty(getElement(),
+                        ids);
             }
-
-            Roles.getDialogRole().setAriaDescribedbyProperty(getElement(), ids);
         } else {
             throw new IllegalArgumentException(
                     "Parameter description must be non-null");
