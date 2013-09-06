@@ -57,6 +57,8 @@ import com.vaadin.ui.UI;
  * @since 7.0.0
  */
 public class CurrentInstance implements Serializable {
+    private static final Object NULL_OBJECT = new Object();
+
     private final WeakReference<Object> instance;
     private final boolean inheritable;
 
@@ -137,7 +139,7 @@ public class CurrentInstance implements Serializable {
             Object instance = entry.getValue().instance.get();
             if (instance == null) {
                 iterator.remove();
-                getLogger().log(Level.WARNING,
+                getLogger().log(Level.FINE,
                         "CurrentInstance for {0} has been garbage collected.",
                         entry.getKey());
             }
@@ -234,6 +236,8 @@ public class CurrentInstance implements Serializable {
             Object v = ci.instance.get();
             if (v == null) {
                 removeStale = true;
+            } else if (v == NULL_OBJECT) {
+                set(c, null, ci.inheritable);
             } else {
                 set(c, v, ci.inheritable);
             }
@@ -265,7 +269,7 @@ public class CurrentInstance implements Serializable {
             boolean removeStale = false;
             for (Class<?> c : map.keySet()) {
                 CurrentInstance ci = map.get(c);
-                if (ci.instance.isEnqueued()) {
+                if (ci.instance.get() == null) {
                     removeStale = true;
                 } else if (ci.inheritable || !onlyInheritable) {
                     copy.put(c, ci);
@@ -295,7 +299,8 @@ public class CurrentInstance implements Serializable {
      */
     public static Map<Class<?>, CurrentInstance> setCurrent(UI ui) {
         Map<Class<?>, CurrentInstance> old = new HashMap<Class<?>, CurrentInstance>();
-        old.put(UI.class, new CurrentInstance(UI.getCurrent(), true));
+        old.put(UI.class,
+                new CurrentInstance(getSameOrNullObject(UI.getCurrent()), true));
         UI.setCurrent(ui);
         old.putAll(setCurrent(ui.getSession()));
         return old;
@@ -316,10 +321,10 @@ public class CurrentInstance implements Serializable {
     public static Map<Class<?>, CurrentInstance> setCurrent(
             VaadinSession session) {
         Map<Class<?>, CurrentInstance> old = new HashMap<Class<?>, CurrentInstance>();
-        old.put(VaadinSession.class,
-                new CurrentInstance(VaadinSession.getCurrent(), true));
-        old.put(VaadinService.class,
-                new CurrentInstance(VaadinService.getCurrent(), true));
+        old.put(VaadinSession.class, new CurrentInstance(
+                getSameOrNullObject(VaadinSession.getCurrent()), true));
+        old.put(VaadinService.class, new CurrentInstance(
+                getSameOrNullObject(VaadinService.getCurrent()), true));
         VaadinService service = null;
         if (session != null) {
             service = session.getService();
@@ -329,6 +334,18 @@ public class CurrentInstance implements Serializable {
         VaadinService.setCurrent(service);
 
         return old;
+    }
+
+    /**
+     * Returns {@code object} unless it is null, in which case #NULL_OBJECT is
+     * returned.
+     * 
+     * @param object
+     *            The instance to return if non-null.
+     * @return {@code object} or #NULL_OBJECT if {@code object} is null.
+     */
+    private static Object getSameOrNullObject(Object object) {
+        return object == null ? NULL_OBJECT : object;
     }
 
     private static Logger getLogger() {
