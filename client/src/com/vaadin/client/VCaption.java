@@ -114,6 +114,8 @@ public class VCaption extends HTML {
 
         if (null != owner) {
             AriaHelper.bindCaption(owner.getWidget(), null);
+            AriaHelper.handleInputInvalid(owner.getWidget(), false);
+            AriaHelper.handleInputRequired(owner.getWidget(), false);
         }
     }
 
