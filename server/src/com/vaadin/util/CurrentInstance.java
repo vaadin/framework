@@ -237,6 +237,22 @@ public class CurrentInstance implements Serializable {
             if (v == null) {
                 removeStale = true;
             } else if (v == NULL_OBJECT) {
+                /*
+                 * NULL_OBJECT is used to identify objects that are null when
+                 * #setCurrent(UI) or #setCurrent(VaadinSession) are called on a
+                 * CurrentInstance. Without this a reference to an already
+                 * collected instance may be left in the CurrentInstance when it
+                 * really should be restored to null.
+                 * 
+                 * One example case that this fixes:
+                 * VaadinService.runPendingAccessTasks() clears all current
+                 * instances and then sets everything but the UI. This makes
+                 * UI.accessSynchronously() save these values before calling
+                 * setCurrent(UI), which stores UI=null in the map it returns.
+                 * This map will be restored after UI.accessSync(), which,
+                 * unless it respects null values, will just leave the wrong UI
+                 * instance registered.
+                 */
                 set(c, null, ci.inheritable);
             } else {
                 set(c, v, ci.inheritable);
