@@ -1747,6 +1747,11 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         if (client.hasEventListeners(this, EventId.FOCUS)) {
             client.updateVariable(paintableId, EventId.FOCUS, "", true);
         }
+
+        ComponentConnector connector = ConnectorMap.get(client).getConnector(
+                this);
+        client.getVTooltip().showAssistive(
+                connector.getTooltipInfo(getElement()));
     }
 
     /**
