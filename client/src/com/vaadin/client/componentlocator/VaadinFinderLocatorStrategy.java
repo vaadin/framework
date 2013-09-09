@@ -28,6 +28,7 @@ import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Property;
 import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.AbstractHasComponentsConnector;
+import com.vaadin.client.ui.SubPartAware;
 import com.vaadin.client.ui.VNotification;
 import com.vaadin.shared.AbstractComponentState;
 
@@ -50,6 +51,7 @@ import com.vaadin.shared.AbstractComponentState;
  */
 public class VaadinFinderLocatorStrategy implements LocatorStrategy {
 
+    private static final String SUBPART_SEPARATOR = "#";
     private ComponentLocator componentLocator;
 
     public VaadinFinderLocatorStrategy(ComponentLocator componentLocator) {
@@ -76,8 +78,8 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
         if (path.startsWith("//VNotification")) {
             return findNotificationByPath(path);
         }
-        return findElementByPath(path, componentLocator.getClient()
-                .getUIConnector());
+        return getElementByPathStartingAtConnector(path, componentLocator
+                .getClient().getUIConnector());
     }
 
     /**
@@ -110,23 +112,54 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      */
     @Override
     public Element getElementByPathStartingAt(String path, Element root) {
-        return findElementByPath(path,
+        return getElementByPathStartingAtConnector(path,
                 Util.findPaintable(componentLocator.getClient(), root));
     }
 
     /**
-     * Recursively finds an element identified by the provided path by
-     * traversing the connector hierarchy starting from the {@code parent}
-     * connector.
+     * Finds an element by the specified path, starting traversal of the
+     * connector hierarchy from the specified root.
+     * 
+     * @param path
+     *            the locator path
+     * @param root
+     *            the root connector
+     * @return the element identified by path or null if not found.
+     */
+    private Element getElementByPathStartingAtConnector(String path,
+            ComponentConnector root) {
+        String[] pathComponents = path.split(SUBPART_SEPARATOR);
+        ComponentConnector connector = findConnectorByPath(pathComponents[0],
+                root);
+        if (connector != null) {
+            if (pathComponents.length > 1) {
+                // We have subparts
+                if (connector.getWidget() instanceof SubPartAware) {
+                    return ((SubPartAware) connector.getWidget())
+                            .getSubPartElement(pathComponents[1]);
+                } else {
+                    return null;
+                }
+            }
+            return connector.getWidget().getElement();
+        }
+        return null;
+    }
+
+    /**
+     * Recursively finds a connector for the element identified by the provided
+     * path by traversing the connector hierarchy starting from the
+     * {@code parent} connector.
      * 
      * @param path
      *            The path identifying an element.
      * @param parent
      *            The connector to start traversing from.
-     * @return The element identified by {@code path} or null if it no such
-     *         element could be found.
+     * @return The connector identified by {@code path} or null if it no such
+     *         connector could be found.
      */
-    private Element findElementByPath(String path, ComponentConnector parent) {
+    private ComponentConnector findConnectorByPath(String path,
+            ComponentConnector parent) {
         boolean findRecursively = path.startsWith("//");
         // Strip away the one or two slashes from the beginning of the path
         path = path.substring(findRecursively ? 2 : 1);
@@ -138,9 +171,9 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
                 extractPredicateString(fragments[0]));
         if (connector != null) {
             if (fragments.length > 1) {
-                return findElementByPath(fragments[1], connector);
+                return findConnectorByPath(fragments[1], connector);
             } else {
-                return connector.getWidget().getElement();
+                return connector;
             }
         }
         return null;
