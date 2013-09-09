@@ -22,5 +22,5 @@ public interface EventId extends Serializable {
     public static final String FOCUS = "focus";
     public static final String CLICK_EVENT_IDENTIFIER = "click";
     public static final String LAYOUT_CLICK_EVENT_IDENTIFIER = "lClick";
-
+    public static final String POLL = "poll";
 }

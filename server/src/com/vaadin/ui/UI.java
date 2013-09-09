@@ -32,6 +32,9 @@ import com.vaadin.event.Action.Handler;
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
+import com.vaadin.event.UIEvents.PollEvent;
+import com.vaadin.event.UIEvents.PollListener;
+import com.vaadin.event.UIEvents.PollNotifier;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ComponentSizeValidator;
@@ -95,7 +98,8 @@ import com.vaadin.util.CurrentInstance;
  * @since 7.0
  */
 public abstract class UI extends AbstractSingleComponentContainer implements
-        Action.Container, Action.Notifier, LegacyComponent, Focusable {
+        Action.Container, Action.Notifier, PollNotifier, LegacyComponent,
+        Focusable {
 
     /**
      * The application to which this UI belongs
@@ -167,10 +171,7 @@ public abstract class UI extends AbstractSingleComponentContainer implements
 
         @Override
         public void poll() {
-            /*
-             * No-op. This is only called to cause a server visit to check for
-             * changes.
-             */
+            fireEvent(new PollEvent(UI.this));
         }
     };
     private DebugWindowServerRpc debugRpc = new DebugWindowServerRpc() {
@@ -1488,6 +1489,17 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      */
     public int getPollInterval() {
         return getState(false).pollInterval;
+    }
+
+    @Override
+    public void addPollListener(PollListener listener) {
+        addListener(EventId.POLL, PollEvent.class, listener,
+                PollListener.POLL_METHOD);
+    }
+
+    @Override
+    public void removePollListener(PollListener listener) {
+        removeListener(EventId.POLL, PollEvent.class, listener);
     }
 
     /**
