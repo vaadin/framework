@@ -134,6 +134,7 @@
     </target>
     <target name="vaadinPush.js">
         <property name="vaadinPush.js.output" location="WebContent/VAADIN/vaadinPush.js" />
+        <property name="vaadinPush.debug.js.output" location="WebContent/VAADIN/vaadinPush.debug.js" />
 
         <loadfile srcfile="WebContent/VAADIN/jquery-1.7.2.js" property="jquery.js.contents" />
         <loadfile srcfile="WebContent/VAADIN/jquery.atmosphere.js" property="jquery.atmosphere.js.contents" />
@@ -146,5 +147,7 @@
             </filterchain>
         </loadfile>
         <echo file="${vaadinPush.js.output}">${vaadinPush.js.contents}</echo>
+        <!-- This vaadinPush.js is not obfuscated so the debug version is the same-->
+        <copy file="${vaadinPush.js.output}" tofile="${vaadinPush.debug.js.output}"/>
     </target>
 </project>
