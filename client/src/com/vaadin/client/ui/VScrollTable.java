@@ -2452,6 +2452,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         Element colResizeWidget = DOM.createDiv();
 
         Element floatingCopyOfHeaderCell;
+        
+        Element floatingThemeDiv;
 
         private boolean sortable = false;
         private final String cid;
@@ -2748,6 +2750,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
 
         private void createFloatingCopy() {
+            floatingThemeDiv = DOM.createDiv();
+            floatingThemeDiv.setClassName(client.getConfiguration().getThemeName());
             floatingCopyOfHeaderCell = DOM.createDiv();
             DOM.setInnerHTML(floatingCopyOfHeaderCell, DOM.getInnerHTML(td));
             floatingCopyOfHeaderCell = DOM
@@ -2758,8 +2762,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             DOM.setStyleAttribute(floatingCopyOfHeaderCell, "width", "auto");
             updateFloatingCopysPosition(DOM.getAbsoluteLeft(td),
                     DOM.getAbsoluteTop(td));
+            DOM.appendChild(floatingThemeDiv, floatingCopyOfHeaderCell);
             DOM.appendChild(RootPanel.get().getElement(),
-                    floatingCopyOfHeaderCell);
+                    floatingThemeDiv);
         }
 
         private void updateFloatingCopysPosition(int x, int y) {
@@ -2774,8 +2779,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         private void hideFloatingCopy() {
             DOM.removeChild(RootPanel.get().getElement(),
-                    floatingCopyOfHeaderCell);
+                    floatingThemeDiv);
             floatingCopyOfHeaderCell = null;
+            floatingThemeDiv = null;
         }
 
         /**
