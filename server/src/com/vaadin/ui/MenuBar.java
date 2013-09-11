@@ -228,7 +228,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
         if (caption == null) {
             throw new IllegalArgumentException("caption cannot be null");
         }
-        MenuItem newItem = new MenuItem(caption, icon, command);
+        MenuItem newItem = createMenuItem(caption, icon, command);
         menuItems.add(newItem);
         markAsDirty();
 
@@ -236,6 +236,20 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
 
     }
 
+    /**
+     * createMenuItem: Override point to allow subclasses to instantiate the MenuItem instance.
+     * @param caption
+     *            the text for the menu item
+     * @param icon
+     *            the icon for the menu item
+     * @param command
+     *            the command for the menu item
+     * @return MenuItem The new menu item instance.
+     */
+    protected MenuBar.MenuItem createMenuItem(final String caption, final Resource icon, final MenuBar.Command command) {
+    	return new MenuItem(caption, icon, command);
+    }
+    
     /**
      * Add an item before some item. If the given item does not exist the item
      * is added at the end of the menu. Icon and command can be null, but a
@@ -257,7 +271,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
             throw new IllegalArgumentException("caption cannot be null");
         }
 
-        MenuItem newItem = new MenuItem(caption, icon, command);
+        MenuItem newItem = createMenuItem(caption, icon, command);
         if (menuItems.contains(itemToAddBefore)) {
             int index = menuItems.indexOf(itemToAddBefore);
             menuItems.add(index, newItem);
@@ -323,7 +337,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
         if (item != null) {
             moreItem = item;
         } else {
-            moreItem = new MenuItem("", null, null);
+            moreItem = createMenuItem("", null, null);
         }
         markAsDirty();
     }
@@ -543,7 +557,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
                 itsChildren = new ArrayList<MenuItem>();
             }
 
-            MenuItem newItem = new MenuItem(caption, icon, command);
+            MenuItem newItem = createMenuItem(caption, icon, command);
 
             // The only place where the parent is set
             newItem.setParent(this);
@@ -554,6 +568,20 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
             return newItem;
         }
 
+        /**
+         * createMenuItem: Override point for subclasses to handle the creation of the menu item.
+         * @param caption
+         *            the text for the menu item
+         * @param icon
+         *            the icon for the menu item
+         * @param command
+         *            the command for the menu item
+         * @return MenuItem The new MenuItem instance.
+         */
+        protected MenuBar.MenuItem createMenuItem(final String caption, final Resource icon, final MenuBar.Command command) {
+        	return new MenuItem(caption, icon, command);
+        }
+        
         /**
          * Add an item before some item. If the given item does not exist the
          * item is added at the end of the menu. Icon and command can be null,
@@ -581,7 +609,7 @@ public class MenuBar extends AbstractComponent implements LegacyComponent,
 
             if (hasChildren() && itsChildren.contains(itemToAddBefore)) {
                 int index = itsChildren.indexOf(itemToAddBefore);
-                newItem = new MenuItem(caption, icon, command);
+                newItem = createMenuItem(caption, icon, command);
                 newItem.setParent(this);
                 itsChildren.add(index, newItem);
             } else {
