@@ -173,7 +173,8 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
     };
 
     /**
-     * Callback used when a connection is closed by the client.
+     * Callback used when a connection is closed, either deliberately or because
+     * an error occurred.
      */
     private final PushEventCallback disconnectCallback = new PushEventCallback() {
         @Override
@@ -192,8 +193,7 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
                 if (!pushMode.isEnabled()) {
                     /*
                      * The client is expected to close the connection after push
-                     * mode has been set to disabled, just clean up some stuff
-                     * and be done with it
+                     * mode has been set to disabled.
                      */
                     getLogger().log(Level.FINER,
                             "Connection closed for resource {0}", id);
@@ -248,24 +248,17 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
             } catch (ServiceException e) {
                 getLogger().log(Level.SEVERE,
                         "Could not get session. This should never happen", e);
+                return;
             } catch (SessionExpiredException e) {
                 SystemMessages msg = service.getSystemMessages(
                         ServletPortletHelper.findLocale(null, null,
                                 vaadinRequest), vaadinRequest);
-                try {
-                    resource.getResponse()
-                            .getWriter()
-                            .write(VaadinService
-                                    .createCriticalNotificationJSON(
-                                            msg.getSessionExpiredCaption(),
-                                            msg.getSessionExpiredMessage(),
-                                            null, msg.getSessionExpiredURL()));
-                } catch (IOException e1) {
-                    getLogger()
-                            .log(Level.WARNING,
-                                    "Failed to notify client about unavailable session",
-                                    e);
-                }
+                sendNotificationAndDisconnect(
+                        resource,
+                        VaadinService.createCriticalNotificationJSON(
+                                msg.getSessionExpiredCaption(),
+                                msg.getSessionExpiredMessage(), null,
+                                msg.getSessionExpiredURL()));
                 return;
             }
 
@@ -275,21 +268,15 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
                 // Sets UI.currentInstance
                 final UI ui = service.findUI(vaadinRequest);
                 if (ui == null) {
-                    // This a request through an already open push connection to
-                    // a UI which no longer exists.
-                    resource.getResponse()
-                            .getWriter()
-                            .write(UidlRequestHandler.getUINotFoundErrorJSON(
-                                    service, vaadinRequest));
-                    // End the connection
-                    resource.resume();
-                    return;
+                    sendNotificationAndDisconnect(resource,
+                            UidlRequestHandler.getUINotFoundErrorJSON(service,
+                                    vaadinRequest));
+                } else {
+                    callback.run(resource, ui);
                 }
-
-                callback.run(resource, ui);
             } catch (IOException e) {
-                getLogger().log(Level.INFO,
-                        "An error occured while writing a push response", e);
+                getLogger().log(Level.WARNING, "Error writing a push response",
+                        e);
             } finally {
                 session.unlock();
             }
@@ -323,9 +310,10 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
         AtmosphereResource resource = event.getResource();
 
         String id = resource.uuid();
-        if (event.isCancelled()) {
-            // Disconnected for whatever reason, handle in onDisconnect() as
-            // it's more reliable
+        if (event.isCancelled() || event.isResumedOnTimeout()) {
+            getLogger().log(Level.FINER,
+                    "Cancelled connection for resource {0}", id);
+            disconnect(event);
         } else if (event.isResuming()) {
             // A connection that was suspended earlier was resumed (committed to
             // the client.) Should only happen if the transport is JSONP or
@@ -364,11 +352,29 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
     public void onDisconnect(AtmosphereResourceEvent event) {
         // Log event on trace level
         super.onDisconnect(event);
-        callWithUi(event.getResource(), disconnectCallback);
+        disconnect(event);
+    }
+
+    @Override
+    public void onThrowable(AtmosphereResourceEvent event) {
+        getLogger().log(Level.SEVERE, "Exception in push connection",
+                event.throwable());
+        disconnect(event);
+    }
+
+    @Override
+    public void onResume(AtmosphereResourceEvent event) {
+        // Log event on trace level
+        super.onResume(event);
+        disconnect(event);
     }
 
     @Override
     public void destroy() {
+    }
+
+    private void disconnect(AtmosphereResourceEvent event) {
+        callWithUi(event.getResource(), disconnectCallback);
     }
 
     /**
@@ -393,6 +399,22 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
                     .createCriticalNotificationJSON(null, null, null, null));
         } finally {
             connection.disconnect();
+        }
+    }
+
+    /**
+     * Tries to send a critical notification to the client and close the
+     * connection. Does nothing if the connection is already closed.
+     */
+    private static void sendNotificationAndDisconnect(
+            AtmosphereResource resource, String notificationJson) {
+        // TODO Implemented differently from sendRefreshAndDisconnect
+        try {
+            resource.getResponse().getWriter().write(notificationJson);
+            resource.resume();
+        } catch (Exception e) {
+            getLogger().log(Level.FINEST,
+                    "Failed to send critical notification to client", e);
         }
     }
 
