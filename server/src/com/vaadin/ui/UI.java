@@ -402,9 +402,12 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      * @see #getSession()
      */
     public void setSession(VaadinSession session) {
-        if ((session == null) == (this.session == null)) {
+        if (session == null && this.session == null) {
             throw new IllegalStateException(
-                    "VaadinServiceSession has already been set. Old session: "
+                    "Session should never be set to null when UI.session is already null");
+        } else if (session != null && this.session != null) {
+            throw new IllegalStateException(
+                    "Session has already been set. Old session: "
                             + getSessionDetails(this.session)
                             + ". New session: " + getSessionDetails(session)
                             + ".");
