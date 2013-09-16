@@ -22,7 +22,7 @@
     </union>
 
     <target name="compile-themes">
-        <ivy:resolve resolveid="common" conf="build" />
+        <ivy:resolve log="download-only" resolveid="common" conf="build" />
         <ivy:cachepath pathid="classpath.compile.theme" conf="build" />
 
         <antcall target="compile-theme">
@@ -69,7 +69,7 @@
     <target name="compile-theme" depends="copy-theme">
         <fail unless="theme" message="You must give the theme name to compile in the 'theme' parameter" />
 
-        <ivy:resolve resolveid="common" conf="compile-theme" />
+        <ivy:resolve log="download-only" resolveid="common" conf="compile-theme" />
         <ivy:cachepath pathid="classpath.compile.theme" conf="compile-theme" />
         <ivy:cachepath pathid="classpath.runtime.theme" conf="build" />
 

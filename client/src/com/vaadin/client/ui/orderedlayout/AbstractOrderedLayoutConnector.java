@@ -375,6 +375,7 @@ public abstract class AbstractOrderedLayoutConnector extends
             Slot slot = Util.findWidget(
                     (com.google.gwt.user.client.Element) element, Slot.class);
             if (slot != null && slot.getCaptionElement() != null
+                    && slot.getParent() == getWidget()
                     && slot.getCaptionElement().isOrHasChild(element)) {
                 ComponentConnector connector = Util.findConnectorFor(slot
                         .getWidget());

@@ -221,8 +221,6 @@ public class AtmospherePushConnection implements PushConnection {
         }
 
         resource.resume();
-        assert !resource.getBroadcaster().getAtmosphereResources()
-                .contains(resource);
         resource = null;
     }
 

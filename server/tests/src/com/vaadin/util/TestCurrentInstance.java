@@ -15,13 +15,20 @@
  */
 package com.vaadin.util;
 
+import static org.junit.Assert.assertNull;
+
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import junit.framework.Assert;
-
+import org.easymock.EasyMock;
+import org.junit.Assert;
 import org.junit.Test;
+
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinService;
+import com.vaadin.server.VaadinSession;
+import com.vaadin.ui.UI;
 
 public class TestCurrentInstance {
 
@@ -141,5 +148,47 @@ public class TestCurrentInstance {
 
     public void testInheritedClearedAfterRemove() {
 
+    }
+
+    private static class UIStoredInCurrentInstance extends UI {
+        @Override
+        protected void init(VaadinRequest request) {
+        }
+    }
+
+    private static class SessionStoredInCurrentInstance extends VaadinSession {
+        public SessionStoredInCurrentInstance(VaadinService service) {
+            super(service);
+        }
+    }
+
+    @Test
+    public void testRestoringNullUIWorks() throws Exception {
+        // First make sure current instance is empty
+        CurrentInstance.clearAll();
+
+        // Then store a new UI in there
+        Map<Class<?>, CurrentInstance> old = CurrentInstance
+                .setCurrent(new UIStoredInCurrentInstance());
+
+        // Restore the old values and assert that the UI is null again
+        CurrentInstance.restoreInstances(old);
+        assertNull(CurrentInstance.get(UI.class));
+    }
+
+    @Test
+    public void testRestoringNullSessionWorks() throws Exception {
+        // First make sure current instance is empty
+        CurrentInstance.clearAll();
+
+        // Then store a new session in there
+        Map<Class<?>, CurrentInstance> old = CurrentInstance
+                .setCurrent(new SessionStoredInCurrentInstance(EasyMock
+                        .createNiceMock(VaadinService.class)));
+
+        // Restore the old values and assert that the session is null again
+        CurrentInstance.restoreInstances(old);
+        assertNull(CurrentInstance.get(VaadinSession.class));
+        assertNull(CurrentInstance.get(VaadinService.class));
     }
 }

@@ -17,10 +17,14 @@
 package com.vaadin.util;
 
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
@@ -36,6 +40,10 @@ import com.vaadin.ui.UI;
  * when {@link VaadinSession#access(Runnable)} or {@link UI#access(Runnable)} is
  * used.
  * <p>
+ * Please note that the instances are stored using {@link WeakReference}. This
+ * means that the a current instance value may suddenly disappear if there a no
+ * other references to the object.
+ * <p>
  * Currently the framework uses the following instances:
  * </p>
  * <p>
@@ -49,7 +57,9 @@ import com.vaadin.ui.UI;
  * @since 7.0.0
  */
 public class CurrentInstance implements Serializable {
-    private final Object instance;
+    private static final Object NULL_OBJECT = new Object();
+
+    private final WeakReference<Object> instance;
     private final boolean inheritable;
 
     private static InheritableThreadLocal<Map<Class<?>, CurrentInstance>> instances = new InheritableThreadLocal<Map<Class<?>, CurrentInstance>>() {
@@ -74,7 +84,7 @@ public class CurrentInstance implements Serializable {
     };
 
     private CurrentInstance(Object instance, boolean inheritable) {
-        this.instance = instance;
+        this.instance = new WeakReference<Object>(instance);
         this.inheritable = inheritable;
     }
 
@@ -93,9 +103,46 @@ public class CurrentInstance implements Serializable {
         }
         CurrentInstance currentInstance = map.get(type);
         if (currentInstance != null) {
-            return type.cast(currentInstance.instance);
+            Object value = currentInstance.instance.get();
+            if (value == null) {
+                /*
+                 * This is believed to never actually happen since the
+                 * ThreadLocal should only outlive the referenced object on
+                 * threads that are not doing anything related to Vaadin, which
+                 * should thus never invoke CurrentInstance.get().
+                 * 
+                 * At this point, there might also be other values that have
+                 * been collected, so we'll scan the entire map and remove stale
+                 * CurrentInstance objects. Using a ReferenceQueue could make
+                 * this assumingly rare case slightly more efficient, but would
+                 * significantly increase the complexity of the code for
+                 * maintaining a separate ReferenceQueue for each Thread.
+                 */
+                removeStaleInstances(map);
+
+                if (map.isEmpty()) {
+                    instances.remove();
+                }
+
+                return null;
+            }
+            return type.cast(value);
         } else {
             return null;
+        }
+    }
+
+    private static void removeStaleInstances(Map<Class<?>, CurrentInstance> map) {
+        for (Iterator<Entry<Class<?>, CurrentInstance>> iterator = map
+                .entrySet().iterator(); iterator.hasNext();) {
+            Entry<Class<?>, CurrentInstance> entry = iterator.next();
+            Object instance = entry.getValue().instance.get();
+            if (instance == null) {
+                iterator.remove();
+                getLogger().log(Level.FINE,
+                        "CurrentInstance for {0} has been garbage collected.",
+                        entry.getKey());
+            }
         }
     }
 
@@ -183,9 +230,37 @@ public class CurrentInstance implements Serializable {
      *            A Class -> CurrentInstance map to set as current instances
      */
     public static void restoreInstances(Map<Class<?>, CurrentInstance> old) {
+        boolean removeStale = false;
         for (Class c : old.keySet()) {
             CurrentInstance ci = old.get(c);
-            set(c, ci.instance, ci.inheritable);
+            Object v = ci.instance.get();
+            if (v == null) {
+                removeStale = true;
+            } else if (v == NULL_OBJECT) {
+                /*
+                 * NULL_OBJECT is used to identify objects that are null when
+                 * #setCurrent(UI) or #setCurrent(VaadinSession) are called on a
+                 * CurrentInstance. Without this a reference to an already
+                 * collected instance may be left in the CurrentInstance when it
+                 * really should be restored to null.
+                 * 
+                 * One example case that this fixes:
+                 * VaadinService.runPendingAccessTasks() clears all current
+                 * instances and then sets everything but the UI. This makes
+                 * UI.accessSynchronously() save these values before calling
+                 * setCurrent(UI), which stores UI=null in the map it returns.
+                 * This map will be restored after UI.accessSync(), which,
+                 * unless it respects null values, will just leave the wrong UI
+                 * instance registered.
+                 */
+                set(c, null, ci.inheritable);
+            } else {
+                set(c, v, ci.inheritable);
+            }
+        }
+
+        if (removeStale) {
+            removeStaleInstances(old);
         }
     }
 
@@ -207,10 +282,19 @@ public class CurrentInstance implements Serializable {
             return Collections.emptyMap();
         } else {
             Map<Class<?>, CurrentInstance> copy = new HashMap<Class<?>, CurrentInstance>();
+            boolean removeStale = false;
             for (Class<?> c : map.keySet()) {
                 CurrentInstance ci = map.get(c);
-                if (ci.inheritable || !onlyInheritable) {
+                if (ci.instance.get() == null) {
+                    removeStale = true;
+                } else if (ci.inheritable || !onlyInheritable) {
                     copy.put(c, ci);
+                }
+            }
+            if (removeStale) {
+                removeStaleInstances(map);
+                if (map.isEmpty()) {
+                    instances.remove();
                 }
             }
             return copy;
@@ -231,7 +315,8 @@ public class CurrentInstance implements Serializable {
      */
     public static Map<Class<?>, CurrentInstance> setCurrent(UI ui) {
         Map<Class<?>, CurrentInstance> old = new HashMap<Class<?>, CurrentInstance>();
-        old.put(UI.class, new CurrentInstance(UI.getCurrent(), true));
+        old.put(UI.class,
+                new CurrentInstance(getSameOrNullObject(UI.getCurrent()), true));
         UI.setCurrent(ui);
         old.putAll(setCurrent(ui.getSession()));
         return old;
@@ -252,10 +337,10 @@ public class CurrentInstance implements Serializable {
     public static Map<Class<?>, CurrentInstance> setCurrent(
             VaadinSession session) {
         Map<Class<?>, CurrentInstance> old = new HashMap<Class<?>, CurrentInstance>();
-        old.put(VaadinSession.class,
-                new CurrentInstance(VaadinSession.getCurrent(), true));
-        old.put(VaadinService.class,
-                new CurrentInstance(VaadinService.getCurrent(), true));
+        old.put(VaadinSession.class, new CurrentInstance(
+                getSameOrNullObject(VaadinSession.getCurrent()), true));
+        old.put(VaadinService.class, new CurrentInstance(
+                getSameOrNullObject(VaadinService.getCurrent()), true));
         VaadinService service = null;
         if (session != null) {
             service = session.getService();
@@ -265,5 +350,21 @@ public class CurrentInstance implements Serializable {
         VaadinService.setCurrent(service);
 
         return old;
+    }
+
+    /**
+     * Returns {@code object} unless it is null, in which case #NULL_OBJECT is
+     * returned.
+     * 
+     * @param object
+     *            The instance to return if non-null.
+     * @return {@code object} or #NULL_OBJECT if {@code object} is null.
+     */
+    private static Object getSameOrNullObject(Object object) {
+        return object == null ? NULL_OBJECT : object;
+    }
+
+    private static Logger getLogger() {
+        return Logger.getLogger(CurrentInstance.class.getName());
     }
 }

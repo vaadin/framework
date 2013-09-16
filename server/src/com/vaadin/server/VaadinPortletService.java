@@ -201,6 +201,10 @@ public class VaadinPortletService extends VaadinService {
             // been rendered, e.g. portlet on one page sends an event to a
             // portlet on another page and then moves the user to that page.
             return true;
+        } else if (PortletUIInitHandler.isUIInitRequest(request)) {
+            // In some cases, the RenderRequest seems to be cached, causing the
+            // first request be the one triggered by vaadinBootstrap.js.
+            return true;
         }
         return false;
     }

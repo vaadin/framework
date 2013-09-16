@@ -30,6 +30,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinResponse;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.AbstractMediaState;
 import com.vaadin.shared.ui.MediaControl;
@@ -90,7 +91,8 @@ public abstract class AbstractMedia extends AbstractComponent {
 
         DownloadStream stream;
 
-        getSession().lock();
+        VaadinSession session = getSession();
+        session.lock();
         try {
             List<URLReference> sources = getState().sources;
 
@@ -108,7 +110,7 @@ public abstract class AbstractMedia extends AbstractComponent {
                     .getResource(reference);
             stream = resource.getStream();
         } finally {
-            getSession().unlock();
+            session.unlock();
         }
 
         stream.writeResponse(request, response);

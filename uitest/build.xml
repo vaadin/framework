@@ -19,7 +19,7 @@
         <!-- This is copied from common.xml to be able to add server.test.source 
             to the source path -->
 
-        <ivy:resolve resolveid="common" conf="build, build-provided" />
+        <ivy:resolve log="download-only" resolveid="common" conf="build, build-provided" />
         <ivy:cachepath pathid="classpath.compile.dependencies" conf="build, build-provided" />
     </target>
 
@@ -97,7 +97,7 @@
         <property name="deps.dir" location="${result.dir}/deps" />
         <property name="src" location="${result.dir}/../src" />
 
-        <ivy:resolve resolveid="common" conf="build" />
+        <ivy:resolve log="download-only" resolveid="common" conf="build" />
         <ivy:cachepath pathid="classpath.runtime.dependencies" conf="build" />
 
         <delete dir="${deps.dir}" />
@@ -120,6 +120,7 @@
                 <include name="statictestfiles/**" />
                 <include name="VAADIN/themes/tests-*/**" />
                 <include name="VAADIN/themes/reindeer-tests/**" />
+                <include name="VAADIN/jquery.atmosphere.js" />
                 <include name="WEB-INF/*.xml" />
                 <include name="WEB-INF/web.xml.2.4" />
             </fileset>

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Command;
+import com.vaadin.client.ApplicationConfiguration;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ApplicationConnection.CommunicationErrorHandler;
 import com.vaadin.client.ResourceLoader;
@@ -473,7 +474,13 @@ public class AtmospherePushConnection implements PushConnection {
         if (isAtmosphereLoaded()) {
             command.execute();
         } else {
-            final String pushJs = ApplicationConstants.VAADIN_PUSH_JS;
+            final String pushJs;
+            if (ApplicationConfiguration.isProductionMode()) {
+                pushJs = ApplicationConstants.VAADIN_PUSH_JS;
+            } else {
+                pushJs = ApplicationConstants.VAADIN_PUSH_DEBUG_JS;
+            }
+
             VConsole.log("Loading " + pushJs);
             ResourceLoader.get().loadScript(
                     connection.getConfiguration().getVaadinDirUrl() + pushJs,
