@@ -43,19 +43,16 @@
     <target name="test" depends="buildorder">
         <subant buildpathref="build-path" target="test" />
     </target>
+
     <target name="test-all" depends="buildorder">
         <property name="war.file" location="result/artifacts/${vaadin.version}/vaadin-uitest/vaadin-uitest-${vaadin.version}.war" />
+
         <parallel>
-            <sequential>
-                <!-- Sleep before running integration tests so testbench 
-                    tests have time to compile and start -->
-                <sleep minutes="4" />
-                <ant antfile="uitest/integration_tests.xml" target="integration-test-all" inheritall="false" inheritrefs="false">
-                    <property name="demo.war" value="${war.file}" />
-                </ant>
-            </sequential>
+            <!-- JUnit tests, can be run without a server -->
             <subant buildpathref="build-path" target="test" />
-            <ant antfile="uitest/test.xml" target="test-package">
+
+            <!-- Server deployment + TestBench tests  -->
+            <ant antfile="uitest/build.xml" target="test-testbench">
                 <property name="war.file" location="${war.file}" />
             </ant>
         </parallel>
