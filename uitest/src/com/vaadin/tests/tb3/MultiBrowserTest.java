@@ -18,11 +18,8 @@ package com.vaadin.tests.tb3;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 /**
@@ -41,11 +38,9 @@ import org.openqa.selenium.remote.DesiredCapabilities;
  * 
  * @author Vaadin Ltd
  */
-@RunWith(value = TB3Runner.class)
 public abstract class MultiBrowserTest extends PrivateTB3Configuration {
 
-    private static List<DesiredCapabilities> allBrowsers = new ArrayList<DesiredCapabilities>();
-    private static List<DesiredCapabilities> websocketBrowsers = new ArrayList<DesiredCapabilities>();
+    static List<DesiredCapabilities> allBrowsers = new ArrayList<DesiredCapabilities>();
     static {
         allBrowsers.add(BrowserUtil.ie(8));
         allBrowsers.add(BrowserUtil.ie(9));
@@ -57,26 +52,18 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
         allBrowsers.add(BrowserUtil.chrome(29));
         allBrowsers.add(BrowserUtil.opera(12));
 
-        websocketBrowsers.addAll(allBrowsers);
-        websocketBrowsers.remove(BrowserUtil.ie(8));
-        websocketBrowsers.remove(BrowserUtil.ie(9));
-    }
-
-    @Parameters
-    public static Collection<DesiredCapabilities> getBrowsersForTest() {
-        return getAllBrowsers();
-    }
-
-    public static Collection<DesiredCapabilities> getAllBrowsers() {
-        return Collections.unmodifiableCollection(allBrowsers);
     }
 
     /**
-     * @return A subset of {@link #getAllBrowsers()} including only those which
-     *         support websockets
+     * @return all supported browsers which are actively tested
      */
-    public static Collection<DesiredCapabilities> getWebsocketBrowsers() {
-        return Collections.unmodifiableCollection(websocketBrowsers);
+    public static List<DesiredCapabilities> getAllBrowsers() {
+        return allBrowsers;
+    }
+
+    @Override
+    public Collection<DesiredCapabilities> getBrowsersToTest() {
+        return allBrowsers;
     }
 
 }

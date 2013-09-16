@@ -17,16 +17,12 @@
 package com.vaadin.tests.tb3;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Test;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
@@ -53,49 +49,26 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
     protected List<FrameworkMethod> computeTestMethods() {
         List<FrameworkMethod> tests = new LinkedList<FrameworkMethod>();
 
-        // Find all methods in our test class marked with @Parameters.
-        for (FrameworkMethod method : getTestClass().getAnnotatedMethods(
-                Parameters.class)) {
-            // Make sure the Parameters method is static
-            if (!Modifier.isStatic(method.getMethod().getModifiers())) {
-                throw new IllegalArgumentException("@Parameters " + method
-                        + " must be static.");
-            }
+        if (!AbstractTB3Test.class.isAssignableFrom(getTestClass()
+                .getJavaClass())) {
+            throw new RuntimeException(getClass().getName() + " only supports "
+                    + AbstractTB3Test.class.getName());
+        }
 
-            // Execute the method (statically)
-            Object params;
-            try {
-                params = method.getMethod().invoke(
-                        getTestClass().getJavaClass());
-            } catch (Throwable t) {
-                throw new RuntimeException("Could not run test factory method "
-                        + method.getName(), t);
-            }
+        try {
+            AbstractTB3Test testClassInstance = (AbstractTB3Test) getTestClass()
+                    .getOnlyConstructor().newInstance();
+            for (DesiredCapabilities capabilities : testClassInstance
+                    .getBrowsersToTest()) {
 
-            // Did the factory return an array? If so, make it a list.
-            if (params.getClass().isArray()) {
-                params = Arrays.asList((Object[]) params);
-            }
-
-            // Did the factory return a scalar object? If so, put it in a list.
-            if (!(params instanceof Iterable<?>)) {
-                params = Collections.singletonList(params);
-            }
-
-            // For each object returned by the factory.
-            for (Object param : (Iterable<?>) params) {
-                if (!(param instanceof DesiredCapabilities)) {
-                    throw new RuntimeException("Unexpected parameter type "
-                            + param.getClass().getName()
-                            + " when expecting DesiredCapabilities");
-                }
-                DesiredCapabilities capabilities = (DesiredCapabilities) param;
                 // Find any methods marked with @Test.
                 for (FrameworkMethod m : getTestClass().getAnnotatedMethods(
                         Test.class)) {
                     tests.add(new TB3Method(m.getMethod(), capabilities));
                 }
             }
+        } catch (Exception e) {
+            throw new RuntimeException("Error retrieving browsers to run on", e);
         }
 
         return tests;

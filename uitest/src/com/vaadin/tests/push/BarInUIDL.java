@@ -16,13 +16,43 @@
 
 package com.vaadin.tests.push;
 
+import org.junit.Assert;
+import org.junit.Test;
+import org.openqa.selenium.WebElement;
+
+import com.vaadin.annotations.Push;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 
+@Push(transport = Transport.STREAMING)
 public class BarInUIDL extends AbstractTestUI {
+
+    public static class BarInUIDLTest extends MultiBrowserTest {
+        @Test
+        public void sendBarInUIDL() {
+            getButton().click();
+            Assert.assertEquals(
+                    "Thank you for clicking | bar",
+                    vaadinElement(
+                            "/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[1]/VLabel[0]")
+                            .getText());
+            getButton().click();
+            Assert.assertEquals(
+                    "Thank you for clicking | bar",
+                    vaadinElement(
+                            "/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[2]/VLabel[0]")
+                            .getText());
+        }
+
+        private WebElement getButton() {
+            return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VButton[0]");
+        }
+    }
 
     /*
      * (non-Javadoc)

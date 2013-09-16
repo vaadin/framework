@@ -17,18 +17,24 @@
 package com.vaadin.tests.tb3;
 
 import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.vaadin.server.LegacyApplication;
-import com.vaadin.testbench.By;
 import com.vaadin.testbench.TestBench;
 import com.vaadin.testbench.TestBenchTestCase;
 import com.vaadin.ui.UI;
@@ -50,6 +56,7 @@ import com.vaadin.ui.UI;
  * 
  * @author Vaadin Ltd
  */
+@RunWith(value = TB3Runner.class)
 public abstract class AbstractTB3Test extends TestBenchTestCase {
     /**
      * Height of the screenshots we want to capture
@@ -154,6 +161,24 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     protected abstract String getDeploymentHostname();
 
     /**
+     * Produces a collection of browsers to run the test on. This method is
+     * executed by the test runner when determining how many test methods to
+     * invoke and with what parameters. For each returned value a test method is
+     * ran and before running that,
+     * {@link #setDesiredCapabilities(DesiredCapabilities)} is invoked with the
+     * value returned by this method.
+     * 
+     * This method is not static to allow overriding it in sub classes. By
+     * default runs the test only on Firefox
+     * 
+     * @return The browsers to run the test on
+     */
+    public Collection<DesiredCapabilities> getBrowsersToTest() {
+        return Collections.singleton(BrowserUtil.firefox(17));
+
+    }
+
+    /**
      * Used to determine which capabilities should be used when setting up a
      * {@link WebDriver} for this test. Typically set by a test runner or left
      * at its default (Firefox 24). If you want to run a test on a single
@@ -189,9 +214,8 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     }
 
     /**
-     * Finds a Vaadin element based on the part of a TB3 style locator following
-     * the :: (e.g.
-     * vaadin=runLabelModes::PID_Scheckboxaction-Enabled/domChild[0] ->
+     * Finds an element based on the part of a TB2 style locator following the
+     * :: (e.g. vaadin=runLabelModes::PID_Scheckboxaction-Enabled/domChild[0] ->
      * PID_Scheckboxaction-Enabled/domChild[0]).
      * 
      * @param vaadinLocator
@@ -199,11 +223,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * @return
      */
     protected WebElement vaadinElement(String vaadinLocator) {
-        String base = getApplicationId(getDeploymentPath());
-
-        base += "::";
-
-        return driver.findElement(By.vaadin(base + vaadinLocator));
+        return driver.findElement(vaadinLocator(vaadinLocator));
     }
 
     /**
@@ -214,7 +234,58 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * @return
      */
     public WebElement vaadinElementById(String id) {
-        return vaadinElement("PID_S" + id);
+        return driver.findElement(vaadinLocatorById(id));
+    }
+
+    /**
+     * Finds a {@link By} locator based on the part of a TB2 style locator
+     * following the :: (e.g.
+     * vaadin=runLabelModes::PID_Scheckboxaction-Enabled/domChild[0] ->
+     * PID_Scheckboxaction-Enabled/domChild[0]).
+     * 
+     * @param vaadinLocator
+     *            The part following :: of the vaadin locator string
+     * @return
+     */
+    public org.openqa.selenium.By vaadinLocator(String vaadinLocator) {
+        String base = getApplicationId(getDeploymentPath());
+
+        base += "::";
+        return com.vaadin.testbench.By.vaadin(base + vaadinLocator);
+    }
+
+    /**
+     * Constructs a {@link By} locator for the id given using Component.setId
+     * 
+     * @param id
+     *            The id to locate
+     * @return a locator for the given id
+     */
+    public By vaadinLocatorById(String id) {
+        return vaadinLocator("PID_S" + id);
+    }
+
+    /**
+     * Waits a short while for the given condition to become true. Use e.g. as
+     * {@link #waitUntil(ExpectedConditions.textToBePresentInElement(by, text))}
+     * 
+     * @param condition
+     *            the condition to wait for to become true
+     */
+    protected void waitUntil(ExpectedCondition<Boolean> condition) {
+        new WebDriverWait(driver, 10).until(condition);
+    }
+
+    /**
+     * Waits a short while for the given condition to become false. Use e.g. as
+     * {@link #waitUntilNot(ExpectedConditions.textToBePresentInElement(by,
+     * text))}
+     * 
+     * @param condition
+     *            the condition to wait for to become false
+     */
+    protected void waitUntilNot(ExpectedCondition<Boolean> condition) {
+        new WebDriverWait(driver, 10).until(ExpectedConditions.not(condition));
     }
 
     /**
