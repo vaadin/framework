@@ -364,7 +364,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
          * @return an object describing the capabilities required for running a
          *         test on the given Safari version
          */
-        protected static DesiredCapabilities safari(int version) {
+        public static DesiredCapabilities safari(int version) {
             DesiredCapabilities c = DesiredCapabilities.safari();
             c.setVersion("" + version);
             return c;
@@ -378,7 +378,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
          * @return an object describing the capabilities required for running a
          *         test on the given Chrome version
          */
-        protected static DesiredCapabilities chrome(int version) {
+        public static DesiredCapabilities chrome(int version) {
             DesiredCapabilities c = DesiredCapabilities.chrome();
             c.setVersion("" + version);
             c.setPlatform(Platform.XP);
@@ -393,7 +393,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
          * @return an object describing the capabilities required for running a
          *         test on the given Opera version
          */
-        protected static DesiredCapabilities opera(int version) {
+        public static DesiredCapabilities opera(int version) {
             DesiredCapabilities c = DesiredCapabilities.opera();
             c.setVersion("" + version);
             c.setPlatform(Platform.XP);
@@ -408,7 +408,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
          * @return an object describing the capabilities required for running a
          *         test on the given Firefox version
          */
-        protected static DesiredCapabilities firefox(int version) {
+        public static DesiredCapabilities firefox(int version) {
             DesiredCapabilities c = DesiredCapabilities.firefox();
             c.setVersion("" + version);
             c.setPlatform(Platform.XP);
@@ -423,7 +423,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
          * @return an object describing the capabilities required for running a
          *         test on the given Internet Explorer version
          */
-        protected static DesiredCapabilities ie(int version) {
+        public static DesiredCapabilities ie(int version) {
             DesiredCapabilities c = DesiredCapabilities.internetExplorer();
             c.setVersion("" + version);
             return c;
