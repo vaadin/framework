@@ -916,6 +916,27 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         }
     }
 
+    /**
+     * TextBox variant used as input element for filter selects, which prevents
+     * selecting text when disabled.
+     * 
+     * @since 7.1.5
+     */
+    public class FilterSelectTextBox extends TextBox {
+
+        /**
+         * Overridden to avoid selecting text when text input is disabled
+         */
+        @Override
+        public void setSelectionRange(int pos, int length) {
+            if (textInputEnabled) {
+                super.setSelectionRange(pos, length);
+            } else {
+                super.setSelectionRange(getValue().length(), 0);
+            }
+        }
+    }
+
     @Deprecated
     public static final FilteringMode FILTERINGMODE_OFF = FilteringMode.OFF;
     @Deprecated
@@ -938,21 +959,10 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
      * <p>
      * For internal use only. May be removed or replaced in the future.
      */
-    public final TextBox tb = new TextBox() {
-
-        // Overridden to avoid selecting text when text input is disabled
-        @Override
-        public void setSelectionRange(int pos, int length) {
-            if (textInputEnabled) {
-                super.setSelectionRange(pos, length);
-            } else {
-                super.setSelectionRange(getValue().length(), 0);
-            }
-        };
-    };
+    public final TextBox tb;
 
     /** For internal use only. May be removed or replaced in the future. */
-    public final SuggestionPopup suggestionPopup = new SuggestionPopup();
+    public final SuggestionPopup suggestionPopup;
 
     /**
      * Used when measuring the width of the popup
@@ -1096,9 +1106,12 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
     private boolean textInputEnabled = true;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public VFilterSelect() {
+        tb = createTextBox();
+        suggestionPopup = createSuggestionPopup();
+
         selectedItemIcon.setStyleName("v-icon");
         selectedItemIcon.addLoadHandler(new LoadHandler() {
 
@@ -1134,6 +1147,32 @@ public class VFilterSelect extends Composite implements Field, KeyDownHandler,
         popupOpener.addClickHandler(this);
 
         setStyleName(CLASSNAME);
+    }
+
+    /**
+     * This method will create the TextBox used by the VFilterSelect instance.
+     * It is invoked during the Constructor and should only be overridden if a
+     * custom TextBox shall be used. The overriding method cannot use any
+     * instance variables.
+     * 
+     * @since 7.1.5
+     * @return TextBox instance used by this VFilterSelect
+     */
+    protected TextBox createTextBox() {
+        return new FilterSelectTextBox();
+    }
+
+    /**
+     * This method will create the SuggestionPopup used by the VFilterSelect
+     * instance. It is invoked during the Constructor and should only be
+     * overridden if a custom SuggestionPopup shall be used. The overriding
+     * method cannot use any instance variables.
+     * 
+     * @since 7.1.5
+     * @return SuggestionPopup instance used by this VFilterSelect
+     */
+    protected SuggestionPopup createSuggestionPopup() {
+        return new SuggestionPopup();
     }
 
     @Override

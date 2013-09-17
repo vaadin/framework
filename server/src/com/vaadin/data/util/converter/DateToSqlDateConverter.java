@@ -44,6 +44,10 @@ public class DateToSqlDateConverter implements Converter<Date, java.sql.Date> {
                     + targetType.getName() + ")");
         }
 
+        if (value == null) {
+            return null;
+        }
+
         return new java.sql.Date(value.getTime());
     }
 
@@ -56,6 +60,11 @@ public class DateToSqlDateConverter implements Converter<Date, java.sql.Date> {
                     + getPresentationType().getName() + " (targetType was "
                     + targetType.getName() + ")");
         }
+
+        if (value == null) {
+            return null;
+        }
+
         return new Date(value.getTime());
     }
 

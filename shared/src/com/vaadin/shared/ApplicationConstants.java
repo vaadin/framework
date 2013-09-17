@@ -79,6 +79,14 @@ public class ApplicationConstants implements Serializable {
     public static final String VAADIN_PUSH_JS = "vaadinPush.js";
 
     /**
+     * The name of the debug version of the javascript containing push support.
+     * The file is located in the VAADIN directory.
+     * 
+     * @since 7.1.6
+     */
+    public static final String VAADIN_PUSH_DEBUG_JS = "vaadinPush.debug.js";
+
+    /**
      * Name of the parameter used to transmit the CSRF token.
      */
     public static final String CSRF_TOKEN_PARAMETER = "v-csrfToken";

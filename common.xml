@@ -14,7 +14,7 @@
 
     <ivy:settings file="${vaadin.basedir}/ivysettings.xml" />
     <ivy:settings file="${vaadin.basedir}/ivysettings.xml" id="ivysettings" />
-    <ivy:resolve file="${vaadin.basedir}/ivy-taskdefs.xml" conf="taskdefs" log="quiet" />
+    <ivy:resolve log="download-only" file="${vaadin.basedir}/ivy-taskdefs.xml" conf="taskdefs" />
     <ivy:cachepath pathid="taskdefs.classpath" conf="taskdefs" />
     <taskdef uri="antlib:net.sf.antcontrib" resource="net/sf/antcontrib/antlib.xml" classpathref="taskdefs.classpath" />
     <!-- ant contrib for Maven integration -->
@@ -354,12 +354,12 @@
 
     <target name="dependencies" description="Resolves dependencies needed by this module">
         <property name='conf' value="build, build-provided" />
-        <ivy:resolve resolveid="common" conf="${conf}" />
+        <ivy:resolve log="download-only" resolveid="common" conf="${conf}" />
         <ivy:cachepath pathid="classpath.compile.dependencies" conf="${conf}" />
     </target>
 
     <target name="dependencies.test" description="Resolves dependencies needed by test">
-        <ivy:resolve resolveid="common" conf="test" />
+        <ivy:resolve log="download-only" resolveid="common" conf="test" />
         <ivy:cachepath pathid="classpath.test.dependencies" conf="test" />
     </target>
 
@@ -372,7 +372,7 @@
         <fail unless="result.dir" message="No result.dir parameter given" />
         <property name="conf" value="*(public)" />
 
-        <ivy:resolve conf="${conf}" />
+        <ivy:resolve log="download-only" conf="${conf}" />
         <ivy:publish settingsref="ivysettings" conf="${conf}" resolver="build-temp" overwrite="true" forcedeliver="true">
             <!-- <artifacts pattern="${result.dir}/[artifact]-[revision].[ext]" 
                 /> -->
@@ -384,7 +384,7 @@
     <target name="publish.to.local.maven">
         <property name="conf" value="*(public)" />
 
-        <ivy:resolve conf="${conf}" />
+        <ivy:resolve log="download-only" conf="${conf}" />
         <ivy:publish conf="${conf}" resolver="local-maven" overwrite="true">
         </ivy:publish>
     </target>

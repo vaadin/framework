@@ -51,7 +51,7 @@ import com.vaadin.launcher.util.BrowserLauncher;
  */
 public class DevelopmentServerLauncher {
 
-    private static final String KEYSTORE = "src/com/vaadin/launcher/keystore";
+    private static final String KEYSTORE = "uitest/src/com/vaadin/launcher/keystore";
     private final static int serverPort = 8888;
 
     /**
