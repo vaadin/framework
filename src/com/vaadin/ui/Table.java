@@ -289,6 +289,7 @@ public class Table extends AbstractSelect implements Action.Container,
      * Index of the first item on the current page.
      */
     private int currentPageFirstItemIndex = 0;
+    private int currentPageFirstItemIndexOnLastPage = -1;
 
     /**
      * Holds value of property selectable.
@@ -1352,7 +1353,9 @@ public class Table extends AbstractSelect implements Action.Container,
          * if (table height) / (row height) is not an integer. Reverted the
          * original fix because of #8662 regression.
          */
+        int indexOnLastPage = -1;
         if (newIndex > maxIndex) {
+            indexOnLastPage = newIndex;
             newIndex = maxIndex;
         }
 
@@ -1364,6 +1367,7 @@ public class Table extends AbstractSelect implements Action.Container,
                 currentPageFirstItemId = null;
             }
             currentPageFirstItemIndex = newIndex;
+            currentPageFirstItemIndexOnLastPage = indexOnLastPage;
         } else {
 
             // For containers not supporting indexes, we must iterate the
@@ -3255,6 +3259,8 @@ public class Table extends AbstractSelect implements Action.Container,
         if (getCurrentPageFirstItemIndex() != 0 || getPageLength() > 0) {
             target.addVariable(this, "firstvisible",
                     getCurrentPageFirstItemIndex());
+            target.addVariable(this, "firstvisibleonlastpage",
+                    currentPageFirstItemIndexOnLastPage);
         }
     }
 

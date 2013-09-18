@@ -417,6 +417,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private final RowRequestHandler rowRequestHandler;
     private VScrollTableBody scrollBody;
     private int firstvisible = 0;
+    private int firstVisibleOnLastPage = -1;
     private boolean sortAscending;
     private String sortColumn;
     private String oldSortColumn;
@@ -1256,12 +1257,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
     private void updateFirstVisibleAndScrollIfNeeded(UIDL uidl) {
         firstvisible = uidl.hasVariable("firstvisible") ? uidl
                 .getIntVariable("firstvisible") : 0;
-        if (firstvisible != lastRequestedFirstvisible && scrollBody != null) {
-            // received 'surprising' firstvisible from server: scroll there
-            firstRowInViewPort = firstvisible;
-            scrollBodyPanel
-                    .setScrollPosition(measureRowHeightOffset(firstvisible));
-        }
+        firstVisibleOnLastPage = uidl.hasVariable("firstvisibleonlastpage") ? uidl
+                .getIntVariable("firstvisibleonlastpage") : -1;
     }
 
     protected int measureRowHeightOffset(int rowIx) {
@@ -2265,9 +2262,14 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
             // Deferred due to some Firefox oddities
             Scheduler.get().scheduleDeferred(new Command() {
                 public void execute() {
-                    scrollBodyPanel
-                            .setScrollPosition(measureRowHeightOffset(firstvisible));
                     firstRowInViewPort = firstvisible;
+                    if (firstVisibleOnLastPage > -1) {
+                        scrollBodyPanel
+                                .setScrollPosition(measureRowHeightOffset(firstVisibleOnLastPage));
+                    } else {
+                        scrollBodyPanel
+                                .setScrollPosition(measureRowHeightOffset(firstvisible));
+                    }
                 }
             });
         }
