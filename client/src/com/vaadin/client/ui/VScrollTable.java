@@ -176,6 +176,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     private int firstRowInViewPort = 0;
     private int pageLength = 15;
     private int lastRequestedFirstvisible = 0; // to detect "serverside scroll"
+    private int firstvisibleOnLastPage = -1; // To detect if the first visible
+                                             // is on the last page
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean showRowHeaders = false;
@@ -1111,8 +1113,14 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     private ScheduledCommand lazyScroller = new ScheduledCommand() {
         @Override
         public void execute() {
-            int offsetTop = measureRowHeightOffset(firstvisible);
-            scrollBodyPanel.setScrollPosition(offsetTop);
+            if (firstvisibleOnLastPage > -1) {
+                scrollBodyPanel
+                        .setScrollPosition(measureRowHeightOffset(firstvisibleOnLastPage));
+            } else {
+                scrollBodyPanel
+                        .setScrollPosition(measureRowHeightOffset(firstvisible));
+            }
+            firstRowInViewPort = firstvisible;
         }
     };
 
@@ -1120,6 +1128,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     public void updateFirstVisibleAndScrollIfNeeded(UIDL uidl) {
         firstvisible = uidl.hasVariable("firstvisible") ? uidl
                 .getIntVariable("firstvisible") : 0;
+        firstvisibleOnLastPage = uidl.hasVariable("firstvisibleonlastpage") ? uidl
+                .getIntVariable("firstvisibleonlastpage") : -1;
         if (firstvisible != lastRequestedFirstvisible && scrollBody != null) {
             // received 'surprising' firstvisible from server: scroll there
             firstRowInViewPort = firstvisible;
@@ -2150,18 +2160,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         isNewBody = false;
 
-        if (firstvisible > 0) {
-            // Deferred due to some Firefox oddities
-            Scheduler.get().scheduleDeferred(new Command() {
-
-                @Override
-                public void execute() {
-                    scrollBodyPanel
-                            .setScrollPosition(measureRowHeightOffset(firstvisible));
-                    firstRowInViewPort = firstvisible;
-                }
-            });
-        }
+        Scheduler.get().scheduleFinally(lazyScroller);
 
         if (enabled) {
             // Do we need cache rows

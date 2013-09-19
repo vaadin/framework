@@ -427,6 +427,12 @@ public class Table extends AbstractSelect implements Action.Container,
     private int currentPageFirstItemIndex = 0;
 
     /**
+     * Index of the "first" item on the last page if a user has used
+     * setCurrentPageFirstItemIndex to scroll down. -1 if not set.
+     */
+    private int currentPageFirstItemIndexOnLastPage = -1;
+
+    /**
      * Holds value of property selectable.
      */
     private boolean selectable = false;
@@ -1477,12 +1483,14 @@ public class Table extends AbstractSelect implements Action.Container,
         }
 
         /*
-         * FIXME #7607 Take somehow into account the case where we want to
-         * scroll to the bottom so that the last row is completely visible even
-         * if (table height) / (row height) is not an integer. Reverted the
-         * original fix because of #8662 regression.
+         * If the new index is on the last page we set the index to be the first
+         * item on that last page and make a note of the real index for the
+         * client side to be able to move the scroll position to the correct
+         * position.
          */
+        int indexOnLastPage = -1;
         if (newIndex > maxIndex) {
+            indexOnLastPage = newIndex;
             newIndex = maxIndex;
         }
 
@@ -1494,6 +1502,20 @@ public class Table extends AbstractSelect implements Action.Container,
                 currentPageFirstItemId = null;
             }
             currentPageFirstItemIndex = newIndex;
+
+            if (needsPageBufferReset) {
+                /*
+                 * The flag currentPageFirstItemIndexOnLastPage denotes a user
+                 * set scrolling position on the last page via
+                 * setCurrentPageFirstItemIndex() and shouldn't be changed by
+                 * the table component internally changing the firstvisible item
+                 * on lazy row fetching. Doing so would make the scrolling
+                 * position not be updated correctly when the lazy rows are
+                 * finally rendered.
+                 */
+                currentPageFirstItemIndexOnLastPage = indexOnLastPage;
+            }
+
         } else {
 
             // For containers not supporting indexes, we must iterate the
@@ -3447,6 +3469,8 @@ public class Table extends AbstractSelect implements Action.Container,
         if (getCurrentPageFirstItemIndex() != 0 || getPageLength() > 0) {
             target.addVariable(this, "firstvisible",
                     getCurrentPageFirstItemIndex());
+            target.addVariable(this, "firstvisibleonlastpage",
+                    currentPageFirstItemIndexOnLastPage);
         }
     }
 
