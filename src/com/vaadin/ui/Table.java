@@ -1369,6 +1369,15 @@ public class Table extends AbstractSelect implements Action.Container,
             currentPageFirstItemIndex = newIndex;
 
             if (needsPageBufferReset) {
+                /*
+                 * The flag currentPageFirstItemIndexOnLastPage denotes a user
+                 * set scrolling position on the last page via
+                 * setCurrentPageFirstItemIndex() and shouldn't be changed by
+                 * the table component internally changing the firstvisible item
+                 * on lazy row fetching. Doing so would make the scrolling
+                 * position not be updated correctly when the lazy rows are
+                 * finally rendered.
+                 */
                 currentPageFirstItemIndexOnLastPage = indexOnLastPage;
             }
 
