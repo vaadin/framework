@@ -207,10 +207,7 @@ public class BrowserInfo {
             return prefix + OS_ANDROID;
         } else if (browserDetails.isIOS()) {
             String iosClass = prefix + OS_IOS;
-            if (getOperatingSystemMajorVersion() == 5) {
-                iosClass += " " + prefix + OS_IOS + "5";
-            }
-            return iosClass;
+            return iosClass + " " + iosClass + getOperatingSystemMajorVersion();
         } else if (browserDetails.isWindows()) {
             return prefix + OS_WINDOWS;
         } else if (browserDetails.isLinux()) {
