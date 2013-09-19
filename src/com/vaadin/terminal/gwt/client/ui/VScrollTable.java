@@ -1259,6 +1259,20 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 .getIntVariable("firstvisible") : 0;
         firstVisibleOnLastPage = uidl.hasVariable("firstvisibleonlastpage") ? uidl
                 .getIntVariable("firstvisibleonlastpage") : -1;
+
+        scrollToFirstVisible();
+    }
+
+    private void scrollToFirstVisible() {
+        if (firstvisible > 0) {
+            if (firstVisibleOnLastPage > -1) {
+                scrollBodyPanel
+                        .setScrollPosition(measureRowHeightOffset(firstVisibleOnLastPage));
+            } else {
+                scrollBodyPanel
+                        .setScrollPosition(measureRowHeightOffset(firstvisible));
+            }
+        }
     }
 
     protected int measureRowHeightOffset(int rowIx) {
@@ -2258,22 +2272,8 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         isNewBody = false;
 
-        if (firstvisible > 0) {
-            // Deferred due to some Firefox oddities
-            Scheduler.get().scheduleDeferred(new Command() {
-                public void execute() {
-                    firstRowInViewPort = firstvisible;
-                    if (firstVisibleOnLastPage > -1) {
-                        scrollBodyPanel
-                                .setScrollPosition(measureRowHeightOffset(firstVisibleOnLastPage));
-                    } else {
-                        scrollBodyPanel
-                                .setScrollPosition(measureRowHeightOffset(firstvisible));
-                    }
-                }
-            });
-        }
-
+        scrollToFirstVisible();
+        
         if (enabled) {
             // Do we need cache rows
             if (scrollBody.getLastRendered() + 1 < firstRowInViewPort

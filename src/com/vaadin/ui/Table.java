@@ -1367,7 +1367,11 @@ public class Table extends AbstractSelect implements Action.Container,
                 currentPageFirstItemId = null;
             }
             currentPageFirstItemIndex = newIndex;
-            currentPageFirstItemIndexOnLastPage = indexOnLastPage;
+
+            if (needsPageBufferReset) {
+                currentPageFirstItemIndexOnLastPage = indexOnLastPage;
+            }
+
         } else {
 
             // For containers not supporting indexes, we must iterate the

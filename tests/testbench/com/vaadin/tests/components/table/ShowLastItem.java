@@ -43,8 +43,7 @@ public class ShowLastItem extends TestBase {
 
     @Override
     protected Integer getTicketNumber() {
-        // TODO Auto-generated method stub
-        return null;
+        return 12407;
     }
 
 }
