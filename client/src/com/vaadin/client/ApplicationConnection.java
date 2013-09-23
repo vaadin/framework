@@ -2994,7 +2994,7 @@ public class ApplicationConnection {
                 if (!path.startsWith("/")) {
                     path = '/' + path;
                 }
-                String pathParam = ApplicationConstants.V_RESOURCE_PATH + "="
+                String pathParam = conf.getServiceUrlParameterName() + "="
                         + URL.encodeQueryString(path);
                 serviceUrl = addGetParameters(serviceUrl, pathParam);
                 uidlUri = serviceUrl;
