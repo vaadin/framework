@@ -72,13 +72,36 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * Connect to the hub using a remote web driver, set the canvas size and
      * opens the initial URL as specified by {@link #getTestUrl()}
      * 
-     * @throws MalformedURLException
+     * @throws Exception
      */
     @Before
-    public void setup() throws MalformedURLException {
+    public void setup() throws Exception {
+        setupDriver();
+
+        String testUrl = getTestUrl();
+        if (testUrl != null) {
+            driver.get(testUrl);
+        }
+    }
+
+    /**
+     * Creates and configure the web driver to be used for the test. By default
+     * creates a remote web driver which connects to {@link #getHubURL()} and
+     * selects a browser based on {@link #getDesiredCapabilities()}.
+     * 
+     * This method MUST call {@link #setDriver(WebDriver)} with the newly
+     * generated driver.
+     * 
+     * @throws Exception
+     *             If something goes wrong
+     */
+    protected void setupDriver() throws Exception {
         DesiredCapabilities capabilities = getDesiredCapabilities();
-        driver = TestBench.createDriver(new RemoteWebDriver(
-                new URL(getHubURL()), capabilities));
+
+        WebDriver dr = TestBench.createDriver(new RemoteWebDriver(new URL(
+                getHubURL()), capabilities));
+        setDriver(dr);
+
         int w = SCREENSHOT_WIDTH;
         int h = SCREENSHOT_HEIGHT;
 
@@ -93,10 +116,6 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
             // Opera does not support this...
         }
 
-        String testUrl = getTestUrl();
-        if (testUrl != null) {
-            driver.get(testUrl);
-        }
     }
 
     /**
