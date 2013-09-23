@@ -50,7 +50,7 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
         allBrowsers.add(BrowserUtil.ie(8));
         allBrowsers.add(BrowserUtil.ie(9));
         allBrowsers.add(BrowserUtil.ie(10));
-        allBrowsers.add(BrowserUtil.firefox(17));
+        allBrowsers.add(BrowserUtil.firefox(24));
         // Uncomment once we have the capability to run on Safari 6
         // allBrowsers.add(safari(6));
         allBrowsers.add(BrowserUtil.chrome(29));
