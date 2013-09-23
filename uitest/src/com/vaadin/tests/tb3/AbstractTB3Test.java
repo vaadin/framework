@@ -16,7 +16,6 @@
 
 package com.vaadin.tests.tb3;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.junit.After;
