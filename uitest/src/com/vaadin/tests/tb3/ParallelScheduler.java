@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.junit.runners.model.RunnerScheduler;
@@ -33,8 +32,18 @@ import org.junit.runners.model.RunnerScheduler;
  */
 public class ParallelScheduler implements RunnerScheduler {
     private final List<Future<Object>> fResults = new ArrayList<Future<Object>>();
+    private ExecutorService fService;
 
-    private final ExecutorService fService = Executors.newCachedThreadPool();
+    /**
+     * Creates a parallel scheduler which will use the given executor service
+     * when submitting test jobs.
+     * 
+     * @param service
+     *            The service to use for tests
+     */
+    public ParallelScheduler(ExecutorService service) {
+        fService = service;
+    }
 
     @Override
     public void schedule(final Runnable childStatement) {

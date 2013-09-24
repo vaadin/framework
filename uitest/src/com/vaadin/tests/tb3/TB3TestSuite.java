@@ -28,6 +28,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.jar.JarEntry;
 
 import org.junit.runners.Suite;
@@ -41,11 +43,24 @@ import org.junit.runners.model.InitializationError;
  */
 public class TB3TestSuite extends Suite {
 
+    /**
+     * This only restricts the number of test suites running concurrently. The
+     * number of tests to run concurrently are configured in {@link TB3Runner}.
+     */
+    private static final int MAX_CONCURRENT_TEST_SUITES = 20;
+
+    /**
+     * This is static so it is shared by all test suites running concurrently on
+     * the same machine and thus can limit the number of threads in use.
+     */
+    private final ExecutorService service = Executors
+            .newFixedThreadPool(MAX_CONCURRENT_TEST_SUITES);
+
     public TB3TestSuite(Class<?> klass,
             Class<? extends AbstractTB3Test> baseClass, String basePackage,
             String[] ignorePackages) throws InitializationError {
         super(klass, findTests(baseClass, basePackage, ignorePackages));
-        setScheduler(new ParallelScheduler());
+        setScheduler(new ParallelScheduler(service));
     }
 
     /**

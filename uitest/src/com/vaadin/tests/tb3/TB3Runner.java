@@ -19,6 +19,8 @@ package com.vaadin.tests.tb3;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.junit.Test;
 import org.junit.runners.BlockJUnit4ClassRunner;
@@ -40,9 +42,21 @@ import com.vaadin.tests.tb3.AbstractTB3Test.BrowserUtil;
  */
 public class TB3Runner extends BlockJUnit4ClassRunner {
 
+    /**
+     * This is the total limit of actual JUnit test instances run in parallel
+     */
+    private static final int MAX_CONCURRENT_TESTS = 50;
+
+    /**
+     * This is static so it is shared by all tests running concurrently on the
+     * same machine and thus can limit the number of threads in use.
+     */
+    private static final ExecutorService service = Executors
+            .newFixedThreadPool(MAX_CONCURRENT_TESTS);
+
     public TB3Runner(Class<?> klass) throws InitializationError {
         super(klass);
-        setScheduler(new ParallelScheduler());
+        setScheduler(new ParallelScheduler(service));
     }
 
     @Override
