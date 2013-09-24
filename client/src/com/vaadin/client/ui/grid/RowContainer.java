@@ -1,0 +1,126 @@
+/*
+ * Copyright 2000-2013 Vaadin Ltd.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+package com.vaadin.client.ui.grid;
+
+/**
+ * A representation of the rows in each of the sections (header, body and
+ * footer) in an {@link Escalator}.
+ * 
+ * @since 7.2
+ * @author Vaadin Ltd
+ * @see Escalator#getHeader()
+ * @see Escalator#getBody()
+ * @see Escalator#getFooter()
+ */
+public interface RowContainer {
+    /**
+     * Returns the current {@link CellRenderer} used to render cells.
+     * 
+     * @return the current cell renderer
+     */
+    public CellRenderer getCellRenderer();
+
+    /**
+     * Sets the {@link CellRenderer} to use when displaying data in the
+     * escalator.
+     * 
+     * @param cellRenderer
+     *            the cell renderer to use to render cells. May not be
+     *            <code>null</code>
+     * @throws IllegalArgumentException
+     *             if {@code cellRenderer} is <code>null</code>
+     * @see CellRenderer#NULL_RENDERER
+     */
+    public void setCellRenderer(CellRenderer cellRenderer)
+            throws IllegalArgumentException;
+
+    /**
+     * Removes rows at a certain offset in the current row container.
+     * 
+     * @param offset
+     *            the index of the first row to be removed
+     * @param numberOfRows
+     *            the number of rows to remove, starting from the offset
+     * @throws IndexOutOfBoundsException
+     *             if any integer number in the range
+     *             <code>[offset..(offset+numberOfRows)]</code> is not an
+     *             existing row index
+     * @throws IllegalArgumentException
+     *             if {@code numberOfRows} is less than 1.
+     */
+    public void removeRows(int offset, int numberOfRows)
+            throws IndexOutOfBoundsException, IllegalArgumentException;
+
+    /**
+     * Adds rows at a certain offset in this row container.
+     * <p>
+     * The new rows will be inserted between the row at the offset, and the row
+     * before (an offset of 0 means that the rows are inserted at the
+     * beginning). Therefore, the rows currently at the offset and afterwards
+     * will be moved downwards.
+     * <p>
+     * The contents of the inserted rows will subsequently be queried from the
+     * cell renderer.
+     * <p>
+     * <em>Note:</em> Only the contents of the inserted rows will be rendered.
+     * If inserting new rows affects the contents of existing rows,
+     * {@link #refreshRows(int, int)} needs to be called for those rows
+     * separately.
+     * 
+     * @param offset
+     *            the index of the row before which new rows are inserted, or
+     *            {@link #getRowCount()} to add rows at the end
+     * @param numberOfRows
+     *            the number of rows to insert after the <code>offset</code>
+     * @see #setCellRenderer(CellRenderer)
+     * @throws IndexOutOfBoundsException
+     *             if <code>offset</code> is not an integer in the range
+     *             <code>[0..{@link #getRowCount()}]</code>
+     * @throws IllegalArgumentException
+     *             if {@code numberOfRows} is less than 1.
+     */
+    public void insertRows(int offset, int numberOfRows)
+            throws IndexOutOfBoundsException, IllegalArgumentException;
+
+    /**
+     * Refreshes a range of rows in the current row container.
+     * <p>
+     * The data for the refreshed rows are queried from the current cell
+     * renderer.
+     * 
+     * @param offset
+     *            the index of the first row that will be updated
+     * @param numberOfRows
+     *            the number of rows to update, starting from the offset
+     * @see #setCellRenderer(CellRenderer)
+     * @throws IndexOutOfBoundsException
+     *             if any integer number in the range
+     *             <code>[offset..(offset+numberOfColumns)]</code> is not an
+     *             existing column index.
+     * @throws IllegalArgumentException
+     *             if {@code numberOfRows} is less than 1.
+     */
+    public void refreshRows(int offset, int numberOfRows)
+            throws IndexOutOfBoundsException, IllegalArgumentException;
+
+    /**
+     * Gets the number of rows in the current row container.
+     * 
+     * @return the number of rows in the current row container
+     */
+    public int getRowCount();
+}

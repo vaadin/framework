@@ -1,0 +1,72 @@
+@mixin base-escalator($primaryStyleName : v-escalator) {
+
+$background-color: white;
+$border-color: #aaa;
+
+.#{$primaryStyleName} {
+	position: relative;
+	background-color: $background-color;
+}
+
+.#{$primaryStyleName}-cell {
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.#{$primaryStyleName}-scroller {
+	position: absolute;
+	overflow: auto;
+	height: inherit;
+	width: inherit; /* width will be overridden if we have frozen columns */
+}
+
+.#{$primaryStyleName}-tablewrapper {
+	position: absolute;
+	overflow: hidden;
+}
+
+.#{$primaryStyleName}-tablewrapper > table {
+	border-spacing: 0;
+	table-layout: fixed;
+	width: inherit; /* a decent default fallback */
+}
+
+.#{$primaryStyleName}-header {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: inherit;
+	z-index: 10;
+}
+
+.#{$primaryStyleName}-body {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: inherit;
+}
+
+.#{$primaryStyleName}-footer {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: inherit;
+}
+
+.#{$primaryStyleName}-row {
+	position: absolute;
+	width: inherit;
+	top: 0;
+	left: 0;
+	background-color: $background-color;
+}
+
+.#{$primaryStyleName}-cell {
+	display: block;
+	float: left;
+	border: 1px solid $border-color;
+	padding: 2px;
+	white-space: nowrap;
+}
+
+}

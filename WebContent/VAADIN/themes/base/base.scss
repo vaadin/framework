@@ -15,6 +15,7 @@
 @import "inlinedatefield/inlinedatefield.scss";
 @import "dragwrapper/dragwrapper.scss";
 @import "embedded/embedded.scss";
+@import "escalator/escalator.scss";
 @import "formlayout/formlayout.scss";
 @import "gridlayout/gridlayout.scss";
 @import "label/label.scss";
@@ -82,6 +83,7 @@ $line-height: normal;
 	@include base-inline-datefield;
 	@include base-dragwrapper;
 	@include base-embedded;
+	@include base-escalator;
 	@include base-formlayout;
 	@include base-gridlayout;
 	@include base-label;
