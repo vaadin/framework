@@ -6,6 +6,7 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ComplexPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.terminal.gwt.client.Util;
@@ -121,8 +122,8 @@ public class VTabsheetPanel extends ComplexPanel {
 
     private void hide(Element e) {
         DOM.setStyleAttribute(e, "visibility", "hidden");
-        DOM.setStyleAttribute(e, "top", "-100000px");
-        DOM.setStyleAttribute(e, "left", "-100000px");
+        DOM.setStyleAttribute(e, "top", Window.getClientHeight()*2 + "px");
+        DOM.setStyleAttribute(e, "left",Window.getClientWidth()*2 + "px");
     }
 
     private void unHide(Element e) {
