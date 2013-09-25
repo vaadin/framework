@@ -134,6 +134,10 @@
             </batchtest>
         </junit>
 
+        <!-- Have teamcity publish each test error artifact immediatly if there are any -->
+        <basename property="basename" file="${target}" suffix="java" />
+        <echo>##teamcity[publishArtifacts '${com.vaadin.testbench.screenshot.directory}/errors/${basename}* => screenshot-errors']</echo>
+
     </target>
 
     <!-- Remove temporary source and compiled java files -->
