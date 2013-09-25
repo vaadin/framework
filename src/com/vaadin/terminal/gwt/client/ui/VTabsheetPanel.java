@@ -122,8 +122,8 @@ public class VTabsheetPanel extends ComplexPanel {
 
     private void hide(Element e) {
         DOM.setStyleAttribute(e, "visibility", "hidden");
-        DOM.setStyleAttribute(e, "top", Window.getClientHeight()*2 + "px");
-        DOM.setStyleAttribute(e, "left",Window.getClientWidth()*2 + "px");
+        DOM.setStyleAttribute(e, "top", -getParent().getOffsetHeight()*2 + "px");
+        DOM.setStyleAttribute(e, "left",-getParent().getOffsetWidth()*2 + "px");
     }
 
     private void unHide(Element e) {
