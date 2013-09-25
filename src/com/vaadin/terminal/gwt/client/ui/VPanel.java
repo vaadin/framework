@@ -6,6 +6,8 @@ package com.vaadin.terminal.gwt.client.ui;
 
 import java.util.Set;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style;
@@ -159,7 +161,7 @@ public class VPanel extends SimplePanel implements Container,
         DOM.setInnerHTML(captionText, text);
     }
 
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
+    public void updateFromUIDL(UIDL uidl, final ApplicationConnection client) {
         rendering = true;
         if (!uidl.hasAttribute("cached")) {
 
@@ -264,6 +266,21 @@ public class VPanel extends SimplePanel implements Container,
         // And apply tab index
         if (uidl.hasVariable("tabindex")) {
             contentNode.setTabIndex(uidl.getIntVariable("tabindex"));
+        }
+
+        if (BrowserInfo.get().isWebkit() && Util.getNativeScrollbarSize() > 0
+                && getWidget().getOffsetWidth() > contentNode.getOffsetWidth()) {
+            /*
+             * Most likely due to some timing issues with webkit overflow scroll hack
+             * causes that scrollbars are not taken into account when
+             * calculating content size. See #10255
+             */
+            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                public void execute() {
+                    Util.updateRelativeChildrenAndSendSizeUpdateEvent(client,
+                            VPanel.this);
+                }
+            });
         }
 
         rendering = false;
