@@ -21,6 +21,7 @@ public class VBrowserDetails implements Serializable {
     private boolean isGecko = false;
     private boolean isWebKit = false;
     private boolean isPresto = false;
+    private boolean isTrident = false;
 
     private boolean isSafari = false;
     private boolean isChrome = false;
@@ -52,9 +53,11 @@ public class VBrowserDetails implements Serializable {
 
         // browser engine name
         isGecko = userAgent.indexOf("gecko") != -1
-                && userAgent.indexOf("webkit") == -1;
+                && userAgent.indexOf("webkit") == -1
+                && userAgent.indexOf("trident/") == -1;
         isWebKit = userAgent.indexOf("applewebkit") != -1;
         isPresto = userAgent.indexOf(" presto/") != -1;
+        isTrident = userAgent.indexOf("trident/") != -1;
 
         // browser name
         isChrome = userAgent.indexOf(" chrome/") != -1;
@@ -62,6 +65,8 @@ public class VBrowserDetails implements Serializable {
         isOpera = userAgent.indexOf("opera") != -1;
         isIE = userAgent.indexOf("msie") != -1 && !isOpera
                 && (userAgent.indexOf("webtv") == -1);
+        // IE 11 no longer contains MSIE in the user agent
+        isIE = isIE || isTrident;
         isFirefox = userAgent.indexOf(" firefox/") != -1;
 
         // Rendering engine version
@@ -88,11 +93,21 @@ public class VBrowserDetails implements Serializable {
         // Browser version
         try {
             if (isIE) {
-                String ieVersionString = userAgent.substring(userAgent
-                        .indexOf("msie ") + 5);
-                ieVersionString = safeSubstring(ieVersionString, 0,
-                        ieVersionString.indexOf(";"));
-                parseVersionString(ieVersionString);
+                if (userAgent.indexOf("msie") == -1) {
+                    // IE 11+
+                    int rvPos = userAgent.indexOf("rv:");
+                    if (rvPos >= 0) {
+                        String tmp = userAgent.substring(rvPos + 3);
+                        tmp = tmp.replaceFirst("(\\.[0-9]+).+", "$1");
+                        parseVersionString(tmp);
+                    }
+                } else {
+                    String ieVersionString = userAgent.substring(userAgent
+                            .indexOf("msie ") + 5);
+                    ieVersionString = safeSubstring(ieVersionString, 0,
+                            ieVersionString.indexOf(";"));
+                    parseVersionString(ieVersionString);
+                }
             } else if (isFirefox) {
                 int i = userAgent.indexOf(" firefox/") + 9;
                 parseVersionString(safeSubstring(userAgent, i, i + 5));
@@ -260,6 +275,16 @@ public class VBrowserDetails implements Serializable {
      */
     public boolean isPresto() {
         return isPresto;
+    }
+
+    /**
+     * Tests if the browser is using the Trident engine
+     * 
+     * @since 7.1.7
+     * @return true if it is Trident, false otherwise
+     */
+    public boolean isTrident() {
+        return isTrident;
     }
 
     /**

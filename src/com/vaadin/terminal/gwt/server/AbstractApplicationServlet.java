@@ -2097,7 +2097,7 @@ public abstract class AbstractApplicationServlet extends HttpServlet implements
                 .getBrowser();
         if (browser.isIE()) {
             String content = "chrome=1";
-            if (browser.getBrowserMajorVersion() == 10) {
+            if (browser.getBrowserMajorVersion() >= 10) {
                 // Tell IE10 to emulate IE9 until IE10 is properly supported
                 // (#9462, #9214)
                 content = "IE=9; " + content;
