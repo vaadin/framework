@@ -44,6 +44,9 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
     private static final String ANDROID_MOTOROLA_3_0 = "Mozilla/5.0 (Linux; U; Android 3.0; en-us; Xoom Build/HRI39) AppleWebKit/534.13 (KHTML, like Gecko) Version/4.0 Safari/534.13";
     private static final String ANDROID_GALAXY_NEXUS_4_0_4_CHROME = "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Mobile Safari/535.19";
 
+    // application on the home screen, without Safari in user agent
+    private static final String IPHONE_IOS_6_1_HOMESCREEN_SIMULATOR = "Mozilla/5.0 (iPhone; CPU iPhone OS 6_1 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Mobile/10B141";
+    
     public void testSafari3() {
         VBrowserDetails bd = new VBrowserDetails(SAFARI3_WINDOWS);
         assertWebKit(bd);
@@ -62,6 +65,18 @@ public class TestVBrowserDetailsUserAgentParser extends TestCase {
         assertBrowserMinorVersion(bd, 0);
         assertEngineVersion(bd, 531f);
         assertMacOSX(bd);
+    }
+    
+    public void testIPhoneIOS6Homescreen() {
+        VBrowserDetails bd = new VBrowserDetails(
+                IPHONE_IOS_6_1_HOMESCREEN_SIMULATOR);
+        assertWebKit(bd);
+        // not identified as Safari, no browser version available
+        // assertSafari(bd);
+        // assertBrowserMajorVersion(bd, 6);
+        // assertBrowserMinorVersion(bd, 1);
+        assertEngineVersion(bd, 536f);
+        assertIOS(bd, 6, 1);
     }
 
     public void testIPhoneIOS5() {
