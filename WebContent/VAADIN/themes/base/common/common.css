@@ -234,7 +234,7 @@ div.v-app-loading {
 .v-scrollable {
 	overflow: auto;
 }
-/* Enable kinetic scrolling on Mobile Safari 6 */ 
-.v-ios.v-sa6 .v-scrollable { 
+/* Enable kinetic scrolling on iOS 6 */ 
+.v-ios6.v-webkit & .v-scrollable { 
         -webkit-overflow-scrolling: touch; 
 } 

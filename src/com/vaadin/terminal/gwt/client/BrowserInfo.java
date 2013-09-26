@@ -172,7 +172,7 @@ public class BrowserInfo {
             }
             String osClass = getOperatingSystemClass();
             if (osClass != null) {
-                cssClass = cssClass + " " + prefix + osClass;
+                cssClass = cssClass + " " + osClass;
             }
             if (isTouchDevice()) {
                 cssClass = cssClass + " " + prefix + UI_TOUCH;
@@ -183,16 +183,22 @@ public class BrowserInfo {
     }
 
     private String getOperatingSystemClass() {
+        String prefix = "v-";
+
         if (browserDetails.isAndroid()) {
-            return OS_ANDROID;
+            return prefix + OS_ANDROID;
         } else if (browserDetails.isIOS()) {
-            return OS_IOS;
+            String iosClass = prefix + OS_IOS;
+            if (isIOS6()) {
+                iosClass += " " + prefix + OS_IOS + "6";
+            }
+            return iosClass;
         } else if (browserDetails.isWindows()) {
-            return OS_WINDOWS;
+            return prefix + OS_WINDOWS;
         } else if (browserDetails.isLinux()) {
-            return OS_LINUX;
+            return prefix + OS_LINUX;
         } else if (browserDetails.isMacOSX()) {
-            return OS_MACOSX;
+            return prefix + OS_MACOSX;
         }
         // Unknown OS
         return null;
