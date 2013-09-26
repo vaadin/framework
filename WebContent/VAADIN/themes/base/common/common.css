@@ -234,7 +234,10 @@ div.v-app-loading {
 .v-scrollable {
 	overflow: auto;
 }
-/* Enable kinetic scrolling on iOS 6 */ 
-.v-ios6.v-webkit & .v-scrollable { 
-        -webkit-overflow-scrolling: touch; 
+.v-ios.v-webkit & .v-scrollable {
+    -webkit-overflow-scrolling: touch; 
 } 
+/* Disable native scrolling on iOS 5 due to #8792 */ 
+.v-ios5.v-webkit & .v-scrollable {
+    -webkit-overflow-scrolling: none; 
+}    

@@ -189,10 +189,7 @@ public class BrowserInfo {
             return prefix + OS_ANDROID;
         } else if (browserDetails.isIOS()) {
             String iosClass = prefix + OS_IOS;
-            if (isIOS6()) {
-                iosClass += " " + prefix + OS_IOS + "6";
-            }
-            return iosClass;
+            return iosClass + " " + iosClass + getOperatingSystemMajorVersion();
         } else if (browserDetails.isWindows()) {
             return prefix + OS_WINDOWS;
         } else if (browserDetails.isLinux()) {
@@ -466,9 +463,9 @@ public class BrowserInfo {
         if (isAndroid() && isWebkit() && getWebkitVersion() >= 534) {
             return false;
         }
-        // iOS 6 Safari supports native scrolling; iOS 5 suffers from #8792
+        // iOS 6+ Safari supports native scrolling; iOS 5 suffers from #8792
         // TODO Should test other iOS browsers
-        if (isIOS6() && isWebkit()) {
+        if (isIOS() && isWebkit() && getOperatingSystemMajorVersion() >= 6) {
             return false;
         }
         return true;
