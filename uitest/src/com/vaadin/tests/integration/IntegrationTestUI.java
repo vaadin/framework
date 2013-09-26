@@ -12,6 +12,11 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 public class IntegrationTestUI extends UI {
+
+    public class IntegrationTestXhrTB3 extends ServletIntegrationTestTB3 {
+        // Uses the test method declared in the super class
+    }
+
     @Override
     protected void init(VaadinRequest request) {
         VerticalLayout layout = new VerticalLayout();

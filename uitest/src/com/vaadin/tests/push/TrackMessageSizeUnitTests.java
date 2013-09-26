@@ -25,17 +25,28 @@ import javax.servlet.ServletContext;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.junit.Assert;
+import org.junit.Test;
 
 import com.vaadin.annotations.JavaScript;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServletService;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.ui.JavaScriptFunction;
 
 // Load vaadinPush.js so that jQueryVaadin is defined 
 @JavaScript("vaadin://vaadinPush.js")
 public class TrackMessageSizeUnitTests extends AbstractTestUIWithLog {
+
+    public static class TrackMessageSizeUnitTestsTB3 extends MultiBrowserTest {
+        @Test
+        public void runTests() {
+            Assert.assertEquals("1. All tests run",
+                    vaadinElementById("Log_row_0").getText());
+        }
+    }
 
     private String testMethod = "function testSequence(expected, data) {\n"
             + "    var request = {trackMessageLength: true, messageDelimiter: '|'};\n"

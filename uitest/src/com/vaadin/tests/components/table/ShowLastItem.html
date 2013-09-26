@@ -3,7 +3,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="" />
 <title>New Test</title>
 </head>
 <body>
@@ -12,14 +11,24 @@
 <tr><td rowspan="1" colspan="3">New Test</td></tr>
 </thead><tbody>
 <tr>
-	<td>open</td>
-	<td>/run/com.vaadin.tests.components.label.LabelModes?restartApplication</td>
-	<td></td>
+    <td>open</td>
+    <td>/run/com.vaadin.tests.components.table.ShowLastItem?restartApplication</td>
+    <td></td>
 </tr>
 <tr>
-	<td>screenCapture</td>
-	<td></td>
-	<td>labelmodes</td>
+    <td>click</td>
+    <td>vaadin=runcomvaadintestscomponentstableShowLastItem::/VVerticalLayout[0]/ChildComponentContainer[1]/VVerticalLayout[0]/ChildComponentContainer[1]/VButton[0]/domChild[0]/domChild[0]</td>
+    <td></td>
+</tr>
+<tr>
+    <td>pause</td>
+    <td>1000</td>
+    <td></td>
+</tr>
+<tr>
+    <td>screenCapture</td>
+    <td></td>
+    <td>row-20-fully-visible</td>
 </tr>
 
 </tbody></table>

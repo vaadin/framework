@@ -2,9 +2,18 @@ package com.vaadin.tests.components.label;
 
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.tests.components.ComponentTestCase;
+import com.vaadin.tests.tb3.SimpleMultiBrowserTest;
 import com.vaadin.ui.Label;
 
 public class LabelModes extends ComponentTestCase<Label> {
+
+    public static class LabelModesTest extends SimpleMultiBrowserTest {
+        @Override
+        public void test() throws Exception {
+            compareScreen("labelmodes");
+        }
+
+    }
 
     @Override
     protected Class<Label> getTestClass() {

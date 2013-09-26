@@ -13,30 +13,37 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.push;
-
-import org.junit.Test;
+package com.vaadin.tests.integration;
 
 import com.vaadin.annotations.Push;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ui.Transport;
 
-@Push(transport = Transport.STREAMING)
-public class BasicPushStreaming extends BasicPush {
-    @Override
-    public void init(VaadinRequest request) {
-        super.init(request);
-        // Don't use fallback so we can easier detect if streaming fails
-        getPushConfiguration().setFallbackTransport(Transport.STREAMING);
+/**
+ * Server test which uses websockets
+ * 
+ * @since 7.1
+ * @author Vaadin Ltd
+ */
+@Push(transport = Transport.WEBSOCKET)
+public class IntegrationTestWebsocket extends IntegrationTestUI {
 
+    public class IntegrationTestWebsocketTB3 extends ServletIntegrationTestTB3 {
+        // Uses the test method declared in the super class
     }
 
-    public static class BasicPushStreamingTest extends BasicPushTest {
-        @Override
-        @Test
-        public void testPush() {
-            super.testPush();
-        }
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.tests.integration.IntegrationTestUI#init(com.vaadin.server
+     * .VaadinRequest)
+     */
+    @Override
+    protected void init(VaadinRequest request) {
+        super.init(request);
+        // Ensure no fallback is used
+        getPushConfiguration().setFallbackTransport(Transport.WEBSOCKET);
     }
 
 }
