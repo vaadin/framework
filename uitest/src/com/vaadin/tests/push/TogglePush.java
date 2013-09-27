@@ -34,30 +34,12 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Label;
 
 public class TogglePush extends AbstractTestUI {
-    public static class TogglePushInInitTB3 extends MultiBrowserTest {
-        @Override
-        protected boolean isPushEnabled() {
-            return true;
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see com.vaadin.tests.tb3.AbstractTB3Test#getTestUrl()
-         */
-        @Override
-        protected String getTestUrl() {
-            return null;
-        }
+    public static class TogglePushTB3 extends MultiBrowserTest {
 
         @Test
         public void togglePushInInit() {
-            String baseUrl = getBaseURL();
-            if (baseUrl.endsWith("/")) {
-                baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
-            }
-
-            String url = baseUrl + getDeploymentPath();
+            setPush(true);
+            String url = getTestUrl();
 
             // Open with push disabled
             driver.get(addParameter(url, "push=disabled"));
@@ -80,12 +62,6 @@ public class TogglePush extends AbstractTestUI {
 
         }
 
-        /**
-         * @since
-         * @param url
-         * @param string
-         * @return
-         */
         private String addParameter(String url, String queryParameter) {
             if (url.contains("?")) {
                 return url + "&" + queryParameter;
@@ -94,31 +70,10 @@ public class TogglePush extends AbstractTestUI {
             }
         }
 
-        private String getCounterText() {
-            return vaadinElement(
-                    "/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VLabel[0]")
-                    .getText();
-        }
-
-        private WebElement getPushToggle() {
-            return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[1]/VCheckBox[0]/domChild[0]");
-        }
-
-        private WebElement getDelayedCounterUpdateButton() {
-            return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[3]/VButton[0]/domChild[0]/domChild[0]");
-        }
-
-    }
-
-    public static class TogglePushTB3 extends MultiBrowserTest {
-
-        @Override
-        protected boolean isPushEnabled() {
-            return true;
-        }
-
         @Test
         public void togglePush() {
+            setPush(true);
+            openTestURL();
             getDelayedCounterUpdateButton().click();
             sleep(2000);
 
@@ -157,15 +112,16 @@ public class TogglePush extends AbstractTestUI {
             return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[1]/VCheckBox[0]/domChild[0]");
         }
 
+        private WebElement getDelayedCounterUpdateButton() {
+            return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[3]/VButton[0]/domChild[0]/domChild[0]");
+        }
+
         private String getCounterText() {
             return vaadinElement(
                     "/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VLabel[0]")
                     .getText();
         }
 
-        private WebElement getDelayedCounterUpdateButton() {
-            return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[3]/VButton[0]/domChild[0]/domChild[0]");
-        }
     }
 
     private final Label counterLabel = new Label();

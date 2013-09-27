@@ -28,6 +28,8 @@ public class PushFromInit extends AbstractTestUIWithLog {
     public static class PushFromInitTB3 extends MultiBrowserTest {
         @Test
         public void testPushFromInit() {
+            openTestURL();
+
             for (int second = 0;; second++) {
                 if (second >= 30) {
                     Assert.fail("timeout");

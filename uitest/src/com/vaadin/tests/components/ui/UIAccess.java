@@ -40,13 +40,10 @@ import com.vaadin.util.CurrentInstance;
 public class UIAccess extends AbstractTestUIWithLog {
 
     public static class UIAccessTest extends MultiBrowserTest {
-        @Override
-        protected boolean isPushEnabled() {
-            return true;
-        }
-
         @Test
         public void testThreadLocals() {
+            setPush(true);
+            openTestURL();
             getCurrentInstanceWhenPushingButton().click();
             waitUntil(ExpectedConditions.textToBePresentInElement(
                     vaadinLocatorById("Log_row_0"), "1."));

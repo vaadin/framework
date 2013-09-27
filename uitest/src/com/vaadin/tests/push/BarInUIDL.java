@@ -35,6 +35,7 @@ public class BarInUIDL extends AbstractTestUI {
     public static class BarInUIDLTest extends MultiBrowserTest {
         @Test
         public void sendBarInUIDL() {
+            openTestURL();
             getButton().click();
             Assert.assertEquals(
                     "Thank you for clicking | bar",

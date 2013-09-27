@@ -47,11 +47,10 @@ import com.vaadin.ui.UI;
  * <ul>
  * <li>Helpers for browser selection</li>
  * <li>Hub connection setup and teardown</li>
- * <li>Automatic opening of a given test on the development server using
- * {@link #getUIClass()} or by automatically finding an enclosing UI class</li>
+ * <li>Automatic generation of URL for a given test on the development server
+ * using {@link #getUIClass()} or by automatically finding an enclosing UI class
+ * and based on requested features, e.g. {@link #isDebug()}, {@link #isPush()}</li>
  * <li>Generic helpers for creating TB3+ tests</li>
- * <li>Automatic URL generation based on needed features, e.g.
- * {@link #isDebug()}, {@link #isPushEnabled()}</li>
  * </ul>
  * 
  * @author Vaadin Ltd
@@ -69,6 +68,10 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     private static final int SCREENSHOT_WIDTH = 1500;
 
     private DesiredCapabilities desiredCapabilities;
+
+    private boolean debug = false;
+
+    private boolean push = false;
     {
         // Default browser to run on unless setDesiredCapabilities is called
         desiredCapabilities = BrowserUtil.firefox(24);
@@ -83,11 +86,6 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     @Before
     public void setup() throws Exception {
         setupDriver();
-
-        String testUrl = getTestUrl();
-        if (testUrl != null) {
-            driver.get(testUrl);
-        }
     }
 
     /**
@@ -125,9 +123,20 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     }
 
     /**
-     * Returns the full URL to be opened when the test starts.
+     * Opens the given test (defined by {@link #getTestUrl(boolean, boolean)},
+     * optionally with debug window and/or push
      * 
-     * @return the full URL to open or null to not open any URL automatically
+     * @param debug
+     * @param push
+     */
+    protected void openTestURL() {
+        driver.get(getTestUrl());
+    }
+
+    /**
+     * Returns the full URL to be used for the test
+     * 
+     * @return the full URL for the test
      */
     protected String getTestUrl() {
         String baseUrl = getBaseURL();
@@ -292,7 +301,12 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * Returns the path that should be used for the test. The path contains the
      * full path (appended to hostname+port) and must start with a slash.
      * 
-     * @return The path to open automatically when the test starts
+     * @param push
+     *            true if "?debug" should be added
+     * @param debug
+     *            true if /run-push should be used instead of /run
+     * 
+     * @return The URL path to the UI class to test
      */
     protected String getDeploymentPath() {
         Class<?> uiClass = getUIClass();
@@ -325,24 +339,47 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     }
 
     /**
-     * Determines whether to run the test in debug mode (with the debug console
+     * Returns whether to run the test in debug mode (with the debug console
      * open) or not
      * 
      * @return true to run with the debug window open, false by default
      */
-    protected boolean isDebug() {
-        return false;
+    protected final boolean isDebug() {
+        return debug;
     }
 
     /**
-     * Determines whether to run the test with push enabled (using /run-push) or
+     * Sets whether to run the test in debug mode (with the debug console open)
+     * or not.
+     * 
+     * @param debug
+     *            true to open debug window, false otherwise
+     */
+    protected final void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
+    /**
+     * Returns whether to run the test with push enabled (using /run-push) or
      * not. Note that push tests can and should typically be created using @Push
      * on the UI instead of overriding this method
      * 
-     * @return true to use push in the test, false to use whatever UI specifies
+     * @return true if /run-push is used, false otherwise
      */
-    protected boolean isPushEnabled() {
-        return false;
+    protected final boolean isPush() {
+        return push;
+    }
+
+    /**
+     * Sets whether to run the test with push enabled (using /run-push) or not.
+     * Note that push tests can and should typically be created using @Push on
+     * the UI instead of overriding this method
+     * 
+     * @param push
+     *            true to use /run-push in the test, false otherwise
+     */
+    protected final void setPush(boolean push) {
+        this.push = push;
     }
 
     /**
@@ -350,15 +387,19 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * The path contains the full path (appended to hostname+port) and must
      * start with a slash.
      * 
-     * This method takes into account {@link #isPushEnabled()} and
-     * {@link #isDebug()} when the path is generated.
+     * This method takes into account {@link #isPush()} and {@link #isDebug()}
+     * when the path is generated.
      * 
      * @param uiClass
+     * @param push
+     *            true if "?debug" should be added
+     * @param debug
+     *            true if /run-push should be used instead of /run
      * @return The path to the given UI class
      */
     private String getDeploymentPath(Class<?> uiClass) {
         String runPath = "/run";
-        if (isPushEnabled()) {
+        if (isPush()) {
             runPath = "/run-push";
         }
 

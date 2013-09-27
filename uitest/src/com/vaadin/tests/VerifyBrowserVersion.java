@@ -45,6 +45,7 @@ public class VerifyBrowserVersion extends TestBase {
 
         @Test
         public void verifyUserAgent() {
+            openTestURL();
             Assert.assertEquals(
                     expectedUserAgent.get(getDesiredCapabilities()),
                     vaadinElementById("userAgent").getText());
