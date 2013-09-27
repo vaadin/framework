@@ -268,11 +268,12 @@ public class VPanel extends SimplePanel implements Container,
             contentNode.setTabIndex(uidl.getIntVariable("tabindex"));
         }
 
-        if (BrowserInfo.get().isWebkit() && Util.getNativeScrollbarSize() > 0
+        if ((BrowserInfo.get().isWebkit() || BrowserInfo.get().isOpera())
+                && Util.getNativeScrollbarSize() > 0
                 && getWidget().getOffsetWidth() > contentNode.getOffsetWidth()) {
             /*
-             * Most likely due to some timing issues with webkit overflow scroll hack
-             * causes that scrollbars are not taken into account when
+             * Most likely due to some timing issues with webkit overflow scroll
+             * hack causes that scrollbars are not taken into account when
              * calculating content size. See #10255
              */
             Scheduler.get().scheduleDeferred(new ScheduledCommand() {
