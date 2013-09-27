@@ -37,6 +37,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.vaadin.server.LegacyApplication;
 import com.vaadin.testbench.TestBench;
 import com.vaadin.testbench.TestBenchTestCase;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.UI;
 
 /**
@@ -295,6 +296,30 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      */
     protected void waitUntilNot(ExpectedCondition<Boolean> condition) {
         new WebDriverWait(driver, 10).until(ExpectedConditions.not(condition));
+    }
+
+    /**
+     * For tests extending {@link AbstractTestUIWithLog}, returns the element
+     * for the Nth log row
+     * 
+     * @param rowNr
+     *            The log row to retrieve
+     * @return the Nth log row
+     */
+    protected WebElement getLogRowElement(int rowNr) {
+        return vaadinElementById("Log_row_" + rowNr);
+    }
+
+    /**
+     * For tests extending {@link AbstractTestUIWithLog}, returns the text in
+     * the Nth log row
+     * 
+     * @param rowNr
+     *            The log row to retrieve text for
+     * @return the text in the log row
+     */
+    protected String getLogRow(int rowNr) {
+        return getLogRowElement(rowNr).getText();
     }
 
     /**

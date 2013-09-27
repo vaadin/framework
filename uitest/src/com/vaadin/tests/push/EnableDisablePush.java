@@ -1,18 +1,73 @@
 package com.vaadin.tests.push;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.Test;
+import org.openqa.selenium.WebElement;
+
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.tests.components.AbstractTestUI;
+import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.tests.util.Log;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.UIDetachedException;
 
 public class EnableDisablePush extends AbstractTestUI {
+
+    public static class EnableDisablePushTest extends MultiBrowserTest {
+        @Test
+        public void testEnablePushWhenUsingPolling() throws Exception {
+            openTestURL();
+
+            assertEquals("1. Push enabled", getLogRow(0));
+
+            getDisablePushButton().click();
+            assertEquals("3. Push disabled", getLogRow(0));
+
+            getEnablePollButton().click();
+            assertEquals("5. Poll enabled", getLogRow(0));
+
+            getEnablePushButton().click();
+            assertEquals("7. Push enabled", getLogRow(0));
+
+            getDisablePollButton().click();
+            assertEquals("9. Poll disabled", getLogRow(0));
+
+            getDisablePushButtonAndReenableFromBackground().click();
+            Thread.sleep(2500);
+            assertEquals("16. Polling disabled, push enabled", getLogRow(0));
+
+            getDisablePushButton().click();
+            assertEquals("18. Push disabled", getLogRow(0));
+        }
+
+        private WebElement getDisablePushButton() {
+            return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[0]/VButton[0]");
+        }
+
+        private WebElement getEnablePushButton() {
+            return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[1]/VButton[0]");
+        }
+
+        private WebElement getDisablePollButton() {
+            return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[2]/VButton[0]");
+        }
+
+        private WebElement getEnablePollButton() {
+            return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[3]/VButton[0]");
+        }
+
+        private WebElement getDisablePushButtonAndReenableFromBackground() {
+            return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[4]/VButton[0]");
+        }
+
+    }
 
     private int c = 0;
 
@@ -27,7 +82,7 @@ public class EnableDisablePush extends AbstractTestUI {
 
             try {
                 while (true) {
-                    TimeUnit.MILLISECONDS.sleep(1000);
+                    TimeUnit.MILLISECONDS.sleep(500);
 
                     access(new Runnable() {
                         @Override
@@ -42,6 +97,9 @@ public class EnableDisablePush extends AbstractTestUI {
                             }
                         }
                     });
+                    if (c == 3) {
+                        return;
+                    }
                 }
             } catch (InterruptedException e) {
             } catch (UIDetachedException e) {
