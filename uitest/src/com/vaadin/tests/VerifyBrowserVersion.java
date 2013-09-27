@@ -32,6 +32,9 @@ public class VerifyBrowserVersion extends TestBase {
                     .put(BrowserUtil.ie(10),
                             "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)");
             expectedUserAgent
+                    .put(BrowserUtil.ie(11),
+                            "Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko");
+            expectedUserAgent
                     .put(BrowserUtil.chrome(29),
                             "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.76 Safari/537.36");
             expectedUserAgent
