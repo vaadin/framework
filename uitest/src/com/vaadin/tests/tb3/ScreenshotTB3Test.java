@@ -72,9 +72,11 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
         protected void failed(Throwable e, Description description) {
 
             // Notify Teamcity of failed test
-            System.out.print("##teamcity[publishArtifacts '");
-            System.out.println(getScreenshotErrorBaseName()
-                    + "* => screenshot-errors']");
+            if (!System.getProperty("teamcity.version", "").equals("")) {
+                System.out.print("##teamcity[publishArtifacts '");
+                System.out.println(getScreenshotErrorBaseName()
+                        + "* => screenshot-errors']");
+            }
         }
     };
 
