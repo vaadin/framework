@@ -1259,7 +1259,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
                 .getIntVariable("firstvisible") : 0;
         firstVisibleOnLastPage = uidl.hasVariable("firstvisibleonlastpage") ? uidl
                 .getIntVariable("firstvisibleonlastpage") : -1;
-        if (firstvisible != lastRequestedFirstvisible) {
+        if (firstvisible != lastRequestedFirstvisible && scrollBody != null) {
             // Only scroll if the first visible changes from the server side.
             // Else we might unintentionally scroll even when the scroll
             // position has not changed.
@@ -1269,6 +1269,7 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
     private void scrollToFirstVisible() {
         if (firstvisible > 0) {
+            firstRowInViewPort = firstvisible;
             if (firstVisibleOnLastPage > -1) {
                 scrollBodyPanel
                         .setScrollPosition(measureRowHeightOffset(firstVisibleOnLastPage));
