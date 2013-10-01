@@ -2277,8 +2277,17 @@ public class VScrollTable extends FlowPanel implements Table, ScrollHandler,
 
         isNewBody = false;
 
-        scrollToFirstVisible();
-        
+        if (firstvisible > 0) {
+            // Deferred due to some Firefox/Chrome oddities
+            // FIXME I don't know why this is needed to be deferred here but
+            // removing this will break scrolling. You have been warned.
+            Scheduler.get().scheduleDeferred(new Command() {
+                public void execute() {
+                    scrollToFirstVisible();
+                }
+            });
+        }
+
         if (enabled) {
             // Do we need cache rows
             if (scrollBody.getLastRendered() + 1 < firstRowInViewPort
