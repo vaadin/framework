@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.vaadin.tests.server.component.table;
+package com.vaadin.tests.components.table;
 
 import com.vaadin.annotations.Push;
 import com.vaadin.event.ItemClickEvent;
