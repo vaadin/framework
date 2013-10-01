@@ -18,7 +18,6 @@ package com.vaadin.client.componentlocator;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -51,7 +50,8 @@ import com.vaadin.shared.AbstractComponentState;
  */
 public class VaadinFinderLocatorStrategy implements LocatorStrategy {
 
-    private static final String SUBPART_SEPARATOR = "#";
+    public static final String SUBPART_SEPARATOR = "#";
+
     private ComponentLocator componentLocator;
 
     public VaadinFinderLocatorStrategy(ComponentLocator componentLocator) {
@@ -372,19 +372,4 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
         return new String[] { path };
     }
 
-    /**
-     * Matches a string that contains either double slashes ({@code //}) or a
-     * complex predicate ({@code [caption = "foo"]})
-     */
-    private static RegExp syntaxMatcher = RegExp
-            .compile("^.*//.*$|^.*\\[\\w+.*=.*\\].*$");
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean handlesPathSyntax(String path) {
-        // If the path contains a double-slash at any point, it's probably ours.
-        return syntaxMatcher.test(path);
-    }
 }

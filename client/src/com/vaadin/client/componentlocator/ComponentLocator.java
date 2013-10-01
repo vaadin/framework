@@ -131,8 +131,9 @@ public class ComponentLocator {
         // always used as a last resort if no other strategies claim
         // responsibility for the path syntax.
         for (LocatorStrategy strategy : locatorStrategies) {
-            if (strategy.handlesPathSyntax(path)) {
-                return strategy.getElementByPath(path);
+            Element element = strategy.getElementByPath(path);
+            if (null != element) {
+                return element;
             }
         }
         return null;
@@ -156,17 +157,22 @@ public class ComponentLocator {
         // always used as a last resort if no other strategies claim
         // responsibility for the path syntax.
         for (LocatorStrategy strategy : locatorStrategies) {
-            if (strategy.handlesPathSyntax(path)) {
-                return strategy.getElementByPathStartingAt(path, root);
+            Element element = strategy.getElementByPathStartingAt(path, root);
+            if (null != element) {
+                return element;
             }
         }
         return null;
     }
 
     /**
+     * Returns the {@link ApplicationConnection} used by this locator.
+     * <p>
+     * This method is primarily for internal use by the framework.
+     * 
      * @return the application connection
      */
-    ApplicationConnection getClient() {
+    public ApplicationConnection getClient() {
         return client;
     }
 }

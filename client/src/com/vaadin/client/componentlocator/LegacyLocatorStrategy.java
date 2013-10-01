@@ -177,17 +177,30 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
 
     @Override
     public Element getElementByPath(String path) {
+        return getElementByPathStartingAt(path, null);
+    }
+
+    @Override
+    public Element getElementByPathStartingAt(String path, Element baseElement) {
         /*
          * Path is of type "targetWidgetPath#componentPart" or
          * "targetWidgetPath".
          */
         String parts[] = path.split(LegacyLocatorStrategy.SUBPART_SEPARATOR, 2);
         String widgetPath = parts[0];
-        Widget w = getWidgetFromPath(widgetPath);
+
+        Widget baseWidget = null;
+        if (null != baseElement) {
+            // Note that this only works if baseElement can be mapped to a
+            // widget to which the path is relative. Otherwise, the current
+            // implementation simply interprets the path as if baseElement was
+            // null.
+            baseWidget = Util.findWidget(baseElement, null);
+        }
+        Widget w = getWidgetFromPath(widgetPath, baseWidget);
         if (w == null || !Util.isAttachedAndDisplayed(w)) {
             return null;
         }
-
         if (parts.length == 1) {
             int pos = widgetPath.indexOf("domChild");
             if (pos == -1) {
@@ -196,26 +209,13 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
 
             // Contains dom reference to a sub element of the widget
             String subPath = widgetPath.substring(pos);
-            return getElementByDOMPath(w.getElement(), subPath);
+            return getElementByDOMPath(baseElement, subPath);
         } else if (parts.length == 2) {
             if (w instanceof SubPartAware) {
                 return ((SubPartAware) w).getSubPartElement(parts[1]);
             }
         }
         return null;
-    }
-
-    @Override
-    public Element getElementByPathStartingAt(String path, Element root) {
-        // Not supported by the legacy format
-        return null;
-    }
-
-    @Override
-    public boolean handlesPathSyntax(String path) {
-        // The legacy strategy is always used if all else fails, so just return
-        // true here.
-        return true;
     }
 
     /**
@@ -364,7 +364,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
 
     /**
      * Creates a locator String for the given widget. The path can be used to
-     * locate the widget using {@link #getWidgetFromPath(String)}.
+     * locate the widget using {@link #getWidgetFromPath(String, Widget)}.
      * <p/>
      * Returns null if no path can be determined for the widget or if the widget
      * is null.
@@ -436,11 +436,14 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
      * 
      * @param path
      *            The String locator that identifies the widget.
+     * @param baseWidget
+     *            the widget to which the path is relative, null if relative to
+     *            root
      * @return The Widget identified by the String locator or null if the widget
      *         could not be identified.
      */
-    private Widget getWidgetFromPath(String path) {
-        Widget w = null;
+    private Widget getWidgetFromPath(String path, Widget baseWidget) {
+        Widget w = baseWidget;
         String parts[] = path.split(PARENTCHILD_SEPARATOR);
 
         for (int i = 0; i < parts.length; i++) {
@@ -517,7 +520,7 @@ public class LegacyLocatorStrategy implements LocatorStrategy {
                             .next();
                 }
                 /*
-                 * The new grid and ordered layotus do not contain
+                 * The new grid and ordered layouts do not contain
                  * ChildComponentContainer widgets. This is instead simulated by
                  * constructing a path step that would find the desired widget
                  * from the layout and injecting it as the next search step

@@ -74,17 +74,4 @@ public interface LocatorStrategy {
      *         could not be located.
      */
     Element getElementByPathStartingAt(String path, Element root);
-
-    /**
-     * Allows the component locator orchestrator to determine whether this
-     * strategy should be used to locate an element using the provided path.
-     * Paths can have (slightly) different syntax, and each locator strategy
-     * should inspect the path string to see if it can be used to locate the
-     * element by the path in question.
-     * 
-     * @param path
-     *            The path whose syntax to check whether handled or not
-     * @return true if this strategy handles the path syntax in question
-     */
-    boolean handlesPathSyntax(String path);
 }
