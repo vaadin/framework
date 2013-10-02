@@ -15,6 +15,9 @@
  */
 package com.vaadin.client.debug.internal;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -38,12 +41,11 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.ValueMap;
-import com.vaadin.client.componentlocator.ComponentLocator;
 
 /**
  * Provides functionality for picking selectors for Vaadin TestBench.
  * 
- * @since 7.1.4
+ * @since 7.1.x
  * @author Vaadin Ltd
  */
 public class TestBenchSection implements Section {
@@ -51,47 +53,46 @@ public class TestBenchSection implements Section {
     /**
      * Selector widget showing a selector in a program-usable form.
      */
-    private static class SelectorWidget extends HTML {
-        private static int selectorIndex = 1;
-        final private String path;
+    private static class SelectorWidget extends HTML implements
+            MouseOverHandler, MouseOutHandler {
+        private static int selectorCounter = 1;
 
-        public SelectorWidget(final String path) {
+        final private SelectorPath path;
+        final private SelectorWidget parent;
+        final private int selectorIndex = selectorCounter++;
+
+        public SelectorWidget(final SelectorPath path,
+                final SelectorWidget parent) {
             this.path = path;
+            this.parent = parent;
+
+            String parentString = (parent != null) ? ("element" + parent.selectorIndex)
+                    : "getDriver()";
             String html = "<div class=\""
                     + VDebugWindow.STYLENAME
                     + "-selector\"><span class=\"tb-selector\">"
-                    + Util.escapeHTML("WebElement element" + (selectorIndex++)
-                            + " = getDriver().findElement(By.vaadin(\"" + path
-                            + "\"));") + "</span></div>";
+                    + Util.escapeHTML("WebElement element" + selectorIndex
+                            + " = " + path.getJUnitSelector(parentString) + ";")
+                    + "</span></div>";
             setHTML(html);
 
-            addMouseOverHandler(new MouseOverHandler() {
-                @Override
-                public void onMouseOver(MouseOverEvent event) {
-                    for (ApplicationConnection a : ApplicationConfiguration
-                            .getRunningApplications()) {
-                        Element element = new ComponentLocator(a)
-                                .getElementByPath(SelectorWidget.this.path);
-                        ComponentConnector connector = Util
-                                .getConnectorForElement(a, a.getUIConnector()
-                                        .getWidget(), element);
-                        if (connector == null) {
-                            connector = Util.getConnectorForElement(a,
-                                    RootPanel.get(), element);
-                        }
-                        if (connector != null) {
-                            Highlight.showOnly(connector);
-                            break;
-                        }
-                    }
-                }
-            });
-            addMouseOutHandler(new MouseOutHandler() {
-                @Override
-                public void onMouseOut(MouseOutEvent event) {
-                    Highlight.hideAll();
-                }
-            });
+            addMouseOverHandler(this);
+            addMouseOutHandler(this);
+        }
+
+        @Override
+        public void onMouseOver(MouseOverEvent event) {
+            ApplicationConnection a = path.getLocator().getClient();
+            Element element = path.findElement();
+            if (null != element) {
+                Highlight.hideAll();
+                Highlight.show(element);
+            }
+        }
+
+        @Override
+        public void onMouseOut(MouseOutEvent event) {
+            Highlight.hideAll();
         }
     }
 
@@ -101,7 +102,10 @@ public class TestBenchSection implements Section {
     private final FlowPanel content = new FlowPanel();
 
     private final HierarchyPanel hierarchyPanel = new HierarchyPanel();
+
     private final FlowPanel selectorPanel = new FlowPanel();
+    // map from full path to SelectorWidget to enable reuse of old selectors
+    private Map<SelectorPath, SelectorWidget> selectorWidgets = new HashMap<SelectorPath, SelectorWidget>();
 
     private final FlowPanel controls = new FlowPanel();
 
@@ -208,34 +212,28 @@ public class TestBenchSection implements Section {
     }
 
     private void pickSelector(ServerConnector connector, Element element) {
-        String path = findTestBenchSelector(connector, element);
+        SelectorPath path = SelectorPath.findTestBenchSelector(connector,
+                element);
 
-        if (null != path && !path.isEmpty()) {
-            selectorPanel.add(new SelectorWidget(path));
-        }
+        addSelectorWidgets(path);
     }
 
-    private String findTestBenchSelector(ServerConnector connector,
-            Element element) {
-        String path = null;
-        ApplicationConnection connection = connector.getConnection();
-        if (connection != null) {
-            if (null == element) {
-                // try to find the root element of the connector
-                if (connector instanceof ComponentConnector) {
-                    Widget widget = ((ComponentConnector) connector)
-                            .getWidget();
-                    if (widget != null) {
-                        element = widget.getElement();
-                    }
-                }
-            }
-            if (null != element) {
-                path = new ComponentLocator(connection)
-                        .getPathForElement(element);
-            }
+    private SelectorWidget addSelectorWidgets(SelectorPath path) {
+        // add selector widgets recursively from root towards children, reusing
+        // old ones
+        SelectorPath parent = path.getParent();
+        SelectorWidget parentWidget = null;
+        if (null != parent) {
+            parentWidget = addSelectorWidgets(parent);
         }
-        return path;
+        SelectorWidget widget = selectorWidgets.get(path);
+        if (null == widget) {
+            // the parent has already been added above
+            widget = new SelectorWidget(path, parentWidget);
+            selectorWidgets.put(path, widget);
+            selectorPanel.add(widget);
+        }
+        return widget;
     }
 
     private final NativePreviewHandler highlightModeHandler = new NativePreviewHandler() {
