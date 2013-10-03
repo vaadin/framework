@@ -41,25 +41,35 @@ public class VConsole {
 
     public static void log(String msg) {
         if (LogConfiguration.loggingIsEnabled(Level.INFO)) {
-            getLogger().log(Level.INFO, msg);
+            // Check for null, so no NullPointerException is generated when
+            // formatting (#12588)
+            getLogger().log(Level.INFO, msg == null ? "null" : msg);
         }
     }
 
     public static void log(Throwable e) {
         if (LogConfiguration.loggingIsEnabled(Level.INFO)) {
-            getLogger().log(Level.INFO, e.getMessage(), e);
+            // Check for null, so no NullPointerException is generated when
+            // formatting (#12588)
+            getLogger().log(Level.INFO,
+                    e.getMessage() == null ? "" : e.getMessage(), e);
         }
     }
 
     public static void error(Throwable e) {
         if (LogConfiguration.loggingIsEnabled(Level.SEVERE)) {
-            getLogger().log(Level.SEVERE, e.getMessage(), e);
+            // Check for null, so no NullPointerException is generated when
+            // formatting (#12588)
+            getLogger().log(Level.SEVERE,
+                    e.getMessage() == null ? "" : e.getMessage(), e);
         }
     }
 
     public static void error(String msg) {
         if (LogConfiguration.loggingIsEnabled(Level.SEVERE)) {
-            getLogger().log(Level.SEVERE, msg);
+            // Check for null, so no NullPointerException is generated when
+            // formatting (#12588)
+            getLogger().log(Level.SEVERE, msg == null ? "null" : msg);
         }
     }
 

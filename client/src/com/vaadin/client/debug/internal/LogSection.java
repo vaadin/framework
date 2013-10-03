@@ -73,6 +73,12 @@ public class LogSection implements Section {
                 return;
             }
 
+            // If no message is provided, record.getMessage will be null and so
+            // the formatter.format will fail with NullPointerException (#12588)
+            if (record.getMessage() == null) {
+                record.setMessage("");
+            }
+
             Formatter formatter = getFormatter();
             String msg = formatter.format(record);
 
