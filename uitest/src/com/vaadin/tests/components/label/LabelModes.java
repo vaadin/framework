@@ -10,6 +10,7 @@ public class LabelModes extends ComponentTestCase<Label> {
     public static class LabelModesTest extends SimpleMultiBrowserTest {
         @Override
         public void test() throws Exception {
+            openTestURL();
             compareScreen("labelmodes");
         }
 

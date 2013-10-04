@@ -28,17 +28,15 @@ import com.vaadin.tests.tb3.MultiBrowserTest;
 public class PushReattachedComponent extends MultiBrowserTest {
 
     @Override
-    protected boolean isPushEnabled() {
-        return true;
-    }
-
-    @Override
     protected Class<?> getUIClass() {
         return PanelChangeContents.class;
     }
 
     @Test
     public void testReattachComponentUsingPush() {
+        setPush(true);
+        openTestURL();
+
         Assert.assertEquals(
                 "stats",
                 vaadinElement(

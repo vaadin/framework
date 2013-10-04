@@ -37,13 +37,10 @@ public class PushConfigurationTest extends AbstractTestUI {
 
     public static class PushConfigurationWebsocket extends WebsocketTest {
 
-        @Override
-        protected boolean isDebug() {
-            return true;
-        }
-
         @Test
         public void testWebsocketAndStreaming() {
+            setDebug(true);
+            openTestURL();
             // Websocket
             Assert.assertEquals(1, getServerCounter());
             new Select(getTransportSelect()).selectByVisibleText("WEBSOCKET");

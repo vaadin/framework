@@ -15,8 +15,6 @@
  */
 package com.vaadin.tests.push;
 
-import org.junit.Test;
-
 import com.vaadin.annotations.Push;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ui.Transport;
@@ -32,11 +30,5 @@ public class BasicPushStreaming extends BasicPush {
     }
 
     public static class BasicPushStreamingTest extends BasicPushTest {
-        @Override
-        @Test
-        public void testPush() {
-            super.testPush();
-        }
     }
-
 }

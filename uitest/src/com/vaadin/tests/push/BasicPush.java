@@ -39,6 +39,8 @@ public class BasicPush extends AbstractTestUI {
 
         @Test
         public void testPush() {
+            openTestURL();
+
             // Test client initiated push
             Assert.assertEquals(0, getClientCounter());
             getIncrementButton().click();

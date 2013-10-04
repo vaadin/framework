@@ -31,6 +31,7 @@ import org.json.JSONObject;
 import com.vaadin.server.BootstrapHandler;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.VaadinPortlet;
+import com.vaadin.server.VaadinPortlet.VaadinLiferayRequest;
 import com.vaadin.server.VaadinPortletRequest;
 import com.vaadin.server.VaadinPortletResponse;
 import com.vaadin.server.VaadinRequest;
@@ -98,6 +99,8 @@ public class PortletBootstrapHandler extends BootstrapHandler {
         JSONObject parameters = super.getApplicationParameters(context);
         VaadinPortletResponse response = (VaadinPortletResponse) context
                 .getResponse();
+        VaadinPortletRequest request = (VaadinPortletRequest) context
+                .getRequest();
         MimeResponse portletResponse = (MimeResponse) response
                 .getPortletResponse();
         ResourceURL resourceURL = portletResponse.createResourceURL();
@@ -107,6 +110,14 @@ public class PortletBootstrapHandler extends BootstrapHandler {
         // Always send path info as a query parameter
         parameters
                 .put(ApplicationConstants.SERVICE_URL_PATH_AS_PARAMETER, true);
+
+        // If we are running in Liferay then we need to prefix all parameters
+        // with the portlet namespace
+        if (request instanceof VaadinLiferayRequest) {
+            parameters.put(
+                    ApplicationConstants.SERVICE_URL_PARAMETER_NAMESPACE,
+                    response.getPortletResponse().getNamespace());
+        }
 
         return parameters;
     }

@@ -43,6 +43,7 @@ public class TrackMessageSizeUnitTests extends AbstractTestUIWithLog {
     public static class TrackMessageSizeUnitTestsTB3 extends MultiBrowserTest {
         @Test
         public void runTests() {
+            openTestURL();
             Assert.assertEquals("1. All tests run",
                     vaadinElementById("Log_row_0").getText());
         }

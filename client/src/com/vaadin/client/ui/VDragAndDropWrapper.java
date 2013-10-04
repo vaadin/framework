@@ -332,11 +332,16 @@ public class VDragAndDropWrapper extends VCustomComponent implements
         vaadinDragEvent.setCurrentGwtEvent(event);
         getDropHandler().dragOver(vaadinDragEvent);
 
-        String s = event.getEffectAllowed();
-        if ("all".equals(s) || s.contains("opy")) {
-            event.setDropEffect("copy");
-        } else {
-            event.setDropEffect(s);
+        try {
+            String s = event.getEffectAllowed();
+            if ("all".equals(s) || s.contains("opy")) {
+                event.setDropEffect("copy");
+            } else {
+                event.setDropEffect(s);
+            }
+        } catch (Exception e) {
+            // IE10 throws exception here in getEffectAllowed, ignore it, let
+            // drop effect be whatever it is
         }
 
         try {
