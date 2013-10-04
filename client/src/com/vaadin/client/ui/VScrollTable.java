@@ -6913,6 +6913,11 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         // fix footers horizontal scrolling
         tFoot.setHorizontalScrollPosition(scrollLeft);
 
+        if (totalRows == 0) {
+            // No rows, no need to fetch new rows
+            return;
+        }
+
         firstRowInViewPort = calcFirstRowInViewPort();
         if (firstRowInViewPort > totalRows - pageLength) {
             firstRowInViewPort = totalRows - pageLength;
