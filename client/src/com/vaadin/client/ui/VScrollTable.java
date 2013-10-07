@@ -2261,7 +2261,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         private int reqFirstRow = 0;
         private int reqRows = 0;
-        private boolean isRunning = false;
+        private boolean isRequestHandlerRunning = false;
 
         public void triggerRowFetch(int first, int rows) {
             setReqFirstRow(first);
@@ -2279,12 +2279,12 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             deferRowFetch(250);
         }
 
-        public boolean isRunning() {
-            return isRunning;
+        public boolean isRequestHandlerRunning() {
+            return isRequestHandlerRunning;
         }
 
         public void deferRowFetch(int msec) {
-            isRunning = true;
+            isRequestHandlerRunning = true;
             if (reqRows > 0 && reqFirstRow < totalRows) {
                 schedule(msec);
 
@@ -2426,7 +2426,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     unSyncedselectionsBeforeRowFetch = new HashSet<Object>(
                             selectedRowKeys);
                 }
-                isRunning = false;
+                isRequestHandlerRunning = false;
             }
         }
 
@@ -2434,7 +2434,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
          * Sends request to refresh content at this position.
          */
         public void refreshContent() {
-            isRunning = true;
+            isRequestHandlerRunning = true;
             int first = (int) (firstRowInViewPort - pageLength * cache_rate);
             int reqRows = (int) (2 * pageLength * cache_rate + pageLength);
             if (first < 0) {
