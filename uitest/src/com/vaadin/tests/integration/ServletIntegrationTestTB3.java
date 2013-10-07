@@ -31,6 +31,7 @@ public abstract class ServletIntegrationTestTB3 extends
 
     @Test
     public void runTest() throws IOException, AssertionError {
+        openTestURL();
         compareScreen("initial");
 
         WebElement cell = vaadinElement(getTableCell(getTable(), 0, 1));
