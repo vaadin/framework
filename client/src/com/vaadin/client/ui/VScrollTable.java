@@ -6110,7 +6110,13 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                                 .next();
                         setRowFocus(endRow);
                     }
+                } else if (!startRow.isSelected()) {
+                    // The start row is no longer selected (probably removed)
+                    // and so we select from above
+                    startRow = (VScrollTableRow) scrollBody.iterator().next();
+                    setRowFocus(endRow);
                 }
+
                 // Deselect previous items if so desired
                 if (deselectPrevious) {
                     deselectAll();
