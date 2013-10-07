@@ -32,6 +32,7 @@ import org.junit.Test;
  * 
  * @author Vaadin Ltd
  */
+@Deprecated
 public abstract class SimpleMultiBrowserTest extends MultiBrowserTest {
 
     @Test
