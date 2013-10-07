@@ -87,11 +87,16 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
     /** For internal use only. May be removed or replaced in the future. */
     public boolean htmlContentAllowed = false;
 
+    private boolean wasHtmlContentAllowed = false;
+    private boolean wasMultiselect = false;
+
     public VOptionGroup() {
         super(CLASSNAME);
         panel = (Panel) optionsContainer;
         optionsToKeys = new HashMap<CheckBox, String>();
         optionsEnabled = new ArrayList<Boolean>();
+
+        wasMultiselect = isMultiselect();
     }
 
     /*
@@ -143,7 +148,11 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
 
             String key = opUidl.getStringAttribute("key");
             CheckBox op = keysToOptions.get(key);
-            if (op == null) {
+
+            // Need to recreate object if isMultiselect is changed (#10451)
+            // OR if htmlContentAllowed changed due to Safari 5 issue
+            if ((op == null) || (htmlContentAllowed != wasHtmlContentAllowed)
+                    || (isMultiselect() != wasMultiselect)) {
                 // Create a new element
                 if (isMultiselect()) {
                     op = new VCheckBox();
@@ -184,6 +193,9 @@ public class VOptionGroup extends VOptionGroupBase implements FocusHandler,
                 panel.add(wid);
             }
         }
+
+        wasHtmlContentAllowed = htmlContentAllowed;
+        wasMultiselect = isMultiselect();
     }
 
     @Override
