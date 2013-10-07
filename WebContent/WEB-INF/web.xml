@@ -92,7 +92,7 @@
         <servlet-class>com.vaadin.server.VaadinServlet</servlet-class>
         <init-param>
             <param-name>UI</param-name>
-            <param-value>com.vaadin.tests.integration.IntegrationTestUI</param-value>
+            <param-value>com.vaadin.tests.integration.ServletIntegrationUI</param-value>
         </init-param>
         <async-supported>true</async-supported>
     </servlet>

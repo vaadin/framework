@@ -26,8 +26,8 @@ import org.openqa.selenium.WebElement;
  * 
  * @author Vaadin Ltd
  */
-public abstract class ServletIntegrationTestTB3 extends
-        AbstractIntegrationTestTB3 {
+public abstract class AbstractServletIntegrationTest extends
+        AbstractIntegrationTest {
 
     @Test
     public void runTest() throws IOException, AssertionError {

@@ -26,11 +26,7 @@ import com.vaadin.shared.ui.ui.Transport;
  * @author Vaadin Ltd
  */
 @Push(transport = Transport.WEBSOCKET)
-public class IntegrationTestWebsocket extends IntegrationTestUI {
-
-    public class IntegrationTestWebsocketTB3 extends ServletIntegrationTestTB3 {
-        // Uses the test method declared in the super class
-    }
+public class ServletIntegrationWebsocketUI extends ServletIntegrationUI {
 
     /*
      * (non-Javadoc)

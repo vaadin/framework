@@ -25,11 +25,6 @@ import com.vaadin.shared.ui.ui.Transport;
  * @author Vaadin Ltd
  */
 @Push(transport = Transport.STREAMING)
-public class IntegrationTestStreaming extends IntegrationTestUI {
-
-    public static class IntegrationTestStreamingTB3 extends
-            ServletIntegrationTestTB3 {
-        // Uses the test method declared in the super class
-    }
+public class ServletIntegrationStreamingUI extends ServletIntegrationUI {
 
 }
