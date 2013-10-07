@@ -229,12 +229,14 @@ public class AtmospherePushConnection implements PushConnection {
     }
 
     protected void onReopen(AtmosphereResponse response) {
-        VConsole.log("Push connection re-established using " + transport);
+        VConsole.log("Push connection re-established using "
+                + response.getTransport());
         onConnect(response);
     }
 
     protected void onOpen(AtmosphereResponse response) {
-        VConsole.log("Push connection established using " + transport);
+        VConsole.log("Push connection established using "
+                + response.getTransport());
         onConnect(response);
     }
 
