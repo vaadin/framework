@@ -325,6 +325,86 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     }
 
     /**
+     * Asserts that {@literal a} is &gt;= {@literal b}
+     * 
+     * @param message
+     *            The message to include in the {@link AssertionError}
+     * @param a
+     * @param b
+     * @throws AssertionError
+     *             If comparison fails
+     */
+    public static final <T> void assertGreaterOrEqual(String message,
+            Comparable<T> a, T b) throws AssertionError {
+        if (a.compareTo(b) >= 0) {
+            return;
+        }
+
+        throw new AssertionError(decorate(message, a, b));
+    }
+
+    /**
+     * Asserts that {@literal a} is &gt; {@literal b}
+     * 
+     * @param message
+     *            The message to include in the {@link AssertionError}
+     * @param a
+     * @param b
+     * @throws AssertionError
+     *             If comparison fails
+     */
+    public static final <T> void assertGreater(String message, Comparable<T> a,
+            T b) throws AssertionError {
+        if (a.compareTo(b) > 0) {
+            return;
+        }
+        throw new AssertionError(decorate(message, a, b));
+    }
+
+    /**
+     * Asserts that {@literal a} is &lt;= {@literal b}
+     * 
+     * @param message
+     *            The message to include in the {@link AssertionError}
+     * @param a
+     * @param b
+     * @throws AssertionError
+     *             If comparison fails
+     */
+    public static final <T> void assertLessThanOrEqual(String message,
+            Comparable<T> a, T b) throws AssertionError {
+        if (a.compareTo(b) <= 0) {
+            return;
+        }
+
+        throw new AssertionError(decorate(message, a, b));
+    }
+
+    /**
+     * Asserts that {@literal a} is &lt; {@literal b}
+     * 
+     * @param message
+     *            The message to include in the {@link AssertionError}
+     * @param a
+     * @param b
+     * @throws AssertionError
+     *             If comparison fails
+     */
+    public static final <T> void assertLessThan(String message,
+            Comparable<T> a, T b) throws AssertionError {
+        if (a.compareTo(b) < 0) {
+            return;
+        }
+        throw new AssertionError(decorate(message, a, b));
+    }
+
+    private static <T> String decorate(String message, Comparable<T> a, T b) {
+        message = message.replace("{0}", a.toString());
+        message = message.replace("{1}", b.toString());
+        return message;
+    }
+
+    /**
      * Returns the path that should be used for the test. The path contains the
      * full path (appended to hostname+port) and must start with a slash.
      * 

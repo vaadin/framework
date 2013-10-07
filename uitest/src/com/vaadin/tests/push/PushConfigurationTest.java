@@ -17,7 +17,9 @@ package com.vaadin.tests.push;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 
 import com.vaadin.tests.tb3.WebsocketTest;
@@ -29,7 +31,9 @@ public class PushConfigurationTest extends WebsocketTest {
         setDebug(true);
         openTestURL();
         // Websocket
-        Assert.assertEquals(1, getServerCounter());
+        int counter = getServerCounter();
+        assertGreaterOrEqual("Counter should be >= 1. Was: " + counter,
+                counter, 1);
         new Select(getTransportSelect()).selectByVisibleText("WEBSOCKET");
         new Select(getPushModeSelect()).selectByVisibleText("AUTOMATIC");
         Assert.assertTrue(vaadinElement(
@@ -37,20 +41,15 @@ public class PushConfigurationTest extends WebsocketTest {
                 .getText()
                 .matches(
                         "^[\\s\\S]*fallbackTransport: streaming[\\s\\S]*transport: websocket[\\s\\S]*$"));
-        int counter = getServerCounter();
+        counter = getServerCounter();
+        final int waitCounter = counter + 2;
+        waitUntil(new ExpectedCondition<Boolean>() {
 
-        for (int second = 0;; second++) {
-            if (second >= 5) {
-                Assert.fail("timeout");
+            @Override
+            public Boolean apply(WebDriver input) {
+                return (getServerCounter() >= waitCounter);
             }
-            if (getServerCounter() >= (counter + 2)) {
-                break;
-            }
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-            }
-        }
+        });
 
         // Use debug console to verify we used the correct transport type
         Assert.assertTrue(driver.getPageSource().contains(
