@@ -19,6 +19,7 @@ package com.vaadin.tests.tb3;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.Before;
@@ -35,6 +36,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.vaadin.server.LegacyApplication;
+import com.vaadin.server.UIProvider;
 import com.vaadin.testbench.TestBench;
 import com.vaadin.testbench.TestBenchTestCase;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
@@ -344,8 +346,9 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     }
 
     /**
-     * Returns the UI class the current test is connected to. Uses the enclosing
-     * class if the test class is a static inner class to a UI class.
+     * Returns the UI class the current test is connected to (or in special
+     * cases UIProvider or LegacyApplication). Uses the enclosing class if the
+     * test class is a static inner class to a UI class.
      * 
      * Test which are not enclosed by a UI class must implement this method and
      * return the UI class they want to test.
@@ -356,11 +359,43 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * @return the UI class the current test is connected to
      */
     protected Class<?> getUIClass() {
+        try {
+            // Convention: SomeUITest uses the SomeUI UI class
+            String uiClassName = getClass().getName().replaceFirst("Test$", "");
+            Class<?> cls = Class.forName(uiClassName);
+            if (isSupportedRunnerClass(cls)) {
+                return cls;
+            }
+        } catch (Exception e) {
+        }
         Class<?> enclosingClass = getClass().getEnclosingClass();
         if (enclosingClass != null) {
-            return enclosingClass;
+            if (UI.class.isAssignableFrom(enclosingClass)) {
+                Logger.getLogger(getClass().getName())
+                        .severe("Test is an static inner class to the UI. This will no longer be supported in the future. The test should be named UIClassTest and reside in the same package as the UI");
+                return enclosingClass;
+            }
         }
-        return null;
+        throw new RuntimeException(
+                "Could not determine UI class. Ensure the test is named UIClassTest and is in the same package as the UIClass");
+    }
+
+    /**
+     * @return true if the given class is supported by ApplicationServletRunner
+     */
+    @SuppressWarnings("deprecation")
+    private boolean isSupportedRunnerClass(Class<?> cls) {
+        if (UI.class.isAssignableFrom(cls)) {
+            return true;
+        }
+        if (UIProvider.class.isAssignableFrom(cls)) {
+            return true;
+        }
+        if (LegacyApplication.class.isAssignableFrom(cls)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

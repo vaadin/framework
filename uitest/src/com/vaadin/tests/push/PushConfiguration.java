@@ -15,10 +15,10 @@
  */
 package com.vaadin.tests.push;
 
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.vaadin.annotations.Push;
 import com.vaadin.data.util.ObjectProperty;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
@@ -27,8 +27,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 
-@Push
-public class BasicPush extends AbstractTestUI {
+public class PushConfiguration extends AbstractTestUI {
 
     private ObjectProperty<Integer> counter = new ObjectProperty<Integer>(0);
 
@@ -36,11 +35,22 @@ public class BasicPush extends AbstractTestUI {
 
     private final Timer timer = new Timer(true);
 
-    private TimerTask task;
+    private final TimerTask task = new TimerTask() {
+
+        @Override
+        public void run() {
+            access(new Runnable() {
+                @Override
+                public void run() {
+                    counter2.setValue(counter2.getValue() + 1);
+                }
+            });
+        }
+    };
 
     @Override
     protected void setup(VaadinRequest request) {
-
+        addComponent(new PushConfigurator(this));
         spacer();
 
         /*
@@ -64,40 +74,14 @@ public class BasicPush extends AbstractTestUI {
          * Server initiated push.
          */
         lbl = new Label(counter2);
-        lbl.setCaption("Server counter (updates each 3s by server thread) :");
+        lbl.setCaption("Server counter (updates each 1s by server thread) :");
         addComponent(lbl);
 
-        addComponent(new Button("Start timer", new Button.ClickListener() {
+        addComponent(new Button("Reset", new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
                 counter2.setValue(0);
-                if (task != null) {
-                    task.cancel();
-                }
-                task = new TimerTask() {
-
-                    @Override
-                    public void run() {
-                        access(new Runnable() {
-                            @Override
-                            public void run() {
-                                counter2.setValue(counter2.getValue() + 1);
-                            }
-                        });
-                    }
-                };
-                timer.scheduleAtFixedRate(task, 3000, 3000);
-            }
-        }));
-
-        addComponent(new Button("Stop timer", new Button.ClickListener() {
-            @Override
-            public void buttonClick(ClickEvent event) {
-                if (task != null) {
-                    task.cancel();
-                    task = null;
-                }
             }
         }));
     }
@@ -122,6 +106,7 @@ public class BasicPush extends AbstractTestUI {
     @Override
     public void attach() {
         super.attach();
+        timer.scheduleAtFixedRate(task, new Date(), 1000);
     }
 
     @Override

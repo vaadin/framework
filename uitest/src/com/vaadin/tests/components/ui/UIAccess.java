@@ -21,45 +21,17 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.tests.components.AbstractTestUIWithLog;
-import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.UI;
 import com.vaadin.util.CurrentInstance;
 
 public class UIAccess extends AbstractTestUIWithLog {
-
-    public static class UIAccessTest extends MultiBrowserTest {
-        @Test
-        public void testThreadLocals() {
-            setPush(true);
-            openTestURL();
-            getCurrentInstanceWhenPushingButton().click();
-            waitUntil(ExpectedConditions.textToBePresentInElement(
-                    vaadinLocatorById("Log_row_0"), "1."));
-            Assert.assertEquals(
-                    "0. Current UI matches in beforeResponse? true",
-                    vaadinElementById("Log_row_1").getText());
-            Assert.assertEquals(
-                    "1. Current session matches in beforeResponse? true",
-                    vaadinElementById("Log_row_0").getText());
-
-        }
-
-        private WebElement getCurrentInstanceWhenPushingButton() {
-            return vaadinElement("/VVerticalLayout[0]/Slot[2]/VVerticalLayout[0]/Slot[7]/VButton[0]");
-        }
-    }
 
     private volatile boolean checkCurrentInstancesBeforeResponse = false;
 
