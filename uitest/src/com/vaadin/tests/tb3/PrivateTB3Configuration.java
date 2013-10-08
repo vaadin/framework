@@ -34,6 +34,7 @@ import java.util.Properties;
  */
 public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
     private static final String HOSTNAME_PROPERTY = "com.vaadin.testbench.deployment.hostname";
+    private static final String PORT_PROPERTY = "com.vaadin.testbench.deployment.port";
     private final Properties properties = new Properties();
 
     public PrivateTB3Configuration() {
@@ -80,6 +81,17 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
         }
 
         return hostName;
+    }
+
+    @Override
+    protected String getDeploymentPort() {
+        String port = getProperty(PORT_PROPERTY);
+
+        if (port == null || "".equals(port)) {
+            port = "8888";
+        }
+
+        return port;
     }
 
     /**
