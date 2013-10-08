@@ -1745,6 +1745,13 @@ public abstract class VaadinService implements Serializable {
                             .getCurrentInstances());
                     CurrentInstance.setCurrent(session);
                     pendingAccess.run();
+
+                    try {
+                        pendingAccess.get();
+
+                    } catch (Exception exception) {
+                        pendingAccess.handleError(exception);
+                    }
                 }
             }
         } finally {
@@ -1752,5 +1759,4 @@ public abstract class VaadinService implements Serializable {
             CurrentInstance.restoreInstances(oldInstances);
         }
     }
-
 }
