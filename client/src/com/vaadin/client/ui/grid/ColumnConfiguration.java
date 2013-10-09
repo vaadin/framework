@@ -26,29 +26,29 @@ package com.vaadin.client.ui.grid;
 public interface ColumnConfiguration {
 
     /**
-     * Removes columns at a certain offset.
+     * Removes columns at a certain index.
      * 
-     * @param offset
+     * @param index
      *            the index of the first column to be removed
      * @param numberOfColumns
-     *            the number of rows to remove, starting from the offset
+     *            the number of rows to remove, starting from the index
      * @throws IndexOutOfBoundsException
      *             if any integer in the range
-     *             <code>[offset..(offset+numberOfColumns)]</code> is not an
+     *             <code>[index..(index+numberOfColumns)]</code> is not an
      *             existing column index.
      * @throws IllegalArgumentException
      *             if <code>numberOfColumns</code> is less than 1.
      */
-    public void removeColumns(int offset, int numberOfColumns)
+    public void removeColumns(int index, int numberOfColumns)
             throws IndexOutOfBoundsException, IllegalArgumentException;
 
     /**
-     * Adds columns at a certain offset.
+     * Adds columns at a certain index.
      * <p>
-     * The new columns will be inserted between the column at the offset, and
-     * the column before (an offset of 0 means that the columns are inserted at
-     * the beginning). Therefore, the columns at the offset and afterwards will
-     * be moved to the right.
+     * The new columns will be inserted between the column at the index, and the
+     * column before (an index of 0 means that the columns are inserted at the
+     * beginning). Therefore, the columns at the index and afterwards will be
+     * moved to the right.
      * <p>
      * The contents of the inserted columns will be queried from the respective
      * cell renderers in the header, body and footer.
@@ -58,18 +58,18 @@ public interface ColumnConfiguration {
      * columns, {@link RowContainer#refreshRows(int, int)} needs to be called as
      * appropriate.
      * 
-     * @param offset
+     * @param index
      *            the index of the column before which new columns are inserted,
      *            or {@link #getColumnCount()} to add new columns at the end
      * @param numberOfColumns
-     *            the number of columns to insert after the <code>offset</code>
+     *            the number of columns to insert after the <code>index</code>
      * @throws IndexOutOfBoundsException
-     *             if <code>offset</code> is not an integer in the range
+     *             if <code>index</code> is not an integer in the range
      *             <code>[0..{@link #getColumnCount()}]</code>
      * @throws IllegalArgumentException
      *             if {@code numberOfColumns} is less than 1.
      */
-    public void insertColumns(int offset, int numberOfColumns)
+    public void insertColumns(int index, int numberOfColumns)
             throws IndexOutOfBoundsException, IllegalArgumentException;
 
     /**

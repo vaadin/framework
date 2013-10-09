@@ -31,34 +31,54 @@ $border-color: #aaa;
 	width: inherit; /* a decent default fallback */
 }
 
-.#{$primaryStyleName}-header {
+.#{$primaryStyleName}-header,
+.#{$primaryStyleName}-body,
+.#{$primaryStyleName}-footer {
 	position: absolute;
-	top: 0;
 	left: 0;
 	width: inherit;
 	z-index: 10;
 }
 
-.#{$primaryStyleName}-body {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: inherit;
-}
+.#{$primaryStyleName}-header { top: 0; }
+.#{$primaryStyleName}-footer { bottom: 0; }
 
-.#{$primaryStyleName}-footer {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	width: inherit;
+.#{$primaryStyleName}-body {
+	z-index: 0;
+	top: 0;
+	
+	.#{$primaryStyleName}-row {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
 }
 
 .#{$primaryStyleName}-row {
-	position: absolute;
+	display: block;
+	
+	.v-ie8 & {
+		/* IE8 doesn't let table rows be longer than body only with display block. Moar hax. */
+		float: left;
+		clear: left;
+		
+		/* 
+		 * The inline style of margin-top from the <tbody> to offset the header's dimension is, 
+		 * for some strange reason, inherited into each contained <tr>. 
+		 * We need to cancel it: 
+		 */
+		margin-top: 0;
+	}
+
+	> td, > th {
+		/* IE8 likes the bgcolor here instead of on the row */
+		background-color: $background-color;
+	}
+}
+
+
+.#{$primaryStyleName}-row {
 	width: inherit;
-	top: 0;
-	left: 0;
-	background-color: $background-color;
 }
 
 .#{$primaryStyleName}-cell {

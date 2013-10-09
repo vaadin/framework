@@ -15,8 +15,16 @@
  */
 package com.vaadin.client.ui.grid;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 import java.util.logging.Logger;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style;
@@ -24,11 +32,148 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
+import com.vaadin.client.Util;
 import com.vaadin.client.ui.grid.PositionFunction.AbsolutePosition;
 import com.vaadin.client.ui.grid.PositionFunction.Translate3DPosition;
 import com.vaadin.client.ui.grid.PositionFunction.TranslatePosition;
 import com.vaadin.client.ui.grid.PositionFunction.WebkitTranslate3DPosition;
+
+/*-
+
+ Maintenance Notes! Reading these might save your day.
+
+
+ == Row Container Structure
+
+ AbstractRowContainer
+ |-- AbstractStaticRowContainer
+ | |-- HeaderRowContainer
+ | `-- FooterContainer
+ `-- BodyRowContainer
+
+ AbstractRowContainer is intended to contain all common logic
+ between RowContainers. It manages the bookkeeping of row
+ count, makes sure that all individual cells are rendered
+ the same way, and so on.
+
+ AbstractStaticRowContainer has some special logic that is
+ required by all RowContainers that don't scroll (hence the
+ word "static"). HeaderRowContainer and FooterRowContainer
+ are pretty thin special cases of a StaticRowContainer
+ (mostly relating to positioning of the root element).
+
+ BodyRowContainer could also be split into an additional
+ "AbstractScrollingRowContainer", but I felt that no more
+ inner classes were needed. So it contains both logic
+ required for making things scroll about, and equivalent
+ special cases for layouting, as are found in
+ Header/FooterRowContainers.
+
+
+ == The Three Indices
+
+ Each RowContainer can be thought to have three levels of
+ indices for any given displayed row (but the distinction
+ matters primarily for the BodyRowContainer, because of the
+ way it scrolls through data):
+
+ - Logical index
+ - Physical (or DOM) index
+ - Visual index
+
+ LOGICAL INDEX is the index that is linked to the data
+ source. If you want your data source to represent a SQL
+ database with 10 000 rows, the 7 000:th row in the SQL has a
+ logical index of 6 999, since the index is 0-based (unless
+ that data source does some funky logic).
+
+ PHYSICAL INDEX is the index for a row that you see in a
+ browser's DOM inspector. If your row is the second <tr>
+ element within a <tbody> tag, it has a physical index of 1
+ (because of 0-based indices). In Header and
+ FooterRowContainers, you are safe to assume that the logical
+ index is the same as the physical index. But because the
+ BodyRowContainer never displays large data sources entirely
+ in the DOM, a physical index usually has no apparent direct
+ relationship with its logical index.
+
+ VISUAL INDEX is the index relating to the order that you
+ see a row in, in the browser, as it is rendered. The
+ topmost row is 0, the second is 1, and so on. The visual
+ index is similar to the physical index in the sense that
+ Header and FooterRowContainers can assume a 1:1
+ relationship between visual index and logical index. And
+ again, BodyRowContainer has no such relationship. The
+ body's visual index has additionally no apparent
+ relationship with its physical index. Because the <tr> tags
+ are reused in the body and visually repositioned with CSS
+ as the user scrolls, the relationship between physical
+ index and visual index is quickly broken. You can get an
+ element's visual index via the field
+ BodyRowContainer.visualRowOrder.
+
+ */
+
+/**
+ * A workaround-class for GWT and JSNI.
+ * <p>
+ * GWT is unable to handle some method calls to Java methods in inner-classes
+ * from within JSNI blocks. Having that inner class implement a non-inner-class
+ * (or interface), makes it possible for JSNI to indirectly refer to the inner
+ * class, by invoking methods and fields in the non-inner-class.
+ * 
+ * @see Escalator.Scroller
+ */
+abstract class JsniWorkaround {
+    /**
+     * A JavaScript function that handles the scroll DOM event, and passes it on
+     * to Java code.
+     * 
+     * @see #createScrollListenerFunction(Escalator)
+     * @see Escalator#onScroll(double,double)
+     * @see Escalator.Scroller#onScroll(double, double)
+     */
+    protected final JavaScriptObject scrollListenerFunction;
+
+    /**
+     * A JavaScript function that handles the mousewheel DOM event, and passes
+     * it on to Java code.
+     * 
+     * @see #createMousewheelListenerFunction(Escalator)
+     * @see Escalator#onScroll(double,double)
+     * @see Escalator.Scroller#onScroll(double, double)
+     */
+    protected final JavaScriptObject mousewheelListenerFunction;
+
+    protected JsniWorkaround(final Escalator escalator) {
+        scrollListenerFunction = createScrollListenerFunction(escalator);
+        mousewheelListenerFunction = createMousewheelListenerFunction(escalator);
+    }
+
+    /**
+     * A method that constructs the JavaScript function that will be stored into
+     * {@link #scrollListenerFunction}.
+     * 
+     * @param esc
+     *            a reference to the current instance of {@link Escalator}
+     * @see Escalator#onScroll(double,double)
+     */
+    protected abstract JavaScriptObject createScrollListenerFunction(
+            Escalator esc);
+
+    /**
+     * A method that constructs the JavaScript function that will be stored into
+     * {@link #mousewheelListenerFunction}.
+     * 
+     * @param esc
+     *            a reference to the current instance of {@link Escalator}
+     * @see Escalator#onScroll(double,double)
+     */
+    protected abstract JavaScriptObject createMousewheelListenerFunction(
+            Escalator esc);
+}
 
 /**
  * A low-level table-like widget that features a scrolling virtual viewport and
@@ -46,12 +191,12 @@ public class Escalator extends Widget {
      * re-measure)
      */
     /*
-     * [[escalator]]: This needs to be re-inspected once the escalator pattern
-     * is actually implemented.
+     * [[escalator]]: This code will require alterations that are relevant for
+     * the escalator functionality.
      */
     /*
-     * [[rowwidth]] [[colwidth]]: This needs to be re-inspected once hard-coded
-     * values are removed, and cell dimensions are actually being calculated.
+     * [[rowwidth]] [[colwidth]]: This code will require alterations that are
+     * relevant for being able to support variable row heights or column widths.
      * NOTE: these bits can most often also be identified by searching for code
      * reading the ROW_HEIGHT_PX and COL_WIDTH_PX constans.
      */
@@ -59,9 +204,235 @@ public class Escalator extends Widget {
      * [[API]]: Implementing this suggestion would require a change in the
      * public API. These suggestions usually don't come lightly.
      */
+    /*
+     * [[mpixscroll]]: This code will require alterations that are relevant for
+     * supporting the scrolling through more pixels than some browsers normally
+     * would support. (i.e. when we support more than "a million" pixels in the
+     * escalator DOM). NOTE: these bits can most often also be identified by
+     * searching for code that call scrollElem.getScrollTop();.
+     */
 
     private static final int ROW_HEIGHT_PX = 20;
     private static final int COLUMN_WIDTH_PX = 100;
+
+    /** An inner class that handles all logic related to scrolling. */
+    private class Scroller extends JsniWorkaround {
+        private double lastScrollTop = -1;
+        private double lastScrollLeft = -1;
+
+        public Scroller() {
+            super(Escalator.this);
+        }
+
+        @Override
+        protected native JavaScriptObject createScrollListenerFunction(
+                Escalator esc)
+        /*-{
+            return $entry(function(e) {
+                esc.@com.vaadin.client.ui.grid.Escalator::onScroll()();
+            });
+        }-*/;
+
+        @Override
+        protected native JavaScriptObject createMousewheelListenerFunction(
+                Escalator esc)
+        /*-{
+            return $entry(function(e) {
+                var deltaX = e.deltaX ? e.deltaX : -0.5*e.wheelDeltaX;
+                var deltaY = e.deltaY ? e.deltaY : -0.5*e.wheelDeltaY;
+                
+                // IE8 has only delta y
+                if (isNaN(deltaY)) {
+                    deltaY = -0.5*e.wheelDelta;
+                }
+
+                // TODO [[optimize]]: instead of using "+=" that potentially
+                // causes a reflow, update a new scroll absolute position.
+                if (!isNaN(deltaY)) {
+                    // the scroll event handler will make sure the content is moved around appropriately
+                    esc.@com.vaadin.client.ui.grid.Escalator::scrollerElem.scrollTop += deltaY;
+                }
+                
+                if (!isNaN(deltaX)) {
+                    // the scroll event handler will make sure the content is moved around appropriately
+                    esc.@com.vaadin.client.ui.grid.Escalator::scrollerElem.scrollLeft += deltaX;
+                }
+
+                // TODO: only prevent if not scrolled to end/bottom. Or no? UX team needs to decide.
+                if (e.preventDefault) {
+                    e.preventDefault();
+                } else {
+                    e.returnValue = false;
+                }
+            });
+        }-*/;
+
+        /**
+         * Recalculates the virtual viewport represented by the scrollbars, so
+         * that the sizes of the scroll handles appear correct in the browser
+         */
+        public void recalculateScrollbarsForVirtualViewport() {
+            double scrollerHeight = height - header.height;
+
+            /*
+             * It looks better this way: if we only have a vertical scrollbar,
+             * keep it between the header and footer. But if we have a
+             * horizontal scrollbar, envelop the footer also.
+             */
+            if (!needsHorizontalScrollbars()) {
+                scrollerHeight -= footer.height;
+            }
+
+            scrollerElem.getStyle().setHeight(scrollerHeight, Unit.PX);
+
+            final double scrollerTop = header.height;
+            scrollerElem.getStyle().setTop(scrollerTop, Unit.PX);
+
+            /*
+             * TODO [[freezecol]]: cut scrollerElem from the left to take freeze
+             * columns into account. innerScroller probably needs some
+             * adjustments too.
+             */
+
+            // TODO [[rowheight]]: adjust for variable row heights.
+            double innerScrollerHeight = ROW_HEIGHT_PX * body.getRowCount();
+            if (needsHorizontalScrollbars()) {
+                innerScrollerHeight += footer.height;
+            }
+            innerScrollerElem.getStyle()
+                    .setHeight(innerScrollerHeight, Unit.PX);
+
+            // TODO [[colwidth]]: adjust for variable column widths.
+            innerScrollerElem.getStyle().setWidth(
+                    COLUMN_WIDTH_PX * columnConfiguration.getColumnCount(),
+                    Unit.PX);
+
+            // we might've got new or got rid of old scrollbars.
+            recalculateTableWrapperSize();
+        }
+
+        /**
+         * Makes sure that the viewport of the table is the correct size, and
+         * that it takes any possible scrollbars into account
+         */
+        public void recalculateTableWrapperSize() {
+            double wrapperHeight = height;
+            if (scrollerElem.getOffsetWidth() < innerScrollerElem
+                    .getOffsetWidth()) {
+                wrapperHeight -= Util.getNativeScrollbarSize();
+            }
+
+            double wrapperWidth = width;
+            if (scrollerElem.getOffsetHeight() - footer.height < innerScrollerElem
+                    .getOffsetHeight()) {
+                wrapperWidth -= Util.getNativeScrollbarSize();
+            }
+
+            tableWrapper.getStyle().setHeight(wrapperHeight, Unit.PX);
+            tableWrapper.getStyle().setWidth(wrapperWidth, Unit.PX);
+        }
+
+        /**
+         * Logical scrolling event handler for the entire widget.
+         * 
+         * @param scrollLeft
+         *            the current number of pixels that the user has scrolled
+         *            from left
+         * @param scrollTop
+         *            the current number of pixels that the user has scrolled
+         *            from the top
+         */
+        public void onScroll() {
+            if (internalScrollEventCalls > 0) {
+                internalScrollEventCalls--;
+                return;
+            }
+
+            final int scrollLeft = scrollerElem.getScrollLeft();
+            final int scrollTop = scrollerElem.getScrollTop();
+
+            if (lastScrollLeft != scrollLeft) {
+                // TODO [[frozen]]: frozen columns should be offset here.
+
+                position.set(headElem, -scrollLeft, 0);
+
+                /*
+                 * TODO [[optimize]]: cache this value in case the instanceof
+                 * check has undesirable overhead. This could also be a
+                 * candidate for some deferred binding magic so that e.g.
+                 * AbsolutePosition is not even considered in permutations that
+                 * we know support something better. That would let the compiler
+                 * completely remove the entire condition since it knows that
+                 * the if will never be true.
+                 */
+                if (position instanceof AbsolutePosition) {
+                    /*
+                     * we don't want to put "top: 0" on the footer, since it'll
+                     * render wrong, as we already have
+                     * "bottom: $footer-height".
+                     */
+                    footElem.getStyle().setLeft(-scrollLeft, Unit.PX);
+                } else {
+                    position.set(footElem, -scrollLeft, 0);
+                }
+
+                lastScrollLeft = scrollLeft;
+            }
+
+            body.setBodyScrollPosition(scrollLeft, scrollTop);
+
+            lastScrollTop = scrollTop;
+            body.updateEscalatorRowsOnScroll();
+            /*
+             * TODO [[optimize]]: Might avoid a reflow by first calculating new
+             * scrolltop and scrolleft, then doing the escalator magic based on
+             * those numbers and only updating the positions after that.
+             */
+        }
+
+        public native void attachScrollListener(Element element)
+        /*-{
+             if (element.addEventListener) {
+                 element.addEventListener("scroll", this.@com.vaadin.client.ui.grid.JsniWorkaround::scrollListenerFunction);
+             } else {
+                 element.attachEvent("onscroll", this.@com.vaadin.client.ui.grid.JsniWorkaround::scrollListenerFunction);
+             }
+        }-*/;
+
+        public native void detachScrollListener(Element element)
+        /*-{
+            if (element.addEventListener) {
+                element.removeEventListener("scroll", this.@com.vaadin.client.ui.grid.JsniWorkaround::scrollListenerFunction);
+            } else {
+                element.detachEvent("onscroll", this.@com.vaadin.client.ui.grid.JsniWorkaround::scrollListenerFunction);
+            }
+        }-*/;
+
+        public native void attachMousewheelListener(Element element)
+        /*-{
+
+            if (element.addEventListener) {
+                // firefox likes "wheel", while others use "mousewheel"
+                var eventName = element.onwheel===undefined?"mousewheel":"wheel";
+                element.addEventListener(eventName, this.@com.vaadin.client.ui.grid.JsniWorkaround::mousewheelListenerFunction);
+            } else {
+                // IE8
+                element.attachEvent("onmousewheel", this.@com.vaadin.client.ui.grid.JsniWorkaround::mousewheelListenerFunction);
+            }
+        }-*/;
+
+        public native void detachMousewheelListener(Element element)
+        /*-{
+            if (element.addEventListener) {
+                // firefox likes "wheel", while others use "mousewheel"
+                var eventName = element.onwheel===undefined?"mousewheel":"wheel";
+                element.removeEventListener(eventName, this.@com.vaadin.client.ui.grid.JsniWorkaround::mousewheelListenerFunction);
+            } else {
+                // IE8
+                element.detachEvent("onmousewheel", this.@com.vaadin.client.ui.grid.JsniWorkaround::mousewheelListenerFunction);
+            }
+        }-*/;
+    }
 
     private static class CellImpl implements Cell {
         private final Element cellElem;
@@ -93,7 +464,7 @@ public class Escalator extends Widget {
 
     private static final String CLASS_NAME = "v-escalator";
 
-    private class RowContainerImpl implements RowContainer {
+    private abstract class AbstractRowContainer implements RowContainer {
         private CellRenderer renderer = CellRenderer.NULL_RENDERER;
 
         private int rows;
@@ -102,18 +473,13 @@ public class Escalator extends Widget {
          * The table section element ({@code <thead>}, {@code <tbody>} or
          * {@code <tfoot>}) the rows (i.e. {@code <tr>} tags) are contained in.
          */
-        private final Element root;
+        protected final Element root;
 
-        /**
-         * What cell type to contain in this {@link RowContainer}. Usually
-         * either a {@code <th>} or {@code <td>}.
-         */
-        private final String cellElementTag;
+        /** The height of the combined rows in the DOM. */
+        protected double height = -1;
 
-        public RowContainerImpl(final Element rowContainerElement,
-                final String cellElementTag) {
+        public AbstractRowContainer(final Element rowContainerElement) {
             root = rowContainerElement;
-            this.cellElementTag = cellElementTag;
         }
 
         /**
@@ -126,16 +492,19 @@ public class Escalator extends Widget {
          * <p>
          * A table section is either header, body or footer.
          * 
-         * @param newPxHeight
-         *            The new pixel height
          */
-        protected void sectionHeightCalculated(final double newPxHeight) {
-            // override if implementation is needed
-        };
-
-        private Element createCellElement() {
-            return DOM.createElement(cellElementTag);
+        protected void sectionHeightCalculated() {
+            // Does nothing by default. Override to catch the "event".
         }
+
+        /**
+         * Returns a new element to be used as a cell in a row.
+         * <p>
+         * Usually a {@code <th>} or {@code <td>}.
+         * 
+         * @return a new element to be used as a cell in a row
+         */
+        protected abstract Element createCellElement();
 
         @Override
         public CellRenderer getCellRenderer() {
@@ -175,21 +544,24 @@ public class Escalator extends Widget {
          * @see #hasSomethingInDom()
          */
         @Override
-        public void removeRows(final int offset, final int numberOfRows) {
-            assertArgumentsAreValidAndWithinRange(offset, numberOfRows);
+        public void removeRows(final int index, final int numberOfRows) {
+            assertArgumentsAreValidAndWithinRange(index, numberOfRows);
 
             rows -= numberOfRows;
 
-            if (hasSomethingInDom()) {
-                for (int i = 0; i < numberOfRows; i++) {
-                    root.getChild(offset).removeFromParent();
-                }
+            if (!isAttached()) {
+                return;
             }
-            refreshRowPositions(offset, getRowCount());
-            recalculateSectionHeight();
+
+            if (hasSomethingInDom()) {
+                paintRemoveRows(index, numberOfRows);
+            }
         }
 
-        private void assertArgumentsAreValidAndWithinRange(final int offset,
+        protected abstract void paintRemoveRows(final int index,
+                final int numberOfRows);
+
+        private void assertArgumentsAreValidAndWithinRange(final int index,
                 final int numberOfRows) throws IllegalArgumentException,
                 IndexOutOfBoundsException {
             if (numberOfRows < 1) {
@@ -198,10 +570,9 @@ public class Escalator extends Widget {
                                 + numberOfRows + ")");
             }
 
-            if (offset < 0 || offset + numberOfRows > getRowCount()) {
+            if (index < 0 || index + numberOfRows > getRowCount()) {
                 throw new IndexOutOfBoundsException("The given "
-                        + "row range (" + offset + ".."
-                        + (offset + numberOfRows)
+                        + "row range (" + index + ".." + (index + numberOfRows)
                         + ") was outside of the current number of rows ("
                         + getRowCount() + ")");
             }
@@ -222,10 +593,9 @@ public class Escalator extends Widget {
          * @see #hasColumnAndRowData()
          */
         @Override
-        public void insertRows(final int offset, final int numberOfRows) {
-            if (offset < 0 || offset > getRowCount()) {
-                throw new IndexOutOfBoundsException("The given offset ("
-                        + offset
+        public void insertRows(final int index, final int numberOfRows) {
+            if (index < 0 || index > getRowCount()) {
+                throw new IndexOutOfBoundsException("The given index (" + index
                         + ") was outside of the current number of rows (0.."
                         + getRowCount() + ")");
             }
@@ -239,28 +609,46 @@ public class Escalator extends Widget {
             rows += numberOfRows;
 
             /*
-             * TODO [[escalator]]: modify offset and numberOfRows so that they
-             * suit the current viewport. If a partial dataset is shown,update
-             * only the part that is visible. If the viewport doesn't show any
-             * of the modifications, this method does nothing.
+             * only add items in the DOM if the widget itself is attached to the
+             * DOM. We can't calculate sizes otherwise.
              */
+            if (isAttached()) {
+                paintInsertRows(index, numberOfRows);
+            }
+        }
 
-            /*
-             * TODO [[escalator]]: assert that escalatorChildIndex is a number
-             * equal or less than the number of escalator rows
-             */
+        /**
+         * Actually add rows into the DOM, now that everything can be
+         * calculated.
+         * 
+         * @param visualIndex
+         *            the DOM index to add rows into
+         * @param numberOfRows
+         *            the number of rows to insert
+         * @return a list of the added row elements
+         */
+        protected List<Element> paintInsertRows(final int visualIndex,
+                final int numberOfRows) {
+            assert isAttached() : "Can't paint rows if Escalator is not attached";
+
+            final List<Element> addedRows = new ArrayList<Element>();
+
+            if (numberOfRows < 1) {
+                return addedRows;
+            }
 
             Node referenceNode;
-            if (root.getChildCount() != 0 && offset != 0) {
+            if (root.getChildCount() != 0 && visualIndex != 0) {
                 // get the row node we're inserting stuff after
-                referenceNode = root.getChild(offset - 1);
+                referenceNode = root.getChild(visualIndex - 1);
             } else {
-                // there are now rows, so just append.
+                // index is 0, so just prepend.
                 referenceNode = null;
             }
 
-            for (int row = offset; row < offset + numberOfRows; row++) {
+            for (int row = visualIndex; row < visualIndex + numberOfRows; row++) {
                 final Element tr = DOM.createTR();
+                addedRows.add(tr);
 
                 for (int col = 0; col < columnConfiguration.getColumnCount(); col++) {
                     final Element cellElem = createCellElement();
@@ -277,14 +665,12 @@ public class Escalator extends Widget {
                 recalculateRowWidth(tr);
                 tr.addClassName(CLASS_NAME + "-row");
 
-                position.set(tr, 0, row * ROW_HEIGHT_PX);
-
                 if (referenceNode != null) {
                     root.insertAfter(tr, referenceNode);
                 } else {
                     /*
-                     * referencenode being null means we have offset 0, i.e.
-                     * make it the first row
+                     * referencenode being null means we have index 0, i.e. make
+                     * it the first row
                      */
                     /*
                      * TODO [[optimize]]: Is insertFirst or append faster for an
@@ -300,42 +686,17 @@ public class Escalator extends Widget {
                 referenceNode = tr;
             }
 
-            /*
-             * we need to update the positions of all rows beneath the ones
-             * added right now.
-             */
-            refreshRowPositions(offset + numberOfRows, getRowCount());
-
-            /*
-             * TODO [[optimize]]: maybe the height doesn't always change?
-             */
             recalculateSectionHeight();
+
+            return addedRows;
         }
 
-        /**
-         * Re-evaluates the positional coordinates for the rows in the given
-         * range. The given range is truncated to suit the given viewport.
-         * 
-         * @param offset
-         *            starting row index
-         * @param numberOfRows
-         *            the number of rows after {@code offset} to refresh the
-         *            positions of
-         */
-        private void refreshRowPositions(final int offset,
-                final int numberOfRows) {
-            final int startRow = Math.max(0, offset);
-            final int endRow = Math.min(getRowCount(), offset + numberOfRows);
-
-            for (int row = startRow; row < endRow; row++) {
-                Element tr = (Element) root.getChild(row);
-                position.set(tr, 0, row * ROW_HEIGHT_PX);
+        protected void recalculateSectionHeight() {
+            final double newHeight = root.getChildCount() * ROW_HEIGHT_PX;
+            if (newHeight != height) {
+                height = newHeight;
+                sectionHeightCalculated();
             }
-        }
-
-        private void recalculateSectionHeight() {
-            /* TODO [[optimize]]: only do this if the height has changed */
-            sectionHeightCalculated(root.getChildCount() * ROW_HEIGHT_PX);
         }
 
         /**
@@ -348,15 +709,20 @@ public class Escalator extends Widget {
          * @see #hasColumnAndRowData()
          */
         @Override
-        public void refreshRows(final int offset, final int numberOfRows) {
-            assertArgumentsAreValidAndWithinRange(offset, numberOfRows);
+        public void refreshRows(final int index, final int numberOfRows) {
+            assertArgumentsAreValidAndWithinRange(index, numberOfRows);
+
+            if (!isAttached()) {
+                return;
+            }
 
             /*
-             * TODO [[escalator]]: modify offset and numberOfRows to fit in the
-             * current viewport. If they don't fall into the current viewport,
-             * NOOP
+             * TODO [[escalator]][[rowheight]]: even if no rows are evaluated in
+             * the current viewport, the heights of some unrendered rows might
+             * change in a refresh. This would cause the scrollbar to be
+             * adjusted (in scrollHeight and/or scrollTop). Do we want to take
+             * this into account?
              */
-
             if (hasColumnAndRowData()) {
                 /*
                  * TODO [[rowheight]]: nudge rows down with
@@ -367,12 +733,21 @@ public class Escalator extends Widget {
                  * needed
                  */
 
-                for (int row = offset; row < offset + numberOfRows; row++) {
-                    Node tr = root.getChild(row);
-                    for (int col = 0; col < tr.getChildCount(); col++) {
-                        paintCell((Element) tr.getChild(col), row, col);
-                    }
+                for (int row = index; row < index + numberOfRows; row++) {
+                    final Node tr = getTrByVisualIndex(row);
+                    refreshRow(tr, row);
                 }
+            }
+        }
+
+        void refreshRow(final Node tr, final int logicalRowIndex) {
+            /*
+             * TODO [[API]]: update this to use the row-based updater API in
+             * Artur's "design" project in github.
+             */
+
+            for (int col = 0; col < tr.getChildCount(); col++) {
+                paintCell((Element) tr.getChild(col), logicalRowIndex, col);
             }
         }
 
@@ -405,6 +780,907 @@ public class Escalator extends Widget {
              */
             cellElem.addClassName(CLASS_NAME + "-cell");
         }
+
+        /**
+         * Gets the child element that is visually at a certain index
+         * 
+         * @param index
+         *            the index of the element to retrieve
+         * @return the element at position {@code index}
+         * @throws IndexOutOfBoundsException
+         *             if {@code index} is not valid within {@link #root}
+         */
+        abstract protected Element getTrByVisualIndex(int index)
+                throws IndexOutOfBoundsException;
+    }
+
+    private abstract class AbstractStaticRowContainer extends
+            AbstractRowContainer {
+        public AbstractStaticRowContainer(final Element headElement) {
+            super(headElement);
+        }
+
+        @Override
+        protected void paintRemoveRows(final int index, final int numberOfRows) {
+            for (int i = index; i < index + numberOfRows; i++) {
+                final Element tr = (Element) root.getChild(i);
+                tr.removeFromParent();
+            }
+            recalculateSectionHeight();
+        }
+
+        @Override
+        protected Element getTrByVisualIndex(final int index)
+                throws IndexOutOfBoundsException {
+            if (index >= 0 && index < root.getChildCount()) {
+                return (Element) root.getChild(index);
+            } else {
+                throw new IndexOutOfBoundsException("No such visual index: "
+                        + index);
+            }
+        }
+    }
+
+    private class HeaderRowContainer extends AbstractStaticRowContainer {
+        public HeaderRowContainer(final Element headElement) {
+            super(headElement);
+        }
+
+        @Override
+        protected void sectionHeightCalculated() {
+            bodyElem.getStyle().setMarginTop(height, Unit.PX);
+        }
+
+        @Override
+        protected Element createCellElement() {
+            return DOM.createTH();
+        }
+    }
+
+    private class FooterRowContainer extends AbstractStaticRowContainer {
+        public FooterRowContainer(final Element footElement) {
+            super(footElement);
+        }
+
+        @Override
+        protected Element createCellElement() {
+            return DOM.createTD();
+        }
+    }
+
+    private class BodyRowContainer extends AbstractRowContainer {
+        /*
+         * TODO [[optimize]]: check whether a native JsArray might be faster
+         * than LinkedList
+         */
+        /**
+         * The order in which row elements are rendered visually in the browser,
+         * with the help of CSS tricks. Usually has nothing to do with the DOM
+         * order.
+         */
+        private final LinkedList<Element> visualRowOrder = new LinkedList<Element>();
+
+        /**
+         * Don't use this field directly, because it will not take proper care
+         * of all the bookkeeping required.
+         * 
+         * @deprecated Use {@link #setRowPosition(Element, int, int)} and
+         *             {@link #getRowTop(Element)} instead.
+         */
+        @Deprecated
+        private final Map<Element, Integer> rowTopPosMap = new HashMap<Element, Integer>();
+
+        private int tBodyScrollTop = 0;
+        private int tBodyScrollLeft = 0;
+
+        public BodyRowContainer(final Element bodyElement) {
+            super(bodyElement);
+        }
+
+        public void updateEscalatorRowsOnScroll() {
+            final int topRowPos = getRowTop(visualRowOrder.getFirst());
+            // TODO [[mpixscroll]]
+            final int scrollTop = tBodyScrollTop;
+            final int viewportOffset = topRowPos - scrollTop;
+
+            /*
+             * TODO [[optimize]] this if-else can most probably be refactored
+             * into a neater block of code
+             */
+
+            if (viewportOffset > 0) {
+                // there's empty room on top
+
+                int rowsToMove = (int) Math.ceil((double) viewportOffset
+                        / (double) ROW_HEIGHT_PX);
+                rowsToMove = Math.min(rowsToMove, root.getChildCount());
+
+                final int end = root.getChildCount();
+                final int start = end - rowsToMove;
+                final int logicalRowIndex = scrollTop / ROW_HEIGHT_PX;
+                moveAndUpdateEscalatorRows(Range.between(start, end), 0,
+                        logicalRowIndex);
+            }
+
+            else if (viewportOffset + ROW_HEIGHT_PX <= 0) {
+                /*
+                 * the viewport has been scrolled more than the topmost visual
+                 * row.
+                 */
+
+                /*
+                 * Using the fact that integer division has implicit
+                 * floor-function to our advantage here.
+                 */
+                int rowsToMove = Math.abs(viewportOffset / ROW_HEIGHT_PX);
+                rowsToMove = Math.min(rowsToMove, root.getChildCount());
+
+                int logicalRowIndex;
+                if (rowsToMove < root.getChildCount()) {
+                    /*
+                     * We scroll so little that we can just keep adding the rows
+                     * below the current escalator
+                     */
+                    logicalRowIndex = getLogicalRowIndex(visualRowOrder
+                            .getLast()) + 1;
+                } else {
+                    /*
+                     * Since we're moving all escalator rows, we need to
+                     * calculate the first logical row index from the scroll
+                     * position.
+                     */
+                    logicalRowIndex = scrollTop / ROW_HEIGHT_PX;
+                }
+
+                /*
+                 * Since we're moving the viewport downwards, the visual index
+                 * is always at the bottom. Note: Due to how
+                 * moveAndUpdateEscalatorRows works, this will work out even if
+                 * we move all the rows, and try to place them "at the end".
+                 */
+                final int targetVisualIndex = root.getChildCount();
+
+                // make sure that we don't move rows over the data boundary
+                boolean aRowWasLeftBehind = false;
+                if (logicalRowIndex + rowsToMove > getRowCount()) {
+                    /*
+                     * TODO [[rowheight]]: with constant row heights, there's
+                     * always exactly one row that will be moved beyond the data
+                     * source, when viewport is scrolled to the end. This,
+                     * however, isn't guaranteed anymore once row heights start
+                     * varying.
+                     */
+                    rowsToMove--;
+                    aRowWasLeftBehind = true;
+                }
+
+                moveAndUpdateEscalatorRows(Range.between(0, rowsToMove),
+                        targetVisualIndex, logicalRowIndex);
+
+                if (aRowWasLeftBehind) {
+                    /*
+                     * To keep visualRowOrder as a spatially contiguous block of
+                     * rows, let's make sure that the one row we didn't move
+                     * visually still stays with the pack.
+                     */
+                    final Range strayRow = Range.withOnly(0);
+                    final int topLogicalIndex = getLogicalRowIndex(visualRowOrder
+                            .get(1)) - 1;
+                    moveAndUpdateEscalatorRows(strayRow, 0, topLogicalIndex);
+                }
+            }
+        }
+
+        @Override
+        protected List<Element> paintInsertRows(final int index,
+                final int numberOfRows) {
+            if (numberOfRows == 0) {
+                return Collections.emptyList();
+            }
+
+            /*
+             * TODO: this method should probably only add physical rows, and not
+             * populate them - let everything be populated as appropriate by the
+             * logic that follows.
+             * 
+             * This also would lead to the fact that paintInsertRows wouldn't
+             * need to return anything.
+             */
+            final List<Element> addedRows = fillAndPopulateEscalatorRowsIfNeeded(
+                    index, numberOfRows);
+
+            /*
+             * insertRows will always change the number of rows - update the
+             * scrollbar sizes.
+             */
+            scroller.recalculateScrollbarsForVirtualViewport();
+
+            final boolean addedRowsAboveCurrentViewport = index * ROW_HEIGHT_PX < scrollerElem
+                    .getScrollTop();
+            final boolean addedRowsBelowCurrentViewport = index * ROW_HEIGHT_PX > scrollerElem
+                    .getScrollTop() + calculateHeight();
+
+            if (addedRowsAboveCurrentViewport) {
+                /*
+                 * We need to tweak the virtual viewport (scroll handle
+                 * positions, table "scroll position" and row locations), but
+                 * without re-evaluating any rows.
+                 */
+
+                final int yDelta = numberOfRows * ROW_HEIGHT_PX;
+                adjustScrollPosIgnoreEvents(yDelta);
+            }
+
+            else if (addedRowsBelowCurrentViewport) {
+                // NOOP, we already recalculated scrollbars.
+            }
+
+            else { // some rows were added inside the current viewport
+
+                final int unupdatedLogicalStart = index + addedRows.size();
+                final int visualOffset = getLogicalRowIndex(visualRowOrder
+                        .getFirst());
+
+                /*
+                 * At this point, we have added new escalator rows, if so
+                 * needed.
+                 * 
+                 * If more rows were added than the new escalator rows can
+                 * account for, we need to start to spin the escalator to update
+                 * the remaining rows aswell.
+                 */
+                final int rowsStillNeeded = numberOfRows - addedRows.size();
+                final Range unupdatedVisual = convertToVisual(Range.withLength(
+                        unupdatedLogicalStart, rowsStillNeeded));
+                final int end = root.getChildCount();
+                final int start = end - unupdatedVisual.length();
+                final int visualTargetIndex = unupdatedLogicalStart
+                        - visualOffset;
+                moveAndUpdateEscalatorRows(Range.between(start, end),
+                        visualTargetIndex, unupdatedLogicalStart);
+
+                // move the surrounding rows to their correct places.
+                int rowTop = (unupdatedLogicalStart + (end - start))
+                        * ROW_HEIGHT_PX;
+                final ListIterator<Element> i = visualRowOrder
+                        .listIterator(visualTargetIndex + (end - start));
+                while (i.hasNext()) {
+                    final Element tr = i.next();
+                    setRowPosition(tr, 0, rowTop);
+                    rowTop += ROW_HEIGHT_PX;
+                }
+            }
+            return addedRows;
+        }
+
+        /**
+         * Move escalator rows around, and make sure everything gets
+         * appropriately repositioned and repainted.
+         * 
+         * @param visualSourceRange
+         *            the range of rows to move to a new place
+         * @param visualTargetIndex
+         *            the visual index where the rows will be placed to
+         * @param logicalTargetIndex
+         *            the logical index to be assigned to the first moved row
+         * @throws IllegalArgumentException
+         *             if any of <code>visualSourceRange.getStart()</code>,
+         *             <code>visualTargetIndex</code> or
+         *             <code>logicalTargetIndex</code> is a negative number; or
+         *             if <code>visualTargetInfo</code> is greater than the
+         *             number of escalator rows.
+         */
+        private void moveAndUpdateEscalatorRows(final Range visualSourceRange,
+                final int visualTargetIndex, final int logicalTargetIndex)
+                throws IllegalArgumentException {
+
+            if (visualSourceRange.isEmpty()) {
+                return;
+            }
+
+            if (visualSourceRange.getStart() < 0) {
+                throw new IllegalArgumentException(
+                        "Logical source start must be 0 or greater (was "
+                                + visualSourceRange.getStart() + ")");
+            } else if (logicalTargetIndex < 0) {
+                throw new IllegalArgumentException(
+                        "Logical target must be 0 or greater");
+            } else if (visualTargetIndex < 0) {
+                throw new IllegalArgumentException(
+                        "Visual target must be 0 or greater");
+            } else if (visualTargetIndex > root.getChildCount()) {
+                throw new IllegalArgumentException(
+                        "Visual target must not be greater than the number of escalator rows");
+            } else if (logicalTargetIndex + visualSourceRange.length() > getRowCount()) {
+                final int logicalEndIndex = logicalTargetIndex
+                        + visualSourceRange.length() - 1;
+                throw new IllegalArgumentException(
+                        "Logical target leads to rows outside of the data range ("
+                                + logicalTargetIndex + ".." + logicalEndIndex
+                                + ")");
+            }
+
+            /*
+             * Since we move a range into another range, the indices might move
+             * about. Having 10 rows, if we move 0..1 to index 10 (to the end of
+             * the collection), the target range will end up being 8..9, instead
+             * of 10..11.
+             * 
+             * This applies only if we move elements forward in the collection,
+             * not backward.
+             */
+            final int adjustedVisualTargetIndex;
+            if (visualSourceRange.getStart() < visualTargetIndex) {
+                adjustedVisualTargetIndex = visualTargetIndex
+                        - visualSourceRange.length();
+            } else {
+                adjustedVisualTargetIndex = visualTargetIndex;
+            }
+
+            if (visualSourceRange.getStart() != adjustedVisualTargetIndex) {
+
+                /*
+                 * Reorder the rows to their correct places within
+                 * visualRowOrder (unless rows are moved back to their original
+                 * places)
+                 */
+
+                /*
+                 * TODO [[optimize]]: move whichever set is smaller: the ones
+                 * explicitly moved, or the others. So, with 10 escalator rows,
+                 * if we are asked to move idx[0..8] to the end of the list,
+                 * it's faster to just move idx[9] to the beginning.
+                 */
+
+                final List<Element> removedRows = new ArrayList<Element>(
+                        visualSourceRange.length());
+                for (int i = 0; i < visualSourceRange.length(); i++) {
+                    final Element tr = visualRowOrder.remove(visualSourceRange
+                            .getStart());
+                    removedRows.add(tr);
+                }
+                visualRowOrder.addAll(adjustedVisualTargetIndex, removedRows);
+            }
+
+            { // Refresh the contents of the affected rows
+                final ListIterator<Element> iter = visualRowOrder
+                        .listIterator(adjustedVisualTargetIndex);
+                for (int logicalIndex = logicalTargetIndex; logicalIndex < logicalTargetIndex
+                        + visualSourceRange.length(); logicalIndex++) {
+                    final Element tr = iter.next();
+                    refreshRow(tr, logicalIndex);
+                }
+            }
+
+            { // Reposition the rows that were moved
+                int newRowTop = logicalTargetIndex * ROW_HEIGHT_PX;
+
+                final ListIterator<Element> iter = visualRowOrder
+                        .listIterator(adjustedVisualTargetIndex);
+                for (int i = 0; i < visualSourceRange.length(); i++) {
+                    final Element tr = iter.next();
+                    setRowPosition(tr, 0, newRowTop);
+                    newRowTop += ROW_HEIGHT_PX;
+                }
+            }
+        }
+
+        /**
+         * Adjust the scroll position without having the scroll handler have any
+         * side-effects.
+         * <p>
+         * <em>Note:</em> {@link Scroller#onScroll(double, double)}
+         * <em>will</em> be triggered, but it not do anything, with the help of
+         * {@link Escalator#internalScrollEventCalls}.
+         * 
+         * @param yDelta
+         *            the delta of pixels to scrolls. A positive value moves the
+         *            viewport downwards, while a negative value moves the
+         *            viewport upwards
+         */
+        public void adjustScrollPosIgnoreEvents(final int yDelta) {
+            if (yDelta == 0) {
+                return;
+            }
+
+            internalScrollEventCalls++;
+            scrollerElem.setScrollTop(scrollerElem.getScrollTop() + yDelta);
+
+            final int snappedYDelta = yDelta - yDelta % ROW_HEIGHT_PX;
+            for (final Element tr : visualRowOrder) {
+                setRowPosition(tr, 0, getRowTop(tr) + snappedYDelta);
+            }
+            setBodyScrollPosition(tBodyScrollLeft, tBodyScrollTop + yDelta);
+        }
+
+        private void setRowPosition(final Element tr, final int x, final int y) {
+            position.set(tr, x, y);
+            rowTopPosMap.put(tr, y);
+        }
+
+        private int getRowTop(final Element tr) {
+            return rowTopPosMap.get(tr);
+        }
+
+        private List<Element> fillAndPopulateEscalatorRowsIfNeeded(
+                final int index, final int numberOfRows) {
+
+            final int maxEscalatorRowCapacity = (int) Math
+                    .ceil(calculateHeight() / ROW_HEIGHT_PX) + 1;
+            final int escalatorRowsStillFit = maxEscalatorRowCapacity
+                    - root.getChildCount();
+            final int escalatorRowsNeeded = Math.min(numberOfRows,
+                    escalatorRowsStillFit);
+
+            if (escalatorRowsNeeded > 0) {
+
+                final List<Element> addedRows = super.paintInsertRows(index,
+                        escalatorRowsNeeded);
+                visualRowOrder.addAll(index, addedRows);
+
+                /*
+                 * We need to figure out the top positions for the rows we just
+                 * added.
+                 */
+                for (int i = 0; i < addedRows.size(); i++) {
+                    setRowPosition(addedRows.get(i), 0, (index + i)
+                            * ROW_HEIGHT_PX);
+                }
+
+                /* Move the other rows away from above the added escalator rows */
+                for (int i = index + addedRows.size(); i < visualRowOrder
+                        .size(); i++) {
+                    final Element tr = visualRowOrder.get(i);
+                    setRowPosition(tr, 0, i * ROW_HEIGHT_PX);
+                }
+
+                return addedRows;
+            } else {
+                return new ArrayList<Element>();
+            }
+        }
+
+        @Override
+        protected void paintRemoveRows(final int index, final int numberOfRows) {
+
+            final Range viewportRange = Range.withLength(
+                    getLogicalRowIndex(visualRowOrder.getFirst()),
+                    visualRowOrder.size());
+
+            final Range removedRowsRange = Range
+                    .withLength(index, numberOfRows);
+
+            final Range[] partitions = removedRowsRange
+                    .partitionWith(viewportRange);
+            final Range removedAbove = partitions[0];
+            final Range removedLogicalInside = partitions[1];
+            final Range removedVisualInside = convertToVisual(removedLogicalInside);
+
+            /*
+             * TODO: extract the following if-block to a separate method. I'll
+             * leave this be inlined for now, to make linediff-based code
+             * reviewing easier. Probably will be moved in the following patch
+             * set.
+             */
+
+            /*
+             * Adjust scroll position in one of two scenarios:
+             * 
+             * 1) Rows were removed above. Then we just need to adjust the
+             * scrollbar by the height of the removed rows.
+             * 
+             * 2) There are no logical rows above, and at least the first (if
+             * not more) visual row is removed. Then we need to snap the scroll
+             * position to the first visible row (i.e. reset scroll position to
+             * absolute 0)
+             * 
+             * The logic is optimized in such a way that the
+             * adjustScrollPosIgnoreEvents is called only once, to avoid extra
+             * reflows, and thus the code might seem a bit obscure.
+             */
+            final boolean firstVisualRowIsRemoved = !removedVisualInside
+                    .isEmpty() && removedVisualInside.getStart() == 0;
+
+            if (!removedAbove.isEmpty() || firstVisualRowIsRemoved) {
+                // TODO [[rowheight]]
+                final int yDelta = removedAbove.length() * ROW_HEIGHT_PX;
+                final int firstLogicalRowHeight = ROW_HEIGHT_PX;
+                final boolean removalScrollsToShowFirstLogicalRow = scrollerElem
+                        .getScrollTop() - yDelta < firstLogicalRowHeight;
+
+                if (removedVisualInside.isEmpty()
+                        && (!removalScrollsToShowFirstLogicalRow || !firstVisualRowIsRemoved)) {
+                    /*
+                     * rows were removed from above the viewport, so all we need
+                     * to do is to adjust the scroll position to account for the
+                     * removed rows
+                     */
+                    adjustScrollPosIgnoreEvents(-yDelta);
+                } else if (removalScrollsToShowFirstLogicalRow) {
+                    /*
+                     * It seems like we've removed all rows from above, and also
+                     * into the current viewport. This means we'll need to even
+                     * out the scroll position to exactly 0 (i.e. adjust by the
+                     * current negative scrolltop, presto!), so that it isn't
+                     * aligned funnily
+                     */
+                    adjustScrollPosIgnoreEvents(-scrollerElem.getScrollTop());
+                }
+            }
+
+            // ranges evaluated, let's do things.
+            if (!removedVisualInside.isEmpty()) {
+                int escalatorRowCount = bodyElem.getChildCount();
+
+                /*
+                 * If we're left with less rows than the number of escalators,
+                 * remove the unused ones.
+                 */
+                final int escalatorRowsToRemove = escalatorRowCount
+                        - getRowCount();
+                if (escalatorRowsToRemove > 0) {
+                    for (int i = 0; i < escalatorRowsToRemove; i++) {
+                        final Element tr = visualRowOrder
+                                .remove(removedVisualInside.getStart());
+                        tr.removeFromParent();
+                        rowTopPosMap.remove(tr);
+                    }
+                    escalatorRowCount -= escalatorRowsToRemove;
+
+                    /*
+                     * Because we're removing escalator rows, we don't have
+                     * anything to scroll by. Let's make sure the viewport is
+                     * scrolled to top, to render any rows possibly left above.
+                     */
+                    body.setBodyScrollPosition(body.tBodyScrollLeft, 0);
+
+                    /*
+                     * We might have removed some rows from the middle, so let's
+                     * make sure we're not left with any holes. Also remember:
+                     * visualIndex == logicalIndex applies now.
+                     */
+                    final int dirtyRowsStart = removedLogicalInside.getStart();
+                    for (int i = dirtyRowsStart; i < escalatorRowCount; i++) {
+                        final Element tr = visualRowOrder.get(i);
+                        setRowPosition(tr, 0, i * ROW_HEIGHT_PX);
+                    }
+
+                    /*
+                     * this is how many rows appeared into the viewport from
+                     * below
+                     */
+                    final int rowsToUpdateDataOn = numberOfRows
+                            - escalatorRowsToRemove;
+                    final int start = Math.max(0, escalatorRowCount
+                            - rowsToUpdateDataOn);
+                    final int end = escalatorRowCount;
+                    for (int i = start; i < end; i++) {
+                        final Element tr = visualRowOrder.get(i);
+                        refreshRow(tr, i);
+                    }
+                }
+
+                else {
+                    // No escalator rows need to be removed.
+
+                    /*
+                     * Two things (or a combination thereof) can happen:
+                     * 
+                     * 1) We're scrolled to the bottom, the last rows are
+                     * removed. SOLUTION: moveAndUpdateEscalatorRows the
+                     * bottommost rows, and place them at the top to be
+                     * refreshed.
+                     * 
+                     * 2) We're scrolled somewhere in the middle, arbitrary rows
+                     * are removed. SOLUTION: moveAndUpdateEscalatorRows the
+                     * removed rows, and place them at the bottom to be
+                     * refreshed.
+                     * 
+                     * Since a combination can also happen, we need to handle
+                     * this in a smart way, all while avoiding
+                     * double-refreshing.
+                     */
+
+                    final int contentBottom = getRowCount() * ROW_HEIGHT_PX;
+                    final int viewportBottom = (int) (tBodyScrollTop + calculateHeight());
+                    if (viewportBottom <= contentBottom) {
+                        /*
+                         * We're in the middle of the row container, everything
+                         * is added to the bottom
+                         */
+                        paintRemoveRowsAtMiddle(removedLogicalInside,
+                                removedVisualInside, 0);
+                    }
+
+                    else if (contentBottom + (numberOfRows * ROW_HEIGHT_PX)
+                            - viewportBottom < ROW_HEIGHT_PX) {
+                        /*
+                         * We're at the end of the row container, everything is
+                         * added to the top.
+                         */
+                        paintRemoveRowsAtBottom(removedLogicalInside,
+                                removedVisualInside);
+                    }
+
+                    else {
+                        /*
+                         * We're in a combination, where we need to both scroll
+                         * up AND show new rows at the bottom.
+                         * 
+                         * Example: Scrolled down to show the second to last
+                         * row. Remove two. Viewport scrolls up, revealing the
+                         * row above row. The last element collapses up and into
+                         * view.
+                         * 
+                         * Reminder: this use case handles only the case when
+                         * there are enough escalator rows to still render a
+                         * full view. I.e. all escalator rows will _always_ be
+                         * populated
+                         */
+                        /*-
+                         *  1       1      |1| <- newly rendered
+                         * |2|     |2|     |2|
+                         * |3| ==> |*| ==> |5| <- newly rendered
+                         * |4|     |*|
+                         *  5       5
+                         *  
+                         *  1       1      |1| <- newly rendered
+                         * |2|     |*|     |4|
+                         * |3| ==> |*| ==> |5| <- newly rendered
+                         * |4|     |4|
+                         *  5       5
+                         */
+
+                        /*
+                         * STEP 1:
+                         * 
+                         * reorganize deprecated escalator rows to bottom, but
+                         * don't re-render anything yet
+                         */
+                        /*-
+                         *  1       1       1
+                         * |2|     |*|     |4|
+                         * |3| ==> |*| ==> |*|
+                         * |4|     |4|     |*|
+                         *  5       5       5
+                         */
+                        int newTop = getRowTop(visualRowOrder
+                                .get(removedVisualInside.getStart()));
+                        for (int i = 0; i < removedVisualInside.length(); i++) {
+                            final Element tr = visualRowOrder
+                                    .remove(removedVisualInside.getStart());
+                            visualRowOrder.addLast(tr);
+                        }
+
+                        for (int i = removedVisualInside.getStart(); i < escalatorRowCount; i++) {
+                            final Element tr = visualRowOrder.get(i);
+                            setRowPosition(tr, 0, newTop);
+                            newTop += ROW_HEIGHT_PX;
+                        }
+
+                        /*
+                         * STEP 2:
+                         * 
+                         * manually scroll
+                         */
+                        /*-
+                         *  1      |1| <-- newly rendered (by scrolling)
+                         * |4|     |4|
+                         * |*| ==> |*|
+                         * |*|       
+                         *  5       5
+                         */
+                        final double newScrollTop = contentBottom
+                                - calculateHeight();
+                        setScrollTop(newScrollTop);
+                        /*
+                         * Manually call the scroll handler, so we get immediate
+                         * effects in the escalator.
+                         */
+                        scroller.onScroll();
+                        internalScrollEventCalls++;
+
+                        /*
+                         * Move the bottommost (n+1:th) escalator row to top,
+                         * because scrolling up doesn't handle that for us
+                         * automatically
+                         */
+                        moveAndUpdateEscalatorRows(
+                                Range.withOnly(escalatorRowCount - 1),
+                                0,
+                                getLogicalRowIndex(visualRowOrder.getFirst()) - 1);
+
+                        /*
+                         * STEP 3:
+                         * 
+                         * update remaining escalator rows
+                         */
+                        /*-
+                         * |1|     |1|
+                         * |4| ==> |4|
+                         * |*|     |5| <-- newly rendered
+                         *           
+                         *  5
+                         */
+                        final int rowsScrolled = (int) (Math
+                                .ceil((viewportBottom - (double) contentBottom)
+                                        / ROW_HEIGHT_PX));
+                        final int start = escalatorRowCount
+                                - (removedVisualInside.length() - rowsScrolled);
+                        final Range visualRefreshRange = Range.between(start,
+                                escalatorRowCount);
+                        final int logicalTargetIndex = getLogicalRowIndex(visualRowOrder
+                                .getFirst()) + start;
+                        // in-place move simply re-renders the rows.
+                        moveAndUpdateEscalatorRows(visualRefreshRange, start,
+                                logicalTargetIndex);
+                    }
+                }
+            }
+
+            /*
+             * this needs to be done after the escalator has been shrunk down,
+             * or it won't work correctly (due to setScrollTop invocation)
+             */
+            scroller.recalculateScrollbarsForVirtualViewport();
+        }
+
+        private void paintRemoveRowsAtMiddle(final Range removedLogicalInside,
+                final Range removedVisualInside, final int logicalOffset) {
+            /*-
+             *  :       :       :
+             * |2|     |2|     |2|
+             * |3| ==> |*| ==> |4|
+             * |4|     |4|     |6| <- newly rendered
+             *  :       :       :
+             */
+
+            final int escalatorRowCount = visualRowOrder.size();
+
+            final int logicalTargetIndex = getLogicalRowIndex(visualRowOrder
+                    .getLast())
+                    - (removedVisualInside.length() - 1)
+                    + logicalOffset;
+            moveAndUpdateEscalatorRows(removedVisualInside, escalatorRowCount,
+                    logicalTargetIndex);
+
+            // move the surrounding rows to their correct places.
+            final ListIterator<Element> iterator = visualRowOrder
+                    .listIterator(removedVisualInside.getStart());
+            int rowTop = (removedLogicalInside.getStart() + logicalOffset)
+                    * ROW_HEIGHT_PX;
+            for (int i = removedVisualInside.getStart(); i < escalatorRowCount
+                    - removedVisualInside.length(); i++) {
+                final Element tr = iterator.next();
+                setRowPosition(tr, 0, rowTop);
+                rowTop += ROW_HEIGHT_PX;
+            }
+        }
+
+        private void paintRemoveRowsAtBottom(final Range removedLogicalInside,
+                final Range removedVisualInside) {
+            /*-
+             *                  :
+             *  :       :      |4| <- newly rendered
+             * |5|     |5|     |5|
+             * |6| ==> |*| ==> |7|
+             * |7|     |7|     
+             */
+
+            final int logicalTargetIndex = getLogicalRowIndex(visualRowOrder
+                    .getFirst()) - removedVisualInside.length();
+            moveAndUpdateEscalatorRows(removedVisualInside, 0,
+                    logicalTargetIndex);
+
+            // move the surrounding rows to their correct places.
+            final ListIterator<Element> iterator = visualRowOrder
+                    .listIterator(removedVisualInside.getEnd());
+            int rowTop = removedLogicalInside.getStart() * ROW_HEIGHT_PX;
+            while (iterator.hasNext()) {
+                final Element tr = iterator.next();
+                setRowPosition(tr, 0, rowTop);
+                rowTop += ROW_HEIGHT_PX;
+            }
+        }
+
+        private int getLogicalRowIndex(final Element element) {
+            // TODO [[rowheight]]
+            return getRowTop(element) / ROW_HEIGHT_PX;
+        }
+
+        @Override
+        protected void recalculateSectionHeight() {
+            // disable for body, since it doesn't make any sense.
+        }
+
+        /**
+         * Adjusts the row index and number to be relevant for the current
+         * virtual viewport.
+         * <p>
+         * It converts a logical range of rows index to the matching visual
+         * range, truncating the resulting range with the viewport.
+         * <p>
+         * <ul>
+         * <li>Escalator contains logical rows 0..100
+         * <li>Current viewport showing logical rows 20..29
+         * <li>convertToVisual([20..29]) &rarr; [0..9]
+         * <li>convertToVisual([15..24]) &rarr; [0..4]
+         * <li>convertToVisual([25..29]) &rarr; [5..9]
+         * <li>convertToVisual([26..39]) &rarr; [6..9]
+         * <li>convertToVisual([0..5]) &rarr; [0..-1] <em>(empty)</em>
+         * <li>convertToVisual([35..1]) &rarr; [0..-1] <em>(empty)</em>
+         * <li>convertToVisual([0..100]) &rarr; [0..9]
+         * </ul>
+         * 
+         * @return a logical range converted to a visual range, truncated to the
+         *         current viewport. The first visual row has the index 0.
+         */
+        private Range convertToVisual(final Range logicalRange) {
+            if (logicalRange.isEmpty()) {
+                return logicalRange;
+            }
+
+            /*
+             * TODO [[rowheight]]: these assumptions will be totally broken with
+             * variable row heights.
+             */
+            final int topRowHeight = ROW_HEIGHT_PX;
+            final int maxEscalatorRows = (int) Math
+                    .ceil((calculateHeight() + topRowHeight) / ROW_HEIGHT_PX);
+            final int currentTopRowIndex = getLogicalRowIndex(visualRowOrder
+                    .getFirst());
+
+            final Range[] partitions = logicalRange.partitionWith(Range
+                    .withLength(currentTopRowIndex, maxEscalatorRows));
+            final Range insideRange = partitions[1];
+            return insideRange.offsetBy(-currentTopRowIndex);
+        }
+
+        @Override
+        protected Element createCellElement() {
+            return DOM.createTD();
+        }
+
+        private double calculateHeight() {
+            final int tableHeight = tableWrapper.getOffsetHeight();
+            final double footerHeight = footer.height;
+            final double headerHeight = header.height;
+            return tableHeight - footerHeight - headerHeight;
+        }
+
+        @Override
+        public void refreshRows(final int index, final int numberOfRows) {
+            final Range visualRange = convertToVisual(Range.withLength(index,
+                    numberOfRows));
+
+            if (!visualRange.isEmpty()) {
+                final int firstLogicalRowIndex = getLogicalRowIndex(visualRowOrder
+                        .getFirst());
+                for (int rowNumber = visualRange.getStart(); rowNumber < visualRange
+                        .getEnd(); rowNumber++) {
+                    refreshRow(visualRowOrder.get(rowNumber),
+                            firstLogicalRowIndex + rowNumber);
+                }
+            }
+        }
+
+        @Override
+        protected Element getTrByVisualIndex(final int index)
+                throws IndexOutOfBoundsException {
+            if (index >= 0 && index < visualRowOrder.size()) {
+                return visualRowOrder.get(index);
+            } else {
+                throw new IndexOutOfBoundsException("No such visual index: "
+                        + index);
+            }
+        }
+
+        private void setBodyScrollPosition(final int scrollLeft,
+                final int scrollTop) {
+            tBodyScrollLeft = scrollLeft;
+            tBodyScrollTop = scrollTop;
+            position.set(bodyElem, -tBodyScrollLeft, -tBodyScrollTop);
+        }
     }
 
     private class ColumnConfigurationImpl implements ColumnConfiguration {
@@ -420,24 +1696,25 @@ public class Escalator extends Widget {
          * @see #hasSomethingInDom()
          */
         @Override
-        public void removeColumns(final int offset, final int numberOfColumns) {
-            assertArgumentsAreValidAndWithinRange(offset, numberOfColumns);
+        public void removeColumns(final int index, final int numberOfColumns) {
+            assertArgumentsAreValidAndWithinRange(index, numberOfColumns);
 
             columns--;
 
+            // FIXME [[escalator]]: broken on escalator
             if (hasSomethingInDom()) {
-                for (RowContainerImpl rowContainer : rowContainers) {
+                for (final AbstractRowContainer rowContainer : rowContainers) {
                     for (int row = 0; row < rowContainer.getRowCount(); row++) {
-                        Node tr = rowContainer.root.getChild(row);
+                        final Node tr = rowContainer.root.getChild(row);
                         for (int col = 0; col < numberOfColumns; col++) {
-                            tr.getChild(offset).removeFromParent();
+                            tr.getChild(index).removeFromParent();
                         }
                     }
                 }
             }
         }
 
-        private void assertArgumentsAreValidAndWithinRange(final int offset,
+        private void assertArgumentsAreValidAndWithinRange(final int index,
                 final int numberOfColumns) {
             if (numberOfColumns < 1) {
                 throw new IllegalArgumentException(
@@ -445,10 +1722,10 @@ public class Escalator extends Widget {
                                 + numberOfColumns + ")");
             }
 
-            if (offset < 0 || offset + numberOfColumns > getColumnCount()) {
+            if (index < 0 || index + numberOfColumns > getColumnCount()) {
                 throw new IndexOutOfBoundsException("The given "
-                        + "column range (" + offset + ".."
-                        + (offset + numberOfColumns)
+                        + "column range (" + index + ".."
+                        + (index + numberOfColumns)
                         + ") was outside of the current "
                         + "number of columns (" + getColumnCount() + ")");
             }
@@ -464,10 +1741,9 @@ public class Escalator extends Widget {
          * @see #hasColumnAndRowData()
          */
         @Override
-        public void insertColumns(final int offset, final int numberOfColumns) {
-            if (offset < 0 || offset > getColumnCount()) {
-                throw new IndexOutOfBoundsException("The given offset("
-                        + offset
+        public void insertColumns(final int index, final int numberOfColumns) {
+            if (index < 0 || index > getColumnCount()) {
+                throw new IndexOutOfBoundsException("The given index(" + index
                         + ") was outside of the current number of columns (0.."
                         + getColumnCount() + ")");
             }
@@ -483,20 +1759,21 @@ public class Escalator extends Widget {
                 return;
             }
 
-            for (final RowContainerImpl rowContainer : rowContainers) {
+            for (final AbstractRowContainer rowContainer : rowContainers) {
+                // FIXME: broken on escalator
                 final Element element = rowContainer.root;
 
                 for (int row = 0; row < element.getChildCount(); row++) {
                     final Element tr = (Element) element.getChild(row);
 
                     Node referenceElement;
-                    if (offset != 0) {
-                        referenceElement = tr.getChild(offset - 1);
+                    if (index != 0) {
+                        referenceElement = tr.getChild(index - 1);
                     } else {
                         referenceElement = null;
                     }
 
-                    for (int col = offset; col < offset + numberOfColumns; col++) {
+                    for (int col = index; col < index + numberOfColumns; col++) {
                         final Element cellElem = rowContainer
                                 .createCellElement();
                         rowContainer.paintCell(cellElem, row, col);
@@ -505,7 +1782,7 @@ public class Escalator extends Widget {
                             tr.insertAfter(cellElem, referenceElement);
                         } else {
                             /*
-                             * referenceElement being null means we have offset
+                             * referenceElement being null means we have index
                              * 0, make it the first cell.
                              */
                             /*
@@ -540,29 +1817,23 @@ public class Escalator extends Widget {
         }
     }
 
+    /** The {@code <thead/>} tag. */
     private final Element headElem = DOM.createTHead();
+    /** The {@code <tbody/>} tag. */
     private final Element bodyElem = DOM.createTBody();
+    /** The {@code <tfoot/>} tag. */
     private final Element footElem = DOM.createTFoot();
-    private final Element scroller;
-    private final Element innerScroller;
 
-    private final RowContainerImpl header = new RowContainerImpl(headElem, "th") {
-        @Override
-        protected void sectionHeightCalculated(final double newPxHeight) {
-            bodyElem.getStyle().setTop(newPxHeight, Unit.PX);
-        };
-    };
+    private final Element scrollerElem = DOM.createDiv();
+    private final Element innerScrollerElem = DOM.createDiv();
 
-    private final RowContainerImpl body = new RowContainerImpl(bodyElem, "td");
+    private final HeaderRowContainer header = new HeaderRowContainer(headElem);
+    private final BodyRowContainer body = new BodyRowContainer(bodyElem);
+    private final FooterRowContainer footer = new FooterRowContainer(footElem);
 
-    private final RowContainerImpl footer = new RowContainerImpl(footElem, "td") {
-        @Override
-        protected void sectionHeightCalculated(final double newPxHeight) {
-            footElem.getStyle().setBottom(newPxHeight, Unit.PX);
-        }
-    };
+    private final Scroller scroller = new Scroller();
 
-    private final RowContainerImpl[] rowContainers = new RowContainerImpl[] {
+    private final AbstractRowContainer[] rowContainers = new AbstractRowContainer[] {
             header, body, footer };
 
     private final ColumnConfigurationImpl columnConfiguration = new ColumnConfigurationImpl();
@@ -570,23 +1841,51 @@ public class Escalator extends Widget {
 
     private PositionFunction position;
 
+    private int internalScrollEventCalls = 0;
+
+    /** The cached width of the escalator, in pixels. */
+    private double width;
+    /** The cached height of the escalator, in pixels. */
+    private double height;
+
+    private static native double getPreciseWidth(Element element)
+    /*-{
+        if (element.getBoundingClientRect) {
+            var rect = element.getBoundingClientRect();
+            return rect.right - rect.left;
+        } else {
+            return element.offsetWidth;
+        }
+    }-*/;
+
+    private static native double getPreciseHeight(Element element)
+    /*-{
+        if (element.getBoundingClientRect) {
+            var rect = element.getBoundingClientRect();
+            return rect.bottom - rect.top;
+        } else {
+            return element.offsetHeight;
+        }
+    }-*/;
+
     /**
      * Creates a new Escalator widget instance.
      */
     public Escalator() {
 
         detectAndApplyPositionFunction();
+        getLogger().info(
+                "Using " + position.getClass().getSimpleName()
+                        + " for position");
 
         final Element root = DOM.createDiv();
         setElement(root);
         setStyleName(CLASS_NAME);
 
-        scroller = DOM.createDiv();
-        scroller.setClassName(CLASS_NAME + "-scroller");
-        root.appendChild(scroller);
+        scrollerElem.setClassName(CLASS_NAME + "-scroller");
+        root.appendChild(scrollerElem);
 
-        innerScroller = DOM.createDiv();
-        scroller.appendChild(innerScroller);
+        scrollerElem.appendChild(innerScrollerElem);
 
         tableWrapper = DOM.createDiv();
         tableWrapper.setClassName(CLASS_NAME + "-tablewrapper");
@@ -614,13 +1913,37 @@ public class Escalator extends Widget {
             @Override
             public void onAttachOrDetach(final AttachEvent event) {
                 if (event.isAttached()) {
+
+                    /*
+                     * this specific order of method calls matters: header and
+                     * footer get defined heights, the body assumes to get the
+                     * rest.
+                     */
+                    header.paintInsertRows(0, header.getRowCount());
+                    footer.paintInsertRows(0, footer.getRowCount());
                     recalculateElementSizes();
+                    body.paintInsertRows(0, body.getRowCount());
+
+                    scroller.attachScrollListener(scrollerElem);
+                    scroller.attachMousewheelListener(getElement());
+                } else {
+                    scroller.detachScrollListener(scrollerElem);
+                    scroller.detachMousewheelListener(getElement());
                 }
             }
         });
     }
 
     private void detectAndApplyPositionFunction() {
+        /*
+         * firefox has a bug in its translate operation, showing white space
+         * when adjusting the scrollbar in BodyRowContainer.paintInsertRows
+         */
+        if (Window.Navigator.getUserAgent().contains("Firefox")) {
+            position = new AbsolutePosition();
+            return;
+        }
+
         final Style docStyle = Document.get().getBody().getStyle();
         if (hasProperty(docStyle, "transform")) {
             if (hasProperty(docStyle, "transformStyle")) {
@@ -633,10 +1956,6 @@ public class Escalator extends Widget {
         } else {
             position = new AbsolutePosition();
         }
-
-        getLogger().info(
-                "Using " + position.getClass().getSimpleName()
-                        + " for position");
     }
 
     private Logger getLogger() {
@@ -728,24 +2047,178 @@ public class Escalator extends Widget {
         recalculateElementSizes();
     }
 
+    /**
+     * Returns the vertical scroll offset. Note that this is not necessarily the
+     * same as the scroll top in the DOM
+     * 
+     * @return the logical vertical scroll offset
+     */
+    public double getScrollTop() {
+        return scrollerElem.getScrollTop();
+    }
+
+    /**
+     * Sets the vertical scroll offset. Note that this is not necessarily the
+     * same as the scroll top in the DOM
+     * 
+     * @param scrollTop
+     *            the number of pixels to scroll vertically
+     */
+    public void setScrollTop(final double scrollTop) {
+        scrollerElem.setScrollTop((int) scrollTop);
+    }
+
+    /**
+     * Returns the logical horizontal scroll offset. Note that this is not
+     * necessarily the same as the scroll left in the DOM.
+     * 
+     * @return the logical horizontal scroll offset
+     */
+    public int getScrollLeft() {
+        return scrollerElem.getScrollLeft();
+    }
+
+    /**
+     * Sets the logical horizontal scroll offset. Note that this is not
+     * necessarily the same as the scroll left in the DOM.
+     * 
+     * @param scrollLeft
+     *            the number of pixels to scroll horizontally
+     */
+    public void setScrollLeft(final int scrollLeft) {
+        scrollerElem.setScrollLeft(scrollLeft);
+    }
+
+    /**
+     * Scrolls the body horizontally so that the column at the given index is
+     * visible.
+     * 
+     * @param columnIndex
+     *            the index of the column to scroll to
+     * @param destination
+     *            where the column should be aligned visually after scrolling
+     * @throws IndexOutOfBoundsException
+     *             if {@code columnIndex} is not a valid index for an existing
+     *             column
+     */
+    public void scrollToColumn(final int columnIndex,
+            final ScrollDestination destination)
+            throws IndexOutOfBoundsException {
+        // FIXME [[escalator]]
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    /**
+     * Scrolls the body horizontally so that the column at the given index is
+     * visible and there is at least {@code padding} pixels to the given scroll
+     * destination.
+     * 
+     * @param columnIndex
+     *            the index of the column to scroll to
+     * @param destination
+     *            where the column should be aligned visually after scrolling
+     * @param padding
+     *            the number pixels to place between the scrolled-to column and
+     *            the viewport edge.
+     * @throws IndexOutOfBoundsException
+     *             if {@code columnIndex} is not a valid index for an existing
+     *             column
+     * @throws IllegalArgumentException
+     *             if {@code destination} is {@link ScrollDestination#MIDDLE},
+     *             because having a padding on a centered column is undefined
+     *             behavior.
+     */
+    public void scrollToColumn(final int columnIndex,
+            final ScrollDestination destination, final int padding)
+            throws IndexOutOfBoundsException, IllegalArgumentException {
+        // FIXME [[escalator]]
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    /**
+     * Scrolls the body vertically so that the row at the given index is
+     * visible.
+     * 
+     * @param rowIndex
+     *            the index of the row to scroll to
+     * @param destination
+     *            where the row should be aligned visually after scrolling
+     * @throws IndexOutOfBoundsException
+     *             if {@code rowIndex} is not a valid index for an existing
+     *             logical row
+     */
+    public void scrollToRow(final int rowIndex,
+            final ScrollDestination destination)
+            throws IndexOutOfBoundsException {
+        // FIXME [[escalator]]
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    /**
+     * Scrolls the body vertically so that the row at the given index is visible
+     * and there is at least {@literal padding} pixels to the given scroll
+     * destination.
+     * 
+     * @param rowIndex
+     *            the index of the logical row to scroll to
+     * 
+     * @param destination
+     *            where the row should be aligned visually after scrolling
+     * @param padding
+     *            the number pixels to place between the scrolled-to row and the
+     *            viewport edge.
+     * @throws IndexOutOfBoundsException
+     *             if {@code rowIndex} is not a valid index for an existing row
+     * @throws IllegalArgumentException
+     *             if {@code destination} is {@link ScrollDestination#MIDDLE},
+     *             because having a padding on a centered row is undefined
+     *             behavior.
+     */
+    public void scrollToRow(final int rowIndex,
+            final ScrollDestination destination, final int padding)
+            throws IndexOutOfBoundsException, IllegalArgumentException {
+        // FIXME [[escalator]]
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
     private void recalculateElementSizes() {
-        for (final RowContainerImpl rowContainer : rowContainers) {
+        width = getPreciseWidth(getElement());
+        height = getPreciseHeight(getElement());
+        for (final AbstractRowContainer rowContainer : rowContainers) {
             rowContainer.recalculateSectionHeight();
         }
 
-        /*
-         * TODO [[escalator]]: take scrollbar size into account only if there is
-         * something to scroll, and only for the dimension it applies to.
-         */
-        // recalculate required space for scroll underlay
-        tableWrapper.getStyle().setHeight(getElement().getOffsetHeight(),
-                Unit.PX);
-        tableWrapper.getStyle()
-                .setWidth(getElement().getOffsetWidth(), Unit.PX);
+        scroller.recalculateTableWrapperSize();
+        scroller.recalculateScrollbarsForVirtualViewport();
     }
 
-    private static void recalculateRowWidth(Element tr) {
+    private boolean needsVerticalScrollbars() {
+        // TODO [[rowheight]]: take variable row heights into account
+        final double bodyHeight = ROW_HEIGHT_PX * body.getRowCount();
+        return height < header.height + bodyHeight + footer.height;
+    }
+
+    private boolean needsHorizontalScrollbars() {
+        // TODO [[colwidth]]: take variable column widths into account
+        return width < COLUMN_WIDTH_PX * columnConfiguration.getColumnCount();
+    }
+
+    private static void recalculateRowWidth(final Element tr) {
         // TODO [[colwidth]]: adjust for variable column widths
         tr.getStyle().setWidth(tr.getChildCount() * COLUMN_WIDTH_PX, Unit.PX);
+    }
+
+    /**
+     * A routing method for {@link Scroller#onScroll(double, double)}
+     * <p>
+     * This is a workaround for GWT and JSNI unable to properly handle inner
+     * classes, so instead we call the outer class' method, which calls the
+     * inner class' respective method.
+     * <p>
+     * Ideally, this method would not exist, and
+     * {@link Scroller#onScroll(double, double)} would be called directly.
+     */
+    private void onScroll() {
+        scroller.onScroll();
     }
 }

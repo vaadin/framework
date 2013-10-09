@@ -15,16 +15,14 @@
  */
 package com.vaadin.tests.widgetset.client.grid;
 
-import com.vaadin.shared.AbstractComponentState;
+import com.vaadin.shared.communication.ClientRpc;
 
-/**
- * @since 7.2
- * @author Vaadin Ltd
- */
-public class TestGridState extends AbstractComponentState {
-    // public static final String DEFAULT_HEIGHT = "400px";
-    public static final String DEFAULT_HEIGHT = "405px";
+public interface TestGridClientRpc extends ClientRpc {
+    void insertRows(int offset, int amount);
 
-    /* TODO: this should be "100%" before setting final. */
-    public static final String DEFAULT_WIDTH = "800px";
+    void removeRows(int offset, int amount);
+
+    void insertColumns(int offset, int amount);
+
+    void removeColumns(int offset, int amount);
 }

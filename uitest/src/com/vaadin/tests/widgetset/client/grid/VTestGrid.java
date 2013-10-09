@@ -19,10 +19,16 @@ public class VTestGrid extends Composite {
 
     public static class BodyRenderer implements CellRenderer {
         private int i = 0;
+        private int ri = 0;
 
         @Override
         public void renderCell(final Cell cell) {
-            cell.getElement().setInnerText("Cell #" + (i++));
+            if (cell.getColumn() != 0) {
+                cell.getElement().setInnerText("Cell #" + (i++));
+            } else {
+                cell.getElement().setInnerText(
+                        "Logical row " + cell.getRow() + "/" + (ri++));
+            }
 
             double c = i * .1;
             int r = (int) ((Math.cos(c) + 1) * 128);
@@ -30,8 +36,10 @@ public class VTestGrid extends Composite {
             int b = (int) ((Math.cos(c / (Math.PI * 2)) + 1) * 128);
             cell.getElement().getStyle()
                     .setBackgroundColor("rgb(" + r + "," + g + "," + b + ")");
-            if ((r + g + b) / 3 < 127) {
+            if ((r * .8 + g * 1.3 + b * .9) / 3 < 127) {
                 cell.getElement().getStyle().setColor("white");
+            } else {
+                cell.getElement().getStyle().clearColor();
             }
         }
     }
@@ -49,12 +57,8 @@ public class VTestGrid extends Composite {
 
     public VTestGrid() {
         initWidget(escalator);
-
         final ColumnConfiguration cConf = escalator.getColumnConfiguration();
-        cConf.insertColumns(0, 1);
-        cConf.insertColumns(0, 1); // prepend one column
-        cConf.insertColumns(cConf.getColumnCount(), 1); // append one column
-        // cConf.insertColumns(cConf.getColumnCount(), 10); // append 10 columns
+        cConf.insertColumns(cConf.getColumnCount(), 5);
 
         final RowContainer h = escalator.getHeader();
         h.setCellRenderer(new HeaderRenderer());
@@ -62,52 +66,22 @@ public class VTestGrid extends Composite {
 
         final RowContainer b = escalator.getBody();
         b.setCellRenderer(new BodyRenderer());
-        b.insertRows(0, 5);
+        b.insertRows(0, 10);
 
         final RowContainer f = escalator.getFooter();
         f.setCellRenderer(new FooterRenderer());
         f.insertRows(0, 1);
 
-        b.removeRows(3, 2);
-        // iterative transformations for testing.
-        // step2();
-        // step3();
-        // step4();
-        // step5();
-        // step6();
-
         setWidth(TestGridState.DEFAULT_WIDTH);
         setHeight(TestGridState.DEFAULT_HEIGHT);
+
     }
 
-    private void step2() {
-        RowContainer b = escalator.getBody();
-        b.insertRows(0, 5); // prepend five rows
-        b.insertRows(b.getRowCount(), 5); // append five rows
+    public RowContainer getBody() {
+        return escalator.getBody();
     }
 
-    private void step3() {
-        ColumnConfiguration cConf = escalator.getColumnConfiguration();
-        cConf.insertColumns(0, 1); // prepend one column
-        cConf.insertColumns(cConf.getColumnCount(), 1); // append one column
+    public ColumnConfiguration getColumnConfiguration() {
+        return escalator.getColumnConfiguration();
     }
-
-    private void step4() {
-        final ColumnConfiguration cConf = escalator.getColumnConfiguration();
-        cConf.removeColumns(0, 1);
-        cConf.removeColumns(1, 1);
-        cConf.removeColumns(cConf.getColumnCount() - 1, 1);
-    }
-
-    private void step5() {
-        final RowContainer b = escalator.getBody();
-        b.removeRows(0, 1);
-        b.removeRows(b.getRowCount() - 1, 1);
-    }
-
-    private void step6() {
-        RowContainer b = escalator.getBody();
-        b.refreshRows(0, b.getRowCount());
-    }
-
 }

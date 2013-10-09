@@ -58,7 +58,7 @@ interface PositionFunction {
         @Override
         public void set(Element e, double x, double y) {
             e.getStyle().setProperty("webkitTransform",
-                    "translate3d(" + x + "px," + y + "px,0");
+                    "translate3d(" + x + "px," + y + "px,0)");
         }
     }
 

@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.widgetset.server.grid;
 
+import com.vaadin.tests.widgetset.client.grid.TestGridClientRpc;
 import com.vaadin.tests.widgetset.client.grid.TestGridState;
 import com.vaadin.ui.AbstractComponent;
 
@@ -31,5 +32,25 @@ public class TestGrid extends AbstractComponent {
     @Override
     protected TestGridState getState() {
         return (TestGridState) super.getState();
+    }
+
+    public void insertRows(int offset, int amount) {
+        rpc().insertRows(offset, amount);
+    }
+
+    public void removeRows(int offset, int amount) {
+        rpc().removeRows(offset, amount);
+    }
+
+    public void insertColumns(int offset, int amount) {
+        rpc().insertColumns(offset, amount);
+    }
+
+    public void removeColumns(int offset, int amount) {
+        rpc().removeColumns(offset, amount);
+    }
+
+    private TestGridClientRpc rpc() {
+        return getRpcProxy(TestGridClientRpc.class);
     }
 }

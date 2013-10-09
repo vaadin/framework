@@ -28,6 +28,29 @@ public class TestGridConnector extends AbstractComponentConnector {
     @Override
     protected void init() {
         super.init();
+        registerRpc(TestGridClientRpc.class, new TestGridClientRpc() {
+            @Override
+            public void insertRows(int offset, int amount) {
+                getWidget().getBody().insertRows(offset, amount);
+            }
+
+            @Override
+            public void removeRows(int offset, int amount) {
+                getWidget().getBody().removeRows(offset, amount);
+            }
+
+            @Override
+            public void removeColumns(int offset, int amount) {
+                getWidget().getColumnConfiguration().removeColumns(offset,
+                        amount);
+            }
+
+            @Override
+            public void insertColumns(int offset, int amount) {
+                getWidget().getColumnConfiguration().insertColumns(offset,
+                        amount);
+            }
+        });
     }
 
     @Override
