@@ -31,6 +31,8 @@ import org.atmosphere.cpr.AtmosphereResourceEvent;
 import org.atmosphere.cpr.AtmosphereResourceEventListenerAdapter;
 import org.json.JSONException;
 
+import com.vaadin.server.ErrorEvent;
+import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.LegacyCommunicationManager.InvalidUIDLSecurityKeyException;
 import com.vaadin.server.ServiceException;
 import com.vaadin.server.ServletPortletHelper;
@@ -274,14 +276,52 @@ public class PushHandler extends AtmosphereResourceEventListenerAdapter
                 } else {
                     callback.run(resource, ui);
                 }
-            } catch (IOException e) {
-                getLogger().log(Level.WARNING, "Error writing a push response",
-                        e);
+            } catch (final IOException e) {
+                callErrorHandler(session, e);
+            } catch (final Exception e) {
+                SystemMessages msg = service.getSystemMessages(
+                        ServletPortletHelper.findLocale(null, null,
+                                vaadinRequest), vaadinRequest);
+                sendNotificationAndDisconnect(
+                        resource,
+                        VaadinService.createCriticalNotificationJSON(
+                                msg.getInternalErrorCaption(),
+                                msg.getInternalErrorMessage(), null,
+                                msg.getInternalErrorURL()));
+                callErrorHandler(session, e);
             } finally {
-                session.unlock();
+                try {
+                    session.unlock();
+                } catch (Exception e) {
+                    getLogger().log(Level.WARNING,
+                            "Error while unlocking session", e);
+                    // can't call ErrorHandler, we (hopefully) don't have a lock
+                }
             }
         } finally {
-            service.requestEnd(vaadinRequest, null, session);
+            try {
+                service.requestEnd(vaadinRequest, null, session);
+            } catch (Exception e) {
+                getLogger().log(Level.WARNING, "Error while ending request", e);
+
+                // can't call ErrorHandler, we don't have a lock
+            }
+        }
+    }
+
+    /**
+     * Call the session's {@link ErrorHandler}, if it has one, with the given
+     * exception wrapped in an {@link ErrorEvent}.
+     */
+    private void callErrorHandler(VaadinSession session, Exception e) {
+        try {
+            ErrorHandler errorHandler = ErrorEvent.findErrorHandler(session);
+            if (errorHandler != null) {
+                errorHandler.error(new ErrorEvent(e));
+            }
+        } catch (Exception ex) {
+            // Let's not allow error handling to cause trouble; log fails
+            getLogger().log(Level.WARNING, "ErrorHandler call failed", ex);
         }
     }
 
