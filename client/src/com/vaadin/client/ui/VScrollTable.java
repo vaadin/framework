@@ -71,7 +71,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
@@ -80,6 +79,7 @@ import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.MouseEventDetailsBuilder;
+import com.vaadin.client.StyleConstants;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
@@ -2758,13 +2758,27 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             DOM.setInnerHTML(floatingCopyOfHeaderCell, DOM.getInnerHTML(td));
             floatingCopyOfHeaderCell = DOM
                     .getChild(floatingCopyOfHeaderCell, 2);
-            DOM.setElementProperty(floatingCopyOfHeaderCell, "className",
-                    VScrollTable.this.getStylePrimaryName() + "-header-drag");
+            // #12714 the shown "ghost element" should be inside
+            // v-overlay-container, and it should contain the same styles as the
+            // table to enable theming (except v-table & v-widget).
+            String stylePrimaryName = VScrollTable.this.getStylePrimaryName();
+            StringBuilder sb = new StringBuilder();
+            for (String s : VScrollTable.this.getStyleName().split(" ")) {
+                if (!s.equals(StyleConstants.UI_WIDGET)) {
+                    sb.append(s);
+                    if (s.equals(stylePrimaryName)) {
+                        sb.append("-header-drag ");
+                    } else {
+                        sb.append(" ");
+                    }
+                }
+            }
+            floatingCopyOfHeaderCell.setClassName(sb.toString().trim());
             // otherwise might wrap or be cut if narrow column
             DOM.setStyleAttribute(floatingCopyOfHeaderCell, "width", "auto");
             updateFloatingCopysPosition(DOM.getAbsoluteLeft(td),
                     DOM.getAbsoluteTop(td));
-            DOM.appendChild(RootPanel.get().getElement(),
+            DOM.appendChild(VOverlay.getOverlayContainer(client),
                     floatingCopyOfHeaderCell);
         }
 
@@ -2779,8 +2793,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
 
         private void hideFloatingCopy() {
-            DOM.removeChild(RootPanel.get().getElement(),
-                    floatingCopyOfHeaderCell);
+            floatingCopyOfHeaderCell.removeFromParent();
             floatingCopyOfHeaderCell = null;
         }
 
@@ -7069,7 +7082,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         private void deEmphasis() {
             UIObject.setStyleName(getElement(),
-                    VScrollTable.this.getStylePrimaryName() + "-drag", false);
+                    getStylePrimaryName() + "-drag", false);
             if (lastEmphasized == null) {
                 return;
             }
@@ -7095,7 +7108,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         private void emphasis(TableDDDetails details) {
             deEmphasis();
             UIObject.setStyleName(getElement(),
-                    VScrollTable.this.getStylePrimaryName() + "-drag", true);
+                    getStylePrimaryName() + "-drag", true);
             // iterate old and new emphasized row
             for (Widget w : scrollBody.renderedRows) {
                 VScrollTableRow row = (VScrollTableRow) w;
