@@ -51,7 +51,6 @@ import com.vaadin.shared.AbstractComponentState;
 public class VaadinFinderLocatorStrategy implements LocatorStrategy {
 
     public static final String SUBPART_SEPARATOR = "#";
-
     private ComponentLocator componentLocator;
 
     public VaadinFinderLocatorStrategy(ComponentLocator componentLocator) {
@@ -215,19 +214,22 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
      */
     private ComponentConnector filterPotentialMatches(
             List<ComponentConnector> potentialMatches, String predicateString) {
+
         if (potentialMatches.isEmpty()) {
             return null;
         }
 
         if (predicateString != null) {
-            String[] parts = predicateString.split("=");
-            if (parts.length == 1) {
-                int index = Integer.valueOf(predicateString);
-                return index < potentialMatches.size() ? potentialMatches
-                        .get(index) : null;
-            } else {
-                String propertyName = parts[0].trim();
-                String value = unquote(parts[1].trim());
+
+            int split_idx = predicateString.indexOf('=');
+
+            if (split_idx != -1) {
+
+                String propertyName = predicateString.substring(0, split_idx)
+                        .trim();
+                String value = unquote(predicateString.substring(split_idx + 1)
+                        .trim());
+
                 for (ComponentConnector connector : potentialMatches) {
                     Property property = AbstractConnector.getStateType(
                             connector).getProperty(propertyName);
@@ -236,8 +238,14 @@ public class VaadinFinderLocatorStrategy implements LocatorStrategy {
                         return connector;
                     }
                 }
+
+            } else {
+                int index = Integer.valueOf(predicateString);
+                return index < potentialMatches.size() ? potentialMatches
+                        .get(index) : null;
             }
         }
+
         return potentialMatches.get(0);
     }
 
