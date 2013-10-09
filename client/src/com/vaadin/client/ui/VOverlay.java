@@ -229,6 +229,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         return shadow != null;
     }
 
+    protected boolean isShimElementEnabled() {
+        return shimElement != null;
+    }
+
     private void removeShimElement() {
         if (shimElement != null) {
             shimElement.removeFromParent();
@@ -380,6 +384,10 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         super.setVisible(visible);
         if (isShadowEnabled()) {
             shadow.getStyle().setProperty("visibility",
+                    visible ? "visible" : "hidden");
+        }
+        if (isShimElementEnabled()) {
+            shimElement.getStyle().setProperty("visibility",
                     visible ? "visible" : "hidden");
         }
     }
