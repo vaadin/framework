@@ -258,14 +258,22 @@ public class VaadinServlet extends HttpServlet implements Constants {
      */
     protected boolean handleContextRootWithoutSlash(HttpServletRequest request,
             HttpServletResponse response) throws IOException {
+        // Query parameters like "?a=b" are handled by the servlet container but
+        // path parameter (e.g. ;jsessionid=) needs to be handled here
+        String location = request.getRequestURI();
+
+        String lastPathParameter = getLastPathParameter(location);
+        location = location.substring(0,
+                location.length() - lastPathParameter.length());
+
         if ((request.getPathInfo() == null || "/".equals(request.getPathInfo()))
                 && "".equals(request.getServletPath())
-                && !request.getRequestURI().endsWith("/")) {
+                && !location.endsWith("/")) {
             /*
              * Path info is for the root but request URI doesn't end with a
              * slash -> redirect to the same URI but with an ending slash.
              */
-            String location = request.getRequestURI() + "/";
+            location = location + "/" + lastPathParameter;
             String queryString = request.getQueryString();
             if (queryString != null) {
                 location += '?' + queryString;
@@ -274,6 +282,40 @@ public class VaadinServlet extends HttpServlet implements Constants {
             return true;
         } else {
             return false;
+        }
+    }
+
+    /**
+     * Finds any path parameter added to the last part of the uri. A path
+     * parameter is any string separated by ";" from the path and ends in / or
+     * at the end of the string.
+     * <p>
+     * For example the uri http://myhost.com/foo;a=1/bar;b=1 contains two path
+     * parameters, {@literal a=1} related to {@literal /foo} and {@literal b=1}
+     * related to /bar.
+     * <p>
+     * For http://myhost.com/foo;a=1/bar;b=1 this method will return ;b=1
+     * 
+     * @since 7.2
+     * @param uri
+     *            a URI
+     * @return the last path parameter of the uri including the semicolon or an
+     *         empty string. Never null.
+     */
+    protected static String getLastPathParameter(String uri) {
+        int lastPathStart = uri.lastIndexOf('/');
+        if (lastPathStart == -1) {
+            return "";
+        }
+
+        int semicolonPos = uri.indexOf(';', lastPathStart);
+        if (semicolonPos < 0) {
+            // No path parameter for the last part
+            return "";
+        } else {
+            // This includes the semicolon.
+            String semicolonString = uri.substring(semicolonPos);
+            return semicolonString;
         }
     }
 
