@@ -226,6 +226,7 @@ public class IndexedContainer extends
     @Override
     public boolean removeAllItems() {
         int origSize = size();
+        Object firstItem = getFirstVisibleItem();
 
         internalRemoveAllItems();
 
@@ -235,7 +236,7 @@ public class IndexedContainer extends
         // filtered out items were removed or not
         if (origSize != 0) {
             // Sends a change event
-            fireItemSetChange();
+            fireItemsRemoved(0, firstItem, origSize);
         }
 
         return true;
@@ -620,8 +621,7 @@ public class IndexedContainer extends
     @Override
     protected void fireItemAdded(int position, Object itemId, Item item) {
         if (position >= 0) {
-            fireItemSetChange(new IndexedContainer.ItemSetChangeEvent(this,
-                    position));
+            super.fireItemAdded(position, itemId, item);
         }
     }
 
@@ -1211,4 +1211,5 @@ public class IndexedContainer extends
     public Collection<Filter> getContainerFilters() {
         return super.getContainerFilters();
     }
+
 }

@@ -582,6 +582,60 @@ public interface Container extends Serializable {
         public Item addItemAt(int index, Object newItemId)
                 throws UnsupportedOperationException;
 
+        /**
+         * An <code>Event</code> object specifying information about the added
+         * items.
+         */
+        public interface ItemAddEvent extends ItemSetChangeEvent {
+
+            /**
+             * Gets the item id of the first added item.
+             * 
+             * @return item id of the first added item
+             */
+            public Object getFirstItemId();
+
+            /**
+             * Gets the index of the first added item.
+             * 
+             * @return index of the first added item
+             */
+            public int getFirstIndex();
+
+            /**
+             * Gets the number of the added items.
+             * 
+             * @return the number of added items.
+             */
+            public int getAddedItemsCount();
+        }
+
+        /**
+         * An <code>Event</code> object specifying information about the removed
+         * items.
+         */
+        public interface ItemRemoveEvent extends ItemSetChangeEvent {
+            /**
+             * Gets the item id of the first removed item.
+             * 
+             * @return item id of the first removed item
+             */
+            public Object getFirstItemId();
+
+            /**
+             * Gets the index of the first removed item.
+             * 
+             * @return index of the first removed item
+             */
+            public int getFirstIndex();
+
+            /**
+             * Gets the number of the removed items.
+             * 
+             * @return the number of removed items
+             */
+            public int getRemovedItemsCount();
+        }
     }
 
     /**
