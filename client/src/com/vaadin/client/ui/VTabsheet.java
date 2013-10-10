@@ -1233,19 +1233,21 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         if (event.getSource() instanceof Tab) {
             int keycode = event.getNativeEvent().getKeyCode();
 
-            if (keycode == getPreviousTabKey()) {
-                selectPreviousTab();
-                event.stopPropagation();
-            } else if (keycode == getNextTabKey()) {
-                selectNextTab();
-                event.stopPropagation();
-            } else if (keycode == getCloseTabKey()) {
-                Tab tab = tb.getTab(activeTabIndex);
-                if (tab.isClosable()) {
-                    tab.onClose();
+            if (!event.isAnyModifierKeyDown()) {
+                if (keycode == getPreviousTabKey()) {
+                    selectPreviousTab();
+                    event.stopPropagation();
+                } else if (keycode == getNextTabKey()) {
+                    selectNextTab();
+                    event.stopPropagation();
+                } else if (keycode == getCloseTabKey()) {
+                    Tab tab = tb.getTab(activeTabIndex);
+                    if (tab.isClosable()) {
+                        tab.onClose();
+                    }
+                } else if (keycode == getSelectTabKey()) {
+                    loadTabSheet(focusedTabIndex);
                 }
-            } else if (keycode == getSelectTabKey()) {
-                loadTabSheet(focusedTabIndex);
             }
         }
     }
