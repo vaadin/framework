@@ -13,20 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.tests.push;
+package com.vaadin.tests.components.label;
 
-import com.vaadin.annotations.Push;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.ui.Transport;
+import org.junit.Test;
 
-@Push(transport = Transport.WEBSOCKET)
-public class BasicPushWebsocket extends BasicPush {
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
-    @Override
-    public void init(VaadinRequest request) {
-        super.init(request);
-        // Don't use fallback so we can easier detect if websocket fails
-        getPushConfiguration().setFallbackTransport(Transport.WEBSOCKET);
+public class LabelModesTest extends MultiBrowserTest {
+
+    @Test
+    public void testLabelModes() throws Exception {
+        openTestURL();
+        compareScreen("labelmodes");
     }
 
 }

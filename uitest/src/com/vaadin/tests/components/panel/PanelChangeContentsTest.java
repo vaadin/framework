@@ -13,24 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
-/**
- * 
- */
-package com.vaadin.tests.push;
+package com.vaadin.tests.components.panel;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.tests.components.panel.PanelChangeContents;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
-public class PushReattachedComponent extends MultiBrowserTest {
-
-    @Override
-    protected Class<?> getUIClass() {
-        return PanelChangeContents.class;
-    }
+public class PanelChangeContentsTest extends MultiBrowserTest {
 
     @Test
     public void testReattachComponentUsingPush() {

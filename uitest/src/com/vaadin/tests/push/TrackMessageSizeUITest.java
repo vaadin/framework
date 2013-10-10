@@ -15,18 +15,16 @@
  */
 package com.vaadin.tests.push;
 
-import com.vaadin.annotations.Push;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.ui.Transport;
+import org.junit.Assert;
+import org.junit.Test;
 
-@Push(transport = Transport.WEBSOCKET)
-public class BasicPushWebsocket extends BasicPush {
+import com.vaadin.tests.tb3.MultiBrowserTest;
 
-    @Override
-    public void init(VaadinRequest request) {
-        super.init(request);
-        // Don't use fallback so we can easier detect if websocket fails
-        getPushConfiguration().setFallbackTransport(Transport.WEBSOCKET);
+public class TrackMessageSizeUITest extends MultiBrowserTest {
+    @Test
+    public void runTests() {
+        openTestURL();
+        Assert.assertEquals("1. All tests run",
+                vaadinElementById("Log_row_0").getText());
     }
-
 }

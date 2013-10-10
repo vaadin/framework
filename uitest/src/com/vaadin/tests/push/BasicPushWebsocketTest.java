@@ -15,18 +15,15 @@
  */
 package com.vaadin.tests.push;
 
-import com.vaadin.annotations.Push;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.ui.Transport;
+import java.util.Collection;
 
-@Push(transport = Transport.WEBSOCKET)
-public class BasicPushWebsocket extends BasicPush {
+import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.tests.tb3.WebsocketTest;
+
+public class BasicPushWebsocketTest extends BasicPushTest {
     @Override
-    public void init(VaadinRequest request) {
-        super.init(request);
-        // Don't use fallback so we can easier detect if websocket fails
-        getPushConfiguration().setFallbackTransport(Transport.WEBSOCKET);
+    public Collection<DesiredCapabilities> getBrowsersToTest() {
+        return WebsocketTest.getWebsocketBrowsers();
     }
-
 }

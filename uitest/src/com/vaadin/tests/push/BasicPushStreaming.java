@@ -28,7 +28,4 @@ public class BasicPushStreaming extends BasicPush {
         getPushConfiguration().setFallbackTransport(Transport.STREAMING);
 
     }
-
-    public static class BasicPushStreamingTest extends BasicPushTest {
-    }
 }

@@ -15,15 +15,8 @@
  */
 package com.vaadin.tests.components.slider;
 
-import java.io.IOException;
-
-import org.junit.Test;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.tests.components.AbstractTestUI;
-import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -31,18 +24,6 @@ import com.vaadin.ui.Slider;
 import com.vaadin.ui.VerticalLayout;
 
 public class SliderDisable extends AbstractTestUI {
-
-    public static class SliderDisableTest extends MultiBrowserTest {
-        @Test
-        public void disableSlider() throws IOException {
-            openTestURL();
-            WebElement element = vaadinElement("/VVerticalLayout[0]/Slot[0]/VSlider[0]/domChild[2]/domChild[0]");
-            new Actions(driver).dragAndDropBy(element, 112, 0).perform();
-            compareScreen("enabled");
-            vaadinElementById("disableButton").click();
-            compareScreen("disabled");
-        }
-    }
 
     @Override
     protected void setup(VaadinRequest request) {

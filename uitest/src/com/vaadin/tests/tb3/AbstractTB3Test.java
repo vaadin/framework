@@ -19,6 +19,7 @@ package com.vaadin.tests.tb3;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.Before;
@@ -35,8 +36,10 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.vaadin.server.LegacyApplication;
+import com.vaadin.server.UIProvider;
 import com.vaadin.testbench.TestBench;
 import com.vaadin.testbench.TestBenchTestCase;
+import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.UI;
 
 /**
@@ -298,6 +301,110 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     }
 
     /**
+     * For tests extending {@link AbstractTestUIWithLog}, returns the element
+     * for the Nth log row
+     * 
+     * @param rowNr
+     *            The log row to retrieve
+     * @return the Nth log row
+     */
+    protected WebElement getLogRowElement(int rowNr) {
+        return vaadinElementById("Log_row_" + rowNr);
+    }
+
+    /**
+     * For tests extending {@link AbstractTestUIWithLog}, returns the text in
+     * the Nth log row
+     * 
+     * @param rowNr
+     *            The log row to retrieve text for
+     * @return the text in the log row
+     */
+    protected String getLogRow(int rowNr) {
+        return getLogRowElement(rowNr).getText();
+    }
+
+    /**
+     * Asserts that {@literal a} is &gt;= {@literal b}
+     * 
+     * @param message
+     *            The message to include in the {@link AssertionError}
+     * @param a
+     * @param b
+     * @throws AssertionError
+     *             If comparison fails
+     */
+    public static final <T> void assertGreaterOrEqual(String message,
+            Comparable<T> a, T b) throws AssertionError {
+        if (a.compareTo(b) >= 0) {
+            return;
+        }
+
+        throw new AssertionError(decorate(message, a, b));
+    }
+
+    /**
+     * Asserts that {@literal a} is &gt; {@literal b}
+     * 
+     * @param message
+     *            The message to include in the {@link AssertionError}
+     * @param a
+     * @param b
+     * @throws AssertionError
+     *             If comparison fails
+     */
+    public static final <T> void assertGreater(String message, Comparable<T> a,
+            T b) throws AssertionError {
+        if (a.compareTo(b) > 0) {
+            return;
+        }
+        throw new AssertionError(decorate(message, a, b));
+    }
+
+    /**
+     * Asserts that {@literal a} is &lt;= {@literal b}
+     * 
+     * @param message
+     *            The message to include in the {@link AssertionError}
+     * @param a
+     * @param b
+     * @throws AssertionError
+     *             If comparison fails
+     */
+    public static final <T> void assertLessThanOrEqual(String message,
+            Comparable<T> a, T b) throws AssertionError {
+        if (a.compareTo(b) <= 0) {
+            return;
+        }
+
+        throw new AssertionError(decorate(message, a, b));
+    }
+
+    /**
+     * Asserts that {@literal a} is &lt; {@literal b}
+     * 
+     * @param message
+     *            The message to include in the {@link AssertionError}
+     * @param a
+     * @param b
+     * @throws AssertionError
+     *             If comparison fails
+     */
+    public static final <T> void assertLessThan(String message,
+            Comparable<T> a, T b) throws AssertionError {
+        if (a.compareTo(b) < 0) {
+            return;
+        }
+        throw new AssertionError(decorate(message, a, b));
+    }
+
+    private static <T> String decorate(String message, Comparable<T> a, T b) {
+        message = message.replace("{0}", a.toString());
+        message = message.replace("{1}", b.toString());
+        return message;
+    }
+
+    /**
      * Returns the path that should be used for the test. The path contains the
      * full path (appended to hostname+port) and must start with a slash.
      * 
@@ -319,8 +426,9 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     }
 
     /**
-     * Returns the UI class the current test is connected to. Uses the enclosing
-     * class if the test class is a static inner class to a UI class.
+     * Returns the UI class the current test is connected to (or in special
+     * cases UIProvider or LegacyApplication). Uses the enclosing class if the
+     * test class is a static inner class to a UI class.
      * 
      * Test which are not enclosed by a UI class must implement this method and
      * return the UI class they want to test.
@@ -331,11 +439,43 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * @return the UI class the current test is connected to
      */
     protected Class<?> getUIClass() {
+        try {
+            // Convention: SomeUITest uses the SomeUI UI class
+            String uiClassName = getClass().getName().replaceFirst("Test$", "");
+            Class<?> cls = Class.forName(uiClassName);
+            if (isSupportedRunnerClass(cls)) {
+                return cls;
+            }
+        } catch (Exception e) {
+        }
         Class<?> enclosingClass = getClass().getEnclosingClass();
         if (enclosingClass != null) {
-            return enclosingClass;
+            if (UI.class.isAssignableFrom(enclosingClass)) {
+                Logger.getLogger(getClass().getName())
+                        .severe("Test is an static inner class to the UI. This will no longer be supported in the future. The test should be named UIClassTest and reside in the same package as the UI");
+                return enclosingClass;
+            }
         }
-        return null;
+        throw new RuntimeException(
+                "Could not determine UI class. Ensure the test is named UIClassTest and is in the same package as the UIClass");
+    }
+
+    /**
+     * @return true if the given class is supported by ApplicationServletRunner
+     */
+    @SuppressWarnings("deprecation")
+    private boolean isSupportedRunnerClass(Class<?> cls) {
+        if (UI.class.isAssignableFrom(cls)) {
+            return true;
+        }
+        if (UIProvider.class.isAssignableFrom(cls)) {
+            return true;
+        }
+        if (LegacyApplication.class.isAssignableFrom(cls)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

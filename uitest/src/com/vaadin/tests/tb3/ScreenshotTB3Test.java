@@ -61,10 +61,6 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
             testMethod = testMethod.replaceAll("\\[.*\\]", "");
 
             String className = testClass.getSimpleName();
-            if (testClass.getEnclosingClass() != null) {
-                className = testClass.getEnclosingClass().getSimpleName();
-            }
-
             screenshotBaseName = className + "-" + testMethod;
         }
 
