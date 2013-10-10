@@ -1113,14 +1113,16 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     private ScheduledCommand lazyScroller = new ScheduledCommand() {
         @Override
         public void execute() {
-            if (firstvisibleOnLastPage > -1) {
-                scrollBodyPanel
-                        .setScrollPosition(measureRowHeightOffset(firstvisibleOnLastPage));
-            } else {
-                scrollBodyPanel
-                        .setScrollPosition(measureRowHeightOffset(firstvisible));
+            if (firstvisible > 0) {
+                firstRowInViewPort = firstvisible;
+                if (firstvisibleOnLastPage > -1) {
+                    scrollBodyPanel
+                            .setScrollPosition(measureRowHeightOffset(firstvisibleOnLastPage));
+                } else {
+                    scrollBodyPanel
+                            .setScrollPosition(measureRowHeightOffset(firstvisible));
+                }
             }
-            firstRowInViewPort = firstvisible;
         }
     };
 
@@ -1131,17 +1133,15 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         firstvisibleOnLastPage = uidl.hasVariable("firstvisibleonlastpage") ? uidl
                 .getIntVariable("firstvisibleonlastpage") : -1;
         if (firstvisible != lastRequestedFirstvisible && scrollBody != null) {
-            // received 'surprising' firstvisible from server: scroll there
-            firstRowInViewPort = firstvisible;
+
             // Update lastRequestedFirstvisible right away here
             // (don't rely on update in the timer which could be cancelled).
             lastRequestedFirstvisible = firstRowInViewPort;
 
-            /*
-             * Schedule the scrolling to be executed last so no updates to the
-             * rows affect scrolling measurements.
-             */
-            Scheduler.get().scheduleFinally(lazyScroller);
+            // Only scroll if the first visible changes from the server side.
+            // Else we might unintentionally scroll even when the scroll
+            // position has not changed.
+            Scheduler.get().scheduleDeferred(lazyScroller);
         }
     }
 
@@ -2160,7 +2160,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         isNewBody = false;
 
-        Scheduler.get().scheduleFinally(lazyScroller);
+        if (firstvisible > 0) {
+            Scheduler.get().scheduleDeferred(lazyScroller);
+        }
 
         if (enabled) {
             // Do we need cache rows

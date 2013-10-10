@@ -315,6 +315,11 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                     ComponentConnector paintable = (ComponentConnector) uidl
                             .getPaintableAttribute("focused", getConnection());
 
+                    if (paintable == null) {
+                        // Do not try to focus invisible components which not present in UIDL
+                        return;
+                    }
+
                     final Widget toBeFocused = paintable.getWidget();
                     /*
                      * Two types of Widgets can be focused, either implementing

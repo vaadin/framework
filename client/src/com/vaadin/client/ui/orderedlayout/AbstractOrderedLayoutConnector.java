@@ -19,6 +19,7 @@ import java.util.List;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
@@ -611,13 +612,14 @@ public abstract class AbstractOrderedLayoutConnector extends
         LayoutManager layoutManager = getLayoutManager();
 
         for (ComponentConnector child : getChildComponents()) {
-            Slot slot = getWidget().getSlot(child.getWidget());
+            Widget childWidget = child.getWidget();
+            Slot slot = getWidget().getSlot(childWidget);
             Element captionElement = slot.getCaptionElement();
-            CaptionPosition pos = slot.getCaptionPosition();
+            CaptionPosition captionPosition = slot.getCaptionPosition();
 
-            Element childElement = child.getWidget().getElement();
-            int h = layoutManager.getOuterHeight(childElement);
-            if (h == -1) {
+            int pixelHeight = layoutManager.getOuterHeight(childWidget
+                    .getElement());
+            if (pixelHeight == -1) {
                 // Height has not yet been measured -> postpone actions that
                 // depend on the max height
                 return -1;
@@ -625,14 +627,10 @@ public abstract class AbstractOrderedLayoutConnector extends
 
             boolean hasRelativeHeight = slot.hasRelativeHeight();
 
+            boolean captionSizeShouldBeAddedtoComponentHeight = captionPosition == CaptionPosition.TOP
+                    || captionPosition == CaptionPosition.BOTTOM;
             boolean includeCaptionHeight = captionElement != null
-                    && (pos == CaptionPosition.TOP || pos == CaptionPosition.BOTTOM);
-            if (!hasRelativeHeight && !includeCaptionHeight
-                    && captionElement != null) {
-                String sHeight = childElement.getStyle().getHeight();
-                includeCaptionHeight = (sHeight == null || !sHeight
-                        .endsWith("%"));
-            }
+                    && captionSizeShouldBeAddedtoComponentHeight;
 
             if (includeCaptionHeight) {
                 int captionHeight = layoutManager
@@ -643,16 +641,16 @@ public abstract class AbstractOrderedLayoutConnector extends
                     // depend on the max height
                     return -1;
                 }
-                h += captionHeight;
+                pixelHeight += captionHeight;
             }
 
             if (!hasRelativeHeight) {
-                if (h > highestNonRelative) {
-                    highestNonRelative = h;
+                if (pixelHeight > highestNonRelative) {
+                    highestNonRelative = pixelHeight;
                 }
             } else {
-                if (h > highestRelative) {
-                    highestRelative = h;
+                if (pixelHeight > highestRelative) {
+                    highestRelative = pixelHeight;
                 }
             }
         }

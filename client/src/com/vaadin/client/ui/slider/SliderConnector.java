@@ -52,6 +52,7 @@ public class SliderConnector extends AbstractFieldConnector implements
 
     @Override
     public void onValueChange(ValueChangeEvent<Double> event) {
+        getState().value = event.getValue();
         rpc.valueChanged(event.getValue());
     }
 
