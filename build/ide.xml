@@ -133,21 +133,12 @@
         </java>
     </target>
     <target name="vaadinPush.js">
-        <property name="vaadinPush.js.output" location="WebContent/VAADIN/vaadinPush.js" />
-        <property name="vaadinPush.debug.js.output" location="WebContent/VAADIN/vaadinPush.debug.js" />
-
-        <loadfile srcfile="WebContent/VAADIN/jquery-1.7.2.js" property="jquery.js.contents" />
-        <loadfile srcfile="WebContent/VAADIN/jquery.atmosphere.js" property="jquery.atmosphere.js.contents" />
-        <loadfile srcfile="WebContent/VAADIN/vaadinPush.js.tpl" property="vaadinPush.js.contents">
-            <filterchain>
-                <replacetokens begintoken="@" endtoken="@">
-                    <token key="jquery.js" value="${jquery.js.contents}" />
-                    <token key="jquery.atmosphere.js" value="${jquery.atmosphere.js.contents}" />
-                </replacetokens>
-            </filterchain>
-        </loadfile>
-        <echo file="${vaadinPush.js.output}">${vaadinPush.js.contents}</echo>
-        <!-- This vaadinPush.js is not obfuscated so the debug version is the same-->
-        <copy file="${vaadinPush.js.output}" tofile="${vaadinPush.debug.js.output}"/>
+        <ant antfile="${basedir}/push/build.xml" target="vaadinPush.js" dir="${basedir}/push" />
+        <property name="js.output.dir" location="WebContent" />
+        <property name="push.js.dir" location="${basedir}/push/result/js" />
+        <copy todir="${js.output.dir}">
+            <fileset dir="${push.js.dir}" includes="VAADIN/vaadinPush*">
+            </fileset>
+        </copy>
     </target>
 </project>
