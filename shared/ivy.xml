@@ -21,7 +21,7 @@
     </publications>
     <dependencies>
         <dependency org="com.vaadin" name="vaadin-shared-deps"
-            rev="1.0.2" conf="build,ide,test->default" />
+            rev="1.0.3" conf="build,ide,test->default" />
     </dependencies>
 
 </ivy-module>
