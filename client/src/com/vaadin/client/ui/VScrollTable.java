@@ -178,6 +178,8 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     private int firstRowInViewPort = 0;
     private int pageLength = 15;
     private int lastRequestedFirstvisible = 0; // to detect "serverside scroll"
+    private int firstvisibleOnLastPage = -1; // To detect if the first visible
+                                             // is on the last page
 
     /** For internal use only. May be removed or replaced in the future. */
     public boolean showRowHeaders = false;
@@ -1072,6 +1074,17 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     }
                     if (selected != row.isSelected()) {
                         row.toggleSelection();
+
+                        if (selected) {
+                            if (focusedRow == null
+                                    || !selectedRowKeys.contains(focusedRow
+                                            .getKey())) {
+                                // The focus is no longer on a selected row,
+                                // move focus to first selected row
+                                setRowFocus(row);
+                            }
+                        }
+
                         if (!isSingleSelectMode() && !selected) {
                             // Update selection range in case a row is
                             // unselected from the middle of a range - #8076
@@ -1113,8 +1126,16 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     private ScheduledCommand lazyScroller = new ScheduledCommand() {
         @Override
         public void execute() {
-            int offsetTop = measureRowHeightOffset(firstvisible);
-            scrollBodyPanel.setScrollPosition(offsetTop);
+            if (firstvisible > 0) {
+                firstRowInViewPort = firstvisible;
+                if (firstvisibleOnLastPage > -1) {
+                    scrollBodyPanel
+                            .setScrollPosition(measureRowHeightOffset(firstvisibleOnLastPage));
+                } else {
+                    scrollBodyPanel
+                            .setScrollPosition(measureRowHeightOffset(firstvisible));
+                }
+            }
         }
     };
 
@@ -1122,18 +1143,18 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
     public void updateFirstVisibleAndScrollIfNeeded(UIDL uidl) {
         firstvisible = uidl.hasVariable("firstvisible") ? uidl
                 .getIntVariable("firstvisible") : 0;
+        firstvisibleOnLastPage = uidl.hasVariable("firstvisibleonlastpage") ? uidl
+                .getIntVariable("firstvisibleonlastpage") : -1;
         if (firstvisible != lastRequestedFirstvisible && scrollBody != null) {
-            // received 'surprising' firstvisible from server: scroll there
-            firstRowInViewPort = firstvisible;
+
             // Update lastRequestedFirstvisible right away here
             // (don't rely on update in the timer which could be cancelled).
             lastRequestedFirstvisible = firstRowInViewPort;
 
-            /*
-             * Schedule the scrolling to be executed last so no updates to the
-             * rows affect scrolling measurements.
-             */
-            Scheduler.get().scheduleFinally(lazyScroller);
+            // Only scroll if the first visible changes from the server side.
+            // Else we might unintentionally scroll even when the scroll
+            // position has not changed.
+            Scheduler.get().scheduleDeferred(lazyScroller);
         }
     }
 
@@ -2153,16 +2174,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         isNewBody = false;
 
         if (firstvisible > 0) {
-            // Deferred due to some Firefox oddities
-            Scheduler.get().scheduleDeferred(new Command() {
-
-                @Override
-                public void execute() {
-                    scrollBodyPanel
-                            .setScrollPosition(measureRowHeightOffset(firstvisible));
-                    firstRowInViewPort = firstvisible;
-                }
-            });
+            Scheduler.get().scheduleDeferred(lazyScroller);
         }
 
         if (enabled) {
@@ -6125,7 +6137,13 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                                 .next();
                         setRowFocus(endRow);
                     }
+                } else if (!startRow.isSelected()) {
+                    // The start row is no longer selected (probably removed)
+                    // and so we select from above
+                    startRow = (VScrollTableRow) scrollBody.iterator().next();
+                    setRowFocus(endRow);
                 }
+
                 // Deselect previous items if so desired
                 if (deselectPrevious) {
                     deselectAll();
@@ -6910,6 +6928,11 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         // fix footers horizontal scrolling
         tFoot.setHorizontalScrollPosition(scrollLeft);
+
+        if (totalRows == 0) {
+            // No rows, no need to fetch new rows
+            return;
+        }
 
         firstRowInViewPort = calcFirstRowInViewPort();
         if (firstRowInViewPort > totalRows - pageLength) {

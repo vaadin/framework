@@ -56,8 +56,7 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
 
     private ServerRpcHandler rpcHandler = new ServerRpcHandler();
 
-    public UidlRequestHandler() {
-    }
+    private UidlWriter uidlWriter = new UidlWriter();
 
     @Override
     public boolean synchronizedHandleRequest(VaadinSession session,
@@ -146,7 +145,7 @@ public class UidlRequestHandler extends SynchronizedRequestHandler implements
             JSONException {
         openJsonMessage(writer, response);
 
-        new UidlWriter().write(ui, writer, repaintAll, false);
+        uidlWriter.write(ui, writer, repaintAll, false);
 
         closeJsonMessage(writer);
     }

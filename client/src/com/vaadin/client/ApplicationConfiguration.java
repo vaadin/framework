@@ -247,6 +247,23 @@ public class ApplicationConfiguration implements EntryPoint {
                 ApplicationConstants.SERVICE_URL_PATH_AS_PARAMETER) == Boolean.TRUE;
     }
 
+    /**
+     * Return the name of the parameter used to to send data to the service url.
+     * This method should only be called if {@link #useServiceUrlPathParam()} is
+     * true.
+     * 
+     * @since 7.1.6
+     * @return The parameter name, by default <code>v-resourcePath</code>
+     */
+    public String getServiceUrlParameterName() {
+        String prefix = getJsoConfiguration(id).getConfigString(
+                ApplicationConstants.SERVICE_URL_PARAMETER_NAMESPACE);
+        if (prefix == null) {
+            prefix = "";
+        }
+        return prefix + ApplicationConstants.V_RESOURCE_PATH;
+    }
+
     public String getRootPanelId() {
         return id;
     }

@@ -422,16 +422,37 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
      * @return A wrapped version of the PorletRequest
      */
     protected VaadinPortletRequest createVaadinRequest(PortletRequest request) {
-        String portalInfo = request.getPortalContext().getPortalInfo()
-                .toLowerCase();
-        if (portalInfo.contains("liferay")) {
+        if (isLiferay(request)) {
             return new VaadinLiferayRequest(request, getService());
-        } else if (portalInfo.contains("gatein")) {
+        } else if (isGateIn(request)) {
             return new VaadinGateinRequest(request, getService());
         } else {
             return new VaadinPortletRequest(request, getService());
         }
+    }
 
+    /**
+     * Returns true if the portlet request is from Liferay.
+     * 
+     * @param request
+     * @return True if Liferay, false otherwise
+     */
+    private static boolean isLiferay(PortletRequest request) {
+        String portalInfo = request.getPortalContext().getPortalInfo()
+                .toLowerCase();
+        return portalInfo.contains("liferay");
+    }
+
+    /**
+     * Returns true if the portlet request if from GateIn
+     * 
+     * @param request
+     * @return True if GateIn, false otherwise
+     */
+    private static boolean isGateIn(PortletRequest request) {
+        String portalInfo = request.getPortalContext().getPortalInfo()
+                .toLowerCase();
+        return portalInfo.contains("gatein");
     }
 
     private VaadinPortletResponse createVaadinResponse(PortletResponse response) {

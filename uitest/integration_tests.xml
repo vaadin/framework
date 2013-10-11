@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project xmlns:antcontrib="antlib:net.sf.antcontrib" name="Vaadin Integration Tests" basedir="." default="integration-test-all">
+<project xmlns:antcontrib="antlib:net.sf.antcontrib" xmlns:ivy="antlib:org.apache.ivy.ant" name="Vaadin Integration Tests" basedir="." default="integration-test-all">
 
     <!-- Import common targets -->
     <import file="../common.xml" />
@@ -32,33 +32,22 @@
     <property name="user" value="${test.integration.user}" />
     <property name="passphrase" value="" />
 
+    <ivy:resolve file="ivy.xml" conf="build, build-provided" />
+    <ivy:cachepath pathid="classpath.tb3.lib" conf="build, build-provided" />
+    <path id="classpath.tb3">
+        <path refid="classpath.tb3.lib" />
+        <path location="result/classes" />
+    </path>
+
     <!-- Upload war to deploy to ssh host -->
     <target name="integration-test-upload-demo">
         <scp file="${demo.war}" todir="${user}@${test.integration.server}:integration-tests/servers/demo.war" keyfile="${sshkey.file}" passphrase="${passphrase}" />
     </target>
 
     <!-- Run basic integration test test -->
-    <target name="integration-test-servlet">
-        <fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-${server-name}-servlet.html" />
-        <pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
-        <subant target="run-tests" failonerror="false" antfile="test.xml">
-            <property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
-            <property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
-            <property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
-            <property name="server.start.succeeded" value="1" />
-            <property name="browsers" value="${test_browsers}" />
-            <property name="testfiles" value="${testfiles}" />
-            <property name="test-output-dir" value="${integration_test.dir}/result/integration-test-output/${server-name}" />
-            <property name="retries" value="0" />
-
-            <fileset dir="." includes="test.xml" />
-        </subant>
-    </target>
-
-    <target name="integration-test-push-servlet">
-        <fileset dir="integration-testscripts" id="html-test-files" includes="integration-test-${server-name}-push-servlet.html" />
-        <pathconvert pathsep=" " property="testfiles" refid="html-test-files" />
-        <subant target="run-tests" failonerror="false" antfile="test.xml">
+    <target name="legacy-integration-test">
+        <fail unless="testfiles" message="You need to specify the files to run using the 'testfiles' property" />
+        <subant target="run-tb2-tests" failonerror="false" antfile="test.xml">
             <property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
             <property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
             <property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
@@ -73,7 +62,7 @@
     </target>
 
     <target name="integration-test-theme">
-        <subant target="run-tests" failonerror="false" antfile="test.xml">
+        <subant target="run-tb2-tests" failonerror="false" antfile="test.xml">
             <property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
             <property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
             <property name="com.vaadin.testbench.deployment.url" value="${deployment.url}" />
@@ -90,7 +79,7 @@
         <fileset dir="integration-testscripts" id="html-test-files" includes="GoogleAppEngine/integration-test-GAE.html" />
         <pathconvert pathsep=" " property="test-GAE" refid="html-test-files" />
 
-        <subant target="run-tests" failonerror="false" antfile="test.xml">
+        <subant target="run-tb2-tests" failonerror="false" antfile="test.xml">
             <property name="com.vaadin.testbench.lib.dir" value="${com.vaadin.testbench.lib.dir}" />
             <property name="com.vaadin.testbench.tester.host" value="${com.vaadin.testbench.tester.host}" />
             <property name="com.vaadin.testbench.deployment.url" value="http://vaadin-integration-test.appspot.com/" />
@@ -107,11 +96,38 @@
         <sshexec host="${test.integration.server}" username="${user}" keyfile="${sshkey.file}" command="ant -f ${ant.hub} deploy-to-GAE" />
     </target>
 
+    <target name="run-tb3-servlet-test">
+        <antcall target="run-tb3-test" inheritall="true">
+            <param name="junit.test.suite" value="com.vaadin.tests.tb3.ServletIntegrationTests" />
+        </antcall>
+    </target>
+    <target name="run-tb3-test">
+        <fail unless="server-name" message="Server name must be defined in server-name" />
+        <fail unless="deployment.url" message="Deplyoment url must be defined in deployment.url" />
+        <fail unless="com.vaadin.testbench.screenshot.directory" message="Screenshot directory must be defined in com.vaadin.testbench.screenshot.directory" />
+
+        <junit printsummary="withOutAndErr" fork="yes">
+            <formatter usefile="false" type="plain" />
+            <classpath refid="classpath.tb3" />
+
+            <jvmarg value="-Dcom.vaadin.testbench.screenshot.directory=${com.vaadin.testbench.screenshot.directory}" />
+            <jvmarg value="-Ddeployment.url=${deployment.url}" />
+            <jvmarg value="-Dserver-name=${server-name}" />
+            <jvmarg value="-Djava.awt.headless=true" />
+            <test name="${junit.test.suite}" />
+        </junit>
+    </target>
 
     <target name="integration-test-tomcat7">
         <antcall target="run-generic-integration-test">
             <param name="startDelay" value="10" />
             <param name="target-server" value="tomcat7" />
+        </antcall>
+    </target>
+    <target name="integration-test-tomcat8">
+        <antcall target="run-generic-integration-test">
+            <param name="startDelay" value="10" />
+            <param name="target-server" value="tomcat8" />
         </antcall>
     </target>
     <target name="integration-test-tomcat5">
@@ -333,7 +349,7 @@
 
     <!-- Upload demo, clean error screenshots and test deployment on all 
         servers -->
-    <target name="integration-test-all">
+    <target name="integration-test-all" unless="tests.integration.skip">
         <property name="passphrase" value="${passphrase}" />
         <fail unless="sshkey.file" message="You must define an ssh.keyfile parameter" />
         <fail unless="com.vaadin.testbench.screenshot.directory" message="You must define a com.vaadin.testbench.screenshot.directory parameter" />
@@ -341,7 +357,8 @@
             <antcontrib:trycatch property="tried">
                 <try>
                     <!-- Still running GAE test from the old server which 
-                        requires its own lock -->
+                    requires its own lock -->
+
                     <echo message="Getting lock" />
                     <antcall target="integration-test-get-lock" />
                     <echo message="Got lock" />
@@ -386,8 +403,8 @@
             <antcall target="integration-test-tomcat5" />
             <antcall target="integration-test-tomcat6" />
             <antcall target="integration-test-tomcat7" />
+            <antcall target="integration-test-tomcat8" />
             <antcall target="integration-test-websphere8" />
-
         </parallel>
 
     </target>
@@ -446,30 +463,23 @@
                     </condition>
                 </fail>
 
-                <copy file="integration-testscripts/common/integration_test.tpl" tofile="integration-testscripts/integration-test-${target-server}-servlet.html" overwrite="true" />
-                <antcall target="integration-test-servlet">
-                    <param name="server-name" value="${target-server}" />
-                    <param name="deployment.url" value="http://${target-host}:${target-port}" />
-                </antcall>
-
-                <!-- Run theme tests in all browsers if there's a property 
-                    with the test files -->
                 <antcontrib:if>
-                    <isset property="testfiles-theme" />
+                    <isset property="testfiles" />
                     <antcontrib:then>
-                        <antcall target="integration-test-theme">
+                        <echo>Starting legacy (TB2) test for ${target-server}</echo>
+                        <antcall target="legacy-integration-test">
                             <param name="server-name" value="${target-server}" />
                             <param name="deployment.url" value="http://${target-host}:${target-port}" />
                         </antcall>
                     </antcontrib:then>
+                    <antcontrib:else>
+                        <echo>Starting TB3 test for ${target-server}</echo>
+                        <antcall target="run-tb3-servlet-test">
+                            <param name="server-name" value="${target-server}" />
+                            <param name="deployment.url" value="http://${target-host}:${target-port}" />
+                        </antcall>
+                    </antcontrib:else>
                 </antcontrib:if>
-
-                <!-- Run integration tests with push -->
-                <copy file="integration-testscripts/common/integration_push_test.tpl" tofile="integration-testscripts/integration-test-${target-server}-push-servlet.html" overwrite="true" />
-                <antcall target="integration-test-push-servlet">
-                    <param name="server-name" value="${target-server}" />
-                    <param name="deployment.url" value="http://${target-host}:${target-port}" />
-                </antcall>
 
                 <!-- Run theme tests in all browsers if there's a property 
                     with the test files -->

@@ -11,7 +11,8 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
-public class IntegrationTestUI extends UI {
+public class ServletIntegrationUI extends UI {
+
     @Override
     protected void init(VaadinRequest request) {
         VerticalLayout layout = new VerticalLayout();

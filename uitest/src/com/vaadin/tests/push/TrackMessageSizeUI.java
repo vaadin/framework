@@ -35,7 +35,7 @@ import com.vaadin.ui.JavaScriptFunction;
 
 // Load vaadinPush.js so that jQueryVaadin is defined 
 @JavaScript("vaadin://vaadinPush.js")
-public class TrackMessageSizeUnitTests extends AbstractTestUIWithLog {
+public class TrackMessageSizeUI extends AbstractTestUIWithLog {
 
     private String testMethod = "function testSequence(expected, data) {\n"
             + "    var request = {trackMessageLength: true, messageDelimiter: '|'};\n"

@@ -2215,11 +2215,13 @@ public class VCalendarPanel extends FocusableFlexTable implements
      *            - the allowed range's start date
      */
     public void setRangeStart(Date rangeStart) {
-        this.rangeStart = rangeStart;
-        if (initialRenderDone) {
-            // Dynamic updates to the range needs to render the calendar to
-            // update the element stylenames
-            renderCalendar();
+        if (this.rangeStart != rangeStart) {
+            this.rangeStart = rangeStart;
+            if (initialRenderDone) {
+                // Dynamic updates to the range needs to render the calendar to
+                // update the element stylenames
+                renderCalendar();
+            }
         }
 
     }
@@ -2232,11 +2234,13 @@ public class VCalendarPanel extends FocusableFlexTable implements
      *            - the allowed range's end date
      */
     public void setRangeEnd(Date rangeEnd) {
-        this.rangeEnd = rangeEnd;
-        if (initialRenderDone) {
-            // Dynamic updates to the range needs to render the calendar to
-            // update the element stylenames
-            renderCalendar();
+        if (this.rangeEnd != rangeEnd) {
+            this.rangeEnd = rangeEnd;
+            if (initialRenderDone) {
+                // Dynamic updates to the range needs to render the calendar to
+                // update the element stylenames
+                renderCalendar();
+            }
         }
     }
 }

@@ -248,10 +248,6 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
         return isShadowEnabled() && shadow.getParentElement() != null;
     }
 
-    private boolean isShimElementAttached() {
-        return shimElement != null && shimElement.hasParentElement();
-    }
-
     private void adjustZIndex() {
         setZIndex(Z_INDEX);
     }
@@ -469,36 +465,51 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
             getOffsetWidth();
         }
 
-        PositionAndSize positionAndSize = new PositionAndSize(getActualLeft(),
-                getActualTop(), getOffsetWidth(), getOffsetHeight());
+        if (isShadowEnabled() || needsShimElement()) {
 
-        // Animate the size
-        positionAndSize.setAnimationFromCenterProgress(progress);
+            PositionAndSize positionAndSize = new PositionAndSize(
+                    getActualLeft(), getActualTop(), getOffsetWidth(),
+                    getOffsetHeight());
 
+            // Animate the size
+            positionAndSize.setAnimationFromCenterProgress(progress);
+
+            Element container = getElement().getParentElement().cast();
+
+            if (isShadowEnabled()) {
+                updateShadowPosition(progress, zIndex, positionAndSize);
+                if (shadow.getParentElement() == null) {
+                    container.insertBefore(shadow, getElement());
+                    sinkShadowEvents();
+                }
+            }
+
+            if (needsShimElement()) {
+                updateShimPosition(positionAndSize);
+                if (shimElement.getParentElement() == null) {
+                    container.insertBefore(shimElement, getElement());
+                }
+            }
+        }
+    }
+
+    private void updateShadowPosition(final double progress, String zIndex,
+            PositionAndSize positionAndSize) {
         // Opera needs some shaking to get parts of the shadow showing
-        // properly
-        // (ticket #2704)
-        if (BrowserInfo.get().isOpera() && isShadowEnabled()) {
+        // properly (ticket #2704)
+        if (BrowserInfo.get().isOpera()) {
             // Clear the height of all middle elements
             DOM.getChild(shadow, 3).getStyle().setProperty("height", "auto");
             DOM.getChild(shadow, 4).getStyle().setProperty("height", "auto");
             DOM.getChild(shadow, 5).getStyle().setProperty("height", "auto");
         }
 
-        // Update correct values
-        if (isShadowEnabled()) {
-            updatePositionAndSize(shadow, positionAndSize);
-            DOM.setStyleAttribute(shadow, "zIndex", zIndex);
-            DOM.setStyleAttribute(shadow, "display", progress < 0.9 ? "none"
-                    : "");
-        }
-        if (needsShimElement()) {
-            updatePositionAndSize((Element) Element.as(getShimElement()),
-                    positionAndSize);
-        }
+        updatePositionAndSize(shadow, positionAndSize);
+        DOM.setStyleAttribute(shadow, "zIndex", zIndex);
+        DOM.setStyleAttribute(shadow, "display", progress < 0.9 ? "none" : "");
 
         // Opera fix, part 2 (ticket #2704)
-        if (BrowserInfo.get().isOpera() && isShadowEnabled()) {
+        if (BrowserInfo.get().isOpera()) {
             // We'll fix the height of all the middle elements
             DOM.getChild(shadow, 3)
                     .getStyle()
@@ -513,17 +524,11 @@ public class VOverlay extends PopupPanel implements CloseHandler<PopupPanel> {
                     .setPropertyPx("height",
                             DOM.getChild(shadow, 5).getOffsetHeight());
         }
+    }
 
-        Element container = getElement().getParentElement().cast();
-        // Attach to dom if not there already
-        if (isShadowEnabled() && !isShadowAttached()) {
-            container.insertBefore(shadow, getElement());
-            sinkShadowEvents();
-        }
-        if (needsShimElement() && !isShimElementAttached()) {
-            container.insertBefore(getShimElement(), getElement());
-        }
-
+    private void updateShimPosition(PositionAndSize positionAndSize) {
+        updatePositionAndSize((Element) Element.as(getShimElement()),
+                positionAndSize);
     }
 
     /**

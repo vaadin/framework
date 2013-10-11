@@ -228,10 +228,28 @@ public class AtmospherePushConnection implements PushConnection {
         return config;
     }
 
-    protected void onOpen(AtmosphereResponse response) {
-        transport = response.getTransport();
+    protected void onReopen(AtmosphereResponse response) {
+        VConsole.log("Push connection re-established using "
+                + response.getTransport());
+        onConnect(response);
+    }
 
-        VConsole.log("Push connection established using " + transport);
+    protected void onOpen(AtmosphereResponse response) {
+        VConsole.log("Push connection established using "
+                + response.getTransport());
+        onConnect(response);
+    }
+
+    /**
+     * Called whenever a server push connection is established (or
+     * re-established).
+     * 
+     * @param response
+     * 
+     * @since 7.2
+     */
+    protected void onConnect(AtmosphereResponse response) {
+        transport = response.getTransport();
 
         switch (state) {
         case CONNECT_PENDING:
@@ -422,6 +440,7 @@ public class AtmospherePushConnection implements PushConnection {
             reconnectInterval: 5000,
             maxReconnectOnClose: 10000000, 
             trackMessageLength: true,
+            enableProtocol: false,
             messageDelimiter: String.fromCharCode(@com.vaadin.shared.communication.PushConstants::MESSAGE_DELIMITER)
         };
     }-*/;
@@ -434,6 +453,9 @@ public class AtmospherePushConnection implements PushConnection {
         config.url = uri;
         config.onOpen = $entry(function(response) {
             self.@com.vaadin.client.communication.AtmospherePushConnection::onOpen(*)(response);
+        });
+        config.onReopen = $entry(function(response) {
+            self.@com.vaadin.client.communication.AtmospherePushConnection::onReopen(*)(response);
         });
         config.onMessage = $entry(function(response) {
             self.@com.vaadin.client.communication.AtmospherePushConnection::onMessage(*)(response);
