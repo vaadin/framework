@@ -16,9 +16,15 @@
 
 package com.vaadin.server;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  * Internal class for keeping track of pending server to client method
@@ -79,5 +85,53 @@ public class ClientMethodInvocation implements Serializable,
             return 0;
         }
         return Long.signum(getSequenceNumber() - o.getSequenceNumber());
+    }
+
+    private void writeObject(ObjectOutputStream stream) throws IOException {
+        // Need to have custom serialization and deserialization because the
+        // constructor allows parameters of any type with Object[]. Thus, having
+        // parameters that are not Serializable will lead to
+        // NotSerializableException when trying to serialize this class.
+        // An example case of this is in #12532 (JavaScriptCallbackHelper ->
+        // JSONArray as parameter and not Serializable), for which this
+        // hac..workaround is implemented.
+
+        // Goes through the parameter types, and apply "custom serialization" to
+        // the ones that are not Serializable by changing them into something
+        // that is Serializable. On deserialization (readObject-method below)
+        // the process should be reversed.
+
+        // Easy way for implementing serialization & deserialization is by
+        // writing/parsing the object's content as string.
+        for (int i = 0; i < parameterTypes.length; i++) {
+            Type type = parameterTypes[i];
+            if (type instanceof Class<?>) {
+                Class<?> clazz = (Class<?>) type;
+                if (JSONArray.class.isAssignableFrom(clazz)) {
+                    parameters[i] = ((JSONArray) parameters[i]).toString();
+                }
+            }
+        }
+        stream.defaultWriteObject();
+    }
+
+    private void readObject(ObjectInputStream stream) throws IOException,
+            ClassNotFoundException {
+        // Reverses the serialization done in writeObject. Basically just
+        // parsing the serialized type back to the non-serializable type.
+        stream.defaultReadObject();
+        for (int i = 0; i < parameterTypes.length; i++) {
+            Type type = parameterTypes[i];
+            if (type instanceof Class<?>) {
+                Class<?> clazz = (Class<?>) type;
+                if (JSONArray.class.isAssignableFrom(clazz)) {
+                    try {
+                        parameters[i] = new JSONArray(((String) parameters[i]));
+                    } catch (JSONException e) {
+                        throw new IOException(e);
+                    }
+                }
+            }
+        }
     }
 }
