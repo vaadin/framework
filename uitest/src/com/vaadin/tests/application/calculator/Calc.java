@@ -25,23 +25,100 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.TextArea;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.Table.ColumnHeaderMode;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 
 @SuppressWarnings("serial")
 public class Calc extends AbstractTestUI {
 
-    private class Log extends TextArea {
+    private class Log extends VerticalLayout {
+
+        private Table table;
+        private Button addCommentButton;
+        private int line = 0;
 
         public Log() {
             super();
+
+            table = new Table();
+            table.setSizeFull();
+
             setWidth("200px");
+            setHeight("100%");
+
+            table.setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
+            table.addContainerProperty("Operation", String.class, "");
+
+            addComponent(table);
+
+            addCommentButton = new Button("Add Comment");
+            addCommentButton.setWidth("100%");
+
+            addCommentButton.addClickListener(new ClickListener() {
+                @Override
+                public void buttonClick(ClickEvent event) {
+
+                    final Window w = new Window("Add comment");
+                    VerticalLayout vl = new VerticalLayout();
+                    vl.setMargin(true);
+
+                    final TextField tf = new TextField();
+                    tf.setSizeFull();
+                    vl.addComponent(tf);
+
+                    HorizontalLayout hl = new HorizontalLayout();
+
+                    Button okButton = new Button("OK");
+                    okButton.setWidth("100%");
+                    okButton.addClickListener(new ClickListener() {
+                        @Override
+                        public void buttonClick(ClickEvent event) {
+                            addRow("[ " + tf.getValue() + " ]");
+                            tf.setValue("");
+                            w.close();
+                            removeWindow(w);
+                        }
+                    });
+
+                    Button cancelButton = new Button("Cancel");
+                    cancelButton.setWidth("100%");
+                    cancelButton.addClickListener(new ClickListener() {
+                        @Override
+                        public void buttonClick(ClickEvent event) {
+                            tf.setValue("");
+                            w.close();
+                            removeWindow(w);
+                        }
+                    });
+
+                    hl.addComponent(cancelButton);
+                    hl.addComponent(okButton);
+                    hl.setSpacing(true);
+                    hl.setWidth("100%");
+
+                    vl.addComponent(hl);
+                    vl.setSpacing(true);
+
+                    w.setContent(vl);
+                    addWindow(w);
+                }
+            });
+
+            addComponent(addCommentButton);
+
+            setExpandRatio(table, 1);
+            setSpacing(true);
         }
 
         public void addRow(String row) {
-            setValue(getValue() + "\n" + row);
+            Integer id = ++line;
+            table.addItem(new Object[] { row }, id);
+            table.setCurrentPageFirstItemIndex(line + 1);
         }
+
     }
 
     // All variables are automatically stored in the session.
@@ -51,7 +128,7 @@ public class Calc extends AbstractTestUI {
     private VerticalLayout topLayout = new VerticalLayout();
 
     // User interface components
-    private final TextField display = new TextField("0.0");
+    private final TextField display = new TextField();
 
     private final Log log = new Log();
 
@@ -137,10 +214,12 @@ public class Calc extends AbstractTestUI {
         topLayout.addComponent(horizontalLayout);
 
         // Create a result label that over all 4 columns in the first row
+        layout.setSpacing(true);
         layout.addComponent(display, 0, 0, 3, 0);
         layout.setComponentAlignment(display, Alignment.MIDDLE_RIGHT);
-        display.setSizeUndefined();
+        display.setSizeFull();
         display.setId("display");
+        display.setValue("0.0");
 
         // The operations for the calculator in the order they appear on the
         // screen (left to right, top to bottom)
@@ -151,7 +230,6 @@ public class Calc extends AbstractTestUI {
 
             // Create a button and use this application for event handling
             Button button = new Button(caption);
-            button.setHeight("30px");
             button.setWidth("40px");
             button.addClickListener(new ClickListener() {
                 @Override
