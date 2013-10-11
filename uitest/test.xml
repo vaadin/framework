@@ -83,7 +83,7 @@
         <fail unless="com.vaadin.testbench.deployment.url" message="The 'com.vaadin.testbench.deployment.url' property must be defined." />
     </target>
 
-    <target name="run-tb2-tests" depends="check-parameters,compile-tests">
+    <target name="run-tb2-tests" depends="check-parameters,compile-tests" unless="tests.tb2.skip">
         <fileset dir="${test-output-dir}" id="tests-fileset">
             <include name="**/**.java" />
         </fileset>
