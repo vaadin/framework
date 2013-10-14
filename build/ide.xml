@@ -130,6 +130,7 @@
             <jvmarg value="-XX:MaxPermSize=256M" />
             <jvmarg value="-Djava.awt.headless=true" />
             <jvmarg value="-Dgwt.usearchives=false" />
+            <jvmarg value="-Dgwt.persistentunitcache=false" />
         </java>
     </target>
     <target name="vaadinPush.js">
