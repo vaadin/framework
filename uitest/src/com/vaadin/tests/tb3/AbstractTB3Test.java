@@ -104,6 +104,10 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      *             If something goes wrong
      */
     protected void setupDriver() throws Exception {
+        if (runLocally()) {
+            setupLocalDriver();
+            return;
+        }
         DesiredCapabilities capabilities = getDesiredCapabilities();
 
         WebDriver dr = TestBench.createDriver(new RemoteWebDriver(new URL(
@@ -125,6 +129,23 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         }
 
     }
+
+    /**
+     * Override and return true to run the test locally. This method is only to
+     * be used for developing tests.
+     * 
+     * @return true to run the test on a local browser, false to use the hub
+     */
+    public boolean runLocally() {
+        return false;
+    }
+
+    /**
+     * Creates a {@link WebDriver} instance used for running the test locally
+     * for debug purposes. Used only when {@link #runLocally()} is overridden to
+     * return true;
+     */
+    protected abstract void setupLocalDriver();
 
     /**
      * Opens the given test (defined by {@link #getTestUrl(boolean, boolean)},
@@ -792,4 +813,5 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         // Do nothing by default
 
     }
+
 }
