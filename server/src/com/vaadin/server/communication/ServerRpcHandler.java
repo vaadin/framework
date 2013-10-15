@@ -182,15 +182,8 @@ public class ServerRpcHandler implements Serializable {
                     }
 
                     // Connector is disabled, log a warning and move to the next
-                    String msg = "Ignoring RPC call for disabled connector "
-                            + connector.getClass().getName();
-                    if (connector instanceof Component) {
-                        String caption = ((Component) connector).getCaption();
-                        if (caption != null) {
-                            msg += ", caption=" + caption;
-                        }
-                    }
-                    getLogger().warning(msg);
+                    getLogger().warning(
+                            getIgnoredDisabledError("RPC call", connector));
                     continue;
                 }
                 // DragAndDropService has null UI
@@ -465,5 +458,27 @@ public class ServerRpcHandler implements Serializable {
 
     private static final Logger getLogger() {
         return Logger.getLogger(ServerRpcHandler.class.getName());
+    }
+
+    /**
+     * Generates an error message when the client is trying to to something
+     * ('what') with a connector which is disabled or invisible.
+     * 
+     * @since 7.1.8
+     * @param connector
+     *            the connector which is disabled (or invisible)
+     * @return an error message
+     */
+    public static String getIgnoredDisabledError(String what,
+            ClientConnector connector) {
+        String msg = "Ignoring " + what + " for disabled connector "
+                + connector.getClass().getName();
+        if (connector instanceof Component) {
+            String caption = ((Component) connector).getCaption();
+            if (caption != null) {
+                msg += ", caption=" + caption;
+            }
+        }
+        return msg;
     }
 }
