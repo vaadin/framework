@@ -77,7 +77,8 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     private boolean push = false;
     {
         // Default browser to run on unless setDesiredCapabilities is called
-        desiredCapabilities = BrowserUtil.firefox(24);
+        desiredCapabilities = BrowserUtil
+                .firefox(MultiBrowserTest.TESTED_FIREFOX_VERSION);
     }
 
     /**
@@ -193,7 +194,8 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * @return The browsers to run the test on
      */
     public Collection<DesiredCapabilities> getBrowsersToTest() {
-        return Collections.singleton(BrowserUtil.firefox(17));
+        return Collections.singleton(BrowserUtil
+                .firefox(MultiBrowserTest.TESTED_FIREFOX_VERSION));
 
     }
 
