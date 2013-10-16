@@ -48,9 +48,6 @@ public class VerifyBrowserVersionTest extends MultiBrowserTest {
         expectedUserAgent
                 .put(BrowserUtil.chrome(MultiBrowserTest.TESTED_CHROME_VERSION),
                         "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.76 Safari/537.36");
-        expectedUserAgent.put(
-                BrowserUtil.opera(MultiBrowserTest.TESTED_OPERA_VERSION),
-                "Opera/9.80 (Windows NT 5.1) Presto/2.12.388 Version/12.15");
 
     }
 
