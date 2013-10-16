@@ -83,7 +83,7 @@
         <fail unless="com.vaadin.testbench.deployment.url" message="The 'com.vaadin.testbench.deployment.url' property must be defined." />
     </target>
 
-    <target name="run-tb2-tests" depends="check-parameters,compile-tests" unless="tests.tb2.skip">
+    <target name="run-tb2-tests" depends="check-parameters,compile-tests">
         <fileset dir="${test-output-dir}" id="tests-fileset">
             <include name="**/**.java" />
         </fileset>
@@ -174,7 +174,7 @@
     <target name="run-and-clean-up" depends="check-parameters,remove-error-screens,run-tb2-tests" />
 
     <!-- Runs all TestBench 2 tests -->
-    <target name="tb2-tests">
+    <target name="tb2-tests" unless="tests.tb2.skip">
         <property name="test-output-dir" location="${test.xml.dir}/result/testbench-junit-classes" />
         <property name="retries" value="2" />
 
