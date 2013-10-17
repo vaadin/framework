@@ -17,7 +17,7 @@
 package com.vaadin.tests.tb3;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -57,19 +57,20 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
         // Re-enable this when it is possible to run on a modern Opera version
         // (15+)
         // allBrowsers.add(BrowserUtil.opera(15));
-
     }
 
     /**
      * @return all supported browsers which are actively tested
      */
     public static List<DesiredCapabilities> getAllBrowsers() {
-        return allBrowsers;
+        return Collections.unmodifiableList(allBrowsers);
     }
 
     @Override
-    public Collection<DesiredCapabilities> getBrowsersToTest() {
-        return allBrowsers;
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // Return a copy so sub classes can do
+        // super.getBrowseresToTest().remove(something)
+        return new ArrayList<DesiredCapabilities>(getAllBrowsers());
     }
 
 }

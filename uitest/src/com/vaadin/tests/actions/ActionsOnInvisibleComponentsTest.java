@@ -1,6 +1,6 @@
 package com.vaadin.tests.actions;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,8 +15,8 @@ public class ActionsOnInvisibleComponentsTest extends MultiBrowserTest {
 
     // This method should be removed once #12785 is fixed
     @Override
-    public Collection<DesiredCapabilities> getBrowsersToTest() {
-        Collection<DesiredCapabilities> browsers = super.getBrowsersToTest();
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        List<DesiredCapabilities> browsers = super.getBrowsersToTest();
         // sendKeys does nothing on these browsers
         browsers.remove(BrowserUtil.firefox(24));
         browsers.remove(BrowserUtil.ie(8));

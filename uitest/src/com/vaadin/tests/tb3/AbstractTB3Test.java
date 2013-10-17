@@ -17,8 +17,8 @@
 package com.vaadin.tests.tb3;
 
 import java.net.URL;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.junit.After;
@@ -214,8 +214,8 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * 
      * @return The browsers to run the test on
      */
-    public Collection<DesiredCapabilities> getBrowsersToTest() {
-        return Collections.singleton(BrowserUtil
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        return Collections.singletonList(BrowserUtil
                 .firefox(MultiBrowserTest.TESTED_FIREFOX_VERSION));
 
     }
