@@ -148,11 +148,9 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     protected abstract void setupLocalDriver();
 
     /**
-     * Opens the given test (defined by {@link #getTestUrl(boolean, boolean)},
-     * optionally with debug window and/or push
-     * 
-     * @param debug
-     * @param push
+     * Opens the given test (defined by {@link #getTestUrl()}, optionally with
+     * debug window and/or push (depending on {@link #isDebug()} and
+     * {@link #isPush()}.
      */
     protected void openTestURL() {
         driver.get(getTestUrl());
