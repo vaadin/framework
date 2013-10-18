@@ -205,14 +205,15 @@ public class AbsFieldValueConversions extends TestCase {
 
     }
 
+    // Now specific to Integer because StringToNumberConverter has been removed
     public static class NumberBean {
-        private Number number;
+        private Integer number;
 
-        public Number getNumber() {
+        public Integer getNumber() {
             return number;
         }
 
-        public void setNumber(Number number) {
+        public void setNumber(Integer number) {
             this.number = number;
         }
 
@@ -239,7 +240,7 @@ public class AbsFieldValueConversions extends TestCase {
         tf.setPropertyDataSource(new MethodProperty<Number>(nb, "number"));
         Converter c2 = tf.getConverter();
         assertTrue(
-                "StringToNumber converter is ok for integer types and should stay even though property is changed",
+                "StringToInteger converter is ok for integer types and should stay even though property is changed",
                 c1 == c2);
         assertEquals(490, tf.getPropertyDataSource().getValue());
         assertEquals("490", tf.getValue());

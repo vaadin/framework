@@ -63,32 +63,32 @@ public class SystemMessages implements Serializable {
     protected String sessionExpiredURL = null;
     protected boolean sessionExpiredNotificationEnabled = true;
     protected String sessionExpiredCaption = "Session Expired";
-    protected String sessionExpiredMessage = "Take note of any unsaved data, and <u>click here</u> to continue.";
+    protected String sessionExpiredMessage = "Take note of any unsaved data, and <u>click here</u> or press ESC key to continue.";
 
     protected String communicationErrorURL = null;
     protected boolean communicationErrorNotificationEnabled = true;
     protected String communicationErrorCaption = "Communication problem";
-    protected String communicationErrorMessage = "Take note of any unsaved data, and <u>click here</u> to continue.";
+    protected String communicationErrorMessage = "Take note of any unsaved data, and <u>click here</u> or press ESC to continue.";
 
     protected String authenticationErrorURL = null;
     protected boolean authenticationErrorNotificationEnabled = true;
     protected String authenticationErrorCaption = "Authentication problem";
-    protected String authenticationErrorMessage = "Take note of any unsaved data, and <u>click here</u> to continue.";
+    protected String authenticationErrorMessage = "Take note of any unsaved data, and <u>click here</u> or press ESC to continue.";
 
     protected String internalErrorURL = null;
     protected boolean internalErrorNotificationEnabled = true;
     protected String internalErrorCaption = "Internal error";
-    protected String internalErrorMessage = "Please notify the administrator.<br/>Take note of any unsaved data, and <u>click here</u> to continue.";
+    protected String internalErrorMessage = "Please notify the administrator.<br/>Take note of any unsaved data, and <u>click here</u> or press ESC to continue.";
 
     protected String outOfSyncURL = null;
     protected boolean outOfSyncNotificationEnabled = true;
     protected String outOfSyncCaption = "Out of sync";
-    protected String outOfSyncMessage = "Something has caused us to be out of sync with the server.<br/>Take note of any unsaved data, and <u>click here</u> to re-sync.";
+    protected String outOfSyncMessage = "Something has caused us to be out of sync with the server.<br/>Take note of any unsaved data, and <u>click here</u> or press ESC to re-sync.";
 
     protected String cookiesDisabledURL = null;
     protected boolean cookiesDisabledNotificationEnabled = true;
     protected String cookiesDisabledCaption = "Cookies disabled";
-    protected String cookiesDisabledMessage = "This application requires cookies to function.<br/>Please enable cookies in your browser and <u>click here</u> to try again.";
+    protected String cookiesDisabledMessage = "This application requires cookies to function.<br/>Please enable cookies in your browser and <u>click here</u> or press ESC to try again.";
 
     /**
      * Use {@link CustomizedSystemMessages} to customize

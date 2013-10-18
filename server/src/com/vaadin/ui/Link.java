@@ -16,13 +16,10 @@
 
 package com.vaadin.ui;
 
-import java.util.Map;
-
-import com.vaadin.server.PaintException;
-import com.vaadin.server.PaintTarget;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.link.LinkConstants;
+import com.vaadin.shared.ui.link.LinkState;
 
 /**
  * Link is used to create external or internal URL links.
@@ -31,7 +28,7 @@ import com.vaadin.shared.ui.link.LinkConstants;
  * @since 3.0
  */
 @SuppressWarnings("serial")
-public class Link extends AbstractComponent implements LegacyComponent {
+public class Link extends AbstractComponent {
 
     /**
      * @deprecated As of 7.0, use {@link BorderStyle#NONE} instead
@@ -50,14 +47,6 @@ public class Link extends AbstractComponent implements LegacyComponent {
      */
     @Deprecated
     public static final BorderStyle TARGET_BORDER_DEFAULT = BorderStyle.DEFAULT;
-
-    private String targetName;
-
-    private BorderStyle targetBorder = BorderStyle.DEFAULT;
-
-    private int targetWidth = -1;
-
-    private int targetHeight = -1;
 
     /**
      * Creates a new link.
@@ -105,43 +94,14 @@ public class Link extends AbstractComponent implements LegacyComponent {
         setTargetBorder(border);
     }
 
-    /**
-     * Paints the content of this component.
-     * 
-     * @param target
-     *            the Paint Event.
-     * @throws PaintException
-     *             if the paint operation failed.
-     */
     @Override
-    public void paintContent(PaintTarget target) throws PaintException {
-        if (getResource() == null) {
-            return;
-        }
+    protected LinkState getState() {
+        return (LinkState) super.getState();
+    }
 
-        // Target window name
-        final String name = getTargetName();
-        if (name != null && name.length() > 0) {
-            target.addAttribute("name", name);
-        }
-
-        // Target window size
-        if (getTargetWidth() >= 0) {
-            target.addAttribute("targetWidth", getTargetWidth());
-        }
-        if (getTargetHeight() >= 0) {
-            target.addAttribute("targetHeight", getTargetHeight());
-        }
-
-        // Target window border
-        switch (getTargetBorder()) {
-        case MINIMAL:
-            target.addAttribute("border", "minimal");
-            break;
-        case NONE:
-            target.addAttribute("border", "none");
-            break;
-        }
+    @Override
+    protected LinkState getState(boolean markAsDirty) {
+        return (LinkState) super.getState(markAsDirty);
     }
 
     /**
@@ -150,7 +110,7 @@ public class Link extends AbstractComponent implements LegacyComponent {
      * @return the target window border.
      */
     public BorderStyle getTargetBorder() {
-        return targetBorder;
+        return getState(false).targetBorder;
     }
 
     /**
@@ -159,7 +119,8 @@ public class Link extends AbstractComponent implements LegacyComponent {
      * @return the target window height.
      */
     public int getTargetHeight() {
-        return targetHeight < 0 ? -1 : targetHeight;
+        return getState(false).targetHeight < 0 ? -1
+                : getState(false).targetHeight;
     }
 
     /**
@@ -169,7 +130,7 @@ public class Link extends AbstractComponent implements LegacyComponent {
      * @return the target window name.
      */
     public String getTargetName() {
-        return targetName;
+        return getState(false).target;
     }
 
     /**
@@ -178,7 +139,8 @@ public class Link extends AbstractComponent implements LegacyComponent {
      * @return the target window width.
      */
     public int getTargetWidth() {
-        return targetWidth < 0 ? -1 : targetWidth;
+        return getState(false).targetWidth < 0 ? -1
+                : getState(false).targetWidth;
     }
 
     /**
@@ -188,8 +150,7 @@ public class Link extends AbstractComponent implements LegacyComponent {
      *            the targetBorder to set.
      */
     public void setTargetBorder(BorderStyle targetBorder) {
-        this.targetBorder = targetBorder;
-        markAsDirty();
+        getState().targetBorder = targetBorder;
     }
 
     /**
@@ -199,8 +160,7 @@ public class Link extends AbstractComponent implements LegacyComponent {
      *            the targetHeight to set.
      */
     public void setTargetHeight(int targetHeight) {
-        this.targetHeight = targetHeight;
-        markAsDirty();
+        getState().targetHeight = targetHeight;
     }
 
     /**
@@ -210,8 +170,7 @@ public class Link extends AbstractComponent implements LegacyComponent {
      *            the targetName to set.
      */
     public void setTargetName(String targetName) {
-        this.targetName = targetName;
-        markAsDirty();
+        getState().target = targetName;
     }
 
     /**
@@ -221,8 +180,7 @@ public class Link extends AbstractComponent implements LegacyComponent {
      *            the targetWidth to set.
      */
     public void setTargetWidth(int targetWidth) {
-        this.targetWidth = targetWidth;
-        markAsDirty();
+        getState().targetWidth = targetWidth;
     }
 
     /**
@@ -244,8 +202,4 @@ public class Link extends AbstractComponent implements LegacyComponent {
         setResource(LinkConstants.HREF_RESOURCE, resource);
     }
 
-    @Override
-    public void changeVariables(Object source, Map<String, Object> variables) {
-        // TODO Remove once LegacyComponent is no longer implemented
-    }
 }

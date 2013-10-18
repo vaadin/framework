@@ -1449,10 +1449,15 @@ public class LayoutManager {
 
     /**
      * Informs this LayoutManager that the size of a component might have
-     * changed. If there is no upcoming layout phase, a new layout phase is
-     * scheduled. This method should be used whenever a size might have changed
-     * from outside of Vaadin's normal update phase, e.g. when an icon has been
-     * loaded or when the user resizes some part of the UI using the mouse.
+     * changed. This method should be used whenever the size of an individual
+     * component might have changed from outside of Vaadin's normal update
+     * phase, e.g. when an icon has been loaded or when the user resizes some
+     * part of the UI using the mouse.
+     * <p>
+     * To set an entire component hierarchy to be measured, use
+     * {@link #setNeedsMeasureRecursively(ComponentConnector)} instead.
+     * <p>
+     * If there is no upcoming layout phase, a new layout phase is scheduled.
      * 
      * @param component
      *            the component whose size might have changed.
@@ -1463,6 +1468,33 @@ public class LayoutManager {
         } else {
             needsMeasure.add(component.getConnectorId());
             layoutLater();
+        }
+    }
+
+    /**
+     * Informs this LayoutManager that some sizes in a component hierarchy might
+     * have changed. This method should be used whenever the size of any child
+     * component might have changed from outside of Vaadin's normal update
+     * phase, e.g. when a CSS class name related to sizing has been changed.
+     * <p>
+     * To set a single component to be measured, use
+     * {@link #setNeedsMeasure(ComponentConnector)} instead.
+     * <p>
+     * If there is no upcoming layout phase, a new layout phase is scheduled.
+     * 
+     * @since 7.2
+     * @param component
+     *            the component at the root of the component hierarchy to
+     *            measure
+     */
+    public void setNeedsMeasureRecursively(ComponentConnector component) {
+        setNeedsMeasure(component);
+
+        if (component instanceof HasComponentsConnector) {
+            HasComponentsConnector hasComponents = (HasComponentsConnector) component;
+            for (ComponentConnector child : hasComponents.getChildComponents()) {
+                setNeedsMeasureRecursively(child);
+            }
         }
     }
 

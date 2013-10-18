@@ -268,7 +268,34 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * @return the created {@link Tab}
      */
     public Tab addTab(Component c, String caption, Resource icon) {
-        return addTab(c, caption, icon, components.size());
+        return addTab(c, caption, icon, "", components.size());
+    }
+
+    /**
+     * Adds a new tab into TabSheet.
+     * 
+     * The first tab added to a tab sheet is automatically selected and a tab
+     * selection event is fired.
+     * 
+     * If the component is already present in the tab sheet, changes its caption
+     * and icon and icon alternate text and returns the corresponding (old) tab,
+     * preserving other tab metadata.
+     * 
+     * @param c
+     *            the component to be added onto tab - should not be null.
+     * @param caption
+     *            the caption to be set for the component and used rendered in
+     *            tab bar
+     * @param icon
+     *            the icon to be set for the component and used rendered in tab
+     *            bar
+     * @param iconAltText
+     *            the alternate text for the icon
+     * @return the created {@link Tab}
+     */
+    public Tab addTab(Component c, String caption, Resource icon,
+            String iconAltText) {
+        return addTab(c, caption, icon, iconAltText, components.size());
     }
 
     /**
@@ -294,12 +321,41 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      * @return the created {@link Tab}
      */
     public Tab addTab(Component c, String caption, Resource icon, int position) {
+        return addTab(c, caption, icon, "", position);
+    }
+
+    /**
+     * Adds a new tab into TabSheet.
+     * 
+     * The first tab added to a tab sheet is automatically selected and a tab
+     * selection event is fired.
+     * 
+     * If the component is already present in the tab sheet, changes its caption
+     * and icon and icon alternate text and returns the corresponding (old) tab,
+     * preserving other tab metadata like the position.
+     * 
+     * @param c
+     *            the component to be added onto tab - should not be null.
+     * @param caption
+     *            the caption to be set for the component and used rendered in
+     *            tab bar
+     * @param icon
+     *            the icon to be set for the component and used rendered in tab
+     *            bar
+     * @param iconAltText
+     *            the alternate text for the icon
+     * @param position
+     *            the position at where the the tab should be added.
+     * @return the created {@link Tab}
+     */
+    public Tab addTab(Component c, String caption, Resource icon,
+            String iconAltText, int position) {
         if (c == null) {
             return null;
         } else if (tabs.containsKey(c)) {
             Tab tab = tabs.get(c);
             tab.setCaption(caption);
-            tab.setIcon(icon);
+            tab.setIcon(icon, iconAltText);
             return tab;
         } else {
             components.add(position, c);
@@ -371,13 +427,15 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             final Component c = i.next();
             String caption = null;
             Resource icon = null;
+            String iconAltText = "";
             if (TabSheet.class.isAssignableFrom(source.getClass())) {
                 Tab tab = ((TabSheet) source).getTab(c);
                 caption = tab.getCaption();
                 icon = tab.getIcon();
+                iconAltText = tab.getIconAltText();
             }
             source.removeComponent(c);
-            addTab(c, caption, icon);
+            addTab(c, caption, icon, iconAltText);
 
         }
     }
@@ -429,9 +487,12 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             if (icon != null) {
                 target.addAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ICON,
                         icon);
+                target.addAttribute(
+                        TabsheetBaseConstants.ATTRIBUTE_TAB_ICON_ALT,
+                        tab.getIconAltText());
             }
             final String caption = tab.getCaption();
-            if (caption != null && caption.length() > 0) {
+            if (caption != null && !caption.isEmpty()) {
                 target.addAttribute(
                         TabsheetBaseConstants.ATTRIBUTE_TAB_CAPTION, caption);
             }
@@ -449,8 +510,13 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
             }
 
             final String styleName = tab.getStyleName();
-            if (styleName != null && styleName.length() != 0) {
+            if (styleName != null && !styleName.isEmpty()) {
                 target.addAttribute(TabsheetConstants.TAB_STYLE_NAME, styleName);
+            }
+
+            final String id = tab.getId();
+            if (id != null && !id.isEmpty()) {
+                target.addAttribute("id", id);
             }
 
             target.addAttribute("key", keyMapper.key(component));
@@ -549,6 +615,11 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         // connector
         if (selected != null) {
             selected.markAsDirtyRecursive();
+
+            Tab tab = getTab(c);
+            if (tab != null && tab.getDefaultFocusComponent() != null) {
+                tab.getDefaultFocusComponent().focus();
+            }
         }
     }
 
@@ -889,6 +960,23 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         public void setClosable(boolean closable);
 
         /**
+         * Set the component that should automatically focused when the tab is
+         * selected.
+         * 
+         * @param component
+         *            the component to focus
+         */
+        public void setDefaultFocusComponent(Focusable component);
+
+        /**
+         * Get the component that should be automatically focused when the tab
+         * is selected.
+         * 
+         * @return the focusable component
+         */
+        public Focusable getDefaultFocusComponent();
+
+        /**
          * Returns the enabled status for the tab. A disabled tab is shown as
          * such in the tab bar and cannot be selected.
          * 
@@ -930,6 +1018,27 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
          *            the icon to set
          */
         public void setIcon(Resource icon);
+
+        /**
+         * Sets the icon and alt text for the tab.
+         * 
+         * @param icon
+         *            the icon to set
+         */
+        public void setIcon(Resource icon, String iconAltText);
+
+        /**
+         * Gets the icon alt text for the tab.
+         */
+        public String getIconAltText();
+
+        /**
+         * Sets the icon alt text for the tab.
+         * 
+         * @param iconAltText
+         *            the icon to set
+         */
+        public void setIconAltText(String iconAltText);
 
         /**
          * Gets the description for the tab. The description can be used to
@@ -1015,6 +1124,23 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
          * @see #setStyleName(String)
          */
         public String getStyleName();
+
+        /**
+         * Adds an unique id for component that is used in the client-side for
+         * testing purposes. Keeping identifiers unique is the responsibility of
+         * the programmer.
+         * 
+         * @param id
+         *            An alphanumeric id
+         */
+        public void setId(String id);
+
+        /**
+         * Gets currently set debug identifier
+         * 
+         * @return current id, null if not set
+         */
+        public String getId();
     }
 
     /**
@@ -1030,6 +1156,9 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         private String description = null;
         private ErrorMessage componentError = null;
         private String styleName;
+        private String id;
+        private String iconAltText = "";
+        private Focusable defaultFocus;
 
         public TabSheetTabImpl(String caption, Resource icon) {
             if (caption == null) {
@@ -1061,8 +1190,35 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
 
         @Override
         public void setIcon(Resource icon) {
+            setIcon(icon, "");
+        }
+
+        @Override
+        public void setIcon(Resource icon, String iconAltText) {
             this.icon = icon;
+            this.iconAltText = iconAltText;
             markAsDirty();
+        }
+
+        @Override
+        public String getIconAltText() {
+            return iconAltText;
+        }
+
+        @Override
+        public void setIconAltText(String iconAltText) {
+            this.iconAltText = iconAltText;
+            markAsDirty();
+        }
+
+        @Override
+        public void setDefaultFocusComponent(Focusable defaultFocus) {
+            this.defaultFocus = defaultFocus;
+        }
+
+        @Override
+        public Focusable getDefaultFocusComponent() {
+            return defaultFocus;
         }
 
         @Override
@@ -1149,6 +1305,18 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
         @Override
         public String getStyleName() {
             return styleName;
+        }
+
+        @Override
+        public void setId(String id) {
+            this.id = id;
+            markAsDirty();
+
+        }
+
+        @Override
+        public String getId() {
+            return id;
         }
     }
 
@@ -1309,7 +1477,7 @@ public class TabSheet extends AbstractComponentContainer implements Focusable,
      */
     private static void copyTabMetadata(Tab from, Tab to) {
         to.setCaption(from.getCaption());
-        to.setIcon(from.getIcon());
+        to.setIcon(from.getIcon(), from.getIconAltText());
         to.setDescription(from.getDescription());
         to.setVisible(from.isVisible());
         to.setEnabled(from.isEnabled());

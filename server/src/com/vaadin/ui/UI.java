@@ -77,7 +77,7 @@ import com.vaadin.util.CurrentInstance;
  * When a new UI instance is needed, typically because the user opens a URL in a
  * browser window which points to e.g. {@link VaadinServlet}, all
  * {@link UIProvider}s registered to the current {@link VaadinSession} are
- * queried for the UI class that should be used. The selection is by defaylt
+ * queried for the UI class that should be used. The selection is by default
  * based on the <code>UI</code> init parameter from web.xml.
  * </p>
  * <p>
@@ -220,6 +220,9 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     private TooltipConfiguration tooltipConfiguration = new TooltipConfigurationImpl(
             this);
     private PushConfiguration pushConfiguration = new PushConfigurationImpl(
+            this);
+
+    private NotificationConfiguration notificationConfiguration = new NotificationConfigurationImpl(
             this);
 
     /**
@@ -551,6 +554,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     private LocaleService localeService = new LocaleService(this,
             getState(false).localeServiceState);
 
+    private String embedId;
+
     /**
      * This method is used by Component.Focusable objects to request focus to
      * themselves. Focus renders must be handled at window level (instead of
@@ -598,12 +603,19 @@ public abstract class UI extends AbstractSingleComponentContainer implements
      *            the initialization request
      * @param uiId
      *            the id of the new ui
+     * @param embedId
+     *            the embed id of this UI, or <code>null</code> if no id is
+     *            known
+     * 
+     * @see #getUIId()
+     * @see #getEmbedId()
      */
-    public void doInit(VaadinRequest request, int uiId) {
+    public void doInit(VaadinRequest request, int uiId, String embedId) {
         if (this.uiId != -1) {
             throw new IllegalStateException("UI id has already been defined");
         }
         this.uiId = uiId;
+        this.embedId = embedId;
 
         // Actual theme - used for finding CustomLayout templates
         theme = request.getParameter("theme");
@@ -1334,6 +1346,15 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     }
 
     /**
+     * Retrieves the object used for configuring notifications.
+     * 
+     * @return The instance used for notification configuration
+     */
+    public NotificationConfiguration getNotificationConfiguration() {
+        return notificationConfiguration;
+    }
+
+    /**
      * Retrieves the object used for configuring the loading indicator.
      * 
      * @return The instance used for configuring the loading indicator
@@ -1518,4 +1539,18 @@ public abstract class UI extends AbstractSingleComponentContainer implements
     private static Logger getLogger() {
         return Logger.getLogger(UI.class.getName());
     }
+
+    /**
+     * Gets a string the uniquely distinguishes this UI instance based on where
+     * it is embedded. The embed identifier is based on the
+     * <code>window.name</code> DOM attribute of the browser window where the UI
+     * is displayed and the id of the div element where the UI is embedded.
+     * 
+     * @since 7.2
+     * @return the embed id for this UI, or <code>null</code> if no id known
+     */
+    public String getEmbedId() {
+        return embedId;
+    }
+
 }

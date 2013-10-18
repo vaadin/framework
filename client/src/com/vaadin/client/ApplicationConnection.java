@@ -49,6 +49,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.regexp.shared.MatchResult;
@@ -90,6 +91,7 @@ import com.vaadin.client.ui.ui.UIConnector;
 import com.vaadin.client.ui.window.WindowConnector;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.Version;
 import com.vaadin.shared.communication.LegacyChangeVariablesInvocation;
 import com.vaadin.shared.communication.MethodInvocation;
@@ -135,10 +137,6 @@ public class ApplicationConnection {
     public static final String REQUIRED_CLASSNAME_EXT = "-required";
 
     public static final String ERROR_CLASSNAME_EXT = "-error";
-
-    public static final char VAR_BURST_SEPARATOR = '\u001d';
-
-    public static final char VAR_ESCAPE_CHARACTER = '\u001b';
 
     /**
      * A string that, if found in a non-JSON response to a UIDL request, will
@@ -269,8 +267,6 @@ public class ApplicationConnection {
 
     /** Event bus for communication events */
     private EventBus eventBus = GWT.create(SimpleEventBus.class);
-
-    private int lastResponseId = -1;
 
     /**
      * The communication handler methods are called at certain points during
@@ -490,6 +486,10 @@ public class ApplicationConnection {
 
             // initial UIDL provided in DOM, continue as if returned by request
             handleJSONText(jsonText, -1);
+
+            // Tooltip can't be created earlier because the necessary fields are
+            // not setup to add it in the correct place in the DOM
+            getVTooltip().showAssistive(new TooltipInfo(" "));
         }
     }
 
@@ -671,7 +671,7 @@ public class ApplicationConnection {
     }-*/;
 
     protected void repaintAll() {
-        makeUidlRequest("", getRepaintAllParameters());
+        makeUidlRequest(new JSONArray(), getRepaintAllParameters());
     }
 
     /**
@@ -702,20 +702,25 @@ public class ApplicationConnection {
     /**
      * Makes an UIDL request to the server.
      * 
-     * @param requestData
-     *            Data that is passed to the server.
+     * @param reqInvocations
+     *            Data containing RPC invocations and all related information.
      * @param extraParams
      *            Parameters that are added as GET parameters to the url.
      *            Contains key=value pairs joined by & characters or is empty if
      *            no parameters should be added. Should not start with any
      *            special character.
      */
-    protected void makeUidlRequest(final String requestData,
+    protected void makeUidlRequest(final JSONArray reqInvocations,
             final String extraParams) {
         startRequest();
-        // Security: double cookie submission pattern
-        final String payload = getCsrfToken() + VAR_BURST_SEPARATOR
-                + requestData;
+
+        JSONObject payload = new JSONObject();
+        payload.put(ApplicationConstants.CSRF_TOKEN, new JSONString(
+                getCsrfToken()));
+        payload.put(ApplicationConstants.RPC_INVOCATIONS, reqInvocations);
+        payload.put(ApplicationConstants.SERVER_SYNC_ID, new JSONNumber(
+                lastSeenServerSyncId));
+
         VConsole.log("Making UIDL Request with params: " + payload);
         String uri = translateVaadinUri(ApplicationConstants.APP_PROTOCOL_PREFIX
                 + ApplicationConstants.UIDL_PATH + '/');
@@ -739,7 +744,7 @@ public class ApplicationConnection {
      * @param payload
      *            The contents of the request to send
      */
-    protected void doUidlRequest(final String uri, final String payload) {
+    protected void doUidlRequest(final String uri, final JSONObject payload) {
         RequestCallback requestCallback = new RequestCallback() {
             @Override
             public void onError(Request request, Throwable exception) {
@@ -902,14 +907,14 @@ public class ApplicationConnection {
      * @throws RequestException
      *             if the request could not be sent
      */
-    protected void doAjaxRequest(String uri, String payload,
+    protected void doAjaxRequest(String uri, JSONObject payload,
             RequestCallback requestCallback) throws RequestException {
         RequestBuilder rb = new RequestBuilder(RequestBuilder.POST, uri);
         // TODO enable timeout
         // rb.setTimeoutMillis(timeoutMillis);
         // TODO this should be configurable
-        rb.setHeader("Content-Type", "text/plain;charset=utf-8");
-        rb.setRequestData(payload);
+        rb.setHeader("Content-Type", JsonConstants.JSON_CONTENT_TYPE);
+        rb.setRequestData(payload.toString());
         rb.setCallback(requestCallback);
 
         final Request request = rb.send();
@@ -973,6 +978,29 @@ public class ApplicationConnection {
      * since they cannot be measured before the request is finished.
      */
     private ValueMap serverTimingInfo;
+
+    /**
+     * Holds the last seen response id given by the server.
+     * <p>
+     * The server generates a strictly increasing id for each response to each
+     * request from the client. This ID is then replayed back to the server on
+     * each request. This helps the server in knowing in what state the client
+     * is, and compare it to its own state. In short, it helps with concurrent
+     * changes between the client and server.
+     * <p>
+     * Initial value, i.e. no responses received from the server, is
+     * {@link #UNDEFINED_SYNC_ID} ({@value #UNDEFINED_SYNC_ID}). This happens
+     * between the bootstrap HTML being loaded and the first UI being rendered;
+     */
+    private int lastSeenServerSyncId = UNDEFINED_SYNC_ID;
+
+    /**
+     * The value of an undefined sync id.
+     * <p>
+     * This must be <code>-1</code>, because of the contract in
+     * {@link #getLastResponseId()}
+     */
+    private static final int UNDEFINED_SYNC_ID = -1;
 
     static final int MAX_CSS_WAITS = 100;
 
@@ -1254,7 +1282,13 @@ public class ApplicationConnection {
      * @return and id identifying the response
      */
     public int getLastResponseId() {
-        return lastResponseId;
+        /*
+         * The discrepancy between field name and getter name is simply historic
+         * - API can't be changed, but the field was repurposed in a more
+         * general, yet compatible, use. "Response id" was deemed unsuitable a
+         * name, so it was called "server sync id" instead.
+         */
+        return lastSeenServerSyncId;
     }
 
     protected void handleUIDLMessage(final Date start, final String jsonText,
@@ -1281,6 +1315,17 @@ public class ApplicationConnection {
         VConsole.log("Handling message from server");
         eventBus.fireEvent(new ResponseHandlingStartedEvent(this));
 
+        if (json.containsKey(ApplicationConstants.SERVER_SYNC_ID)) {
+            int syncId = json.getInt(ApplicationConstants.SERVER_SYNC_ID);
+
+            assert (lastSeenServerSyncId == UNDEFINED_SYNC_ID || syncId == lastSeenServerSyncId + 1) : "Newly retrieved server sync id was not exactly one larger than the previous one (new: "
+                    + syncId + ", last seen: " + lastSeenServerSyncId + ")";
+
+            lastSeenServerSyncId = syncId;
+        } else {
+            VConsole.error("Server response didn't contain an id.");
+        }
+
         // Handle redirect
         if (json.containsKey("redirect")) {
             String url = json.getValueMap("redirect").getString("url");
@@ -1288,8 +1333,6 @@ public class ApplicationConnection {
             redirect(url);
             return;
         }
-
-        lastResponseId++;
 
         final MultiStepDuration handleUIDLDuration = new MultiStepDuration();
 
@@ -2464,14 +2507,12 @@ public class ApplicationConnection {
      */
     private void buildAndSendVariableBurst(
             LinkedHashMap<String, MethodInvocation> pendingInvocations) {
-        final StringBuffer req = new StringBuffer();
 
-        while (!pendingInvocations.isEmpty()) {
+        JSONArray reqJson = new JSONArray();
+        if (!pendingInvocations.isEmpty()) {
             if (ApplicationConfiguration.isDebugMode()) {
                 Util.logVariableBurst(this, pendingInvocations.values());
             }
-
-            JSONArray reqJson = new JSONArray();
 
             for (MethodInvocation invocation : pendingInvocations.values()) {
                 JSONArray invocationJson = new JSONArray();
@@ -2511,9 +2552,6 @@ public class ApplicationConnection {
                 reqJson.set(reqJson.size(), invocationJson);
             }
 
-            // escape burst separators (if any)
-            req.append(escapeBurstContents(reqJson.toString()));
-
             pendingInvocations.clear();
             // Keep tag string short
             lastInvocationTag = 0;
@@ -2537,7 +2575,7 @@ public class ApplicationConnection {
 
             getConfiguration().setWidgetsetVersionSent();
         }
-        makeUidlRequest(req.toString(), extraParams);
+        makeUidlRequest(reqJson, extraParams);
     }
 
     private boolean isJavascriptRpc(MethodInvocation invocation) {
@@ -2778,35 +2816,6 @@ public class ApplicationConnection {
     public void updateVariable(String paintableId, String variableName,
             Object[] values, boolean immediate) {
         addVariableToQueue(paintableId, variableName, values, immediate);
-    }
-
-    /**
-     * Encode burst separator characters in a String for transport over the
-     * network. This protects from separator injection attacks.
-     * 
-     * @param value
-     *            to encode
-     * @return encoded value
-     */
-    protected String escapeBurstContents(String value) {
-        final StringBuilder result = new StringBuilder();
-        for (int i = 0; i < value.length(); ++i) {
-            char character = value.charAt(i);
-            switch (character) {
-            case VAR_ESCAPE_CHARACTER:
-                // fall-through - escape character is duplicated
-            case VAR_BURST_SEPARATOR:
-                result.append(VAR_ESCAPE_CHARACTER);
-                // encode as letters for easier reading
-                result.append(((char) (character + 0x30)));
-                break;
-            default:
-                // the char is not a special one - add it to the result as is
-                result.append(character);
-                break;
-            }
-        }
-        return result.toString();
     }
 
     /**

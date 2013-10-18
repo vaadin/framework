@@ -21,19 +21,25 @@ import java.util.Date;
 import java.util.EventObject;
 import java.util.Iterator;
 
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
+import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.Position;
+import com.vaadin.shared.ui.ui.NotificationConfigurationBean;
+import com.vaadin.shared.ui.ui.NotificationConfigurationBean.Role;
 import com.vaadin.shared.ui.ui.UIConstants;
 
 public class VNotification extends VOverlay {
@@ -45,6 +51,12 @@ public class VNotification extends VOverlay {
     public static final Position TOP_RIGHT = Position.TOP_RIGHT;
     public static final Position BOTTOM_LEFT = Position.BOTTOM_LEFT;
     public static final Position BOTTOM_RIGHT = Position.BOTTOM_RIGHT;
+
+    /**
+     * Position that is only accessible for assistive devices, invisible for
+     * visual users.
+     */
+    public static final Position ASSISTIVE = Position.ASSISTIVE;
 
     public static final int DELAY_FOREVER = -1;
     public static final int DELAY_NONE = 0;
@@ -149,13 +161,65 @@ public class VNotification extends VOverlay {
     }
 
     public void show(Widget widget, Position position, String style) {
-        setWidget(widget);
+        NotificationConfigurationBean styleSetup = getUiState(style);
+        setWaiAriaRole(styleSetup);
+
+        FlowPanel panel = new FlowPanel();
+        if (styleSetup.hasAssistivePrefix()) {
+            panel.add(new Label(styleSetup.getAssistivePrefix()));
+            AriaHelper.setVisibleForAssistiveDevicesOnly(panel.getElement(),
+                    true);
+        }
+
+        panel.add(widget);
+
+        if (styleSetup.hasAssistivePostfix()) {
+            panel.add(new Label(styleSetup.getAssistivePostfix()));
+            AriaHelper.setVisibleForAssistiveDevicesOnly(panel.getElement(),
+                    true);
+        }
+        setWidget(panel);
         show(position, style);
     }
 
     public void show(String html, Position position, String style) {
-        setWidget(new HTML(html));
+        NotificationConfigurationBean styleSetup = getUiState(style);
+        String assistiveDeviceOnlyStyle = AriaHelper.ASSISTIVE_DEVICE_ONLY_STYLE;
+
+        setWaiAriaRole(styleSetup);
+
+        String type = "";
+        String usage = "";
+
+        if (styleSetup != null && styleSetup.hasAssistivePrefix()) {
+            type = "<span class='" + assistiveDeviceOnlyStyle + "'>"
+                    + styleSetup.getAssistivePrefix() + "</span>";
+        }
+
+        if (styleSetup != null && styleSetup.hasAssistivePostfix()) {
+            usage = "<span class='" + assistiveDeviceOnlyStyle + "'>"
+                    + styleSetup.getAssistivePostfix() + "</span>";
+        }
+
+        setWidget(new HTML(type + html + usage));
         show(position, style);
+    }
+
+    private NotificationConfigurationBean getUiState(String style) {
+        NotificationConfigurationBean styleSetup = getApplicationConnection()
+                .getUIConnector().getState().notificationConfiguration.setup
+                .get(style);
+        return styleSetup;
+    }
+
+    private void setWaiAriaRole(NotificationConfigurationBean styleSetup) {
+        Roles.getAlertRole().set(getElement());
+
+        if (styleSetup != null && styleSetup.getAssistiveRole() != null) {
+            if (Role.STATUS == styleSetup.getAssistiveRole()) {
+                Roles.getStatusRole().set(getElement());
+            }
+        }
     }
 
     public void show(Position position, String style) {
@@ -256,6 +320,10 @@ public class VNotification extends VOverlay {
             center();
             DOM.setStyleAttribute(el, "top", "");
             DOM.setStyleAttribute(el, "bottom", "0px");
+            break;
+        case ASSISTIVE:
+            DOM.setStyleAttribute(el, "top", "-2000px");
+            DOM.setStyleAttribute(el, "left", "-2000px");
             break;
         default:
         case MIDDLE_CENTER:
@@ -377,7 +445,8 @@ public class VNotification extends VOverlay {
             final String parsedUri = client
                     .translateVaadinUri(notification
                             .getStringAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_ICON));
-            html += "<img src=\"" + Util.escapeAttribute(parsedUri) + "\" />";
+            html += "<img src=\"" + Util.escapeAttribute(parsedUri)
+                    + "\" alt=\"\" />";
         }
         if (notification
                 .hasAttribute(UIConstants.ATTRIBUTE_NOTIFICATION_CAPTION)) {
@@ -417,6 +486,8 @@ public class VNotification extends VOverlay {
 
     public static VNotification createNotification(int delayMsec, Widget owner) {
         final VNotification notification = GWT.create(VNotification.class);
+        notification.setWaiAriaRole(null);
+
         notification.delayMsec = delayMsec;
         if (BrowserInfo.get().isTouchDevice()) {
             new Timer() {

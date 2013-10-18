@@ -23,10 +23,12 @@ import java.util.Map;
 
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.TabIndexState;
+import com.vaadin.shared.ui.ui.NotificationConfigurationBean.Role;
 
 public class UIState extends TabIndexState {
     public TooltipConfigurationState tooltipConfiguration = new TooltipConfigurationState();
     public LoadingIndicatorConfigurationState loadingIndicatorConfiguration = new LoadingIndicatorConfigurationState();
+    public NotificationConfigurationState notificationConfiguration = new NotificationConfigurationState();
     public int pollInterval = -1;
 
     // Informing users of assistive devices, that the content of this container
@@ -46,6 +48,22 @@ public class UIState extends TabIndexState {
         public int quickOpenTimeout = 1000;
         public int closeTimeout = 300;
         public int maxWidth = 500;
+    }
+
+    public static class NotificationConfigurationState implements Serializable {
+        public Map<String, NotificationConfigurationBean> setup = new HashMap<String, NotificationConfigurationBean>();
+        {
+            setup.put("error", new NotificationConfigurationBean("Error: ",
+                    " - close with ESC-key", Role.ALERT));
+            setup.put("warning", new NotificationConfigurationBean("Warning: ",
+                    null, Role.ALERT));
+            setup.put("humanized", new NotificationConfigurationBean("Info: ",
+                    null, Role.ALERT));
+            setup.put("tray", new NotificationConfigurationBean("Status: ",
+                    null, Role.STATUS));
+            setup.put("assistive", new NotificationConfigurationBean("Note: ",
+                    null, Role.STATUS));
+        };
     }
 
     public static class PushConfigurationState implements Serializable {

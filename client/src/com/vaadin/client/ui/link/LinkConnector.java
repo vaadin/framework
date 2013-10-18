@@ -17,38 +17,21 @@
 package com.vaadin.client.ui.link;
 
 import com.google.gwt.user.client.DOM;
-import com.vaadin.client.ApplicationConnection;
-import com.vaadin.client.Paintable;
-import com.vaadin.client.UIDL;
 import com.vaadin.client.communication.StateChangeEvent;
-import com.vaadin.client.communication.StateChangeEvent.StateChangeHandler;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.client.ui.Icon;
 import com.vaadin.client.ui.VLink;
-import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.link.LinkConstants;
 import com.vaadin.shared.ui.link.LinkState;
 import com.vaadin.ui.Link;
 
 @Connect(Link.class)
-public class LinkConnector extends AbstractComponentConnector implements
-        Paintable {
+public class LinkConnector extends AbstractComponentConnector {
 
     @Override
     protected void init() {
         super.init();
-        addStateChangeHandler("resources", new StateChangeHandler() {
-            @Override
-            public void onStateChanged(StateChangeEvent stateChangeEvent) {
-                getWidget().src = getResourceUrl(LinkConstants.HREF_RESOURCE);
-                if (getWidget().src == null) {
-                    getWidget().anchor.removeAttribute("href");
-                } else {
-                    getWidget().anchor.setAttribute("href", getWidget().src);
-                }
-            }
-        });
     }
 
     @Override
@@ -62,35 +45,30 @@ public class LinkConnector extends AbstractComponentConnector implements
     }
 
     @Override
-    public void updateFromUIDL(UIDL uidl, ApplicationConnection client) {
-
-        if (!isRealUpdate(uidl)) {
-            return;
-        }
-
-        getWidget().client = client;
+    public void onStateChanged(StateChangeEvent stateChangeEvent) {
+        super.onStateChanged(stateChangeEvent);
 
         getWidget().enabled = isEnabled();
 
-        if (uidl.hasAttribute("name")) {
-            getWidget().target = uidl.getStringAttribute("name");
+        if (stateChangeEvent.hasPropertyChanged("resources")) {
+            getWidget().src = getResourceUrl(LinkConstants.HREF_RESOURCE);
+            if (getWidget().src == null) {
+                getWidget().anchor.removeAttribute("href");
+            } else {
+                getWidget().anchor.setAttribute("href", getWidget().src);
+            }
+        }
+
+        getWidget().target = getState().target;
+        if (getWidget().target == null) {
+            getWidget().anchor.removeAttribute("target");
+        } else {
             getWidget().anchor.setAttribute("target", getWidget().target);
         }
 
-        if (uidl.hasAttribute("border")) {
-            if ("none".equals(uidl.getStringAttribute("border"))) {
-                getWidget().borderStyle = BorderStyle.NONE;
-            } else {
-                getWidget().borderStyle = BorderStyle.MINIMAL;
-            }
-        } else {
-            getWidget().borderStyle = BorderStyle.DEFAULT;
-        }
-
-        getWidget().targetHeight = uidl.hasAttribute("targetHeight") ? uidl
-                .getIntAttribute("targetHeight") : -1;
-        getWidget().targetWidth = uidl.hasAttribute("targetWidth") ? uidl
-                .getIntAttribute("targetWidth") : -1;
+        getWidget().borderStyle = getState().targetBorder;
+        getWidget().targetWidth = getState().targetWidth;
+        getWidget().targetHeight = getState().targetHeight;
 
         // Set link caption
         getWidget().captionElement.setInnerText(getState().caption);
@@ -111,13 +89,12 @@ public class LinkConnector extends AbstractComponentConnector implements
 
         if (getIcon() != null) {
             if (getWidget().icon == null) {
-                getWidget().icon = new Icon(client);
+                getWidget().icon = new Icon(getConnection());
                 getWidget().anchor.insertBefore(getWidget().icon.getElement(),
                         getWidget().captionElement);
             }
             getWidget().icon.setUri(getIcon());
         }
-
     }
 
     @Override

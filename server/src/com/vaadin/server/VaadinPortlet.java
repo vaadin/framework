@@ -503,6 +503,12 @@ public class VaadinPortlet extends GenericPortlet implements Constants,
         handleRequest(request, response);
     }
 
+    @Override
+    public void destroy() {
+        super.destroy();
+        getService().destroy();
+    }
+
     private static final Logger getLogger() {
         return Logger.getLogger(VaadinPortlet.class.getName());
     }

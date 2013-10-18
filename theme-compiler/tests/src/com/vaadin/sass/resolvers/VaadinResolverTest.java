@@ -40,16 +40,26 @@ import java.lang.reflect.Method;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.vaadin.sass.internal.resolver.VaadinResolver;
+import com.vaadin.sass.internal.resolver.AbstractResolver;
+import com.vaadin.sass.internal.resolver.ClassloaderResolver;
+import com.vaadin.sass.internal.resolver.FilesystemResolver;
 
 public class VaadinResolverTest {
 
     @Test
-    public void testPathNormalization() throws Exception {
+    public void testFilesystemResolverPathNormalization() throws Exception {
+        testPathNormalization(new FilesystemResolver());
+    }
 
-        VaadinResolver resolver = new VaadinResolver();
+    @Test
+    public void testClassloaderResolverPathNormalization() throws Exception {
+        testPathNormalization(new ClassloaderResolver());
+    }
 
-        Method normalizeMethod = VaadinResolver.class.getDeclaredMethod(
+    public void testPathNormalization(AbstractResolver resolver)
+            throws Exception {
+
+        Method normalizeMethod = AbstractResolver.class.getDeclaredMethod(
                 "normalize", String.class);
         normalizeMethod.setAccessible(true);
 

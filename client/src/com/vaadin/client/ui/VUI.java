@@ -18,6 +18,7 @@ package com.vaadin.client.ui;
 
 import java.util.ArrayList;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.HasScrollHandlers;
@@ -43,6 +44,7 @@ import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Profiler;
+import com.vaadin.client.Util;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
@@ -164,6 +166,8 @@ public class VUI extends SimplePanel implements ResizeHandler,
                 }
 
             });
+
+    private Element storedFocus;
 
     public VUI() {
         super();
@@ -497,4 +501,36 @@ public class VUI extends SimplePanel implements ResizeHandler,
         FocusUtil.setTabIndex(this, index);
     }
 
+    /**
+     * Allows to store the currently focused Element.
+     * 
+     * Current use case is to store the focus when a Window is opened. Does
+     * currently handle only a single value. Needs to be extended for #12158
+     * 
+     * @param focusedElement
+     */
+    public void storeFocus() {
+        storedFocus = Util.getFocusedElement();
+    }
+
+    /**
+     * Restores the previously stored focus Element.
+     * 
+     * Current use case is to restore the focus when a Window is closed. Does
+     * currently handle only a single value. Needs to be extended for #12158
+     * 
+     * @return the lastFocusElementBeforeDialogOpened
+     */
+    public void focusStoredElement() {
+        if (storedFocus != null) {
+            storedFocus.focus();
+
+            Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    storedFocus.focus();
+                }
+            });
+        }
+    }
 }

@@ -476,6 +476,8 @@ public class Page implements Serializable {
 
     private final PageState state;
 
+    private String windowName;
+
     public Page(UI uI, PageState state) {
         this.uI = uI;
         this.state = state;
@@ -637,6 +639,7 @@ public class Page implements Serializable {
         String location = request.getParameter("v-loc");
         String clientWidth = request.getParameter("v-cw");
         String clientHeight = request.getParameter("v-ch");
+        windowName = request.getParameter("v-wn");
 
         if (location != null) {
             try {
@@ -659,6 +662,17 @@ public class Page implements Serializable {
 
     public WebBrowser getWebBrowser() {
         return uI.getSession().getBrowser();
+    }
+
+    /**
+     * Gets the window.name value of the browser window of this page.
+     * 
+     * @since 7.2
+     * 
+     * @return the window name, <code>null</code> if the name is not known
+     */
+    public String getWindowName() {
+        return windowName;
     }
 
     /**
@@ -1124,7 +1138,7 @@ public class Page implements Serializable {
      *            the new page title to set
      */
     public void setTitle(String title) {
-        uI.getRpcProxy(PageClientRpc.class).setTitle(title);
+        getState(true).title = title;
     }
 
     /**

@@ -9,7 +9,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.converter.Converter;
-import com.vaadin.data.util.converter.StringToNumberConverter;
+import com.vaadin.data.util.converter.StringToDoubleConverter;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.tests.data.bean.Address;
 import com.vaadin.tests.data.bean.Country;
@@ -276,7 +276,7 @@ public class DoublesInTable extends TestBase {
 
         });
 
-        t.setConverter("rent", new StringToNumberConverter() {
+        t.setConverter("rent", new StringToDoubleConverter() {
             @Override
             protected NumberFormat getFormat(Locale locale) {
                 return NumberFormat.getCurrencyInstance(locale);

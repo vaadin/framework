@@ -120,6 +120,8 @@
 					url += '&theme=' + encodeURIComponent(theme);
 				}
 				
+				url += "&v-appId=" + appId;
+				
 				var extraParams = getConfig('extraParams')
 				if (extraParams !== undefined) {
 					url += extraParams;

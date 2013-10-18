@@ -43,7 +43,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.VaadinServletConfiguration.InitParameterName;
 import com.vaadin.sass.internal.ScssStylesheet;
-import com.vaadin.server.communication.PushRequestHandler;
 import com.vaadin.server.communication.ServletUIInitHandler;
 import com.vaadin.shared.JsonConstants;
 import com.vaadin.ui.UI;
@@ -672,26 +671,53 @@ public class VaadinServlet extends HttpServlet implements Constants {
         // Provide modification timestamp to the browser if it is known.
         if (lastModifiedTime > 0) {
             response.setDateHeader("Last-Modified", lastModifiedTime);
-            /*
-             * The browser is allowed to cache for 1 hour without checking if
-             * the file has changed. This forces browsers to fetch a new version
-             * when the Vaadin version is updated. This will cause more requests
-             * to the servlet than without this but for high volume sites the
-             * static files should never be served through the servlet. The
-             * cache timeout can be configured by setting the resourceCacheTime
-             * parameter in web.xml
-             */
-            int resourceCacheTime = getService().getDeploymentConfiguration()
-                    .getResourceCacheTime();
-            String cacheControl = "max-age="
-                    + String.valueOf(resourceCacheTime);
-            if (filename.contains("nocache")) {
-                cacheControl = "public, max-age=0, must-revalidate";
+
+            String cacheControl = "public, max-age=0, must-revalidate";
+            int resourceCacheTime = getCacheTime(filename);
+            if (resourceCacheTime > 0) {
+                cacheControl = "max-age=" + String.valueOf(resourceCacheTime);
             }
             response.setHeader("Cache-Control", cacheControl);
         }
 
         writeStaticResourceResponse(request, response, resourceUrl);
+    }
+
+    /**
+     * Calculates the cache lifetime for the given filename in seconds. By
+     * default filenames containing ".nocache." return 0, filenames containing
+     * ".cache." return one year, all other return the value defined in the
+     * web.xml using resourceCacheTime (defaults to 1 hour).
+     * 
+     * @param filename
+     * @return cache lifetime for the given filename in seconds
+     */
+    protected int getCacheTime(String filename) {
+        /*
+         * GWT conventions:
+         * 
+         * - files containing .nocache. will not be cached.
+         * 
+         * - files containing .cache. will be cached for one year.
+         * 
+         * https://developers.google.com/web-toolkit/doc/latest/
+         * DevGuideCompilingAndDebugging#perfect_caching
+         */
+        if (filename.contains(".nocache.")) {
+            return 0;
+        }
+        if (filename.contains(".cache.")) {
+            return 60 * 60 * 24 * 365;
+        }
+        /*
+         * For all other files, the browser is allowed to cache for 1 hour
+         * without checking if the file has changed. This forces browsers to
+         * fetch a new version when the Vaadin version is updated. This will
+         * cause more requests to the servlet than without this but for high
+         * volume sites the static files should never be served through the
+         * servlet.
+         */
+        return getService().getDeploymentConfiguration().getResourceCacheTime();
     }
 
     /**
@@ -984,20 +1010,8 @@ public class VaadinServlet extends HttpServlet implements Constants {
     }
 
     protected boolean isStaticResourceRequest(HttpServletRequest request) {
-        String pathInfo = request.getPathInfo();
-        if (pathInfo == null) {
-            return false;
-        }
-
-        if ((request.getContextPath() != null)
-                && (request.getRequestURI().startsWith("/VAADIN/"))) {
-            return true;
-        } else if (request.getRequestURI().startsWith(
-                request.getContextPath() + "/VAADIN/")) {
-            return true;
-        }
-
-        return false;
+        return request.getRequestURI().startsWith(
+                request.getContextPath() + "/VAADIN/");
     }
 
     /**
@@ -1077,15 +1091,15 @@ public class VaadinServlet extends HttpServlet implements Constants {
         return u;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.servlet.GenericServlet#destroy()
+     */
     @Override
     public void destroy() {
         super.destroy();
-
-        for (RequestHandler handler : getService().getRequestHandlers()) {
-            if (handler instanceof PushRequestHandler) {
-                ((PushRequestHandler) handler).destroy();
-            }
-        }
+        getService().destroy();
     }
 
     /**

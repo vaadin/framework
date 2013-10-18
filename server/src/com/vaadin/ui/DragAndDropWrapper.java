@@ -56,7 +56,7 @@ public class DragAndDropWrapper extends CustomComponent implements DropTarget,
                 for (int i = 0; i < fc; i++) {
                     Html5File file = new Html5File(
                             (String) rawVariables.get("fn" + i), // name
-                            (Integer) rawVariables.get("fs" + i), // size
+                            ((Double) rawVariables.get("fs" + i)).longValue(), // size
                             (String) rawVariables.get("ft" + i)); // mime
                     String id = (String) rawVariables.get("fi" + i);
                     files[i] = file;

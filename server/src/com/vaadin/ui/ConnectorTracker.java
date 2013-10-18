@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -80,6 +81,16 @@ public class ConnectorTracker implements Serializable {
     private Map<String, Map<String, StreamVariable>> pidToNameToStreamVariable;
 
     private Map<StreamVariable, String> streamVariableToSeckey;
+
+    private int currentSyncId = 0;
+
+    /**
+     * Map to track on which syncId each connector was removed.
+     * 
+     * @see #getCurrentSyncId()
+     * @see #cleanConcurrentlyRemovedConnectorIds(long)
+     */
+    private TreeMap<Integer, Set<String>> syncIdToUnregisteredConnectorIds = new TreeMap<Integer, Set<String>>();
 
     /**
      * Gets a logger for this class
@@ -169,6 +180,15 @@ public class ConnectorTracker implements Serializable {
                     + connectorId
                     + " is not the one that was registered for that id");
         }
+
+        Set<String> unregisteredConnectorIds = syncIdToUnregisteredConnectorIds
+                .get(currentSyncId);
+        if (unregisteredConnectorIds == null) {
+            unregisteredConnectorIds = new HashSet<String>();
+            syncIdToUnregisteredConnectorIds.put(currentSyncId,
+                    unregisteredConnectorIds);
+        }
+        unregisteredConnectorIds.add(connectorId);
 
         dirtyConnectors.remove(connector);
         if (unregisteredConnectors.add(connector)) {
@@ -570,12 +590,18 @@ public class ConnectorTracker implements Serializable {
     /**
      * Sets the current response write status. Connectors can not be marked as
      * dirty when the response is written.
+     * <p>
+     * This method has a side-effect of incrementing the sync id by one (see
+     * {@link #getCurrentSyncId()}), if {@link #isWritingResponse()} returns
+     * <code>false</code> and <code>writingResponse</code> is set to
+     * <code>true</code>.
      * 
      * @param writingResponse
      *            the new response status.
      * 
      * @see #markDirty(ClientConnector)
      * @see #isWritingResponse()
+     * @see #getCurrentSyncId()
      * 
      * @throws IllegalArgumentException
      *             if the new response status is the same as the previous value.
@@ -586,6 +612,14 @@ public class ConnectorTracker implements Serializable {
         if (this.writingResponse == writingResponse) {
             throw new IllegalArgumentException(
                     "The old value is same as the new value");
+        }
+
+        /*
+         * the right hand side of the && is unnecessary here because of the
+         * if-clause above, but rigorous coding is always rigorous coding.
+         */
+        if (writingResponse && !this.writingResponse) {
+            currentSyncId++;
         }
         this.writingResponse = writingResponse;
     }
@@ -731,5 +765,106 @@ public class ConnectorTracker implements Serializable {
             return null;
         }
         return streamVariableToSeckey.get(variable);
+    }
+
+    /**
+     * Check whether a connector was present on the client when the it was
+     * creating this request, but was removed server-side before the request
+     * arrived.
+     * 
+     * @since 7.2
+     * @param connectorId
+     *            The connector id to check for whether it was removed
+     *            concurrently or not.
+     * @param lastSyncIdSeenByClient
+     *            the most recent sync id the client has seen at the time the
+     *            request was sent
+     * @return <code>true</code> if the connector was removed before the client
+     *         had a chance to react to it.
+     */
+    public boolean connectorWasPresentAsRequestWasSent(String connectorId,
+            long lastSyncIdSeenByClient) {
+
+        assert getConnector(connectorId) == null : "Connector " + connectorId
+                + " is still attached";
+
+        boolean clientRequestIsTooOld = lastSyncIdSeenByClient < currentSyncId;
+        if (clientRequestIsTooOld) {
+            /*
+             * The headMap call is present here because we're only interested in
+             * connectors removed "in the past" (i.e. the server has removed
+             * them before the client ever knew about that), since those are the
+             * ones that we choose to handle as a special case.
+             */
+            /*-
+             *   Server                          Client
+             * [#1 add table] ---------.
+             *                          \
+             * [push: #2 remove table]-. `--> [adding table, storing #1]
+             *                          \  .- [table from request #1 needs more data]
+             *                           \/
+             *                           /`-> [removing table, storing #2]
+             * [#1 < #2 - ignoring] <---´
+             */
+            for (Set<String> unregisteredConnectors : syncIdToUnregisteredConnectorIds
+                    .headMap(currentSyncId).values()) {
+                if (unregisteredConnectors.contains(connectorId)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Gets the most recently generated server sync id.
+     * <p>
+     * The sync id is incremented by one whenever a new response is being
+     * written. This id is then sent over to the client. The client then adds
+     * the most recent sync id to each communication packet it sends back to the
+     * server. This way, the server knows at what state the client is when the
+     * packet is sent. If the state has changed on the server side since that,
+     * the server can try to adjust the way it handles the actions from the
+     * client side.
+     * 
+     * @see #setWritingResponse(boolean)
+     * @see #connectorWasPresentAsRequestWasSent(String, long)
+     * @since 7.2
+     * @return the current sync id
+     */
+    public int getCurrentSyncId() {
+        return currentSyncId;
+    }
+
+    /**
+     * Maintains the bookkeeping connector removal and concurrency by removing
+     * entries that have become too old.
+     * <p>
+     * <em>It is important to run this call for each transmission from the client</em>
+     * , otherwise the bookkeeping gets out of date and the results form
+     * {@link #connectorWasPresentAsRequestWasSent(String, long)} will become
+     * invalid (that is, even though the client knew the component was removed,
+     * the aforementioned method would start claiming otherwise).
+     * <p>
+     * Entries that both client and server agree upon are removed. Since
+     * argument is the last sync id that the client has seen from the server, we
+     * know that entries earlier than that cannot cause any problems anymore.
+     * 
+     * @see #connectorWasPresentAsRequestWasSent(String, long)
+     * @since 7.2
+     * @param lastSyncIdSeenByClient
+     *            the sync id the client has most recently received from the
+     *            server.
+     */
+    public void cleanConcurrentlyRemovedConnectorIds(int lastSyncIdSeenByClient) {
+        /*
+         * We remove all entries _older_ than the one reported right now,
+         * because the remaining still contain components that might cause
+         * conflicts. In any case, it's better to clean up too little than too
+         * much, especially as the data will hardly grow into the kilobytes.
+         */
+        syncIdToUnregisteredConnectorIds.headMap(lastSyncIdSeenByClient)
+                .clear();
     }
 }

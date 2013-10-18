@@ -94,4 +94,26 @@ public class ApplicationConstants implements Serializable {
      * Name of the parameter used to transmit the CSRF token.
      */
     public static final String CSRF_TOKEN_PARAMETER = "v-csrfToken";
+
+    /**
+     * The name of the parameter used to transmit RPC invocations
+     * 
+     * @since 7.2
+     */
+    public static final String RPC_INVOCATIONS = "rpc";
+
+    /**
+     * The name of the parameter used to transmit the CSRF token
+     * 
+     * @since 7.2
+     */
+    public static final String CSRF_TOKEN = "csrfToken";
+
+    /**
+     * The name of the parameter used to transmit the sync id
+     * 
+     * @see com.vaadin.ui.ConnectorTracker#getCurrentSyncId()
+     * @since 7.2
+     */
+    public static final String SERVER_SYNC_ID = "syncId";
 }

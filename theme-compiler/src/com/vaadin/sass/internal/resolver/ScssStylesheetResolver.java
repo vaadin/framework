@@ -17,6 +17,8 @@ package com.vaadin.sass.internal.resolver;
 
 import org.w3c.css.sac.InputSource;
 
+import com.vaadin.sass.internal.ScssStylesheet;
+
 public interface ScssStylesheetResolver {
     /**
      * Called with the "identifier" of a stylesheet that the resolver should try
@@ -26,9 +28,12 @@ public interface ScssStylesheetResolver {
      * stylesheet was found, e.g "runo.scss" might result in a URI like
      * "VAADIN/themes/runo/runo.scss".
      * 
+     * @param parentStylesheet
+     *            The parent style sheet
      * @param identifier
      *            used fo find stylesheet
      * @return InputSource for stylesheet (with URI set) or null if not found
      */
-    public InputSource resolve(String identifier);
+    public InputSource resolve(ScssStylesheet parentStylesheet,
+            String identifier);
 }

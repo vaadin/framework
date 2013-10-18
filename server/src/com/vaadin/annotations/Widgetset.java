@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 import com.vaadin.ui.UI;
 
 /**
- * Defines a specific theme for a {@link UI}.
+ * Defines a specific widgetset for a {@link UI}.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

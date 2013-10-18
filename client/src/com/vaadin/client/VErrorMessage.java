@@ -31,9 +31,6 @@ public class VErrorMessage extends FlowPanel {
     public VErrorMessage() {
         super();
         setStyleName(CLASSNAME);
-
-        // Needed for binding with WAI-ARIA attributes
-        getElement().setId(DOM.createUniqueId());
     }
 
     /**

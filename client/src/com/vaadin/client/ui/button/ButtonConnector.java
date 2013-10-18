@@ -87,8 +87,7 @@ public class ButtonConnector extends AbstractComponentConnector implements
                                 getWidget().icon.getElement(),
                                 getWidget().captionElement);
                     }
-                    getWidget().icon.setUri(getIcon());
-                    getWidget().icon.setAlternateText(getState().iconAltText);
+                    getWidget().icon.setUri(getIcon(), getState().iconAltText);
                 } else {
                     if (getWidget().icon != null) {
                         getWidget().wrapper.removeChild(getWidget().icon

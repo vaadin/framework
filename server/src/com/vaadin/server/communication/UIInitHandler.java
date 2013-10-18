@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,6 +37,7 @@ import com.vaadin.server.VaadinResponse;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ApplicationConstants;
+import com.vaadin.shared.JsonConstants;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.shared.ui.ui.UIConstants;
@@ -56,12 +56,13 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
     protected abstract boolean isInitRequest(VaadinRequest request);
 
     @Override
+    protected boolean canHandleRequest(VaadinRequest request) {
+        return isInitRequest(request);
+    }
+
+    @Override
     public boolean synchronizedHandleRequest(VaadinSession session,
             VaadinRequest request, VaadinResponse response) throws IOException {
-        if (!isInitRequest(request)) {
-            return false;
-        }
-
         StringWriter stringWriter = new StringWriter();
 
         try {
@@ -107,7 +108,7 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
     static boolean commitJsonResponse(VaadinRequest request,
             VaadinResponse response, String json) throws IOException {
         // The response was produced without errors so write it to the client
-        response.setContentType("application/json; charset=UTF-8");
+        response.setContentType(JsonConstants.JSON_CONTENT_TYPE);
 
         // Ensure that the browser does not cache UIDL responses.
         // iOS 6 Safari requires this (#9732)
@@ -163,31 +164,29 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
             return null;
         }
 
-        // Check for an existing UI based on window.name
+        // Check for an existing UI based on embed id
 
-        // Special parameter sent by vaadinBootstrap.js
-        String windowName = request.getParameter("v-wn");
+        String embedId = getEmbedId(request);
 
-        Map<String, Integer> retainOnRefreshUIs = session
-                .getPreserveOnRefreshUIs();
-        if (windowName != null && !retainOnRefreshUIs.isEmpty()) {
-            // Check for a known UI
-
-            Integer retainedUIId = retainOnRefreshUIs.get(windowName);
-
-            if (retainedUIId != null) {
-                UI retainedUI = session.getUIById(retainedUIId.intValue());
+        UI retainedUI = session.getUIByEmbedId(embedId);
+        if (retainedUI != null) {
+            if (vaadinService.preserveUIOnRefresh(provider, new UICreateEvent(
+                    request, uiClass))) {
                 if (uiClass.isInstance(retainedUI)) {
                     reinitUI(retainedUI, request);
                     return retainedUI;
                 } else {
                     getLogger().info(
-                            "Not using retained UI in " + windowName
-                                    + " because retained UI was of type "
+                            "Not using the preserved UI " + embedId
+                                    + " because it is of type "
                                     + retainedUI.getClass() + " but " + uiClass
                                     + " is expected for the request.");
                 }
             }
+            /*
+             * Previous UI without preserve on refresh will be closed when the
+             * new UI gets added to the session.
+             */
         }
 
         // No existing UI found - go on by creating and initializing one
@@ -220,23 +219,42 @@ public abstract class UIInitHandler extends SynchronizedRequestHandler {
         // Set thread local here so it is available in init
         UI.setCurrent(ui);
 
-        ui.doInit(request, uiId.intValue());
+        ui.doInit(request, uiId.intValue(), embedId);
 
         session.addUI(ui);
 
-        // Remember if it should be remembered
-        if (vaadinService.preserveUIOnRefresh(provider, event)) {
-            // Remember this UI
-            if (windowName == null) {
-                getLogger().warning(
-                        "There is no window.name available for UI " + uiClass
-                                + " that should be preserved.");
-            } else {
-                session.getPreserveOnRefreshUIs().put(windowName, uiId);
-            }
+        // Warn if the window can't be preserved
+        if (embedId == null
+                && vaadinService.preserveUIOnRefresh(provider, event)) {
+            getLogger().warning(
+                    "There is no embed id available for UI " + uiClass
+                            + " that should be preserved.");
         }
 
         return ui;
+    }
+
+    /**
+     * Constructs an embed id based on information in the request.
+     * 
+     * @since 7.2
+     * 
+     * @param request
+     *            the request to get embed information from
+     * @return the embed id, or <code>null</code> if id is not available.
+     * 
+     * @see UI#getEmbedId()
+     */
+    protected String getEmbedId(VaadinRequest request) {
+        // Parameters sent by vaadinBootstrap.js
+        String windowName = request.getParameter("v-wn");
+        String appId = request.getParameter("v-appId");
+
+        if (windowName != null && appId != null) {
+            return windowName + '.' + appId;
+        } else {
+            return null;
+        }
     }
 
     /**

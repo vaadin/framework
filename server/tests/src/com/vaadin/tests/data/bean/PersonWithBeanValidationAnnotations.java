@@ -8,12 +8,15 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class PersonWithBeanValidationAnnotations {
     @NotNull
     @Size(min = 5, max = 20)
+    @Pattern(regexp = "A.*")
     private String firstName;
+
     @NotNull
     private String lastName;
 

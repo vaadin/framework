@@ -28,6 +28,8 @@ import org.atmosphere.cpr.AtmosphereRequest;
 import org.atmosphere.cpr.AtmosphereResponse;
 
 import com.vaadin.server.RequestHandler;
+import com.vaadin.server.ServiceDestroyEvent;
+import com.vaadin.server.ServiceDestroyListener;
 import com.vaadin.server.ServiceException;
 import com.vaadin.server.ServletPortletHelper;
 import com.vaadin.server.SessionExpiredHandler;
@@ -62,6 +64,13 @@ public class PushRequestHandler implements RequestHandler,
                 // Overridden to disable version number check
             }
         };
+
+        service.addServiceDestroyListener(new ServiceDestroyListener() {
+            @Override
+            public void serviceDestroy(ServiceDestroyEvent event) {
+                destroy();
+            }
+        });
 
         pushHandler = new PushHandler(service);
         atmosphere.addAtmosphereHandler("/*", pushHandler);

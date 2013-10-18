@@ -295,7 +295,17 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         if (getIcon() != null) {
             iconURL = getIcon();
         }
+
+        window.setAssistivePrefix(state.assistivePrefix);
+        window.setAssistivePostfix(state.assistivePostfix);
         window.setCaption(state.caption, iconURL);
+
+        window.setWaiAriaRole(getState().role);
+        window.setAssistiveDescription(state.contentDescription);
+
+        window.setTabStopEnabled(getState().assistiveTabStop);
+        window.setTabStopTopAssistiveText(getState().assistiveTabStopTopText);
+        window.setTabStopBottomAssistiveText(getState().assistiveTabStopBottomText);
 
         clickEventHandler.handleEventHandlerRegistration();
 

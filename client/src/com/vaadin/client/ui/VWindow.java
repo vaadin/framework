@@ -18,10 +18,16 @@ package com.vaadin.client.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
+import com.google.gwt.aria.client.Id;
+import com.google.gwt.aria.client.RelevantValue;
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
@@ -29,34 +35,45 @@ import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Event.NativePreviewEvent;
+import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.BrowserInfo;
+import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorMap;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Util;
 import com.vaadin.client.debug.internal.VDebugWindow;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
+import com.vaadin.client.ui.aria.AriaHelper;
+import com.vaadin.shared.Connector;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.window.WindowMode;
+import com.vaadin.shared.ui.window.WindowState.WindowRole;
 
 /**
  * "Sub window" component.
  * 
  * @author Vaadin Ltd
  */
-public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
-        ScrollHandler, KeyDownHandler, FocusHandler, BlurHandler, Focusable {
+public class VWindow extends VWindowOverlay implements
+        ShortcutActionHandlerOwner, ScrollHandler, KeyDownHandler,
+        KeyUpHandler, FocusHandler, BlurHandler, Focusable {
 
     private static ArrayList<VWindow> windowOrder = new ArrayList<VWindow>();
 
@@ -138,6 +155,22 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
     private boolean closable = true;
 
+    private Connector[] assistiveConnectors = new Connector[0];
+    private String assistivePrefix;
+    private String assistivePostfix;
+
+    private Element topTabStop;
+    private Element bottomTabStop;
+
+    private NativePreviewHandler topEventBlocker;
+    private NativePreviewHandler bottomEventBlocker;
+
+    private HandlerRegistration topBlockerRegistration;
+    private HandlerRegistration bottomBlockerRegistration;
+
+    // Prevents leaving the window with the Tab key when true
+    private boolean doTabStop;
+
     /**
      * If centered (via UIDL), the window should stay in the centered -mode
      * until a position is received from the server, or the user moves or
@@ -172,11 +205,72 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         // Different style of shadow for windows
         setShadowStyle("window");
 
+        Roles.getDialogRole().set(getElement());
+        Roles.getDialogRole().setAriaRelevantProperty(getElement(),
+                RelevantValue.ADDITIONS);
+
         constructDOM();
         contentPanel.addScrollHandler(this);
         contentPanel.addKeyDownHandler(this);
+        contentPanel.addKeyUpHandler(this);
         contentPanel.addFocusHandler(this);
         contentPanel.addBlurHandler(this);
+    }
+
+    @Override
+    protected void onAttach() {
+        super.onAttach();
+
+        /*
+         * Stores the element that has focus in the application UI when the
+         * window is opened, so it can be restored when the window closes.
+         * 
+         * This is currently implemented for the case when one non-modal window
+         * can be open at the same time, and the focus is not changed while the
+         * window is open.
+         */
+        getApplicationConnection().getUIConnector().getWidget().storeFocus();
+
+        /*
+         * When this window gets reattached, set the tabstop to the previous
+         * state.
+         */
+        setTabStopEnabled(doTabStop);
+    }
+
+    @Override
+    protected void onDetach() {
+        super.onDetach();
+
+        /*
+         * Restores the previously stored focused element.
+         * 
+         * When the focus was changed outside the window while the window was
+         * open, the originally stored element is restored.
+         */
+        getApplicationConnection().getUIConnector().getWidget()
+                .focusStoredElement();
+
+        removeTabBlockHandlers();
+    }
+
+    private void addTabBlockHandlers() {
+        if (topBlockerRegistration == null) {
+            topBlockerRegistration = Event
+                    .addNativePreviewHandler(topEventBlocker);
+            bottomBlockerRegistration = Event
+                    .addNativePreviewHandler(bottomEventBlocker);
+        }
+    }
+
+    private void removeTabBlockHandlers() {
+        if (topBlockerRegistration != null) {
+            topBlockerRegistration.removeHandler();
+            topBlockerRegistration = null;
+
+            bottomBlockerRegistration.removeHandler();
+            bottomBlockerRegistration = null;
+        }
     }
 
     public void bringToFront() {
@@ -242,6 +336,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     protected void constructDOM() {
         setStyleName(CLASSNAME);
 
+        topTabStop = DOM.createDiv();
+        DOM.setElementAttribute(topTabStop, "tabindex", "0");
+
         header = DOM.createDiv();
         DOM.setElementProperty(header, "className", CLASSNAME + "-outerheader");
         headerText = DOM.createDiv();
@@ -256,18 +353,25 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         maximizeRestoreBox = DOM.createDiv();
         DOM.setElementProperty(maximizeRestoreBox, "className", CLASSNAME
                 + "-maximizebox");
+        DOM.setElementAttribute(maximizeRestoreBox, "tabindex", "0");
         DOM.setElementProperty(closeBox, "className", CLASSNAME + "-closebox");
+        DOM.setElementAttribute(closeBox, "tabindex", "0");
         DOM.appendChild(footer, resizeBox);
+
+        bottomTabStop = DOM.createDiv();
+        DOM.setElementAttribute(bottomTabStop, "tabindex", "0");
 
         wrapper = DOM.createDiv();
         DOM.setElementProperty(wrapper, "className", CLASSNAME + "-wrap");
 
+        DOM.appendChild(wrapper, topTabStop);
         DOM.appendChild(wrapper, header);
         DOM.appendChild(wrapper, maximizeRestoreBox);
         DOM.appendChild(wrapper, closeBox);
         DOM.appendChild(header, headerText);
         DOM.appendChild(wrapper, contents);
         DOM.appendChild(wrapper, footer);
+        DOM.appendChild(wrapper, bottomTabStop);
         DOM.appendChild(super.getContainerElement(), wrapper);
 
         sinkEvents(Event.ONDBLCLICK | Event.MOUSEEVENTS | Event.TOUCHEVENTS
@@ -275,6 +379,96 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
 
         setWidget(contentPanel);
 
+        // Make the closebox accessible for assistive devices
+        Roles.getButtonRole().set(closeBox);
+        Roles.getButtonRole().setAriaLabelProperty(closeBox, "close button");
+
+        // Make the maximizebox accessible for assistive devices
+        Roles.getButtonRole().set(maximizeRestoreBox);
+        Roles.getButtonRole().setAriaLabelProperty(maximizeRestoreBox,
+                "maximize button");
+
+        // Provide the title to assistive devices
+        AriaHelper.ensureHasId(headerText);
+        Roles.getDialogRole().setAriaLabelledbyProperty(getElement(),
+                Id.of(headerText));
+
+        // Handlers to Prevent tab to leave the window
+        topEventBlocker = new NativePreviewHandler() {
+            @Override
+            public void onPreviewNativeEvent(NativePreviewEvent event) {
+                NativeEvent nativeEvent = event.getNativeEvent();
+                if (nativeEvent.getEventTarget().cast() == topTabStop
+                        && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
+                        && nativeEvent.getShiftKey()) {
+                    nativeEvent.preventDefault();
+                }
+            }
+        };
+
+        bottomEventBlocker = new NativePreviewHandler() {
+            @Override
+            public void onPreviewNativeEvent(NativePreviewEvent event) {
+                NativeEvent nativeEvent = event.getNativeEvent();
+                if (nativeEvent.getEventTarget().cast() == bottomTabStop
+                        && nativeEvent.getKeyCode() == KeyCodes.KEY_TAB
+                        && !nativeEvent.getShiftKey()) {
+                    nativeEvent.preventDefault();
+                }
+            }
+        };
+    }
+
+    /**
+     * Sets the message that is provided to users of assistive devices when the
+     * user reaches the top of the window when leaving a window with the tab key
+     * is prevented.
+     * <p>
+     * This message is not visible on the screen.
+     * 
+     * @param topMessage
+     *            String provided when the user navigates with Shift-Tab keys to
+     *            the top of the window
+     */
+    public void setTabStopTopAssistiveText(String topMessage) {
+        Roles.getNoteRole().setAriaLabelProperty(topTabStop, topMessage);
+    }
+
+    /**
+     * Sets the message that is provided to users of assistive devices when the
+     * user reaches the bottom of the window when leaving a window with the tab
+     * key is prevented.
+     * <p>
+     * This message is not visible on the screen.
+     * 
+     * @param bottomMessage
+     *            String provided when the user navigates with the Tab key to
+     *            the bottom of the window
+     */
+    public void setTabStopBottomAssistiveText(String bottomMessage) {
+        Roles.getNoteRole().setAriaLabelProperty(bottomTabStop, bottomMessage);
+    }
+
+    /**
+     * Gets the message that is provided to users of assistive devices when the
+     * user reaches the top of the window when leaving a window with the tab key
+     * is prevented.
+     * 
+     * @return the top message
+     */
+    public String getTabStopTopAssistiveText() {
+        return Roles.getNoteRole().getAriaLabelProperty(topTabStop);
+    }
+
+    /**
+     * Gets the message that is provided to users of assistive devices when the
+     * user reaches the bottom of the window when leaving a window with the tab
+     * key is prevented.
+     * 
+     * @return the bottom message
+     */
+    public String getTabStopBottomAssistiveText() {
+        return Roles.getNoteRole().getAriaLabelProperty(bottomTabStop);
     }
 
     /**
@@ -492,6 +686,7 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
             if (isAttached()) {
                 showModalityCurtain();
             }
+            addTabBlockHandlers();
             deferOrdering();
         } else {
             if (modalityCurtain != null) {
@@ -499,6 +694,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                     hideModalityCurtain();
                 }
                 modalityCurtain = null;
+            }
+            if (!doTabStop) {
+                removeTabBlockHandlers();
             }
         }
     }
@@ -653,9 +851,62 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         if (icon != null) {
             icon = client.translateVaadinUri(icon);
             html = "<img src=\"" + Util.escapeAttribute(icon)
-                    + "\" class=\"v-icon\" />" + html;
+                    + "\" class=\"v-icon\" alt=\"\" />" + html;
         }
+
+        // Provide information to assistive device users that a sub window was
+        // opened
+        String prefix = "<span class='"
+                + AriaHelper.ASSISTIVE_DEVICE_ONLY_STYLE + "'>"
+                + assistivePrefix + "</span>";
+        String postfix = "<span class='"
+                + AriaHelper.ASSISTIVE_DEVICE_ONLY_STYLE + "'>"
+                + assistivePostfix + "</span>";
+
+        html = prefix + html + postfix;
         DOM.setInnerHTML(headerText, html);
+    }
+
+    /**
+     * Setter for the text for assistive devices the window caption is prefixed
+     * with.
+     * 
+     * @param assistivePrefix
+     *            the assistivePrefix to set
+     */
+    public void setAssistivePrefix(String assistivePrefix) {
+        this.assistivePrefix = assistivePrefix;
+    }
+
+    /**
+     * Getter for the text for assistive devices the window caption is prefixed
+     * with.
+     * 
+     * @return the assistivePrefix
+     */
+    public String getAssistivePrefix() {
+        return assistivePrefix;
+    }
+
+    /**
+     * Setter for the text for assistive devices the window caption is postfixed
+     * with.
+     * 
+     * @param assistivePostfix
+     *            the assistivePostfix to set
+     */
+    public void setAssistivePostfix(String assistivePostfix) {
+        this.assistivePostfix = assistivePostfix;
+    }
+
+    /**
+     * Getter for the text for assistive devices the window caption is postfixed
+     * with.
+     * 
+     * @return the assistivePostfix
+     */
+    public String getAssistivePostfix() {
+        return assistivePostfix;
     }
 
     @Override
@@ -1026,6 +1277,13 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
     }
 
     @Override
+    public void onKeyUp(KeyUpEvent event) {
+        if (isClosable() && event.getNativeKeyCode() == KeyCodes.KEY_ESCAPE) {
+            onCloseClick();
+        }
+    }
+
+    @Override
     public void onBlur(BlurEvent event) {
         if (client.hasEventListeners(this, EventId.BLUR)) {
             client.updateVariable(id, EventId.BLUR, "", true);
@@ -1061,4 +1319,97 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
                 - contentPanel.getElement().getOffsetWidth();
     }
 
+    /**
+     * Allows to specify which connectors contain the description for the
+     * window. Text contained in the widgets of the connectors will be read by
+     * assistive devices when it is opened.
+     * <p>
+     * When the provided array is empty, an existing description is removed.
+     * 
+     * @param connectors
+     *            with the connectors of the widgets to use as description
+     */
+    public void setAssistiveDescription(Connector[] connectors) {
+        if (connectors != null) {
+            assistiveConnectors = connectors;
+
+            if (connectors.length == 0) {
+                Roles.getDialogRole().removeAriaDescribedbyProperty(
+                        getElement());
+            } else {
+                Id[] ids = new Id[connectors.length];
+                for (int index = 0; index < connectors.length; index++) {
+                    if (connectors[index] == null) {
+                        throw new IllegalArgumentException(
+                                "All values in parameter description need to be non-null");
+                    }
+
+                    Element element = ((ComponentConnector) connectors[index])
+                            .getWidget().getElement();
+                    AriaHelper.ensureHasId(element);
+                    ids[index] = Id.of(element);
+                }
+
+                Roles.getDialogRole().setAriaDescribedbyProperty(getElement(),
+                        ids);
+            }
+        } else {
+            throw new IllegalArgumentException(
+                    "Parameter description must be non-null");
+        }
+    }
+
+    /**
+     * Gets the connectors that are used as assistive description. Text
+     * contained in these connectors will be read by assistive devices when the
+     * window is opened.
+     * 
+     * @return list of previously set connectors
+     */
+    public List<Connector> getAssistiveDescription() {
+        return Collections.unmodifiableList(Arrays.asList(assistiveConnectors));
+    }
+
+    /**
+     * Sets the WAI-ARIA role the window.
+     * 
+     * This role defines how an assistive device handles a window. Available
+     * roles are alertdialog and dialog (@see <a
+     * href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
+     * Model</a>).
+     * 
+     * The default role is dialog.
+     * 
+     * @param role
+     *            WAI-ARIA role to set for the window
+     */
+    public void setWaiAriaRole(WindowRole role) {
+        if ("alertdialog".equals(role)) {
+            Roles.getAlertdialogRole().set(getElement());
+        } else {
+            Roles.getDialogRole().set(getElement());
+        }
+    }
+
+    /**
+     * Registers the handlers that prevent to leave the window using the
+     * Tab-key.
+     * <p>
+     * The value of the parameter doTabStop is stored and used for non-modal
+     * windows. For modal windows, the handlers are always registered, while
+     * preserving the stored value.
+     * 
+     * @param doTabStop
+     *            true to prevent leaving the window, false to allow leaving the
+     *            window for non modal windows
+     */
+    public void setTabStopEnabled(boolean doTabStop) {
+        this.doTabStop = doTabStop;
+
+        if (doTabStop || vaadinModality) {
+            addTabBlockHandlers();
+        } else {
+            removeTabBlockHandlers();
+        }
+    }
 }

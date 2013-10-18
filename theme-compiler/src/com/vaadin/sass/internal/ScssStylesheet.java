@@ -19,10 +19,10 @@ package com.vaadin.sass.internal;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -35,8 +35,9 @@ import com.vaadin.sass.internal.handler.SCSSErrorHandler;
 import com.vaadin.sass.internal.parser.ParseException;
 import com.vaadin.sass.internal.parser.Parser;
 import com.vaadin.sass.internal.parser.SCSSParseException;
+import com.vaadin.sass.internal.resolver.ClassloaderResolver;
+import com.vaadin.sass.internal.resolver.FilesystemResolver;
 import com.vaadin.sass.internal.resolver.ScssStylesheetResolver;
-import com.vaadin.sass.internal.resolver.VaadinResolver;
 import com.vaadin.sass.internal.tree.BlockNode;
 import com.vaadin.sass.internal.tree.MixinDefNode;
 import com.vaadin.sass.internal.tree.Node;
@@ -59,9 +60,11 @@ public class ScssStylesheet extends Node {
 
     private static HashMap<Node, Node> lastNodeAdded = new HashMap<Node, Node>();
 
-    private String fileName;
+    private File file;
 
     private String charset;
+
+    private List<ScssStylesheetResolver> resolvers = new ArrayList<ScssStylesheetResolver>();
 
     /**
      * Read in a file SCSS and parse it into a ScssStylesheet
@@ -101,8 +104,8 @@ public class ScssStylesheet extends Node {
      * @throws CSSException
      * @throws IOException
      */
-    public static ScssStylesheet get(String identifier, String encoding)
-            throws CSSException, IOException {
+    public static ScssStylesheet get(String identifier,
+            ScssStylesheet parentStylesheet) throws CSSException, IOException {
         /*
          * The encoding to be used is passed through "encoding" parameter. the
          * imported children scss node will have the same encoding as their
@@ -122,12 +125,22 @@ public class ScssStylesheet extends Node {
 
         SCSSDocumentHandler handler = new SCSSDocumentHandlerImpl();
         ScssStylesheet stylesheet = handler.getStyleSheet();
-
-        InputSource source = stylesheet.resolveStylesheet(identifier);
+        if (parentStylesheet == null) {
+            // Use default resolvers
+            stylesheet.addResolver(new FilesystemResolver());
+            stylesheet.addResolver(new ClassloaderResolver());
+        } else {
+            // Use parent resolvers
+            stylesheet.setResolvers(parentStylesheet.getResolvers());
+        }
+        InputSource source = stylesheet.resolveStylesheet(identifier,
+                parentStylesheet);
         if (source == null) {
             return null;
         }
-        source.setEncoding(encoding);
+        if (parentStylesheet != null) {
+            source.setEncoding(parentStylesheet.getCharset());
+        }
 
         Parser parser = new Parser();
         parser.setErrorHandler(new SCSSErrorHandler());
@@ -145,29 +158,50 @@ public class ScssStylesheet extends Node {
         return stylesheet;
     }
 
-    private static ScssStylesheetResolver[] resolvers = null;
-
-    public static void setStylesheetResolvers(
-            ScssStylesheetResolver... styleSheetResolvers) {
-        resolvers = Arrays.copyOf(styleSheetResolvers,
-                styleSheetResolvers.length);
-    }
-
-    public InputSource resolveStylesheet(String identifier) {
-        if (resolvers == null) {
-            setStylesheetResolvers(new VaadinResolver());
-        }
-
-        for (ScssStylesheetResolver resolver : resolvers) {
-            InputSource source = resolver.resolve(identifier);
+    public InputSource resolveStylesheet(String identifier,
+            ScssStylesheet parentStylesheet) {
+        for (ScssStylesheetResolver resolver : getResolvers()) {
+            InputSource source = resolver.resolve(parentStylesheet, identifier);
             if (source != null) {
                 File f = new File(source.getURI());
-                setFileName(f.getParent());
+                setFile(f);
                 return source;
             }
         }
 
         return null;
+    }
+
+    /**
+     * Retrieves a list of resolvers to use when resolving imports
+     * 
+     * @since 7.2
+     * @return the resolvers used to resolving imports
+     */
+    public List<ScssStylesheetResolver> getResolvers() {
+        return Collections.unmodifiableList(resolvers);
+    }
+
+    /**
+     * Sets the list of resolvers to use when resolving imports
+     * 
+     * @since 7.2
+     * @param resolvers
+     *            the resolvers to set
+     */
+    public void setResolvers(List<ScssStylesheetResolver> resolvers) {
+        this.resolvers = new ArrayList<ScssStylesheetResolver>(resolvers);
+    }
+
+    /**
+     * Adds the given resolver to the resolver list
+     * 
+     * @since 7.2
+     * @param resolver
+     *            The resolver to add
+     */
+    public void addResolver(ScssStylesheetResolver resolver) {
+        resolvers.add(resolver);
     }
 
     /**
@@ -355,12 +389,28 @@ public class ScssStylesheet extends Node {
         return mixinDefs.get(name);
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setFile(File file) {
+        this.file = file;
     }
 
+    /**
+     * Returns the directory containing this style sheet
+     * 
+     * @since 7.2
+     * @return The directory containing this style sheet
+     */
+    public String getDirectory() {
+        return file.getParent();
+    }
+
+    /**
+     * Returns the full file name for this style sheet
+     * 
+     * @since 7.2
+     * @return The full file name for this style sheet
+     */
     public String getFileName() {
-        return fileName;
+        return file.getPath();
     }
 
     public static HashMap<Node, Node> getLastNodeAdded() {

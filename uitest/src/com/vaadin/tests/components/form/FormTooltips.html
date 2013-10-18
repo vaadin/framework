@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="http://localhost:8070" />
+<link rel="selenium.base" href="http://localhost:8888" />
 <title>FormTooltips</title>
 </head>
 <body>
@@ -38,9 +38,14 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementNotPresent</td>
-	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::Root/VTooltip[0]/FlowPanel[0]/domChild[1]</td>
+	<td>pause</td>
+	<td>1000</td>
 	<td></td>
+</tr>
+<tr>
+	<td>assertElementPositionLeft</td>
+	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::Root/VTooltip[0]/FlowPanel[0]/domChild[1]</td>
+	<td>-1000</td>
 </tr>
 <!--first name caption tooltip-->
 <tr>
@@ -64,9 +69,14 @@
 	<td></td>
 </tr>
 <tr>
-	<td>waitForElementNotPresent</td>
-	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::Root/VTooltip[0]/FlowPanel[0]/domChild[1]</td>
+	<td>pause</td>
+	<td>1000</td>
 	<td></td>
+</tr>
+<tr>
+	<td>assertElementPositionLeft</td>
+	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::Root/VTooltip[0]/FlowPanel[0]/domChild[1]</td>
+	<td>-1000</td>
 </tr>
 <!--Form should not have a description tooltip-->
 <tr>
@@ -80,9 +90,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>assertElementNotPresent</td>
+	<td>assertElementPositionLeft</td>
 	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::Root/VTooltip[0]</td>
-	<td></td>
+	<td>-1000</td>
 </tr>
 <!--Form error message should not have a tooltip-->
 <tr>
@@ -96,9 +106,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>assertElementNotPresent</td>
+	<td>assertElementPositionLeft</td>
 	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::Root/VTooltip[0]</td>
-	<td></td>
+	<td>-1000</td>
 </tr>
 <!--last name should have no tooltip-->
 <tr>
@@ -112,9 +122,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>assertElementNotPresent</td>
+	<td>assertElementPositionLeft</td>
 	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::Root/VTooltip[0]/FlowPanel[0]/domChild[1]</td>
-	<td></td>
+	<td>-1000</td>
 </tr>
 <!--last name caption should have no tooltip-->
 <tr>
@@ -128,9 +138,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>assertElementNotPresent</td>
+	<td>assertElementPositionLeft</td>
 	<td>vaadin=runcomvaadintestscomponentsformFormTooltips::Root/VTooltip[0]/FlowPanel[0]/domChild[1]</td>
-	<td></td>
+	<td>-1000</td>
 </tr>
 
 </tbody></table>

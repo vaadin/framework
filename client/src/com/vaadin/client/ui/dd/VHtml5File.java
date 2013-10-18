@@ -35,7 +35,13 @@ public class VHtml5File extends JavaScriptObject {
         return this.type;
      }-*/;
 
-    public native final int getSize()
+    /*
+     * Browser implementations support files >2GB dropped and report the value
+     * as long. Due to JSNI limitations this value needs to be sent as double
+     * and then cast back to a long value.
+     * www.gwtproject.org/doc/latest/DevGuideCodingBasicsJSNI.html#important
+     */
+    public native final double getSize()
     /*-{
         return this.size ? this.size : 0;
     }-*/;

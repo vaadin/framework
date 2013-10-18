@@ -38,6 +38,7 @@ import com.vaadin.server.LegacyCommunicationManager;
 import com.vaadin.server.LegacyCommunicationManager.ClientCache;
 import com.vaadin.server.SystemMessages;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.shared.ApplicationConstants;
 import com.vaadin.ui.ConnectorTracker;
 import com.vaadin.ui.UI;
 
@@ -105,6 +106,9 @@ public class UidlWriter implements Serializable {
 
         uiConnectorTracker.setWritingResponse(true);
         try {
+            writer.write("\"" + ApplicationConstants.SERVER_SYNC_ID
+                    + "\": " + uiConnectorTracker.getCurrentSyncId() + ", ");
+
             writer.write("\"changes\" : ");
 
             LegacyCommunicationManager manager = session

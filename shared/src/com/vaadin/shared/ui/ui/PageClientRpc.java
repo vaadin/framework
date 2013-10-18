@@ -20,8 +20,6 @@ import com.vaadin.shared.communication.ClientRpc;
 
 public interface PageClientRpc extends ClientRpc {
 
-    public void setTitle(String title);
-
     public void reload();
 
 }

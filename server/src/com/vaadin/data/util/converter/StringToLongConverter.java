@@ -20,17 +20,35 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 /**
- * A converter that converts from {@link Number} to {@link String} and back.
- * Uses the given locale and {@link NumberFormat} for formatting and parsing.
+ * A converter that converts from {@link String} to {@link Long} and back. Uses
+ * the given locale and a {@link NumberFormat} instance for formatting and
+ * parsing.
  * <p>
  * Override and overwrite {@link #getFormat(Locale)} to use a different format.
  * </p>
  * 
  * @author Vaadin Ltd
- * @since 7.0
+ * @since 7.2
  */
-public class StringToNumberConverter extends
-        AbstractStringToNumberConverter<Number> {
+public class StringToLongConverter extends
+        AbstractStringToNumberConverter<Long> {
+
+    /**
+     * Returns the format used by
+     * {@link #convertToPresentation(Long, Class, Locale)} and
+     * {@link #convertToModel(String, Class, Locale)}
+     * 
+     * @param locale
+     *            The locale to use
+     * @return A NumberFormat instance
+     */
+    @Override
+    protected NumberFormat getFormat(Locale locale) {
+        if (locale == null) {
+            locale = Locale.getDefault();
+        }
+        return NumberFormat.getIntegerInstance(locale);
+    }
 
     /*
      * (non-Javadoc)
@@ -40,16 +58,11 @@ public class StringToNumberConverter extends
      * java.lang.Class, java.util.Locale)
      */
     @Override
-    public Number convertToModel(String value,
-            Class<? extends Number> targetType, Locale locale)
-            throws ConversionException {
-        if (targetType != getModelType()) {
-            throw new ConversionException("Converter only supports "
-                    + getModelType().getName() + " (targetType was "
-                    + targetType.getName() + ")");
-        }
+    public Long convertToModel(String value, Class<? extends Long> targetType,
+            Locale locale) throws ConversionException {
+        Number n = convertToNumber(value, targetType, locale);
+        return n == null ? null : n.longValue();
 
-        return convertToNumber(value, targetType, locale);
     }
 
     /*
@@ -58,8 +71,8 @@ public class StringToNumberConverter extends
      * @see com.vaadin.data.util.converter.Converter#getModelType()
      */
     @Override
-    public Class<Number> getModelType() {
-        return Number.class;
+    public Class<Long> getModelType() {
+        return Long.class;
     }
 
 }

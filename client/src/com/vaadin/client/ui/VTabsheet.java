@@ -19,6 +19,10 @@ package com.vaadin.client.ui;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.gwt.aria.client.Id;
+import com.google.gwt.aria.client.LiveValue;
+import com.google.gwt.aria.client.Roles;
+import com.google.gwt.aria.client.SelectedValue;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style;
@@ -55,6 +59,7 @@ import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;
+import com.vaadin.client.ui.aria.AriaHelper;
 import com.vaadin.shared.AbstractComponentState;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.ComponentStateUtil;
@@ -94,12 +99,18 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                 + "-selected";
         private static final String TD_SELECTED_FIRST_CLASSNAME = TD_SELECTED_CLASSNAME
                 + "-first";
+        private static final String TD_FOCUS_CLASSNAME = TD_CLASSNAME
+                + "-focus";
+        private static final String TD_FOCUS_FIRST_CLASSNAME = TD_FOCUS_CLASSNAME
+                + "-first";
         private static final String TD_DISABLED_CLASSNAME = TD_CLASSNAME
                 + "-disabled";
 
         private static final String DIV_CLASSNAME = CLASSNAME + "-tabitem";
         private static final String DIV_SELECTED_CLASSNAME = DIV_CLASSNAME
                 + "-selected";
+        private static final String DIV_FOCUS_CLASSNAME = DIV_CLASSNAME
+                + "-focus";
 
         private TabCaption tabCaption;
         Element td = getElement();
@@ -112,10 +123,16 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         private String styleName;
 
+        private String id;
+
         private Tab(TabBar tabBar) {
             super(DOM.createTD());
             this.tabBar = tabBar;
             setStyleName(td, TD_CLASSNAME);
+
+            Roles.getTabRole().set(getElement());
+            Roles.getTabRole().setAriaSelectedState(getElement(),
+                    SelectedValue.FALSE);
 
             div = DOM.createDiv();
             focusImpl.setTabIndex(td, -1);
@@ -126,6 +143,9 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             tabCaption = new TabCaption(this, getTabsheet()
                     .getApplicationConnection());
             add(tabCaption);
+
+            Roles.getTabRole().setAriaLabelledbyProperty(getElement(),
+                    Id.of(tabCaption.getElement()));
 
             addFocusHandler(getTabsheet());
             addBlurHandler(getTabsheet());
@@ -138,6 +158,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         public void setHiddenOnServer(boolean hiddenOnServer) {
             this.hiddenOnServer = hiddenOnServer;
+            Roles.getTabRole().setAriaHiddenState(getElement(), hiddenOnServer);
         }
 
         @Override
@@ -152,6 +173,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
         public void setEnabledOnServer(boolean enabled) {
             enabledOnServer = enabled;
+            Roles.getTabRole().setAriaDisabledState(getElement(), !enabled);
+
             setStyleName(td, TD_DISABLED_CLASSNAME, !enabled);
             if (!enabled) {
                 focusImpl.setTabIndex(td, -1);
@@ -175,10 +198,18 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
          *            true if the Tab is the first visible Tab
          */
         public void setStyleNames(boolean selected, boolean first) {
+            setStyleNames(selected, first, false);
+        }
+
+        public void setStyleNames(boolean selected, boolean first,
+                boolean keyboardFocus) {
             setStyleName(td, TD_FIRST_CLASSNAME, first);
             setStyleName(td, TD_SELECTED_CLASSNAME, selected);
             setStyleName(td, TD_SELECTED_FIRST_CLASSNAME, selected && first);
             setStyleName(div, DIV_SELECTED_CLASSNAME, selected);
+            setStyleName(td, TD_FOCUS_CLASSNAME, keyboardFocus);
+            setStyleName(td, TD_FOCUS_FIRST_CLASSNAME, keyboardFocus && first);
+            setStyleName(div, DIV_FOCUS_CLASSNAME, keyboardFocus);
         }
 
         public void setTabulatorIndex(int tabIndex) {
@@ -204,10 +235,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             String newStyleName = tabUidl
                     .getStringAttribute(TabsheetConstants.TAB_STYLE_NAME);
             // Find the nth td element
-            if (newStyleName != null && newStyleName.length() != 0) {
+            if (newStyleName != null && !newStyleName.isEmpty()) {
                 if (!newStyleName.equals(styleName)) {
                     // If we have a new style name
-                    if (styleName != null && styleName.length() != 0) {
+                    if (styleName != null && !styleName.isEmpty()) {
                         // Remove old style name if present
                         td.removeClassName(TD_CLASSNAME + "-" + styleName);
                     }
@@ -220,6 +251,15 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                 // uidl
                 td.removeClassName(TD_CLASSNAME + "-" + styleName);
                 styleName = null;
+            }
+
+            String newId = tabUidl.getStringAttribute("id");
+            if (newId != null && !newId.isEmpty()) {
+                td.setId(newId);
+                id = newId;
+            } else if (id != null) {
+                td.removeAttribute("id");
+                id = null;
             }
         }
 
@@ -249,6 +289,23 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         public void blur() {
             focusImpl.blur(td);
         }
+
+        public boolean hasTooltip() {
+            return tabCaption.getTooltipInfo() != null;
+        }
+
+        public TooltipInfo getTooltipInfo() {
+            return tabCaption.getTooltipInfo();
+        }
+
+        public void setAssistiveDescription(String descriptionId) {
+            Roles.getTablistRole().setAriaDescribedbyProperty(getElement(),
+                    Id.of(descriptionId));
+        }
+
+        public void removeAssistiveDescription() {
+            Roles.getTablistRole().removeAriaDescribedbyProperty(getElement());
+        }
     }
 
     public static class TabCaption extends VCaption {
@@ -262,6 +319,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             super(client);
             this.client = client;
             this.tab = tab;
+
+            AriaHelper.ensureHasId(getElement());
         }
 
         public boolean updateCaption(UIDL uidl) {
@@ -280,7 +339,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                     uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_DISABLED),
                     uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_DESCRIPTION),
                     uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ERROR_MESSAGE),
-                    uidl.getStringAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ICON));
+                    uidl.getStringAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ICON),
+                    uidl.getStringAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ICON_ALT));
 
             setClosable(uidl.hasAttribute("closable"));
 
@@ -318,6 +378,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                 closeButton.setInnerHTML("&times;");
                 closeButton
                         .setClassName(VTabsheet.CLASSNAME + "-caption-close");
+
+                Roles.getTabRole().setAriaHiddenState(closeButton, true);
+                Roles.getTabRole().setAriaDisabledState(closeButton, true);
+
                 getElement().appendChild(closeButton);
             } else if (!closable && closeButton != null) {
                 getElement().removeChild(closeButton);
@@ -364,6 +428,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             this.tabsheet = tabsheet;
 
             Element el = DOM.createTable();
+            Roles.getPresentationRole().set(el);
+
             Element tbody = DOM.createTBody();
             DOM.appendChild(el, tbody);
             DOM.appendChild(tbody, tr);
@@ -420,11 +486,9 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             }
 
             int index = getWidgetIndex(caption.getParent());
-            // IE needs explicit focus()
-            if (BrowserInfo.get().isIE()) {
-                getTabsheet().focus();
-            }
-            getTabsheet().onTabSelected(index);
+
+            getTabsheet().focus();
+            getTabsheet().loadTabSheet(index);
         }
 
         public VTabsheet getTabsheet() {
@@ -442,13 +506,18 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             final Tab newSelected = getTab(index);
             final Tab oldSelected = selected;
 
-            newSelected.setStyleNames(true, isFirstVisibleTab(index));
+            newSelected.setStyleNames(true, isFirstVisibleTab(index), true);
             newSelected.setTabulatorIndex(getTabsheet().tabulatorIndex);
+            Roles.getTabRole().setAriaSelectedState(newSelected.getElement(),
+                    SelectedValue.TRUE);
 
             if (oldSelected != null && oldSelected != newSelected) {
                 oldSelected.setStyleNames(false,
                         isFirstVisibleTab(getWidgetIndex(oldSelected)));
                 oldSelected.setTabulatorIndex(-1);
+
+                Roles.getTabRole().setAriaSelectedState(
+                        oldSelected.getElement(), SelectedValue.FALSE);
             }
 
             // Update the field holding the currently selected tab
@@ -457,6 +526,23 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             // The selected tab might need more (or less) space
             newSelected.recalculateCaptionWidth();
             getTab(tabsheet.activeTabIndex).recalculateCaptionWidth();
+        }
+
+        public void navigateTab(int fromIndex, int toIndex) {
+            Tab newNavigated = getTab(toIndex);
+            if (newNavigated == null) {
+                throw new IllegalArgumentException(
+                        "Tab at provided index toIndex was not found");
+            }
+
+            Tab oldNavigated = getTab(fromIndex);
+            newNavigated.setStyleNames(newNavigated.equals(selected),
+                    isFirstVisibleTab(toIndex), true);
+
+            if (oldNavigated != null && fromIndex != toIndex) {
+                oldNavigated.setStyleNames(oldNavigated.equals(selected),
+                        isFirstVisibleTab(fromIndex), false);
+            }
         }
 
         public void removeTab(int i) {
@@ -591,7 +677,7 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     /**
      * @return Whether the tab could be selected or not.
      */
-    private boolean onTabSelected(final int tabIndex) {
+    private boolean canSelectTab(final int tabIndex) {
         Tab tab = tb.getTab(tabIndex);
         if (client == null || disabled || waitingForResponse) {
             return false;
@@ -599,14 +685,31 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         if (!tab.isEnabledOnServer() || tab.isHiddenOnServer()) {
             return false;
         }
-        if (activeTabIndex != tabIndex) {
+
+        // Note that we return true when tabIndex == activeTabIndex; the active
+        // tab could be selected, it's just a no-op.
+        return true;
+    }
+
+    /**
+     * Load the content of a tab of the provided index.
+     * 
+     * @param index
+     *            of the tab to load
+     */
+    public void loadTabSheet(int tabIndex) {
+        if (activeTabIndex != tabIndex && canSelectTab(tabIndex)) {
             tb.selectTab(tabIndex);
 
             // If this TabSheet already has focus, set the new selected tab
             // as focused.
             if (focusedTab != null) {
-                focusedTab = tab;
+                focusedTab = tb.getTab(tabIndex);
+                focusedTab.focus();
             }
+
+            activeTabIndex = tabIndex;
+            focusedTabIndex = tabIndex;
 
             addStyleDependentName("loading");
             // Hide the current contents so a loading indicator can be shown
@@ -619,9 +722,6 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
                     .toString(), true);
             waitingForResponse = true;
         }
-        // Note that we return true when tabIndex == activeTabIndex; the active
-        // tab could be selected, it's just a no-op.
-        return true;
     }
 
     public ApplicationConnection getApplicationConnection() {
@@ -663,22 +763,30 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         DOM.setStyleAttribute(getElement(), "overflow", "hidden");
         tabs = DOM.createDiv();
         DOM.setElementProperty(tabs, "className", TABS_CLASSNAME);
+        Roles.getTablistRole().set(tabs);
+        Roles.getTablistRole().setAriaLiveProperty(tabs, LiveValue.OFF);
         scroller = DOM.createDiv();
+        Roles.getTablistRole().setAriaHiddenState(scroller, true);
 
         DOM.setElementProperty(scroller, "className", SCROLLER_CLASSNAME);
         scrollerPrev = DOM.createButton();
+        scrollerPrev.setTabIndex(-1);
         DOM.setElementProperty(scrollerPrev, "className", SCROLLER_CLASSNAME
                 + "Prev");
+        Roles.getTablistRole().setAriaHiddenState(scrollerPrev, true);
         DOM.sinkEvents(scrollerPrev, Event.ONCLICK);
         scrollerNext = DOM.createButton();
+        scrollerNext.setTabIndex(-1);
         DOM.setElementProperty(scrollerNext, "className", SCROLLER_CLASSNAME
                 + "Next");
+        Roles.getTablistRole().setAriaHiddenState(scrollerNext, true);
         DOM.sinkEvents(scrollerNext, Event.ONCLICK);
         DOM.appendChild(getElement(), tabs);
 
         // Tabs
         tp.setStyleName(CLASSNAME + "-tabsheetpanel");
         contentNode = DOM.createDiv();
+        Roles.getTabpanelRole().set(contentNode);
 
         deco = DOM.createDiv();
 
@@ -1083,7 +1191,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
 
     @Override
     public void onBlur(BlurEvent event) {
+        getApplicationConnection().getVTooltip().hideTooltip();
+
         if (focusedTab != null && event.getSource() instanceof Tab) {
+            focusedTab.removeAssistiveDescription();
             focusedTab = null;
             if (client.hasEventListeners(this, EventId.BLUR)) {
                 client.updateVariable(id, EventId.BLUR, "", true);
@@ -1097,6 +1208,13 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             focusedTab = (Tab) event.getSource();
             if (client.hasEventListeners(this, EventId.FOCUS)) {
                 client.updateVariable(id, EventId.FOCUS, "", true);
+            }
+
+            if (focusedTab.hasTooltip()) {
+                focusedTab.setAssistiveDescription(getApplicationConnection()
+                        .getVTooltip().getUniqueId());
+                getApplicationConnection().getVTooltip().showAssistive(
+                        focusedTab.getTooltipInfo());
             }
         }
     }
@@ -1118,13 +1236,17 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
             if (!event.isAnyModifierKeyDown()) {
                 if (keycode == getPreviousTabKey()) {
                     selectPreviousTab();
+                    event.stopPropagation();
                 } else if (keycode == getNextTabKey()) {
                     selectNextTab();
+                    event.stopPropagation();
                 } else if (keycode == getCloseTabKey()) {
                     Tab tab = tb.getTab(activeTabIndex);
                     if (tab.isClosable()) {
                         tab.onClose();
                     }
+                } else if (keycode == getSelectTabKey()) {
+                    loadTabSheet(focusedTabIndex);
                 }
             }
         }
@@ -1136,6 +1258,10 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
      */
     protected int getPreviousTabKey() {
         return KeyCodes.KEY_LEFT;
+    }
+
+    protected int getSelectTabKey() {
+        return 32; // Space key
     }
 
     /**
@@ -1155,18 +1281,27 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     }
 
     private void selectPreviousTab() {
-        int newTabIndex = activeTabIndex;
+        int newTabIndex = focusedTabIndex;
         // Find the previous visible and enabled tab if any.
         do {
             newTabIndex--;
-        } while (newTabIndex >= 0 && !onTabSelected(newTabIndex));
+        } while (newTabIndex >= 0 && !canSelectTab(newTabIndex));
 
         if (newTabIndex >= 0) {
-            activeTabIndex = newTabIndex;
+            tb.navigateTab(focusedTabIndex, newTabIndex);
+            focusedTabIndex = newTabIndex;
+
+            // If this TabSheet already has focus, set the new selected tab
+            // as focused.
+            if (focusedTab != null) {
+                focusedTab = tb.getTab(focusedTabIndex);
+                focusedTab.focus();
+            }
+
             if (isScrolledTabs()) {
                 // Scroll until the new active tab is visible
                 int newScrollerIndex = scrollerIndex;
-                while (tb.getTab(activeTabIndex).getAbsoluteLeft() < getAbsoluteLeft()
+                while (tb.getTab(focusedTabIndex).getAbsoluteLeft() < getAbsoluteLeft()
                         && newScrollerIndex != -1) {
                     newScrollerIndex = tb.scrollLeft(newScrollerIndex);
                 }
@@ -1177,18 +1312,28 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
     }
 
     private void selectNextTab() {
-        int newTabIndex = activeTabIndex;
+        int newTabIndex = focusedTabIndex;
         // Find the next visible and enabled tab if any.
         do {
             newTabIndex++;
-        } while (newTabIndex < getTabCount() && !onTabSelected(newTabIndex));
+        } while (newTabIndex < getTabCount() && !canSelectTab(newTabIndex));
 
         if (newTabIndex < getTabCount()) {
-            activeTabIndex = newTabIndex;
+
+            tb.navigateTab(focusedTabIndex, newTabIndex);
+            focusedTabIndex = newTabIndex;
+
+            // If this TabSheet already has focus, set the new selected tab
+            // as focused.
+            if (focusedTab != null) {
+                focusedTab = tb.getTab(focusedTabIndex);
+                focusedTab.focus();
+            }
+
             if (isClippedTabs()) {
                 // Scroll until the new active tab is completely visible
                 int newScrollerIndex = scrollerIndex;
-                while (isClipped(tb.getTab(activeTabIndex))
+                while (isClipped(tb.getTab(focusedTabIndex))
                         && newScrollerIndex != -1) {
                     newScrollerIndex = tb.scrollRight(newScrollerIndex);
                 }

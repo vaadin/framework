@@ -264,7 +264,7 @@ public class TableConnector extends AbstractHasComponentsConnector implements
 
         if (getWidget().focusedRow != null) {
             if (!getWidget().focusedRow.isAttached()
-                    && !getWidget().rowRequestHandler.isRunning()) {
+                    && !getWidget().rowRequestHandler.isRequestHandlerRunning()) {
                 // focused row has been orphaned, can't focus
                 if (getWidget().selectedRowKeys.contains(getWidget().focusedRow
                         .getKey())) {

@@ -101,10 +101,6 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
     protected void init() {
         super.init();
         registerRpc(PageClientRpc.class, new PageClientRpc() {
-            @Override
-            public void setTitle(String title) {
-                com.google.gwt.user.client.Window.setTitle(title);
-            }
 
             @Override
             public void reload() {
@@ -664,6 +660,11 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
 
         if (stateChangeEvent.hasPropertyChanged("pollInterval")) {
             configurePolling();
+        }
+
+        if (stateChangeEvent.hasPropertyChanged("pageState.title")) {
+            com.google.gwt.user.client.Window
+                    .setTitle(getState().pageState.title);
         }
 
         if (stateChangeEvent.hasPropertyChanged("pushConfiguration")) {

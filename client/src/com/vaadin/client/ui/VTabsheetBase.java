@@ -42,6 +42,8 @@ public abstract class VTabsheetBase extends ComplexPanel {
     /** For internal use only. May be removed or replaced in the future. */
     public int activeTabIndex = 0;
     /** For internal use only. May be removed or replaced in the future. */
+    public int focusedTabIndex = 0;
+    /** For internal use only. May be removed or replaced in the future. */
     public boolean disabled;
     /** For internal use only. May be removed or replaced in the future. */
     public boolean readonly;

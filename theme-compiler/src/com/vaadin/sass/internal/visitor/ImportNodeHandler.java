@@ -16,7 +16,6 @@
 
 package com.vaadin.sass.internal.visitor;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,25 +56,14 @@ public class ImportNodeHandler {
                 ImportNode importNode = (ImportNode) n;
                 if (!importNode.isPureCssImport()) {
                     try {
-                        StringBuilder filePathBuilder = new StringBuilder(
-                                styleSheet.getFileName());
-                        filePathBuilder.append(File.separatorChar).append(
-                                importNode.getUri());
-                        if (!filePathBuilder.toString().endsWith(".scss")) {
-                            filePathBuilder.append(".scss");
-                        }
-
                         // set parent's charset to imported node.
                         ScssStylesheet imported = ScssStylesheet.get(
-                                filePathBuilder.toString(),
-                                styleSheet.getCharset());
+                                importNode.getUri(), styleSheet);
                         if (imported == null) {
-                            imported = ScssStylesheet.get(importNode.getUri());
-                        }
-                        if (imported == null) {
-                            throw new FileNotFoundException(importNode.getUri()
-                                    + " (parent: "
-                                    + ScssStylesheet.get().getFileName() + ")");
+                            throw new FileNotFoundException("Import '"
+                                    + importNode.getUri() + "' in '"
+                                    + styleSheet.getFileName()
+                                    + "' could not be found");
                         }
 
                         traverse(imported);

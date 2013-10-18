@@ -17,8 +17,6 @@
 package com.vaadin.data.validator;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -115,7 +113,9 @@ public class BeanValidator implements Validator {
         Set<?> violations = getJavaxBeanValidator().validateValue(beanClass,
                 propertyName, value);
         if (violations.size() > 0) {
-            List<String> exceptions = new ArrayList<String>();
+            InvalidValueException[] causes = new InvalidValueException[violations
+                    .size()];
+            int i = 0;
             for (Object v : violations) {
                 final ConstraintViolation<?> violation = (ConstraintViolation<?>) v;
                 String msg = getJavaxBeanValidatorFactory()
@@ -123,16 +123,11 @@ public class BeanValidator implements Validator {
                                 violation.getMessageTemplate(),
                                 new SimpleContext(value, violation
                                         .getConstraintDescriptor()), locale);
-                exceptions.add(msg);
+                causes[i] = new InvalidValueException(msg);
+                ++i;
             }
-            StringBuilder b = new StringBuilder();
-            for (int i = 0; i < exceptions.size(); i++) {
-                if (i != 0) {
-                    b.append("<br/>");
-                }
-                b.append(exceptions.get(i));
-            }
-            throw new InvalidValueException(b.toString());
+
+            throw new InvalidValueException(null, causes);
         }
     }
 

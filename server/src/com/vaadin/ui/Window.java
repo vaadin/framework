@@ -18,6 +18,9 @@ package com.vaadin.ui;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import com.vaadin.event.FieldEvents.BlurEvent;
@@ -33,10 +36,12 @@ import com.vaadin.event.ShortcutAction.ModifierKey;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
+import com.vaadin.shared.Connector;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.shared.ui.window.WindowServerRpc;
 import com.vaadin.shared.ui.window.WindowState;
+import com.vaadin.shared.ui.window.WindowState.WindowRole;
 import com.vaadin.util.ReflectTools;
 
 /**
@@ -228,8 +233,6 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
         // Don't do anything if not attached to a UI
         if (uI != null) {
-            // focus is restored to the parent window
-            uI.focus();
             // window is removed from the UI
             uI.removeWindow(this);
         }
@@ -634,7 +637,10 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
 
     /**
      * Sets window modality. When a modal window is open, components outside
-     * that window it cannot be accessed.
+     * that window cannot be accessed.
+     * <p>
+     * Keyboard navigation is restricted by blocking the tab key at the top and
+     * bottom of the window by activating the tab stop function internally.
      * 
      * @param modal
      *            true if modality is to be turned on
@@ -994,5 +1000,195 @@ public class Window extends Panel implements FocusNotifier, BlurNotifier,
     @Override
     protected WindowState getState(boolean markAsDirty) {
         return (WindowState) super.getState(markAsDirty);
+    }
+
+    /**
+     * Allows to specify which components contain the description for the
+     * window. Text contained in these components will be read by assistive
+     * devices when it is opened.
+     * 
+     * @param connectors
+     *            with the components to use as description
+     */
+    public void setAssistiveDescription(Connector... connectors) {
+        if (connectors == null) {
+            throw new IllegalArgumentException(
+                    "Parameter connectors must be non-null");
+        } else {
+            getState().contentDescription = connectors;
+        }
+    }
+
+    /**
+     * Gets the components that are used as assistive description. Text
+     * contained in these components will be read by assistive devices when the
+     * window is opened.
+     * 
+     * @return list of previously set components
+     */
+    public List<Connector> getAssistiveDescription() {
+        return Collections.unmodifiableList(Arrays
+                .asList(getState().contentDescription));
+    }
+
+    /**
+     * Sets the accessibility prefix for the window caption.
+     * 
+     * This prefix is read to assistive device users before the window caption,
+     * but not visible on the page.
+     * 
+     * @param prefix
+     *            String that is placed before the window caption
+     */
+    public void setAssistivePrefix(String prefix) {
+        getState().assistivePrefix = prefix;
+    }
+
+    /**
+     * Gets the accessibility prefix for the window caption.
+     * 
+     * This prefix is read to assistive device users before the window caption,
+     * but not visible on the page.
+     * 
+     * @return The accessibility prefix
+     */
+    public String getAssistivePrefix() {
+        return getState().assistivePrefix;
+    }
+
+    /**
+     * Sets the accessibility postfix for the window caption.
+     * 
+     * This postfix is read to assistive device users after the window caption,
+     * but not visible on the page.
+     * 
+     * @param prefix
+     *            String that is placed after the window caption
+     */
+    public void setAssistivePostfix(String assistivePostfix) {
+        getState().assistivePostfix = assistivePostfix;
+    }
+
+    /**
+     * Gets the accessibility postfix for the window caption.
+     * 
+     * This postfix is read to assistive device users after the window caption,
+     * but not visible on the page.
+     * 
+     * @return The accessibility postfix
+     */
+    public String getAssistivePostfix() {
+        return getState().assistivePostfix;
+    }
+
+    /**
+     * Sets the WAI-ARIA role the window.
+     * 
+     * This role defines how an assistive device handles a window. Available
+     * roles are alertdialog and dialog (@see <a
+     * href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
+     * Model</a>).
+     * 
+     * The default role is dialog.
+     * 
+     * @param role
+     *            WAI-ARIA role to set for the window
+     */
+    public void setAssistiveRole(WindowRole role) {
+        getState().role = role;
+    }
+
+    /**
+     * Gets the WAI-ARIA role the window.
+     * 
+     * This role defines how an assistive device handles a window. Available
+     * roles are alertdialog and dialog (@see <a
+     * href="http://www.w3.org/TR/2011/CR-wai-aria-20110118/roles">Roles
+     * Model</a>).
+     * 
+     * @return WAI-ARIA role set for the window
+     */
+    public WindowRole getAssistiveRole() {
+        return getState().role;
+    }
+
+    /**
+     * Set if it should be prevented to set the focus to a component outside a
+     * non-modal window with the tab key.
+     * <p>
+     * This is meant to help users of assistive devices to not leaving the
+     * window unintentionally.
+     * <p>
+     * For modal windows, this function is activated automatically, while
+     * preserving the stored value of tabStop.
+     * 
+     * @param tabStop
+     *            true to keep the focus inside the window when reaching the top
+     *            or bottom, false (default) to allow leaving the window
+     */
+    public void setTabStopEnabled(boolean tabStop) {
+        getState().assistiveTabStop = tabStop;
+    }
+
+    /**
+     * Get if it is prevented to leave a window with the tab key.
+     * 
+     * @return true when the focus is limited to inside the window, false when
+     *         focus can leave the window
+     */
+    public boolean isTabStopEnabled() {
+        return getState().assistiveTabStop;
+    }
+
+    /**
+     * Sets the message that is provided to users of assistive devices when the
+     * user reaches the top of the window when leaving a window with the tab key
+     * is prevented.
+     * <p>
+     * This message is not visible on the screen.
+     * 
+     * @param topMessage
+     *            String provided when the user navigates with Shift-Tab keys to
+     *            the top of the window
+     */
+    public void setTabStopTopAssistiveText(String topMessage) {
+        getState().assistiveTabStopTopText = topMessage;
+    }
+
+    /**
+     * Sets the message that is provided to users of assistive devices when the
+     * user reaches the bottom of the window when leaving a window with the tab
+     * key is prevented.
+     * <p>
+     * This message is not visible on the screen.
+     * 
+     * @param bottomMessage
+     *            String provided when the user navigates with the Tab key to
+     *            the bottom of the window
+     */
+    public void setTabStopBottomAssistiveText(String bottomMessage) {
+        getState().assistiveTabStopBottomText = bottomMessage;
+    }
+
+    /**
+     * Gets the message that is provided to users of assistive devices when the
+     * user reaches the top of the window when leaving a window with the tab key
+     * is prevented.
+     * 
+     * @return the top message
+     */
+    public String getTabStopTopAssistiveText() {
+        return getState().assistiveTabStopTopText;
+    }
+
+    /**
+     * Gets the message that is provided to users of assistive devices when the
+     * user reaches the bottom of the window when leaving a window with the tab
+     * key is prevented.
+     * 
+     * @return the bottom message
+     */
+    public String getTabStopBottomAssistiveText() {
+        return getState().assistiveTabStopBottomText;
     }
 }

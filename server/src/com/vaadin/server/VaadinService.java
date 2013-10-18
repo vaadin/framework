@@ -41,7 +41,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.portlet.Portlet;
 import javax.portlet.PortletContext;
+import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
@@ -96,6 +98,10 @@ public abstract class VaadinService implements Serializable {
     private static final Method SESSION_DESTROY_METHOD = ReflectTools
             .findMethod(SessionDestroyListener.class, "sessionDestroy",
                     SessionDestroyEvent.class);
+
+    private static final Method SERVICE_DESTROY_METHOD = ReflectTools
+            .findMethod(ServiceDestroyListener.class, "serviceDestroy",
+                    ServiceDestroyEvent.class);
 
     /**
      * @deprecated As of 7.0. Only supported for {@link LegacyApplication}.
@@ -1674,23 +1680,6 @@ public abstract class VaadinService implements Serializable {
         FutureAccess future = new FutureAccess(session, runnable);
         session.getPendingAccessQueue().add(future);
 
-        ensureAccessQueuePurged(session);
-
-        return future;
-    }
-
-    /**
-     * Makes sure the pending access queue is purged for the provided session.
-     * If the session is currently locked by the current thread or some other
-     * thread, the queue will be purged when the session is unlocked. If the
-     * lock is not held by any thread, it is acquired and the queue is purged
-     * right away.
-     * 
-     * @since 7.1.2
-     * @param session
-     *            the session for which the access queue should be purged
-     */
-    public void ensureAccessQueuePurged(VaadinSession session) {
         /*
          * If no thread is currently holding the lock, pending changes for UIs
          * with automatic push would not be processed and pushed until the next
@@ -1713,6 +1702,8 @@ public abstract class VaadinService implements Serializable {
         } catch (InterruptedException e) {
             // Just ignore
         }
+
+        return future;
     }
 
     /**
@@ -1759,4 +1750,50 @@ public abstract class VaadinService implements Serializable {
             CurrentInstance.restoreInstances(oldInstances);
         }
     }
+
+    /**
+     * Adds a service destroy listener that gets notified when this service is
+     * destroyed.
+     * 
+     * @since 7.2
+     * @param listener
+     *            the service destroy listener to add
+     * 
+     * @see #destroy()
+     * @see #removeServiceDestroyListener(ServiceDestroyListener)
+     * @see ServiceDestroyListener
+     */
+    public void addServiceDestroyListener(ServiceDestroyListener listener) {
+        eventRouter.addListener(ServiceDestroyEvent.class, listener,
+                SERVICE_DESTROY_METHOD);
+    }
+
+    /**
+     * Removes a service destroy listener that was previously added with
+     * {@link #addServiceDestroyListener(ServiceDestroyListener)}.
+     * 
+     * @since 7.2
+     * @param listener
+     *            the service destroy listener to remove
+     */
+    public void removeServiceDestroyListener(ServiceDestroyListener listener) {
+        eventRouter.removeListener(ServiceDestroyEvent.class, listener,
+                SERVICE_DESTROY_METHOD);
+    }
+
+    /**
+     * Called when the servlet, portlet or similar for this service is being
+     * destroyed. After this method has been called, no more requests will be
+     * handled by this service.
+     * 
+     * @see #addServiceDestroyListener(ServiceDestroyListener)
+     * @see Servlet#destroy()
+     * @see Portlet#destroy()
+     * 
+     * @since 7.2
+     */
+    public void destroy() {
+        eventRouter.fireEvent(new ServiceDestroyEvent(this));
+    }
+
 }

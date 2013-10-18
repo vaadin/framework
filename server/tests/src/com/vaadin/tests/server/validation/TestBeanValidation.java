@@ -1,7 +1,6 @@
 package com.vaadin.tests.server.validation;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.vaadin.data.Validator.InvalidValueException;
@@ -59,6 +58,32 @@ public class TestBeanValidation {
     }
 
     @Test
+    public void testBeanValidationException_OneValidationError() {
+        InvalidValueException[] causes = null;
+        BeanValidator validator = new BeanValidator(BeanToValidate.class,
+                "lastname");
+        try {
+            validator.validate(null);
+        } catch (InvalidValueException e) {
+            causes = e.getCauses();
+        }
+
+        Assert.assertEquals(1, causes.length);
+    }
+
+    @Test
+    public void testBeanValidationsException_TwoValidationErrors() {
+        InvalidValueException[] causes = null;
+        BeanValidator validator = new BeanValidator(BeanToValidate.class,
+                "nickname");
+        try {
+            validator.validate("A");
+        } catch (InvalidValueException e) {
+            causes = e.getCauses();
+        }
+
+        Assert.assertEquals(2, causes.length);
+    }
     public void testBeanValidationNotAddedTwice() {
         // See ticket #11045
         BeanFieldGroup<BeanToValidate> fieldGroup = new BeanFieldGroup<BeanToValidate>(

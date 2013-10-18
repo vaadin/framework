@@ -18,24 +18,46 @@ package com.vaadin.sass.internal.resolver;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.w3c.css.sac.InputSource;
 
-public class FilesystemResolver implements ScssStylesheetResolver {
+import com.vaadin.sass.internal.ScssStylesheet;
+
+public class FilesystemResolver extends AbstractResolver {
+
+    private String[] customPaths = null;
+
+    public FilesystemResolver(String... customPaths) {
+        this.customPaths = customPaths;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.vaadin.sass.internal.resolver.AbstractResolver#getPotentialPaths(
+     * com.vaadin.sass.internal.ScssStylesheet, java.lang.String)
+     */
+    @Override
+    protected List<String> getPotentialParentPaths(
+            ScssStylesheet parentStyleSheet, String identifier) {
+        List<String> potentialPaths = super.getPotentialParentPaths(
+                parentStyleSheet, identifier);
+        if (customPaths != null) {
+            for (String path : customPaths) {
+                potentialPaths.add(extractFullPath(path, identifier));
+            }
+        }
+
+        return potentialPaths;
+    }
 
     @Override
-    public InputSource resolve(String identifier) {
-        // identifier should not have .scss, fileName should
-        String ext = ".scss";
-        if (identifier.endsWith(".css")) {
-            ext = ".css";
-        }
+    public InputSource resolveNormalized(String identifier) {
         String fileName = identifier;
-        if (identifier.endsWith(ext)) {
-            identifier = identifier.substring(0,
-                    identifier.length() - ext.length());
-        } else {
-            fileName = fileName + ext;
+        if (!fileName.endsWith(".css")) {
+            fileName += ".scss";
         }
 
         try {

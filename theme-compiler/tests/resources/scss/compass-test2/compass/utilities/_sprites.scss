@@ -1,0 +1,6 @@
+.body {
+	background-image: url(../folder-test2/bg.png);
+	background: transparent url(../folder-test2/img/loading-indicator.gif);
+	background-image: url(http://abc/bg.png);
+	background-image: url(/abc/bg.png);
+}

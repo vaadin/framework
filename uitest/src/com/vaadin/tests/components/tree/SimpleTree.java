@@ -8,6 +8,8 @@ import com.vaadin.event.Action;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.tests.components.TestBase;
 import com.vaadin.ui.AbstractSelect;
+import com.vaadin.ui.AbstractSelect.ItemDescriptionGenerator;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Tree;
 
 public class SimpleTree extends TestBase implements Action.Handler {
@@ -52,6 +54,17 @@ public class SimpleTree extends TestBase implements Action.Handler {
 
         tree.setItemIcon(9, notCachedFolderIconLargeOther, "First Choice");
         tree.setItemIcon(11, notCachedFolderIconLarge);
+
+        tree.setItemDescriptionGenerator(new ItemDescriptionGenerator() {
+            @Override
+            public String generateDescription(Component source, Object itemId,
+                    Object propertyId) {
+                if ((Integer) itemId == 3) {
+                    return "tree item tooltip";
+                }
+                return "";
+            }
+        });
 
         // Expand whole tree
         for (Object id : tree.rootItemIds()) {

@@ -1,8 +1,10 @@
 #!/bin/bash
 
-FROM=7.0
-TO=7.1
+IGNORE=7.0
+FROM=7.1
+TO=master
 
+IGNORE_HEAD=origin/$IGNORE
 FROM_HEAD=origin/$FROM
 PUSH="origin HEAD:refs/for/$TO"
 
@@ -86,7 +88,7 @@ fi
 git checkout $TO
 git fetch
 
-pending=`git log $TO..$FROM_HEAD --reverse|grep "^commit "|sed "s/commit //"`
+pending=`git log $TO..$FROM_HEAD ^$IGNORE_HEAD --reverse|grep "^commit "|sed "s/commit //"`
 
 pendingCommit=
 pendingCommitMessage=
@@ -94,7 +96,7 @@ for commit in $pending
 do
         echo "Checking $commit..."
         mergeDirective=`git log -n 1 --format=%B $commit|grep "^Merge:"|sed "s/Merge: //"`
-        commitMsg=`git log -n 1 --format=oneline --abbrev-commit $commit`
+        commitMsg=`git log -n 1 --format=oneline --abbrev-commit $commit | sed 's/\\\\/\\\\\\\\/g'` #Multiple levels of unescaping, sed just changes \ to \\
         if [ "$mergeDirective" == "" ]
         then
                 if can_merge $commit
@@ -107,7 +109,7 @@ do
                         pendingCommit=
                         pendingCommitMessage=
                         echo
-                        echo "Stopping merge because $commit because of merge conflicts"
+                        echo "Stopping merge at $commit because of merge conflicts"
                         echo "The following commit must be manually merged."
                         show $commit
                         exit 3
