@@ -16,6 +16,8 @@
 
 package com.vaadin.server;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -202,10 +204,10 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
      * session is serialized as long as it doesn't happen while some other
      * thread has the lock.
      */
-    private transient ConcurrentLinkedQueue<FutureAccess> pendingAccessQueue;
+    private transient ConcurrentLinkedQueue<FutureAccess> pendingAccessQueue = new ConcurrentLinkedQueue<FutureAccess>();
 
     /**
-     * Create a new service session tied to a Vaadin service
+     * Creates a new VaadinSession tied to a VaadinService.
      * 
      * @param service
      *            the Vaadin service for the new session
@@ -1260,18 +1262,15 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     }
 
     /**
-     * Gets the queue of tasks submitted using {@link #access(Runnable)}.
+     * Gets the queue of tasks submitted using {@link #access(Runnable)}. It is
+     * safe to call this method and access the returned queue without holding
+     * the {@link #lock() session lock}.
      * 
      * @since 7.1
      * 
-     * @return the pending access queue
+     * @return the queue of pending access tasks
      */
     public Queue<FutureAccess> getPendingAccessQueue() {
-        if (pendingAccessQueue == null) {
-            // pendingAccessQueue is transient, so will be null after
-            // deserialization
-            pendingAccessQueue = new ConcurrentLinkedQueue<FutureAccess>();
-        }
         return pendingAccessQueue;
     }
 
@@ -1285,6 +1284,16 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
     public String getCsrfToken() {
         assert hasLock();
         return csrfToken;
+    }
+
+    /**
+     * Override default deserialization logic to account for transient
+     * {@link #pendingAccessQueue}.
+     */
+    private void readObject(ObjectInputStream stream) throws IOException,
+            ClassNotFoundException {
+        stream.defaultReadObject();
+        pendingAccessQueue = new ConcurrentLinkedQueue<FutureAccess>();
     }
 
     /**

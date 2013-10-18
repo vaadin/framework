@@ -14,6 +14,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.MethodProperty;
 import com.vaadin.data.validator.RegexpValidator;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Form;
 
 public class TestSerialization extends TestCase {
@@ -21,7 +22,7 @@ public class TestSerialization extends TestCase {
     public void testValidators() throws Exception {
         RegexpValidator validator = new RegexpValidator(".*", "Error");
         validator.validate("aaa");
-        RegexpValidator validator2 = (RegexpValidator) serializeAndDeserialize(validator);
+        RegexpValidator validator2 = serializeAndDeserialize(validator);
         validator2.validate("aaa");
     }
 
@@ -67,7 +68,17 @@ public class TestSerialization extends TestCase {
         serializeAndDeserialize(mp);
     }
 
-    private static Serializable serializeAndDeserialize(Serializable s)
+    public void testVaadinSession() throws Exception {
+        VaadinSession session = new VaadinSession(null);
+
+        session = serializeAndDeserialize(session);
+
+        assertNotNull(
+                "Pending access queue was not recreated after deserialization",
+                session.getPendingAccessQueue());
+    }
+
+    private static <S extends Serializable> S serializeAndDeserialize(S s)
             throws IOException, ClassNotFoundException {
         // Serialize and deserialize
 
@@ -77,10 +88,12 @@ public class TestSerialization extends TestCase {
         byte[] data = bs.toByteArray();
         ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(
                 data));
-        Serializable s2 = (Serializable) in.readObject();
+        @SuppressWarnings("unchecked")
+        S s2 = (S) in.readObject();
 
         // using special toString(Object) method to avoid calling
         // Property.toString(), which will be temporarily disabled
+        // TODO This is hilariously broken (#12723)
         if (s.equals(s2)) {
             System.out.println(toString(s) + " equals " + toString(s2));
         } else {
