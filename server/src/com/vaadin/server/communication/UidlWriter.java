@@ -52,6 +52,14 @@ import com.vaadin.ui.UI;
  */
 public class UidlWriter implements Serializable {
 
+    private LegacyUidlWriter legacyUidlWriter = new LegacyUidlWriter();
+    private SharedStateWriter sharedStateWriter = new SharedStateWriter();
+    private ConnectorTypeWriter connectorTypeWriter = new ConnectorTypeWriter();
+    private ConnectorHierarchyWriter connectorHierarchyWriter = new ConnectorHierarchyWriter();
+    private ClientRpcWriter clientRpcWriter = new ClientRpcWriter();
+    private MetadataWriter metadataWriter = new MetadataWriter();
+    private ResourceWriter resourceWriter = new ResourceWriter();
+
     /**
      * Writes a JSON object containing all pending changes to the given UI.
      * 
@@ -80,13 +88,12 @@ public class UidlWriter implements Serializable {
         // to write out
         session.getService().runPendingAccessTasks(session);
 
-        ArrayList<ClientConnector> dirtyVisibleConnectors = ui
-                .getConnectorTracker().getDirtyVisibleConnectors();
-        LegacyCommunicationManager manager = session.getCommunicationManager();
         // Paints components
-        ConnectorTracker uiConnectorTracker = ui.getConnectorTracker();
         getLogger().log(Level.FINE, "* Creating response to client");
 
+        ConnectorTracker uiConnectorTracker = ui.getConnectorTracker();
+        ArrayList<ClientConnector> dirtyVisibleConnectors = uiConnectorTracker
+                .getDirtyVisibleConnectors();
         getLogger().log(
                 Level.FINE,
                 "Found " + dirtyVisibleConnectors.size()
@@ -104,10 +111,13 @@ public class UidlWriter implements Serializable {
 
             writer.write("\"changes\" : ");
 
+            LegacyCommunicationManager manager = session
+                    .getCommunicationManager();
+
             JsonPaintTarget paintTarget = new JsonPaintTarget(manager, writer,
                     !repaintAll);
 
-            new LegacyUidlWriter().write(ui, writer, paintTarget);
+            legacyUidlWriter.write(ui, writer, paintTarget);
 
             paintTarget.close();
             writer.write(", "); // close changes
@@ -124,7 +134,7 @@ public class UidlWriter implements Serializable {
             // processing.
 
             writer.write("\"state\":");
-            new SharedStateWriter().write(ui, writer);
+            sharedStateWriter.write(ui, writer);
             writer.write(", "); // close states
 
             // TODO This should be optimized. The type only needs to be
@@ -133,7 +143,7 @@ public class UidlWriter implements Serializable {
             // widget mapping
 
             writer.write("\"types\":");
-            new ConnectorTypeWriter().write(ui, writer, paintTarget);
+            connectorTypeWriter.write(ui, writer, paintTarget);
             writer.write(", "); // close states
 
             // Send update hierarchy information to the client.
@@ -144,7 +154,7 @@ public class UidlWriter implements Serializable {
             // child to 0 children)
 
             writer.write("\"hierarchy\":");
-            new ConnectorHierarchyWriter().write(ui, writer);
+            connectorHierarchyWriter.write(ui, writer);
             writer.write(", "); // close hierarchy
 
             // send server to client RPC calls for components in the UI, in call
@@ -154,7 +164,7 @@ public class UidlWriter implements Serializable {
             // which they were performed, remove the calls from components
 
             writer.write("\"rpc\" : ");
-            new ClientRpcWriter().write(ui, writer);
+            clientRpcWriter.write(ui, writer);
             writer.write(", "); // close rpc
 
             uiConnectorTracker.markAllConnectorsClean();
@@ -164,11 +174,11 @@ public class UidlWriter implements Serializable {
             SystemMessages messages = ui.getSession().getService()
                     .getSystemMessages(ui.getLocale(), null);
             // TODO hilightedConnector
-            new MetadataWriter().write(ui, writer, repaintAll, async, messages);
+            metadataWriter.write(ui, writer, repaintAll, async, messages);
             writer.write(", ");
 
             writer.write("\"resources\" : ");
-            new ResourceWriter().write(ui, writer, paintTarget);
+            resourceWriter.write(ui, writer, paintTarget);
 
             Collection<Class<? extends ClientConnector>> usedClientConnectors = paintTarget
                     .getUsedClientConnectors();

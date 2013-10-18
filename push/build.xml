@@ -10,12 +10,16 @@
     <property name="module.name" value="vaadin-push" />
     <property name="module.symbolic" value="com.vaadin.push" />
     <property name="result.dir" location="result" />
+    <property name="temp.dir" location="${result.dir}/temp" />
+    <property name="jquery.unpack" location="${temp.dir}/jquery" />
     <property name="vaadinPush.js" location="${result.dir}/js/VAADIN/vaadinPush.js" />
     <property name="vaadinPush.debug.js" location="${result.dir}/js/VAADIN/vaadinPush.debug.js" />
 
-    <!-- Keep the version number in sync with ivy.xml, server/src/com/vaadin/server/Constants.java and jquery.atmosphere.js -->
-    <property name="atmosphere.version" value="1.0.14.vaadin4" />
-    <property name="jquery.version" value="1.7.2" />
+    <!-- Keep the version number in sync with ivy.xml, server/src/com/vaadin/server/Constants.java -->
+    <property name="atmosphere.runtime.version" value="1.0.14.vaadin4" />
+    <!-- Keep the version number in sync with ivy.xml -->
+    <property name="atmosphere.js.version" value="2.0.3-vaadin1" />
+    <property name="jquery.version" value="1.9.0" />
 
     <path id="classpath.compile.custom" />
 
@@ -28,9 +32,24 @@
 
     <target name="vaadinPush.js">
         <mkdir dir="${result.dir}/js/VAADIN" />
+        <ivy:resolve file="ivy.xml" conf="push.js" />
+        <ivy:cachepath pathid="atmosphere.jquery.deps" conf="push.js" />
 
-        <loadfile srcfile="${vaadin.basedir}/WebContent/VAADIN/jquery-${jquery.version}.js" property="jquery.js.contents" />
-        <loadfile srcfile="${vaadin.basedir}/WebContent/VAADIN/jquery.atmosphere.js" property="jquery.atmosphere.js.contents" />
+        <copy todir="${temp.dir}" flatten="true">
+            <path refid="atmosphere.jquery.deps" />
+        </copy>
+
+        <!-- Unzip to temp dir -->
+        <unzip src="${temp.dir}/jquery-${atmosphere.js.version}.war" dest="${jquery.unpack}">
+            <patternset>
+                <include name="**/jquery.atmosphere.js" />
+                <include name="**/jquery-${jquery.version}.js" />
+            </patternset>
+            <mapper type="flatten" />
+        </unzip>
+        <loadfile srcfile="${jquery.unpack}/jquery-${jquery.version}.js" property="jquery.js.contents" />
+        <loadfile srcfile="${jquery.unpack}/jquery.atmosphere.js" property="jquery.atmosphere.js.contents" />
+
         <loadfile srcfile="${vaadin.basedir}/WebContent/VAADIN/vaadinPush.js.tpl" property="vaadinPush.js.contents">
             <filterchain>
                 <replacetokens begintoken="@" endtoken="@">
@@ -55,7 +74,7 @@
 
     <target name="jar" depends="vaadinPush.js">
         <antcall target="common.jar">
-            <param name="require-bundle" value="com.vaadin.external.atmosphere.atmosphere-runtime;bundle-version=&quot;${atmosphere.version}&quot;;visibility:=reexport" />
+            <param name="require-bundle" value="com.vaadin.external.atmosphere.atmosphere-runtime;bundle-version=&quot;${atmosphere.runtime.version}&quot;;visibility:=reexport" />
             <reference torefid="extra.jar.includes" refid="jar.includes" />
         </antcall>
     </target>

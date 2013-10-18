@@ -1072,6 +1072,17 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                     }
                     if (selected != row.isSelected()) {
                         row.toggleSelection();
+
+                        if (selected) {
+                            if (focusedRow == null
+                                    || !selectedRowKeys.contains(focusedRow
+                                            .getKey())) {
+                                // The focus is no longer on a selected row,
+                                // move focus to first selected row
+                                setRowFocus(row);
+                            }
+                        }
+
                         if (!isSingleSelectMode() && !selected) {
                             // Update selection range in case a row is
                             // unselected from the middle of a range - #8076
@@ -6914,6 +6925,11 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
 
         // fix footers horizontal scrolling
         tFoot.setHorizontalScrollPosition(scrollLeft);
+
+        if (totalRows == 0) {
+            // No rows, no need to fetch new rows
+            return;
+        }
 
         firstRowInViewPort = calcFirstRowInViewPort();
         if (firstRowInViewPort > totalRows - pageLength) {

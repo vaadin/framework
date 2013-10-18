@@ -10,7 +10,7 @@
         <path location="${tb3test.dir}/result/classes" />
     </path>
 
-    <target name="run-all-tb3-tests" description="Run all the TB3 tests (except server tests) in the project">
+    <target name="run-all-tb3-tests" unless="tests.tb3.skip" description="Run all the TB3 tests (except server tests) in the project">
         <antcall target="run-tb3-suite">
             <param name="junit.test.suite" value="com.vaadin.tests.tb3.AllTB3Tests" />
         </antcall>

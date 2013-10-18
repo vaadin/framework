@@ -173,6 +173,13 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     protected abstract String getDeploymentHostname();
 
     /**
+     * Used to determine what port the test is running on
+     * 
+     * @return The port teh test is running on, by default 8888
+     */
+    protected abstract String getDeploymentPort();
+
+    /**
      * Produces a collection of browsers to run the test on. This method is
      * executed by the test runner when determining how many test methods to
      * invoke and with what parameters. For each returned value a test method is
@@ -562,7 +569,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * @return The base URL for the test. Does not include a trailing slash.
      */
     protected String getBaseURL() {
-        return "http://" + getDeploymentHostname() + ":8888";
+        return "http://" + getDeploymentHostname() + ":" + getDeploymentPort();
     }
 
     /**

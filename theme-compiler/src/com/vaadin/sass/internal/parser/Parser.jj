@@ -1727,6 +1727,7 @@ void includeDirective() :
     (name = property()|name = variableName(){ name = "$"+name;}
          |(name = functionName() 
            args = argValuelist()) <RPARAN>)
+    (<S>)*
     ((";"(<S>)*)+
            {documentHandler.includeDirective(name, args);}
     | <LBRACE> (<S>)* {documentHandler.startIncludeContentBlock(name);}

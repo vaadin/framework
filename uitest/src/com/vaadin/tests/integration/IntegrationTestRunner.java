@@ -45,7 +45,7 @@ public class IntegrationTestRunner extends TB3Runner {
      */
     @Override
     protected String testName(FrameworkMethod method) {
-        if (AbstractIntegrationTestTB3.class.isAssignableFrom(testClass)) {
+        if (AbstractIntegrationTest.class.isAssignableFrom(testClass)) {
             return System.getProperty("server-name");
         } else {
             return super.testName(method);

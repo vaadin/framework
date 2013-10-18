@@ -67,7 +67,7 @@ public interface Constants {
 
     // Keep the version number in sync with push/build.xml and other locations
     // listed in that file
-    static final String REQUIRED_ATMOSPHERE_VERSION = "1.0.14.vaadin4";
+    static final String REQUIRED_ATMOSPHERE_RUNTIME_VERSION = "1.0.14.vaadin4";
 
     static final String INVALID_ATMOSPHERE_VERSION_WARNING = "\n"
             + "=================================================================\n"
@@ -82,7 +82,7 @@ public interface Constants {
             + "If using a dependency management system, please add a dependency\n"
             + "to vaadin-push.\n"
             + "If managing dependencies manually, please make sure Atmosphere\n"
-            + REQUIRED_ATMOSPHERE_VERSION
+            + REQUIRED_ATMOSPHERE_RUNTIME_VERSION
             + " is included on the classpath.\n"
             + "Will fall back to using "
             + PushMode.class.getSimpleName()

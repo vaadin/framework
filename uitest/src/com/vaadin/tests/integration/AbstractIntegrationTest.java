@@ -32,7 +32,7 @@ import com.vaadin.tests.tb3.PrivateTB3Configuration;
  * @author Vaadin Ltd
  */
 @RunWith(IntegrationTestRunner.class)
-public abstract class AbstractIntegrationTestTB3 extends
+public abstract class AbstractIntegrationTest extends
         PrivateTB3Configuration {
     @Override
     protected String getBaseURL() {

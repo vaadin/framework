@@ -19,7 +19,7 @@ package com.vaadin.tests.tb3;
 import org.junit.runner.RunWith;
 import org.junit.runners.model.InitializationError;
 
-import com.vaadin.tests.integration.ServletIntegrationTestTB3;
+import com.vaadin.tests.integration.AbstractServletIntegrationTest;
 import com.vaadin.tests.tb3.ServletIntegrationTests.ServletIntegrationTestSuite;
 
 @RunWith(ServletIntegrationTestSuite.class)
@@ -28,7 +28,7 @@ public class ServletIntegrationTests {
     public static class ServletIntegrationTestSuite extends TB3TestSuite {
         public ServletIntegrationTestSuite(Class<?> klass)
                 throws InitializationError {
-            super(klass, ServletIntegrationTestTB3.class,
+            super(klass, AbstractServletIntegrationTest.class,
                     "com.vaadin.tests.integration", new String[] {});
         }
     }

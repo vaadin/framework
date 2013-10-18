@@ -1,0 +1,9 @@
+@mixin test($foo) {
+  #{$foo} {
+    @content;
+  }
+}
+
+@include test("foo") {
+  lorem: ipsum;
+}
