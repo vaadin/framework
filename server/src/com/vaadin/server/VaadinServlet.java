@@ -427,8 +427,6 @@ public class VaadinServlet extends HttpServlet implements Constants {
         outWriter.print(output);
         outWriter.flush();
         outWriter.close();
-        out.flush();
-
     }
 
     /**
