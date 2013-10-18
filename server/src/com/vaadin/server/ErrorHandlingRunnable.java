@@ -15,6 +15,8 @@
  */
 package com.vaadin.server;
 
+import java.io.Serializable;
+
 /**
  * Defines the interface to handle exceptions thrown during the execution of a
  * FutureAccess.
@@ -22,7 +24,7 @@ package com.vaadin.server;
  * @since 7.1.8
  * @author Vaadin Ltd
  */
-public interface ErrorHandlingRunnable extends Runnable {
+public interface ErrorHandlingRunnable extends Runnable, Serializable {
 
     /**
      * Handles exceptions thrown during the execution of a FutureAccess.
