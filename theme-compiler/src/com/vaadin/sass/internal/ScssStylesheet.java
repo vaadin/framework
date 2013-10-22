@@ -93,19 +93,49 @@ public class ScssStylesheet extends Node {
     }
 
     /**
-     * Main entry point for the SASS compiler. Takes in a file and encoding then
-     * builds up a ScssStylesheet tree out of it. Calling compile() on it will
-     * transform SASS into CSS. Calling toString() will print out the SCSS/CSS.
+     * Main entry point for the SASS compiler. Takes in a file and an optional
+     * parent style sheet, then builds up a ScssStylesheet tree out of it.
+     * Calling compile() on it will transform SASS into CSS. Calling toString()
+     * will print out the SCSS/CSS.
      * 
      * @param identifier
      *            The file path. If null then null is returned.
-     * @param encoding
+     * @param parentStylesheet
+     *            Style sheet from which to inherit resolvers and encoding. May
+     *            be null.
      * @return
      * @throws CSSException
      * @throws IOException
      */
     public static ScssStylesheet get(String identifier,
             ScssStylesheet parentStylesheet) throws CSSException, IOException {
+        return get(identifier, parentStylesheet, new SCSSDocumentHandlerImpl(),
+                new SCSSErrorHandler());
+    }
+
+    /**
+     * Main entry point for the SASS compiler. Takes in a file, an optional
+     * parent stylesheet, and document and error handlers. Then builds up a
+     * ScssStylesheet tree out of it. Calling compile() on it will transform
+     * SASS into CSS. Calling toString() will print out the SCSS/CSS.
+     * 
+     * @param identifier
+     *            The file path. If null then null is returned.
+     * @param parentStylesheet
+     *            Style sheet from which to inherit resolvers and encoding. May
+     *            be null.
+     * @param documentHandler
+     *            Instance of document handler. May not be null.
+     * @param errorHandler
+     *            Instance of error handler. May not be null.
+     * @return
+     * @throws CSSException
+     * @throws IOException
+     */
+    public static ScssStylesheet get(String identifier,
+            ScssStylesheet parentStylesheet,
+            SCSSDocumentHandler documentHandler, SCSSErrorHandler errorHandler)
+            throws CSSException, IOException {
         /*
          * The encoding to be used is passed through "encoding" parameter. the
          * imported children scss node will have the same encoding as their
@@ -123,8 +153,7 @@ public class ScssStylesheet extends Node {
         File file = new File(identifier);
         file = file.getCanonicalFile();
 
-        SCSSDocumentHandler handler = new SCSSDocumentHandlerImpl();
-        ScssStylesheet stylesheet = handler.getStyleSheet();
+        ScssStylesheet stylesheet = documentHandler.getStyleSheet();
         if (parentStylesheet == null) {
             // Use default resolvers
             stylesheet.addResolver(new FilesystemResolver());
@@ -143,8 +172,8 @@ public class ScssStylesheet extends Node {
         }
 
         Parser parser = new Parser();
-        parser.setErrorHandler(new SCSSErrorHandler());
-        parser.setDocumentHandler(handler);
+        parser.setErrorHandler(errorHandler);
+        parser.setDocumentHandler(documentHandler);
 
         try {
             parser.parseStyleSheet(source);

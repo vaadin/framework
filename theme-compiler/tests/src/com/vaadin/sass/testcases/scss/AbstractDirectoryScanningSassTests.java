@@ -28,8 +28,13 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
+import org.w3c.css.sac.CSSException;
+import org.w3c.css.sac.CSSParseException;
 
 import com.vaadin.sass.internal.ScssStylesheet;
+import com.vaadin.sass.internal.handler.SCSSDocumentHandler;
+import com.vaadin.sass.internal.handler.SCSSDocumentHandlerImpl;
+import com.vaadin.sass.internal.handler.SCSSErrorHandler;
 import com.vaadin.sass.testcases.scss.SassTestRunner.FactoryTest;
 
 public abstract class AbstractDirectoryScanningSassTests {
@@ -78,19 +83,38 @@ public abstract class AbstractDirectoryScanningSassTests {
 
     @FactoryTest
     public void compareScssWithCss(String scssResourceName) throws Exception {
-        String referenceCss;
         File scssFile = getSassLangResourceFile(scssResourceName);
-        File cssFile = getCssFile(scssFile);
-        referenceCss = IOUtils.toString(new FileInputStream(cssFile));
-        ScssStylesheet scssStylesheet = ScssStylesheet.get(scssFile
-                .getCanonicalPath());
+
+        SCSSDocumentHandler documentHandler = new SCSSDocumentHandlerImpl();
+        SCSSErrorHandler errorHandler = new SCSSErrorHandler() {
+            @Override
+            public void error(CSSParseException arg0) throws CSSException {
+                super.error(arg0);
+                Assert.fail(arg0.getMessage());
+            }
+
+            @Override
+            public void fatalError(CSSParseException arg0) throws CSSException {
+                super.error(arg0);
+                Assert.fail(arg0.getMessage());
+            }
+        };
+
+        ScssStylesheet scssStylesheet = ScssStylesheet.get(
+                scssFile.getCanonicalPath(), null, documentHandler,
+                errorHandler);
         scssStylesheet.compile();
         String parsedCss = scssStylesheet.toString();
 
-        String normalizedReference = normalize(referenceCss);
-        String normalizedParsed = normalize(parsedCss);
-        Assert.assertEquals("Original CSS and parsed CSS do not match for "
-                + scssResourceName, normalizedReference, normalizedParsed);
+        if (getCssFile(scssFile) != null) {
+            String referenceCss = IOUtils.toString(new FileInputStream(
+                    getCssFile(scssFile)));
+            String normalizedReference = normalize(referenceCss);
+            String normalizedParsed = normalize(parsedCss);
+
+            Assert.assertEquals("Original CSS and parsed CSS do not match for "
+                    + scssResourceName, normalizedReference, normalizedParsed);
+        }
     }
 
     private String normalize(String css) {
@@ -120,7 +144,7 @@ public abstract class AbstractDirectoryScanningSassTests {
         return new File(res.toURI());
     }
 
-    private File getCssFile(File scssFile) throws IOException {
+    protected File getCssFile(File scssFile) throws IOException {
         return new File(scssFile.getCanonicalPath().replace("scss", "css"));
     }
 }
