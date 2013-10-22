@@ -3259,7 +3259,7 @@ public class ParserTokenManager implements ParserConstants {
                         }
                         break;
                     case 162:
-                        if ((0x7fffffe07fffffeL & l) != 0L) {
+                        if ((0x7fffffe87fffffeL & l) != 0L) {
                             if (kind > 103) {
                                 kind = 103;
                             }
@@ -3310,10 +3310,10 @@ public class ParserTokenManager implements ParserConstants {
                         }
                         break;
                     case 38:
-                        if ((0x7fffffe07fffffeL & l) != 0L) {
+                        if ((0x7fffffe87fffffeL & l) != 0L) {
                             jjCheckNAddStates(0, 3);
                         }
-                        if ((0x7fffffe07fffffeL & l) != 0L) {
+                        if ((0x7fffffe87fffffeL & l) != 0L) {
                             if (kind > 72) {
                                 kind = 72;
                             }
@@ -3339,7 +3339,7 @@ public class ParserTokenManager implements ParserConstants {
                         }
                         break;
                     case 24:
-                        if ((0x7fffffe07fffffeL & l) != 0L) {
+                        if ((0x7fffffe87fffffeL & l) != 0L) {
                             if (kind > 72) {
                                 kind = 72;
                             }
@@ -3390,7 +3390,7 @@ public class ParserTokenManager implements ParserConstants {
                         }
                         break;
                     case 174:
-                        if ((0x7fffffe07fffffeL & l) != 0L) {
+                        if ((0x7fffffe87fffffeL & l) != 0L) {
                             if (kind > 103) {
                                 kind = 103;
                             }
@@ -3408,7 +3408,7 @@ public class ParserTokenManager implements ParserConstants {
                         }
                         break;
                     case 75:
-                        if ((0x7fffffe07fffffeL & l) != 0L) {
+                        if ((0x7fffffe87fffffeL & l) != 0L) {
                             if (kind > 76) {
                                 kind = 76;
                             }
@@ -3438,10 +3438,6 @@ public class ParserTokenManager implements ParserConstants {
                         }
                         break;
                     case 4:
-                        if ((0x7fffffe07fffffeL & l) != 0L) {
-                            jjCheckNAddStates(138, 140);
-                        }
-                        break;
                     case 5:
                         if ((0x7fffffe87fffffeL & l) != 0L) {
                             jjCheckNAddStates(138, 140);
@@ -3671,14 +3667,6 @@ public class ParserTokenManager implements ParserConstants {
                         }
                         break;
                     case 76:
-                        if ((0x7fffffe07fffffeL & l) == 0L) {
-                            break;
-                        }
-                        if (kind > 76) {
-                            kind = 76;
-                        }
-                        jjCheckNAddTwoStates(77, 78);
-                        break;
                     case 77:
                         if ((0x7fffffe87fffffeL & l) == 0L) {
                             break;
@@ -3898,7 +3886,7 @@ public class ParserTokenManager implements ParserConstants {
                         }
                         break;
                     case 108:
-                        if ((0x7fffffe07fffffeL & l) == 0L) {
+                        if ((0x7fffffe87fffffeL & l) == 0L) {
                             break;
                         }
                         if (kind > 103) {
@@ -4586,7 +4574,7 @@ public class ParserTokenManager implements ParserConstants {
                         }
                         break;
                     case 267:
-                        if ((0x7fffffe07fffffeL & l) == 0L) {
+                        if ((0x7fffffe87fffffeL & l) == 0L) {
                             break;
                         }
                         if (kind > 72) {
@@ -4595,12 +4583,12 @@ public class ParserTokenManager implements ParserConstants {
                         jjCheckNAddTwoStates(225, 226);
                         break;
                     case 268:
-                        if ((0x7fffffe07fffffeL & l) != 0L) {
+                        if ((0x7fffffe87fffffeL & l) != 0L) {
                             jjCheckNAddStates(0, 3);
                         }
                         break;
                     case 269:
-                        if ((0x7fffffe07fffffeL & l) == 0L) {
+                        if ((0x7fffffe87fffffeL & l) == 0L) {
                             break;
                         }
                         if (kind > 72) {
@@ -4809,14 +4797,6 @@ public class ParserTokenManager implements ParserConstants {
                         }
                         break;
                     case 333:
-                        if ((0x7fffffe07fffffeL & l) == 0L) {
-                            break;
-                        }
-                        if (kind > 95) {
-                            kind = 95;
-                        }
-                        jjCheckNAddTwoStates(334, 335);
-                        break;
                     case 334:
                         if ((0x7fffffe87fffffeL & l) == 0L) {
                             break;

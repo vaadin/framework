@@ -13,26 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.vaadin.server;
+package com.vaadin.tests.push;
 
-import java.io.Serializable;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.ui.Transport;
 
-/**
- * Defines the interface to handle exceptions thrown during the execution of a
- * FutureAccess.
- * 
- * @since 7.1.8
- * @author Vaadin Ltd
- */
-public interface ErrorHandlingRunnable extends Runnable, Serializable {
+public class PushLargeDataStreaming extends PushLargeData {
 
-    /**
-     * Handles exceptions thrown during the execution of a FutureAccess.
-     * 
-     * @since 7.1.8
-     * @param exception
-     *            the thrown exception.
-     */
-    public void handleError(Exception exception);
-
+    @Override
+    protected void setup(VaadinRequest request) {
+        super.setup(request);
+        getPushConfiguration().setTransport(Transport.STREAMING);
+        getPushConfiguration().setFallbackTransport(Transport.STREAMING);
+    }
 }

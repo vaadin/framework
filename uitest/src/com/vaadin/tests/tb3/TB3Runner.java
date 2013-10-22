@@ -17,6 +17,8 @@
 package com.vaadin.tests.tb3;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -72,8 +74,14 @@ public class TB3Runner extends BlockJUnit4ClassRunner {
         try {
             AbstractTB3Test testClassInstance = (AbstractTB3Test) getTestClass()
                     .getOnlyConstructor().newInstance();
-            for (DesiredCapabilities capabilities : testClassInstance
-                    .getBrowsersToTest()) {
+            Collection<DesiredCapabilities> desiredCapabilites = testClassInstance
+                    .getBrowsersToTest();
+            if (testClassInstance.runLocally()) {
+                desiredCapabilites = new ArrayList<DesiredCapabilities>();
+                desiredCapabilites.add(BrowserUtil
+                        .firefox(MultiBrowserTest.TESTED_FIREFOX_VERSION));
+            }
+            for (DesiredCapabilities capabilities : desiredCapabilites) {
 
                 // Find any methods marked with @Test.
                 for (FrameworkMethod m : getTestClass().getAnnotatedMethods(

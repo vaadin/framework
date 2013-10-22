@@ -15,6 +15,7 @@
  */
 package com.vaadin.sass.testcases.scss;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
@@ -37,7 +38,7 @@ public class AutomaticSassTests extends AbstractDirectoryScanningSassTests {
 
     @TestFactory
     public static Collection<String> getScssResourceNames()
-            throws URISyntaxException {
+            throws URISyntaxException, IOException {
         return getScssResourceNames(getResourceURLInternal(""));
     }
 

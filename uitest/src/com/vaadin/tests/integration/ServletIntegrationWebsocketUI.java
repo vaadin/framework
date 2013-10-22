@@ -18,6 +18,7 @@ package com.vaadin.tests.integration;
 import com.vaadin.annotations.Push;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ui.Transport;
+import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
 
 /**
  * Server test which uses websockets
@@ -39,7 +40,9 @@ public class ServletIntegrationWebsocketUI extends ServletIntegrationUI {
     protected void init(VaadinRequest request) {
         super.init(request);
         // Ensure no fallback is used
-        getPushConfiguration().setFallbackTransport(Transport.WEBSOCKET);
+        getPushConfiguration().setParameter(
+                PushConfigurationState.FALLBACK_TRANSPORT_PARAM, "none");
+
     }
 
 }

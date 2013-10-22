@@ -16,13 +16,17 @@
 
 package com.vaadin.client.ui;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
 import com.vaadin.client.ui.TouchScrollDelegate.TouchScrollHandler;
@@ -206,5 +210,36 @@ public class VPanel extends SimplePanel implements ShortcutActionHandlerOwner,
             touchScrollHandler = TouchScrollDelegate.enableTouchScrolling(this);
         }
         touchScrollHandler.addElement(contentNode);
+
+        /*
+         * Shake up the DOM a bit to make the window shed unnecessary scroll
+         * bars and resize correctly afterwards. This resulting code took over a
+         * week to summon forth, and involved some pretty hairy black magic.
+         * Don't touch it unless you know what you're doing! Fixes ticket
+         * #12727.
+         * 
+         * This solution comes from ticket #11994: Windows get unnecessary
+         * scroll bars in WebKit when content is 100% wide.
+         */
+        if (BrowserInfo.get().isWebkit()) {
+            Scheduler.get().scheduleFinally(new ScheduledCommand() {
+                @Override
+                public void execute() {
+                    final com.google.gwt.dom.client.Element scrollable = contentNode
+                            .getFirstChildElement();
+                    final String oldWidth = scrollable.getStyle().getWidth();
+                    final String oldHeight = scrollable.getStyle().getHeight();
+
+                    scrollable.getStyle().setWidth(110, Unit.PCT);
+                    scrollable.getOffsetWidth();
+                    scrollable.getStyle().setProperty("width", oldWidth);
+
+                    scrollable.getStyle().setHeight(110, Unit.PCT);
+                    scrollable.getOffsetHeight();
+                    scrollable.getStyle().setProperty("height", oldHeight);
+                }
+            });
+        }
+
     }
 }

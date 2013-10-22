@@ -15,7 +15,7 @@
  */
 package com.vaadin.tests.push;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.openqa.selenium.remote.DesiredCapabilities;
 
@@ -23,7 +23,7 @@ import com.vaadin.tests.tb3.WebsocketTest;
 
 public class BasicPushWebsocketTest extends BasicPushTest {
     @Override
-    public Collection<DesiredCapabilities> getBrowsersToTest() {
+    public List<DesiredCapabilities> getBrowsersToTest() {
         return WebsocketTest.getWebsocketBrowsers();
     }
 }

@@ -22,6 +22,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import com.vaadin.tests.tb3.MultiBrowserTest;
 import com.vaadin.tests.tb3.PrivateTB3Configuration;
 
 /**
@@ -32,8 +33,7 @@ import com.vaadin.tests.tb3.PrivateTB3Configuration;
  * @author Vaadin Ltd
  */
 @RunWith(IntegrationTestRunner.class)
-public abstract class AbstractIntegrationTest extends
-        PrivateTB3Configuration {
+public abstract class AbstractIntegrationTest extends PrivateTB3Configuration {
     @Override
     protected String getBaseURL() {
         String deploymentUrl = System.getProperty("deployment.url");
@@ -47,7 +47,8 @@ public abstract class AbstractIntegrationTest extends
 
     @Parameters
     public static Collection<DesiredCapabilities> getBrowsersForTest() {
-        return Collections.singleton(BrowserUtil.firefox(17));
+        return Collections.singleton(BrowserUtil
+                .firefox(MultiBrowserTest.TESTED_FIREFOX_VERSION));
     }
 
 }
