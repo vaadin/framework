@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ivy-module [
+<!-- Keep the version numbers in sync with build.xml -->
+    <!ENTITY atmosphere.runtime.version "1.0.14.vaadin4">
+    <!ENTITY atmosphere.js.version "2.0.3-vaadin1">
+]>
 <ivy-module version="2.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"
@@ -11,6 +16,8 @@
         <conf name="build-provided" />
         <conf name="ide" visibility="private" />
         <conf name="test" visibility="private" />
+        <!-- Used for building push.js only -->
+        <conf name="push.js" visibility="private" />
     </configurations>
     <publications>
         <artifact type="jar" ext="jar" />
@@ -26,10 +33,11 @@
             rev="2.4" conf="build-provided,ide,test -> default" />
 
         <!-- Atmosphere -->
-        <!-- Keep the version number in sync with build.xml and other locations listed in that file -->
-        <dependency org="com.vaadin.external.atmosphere" name="atmosphere-runtime"
-            rev="1.0.14.vaadin4" conf="build,ide,test -> default">
-        </dependency>
+        <dependency org="com.vaadin.external.atmosphere"
+            name="atmosphere-runtime" rev="&atmosphere.runtime.version;"
+            conf="build,ide,test -> default" />
+        <dependency org="com.vaadin.external.atmosphere.client"
+            name="jquery" rev="&atmosphere.js.version;" conf="push.js -> default" />
     </dependencies>
 
 </ivy-module>

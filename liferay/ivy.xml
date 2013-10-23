@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"
+    xmlns:m="http://ant.apache.org/ivy/maven">
+
+    <info organisation="com.vaadin" module="vaadin-liferay" revision="${vaadin.version}" />
+
+    <configurations>
+        <conf name="build" />
+        <conf name="build-provided" />
+        <conf name="deps" visibility="private" />
+    </configurations>
+
+    <publications>
+        <artifact type="zip" ext="zip" />
+    </publications>
+
+    <dependencies>
+        <dependency org="com.vaadin" name="vaadin-client-compiled"
+            rev="${vaadin.version}" conf="deps -> build" transitive="false"/>
+        <dependency org="com.vaadin" name="vaadin-themes"
+            rev="${vaadin.version}" conf="deps -> build" transitive="false"/>
+        <dependency org="com.vaadin" name="vaadin-push"
+            rev="${vaadin.version}" conf="deps -> build" transitive="false" />
+        <dependency org="com.vaadin" name="vaadin-server"
+            rev="${vaadin.version}" conf="deps -> build" transitive="false" />
+    </dependencies>
+
+</ivy-module>

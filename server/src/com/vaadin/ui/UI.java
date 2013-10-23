@@ -24,6 +24,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vaadin.event.Action;
@@ -35,6 +36,9 @@ import com.vaadin.navigator.Navigator;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.ComponentSizeValidator;
 import com.vaadin.server.ComponentSizeValidator.InvalidLayout;
+import com.vaadin.server.DefaultErrorHandler;
+import com.vaadin.server.ErrorHandler;
+import com.vaadin.server.ErrorHandlingRunnable;
 import com.vaadin.server.LocaleService;
 import com.vaadin.server.Page;
 import com.vaadin.server.PaintException;
@@ -1287,10 +1291,35 @@ public abstract class UI extends AbstractSingleComponentContainer implements
             throw new UIDetachedException();
         }
 
-        return session.access(new Runnable() {
+        return session.access(new ErrorHandlingRunnable() {
             @Override
             public void run() {
                 accessSynchronously(runnable);
+            }
+
+            @Override
+            public void handleError(Exception exception) {
+                try {
+                    if (runnable instanceof ErrorHandlingRunnable) {
+                        ErrorHandlingRunnable errorHandlingRunnable = (ErrorHandlingRunnable) runnable;
+
+                        errorHandlingRunnable.handleError(exception);
+                    } else {
+                        ConnectorErrorEvent errorEvent = new ConnectorErrorEvent(
+                                UI.this, exception);
+
+                        ErrorHandler errorHandler = com.vaadin.server.ErrorEvent
+                                .findErrorHandler(UI.this);
+
+                        if (errorHandler == null) {
+                            errorHandler = new DefaultErrorHandler();
+                        }
+
+                        errorHandler.error(errorEvent);
+                    }
+                } catch (Exception e) {
+                    getLogger().log(Level.SEVERE, e.getMessage(), e);
+                }
             }
         });
     }

@@ -9,6 +9,7 @@ import com.vaadin.server.WebBrowser;
 import com.vaadin.shared.communication.PushMode;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.shared.ui.ui.Transport;
+import com.vaadin.shared.ui.ui.UIState.PushConfigurationState;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
@@ -100,6 +101,15 @@ public abstract class AbstractTestUI extends UI {
         }
     }
 
+    /**
+     * Sets the push transport according to the transport= URL parameter if such
+     * is given. Supports transport=xhr (disables push), transport=websocket
+     * (forces websocket into use), transport=streaming (forces streaming into
+     * use). Using ?transport=xyz disables the fallback transport.
+     * 
+     * @param request
+     *            The UI init request
+     */
     protected void setTransport(VaadinRequest request) {
         String transport = request.getParameter("transport");
         PushConfiguration config = getPushConfiguration();
@@ -112,11 +122,17 @@ public abstract class AbstractTestUI extends UI {
                 config.setPushMode(PushMode.AUTOMATIC);
             }
             config.setTransport(Transport.WEBSOCKET);
+            // Ensure no fallback is used
+            getPushConfiguration().setParameter(
+                    PushConfigurationState.FALLBACK_TRANSPORT_PARAM, "none");
         } else if ("streaming".equals(transport)) {
             if (!mode.isEnabled()) {
                 config.setPushMode(PushMode.AUTOMATIC);
             }
             config.setTransport(Transport.STREAMING);
+            // Ensure no fallback is used
+            getPushConfiguration().setParameter(
+                    PushConfigurationState.FALLBACK_TRANSPORT_PARAM, "none");
         }
     }
 

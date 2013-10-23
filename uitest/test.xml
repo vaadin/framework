@@ -174,7 +174,7 @@
     <target name="run-and-clean-up" depends="check-parameters,remove-error-screens,run-tb2-tests" />
 
     <!-- Runs all TestBench 2 tests -->
-    <target name="tb2-tests">
+    <target name="tb2-tests" unless="tests.tb2.skip">
         <property name="test-output-dir" location="${test.xml.dir}/result/testbench-junit-classes" />
         <property name="retries" value="2" />
 

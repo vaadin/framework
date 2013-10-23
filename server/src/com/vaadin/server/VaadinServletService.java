@@ -66,11 +66,11 @@ public class VaadinServletService extends VaadinService {
     private static boolean checkAtmosphereSupport() {
         try {
             String rawVersion = Version.getRawVersion();
-            if (!Constants.REQUIRED_ATMOSPHERE_VERSION.equals(rawVersion)) {
+            if (!Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION.equals(rawVersion)) {
                 getLogger().log(
                         Level.WARNING,
                         Constants.INVALID_ATMOSPHERE_VERSION_WARNING,
-                        new Object[] { Constants.REQUIRED_ATMOSPHERE_VERSION,
+                        new Object[] { Constants.REQUIRED_ATMOSPHERE_RUNTIME_VERSION,
                                 rawVersion });
             }
             return true;

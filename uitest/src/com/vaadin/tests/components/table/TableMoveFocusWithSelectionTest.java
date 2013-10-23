@@ -57,19 +57,25 @@ public class TableMoveFocusWithSelectionTest extends MultiBrowserTest {
         // Click on row 7
         getDriver().findElement(By.id("row-7")).click();
 
-        // Select row 5-10 server side
-        getDriver().findElement(By.id("select-510")).click();
-
-        // Ensure row 7 is still focused
+        // Clicking a row should get the row focus
         WebElement row7TableRow = getDriver().findElement(
                 By.xpath("//div[@id='row-7']/../../.."));
         String row7StyleName = row7TableRow.getAttribute("class");
         assertTrue(row7StyleName.contains("v-table-focus"));
-    }
 
-    @Override
-    protected Class<?> getUIClass() {
-        // FIXME Remove when this is done automatically
-        return TableMoveFocusWithSelection.class;
+        // Select row 5-10 server side
+        getDriver().findElement(By.id("select-510")).click();
+
+        /*
+         * Focus the table again (some browsers steal focus when performing
+         * button click, other don't)
+         */
+        getDriver().findElement(By.id("test-table")).click();
+
+        // Ensure row 7 is still focused
+        row7TableRow = getDriver().findElement(
+                By.xpath("//div[@id='row-7']/../../.."));
+        row7StyleName = row7TableRow.getAttribute("class");
+        assertTrue(row7StyleName.contains("v-table-focus"));
     }
 }

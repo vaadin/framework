@@ -19,7 +19,6 @@ package com.vaadin.sass.testcases.scss;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -36,28 +35,43 @@ import com.vaadin.sass.testcases.scss.SassTestRunner.FactoryTest;
 public abstract class AbstractDirectoryScanningSassTests {
 
     public static Collection<String> getScssResourceNames(URL directoryUrl)
-            throws URISyntaxException {
+            throws URISyntaxException, IOException {
         List<String> resources = new ArrayList<String>();
-        for (File scssFile : getScssFiles(directoryUrl)) {
-            resources.add(scssFile.getName());
+        for (String scssFile : getScssFiles(directoryUrl)) {
+            resources.add(scssFile);
         }
         return resources;
     }
 
-    private static File[] getScssFiles(URL directoryUrl)
-            throws URISyntaxException {
+    private static List<String> getScssFiles(URL directoryUrl)
+            throws URISyntaxException, IOException {
         URL sasslangUrl = directoryUrl;
         File sasslangDir = new File(sasslangUrl.toURI());
         File scssDir = new File(sasslangDir, "scss");
         Assert.assertTrue(scssDir.exists());
 
-        return scssDir.listFiles(new FilenameFilter() {
+        List<File> scssFiles = new ArrayList<File>();
+        addScssFilesRecursively(scssDir, scssFiles);
 
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".scss");
+        List<String> scssRelativeNames = new ArrayList<String>();
+        for (File f : scssFiles) {
+            String relativeName = f.getCanonicalPath().substring(
+                    scssDir.getCanonicalPath().length() + 1);
+            scssRelativeNames.add(relativeName);
+        }
+        return scssRelativeNames;
+    }
+
+    private static void addScssFilesRecursively(File scssDir,
+            List<File> scssFiles) {
+        for (File f : scssDir.listFiles()) {
+            if (f.isDirectory()) {
+                addScssFilesRecursively(f, scssFiles);
+            } else if (f.getName().endsWith(".scss")
+                    && !f.getName().startsWith("_")) {
+                scssFiles.add(f);
             }
-        });
+        }
     }
 
     protected abstract URL getResourceURL(String path);
@@ -69,7 +83,7 @@ public abstract class AbstractDirectoryScanningSassTests {
         File cssFile = getCssFile(scssFile);
         referenceCss = IOUtils.toString(new FileInputStream(cssFile));
         ScssStylesheet scssStylesheet = ScssStylesheet.get(scssFile
-                .getAbsolutePath());
+                .getCanonicalPath());
         scssStylesheet.compile();
         String parsedCss = scssStylesheet.toString();
 
@@ -88,6 +102,9 @@ public abstract class AbstractDirectoryScanningSassTests {
         css = css.replaceAll("^[\n\r\t ]*", "");
         // remove trailing whitespace
         css = css.replaceAll("[\n\r\t ]*$", "");
+        css = css.replaceAll(";", ";\n");
+        css = css.replaceAll("\\{", "\\{\n");
+        css = css.replaceAll("}", "}\n");
         return css;
     }
 
@@ -103,7 +120,7 @@ public abstract class AbstractDirectoryScanningSassTests {
         return new File(res.toURI());
     }
 
-    private File getCssFile(File scssFile) {
-        return new File(scssFile.getAbsolutePath().replace("scss", "css"));
+    private File getCssFile(File scssFile) throws IOException {
+        return new File(scssFile.getCanonicalPath().replace("scss", "css"));
     }
 }

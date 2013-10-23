@@ -559,7 +559,7 @@ TOKEN : /* basic tokens */
                          ( <H> )? ( <H> )? 
                     ( [ " ", "\t" , "\n" , "\r", "\f" ] )? >
   | < #ESCAPE     : <UNICODE> | ( "\\" [ " "-"~","\200"-"\377" ] ) >
-  | < #NMSTART    : ("-")?[ "a"-"z"] | <NONASCII> | <ESCAPE> >
+  | < #NMSTART    : ("-")?[ "a"-"z","_"] | <NONASCII> | <ESCAPE> >
   | < #NMCHAR	  : ["a"-"z", "0"-"9", "-", "_"] | <NONASCII> | <ESCAPE> >
   | < #STRINGCHAR : [ "\t"," ","!","#","$","%","&","("-"~" ] 
                     | "\\\n" | "\\\r\n" | "\\\r" | "\\\f" 
@@ -1727,6 +1727,7 @@ void includeDirective() :
     (name = property()|name = variableName(){ name = "$"+name;}
          |(name = functionName() 
            args = argValuelist()) <RPARAN>)
+    (<S>)*
     ((";"(<S>)*)+
            {documentHandler.includeDirective(name, args);}
     | <LBRACE> (<S>)* {documentHandler.startIncludeContentBlock(name);}

@@ -27,6 +27,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.vaadin.event.ActionManager;
+import com.vaadin.event.ConnectorActionManager;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.ComponentSizeValidator;
@@ -90,7 +91,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      * Keeps track of the Actions added to this component; the actual
      * handling/notifying is delegated, usually to the containing window.
      */
-    private ActionManager actionManager;
+    private ConnectorActionManager actionManager;
 
     private boolean visible = true;
 
@@ -929,7 +930,7 @@ public abstract class AbstractComponent extends AbstractClientConnector
      */
     protected ActionManager getActionManager() {
         if (actionManager == null) {
-            actionManager = new ActionManager();
+            actionManager = new ConnectorActionManager(this);
             setActionManagerViewer();
         }
         return actionManager;

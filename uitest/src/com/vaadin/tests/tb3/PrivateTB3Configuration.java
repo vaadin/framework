@@ -25,6 +25,12 @@ import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.Properties;
 
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxBinary;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
+import com.vaadin.testbench.TestBench;
+
 /**
  * Provides values for parameters which depend on where the test is run.
  * Parameters should be configured in work/eclipse-run-selected-test.properties.
@@ -132,4 +138,23 @@ public abstract class PrivateTB3Configuration extends ScreenshotTB3Test {
                 "No compatible (192.168.*) ip address found.");
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.vaadin.tests.tb3.AbstractTB3Test#setupLocalDriver()
+     */
+    @Override
+    protected void setupLocalDriver() {
+        String firefoxPath = getProperty("firefox.path");
+        WebDriver driver;
+        if (firefoxPath != null) {
+            driver = new FirefoxDriver(
+                    new FirefoxBinary(new File(firefoxPath)), null);
+        } else {
+            driver = new FirefoxDriver();
+        }
+        setDriver(TestBench.createDriver(driver));
+        setDesiredCapabilities(BrowserUtil
+                .firefox(MultiBrowserTest.TESTED_FIREFOX_VERSION));
+    }
 }

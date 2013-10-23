@@ -34,11 +34,13 @@ import com.vaadin.tests.components.AbstractTestUIWithLog;
 import com.vaadin.ui.JavaScriptFunction;
 
 // Load vaadinPush.js so that jQueryVaadin is defined 
-@JavaScript("vaadin://vaadinPush.js")
+@JavaScript("vaadin://vaadinPush.debug.js")
 public class TrackMessageSizeUI extends AbstractTestUIWithLog {
 
     private String testMethod = "function testSequence(expected, data) {\n"
             + "    var request = {trackMessageLength: true, messageDelimiter: '|'};\n"
+            + "    _request = {trackMessageLength: true, messageDelimiter: '|'};\n"
+            + "    _handleProtocol = function(a,b) {return true;};"
             + "    var response = {partialMessage: ''};\n"
             + "    var messages = [];\n"
             + "    for(var i = 0; i < data.length; i++) {\n"
@@ -85,7 +87,7 @@ public class TrackMessageSizeUI extends AbstractTestUIWithLog {
     }
 
     private String findMethodImplementation() {
-        String filename = "/VAADIN/jquery.atmosphere.js";
+        String filename = "/VAADIN/vaadinPush.debug.js";
         URL resourceURL = findResourceURL(filename,
                 (VaadinServletService) VaadinService.getCurrent());
         if (resourceURL == null) {
@@ -141,7 +143,7 @@ public class TrackMessageSizeUI extends AbstractTestUIWithLog {
 
     @Override
     protected String getTestDescription() {
-        return "Unit tests for _trackMessageSize in jquery.atmosphere.js. Implemented with testbench and a full Vaadin server side since the testing requires some file mangling.";
+        return "Unit tests for _trackMessageSize in vaadinPush.debug.js. Implemented with testbench and a full Vaadin server side since the testing requires some file mangling.";
     }
 
     @Override

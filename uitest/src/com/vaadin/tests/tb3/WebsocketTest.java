@@ -20,7 +20,6 @@
 package com.vaadin.tests.tb3;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,8 +43,8 @@ public abstract class WebsocketTest extends PrivateTB3Configuration {
      * @return All supported browsers which are actively tested and support
      *         websockets
      */
-    public static Collection<DesiredCapabilities> getWebsocketBrowsers() {
-        return Collections.unmodifiableCollection(websocketBrowsers);
+    public static List<DesiredCapabilities> getWebsocketBrowsers() {
+        return Collections.unmodifiableList(websocketBrowsers);
     }
 
     /*
@@ -54,7 +53,7 @@ public abstract class WebsocketTest extends PrivateTB3Configuration {
      * @see com.vaadin.tests.tb3.AbstractTB3Test#getBrowserToRunOn()
      */
     @Override
-    public Collection<DesiredCapabilities> getBrowsersToTest() {
-        return getWebsocketBrowsers();
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        return new ArrayList<DesiredCapabilities>(getWebsocketBrowsers());
     }
 }

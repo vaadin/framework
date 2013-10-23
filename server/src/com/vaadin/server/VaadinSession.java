@@ -35,6 +35,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.portlet.PortletSession;
@@ -86,6 +87,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         private final Map<Class<?>, CurrentInstance> instances = CurrentInstance
                 .getInstances(true);
         private final VaadinSession session;
+        private Runnable runnable;
 
         /**
          * Creates an instance for the given runnable
@@ -100,6 +102,7 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
         public FutureAccess(VaadinSession session, Runnable runnable) {
             super(runnable, null);
             this.session = session;
+            this.runnable = runnable;
         }
 
         @Override
@@ -128,6 +131,36 @@ public class VaadinSession implements HttpSessionBindingListener, Serializable {
          */
         public Map<Class<?>, CurrentInstance> getCurrentInstances() {
             return instances;
+        }
+
+        /**
+         * Handles exceptions thrown during the execution of this task.
+         * 
+         * @since 7.1.8
+         * @param exception
+         *            the thrown exception.
+         */
+        public void handleError(Exception exception) {
+            try {
+                if (runnable instanceof ErrorHandlingRunnable) {
+                    ErrorHandlingRunnable errorHandlingRunnable = (ErrorHandlingRunnable) runnable;
+
+                    errorHandlingRunnable.handleError(exception);
+                } else {
+                    ErrorEvent errorEvent = new ErrorEvent(exception);
+
+                    ErrorHandler errorHandler = ErrorEvent
+                            .findErrorHandler(session);
+
+                    if (errorHandler == null) {
+                        errorHandler = new DefaultErrorHandler();
+                    }
+
+                    errorHandler.error(errorEvent);
+                }
+            } catch (Exception e) {
+                getLogger().log(Level.SEVERE, e.getMessage(), e);
+            }
         }
     }
 

@@ -17,7 +17,7 @@
 package com.vaadin.tests.tb3;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -40,30 +40,37 @@ import org.openqa.selenium.remote.DesiredCapabilities;
  */
 public abstract class MultiBrowserTest extends PrivateTB3Configuration {
 
+    public static final int TESTED_SAFARI_VERSION = 6;
+    public static final int TESTED_CHROME_VERSION = 29;
+    public static final int TESTED_FIREFOX_VERSION = 24;
+
     static List<DesiredCapabilities> allBrowsers = new ArrayList<DesiredCapabilities>();
     static {
         allBrowsers.add(BrowserUtil.ie(8));
         allBrowsers.add(BrowserUtil.ie(9));
         allBrowsers.add(BrowserUtil.ie(10));
         allBrowsers.add(BrowserUtil.ie(11));
-        allBrowsers.add(BrowserUtil.firefox(24));
+        allBrowsers.add(BrowserUtil.firefox(TESTED_FIREFOX_VERSION));
         // Uncomment once we have the capability to run on Safari 6
-        // allBrowsers.add(safari(6));
-        allBrowsers.add(BrowserUtil.chrome(29));
-        allBrowsers.add(BrowserUtil.opera(12));
-
+        // allBrowsers.add(safari(TESTED_SAFARI_VERSION));
+        allBrowsers.add(BrowserUtil.chrome(TESTED_CHROME_VERSION));
+        // Re-enable this when it is possible to run on a modern Opera version
+        // (15+)
+        // allBrowsers.add(BrowserUtil.opera(15));
     }
 
     /**
      * @return all supported browsers which are actively tested
      */
     public static List<DesiredCapabilities> getAllBrowsers() {
-        return allBrowsers;
+        return Collections.unmodifiableList(allBrowsers);
     }
 
     @Override
-    public Collection<DesiredCapabilities> getBrowsersToTest() {
-        return allBrowsers;
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        // Return a copy so sub classes can do
+        // super.getBrowseresToTest().remove(something)
+        return new ArrayList<DesiredCapabilities>(getAllBrowsers());
     }
 
 }

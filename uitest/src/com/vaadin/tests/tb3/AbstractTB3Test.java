@@ -17,8 +17,8 @@
 package com.vaadin.tests.tb3;
 
 import java.net.URL;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.junit.After;
@@ -77,7 +77,8 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     private boolean push = false;
     {
         // Default browser to run on unless setDesiredCapabilities is called
-        desiredCapabilities = BrowserUtil.firefox(24);
+        desiredCapabilities = BrowserUtil
+                .firefox(MultiBrowserTest.TESTED_FIREFOX_VERSION);
     }
 
     /**
@@ -103,6 +104,10 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      *             If something goes wrong
      */
     protected void setupDriver() throws Exception {
+        if (runLocally()) {
+            setupLocalDriver();
+            return;
+        }
         DesiredCapabilities capabilities = getDesiredCapabilities();
 
         WebDriver dr = TestBench.createDriver(new RemoteWebDriver(new URL(
@@ -126,11 +131,26 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     }
 
     /**
-     * Opens the given test (defined by {@link #getTestUrl(boolean, boolean)},
-     * optionally with debug window and/or push
+     * Override and return true to run the test locally. This method is only to
+     * be used for developing tests.
      * 
-     * @param debug
-     * @param push
+     * @return true to run the test on a local browser, false to use the hub
+     */
+    public boolean runLocally() {
+        return false;
+    }
+
+    /**
+     * Creates a {@link WebDriver} instance used for running the test locally
+     * for debug purposes. Used only when {@link #runLocally()} is overridden to
+     * return true;
+     */
+    protected abstract void setupLocalDriver();
+
+    /**
+     * Opens the given test (defined by {@link #getTestUrl()}, optionally with
+     * debug window and/or push (depending on {@link #isDebug()} and
+     * {@link #isPush()}.
      */
     protected void openTestURL() {
         driver.get(getTestUrl());
@@ -192,8 +212,9 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * 
      * @return The browsers to run the test on
      */
-    public Collection<DesiredCapabilities> getBrowsersToTest() {
-        return Collections.singleton(BrowserUtil.firefox(17));
+    public List<DesiredCapabilities> getBrowsersToTest() {
+        return Collections.singletonList(BrowserUtil
+                .firefox(MultiBrowserTest.TESTED_FIREFOX_VERSION));
 
     }
 
@@ -790,4 +811,5 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
         // Do nothing by default
 
     }
+
 }
