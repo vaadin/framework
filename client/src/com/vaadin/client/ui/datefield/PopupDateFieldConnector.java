@@ -178,8 +178,8 @@ public class PopupDateFieldConnector extends TextualDateConnector {
     public void onStateChanged(StateChangeEvent stateChangeEvent) {
         super.onStateChanged(stateChangeEvent);
         getWidget().setTextFieldEnabled(getState().textFieldEnabled);
-        getWidget().setRangeStart(getState().rangeStart);
-        getWidget().setRangeEnd(getState().rangeEnd);
+        getWidget().setRangeStart((Date) getState().rangeStart.clone());
+        getWidget().setRangeEnd((Date) getState().rangeEnd.clone());
     }
 
     @Override
