@@ -127,6 +127,10 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         final Button replaceButton = new Button("Test replace");
         final Button moveButton = new Button("Test move");
         final Button removeButton = new Button("Test remove");
+        addButton.setId("testButton1");
+        replaceButton.setId("testButton2");
+        moveButton.setId("testButton3");
+        removeButton.setId("testButton4");
 
         replaceButton.setEnabled(false);
         moveButton.setEnabled(false);
@@ -196,7 +200,9 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         final Button biggerButton = new Button("full size");
         final Button smallerButton = new Button("200 px width");
         final Button originalButton = new Button("undefined size and add");
-
+        biggerButton.setId("testButton1");
+        smallerButton.setId("testButton2");
+        originalButton.setId("testButton3");
         vlo.addComponent(biggerButton);
         vlo.addComponent(smallerButton);
         vlo.addComponent(originalButton);
@@ -264,6 +270,11 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
                 "Set undefined size and add component");
         final Button button3 = new Button("Set fixed width and height 75%");
         final Button button4 = new Button("Set size full");
+
+        button1.setId("testButton1");
+        button2.setId("testButton2");
+        button3.setId("testButton3");
+        button4.setId("testButton4");
 
         vlo.addComponent(button1);
         vlo.addComponent(button2);
@@ -344,8 +355,11 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         c2.setSizeFull();
 
         final Button button1 = new Button("Expand to 1/undefined");
+        button1.setId("testButton1");
         final Button button2 = new Button("Expand to 0.5/0.5");
+        button2.setId("testButton2");
         final Button button3 = new Button("Expand to 0.75/0.25");
+        button3.setId("testButton3");
 
         vlo.addComponent(button1);
         vlo.addComponent(button2);
@@ -460,6 +474,10 @@ public class VerticalLayoutTests extends AbstractLayoutTests {
         final Button button2 = new Button("Set spacing on");
         final Button button3 = new Button("Set margin off");
         final Button button4 = new Button("Set spacing off");
+        button1.setId("testButton1");
+        button2.setId("testButton2");
+        button3.setId("testButton3");
+        button4.setId("testButton4");
 
         vlo.addComponent(button1);
         vlo.addComponent(button2);
