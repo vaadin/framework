@@ -45,6 +45,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.vaadin.client.ApplicationConnection;
+import com.vaadin.client.ApplicationConnection.ApplicationStoppedEvent;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
@@ -320,7 +321,8 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
                             .getPaintableAttribute("focused", getConnection());
 
                     if (paintable == null) {
-                        // Do not try to focus invisible components which not present in UIDL
+                        // Do not try to focus invisible components which not
+                        // present in UIDL
                         return;
                     }
 
@@ -467,6 +469,21 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             // side-effects from focusing (scrollIntoView).
             getWidget().getElement().focus();
         }
+
+        applicationConnection.addHandler(
+                ApplicationConnection.ApplicationStoppedEvent.TYPE,
+                new ApplicationConnection.ApplicationStoppedHandler() {
+
+                    @Override
+                    public void onApplicationStopped(
+                            ApplicationStoppedEvent event) {
+                        // Stop any polling
+                        if (pollTimer != null) {
+                            pollTimer.cancel();
+                            pollTimer = null;
+                        }
+                    }
+                });
     }
 
     private ClickEventHandler clickEventHandler = new ClickEventHandler(this) {
@@ -686,6 +703,12 @@ public class UIConnector extends AbstractSingleComponentContainerConnector
             pollTimer = new Timer() {
                 @Override
                 public void run() {
+                    if (getState().pollInterval < 0) {
+                        // Polling has been cancelled server side
+                        pollTimer.cancel();
+                        pollTimer = null;
+                        return;
+                    }
                     getRpcProxy(UIServerRpc.class).poll();
                     // Send changes even though poll is @Delayed
                     getConnection().sendPendingVariableChanges();
