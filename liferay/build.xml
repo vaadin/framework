@@ -69,4 +69,8 @@
         <antcall target="common.clean" />
     </target>
 
+    <target name="checkstyle" />
+
+    <target name="test" depends="checkstyle" />
+
 </project>
