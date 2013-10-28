@@ -2382,8 +2382,9 @@ LexicalUnitImpl nonVariableTerm(LexicalUnitImpl prev) :{LexicalUnitImpl result
 		   && (Character.isDigit(s.charAt(i)) || (s.charAt(i) == '.'))) {
 		i++;
 	    }
+
 	    result = LexicalUnitImpl.createDimen(n.beginLine, n.beginColumn, prev, 
-						 Float.valueOf(s.substring(0, i)).floatValue(),
+						 number(op,n,s.length()-i),
 						 s.substring(i));
 	}
     | result=function(op, prev) ) )

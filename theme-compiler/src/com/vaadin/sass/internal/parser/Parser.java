@@ -159,6 +159,7 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
 
     /**
      * This method parses only one rule (style rule or at-rule, except
+     * 
      * @charset).
      * 
      * @param source
@@ -5574,9 +5575,14 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
                         && (Character.isDigit(s.charAt(i)) || (s.charAt(i) == '.'))) {
                     i++;
                 }
+                /*
+                 * result = LexicalUnitImpl.createDimen(n.beginLine,
+                 * n.beginColumn, prev, Float.valueOf(s.substring(0,
+                 * i)).floatValue(), s.substring(i));
+                 */
                 result = LexicalUnitImpl.createDimen(n.beginLine,
-                        n.beginColumn, prev, Float.valueOf(s.substring(0, i))
-                                .floatValue(), s.substring(i));
+                        n.beginColumn, prev, number(op, n, s.length() - i),
+                        s.substring(i));
                 break;
             case FUNCTION:
                 result = function(op, prev);
@@ -7110,15 +7116,15 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         return false;
     }
 
-    private boolean jj_3R_299() {
-        if (jj_scan_token(INTERPOLATION)) {
+    private boolean jj_3R_266() {
+        if (jj_3R_187()) {
             return true;
         }
         return false;
     }
 
-    private boolean jj_3R_266() {
-        if (jj_3R_187()) {
+    private boolean jj_3R_299() {
+        if (jj_scan_token(INTERPOLATION)) {
             return true;
         }
         return false;
@@ -7133,6 +7139,28 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
 
     private boolean jj_3R_253() {
         if (jj_scan_token(ANY)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean jj_3R_256() {
+        if (jj_scan_token(FUNCTION)) {
+            return true;
+        }
+        Token xsp;
+        while (true) {
+            xsp = jj_scanpos;
+            if (jj_scan_token(1)) {
+                jj_scanpos = xsp;
+                break;
+            }
+        }
+        xsp = jj_scanpos;
+        if (jj_3R_266()) {
+            jj_scanpos = xsp;
+        }
+        if (jj_scan_token(RPARAN)) {
             return true;
         }
         return false;
@@ -7187,28 +7215,6 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         return false;
     }
 
-    private boolean jj_3R_256() {
-        if (jj_scan_token(FUNCTION)) {
-            return true;
-        }
-        Token xsp;
-        while (true) {
-            xsp = jj_scanpos;
-            if (jj_scan_token(1)) {
-                jj_scanpos = xsp;
-                break;
-            }
-        }
-        xsp = jj_scanpos;
-        if (jj_3R_266()) {
-            jj_scanpos = xsp;
-        }
-        if (jj_scan_token(RPARAN)) {
-            return true;
-        }
-        return false;
-    }
-
     private boolean jj_3R_180() {
         if (jj_scan_token(COMMA)) {
             return true;
@@ -7231,15 +7237,22 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         return false;
     }
 
-    private boolean jj_3R_298() {
-        if (jj_scan_token(IDENT)) {
+    private boolean jj_3R_246() {
+        if (jj_3R_259()) {
             return true;
         }
         return false;
     }
 
-    private boolean jj_3R_246() {
-        if (jj_3R_259()) {
+    private boolean jj_3R_245() {
+        if (jj_3R_258()) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean jj_3R_298() {
+        if (jj_scan_token(IDENT)) {
             return true;
         }
         return false;
@@ -7253,13 +7266,6 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
             if (jj_3R_299()) {
                 return true;
             }
-        }
-        return false;
-    }
-
-    private boolean jj_3R_245() {
-        if (jj_3R_258()) {
-            return true;
         }
         return false;
     }
@@ -7525,21 +7531,6 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         return false;
     }
 
-    private boolean jj_3R_196() {
-        if (jj_3R_220()) {
-            return true;
-        }
-        Token xsp;
-        while (true) {
-            xsp = jj_scanpos;
-            if (jj_3R_273()) {
-                jj_scanpos = xsp;
-                break;
-            }
-        }
-        return false;
-    }
-
     private boolean jj_3R_199() {
         Token xsp;
         xsp = jj_scanpos;
@@ -7556,6 +7547,21 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
                         }
                     }
                 }
+            }
+        }
+        return false;
+    }
+
+    private boolean jj_3R_196() {
+        if (jj_3R_220()) {
+            return true;
+        }
+        Token xsp;
+        while (true) {
+            xsp = jj_scanpos;
+            if (jj_3R_273()) {
+                jj_scanpos = xsp;
+                break;
             }
         }
         return false;
@@ -7899,6 +7905,13 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         return false;
     }
 
+    private boolean jj_3R_258() {
+        if (jj_scan_token(HASH)) {
+            return true;
+        }
+        return false;
+    }
+
     private boolean jj_3_1() {
         if (jj_3R_176()) {
             return true;
@@ -8013,13 +8026,6 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         return false;
     }
 
-    private boolean jj_3R_258() {
-        if (jj_scan_token(HASH)) {
-            return true;
-        }
-        return false;
-    }
-
     private boolean jj_3_4() {
         if (jj_3R_179()) {
             return true;
@@ -8027,15 +8033,15 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         return false;
     }
 
-    private boolean jj_3R_251() {
-        if (jj_3R_186()) {
+    private boolean jj_3R_259() {
+        if (jj_scan_token(URL)) {
             return true;
         }
         return false;
     }
 
-    private boolean jj_3R_259() {
-        if (jj_scan_token(URL)) {
+    private boolean jj_3R_251() {
+        if (jj_3R_186()) {
             return true;
         }
         return false;
@@ -8088,6 +8094,13 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
         return false;
     }
 
+    private boolean jj_3R_260() {
+        if (jj_scan_token(UNICODERANGE)) {
+            return true;
+        }
+        return false;
+    }
+
     private boolean jj_3R_255() {
         Token xsp;
         xsp = jj_scanpos;
@@ -8102,13 +8115,6 @@ public class Parser implements org.w3c.css.sac.Parser, ParserConstants {
 
     private boolean jj_3R_264() {
         if (jj_scan_token(MINUS)) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean jj_3R_260() {
-        if (jj_scan_token(UNICODERANGE)) {
             return true;
         }
         return false;
