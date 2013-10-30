@@ -265,7 +265,8 @@ public class VTabsheet extends VTabsheetBase implements Focusable,
         }
 
         public boolean updateCaption(UIDL uidl) {
-            if (uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_DESCRIPTION)) {
+            if (uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_DESCRIPTION)
+                    || uidl.hasAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ERROR_MESSAGE)) {
                 setTooltipInfo(new TooltipInfo(
                         uidl.getStringAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_DESCRIPTION),
                         uidl.getStringAttribute(TabsheetBaseConstants.ATTRIBUTE_TAB_ERROR_MESSAGE)));
