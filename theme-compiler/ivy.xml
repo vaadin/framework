@@ -42,6 +42,8 @@
         <!-- Testing libs -->
         <dependency org="junit" name="junit" rev="4.11"
             conf="ide,test -> default" />
+        <dependency org="org.jsoup" name="jsoup" rev="1.6.3"
+            conf="ide,test -> default" />
 
         <!-- Internally used, for now -->
         <dependency org="com.carrotsearch" name="smartsprites"
