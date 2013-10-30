@@ -134,17 +134,11 @@
             </batchtest>
         </junit>
 
-        <antcall target="notify-teamcity-of-build-artifact">
-            <param name="file" value="${target}" />
-        </antcall>
+        <!-- Have teamcity publish each test error artifact immediatly if there are any -->
+        <basename property="basename" file="${target}" suffix="java" />
+        <echo>##teamcity[publishArtifacts '${com.vaadin.testbench.screenshot.directory}/errors/${basename}* => screenshot-errors']</echo>
 
     </target>
-
-	<!-- Have teamcity publish each test error artifact immediatly if there are any -->
-	<target name="notify-teamcity-of-build-artifact" if="teamcity.version">
-           <basename property="basename" file="${file}" suffix="java" />
-           <echo>##teamcity[publishArtifacts '${com.vaadin.testbench.screenshot.directory}/errors/${basename}* => screenshot-errors']</echo>
-	</target>
 
     <!-- Remove temporary source and compiled java files -->
     <target name="remove-temp-testclasses">
