@@ -31,7 +31,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
-import org.junit.runner.Description;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -62,16 +61,7 @@ public abstract class ScreenshotTB3Test extends AbstractTB3Test {
 
             String className = testClass.getSimpleName();
             screenshotBaseName = className + "-" + testMethod;
-        }
-
-        @Override
-        protected void failed(Throwable e, Description description) {
-
-            // Notify Teamcity of failed test
-            System.out.print("##teamcity[publishArtifacts '");
-            System.out.println(getScreenshotErrorBaseName()
-                    + "* => screenshot-errors']");
-        }
+        };
     };
 
     /**
