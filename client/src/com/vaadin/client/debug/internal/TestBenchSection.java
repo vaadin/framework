@@ -67,7 +67,7 @@ public class TestBenchSection implements Section {
             this.parent = parent;
 
             String parentString = (parent != null) ? ("element" + parent.selectorIndex)
-                    : "getDriver()";
+                    : null;
             String html = "<div class=\""
                     + VDebugWindow.STYLENAME
                     + "-selector\"><span class=\"tb-selector\">"
@@ -215,7 +215,9 @@ public class TestBenchSection implements Section {
         SelectorPath path = SelectorPath.findTestBenchSelector(connector,
                 element);
 
-        addSelectorWidgets(path);
+        if (null != path) {
+            addSelectorWidgets(path);
+        }
     }
 
     private SelectorWidget addSelectorWidgets(SelectorPath path) {

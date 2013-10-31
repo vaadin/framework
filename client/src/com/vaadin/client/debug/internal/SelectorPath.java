@@ -16,18 +16,21 @@
 
 package com.vaadin.client.debug.internal;
 
+import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.FastStringSet;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.componentlocator.ComponentLocator;
 import com.vaadin.client.componentlocator.VaadinFinderLocatorStrategy;
 import com.vaadin.client.metadata.NoDataException;
 import com.vaadin.client.metadata.Property;
+import com.vaadin.client.metadata.TypeDataStore;
 import com.vaadin.client.ui.AbstractConnector;
 import com.vaadin.client.ui.SubPartAware;
 
@@ -108,7 +111,8 @@ public abstract class SelectorPath {
      * in a test.
      * 
      * @param context
-     *            the context to use (usually "getDriver()" or a variable name)
+     *            the context to use (usually a variable name) or null for
+     *            default
      * @return string to add in a JUnit test
      */
     public abstract String getJUnitSelector(String context);
@@ -551,7 +555,10 @@ public abstract class SelectorPath {
 
         @Override
         public String getJUnitSelector(String context) {
-            return context + ".findElement(By.xpath(\"" + getPath() + "\"))";
+            // use driver by default
+            String contextString = null != context ? context : "getDriver()";
+            return contextString + ".findElement(By.xpath(\"" + getPath()
+                    + "\"))";
         }
 
         @Override
@@ -604,7 +611,8 @@ public abstract class SelectorPath {
 
         @Override
         public String getJUnitSelector(String context) {
-            return context + ".findElement(By.id(\"" + getId() + "\"))";
+            String contextPart = null != context ? ", " + context : "";
+            return "getElementById(\"" + getId() + "\"" + contextPart + ")";
         }
 
         @Override
@@ -632,11 +640,6 @@ public abstract class SelectorPath {
          * @return path of the element for By.vaadin(...)
          */
         protected abstract String getPath();
-
-        @Override
-        public String getJUnitSelector(String context) {
-            return context + ".findElement(By.vaadin(\"" + getPath() + "\"))";
-        }
 
         @Override
         public Element findElement() {
@@ -746,6 +749,50 @@ public abstract class SelectorPath {
         }
 
         @Override
+        public String getJUnitSelector(String context) {
+            String componentClass = getComponentClass();
+            String contextPart = null != context ? ", " + context : "";
+            // TODO update after subpart API finished
+            if (null != getSubPart() || null == componentClass) {
+                return "getElementByPath(\"" + getPath() + "\"" + contextPart
+                        + ")";
+            } else if (null != getWidgetCaption()) {
+                return "getElementByCaption(" + componentClass + ".class, \""
+                        + getWidgetCaption() + "\"" + contextPart + ")";
+            } else if (getWidgetIndex() >= 0) {
+                return "getElementByIndex(" + componentClass + ".class, "
+                        + getWidgetIndex() + contextPart + ")";
+            } else {
+                return "getElement(" + componentClass + ".class" + contextPart
+                        + ")";
+            }
+        }
+
+        /**
+         * Returns the Vaadin server side component class to use for a widget
+         * class.
+         * 
+         * @return fully qualified server side class name, null if unable to
+         *         determine it
+         */
+        private String getComponentClass() {
+            ComponentConnector connector = Util.findPaintable(getLocator()
+                    .getClient(), findElement());
+            Class<? extends ServerConnector> connectorClass = connector
+                    .getClass();
+            FastStringSet identifiers = TypeDataStore.get().findIdentifiersFor(
+                    connectorClass);
+            JsArrayString ids = identifiers.dump();
+            if (ids.length() == 1) {
+                return ids.get(0);
+            } else {
+                return null;
+            }
+        }
+
+        // these are used only to locate components on the client side by path
+
+        @Override
         protected String getPath() {
             return "/" + getWidgetClass() + getIndexString(false)
                     + getSubPartPostfix();
@@ -798,6 +845,12 @@ public abstract class SelectorPath {
                 ComponentLocator locator) {
             super(parent, locator);
             this.path = path;
+        }
+
+        @Override
+        public String getJUnitSelector(String context) {
+            String contextPart = null != context ? ", " + context : "";
+            return "getElementByPath(\"" + getPath() + "\"" + contextPart + ")";
         }
 
         /**
