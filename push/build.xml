@@ -17,8 +17,6 @@
 
     <!-- Keep the version number in sync with ivy.xml, server/src/com/vaadin/server/Constants.java -->
     <property name="atmosphere.runtime.version" value="1.0.14.vaadin4" />
-    <!-- Keep the version number in sync with ivy.xml -->
-    <property name="atmosphere.js.version" value="2.0.3-vaadin1" />
     <property name="jquery.version" value="1.9.0" />
 
     <path id="classpath.compile.custom" />
@@ -32,15 +30,16 @@
 
     <target name="vaadinPush.js">
         <mkdir dir="${result.dir}/js/VAADIN" />
-        <ivy:resolve file="ivy.xml" conf="push.js" />
+        <ivy:resolve log="download-only" file="ivy.xml" conf="push.js" />
         <ivy:cachepath pathid="atmosphere.jquery.deps" conf="push.js" />
 
-        <copy todir="${temp.dir}" flatten="true">
+        <delete dir="${temp.dir}" />
+        <copy flatten="true" tofile="${temp.dir}/jquery.war">
             <path refid="atmosphere.jquery.deps" />
         </copy>
 
         <!-- Unzip to temp dir -->
-        <unzip src="${temp.dir}/jquery-${atmosphere.js.version}.war" dest="${jquery.unpack}">
+        <unzip src="${temp.dir}/jquery.war" dest="${jquery.unpack}">
             <patternset>
                 <include name="**/jquery.atmosphere.js" />
                 <include name="**/jquery-${jquery.version}.js" />
