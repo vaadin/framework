@@ -15,6 +15,7 @@
  */
 package com.vaadin.tests.tb3;
 
+import java.io.File;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.After;
@@ -29,6 +30,11 @@ public abstract class MultiBrowserTestWithProxy extends MultiBrowserTest {
     private static AtomicInteger availablePort = new AtomicInteger(2000);
     private Session proxySession;
     private Integer proxyPort = null;
+    private JSch jsch;
+    private static String sshDir = System.getProperty("user.home") + "/.ssh/";
+    private String[] publicKeys = new String[] {
+            System.getProperty("sshkey.file"), sshDir + "id_rsa",
+            sshDir + "id_dsa", sshDir + "id_rsa2" };
 
     @Before
     public void setupInitialProxy() throws JSchException {
@@ -71,13 +77,21 @@ public abstract class MultiBrowserTestWithProxy extends MultiBrowserTest {
     }
 
     private void createProxy(int proxyPort) throws JSchException {
-        JSch j = new JSch();
-        String keyFile = System.getProperty("sshkey.file");
-        if (keyFile == null) {
-            keyFile = "~/.ssh/id_rsa";
+        if (jsch == null) {
+            jsch = new JSch();
+
+            String keyFile = null;
+            for (String publicKey : publicKeys) {
+                if (publicKey != null) {
+                    if (new File(publicKey).exists()) {
+                        keyFile = publicKey;
+                        break;
+                    }
+                }
+            }
+            jsch.addIdentity(keyFile);
         }
-        j.addIdentity(keyFile);
-        proxySession = j.getSession("localhost");
+        proxySession = jsch.getSession("localhost");
         proxySession.setConfig("StrictHostKeyChecking", "no");
         proxySession.setPortForwardingL("0.0.0.0", proxyPort,
                 super.getDeploymentHostname(), super.getDeploymentPort());

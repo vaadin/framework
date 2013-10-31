@@ -306,18 +306,31 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
     }
 
     /**
-     * Waits a short while for the given condition to become true. Use e.g. as
+     * Waits up to 10s for the given condition to become true. Use e.g. as
      * {@link #waitUntil(ExpectedConditions.textToBePresentInElement(by, text))}
      * 
      * @param condition
      *            the condition to wait for to become true
      */
     protected void waitUntil(ExpectedCondition<Boolean> condition) {
-        new WebDriverWait(driver, 10).until(condition);
+        waitUntil(condition, 10);
     }
 
     /**
-     * Waits a short while for the given condition to become false. Use e.g. as
+     * Waits the given number of seconds for the given condition to become true.
+     * Use e.g. as {@link
+     * #waitUntil(ExpectedConditions.textToBePresentInElement(by, text))}
+     * 
+     * @param condition
+     *            the condition to wait for to become true
+     */
+    protected void waitUntil(ExpectedCondition<Boolean> condition,
+            long timeoutInSeconds) {
+        new WebDriverWait(driver, timeoutInSeconds).until(condition);
+    }
+
+    /**
+     * Waits up to 10s for the given condition to become false. Use e.g. as
      * {@link #waitUntilNot(ExpectedConditions.textToBePresentInElement(by,
      * text))}
      * 
@@ -325,7 +338,20 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      *            the condition to wait for to become false
      */
     protected void waitUntilNot(ExpectedCondition<Boolean> condition) {
-        new WebDriverWait(driver, 10).until(ExpectedConditions.not(condition));
+        waitUntilNot(condition, 10);
+    }
+
+    /**
+     * Waits the given number of seconds for the given condition to become
+     * false. Use e.g. as {@link
+     * #waitUntilNot(ExpectedConditions.textToBePresentInElement(by, text))}
+     * 
+     * @param condition
+     *            the condition to wait for to become false
+     */
+    protected void waitUntilNot(ExpectedCondition<Boolean> condition,
+            long timeoutInSeconds) {
+        waitUntil(ExpectedConditions.not(condition), timeoutInSeconds);
     }
 
     protected void waitForElementToBePresent(By by) {

@@ -38,6 +38,26 @@ public abstract class PushReconnectTest extends MultiBrowserTestWithProxy {
     }
 
     @Test
+    public void testUserActionWhileDisconnectedWithDelay() throws Exception {
+        setDebug(true);
+        openTestURL();
+        startTimer();
+        waitUntilServerCounterChanges();
+        disconnectProxy();
+        Assert.assertEquals(0, getClientCounter());
+        getIncrementClientCounterButton().click();
+        // No change while disconnected
+        Assert.assertEquals(0, getClientCounter());
+        // Firefox sends extra onopen calls after a while, which breaks
+        // everything
+        Thread.sleep(10000);
+        connectProxy();
+        waitUntilServerCounterChanges();
+        // The change should have appeared when reconnected
+        Assert.assertEquals(1, getClientCounter());
+    }
+
+    @Test
     public void testUserActionWhileDisconnected() throws Exception {
         setDebug(true);
         openTestURL();
@@ -110,9 +130,9 @@ public abstract class PushReconnectTest extends MultiBrowserTestWithProxy {
         waitUntilServerCounterChanges();
         for (int i = 0; i < 50; i++) {
             disconnectProxy();
-            Thread.sleep(50);
+            Thread.sleep(100);
             connectProxy();
-            Thread.sleep(50);
+            Thread.sleep(100);
         }
         waitUntilServerCounterChanges();
         waitUntilServerCounterChanges();
@@ -134,7 +154,7 @@ public abstract class PushReconnectTest extends MultiBrowserTestWithProxy {
             public Boolean apply(WebDriver input) {
                 return BasicPushTest.getServerCounter(PushReconnectTest.this) > counter;
             }
-        });
+        }, 30);
     }
 
     private void startTimer() {
