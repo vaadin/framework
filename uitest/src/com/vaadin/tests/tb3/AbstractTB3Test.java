@@ -650,6 +650,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
          */
         public static DesiredCapabilities safari(int version) {
             DesiredCapabilities c = DesiredCapabilities.safari();
+            c.setPlatform(Platform.MAC);
             c.setVersion("" + version);
             return c;
         }

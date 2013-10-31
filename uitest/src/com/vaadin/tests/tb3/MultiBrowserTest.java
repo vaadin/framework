@@ -40,7 +40,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
  */
 public abstract class MultiBrowserTest extends PrivateTB3Configuration {
 
-    public static final int TESTED_SAFARI_VERSION = 6;
+    public static final int TESTED_SAFARI_VERSION = 7;
     public static final int TESTED_CHROME_VERSION = 29;
     public static final int TESTED_FIREFOX_VERSION = 24;
 
@@ -52,7 +52,7 @@ public abstract class MultiBrowserTest extends PrivateTB3Configuration {
         allBrowsers.add(BrowserUtil.ie(11));
         allBrowsers.add(BrowserUtil.firefox(TESTED_FIREFOX_VERSION));
         // Uncomment once we have the capability to run on Safari 6
-        // allBrowsers.add(safari(TESTED_SAFARI_VERSION));
+        // allBrowsers.add(BrowserUtil.safari(TESTED_SAFARI_VERSION));
         allBrowsers.add(BrowserUtil.chrome(TESTED_CHROME_VERSION));
         // Re-enable this when it is possible to run on a modern Opera version
         // (15+)
