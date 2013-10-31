@@ -38,7 +38,7 @@ public class BasicPush extends AbstractTestUI {
 
     public static final String SERVER_COUNTER_ID = "serverCounter";
 
-    public static final String INCREMENT_BUTTON_ID = "clientCounter";
+    public static final String INCREMENT_BUTTON_ID = "incrementCounter";
 
     private ObjectProperty<Integer> counter = new ObjectProperty<Integer>(0);
 

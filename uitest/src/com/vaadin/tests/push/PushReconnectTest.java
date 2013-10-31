@@ -53,6 +53,15 @@ public abstract class PushReconnectTest extends MultiBrowserTestWithProxy {
         waitUntilServerCounterChanges();
         // The change should have appeared when reconnected
         Assert.assertEquals(1, getClientCounter());
+
+        // IE has problems with another reconnect
+        disconnectProxy();
+        getIncrementClientCounterButton().click();
+        Assert.assertEquals(1, getClientCounter());
+        Thread.sleep(1000);
+        connectProxy();
+        waitUntilServerCounterChanges();
+        Assert.assertEquals(2, getClientCounter());
     }
 
     @Test
@@ -63,6 +72,18 @@ public abstract class PushReconnectTest extends MultiBrowserTestWithProxy {
         waitUntilServerCounterChanges();
         disconnectProxy();
         Thread.sleep(12000);
+        connectProxy();
+        waitUntilServerCounterChanges();
+    }
+
+    @Test
+    public void testReallyLongDisconnect() throws Exception {
+        setDebug(true);
+        openTestURL();
+        startTimer();
+        waitUntilServerCounterChanges();
+        disconnectProxy();
+        Thread.sleep(120000);
         connectProxy();
         waitUntilServerCounterChanges();
     }
