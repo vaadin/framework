@@ -197,7 +197,7 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
      * 
      * @return The port teh test is running on, by default 8888
      */
-    protected abstract String getDeploymentPort();
+    protected abstract int getDeploymentPort();
 
     /**
      * Produces a collection of browsers to run the test on. This method is

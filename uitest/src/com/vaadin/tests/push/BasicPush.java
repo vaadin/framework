@@ -30,6 +30,16 @@ import com.vaadin.ui.Label;
 @Push
 public class BasicPush extends AbstractTestUI {
 
+    public static final String CLIENT_COUNTER_ID = "clientCounter";
+
+    public static final String STOP_TIMER_ID = "stopTimer";
+
+    public static final String START_TIMER_ID = "startTimer";
+
+    public static final String SERVER_COUNTER_ID = "serverCounter";
+
+    public static final String INCREMENT_BUTTON_ID = "clientCounter";
+
     private ObjectProperty<Integer> counter = new ObjectProperty<Integer>(0);
 
     private ObjectProperty<Integer> counter2 = new ObjectProperty<Integer>(0);
@@ -48,15 +58,19 @@ public class BasicPush extends AbstractTestUI {
          */
         Label lbl = new Label(counter);
         lbl.setCaption("Client counter (click 'increment' to update):");
+        lbl.setId(CLIENT_COUNTER_ID);
         addComponent(lbl);
 
-        addComponent(new Button("Increment", new Button.ClickListener() {
+        Button incrementButton = new Button("Increment",
+                new Button.ClickListener() {
 
-            @Override
-            public void buttonClick(ClickEvent event) {
-                counter.setValue(counter.getValue() + 1);
-            }
-        }));
+                    @Override
+                    public void buttonClick(ClickEvent event) {
+                        counter.setValue(counter.getValue() + 1);
+                    }
+                });
+        incrementButton.setId(INCREMENT_BUTTON_ID);
+        addComponent(incrementButton);
 
         spacer();
 
@@ -65,33 +79,37 @@ public class BasicPush extends AbstractTestUI {
          */
         lbl = new Label(counter2);
         lbl.setCaption("Server counter (updates each 3s by server thread) :");
+        lbl.setId(SERVER_COUNTER_ID);
         addComponent(lbl);
 
-        addComponent(new Button("Start timer", new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                counter2.setValue(0);
-                if (task != null) {
-                    task.cancel();
-                }
-                task = new TimerTask() {
+        Button startTimer = new Button("Start timer",
+                new Button.ClickListener() {
 
                     @Override
-                    public void run() {
-                        access(new Runnable() {
+                    public void buttonClick(ClickEvent event) {
+                        counter2.setValue(0);
+                        if (task != null) {
+                            task.cancel();
+                        }
+                        task = new TimerTask() {
+
                             @Override
                             public void run() {
-                                counter2.setValue(counter2.getValue() + 1);
+                                access(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        counter2.setValue(counter2.getValue() + 1);
+                                    }
+                                });
                             }
-                        });
+                        };
+                        timer.scheduleAtFixedRate(task, 3000, 3000);
                     }
-                };
-                timer.scheduleAtFixedRate(task, 3000, 3000);
-            }
-        }));
+                });
+        startTimer.setId(START_TIMER_ID);
+        addComponent(startTimer);
 
-        addComponent(new Button("Stop timer", new Button.ClickListener() {
+        Button stopTimer = new Button("Stop timer", new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
                 if (task != null) {
@@ -99,7 +117,9 @@ public class BasicPush extends AbstractTestUI {
                     task = null;
                 }
             }
-        }));
+        });
+        stopTimer.setId(STOP_TIMER_ID);
+        addComponent(stopTimer);
     }
 
     @Override

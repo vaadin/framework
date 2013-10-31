@@ -19,6 +19,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
+import com.vaadin.tests.tb3.AbstractTB3Test;
 import com.vaadin.tests.tb3.MultiBrowserTest;
 
 public abstract class BasicPushTest extends MultiBrowserTest {
@@ -30,15 +31,13 @@ public abstract class BasicPushTest extends MultiBrowserTest {
         // Test client initiated push
         Assert.assertEquals(0, getClientCounter());
         getIncrementButton().click();
-        Assert.assertEquals(
-                "Client counter not incremented by button click", 1,
-                getClientCounter());
+        Assert.assertEquals("Client counter not incremented by button click",
+                1, getClientCounter());
         getIncrementButton().click();
         getIncrementButton().click();
         getIncrementButton().click();
-        Assert.assertEquals(
-                "Four clicks should have incremented counter to 4", 4,
-                getClientCounter());
+        Assert.assertEquals("Four clicks should have incremented counter to 4",
+                4, getClientCounter());
 
         // Test server initiated push
         getServerCounterStartButton().click();
@@ -63,30 +62,47 @@ public abstract class BasicPushTest extends MultiBrowserTest {
     }
 
     private int getServerCounter() {
-        return Integer.parseInt(getServerCounterElement().getText());
+        return getServerCounter(this);
     }
 
     private int getClientCounter() {
-        return Integer.parseInt(getClientCounterElement().getText());
+        return getClientCounter(this);
     }
 
-    private WebElement getServerCounterElement() {
-        return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[4]/VLabel[0]");
-    }
-
-    private WebElement getServerCounterStartButton() {
-        return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[5]/VButton[0]/domChild[0]/domChild[0]");
-    }
-
-    private WebElement getServerCounterStopButton() {
-        return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[6]/VButton[0]/domChild[0]/domChild[0]");
+    public static int getClientCounter(AbstractTB3Test t) {
+        WebElement clientCounterElem = t
+                .vaadinElementById(BasicPush.CLIENT_COUNTER_ID);
+        return Integer.parseInt(clientCounterElem.getText());
     }
 
     private WebElement getIncrementButton() {
-        return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[2]/VButton[0]/domChild[0]/domChild[0]");
+        return getIncrementButton(this);
     }
 
-    private WebElement getClientCounterElement() {
-        return vaadinElement("/VVerticalLayout[0]/Slot[1]/VVerticalLayout[0]/Slot[1]/VLabel[0]");
+    private WebElement getServerCounterStopButton() {
+        return getServerCounterStopButton(this);
     }
+
+    private WebElement getServerCounterStartButton() {
+        return getServerCounterStartButton(this);
+    }
+
+    public static int getServerCounter(AbstractTB3Test t) {
+        WebElement serverCounterElem = t
+                .vaadinElementById(BasicPush.SERVER_COUNTER_ID);
+        return Integer.parseInt(serverCounterElem.getText());
+    }
+
+    public static WebElement getServerCounterStartButton(AbstractTB3Test t) {
+        return t.vaadinElementById(BasicPush.START_TIMER_ID);
+    }
+
+    public static WebElement getServerCounterStopButton(AbstractTB3Test t) {
+        return t.vaadinElementById(BasicPush.STOP_TIMER_ID);
+    }
+
+    public static WebElement getIncrementButton(AbstractTB3Test t) {
+        return t.vaadinElementById(BasicPush.INCREMENT_BUTTON_ID);
+    }
+
 }
