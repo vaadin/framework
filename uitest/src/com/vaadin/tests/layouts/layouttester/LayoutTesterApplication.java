@@ -114,7 +114,7 @@ public class LayoutTesterApplication extends AbstractTestCase {
     private NativeSelect getLayoutTypeSelect() {
         if (layoutSelector == null) {
             layoutSelector = new NativeSelect();
-            layoutSelector.setId(LAYOUT_SELECT);
+            layoutSelector.setId(LAYOUT_SELECT_ID);
             layoutSelector.addItem(VerticalLayout.class);
             layoutSelector.addItem(HorizontalLayout.class);
             layoutSelector.addItem(GridLayout.class);
