@@ -19,7 +19,6 @@ package com.vaadin.tests.tb3;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.Before;
@@ -506,14 +505,6 @@ public abstract class AbstractTB3Test extends TestBenchTestCase {
                 return cls;
             }
         } catch (Exception e) {
-        }
-        Class<?> enclosingClass = getClass().getEnclosingClass();
-        if (enclosingClass != null) {
-            if (UI.class.isAssignableFrom(enclosingClass)) {
-                Logger.getLogger(getClass().getName())
-                        .severe("Test is an static inner class to the UI. This will no longer be supported in the future. The test should be named UIClassTest and reside in the same package as the UI");
-                return enclosingClass;
-            }
         }
         throw new RuntimeException(
                 "Could not determine UI class. Ensure the test is named UIClassTest and is in the same package as the UIClass");
