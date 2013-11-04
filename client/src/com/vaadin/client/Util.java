@@ -556,10 +556,10 @@ public class Util {
                     final String oldHeight = scrollable.getStyle().getHeight();
 
                     scrollable.getStyle().setWidth(110, Unit.PCT);
-                    scrollable.getStyle().setHeight(110, Unit.PCT);
                     scrollable.getOffsetWidth();
-                    scrollable.getOffsetHeight();
                     scrollable.getStyle().setProperty("width", oldWidth);
+                    scrollable.getStyle().setHeight(110, Unit.PCT);
+                    scrollable.getOffsetHeight();
                     scrollable.getStyle().setProperty("height", oldHeight);
 
                     // Restore the scroll position
