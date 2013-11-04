@@ -3,7 +3,6 @@
 
     <include file="../common.xml" />
     <dirname property="test.xml.dir" file="${ant.file.Run Vaadin Testbench Tests}" />
-
     <!-- ================================================================== -->
     <!-- Configuration -->
     <!-- ================================================================== -->
@@ -84,6 +83,11 @@
     </target>
 
     <target name="run-tb2-tests" depends="check-parameters,compile-tests">
+        <property name="report.qualifier" value="tb2" />
+        <property name="report.dir" location="${test.xml.dir}/result/reports-${report.qualifier}" />
+        
+        <delete dir="${report.dir}" />
+        <mkdir dir="${report.dir}" />
         <fileset dir="${test-output-dir}" id="tests-fileset">
             <include name="**/**.java" />
         </fileset>
@@ -103,13 +107,16 @@
 
     <!-- This target runs the generated and compiled junit tests -->
     <target name="execute-tests">
-        <junit fork="yes" printsummary="withOutAndErr" maxmemory="96m">
+        <!-- Junit does not create the report dir so we need to ensure it
+        exists -->
+        <mkdir dir="${report.dir}" />
+        <junit fork="yes" showoutput="no" printsummary="no" maxmemory="96m">
             <classpath>
                 <path refid="classpath" />
                 <pathelement path="${class-dir}" />
             </classpath>
 
-            <formatter usefile="false" type="plain" />
+            <formatter type="xml" />
 
             <jvmarg value="-Dcom.vaadin.testbench.tester.host=${com.vaadin.testbench.tester.host}" />
             <jvmarg value="-Dcom.vaadin.testbench.deployment.url=${com.vaadin.testbench.deployment.url}" />
@@ -129,7 +136,7 @@
             <jvmarg value="-Dcom.vaadin.testbench.screenshot.reference.debug=${com.vaadin.testbench.screenshot.reference.debug}" />
             <jvmarg value="-Dcom.vaadin.testbench.screenshot.cursor=${com.vaadin.testbench.screenshot.cursor}" />
 
-            <batchtest>
+            <batchtest todir="${report.dir}">
                 <filelist dir="${test-output-dir}" files="${target}" />
             </batchtest>
         </junit>
