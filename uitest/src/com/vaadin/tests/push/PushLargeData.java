@@ -126,7 +126,9 @@ public abstract class PushLargeData extends AbstractTestUIWithLog {
                     @Override
                     public void run() {
                         PushLargeData ui = (PushLargeData) UI.getCurrent();
-                        ui.getDataLabel().setValue(
+                        // Using description as it is not rendered to the DOM
+                        // immediately
+                        ui.getDataLabel().setDescription(
                                 System.currentTimeMillis() + ": " + data);
                         ui.log("Package " + idx + " pushed");
                     }
