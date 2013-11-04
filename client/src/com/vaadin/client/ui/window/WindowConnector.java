@@ -99,6 +99,8 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
         super.init();
 
         VWindow window = getWidget();
+        window.id = getConnectorId();
+        window.client = getConnection();
 
         getLayoutManager().registerDependency(this,
                 window.contentPanel.getElement());
@@ -126,9 +128,6 @@ public class WindowConnector extends AbstractSingleComponentContainerConnector
 
         VWindow window = getWidget();
         String connectorId = getConnectorId();
-
-        window.id = getConnectorId();
-        window.client = client;
 
         // Workaround needed for Testing Tools (GWT generates window DOM
         // slightly different in different browsers).
