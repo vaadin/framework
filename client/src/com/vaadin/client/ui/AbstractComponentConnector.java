@@ -15,6 +15,7 @@
  */
 package com.vaadin.client.ui;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Focusable;
@@ -68,8 +69,16 @@ public abstract class AbstractComponentConnector extends AbstractConnector
     /**
      * Creates and returns the widget for this VPaintableWidget. This method
      * should only be called once when initializing the paintable.
+     * <p>
+     * You should typically not override this method since the framework by
+     * default generates an implementation that uses {@link GWT#create(Class)}
+     * to create a widget of the same type as returned by the most specific
+     * override of {@link #getWidget()}. If you do override the method, you
+     * can't call <code>super.createWidget()</code> since the metadata needed
+     * for that implementation is not generated if there's an override of the
+     * method.
      * 
-     * @return
+     * @return a new widget instance to use for this component connector
      */
     protected Widget createWidget() {
         Type type = TypeData.getType(getClass());
@@ -79,10 +88,12 @@ public abstract class AbstractComponentConnector extends AbstractConnector
             return (Widget) instance;
         } catch (NoDataException e) {
             throw new IllegalStateException(
-                    "There is no information about the widget for "
+                    "Default implementation of createWidget() does not work for "
                             + Util.getSimpleName(this)
-                            + ". Did you remember to compile the right widgetset?",
-                    e);
+                            + ". This might be caused by explicitely using "
+                            + "super.createWidget(), using a widget type with "
+                            + "generics or some unspecified problem with the "
+                            + "widgetset compilation.", e);
         }
     }
 
