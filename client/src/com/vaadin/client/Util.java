@@ -449,6 +449,35 @@ public class Util {
     }
 
     /**
+     * Calculates maximum horizontal scrolling value for the given element.
+     * 
+     * @since 7.1.9
+     * @param element
+     *            which scrollLeft should be calculated
+     * @return maximum value for scrollLeft of the given element
+     */
+    public static int getMaxScrollLeft(final Element element) {
+        int scrollWidth = element.getScrollWidth();
+        int clientWidth = element.getClientWidth();
+        return scrollWidth - clientWidth;
+    }
+
+    /**
+     * Checks if scrollLeft of the element is at its maximum value. Returns
+     * false if the element can't be scrolled horizontally.
+     * 
+     * @since 7.1.9
+     * @param element
+     *            which scrollLeft should be checked
+     * @return true, if scrollLeft is at maximum (false if element can't be
+     *         scrolled horizontally)
+     */
+    public static boolean isScrollLeftAtMax(final Element element) {
+        int scrollLeft = element.getScrollLeft();
+        return scrollLeft != 0 && scrollLeft == getMaxScrollLeft(element);
+    }
+
+    /**
      * Run workaround for webkits overflow auto issue.
      * 
      * See: our bug #2138 and https://bugs.webkit.org/show_bug.cgi?id=21462
@@ -469,6 +498,8 @@ public class Util {
             // check the scrolltop value before hiding the element
             final int scrolltop = elem.getScrollTop();
             final int scrollleft = elem.getScrollLeft();
+            final boolean scrollLeftAtMax = isScrollLeftAtMax(elem);
+
             elem.getStyle().setProperty("overflow", "hidden");
 
             Scheduler.get().scheduleDeferred(new Command() {
@@ -490,6 +521,12 @@ public class Util {
                         // position
                         elem.setScrollTop(scrollvalue - 1);
                         elem.setScrollTop(scrollvalue);
+                    }
+
+                    // keep horizontal scroll at max if it was before vertical
+                    // scroll bar was added/removed
+                    if (scrollLeftAtMax) {
+                        elem.setScrollLeft(getMaxScrollLeft(elem));
                     }
 
                     // fix for #6940 : Table horizontal scroll sometimes not
