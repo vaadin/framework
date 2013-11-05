@@ -33,6 +33,7 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.ScrollEvent;
 import com.google.gwt.event.dom.client.ScrollHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -47,6 +48,8 @@ import com.vaadin.client.LayoutManager;
 import com.vaadin.client.Util;
 import com.vaadin.client.debug.internal.VDebugWindow;
 import com.vaadin.client.ui.ShortcutActionHandler.ShortcutActionHandlerOwner;
+import com.vaadin.client.ui.window.WindowMoveEvent;
+import com.vaadin.client.ui.window.WindowMoveHandler;
 import com.vaadin.shared.EventId;
 import com.vaadin.shared.ui.window.WindowMode;
 
@@ -921,6 +924,9 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         dragging = false;
         hideDraggingCurtain();
         DOM.releaseCapture(getElement());
+
+        // fire move event
+        fireEvent(new WindowMoveEvent(uidlPositionX, uidlPositionY));
     }
 
     @Override
@@ -1034,6 +1040,16 @@ public class VWindow extends VOverlay implements ShortcutActionHandlerOwner,
         LayoutManager layoutManager = getLayoutManager();
         return layoutManager.getOuterWidth(getElement())
                 - contentPanel.getElement().getOffsetWidth();
+    }
+
+    /**
+     * Adds a Handler for when user moves the window.
+     * 
+     * @since 7.1.9
+     * @return {@link HandlerRegistration} used to remove the handler
+     */
+    public HandlerRegistration addMoveHandler(WindowMoveHandler handler) {
+        return addHandler(handler, WindowMoveEvent.getType());
     }
 
 }
